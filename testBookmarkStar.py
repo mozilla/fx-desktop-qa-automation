@@ -58,7 +58,7 @@ class Test(unittest.TestCase):
                 print('The title of the page should be blank !' + self.driver.title + '! <- Nothing between those')
                 self.driver.execute_script("window.open('');")
 
-                # Switch to the new tab and open the URL
+                # Switch to the new tab and open the Mozilla URL
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 self.driver.get(test_url)
                 WebDriverWait(self.driver, 10).until(EC.url_changes('https://mozilla.com'))

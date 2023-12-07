@@ -64,7 +64,7 @@ class Test(unittest.TestCase):
             # Assert that the video play time is at least 3 seconds
             self.assertTrue(self, current_play_time >= 3.0)
 
-            # Pause the video
+            # Click the pause the video button
             play_button.click()
 
         finally:

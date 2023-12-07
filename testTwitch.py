@@ -50,7 +50,6 @@ class Test(unittest.TestCase):
 
             # Wait for the search results to load
             # CSS SELECTOR: .kEZcIh > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) >
-            # div:nth-child(1) > strong:nth-child(1) > a:nth-child(1)
             item_element = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '.kEZcIh > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > '

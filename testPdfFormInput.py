@@ -43,7 +43,7 @@ class Test(unittest.TestCase):
             self.driver.get(test_url)
             WebDriverWait(self.driver, 10).until(EC.url_changes('foersom.com/net/HowTo/data/OoPdfFormExample.pdf'))
 
-            # Enter Name in PDF form fields
+            # Enter full name in the PDF form fields
             # Given name text box element: id=pdfjs_internal_id_5R value="" name="Given Name Text Box"
             given_name_field = self.driver.find_element(By.ID, "pdfjs_internal_id_5R")
             given_name_field.send_keys("Mary")

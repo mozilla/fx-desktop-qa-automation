@@ -33,7 +33,7 @@ class Test(unittest.TestCase):
             self.driver.get(example_url)
             WebDriverWait(self.driver, 10).until(EC.url_changes('https://www.example.com/'))
 
-            # Open a page in a new tab
+            # Open another page in a new tab
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 newtab_button = self.driver.find_element(By.ID, "tabs-newtab-button")
                 newtab_button.click()

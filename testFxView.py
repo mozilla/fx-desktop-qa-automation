@@ -77,11 +77,6 @@ class Test(unittest.TestCase):
                 pyautogui.press('down')
                 pyautogui.press('tab')
                 pyautogui.press('enter')
-                #pyautogui.click()
-                #pyautogui.press(['down'], interval=1)
-                #pyautogui.press(['tab'], interval=1)
-                #pyautogui.press(['right'], interval=1)
-                #pyautogui.press(['enter'], interval=1)
                 time.sleep(3)
 
         finally:

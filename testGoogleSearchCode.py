@@ -31,7 +31,7 @@ class Test(unittest.TestCase):
                 self.driver.find_element(By.ID, 'urlbar-input').send_keys("soccer" + Keys.RETURN)
                 time.sleep(3)
 
-            # Check that the search url is correct
+            # Check that the search url contains the appropriate search code
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 expected_code = "firefox-b-d&q=soccer"
                 WebDriverWait(self.driver, 10).until(EC.title_contains('Google Search'))
