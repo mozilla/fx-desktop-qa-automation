@@ -33,7 +33,7 @@ class Test(unittest.TestCase):
         # NOTE: This worked for a while, then I stopped working and Amazon Capta'd again.
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
-    def test_new_tab(self):
+    def test_amazon_search(self):
 
         print(" - TEST: Verify a user can search on Amazon")
         try:
@@ -57,8 +57,9 @@ class Test(unittest.TestCase):
 
             # Wait for the search results to load
             # XPATH: html/body/div[1]/div[1]/div[1]/div[1]/div/span[1]/div[1]/div[3]/div/div/div/div/span/div/div/div[3]/div[1]/h2/a/span
-            item_element = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//div[1]/div[1]/div[1]/div[1]/div/span[1]/div[1]/div[3]/div/div/div/div/span/div/div/div[3]/div[1]/h2/a/span")))
+            # EC.presence_of_element_located((By.XPATH, "//div[1]/div[1]/div[1]/div[1]/div/span[1]/div[1]/div[3]/div/div/div/div/span/div/div/div[3]/div[1]/h2/a/span")))
+            item_element = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR,
+                            "span[data-component-type='s-search-results'] div.s-card-container span.a-text-normal")))
             item_element_text = item_element.text
             print("Element found by class name:", item_element_text)
             self.assertIn("Soccer", item_element_text)

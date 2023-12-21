@@ -55,6 +55,7 @@ class Test(unittest.TestCase):
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 # Open a new tab after making first tab blank
                 self.driver.get('about:blank')
+                self.assertEqual(self.driver.title, "")
                 print('The title of the page should be blank !' + self.driver.title + '! <- Nothing between those')
                 self.driver.execute_script("window.open('');")
 

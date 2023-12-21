@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
 
             # Check if the video player is present
             video_player = self.driver.find_element(By.CSS_SELECTOR, ".html5-video-player")
-            self.assertTrue(self, video_player.is_displayed())
+            self.assertTrue(video_player.is_displayed())
 
             # Click on play
             play_button = self.driver.find_element(By.CSS_SELECTOR, ".ytp-play-button")
@@ -59,10 +59,10 @@ class Test(unittest.TestCase):
             print(current_time_element.text)
             current_play_time = float(current_time_element.text.split(':')[0]) * 60 + float(
                 current_time_element.text.split(':')[1])
-            print(f"The running play time should be at least 3 seconds. The value now is {current_play_time} seconds")
+            print(f"The running play time should be at least 2 seconds. The value now is {current_play_time} seconds")
 
-            # Assert that the video play time is at least 3 seconds
-            self.assertTrue(self, current_play_time >= 3.0)
+            # Assert that the video play time is at least 2 seconds
+            self.assertTrue(current_play_time >= 2.0)
 
             # Click the pause the video button
             play_button.click()

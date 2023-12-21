@@ -29,12 +29,12 @@ class Test(unittest.TestCase):
 
         print(" - TEST: Verify a user can search on Twitch")
         try:
-            # Navigate to Amazon
+            # Navigate to Twitch
             test_url = "https://www.twitch.com"
             self.driver.get(test_url)
             WebDriverWait(self.driver, 10).until(EC.url_contains("https://www.twitch.tv"))
 
-            # Verify the Amazon page is loaded
+            # Verify the Twitch page is loaded
             WebDriverWait(self.driver, 10).until(EC.title_contains("Twitch"))
             page_title = self.driver.title
             self.assertEqual(page_title, "Twitch")
