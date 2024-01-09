@@ -1,12 +1,19 @@
 # Work in progress, but stuck in navigating the FxView page. I'll return to it later.
+# Turns out, in the FxView page, finding elements returns empty set.
+# So I'm forced to use keyboard navigation within the page to drive the test steps,
+# which is extremely fragile... unusable :(
+# NOTE: New work behind about:config "screenshots.browser.component.enabled"
+# may give us access to the elements? Need to figure out how to add that config as tru
+# to the profile before this test is run.
 
 import time
 import unittest
 import pyautogui
+import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 
@@ -15,13 +22,11 @@ class Test(unittest.TestCase):
         # Create a new instance of the browser
         self.options = Options()
 
-        # Firefox Location
-        # options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox-bin"
+        # Firefox/Nightly
+        self.options.binary_location = conf.app_location()
 
-        # Nightly Location
-        self.options.binary_location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox-bin"
-
-        # self.options.add_argument("-headless")
+        if conf.run_headless() is True:
+            self.options.add_argument("--headless")
 
         self.driver = webdriver.Firefox(options=self.options)
 
@@ -32,7 +37,7 @@ class Test(unittest.TestCase):
             # Navigate to an example web page
             example_url = 'https://example.com'
             self.driver.get(example_url)
-            WebDriverWait(self.driver, 10).until(EC.url_changes('https://www.example.com/'))
+            WebDriverWait(self.driver, 10).until(ec.url_changes('https://www.example.com/'))
 
             # Open a new tab
             self.driver.execute_script("window.open('');")
@@ -41,7 +46,7 @@ class Test(unittest.TestCase):
             self.driver.switch_to.window(self.driver.window_handles[1])
             test_page = "https://wiki.mozilla.org/Test_page"
             self.driver.get(test_page)
-            WebDriverWait(self.driver, 10).until(EC.title_contains('Test page - MozillaWiki'))
+            WebDriverWait(self.driver, 10).until(ec.title_contains('Test page - MozillaWiki'))
             print("Title of the page is: " + self.driver.title)
 
             # Close the current tab containing the test page
@@ -55,24 +60,9 @@ class Test(unittest.TestCase):
                 time.sleep(2)
                 print("Title of the page is: " + self.driver.title)
 
-            # Open Recently Closed Tabs section from the sidebar
-            # with ((self.driver.context(self.driver.CONTEXT_CONTENT))):
-            # Turns out the FxView page is part of the Chrome.  However, finding elements returns empty set.
-                # Recently Closed Tabs sidebar element: data-l10n-id: "firefoxview-recently-closed-nav"
-                # CSS PATH: html body fxview-category-navigation fxview-category-button.category
-                # CSS SELECTOR: fxview-category-button.category:nth-child(4)
-                # XPATH:
-                # rc_tabs_button = self.driver.find_elements(By.CLASS_NAME,"category")
-                # for x in range(len(rc_tabs_button)):
-                #    print(rc_tabs_button[x])
-                # print(rc_tabs_button)
-                # rc_tabs_button.click()
-                # WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//fxview-category-button[@data-l10n-id='firefoxview-recently-closed-nav']"))).click()
-
-                # So I'm forced to use keyboard navigation within the page to drive the test steps.
-                # And it turns out this is extremely fragile... unusable :(
+                # Open Recently Closed Tabs section from the sidebar.
                 pyautogui.PAUSE = 2.0
-                pyautogui.moveTo(10,10)
+                pyautogui.moveTo(10, 10)
                 pyautogui.press('down')
                 pyautogui.press('down')
                 pyautogui.press('tab')

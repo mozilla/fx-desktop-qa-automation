@@ -4,10 +4,11 @@
 
 import time
 import unittest
+import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 
@@ -16,13 +17,11 @@ class Test(unittest.TestCase):
         # Create a new instance of the browser
         self.options = Options()
 
-        # Firefox Location
-        # options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox-bin"
+        # Firefox/Nightly location
+        self.options.binary_location = conf.app_location()
 
-        # Nightly Location
-        self.options.binary_location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox-bin"
-
-        # self.options.add_argument("-headless")
+        if conf.run_headless() is True:
+            self.options.add_argument("--headless")
 
         self.driver = webdriver.Firefox(options=self.options)
 
@@ -33,10 +32,10 @@ class Test(unittest.TestCase):
             # Navigate to a Youtube video
             video_url = "https://www.youtube.com/watch?v=mAia0v3ojzw"
             self.driver.get(video_url)
-            WebDriverWait(self.driver, 10).until(EC.url_contains("https://www.youtube.com"))
+            WebDriverWait(self.driver, 10).until(ec.url_contains("https://www.youtube.com"))
 
-            # Verify the correct Youtube video page is loaded
-            WebDriverWait(self.driver, 10).until(EC.title_contains("Top 10"))
+            # Verify the correct YouTube video page is loaded
+            WebDriverWait(self.driver, 10).until(ec.title_contains("Top 10"))
             page_title = self.driver.title
             self.assertEqual(page_title, "Top 10 built-in FireFox features | Compilation | #AskFirefox - YouTube")
             print("Title of the web page is: " + page_title)
@@ -52,7 +51,7 @@ class Test(unittest.TestCase):
 
             # Wait for the current time element to be present
             current_time_element = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '.ytp-time-current')))
+                ec.presence_of_element_located((By.CSS_SELECTOR, '.ytp-time-current')))
 
             # Wait for the video to play for a bit, then get the current play time
             time.sleep(3)

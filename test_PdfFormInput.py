@@ -1,11 +1,13 @@
 import time
 import unittest
 import os
+import platform
 import pyautogui
+import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 
@@ -14,16 +16,13 @@ class Test(unittest.TestCase):
         # Create a new instance of the browser
         self.options = Options()
 
-        # Firefox Location
-        # options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox-bin"
+        # Firefox/Nightly location
+        self.options.binary_location = conf.app_location()
 
-        # Nightly Location
-        self.options.binary_location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox-bin"
-
-        # self.options.add_argument("-headless")
+        if conf.run_headless() is True:
+            self.options.add_argument("--headless")
 
         self.driver = webdriver.Firefox(options=self.options)
-
 
     def test_pdf_form_fill(self):
 
@@ -33,13 +32,12 @@ class Test(unittest.TestCase):
             # Navigate to the test form
             test_url = 'http://foersom.com/net/HowTo/data/OoPdfFormExample.pdf'
             self.driver.get(test_url)
-            WebDriverWait(self.driver, 10).until(EC.url_changes('foersom.com/net/HowTo/data/OoPdfFormExample.pdf'))
+            WebDriverWait(self.driver, 10).until(ec.url_changes('foersom.com/net/HowTo/data/OoPdfFormExample.pdf'))
 
             # Enter full name in the PDF form fields
             # Given name text box element: id=pdfjs_internal_id_5R value="" name="Given Name Text Box"
-            # given_name_field = self.driver.find_element(By.ID, "pdfjs_internal_id_5R")
             given_name_field = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.ID, "pdfjs_internal_id_5R")))
+                ec.presence_of_element_located((By.ID, "pdfjs_internal_id_5R")))
             given_name_field.send_keys("Mary")
 
             # Family name text box element: id=pdfjs_internal_id_7R value="" name="Family Name Text Box"
@@ -62,20 +60,31 @@ class Test(unittest.TestCase):
             print('The title of the tab should be blank !' + self.driver.title + '! <- Nothing between those')
             self.driver.execute_script("window.open('');")
 
+            # Determine system user and set paths per platform
+            user = os.environ.get('USER')
+            this_platform = platform.system()
+            saved_pdf_location = ""
+            if this_platform == 'Windows':
+                saved_pdf_location = "C:\\Users\\" + user + "\\Downloads\\OoPdfFormExample.pdf"
+            elif this_platform == 'Darwin':
+                saved_pdf_location = "/Users/" + user + "/Downloads/OoPdfFormExample.pdf"
+            elif this_platform == 'Linux':
+                saved_pdf_location = "/home/" + user + "/Downloads/OoPdfFormExample.pdf"
+
+            saved_pdf_url = "file://" + saved_pdf_location
+
             # Switch to the new tab and open the saved PDF
             self.driver.switch_to.window(self.driver.window_handles[1])
-            saved_pdf_location = "/Users/tracy/Downloads/OoPdfFormExample.pdf"
-            saved_pdf_url = "file://" + saved_pdf_location
             self.driver.get(saved_pdf_url)
-            WebDriverWait(self.driver, 10).until(EC.title_contains('PDF Form Example'))
+            WebDriverWait(self.driver, 10).until(ec.title_contains('PDF Form Example'))
             print("Title of the loaded file is: " + self.driver.title)
 
             # Verify the values in the form fields are correctly filled in
             given_name_saved = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.ID, "pdfjs_internal_id_5R")))
+                ec.presence_of_element_located((By.ID, "pdfjs_internal_id_5R")))
             given_value = given_name_saved.get_attribute("value")
             print("The value of the Given name is '" + given_value + "' <- should be 'Mary'")
-            self.assertEqual(given_value,"Mary")
+            self.assertEqual(given_value, "Mary")
             family_name_saved = self.driver.find_element(By.ID, "pdfjs_internal_id_7R")
             family_value = family_name_saved.get_attribute("value")
             print("The value of the Family name is '" + family_value + "' <- should be 'Smithsonian'")
@@ -89,7 +98,8 @@ class Test(unittest.TestCase):
                 os.remove(saved_pdf_location)
                 print(saved_pdf_location + " has been deleted.")
             except OSError as error:
-                print("There was an error. The PDF probably doesn't exist.")
+                print("There was an error.")
+                print(error)
 
         finally:
             # Close the browser after the test is complete

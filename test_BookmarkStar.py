@@ -1,23 +1,23 @@
 import time
 import unittest
+import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+
 
 class Test(unittest.TestCase):
     def setUp(self):
         # Create a new instance of the browser
         self.options = Options()
 
-        # Firefox Location
-        # options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox-bin"
+        # Firefox/Nightly location
+        self.options.binary_location = conf.app_location()
 
-        # Nightly Location
-        self.options.binary_location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox-bin"
-
-        # self.options.add_argument("-headless")
+        if conf.run_headless() is True:
+            self.options.add_argument("--headless")
 
         self.driver = webdriver.Firefox(options=self.options)
 
@@ -28,7 +28,7 @@ class Test(unittest.TestCase):
             # Navigate to a common URL
             test_url = 'https://mozilla.com'
             self.driver.get(test_url)
-            WebDriverWait(self.driver, 10).until(EC.url_changes(test_url))
+            WebDriverWait(self.driver, 10).until(ec.url_changes(test_url))
 
             # Click Star button
             with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -43,7 +43,7 @@ class Test(unittest.TestCase):
 
                 # Check to confirm the Star button is filled in
                 starred_value = star_button.get_attribute("starred")
-                self.assertEqual(starred_value,"true")
+                self.assertEqual(starred_value, "true")
                 print("The value of the starred attribute is '" + starred_value + "'")
 
                 # Add a check for the presence of the bookmark. This is much more challenging
@@ -62,12 +62,11 @@ class Test(unittest.TestCase):
                 # Switch to the new tab and open the Mozilla URL
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 self.driver.get(test_url)
-                WebDriverWait(self.driver, 10).until(EC.url_changes('https://mozilla.com'))
+                WebDriverWait(self.driver, 10).until(ec.url_changes('https://mozilla.com'))
 
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 self.assertEqual(starred_value, "true")
                 print("2nd check: The value of the starred attribute is '" + starred_value + "'")
-
 
         finally:
             # Close the browser after the test is complete
