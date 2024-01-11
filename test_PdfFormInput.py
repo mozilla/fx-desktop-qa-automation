@@ -2,13 +2,13 @@ import time
 import unittest
 import os
 import platform
-import keyboard
 import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from pynput.keyboard import Key, Controller
 
 
 class Test(unittest.TestCase):
@@ -50,7 +50,11 @@ class Test(unittest.TestCase):
 
             # Wait for the system Save dialog
             time.sleep(2)
-            keyboard.send('enter')
+
+            # Press and release the Enter key
+            keyboard = Controller()
+            keyboard.press(Key.enter)
+            keyboard.release(Key.enter)
 
             # Wait for the download to complete
             time.sleep(3)

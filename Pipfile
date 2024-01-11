@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 selenium = "*"
-keyboard = "*"
+pynput = "*"
 
 [dev-packages]
 
