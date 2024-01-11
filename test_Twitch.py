@@ -2,10 +2,10 @@
 
 import time
 import unittest
-import pyautogui
 import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -39,22 +39,19 @@ class Test(unittest.TestCase):
             self.assertEqual(page_title, "Twitch")
             print("Title of the web page is: " + page_title)
 
-            # Tab to the search input field and enter "Diablo IV"
-            # (had to do this 'cause locating the search field by element wasn't working)
-            pyautogui.PAUSE = 1.0
-            pyautogui.moveTo(10, 10)
-            pyautogui.press('tab', presses=5)
-            pyautogui.typewrite("Diablo IV")
-            pyautogui.press('enter')
+            # Find the search input field and enter "Diablo IV"
+            search_input = WebDriverWait(self.driver, 10).until(
+                ec.presence_of_element_located((By.CSS_SELECTOR, 'input[aria-label="Search Input"]')))
+            search_input.send_keys("Diablo IV")
+            search_input.send_keys(Keys.RETURN)
 
             # Wait for the search results to load
-            # CSS SELECTOR: .kEZcIh > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) >
             item_element = WebDriverWait(self.driver, 10).until(
                 ec.presence_of_element_located((By.CSS_SELECTOR,
                                                 '.kEZcIh > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > '
                                                 'div:nth-child(1) > strong:nth-child(1) > a:nth-child(1)')))
             item_element_text = item_element.text
-            print("Element found by class CSS:", item_element_text)
+            print("Element found by CSS:", item_element_text)
             self.assertIn("Diablo", item_element_text)
 
             time.sleep(2)

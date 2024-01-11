@@ -2,7 +2,7 @@ import time
 import unittest
 import os
 import platform
-import pyautogui
+import keyboard
 import configuration as conf
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -49,8 +49,8 @@ class Test(unittest.TestCase):
             download_button.click()
 
             # Wait for the system Save dialog
-            time.sleep(1)
-            pyautogui.press('enter')
+            time.sleep(2)
+            keyboard.send('enter')
 
             # Wait for the download to complete
             time.sleep(3)
