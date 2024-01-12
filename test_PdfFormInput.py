@@ -29,6 +29,7 @@ class Test(unittest.TestCase):
         # From TestRail: https://testrail.stage.mozaws.net/index.php?/cases/view/1017484
         print(" - TEST: Verify PDF form input")
         try:
+            this_platform = platform.system()
             # Navigate to the test form
             test_url = 'http://foersom.com/net/HowTo/data/OoPdfFormExample.pdf'
             self.driver.get(test_url)
@@ -50,9 +51,27 @@ class Test(unittest.TestCase):
 
             # Wait for the system Save dialog
             time.sleep(2)
+            keyboard = Controller()
+
+            # On Linux the Save button isn't in focus by default, we have to navigate to it
+            if this_platform == 'Linux':
+                keyboard.press(Key.alt)
+                keyboard.press(Key.tab)
+                keyboard.release(Key.tab)
+                keyboard.release(Key.alt)
+                time.sleep(1)
+                keyboard.press(Key.alt)
+                keyboard.press(Key.tab)
+                keyboard.release(Key.tab)
+                keyboard.release(Key.alt)
+                time.sleep(1)
+                keyboard.press(Key.tab)
+                keyboard.release(Key.tab)
+                time.sleep(1)
+                keyboard.press(Key.tab)
+                keyboard.release(Key.tab)
 
             # Press and release the Enter key
-            keyboard = Controller()
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
 
@@ -66,7 +85,6 @@ class Test(unittest.TestCase):
 
             # Determine system user and set paths per platform
             user = os.environ.get('USER')
-            this_platform = platform.system()
             saved_pdf_location = ""
             if this_platform == 'Windows':
                 saved_pdf_location = "C:\\Users\\" + user + "\\Downloads\\OoPdfFormExample.pdf"
