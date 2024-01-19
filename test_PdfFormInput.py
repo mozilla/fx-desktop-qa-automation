@@ -84,13 +84,15 @@ class Test(unittest.TestCase):
             self.driver.execute_script("window.open('');")
 
             # Determine system user and set paths per platform
-            user = os.environ.get('USER')
             saved_pdf_location = ""
             if this_platform == 'Windows':
+                user = os.environ.get('USERNAME')
                 saved_pdf_location = "C:\\Users\\" + user + "\\Downloads\\OoPdfFormExample.pdf"
             elif this_platform == 'Darwin':
+                user = os.environ.get('USER')
                 saved_pdf_location = "/Users/" + user + "/Downloads/OoPdfFormExample.pdf"
             elif this_platform == 'Linux':
+                user = os.environ.get('USER')
                 saved_pdf_location = "/home/" + user + "/Downloads/OoPdfFormExample.pdf"
 
             saved_pdf_url = "file://" + saved_pdf_location

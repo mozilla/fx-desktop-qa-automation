@@ -38,18 +38,20 @@ class Test(unittest.TestCase):
                 star_button = self.driver.find_element(By.ID, "star-button")
                 star_button.click()
 
-                # Wait for the bookmark dialog to auto dismiss
-                time.sleep(5)
+                # Wait for the bookmark dialog to open then Save bookmark
+                save_button = WebDriverWait(self.driver, 10).until(
+                    ec.presence_of_element_located((By.ID, "editBookmarkPanelDoneButton")))
+                save_button.click()
 
                 # Check to confirm the Star button is filled in
                 starred_value = star_button.get_attribute("starred")
                 self.assertEqual(starred_value, "true")
                 print("The value of the starred attribute is '" + starred_value + "'")
 
-                # Add a check for the presence of the bookmark. This is much more challenging
-                # as we can't get access to the bookmark Sidebar nor the Library via DOM. As such,
-                # our option here is to open a new tab, visit the same URL that was bookmarked, then
-                # confirm the star is filled in, indicating the bookmark exist in Firefox.
+            # Add a check for the presence of the bookmark. This is much more challenging
+            # as we can't get access to the bookmark Sidebar nor the Library via DOM. As such,
+            # our option here is to open a new tab, visit the same URL that was bookmarked, then
+            # confirm the star is filled in, indicating the bookmark exist in Firefox.
 
             # Open a new Tab with the previously bookmarked page
             with self.driver.context(self.driver.CONTEXT_CONTENT):
