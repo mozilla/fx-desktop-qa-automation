@@ -20,38 +20,32 @@ Install the build in a Custom directory as follows per Platform:
 Launch the build manually one time to navigate through any system permission dialogs, then exit Firefox.
 
 ### Getting set up
-- If you don't have Python installed, download and install it from the official website
-  [Python Downloads](https://www.python.org/downloads/). Make sure to 
-  check the option to add Python to the system PATH during installation.
-- Install pip - run: `sudo apt install python3-pip -y`
+- If you don't have Python 3.10 or higher installed, download and install it from the official website
+  [Python Downloads](https://www.python.org/downloads/). Make sure to check the option to add Python 
+  to the system PATH during installation. For Ubuntu, consider using the
+  [Deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) if your version's apt repo
+  does not contain a version higher than 3.9.
+- Install pip - run `python -m ensurepip`
   confirm: `pip --version`
-- Install Selenium: `pip install selenium`
 - Download and install GeckoDriver: 
   - Get the latest version of [GeckoDriver](https://github.com/mozilla/geckodriver/releases) for your Platform.
   - Extract and install it, then ensure that directory is in your PATH
 - Get the project from git:
-  - On macOS and Linux:
+  - On Linux:
     - run: `sudo apt install git`
-  - For Windows
+  - On Windows:
     - run: `choco install git` (have to install chocolatey, if not present)
+  - On MacOS:
+    - run: `git --version` (likely already installed, follow install prompts if not)
   - In a location of your choice, run: `git clone https://github.com/Tracy-Walker/FxIncidentSmoketests FxSmoketests`
 - Use pip to install Pipenv:
-  - run: `pip install --user pipenv`
-- Install virtualenv:
-  - run: pip install virtualenv
-  - cd to the project folder FxSmoketests
-    - On macOS and Linux:
-      - run: `virtualenv venv`
-      - run: `source venv/bin/activate`
-    - On Windows:
-      - cd to path\to\your\FxSmoketests\venv\Scripts
-      - run: `activate`
-  - Then return to top level of the project directory (containing the test scripts)
-- Install required packages:
-  - run `pip install -r requirements.txt`
+  - run: `pip install --user pipenv`. If prompted to add a directory to PATH, please do so. Windows
+    users may need to restart their shell.
+- Install dependencies: `pipenv install`
+- Start virtual environment: `pipenv shell`
   - Ensure pynput is installed
-    - run `python -m pip install pynput`
     - run: `pip list` to see if it's in the list
+      - if not, run:`python -m pip install pynput`
     - you still may run into problems when running the test suite later. 
       If pynput is not found, ensure the libraries are in your PATH.
 - Ensure your system allows the following to run in the virtual env:
@@ -62,13 +56,15 @@ Launch the build manually one time to navigate through any system permission dia
 - CD into the FxSmoketests project directory
 - run: `python main.py`
 - There will be some warnings. Ignore them.
-- Test results are displayed inline. ie:
+- IMPORTANT: On MacOS you may be prompted to allow Terminal to control accessibility settings.
+  Allow this. You may need to re-run the tests.
+- Test results are displayed inline. i.e.:
   - Ran 7 tests in 51.361s
-    - "OK" (test run passed all tests)
+    - "ok" (test run passed all tests)
     - or "FAILED (errors=x)
 - On Failure:
   - rerun the test suite as above - run: `python main.py`
-  - or just the failed test; ie. `python test_Amazon.py`
+  - or just the failed test; i.e.: `python test_Amazon.py`
 
 ### On the horizon
 I'll rewrite these test in pytest format instead of unittest. 
