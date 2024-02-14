@@ -6,5 +6,6 @@ name = "pypi"
 [packages]
 selenium = "*"
 pynput = "*"
+pytest = "*"
 
 [dev-packages]
