@@ -67,4 +67,4 @@ Launch the build manually one time to navigate through any system permission dia
 
 - On Failure:
   - rerun the test suite as above - run: `pytest`
-  - or just the failed test; i.e.: `pytesr test_amazon.py`
+  - or just the failed test; i.e.: `pytest test_amazon.py`
