@@ -36,40 +36,41 @@ def fx_executable(request):
 
     # Path to build location.  Use Custom by installing your incident build to the coinciding path.
     location = ""
-    if sys_platform == 'Windows':
-        if version == 'Firefox':
+    if sys_platform == "Windows":
+        if version == "Firefox":
             location = "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
-        elif version == 'Nightly':
+        elif version == "Nightly":
             location = "C:\\Program Files\\Nightly Firefox\\firefox.exe"
-        elif version == 'Custom':
+        elif version == "Custom":
             location = "C:\\Program Files\\Custom Firefox\\firefox.exe"
-    elif sys_platform == 'Darwin':
-        if version == 'Firefox':
+    elif sys_platform == "Darwin":
+        if version == "Firefox":
             location = "/Applications/Firefox.app/Contents/MacOS/firefox"
-        elif version == 'Nightly':
+        elif version == "Nightly":
             location = "/Applications/Nightly Firefox.app/Contents/MacOS/firefox"
-        elif version == 'Custom':
+        elif version == "Custom":
             location = "/Applications/Custom Firefox.app/Contents/MacOS/firefox"
-    elif sys_platform == 'Linux':
-        user = os.environ.get('USER')
-        if version == 'Firefox':
-            location = "/home/" + user + "/Desktop/Firefox/firefox"
-        elif version == 'Nightly':
-            location = "/home/" + user + "/Desktop/Nightly Firefox/firefox"
-        elif version == 'Custom':
-            location = "/home/" + user + "/Desktop/Custom Firefox/firefox"
+    elif sys_platform == "Linux":
+        user = os.environ.get("USER")
+        if version == "Firefox":
+            location = f"/home/{user}/Desktop/Firefox/firefox"
+        elif version == "Nightly":
+            location = f"/home/{user}/Desktop/Nightly Firefox/firefox"
+        elif version == "Custom":
+            location = f"/home/{user}/Desktop/Custom Firefox/firefox"
 
     return location
 
 
 @pytest.fixture(autouse=True)
-def session(fx_executable, opt_headless):
+def session(fx_executable, opt_headless, test_opts):
     # create a new instance of the browser
     options = Options()
     if opt_headless:
         options.add_argument("--headless")
     options.binary_location = fx_executable
-    options.set_preference("browser.toolbars.bookmarks.visibility", "always")
+    for opt, value in test_opts:
+        options.set_preference(opt, value)
     s = webdriver.Firefox(options=options)
     yield s
 
