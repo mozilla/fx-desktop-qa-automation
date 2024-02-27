@@ -8,28 +8,28 @@ from selenium.webdriver.firefox.options import Options
 def pytest_addoption(parser):
     # set the location of the fx binary from command line if provided
     parser.addoption(
-        "--fx_edition",
+        "--fx-edition",
         action="store",
         default="Custom",
         help="Firefox edition to test. See README for exact paths to builds",
     )
 
     parser.addoption(
-        "--run_headless",
+        "--run-headless",
         action="store",
         default=False,
-        help="Run in headless mode: --run_headless=True",
+        help="Run in headless mode: --run-headless=True",
     )
 
 
 @pytest.fixture()
 def opt_headless(request):
-    return request.config.getoption("--run_headless")
+    return request.config.getoption("--run-headless")
 
 
 @pytest.fixture()
 def fx_executable(request):
-    version = request.config.getoption("--fx_edition")
+    version = request.config.getoption("--fx-edition")
 
     # Get the platform this is running on
     sys_platform = platform.system()
@@ -63,7 +63,7 @@ def fx_executable(request):
 
 
 @pytest.fixture(autouse=True)
-def session(fx_executable, opt_headless, test_opts):
+def driver(fx_executable, opt_headless, test_opts):
     # create a new instance of the browser
     options = Options()
     if opt_headless:

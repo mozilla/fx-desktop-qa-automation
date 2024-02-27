@@ -7,5 +7,9 @@ name = "pypi"
 selenium = "*"
 pynput = "*"
 pytest = "*"
+pytest-httpserver = "*"
+requests = "*"
 
 [dev-packages]
+werkzeug = "*"
+selenium-wire = "*"

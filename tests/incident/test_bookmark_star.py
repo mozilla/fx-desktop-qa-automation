@@ -9,18 +9,18 @@ def test_url():
     return "https://www.mozilla.com"
 
 
-def test_bookmark(session, test_url):
+def test_bookmark(driver, test_url):
     print(" - TEST: Verify page can be Bookmarked")
-    session.get(test_url)
-    WebDriverWait(session, 10).until(EC.url_changes(test_url))
+    driver.get(test_url)
+    WebDriverWait(driver, 10).until(EC.url_changes(test_url))
 
     # Click Star button
-    with session.context(session.CONTEXT_CHROME):
-        star_button = session.find_element(By.ID, "star-button")
+    with driver.context(driver.CONTEXT_CHROME):
+        star_button = driver.find_element(By.ID, "star-button")
         star_button.click()
 
         # Wait for the bookmark dialog to open then Save bookmark
-        save_button = WebDriverWait(session, 10).until(
+        save_button = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "editBookmarkPanelDoneButton"))
         )
         save_button.click()
@@ -31,23 +31,23 @@ def test_bookmark(session, test_url):
         del starred_value
 
     # Check for the presence of the bookmark.
-    with session.context(session.CONTEXT_CONTENT):
+    with driver.context(driver.CONTEXT_CONTENT):
         # Open a new tab after making first tab blank
-        session.get("about:blank")
-        assert session.title == ""
+        driver.get("about:blank")
+        assert driver.title == ""
         print(
             "The title of the page should be blank !"
-            + session.title
+            + driver.title
             + "! <- Nothing between those"
         )
-        session.execute_script("window.open('');")
+        driver.execute_script("window.open('');")
 
         # Switch to the new tab and open the Mozilla URL
-        session.switch_to.window(session.window_handles[1])
-        session.get(test_url)
-        WebDriverWait(session, 10).until(EC.url_changes("https://mozilla.com"))
+        driver.switch_to.window(driver.window_handles[1])
+        driver.get(test_url)
+        WebDriverWait(driver, 10).until(EC.url_changes("https://mozilla.com"))
 
-    with session.context(session.CONTEXT_CHROME):
+    with driver.context(driver.CONTEXT_CHROME):
         starred_value = star_button.get_attribute("starred")
         assert starred_value == "true"
         print(

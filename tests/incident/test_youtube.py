@@ -14,16 +14,16 @@ def test_url():
     return "https://www.youtube.com/watch?v=mAia0v3ojzw"
 
 
-def test_youtube_search(session, test_url):
+def test_youtube_search(driver, test_url):
     print(" - TEST: Verify a user can play a Youtube video")
 
     # Navigate to a Youtube video
-    session.get(test_url)
-    WebDriverWait(session, 10).until(EC.url_contains("https://www.youtube.com"))
+    driver.get(test_url)
+    WebDriverWait(driver, 10).until(EC.url_contains("https://www.youtube.com"))
 
     # Verify the correct YouTube video page is loaded
-    WebDriverWait(session, 10).until(EC.title_contains("Top 10"))
-    page_title = session.title
+    WebDriverWait(driver, 10).until(EC.title_contains("Top 10"))
+    page_title = driver.title
     assert (
         page_title
         == "Top 10 built-in Firefox features | Compilation | #AskFirefox - YouTube"
@@ -32,15 +32,15 @@ def test_youtube_search(session, test_url):
     time.sleep(2)
 
     # Check if the video player is present
-    video_player = session.find_element(By.CSS_SELECTOR, ".html5-video-player")
+    video_player = driver.find_element(By.CSS_SELECTOR, ".html5-video-player")
     assert video_player.is_displayed()
 
     # Click on play
-    play_button = session.find_element(By.CSS_SELECTOR, ".ytp-play-button")
+    play_button = driver.find_element(By.CSS_SELECTOR, ".ytp-play-button")
     play_button.click()
 
     # Wait for the current time element to be present
-    current_time_element = WebDriverWait(session, 10).until(
+    current_time_element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".ytp-time-current"))
     )
 
