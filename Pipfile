@@ -13,3 +13,4 @@ requests = "*"
 [dev-packages]
 werkzeug = "*"
 selenium-wire = "*"
+faker = "*"

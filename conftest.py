@@ -75,3 +75,8 @@ def driver(fx_executable, opt_headless, test_opts):
     yield s
 
     s.quit()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def faker_seed():
+    return 19980331

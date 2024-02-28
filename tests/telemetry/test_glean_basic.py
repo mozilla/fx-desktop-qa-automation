@@ -90,9 +90,7 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     engine_select.click()
     list_item = driver.find_element(*AboutPrefs.search_engine_option("Google"))
     list_item.click()
-    wait.until(
-        EC.visibility_of_element_located(AboutPrefs.any_dropdown_active)
-    )
+    wait.until(EC.visibility_of_element_located(AboutPrefs.any_dropdown_active))
     list_item.send_keys(
         Keys.DOWN, Keys.DOWN, Keys.DOWN, Keys.RETURN
     )  # we hack because we care - clicking on these special elements doesn't always work
