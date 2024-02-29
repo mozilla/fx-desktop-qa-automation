@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 
 @dataclass
 class AboutPrefs:
-    # Docstring TK
+    """Page Object Model for about:preferences"""
 
     # Categories
     category_search = (By.ID, "category-search")
@@ -22,8 +22,12 @@ class AboutPrefs:
 
 @dataclass
 class AboutGlean:
-    # Docstring TK
+    """Page Object Model for about:glean"""
 
     # Elements
     ping_id_input = (By.ID, "tag-pings")
     submit_button = (By.ID, "controls-submit")
+
+# Endnotes:
+#  - If you're looking for about:logins, that page has so many shadow DOMs
+#    that all elements exist in shadow_dom.py.

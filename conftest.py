@@ -3,10 +3,12 @@ import os
 import platform
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from typing import Tuple
+from typing import List
 
 
 def pytest_addoption(parser):
-    # set the location of the fx binary from command line if provided
+    """Set the location of the fx binary from command line if provided"""
     parser.addoption(
         "--fx-edition",
         action="store",
@@ -29,6 +31,7 @@ def opt_headless(request):
 
 @pytest.fixture()
 def fx_executable(request):
+    """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-edition")
 
     # Get the platform this is running on
@@ -63,13 +66,17 @@ def fx_executable(request):
 
 
 @pytest.fixture(autouse=True)
-def driver(fx_executable, opt_headless, test_opts):
-    # create a new instance of the browser
+def driver(fx_executable: str, opt_headless: bool, set_prefs: List[Tuple]):
+    """
+    Return the webdriver object.
+
+    All arguments are fixtures being requested.
+    """
     options = Options()
     if opt_headless:
         options.add_argument("--headless")
     options.binary_location = fx_executable
-    for opt, value in test_opts:
+    for opt, value in set_prefs:
         options.set_preference(opt, value)
     s = webdriver.Firefox(options=options)
     yield s

@@ -2,5 +2,5 @@ import pytest
 
 
 @pytest.fixture()
-def test_opts():
+def set_prefs():
     return [("browser.toolbars.bookmarks.visibility", "always")]

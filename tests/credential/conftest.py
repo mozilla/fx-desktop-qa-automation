@@ -1,23 +1,16 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 from modules.util import BrowserActions
 from modules.shadow_dom import AboutLogins
 from faker import Faker
 from faker.providers import internet
 from faker.providers import misc
-from collections.abc import Iterable
-
-
-from time import sleep
 
 
 @pytest.fixture()
-def test_opts():
+def set_prefs():
+    """Set prefs"""
     return []
 
 
@@ -34,9 +27,12 @@ def origins():
 
 
 @pytest.fixture()
-def driver_and_saved_usernames(
-    driver: Firefox, faker: Faker, origins
-) -> Iterable[Firefox, Iterable[str]]:
+def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
+    """
+    Adds 6 fake logins to the session's about:logins. The final two usernames are the same.
+    Yields a Tuple of the WebDriver object under test and a five-element list of the
+    unique usernames added. (Five, because the last element was reused.)
+    """
     ba = BrowserActions(driver)
     faker.add_provider(internet)
     faker.add_provider(misc)
@@ -55,7 +51,6 @@ def driver_and_saved_usernames(
 
     usernames = []
     for i in range(5):
-        print(i)
         candidate_username = ""
         while candidate_username == "" or candidate_username[:5] in [
             u[:5] for u in usernames

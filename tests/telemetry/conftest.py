@@ -3,11 +3,13 @@ import pytest
 
 @pytest.fixture(scope="session")
 def httpserver_listen_address():
+    """Set port for local http server"""
     return ("127.0.0.1", 5312)
 
 
 @pytest.fixture()
-def test_opts():
+def set_prefs():
+    """Set prefs"""
     return [
         ("browser.search.region", "US"),
         ("privacy.donottrackheader.enabled", False),

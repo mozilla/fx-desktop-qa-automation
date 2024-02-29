@@ -70,15 +70,17 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     driver.get("about:glean")
     ping_input = driver.find_element(*AboutGlean.ping_id_input)
     ba.clear_and_fill(ping_input, ping)
-    ba.wait_on_element_contains_text(
-        (By.CSS_SELECTOR, f"label[for='{AboutGlean.submit_button[1]}'"), ping
+    wait.until(
+        EC.text_to_be_present_in_element(
+            (By.CSS_SELECTOR, f"label[for='{AboutGlean.submit_button[1]}'"), ping
+        )
     )
     driver.find_element(*AboutGlean.submit_button).click()
 
     # Search 1 (Google)
     sleep(1)
     ba.search("trombone")
-    ba.wait_on_title("Search")
+    wait.until(EC.title_contains("Search"))
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='navigation']"))
     )
@@ -98,7 +100,7 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
 
     # Search 2 (DDG)
     ba.search("trumpet")
-    ba.wait_on_title("DuckDuckGo")
+    wait.until(EC.title_contains("DuckDuckGo"))
     wait.until(EC.visibility_of_element_located((By.ID, "more-results")))
 
     # We could go back to about:glean, but this is faster
