@@ -14,33 +14,33 @@ def test_url():
     return "https://www.amazon.com"
 
 
-def test_amazon_search(session, test_url):
+def test_amazon_search(driver, test_url):
     print(" - TEST: Verify a user can search on Amazon")
 
     # Remove navigator.webdriver Flag using JavaScript to avoid bot detection by Amazon
     # NOTE: This worked for a while, then it intermittently stops working and Amazon Captcha got us again.
-    session.execute_script(
+    driver.execute_script(
         "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
     )
 
-    session.get(test_url)
-    WebDriverWait(session, 10).until(EC.url_contains("https://www.amazon.com"))
+    driver.get(test_url)
+    WebDriverWait(driver, 10).until(EC.url_contains("https://www.amazon.com"))
 
     # Verify the Amazon page is loaded
-    WebDriverWait(session, 10).until(EC.title_contains("Amazon.com"))
-    page_title = session.title
+    WebDriverWait(driver, 10).until(EC.title_contains("Amazon.com"))
+    page_title = driver.title
     assert page_title == "Amazon.com. Spend less. Smile more."
     print("Title of the web page is: " + page_title)
 
     # Find the search input field and enter "soccer ball"
-    search_input = WebDriverWait(session, 10).until(
+    search_input = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "twotabsearchtextbox"))
     )
     time.sleep(2)
     search_input.send_keys("soccer ball", Keys.RETURN)
 
     # Wait for the search results to load
-    item_element = WebDriverWait(session, 10).until(
+    item_element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (
                 By.XPATH,

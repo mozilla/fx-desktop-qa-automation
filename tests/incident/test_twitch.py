@@ -10,21 +10,21 @@ def test_url():
     return "https://www.twitch.com"
 
 
-def test_twitch_search(session, test_url):
+def test_twitch_search(driver, test_url):
     print(" - TEST: Verify a user can search on Twitch")
 
     # Navigate to Twitch
-    session.get(test_url)
-    WebDriverWait(session, 10).until(EC.url_contains("https://www.twitch.tv"))
+    driver.get(test_url)
+    WebDriverWait(driver, 10).until(EC.url_contains("https://www.twitch.tv"))
 
     # Verify the Twitch page is loaded
-    WebDriverWait(session, 10).until(EC.title_contains("Twitch"))
-    page_title = session.title
+    WebDriverWait(driver, 10).until(EC.title_contains("Twitch"))
+    page_title = driver.title
     assert page_title == "Twitch"
     print("Title of the web page is: " + page_title)
 
     # Find the search input field and enter "Diablo IV"
-    search_input = WebDriverWait(session, 10).until(
+    search_input = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, 'input[aria-label="Search Input"]')
         )
@@ -33,7 +33,7 @@ def test_twitch_search(session, test_url):
     search_input.send_keys(Keys.RETURN)
 
     # Wait for the search results to load
-    item_element = WebDriverWait(session, 10).until(
+    item_element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (
                 By.CSS_SELECTOR,

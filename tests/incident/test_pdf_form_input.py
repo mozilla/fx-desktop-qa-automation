@@ -13,30 +13,30 @@ def test_url():
     return "http://foersom.com/net/HowTo/data/OoPdfFormExample.pdf"
 
 
-def test_pdf_form_fill(session, test_url):
+def test_pdf_form_fill(driver, test_url):
     # From TestRail: https://testrail.stage.mozaws.net/index.php?/cases/view/1017484
     print(" - TEST: Verify PDF form input")
 
     this_platform = platform.system()
     # Navigate to the test form
-    session.get(test_url)
-    WebDriverWait(session, 10).until(
+    driver.get(test_url)
+    WebDriverWait(driver, 10).until(
         EC.url_changes("foersom.com/net/HowTo/data/OoPdfFormExample.pdf")
     )
 
     # Enter full name in the PDF form fields
     # Given name text box element: id=pdfjs_internal_id_5R value="" name="Given Name Text Box"
-    given_name_field = WebDriverWait(session, 10).until(
+    given_name_field = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "pdfjs_internal_id_5R"))
     )
     given_name_field.send_keys("Mary")
 
     # Family name text box element: id=pdfjs_internal_id_7R value="" name="Family Name Text Box"
-    family_name_field = session.find_element(By.ID, "pdfjs_internal_id_7R")
+    family_name_field = driver.find_element(By.ID, "pdfjs_internal_id_7R")
     family_name_field.send_keys("Smithsonian")
 
     # Save the PDF to Downloads
-    download_button = session.find_element(By.ID, "download")
+    download_button = driver.find_element(By.ID, "download")
     download_button.click()
 
     # Wait for the system Save dialog
@@ -69,13 +69,13 @@ def test_pdf_form_fill(session, test_url):
     time.sleep(3)
 
     # Open a new tab after making the first tab blank
-    session.get("about:blank")
+    driver.get("about:blank")
     print(
         "The title of the tab should be blank !"
-        + session.title
+        + driver.title
         + "! <- Nothing between those"
     )
-    session.execute_script("window.open('');")
+    driver.execute_script("window.open('');")
 
     # Determine system user and set paths per platform
     saved_pdf_location = ""
@@ -92,19 +92,19 @@ def test_pdf_form_fill(session, test_url):
     saved_pdf_url = "file://" + saved_pdf_location
 
     # Switch to the new tab and open the saved PDF
-    session.switch_to.window(session.window_handles[1])
-    session.get(saved_pdf_url)
-    WebDriverWait(session, 10).until(EC.title_contains("PDF Form Example"))
-    print("Title of the loaded file is: " + session.title)
+    driver.switch_to.window(driver.window_handles[1])
+    driver.get(saved_pdf_url)
+    WebDriverWait(driver, 10).until(EC.title_contains("PDF Form Example"))
+    print("Title of the loaded file is: " + driver.title)
 
     # Verify the values in the form fields are correctly filled in
-    given_name_saved = WebDriverWait(session, 10).until(
+    given_name_saved = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "pdfjs_internal_id_5R"))
     )
     given_value = given_name_saved.get_attribute("value")
     print("The value of the Given name is '" + given_value + "' <- should be 'Mary'")
     assert given_value == "Mary"
-    family_name_saved = session.find_element(By.ID, "pdfjs_internal_id_7R")
+    family_name_saved = driver.find_element(By.ID, "pdfjs_internal_id_7R")
     family_value = family_name_saved.get_attribute("value")
     print(
         "The value of the Family name is '"
@@ -114,7 +114,7 @@ def test_pdf_form_fill(session, test_url):
     assert family_value == "Smithsonian"
 
     # Close the current tab containing the PDF
-    session.close()
+    driver.close()
 
     # remove the downloaded PDF from the system
     try:

@@ -3,33 +3,36 @@ import os
 import platform
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from typing import Tuple
+from typing import List
 
 
 def pytest_addoption(parser):
-    # set the location of the fx binary from command line if provided
+    """Set the location of the fx binary from command line if provided"""
     parser.addoption(
-        "--fx_edition",
+        "--fx-edition",
         action="store",
         default="Custom",
         help="Firefox edition to test. See README for exact paths to builds",
     )
 
     parser.addoption(
-        "--run_headless",
+        "--run-headless",
         action="store",
         default=False,
-        help="Run in headless mode: --run_headless=True",
+        help="Run in headless mode: --run-headless=True",
     )
 
 
 @pytest.fixture()
 def opt_headless(request):
-    return request.config.getoption("--run_headless")
+    return request.config.getoption("--run-headless")
 
 
 @pytest.fixture()
 def fx_executable(request):
-    version = request.config.getoption("--fx_edition")
+    """Get the Fx executable path based on platform and edition request."""
+    version = request.config.getoption("--fx-edition")
 
     # Get the platform this is running on
     sys_platform = platform.system()
@@ -63,15 +66,24 @@ def fx_executable(request):
 
 
 @pytest.fixture(autouse=True)
-def session(fx_executable, opt_headless, test_opts):
-    # create a new instance of the browser
+def driver(fx_executable: str, opt_headless: bool, set_prefs: List[Tuple]):
+    """
+    Return the webdriver object.
+
+    All arguments are fixtures being requested.
+    """
     options = Options()
     if opt_headless:
         options.add_argument("--headless")
     options.binary_location = fx_executable
-    for opt, value in test_opts:
+    for opt, value in set_prefs:
         options.set_preference(opt, value)
     s = webdriver.Firefox(options=options)
     yield s
 
     s.quit()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def faker_seed():
+    return 19980331
