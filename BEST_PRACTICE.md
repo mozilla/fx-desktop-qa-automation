@@ -62,7 +62,7 @@ PyTest relies heavily on functions called "Fixtures" to provide things like test
 data, setup, teardown, and session information. Functions are identifies as
 fixtures by the `@pytest.fixture` decorator. Fixtures are _requested_ by tests in
 their function signatures. Fixtures can request other fixtures.
-(PyTest Fixture Tutorial)[https://docs.pytest.org/en/8.0.x/explanation/fixtures.html#about-fixtures]
+[PyTest Fixture Tutorial](https://docs.pytest.org/en/8.0.x/explanation/fixtures.html#about-fixtures)
 
 #### conftest.py
 
@@ -90,4 +90,12 @@ a fixture declared in `./tests/foo/conftest.py`, and that's very useful.
 
 ## Selenium Python
 
-#### Content TK
+#### Basics
+
+The basics of Selenium Python are out of scope of a repo doc like this, but we do
+plan on finding and if necessary creating some documentation around the framework.
+
+#### Finding Tricky Selectors
+
+Please see 
+[our guide to tricky selectors](https://mozilla-hub.atlassian.net/wiki/spaces/QA/pages/606503037/HOWTO+Find+difficult+selectors).

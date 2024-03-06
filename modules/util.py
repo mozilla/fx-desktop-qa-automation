@@ -70,11 +70,14 @@ class BrowserActions:
         webelement = self.driver.find_element(*element_tuple)
         self.clear_and_fill(webelement, term)
 
-    def search(self, term: str):
+    def search(self, term: str, with_enter=True):
         """
-        Type something into the Awesome Bar and hit Enter.
+        Type something into the Awesome Bar. By default, press Enter.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             url_bar = self.driver.find_element(By.ID, "urlbar-input")
             url_bar.clear()
-            url_bar.send_keys(term, Keys.RETURN)
+            if with_enter:
+                url_bar.send_keys(term, Keys.RETURN)
+            else:
+                url_bar.send_keys(term)

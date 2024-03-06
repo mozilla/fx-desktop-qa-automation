@@ -43,14 +43,14 @@ def fx_executable(request):
         if version == "Firefox":
             location = "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
         elif version == "Nightly":
-            location = "C:\\Program Files\\Nightly Firefox\\firefox.exe"
+            location = "C:\\Program Files\\Firefox Nightly\\firefox.exe"
         elif version == "Custom":
             location = "C:\\Program Files\\Custom Firefox\\firefox.exe"
     elif sys_platform == "Darwin":
         if version == "Firefox":
             location = "/Applications/Firefox.app/Contents/MacOS/firefox"
         elif version == "Nightly":
-            location = "/Applications/Nightly Firefox.app/Contents/MacOS/firefox"
+            location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox"
         elif version == "Custom":
             location = "/Applications/Custom Firefox.app/Contents/MacOS/firefox"
     elif sys_platform == "Linux":
@@ -58,7 +58,7 @@ def fx_executable(request):
         if version == "Firefox":
             location = f"/home/{user}/Desktop/Firefox/firefox"
         elif version == "Nightly":
-            location = f"/home/{user}/Desktop/Nightly Firefox/firefox"
+            location = f"/home/{user}/Desktop/Firefox Nightly/firefox"
         elif version == "Custom":
             location = f"/home/{user}/Desktop/Custom Firefox/firefox"
 

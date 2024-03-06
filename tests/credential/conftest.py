@@ -9,6 +9,11 @@ from faker.providers import misc
 
 
 @pytest.fixture()
+def suite_id():
+    return ("43517", "Password manager")
+
+
+@pytest.fixture()
 def set_prefs():
     """Set prefs"""
     return []

@@ -13,6 +13,7 @@ class AboutLogins:
     driver: selenium.webdriver.Firefox
         WebDriver object under test
     """
+
     def __init__(self, driver: Firefox):
         self.driver = driver
 
@@ -44,4 +45,6 @@ class AboutLogins:
         actions_row_shadow_root = self.driver.find_element(
             By.CLASS_NAME, "form-actions-row"
         ).shadow_root
-        return actions_row_shadow_root.find_element(By.CLASS_NAME, "save-changes-button")
+        return actions_row_shadow_root.find_element(
+            By.CLASS_NAME, "save-changes-button"
+        )
