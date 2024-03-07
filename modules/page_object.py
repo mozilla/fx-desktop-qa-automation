@@ -43,7 +43,6 @@ class Navigation:
     search_mode_span = (By.ID, "urlbar-search-mode-indicator-title")
 
     # "Refresh Firefox" incl. Intervention Card
-    # quick_actions_refresh_button = (By.CSS_SELECTOR, '[id="urlbarView-row-3-label-0"][text^="Refresh"]')
     quick_actions_refresh_button = (By.ID, "urlbarView-row-3-label-0")
     refresh_intervention_card = (
         By.CSS_SELECTOR,
@@ -64,6 +63,12 @@ class Navigation:
     fx_refresh_menu_get_help_item = (
         By.CSS_SELECTOR,
         'menuitem[data-l10n-id="urlbar-result-menu-tip-get-help"]',
+    )
+
+    # Search with...
+    search_engine_suggestion_row = (
+        By.CSS_SELECTOR,
+        'div[class="urlbarView-row"][type="search_engine"]',
     )
 
 

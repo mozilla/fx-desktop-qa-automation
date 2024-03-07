@@ -81,3 +81,21 @@ class BrowserActions:
                 url_bar.send_keys(term, Keys.RETURN)
             else:
                 url_bar.send_keys(term)
+
+    def filter_elements_by_attr(
+        self, elements: list[WebElement], attr: str, value: str
+    ) -> list[WebElement]:
+        """docstring"""
+        return [e for e in elements if e.get_attribute(attr) == value]
+
+    def pick_element_from_list_by_text(
+        self, elements: list[WebElement], substr: str
+    ) -> WebElement:
+        """docstring"""
+        matches = [e for e in elements if substr in e.get_attribute("innerText")]
+        if len(matches) == 1:
+            return matches[0]
+        elif len(matches) == 0:
+            return None
+        else:
+            raise RuntimeError("More than one element matches text.")
