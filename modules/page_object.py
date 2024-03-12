@@ -42,6 +42,11 @@ class Navigation:
     )
     search_mode_span = (By.ID, "urlbar-search-mode-indicator-title")
 
+    # Search Mode One-Offs
+    search_one_off_settings_button = (By.ID, "urlbar-anon-search-settings")
+    search_one_off_engine_button = lambda self, site: (By.CSS_SELECTOR, f"[id*=urlbar-engine-one-off-item-engine][tooltiptext^={site}]")
+    search_one_off_browser_button = lambda self, source: (By.ID, f"urlbar-engine-one-off-item-{source}")
+
     # "Refresh Firefox" incl. Intervention Card
     quick_actions_refresh_button = (By.ID, "urlbarView-row-3-label-0")
     refresh_intervention_card = (

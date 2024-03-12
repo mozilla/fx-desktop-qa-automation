@@ -25,7 +25,6 @@ def set_prefs():
 
 @pytest.fixture()
 def search_modes():
-    # Not sure why Wikipedia isn't a search mode
     return {
         "site": [
             "Google",
@@ -33,6 +32,7 @@ def search_modes():
             "Bing",
             "DuckDuckGo",
             "eBay",
+            "Wikipedia"
         ],
         "browser": [
             ("*", "Bookmarks"),
