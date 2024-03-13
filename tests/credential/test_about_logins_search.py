@@ -1,6 +1,4 @@
-import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.support.wait import WebDriverWait
 from modules.util import BrowserActions
 from modules.shadow_dom import AboutLogins
 from typing import Tuple
@@ -8,7 +6,7 @@ from typing import List
 
 
 def test_about_logins_search_functionality(
-    driver_and_saved_usernames: Tuple[Firefox, List[str]]
+    driver_and_saved_usernames: Tuple[Firefox, List[str]],
 ):
     (driver, usernames) = driver_and_saved_usernames
     about_logins = AboutLogins(driver)

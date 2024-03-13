@@ -11,10 +11,13 @@ class AboutPrefs:
 
     # Category: Search elements
     search_engine_dropdown = (By.ID, "defaultEngine")
-    search_engine_option = lambda engine_name: (
-        By.CSS_SELECTOR,
-        f"menuitem[label='{engine_name}']",
-    )
+
+    @property
+    def search_engine_option(self, engine_name):
+        return (
+            By.CSS_SELECTOR,
+            f"menuitem[label='{engine_name}']",
+        )
 
     # Misc
     any_dropdown_active = (By.CSS_SELECTOR, "menuitem[_moz-menuactive='true']")
@@ -44,8 +47,20 @@ class Navigation:
 
     # Search Mode One-Offs
     search_one_off_settings_button = (By.ID, "urlbar-anon-search-settings")
-    search_one_off_engine_button = lambda self, site: (By.CSS_SELECTOR, f"[id*=urlbar-engine-one-off-item-engine][tooltiptext^={site}]")
-    search_one_off_browser_button = lambda self, source: (By.ID, f"urlbar-engine-one-off-item-{source}")
+
+    @property
+    def search_one_off_engine_button(self, site):
+        return (
+            By.CSS_SELECTOR,
+            f"[id*=urlbar-engine-one-off-item-engine][tooltiptext^={site}]",
+        )
+
+    @property
+    def search_one_off_browser_button(self, source):
+        return (
+            By.ID,
+            f"urlbar-engine-one-off-item-{source}",
+        )
 
     # "Refresh Firefox" incl. Intervention Card
     quick_actions_refresh_button = (By.ID, "urlbarView-row-3-label-0")
