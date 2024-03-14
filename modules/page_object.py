@@ -46,7 +46,10 @@ class Navigation:
     search_mode_span = (By.ID, "urlbar-search-mode-indicator-title")
 
     # Overflow menu
-    overflow_item = (By.CSS_SELECTOR, '[class="urlbarView-title urlbarView-overflowable"]')
+    overflow_item = (
+        By.CSS_SELECTOR,
+        '[class="urlbarView-title urlbarView-overflowable"]',
+    )
 
     # Search Mode One-Offs
     search_one_off_settings_button = (By.ID, "urlbar-anon-search-settings")
