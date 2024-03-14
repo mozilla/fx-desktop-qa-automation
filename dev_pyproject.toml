@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+generate_report_on_test = False
+addopts = "-vs --html=report.html"
+
+[tool.ruff]
+target-version = "py310"
