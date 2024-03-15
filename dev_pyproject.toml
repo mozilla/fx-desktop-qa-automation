@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-generate_report_on_test = False
+generate_report_on_test = false
 addopts = "-vs --html=report.html"
 
 [tool.ruff]

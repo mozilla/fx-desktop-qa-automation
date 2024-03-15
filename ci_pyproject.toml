@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-generate_report_on_test = True
+generate_report_on_test = true
 addopts = "-vs --html=/builds/worker/artifacts/report.html"
 
 [tool.ruff]
