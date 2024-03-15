@@ -1,6 +1,11 @@
 import pytest
 
 
+@pytest.fixture()
+def suite_id():
+    return ("18215", "Address Bar and Search 89+")
+
+
 @pytest.fixture(scope="session")
 def httpserver_listen_address():
     """Set port for local http server"""
@@ -16,3 +21,16 @@ def set_prefs():
         ("telemetry.fog.test.localhost_port", 5312),
         ("datareporting.healthreport.uploadEnabled", True),
     ]
+
+
+@pytest.fixture()
+def search_modes():
+    return {
+        "site": ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay", "Wikipedia"],
+        "browser": [
+            ("*", "Bookmarks"),
+            ("%", "Tabs"),
+            ("^", "History"),
+            (">", "Actions"),
+        ],
+    }

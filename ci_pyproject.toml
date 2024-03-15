@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+generate_report_on_test = True
+addopts = "-vs --html=/builds/worker/artifacts/report.html"
+
+[tool.ruff]
+target-version = "py310"

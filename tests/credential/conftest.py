@@ -1,11 +1,17 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.common.exceptions import WebDriverException
 
 from modules.util import BrowserActions
 from modules.shadow_dom import AboutLogins
 from faker import Faker
 from faker.providers import internet
 from faker.providers import misc
+
+
+@pytest.fixture()
+def suite_id():
+    return ("43517", "Password manager")
 
 
 @pytest.fixture()
@@ -46,7 +52,7 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
         ba.clear_and_fill(about_logins.login_item_by_type("password"), password)
         try:
             about_logins.add_login_button()
-        except:
+        except WebDriverException:
             about_logins.login_item_save_changes_button().click()
 
     usernames = []

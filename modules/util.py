@@ -2,8 +2,6 @@ from random import shuffle
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from collections.abc import Iterable
 
@@ -70,11 +68,32 @@ class BrowserActions:
         webelement = self.driver.find_element(*element_tuple)
         self.clear_and_fill(webelement, term)
 
-    def search(self, term: str):
+    def search(self, term: str, with_enter=True):
         """
-        Type something into the Awesome Bar and hit Enter.
+        Type something into the Awesome Bar. By default, press Enter.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             url_bar = self.driver.find_element(By.ID, "urlbar-input")
             url_bar.clear()
-            url_bar.send_keys(term, Keys.RETURN)
+            if with_enter:
+                url_bar.send_keys(term, Keys.RETURN)
+            else:
+                url_bar.send_keys(term)
+
+    def filter_elements_by_attr(
+        self, elements: list[WebElement], attr: str, value: str
+    ) -> list[WebElement]:
+        """docstring"""
+        return [e for e in elements if e.get_attribute(attr) == value]
+
+    def pick_element_from_list_by_text(
+        self, elements: list[WebElement], substr: str
+    ) -> WebElement:
+        """docstring"""
+        matches = [e for e in elements if substr in e.get_attribute("innerText")]
+        if len(matches) == 1:
+            return matches[0]
+        elif len(matches) == 0:
+            return None
+        else:
+            raise RuntimeError("More than one element matches text.")
