@@ -64,7 +64,6 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     # Set ping name
     ping = u.random_string(8)
     PING_ID = ping
-    print(f"ping: {ping}")
     driver.get("about:glean")
     ping_input = driver.find_element(*AboutGlean.ping_id_input)
     ba.clear_and_fill(ping_input, ping)
@@ -86,7 +85,7 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     # Change default search engine
     driver.get("about:preferences")
     driver.find_element(*AboutPrefs.category_search).click()
-    engine_select = driver.find_element(*AboutPrefs.search_engine_dropdown)
+    engine_select = wait.until(EC.element_to_be_clickable(AboutPrefs.search_engine_dropdown))
     engine_select.click()
     list_item = driver.find_element(*AboutPrefs.search_engine_option("Google"))
     list_item.click()

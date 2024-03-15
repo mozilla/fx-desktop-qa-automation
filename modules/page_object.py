@@ -12,8 +12,7 @@ class AboutPrefs:
     # Category: Search elements
     search_engine_dropdown = (By.ID, "defaultEngine")
 
-    @property
-    def search_engine_option(self, engine_name):
+    def search_engine_option(engine_name):
         return (
             By.CSS_SELECTOR,
             f"menuitem[label='{engine_name}']",
@@ -54,14 +53,12 @@ class Navigation:
     # Search Mode One-Offs
     search_one_off_settings_button = (By.ID, "urlbar-anon-search-settings")
 
-    @property
     def search_one_off_engine_button(self, site):
         return (
             By.CSS_SELECTOR,
             f"[id*=urlbar-engine-one-off-item-engine][tooltiptext^={site}]",
         )
 
-    @property
     def search_one_off_browser_button(self, source):
         return (
             By.ID,

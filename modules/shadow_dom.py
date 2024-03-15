@@ -1,6 +1,8 @@
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class AboutLogins:
@@ -14,6 +16,7 @@ class AboutLogins:
     """
 
     def __init__(self, driver: Firefox):
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "login-list")))
         self.driver = driver
 
     def add_login_button(self) -> WebElement:

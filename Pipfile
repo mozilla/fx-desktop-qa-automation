@@ -9,6 +9,7 @@ pynput = "*"
 pytest = "*"
 pytest-httpserver = "*"
 requests = "*"
+pytest-xdist = "*"
 
 [dev-packages]
 werkzeug = "*"
