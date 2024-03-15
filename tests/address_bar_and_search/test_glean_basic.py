@@ -85,7 +85,9 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     # Change default search engine
     driver.get("about:preferences")
     driver.find_element(*AboutPrefs.category_search).click()
-    engine_select = wait.until(EC.element_to_be_clickable(AboutPrefs.search_engine_dropdown))
+    engine_select = wait.until(
+        EC.element_to_be_clickable(AboutPrefs.search_engine_dropdown)
+    )
     engine_select.click()
     list_item = driver.find_element(*AboutPrefs.search_engine_option("Google"))
     list_item.click()

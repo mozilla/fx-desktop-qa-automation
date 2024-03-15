@@ -16,7 +16,9 @@ class AboutLogins:
     """
 
     def __init__(self, driver: Firefox):
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "login-list")))
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "login-list"))
+        )
         self.driver = driver
 
     def add_login_button(self) -> WebElement:
