@@ -51,6 +51,7 @@ ruff format
 
 # Update pyproject for use in CI
 cp -f ./ci_pyproject.toml ./pyproject.toml
+git add pyproject.toml
 
 # If there are whitespace errors, print the offending file names and fail.
 exec git diff-index --check --cached $against --
