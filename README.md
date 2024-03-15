@@ -37,7 +37,7 @@ Launch the build manually one time to navigate through any system permission dia
     - run: `choco install git` (have to install chocolatey, if not present)
   - On MacOS:
     - run: `git --version` (likely already installed, follow install prompts if not)
-  - In a location of your choice, run: `git clone https://github.com/Tracy-Walker/FxIncidentSmoketests FxSmoketests`
+  - In a location of your choice, run: `git clone https://github.com/ben-c-at-moz/headstart-tests FxAutomation`
 - Use pip to install Pipenv:
   - run: `pip install --user pipenv`. If prompted to add a directory to PATH, please do so. Windows
     users may need to restart their shell.
@@ -45,7 +45,7 @@ Launch the build manually one time to navigate through any system permission dia
 - Start virtual environment: `pipenv shell`
   - Ensure pynput is installed
     - run: `pip list` to see if it's in the list
-      - if not, run:`python -m pip install pynput`
+      - if not, run: `python -m pip install pynput`
     - you still may run into problems when running the test suite later. 
       If pynput is not found, ensure the libraries are in your PATH.
 - Ensure your system allows the following to run in the virtual env:
@@ -53,7 +53,8 @@ Launch the build manually one time to navigate through any system permission dia
   - Terminal
 
 ### Run the tests
-- CD into the FxSmoketests project directory
+- CD into the FxAutomation project directory
+- run `./devsetup.sh`
 - run: `pytest`
 - IMPORTANT: On MacOS you may be prompted to allow Terminal to control accessibility settings.
   Allow this. You may need to re-run the tests.
@@ -62,7 +63,6 @@ Launch the build manually one time to navigate through any system permission dia
 - ### Notable command line options
 - --run_headless=True (run the tests in headless mode)
 - --fx_edition=option (options are Custom(default), Firefox, Nightly)
-- -rA shows print statements in terminal
 - --html=report.html (creates an html report file, report.html, in top project directory)
 
 - On Failure:
