@@ -13,6 +13,7 @@ def test_url():
     return "http://foersom.com/net/HowTo/data/OoPdfFormExample.pdf"
 
 
+@pytest.mark.pynput
 def test_pdf_form_fill(driver, test_url):
     # From TestRail: https://testrail.stage.mozaws.net/index.php?/cases/view/1017484
     print(" - TEST: Verify PDF form input")

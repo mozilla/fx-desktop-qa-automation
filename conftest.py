@@ -8,7 +8,7 @@ from typing import List
 
 
 def pytest_addoption(parser):
-    """Set the location of the fx binary from command line if provided"""
+    """Set custom command-line options"""
     parser.addoption(
         "--fx-edition",
         action="store",
@@ -23,10 +23,22 @@ def pytest_addoption(parser):
         help="Run in headless mode: --run-headless=True",
     )
 
+    parser.addoption(
+        "--implicit-timeout",
+        action="store",
+        default=10,
+        help="Timeout for implicit waits, set 0 for no wait (default 10)",
+    )
+
 
 @pytest.fixture()
 def opt_headless(request):
     return request.config.getoption("--run-headless")
+
+
+@pytest.fixture()
+def opt_implicit_timeout(request):
+    return request.config.getoption("--implicit-timeout")
 
 
 @pytest.fixture()
@@ -66,7 +78,12 @@ def fx_executable(request):
 
 
 @pytest.fixture(autouse=True)
-def driver(fx_executable: str, opt_headless: bool, set_prefs: List[Tuple]):
+def driver(
+    fx_executable: str,
+    opt_headless: bool,
+    opt_implicit_timeout: int,
+    set_prefs: List[Tuple],
+):
     """
     Return the webdriver object.
 
@@ -79,6 +96,7 @@ def driver(fx_executable: str, opt_headless: bool, set_prefs: List[Tuple]):
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     s = webdriver.Firefox(options=options)
+    s.implicitly_wait(10)
     yield s
 
     s.quit()

@@ -10,6 +10,7 @@ pytest = "*"
 pytest-httpserver = "*"
 requests = "*"
 pytest-xdist = "*"
+pytest-html = "*"
 
 [dev-packages]
 werkzeug = "*"
@@ -17,4 +18,3 @@ selenium-wire = "*"
 faker = "*"
 pdoc = "*"
 ruff = "*"
-pytest-html = "*"
