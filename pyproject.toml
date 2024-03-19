@@ -1,6 +1,6 @@
 [tool.pytest.ini_options]
-generate_report_on_test = true
-addopts = "-vs --html=/builds/worker/artifacts/report.html"
+generate_report_on_test = false
+addopts = "-vs --html=report.html"
 markers = [
     "pynput: test uses pynput package"
 ]
