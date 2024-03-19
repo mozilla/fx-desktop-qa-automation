@@ -1,25 +1,89 @@
 from dataclasses import dataclass
+from pypom import Page, Region
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import Firefox
+from selenium.webdriver.common import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.exceptions import (
+    WebDriverException,
+    InvalidArgumentException,
+)
 
 
-@dataclass
-class AboutPrefs:
+class PomUtils:
+    def __init__(self, driver: Firefox):
+        self.driver = driver
+
+    def get_shadow_content(self, element: WebElement) -> list[WebElement]:
+        try:
+            shadow_root = element.shadow_root
+            return [shadow_root]
+        except InvalidArgumentException:
+            shadow_children = driver.execute_script(
+                "return arguments[0].shadowRoot.children", element
+            )
+            if len(shadow_children) and shadow_children[0] is not None:
+                return shadow_children
+
+
+class AboutPrefs(Page):
     """Page Object Model for about:preferences"""
 
-    # Categories
-    category_search = (By.ID, "category-search")
+    self.utils = PomUtils(self.driver)
+    _category_search = (By.ID, "category-search")
+    _search_engine_dropdown = (By.ID, "defaultEngine")
 
-    # Category: Search elements
-    search_engine_dropdown = (By.ID, "defaultEngine")
+    def get_dropdown(self, selector: tuple[str, str]) -> self.Dropdown:
+        menu_root = self.driver.find_element(*selector)
+        return Dropdown(self, menu_root)
 
-    def search_engine_option(engine_name):
-        return (
-            By.CSS_SELECTOR,
-            f"menuitem[label='{engine_name}']",
+    def get_dropdown_by_current_value(self, value: str) -> self.Dropdown:
+        menu_root = self.driver.find_element(
+            By.CSS_SELECTOR, f"menulist[label='{value}']"
         )
+        return Dropdown(self, menu_root)
+
+    def get_dropdown_by_label(self, label: str) -> self.Dropdown:
+        menu_root = self.driver.find_element(
+            By.XPATH,
+            f".//label[contains(., '{label}')]/following-sibling::hbox/menulist",
+        )
+        return Dropdown(self, menu_root)
 
     # Misc
-    any_dropdown_active = (By.CSS_SELECTOR, "menuitem[_moz-menuactive='true']")
+
+    class Dropdown(Region):
+        _active_dropdown_item = (By.CSS_SELECTOR, "menuitem[_moz-menuactive='true']")
+
+        def __init__(self, root):
+            self.root = root
+            self.utils = PomUtils(self.root)
+            shadow_elements = self.utils.get_shadow_content(self.root)
+            self.dropmarker = next(
+                e for e in shadow_elements if e.tag_name == "dropmarker"
+            )
+
+        @property
+        def loaded(self):
+            return self.dropmarker if self.dropmarker else False
+
+        def select_option(self, option_name):
+            menu_open = lambda: self.dropmarker.get_attribute("open") == "true"
+            if not menu_open():
+                self.root.click()
+            matching_menuitems = [
+                e
+                for e in self.root.find_elements(By.CSS_SELECTOR, "menuitem")
+                if e.get_attribute("innerText").lower() == option_name.lower()
+            ]
+            if len(matching_menuitems) == 0:
+                return False
+            elif len(matching_menuitems) == 1:
+                matching_menuitems[0].click()
+                return matching_menuitems[0]
+            else:
+                raise ValueError("More than one menu item matched search string")
 
 
 @dataclass
