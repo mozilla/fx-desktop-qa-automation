@@ -1,9 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.common.exceptions import WebDriverException
 
-from modules.util import BrowserActions
-from modules.shadow_dom import AboutLogins
+from modules.page_object import AboutLogins
 from faker import Faker
 from faker.providers import internet
 from faker.providers import misc
@@ -39,21 +37,19 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
     Yields a Tuple of the WebDriver object under test and a five-element list of the
     unique usernames added. (Five, because the last element was reused.)
     """
-    ba = BrowserActions(driver)
     faker.add_provider(internet)
     faker.add_provider(misc)
 
     def add_login(origin: str, username: str, password: str):
-        driver.get("about:logins")
-        about_logins = AboutLogins(driver)
+        about_logins = AboutLogins(driver).open()
         about_logins.add_login_button().click()
-        ba.clear_and_fill(about_logins.login_item_by_type("origin"), origin)
-        ba.clear_and_fill(about_logins.login_item_by_type("username"), username)
-        ba.clear_and_fill(about_logins.login_item_by_type("password"), password)
-        try:
-            about_logins.add_login_button()
-        except WebDriverException:
-            about_logins.login_item_save_changes_button().click()
+        about_logins.create_new_login(
+            {
+                "origin": origin,
+                "username": username,
+                "password": password,
+            }
+        )
 
     usernames = []
     for i in range(5):

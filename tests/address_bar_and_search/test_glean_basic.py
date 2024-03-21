@@ -1,7 +1,6 @@
 from time import sleep
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from modules.util import Utilities, BrowserActions
@@ -64,15 +63,8 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     # Set ping name
     ping = u.random_string(8)
     PING_ID = ping
-    driver.get("about:glean")
-    ping_input = driver.find_element(*AboutGlean.ping_id_input)
-    ba.clear_and_fill(ping_input, ping)
-    wait.until(
-        EC.text_to_be_present_in_element(
-            (By.CSS_SELECTOR, f"label[for='{AboutGlean.submit_button[1]}'"), ping
-        )
-    )
-    driver.find_element(*AboutGlean.submit_button).click()
+    about_glean = AboutGlean(driver).open()
+    about_glean.change_ping_id(ping)
 
     # Search 1 (Google)
     sleep(1)
@@ -83,18 +75,9 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     )
 
     # Change default search engine
-    driver.get("about:preferences")
-    driver.find_element(*AboutPrefs.category_search).click()
-    engine_select = wait.until(
-        EC.element_to_be_clickable(AboutPrefs.search_engine_dropdown)
-    )
-    engine_select.click()
-    list_item = driver.find_element(*AboutPrefs.search_engine_option("Google"))
-    list_item.click()
-    wait.until(EC.visibility_of_element_located(AboutPrefs.any_dropdown_active))
-    list_item.send_keys(
-        Keys.DOWN, Keys.DOWN, Keys.DOWN, Keys.RETURN
-    )  # we hack because we care - clicking on these special elements doesn't always work
+    about_prefs = AboutPrefs(driver, category="search").open()
+    dropdown = about_prefs.get_search_engine_dropdown()
+    dropdown.select_option("DuckDuckGo")
     sleep(1)
 
     # Search 2 (DDG)
