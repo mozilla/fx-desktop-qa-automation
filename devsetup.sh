@@ -1,4 +1,3 @@
 #!/bin/sh
 
-./post-checkout
-cp -f post-merge ./.git/hooks/post-commit
+cp -f pre-commit ./.git/hooks/pre-commit
