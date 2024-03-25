@@ -1,9 +1,10 @@
+from collections.abc import Iterable
 from random import shuffle
+
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from collections.abc import Iterable
 
 
 class Utilities:
