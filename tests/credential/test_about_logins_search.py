@@ -1,8 +1,9 @@
+from typing import List, Tuple
+
 from selenium.webdriver import Firefox
-from modules.util import BrowserActions
+
 from modules.page_object import AboutLogins
-from typing import Tuple
-from typing import List
+from modules.util import BrowserActions
 
 
 def test_about_logins_search_functionality(

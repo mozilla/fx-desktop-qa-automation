@@ -1,18 +1,17 @@
+import gzip
+import json
+import re
 from time import sleep
+
+from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from modules.util import Utilities, BrowserActions
-from pytest_httpserver import HTTPServer
-from werkzeug.wrappers import Request
-from werkzeug.wrappers import Response
-import re
-import gzip
-import json
-from modules.page_object import AboutGlean
-from modules.page_object import AboutPrefs
+from werkzeug.wrappers import Request, Response
 
+from modules.page_object import AboutGlean, AboutPrefs
+from modules.util import BrowserActions, Utilities
 
 PINGS_WITH_ID = 0
 PING_ID = ""

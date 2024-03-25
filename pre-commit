@@ -46,7 +46,7 @@ EOF
 fi
 
 # Lint and format with ruff
-ruff check --fix
+ruff check --select I --fix
 ruff format
 
 # If there are whitespace errors, print the offending file names and fail.

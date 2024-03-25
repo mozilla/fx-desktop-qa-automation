@@ -1,10 +1,9 @@
 import pytest
+from faker import Faker
+from faker.providers import internet, misc
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutLogins
-from faker import Faker
-from faker.providers import internet
-from faker.providers import misc
 
 
 @pytest.fixture()

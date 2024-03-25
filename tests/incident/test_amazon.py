@@ -2,6 +2,7 @@
 #  It can fails after a while due to bot identification by Amazon
 
 import time
+
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys

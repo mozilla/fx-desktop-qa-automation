@@ -1,10 +1,10 @@
-import pytest
 import os
 import platform
+from typing import List, Tuple
+
+import pytest
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from typing import Tuple
-from typing import List
 
 
 def pytest_addoption(parser):

@@ -1,11 +1,12 @@
-import time
-import pytest
 import os
 import platform
+import time
+
+import pytest
+from pynput.keyboard import Controller, Key
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from pynput.keyboard import Key, Controller
 
 
 @pytest.fixture()
