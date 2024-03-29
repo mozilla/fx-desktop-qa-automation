@@ -1,6 +1,10 @@
 from collections.abc import Iterable
 from random import shuffle
 
+from selenium.common.exceptions import (
+    InvalidArgumentException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -98,3 +102,19 @@ class BrowserActions:
             return None
         else:
             raise RuntimeError("More than one element matches text.")
+
+
+class PomUtils:
+    def __init__(self, driver: Firefox):
+        self.driver = driver
+
+    def get_shadow_content(self, element: WebElement) -> list[WebElement]:
+        try:
+            shadow_root = element.shadow_root
+            return [shadow_root]
+        except InvalidArgumentException:
+            shadow_children = self.driver.execute_script(
+                "return arguments[0].shadowRoot.children", element
+            )
+            if len(shadow_children) and shadow_children[0] is not None:
+                return shadow_children
