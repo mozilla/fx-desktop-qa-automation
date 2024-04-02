@@ -28,7 +28,7 @@ class AboutPrefs(Page):
             self.utils = PomUtils(self.driver)
             self.shadow_elements = self.utils.get_shadow_content(self.root)
             self.dropmarker = next(
-                el for el in self.shadow_elements if e.tag_name == "dropmarker"
+                el for el in self.shadow_elements if el.tag_name == "dropmarker"
             )
 
         @property
