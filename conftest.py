@@ -95,11 +95,11 @@ def driver(
     options.binary_location = fx_executable
     for opt, value in set_prefs:
         options.set_preference(opt, value)
-    s = webdriver.Firefox(options=options)
-    s.implicitly_wait(opt_implicit_timeout)
-    yield s
+    driver = webdriver.Firefox(options=options)
+    driver.implicitly_wait(opt_implicit_timeout)
+    yield driver
 
-    s.quit()
+    driver.quit()
 
 
 @pytest.fixture(scope="session", autouse=True)

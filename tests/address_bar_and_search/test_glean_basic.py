@@ -75,8 +75,7 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
 
     # Change default search engine
     about_prefs = AboutPrefs(driver, category="search").open()
-    dropdown = about_prefs.get_search_engine_dropdown()
-    dropdown.select_option("DuckDuckGo")
+    about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
     sleep(1)
 
     # Search 2 (DDG)

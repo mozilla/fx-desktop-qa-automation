@@ -28,7 +28,7 @@ class AboutPrefs(Page):
             self.utils = PomUtils(self.driver)
             self.shadow_elements = self.utils.get_shadow_content(self.root)
             self.dropmarker = next(
-                e for e in self.shadow_elements if e.tag_name == "dropmarker"
+                el for el in self.shadow_elements if e.tag_name == "dropmarker"
             )
 
         @property
@@ -39,9 +39,9 @@ class AboutPrefs(Page):
             if not self.dropmarker.get_attribute("open") == "true":
                 self.root.click()
             matching_menuitems = [
-                e
-                for e in self.root.find_elements(By.CSS_SELECTOR, "menuitem")
-                if e.get_attribute("label") == option_name
+                el
+                for el in self.root.find_elements(By.CSS_SELECTOR, "menuitem")
+                if el.get_attribute("label") == option_name
             ]
             if len(matching_menuitems) == 0:
                 return False
@@ -52,22 +52,22 @@ class AboutPrefs(Page):
             else:
                 raise ValueError("More than one menu item matched search string")
 
-    def get_dropdown(self, selector: tuple[str, str]) -> Dropdown:
+    def dropdown(self, selector: tuple[str, str]) -> Dropdown:
         menu_root = self.driver.find_element(*selector)
         return self.Dropdown(self, root=menu_root)
 
-    def get_dropdown_by_current_value(self, value: str) -> Dropdown:
+    def dropdown_with_current_value(self, value: str) -> Dropdown:
         menu_root = self.driver.find_element(
             By.CSS_SELECTOR, f"menulist[label='{value}']"
         )
         return self.Dropdown(self, root=menu_root)
 
-    def get_dropdown_by_label(self, label: str) -> Dropdown:
+    def dropdown_with_label(self, label: str) -> Dropdown:
         menu_root = self.driver.find_element(
             By.XPATH,
             f".//label[contains(., '{label}')]/following-sibling::hbox/menulist",
         )
         return self.Dropdown(self, root=menu_root)
 
-    def get_search_engine_dropdown(self) -> Dropdown:
-        return self.get_dropdown((By.ID, "defaultEngine"))
+    def search_engine_dropdown(self) -> Dropdown:
+        return self.dropdown((By.ID, "defaultEngine"))

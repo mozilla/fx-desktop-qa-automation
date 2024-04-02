@@ -37,6 +37,35 @@ class Navigation(Page):
     # Search Mode One-Offs
     _search_one_off_settings_button = (By.ID, "urlbar-anon-search-settings")
 
+    # "Refresh Firefox" incl. Intervention Card
+    quick_actions_refresh_button = (By.ID, "urlbarView-row-3-label-0")
+    refresh_intervention_card = (
+        By.CSS_SELECTOR,
+        'div[tip-type="intervention_refresh"]',
+    )
+    fx_refresh_text = (
+        By.CSS_SELECTOR,
+        'span[data-l10n-id="intervention-refresh-profile"]',
+    )
+    fx_refresh_button = (
+        By.CSS_SELECTOR,
+        'span[role="button"][data-l10n-id="intervention-refresh-profile-confirm"]',
+    )
+    fx_refresh_menu = (
+        By.CSS_SELECTOR,
+        'span[data-l10n-id="urlbar-result-menu-button"][title="Open menu"]',
+    )
+    fx_refresh_menu_get_help_item = (
+        By.CSS_SELECTOR,
+        'menuitem[data-l10n-id="urlbar-result-menu-tip-get-help"]',
+    )
+
+    # Search with...
+    search_engine_suggestion_row = (
+        By.CSS_SELECTOR,
+        'div[class="urlbarView-row"][type="search_engine"]',
+    )
+
     def ensure_chrome_context(self):
         if self._xul_source_snippet not in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CHROME)
@@ -78,32 +107,3 @@ class Navigation(Page):
             By.ID,
             f"urlbar-engine-one-off-item-{source}",
         )
-
-    # "Refresh Firefox" incl. Intervention Card
-    quick_actions_refresh_button = (By.ID, "urlbarView-row-3-label-0")
-    refresh_intervention_card = (
-        By.CSS_SELECTOR,
-        'div[tip-type="intervention_refresh"]',
-    )
-    fx_refresh_text = (
-        By.CSS_SELECTOR,
-        'span[data-l10n-id="intervention-refresh-profile"]',
-    )
-    fx_refresh_button = (
-        By.CSS_SELECTOR,
-        'span[role="button"][data-l10n-id="intervention-refresh-profile-confirm"]',
-    )
-    fx_refresh_menu = (
-        By.CSS_SELECTOR,
-        'span[data-l10n-id="urlbar-result-menu-button"][title="Open menu"]',
-    )
-    fx_refresh_menu_get_help_item = (
-        By.CSS_SELECTOR,
-        'menuitem[data-l10n-id="urlbar-result-menu-tip-get-help"]',
-    )
-
-    # Search with...
-    search_engine_suggestion_row = (
-        By.CSS_SELECTOR,
-        'div[class="urlbarView-row"][type="search_engine"]',
-    )
