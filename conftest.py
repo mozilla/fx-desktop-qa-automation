@@ -96,7 +96,7 @@ def driver(
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     s = webdriver.Firefox(options=options)
-    s.implicitly_wait(10)
+    s.implicitly_wait(opt_implicit_timeout)
     yield s
 
     s.quit()

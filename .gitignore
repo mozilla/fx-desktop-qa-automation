@@ -58,9 +58,6 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# pytest-html
-assets/
-
 # Translations
 *.mo
 *.pot
