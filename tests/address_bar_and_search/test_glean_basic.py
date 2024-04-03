@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from werkzeug.wrappers import Request, Response
 
+from modules.browser_object import Navigation
 from modules.page_object import AboutGlean, AboutPrefs
 from modules.util import BrowserActions, Utilities
 
@@ -66,22 +67,26 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     about_glean.change_ping_id(ping)
 
     # Search 1 (Google)
-    sleep(1)
-    ba.search("trombone")
-    wait.until(EC.title_contains("Search"))
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='navigation']"))
+    nav = Navigation(driver).open()
+    (
+        nav.search("trombone")
+        .expect_in_content(EC.title_contains("Search"))
+        .expect_in_content(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='navigation']"))
+        )
     )
 
     # Change default search engine
     about_prefs = AboutPrefs(driver, category="search").open()
     about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
-    sleep(1)
 
     # Search 2 (DDG)
-    ba.search("trumpet")
-    wait.until(EC.title_contains("DuckDuckGo"))
-    wait.until(EC.visibility_of_element_located((By.ID, "more-results")))
+    nav = Navigation(driver).open()
+    (
+        nav.search("trumpet")
+        .expect_in_content(EC.title_contains("DuckDuckGo"))
+        .expect_in_content(EC.visibility_of_element_located((By.ID, "more-results")))
+    )
 
     # We could go back to about:glean, but this is faster
     with driver.context(driver.CONTEXT_CHROME):

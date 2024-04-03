@@ -41,7 +41,7 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
 
     def add_login(origin: str, username: str, password: str):
         about_logins = AboutLogins(driver).open()
-        about_logins.add_login_button().click()
+        about_logins.click_add_login_button()
         about_logins.create_new_login(
             {
                 "origin": origin,

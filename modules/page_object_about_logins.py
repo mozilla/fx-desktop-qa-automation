@@ -59,7 +59,11 @@ class AboutLogins(Page):
             By.CLASS_NAME, "save-changes-button"
         )
 
-    def create_new_login(self, form_info: dict):
+    def click_add_login_button(self) -> Page:
+        self.add_login_button().click()
+        return self
+
+    def create_new_login(self, form_info: dict) -> Page:
         ba = BrowserActions(self.driver)
         for item_type, value in form_info.items():
             ba.clear_and_fill(self.login_item_by_type(item_type), value)
@@ -67,3 +71,4 @@ class AboutLogins(Page):
             self.add_login_button()
         except WebDriverException:
             self.login_item_save_changes_button().click()
+        return self

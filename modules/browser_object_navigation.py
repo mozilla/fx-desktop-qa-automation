@@ -74,18 +74,27 @@ class Navigation(Page):
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
 
-    def get_awesome_bar(self) -> WebElement:
+    def expect(self, condition) -> Page:
+        self.wait.until(condition)
+        return self
+
+    def expect_in_content(self, condition) -> Page:
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.expect(condition)
+        return self
+
+    def get_awesome_bar(self) -> Page:
         self.ensure_chrome_context()
         self.awesome_bar = self.driver.find_element(*self._awesome_bar)
         return self
 
-    def type_in_awesome_bar(self, term: str) -> WebElement:
+    def type_in_awesome_bar(self, term: str) -> Page:
         self.get_awesome_bar()
         self.awesome_bar.click()
         self.awesome_bar.send_keys(term)
         return self
 
-    def set_search_mode_via_awesome_bar(self, mode: str) -> WebElement:
+    def set_search_mode_via_awesome_bar(self, mode: str) -> Page:
         if mode in self.BROWSER_MODES:
             abbr = self.BROWSER_MODES[mode]
         else:
@@ -94,6 +103,17 @@ class Navigation(Page):
         self.wait.until(EC.visibility_of_element_located(self._tab_to_search_text_span))
         self.awesome_bar.send_keys(Keys.TAB)
         self.wait.until(EC.text_to_be_present_in_element(self._search_mode_span, mode))
+        return self
+
+    def search(self, term: str, mode=None) -> Page:
+        self.ensure_chrome_context()
+        if mode is not None:
+            self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
+                term + Keys.ENTER
+            )
+        else:
+            self.type_in_awesome_bar(term + Keys.ENTER)
+        self.resume_content_context()
         return self
 
     def search_one_off_engine_button(self, site):
