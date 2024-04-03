@@ -1,9 +1,17 @@
+from pypom import Page, Region
+from selenium.common.exceptions import (
+    InvalidArgumentException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+
+from modules.util import BrowserActions
 
 
-class AboutLogins:
+class AboutLogins(Page):
     """
     Page Object Model for about:logins, which goes through Shadow DOMs.
 
@@ -13,8 +21,11 @@ class AboutLogins:
         WebDriver object under test
     """
 
-    def __init__(self, driver: Firefox):
-        self.driver = driver
+    URL_TEMPLATE = "about:logins"
+
+    @property
+    def loaded(self):
+        return EC.presence_of_element_located((By.CSS_SELECTOR, "login-list"))
 
     def add_login_button(self) -> WebElement:
         """Return the button that allows you to add a new login."""
@@ -47,3 +58,12 @@ class AboutLogins:
         return actions_row_shadow_root.find_element(
             By.CLASS_NAME, "save-changes-button"
         )
+
+    def create_new_login(self, form_info: dict):
+        ba = BrowserActions(self.driver)
+        for item_type, value in form_info.items():
+            ba.clear_and_fill(self.login_item_by_type(item_type), value)
+        try:
+            self.add_login_button()
+        except WebDriverException:
+            self.login_item_save_changes_button().click()

@@ -1,11 +1,12 @@
-import time
-import pytest
 import os
 import platform
+import time
+
+import pytest
+from pynput.keyboard import Controller, Key
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from pynput.keyboard import Key, Controller
 
 
 @pytest.fixture()
@@ -13,6 +14,7 @@ def test_url():
     return "http://foersom.com/net/HowTo/data/OoPdfFormExample.pdf"
 
 
+@pytest.mark.pynput
 def test_pdf_form_fill(driver, test_url):
     # From TestRail: https://testrail.stage.mozaws.net/index.php?/cases/view/1017484
     print(" - TEST: Verify PDF form input")

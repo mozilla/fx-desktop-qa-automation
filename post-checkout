@@ -1,6 +1,0 @@
-#!/bin/sh
-
-cp -f ./post-checkout ./.git/hooks/post-checkout
-cp -f ./post-merge ./.git/hooks/post-merge
-cp -f ./pre-commit ./.git/hooks/pre-commit
-cp -f ./dev_pyproject.toml ./pyproject.toml

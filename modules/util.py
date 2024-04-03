@@ -1,9 +1,14 @@
+from collections.abc import Iterable
 from random import shuffle
+
+from selenium.common.exceptions import (
+    InvalidArgumentException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from collections.abc import Iterable
 
 
 class Utilities:
@@ -84,16 +89,32 @@ class BrowserActions:
         self, elements: list[WebElement], attr: str, value: str
     ) -> list[WebElement]:
         """docstring"""
-        return [e for e in elements if e.get_attribute(attr) == value]
+        return [el for el in elements if el.get_attribute(attr) == value]
 
     def pick_element_from_list_by_text(
         self, elements: list[WebElement], substr: str
     ) -> WebElement:
         """docstring"""
-        matches = [e for e in elements if substr in e.get_attribute("innerText")]
+        matches = [el for el in elements if substr in el.get_attribute("innerText")]
         if len(matches) == 1:
             return matches[0]
         elif len(matches) == 0:
             return None
         else:
             raise RuntimeError("More than one element matches text.")
+
+
+class PomUtils:
+    def __init__(self, driver: Firefox):
+        self.driver = driver
+
+    def get_shadow_content(self, element: WebElement) -> list[WebElement]:
+        try:
+            shadow_root = element.shadow_root
+            return [shadow_root]
+        except InvalidArgumentException:
+            shadow_children = self.driver.execute_script(
+                "return arguments[0].shadowRoot.children", element
+            )
+            if len(shadow_children) and shadow_children[0] is not None:
+                return shadow_children

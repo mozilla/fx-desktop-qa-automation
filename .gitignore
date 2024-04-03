@@ -1,5 +1,6 @@
 /venv/
 /report.html
+assets/
 /Test Results - .html
 /geckodriver.log
 env

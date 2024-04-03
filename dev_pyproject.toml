@@ -1,6 +1,9 @@
 [tool.pytest.ini_options]
 generate_report_on_test = false
 addopts = "-vs --html=report.html"
+markers = [
+    "pynput: test uses pynput package"
+]
 
 [tool.ruff]
 target-version = "py310"
