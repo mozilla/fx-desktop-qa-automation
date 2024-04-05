@@ -54,7 +54,6 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     global PINGS_WITH_ID
     global PING_ID
     u = Utilities()
-    ba = BrowserActions(driver)
     wait = WebDriverWait(driver, 30)
 
     # mock server
