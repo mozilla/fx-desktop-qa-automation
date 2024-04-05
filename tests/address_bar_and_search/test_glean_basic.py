@@ -12,7 +12,7 @@ from werkzeug.wrappers import Request, Response
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutGlean, AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 PINGS_WITH_ID = 0
 PING_ID = ""
