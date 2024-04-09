@@ -1,0 +1,61 @@
+#!/bin/bash
+
+GECKO_PARENT_DIR=$(curl https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq '.["html_url"]' | tr -d '"')
+GECKO_LATEST_VERSION=$(echo "$GECKO_PARENT_DIR" | awk -F "/" '{print $NF}')
+
+UNAME_A=$(uname -a)
+if [ -n "$WSL_DISTRO_NAME" ]
+then
+    SYSTEM_NAME="win"
+else
+    if [[ $UNAME_A == *"Darwin"* ]]
+    then
+        SYSTEM_NAME="macos"
+    else
+        SYSTEM_NAME="linux"
+    fi
+fi
+
+if [[ $UNAME_A == *"arm64"* ]]
+then
+    ARCH="-aarch64"
+else
+    if [[ $SYSTEM_NAME == "linux" ]] && [[ $UNAME_A == *"i386"* ]]
+    then
+        BITS="32"
+    else
+        BITS="64"
+    fi
+fi
+
+if [[ "$SYSTEM_NAME" == "win" ]] && [[ -z $ARCH ]] && [[ $BITS = "64" ]]
+then
+    echo "Intel Win64"
+    exit 2
+fi
+
+if [[ $SYSTEM_NAME == "win" ]]
+then
+    EXT="zip"
+else
+    EXT="tar.gz"
+fi
+
+FILENAME="geckodriver-${GECKO_LATEST_VERSION}-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
+
+if [[ $SYSTEM_NAME == "macos" ]]
+then
+    FX_SYS_NAME="osx"
+else
+    FX_SYS_NAME=$"$SYSTEM_NAME"
+fi
+
+FX_LINK_HTML=$(curl https://download.mozilla.org/\?product\=firefox-beta-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
+FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
+
+GECKO_LOC="$GECKO_PARENT_DIR/$FILENAME"
+echo "$GECKO_LOC"
+echo "$FX_LOC"
+
+curl -O "$GECKO_LOC"
+curl -O "$FX_LOC"

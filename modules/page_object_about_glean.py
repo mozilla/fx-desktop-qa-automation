@@ -1,5 +1,4 @@
 from pypom import Page, Region
-from modules.page_base import BasePage
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -9,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.page_base import BasePage
 from modules.util import BrowserActions
 
 
