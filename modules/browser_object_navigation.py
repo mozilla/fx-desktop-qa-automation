@@ -4,8 +4,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.page_base import BasePage
 
-class Navigation(Page):
+
+class Navigation(BasePage):
     """Page Object Model for nav buttons and AwesomeBar"""
 
     URL_TEMPLATE = "about:blank"
@@ -74,10 +76,6 @@ class Navigation(Page):
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
 
-    def expect(self, condition) -> Page:
-        self.wait.until(condition)
-        return self
-
     def expect_in_content(self, condition) -> Page:
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             self.expect(condition)
@@ -86,6 +84,11 @@ class Navigation(Page):
     def get_awesome_bar(self) -> Page:
         self.ensure_chrome_context()
         self.awesome_bar = self.driver.find_element(*self._awesome_bar)
+        return self
+
+    def clear_awesome_bar(self) -> Page:
+        self.get_awesome_bar()
+        self.awesome_bar.clear()
         return self
 
     def type_in_awesome_bar(self, term: str) -> Page:
@@ -106,14 +109,13 @@ class Navigation(Page):
         return self
 
     def search(self, term: str, mode=None) -> Page:
-        self.ensure_chrome_context()
-        if mode is not None:
-            self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
-                term + Keys.ENTER
-            )
-        else:
-            self.type_in_awesome_bar(term + Keys.ENTER)
-        self.resume_content_context()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            if mode is not None:
+                self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
+                    term + Keys.ENTER
+                )
+            else:
+                self.type_in_awesome_bar(term + Keys.ENTER)
         return self
 
     def search_one_off_engine_button(self, site):

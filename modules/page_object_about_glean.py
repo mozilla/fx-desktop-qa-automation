@@ -8,10 +8,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.page_base import BasePage
 from modules.util import BrowserActions
 
 
-class AboutGlean(Page):
+class AboutGlean(BasePage):
     """Page Object Model for about:glean"""
 
     URL_TEMPLATE = "about:glean"
