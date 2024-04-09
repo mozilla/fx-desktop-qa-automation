@@ -67,12 +67,10 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
 
     # Search 1 (Google)
     nav = Navigation(driver).open()
-    (
-        nav.search("trombone")
-        .expect_in_content(EC.title_contains("Search"))
-        .expect_in_content(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='navigation']"))
-        )
+    nav.search("trombone")
+    nav.expect_in_content(EC.title_contains("Search"))
+    nav.expect_in_content(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='navigation']"))
     )
 
     # Change default search engine
