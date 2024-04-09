@@ -1,4 +1,5 @@
 from pypom import Page, Region
+from modules.page_base import BasePage
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -11,14 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.util import BrowserActions, PomUtils
 
 
-class AboutPrefs(Page):
+class AboutPrefs(BasePage):
     """Page Object Model for about:preferences"""
 
     URL_TEMPLATE = "about:preferences#{category}"
-
-    def __init__(self, driver, **kwargs):
-        super().__init__(driver, timeout=10, **kwargs)
-        self.utils = PomUtils(self.driver)
 
     class Dropdown(Region):
         _active_dropdown_item = (By.CSS_SELECTOR, "menuitem[_moz-menuactive='true']")

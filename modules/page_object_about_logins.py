@@ -1,4 +1,5 @@
 from pypom import Page, Region
+from modules.page_base import BasePage
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -11,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.util import BrowserActions
 
 
-class AboutLogins(Page):
+class AboutLogins(BasePage):
     """
     Page Object Model for about:logins, which goes through Shadow DOMs.
 

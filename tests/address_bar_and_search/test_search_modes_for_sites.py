@@ -15,8 +15,7 @@ def test_search_modes_for_sites(driver: Firefox, site: str):
     # C1365213 (potentially)
     nav = Navigation(driver).open()
     (
-        nav.set_search_mode_via_awesome_bar(site)
-        .type_in_awesome_bar("soccer" + Keys.RETURN)
+        nav.search("soccer", mode=site)
         .expect_in_content(EC.url_contains(site.lower()))
-        .awesome_bar.clear()
+        .clear_awesome_bar()
     )
