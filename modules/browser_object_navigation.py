@@ -81,18 +81,22 @@ class Navigation(BasePage):
             self.expect(condition)
         return self
 
-    def get_awesome_bar(self) -> Page:
+    def set_awesome_bar(self) -> Page:
         self.ensure_chrome_context()
         self.awesome_bar = self.driver.find_element(*self._awesome_bar)
         return self
 
+    def get_awesome_bar(self) -> WebElement:
+        self.set_awesome_bar()
+        return self.awesome_bar
+
     def clear_awesome_bar(self) -> Page:
-        self.get_awesome_bar()
+        self.set_awesome_bar()
         self.awesome_bar.clear()
         return self
 
     def type_in_awesome_bar(self, term: str) -> Page:
-        self.get_awesome_bar()
+        self.set_awesome_bar()
         self.awesome_bar.click()
         self.awesome_bar.send_keys(term)
         return self
@@ -110,7 +114,7 @@ class Navigation(BasePage):
 
     def search(self, term: str, mode=None) -> Page:
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            if mode is not None:
+            if mode:
                 self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
                     term + Keys.ENTER
                 )
