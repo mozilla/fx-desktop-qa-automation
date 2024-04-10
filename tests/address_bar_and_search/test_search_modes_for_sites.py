@@ -14,8 +14,6 @@ def test_search_modes_for_sites(driver: Firefox, site: str):
     # C2234690
     # C1365213 (potentially)
     nav = Navigation(driver).open()
-    nav.set_search_mode_via_awesome_bar(site)
-    nav.type_in_awesome_bar("soccer" + Keys.RETURN)
-    with driver.context(driver.CONTEXT_CONTENT):
-        nav.wait.until(EC.url_contains(site.lower()))
-    nav.awesome_bar.clear()
+    nav.search("soccer", mode=site)
+    nav.expect_in_content(EC.url_contains(site.lower()))
+    nav.clear_awesome_bar()
