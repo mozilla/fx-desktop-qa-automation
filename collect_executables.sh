@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Usage: ./collect_executables.sh [channel]
+# Collects geckodriver and Fx, default channel is Beta.
+
 GECKO_PARENT_DIR=$(curl https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq '.["html_url"]' | tr -d '"')
 GECKO_LATEST_VERSION=$(echo "$GECKO_PARENT_DIR" | awk -F "/" '{print $NF}')
 
@@ -50,7 +53,17 @@ else
     FX_SYS_NAME=$"$SYSTEM_NAME"
 fi
 
-FX_LINK_HTML=$(curl https://download.mozilla.org/\?product\=firefox-beta-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
+CHANNEL="-beta"
+if [[ $1 == *"ightly"* ]]
+then
+    CHANNEL="-nightly"
+else
+    if [[ $1 == *"rod"* ]]
+    then
+        CHANNEL=""
+    fi
+fi
+FX_LINK_HTML=$(curl https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
 FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 GECKO_LOC="$GECKO_PARENT_DIR/$FILENAME"
