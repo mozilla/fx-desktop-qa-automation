@@ -58,7 +58,7 @@ if [[ $1 == *"ightly"* ]]
 then
     CHANNEL="-nightly"
 else
-    if [[ $1 == *"rod"* ]]
+    if [[ $1 == *"rod"* ]] || [[ $1 == *"elease"* ]]
     then
         CHANNEL=""
     fi
