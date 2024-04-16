@@ -23,7 +23,7 @@ ENV PATH=/root/.local/bin:$PATH
 
 # %include-run-task
 # %include collect_executables.sh
-ADD topsrcdir/collect_executables.sh
+ADD topsrcdir/collect_executables.sh .
 RUN topsrcdir/collect_executables.sh
 
 ENV PATH=/root/.local/bin/firefox:$PATH
