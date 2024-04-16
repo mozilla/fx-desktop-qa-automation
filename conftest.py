@@ -20,7 +20,7 @@ def pytest_addoption(parser):
         "--fx-executable",
         action="store",
         default="",
-        help="Path to Fx executable. Will overwrite --fx-channel."
+        help="Path to Fx executable. Will overwrite --fx-channel.",
     )
 
     parser.addoption(
