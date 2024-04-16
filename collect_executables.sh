@@ -72,3 +72,5 @@ echo "$FX_LOC"
 
 curl -O "$GECKO_LOC"
 curl -O "$FX_LOC"
+
+tar -xvf "$GECKO_LOC"
