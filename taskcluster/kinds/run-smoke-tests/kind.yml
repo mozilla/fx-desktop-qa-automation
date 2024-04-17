@@ -13,12 +13,12 @@ task-defaults:
         type: directory
 
 tasks:
-  smoketest:
+  smoketest-linux:
+    dependencies:
+      collect: collect-linux
     run:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        ls /root
-        ls /root/firefox
-        /root/firefox/firefox --version ;
-        pipenv run python -m pytest --fx_executable /root/firefox/firefox .
+        ./firefox/firefox --version ;
+        pipenv run python -m pytest --fx_executable ./firefox/firefox .

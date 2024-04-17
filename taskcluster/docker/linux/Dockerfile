@@ -21,15 +21,6 @@ RUN apt install -y git python3-pip python-is-python3 firefox libasound2 && \
 
 ENV PATH=/root/.local/bin:$PATH
 
-# %include-run-task
-# %include collect_executables.sh
-ADD topsrcdir/collect_executables.sh .
-RUN ./collect_executables.sh
-RUN mv *.tar.* /kaniko/buildcontext/
-
-ADD firefox.tar.bz2 /root/
-ADD geckodriver.tar.gz /root/
-
 ENV PATH=/root/.local/bin/firefox:$PATH
 
 ENV SHELL=/bin/bash \
