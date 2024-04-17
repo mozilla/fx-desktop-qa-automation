@@ -26,10 +26,9 @@ ENV PATH=/root/.local/bin:$PATH
 ADD topsrcdir/collect_executables.sh .
 RUN ./collect_executables.sh
 
-# %include firefox.tar.bz2
-# %include geckodriver.tar.gz
-ADD topsrcdir/firefox.tar.bz2 /root/
-ADD topsrcdir/geckodriver.tar.gz /root/
+ADD firefox.tar.bz2 /root/
+ADD geckodriver.tar.gz /root/
+RUN tree /root
 
 ENV PATH=/root/.local/bin/firefox:$PATH
 
