@@ -3,8 +3,7 @@
 # Usage: ./collect_executables.sh [channel]
 # Collects geckodriver and Fx, default channel is Beta.
 
-GECKO_PARENT_DIR=$(curl https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq '.["html_url"]' | tr -d '"')
-GECKO_LATEST_VERSION=$(echo "$GECKO_PARENT_DIR" | awk -F "/" '{print $NF}')
+GECKO_LINK=$(curl https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq '.["assets"][0]["browser_download_url"]' | tr -d '"')
 
 UNAME_A=$(uname -a)
 if [ -n "$WSL_DISTRO_NAME" ]
@@ -66,11 +65,10 @@ fi
 FX_LINK_HTML=$(curl https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
 FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
-GECKO_LOC="$GECKO_PARENT_DIR/$FILENAME"
-echo "$GECKO_LOC"
+echo "$GECKO_LINK"
 echo "$FX_LOC"
 
-curl -O "$GECKO_LOC"
+curl -OL "$GECKO_LINK"
 curl -O "$FX_LOC"
 
-tar -xvf "$GECKO_LOC"
+tar -xvf ./gecko*.tar.gz
