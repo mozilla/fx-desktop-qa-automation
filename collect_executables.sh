@@ -71,5 +71,9 @@ echo "$FX_LOC"
 curl -OL "$GECKO_LINK"
 curl -O "$FX_LOC"
 
-tar -xvf ./firefox*.tar*
-tar -xvf ./gecko*.tar.gz
+mv geckodriver*.tar.gz geckodriver.tar.gz
+
+if [[ $SYSTEM_NAME == "linux" ]]
+then
+    mv firefox*.tar.bz2 firefox.tar.bz2
+fi
