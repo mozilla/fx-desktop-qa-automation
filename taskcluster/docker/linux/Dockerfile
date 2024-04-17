@@ -25,7 +25,7 @@ ENV PATH=/root/.local/bin:$PATH
 # %include collect_executables.sh
 ADD topsrcdir/collect_executables.sh .
 RUN ./collect_executables.sh
-RUN ls .
+RUN mv *.tar.* /kaniko/buildcontext/
 
 ADD firefox.tar.bz2 /root/
 ADD geckodriver.tar.gz /root/
