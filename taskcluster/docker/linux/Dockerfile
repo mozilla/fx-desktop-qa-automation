@@ -29,7 +29,6 @@ RUN mv *.tar.* /kaniko/buildcontext/
 
 ADD firefox.tar.bz2 /root/
 ADD geckodriver.tar.gz /root/
-RUN tree /root
 
 ENV PATH=/root/.local/bin/firefox:$PATH
 
