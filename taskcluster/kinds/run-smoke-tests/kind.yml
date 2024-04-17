@@ -13,7 +13,7 @@ task-defaults:
         type: directory
 
 tasks:
-  smoketest-linux:
+  linux:
     dependencies:
       collect: collect-linux
     run:

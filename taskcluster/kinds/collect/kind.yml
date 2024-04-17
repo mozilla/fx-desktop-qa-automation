@@ -13,7 +13,7 @@ task-defaults:
         type: directory
 
 tasks:
-  collect-linux:
+  linux:
     run:
       using: run-task
       cwd: "{checkout}"
