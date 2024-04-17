@@ -1,0 +1,23 @@
+---
+transforms:
+  - fx_desktop_qa_automation_taskgraph.transforms.collect:transforms
+
+task-defaults:
+  worker-type: t-linux-large
+  worker:
+    docker-image: {in-tree: linux}
+    max-run-time: 1800
+    artifacts:
+      - name: public/results
+        path: /builds/worker/artifacts
+        type: directory
+
+tasks:
+  collect-linux:
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        ./collect_executables.sh
+        tar xvf firefox.tar.bz2
+        tar xvf geckodriver.tar.gz
