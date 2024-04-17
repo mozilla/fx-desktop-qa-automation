@@ -18,5 +18,5 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        ./firefox --version ;
-        python -m pytest --fx_executable ./firefox .
+        /firefox --version ;
+        python -m pytest --fx_executable /firefox .
