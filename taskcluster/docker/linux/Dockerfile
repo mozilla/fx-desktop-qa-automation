@@ -25,8 +25,6 @@ ENV PATH=/root/.local/bin:$PATH
 # %include collect_executables.sh
 ADD topsrcdir/collect_executables.sh .
 RUN ./collect_executables.sh
-RUN echo $PWD
-RUN ls -la
 
 ENV PATH=/root/.local/bin/firefox:$PATH
 

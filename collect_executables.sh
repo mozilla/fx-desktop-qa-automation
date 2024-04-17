@@ -71,4 +71,5 @@ echo "$FX_LOC"
 curl -OL "$GECKO_LINK"
 curl -O "$FX_LOC"
 
+tar -xvf ./firefox*.tar*
 tar -xvf ./gecko*.tar.gz
