@@ -25,6 +25,8 @@ ENV PATH=/root/.local/bin:$PATH
 # %include collect_executables.sh
 ADD topsrcdir/collect_executables.sh .
 RUN ./collect_executables.sh
+RUN mv firefox /root/
+RUN mv geckodriver /root/
 
 ENV PATH=/root/.local/bin/firefox:$PATH
 
