@@ -15,7 +15,9 @@ task-defaults:
 tasks:
   linux:
     dependencies:
-      collect: collect-linux
+      setupenv:
+        - setupenv-pipenv
+        - setupenv-linux
     run:
       using: run-task
       cwd: "{checkout}"

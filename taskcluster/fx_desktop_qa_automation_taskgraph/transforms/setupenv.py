@@ -8,7 +8,7 @@ transforms = TransformSequence()
 @transforms.add
 def apply_config(config, tasks):
     for task in tasks:
-        task["description"] = "Collects Fx and Geckodriver"
+        task["description"] = "Set up dependencies and env"
 
         env = task.setdefault("worker", {}).setdefault("env", {})
 

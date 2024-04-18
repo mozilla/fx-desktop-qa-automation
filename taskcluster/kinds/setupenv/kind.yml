@@ -1,6 +1,6 @@
 ---
 transforms:
-  - fx_desktop_qa_automation_taskgraph.transforms.collect:transforms
+  - fx_desktop_qa_automation_taskgraph.transforms.setupenv:transforms
 
 task-defaults:
   worker-type: t-linux-large
@@ -13,6 +13,12 @@ task-defaults:
         type: directory
 
 tasks:
+  pipenv:
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        pipenv install
   linux:
     run:
       using: run-task
