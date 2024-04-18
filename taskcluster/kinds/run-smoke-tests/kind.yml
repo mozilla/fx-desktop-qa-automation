@@ -14,16 +14,11 @@ task-defaults:
 
 tasks:
   linux:
-    dependencies:
-      env: setupenv-pipenv
-      fx_collect: setupenv-linux
     run:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        ls .;
-        ls firefox;
-        ./firefox/firefox --version ;
+        ./collect_executables.sh;
         mv ci_pyproject.toml pyproject.toml;
         pipenv install;
         pipenv run python -m pytest --fx-executable ./firefox/firefox .
