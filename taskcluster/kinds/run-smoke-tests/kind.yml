@@ -21,4 +21,4 @@ tasks:
         ./collect_executables.sh;
         mv ci_pyproject.toml pyproject.toml;
         pipenv install;
-        pipenv run python -m pytest --fx-executable ./firefox/firefox .
+        pipenv run pytest --fx-executable ./firefox/firefox .
