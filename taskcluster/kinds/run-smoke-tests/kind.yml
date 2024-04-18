@@ -22,4 +22,5 @@ tasks:
       cwd: "{checkout}"
       command: |-
         ./firefox/firefox --version ;
+        pipenv install
         pipenv run python -m pytest --fx_executable ./firefox/firefox .
