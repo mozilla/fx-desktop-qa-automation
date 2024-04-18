@@ -21,7 +21,9 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
+        ls .;
+        ls firefox;
         ./firefox/firefox --version ;
-        mv ci_pyproject.toml pyproject.toml
-        pipenv install
+        mv ci_pyproject.toml pyproject.toml;
+        pipenv install;
         pipenv run python -m pytest --fx-executable ./firefox/firefox .
