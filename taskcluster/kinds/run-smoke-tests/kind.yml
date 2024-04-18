@@ -15,9 +15,8 @@ task-defaults:
 tasks:
   linux:
     dependencies:
-      setupenv:
-        - setupenv-pipenv
-        - setupenv-linux
+      env: setupenv-pipenv
+      fx_collect: setupenv-linux
     run:
       using: run-task
       cwd: "{checkout}"
