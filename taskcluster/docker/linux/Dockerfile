@@ -19,6 +19,8 @@ RUN apt install -y git python3-pip python-is-python3 firefox libasound2 && \
     rm -rf /var/lib/apt/lists/* && \
     python -m pip install --no-cache --upgrade pip setuptools pytest selenium
 
+RUN pip install pipenv && pipenv install --dev --system --deploy
+
 # %include-run-task
 
 ENV PATH=/root/.local/bin:$PATH
