@@ -1,5 +1,5 @@
 # This test searches for a soccer ball on Amazon.
-#  It can fails after a while due to bot identification by Amazon
+#  It can fail after a while due to bot identification by Amazon
 
 import time
 
