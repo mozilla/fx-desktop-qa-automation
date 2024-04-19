@@ -25,9 +25,9 @@ def pytest_addoption(parser):
 
     parser.addoption(
         "--run-headless",
-        action="store",
+        action="store_true",
         default=False,
-        help="Run in headless mode: --run-headless=True",
+        help="Run in headless mode: --run-headless",
     )
 
     parser.addoption(
