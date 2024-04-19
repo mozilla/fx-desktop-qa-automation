@@ -15,6 +15,7 @@ def test_url():
     return "https://www.tiktok.com"
 
 
+@pytest.mark.incident
 @pytest.mark.skip("Test blocked by login and puzzle captcha")
 def test_new_tab(driver, test_url):
     print(" - TEST: Verify a user can search on TikTok")

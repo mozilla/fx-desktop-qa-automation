@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 
+@pytest.mark.incident
 def test_google_search_code(driver):
     print(" - TEST: Verify Firefox search code for Google SERP")
 

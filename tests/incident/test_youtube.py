@@ -15,6 +15,7 @@ def test_url():
     return "https://www.youtube.com/watch?v=mAia0v3ojzw"
 
 
+@pytest.mark.incident
 def test_youtube_search(driver, test_url):
     print(" - TEST: Verify a user can play a Youtube video")
 

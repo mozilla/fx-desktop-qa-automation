@@ -12,6 +12,7 @@ def test_url():
     return "https://example.com"
 
 
+@pytest.mark.incident
 def test_new_tab(driver, test_url):
     print(" - TEST: Verify a user can open a page in a new tab")
 

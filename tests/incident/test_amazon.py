@@ -15,6 +15,7 @@ def test_url():
     return "https://www.amazon.com"
 
 
+@pytest.mark.incident
 def test_amazon_search(driver, test_url):
     print(" - TEST: Verify a user can search on Amazon")
 

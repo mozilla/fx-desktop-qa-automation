@@ -1,12 +1,13 @@
 [tool.pytest.ini_options]
 generate_report_on_test = true
 markers = [
-    "pynput: test uses pynput package"
+    "pynput: test uses pynput package",
+    "incident: incident smoke tests"
 ]
 testpaths = [
     "tests"
 ]
-addopts = "-vs -m 'not pynput' --run-headless --html=/builds/worker/artifacts/report.html"
+addopts = "-vs -m 'not pynput' -m 'not incident' --run-headless --html=/builds/worker/artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"
