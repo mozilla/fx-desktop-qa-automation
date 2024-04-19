@@ -28,10 +28,7 @@ def test_amazon_search(driver, test_url):
     WebDriverWait(driver, 10).until(EC.url_contains("https://www.amazon.com"))
 
     # Verify the Amazon page is loaded
-    WebDriverWait(driver, 10).until(EC.title_contains("Amazon.com"))
-    page_title = driver.title
-    assert page_title == "Amazon.com. Spend less. Smile more."
-    print("Title of the web page is: " + page_title)
+    WebDriverWait(driver, 10).until(EC.title_is("Amazon.com. Spend less. Smile more."))
 
     # Find the search input field and enter "soccer ball"
     search_input = WebDriverWait(driver, 10).until(
