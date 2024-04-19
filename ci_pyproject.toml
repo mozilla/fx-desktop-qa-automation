@@ -1,12 +1,12 @@
 [tool.pytest.ini_options]
 generate_report_on_test = true
-addopts = "-vs -m 'not pynput' --html=/builds/worker/artifacts/report.html"
 markers = [
     "pynput: test uses pynput package"
 ]
 testpaths = [
     "tests"
 ]
+addopts = "-vs -m 'not pynput' --headless --html=/builds/worker/artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"

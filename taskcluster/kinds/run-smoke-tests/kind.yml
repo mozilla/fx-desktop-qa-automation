@@ -19,6 +19,6 @@ tasks:
       cwd: "{checkout}"
       command: |-
         ./collect_executables.sh;
-        mv ci_pyproject.toml pyproject.toml;
+        mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest -m 'not pynput' --fx-executable ./firefox/firefox .
