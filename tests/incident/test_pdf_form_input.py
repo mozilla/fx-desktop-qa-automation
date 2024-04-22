@@ -3,7 +3,6 @@ import platform
 import time
 
 import pytest
-from pynput.keyboard import Controller, Key
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -17,6 +16,10 @@ def test_url():
 @pytest.mark.incident
 @pytest.mark.pynput
 def test_pdf_form_fill(driver, test_url):
+    try:
+        from pynput.keyboard import Controller, Key
+    except:
+        pytest.skip("Could not load pynput")
     # From TestRail: https://testrail.stage.mozaws.net/index.php?/cases/view/1017484
     print(" - TEST: Verify PDF form input")
 
