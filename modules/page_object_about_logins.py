@@ -26,6 +26,10 @@ class AboutLogins(BasePage):
 
     @property
     def loaded(self):
+        try:
+            self.add_login_button()
+        except:
+            return False
         return EC.presence_of_element_located((By.CSS_SELECTOR, "login-list"))
 
     def add_login_button(self) -> WebElement:
