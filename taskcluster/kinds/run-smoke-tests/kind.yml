@@ -1,0 +1,24 @@
+---
+transforms:
+  - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
+
+task-defaults:
+  worker-type: t-linux-large
+  worker:
+    docker-image: {in-tree: linux}
+    max-run-time: 1800
+    artifacts:
+      - name: public/results
+        path: /builds/worker/artifacts
+        type: directory
+
+tasks:
+  linux:
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        ./collect_executables.sh;
+        mv ./ci_pyproject.toml ./pyproject.toml;
+        pipenv install;
+        pipenv run pytest --fx-executable ./firefox/firefox .

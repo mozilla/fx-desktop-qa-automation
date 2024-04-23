@@ -10,17 +10,24 @@ from selenium.webdriver.firefox.options import Options
 def pytest_addoption(parser):
     """Set custom command-line options"""
     parser.addoption(
-        "--fx-edition",
+        "--fx-channel",
         action="store",
         default="Custom",
-        help="Firefox edition to test. See README for exact paths to builds",
+        help="Firefox channel to test. See README for exact paths to builds",
+    )
+
+    parser.addoption(
+        "--fx-executable",
+        action="store",
+        default="",
+        help="Path to Fx executable. Will overwrite --fx-channel.",
     )
 
     parser.addoption(
         "--run-headless",
-        action="store",
+        action="store_true",
         default=False,
-        help="Run in headless mode: --run-headless=True",
+        help="Run in headless mode: --run-headless",
     )
 
     parser.addoption(
@@ -44,7 +51,10 @@ def opt_implicit_timeout(request):
 @pytest.fixture()
 def fx_executable(request):
     """Get the Fx executable path based on platform and edition request."""
-    version = request.config.getoption("--fx-edition")
+    version = request.config.getoption("--fx-channel")
+    location = request.config.getoption("--fx-executable")
+    if location:
+        return location
 
     # Get the platform this is running on
     sys_platform = platform.system()

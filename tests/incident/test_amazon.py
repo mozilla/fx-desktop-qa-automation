@@ -1,5 +1,5 @@
 # This test searches for a soccer ball on Amazon.
-#  It can fails after a while due to bot identification by Amazon
+#  It can fail after a while due to bot identification by Amazon
 
 import time
 
@@ -15,6 +15,7 @@ def test_url():
     return "https://www.amazon.com"
 
 
+@pytest.mark.incident
 def test_amazon_search(driver, test_url):
     print(" - TEST: Verify a user can search on Amazon")
 
@@ -28,10 +29,7 @@ def test_amazon_search(driver, test_url):
     WebDriverWait(driver, 10).until(EC.url_contains("https://www.amazon.com"))
 
     # Verify the Amazon page is loaded
-    WebDriverWait(driver, 10).until(EC.title_contains("Amazon.com"))
-    page_title = driver.title
-    assert page_title == "Amazon.com. Spend less. Smile more."
-    print("Title of the web page is: " + page_title)
+    WebDriverWait(driver, 10).until(EC.title_is("Amazon.com. Spend less. Smile more."))
 
     # Find the search input field and enter "soccer ball"
     search_input = WebDriverWait(driver, 10).until(

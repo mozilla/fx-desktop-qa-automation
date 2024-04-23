@@ -9,6 +9,7 @@ def test_url():
     return "https://www.mozilla.com"
 
 
+@pytest.mark.incident
 def test_bookmark(driver, test_url):
     print(" - TEST: Verify page can be Bookmarked")
     driver.get(test_url)

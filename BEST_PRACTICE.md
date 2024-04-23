@@ -46,7 +46,21 @@ also be set inside an individual test file.
 
 ### Support methods and classes
 
-Text TK
+Certain utilities are bundled in `./modules/util.py`. These are organized by
+general use case as classes, e.g. BrowserActions for helper functions that make
+Selenium easier to use or PomUtils that help organize object models. Import the
+class, but instantiate it inside the object model or test you're writing:
+```Python
+from modules.util import BrowserActions
+
+def test_something(driver):
+    ba = BrowserActions(driver)
+    ba.search("soccer ball")
+```
+
+### Page and Browser Object Models
+
+See [the Object Models doc](./OBJECT_MODELS.md) for best practices.
 
 ======
 

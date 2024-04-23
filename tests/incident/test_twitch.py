@@ -10,6 +10,7 @@ def test_url():
     return "https://www.twitch.com"
 
 
+@pytest.mark.incident
 def test_twitch_search(driver, test_url):
     print(" - TEST: Verify a user can search on Twitch")
 

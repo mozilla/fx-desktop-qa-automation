@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+faker = "*"
 selenium = "*"
 pynput = "*"
 pytest = "*"
@@ -16,7 +17,6 @@ pypom = "*"
 [dev-packages]
 werkzeug = "*"
 selenium-wire = "*"
-faker = "*"
 pdoc = "*"
 ruff = "*"
 pytest-variables = "*"

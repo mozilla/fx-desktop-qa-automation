@@ -2,7 +2,8 @@
 generate_report_on_test = false
 addopts = "-vs --html=report.html"
 markers = [
-    "pynput: test uses pynput package"
+    "pynput: test uses pynput package",
+    "incident: incident smoke tests"
 ]
 
 [tool.ruff]
