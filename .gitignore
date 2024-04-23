@@ -4,11 +4,11 @@ assets/
 /Test Results - .html
 /geckodriver.log
 env
-./*.dmg
-./*.tar
-./*.zip
-./*.gz
-./*.7z
+*.dmg
+*.tar
+*.zip
+*.gz
+*.7z
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

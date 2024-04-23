@@ -60,7 +60,7 @@ def test_something(driver):
 
 ### Page and Browser Object Models
 
-See ./OBJECT_MODELS.md for best practices.
+See [the Object Models doc](./OBJECT_MODELS.md) for best practices.
 
 ======
 
