@@ -3,8 +3,7 @@
 # Usage: ./collect_executables.sh [channel]
 # Collects geckodriver and Fx, default channel is Beta.
 
-GECKO_LINK=$(curl https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq '.["assets"][0]["browser_download_url"]' | tr -d '"')
-
+## Determine OS and arch
 UNAME_A=$(uname -a)
 if [ -n "$WSL_DISTRO_NAME" ]
 then
@@ -32,8 +31,7 @@ fi
 
 if [[ "$SYSTEM_NAME" == "win" ]] && [[ -z $ARCH ]] && [[ $BITS = "64" ]]
 then
-    echo "Intel Win64"
-    exit 2
+    BITS=32
 fi
 
 if [[ $SYSTEM_NAME == "win" ]]
@@ -43,8 +41,23 @@ else
     EXT="tar.gz"
 fi
 
-FILENAME="geckodriver-${GECKO_LATEST_VERSION}-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
+# Find the version of Geckodriver that matches arch
+FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
+echo "$FILENAME"
+echo "--"
 
+# 20 is arbitrary and may break if future releases of Geckodriver have more than 20 channels
+for i in {0..20}
+do
+    GECKO_LINK=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq ".[\"assets\"][${i}][\"browser_download_url\"]" | tr -d '"')
+    if [[ $GECKO_LINK == *"${FILENAME}"* ]] && [[ $GECKO_LINK != *".asc" ]]
+    then
+        echo "$GECKO_LINK"
+        curl -OL "$GECKO_LINK"
+    fi
+done
+
+# Determine the Fx channel and arch
 if [[ $SYSTEM_NAME == "macos" ]]
 then
     FX_SYS_NAME="osx"
@@ -62,13 +75,9 @@ else
         CHANNEL=""
     fi
 fi
-FX_LINK_HTML=$(curl https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
+FX_LINK_HTML=$(curl -s https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
 FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
-echo "$GECKO_LINK"
-echo "$FX_LOC"
-
-curl -OL "$GECKO_LINK"
 curl -O "$FX_LOC"
 
 mv geckodriver*.tar.gz geckodriver.tar.gz
