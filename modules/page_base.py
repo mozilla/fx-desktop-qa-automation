@@ -4,6 +4,7 @@ import re
 from pypom import Page
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 
 from modules.util import PomUtils
 
@@ -21,6 +22,30 @@ STRATEGY_MAP = {
 
 
 class BasePage(Page):
+    """
+    This class extends pypom.Page with a constructor and methods to support our testing.
+
+    Page objects will now expect a JSON entry in ./modules/data with info about elements'
+    selectors, locations in shadow DOM, and other categorizations. This JSON file should
+    be name filename.components.json, where filename is the snake_case version of the
+    class name. E.g. AboutPrefs has ./modules/data/about_prefs.components.json.
+
+    Elements in the "requiredForPage" group will be checked for presence before self.loaded
+    can return True.
+
+    ...
+
+    Attributes
+    ----------
+    driver: selenium.webdriver.Firefox
+        The browser instance under test
+
+    utils: modules.utils.PomUtils
+        POM utilities for the object
+
+    elements: dict
+        Parse of the elements JSON file
+    """
     def __init__(self, driver, **kwargs):
         super().__init__(driver, **kwargs)
         self.utils = PomUtils(self.driver)
@@ -36,15 +61,38 @@ class BasePage(Page):
         self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
 
     def expect(self, condition) -> Page:
+        """Use the Page's wait object to assert a condition or wait until timeout"""
         self.wait.until(condition)
         return self
 
     def load_element_manifest(self, manifest_loc):
+        """Populate self.elements with the parse of the elements JSON"""
         with open(manifest_loc) as fh:
             self.elements = json.load(fh)
 
     def get_selector(self, name: str, *label) -> list:
-        """ """
+        """
+        Given a key for a self.elements dict entry, return the Selenium selector tuple.
+        If there are items in `label`, replace instances of {.*} in the "selectorData"
+        with items from `label`, in the order they are given. (Think Rust format macros.)
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        *label: *str
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+        list
+            The Selenium selector tuple (as a list)
+        """
         element_data = self.elements[name]
         selector = [
             STRATEGY_MAP[element_data["strategy"]],
@@ -58,7 +106,30 @@ class BasePage(Page):
             selector[1] = selector[1].replace(match[i], label[i])
         return selector
 
-    def get_element(self, name: str, *label):
+    def get_element(self, name: str, *label) -> WebElement:
+        """
+        Given a key for a self.elements dict entry, return the Selenium WebElement.
+        If there are items in `label`, replace instances of {.*} in the "selectorData"
+        with items from `label`, in the order they are given. (Think Rust format macros.)
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        *label: *str
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+
+        selenium.webdriver.remote.webelement.WebElement
+            The WebElement object referred to by the element dict.
+        """
         if "seleniumObject" in self.elements[name]:
             return self.elements[name]["seleniumObject"]
         element_data = self.elements[name]
