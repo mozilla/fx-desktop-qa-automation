@@ -3,8 +3,8 @@ import re
 
 from pypom import Page
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.util import PomUtils
 
@@ -46,6 +46,7 @@ class BasePage(Page):
     elements: dict
         Parse of the elements JSON file
     """
+
     def __init__(self, driver, **kwargs):
         super().__init__(driver, **kwargs)
         self.utils = PomUtils(self.driver)
