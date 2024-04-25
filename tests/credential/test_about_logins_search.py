@@ -12,4 +12,4 @@ def test_about_logins_search_functionality(
     (driver, usernames) = driver_and_saved_usernames
     about_logins = AboutLogins(driver).open()
     ba = BrowserActions(driver)
-    ba.clear_and_fill(about_logins.search_input(), usernames[-1])
+    ba.clear_and_fill(about_logins.get_element("login-filter-input"), usernames[-1])

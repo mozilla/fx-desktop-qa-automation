@@ -1,15 +1,9 @@
-from pypom import Page, Region
-from selenium.common.exceptions import (
-    InvalidArgumentException,
-    WebDriverException,
-)
-from selenium.webdriver import Firefox
+from pypom import Region
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
-from modules.util import BrowserActions, PomUtils
+from modules.util import PomUtils
 
 
 class AboutPrefs(BasePage):
@@ -17,9 +11,11 @@ class AboutPrefs(BasePage):
 
     URL_TEMPLATE = "about:preferences#{category}"
 
-    class Dropdown(Region):
-        _active_dropdown_item = (By.CSS_SELECTOR, "menuitem[_moz-menuactive='true']")
+    def __init__(self, driver, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.load_element_manifest("./modules/data/about_prefs.components.json")
 
+    class Dropdown(Region):
         def __init__(self, page, **kwargs):
             super().__init__(page, **kwargs)
             self.utils = PomUtils(self.driver)
@@ -45,26 +41,9 @@ class AboutPrefs(BasePage):
             elif len(matching_menuitems) == 1:
                 matching_menuitems[0].click()
                 self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
-                return matching_menuitems[0]
+                return self
             else:
                 raise ValueError("More than one menu item matched search string")
 
-    def dropdown(self, selector: tuple[str, str]) -> Dropdown:
-        menu_root = self.driver.find_element(*selector)
-        return self.Dropdown(self, root=menu_root)
-
-    def dropdown_with_current_value(self, value: str) -> Dropdown:
-        menu_root = self.driver.find_element(
-            By.CSS_SELECTOR, f"menulist[label='{value}']"
-        )
-        return self.Dropdown(self, root=menu_root)
-
-    def dropdown_with_label(self, label: str) -> Dropdown:
-        menu_root = self.driver.find_element(
-            By.XPATH,
-            f".//label[contains(., '{label}')]/following-sibling::hbox/menulist",
-        )
-        return self.Dropdown(self, root=menu_root)
-
     def search_engine_dropdown(self) -> Dropdown:
-        return self.dropdown((By.ID, "defaultEngine"))
+        return self.Dropdown(self, root=self.get_element("search-engine-dropdown-root"))

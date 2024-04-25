@@ -1,0 +1,69 @@
+{
+    "login-list":
+    {
+        "selectorData": "login-list",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "create-login-button":
+    {
+        "selectorData": "create-login-button",
+        "strategy": "css",
+        "shadowParent": "login-list",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "login-filter":
+    {
+        "selectorData": "login-filter",
+        "strategy": "css",
+        "shadowParent": "login-list",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "login-filter-input":
+    {
+        "selectorData": "filter",
+        "strategy": "class",
+        "shadowParent": "login-filter",
+        "groups": []
+    },
+
+    "login-item":
+    {
+        "selectorData": "login-item",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "login-item-type":
+    {
+        "selectorData": "{name}",
+        "strategy": "name",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "form-actions-row":
+    {
+        "selectorData": "form-actions-row",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "save-changes-button":
+    {
+        "selectorData": "save-changes-button",
+        "strategy": "class",
+        "shadowParent": "form-actions-row",
+        "groups": []
+    }
+
+}

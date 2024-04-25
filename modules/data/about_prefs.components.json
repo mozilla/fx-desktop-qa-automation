@@ -1,0 +1,46 @@
+{
+    "search-engine-dropdown-root": {
+        "selectorData": "defaultEngine",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage",
+            "dropdownRoot",
+            "searchEngineDropdown"
+        ]
+    },
+
+    "search-engine-dropmarker": {
+        "selectorData": "dropmarker",
+        "strategy": "tag",
+        "shadowParent": "search-engine-dropdown-root",
+        "groups": [
+            "searchEngineDropdown"
+        ]
+    },
+
+    "dropdown-by-label": {
+        "selectorData": ".//label[contains(., '{label}')]/following-sibling::hbox/menulist",
+        "strategy": "xpath",
+        "groups": [
+            "generic",
+            "dropdownRoot"
+        ]
+    },
+
+    "dropdown-by-current-value": {
+        "selectorData": "menulist[label='{value}']",
+        "strategy": "css",
+        "groups": [
+            "generic",
+            "dropdownRoot"
+        ]
+    },
+
+    "active-menu-item": {
+        "selectorData": "menuitem[_moz-menuactive='true']",
+        "strategy": "css",
+        "groups": [
+            "refresh"
+        ]
+    }
+}
