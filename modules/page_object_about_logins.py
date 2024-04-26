@@ -19,10 +19,6 @@ class AboutLogins(BasePage):
 
     URL_TEMPLATE = "about:logins"
 
-    def __init__(self, driver):
-        super().__init__(driver)
-        self.load_element_manifest("./modules/data/about_logins.components.json")
-
     def click_add_login_button(self) -> Page:
         self.get_element("create-login-button").click()
         return self

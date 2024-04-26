@@ -11,10 +11,6 @@ class AboutPrefs(BasePage):
 
     URL_TEMPLATE = "about:preferences#{category}"
 
-    def __init__(self, driver, **kwargs):
-        super().__init__(driver, **kwargs)
-        self.load_element_manifest("./modules/data/about_prefs.components.json")
-
     class Dropdown(Region):
         def __init__(self, page, **kwargs):
             super().__init__(page, **kwargs)
