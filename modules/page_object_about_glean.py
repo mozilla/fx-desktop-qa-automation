@@ -1,13 +1,4 @@
-from time import sleep
-
-from pypom import Page, Region
-from selenium.common.exceptions import (
-    InvalidArgumentException,
-    WebDriverException,
-)
-from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
+from pypom import Page
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -19,7 +10,7 @@ class AboutGlean(BasePage):
 
     URL_TEMPLATE = "about:glean"
 
-    def change_ping_id(self, ping_id: str):
+    def change_ping_id(self, ping_id: str) -> Page:
         ba = BrowserActions(self.driver)
         ping_input = self.get_element("ping-id-input")
         ba.clear_and_fill(ping_input, ping_id)
