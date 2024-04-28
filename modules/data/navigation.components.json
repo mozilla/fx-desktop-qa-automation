@@ -1,0 +1,90 @@
+{
+    "awesome-bar": {
+        "selectorData": "urlbar-input",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage",
+            "awesomeBar"
+        ]
+    },
+
+    "tab-to-search-text-span": {
+        "selectorData": "urlbarView-dynamic-onboardTabToSearch-text-container",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "search-mode-span": {
+        "selectorData": "urlbar-search-mode-indicator-title",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "overflow-item": {
+        "selectorData": "[class=\"urlbarView-title urlbarView-overflowable\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-one-off-settings-button": {
+        "selectorData": "urlbar-anon-search-settings",
+        "strategy": "id",
+        "groups": [
+            "searchOneOffs"
+        ]
+    },
+
+    "quick-actions-refresh-button": {
+        "selectorData": "urlbarView-row-3-label-0",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "refresh-intervention-card": {
+        "selectorData": "div[tip-type=\"intervention_refresh\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fx-refresh-text": {
+        "selectorData": "span[data-l10n-id=\"intervention-refresh-profile\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fx-refresh-button": {
+        "selectorData": "span[role=\"button\"][data-l10n-id=\"intervention-refresh-profile-confirm\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fx-refresh-menu": {
+        "selectorData": "span[data-l10n-id=\"urlbar-result-menu-button\"][title=\"Open menu\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fx-refresh-menu-get-help-item": {
+        "selectorData": "menuitem[data-l10n-id=\"urlbar-result-menu-tip-get-help\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-engine-suggestion-row": {
+        "selectorData": "div[class=\"urlbarView-row\"][type=\"search_engine\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-one-off-engine-button": {
+        "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^={site}]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-one-off-browser-button": {
+        "selectorData": "urlbar-engine-one-off-item-{source}",
+        "strategy": "id",
+        "groups": []
+    }
+}

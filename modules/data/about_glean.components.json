@@ -1,0 +1,23 @@
+{
+    "ping-id-input": {
+        "selectorData": "tag-pings",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "ping-submit-button": {
+        "selectorData": "controls-submit",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "ping-submit-label": {
+        "selectorData": "label[for='controls-submit']",
+        "strategy": "css",
+        "groups": []
+    }
+}

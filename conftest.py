@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 from typing import List, Tuple
@@ -88,11 +89,17 @@ def fx_executable(request):
 
 
 @pytest.fixture(autouse=True)
+def env_prep():
+    logging.getLogger("werkzeug").setLevel(logging.WARNING)
+
+
+@pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
     set_prefs: List[Tuple],
+    env_prep,
 ):
     """
     Return the webdriver object.
