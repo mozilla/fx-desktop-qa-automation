@@ -7,6 +7,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.util import PomUtils
+import logging
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {
@@ -53,6 +54,8 @@ class BasePage(Page):
 
         # JSON files should be labelled with snake_cased versions of the Class name
         qualname = self.__class__.__qualname__
+        logging.info("======")
+        logging.info(f"Loading POM for {qualname}...")
         manifest_name = qualname[0].lower()
         for char in qualname[1:]:
             if char == char.lower():
@@ -68,6 +71,7 @@ class BasePage(Page):
 
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
+        logging.info(f"Loading element manifest: {manifest_loc}")
         with open(manifest_loc) as fh:
             self.elements = json.load(fh)
 
@@ -94,6 +98,7 @@ class BasePage(Page):
         list
             The Selenium selector tuple (as a list)
         """
+        logging.info(f"Get selector for {name}...")
         element_data = self.elements[name]
         selector = [
             STRATEGY_MAP[element_data["strategy"]],
@@ -104,6 +109,7 @@ class BasePage(Page):
         braces = re.compile(r"(\{.*?\})")
         match = braces.findall(selector[1])
         for i in range(len(label)):
+            logging.info(f"Replace {match[i]} with {label[i]}")
             selector[1] = selector[1].replace(match[i], label[i])
         return selector
 
@@ -131,17 +137,22 @@ class BasePage(Page):
         selenium.webdriver.remote.webelement.WebElement
             The WebElement object referred to by the element dict.
         """
+        logging.info("====")
+        logging.info(f"Getting element {name}")
         if "seleniumObject" in self.elements[name]:
+            logging.info("Returned from object cache!")
             return self.elements[name]["seleniumObject"]
         element_data = self.elements[name]
         selector = self.get_selector(name, *label)
         if "shadowParent" in element_data:
+            logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
             shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
             self.elements[name]["seleniumObject"] = shadow_element
             return shadow_element
         found_element = self.driver.find_element(*selector)
         self.elements[name]["seleniumObject"] = found_element
+        logging.info(f"Returning element {name}.\n")
         return found_element
 
     @property
