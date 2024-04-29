@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 
 from pypom import Page
@@ -7,7 +8,6 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.util import PomUtils
-import logging
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {

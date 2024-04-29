@@ -1,6 +1,6 @@
+import logging
 from collections.abc import Iterable
 from random import shuffle
-import logging
 
 from selenium.common.exceptions import (
     InvalidArgumentException,
@@ -130,6 +130,7 @@ class PomUtils:
         Given a WebElement, return the shadow DOM root or roots attached to it. Returns a list.
         """
         logging.info(f"Getting shadow nodes from root {element}")
+
         def shadow_from_script():
             shadow_children = self.driver.execute_script(
                 "return arguments[0].shadowRoot.children", element
@@ -155,7 +156,9 @@ class PomUtils:
 
     def css_selector_matches_element(self, element: WebElement, selector: list) -> bool:
         sel = f'"{selector[1]}"'
-        return self.driver.execute_script(f"return arguments[0].matches({sel})", element)
+        return self.driver.execute_script(
+            f"return arguments[0].matches({sel})", element
+        )
 
     def find_shadow_element(
         self, shadow_parent: WebElement, selector: list
