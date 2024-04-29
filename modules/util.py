@@ -1,5 +1,6 @@
 import logging
 from collections.abc import Iterable
+from typing import Union
 from random import shuffle
 
 from selenium.common.exceptions import (
@@ -10,6 +11,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.shadowroot import ShadowRoot
 
 
 class Utilities:
@@ -125,7 +127,7 @@ class PomUtils:
     def __init__(self, driver: Firefox):
         self.driver = driver
 
-    def get_shadow_content(self, element: WebElement) -> list[WebElement]:
+    def get_shadow_content(self, element: WebElement) -> list[Union[WebElement, ShadowRoot]]:
         """
         Given a WebElement, return the shadow DOM root or roots attached to it. Returns a list.
         """
@@ -154,14 +156,16 @@ class PomUtils:
             return shadow_from_script()
         return []
 
-    def css_selector_matches_element(self, element: WebElement, selector: list) -> bool:
+    def css_selector_matches_element(self, element: Union[WebElement, ShadowRoot], selector: list) -> bool:
+        if type(element) == ShadowRoot:
+            return False
         sel = f'"{selector[1]}"'
         return self.driver.execute_script(
             f"return arguments[0].matches({sel})", element
         )
 
     def find_shadow_element(
-        self, shadow_parent: WebElement, selector: list
+        self, shadow_parent: Union[WebElement, ShadowRoot], selector: list
     ) -> WebElement:
         """
         Given a WebElement with a shadow root attached, find a selector in the
@@ -169,15 +173,12 @@ class PomUtils:
         """
         original_timeout = self.driver.timeouts.implicit_wait
         matches = []
-        logging.info(f"Requesting shadow nodes from root {shadow_parent}")
+        logging.info(f"Requesting shadow nodes from root {shadow_parent}...")
         shadow_nodes = self.get_shadow_content(shadow_parent)
-        logging.info("Found shadow nodes")
-        logging.info(shadow_nodes)
-        logging.info(f"looking for {selector}")
+        logging.info(f"Found {len(shadow_nodes)} shadow nodes...")
+        logging.info(f"Looking for {selector}...")
         self.driver.implicitly_wait(0)
         for node in shadow_nodes:
-            logging.info(node)
-            logging.info(node.get_attribute("outerHTML"))
             if self.css_selector_matches_element(node, selector):
                 # If we collect shadow children via JS, and one matches the selector, we're good.
                 self.driver.implicitly_wait(original_timeout)
@@ -188,10 +189,12 @@ class PomUtils:
                 matches.extend(elements)
         self.driver.implicitly_wait(original_timeout)
         if len(matches) == 1:
+            logging.info("Returning match...")
             return matches[0]
         elif len(matches):
             raise WebDriverException(
                 "More than one element matched within a Shadow DOM"
             )
         else:
+            logging.info("No matches found.")
             return None
