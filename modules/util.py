@@ -1,7 +1,7 @@
 import logging
 from collections.abc import Iterable
-from typing import Union
 from random import shuffle
+from typing import Union
 
 from selenium.common.exceptions import (
     InvalidArgumentException,
@@ -10,8 +10,8 @@ from selenium.common.exceptions import (
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.shadowroot import ShadowRoot
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class Utilities:
@@ -127,7 +127,9 @@ class PomUtils:
     def __init__(self, driver: Firefox):
         self.driver = driver
 
-    def get_shadow_content(self, element: WebElement) -> list[Union[WebElement, ShadowRoot]]:
+    def get_shadow_content(
+        self, element: WebElement
+    ) -> list[Union[WebElement, ShadowRoot]]:
         """
         Given a WebElement, return the shadow DOM root or roots attached to it. Returns a list.
         """
@@ -156,7 +158,9 @@ class PomUtils:
             return shadow_from_script()
         return []
 
-    def css_selector_matches_element(self, element: Union[WebElement, ShadowRoot], selector: list) -> bool:
+    def css_selector_matches_element(
+        self, element: Union[WebElement, ShadowRoot], selector: list
+    ) -> bool:
         if type(element) == ShadowRoot:
             return False
         sel = f'"{selector[1]}"'
