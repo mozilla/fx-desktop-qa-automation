@@ -1,6 +1,8 @@
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
+
 from modules.page_object import AboutPrefs
+
 
 def test_search_prefs(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="general").open()
