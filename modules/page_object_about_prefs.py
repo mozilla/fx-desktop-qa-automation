@@ -1,5 +1,4 @@
 from pypom import Region
-from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -45,3 +44,9 @@ class AboutPrefs(BasePage):
 
     def search_engine_dropdown(self) -> Dropdown:
         return self.Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
+
+    def find_in_settings(self, term: str) -> BasePage:
+        search_input = self.get_element("find-in-settings-input")
+        search_input.clear()
+        search_input.send_keys(term)
+        return self
