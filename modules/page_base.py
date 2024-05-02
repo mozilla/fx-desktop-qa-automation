@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+from collections.abc import Callable
 
 from pypom import Page
 from selenium.webdriver.common.by import By
@@ -154,6 +155,22 @@ class BasePage(Page):
         self.elements[name]["seleniumObject"] = found_element
         logging.info(f"Returning element {name}.\n")
         return found_element
+
+    def element_exists(self, name: str, *label) -> Page:
+        self.expect(EC.presence_of_element_located(self.get_selector(name, *label)))
+        return self
+
+    def element_visible(self, name: str, *label) -> Page:
+        self.expect(EC.visibility_of(self.get_element(name, *label)))
+        return self
+
+    def element_clickable(self, name: str, *label) -> Page:
+        self.expect(EC.element_to_be_clickable(self.get_element(name, *label)))
+        return self
+
+    def element_selected(self, name: str, *label) -> Page:
+        self.expect(EC.element_to_be_selected(self.get_element(name, *label)))
+        return self
 
     @property
     def loaded(self):
