@@ -161,7 +161,7 @@ class PomUtils:
     def css_selector_matches_element(
         self, element: Union[WebElement, ShadowRoot], selector: list
     ) -> bool:
-        if type(element) == ShadowRoot:
+        if element is ShadowRoot:
             return False
         sel = f'"{selector[1]}"'
         return self.driver.execute_script(
