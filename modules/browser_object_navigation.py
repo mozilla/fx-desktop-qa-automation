@@ -87,24 +87,6 @@ class Navigation(BasePage):
         )
         return self
 
-    def assert_search_mode_matches(self, mode: str) -> BasePage:
-        """docstring"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            mode_chip_value = self.get_element("search-mode-span").get_attribute(
-                "innerText"
-            )
-            if "." in mode_chip_value:
-                # Amazon.com!
-                mode_chip_value = mode_chip_value.split(".")[0]
-            assert mode_chip_value.lower() == mode.lower()
-        return self
-
-    def click_one_off_search_button(self, mode: str) -> BasePage:
-        """docstring"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("search-one-off-engine-button", mode).click()
-        return self
-
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
