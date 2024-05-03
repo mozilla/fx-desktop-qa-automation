@@ -16,20 +16,6 @@ class Navigation(BasePage):
         "Actions": ">",
     }
 
-    _xul_source_snippet = (
-        'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
-    )
-
-    def ensure_chrome_context(self):
-        """Make sure the Selenium driver is using CONTEXT_CHROME"""
-        if self._xul_source_snippet not in self.driver.page_source:
-            self.driver.set_context(self.driver.CONTEXT_CHROME)
-
-    def resume_content_context(self):
-        """Make sure the Selenium driver is using CONTEXT_CONTENT"""
-        if self._xul_source_snippet in self.driver.page_source:
-            self.driver.set_context(self.driver.CONTEXT_CONTENT)
-
     def expect_in_content(self, condition) -> BasePage:
         """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):

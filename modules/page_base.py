@@ -65,6 +65,20 @@ class BasePage(Page):
                 manifest_name += f"_{char.lower()}"
         self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
 
+    _xul_source_snippet = (
+        'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
+    )
+
+    def ensure_chrome_context(self):
+        """Make sure the Selenium driver is using CONTEXT_CHROME"""
+        if self._xul_source_snippet not in self.driver.page_source:
+            self.driver.set_context(self.driver.CONTEXT_CHROME)
+
+    def resume_content_context(self):
+        """Make sure the Selenium driver is using CONTEXT_CONTENT"""
+        if self._xul_source_snippet in self.driver.page_source:
+            self.driver.set_context(self.driver.CONTEXT_CONTENT)
+
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
         self.wait.until(condition)
