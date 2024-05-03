@@ -9,9 +9,12 @@ task-defaults:
     max-run-time: 1800
 
 tasks:
-  world:
-    noun: world
+  linux:
     run:
       using: run-task
-      command: >-
-          echo "Hello $NOUN!"
+      cwd: "{checkout}"
+      command: |-
+        mv ./dev_pyproject.toml ./pyproject.toml;
+        pipenv install;
+        pipenv run python -m ruff format .;
+        pipenv run python -m ruff check --fix .;
