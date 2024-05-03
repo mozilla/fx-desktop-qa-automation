@@ -19,11 +19,12 @@ class PanelUi(BasePage):
 
         @property
         def loaded(self):
-            targeted = [el for el in self.page.elements.values() if "requiredForPage" in el["groups"] and "menuItem" in el["groups"]]
-            return all(
-                [EC.presence_of_element_located(el) for el in targeted]
-            )
-
+            targeted = [
+                el
+                for el in self.page.elements.values()
+                if "requiredForPage" in el["groups"] and "menuItem" in el["groups"]
+            ]
+            return all([EC.presence_of_element_located(el) for el in targeted])
 
     def open_panel_menu(self) -> BasePage:
         with self.driver.context(self.driver.CONTEXT_CHROME):

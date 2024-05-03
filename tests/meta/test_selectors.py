@@ -1,5 +1,7 @@
-from modules.browser_object import PanelUi
 from selenium.webdriver import Firefox
+
+from modules.browser_object import PanelUi
+
 
 def test_a_selector(driver: Firefox):
     panel = PanelUi(driver).open()
