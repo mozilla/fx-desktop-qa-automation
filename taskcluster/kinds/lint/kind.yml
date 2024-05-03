@@ -16,5 +16,5 @@ tasks:
       command: |-
         mv ./dev_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run python -m ruff format .;
-        pipenv run python -m ruff check --fix .;
+        pipenv run ruff format .;
+        pipenv run ruff check --fix .;
