@@ -86,5 +86,11 @@
         "selectorData": "urlbar-engine-one-off-item-{source}",
         "strategy": "id",
         "groups": []
+    },
+
+    "panel-ui-button": {
+        "selectorData": "PanelUI-button",
+        "strategy": "id",
+        "groups": []
     }
 }
