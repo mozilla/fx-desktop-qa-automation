@@ -15,6 +15,6 @@ tasks:
       cwd: "{checkout}"
       command: |-
         mv ./dev_pyproject.toml ./pyproject.toml;
-        pipenv install;
-        pipenv run ruff format .;
-        pipenv run ruff check --fix .;
+        pip install ruff;
+        ruff format .;
+        ruff check --fix .;
