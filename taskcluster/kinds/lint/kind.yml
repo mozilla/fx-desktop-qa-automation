@@ -1,6 +1,6 @@
 ---
 transforms:
-  - fx_desktop_qa_automation_taskgraph.transforms.hello:transforms
+  - fx_desktop_qa_automation_taskgraph.transforms.lint:transforms
 
 task-defaults:
   worker-type: t-linux-large
