@@ -24,7 +24,7 @@ class Navigation(BasePage):
 
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
-        self.ensure_chrome_context()
+        self.set_chrome_context()
         self.awesome_bar = self.get_element("awesome-bar")
         return self
 

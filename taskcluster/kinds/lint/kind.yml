@@ -15,6 +15,5 @@ tasks:
       cwd: "{checkout}"
       command: |-
         mv ./dev_pyproject.toml ./pyproject.toml;
-        pip install ruff;
         ruff format .;
         ruff check --fix .;

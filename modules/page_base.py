@@ -68,12 +68,12 @@ class BasePage(Page):
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
     )
 
-    def ensure_chrome_context(self):
+    def set_chrome_context(self):
         """Make sure the Selenium driver is using CONTEXT_CHROME"""
         if self._xul_source_snippet not in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CHROME)
 
-    def resume_content_context(self):
+    def set_content_context(self):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
