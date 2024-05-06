@@ -21,11 +21,7 @@ def test_search_modes_for_sites(driver: Firefox, site: str):
         The list of search options to try
 
     """
-    # search in bar the site
     nav = Navigation(driver).open()
-    # mode is optional because it will try to enter it as the little shard if specified
     nav.search("soccer", mode=site)
-    # verify its in the search bar
     nav.expect_in_content(EC.url_contains(site.lower()))
-    # close
     nav.clear_awesome_bar()
