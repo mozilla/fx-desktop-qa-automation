@@ -1,0 +1,19 @@
+---
+transforms:
+  - fx_desktop_qa_automation_taskgraph.transforms.lint:transforms
+
+task-defaults:
+  worker-type: t-linux-large
+  worker:
+    docker-image: {in-tree: linux}
+    max-run-time: 1800
+
+tasks:
+  linux:
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        mv ./dev_pyproject.toml ./pyproject.toml;
+        ruff format .;
+        ruff check --fix .;

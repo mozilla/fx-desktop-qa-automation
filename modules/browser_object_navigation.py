@@ -1,4 +1,3 @@
-from pypom import Page
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,29 +16,15 @@ class Navigation(BasePage):
         "Actions": ">",
     }
 
-    _xul_source_snippet = (
-        'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
-    )
-
-    def ensure_chrome_context(self):
-        """Make sure the Selenium driver is using CONTEXT_CHROME"""
-        if self._xul_source_snippet not in self.driver.page_source:
-            self.driver.set_context(self.driver.CONTEXT_CHROME)
-
-    def resume_content_context(self):
-        """Make sure the Selenium driver is using CONTEXT_CONTENT"""
-        if self._xul_source_snippet in self.driver.page_source:
-            self.driver.set_context(self.driver.CONTEXT_CONTENT)
-
-    def expect_in_content(self, condition) -> Page:
+    def expect_in_content(self, condition) -> BasePage:
         """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             self.expect(condition)
         return self
 
-    def set_awesome_bar(self) -> Page:
+    def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
-        self.ensure_chrome_context()
+        self.set_chrome_context()
         self.awesome_bar = self.get_element("awesome-bar")
         return self
 
@@ -48,20 +33,20 @@ class Navigation(BasePage):
         self.set_awesome_bar()
         return self.awesome_bar
 
-    def clear_awesome_bar(self) -> Page:
+    def clear_awesome_bar(self) -> BasePage:
         """Clear the Awesome Bar. Prefer this over get_element("awesome-bar").clear()"""
         self.set_awesome_bar()
         self.awesome_bar.clear()
         return self
 
-    def type_in_awesome_bar(self, term: str) -> Page:
+    def type_in_awesome_bar(self, term: str) -> BasePage:
         """Enter text into the Awesome Bar. You probably want self.search()"""
         self.set_awesome_bar()
         self.awesome_bar.click()
         self.awesome_bar.send_keys(term)
         return self
 
-    def set_search_mode_via_awesome_bar(self, mode: str) -> Page:
+    def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
         """
         Given a `mode`, set the Awesome Bar search mode. Returns self.
 
@@ -88,7 +73,7 @@ class Navigation(BasePage):
         )
         return self
 
-    def search(self, term: str, mode=None) -> Page:
+    def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
 

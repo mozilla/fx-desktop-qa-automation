@@ -42,5 +42,26 @@
         "groups": [
             "refresh"
         ]
+    },
+
+    "find-in-settings": {
+        "selectorData": "searchInput",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "find-in-settings-input": {
+        "selectorData": "input[placeholder='Find in Settings']",
+        "strategy": "css",
+        "shadowParent": "find-in-settings",
+        "groups": []
+    },
+
+    "h2-enhanced-tracking-protection": {
+        "selectorData": "h2[data-l10n-id='content-blocking-enhanced-tracking-protection']",
+        "strategy": "css",
+        "groups": []
     }
 }
