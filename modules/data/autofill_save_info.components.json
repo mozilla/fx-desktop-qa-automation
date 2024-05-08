@@ -7,8 +7,8 @@
         ]
     },
     "organization-field": {
-        "selectorData": "input[autocomplete=\"organization\"]",
-        "strategy": "css",
+        "selectorData": "/html/body/form/label[2]/input",
+        "strategy": "xpath",
         "groups": [
             "requiredForPage"
         ]

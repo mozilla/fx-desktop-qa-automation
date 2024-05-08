@@ -1,5 +1,3 @@
-from pypom import Page
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_base import BasePage
@@ -12,7 +10,8 @@ class AutofillSaveInfo(BasePage):
     """
 
     def save_information_basic(self, autofill_info: AutofillAddressBase):
-        # self.fill_input_element
+        ba = BrowserActions(self.driver)
+        self.fill_input_element(ba, "organization-field", "hello")
         pass
 
     def fill_input_element(
@@ -32,5 +31,4 @@ class AutofillSaveInfo(BasePage):
         term: str
             The string to be sent to the input field
         """
-        web_element = self.get_element(element_idenitifer)
-        ba.clear_and_fill
+        self.get_element(element_idenitifer)
