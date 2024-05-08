@@ -1,4 +1,3 @@
-
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_base import BasePage
 from modules.util import BrowserActions
