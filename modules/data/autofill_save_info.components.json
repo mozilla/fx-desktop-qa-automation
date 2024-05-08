@@ -1,0 +1,16 @@
+{
+    "name-field": {
+        "selectorData": "/html/body/form/label[1]/input",
+        "strategy": "xpath",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+    "organization-field": {
+        "selectorData": "input[autocomplete=\"organization\"]",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
+    }
+}

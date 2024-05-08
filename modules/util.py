@@ -44,6 +44,21 @@ class BrowserActions:
     def __init__(self, driver: Firefox):
         self.driver = driver
 
+    def clear_and_fill_no_additional_keystroke(self, webelement: WebElement, term: str):
+        """
+        Given a WebElement, send it the string `term` with no additional keystrokes.
+
+        ...
+
+        Parameters
+        ----------
+        webelement : selenium.webdriver.remote.webelement.WebElement
+        term : str
+            The string to send to this element
+        """
+        webelement.clear()
+        webelement.send_keys(term)
+
     def clear_and_fill(self, webelement: WebElement, term: str):
         """
         Given a WebElement, send it the string `term` to it followed by Keys.RETURN.
