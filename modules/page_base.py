@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+from copy import deepcopy
 
 from pypom import Page
 from selenium.webdriver.common.by import By
@@ -153,20 +154,29 @@ class BasePage(Page):
         """
         logging.info("====")
         logging.info(f"Getting element {name}")
-        if "seleniumObject" in self.elements[name]:
+        if label:
+            logging.info(f"Labels: {label}")
+        cache_name = name
+        if label:
+            labelcode = "".join(label)
+            cache_name = f"{name}{labelcode}"
+            if cache_name not in self.elements:
+                self.elements[cache_name] = deepcopy(self.elements[name])
+
+        if "seleniumObject" in self.elements[cache_name]:
             logging.info("Returned from object cache!")
-            return self.elements[name]["seleniumObject"]
-        element_data = self.elements[name]
-        selector = self.get_selector(name, *label)
+            return self.elements[cache_name]["seleniumObject"]
+        element_data = self.elements[cache_name]
+        selector = self.get_selector(cache_name, *label)
         if "shadowParent" in element_data:
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
             shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
-            self.elements[name]["seleniumObject"] = shadow_element
+            self.elements[cache_name]["seleniumObject"] = shadow_element
             return shadow_element
         found_element = self.driver.find_element(*selector)
-        self.elements[name]["seleniumObject"] = found_element
-        logging.info(f"Returning element {name}.\n")
+        self.elements[cache_name]["seleniumObject"] = found_element
+        logging.info(f"Returning element {cache_name}.\n")
         return found_element
 
     def element_exists(self, name: str, *label) -> Page:
