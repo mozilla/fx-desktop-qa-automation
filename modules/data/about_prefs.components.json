@@ -63,5 +63,12 @@
         "selectorData": "h2[data-l10n-id='content-blocking-enhanced-tracking-protection']",
         "strategy": "css",
         "groups": []
+    },
+    "save-and-fill-addresses": {
+        "selectorData": "tail-with-learn-more",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage"
+        ]
     }
 }

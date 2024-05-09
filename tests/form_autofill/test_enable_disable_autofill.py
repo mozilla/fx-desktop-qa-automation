@@ -1,10 +1,11 @@
+from time import sleep
+
 from selenium.webdriver import Firefox
 
 from modules.autofill_object import AutofillSaveInfo
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
-
-AUTOFILL_BASE_URL = "https://mozilla.github.io/form-fill-examples/basic.html?"
+from modules.page_object import AboutPrefs
 
 autofill_sample_data_canadian = AutofillAddressBase(
     name="John Doe",
@@ -20,16 +21,17 @@ autofill_sample_data_canadian = AutofillAddressBase(
 
 
 def test_enable_disable_autofill(driver: Firefox):
-    afsi = AutofillSaveInfo(driver)
     nav = Navigation(driver).open()
-    nav.search(AUTOFILL_BASE_URL)
+    afsi = AutofillSaveInfo(driver).open()
     afsi.save_information_basic(autofill_sample_data_canadian)
-    # go to prefs security and privacy
-    # nav.search("")
-    # disable autofill
+    # press save on the top browser thing NOTE DONT KNOW HOW TO DO
 
+    # navigate to about:preferences
+    aboout_prefs = AboutPrefs(driver, category="privacy").open()
+    # # disable autofill NOTE DOES NOT WORK
+    aboout_prefs.find_setting_and_click("save-and-fill-addresses")
     # go back to https://mozilla.github.io/form-fill-examples/basic.html?
-
+    # afsi.open()
     # double click name
 
     # ensure nothing pops up

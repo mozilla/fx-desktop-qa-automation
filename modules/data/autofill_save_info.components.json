@@ -1,14 +1,14 @@
 {
-    "name-field": {
-        "selectorData": "/html/body/form/label[1]/input",
-        "strategy": "xpath",
+    "form-field": {
+        "selectorData": "input[autocomplete=\"{name}\"]",
+        "strategy": "css",
         "groups": [
             "requiredForPage"
         ]
     },
-    "organization-field": {
-        "selectorData": "/html/body/form/label[2]/input",
-        "strategy": "xpath",
+    "submit-button": {
+        "selectorData": "input[type=\"{name}\"]",
+        "strategy": "css",
         "groups": [
             "requiredForPage"
         ]
