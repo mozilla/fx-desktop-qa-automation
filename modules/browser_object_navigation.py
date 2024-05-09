@@ -109,3 +109,58 @@ class Navigation(BasePage):
             else:
                 self.type_in_awesome_bar(term + Keys.ENTER)
         return self
+
+    def click_in_awesome_bar(self) -> Page:
+        """
+        Focuses and clicks on the Awesome Bar. This method is a utility to focus the input area
+        of the Awesome Bar without typing any text. Useful for setting up subsequent interactions.
+
+        Returns:
+            Page: An instance of itself to support method chaining.
+        """
+        self.set_awesome_bar()  # Ensures the Awesome Bar is set up and focused
+        self.awesome_bar.click()  # Performs a click action on the Awesome Bar
+        return self
+
+    def click_on_onoff_search_button(self, identifier: str, index: int = 0) -> Page:
+        """
+        Clicks on a specific search engine button located in the Awesome Bar based on the given identifier.
+        It can handle special site identifiers that have custom names like 'Amazon' or 'Wikipedia'.
+
+        Parameters:
+            identifier (str): The name or special identifier of the search engine.
+            index (int): The index of the button among multiple ones (default is 0 for the first button).
+
+        Returns:
+            Page: An instance of itself to support method chaining.
+
+        Notes:
+            This method focuses on the Awesome Bar first to ensure that search engine buttons are ready
+            for interaction. It constructs a unique CSS selector to find the button and ensures the button
+            is visible before clicking.
+        """
+        # Maps special identifiers to their common names on the UI
+        special_sites = {
+            "Amazon": "Amazon.com",
+            "Wikipedia": "Wikipedia (en)"
+        }
+
+        # Ensure the Awesome Bar is focused to interact with search engine buttons
+        self.click_in_awesome_bar()
+
+        # Prepare the selector based on identifier, special cases are handled
+        index = "engine-" + str(index)
+        key = "search-engine-buttons"
+        handle = identifier.lower()
+        if identifier in special_sites:
+            identifier = special_sites[identifier]  # Map to special name if exists
+
+        # Build the selector using the identifier and index
+        button_selector = self.get_selector(key, index, identifier, handle)
+
+        # Wait for the button to be visible and then click it
+        self.wait.until(
+            EC.visibility_of_element_located(button_selector)
+        )
+        self.driver.find_element(*button_selector).click()
+        return self
