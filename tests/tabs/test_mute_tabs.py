@@ -1,5 +1,5 @@
-from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
 
@@ -11,4 +11,7 @@ def test_mute_unmute_tab(driver: Firefox, video_url: str):
     play_button = driver.find_element(By.CSS_SELECTOR, ".ytp-play-button")
     play_button.click()
     with driver.context(driver.CONTEXT_CHROME):
-        tabs.mute_tab(1)
+        tabs.click_tab_mute_button(1)
+        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
+        tabs.click_tab_mute_button(1)
+        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)

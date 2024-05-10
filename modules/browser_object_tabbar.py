@@ -2,14 +2,23 @@ import logging
 from typing import Union
 
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 
 from modules.page_base import BasePage
-
 
 class TabBar(BasePage):
     """Page Object Model for tab navigation"""
 
     URL_TEMPLATE = "about:blank"
+
+    class MediaStatus():
+        def __init__(self):
+            self.PLAYING = "playing"
+            self.MUTED = "muted"
+            self.AUTOPLAY_BLOCKED = "blocked"
+            self.PIP = "pip"
+
+    MEDIA_STATUS = MediaStatus()
 
     def new_tab_by_button(self) -> BasePage:
         """Use the New Tab button (+) to open a new tab"""
@@ -29,23 +38,8 @@ class TabBar(BasePage):
             self.get_element("tab-by-index", str(index)).click()
         return self
 
-    def toggle_tab_mute(
-        self, identifier: Union[str, int], assert_current=None
-    ) -> BasePage:
-        """
-        Given a tab title or index, mute or unmute that tab. Optionally, assert that
-        the tab is in a given media state first.
-        """
+    def get_tab(self, identifier: Union[str, int]) -> Union[WebElement, None]:
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            if assert_current is not None:
-                assert EC.visibility_of(
-                    self.get_element("tab-sound-label", assert_current)
-                )
-            is_playing = EC.visibility_of(
-                self.get_element("tab-sound-label", "playing")
-            )
-            if not is_playing:
-                assert EC.visibility_of(self.get_element("tab-sound-label", "muted"))
             if isinstance(identifier, int):
                 tab = self.get_element("tab-by-index", str(identifier))
             elif isinstance(identifier, str):
@@ -54,11 +48,22 @@ class TabBar(BasePage):
                 # if we get an unexpected type, we shouldn't assume that the user wants sys exit
                 # but we have to cause problems for them nonetheless
                 assert False
-                return self
+                tab = None
+            return tab
+
+    def click_tab_mute_button(self, identifier: Union[str, int]) -> BasePage:
+        """Click the tab icon overlay, no matter what's happening with media"""
+        logging.info(f"toggling tab mute for {identifier}")
+        tab = self.get_tab(identifier)
+        with self.driver.context(self.driver.CONTEXT_CHROME):
             self.actions.move_to_element(tab).perform()
-            assert EC.visibility_of(self.get_element("tab-sound-label", "playing"))
             self.get_element("tab-icon-overlay").click()
-            self.wait.until(
-                EC.visibility_of(self.get_element("tab-sound-label", "muted"))
-            )
-            return self
+        return self
+
+    def expect_tab_sound_status(self, identifier: Union[str, int], status: MediaStatus) -> BasePage:
+        """Check to see if the tab has an expected MediaStatus"""
+        tab = self.get_tab(identifier)
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.move_to_element(tab).perform()
+            self.expect(EC.visibility_of(self.get_element("tab-sound-label", status)))
+        return self

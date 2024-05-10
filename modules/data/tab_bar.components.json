@@ -1,4 +1,5 @@
 {
+    "context": "chrome",
     "tab-bar-root": {
         "selectorData": "tabbrowser-arrowscrollbox",
         "strategy": "id",

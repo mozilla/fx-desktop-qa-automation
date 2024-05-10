@@ -6,8 +6,11 @@ from copy import deepcopy
 from pypom import Page
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
 
 from modules.util import PomUtils
 
@@ -66,6 +69,7 @@ class BasePage(Page):
                 manifest_name += f"_{char.lower()}"
         self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
         self.actions = ActionChains(self.driver)
+        self.instawait = WebDriverWait(self.driver, 0)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -91,6 +95,11 @@ class BasePage(Page):
         logging.info(f"Loading element manifest: {manifest_loc}")
         with open(manifest_loc) as fh:
             self.elements = json.load(fh)
+        if "context" in self.elements:
+            self.context = self.elements["context"]
+            del(self.elements["context"])
+        else:
+            self.context = "content"
 
     def get_selector(self, name: str, *label) -> list:
         """
@@ -166,8 +175,14 @@ class BasePage(Page):
                 self.elements[cache_name] = deepcopy(self.elements[name])
 
         if "seleniumObject" in self.elements[cache_name]:
-            logging.info("Returned from object cache!")
-            return self.elements[cache_name]["seleniumObject"]
+            cached_element = self.elements[cache_name]["seleniumObject"]
+            try:
+                self.instawait.until_not(EC.staleness_of(cached_element))
+                logging.info(f"Returned {cache_name} from object cache!")
+                return self.elements[cache_name]["seleniumObject"]
+            except (TimeoutError, TimeoutException):
+                # Because we have a timeout of 0, this should not cause delays
+                pass
         element_data = self.elements[cache_name]
         selector = self.get_selector(cache_name, *label)
         if "shadowParent" in element_data:
@@ -199,12 +214,16 @@ class BasePage(Page):
 
     @property
     def loaded(self):
-        return all(
-            [
-                EC.presence_of_element_located(
-                    (STRATEGY_MAP[el["strategy"]], el["selectorData"])
-                )
-                for el in self.elements.values()
-                if "requiredForPage" in el["groups"]
-            ]
-        )
+        _loaded = False
+        try:
+            if self.context == "chrome":
+                self.set_chrome_context()
+            for name in self.elements:
+                if "requiredForPage" in self.elements[name]["groups"]:
+                    logging.info(f"ensuring {name} in DOM...")
+                    self.get_element(name)
+            _loaded = True
+        except (TimeoutError, TimeoutException):
+            pass
+        self.set_content_context()
+        return _loaded
