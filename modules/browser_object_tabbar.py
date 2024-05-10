@@ -1,17 +1,19 @@
 import logging
 from typing import Union
 
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
+
 
 class TabBar(BasePage):
     """Page Object Model for tab navigation"""
 
     URL_TEMPLATE = "about:blank"
 
-    class MediaStatus():
+    class MediaStatus:
+        """Fake enum: just return a string based on a constant name"""
         def __init__(self):
             self.PLAYING = "playing"
             self.MUTED = "muted"
@@ -39,6 +41,7 @@ class TabBar(BasePage):
         return self
 
     def get_tab(self, identifier: Union[str, int]) -> Union[WebElement, None]:
+        """Return a tab root based on either a title or an index"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             if isinstance(identifier, int):
                 tab = self.get_element("tab-by-index", str(identifier))
@@ -60,7 +63,9 @@ class TabBar(BasePage):
             self.get_element("tab-icon-overlay").click()
         return self
 
-    def expect_tab_sound_status(self, identifier: Union[str, int], status: MediaStatus) -> BasePage:
+    def expect_tab_sound_status(
+        self, identifier: Union[str, int], status: MediaStatus
+    ) -> BasePage:
         """Check to see if the tab has an expected MediaStatus"""
         tab = self.get_tab(identifier)
         with self.driver.context(self.driver.CONTEXT_CHROME):

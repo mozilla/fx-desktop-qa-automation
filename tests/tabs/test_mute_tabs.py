@@ -1,5 +1,5 @@
-from selenium.webdriver.common.by import By
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 
 from modules.browser_object import TabBar
 

@@ -4,13 +4,12 @@ import re
 from copy import deepcopy
 
 from pypom import Page
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
 
 from modules.util import PomUtils
 
@@ -95,9 +94,10 @@ class BasePage(Page):
         logging.info(f"Loading element manifest: {manifest_loc}")
         with open(manifest_loc) as fh:
             self.elements = json.load(fh)
+        # We should expect an key-value pair of "context": "chrome" for Browser Objs
         if "context" in self.elements:
             self.context = self.elements["context"]
-            del(self.elements["context"])
+            del self.elements["context"]
         else:
             self.context = "content"
 
@@ -214,6 +214,10 @@ class BasePage(Page):
 
     @property
     def loaded(self):
+        """
+        Here, we're using our own get_elements to ensure that all elements that
+        are requiredForPage are gettable before we return loaded as True
+        """
         _loaded = False
         try:
             if self.context == "chrome":
