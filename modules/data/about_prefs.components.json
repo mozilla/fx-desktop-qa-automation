@@ -64,11 +64,10 @@
         "strategy": "css",
         "groups": []
     },
+
     "save-and-fill-addresses": {
-        "selectorData": "tail-with-learn-more",
-        "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
+        "selectorData": "checkbox[label='Save and fill addresses']",
+        "strategy": "css",
+        "groups": []
     }
 }

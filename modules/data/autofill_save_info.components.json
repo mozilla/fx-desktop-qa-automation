@@ -6,11 +6,26 @@
             "requiredForPage"
         ]
     },
+
     "submit-button": {
         "selectorData": "input[type=\"{name}\"]",
         "strategy": "css",
         "groups": [
             "requiredForPage"
         ]
+    },
+
+    "doorhanger-save-button": {
+        "selectorData": "button[label='Save'].popup-notification-primary-button",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "autofill-panel": {
+        "selectorData": "PopupAutoComplete",
+        "strategy": "id",
+        "groups": []
     }
 }

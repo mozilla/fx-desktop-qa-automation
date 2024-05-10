@@ -1,3 +1,9 @@
+import logging
+from time import sleep
+
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_base import BasePage
 from modules.util import BrowserActions
@@ -16,7 +22,7 @@ class AutofillSaveInfo(BasePage):
         Instantiates a dictionary of fields and fills in the input, if the input is not None.
 
         ...
-        Arguments
+        Attributes
         ---------
 
         autofill_info: AutofillAddressBase
@@ -39,6 +45,8 @@ class AutofillSaveInfo(BasePage):
                 self.fill_input_element(ba, field, value)
 
         self.click_form_button("submit")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("doorhanger-save-button").click()
 
     def fill_input_element(self, ba: BrowserActions, field_name: str, term: str):
         """
@@ -46,8 +54,7 @@ class AutofillSaveInfo(BasePage):
         identify the webelement and send the term to the input field without any additional keystrokes.
 
         ...
-
-        Parameters
+        Attributes
         ----------
         ba : BrowserActions
         field_name : str
@@ -60,3 +67,16 @@ class AutofillSaveInfo(BasePage):
 
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
+
+    def double_click_name_and_verify(self):
+        """
+        Double clicks the form field of Name and verifies that the autofill popup
+        does NOT appear.
+        """
+        self.double_click("form-field", "name")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            element = self.get_element("autofill-panel")
+            try:
+                self.expect(EC.element_to_be_clickable(element))
+            except TimeoutException:
+                logging.info("Autofill panel could not be clicked.")

@@ -28,6 +28,48 @@ class Utilities:
         shuffle(chars)
         return "".join(chars[:n])
 
+    def write_html_content(self, file_name: str, driver: Firefox, write_chrome: bool):
+        """
+        Takes the driver, the desired file name and the flag write_chrome, when true this flag will log the
+        web contents of the Chrome in the <file_name>.html and the regular page contents when it is fales.
+
+        ...
+
+        Attributes
+        ---------
+
+        file_name : str
+            The name of the file to be made
+        driver : selenium.webdriver.Firefox
+            The Firefox driver instance
+        write_chrome : bool
+            A boolean flag indicating whether or not to write contents of the browsers chrome
+            when True, or the browser's content when False.
+        """
+        if write_chrome:
+            with driver.context(driver.CONTEXT_CHROME):
+                self.__write_contents(driver, file_name)
+        else:
+            self.__write_contents(driver, file_name)
+
+    def __write_contents(self, driver: Firefox, file_name: str):
+        """
+        A private helper function to help write contents of a file from write_html_content
+
+        ...
+
+        Attributes
+        ---------
+
+        driver: selenium.webdriver.Firefox
+            The Firefox driver instance
+        file_name: str
+            The name of the file to be made
+        """
+        with open(file_name + ".html", "w") as fh:
+            output_contents = driver.page_source.replace("><", ">\n<")
+            fh.write(output_contents)
+
 
 class BrowserActions:
     """
@@ -50,7 +92,7 @@ class BrowserActions:
 
         ...
 
-        Parameters
+        Attributes
         ----------
         webelement : selenium.webdriver.remote.webelement.WebElement
         term : str
@@ -65,7 +107,7 @@ class BrowserActions:
 
         ...
 
-        Parameters
+        Attributes
         ----------
         webelement : selenium.webdriver.remote.webelement.WebElement
         term : str
@@ -81,7 +123,7 @@ class BrowserActions:
 
         ...
 
-        Parameters
+        Attributes
         ----------
         element_tuple : Tuple[selenium.webdriver.common.by.By.CONSTANT, str]
             The tuple used in e.g. expected_conditions methods to select an element
