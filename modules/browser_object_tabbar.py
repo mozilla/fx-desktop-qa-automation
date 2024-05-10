@@ -17,7 +17,6 @@ class TabBar(BasePage):
             self.get_element("newtab-button").click()
         return self
 
-
     def click_tab_by_title(self, title: str) -> BasePage:
         """Given a full page title, click the corresponding tab"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -30,15 +29,21 @@ class TabBar(BasePage):
             self.get_element("tab-by-index", str(index)).click()
         return self
 
-    def toggle_tab_mute(self, identifier: Union[str, int], assert_current=None) -> BasePage:
+    def toggle_tab_mute(
+        self, identifier: Union[str, int], assert_current=None
+    ) -> BasePage:
         """
         Given a tab title or index, mute or unmute that tab. Optionally, assert that
         the tab is in a given media state first.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             if assert_current is not None:
-                assert EC.visibility_of(self.get_element("tab-sound-label", assert_current))
-            is_playing = EC.visibility_of(self.get_element("tab-sound-label", "playing"))
+                assert EC.visibility_of(
+                    self.get_element("tab-sound-label", assert_current)
+                )
+            is_playing = EC.visibility_of(
+                self.get_element("tab-sound-label", "playing")
+            )
             if not is_playing:
                 assert EC.visibility_of(self.get_element("tab-sound-label", "muted"))
             if isinstance(identifier, int):
@@ -53,5 +58,7 @@ class TabBar(BasePage):
             self.actions.move_to_element(tab).perform()
             assert EC.visibility_of(self.get_element("tab-sound-label", "playing"))
             self.get_element("tab-icon-overlay").click()
-            self.wait.until(EC.visibility_of(self.get_element("tab-sound-label", "muted")))
+            self.wait.until(
+                EC.visibility_of(self.get_element("tab-sound-label", "muted"))
+            )
             return self
