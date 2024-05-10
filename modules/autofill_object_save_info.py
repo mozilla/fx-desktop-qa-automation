@@ -1,7 +1,7 @@
-import logging
 from time import sleep
 
-from selenium.common.exceptions import TimeoutException
+from faker import Faker
+from faker.providers import internet, misc
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.classes.autofill_base import AutofillAddressBase
@@ -76,7 +76,73 @@ class AutofillSaveInfo(BasePage):
         self.double_click("form-field", "name")
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("autofill-panel")
-            try:
-                self.expect(EC.element_to_be_clickable(element))
-            except TimeoutException:
-                logging.info("Autofill panel could not be clicked.")
+            self.expect_not(EC.element_to_be_clickable(element))
+
+    def create_localized_faker(self, country_code: str):
+        """
+        Given a country code, try to find the associated English locale. Returns the faker object
+        and whether or not the country code was valid.
+
+        ...
+        Attributes
+        ----------
+        country_code : str
+            The two letter country code.
+
+
+        Returns
+        -------
+        Tuple[Faker, bool]
+            A tuple where the first element is the faker object, second is a boolean indicated whether or not
+            the locale is valid.
+        """
+        locale = f"en_{country_code.upper()}"
+        try:
+            faker = Faker(locale)
+            faker.add_provider(internet)
+            faker.add_provider(misc)
+            return (faker, True)
+        except AttributeError:
+            faker = Faker(locale)
+            faker.add_provider(internet)
+            faker.add_provider(misc)
+            return (faker, False)
+
+    def fake_autofill_data(self, country_code: str):
+        """
+        Given a country code, tries to initialize the locale of the faker and generates fake data
+        then returns the new AutofillAddressBase object with the fake data.
+
+        ...
+        Attributes
+        ----------
+        country_code : str
+            The two letter country code, defaults to CA if it is not valid.
+        """
+        fake, valid_code = self.create_localized_faker(country_code)
+        name = fake.name()
+        organization = fake.company()
+        street_address = fake.street_address()
+        address_level_2 = fake.city()
+        try:
+            address_level_1 = fake.state()
+        except AttributeError:
+            address_level_1 = fake.administrative_unit()
+        postal_code = fake.postcode()
+        country = "CA" if valid_code == False else country_code
+        email = fake.email()
+        telephone = fake.phone_number()
+
+        fake_data = AutofillAddressBase(
+            name=name,
+            organization=organization,
+            street_address=street_address,
+            address_level_2=address_level_2,
+            address_level_1=address_level_1,
+            postal_code=postal_code,
+            country=country,
+            email=email,
+            telephone=telephone,
+        )
+
+        return fake_data

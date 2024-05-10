@@ -1,5 +1,7 @@
 import pytest
 
+from modules.classes.autofill_base import AutofillAddressBase
+
 
 @pytest.fixture()
 def suite_id():

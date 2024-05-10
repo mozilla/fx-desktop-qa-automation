@@ -86,6 +86,10 @@ class BasePage(Page):
         self.wait.until(condition)
         return self
 
+    def expect_not(self, condition) -> Page:
+        self.wait.until_not(condition)
+        return self
+
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
         logging.info(f"Loading element manifest: {manifest_loc}")
