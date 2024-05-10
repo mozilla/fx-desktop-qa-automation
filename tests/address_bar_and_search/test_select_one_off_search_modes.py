@@ -1,15 +1,18 @@
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import Navigation
 
 # One-off search engine names and the corresponding urlbar
 # search shard aren't always identical text
-sites = [("Google","Google"),
-         ("Amazon", "Amazon.com"),
-         ("Bing", "Bing"),
-         ("DuckDuckGo", "DuckDuckGo"),
-         ("eBay", "eBay"),
-         ("Wikipedia", "Wikipedia (en)")]
+sites = [
+    ("Google", "Google"),
+    ("Amazon", "Amazon.com"),
+    ("Bing", "Bing"),
+    ("DuckDuckGo", "DuckDuckGo"),
+    ("eBay", "eBay"),
+    ("Wikipedia", "Wikipedia (en)"),
+]
 
 
 @pytest.mark.parametrize("engine, shard", sites)
