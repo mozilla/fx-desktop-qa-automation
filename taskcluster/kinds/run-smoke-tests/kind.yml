@@ -19,7 +19,8 @@ tasks:
       cwd: "{checkout}"
       command: |-
         ./collect_executables.sh;
-        ./firefox/firefox -v
+        ls .;
+        ls firefox;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox .
