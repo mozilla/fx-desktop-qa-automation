@@ -14,7 +14,7 @@ def pytest_addoption(parser):
         "--ci",
         action="store_true",
         default=False,
-        help="Is this running in a CI environment?"
+        help="Is this running in a CI environment?",
     )
 
     parser.addoption(
@@ -55,9 +55,11 @@ def opt_headless(request):
 def opt_implicit_timeout(request):
     return request.config.getoption("--implicit-timeout")
 
+
 @pytest.fixture()
 def ci(request):
     return request.config.getoption("--ci")
+
 
 @pytest.fixture()
 def fx_executable(request):
@@ -128,11 +130,9 @@ def driver(
 
     driver.quit()
 
+
 @pytest.fixture()
-def screenshot(
-    driver: webdriver.Firefox,
-    ci: bool
-):
+def screenshot(driver: webdriver.Firefox, ci: bool):
     def _screenshot(filename):
         if not filename.endswith(".png"):
             filename = filename + ".png"
@@ -140,7 +140,9 @@ def screenshot(
         if ci:
             artifacts_loc = os.path.join("/builds", "worker", "artifacts")
         driver.save_screenshot(os.path.join(artifacts_loc, filename))
+
     return _screenshot
+
 
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
