@@ -14,6 +14,7 @@ class TabBar(BasePage):
 
     class MediaStatus:
         """Fake enum: just return a string based on a constant name"""
+
         def __init__(self):
             self.PLAYING = "playing"
             self.MUTED = "muted"
