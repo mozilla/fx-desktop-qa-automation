@@ -19,9 +19,7 @@ tasks:
       cwd: "{checkout}"
       command: |-
         ./collect_executables.sh;
-        ls firefox;
-        echo \n;
-        ls ./firefox/firefox;
+        chmod +x ./firefox/firefox;
         ./firefox/firefox -v;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
