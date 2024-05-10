@@ -2,7 +2,7 @@
     "tab-bar-root": {
         "selectorData": "tabbrowser-arrowscrollbox",
         "strategy": "id",
-        "groups", [
+        "groups": [
             "requiredForPage"
         ]
     },
@@ -10,7 +10,6 @@
     "tab-by-title": {
         "selectorData": "tab[label=\"{title}\"]",
         "strategy": "css",
-        "shadowParent": "tab-bar-root",
         "groups": [
             "tabSelector"
         ]
@@ -19,7 +18,6 @@
     "tab-by-index": {
         "selectorData": "tab[linkedpanel$=\"-{index}\"]",
         "strategy": "css",
-        "shadowParent": "tab-bar-root",
         "groups": [
             "tabSelector"
         ]
@@ -28,9 +26,20 @@
     "newtab-button": {
         "selectorData": "tabs-newtab-button",
         "strategy": "id",
-        "shadowParent": "tab-bar-root",
         "groups": [
             "requiredForPage"
         ]
+    },
+
+    "tab-icon-overlay": {
+        "selectorData": "tab-icon-overlay",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "tab-sound-label": {
+        "selectorData": "tab-icon-sound-{status}-label",
+        "strategy": "class",
+        "groups": []
     }
 }
