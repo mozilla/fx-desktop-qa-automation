@@ -1,4 +1,3 @@
-from time import sleep
 
 from faker import Faker
 from faker.providers import internet, misc
@@ -129,7 +128,7 @@ class AutofillSaveInfo(BasePage):
         except AttributeError:
             address_level_1 = fake.administrative_unit()
         postal_code = fake.postcode()
-        country = "CA" if valid_code == False else country_code
+        country = "CA" if not valid_code else country_code
         email = fake.email()
         telephone = fake.phone_number()
 

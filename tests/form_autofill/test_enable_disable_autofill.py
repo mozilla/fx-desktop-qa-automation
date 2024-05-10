@@ -1,11 +1,9 @@
-from typing import Tuple
 
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.autofill_object import AutofillSaveInfo
 from modules.browser_object import Navigation
-from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object import AboutPrefs
 
 countries = ["CA", "US"]
