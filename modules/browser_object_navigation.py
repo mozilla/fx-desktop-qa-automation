@@ -94,3 +94,41 @@ class Navigation(BasePage):
             else:
                 self.type_in_awesome_bar(term + Keys.ENTER)
         return self
+
+    def set_amazon_one_off_button(self) -> BasePage:
+        """Set the amazon_one_off_button attribute of the Navigation object"""
+        self.set_chrome_context()
+        self.amazon_one_off_button = self.get_element("search-one-off-engine-button", "Amazon")
+        return self
+
+    def get_amazon_one_off_button(self) -> WebElement:
+        """Get the amazon_one_off_button"""
+        self.set_amazon_one_off_button()
+        return self.amazon_one_off_button
+
+    def click_awesome_bar(self):
+        """Click on the awesome bar"""
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        return self
+
+    def click_amazon_one_off_button(self):
+        """Click on amazon one-off search button"""
+        self.set_amazon_one_off_button()
+        self.amazon_one_off_button.click()
+        return self
+
+    def search_via_amazon_one_off_button(self, term: str):
+        """Search using amazon one-off"""
+        self.set_awesome_bar()
+        self.awesome_bar.send_keys(term + Keys.ENTER)
+        return self
+
+    def type_in_awesome_bar_via_amazon_one_off(self, term: str):
+        """include all actions from above, not sure if it's recommended to have to setters here """
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        self.set_amazon_one_off_button()
+        self.amazon_one_off_button.click()
+        self.awesome_bar.send_keys(term + Keys.ENTER)
+        return self

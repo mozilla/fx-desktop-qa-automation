@@ -62,7 +62,7 @@ class BasePage(Page):
                 manifest_name += char
             else:
                 manifest_name += f"_{char.lower()}"
-        self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
+        self.load_element_manifest(f"/Users/hani.yacoub/FxAutomation/modules/data/{manifest_name}.components.json")
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
