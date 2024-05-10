@@ -81,8 +81,10 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 curl -O "$FX_LOC"
 
 mv geckodriver*.tar.gz geckodriver.tar.gz
+tar -xvzf geckodriver.tar.gz
 
 if [[ $SYSTEM_NAME == "linux" ]]
 then
     mv firefox*.tar.bz2 firefox.tar.bz2
+    tar -xvjf firefox.tar.bz2
 fi
