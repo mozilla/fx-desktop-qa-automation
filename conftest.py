@@ -60,17 +60,18 @@ def opt_implicit_timeout(request):
 def ci(request):
     return request.config.getoption("--ci")
 
+@pytest.fixture()
+def sys_platform():
+    return platform.system()
 
 @pytest.fixture()
-def fx_executable(request):
+def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
     location = request.config.getoption("--fx-executable")
     if location:
         return location
 
-    # Get the platform this is running on
-    sys_platform = platform.system()
 
     # Path to build location.  Use Custom by installing your incident build to the coinciding path.
     location = ""
