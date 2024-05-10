@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 
 from modules.browser_object import TabBar
 
+from time import sleep
 
 def test_mute_unmute_tab(driver: Firefox, screenshot, video_url: str):
     # C134719
@@ -13,6 +14,7 @@ def test_mute_unmute_tab(driver: Firefox, screenshot, video_url: str):
     with driver.context(driver.CONTEXT_CHROME):
         tabs.click_tab_mute_button(1)
         tabs.actions.move_to_element(tabs.get_tab(1))
+        sleep(0.3)
         screenshot("should_be_muted")
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
         tabs.click_tab_mute_button(1)
