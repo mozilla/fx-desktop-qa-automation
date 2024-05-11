@@ -20,7 +20,7 @@ tasks:
       command: |-
         ./collect_executables.sh;
         chmod +x ./firefox/firefox;
-        ./firefox/firefox -v;
+        bash ./firefox/firefox -v;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox .
