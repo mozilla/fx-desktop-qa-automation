@@ -8,7 +8,9 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     # C134719
     driver.get("about:support")
     ac = ActionChains(driver)
-    ac.move_to_element_with_offset(driver.find_element(By.ID, "useragent-box")).perform()
+    ac.move_to_element(
+        driver.find_element(By.ID, "useragent-box")
+    ).perform()
     screenshot("about-support")
     tabs = TabBar(driver).open()
     driver.get(video_url)
