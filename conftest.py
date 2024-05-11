@@ -127,6 +127,7 @@ def driver(
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     driver = webdriver.Firefox(options=options)
+    driver.set_window_size(1152, 864)
     driver.implicitly_wait(opt_implicit_timeout)
     yield driver
 
