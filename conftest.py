@@ -67,6 +67,7 @@ def opt_implicit_timeout(request):
 def ci(request):
     return request.config.getoption("--ci")
 
+
 @pytest.fixture()
 def browser_log(request):
     return request.config.getoption("--browser-logging")
@@ -117,6 +118,7 @@ def fx_executable(request, sys_platform):
 def env_prep():
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
 
+
 @pytest.fixture()
 def artifacts_loc(ci: bool):
     artifacts_loc = ""
@@ -147,7 +149,10 @@ def driver(
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     if browser_log:
-        driver = webdriver.Firefox(options=options, service_log_path=os.path.join(artifacts_loc, "webdriver_log"))
+        driver = webdriver.Firefox(
+            options=options,
+            service_log_path=os.path.join(artifacts_loc, "webdriver_log"),
+        )
     else:
         driver = webdriver.Firefox(options=options)
     driver.set_window_size(1152, 864)
