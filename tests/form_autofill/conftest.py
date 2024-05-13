@@ -1,7 +1,6 @@
 import pytest
 
 
-
 @pytest.fixture()
 def suite_id():
     return ("2054", "Form Autofill")

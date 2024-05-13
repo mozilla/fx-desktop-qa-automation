@@ -1,4 +1,3 @@
-
 from faker import Faker
 from faker.providers import internet, misc
 from selenium.webdriver.support import expected_conditions as EC
