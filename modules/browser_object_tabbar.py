@@ -1,9 +1,9 @@
 import logging
+from time import sleep
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 
 from modules.page_base import BasePage
 
