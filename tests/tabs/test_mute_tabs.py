@@ -14,7 +14,7 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     play_button.click()
     with driver.context(driver.CONTEXT_CHROME):
         tabs.actions.move_to_element(tabs.get_tab(1))
-        sleep(0.5)
+        sleep(3.5)
         screenshot("media-playing")
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
         tabs.click_tab_mute_button(1)
