@@ -43,3 +43,9 @@ class AboutPrefs(BasePage):
 
     def search_engine_dropdown(self) -> Dropdown:
         return self.Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
+
+    def find_in_settings(self, term: str) -> BasePage:
+        search_input = self.get_element("find-in-settings-input")
+        search_input.clear()
+        search_input.send_keys(term)
+        return self

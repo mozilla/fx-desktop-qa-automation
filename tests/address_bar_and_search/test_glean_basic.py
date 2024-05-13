@@ -7,7 +7,6 @@ from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 from werkzeug.wrappers import Request, Response
 
 from modules.browser_object import Navigation
@@ -54,7 +53,6 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     global PINGS_WITH_ID
     global PING_ID
     u = Utilities()
-    wait = WebDriverWait(driver, 30)
 
     # mock server
     httpserver.expect_request(re.compile("^/")).respond_with_handler(glean_handler)

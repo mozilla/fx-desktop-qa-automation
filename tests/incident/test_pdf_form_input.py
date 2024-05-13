@@ -18,7 +18,7 @@ def test_url():
 def test_pdf_form_fill(driver, test_url):
     try:
         from pynput.keyboard import Controller, Key
-    except:
+    except ModuleNotFoundError:
         pytest.skip("Could not load pynput")
     # From TestRail: https://testrail.stage.mozaws.net/index.php?/cases/view/1017484
     print(" - TEST: Verify PDF form input")

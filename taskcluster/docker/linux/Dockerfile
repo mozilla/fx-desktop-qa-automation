@@ -17,7 +17,7 @@ RUN apt update -y && apt upgrade -y
 RUN apt install -y git python3-pip python-is-python3 libasound2 && \
     apt install -y curl jq wget bzip2 libxtst6 libgtk-3-0 libx11-xcb-dev libdbus-glib-1-2 libxt6 libpci-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    python -m pip install --no-cache --upgrade pip setuptools pytest selenium pipenv
+    python -m pip install --no-cache --upgrade pip setuptools pytest selenium pipenv ruff
 
 # %include-run-task
 
