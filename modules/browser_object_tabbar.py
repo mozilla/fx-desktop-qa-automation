@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
@@ -66,13 +65,11 @@ class TabBar(BasePage):
         return self
 
     def expect_tab_sound_status(
-        self, identifier: Union[str, int], status: MediaStatus, screenshot
+        self, identifier: Union[str, int], status: MediaStatus
     ) -> BasePage:
         """Check to see if the tab has an expected MediaStatus"""
         tab = self.get_tab(identifier)
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.actions.move_to_element(tab).perform()
-            sleep(0.5)
-            screenshot("tab-playing-media")
             self.expect(EC.visibility_of(self.get_element("tab-sound-label", status)))
         return self
