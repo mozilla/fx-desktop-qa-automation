@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-import threading
 from copy import deepcopy
 
 from pypom import Page
@@ -10,6 +9,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.util import PomUtils
 
@@ -68,6 +68,7 @@ class BasePage(Page):
                 manifest_name += f"_{char.lower()}"
         self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
         self.actions = ActionChains(self.driver)
+        self.instawait = WebDriverWait(self.driver, 0)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -86,10 +87,6 @@ class BasePage(Page):
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
         self.wait.until(condition)
-        return self
-
-    def expect_not(self, condition) -> Page:
-        self.wait.until_not(condition)
         return self
 
     def load_element_manifest(self, manifest_loc):
@@ -112,7 +109,7 @@ class BasePage(Page):
 
         ...
 
-        Attributes
+        Arguments
         ---------
 
         name: str
@@ -148,13 +145,9 @@ class BasePage(Page):
         If there are items in `label`, replace instances of {.*} in the "selectorData"
         with items from `label`, in the order they are given. (Think Rust format macros.)
 
-        Tries to return the webelement from the cache, however upon leaving a page all elements become stale.
-
-        Try to create new objects for eacy visit to a page upon navigation.
-
         ...
 
-        Attributes
+        Arguments
         ---------
 
         name: str
@@ -202,27 +195,6 @@ class BasePage(Page):
         self.elements[cache_name]["seleniumObject"] = found_element
         logging.info(f"Returning element {cache_name}.\n")
         return found_element
-
-    def double_click(self, element_name, *label) -> Page:
-        """
-        Given the element name identifer (to be found in the JSON) and the optional label,
-        find the element and perform a double click on it.
-
-        ...
-        Attributes
-        ---------
-
-        element_name: str
-            The key of the entry in self.elements, parsed from the elements JSON
-
-        *label: *str
-            Strings that replace instances of {.*} in the "selectorData" subentry of
-            self.elements[name]
-        """
-        web_element = self.get_element(element_name, *label)
-        self.actions.double_click(web_element)
-        self.actions.perform()
-        return self
 
     def element_exists(self, name: str, *label) -> Page:
         self.expect(EC.presence_of_element_located(self.get_selector(name, *label)))
