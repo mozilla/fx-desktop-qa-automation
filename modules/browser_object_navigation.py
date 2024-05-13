@@ -46,6 +46,16 @@ class Navigation(BasePage):
         self.awesome_bar.send_keys(term)
         return self
 
+    def click_in_awesome_bar(self) -> BasePage:
+        self.set_awesome_bar()
+        """Click in the awesome bar"""
+        self.awesome_bar.click()
+        return self
+
+    def click_on_one_off_button(self, name: str):
+        """Click on the one off button of the awesome bar"""
+        self.get_element("search-one-off-engine-button", name).click()
+
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
         """
         Given a `mode`, set the Awesome Bar search mode. Returns self.
