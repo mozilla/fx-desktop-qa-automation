@@ -61,6 +61,38 @@ class Navigation(BasePage):
         self.awesome_bar.send_keys(term)
         return self
 
+    def init_and_click_awesome_bar_with_engine(self, engine: str):
+        """
+        Set the awesome bar, click it and search with the specified engine
+
+        ...
+
+        Attributes
+        ----------
+        engine: str
+            The name of the engine to use
+        """
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        self.get_element("search-one-off-engine-button", engine).click()
+
+    def verify_shard_text(self, text: str):
+        """
+        Verifies that the shard text is in the shard webelement in the awesome bar
+
+        ...
+
+        Attributes
+        ----------
+        engine: str
+            The name of the engine to use
+        """
+        self.wait.until(
+            EC.text_to_be_present_in_element(
+                self.get_selector("search-mode-span"), text
+            )
+        )
+
     def set_search_mode_via_awesome_bar(self, mode: str) -> Page:
         """
         Given a `mode`, set the Awesome Bar search mode. Returns self.
