@@ -22,4 +22,4 @@ tasks:
         pulseaudio --start --daemonize
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable ./firefox/firefox .
+        pipenv run pytest --browser-logging --fx-executable ./firefox/firefox .
