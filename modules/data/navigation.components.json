@@ -1,4 +1,6 @@
 {
+
+    "context": "chrome",
     "awesome-bar": {
         "selectorData": "urlbar-input",
         "strategy": "id",

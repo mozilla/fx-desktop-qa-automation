@@ -2,25 +2,19 @@
     "form-field": {
         "selectorData": "input[autocomplete=\"{name}\"]",
         "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "submit-button": {
         "selectorData": "input[type=\"{name}\"]",
         "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "doorhanger-save-button": {
         "selectorData": "button[label='Save'].popup-notification-primary-button",
         "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "autofill-panel": {
