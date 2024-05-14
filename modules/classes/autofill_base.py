@@ -35,4 +35,4 @@ class AutofillAddressBase:
         The email address associated with the address.
     telephone : str | None
         The telephone number associated with the address.
-    """
+        """
