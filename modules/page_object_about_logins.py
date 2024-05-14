@@ -6,6 +6,7 @@ from selenium.common.exceptions import (
 
 from modules.page_base import BasePage
 from modules.util import BrowserActions
+import logging
 
 
 class AboutLogins(BasePage):
@@ -22,14 +23,20 @@ class AboutLogins(BasePage):
 
     def click_add_login_button(self) -> Page:
         self.get_element("create-login-button").click()
+        logging.info("Clicked add login button")
         return self
 
     def create_new_login(self, form_info: dict) -> Page:
         ba = BrowserActions(self.driver)
         try:
             for item_type, value in form_info.items():
+                logging.info(f"Filling {item_type} with {value}")
                 ba.clear_and_fill(self.get_element("login-item-type", item_type), value)
+            logging.info("Clicking submit...")
             self.get_element("create-login-button")
+            logging.info("Submitted.")
         except (WebDriverException, StaleElementReferenceException):
+            logging.info("Element not found or stale, pressing 'Save Changes'")
             self.get_element("save-changes-button").click()
+            logging.info("Pressed.")
         return self
