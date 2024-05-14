@@ -32,24 +32,17 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
+        "--run-headless",
+        action="store_true",
+        default=False,
+        help="Run in headless mode: --run-headless",
+    )
+
+    parser.addoption(
         "--implicit-timeout",
         action="store",
         default=10,
         help="Timeout for implicit waits, set 0 for no wait (default 10)",
-    )
-
-    parser.addoption(
-        "--run-headless",
-        action="store_true",
-        default=False,
-        help="Run in headless mode.",
-    )
-
-    parser.addoption(
-        "--browser-logging",
-        action="store_true",
-        default=False,
-        help="Save logs from the browser session.",
     )
 
 
@@ -66,11 +59,6 @@ def opt_implicit_timeout(request):
 @pytest.fixture()
 def ci(request):
     return request.config.getoption("--ci")
-
-
-@pytest.fixture()
-def browser_log(request):
-    return request.config.getoption("--browser-logging")
 
 
 @pytest.fixture()
@@ -119,22 +107,12 @@ def env_prep():
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
 
 
-@pytest.fixture()
-def artifacts_loc(ci: bool):
-    artifacts_loc = ""
-    if ci:
-        artifacts_loc = os.path.join("/builds", "worker", "artifacts")
-    return artifacts_loc
-
-
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
     set_prefs: List[Tuple],
-    browser_log: bool,
-    artifacts_loc: str,
     env_prep,
 ):
     """
@@ -148,13 +126,7 @@ def driver(
     options.binary_location = fx_executable
     for opt, value in set_prefs:
         options.set_preference(opt, value)
-    if browser_log:
-        driver = webdriver.Firefox(
-            options=options,
-            service_log_path=os.path.join(artifacts_loc, "webdriver_log"),
-        )
-    else:
-        driver = webdriver.Firefox(options=options)
+    driver = webdriver.Firefox(options=options)
     driver.set_window_size(1152, 864)
     driver.implicitly_wait(opt_implicit_timeout)
     yield driver
@@ -163,10 +135,13 @@ def driver(
 
 
 @pytest.fixture()
-def screenshot(driver: webdriver.Firefox, artifacts_loc: str):
+def screenshot(driver: webdriver.Firefox, ci: bool):
     def _screenshot(filename):
         if not filename.endswith(".png"):
             filename = filename + ".png"
+        artifacts_loc = ""
+        if ci:
+            artifacts_loc = os.path.join("/builds", "worker", "artifacts")
         driver.save_screenshot(os.path.join(artifacts_loc, filename))
 
     return _screenshot
