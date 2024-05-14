@@ -1,7 +1,7 @@
 [tool.pytest.ini_options]
 generate_report_on_test = true
 log_cli = true
-log_cli_level = "warn"
+log_cli_level = "info"
 markers = [
     "pynput: test uses pynput package",
     "incident: incident smoke tests"

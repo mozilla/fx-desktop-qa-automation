@@ -1,11 +1,15 @@
 import json
 import logging
 import re
+from copy import deepcopy
 
 from pypom import Page
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.util import PomUtils
 
@@ -63,6 +67,8 @@ class BasePage(Page):
             else:
                 manifest_name += f"_{char.lower()}"
         self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
+        self.actions = ActionChains(self.driver)
+        self.instawait = WebDriverWait(self.driver, 0)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -83,11 +89,22 @@ class BasePage(Page):
         self.wait.until(condition)
         return self
 
+    def expect_not(self, condition) -> Page:
+        """Use the Page's to wait until assert a condition is not true or wait until timeout"""
+        self.wait.until_not(condition)
+        return self
+
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
         logging.info(f"Loading element manifest: {manifest_loc}")
         with open(manifest_loc) as fh:
             self.elements = json.load(fh)
+        # We should expect an key-value pair of "context": "chrome" for Browser Objs
+        if "context" in self.elements:
+            self.context = self.elements["context"]
+            del self.elements["context"]
+        else:
+            self.context = "content"
 
     def get_selector(self, name: str, *label) -> list:
         """
@@ -153,20 +170,35 @@ class BasePage(Page):
         """
         logging.info("====")
         logging.info(f"Getting element {name}")
-        if "seleniumObject" in self.elements[name]:
-            logging.info("Returned from object cache!")
-            return self.elements[name]["seleniumObject"]
-        element_data = self.elements[name]
-        selector = self.get_selector(name, *label)
+        if label:
+            logging.info(f"Labels: {label}")
+        cache_name = name
+        if label:
+            labelcode = "".join(label)
+            cache_name = f"{name}{labelcode}"
+            if cache_name not in self.elements:
+                self.elements[cache_name] = deepcopy(self.elements[name])
+
+        if "seleniumObject" in self.elements[cache_name]:
+            cached_element = self.elements[cache_name]["seleniumObject"]
+            try:
+                self.instawait.until_not(EC.staleness_of(cached_element))
+                logging.info(f"Returned {cache_name} from object cache!")
+                return self.elements[cache_name]["seleniumObject"]
+            except (TimeoutError, TimeoutException):
+                # Because we have a timeout of 0, this should not cause delays
+                pass
+        element_data = self.elements[cache_name]
+        selector = self.get_selector(cache_name, *label)
         if "shadowParent" in element_data:
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
             shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
-            self.elements[name]["seleniumObject"] = shadow_element
+            self.elements[cache_name]["seleniumObject"] = shadow_element
             return shadow_element
         found_element = self.driver.find_element(*selector)
-        self.elements[name]["seleniumObject"] = found_element
-        logging.info(f"Returning element {name}.\n")
+        self.elements[cache_name]["seleniumObject"] = found_element
+        logging.info(f"Returning element {cache_name}.\n")
         return found_element
 
     def element_exists(self, name: str, *label) -> Page:
@@ -185,14 +217,26 @@ class BasePage(Page):
         self.expect(EC.element_to_be_selected(self.get_element(name, *label)))
         return self
 
+    def double_click(self, name: str, *label: str):
+        elem = self.get_element(name, *label)
+        self.actions.double_click(elem).perform()
+
     @property
     def loaded(self):
-        return all(
-            [
-                EC.presence_of_element_located(
-                    (STRATEGY_MAP[el["strategy"]], el["selectorData"])
-                )
-                for el in self.elements.values()
-                if "requiredForPage" in el["groups"]
-            ]
-        )
+        """
+        Here, we're using our own get_elements to ensure that all elements that
+        are requiredForPage are gettable before we return loaded as True
+        """
+        _loaded = False
+        try:
+            if self.context == "chrome":
+                self.set_chrome_context()
+            for name in self.elements:
+                if "requiredForPage" in self.elements[name]["groups"]:
+                    logging.info(f"ensuring {name} in DOM...")
+                    self.get_element(name)
+            _loaded = True
+        except (TimeoutError, TimeoutException):
+            pass
+        self.set_content_context()
+        return _loaded

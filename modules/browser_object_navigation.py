@@ -77,7 +77,7 @@ class Navigation(BasePage):
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
 
-        Parameters
+        Attributes
         ----------
 
         term : str
