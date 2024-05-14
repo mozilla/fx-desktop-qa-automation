@@ -1,0 +1,46 @@
+{
+    "context": "chrome",
+    "tab-bar-root": {
+        "selectorData": "tabbrowser-arrowscrollbox",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "tab-by-title": {
+        "selectorData": "tab[label=\"{title}\"]",
+        "strategy": "css",
+        "groups": [
+            "tabSelector"
+        ]
+    },
+
+    "tab-by-index": {
+        "selectorData": "tab[linkedpanel$=\"-{index}\"]",
+        "strategy": "css",
+        "groups": [
+            "tabSelector"
+        ]
+    },
+
+    "newtab-button": {
+        "selectorData": "tabs-newtab-button",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "tab-icon-overlay": {
+        "selectorData": "tab-icon-overlay",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "tab-sound-label": {
+        "selectorData": "tab-icon-sound-{status}-label",
+        "strategy": "class",
+        "groups": []
+    }
+}

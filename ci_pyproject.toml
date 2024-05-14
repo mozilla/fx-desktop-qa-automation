@@ -3,13 +3,14 @@ generate_report_on_test = true
 log_cli = true
 log_cli_level = "info"
 markers = [
+    "audio: test is reliant on audio",
     "pynput: test uses pynput package",
     "incident: incident smoke tests"
 ]
 testpaths = [
     "tests"
 ]
-addopts = "-vs -m 'not incident' --run-headless --html=/builds/worker/artifacts/report.html"
+addopts = "-vs -m 'not incident' --ci --html=/builds/worker/artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"

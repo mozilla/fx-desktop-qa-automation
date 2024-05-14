@@ -295,6 +295,7 @@ class PomUtils:
         original_timeout = self.driver.timeouts.implicit_wait
         matches = []
         logging.info(f"Requesting shadow nodes from root {shadow_parent}...")
+        logging.info(f"Searching for {selector}...")
         shadow_nodes = self.get_shadow_content(shadow_parent)
         logging.info(f"Found {len(shadow_nodes)} shadow nodes...")
         logging.info(f"Looking for {selector}...")

@@ -11,6 +11,13 @@ from selenium.webdriver.firefox.options import Options
 def pytest_addoption(parser):
     """Set custom command-line options"""
     parser.addoption(
+        "--ci",
+        action="store_true",
+        default=False,
+        help="Is this running in a CI environment?",
+    )
+
+    parser.addoption(
         "--fx-channel",
         action="store",
         default="Custom",
@@ -50,15 +57,22 @@ def opt_implicit_timeout(request):
 
 
 @pytest.fixture()
-def fx_executable(request):
+def ci(request):
+    return request.config.getoption("--ci")
+
+
+@pytest.fixture()
+def sys_platform():
+    return platform.system()
+
+
+@pytest.fixture()
+def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
     location = request.config.getoption("--fx-executable")
     if location:
         return location
-
-    # Get the platform this is running on
-    sys_platform = platform.system()
 
     # Path to build location.  Use Custom by installing your incident build to the coinciding path.
     location = ""
@@ -107,16 +121,30 @@ def driver(
     All arguments are fixtures being requested.
     """
     options = Options()
-    if opt_headless:
+    if opt_headless or ci:
         options.add_argument("--headless")
     options.binary_location = fx_executable
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     driver = webdriver.Firefox(options=options)
+    driver.set_window_size(1152, 864)
     driver.implicitly_wait(opt_implicit_timeout)
     yield driver
 
     driver.quit()
+
+
+@pytest.fixture()
+def screenshot(driver: webdriver.Firefox, ci: bool):
+    def _screenshot(filename):
+        if not filename.endswith(".png"):
+            filename = filename + ".png"
+        artifacts_loc = ""
+        if ci:
+            artifacts_loc = os.path.join("/builds", "worker", "artifacts")
+        driver.save_screenshot(os.path.join(artifacts_loc, filename))
+
+    return _screenshot
 
 
 @pytest.fixture(scope="session", autouse=True)

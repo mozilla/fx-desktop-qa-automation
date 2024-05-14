@@ -5,6 +5,7 @@
 
 ## Determine OS and arch
 UNAME_A=$(uname -a)
+echo "$UNAME_A"
 if [ -n "$WSL_DISTRO_NAME" ]
 then
     SYSTEM_NAME="win"
@@ -81,8 +82,11 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 curl -O "$FX_LOC"
 
 mv geckodriver*.tar.gz geckodriver.tar.gz
+tar -xvzf geckodriver.tar.gz
 
 if [[ $SYSTEM_NAME == "linux" ]]
 then
+    ls firefox*.tar.bz2
     mv firefox*.tar.bz2 firefox.tar.bz2
+    tar -xvjf firefox.tar.bz2
 fi
