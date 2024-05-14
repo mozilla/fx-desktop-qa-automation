@@ -45,6 +45,13 @@ def pytest_addoption(parser):
         help="Timeout for implicit waits, set 0 for no wait (default 10)",
     )
 
+    parser.addoption(
+        "--window-size",
+        action="store",
+        default="1152x864",
+        help="Size for Fx window, default is '1152x864'"
+    )
+
 
 @pytest.fixture()
 def opt_headless(request):
@@ -59,6 +66,10 @@ def opt_implicit_timeout(request):
 @pytest.fixture()
 def opt_ci(request):
     return request.config.getoption("--ci")
+
+@pytest.fixture()
+def opt_window_size(request):
+    return request.config.getoption("--window-size")
 
 
 @pytest.fixture()
@@ -114,6 +125,7 @@ def driver(
     opt_implicit_timeout: int,
     set_prefs: List[Tuple],
     opt_ci: bool,
+    opt_window_size: str,
     env_prep,
 ):
     """
@@ -128,7 +140,16 @@ def driver(
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     driver = webdriver.Firefox(options=options)
-    driver.set_window_size(1152, 864)
+    separator = 'x'
+    if separator not in opt_window_size:
+        if "by" in opt_window_size:
+            separator = "by"
+        elif ',' in opt_window_size:
+            separator = ','
+        elif ' ' in opt_window_size:
+            separator = ' '
+    winsize = [int(s) for s in opt_window_size.split(separator)]
+    driver.set_window_size(*winsize)
     driver.implicitly_wait(opt_implicit_timeout)
     yield driver
 
@@ -136,12 +157,12 @@ def driver(
 
 
 @pytest.fixture()
-def screenshot(driver: webdriver.Firefox, ci: bool):
+def screenshot(driver: webdriver.Firefox, opt_ci: bool):
     def _screenshot(filename):
         if not filename.endswith(".png"):
             filename = filename + ".png"
         artifacts_loc = ""
-        if ci:
+        if opt_ci:
             artifacts_loc = os.path.join("/builds", "worker", "artifacts")
         driver.save_screenshot(os.path.join(artifacts_loc, filename))
 
