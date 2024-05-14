@@ -1,6 +1,7 @@
 from pypom import Page
 from selenium.common.exceptions import (
     WebDriverException,
+    StaleElementReferenceException
 )
 
 from modules.page_base import BasePage
@@ -29,6 +30,6 @@ class AboutLogins(BasePage):
             ba.clear_and_fill(self.get_element("login-item-type", item_type), value)
         try:
             self.get_element("create-login-button")
-        except WebDriverException:
+        except (WebDriverException, StaleElementReferenceException):
             self.get_element("save-changes-button").click()
         return self
