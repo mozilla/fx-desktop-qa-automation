@@ -1,3 +1,5 @@
+import logging
+
 from pypom import Page
 from selenium.common.exceptions import (
     StaleElementReferenceException,
@@ -6,7 +8,6 @@ from selenium.common.exceptions import (
 
 from modules.page_base import BasePage
 from modules.util import BrowserActions
-import logging
 
 
 class AboutLogins(BasePage):

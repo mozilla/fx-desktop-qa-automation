@@ -1,5 +1,6 @@
-import pytest
 import logging
+
+import pytest
 from faker import Faker
 from faker.providers import internet, misc
 from selenium.webdriver import Firefox
