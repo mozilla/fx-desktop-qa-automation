@@ -134,27 +134,29 @@ def driver(
 
     All arguments are fixtures being requested.
     """
-    options = Options()
-    if opt_headless or opt_ci:
-        options.add_argument("--headless")
-    options.binary_location = fx_executable
-    for opt, value in set_prefs:
-        options.set_preference(opt, value)
-    driver = webdriver.Firefox(options=options)
-    separator = "x"
-    if separator not in opt_window_size:
-        if "by" in opt_window_size:
-            separator = "by"
-        elif "," in opt_window_size:
-            separator = ","
-        elif " " in opt_window_size:
-            separator = " "
-    winsize = [int(s) for s in opt_window_size.split(separator)]
-    driver.set_window_size(*winsize)
-    driver.implicitly_wait(opt_implicit_timeout)
-    yield driver
+    try:
+        options = Options()
+        if opt_headless or opt_ci:
+            options.add_argument("--headless")
+        options.binary_location = fx_executable
+        for opt, value in set_prefs:
+            options.set_preference(opt, value)
+        driver = webdriver.Firefox(options=options)
+        separator = "x"
+        if separator not in opt_window_size:
+            if "by" in opt_window_size:
+                separator = "by"
+            elif "," in opt_window_size:
+                separator = ","
+            elif " " in opt_window_size:
+                separator = " "
+        winsize = [int(s) for s in opt_window_size.split(separator)]
+        driver.set_window_size(*winsize)
+        driver.implicitly_wait(opt_implicit_timeout)
+        yield driver
 
-    driver.quit()
+    finally:
+        driver.quit()
 
 
 @pytest.fixture()
