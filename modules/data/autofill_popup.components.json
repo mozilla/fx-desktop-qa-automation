@@ -1,0 +1,14 @@
+{
+    "context": "chrome",
+    "doorhanger-save-button": {
+        "selectorData": "button[label='Save'].popup-notification-primary-button",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "autofill-panel": {
+        "selectorData": "PopupAutoComplete",
+        "strategy": "id",
+        "groups": []
+    }
+}
