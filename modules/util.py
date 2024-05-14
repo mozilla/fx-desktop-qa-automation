@@ -174,37 +174,24 @@ class BrowserActions:
         webelement.clear()
         webelement.send_keys(term)
 
-    def clear_and_fill(self, webelement: WebElement, term: str):
+    def clear_and_fill(self, webelement: WebElement, term: str, press_enter=True):
         """
-        Given a WebElement, send it the string `term` to it followed by Keys.RETURN.
+        Given a WebElement, send it the string `term` to it followed by optionally pressing ENTER.
+        Default will press ENTER after sending the term to the weblement unless specified otherwise
 
-        ...
-
-        Attributes
+        Parameters
         ----------
         webelement : selenium.webdriver.remote.webelement.WebElement
+            The WebElement to interact with.
         term : str
-            The string to send to this element
+            The string to send to this element.
+        press_enter : bool, optional
+            Whether to press Enter after sending the term (default is True).
         """
         webelement.clear()
-        webelement.send_keys(term, Keys.RETURN)
-
-    def find_clear_and_fill(self, element_tuple: Iterable, term: str):
-        """
-        Given a Tuple of (By.CONSTANT, str), select the first matching element
-        and send the string `term` to it followed by Keys.RETURN.
-
-        ...
-
-        Attributes
-        ----------
-        element_tuple : Tuple[selenium.webdriver.common.by.By.CONSTANT, str]
-            The tuple used in e.g. expected_conditions methods to select an element
-        term : str
-            The string to send to this element
-        """
-        webelement = self.driver.find_element(*element_tuple)
-        self.clear_and_fill(webelement, term)
+        webelement.send_keys(term)
+        if press_enter:
+            webelement.send_keys(Keys.RETURN)
 
     def search(self, term: str, with_enter=True):
         """
