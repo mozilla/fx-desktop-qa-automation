@@ -1,7 +1,7 @@
 from pypom import Page
 from selenium.common.exceptions import (
+    StaleElementReferenceException,
     WebDriverException,
-    StaleElementReferenceException
 )
 
 from modules.page_base import BasePage
