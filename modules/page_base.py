@@ -89,6 +89,11 @@ class BasePage(Page):
         self.wait.until(condition)
         return self
 
+    def expect_not(self, condition) -> Page:
+        """Use the Page's to wait until assert a condition is not true or wait until timeout"""
+        self.wait.until_not(condition)
+        return self
+
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
         logging.info(f"Loading element manifest: {manifest_loc}")
@@ -211,6 +216,10 @@ class BasePage(Page):
     def element_selected(self, name: str, *label) -> Page:
         self.expect(EC.element_to_be_selected(self.get_element(name, *label)))
         return self
+
+    def double_click(self, name: str, *label: str):
+        elem = self.get_element(name, *label)
+        self.actions.double_click(elem).perform()
 
     @property
     def loaded(self):

@@ -49,7 +49,3 @@ class AboutPrefs(BasePage):
         search_input.clear()
         search_input.send_keys(term)
         return self
-
-    def find_setting_and_click(self, field_name: str):
-        # with self.driver.context(self.driver.CONTEXT_CHROME):
-        self.get_element(field_name).click()

@@ -1,16 +1,5 @@
 {
-    "form-field": {
-        "selectorData": "input[autocomplete=\"{name}\"]",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "submit-button": {
-        "selectorData": "input[type=\"{name}\"]",
-        "strategy": "css",
-        "groups": []
-    },
-
+    "context": "chrome",
     "doorhanger-save-button": {
         "selectorData": "button[label='Save'].popup-notification-primary-button",
         "strategy": "css",

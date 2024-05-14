@@ -3,6 +3,8 @@ from collections.abc import Iterable
 from random import shuffle
 from typing import Union
 
+from faker import Faker
+from faker.providers import internet, misc
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -12,6 +14,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
+
+from modules.classes.autofill_base import AutofillAddressBase
 
 
 class Utilities:
@@ -28,9 +32,9 @@ class Utilities:
         shuffle(chars)
         return "".join(chars[:n])
 
-    def write_html_content(self, file_name: str, driver: Firefox, write_chrome: bool):
+    def write_html_content(self, file_name: str, driver: Firefox, chrome: bool):
         """
-        Takes the driver, the desired file name and the flag write_chrome, when true this flag will log the
+        Takes the driver, the desired file name and the flag chrome, when true this flag will log the
         web contents of the Chrome in the <file_name>.html and the regular page contents when it is fales.
 
         ...
@@ -42,11 +46,11 @@ class Utilities:
             The name of the file to be made
         driver : selenium.webdriver.Firefox
             The Firefox driver instance
-        write_chrome : bool
+        chrome : bool
             A boolean flag indicating whether or not to write contents of the browsers chrome
             when True, or the browser's content when False.
         """
-        if write_chrome:
+        if chrome:
             with driver.context(driver.CONTEXT_CHROME):
                 self.__write_contents(driver, file_name)
         else:
@@ -69,6 +73,75 @@ class Utilities:
         with open(file_name + ".html", "w") as fh:
             output_contents = driver.page_source.replace("><", ">\n<")
             fh.write(output_contents)
+
+    def create_localized_faker(self, country_code: str):
+        """
+        Given a country code, try to find the associated English locale. Returns the faker object
+        and whether or not the country code was valid.
+
+        ...
+        Attributes
+        ----------
+        country_code : str
+            The two letter country code.
+
+
+        Returns
+        -------
+        Tuple[Faker, bool]
+            A tuple where the first element is the faker object, second is a boolean indicated whether or not
+            the locale is valid.
+        """
+        locale = f"en_{country_code.upper()}"
+        try:
+            faker = Faker(locale)
+            faker.add_provider(internet)
+            faker.add_provider(misc)
+            return (faker, True)
+        except AttributeError:
+            faker = Faker(locale)
+            faker.add_provider(internet)
+            faker.add_provider(misc)
+            return (faker, False)
+
+    def fake_autofill_data(self, country_code: str):
+        """
+        Given a country code, tries to initialize the locale of the faker and generates fake data
+        then returns the new AutofillAddressBase object with the fake data.
+
+        ...
+        Attributes
+        ----------
+        country_code : str
+            The two letter country code, defaults to CA if it is not valid.
+        """
+        fake, valid_code = self.create_localized_faker(country_code)
+        name = fake.name()
+        organization = fake.company()
+        street_address = fake.street_address()
+        address_level_2 = fake.city()
+        try:
+            address_level_1 = fake.state()
+        except AttributeError:
+            address_level_1 = fake.administrative_unit()
+        postal_code = fake.postcode()
+        country = "CA" if not valid_code else country_code
+        email = fake.email()
+        telephone = fake.phone_number()
+
+        fake_data = AutofillAddressBase(
+            name=name,
+            organization=organization,
+            street_address=street_address,
+            address_level_2=address_level_2,
+            address_level_1=address_level_1,
+            postal_code=postal_code,
+            country=country,
+            email=email,
+            telephone=telephone,
+        )
+
+        return fake_data
 
 
 class BrowserActions:
