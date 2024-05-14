@@ -49,7 +49,7 @@ def pytest_addoption(parser):
         "--window-size",
         action="store",
         default="1152x864",
-        help="Size for Fx window, default is '1152x864'"
+        help="Size for Fx window, default is '1152x864'",
     )
 
 
@@ -66,6 +66,7 @@ def opt_implicit_timeout(request):
 @pytest.fixture()
 def opt_ci(request):
     return request.config.getoption("--ci")
+
 
 @pytest.fixture()
 def opt_window_size(request):
@@ -140,14 +141,14 @@ def driver(
     for opt, value in set_prefs:
         options.set_preference(opt, value)
     driver = webdriver.Firefox(options=options)
-    separator = 'x'
+    separator = "x"
     if separator not in opt_window_size:
         if "by" in opt_window_size:
             separator = "by"
-        elif ',' in opt_window_size:
-            separator = ','
-        elif ' ' in opt_window_size:
-            separator = ' '
+        elif "," in opt_window_size:
+            separator = ","
+        elif " " in opt_window_size:
+            separator = " "
     winsize = [int(s) for s in opt_window_size.split(separator)]
     driver.set_window_size(*winsize)
     driver.implicitly_wait(opt_implicit_timeout)
