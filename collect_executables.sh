@@ -5,7 +5,6 @@
 
 ## Determine OS and arch
 UNAME_A=$(uname -a)
-echo "$UNAME_A"
 if [ -n "$WSL_DISTRO_NAME" ]
 then
     SYSTEM_NAME="win"
@@ -44,8 +43,6 @@ fi
 
 # Find the version of Geckodriver that matches arch
 FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
-echo "$FILENAME"
-echo "--"
 
 # 20 is arbitrary and may break if future releases of Geckodriver have more than 20 channels
 for i in {0..20}
@@ -63,7 +60,12 @@ if [[ $SYSTEM_NAME == "macos" ]]
 then
     FX_SYS_NAME="osx"
 else
-    FX_SYS_NAME=$"$SYSTEM_NAME"
+    if [[ $SYSTEM_NAME == "linux" ]] && [[ $BITS == "64" ]]
+    then
+        FX_SYS_NAME="linux64"
+    else
+        FX_SYS_NAME=$"$SYSTEM_NAME"
+    fi
 fi
 
 CHANNEL="-beta"
