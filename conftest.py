@@ -57,7 +57,7 @@ def opt_implicit_timeout(request):
 
 
 @pytest.fixture()
-def ci(request):
+def opt_ci(request):
     return request.config.getoption("--ci")
 
 
@@ -113,6 +113,7 @@ def driver(
     opt_headless: bool,
     opt_implicit_timeout: int,
     set_prefs: List[Tuple],
+    opt_ci: bool,
     env_prep,
 ):
     """
@@ -121,7 +122,7 @@ def driver(
     All arguments are fixtures being requested.
     """
     options = Options()
-    if opt_headless or ci:
+    if opt_headless or opt_ci:
         options.add_argument("--headless")
     options.binary_location = fx_executable
     for opt, value in set_prefs:
