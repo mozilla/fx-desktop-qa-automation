@@ -121,7 +121,7 @@ def driver(
     All arguments are fixtures being requested.
     """
     options = Options()
-    if opt_headless:
+    if opt_headless or ci:
         options.add_argument("--headless")
     options.binary_location = fx_executable
     for opt, value in set_prefs:

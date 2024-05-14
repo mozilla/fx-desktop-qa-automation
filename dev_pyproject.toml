@@ -4,6 +4,7 @@ addopts = "-vs --html=report.html"
 log_cli = true
 log_cli_level = "info"
 markers = [
+    "audio: test is reliant on audio",
     "pynput: test uses pynput package",
     "incident: incident smoke tests"
 ]
