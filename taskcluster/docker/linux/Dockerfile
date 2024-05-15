@@ -29,6 +29,12 @@ ENV SHELL=/bin/bash \
     HOME=/builds/worker \
     PATH=/builds/worker/.local/bin:/root/.local/bin:$PATH
 
+ENV MOZ_LOG_FILE=/builds/worker/artifacts/fx_log
+ENV MOZ_DISABLE_CONTENT_PROCESS=1
+ENV MOZ_LOG=HTMLMediaElement:4,HTMLMediaElementEvents:4,cubeb:5,PlatformDecoderModule:5,AudioSink:5,AudioSinkWrapper:5,MediaDecoderStateMachine:4,MediaDecoder:4,MediaFormatReader:5,GMP:5,EME:5
+
+RUN pactl list > /builds/worker/artifacts/pactl_list
+
 VOLUME /builds/worker/checkouts
 VOLUME /builds/worker/.cache
 
