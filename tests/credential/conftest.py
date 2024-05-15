@@ -4,6 +4,7 @@ import pytest
 from faker import Faker
 from faker.providers import internet, misc
 from selenium.webdriver import Firefox
+from datetime import datetime
 
 from modules.page_object import AboutLogins
 
@@ -32,7 +33,7 @@ def origins():
 
 
 @pytest.fixture()
-def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
+def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins, screenshot):
     """
     Adds 6 fake logins to the session's about:logins. The final two usernames are the same.
     Yields a Tuple of the WebDriver object under test and a five-element list of the
@@ -63,6 +64,7 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
         ]:
             candidate_username = faker.user_name()
         usernames.append(candidate_username)
+        screenshot(f"cred-setup-{datetime.now().strftime("%Y-%m%d_%H%M%S")}")
         add_login(origins[i], candidate_username, faker.password(length=15))
 
     # Add a cred with a matching username for a different origin
