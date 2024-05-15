@@ -64,7 +64,8 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins, screensho
         ]:
             candidate_username = faker.user_name()
         usernames.append(candidate_username)
-        screenshot(f"cred-setup-{datetime.now().strftime("%Y-%m%d_%H%M%S")}")
+        timestamp = datetime.now().strftime('%Y-%m%d_%H%M%S')
+        screenshot(f"cred-setup-{timestamp}")
         add_login(origins[i], candidate_username, faker.password(length=15))
 
     # Add a cred with a matching username for a different origin
