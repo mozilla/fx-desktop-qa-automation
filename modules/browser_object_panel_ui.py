@@ -36,3 +36,14 @@ class PanelUi(BasePage):
                 fh.write(self.driver.page_source)
             self.menu = self.Menu(self, root=panel_root)
         return self
+
+    def select_panel_setting(self, name, *label):
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            panel_option = self.get_element(name, *label)
+            panel_option.click()
+
+    def navigate_to_about_addons(self):
+        self.select_panel_setting("more-tools")
+        self.select_panel_setting("customize-toolbar")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("manage-themes").click()

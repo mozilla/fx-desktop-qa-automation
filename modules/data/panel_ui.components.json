@@ -1,10 +1,29 @@
 {
+    "context": "chrome",
     "panel-ui-button": {
         "selectorData": "PanelUI-menu-button",
         "strategy": "id",
         "groups": [
             "requiredForPage"
         ]
+    },
+
+    "more-tools": {
+        "selectorData": "appMenu-more-button2",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "customize-toolbar": {
+        "selectorData": "overflowMenu-customize-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "manage-themes": {
+        "selectorData": "customization-lwtheme-link",
+        "strategy": "id",
+        "groups": []
     },
 
     "zoom-reduce": {
