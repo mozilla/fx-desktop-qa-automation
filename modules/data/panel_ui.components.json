@@ -1,0 +1,36 @@
+{
+    "panel-ui-button": {
+        "selectorData": "PanelUI-menu-button",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "zoom-reduce": {
+        "selectorData": "appMenu-zoomReduce-button2",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage",
+            "menuItem"
+        ]
+    },
+
+    "zoom-enlarge": {
+        "selectorData": "appMenu-zoomEnlarge-button2",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage",
+            "menuItem"
+        ]
+    },
+
+    "zoom-reset": {
+        "selectorData": "appMenu-zoomReset-button2",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage",
+            "menuItem"
+        ]
+    }
+}
