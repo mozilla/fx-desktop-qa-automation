@@ -15,7 +15,7 @@ def get_snake_case(tokenized):
     return file_name
 
 
-def get_file_name(tokenized):
+def get_file_name(tokenized, type):
     file_name = get_snake_case(tokenized)
 
     if type == "pom":
@@ -43,7 +43,7 @@ def create_pom_or_bom():
     if url_template == "N/A":
         url_template = ""
 
-    file_name = get_file_name(tokenized)
+    file_name = get_file_name(tokenized, type)
 
     class_name = get_class_name(tokenized)
 
