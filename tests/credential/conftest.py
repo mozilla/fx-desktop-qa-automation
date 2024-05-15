@@ -1,10 +1,10 @@
 import logging
+from datetime import datetime
 
 import pytest
 from faker import Faker
 from faker.providers import internet, misc
 from selenium.webdriver import Firefox
-from datetime import datetime
 
 from modules.page_object import AboutLogins
 
