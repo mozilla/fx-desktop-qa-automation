@@ -94,6 +94,14 @@ class BasePage(Page):
         self.wait.until_not(condition)
         return self
 
+    def perform_key_combo(self, *keys) -> Page:
+        """Use ActionChains to perform key combos"""
+        for k in keys[-1]:
+            self.actions.key_down(k)
+        self.actions.send_keys(keys[-1])
+        self.actions.perform()
+        return self
+
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
         logging.info(f"Loading element manifest: {manifest_loc}")
