@@ -1,10 +1,10 @@
 import json
 import logging
-import re
 import os
+import re
 from copy import deepcopy
-
 from pathlib import Path
+
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
@@ -70,7 +70,7 @@ class BasePage(Page):
                 manifest_name += f"_{char.lower()}"
         root_dir = Path(os.getcwd()).parent.parent
         json_path = root_dir.joinpath("modules", "data")
-        self.load_element_manifest(fr"{json_path}\{manifest_name}.components.json")
+        self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
