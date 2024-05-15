@@ -47,6 +47,8 @@ def create_pom_or_bom():
 
     class_name = get_class_name(tokenized)
 
+    json_name = get_snake_case(tokenized)
+
     class_content = textwrap.dedent(f"""\
 from modules.page_base import BasePage
 
@@ -61,7 +63,7 @@ class {class_name}(BasePage):
     try:
         with open(f"modules/{file_name}.py", "w") as file:
             file.write(class_content)
-        with open(f"modules/data/{file_name}.components.json", "w") as file:
+        with open(f"modules/data/{json_name}.components.json", "w") as file:
             file.write("{}")
         print(
             f"{file_name}.py was created and {file_name}.components.json was crated, a new class {class_name} was added inside the Python file!"
