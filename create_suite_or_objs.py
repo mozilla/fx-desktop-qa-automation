@@ -127,7 +127,7 @@ def main():
             break
 
         while type != "suite" and type != "obj":
-            type = input("suite or obj?: ")
+            type = input("suite or obj?: ").lower()
 
         if type == "suite":
             create_suite()
