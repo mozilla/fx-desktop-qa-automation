@@ -20,7 +20,6 @@ tasks:
       command: |-
         ./collect_executables.sh;
         pulseaudio --start --daemonize
-        pactl list > /builds/worker/artifacts/pactl_list
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox .
