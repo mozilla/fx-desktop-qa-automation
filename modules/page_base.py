@@ -202,10 +202,12 @@ class BasePage(Page):
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
             shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
-            self.elements[cache_name]["seleniumObject"] = shadow_element
+            if "doNotCache" not in element_data["groups"]:
+                self.elements[cache_name]["seleniumObject"] = shadow_element
             return shadow_element
         found_element = self.driver.find_element(*selector)
-        self.elements[cache_name]["seleniumObject"] = found_element
+        if "doNotCache" not in element_data["groups"]:
+            self.elements[cache_name]["seleniumObject"] = found_element
         logging.info(f"Returning element {cache_name}.\n")
         return found_element
 
