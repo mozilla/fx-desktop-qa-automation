@@ -1,5 +1,4 @@
 import logging
-from collections.abc import Iterable
 from random import shuffle
 from typing import Union
 
