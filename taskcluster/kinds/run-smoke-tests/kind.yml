@@ -19,7 +19,7 @@ tasks:
       cwd: "{checkout}"
       command: |-
         ./collect_executables.sh;
-        pulseaudio --start --daemonize
+        pulseaudio --start --log-level=3 --log-target=file:/builds/worker/artifacts/pulseaudio_log;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox .
