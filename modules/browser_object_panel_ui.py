@@ -43,6 +43,9 @@ class PanelUi(BasePage):
             panel_option.click()
 
     def navigate_to_about_addons(self):
+        """
+        On the hamburger menu > More Tools > Customize Toolbar > Manage Themes
+        """
         self.select_panel_setting("more-tools")
         self.select_panel_setting("customize-toolbar")
         with self.driver.context(self.driver.CONTEXT_CHROME):

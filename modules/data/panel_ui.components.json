@@ -30,7 +30,6 @@
         "selectorData": "appMenu-zoomReduce-button2",
         "strategy": "id",
         "groups": [
-            "requiredForPage",
             "menuItem"
         ]
     },
@@ -39,7 +38,6 @@
         "selectorData": "appMenu-zoomEnlarge-button2",
         "strategy": "id",
         "groups": [
-            "requiredForPage",
             "menuItem"
         ]
     },
@@ -48,7 +46,6 @@
         "selectorData": "appMenu-zoomReset-button2",
         "strategy": "id",
         "groups": [
-            "requiredForPage",
             "menuItem"
         ]
     }

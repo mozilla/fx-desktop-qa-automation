@@ -94,5 +94,12 @@
         "selectorData": "PanelUI-button",
         "strategy": "id",
         "groups": []
+    },
+
+    "navigation-background-component": {
+        "selectorData": "nav-bar",
+        "strategy": "id",
+        "groups": []
     }
+
 }
