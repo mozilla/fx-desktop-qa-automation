@@ -132,7 +132,32 @@ def driver(
     """
     Return the webdriver object.
 
-    All arguments are fixtures being requested.
+    All arguments are fixtures being requested, rather than parameters.
+
+    Fixtures
+    --------
+
+    fx_executable: str
+        Location of the Firefox executable.
+
+    opt_headless: bool
+        Whether pytest was run with --run-headless.
+
+    opt_implicit_timeout: int
+        Timeout, in seconds for driver-level wait attribute.
+
+    set_prefs: List[Tuple]
+        Preferences to set before the Firefox object is created.
+        Usually set in the conftest.py inside a test suite folder.
+
+    opt_ci: bool
+        Whether pytest was run with --ci.
+
+    opt_window_size: str
+        String describing the window size for the Firefox window.
+
+    env_prep: None
+        Fixture that does other environment work, like set logging levels.
     """
     try:
         options = Options()

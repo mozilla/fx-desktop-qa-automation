@@ -95,7 +95,10 @@ class BasePage(Page):
         return self
 
     def perform_key_combo(self, *keys) -> Page:
-        """Use ActionChains to perform key combos"""
+        """
+        Use ActionChains to perform key combos. Modifier keys should come first in the function call.
+        Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
+        """
         for k in keys[-1]:
             self.actions.key_down(k)
         self.actions.send_keys(keys[-1])
