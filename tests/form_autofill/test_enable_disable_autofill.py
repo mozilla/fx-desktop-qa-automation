@@ -1,10 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.autofill_object import AddressFill
-from modules.browser_object import Navigation
+from modules.browser_object import AutofillPopup, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
+from modules.page_object import AboutPrefs, AddressFill
 from modules.util import Utilities
 
 countries = ["CA", "US"]
