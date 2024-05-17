@@ -1,8 +1,8 @@
 import json
 import logging
 import os
-import re
 import platform
+import re
 from copy import deepcopy
 from pathlib import Path
 
@@ -75,7 +75,9 @@ class BasePage(Page):
             json_path = root_dir.joinpath("modules", "data")
             self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
         else:
-            self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
+            self.load_element_manifest(
+                f"./modules/data/{manifest_name}.components.json"
+            )
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
