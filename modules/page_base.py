@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import platform
 from copy import deepcopy
 from pathlib import Path
 
@@ -68,15 +69,22 @@ class BasePage(Page):
                 manifest_name += char
             else:
                 manifest_name += f"_{char.lower()}"
-        root_dir = Path(os.getcwd()).parent.parent
-        json_path = root_dir.joinpath("modules", "data")
-        self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
+        sys_platform = self.sys_platform()
+        if sys_platform == "Windows":
+            root_dir = Path(os.getcwd()).parent.parent
+            json_path = root_dir.joinpath("modules", "data")
+            self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
+        else:
+            self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
     )
+
+    def sys_platform(self):
+        return platform.system()
 
     def set_chrome_context(self):
         """Make sure the Selenium driver is using CONTEXT_CHROME"""
