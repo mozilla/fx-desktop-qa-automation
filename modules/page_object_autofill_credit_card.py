@@ -1,7 +1,9 @@
+from typing import List
 from modules.browser_object import CreditCardPopup
+from modules.classes.credit_card import CreditCardBase
 from modules.page_object_autofill import Autofill
 from modules.util import BrowserActions, CreditCardBase
-from modules.classes.credit_card import CreditCardBase
+
 
 class CreditCardFill(Autofill):
     """
@@ -31,16 +33,40 @@ class CreditCardFill(Autofill):
             self.double_click("form-field", field)
             ccp.verify_popup()
 
-    def extract_credit_card_obj_into_list(self, credit_card_sample_data: CreditCardBase):
+    def extract_credit_card_obj_into_list(
+        self, credit_card_sample_data: CreditCardBase
+    ) -> List[str]:
+        """
+        Extracts the credit card information from the object and returns it as a list.
+
+        Attributes
+        ----------
+        credit_card_sample_data: CreditCardBase
+            The credit card information object
+        """
         ret_val = [
             credit_card_sample_data.name,
             credit_card_sample_data.card_number,
             credit_card_sample_data.expiration_month,
-            f"20{credit_card_sample_data.expiration_year}"
-            ]
+            f"20{credit_card_sample_data.expiration_year}",
+        ]
         return ret_val
 
-    def verify_four_fields(self, ccp: CreditCardPopup, credit_card_sample_data: CreditCardBase):
+    def verify_four_fields(
+        self, ccp: CreditCardPopup, credit_card_sample_data: CreditCardBase
+    ):
+        """
+        Veriies that after clicking the autofill panel the information is filled correctly.
+
+        Attributes
+        ----------
+
+        ccp: CreditCardPopup
+            The credit card popup object
+
+        credit_card_sample_data: CreditCardBase
+            The object that contains all of the relevant information about the credit card autofill
+        """
         self.double_click("form-field", "cc-name")
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ccp.get_element("autofill-profile-option").click()
@@ -48,4 +74,4 @@ class CreditCardFill(Autofill):
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
         for i in range(len(info_list)):
             input_field = self.get_element("form-field", self.fields[i])
-            assert info_list[i] == input_field.get_attribute('value')
+            assert info_list[i] == input_field.get_attribute("value")

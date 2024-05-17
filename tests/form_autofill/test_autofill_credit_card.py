@@ -24,7 +24,11 @@ def test_autofill_credit_card(driver: Firefox):
 
     ccf.verify_all_fields(ccp)
 
+
 def test_autofill_four_fields(driver: Firefox):
+    """
+    C122404, tests that the form fields are filled corrected after saving a profile.
+    """
     nav = Navigation(driver)
     util = Utilities()
 
