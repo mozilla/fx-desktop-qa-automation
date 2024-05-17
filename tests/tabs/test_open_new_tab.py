@@ -20,8 +20,8 @@ def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):
     driver.get("about:robots")
     browser.set_chrome_context()
     ActionChains(driver).key_down(Keys.COMMAND).send_keys("t").perform()
-    WebDriverWait(driver, 10).until(EC.title_contains("Mozilla Firefox"))
-    assert driver.title == "Mozilla Firefox"
+    WebDriverWait(driver, 10).until(EC.title_contains("New Tab"))
+    assert driver.title == "New Tab"
     if driver.find_element(By.CLASS_NAME, "fake-editable"):
         print("We found the selector by CLASS_NAME")
     with driver.context(driver.CONTEXT_CONTENT):
