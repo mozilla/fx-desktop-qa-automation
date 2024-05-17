@@ -23,8 +23,8 @@ class Autofill(BasePage):
         term: str
             The string to be sent to the input field
         """
-        web_elem = self.get_element("form-field", field_name)
-        ba.clear_and_fill(web_elem, term, press_enter=False)
+        form_field_element = self.get_element("form-field", field_name)
+        ba.clear_and_fill(form_field_element, term, press_enter=False)
 
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
