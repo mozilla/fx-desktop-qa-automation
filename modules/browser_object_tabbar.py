@@ -12,12 +12,6 @@ class TabBar(BasePage):
     """Page Object Model for tab navigation"""
 
     URL_TEMPLATE = "about:blank"
-    NEW_TAB_KEY_COMBO = {
-        "Windows": [Keys.CONTROL, "t"],
-        "Linux": [Keys.CONTROL, "t"],
-        "Darwin": [Keys.COMMAND, "t"]
-    }
-
 
     class MediaStatus:
         """Fake enum: just return a string based on a constant name"""
