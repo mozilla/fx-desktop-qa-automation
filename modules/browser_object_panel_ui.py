@@ -28,12 +28,8 @@ class PanelUi(BasePage):
 
     def open_panel_menu(self) -> BasePage:
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            with open("pre_menu_open.html", "w") as fh:
-                fh.write(self.driver.page_source)
             panel_root = self.get_element("panel-ui-button")
             panel_root.click()
-            with open("menu_content.html", "w") as fh:
-                fh.write(self.driver.page_source)
             self.menu = self.Menu(self, root=panel_root)
         return self
 
