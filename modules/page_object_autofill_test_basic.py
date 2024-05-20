@@ -1,3 +1,8 @@
+from selenium.webdriver import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.page_base import BasePage
 from modules.util import AutofillAddressBase, BrowserActions
 
@@ -58,3 +63,15 @@ class AddressFill(BasePage):
 
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
+
+    def click(self, name: str, *label: str):
+        elem = self.get_element(name, *label)
+        self.actions.click(elem).perform()
+
+    def click_address(self):
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("select-address").click()
+
+    def click_clear(self):
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("clear-address").click()

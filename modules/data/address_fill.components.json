@@ -9,5 +9,25 @@
         "selectorData": "input[type=\"{name}\"]",
         "strategy": "css",
         "groups": []
+    },
+
+    "popup-autocomplete-panel": {
+        "selectorData": "mainPopupSet",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context": "chrome",
+    "clear-address": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
+        "strategy":"css",
+        "groups": []
+    },
+
+    "context": "chrome",
+    "select-address": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
+        "strategy":"css",
+        "groups": []
     }
 }
