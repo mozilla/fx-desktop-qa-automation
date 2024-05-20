@@ -11,12 +11,6 @@
         "groups": []
     },
 
-    "popup-autocomplete-panel": {
-        "selectorData": "mainPopupSet",
-        "strategy": "id",
-        "groups": []
-    },
-
     "context": "chrome",
     "clear-address": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
