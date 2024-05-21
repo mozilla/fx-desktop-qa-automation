@@ -4,5 +4,11 @@
         "selectorData": "autocomplete-richlistbox",
         "strategy": "class",
         "groups": []
+    },
+
+    "autofill-panel": {
+        "selectorData": "PopupAutoComplete",
+        "strategy": "id",
+        "groups": []
     }
 }

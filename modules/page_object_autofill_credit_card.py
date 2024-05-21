@@ -1,3 +1,5 @@
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.browser_object import CreditCardPopup
 from modules.page_object_autofill import Autofill
 from modules.util import BrowserActions, CreditCardBase
