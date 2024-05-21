@@ -1,0 +1,8 @@
+{
+    "context": "chrome",
+    "autofill-cc-panel": {
+        "selectorData": "autocomplete-richlistbox",
+        "strategy": "class",
+        "groups": []
+    }
+}

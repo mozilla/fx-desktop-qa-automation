@@ -1,7 +1,10 @@
 import json
 import logging
+import os
+import platform
 import re
 from copy import deepcopy
+from pathlib import Path
 
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
@@ -66,13 +69,24 @@ class BasePage(Page):
                 manifest_name += char
             else:
                 manifest_name += f"_{char.lower()}"
-        self.load_element_manifest(f"./modules/data/{manifest_name}.components.json")
+        sys_platform = self.sys_platform()
+        if sys_platform == "Windows":
+            root_dir = Path(os.getcwd()).parent.parent
+            json_path = root_dir.joinpath("modules", "data")
+            self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
+        else:
+            self.load_element_manifest(
+                f"./modules/data/{manifest_name}.components.json"
+            )
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
     )
+
+    def sys_platform(self):
+        return platform.system()
 
     def set_chrome_context(self):
         """Make sure the Selenium driver is using CONTEXT_CHROME"""
@@ -92,6 +106,17 @@ class BasePage(Page):
     def expect_not(self, condition) -> Page:
         """Use the Page's to wait until assert a condition is not true or wait until timeout"""
         self.wait.until_not(condition)
+        return self
+
+    def perform_key_combo(self, *keys) -> Page:
+        """
+        Use ActionChains to perform key combos. Modifier keys should come first in the function call.
+        Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
+        """
+        for k in keys[-1]:
+            self.actions.key_down(k)
+        self.actions.send_keys(keys[-1])
+        self.actions.perform()
         return self
 
     def load_element_manifest(self, manifest_loc):
@@ -194,10 +219,12 @@ class BasePage(Page):
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
             shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
-            self.elements[cache_name]["seleniumObject"] = shadow_element
+            if "doNotCache" not in element_data["groups"]:
+                self.elements[cache_name]["seleniumObject"] = shadow_element
             return shadow_element
         found_element = self.driver.find_element(*selector)
-        self.elements[cache_name]["seleniumObject"] = found_element
+        if "doNotCache" not in element_data["groups"]:
+            self.elements[cache_name]["seleniumObject"] = found_element
         logging.info(f"Returning element {cache_name}.\n")
         return found_element
 

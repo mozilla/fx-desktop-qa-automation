@@ -45,6 +45,13 @@ def pytest_addoption(parser):
         help="Timeout for implicit waits, set 0 for no wait (default 10)",
     )
 
+    parser.addoption(
+        "--window-size",
+        action="store",
+        default="1152x864",
+        help="Size for Fx window, default is '1152x864'",
+    )
+
 
 @pytest.fixture()
 def opt_headless(request):
@@ -57,8 +64,13 @@ def opt_implicit_timeout(request):
 
 
 @pytest.fixture()
-def ci(request):
+def opt_ci(request):
     return request.config.getoption("--ci")
+
+
+@pytest.fixture()
+def opt_window_size(request):
+    return request.config.getoption("--window-size")
 
 
 @pytest.fixture()
@@ -113,34 +125,72 @@ def driver(
     opt_headless: bool,
     opt_implicit_timeout: int,
     set_prefs: List[Tuple],
+    opt_ci: bool,
+    opt_window_size: str,
     env_prep,
 ):
     """
     Return the webdriver object.
 
-    All arguments are fixtures being requested.
-    """
-    options = Options()
-    if opt_headless or ci:
-        options.add_argument("--headless")
-    options.binary_location = fx_executable
-    for opt, value in set_prefs:
-        options.set_preference(opt, value)
-    driver = webdriver.Firefox(options=options)
-    driver.set_window_size(1152, 864)
-    driver.implicitly_wait(opt_implicit_timeout)
-    yield driver
+    All arguments are fixtures being requested, rather than parameters.
 
-    driver.quit()
+    Fixtures
+    --------
+
+    fx_executable: str
+        Location of the Firefox executable.
+
+    opt_headless: bool
+        Whether pytest was run with --run-headless.
+
+    opt_implicit_timeout: int
+        Timeout, in seconds for driver-level wait attribute.
+
+    set_prefs: List[Tuple]
+        Preferences to set before the Firefox object is created.
+        Usually set in the conftest.py inside a test suite folder.
+
+    opt_ci: bool
+        Whether pytest was run with --ci.
+
+    opt_window_size: str
+        String describing the window size for the Firefox window.
+
+    env_prep: None
+        Fixture that does other environment work, like set logging levels.
+    """
+    try:
+        options = Options()
+        if opt_headless or opt_ci:
+            options.add_argument("--headless")
+        options.binary_location = fx_executable
+        for opt, value in set_prefs:
+            options.set_preference(opt, value)
+        driver = webdriver.Firefox(options=options)
+        separator = "x"
+        if separator not in opt_window_size:
+            if "by" in opt_window_size:
+                separator = "by"
+            elif "," in opt_window_size:
+                separator = ","
+            elif " " in opt_window_size:
+                separator = " "
+        winsize = [int(s) for s in opt_window_size.split(separator)]
+        driver.set_window_size(*winsize)
+        driver.implicitly_wait(opt_implicit_timeout)
+        yield driver
+
+    finally:
+        driver.quit()
 
 
 @pytest.fixture()
-def screenshot(driver: webdriver.Firefox, ci: bool):
+def screenshot(driver: webdriver.Firefox, opt_ci: bool):
     def _screenshot(filename):
         if not filename.endswith(".png"):
             filename = filename + ".png"
         artifacts_loc = ""
-        if ci:
+        if opt_ci:
             artifacts_loc = os.path.join("/builds", "worker", "artifacts")
         driver.save_screenshot(os.path.join(artifacts_loc, filename))
 

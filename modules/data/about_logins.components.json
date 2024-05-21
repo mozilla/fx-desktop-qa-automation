@@ -4,7 +4,8 @@
         "selectorData": "login-list",
         "strategy": "css",
         "groups": [
-            "requiredForPage"
+            "requiredForPage",
+            "doNotCache"
         ]
     },
 
@@ -14,7 +15,8 @@
         "strategy": "css",
         "shadowParent": "login-list",
         "groups": [
-            "requiredForPage"
+            "requiredForPage",
+            "doNotCache"
         ]
     },
 
