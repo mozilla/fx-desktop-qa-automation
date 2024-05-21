@@ -2,9 +2,9 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import CreditCardPopup, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.page_object import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
-from modules.page_object import AboutPrefs
 
 
 def test_autofill_credit_card(driver: Firefox):
@@ -24,6 +24,7 @@ def test_autofill_credit_card(driver: Firefox):
     afp.press_doorhanger_save()
 
     ccf.verify_all_fields(ccp)
+
 
 def test_enable_disable_form_autofill_cc(driver: Firefox):
     """
