@@ -6,8 +6,9 @@ from modules.browser_object import TabBar
 
 
 def test_open_new_tab_plus(driver: Firefox):
-    # C134453
-
+    """
+    C134453 - A new tab can be opened from the dedicated button ("+")
+    """
     browser = TabBar(driver).open()
     driver.get("about:robots")
     browser.set_chrome_context()
@@ -15,16 +16,21 @@ def test_open_new_tab_plus(driver: Firefox):
     WebDriverWait(driver, 10).until(EC.title_contains("Mozilla Firefox"))
     assert driver.title == "Mozilla Firefox"
 
-def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):
-    # C134442
 
+def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):
+    """
+    C134442 - A new tab can be opened via keyboard combinations
+    """
     browser = TabBar(driver).open()
     driver.get("about:robots")
     browser.set_chrome_context()
-    # This action chain must be made into an object which accounts for cross
-    # platform shortcut differences. As it is, will only work on macOS.
-    ActionChains(driver).key_down(Keys.COMMAND).send_keys("t").key_up(
-        Keys.CONTROL
-    ).perform()
+    browser.new_tab_by_keys(sys_platform)
     WebDriverWait(driver, 10).until(EC.title_contains("Mozilla Firefox"))
     assert driver.title == "Mozilla Firefox"
+
+def test_open_new_via_link(driver: Firefox):
+    """
+    C134444 - A hyperlink can be opened in a new tab
+    """
+    browser = TabBar(driver).open()
+    driver.get("https://example.com/")
