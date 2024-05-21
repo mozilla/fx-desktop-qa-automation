@@ -2,7 +2,7 @@ from typing import List
 
 from modules.browser_object import CreditCardPopup
 from modules.classes.credit_card import CreditCardBase
-from modules.page_object import Autofill
+from modules.page_object_autofill import Autofill
 from modules.util import BrowserActions
 
 
