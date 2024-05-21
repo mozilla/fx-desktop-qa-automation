@@ -5,6 +5,7 @@ from modules.classes.credit_card import CreditCardBase
 from modules.page_object import Autofill
 from modules.util import BrowserActions
 
+
 class CreditCardFill(Autofill):
     """
     Page Object Model for auto site (https://mozilla.github.io/form-fill-examples/basic_cc.html)
