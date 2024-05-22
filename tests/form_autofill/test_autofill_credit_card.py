@@ -15,15 +15,13 @@ def test_autofill_credit_card(driver: Firefox):
     util = Utilities()
 
     nav.open()
-    ccf = CreditCardFill(driver).open()
-    afp = AutofillPopup(driver)
-    ccp = CreditCardPopup(driver)
+    credit_card_fill_obj = CreditCardFill(driver).open()
+    autofill_popup_obj = AutofillPopup(driver)
+    credit_card_popoup_obj = CreditCardPopup(driver)
 
-    credit_card_sample_data = util.fake_credit_card_data()
-    ccf.fill_credit_card_info(credit_card_sample_data)
-    afp.press_doorhanger_save()
+    credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
 
-    ccf.verify_all_fields(ccp)
+    credit_card_fill_obj.verify_all_fields(credit_card_popoup_obj)
 
 
 def test_enable_disable_form_autofill_cc(driver: Firefox):
@@ -35,11 +33,9 @@ def test_enable_disable_form_autofill_cc(driver: Firefox):
 
     nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
-    new_autofill_popup = AutofillPopup(driver)
+    autofill_popup_obj = AutofillPopup(driver)
 
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
-    new_autofill_popup.press_doorhanger_save()
+    credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
 
     about_prefs = AboutPrefs(driver, category="privacy").open()
     about_prefs.get_element("save-and-fill-payment-methods").click()
