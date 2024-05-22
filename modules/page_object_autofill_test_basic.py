@@ -1,5 +1,6 @@
 from modules.page_base import BasePage
 from modules.util import AutofillAddressBase, BrowserActions
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class AddressFill(BasePage):
@@ -70,3 +71,11 @@ class AddressFill(BasePage):
     def click_clear(self):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("clear-address").click()
+
+    def verify_autofill_displayed(self):
+        """
+        Verifies that the autofill suggestions are displayed.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            element = self.get_element("select-address")
+            self.expect(EC.visibility_of(element))

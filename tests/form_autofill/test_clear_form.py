@@ -1,3 +1,6 @@
+import time
+from selenium.common.exceptions import NoSuchElementException
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -33,3 +36,6 @@ def test_clear_form(driver: Firefox, country_code: str):
     new_address_autofill.click_address()
     new_address_autofill.click("form-field", "name")
     new_address_autofill.click_clear()
+    new_address_autofill.click("form-field", "name")
+    # Verify that the form autofill suggestions are displayed.
+    new_address_autofill.verify_autofill_displayed()
