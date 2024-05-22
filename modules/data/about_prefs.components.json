@@ -69,5 +69,11 @@
         "selectorData": "checkbox[label='Save and fill addresses']",
         "strategy": "css",
         "groups": []
+    },
+
+    "save-and-fill-payment-methods": {
+        "selectorData": "checkbox[label='Save and fill payment methods']",
+        "strategy": "css",
+        "groups": []
     }
 }
