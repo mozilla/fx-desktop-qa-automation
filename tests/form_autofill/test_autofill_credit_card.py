@@ -26,7 +26,8 @@ def test_autofill_credit_card(driver: Firefox):
 
 def test_enable_disable_form_autofill_cc(driver: Firefox):
     """
-    C122388, tests that after saving cc information and toggling the autofill credit cards box the dropdown does not appear.
+    C122388, tests that after saving cc information and toggling the autofill credit 
+    cards box the dropdown does not appear.
     """
     nav = Navigation(driver)
     util = Utilities()
