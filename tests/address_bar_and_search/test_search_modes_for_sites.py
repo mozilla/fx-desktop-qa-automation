@@ -7,6 +7,7 @@ from modules.browser_object import Navigation
 sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
 
 
+@pytest.mark.ci
 @pytest.mark.parametrize("site", sites)
 def test_search_modes_for_sites(driver: Firefox, site: str):
     # C2234690

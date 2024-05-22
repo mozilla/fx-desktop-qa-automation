@@ -14,7 +14,7 @@ themes = {
     "firefox-alpenglow_mozilla_org-heading": "rgba(255, 255, 255, 0.76)",
 }
 
-
+@pytest.mark.ci
 def test_redirect_to_addons(driver: Firefox):
     """
     C118173, ensures that the user is redirected to about:addons through the ui panel
