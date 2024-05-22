@@ -6,7 +6,9 @@ log_cli_level = "info"
 markers = [
     "audio: test is reliant on audio",
     "pynput: test uses pynput package",
-    "incident: incident smoke tests"
+    "incident: incident smoke tests",
+    "unstable: temporary mark for unstable tests",
+    "ci: basic tests to run in ci"
 ]
 
 [tool.ruff]

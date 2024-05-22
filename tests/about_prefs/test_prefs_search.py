@@ -1,8 +1,8 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 
-import pytest
 
 @pytest.mark.ci
 def test_search_prefs(driver: Firefox):

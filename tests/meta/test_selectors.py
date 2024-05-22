@@ -1,8 +1,8 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
 
-import pytest
 
 @pytest.mark.unstable
 def test_a_selector(driver: Firefox):
