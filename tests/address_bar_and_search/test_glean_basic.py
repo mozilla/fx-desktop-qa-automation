@@ -3,6 +3,7 @@ import json
 import re
 from time import sleep
 
+import pytest
 from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -48,6 +49,7 @@ def glean_handler(rq: Request) -> Response:
     return Response("", status=200)
 
 
+@pytest.mark.ci
 def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     # C2234689
     global PINGS_WITH_ID

@@ -5,12 +5,14 @@ log_cli_level = "warn"
 markers = [
     "audio: test is reliant on audio",
     "pynput: test uses pynput package",
-    "incident: incident smoke tests"
+    "incident: incident smoke tests",
+    "unstable: temporary mark for unstable tests",
+    "ci: basic tests to run in ci"
 ]
 testpaths = [
     "tests"
 ]
-addopts = "-vs -m 'not incident' --ci --html=/builds/worker/artifacts/report.html"
+addopts = "-vs -m 'ci' --ci --html=/builds/worker/artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"
