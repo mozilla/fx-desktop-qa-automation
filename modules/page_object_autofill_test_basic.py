@@ -1,4 +1,4 @@
-import time
+import re
 
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -63,18 +63,20 @@ class AddressFill(Autofill):
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
 
-    # def double_click(self, name: str, *label: str):
-    #     """
-    #     Double-click on the specified element.
+    def normalize_phone_number(self, phone: str, default_country_code="1"):
+        """
+        Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
+        to only the <country-code>xxxxxxxxxx format and return it.
 
-    #     Parameters:
-    #     name (str): The name of the element to double-click.
-    #     label (str): Additional labels to identify the element (optional).
-    #     """
-    #     elem = self.get_element(name, *label)
-    #     self.actions.double_click(elem).perform()
-    # elem = self.get_element(name, *label)
-    # actions = ActionChains(self.driver)
-    # actions.click(elem).perform()  # First click
-    # time.sleep(0.1)  # Delay between clicks
-    # actions.click(elem).perform()
+        ...
+        Attributes
+        ----------
+        phone : str
+            The phone number to be normalized
+        default_country_code: str
+            By default this is '1' for Canadian and US codes.
+        """
+        phone = re.sub(r"\D", "", phone)
+        if len(phone) == 10:
+            phone = default_country_code + phone
+        return phone

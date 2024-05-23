@@ -10,39 +10,12 @@ from modules.util import Utilities
 
 countries = ["CA", "US"]
 
-# @pytest.mark.parametrize("country_code", countries)
-# def test_enable_disable_autofill(driver: Firefox, country_code: str):
-#     """
-#     C122347, tests that after filling autofill and disabling it in settings that
-#     the autofill popups do not appear.
-#     """
-#     # instantiate objects
-#     Navigation(driver).open()
-#     af = AddressFill(driver).open()
-#     afp = AutofillPopup(driver)
-#     util = Utilities()
-
-#     # create fake data, fill it in and press submit and save on the doorhanger
-#     autofill_sample_data = util.fake_autofill_data(country_code)
-#     af.save_information_basic(autofill_sample_data)
-#     afp.press_doorhanger_save()
-#     about_prefs = AboutPrefs(driver, category="privacy").open()
-#     about_prefs.get_element("save-and-fill-addresses").click()
-
-#     # creating new objects to prevent stale webelements
-#     new_af = AddressFill(driver).open()
-#     new_af = AddressFill(driver).open()
-#     new_afp = AutofillPopup(driver)
-
-#     # verifying the popup panel does not appear
-#     new_af.double_click("form-field", "name")
-#     new_afp.verify_no_popup_panel()
-
 
 @pytest.mark.parametrize("country_code", countries)
-def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
+def test_enable_disable_autofill(driver: Firefox, country_code: str):
     """
-    C122361
+    C122347, tests that after filling autofill and disabling it in settings that
+    the autofill popups do not appear.
     """
     # instantiate objects
     Navigation(driver).open()
@@ -54,14 +27,14 @@ def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
     autofill_sample_data = util.fake_autofill_data(country_code)
     af.save_information_basic(autofill_sample_data)
     afp.press_doorhanger_save()
+    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs.get_element("save-and-fill-addresses").click()
 
-    # double click telephone attribute
-    af.double_click("form-field", "tel")
-    first_item = afp.get_nth_element("1")
+    # creating new objects to prevent stale webelements
+    new_af = AddressFill(driver).open()
+    new_af = AddressFill(driver).open()
+    new_afp = AutofillPopup(driver)
 
-    afp.hover_over_element(first_item)
-
-    actual_value = afp.get_primary_value(first_item)
-    stripped_number = actual_value[2:]
-    original_number = autofill_sample_data.telephone.replace(" ", "")
-    assert stripped_number == original_number
+    # verifying the popup panel does not appear
+    new_af.double_click("form-field", "name")
+    new_afp.verify_no_popup_panel()
