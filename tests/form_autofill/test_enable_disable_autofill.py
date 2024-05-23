@@ -36,3 +36,23 @@ def test_enable_disable_autofill(driver: Firefox, country_code: str):
     # verifying the popup panel does not appear
     new_af.double_click("form-field", "name")
     new_afp.verify_no_popup_panel()
+
+
+@pytest.mark.parametrize("country_code", countries)
+def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
+    """
+    C122361
+    """
+    # instantiate objects
+    Navigation(driver).open()
+    af = AddressFill(driver).open()
+    afp = AutofillPopup(driver)
+    util = Utilities()
+
+    # create fake data, fill it in and press submit and save on the doorhanger
+    autofill_sample_data = util.fake_autofill_data(country_code)
+    af.save_information_basic(autofill_sample_data)
+    afp.press_doorhanger_save()
+
+    # double click telephone attribute
+    af.double_click("")

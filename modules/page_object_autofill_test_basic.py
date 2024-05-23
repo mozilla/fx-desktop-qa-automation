@@ -38,3 +38,34 @@ class AddressFill(Autofill):
                 self.fill_input_element(ba, field, value)
 
         self.click_form_button("submit")
+
+    def fill_input_element(self, ba: BrowserActions, field_name: str, term: str):
+        """
+        Given BrowserActions object, the string of the element to be identified and the string term to be sent to the input,
+        identify the webelement and send the term to the input field without any additional keystrokes.
+
+        ...
+        Attributes
+        ----------
+        ba : BrowserActions
+        field_name : str
+            The name of the input field to be identified
+        term: str
+            The string to be sent to the input field
+        """
+        web_elem = self.get_element("form-field", field_name)
+        ba.clear_and_fill(web_elem, term, press_enter=False)
+
+    def click_form_button(self, field_name):
+        self.get_element("submit-button", field_name).click()
+
+    def double_click(self, name: str, *label: str):
+        """
+        Double-click on the specified element.
+
+        Parameters:
+        name (str): The name of the element to double-click.
+        label (str): Additional labels to identify the element (optional).
+        """
+        elem = self.get_element(name, *label)
+        self.actions.double_click(elem).perform()
