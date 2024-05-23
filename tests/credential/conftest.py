@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from faker import Faker
 from faker.providers import internet, misc
@@ -40,9 +42,12 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
     faker.add_provider(misc)
 
     def add_login(origin: str, username: str, password: str):
-        about_logins = AboutLogins(driver).open()
-        about_logins.click_add_login_button()
-        about_logins.create_new_login(
+        logging.info("Adding login...")
+        _about_logins = AboutLogins(driver).open()
+        logging.info("about:logins opened. Clicking plus button...")
+        _about_logins.click_add_login_button()
+        logging.info("Plus button clicked. Adding new login...")
+        _about_logins.create_new_login(
             {
                 "origin": origin,
                 "username": username,
