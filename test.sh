@@ -1,6 +1,6 @@
 result_file="test_results.log"
 
-for i in {1..20}
+for i in {1..100}
 do
   pytest tests/form_autofill/test_enable_disable_autofill.py
 

@@ -246,6 +246,7 @@ class BasePage(Page):
 
     def double_click(self, name: str, *label: str):
         elem = self.get_element(name, *label)
+        EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
     @property
