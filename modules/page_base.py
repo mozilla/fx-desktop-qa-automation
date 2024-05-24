@@ -70,13 +70,13 @@ class BasePage(Page):
             else:
                 manifest_name += f"_{char.lower()}"
         sys_platform = self.sys_platform()
-        if sys_platform == "Windows":
-            root_dir = Path(os.getcwd()).parent.parent
-            json_path = root_dir.joinpath("modules", "data")
-            self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
-        else:
-            self.load_element_manifest(
-                f"./modules/data/{manifest_name}.components.json"
+#        if sys_platform == "Windows":
+ #           root_dir = Path(os.getcwd())
+  #          json_path = root_dir.joinpath("modules", "data")
+   #         self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
+    #    else:
+        self.load_element_manifest(
+            f"./modules/data/{manifest_name}.components.json"
             )
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)

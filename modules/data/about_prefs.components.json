@@ -75,5 +75,52 @@
         "selectorData": "checkbox[label='Save and fill payment methods']",
         "strategy": "css",
         "groups": []
+    },
+    "saved-payment-methods-button": {
+        "selectorData": "button[label='Saved payment methods']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "add_card_button": {
+        "selectorData": "add",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cc_name_input": {
+        "selectorData": "#cc-name",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cc_number_input": {
+        "selectorData": "#cc-number",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cc_exp_month_input": {
+        "selectorData": "#cc-exp-month",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cc_exp_year_input": {
+        "selectorData": "#cc-exp-year",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cc_cvc_input": {
+        "selectorData": "#cc-cvc",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "save_card_button": {
+        "selectorData": "button[data-l10n-id='save-credit-card-button']",
+        "strategy": "css",
+        "groups": []
     }
 }

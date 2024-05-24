@@ -30,7 +30,6 @@ def test_enable_disable_autofill(driver: Firefox, country_code: str):
 
     # creating new objects to prevent stale webelements
     new_af = AddressFill(driver).open()
-    new_af = AddressFill(driver).open()
     new_afp = AutofillPopup(driver)
 
     # verifying the popup panel does not appear
