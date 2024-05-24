@@ -74,7 +74,28 @@ class CreditCardFill(Autofill):
         self.fill_credit_card_info(credit_card_sample_data)
         autofill_popup_obj.press_doorhanger_save()
 
-    def update_field(self, field: str, field_data: str, autofill_popup_obj: AutofillPopup):
+    def update_field(
+        self, field: str, field_data: str, autofill_popup_obj: AutofillPopup
+    ):
         ba = BrowserActions(self.driver)
         self.fill_input_element(ba, field, field_data)
         autofill_popup_obj.press_doorhanger_save()
+
+    def press_autofill_panel(self, credit_card_popoup_obj: CreditCardPopup):
+        self.double_click("form-field", "cc-name")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            credit_card_popoup_obj.get_element("autofill-profile-option").click()
+
+    def update_credit_card_information(
+        self,
+        credit_card_popoup_obj: CreditCardPopup,
+        autofill_popup_obj: AutofillPopup,
+        field_name: str,
+        field_data: str,
+    ):
+        self.press_autofill_panel(credit_card_popoup_obj)
+        self.update_field(field_name, field_data, autofill_popup_obj)
+        self.click_form_button("submit")
+
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            credit_card_popoup_obj.get_element("update-card-info-popup-button").click()
