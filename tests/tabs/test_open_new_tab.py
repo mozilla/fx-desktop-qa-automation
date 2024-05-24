@@ -1,4 +1,4 @@
-from selenium.webdriver import ActionChains, Firefox, Keys
+from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -27,11 +27,3 @@ def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):
     browser.new_tab_by_keys(sys_platform)
     WebDriverWait(driver, 10).until(EC.title_contains("Mozilla Firefox"))
     assert driver.title == "Mozilla Firefox"
-
-
-def test_open_new_via_link(driver: Firefox):
-    """
-    C134444 - A hyperlink can be opened in a new tab
-    """
-    browser = TabBar(driver).open()
-    driver.get("https://example.com/")
