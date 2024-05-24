@@ -1,8 +1,8 @@
 import logging
 import os
 import platform
+from subprocess import CalledProcessError, check_call
 from typing import List, Tuple
-from subprocess import (check_call, CalledProcessError)
 
 import pytest
 from selenium import webdriver
@@ -184,6 +184,7 @@ def driver(
     finally:
         driver.quit()
 
+
 @pytest.fixture()
 def unlock_keyring(sys_platform: str):
     # TODO: add linux and windows unlocks if relevant
@@ -196,6 +197,7 @@ def unlock_keyring(sys_platform: str):
         logging.warning("Failed to unlock keyring: security has errors.")
     except OSError:
         logging.warning("Failed to unlock keyring: security executable not found.")
+
 
 @pytest.fixture()
 def screenshot(driver: webdriver.Firefox, opt_ci: bool):
