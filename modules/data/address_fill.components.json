@@ -11,14 +11,12 @@
         "groups": []
     },
 
-    "context": "chrome",
     "clear-address": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
         "strategy":"css",
         "groups": []
     },
 
-    "context": "chrome",
     "select-address": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
         "strategy":"css",
