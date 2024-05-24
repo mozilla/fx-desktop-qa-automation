@@ -73,3 +73,8 @@ class CreditCardFill(Autofill):
         credit_card_sample_data = util.fake_credit_card_data()
         self.fill_credit_card_info(credit_card_sample_data)
         autofill_popup_obj.press_doorhanger_save()
+
+    def update_field(self, field: str, field_data: str, autofill_popup_obj: AutofillPopup):
+        ba = BrowserActions(self.driver)
+        self.fill_input_element(ba, field, field_data)
+        autofill_popup_obj.press_doorhanger_save()
