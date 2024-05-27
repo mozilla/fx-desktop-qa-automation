@@ -1,6 +1,5 @@
 from typing import List
 
-
 from modules.browser_object import CreditCardPopup
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
