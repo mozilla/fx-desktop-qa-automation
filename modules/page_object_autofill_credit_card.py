@@ -1,9 +1,12 @@
 from typing import List
 
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.browser_object import CreditCardPopup
+from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object_autofill import Autofill
-from modules.util import BrowserActions
+from modules.util import BrowserActions, CreditCardBase, Utilities
 
 
 class CreditCardFill(Autofill):
@@ -15,6 +18,18 @@ class CreditCardFill(Autofill):
     fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
 
     def fill_credit_card_info(self, info: CreditCardBase):
+        """
+        Fills a credit card form with the provided information.
+
+        ...
+
+        Attributes
+        ----------
+
+        info:  CreditCardBase
+            An instance of the CreditCardBase class containing the credit card details.
+
+        """
         fields = {
             "cc-name": info.name,
             "cc-number": info.card_number,
@@ -76,3 +91,20 @@ class CreditCardFill(Autofill):
         for i in range(len(info_list)):
             input_field = self.get_element("form-field", self.fields[i])
             assert info_list[i] == input_field.get_attribute("value")
+
+    def fake_and_fill(self, util: Utilities, autofill_popup_obj: AutofillPopup):
+        """
+        Fills a credit card form with randomly generated data and interacts with the autofill popup.
+
+        ...
+
+        Attributes
+        ----------
+            util: Utilities
+                An instance of the Utilities class
+            autofill_popup_obj: AutofillPopup
+                An instance of the AutofillPopup class used to interact with the autofill popup
+        """
+        credit_card_sample_data = util.fake_credit_card_data()
+        self.fill_credit_card_info(credit_card_sample_data)
+        autofill_popup_obj.press_doorhanger_save()
