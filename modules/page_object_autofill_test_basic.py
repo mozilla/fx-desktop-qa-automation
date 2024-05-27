@@ -1,5 +1,3 @@
-import re
-
 from selenium.webdriver.common.action_chains import ActionChains
 
 from modules.page_object_autofill import Autofill
@@ -62,21 +60,3 @@ class AddressFill(Autofill):
 
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
-
-    def normalize_phone_number(self, phone: str, default_country_code="1"):
-        """
-        Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
-        to only the <country-code>xxxxxxxxxx format and return it.
-
-        ...
-        Attributes
-        ----------
-        phone : str
-            The phone number to be normalized
-        default_country_code: str
-            By default this is '1' for Canadian and US codes.
-        """
-        phone = re.sub(r"\D", "", phone)
-        if len(phone) == 10:
-            phone = default_country_code + phone
-        return phone

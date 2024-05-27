@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -27,14 +29,18 @@ def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
 
     # double click telephone attribute
     address_fill_obj.double_click("form-field", "tel")
+    logging.info(f"The generated phone number: {autofill_sample_data.telephone}")
     first_item = autofill_popup_obj.get_nth_element("1")
 
-    # get relevant fields
+    # # get relevant fields
     autofill_popup_obj.hover_over_element(first_item)
     actual_value = autofill_popup_obj.get_primary_value(first_item)
-    normalized_number = address_fill_obj.normalize_phone_number(actual_value)
-    original_number = address_fill_obj.normalize_phone_number(
-        autofill_sample_data.telephone
+    normalized_number = util.normalize_phone_number(actual_value)
+    original_number = util.normalize_phone_number(autofill_sample_data.telephone)
+
+    logging.info(f"Original: {actual_value}, Normalized: {normalized_number}")
+    logging.info(
+        f"Original: {autofill_sample_data.telephone}, Normalized: {original_number}"
     )
 
     # verify
