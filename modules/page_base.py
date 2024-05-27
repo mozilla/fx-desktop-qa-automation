@@ -5,6 +5,7 @@ import platform
 import re
 from copy import deepcopy
 from pathlib import Path
+from typing import List
 
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
@@ -227,6 +228,14 @@ class BasePage(Page):
             self.elements[cache_name]["seleniumObject"] = found_element
         logging.info(f"Returning element {cache_name}.\n")
         return found_element
+
+    def get_elements(self, name: str, *label) -> List[WebElement]:
+        logging.info("====")
+        logging.info(f"Getting elements {name}")
+        if label:
+            logging.info(f"Labels: {label}")
+        selector = self.get_selector(name, *label)
+        return self.driver.find_elements(*selector)
 
     def element_exists(self, name: str, *label) -> Page:
         self.expect(EC.presence_of_element_located(self.get_selector(name, *label)))

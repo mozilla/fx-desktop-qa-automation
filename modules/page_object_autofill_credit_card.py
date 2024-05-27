@@ -1,5 +1,6 @@
 from typing import List
 
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import CreditCardPopup
@@ -146,3 +147,25 @@ class CreditCardFill(Autofill):
         for i in range(len(info_list)):
             input_field = self.get_element("form-field", self.fields[i])
             assert info_list[i] == input_field.get_attribute("value")
+
+    def verify_updated_information(
+        self,
+        credit_card_popoup_obj: CreditCardPopup,
+        autofill_popup_obj: AutofillPopup,
+        credit_card_sample_data: CreditCardBase,
+        field_name: str,
+        new_data: str,
+    ) -> None:
+        # ensuring only 1 profile pops up (off by 1, the panel has 2 children even if 1 profile is saved)
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            elements = autofill_popup_obj.get_elements("autofill-item")
+            count = len(elements)
+            assert count == 2
+
+        # updating the profile accordingly
+        self.update_credit_card_information(
+            credit_card_popoup_obj, autofill_popup_obj, field_name, new_data
+        )
+
+        # verifiyng the correct data
+        self.verify_four_fields(credit_card_popoup_obj, credit_card_sample_data)
