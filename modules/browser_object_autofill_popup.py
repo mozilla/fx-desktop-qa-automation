@@ -36,8 +36,14 @@ class AutofillPopup(BasePage):
         Get the nth element from the address dropdown.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            return self.wait.until(EC.visibility_of_element_located(
-                ("css selector", f".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({str(index)})",)))
+            return self.wait.until(
+                EC.visibility_of_element_located(
+                    (
+                        "css selector",
+                        f".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({str(index)})",
+                    )
+                )
+            )
 
     def get_primary_value(self, element):
         """

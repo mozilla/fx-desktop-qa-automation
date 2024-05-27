@@ -37,4 +37,6 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
     # matches the expected value
     actual_value = autofill_popup_panel.get_primary_value(first_item)
     expected_street_address = autofill_sample_data.street_address
-    assert (expected_street_address == actual_value), f"Expected {expected_street_address}, but got {actual_value}"
+    assert (
+        expected_street_address == actual_value
+    ), f"Expected {expected_street_address}, but got {actual_value}"
