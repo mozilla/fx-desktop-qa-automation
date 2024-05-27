@@ -70,3 +70,22 @@ Launch the build manually one time to navigate through any system permission dia
   - rerun failed tests: `pytest -lf` 
   - rerun the test suite as above - run: `pytest`
   - or just the failed test; i.e.: `pytest test_amazon.py`
+
+- ### IDE Pycharm Configuration
+- #### Configuration to run tests from the IDE interactive interface
+- Open Run/Debug Configurations**:
+    - Click on the **Current File** in the toolbar and select **Edit Configurations**, or
+    - Click on the **More actions** button (three dots) and select **Edit** from the configuration section
+- Open Edit Configuration Templates**:
+    - In the **Templates** section, select **Python tests** and then **pytest**
+    - Set the **Working directory** to the path of your current project root directory
+    - Ensure you have the correct Python interpreter selected
+    - Leave all other settings as default
+    - Click Apply
+
+- #### Tabs and Indents config
+- json:
+    - Tab size: 4
+    - Indent: 4
+    - Continuation indent: 8
+    - Keep indents on empty lines unchecked
