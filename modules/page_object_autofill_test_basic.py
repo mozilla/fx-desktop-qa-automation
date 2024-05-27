@@ -1,4 +1,3 @@
-
 from modules.page_object_autofill import Autofill
 from modules.util import AutofillAddressBase, BrowserActions
 

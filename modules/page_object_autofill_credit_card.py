@@ -1,4 +1,3 @@
-
 from modules.browser_object import CreditCardPopup
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import Autofill
