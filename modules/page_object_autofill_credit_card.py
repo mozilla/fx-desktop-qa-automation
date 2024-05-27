@@ -1,12 +1,11 @@
 from typing import List
 
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import CreditCardPopup
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object_autofill import Autofill
-from modules.util import BrowserActions, CreditCardBase, Utilities
+from modules.util import BrowserActions, Utilities
 
 
 class CreditCardFill(Autofill):
