@@ -28,28 +28,20 @@ class AutofillPopup(BasePage):
             self.expect_not(EC.element_to_be_clickable(element))
 
     def hover_over_element(self, element: str):
-        """
-        Hover over the specified element.
-        Parameters: element (str): The element to hover over.
-        """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.actions.move_to_element(element).perform()
 
-    def get_nth_element(self, index: str):
+    def get_nth_element(self, index: int):
         """
-        Get the nth element from the autocomplete list.
-        Parameters: index (str): The index of the element to retrieve (1-based).
-        Returns: WebElement: The nth element in the autocomplete list.
+        Get the nth element from the address dropdown.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             return self.wait.until(EC.visibility_of_element_located(
-                ("css selector", f".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})")))
+                ("css selector", f".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({str(index)})",)))
 
     def get_primary_value(self, element):
         """
-        Get the primary value from the autocomplete element.
-        Parameters: element (WebElement): The autocomplete element from which to retrieve the primary value.
-        Returns: str: The primary value extracted from the element's attribute.
+        Get the primary value from the address dropdown.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ac_value = element.get_attribute("ac-value")
