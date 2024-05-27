@@ -230,6 +230,31 @@ class BasePage(Page):
         return found_element
 
     def get_elements(self, name: str, *label) -> List[WebElement]:
+        """
+        Given a key for a self.elements dict entry, return the Selenium WebElements that correspond with the entry.
+
+        If there are items in `label`, replace instances of {.*} in the "selectorData"
+        with items from `label`, in the order they are given. (Think Rust format macros.)
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        *label: *str
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+
+        List[selenium.webdriver.remote.webelement.WebElement]
+            The WebElement objects in a list referred to by the element dict.
+
+        """
         logging.info("====")
         logging.info(f"Getting elements {name}")
         if label:

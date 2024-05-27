@@ -13,6 +13,9 @@ from modules.util import Utilities
 
 
 def test_autofill_update_credit_card(driver: Firefox):
+    """
+    C122406, updates the name of the credit card holder and ensure no new profile is created and data is saved correctly
+    """
     nav = Navigation(driver)
     util = Utilities()
 
@@ -25,8 +28,6 @@ def test_autofill_update_credit_card(driver: Firefox):
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
     autofill_popup_obj.press_doorhanger_save()
     credit_card_fill_obj.press_autofill_panel(credit_card_popoup_obj)
-
-    # TODO: figure out why the second credit card saving is flaky
 
     new_cc_name = util.fake_credit_card_data().name
     credit_card_sample_data.name = new_cc_name

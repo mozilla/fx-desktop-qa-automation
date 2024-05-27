@@ -156,16 +156,40 @@ class CreditCardFill(Autofill):
         field_name: str,
         new_data: str,
     ) -> None:
-        # ensuring only 1 profile pops up (off by 1, the panel has 2 children even if 1 profile is saved)
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            elements = autofill_popup_obj.get_elements("autofill-item")
-            count = len(elements)
-            assert count == 2
+        """
+        Verfies that there is only 1 profile in the popup panel, updates the credit card information and verifies all the fields
+        according to the passed in credit card information object
+
+        Attributes
+        ----------
+
+        credit_card_popoup_obj: CreditCardPopup
+            The credit card popup object
+
+        autofill_popup_obj: AutofillPopup
+            An instance of autofill popup object
+
+        credit_card_sample_data: CreditCardBase
+            An instance of the fake generated data
+
+        field_name: str
+            The name of the field to update
+
+        new_data: str
+            The data to update the field with
+        """
 
         # updating the profile accordingly
         self.update_credit_card_information(
             credit_card_popoup_obj, autofill_popup_obj, field_name, new_data
         )
+
+        # ensuring only 1 profile pops up (off by 1, the panel has 2 children even if 1 profile is saved)
+        # TODO: figure out why it isnt correctly getting the number of list items
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            elements = autofill_popup_obj.get_elements("autofill-item")
+            count = len(elements)
+            assert count == 2
 
         # verifiyng the correct data
         self.verify_four_fields(credit_card_popoup_obj, credit_card_sample_data)
