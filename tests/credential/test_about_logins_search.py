@@ -1,11 +1,13 @@
 from typing import List, Tuple
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutLogins
 from modules.util import BrowserActions
 
 
+@pytest.mark.unstable
 def test_about_logins_search_functionality(
     driver_and_saved_usernames: Tuple[Firefox, List[str]],
 ):

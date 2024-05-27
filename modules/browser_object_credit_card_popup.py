@@ -13,3 +13,11 @@ class CreditCardPopup(BasePage):
             self.expect(
                 EC.element_to_be_clickable(self.get_element("autofill-cc-panel"))
             )
+
+    def verify_no_popup_panel(self):
+        """
+        Verifies that the autofill popup does NOT appear.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            element = self.get_element("autofill-panel")
+            self.expect_not(EC.element_to_be_clickable(element))
