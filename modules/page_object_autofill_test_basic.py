@@ -1,5 +1,3 @@
-import re
-
 from modules.page_object_autofill import Autofill
 from modules.util import AutofillAddressBase, BrowserActions
 
@@ -62,20 +60,12 @@ class AddressFill(Autofill):
         self.get_element("submit-button", field_name).click()
 
     def double_click(self, name: str, *label: str):
+        """
+        Double-click on the specified element.
+
+        Parameters:
+        name (str): The name of the element to double-click.
+        label (str): Additional labels to identify the element (optional).
+        """
         elem = self.get_element(name, *label)
         self.actions.double_click(elem).perform()
-
-    def normalize_phone_number(self, phone_number, country):
-        """
-        Normalize phone numbers to a standard format based on the country.
-        Remove country code if specified.
-        """
-        country_codes = {
-            "US": "1",
-            "CA": "1",
-        }
-        country_code = country_codes.get(country, "")
-        normalized = re.sub(r"\D", "", phone_number)
-        if country_code and normalized.startswith(country_code):
-            normalized = normalized[len(country_code) :]
-        return normalized
