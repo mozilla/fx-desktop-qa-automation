@@ -51,6 +51,7 @@ class AutofillPopup(BasePage):
                 )
             )
 
+    # TODO: on Nightly, no JSON is returned on get_attribute, on reg Firefox the JSON is returned. When this fails later on, FIX.
     def get_primary_value(self, element):
         """
         Get the primary value from the autocomplete element.

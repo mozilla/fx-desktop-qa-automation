@@ -32,7 +32,7 @@ def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
     logging.info(f"The generated phone number: {autofill_sample_data.telephone}")
     first_item = autofill_popup_obj.get_nth_element("1")
 
-    # # get relevant fields
+    # get relevant fields
     autofill_popup_obj.hover_over_element(first_item)
     actual_value = autofill_popup_obj.get_primary_value(first_item)
     normalized_number = util.normalize_phone_number(actual_value)
