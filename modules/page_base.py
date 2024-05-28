@@ -5,7 +5,7 @@ import platform
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
@@ -132,11 +132,11 @@ class BasePage(Page):
         else:
             self.context = "content"
 
-    def get_selector(self, name: str, *label) -> list:
+    def get_selector(self, name: str, labels=[]) -> list:
         """
         Given a key for a self.elements dict entry, return the Selenium selector tuple.
-        If there are items in `label`, replace instances of {.*} in the "selectorData"
-        with items from `label`, in the order they are given. (Think Rust format macros.)
+        If there are items in `labels`, replace instances of {.*} in the "selectorData"
+        with items from `labels`, in the order they are given. (Think Rust format macros.)
 
         ...
 
@@ -146,7 +146,7 @@ class BasePage(Page):
         name: str
             The key of the entry in self.elements, parsed from the elements JSON
 
-        *label: *str
+        labels: list[str]
             Strings that replace instances of {.*} in the "selectorData" subentry of
             self.elements[name]
 
@@ -161,20 +161,23 @@ class BasePage(Page):
             STRATEGY_MAP[element_data["strategy"]],
             element_data["selectorData"],
         ]
-        if not label:
+        if not labels:
             return selector
         braces = re.compile(r"(\{.*?\})")
         match = braces.findall(selector[1])
-        for i in range(len(label)):
-            logging.info(f"Replace {match[i]} with {label[i]}")
-            selector[1] = selector[1].replace(match[i], label[i])
+        for i in range(len(labels)):
+            logging.info(f"Replace {match[i]} with {labels[i]}")
+            selector[1] = selector[1].replace(match[i], labels[i])
         return selector
 
-    def get_element(self, name: str, *label) -> WebElement:
+    def get_element(
+        self, name: str, multiple=False, labels=[]
+    ) -> Union[list[WebElement], WebElement]:
         """
-        Given a key for a self.elements dict entry, return the Selenium WebElement.
-        If there are items in `label`, replace instances of {.*} in the "selectorData"
-        with items from `label`, in the order they are given. (Think Rust format macros.)
+        Given a key for a self.elements dict entry, return the Selenium WebElement(s).
+        If multiple is set to True, use find_elements instead of find_element.
+        If there are items in `labels`, replace instances of {.*} in the "selectorData"
+        with items from `labels`, in the order they are given. (Think Rust format macros.)
 
         ...
 
@@ -184,7 +187,10 @@ class BasePage(Page):
         name: str
             The key of the entry in self.elements, parsed from the elements JSON
 
-        *label: *str
+        multiple: bool
+            Do we expect a list of WebElements?
+
+        labels: list[str]
             Strings that replace instances of {.*} in the "selectorData" subentry of
             self.elements[name]
 
@@ -195,17 +201,21 @@ class BasePage(Page):
             The WebElement object referred to by the element dict.
         """
         logging.info("====")
-        logging.info(f"Getting element {name}")
-        if label:
-            logging.info(f"Labels: {label}")
+        if multiple:
+            logging.info(f"Getting MULTIPLE elements {name}")
+        else:
+            logging.info(f"Getting element {name}")
+        if labels:
+            logging.info(f"Labels: {labels}")
         cache_name = name
-        if label:
-            labelcode = "".join(label)
-            cache_name = f"{name}{labelcode}"
+        if labels:
+            labelscode = "".join(labels)
+            cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
 
-        if "seleniumObject" in self.elements[cache_name]:
+        if not multiple and "seleniumObject" in self.elements[cache_name]:
+            # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
             try:
                 self.instawait.until_not(EC.staleness_of(cached_element))
@@ -215,7 +225,7 @@ class BasePage(Page):
                 # Because we have a timeout of 0, this should not cause delays
                 pass
         element_data = self.elements[cache_name]
-        selector = self.get_selector(cache_name, *label)
+        selector = self.get_selector(cache_name, labels)
         if "shadowParent" in element_data:
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
@@ -229,57 +239,24 @@ class BasePage(Page):
         logging.info(f"Returning element {cache_name}.\n")
         return found_element
 
-    def get_elements(self, name: str, *label) -> List[WebElement]:
-        """
-        Given a key for a self.elements dict entry, return the Selenium WebElements that correspond with the entry.
-
-        If there are items in `label`, replace instances of {.*} in the "selectorData"
-        with items from `label`, in the order they are given. (Think Rust format macros.)
-
-        ...
-
-        Arguments
-        ---------
-
-        name: str
-            The key of the entry in self.elements, parsed from the elements JSON
-
-        *label: *str
-            Strings that replace instances of {.*} in the "selectorData" subentry of
-            self.elements[name]
-
-        Returns
-        -------
-
-        List[selenium.webdriver.remote.webelement.WebElement]
-            The WebElement objects in a list referred to by the element dict.
-
-        """
-        logging.info("====")
-        logging.info(f"Getting elements {name}")
-        if label:
-            logging.info(f"Labels: {label}")
-        selector = self.get_selector(name, *label)
-        return self.driver.find_elements(*selector)
-
     def element_exists(self, name: str, *label) -> Page:
         self.expect(EC.presence_of_element_located(self.get_selector(name, *label)))
         return self
 
-    def element_visible(self, name: str, *label) -> Page:
-        self.expect(EC.visibility_of(self.get_element(name, *label)))
+    def element_visible(self, name: str, *labels) -> Page:
+        self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
         return self
 
-    def element_clickable(self, name: str, *label) -> Page:
-        self.expect(EC.element_to_be_clickable(self.get_element(name, *label)))
+    def element_clickable(self, name: str, *labels) -> Page:
+        self.expect(EC.element_to_be_clickable(self.get_element(name, labels=labels)))
         return self
 
-    def element_selected(self, name: str, *label) -> Page:
-        self.expect(EC.element_to_be_selected(self.get_element(name, *label)))
+    def element_selected(self, name: str, *labels) -> Page:
+        self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
         return self
 
-    def double_click(self, name: str, *label: str):
-        elem = self.get_element(name, *label)
+    def double_click(self, name: str, *labels):
+        elem = self.get_element(name, labels=labels)
         self.actions.double_click(elem).perform()
 
     @property

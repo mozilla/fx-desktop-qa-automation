@@ -11,11 +11,11 @@ class AboutAddons(BasePage):
 
     URL_TEMPLATE = "about:addons"
 
-    def choose_sidebar_option(self, *label):
+    def choose_sidebar_option(self, option: str):
         """
         Clicks the corresponding sidebar option from the about:addons page.
         """
-        self.get_element("sidebar-options", *label).click()
+        self.get_element("sidebar-options", labels=[option]).click()
 
     def activate_theme(self, nav: Navigation, theme_name: str, intended_color: str):
         """
@@ -30,7 +30,7 @@ class AboutAddons(BasePage):
         intended_color: str
             The RGB string that is the intended colour of the element
         """
-        self.get_element("theme-card", theme_name).click()
+        self.get_element("theme-card", labels=[theme_name]).click()
         self.get_element("enable-theme").click()
 
         self.expect(

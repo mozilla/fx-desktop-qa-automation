@@ -53,13 +53,13 @@ class AddressFill(Autofill):
         term: str
             The string to be sent to the input field
         """
-        web_elem = self.get_element("form-field", field_name)
+        web_elem = self.get_element("form-field", labels=[field_name])
         ba.clear_and_fill(web_elem, term, press_enter=False)
 
     def click_form_button(self, field_name):
-        self.get_element("submit-button", field_name).click()
+        self.get_element("submit-button", labels=[field_name]).click()
 
-    def double_click(self, name: str, *label: str):
+    def double_click(self, name: str, label: str):
         """
         Double-click on the specified element.
 
@@ -67,5 +67,5 @@ class AddressFill(Autofill):
         name (str): The name of the element to double-click.
         label (str): Additional labels to identify the element (optional).
         """
-        elem = self.get_element(name, *label)
+        elem = self.get_element(name, labels=[label])
         self.actions.double_click(elem).perform()
