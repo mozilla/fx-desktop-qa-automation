@@ -246,6 +246,18 @@ class BrowserActions:
         else:
             raise RuntimeError("More than one element matches text.")
 
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
+
+    def switch_to_content_context(self):
+        """
+        Switches back to the normal context
+        """
+        self.driver.switch_to.default_content()
+
 
 class PomUtils:
     """

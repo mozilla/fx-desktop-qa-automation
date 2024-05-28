@@ -1,13 +1,11 @@
 from typing import List
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import CreditCardPopup
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object_autofill import Autofill
-from modules.util import BrowserActions, CreditCardBase, Utilities
+from modules.util import BrowserActions, Utilities
 
 
 class CreditCardFill(Autofill):
@@ -183,13 +181,6 @@ class CreditCardFill(Autofill):
         self.update_credit_card_information(
             credit_card_popoup_obj, autofill_popup_obj, field_name, new_data
         )
-
-        # ensuring only 1 profile pops up (off by 1, the panel has 2 children even if 1 profile is saved)
-        # TODO: figure out why it isnt correctly getting the number of list items
-        # with self.driver.context(self.driver.CONTEXT_CHROME):
-        #     elements = autofill_popup_obj.get_element("autofill-item")
-        #     count = len(elements)
-        #     assert count == 2
 
         # verifiyng the correct data
         self.verify_four_fields(credit_card_popoup_obj, credit_card_sample_data)

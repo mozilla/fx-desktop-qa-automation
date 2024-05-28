@@ -5,7 +5,7 @@ import platform
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
