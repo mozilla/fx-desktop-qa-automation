@@ -52,7 +52,9 @@ git add -u
 
 git --no-pager diff --name-only --cached | while read -r file ; do
     if [[ "$file" == "test"* ]] && [[ "$file" == *".py"* ]]; then
-        pytest --vs --run-headless "$file" || exit 1
+        if ! pytest --vs --run-headless "$file"; then
+            exit 1
+        fi
     fi
 done
 # If there are whitespace errors, print the offending file names and fail.
