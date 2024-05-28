@@ -47,7 +47,7 @@ fi
 
 # Check new tests in pytest
 if ! python run_commit_tests.py; then
-    echo "new tests failed"
+    echo "New test failed to pass!"
     exit 1
 fi
 

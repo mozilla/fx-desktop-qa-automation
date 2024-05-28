@@ -8,6 +8,6 @@ if __name__ == "__main__":
     )
 
     tests = [f for f in committed_files if f.startswith("test") and f.endswith(".py")]
-    print(f"testing {tests}")
+    print(f"Testing {tests} ...")
 
-    check_output(["pytest", "-vs", "--run-headless", *tests])
+    print(check_output(["pytest", "-vs", "--run-headless", *tests]))
