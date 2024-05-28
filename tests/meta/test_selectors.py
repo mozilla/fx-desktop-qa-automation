@@ -11,6 +11,5 @@ def test_a_selector(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         panel.get_element("zoom-reduce").click()
         panel.get_element("zoom-reduce").click()
-        panel.get_element("zoom-reduce").click()
         panel.get_element("zoom-enlarge").click()
         panel.get_element("zoom-reset").click()

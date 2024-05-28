@@ -46,15 +46,7 @@ EOF
 fi
 
 # Check new tests in pytest
-tests_to_run=""
-git --no-pager diff --name-only --cached | while read -r file; do
-    if [[ "$file" == test* ]] && [[ "$file" == *.py ]]; then
-        tests_to_run="${tests_to_run} $file"
-    fi
-done
-
-echo "Running pytest on {$tests_to_run}..."
-pytest --vs --run-headless "${tests_to_run}"
+python run_commit_tests.py
 
 # Lint and format with ruff
 ruff check --select I --fix
