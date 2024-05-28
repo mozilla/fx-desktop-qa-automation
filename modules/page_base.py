@@ -201,10 +201,10 @@ class BasePage(Page):
             The WebElement object referred to by the element dict.
         """
         logging.info("====")
-        if multiple:
-            logging.info(f"Getting MULTIPLE elements {name}")
-        else:
+        if not multiple:
             logging.info(f"Getting element {name}")
+        else:
+            logging.info(f"Getting multiple elements by name {name}")
         if labels:
             logging.info(f"Labels: {labels}")
         cache_name = name
