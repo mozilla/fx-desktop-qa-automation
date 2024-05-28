@@ -2,7 +2,7 @@
 generate_report_on_test = false
 addopts = "-vs --html=report.html"
 log_cli = true
-log_cli_level = "info"
+log_cli_level = "warning"
 markers = [
     "audio: test is reliant on audio",
     "pynput: test uses pynput package",
