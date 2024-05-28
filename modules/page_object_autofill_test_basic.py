@@ -58,14 +58,3 @@ class AddressFill(Autofill):
 
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
-
-    def double_click(self, name: str, *label: str):
-        """
-        Double-click on the specified element.
-
-        Parameters:
-        name (str): The name of the element to double-click.
-        label (str): Additional labels to identify the element (optional).
-        """
-        elem = self.get_element(name, *label)
-        self.actions.double_click(elem).perform()
