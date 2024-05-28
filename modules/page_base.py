@@ -211,7 +211,8 @@ class BasePage(Page):
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
 
-        if "seleniumObject" in self.elements[cache_name]:
+        if not multiple and "seleniumObject" in self.elements[cache_name]:
+            # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
             try:
                 self.instawait.until_not(EC.staleness_of(cached_element))
@@ -225,15 +226,27 @@ class BasePage(Page):
         if "shadowParent" in element_data:
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
-            shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
+            if not multiple:
+                shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
+                if "doNotCache" not in element_data["groups"]:
+                    self.elements[cache_name]["seleniumObject"] = shadow_element
+                return shadow_element
+            else:
+                # no caching for multiples
+                return self.utils.find_shadow_element(
+                    shadow_parent, selector, multiple=multiple
+                )
+        if not multiple:
+            found_element = self.driver.find_element(*selector)
             if "doNotCache" not in element_data["groups"]:
-                self.elements[cache_name]["seleniumObject"] = shadow_element
-            return shadow_element
-        found_element = self.driver.find_element(*selector)
-        if "doNotCache" not in element_data["groups"]:
-            self.elements[cache_name]["seleniumObject"] = found_element
-        logging.info(f"Returning element {cache_name}.\n")
-        return found_element
+                self.elements[cache_name]["seleniumObject"] = found_element
+            logging.info(f"Returning element {cache_name}.\n")
+            return found_element
+        else:
+            return self.driver.find_elements(*selector)
+
+    def get_elements(self, name: str, labels=[]):
+        return self.get_element(name, multiple=True, labels=labels)
 
     def element_exists(self, name: str, *labels) -> Page:
         self.expect(
