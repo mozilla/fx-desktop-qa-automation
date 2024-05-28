@@ -1,7 +1,7 @@
 import logging
 from typing import Union
 
-from selenium.webdriver import ActionChains, Keys
+from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -33,11 +33,11 @@ class TabBar(BasePage):
     def new_tab_by_keys(self, sys_platform) -> BasePage:
         """Use keyboard shortcut to open a new tab"""
         if sys_platform == "Darwin":
-            ActionChains(self.driver).key_down(Keys.COMMAND).send_keys("t").key_up(
+            self.actions.key_down(Keys.COMMAND).send_keys("t").key_up(
                 Keys.COMMAND
             ).perform()
         else:
-            ActionChains(self.driver).key_down(Keys.CONTROL).send_keys("t").key_up(
+            self.actions.key_down(Keys.CONTROL).send_keys("t").key_up(
                 Keys.CONTROL
             ).perform()
         return self
