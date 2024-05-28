@@ -56,13 +56,14 @@ ruff check --select I --fix
 ruff format
 git add -u
 
+# if ruff fix doesn't work, we need to fail
 if ! ruff check --select I --fix; then
-    echo "linting failed"
+    echo "Linting failed!"
     exit 1
 fi
 
 if ! ruff format; then
-    echo "linting failed"
+    echo "Formatting failed!"
     exit 1
 fi
 # If there are whitespace errors, print the offending file names and fail.
