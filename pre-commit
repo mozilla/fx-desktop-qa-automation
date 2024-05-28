@@ -46,7 +46,10 @@ EOF
 fi
 
 # Check new tests in pytest
-python run_commit_tests.py
+if ! python run_commit_tests.py; then
+    echo "new tests failed"
+    exit 1
+fi
 
 # Lint and format with ruff
 ruff check --select I --fix
