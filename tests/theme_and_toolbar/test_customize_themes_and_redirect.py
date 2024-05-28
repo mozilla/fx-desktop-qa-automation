@@ -1,4 +1,3 @@
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -9,6 +8,7 @@ themes = {
     "firefox-compact-dark_mozilla_org-heading": "rgb(43, 42, 51)",
     "firefox-compact-light_mozilla_org-heading": "rgb(249, 249, 251)",
 }
+
 # broken: "firefox-alpenglow_mozilla_org-heading": "rgba(255, 255, 255, 0.76)",
 
 
