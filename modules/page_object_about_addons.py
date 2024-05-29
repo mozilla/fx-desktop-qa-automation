@@ -17,7 +17,9 @@ class AboutAddons(BasePage):
         """
         self.get_element("sidebar-options", labels=[option]).click()
 
-    def activate_theme(self, nav: Navigation, theme_name: str, intended_color: str):
+    def activate_theme(
+        self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
+    ):
         """
         Clicks the theme card and presses enable. Then verifies that the theme is the correct colour.
 
@@ -44,4 +46,7 @@ class AboutAddons(BasePage):
             background_colour = navigation_component.value_of_css_property(
                 "background-color"
             )
-            assert background_colour == intended_color
+            if perform_assert:
+                assert background_colour == intended_color
+            else:
+                return background_colour

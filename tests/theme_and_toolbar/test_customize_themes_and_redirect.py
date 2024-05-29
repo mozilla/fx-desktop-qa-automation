@@ -8,7 +8,8 @@ themes = {
     "firefox-compact-dark_mozilla_org-heading": "rgb(43, 42, 51)",
     "firefox-compact-light_mozilla_org-heading": "rgb(249, 249, 251)",
 }
-# breaking: "firefox-alpenglow_mozilla_org-heading": "rgba(255, 255, 255, 0.76)",
+
+alpengow_map = {"light": "rgba(255, 255, 255, 0.76)", "dark": "rgba(40, 29, 78, 0.96)"}
 
 
 @pytest.mark.ci
@@ -33,3 +34,18 @@ def test_open_addons(driver: Firefox, theme_name: str):
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
     abt_addons.activate_theme(nav, theme_name, themes[theme_name])
+
+
+def test_alpenglow_theme(driver: Firefox):
+    """
+    C118173, specifically for alpenglow theme because colour can be two values for dark or light mode
+    """
+
+    nav = Navigation(driver).open()
+    abt_addons = AboutAddons(driver).open()
+    abt_addons.choose_sidebar_option("theme")
+    current_bg = abt_addons.activate_theme(
+        nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
+    )
+
+    assert current_bg == alpengow_map["light"] or current_bg == alpengow_map["dark"]
