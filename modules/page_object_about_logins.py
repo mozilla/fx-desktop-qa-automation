@@ -32,7 +32,9 @@ class AboutLogins(BasePage):
         try:
             for item_type, value in form_info.items():
                 logging.info(f"Filling {item_type} with {value}")
-                ba.clear_and_fill(self.get_element("login-item-type", item_type), value)
+                ba.clear_and_fill(
+                    self.get_element("login-item-type", labels=[item_type]), value
+                )
             logging.info("Clicking submit...")
             self.get_element("create-login-button")
             logging.info("Submitted.")
