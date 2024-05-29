@@ -269,8 +269,8 @@ class BasePage(Page):
         self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
         return self
 
-    def double_click(self, name: str, *label: str):
-        elem = self.get_element(name, *label)
+    def double_click(self, name: str, label: str):
+        elem = self.get_element(name, labels=[label])
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
