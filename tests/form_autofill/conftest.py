@@ -9,4 +9,7 @@ def suite_id():
 @pytest.fixture()
 def set_prefs():
     """Set prefs"""
-    return []
+    return [
+        ("extensions.formautofill.creditCards.reauth.optout", False),
+        ("extensions.formautofill.reauth.enabled", False),
+    ]

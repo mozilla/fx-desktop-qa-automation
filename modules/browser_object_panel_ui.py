@@ -1,6 +1,4 @@
 from pypom import Region
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -33,9 +31,9 @@ class PanelUi(BasePage):
             self.menu = self.Menu(self, root=panel_root)
         return self
 
-    def select_panel_setting(self, name, *label):
+    def select_panel_setting(self, name, *labels):
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            panel_option = self.get_element(name, *label)
+            panel_option = self.get_element(name, labels=labels)
             panel_option.click()
 
     def navigate_to_about_addons(self):
