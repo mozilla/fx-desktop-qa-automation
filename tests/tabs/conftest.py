@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    return ("2103", "Tabbed Browsing")
+    return ("2103", "Tabbed Browser")
 
 
 @pytest.fixture()
