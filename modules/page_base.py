@@ -72,7 +72,7 @@ class BasePage(Page):
                 manifest_name += f"_{char.lower()}"
         sys_platform = self.sys_platform()
         if sys_platform == "Windows":
-            root_dir = Path(os.getcwd()).parent.parent
+            root_dir = Path(os.getcwd())
             json_path = root_dir.joinpath("modules", "data")
             self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
         else:
@@ -269,8 +269,9 @@ class BasePage(Page):
         self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
         return self
 
-    def double_click(self, name: str, *labels):
-        elem = self.get_element(name, labels=labels)
+    def double_click(self, name: str, label: str):
+        elem = self.get_element(name, labels=[label])
+        EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
     @property

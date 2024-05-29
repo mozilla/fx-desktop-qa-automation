@@ -1,4 +1,5 @@
 import logging
+import re
 from random import shuffle
 from typing import Union
 
@@ -104,6 +105,30 @@ class Utilities:
             faker.add_provider(misc)
             return (faker, False)
 
+    def generate_localized_phone_US_CA(self, fake: Faker) -> str:
+        """
+        Generates a phone number that is valid based on the US and CA locale.
+
+        This means that only numbers that do not start with 1 (in the actual phone number not the area code) are considered valid.
+
+        ...
+        Attributes
+        ----------
+        fake : Faker
+            The localized Faker object
+
+        Returns
+        -------
+        str
+            The raw, generated phone number
+        """
+        phone = ""
+        while True:
+            phone = self.normalize_phone_number(fake.phone_number())
+            if phone[:2] != "11":
+                break
+        return phone
+
     def fake_autofill_data(self, country_code: str):
         """
         Given a country code, tries to initialize the locale of the faker and generates fake data
@@ -127,7 +152,7 @@ class Utilities:
         postal_code = fake.postcode()
         country = "CA" if not valid_code else country_code
         email = fake.email()
-        telephone = fake.phone_number()
+        telephone = self.generate_localized_phone_US_CA(fake)
 
         fake_data = AutofillAddressBase(
             name=name,
@@ -160,6 +185,54 @@ class Utilities:
         )
 
         return fake_data
+
+    def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
+        """
+        Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
+        to only the <country-code>xxxxxxxxxx format and return it.
+
+        Regex Meanings: \s*(?:x|ext)\s*\d*$
+        \s*: Matches zero or more whitespace characters.
+        (?:x|ext): Group that matches either "x" or "ext".
+        \d*: Matches zero or more digits
+        $: Anchors the match to the end of the string, ensuring that the pattern occurs right at the end.
+        So, the regex matches strings where after any amount of whitespace, there is either an "x" or "ext" followed directly by any number of digits, and nothing else after that until the end of the string.
+        Examples of matching strings include the " x123" of the "4156360998 x123", and the "ext456" of "9087469876ext456".
+
+        Regex Meanings: \D
+        \D: Matches any character that is not a digit.
+        The \D token will match any single character that is a letter, punctuation mark, whitespace, or any other non-digit character.
+
+        ...
+        Attributes
+        ----------
+        phone : str
+            The phone number to be normalized
+        default_country_code: str
+            By default this is '1' for Canadian and US codes.
+
+        Returns
+        -------
+        str
+            The normalized version of the phone number in the <country code>xxxxxxxxxx format
+        """
+        # sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
+        phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
+        # sub out anything that is not a digit with the empty string to ensure the phone number is formatted with no spaces or special characters
+        digits = re.sub(r"\D", "", phone)
+        ret_val = ""
+
+        # if the phone already contains the area code, ensure we only return the last 10 digits, otherwise a 10 length number is valid
+        if len(digits) > 10:
+            ret_val = digits[-10:]
+        elif len(digits) == 10:
+            ret_val = digits
+        else:
+            logging.warning("No valid phone number could be generated.")
+            return ""
+
+        # return with the country code and the normalized phone number
+        return default_country_code + ret_val
 
 
 class BrowserActions:
