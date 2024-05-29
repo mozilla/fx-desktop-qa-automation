@@ -6,6 +6,12 @@
         "groups": []
     },
 
+    "autofill-profile-option": {
+        "selectorData": "autocomplete-richlistitem",
+        "strategy": "class",
+        "groups": []
+      },
+  
     "autofill-panel": {
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
