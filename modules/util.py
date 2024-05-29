@@ -143,7 +143,16 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self):
+    def fake_credit_card_data(self) -> CreditCardBase:
+        """
+        Generates fake information related to the CC scenarios.
+
+
+        Returns
+        -------
+        CreditCardBase
+            The object that contains all of the fake data generated.
+        """
         fake = Faker()
         name = fake.name()
         card_number = fake.credit_card_number()

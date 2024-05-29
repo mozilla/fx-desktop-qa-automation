@@ -23,7 +23,6 @@ class CreditCardFill(Autofill):
 
         Attributes
         ----------
-
         info:  CreditCardBase
             An instance of the CreditCardBase class containing the credit card details.
 
@@ -84,6 +83,9 @@ class CreditCardFill(Autofill):
         autofill_popup_obj.press_doorhanger_save()
 
     def press_autofill_panel(self, credit_card_popoup_obj: CreditCardPopup):
+        """
+        Presses the autofill panel that pops up after you double click an input field
+        """
         self.double_click("form-field", "cc-name")
         with self.driver.context(self.driver.CONTEXT_CHROME):
             credit_card_popoup_obj.get_element("autofill-profile-option").click()
@@ -96,6 +98,9 @@ class CreditCardFill(Autofill):
         field_data: str,
         save_card=False,
     ):
+        """
+        Updates the credit card based on field that is to be changed by first autofilling everything then updating the field of choice then pressing submit and handling the popup.
+        """
         self.press_autofill_panel(credit_card_popoup_obj)
         self.update_field(field_name, field_data, autofill_popup_obj)
         self.click_form_button("submit")

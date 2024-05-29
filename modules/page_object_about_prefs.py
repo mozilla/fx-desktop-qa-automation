@@ -55,6 +55,19 @@ class AboutPrefs(BasePage):
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
+        """
+        Does the assertions that ensure all of the extracted information (the cc_info_json) is the same as the generated fake credit_card_fill_obj data.
+
+
+        ...
+
+        Attributes
+        ----------
+        cc_info_json: dict
+            The dictionary that is the json representation of the extracted information from a web page
+        credit_card_fill_obj: CreditCardBase
+            The object that contains all of the generated information
+        """
         assert cc_info_json["name"] == credit_card_fill_obj.name
         assert cc_info_json["number"][-4:] == credit_card_fill_obj.card_number[-4:]
         assert int(cc_info_json["month"]) == int(credit_card_fill_obj.expiration_month)
