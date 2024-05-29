@@ -8,7 +8,6 @@ from modules.browser_object import CreditCardPopup, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 
-# from modules.page_object import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
@@ -18,7 +17,7 @@ fields = ["cc-name", "cc-exp-month", "cc-exp-year"]
 @pytest.mark.parametrize("field", fields)
 def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     """
-    C122406, ensures that updating the credit card saves the correct information with no
+    C122406, ensures that updating the credit card saves the correct information with no dupe profile for the name and expiry dates
     """
     nav = Navigation(driver)
     util = Utilities()
@@ -65,3 +64,34 @@ def test_update_cc_no_dupe_name(driver: Firefox, field: str):
 
     # verify the items in the JSON vs the sample data
     about_prefs.verify_cc_json(cc_info_json, credit_card_sample_data)
+
+def test_update_cc_number_new_profile(driver: Firefox):
+    """
+    C122406, continuation ensures that updating the credit card number saves a new card instead of updating the new one
+    """
+    nav = Navigation(driver)
+    util = Utilities()
+
+    nav.open()
+    credit_card_fill_obj = CreditCardFill(driver).open()
+    autofill_popup_obj = AutofillPopup(driver)
+    credit_card_popoup_obj = CreditCardPopup(driver)
+    browser_action_obj = BrowserActions(driver)
+
+    credit_card_sample_data = util.fake_credit_card_data()
+    credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
+    autofill_popup_obj.press_doorhanger_save()
+    credit_card_fill_obj.press_autofill_panel(credit_card_popoup_obj)
+
+    # updating the card number of the cc holder
+    new_sample_data = util.fake_credit_card_data()
+    credit_card_fill_obj.update_credit_card_information(credit_card_popoup_obj, autofill_popup_obj, "cc-number", new_sample_data.card_number, save_card=True)
+
+    # navigate to settings
+    about_prefs = AboutPrefs(driver, category="privacy").open()
+    iframe = about_prefs.get_saved_payments_popup_iframe()
+    browser_action_obj.switch_to_iframe_context(iframe)
+
+    # assert new profile is saved
+    element = about_prefs.get_element("cc-saved-options", multiple=True)
+    assert len(element) == 2
