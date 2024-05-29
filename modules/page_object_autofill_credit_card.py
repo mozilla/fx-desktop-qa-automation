@@ -68,9 +68,9 @@ class CreditCardFill(Autofill):
 
     def verify_four_fields(
         self, ccp: CreditCardPopup, credit_card_sample_data: CreditCardBase
-    ):
+    ) -> Autofill:
         """
-        Veriies that after clicking the autofill panel the information is filled correctly.
+        Verifies that after clicking the autofill panel the information is filled correctly.
 
         Attributes
         ----------
@@ -87,7 +87,7 @@ class CreditCardFill(Autofill):
 
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
         for i in range(len(info_list)):
-            input_field = self.get_element("form-field", self.fields[i])
+            input_field = self.get_element("form-field", labels=[self.fields[i]])
             assert info_list[i] == input_field.get_attribute("value")
         return self
 
