@@ -60,17 +60,17 @@ class AddressFill(BasePage):
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
 
-    def click(self, name: str, *label: str):
+    def click(self, name: str, *label: str) -> BasePage:
         elem = self.get_element(name, *label)
         self.actions.click(elem).perform()
         return self
 
-    def click_address(self):
+    def click_address(self) -> BasePage:
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("select-address").click()
         return self
 
-    def click_clear(self):
+    def click_clear(self) -> BasePage:
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("clear-address").click()
         return self
