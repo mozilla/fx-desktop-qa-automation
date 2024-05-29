@@ -94,7 +94,7 @@ class CreditCardFill(Autofill):
         autofill_popup_obj: AutofillPopup,
         field_name: str,
         field_data: str,
-        save_card=False
+        save_card=False,
     ):
         self.press_autofill_panel(credit_card_popoup_obj)
         self.update_field(field_name, field_data, autofill_popup_obj)
@@ -102,10 +102,11 @@ class CreditCardFill(Autofill):
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
             if not save_card:
-                credit_card_popoup_obj.get_element("update-card-info-popup-button").click()
+                credit_card_popoup_obj.get_element(
+                    "update-card-info-popup-button"
+                ).click()
             else:
                 autofill_popup_obj.get_element("doorhanger-save-button").click()
-
 
     def extract_credit_card_obj_into_list(
         self, credit_card_sample_data: CreditCardBase
@@ -252,6 +253,6 @@ class CreditCardFill(Autofill):
             autofill_popup_obj,
             credit_card_sample_data,
             "cc-exp-year",
-            credit_card_sample_data.expiration_year
+            credit_card_sample_data.expiration_year,
         )
         return self
