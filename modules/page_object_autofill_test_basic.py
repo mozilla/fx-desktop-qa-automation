@@ -63,14 +63,17 @@ class AddressFill(BasePage):
     def click(self, name: str, *label: str):
         elem = self.get_element(name, *label)
         self.actions.click(elem).perform()
+        return self
 
     def click_address(self):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("select-address").click()
+        return self
 
     def click_clear(self):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("clear-address").click()
+        return self
 
     def verify_autofill_displayed(self):
         """
