@@ -89,6 +89,7 @@ class CreditCardFill(Autofill):
         for i in range(len(info_list)):
             input_field = self.get_element("form-field", self.fields[i])
             assert info_list[i] == input_field.get_attribute("value")
+        return self
 
     def fake_and_fill(self, util: Utilities, autofill_popup_obj: AutofillPopup):
         """
