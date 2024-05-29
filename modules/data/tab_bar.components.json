@@ -42,5 +42,13 @@
         "selectorData": "tab-icon-sound-{status}-label",
         "strategy": "class",
         "groups": []
+    },
+
+    "list-all-tabs-button": {
+        "selectorData": "alltabs-button",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
     }
 }

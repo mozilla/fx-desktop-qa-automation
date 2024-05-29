@@ -88,3 +88,13 @@ class TabBar(BasePage):
                 EC.visibility_of(self.get_element("tab-sound-label", labels=[status]))
             )
         return self
+
+    def click_list_all_tabs(self) -> BasePage:
+        """Click the Tab Visibility / List All Tabs button"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            with open("1.html", "w") as fh:
+                fh.write(self.driver.page_source)
+            self.get_element("list-all-tabs-button").click()
+            with open("2.html", "w") as fh:
+                fh.write(self.driver.page_source)
+        return self
