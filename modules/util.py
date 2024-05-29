@@ -152,7 +152,7 @@ class Utilities:
         postal_code = fake.postcode()
         country = "CA" if not valid_code else country_code
         email = fake.email()
-        telephone = self.generate_localized_phone_US_CA(f"en_{country_code}", fake)
+        telephone = self.generate_localized_phone_US_CA(fake)
 
         fake_data = AutofillAddressBase(
             name=name,
@@ -377,7 +377,10 @@ class PomUtils:
         )
 
     def find_shadow_element(
-        self, shadow_parent: Union[WebElement, ShadowRoot], selector: list
+        self,
+        shadow_parent: Union[WebElement, ShadowRoot],
+        selector: list,
+        multiple=False,
     ) -> WebElement:
         """
         Given a WebElement with a shadow root attached, find a selector in the
@@ -401,13 +404,18 @@ class PomUtils:
                 logging.info("Found a match")
                 matches.extend(elements)
         self.driver.implicitly_wait(original_timeout)
-        if len(matches) == 1:
-            logging.info("Returning match...")
-            return matches[0]
-        elif len(matches):
-            raise WebDriverException(
-                "More than one element matched within a Shadow DOM"
-            )
+        if not multiple:
+            if len(matches) == 1:
+                logging.info("Returning match...")
+                return matches[0]
+            elif len(matches):
+                raise WebDriverException(
+                    "More than one element matched within a Shadow DOM"
+                )
+            else:
+                logging.info("No matches found.")
+                return None
         else:
-            logging.info("No matches found.")
-            return None
+            if not matches:
+                logging.info("No matches found.")
+            return matches

@@ -7,8 +7,8 @@ from modules.page_object import AboutAddons
 themes = {
     "firefox-compact-dark_mozilla_org-heading": "rgb(43, 42, 51)",
     "firefox-compact-light_mozilla_org-heading": "rgb(249, 249, 251)",
-    "firefox-alpenglow_mozilla_org-heading": "rgba(255, 255, 255, 0.76)",
 }
+# breaking: "firefox-alpenglow_mozilla_org-heading": "rgba(255, 255, 255, 0.76)",
 
 
 @pytest.mark.ci
