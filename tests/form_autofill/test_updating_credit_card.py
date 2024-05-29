@@ -49,7 +49,7 @@ def test_autofill_update_credit_card(driver: Firefox):
     element = about_prefs.get_element("cc-saved-options", multiple=True)
     assert len(element) == 1
 
-    print(element.get_dom_attribute("data-l10n-args"))
+    print(element[0].get_dom_attribute("data-l10n-args"))
     print(credit_card_sample_data)
     browser_action_obj.switch_to_content_context()
 
