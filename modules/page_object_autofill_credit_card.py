@@ -152,7 +152,7 @@ class CreditCardFill(Autofill):
         credit_card_sample_data: CreditCardBase,
         field_name: str,
         new_data: str,
-    ) -> None:
+    ) -> Autofill:
         """
         Verfies that there is only 1 profile in the popup panel, updates the credit card information and verifies all the fields
         according to the passed in credit card information object
@@ -183,3 +183,70 @@ class CreditCardFill(Autofill):
 
         # verifiyng the correct data
         self.verify_four_fields(credit_card_popoup_obj, credit_card_sample_data)
+        return self
+
+    def update_cc_name(
+        self,
+        util: Utilities,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup_obj: AutofillPopup,
+        credit_card_popoup_obj: CreditCardPopup,
+    ) -> Autofill:
+        """
+        Generates a new name, updates the credit card information in the form.
+        """
+        new_cc_name = util.fake_credit_card_data().name
+        credit_card_sample_data.name = new_cc_name
+
+        self.verify_updated_information(
+            credit_card_popoup_obj,
+            autofill_popup_obj,
+            credit_card_sample_data,
+            "cc-name",
+            credit_card_sample_data.name,
+        )
+        return self
+
+    def update_cc_exp_month(
+        self,
+        util: Utilities,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup_obj: AutofillPopup,
+        credit_card_popoup_obj: CreditCardPopup,
+    ) -> Autofill:
+        """
+        Generates a new expiry month, updates the credit card information in the form.
+        """
+        new_cc_exp_month = util.fake_credit_card_data().expiration_month
+        credit_card_sample_data.expiration_month = new_cc_exp_month
+
+        self.verify_updated_information(
+            credit_card_popoup_obj,
+            autofill_popup_obj,
+            credit_card_sample_data,
+            "cc-exp-month",
+            credit_card_sample_data.expiration_month,
+        )
+        return self
+
+    def update_cc_exp_year(
+        self,
+        util: Utilities,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup_obj: AutofillPopup,
+        credit_card_popoup_obj: CreditCardPopup,
+    ) -> Autofill:
+        """
+        Generates a new expiry year, updates the credit card information in the form.
+        """
+        new_cc_exp_year = util.fake_credit_card_data().expiration_year
+        credit_card_sample_data.expiration_year = new_cc_exp_year
+
+        self.verify_updated_information(
+            credit_card_popoup_obj,
+            autofill_popup_obj,
+            credit_card_sample_data,
+            "cc-exp-year",
+            credit_card_sample_data.expiration_year,
+        )
+        return self

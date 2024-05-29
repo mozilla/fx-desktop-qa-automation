@@ -1,3 +1,7 @@
+import json
+import logging
+
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import CreditCardPopup, Navigation
@@ -8,10 +12,13 @@ from modules.page_object import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
+fields = ["cc-name", "cc-exp-month", "cc-exp-year"]
 
-def test_autofill_update_credit_card(driver: Firefox):
+
+@pytest.mark.parametrize("field", fields)
+def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     """
-    C122406, updates the name of the credit card holder and ensure no new profile is created and data is saved correctly
+    C122406, ensures that updating the credit card saves the correct information with no
     """
     nav = Navigation(driver)
     util = Utilities()
@@ -27,37 +34,34 @@ def test_autofill_update_credit_card(driver: Firefox):
     autofill_popup_obj.press_doorhanger_save()
     credit_card_fill_obj.press_autofill_panel(credit_card_popoup_obj)
 
-    # updating the name of the cc
-    new_cc_name = util.fake_credit_card_data().name
-    credit_card_sample_data.name = new_cc_name
-
-    credit_card_fill_obj.verify_updated_information(
-        credit_card_popoup_obj,
-        autofill_popup_obj,
-        credit_card_sample_data,
-        "cc-name",
-        credit_card_sample_data.name,
-    )
+    # updating the name of the cc holder
+    if field == "cc-name":
+        credit_card_fill_obj.update_cc_name(
+            util, credit_card_sample_data, autofill_popup_obj, credit_card_popoup_obj
+        )
+    elif field == "cc-exp-month":
+        credit_card_fill_obj.update_cc_exp_month(
+            util, credit_card_sample_data, autofill_popup_obj, credit_card_popoup_obj
+        )
+    else:
+        credit_card_fill_obj.update_cc_exp_year(
+            util, credit_card_sample_data, autofill_popup_obj, credit_card_popoup_obj
+        )
 
     # navigate to settings
     about_prefs = AboutPrefs(driver, category="privacy").open()
-    about_prefs.get_element("prefs-button", labels=["Saved payment methods"]).click()
-
-    iframe = about_prefs.get_element("browser-popup")
+    iframe = about_prefs.get_saved_payments_popup_iframe()
     browser_action_obj.switch_to_iframe_context(iframe)
 
+    # assert no dupe profile is saved
     element = about_prefs.get_element("cc-saved-options", multiple=True)
     assert len(element) == 1
 
-    print(element[0].get_dom_attribute("data-l10n-args"))
-    print(credit_card_sample_data)
+    # preprocessing for validations
+    cc_info_json = json.loads(element[0].get_dom_attribute("data-l10n-args"))
     browser_action_obj.switch_to_content_context()
+    logging.info(f"The extracted JSON: {cc_info_json}")
+    logging.info(f"The extracted cc data: {credit_card_sample_data}")
 
-    # new_cc_number = util.fake_credit_card_data().card_number
-    # credit_card_sample_data.card_number = new_cc_number
-
-    # credit_card_fill_obj.verify_updated_information(credit_card_popoup_obj,
-    #                                                 autofill_popup_obj,
-    #                                                 credit_card_sample_data,
-    #                                                 "cc-number",
-    #                                                 credit_card_sample_data.card_number)
+    # verify the items in the JSON vs the sample data
+    about_prefs.verify_cc_json(cc_info_json, credit_card_sample_data)

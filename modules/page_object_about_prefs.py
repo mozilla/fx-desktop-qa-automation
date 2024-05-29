@@ -1,7 +1,9 @@
 from pypom import Region
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.classes.credit_card import CreditCardBase
 from modules.page_base import BasePage
 from modules.util import PomUtils
 
@@ -49,3 +51,19 @@ class AboutPrefs(BasePage):
         search_input.clear()
         search_input.send_keys(term)
         return self
+
+    def verify_cc_json(
+        self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
+    ) -> BasePage:
+        assert cc_info_json["name"] == credit_card_fill_obj.name
+        assert cc_info_json["number"][-4:] == credit_card_fill_obj.card_number[-4:]
+        assert int(cc_info_json["month"]) == int(credit_card_fill_obj.expiration_month)
+        return self
+
+    def get_saved_payments_popup_iframe(self) -> WebElement:
+        """
+        Returns the iframe object for the dialog panel in the popup
+        """
+        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
+        iframe = self.get_element("browser-popup")
+        return iframe
