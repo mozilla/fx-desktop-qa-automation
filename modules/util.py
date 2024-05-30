@@ -191,18 +191,7 @@ class Utilities:
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
         to only the <country-code>xxxxxxxxxx format and return it.
 
-        Regex Meanings: \s*(?:x|ext)\s*\d*$
-        \s*: Matches zero or more whitespace characters.
-        (?:x|ext): Group that matches either "x" or "ext".
-        \d*: Matches zero or more digits
-        $: Anchors the match to the end of the string, ensuring that the pattern occurs right at the end.
-        So, the regex matches strings where after any amount of whitespace, there is either an "x" or "ext" followed directly by any number of digits, and nothing else after that until the end of the string.
-        Examples of matching strings include the " x123" of the "4156360998 x123", and the "ext456" of "9087469876ext456".
-
-        Regex Meanings: \D
-        \D: Matches any character that is not a digit.
-        The \D token will match any single character that is a letter, punctuation mark, whitespace, or any other non-digit character.
-
+        Regex explanations: https://docs.python.org/3/library/re.html#regular-expression-syntax
         ...
         Attributes
         ----------
