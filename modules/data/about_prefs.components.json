@@ -75,5 +75,24 @@
         "selectorData": "checkbox[label='Save and fill payment methods']",
         "strategy": "css",
         "groups": []
+    },
+
+    "prefs-button": {
+        "selectorData": "button[label=\"{name}\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cc-saved-options": {
+        "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
+        "strategy": "css",
+        "iframe": "browser-popup",
+        "groups": []
+    },
+
+    "browser-popup": {
+        "selectorData": "dialogFrame",
+        "strategy": "class",
+        "groups": []
     }
 }
