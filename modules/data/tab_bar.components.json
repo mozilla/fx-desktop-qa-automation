@@ -44,6 +44,14 @@
         "groups": []
     },
 
+    "tab-title": {
+        "selectorData": "tab-text",
+        "strategy": "class",
+        "groups": [
+            "subTabOnly"
+        ]
+    },
+
     "list-all-tabs-button": {
         "selectorData": "alltabs-button",
         "strategy": "id",

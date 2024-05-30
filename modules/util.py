@@ -353,6 +353,9 @@ class PomUtils:
         except InvalidArgumentException:
             logging.info("Selenium shadow nav failed.")
             return shadow_from_script()
+        except WebDriverException:
+            logging.info("Cannot use Selenium shadow nav in CONTEXT_CHROME")
+            return shadow_from_script()
         return []
 
     def css_selector_matches_element(
@@ -368,6 +371,7 @@ class PomUtils:
     def find_shadow_chrome_element(
         self, nodes: list[WebElement], selector: list
     ) -> Union[WebElement, None]:
+        logging.info("Selecting element in Chrome Context Shadow DOM...")
         if selector[0] != By.ID:
             raise ValueError(
                 "Currently shadow elements in chrome can only be selected by ID."
@@ -376,7 +380,11 @@ class PomUtils:
             node_html = self.driver.execute_script(
                 "return arguments[0].outerHTML;", node
             )
-            if f'id="{selector}"' in node_html:
+            tag = f'id="{selector[1]}"'
+            logging.info(f"Looking for {tag}")
+            logging.info(f"Shadow element code: {node_html}")
+            if tag in node_html:
+                logging.info("Element found, returning...")
                 return node
         return None
 
@@ -399,7 +407,7 @@ class PomUtils:
         logging.info(f"Found {len(shadow_nodes)} shadow nodes...")
         logging.info(f"Looking for {selector}...")
         if context == "chrome":
-            return find_shadow_chrome_element(shadow_nodes, selector)
+            return self.find_shadow_chrome_element(shadow_nodes, selector)
         self.driver.implicitly_wait(0)
         for node in shadow_nodes:
             if self.css_selector_matches_element(node, selector):

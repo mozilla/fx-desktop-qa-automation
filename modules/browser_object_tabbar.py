@@ -25,6 +25,15 @@ class TabBar(BasePage):
 
     MEDIA_STATUS = MediaStatus()
 
+    class ScrollDirection:
+        """Fake enum: Which way are we scrolling tabs"""
+
+        def __init__(self):
+            self.LEFT = "left"
+            self.RIGHT = "right"
+
+    SCROLL_DIRECTION = ScrollDirection()
+
     def new_tab_by_button(self) -> BasePage:
         """Use the New Tab button (+) to open a new tab"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -78,6 +87,12 @@ class TabBar(BasePage):
             self.get_element("tab-icon-overlay").click()
         return self
 
+    def get_tab_title(self, tab_element: WebElement) -> str:
+        """Given a tab root element, get the title text of the tab"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            tab_label = tab_element.find_element(*self.get_selector("tab-title"))
+            return tab_label.text
+
     def expect_tab_sound_status(
         self, identifier: Union[str, int], status: MediaStatus
     ) -> BasePage:
@@ -112,3 +127,8 @@ class TabBar(BasePage):
                 self.get_selector("all-tabs-entry")
             )
         return len(all_tabs_entries)
+
+    def scroll_tabs(self, direction: ScrollDirection) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element(f"tab-scroll-{direction}").click()
+        return self
