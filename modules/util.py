@@ -365,11 +365,27 @@ class PomUtils:
             f"return arguments[0].matches({sel})", element
         )
 
+    def find_shadow_chrome_element(
+        self, nodes: list[WebElement], selector: list
+    ) -> Union[WebElement, None]:
+        if selector[0] != By.ID:
+            raise ValueError(
+                "Currently shadow elements in chrome can only be selected by ID."
+            )
+        for node in nodes:
+            node_html = self.driver.execute_script(
+                "return arguments[0].outerHTML;", node
+            )
+            if f'id="{selector}"' in node_html:
+                return node
+        return None
+
     def find_shadow_element(
         self,
         shadow_parent: Union[WebElement, ShadowRoot],
         selector: list,
         multiple=False,
+        context="content",
     ) -> WebElement:
         """
         Given a WebElement with a shadow root attached, find a selector in the
@@ -382,6 +398,8 @@ class PomUtils:
         shadow_nodes = self.get_shadow_content(shadow_parent)
         logging.info(f"Found {len(shadow_nodes)} shadow nodes...")
         logging.info(f"Looking for {selector}...")
+        if context == "chrome":
+            return find_shadow_chrome_element(shadow_nodes, selector)
         self.driver.implicitly_wait(0)
         for node in shadow_nodes:
             if self.css_selector_matches_element(node, selector):

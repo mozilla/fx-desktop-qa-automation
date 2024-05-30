@@ -230,14 +230,16 @@ class BasePage(Page):
             logging.info(f"Found shadow parent {element_data['shadowParent']}...")
             shadow_parent = self.get_element(element_data["shadowParent"])
             if not multiple:
-                shadow_element = self.utils.find_shadow_element(shadow_parent, selector)
+                shadow_element = self.utils.find_shadow_element(
+                    shadow_parent, selector, context=self.context
+                )
                 if "doNotCache" not in element_data["groups"]:
                     self.elements[cache_name]["seleniumObject"] = shadow_element
                 return shadow_element
             else:
                 # no caching for multiples
                 return self.utils.find_shadow_element(
-                    shadow_parent, selector, multiple=multiple
+                    shadow_parent, selector, multiple=multiple, context=self.context
                 )
         if not multiple:
             found_element = self.driver.find_element(*selector)
