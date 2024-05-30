@@ -1,9 +1,9 @@
-from modules.page_base import BasePage
+from modules.page_object import Autofill
 from modules.util import AutofillAddressBase, BrowserActions
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class AddressFill(BasePage):
+class AddressFill(Autofill):
     """
     Page Object Model for auto site (https://mozilla.github.io/form-fill-examples/basic.html)
     """
@@ -60,17 +60,17 @@ class AddressFill(BasePage):
     def click_form_button(self, field_name):
         self.get_element("submit-button", field_name).click()
 
-    def click(self, name: str, *label: str) -> BasePage:
+    def click(self, name: str, *label: str) -> Autofill:
         elem = self.get_element(name, *label)
         self.actions.click(elem).perform()
         return self
 
-    def click_address(self) -> BasePage:
+    def click_address(self) -> Autofill:
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("select-address").click()
         return self
 
-    def click_clear(self) -> BasePage:
+    def click_clear(self) -> Autofill:
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("clear-address").click()
         return self
