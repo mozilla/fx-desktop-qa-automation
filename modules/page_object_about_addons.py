@@ -17,9 +17,11 @@ class AboutAddons(BasePage):
         """
         self.get_element("sidebar-options", labels=[option]).click()
 
-    def activate_theme(self, nav: Navigation, theme_name: str, intended_color: str):
+    def activate_theme(
+        self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
+    ):
         """
-        Clicks the theme card and presses enable. Then verifies that the theme is the correct colour.
+        Clicks the theme card and presses enable. Then verifies that the theme is the correct color.
 
         Attributes
         ----------
@@ -28,7 +30,7 @@ class AboutAddons(BasePage):
         theme_name: str
             The name of the theme to press
         intended_color: str
-            The RGB string that is the intended colour of the element
+            The RGB string that is the intended color of the element
         """
         self.get_element("theme-card", labels=[theme_name]).click()
         self.get_element("enable-theme").click()
@@ -41,7 +43,10 @@ class AboutAddons(BasePage):
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
             navigation_component = nav.get_element("navigation-background-component")
-            background_colour = navigation_component.value_of_css_property(
+            background_color = navigation_component.value_of_css_property(
                 "background-color"
             )
-            assert background_colour == intended_color
+            if perform_assert:
+                assert background_color == intended_color
+            else:
+                return background_color
