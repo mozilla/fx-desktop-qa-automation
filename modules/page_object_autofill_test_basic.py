@@ -54,6 +54,7 @@ class AddressFill(Autofill):
         term: str
             The string to be sent to the input field
         """
+
         web_elem = self.get_element("form-field", field_name)
         ba.clear_and_fill(web_elem, term, press_enter=False)
 
@@ -82,3 +83,9 @@ class AddressFill(Autofill):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
+
+        web_elem = self.get_element("form-field", labels=[field_name])
+        ba.clear_and_fill(web_elem, term, press_enter=False)
+
+    def click_form_button(self, field_name):
+        self.get_element("submit-button", labels=[field_name]).click()
