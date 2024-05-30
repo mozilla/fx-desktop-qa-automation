@@ -1,6 +1,7 @@
 import logging
 from typing import Union
 
+from pypom import Region
 from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -95,6 +96,19 @@ class TabBar(BasePage):
             with open("1.html", "w") as fh:
                 fh.write(self.driver.page_source)
             self.get_element("list-all-tabs-button").click()
+            self.expect(
+                EC.text_to_be_present_in_element_attribute(
+                    self.get_selector("list-all-tabs-button"), "open", "true"
+                )
+            )
             with open("2.html", "w") as fh:
                 fh.write(self.driver.page_source)
         return self
+
+    def count_tabs_in_all_tabs_menu(self) -> int:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            all_tabs_menu = self.get_element("all-tabs-menu")
+            all_tabs_entries = all_tabs_menu.find_elements(
+                self.get_selector("all-tabs-entry")
+            )
+        return len(all_tabs_entries)

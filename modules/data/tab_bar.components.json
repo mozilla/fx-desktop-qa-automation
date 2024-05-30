@@ -48,7 +48,45 @@
         "selectorData": "alltabs-button",
         "strategy": "id",
         "groups": [
-            "requiredForPage"
+            "requiredForPage",
+            "doNotCache"
         ]
+    },
+
+    "all-tabs-menu": {
+        "selectorData": "allTabsMenu-allTabsView",
+        "strategy": "id",
+        "groups": [
+            "allTabsMenu"
+        ]
+    },
+
+    "all-tabs-entry": {
+        "selectorData": "all-tabs-item",
+        "strategy": "class",
+        "groups": [
+            "allTabsMenu"
+        ]
+    },
+
+    "tab-scrollbox": {
+        "selectorData": "tabbrowser-arrowscrollbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tab-scroll-left": {
+        "selectorData": "scrollbutton-up",
+        "strategy": "id",
+        "shadowParent": "tab-scrollbox",
+        "groups": []
+    },
+
+    "tab-scroll-right": {
+        "selectorData": "scrollbutton-down",
+        "strategy": "id",
+        "shadowParent": "tab-scrollbox",
+        "groups": []
     }
+
 }
