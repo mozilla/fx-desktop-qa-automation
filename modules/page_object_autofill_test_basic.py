@@ -1,5 +1,6 @@
-from modules.page_object_autofill import Autofill
+from modules.page_object import Autofill
 from modules.util import AutofillAddressBase, BrowserActions
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class AddressFill(Autofill):
@@ -53,8 +54,35 @@ class AddressFill(Autofill):
         term: str
             The string to be sent to the input field
         """
+
         web_elem = self.get_element("form-field", labels=[field_name])
         ba.clear_and_fill(web_elem, term, press_enter=False)
+
+    def click_form_button(self, field_name):
+        self.get_element("submit-button", field_name).click()
+
+    def click(self, name: str, *label: str) -> Autofill:
+        elem = self.get_element(name, *label)
+        self.actions.click(elem).perform()
+        return self
+
+    def click_address(self) -> Autofill:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("select-address").click()
+        return self
+
+    def click_clear(self) -> Autofill:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("clear-address").click()
+        return self
+
+    def verify_autofill_displayed(self):
+        """
+        Verifies that the autofill suggestions are displayed.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            element = self.get_element("select-address")
+            self.expect(EC.visibility_of(element))
 
     def click_form_button(self, field_name):
         self.get_element("submit-button", labels=[field_name]).click()
