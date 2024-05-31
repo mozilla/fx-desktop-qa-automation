@@ -101,12 +101,20 @@ class BasePage(Page):
 
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
-        self.wait.until(condition)
+        if self.context == "chrome":
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.wait.until(condition)
+        else:
+            self.wait.until(condition)
         return self
 
     def expect_not(self, condition) -> Page:
         """Use the Page's to wait until assert a condition is not true or wait until timeout"""
-        self.wait.until_not(condition)
+        if self.context == "chrome":
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.wait.until_not(condition)
+        else:
+            self.wait.until_not(condition)
         return self
 
     def perform_key_combo(self, *keys) -> Page:

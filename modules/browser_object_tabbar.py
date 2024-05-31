@@ -108,16 +108,12 @@ class TabBar(BasePage):
     def click_list_all_tabs(self) -> BasePage:
         """Click the Tab Visibility / List All Tabs button"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            with open("1.html", "w") as fh:
-                fh.write(self.driver.page_source)
             self.get_element("list-all-tabs-button").click()
             self.expect(
                 EC.text_to_be_present_in_element_attribute(
                     self.get_selector("list-all-tabs-button"), "open", "true"
                 )
             )
-            with open("2.html", "w") as fh:
-                fh.write(self.driver.page_source)
         return self
 
     def count_tabs_in_all_tabs_menu(self) -> int:
@@ -129,6 +125,7 @@ class TabBar(BasePage):
         return len(all_tabs_entries)
 
     def scroll_tabs(self, direction: ScrollDirection) -> BasePage:
+        logging.info(f"Scrolling tabs {direction}")
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element(f"tab-scroll-{direction}").click()
         return self

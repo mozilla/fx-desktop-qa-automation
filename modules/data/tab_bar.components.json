@@ -95,6 +95,12 @@
         "strategy": "id",
         "shadowParent": "tab-scrollbox",
         "groups": []
+    },
+
+    "tab-icon": {
+        "selectorData": "tab-icon-image",
+        "strategy": "class",
+        "groups": []
     }
 
 }
