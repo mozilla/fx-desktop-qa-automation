@@ -77,6 +77,14 @@
         ]
     },
 
+    "all-tabs-entry-selected": {
+        "selectorData": "toolbaritem.all-tabs-item[selected='true']",
+        "strategy": "css",
+        "groups": [
+            "allTabsMenu"
+        ]
+    },
+
     "tab-scrollbox": {
         "selectorData": "tabbrowser-arrowscrollbox",
         "strategy": "id",

@@ -1,8 +1,8 @@
 import logging
 from typing import Union
 
-from pypom import Region
 from selenium.webdriver import Keys
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -105,7 +105,7 @@ class TabBar(BasePage):
             )
         return self
 
-    def click_list_all_tabs(self) -> BasePage:
+    def open_all_tabs_list(self) -> BasePage:
         """Click the Tab Visibility / List All Tabs button"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("list-all-tabs-button").click()
@@ -127,5 +127,42 @@ class TabBar(BasePage):
     def scroll_tabs(self, direction: ScrollDirection) -> BasePage:
         logging.info(f"Scrolling tabs {direction}")
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element(f"tab-scroll-{direction}").click()
+            scroll_button = self.get_element(f"tab-scroll-{direction}")
+            scroll_button.click()
         return self
+
+    def get_text_of_all_tabs_entry(self, selected=False, index=0) -> str:
+        entry = None
+        if selected:
+            entry = self.get_element("all-tabs-entry-selected")
+        else:
+            entries = self.get_elements("all-tabs-entry")
+            entry = entries[index]
+        return entry.find_element(By.CLASS_NAME, "all-tabs-button").get_attribute(
+            "label"
+        )
+
+    def get_location_of_all_tabs_entry(self, selected=False, index=0) -> str:
+        entry = None
+        if selected:
+            entry = self.get_element("all-tabs-entry-selected")
+        else:
+            entries = self.get_elements("all-tabs-entry")
+            entry = entries[index]
+        return entry.find_element(By.CLASS_NAME, "all-tabs-button").location
+
+    def scroll_on_all_tabs_menu(self, down=True, pixels=200) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            menu = self.get_element("all-tabs-menu")
+            logging.info("Menu loc and dim")
+            logging.info(menu.location)
+            logging.info(menu.size)
+            x_start = menu.location["x"] + menu.size["width"] - 4
+            y_start = menu.location["y"] + (menu.size["height"] // 2)
+            sign = 1 if down else -1
+            logging.info(f"origin x:{x_start}, y:{y_start}")
+            self.actions.move_by_offset(x_start, y_start)
+            self.actions.click_and_hold()
+            self.actions.move_by_offset(0, (sign * pixels))
+            self.actions.release()
+            self.actions.perform()
