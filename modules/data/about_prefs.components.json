@@ -86,13 +86,38 @@
     "cc-saved-options": {
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",
-        "iframe": "browser-popup",
+        "groups": []
+    },
+
+    "panel-popup-button": {
+        "selectorData": "button[data-l10n-id='{name}']",
+        "strategy": "css",
         "groups": []
     },
 
     "browser-popup": {
         "selectorData": "dialogFrame",
         "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "browser-popup-1": {
+        "selectorData": "dialogFrame",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "browser-popup-2": {
+        "selectorData": "browser[contextmenu='contentAreaContextMenu']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "saved-addresses": {
+        "selectorData": "addresses",
+        "strategy": "id",
         "groups": []
     }
 }

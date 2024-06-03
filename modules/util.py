@@ -1,7 +1,7 @@
 import logging
 import re
 from random import shuffle
-from typing import Union
+from typing import List, Union
 
 from faker import Faker
 from faker.providers import internet, misc
@@ -9,7 +9,7 @@ from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
 )
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.shadowroot import ShadowRoot
@@ -129,7 +129,7 @@ class Utilities:
                 break
         return phone
 
-    def fake_autofill_data(self, country_code: str):
+    def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
         """
         Given a country code, tries to initialize the locale of the faker and generates fake data
         then returns the new AutofillAddressBase object with the fake data.
