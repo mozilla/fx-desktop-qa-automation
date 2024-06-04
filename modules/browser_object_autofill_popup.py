@@ -1,7 +1,7 @@
 import json
 
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 
