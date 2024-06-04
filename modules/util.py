@@ -129,7 +129,7 @@ class Utilities:
                 break
         return phone
 
-    def fake_autofill_data(self, country_code: str):
+    def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
         """
         Given a country code, tries to initialize the locale of the faker and generates fake data
         then returns the new AutofillAddressBase object with the fake data.
@@ -142,7 +142,7 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        organization = fake.company()
+        organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         address_level_2 = fake.city()
         try:
@@ -168,7 +168,16 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self):
+    def fake_credit_card_data(self) -> CreditCardBase:
+        """
+        Generates fake information related to the CC scenarios.
+
+
+        Returns
+        -------
+        CreditCardBase
+            The object that contains all of the fake data generated.
+        """
         fake = Faker()
         name = fake.name()
         card_number = fake.credit_card_number()
@@ -307,6 +316,18 @@ class BrowserActions:
             return None
         else:
             raise RuntimeError("More than one element matches text.")
+
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
+
+    def switch_to_content_context(self):
+        """
+        Switches back to the normal context
+        """
+        self.driver.switch_to.default_content()
 
 
 class PomUtils:
