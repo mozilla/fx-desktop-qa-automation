@@ -1,8 +1,7 @@
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import CreditCardPopup, Navigation, AutofillPopup
+from modules.browser_object import AutofillPopup, CreditCardPopup, Navigation
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
@@ -28,4 +27,6 @@ def test_form_autofill_suggestions(driver: Firefox, index: str):
         item1 = autofill_popup_obj.get_nth_element(index)
         item1.click()
 
-    credit_card_fill_obj.verify_four_fields(credit_card_popoup_obj, sample_data_2 if index == "1" else sample_data_1)
+    credit_card_fill_obj.verify_four_fields(
+        credit_card_popoup_obj, sample_data_2 if index == "1" else sample_data_1
+    )
