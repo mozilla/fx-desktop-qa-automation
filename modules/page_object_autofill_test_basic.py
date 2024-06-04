@@ -60,7 +60,7 @@ class AddressFill(Autofill):
         ba.clear_and_fill(web_elem, term, press_enter=False)
 
     def click_form_button(self, field_name):
-        self.get_element("submit-button", field_name).click()
+        self.get_element("submit-button", labels=[field_name]).click()
 
     def click(self, name: str, *label: str) -> Autofill:
         elem = self.get_element(name, *label)
@@ -84,6 +84,3 @@ class AddressFill(Autofill):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
-
-    def click_form_button(self, field_name):
-        self.get_element("submit-button", labels=[field_name]).click()
