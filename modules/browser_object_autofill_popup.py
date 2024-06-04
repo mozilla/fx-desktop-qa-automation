@@ -28,6 +28,7 @@ class AutofillPopup(BasePage):
             element = self.get_element("autofill-panel")
             self.expect_not(EC.element_to_be_clickable(element))
 
+
     def hover_over_element(self, element: str):
         """
         Hover over the specified element.

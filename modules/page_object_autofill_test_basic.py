@@ -1,7 +1,6 @@
-from selenium.webdriver.support import expected_conditions as EC
-
 from modules.page_object import Autofill
 from modules.util import AutofillAddressBase, BrowserActions
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class AddressFill(Autofill):

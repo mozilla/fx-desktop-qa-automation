@@ -31,13 +31,9 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
 
     # Get the first element from the autocomplete dropdown
     first_item = autofill_popup_panel.get_nth_element(1)
-    actual_value = autofill_popup_panel.hover_over_element(
-        first_item
-    ).get_primary_value(first_item)
+    actual_value = autofill_popup_panel.hover_over_element(first_item).get_primary_value(first_item)
 
     # Get the primary value (street address) from the first item in the dropdown and assert that the actual value
     # matches the expected value
     expected_street_address = autofill_sample_data.street_address
-    assert (
-        expected_street_address == actual_value
-    ), f"Expected {expected_street_address}, but got {actual_value}"
+    assert (expected_street_address == actual_value), f"Expected {expected_street_address}, but got {actual_value}"
