@@ -42,21 +42,34 @@ class CreditCardFill(Autofill):
         self.click_form_button("submit")
 
     def verify_all_fields(self, ccp: CreditCardPopup):
-        """
-        Verifies the pre-filled values in the credit card form.
+        for field in self.fields:
+            self.double_click("form-field", field)
+            ccp.verify_popup()
 
-        ...
+    def verify_four_fields(
+        self, ccp: CreditCardPopup, credit_card_sample_data: CreditCardBase
+    ) -> Autofill:
+        """
+        Verifies that after clicking the autofill panel the information is filled correctly.
 
         Attributes
         ----------
 
         ccp: CreditCardPopup
-            An instance of the CreditCardPopup class used to interact with the verification popup.
+            The credit card popup object
+
+        credit_card_sample_data: CreditCardBase
+            The object that contains all of the relevant information about the credit card autofill
         """
-        fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
-        for field in fields:
-            self.double_click("form-field", field)
-            ccp.verify_popup()
+        self.double_click("form-field", "cc-name")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            ccp.get_element("autofill-profile-option").click()
+
+        info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
+        for i in range(len(info_list)):
+            input_field = self.get_element("form-field", labels=[self.fields[i]])
+            assert info_list[i] == input_field.get_attribute("value")
+        return self
 
     def fake_and_fill(self, util: Utilities, autofill_popup_obj: AutofillPopup):
         """
@@ -131,30 +144,6 @@ class CreditCardFill(Autofill):
             f"20{credit_card_sample_data.expiration_year}",
         ]
         return ret_val
-
-    def verify_four_fields(
-        self, ccp: CreditCardPopup, credit_card_sample_data: CreditCardBase
-    ):
-        """
-        Veriies that after clicking the autofill panel the information is filled correctly.
-
-        Attributes
-        ----------
-
-        ccp: CreditCardPopup
-            The credit card popup object
-
-        credit_card_sample_data: CreditCardBase
-            The object that contains all of the relevant information about the credit card autofill
-        """
-        self.double_click("form-field", "cc-name")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            ccp.get_element("autofill-profile-option").click()
-
-        info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
-        for i in range(len(info_list)):
-            input_field = self.get_element("form-field", labels=[self.fields[i]])
-            assert info_list[i] == input_field.get_attribute("value")
 
     def verify_updated_information(
         self,

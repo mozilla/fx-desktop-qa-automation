@@ -46,7 +46,6 @@ def test_autofill_four_fields(driver: Firefox):
         credit_card_popup_obj, credit_card_sample_data
     )
 
-
 def test_enable_disable_form_autofill_cc(driver: Firefox):
     """
     C122388, tests that after saving cc information and toggling the autofill credit
