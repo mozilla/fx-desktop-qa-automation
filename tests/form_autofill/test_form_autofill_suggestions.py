@@ -10,6 +10,9 @@ indices = ["1", "2"]
 
 @pytest.mark.parametrize("index", indices)
 def test_form_autofill_suggestions(driver: Firefox, index: str):
+    """
+    C122401, checks that the corresponding autofill suggestion autofills the fields correctly
+    """
     nav = Navigation(driver)
     util = Utilities()
 
