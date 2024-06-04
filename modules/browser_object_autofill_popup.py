@@ -1,6 +1,5 @@
 import json
 
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -27,7 +26,6 @@ class AutofillPopup(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("autofill-panel")
             self.expect_not(EC.element_to_be_clickable(element))
-
 
     def hover_over_element(self, element: str):
         """
