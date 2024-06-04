@@ -12,7 +12,7 @@ countries = ["CA", "US"]
 @pytest.mark.parametrize("country_code", countries)
 def test_address_attribute_selection(driver: Firefox, country_code: str):
     """
-    C122359 - This test verifies that after filling the autofill fields and saving the data, hovering over the first
+    C122356 - This test verifies that after filling the autofill fields and saving the data, hovering over the first
     item in the dropdown ensures that the actual value matches the expected value.
     """
     # Instantiate objects and open the navigation page
@@ -27,7 +27,7 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
     autofill_popup_panel.press_doorhanger_save()
 
     # Double-click on the name field to trigger the autocomplete dropdown
-    address_form_fields.double_click("form-field", "street-address")
+    address_form_fields.double_click("form-field", "name")
 
     # Get the first element from the autocomplete dropdown
     first_item = autofill_popup_panel.get_nth_element(1)
@@ -37,7 +37,7 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
 
     # Get the primary value (street address) from the first item in the dropdown and assert that the actual value
     # matches the expected value
-    expected_street_address = autofill_sample_data.street_address
+    expected_name = autofill_sample_data.name
     assert (
-        expected_street_address == actual_value
-    ), f"Expected {expected_street_address}, but got {actual_value}"
+        expected_name == actual_value
+    ), f"Expected {expected_name}, but got {actual_value}"
