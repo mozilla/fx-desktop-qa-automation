@@ -129,7 +129,7 @@ class Utilities:
                 break
         return phone
 
-    def fake_autofill_data(self, country_code: str):
+    def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
         """
         Given a country code, tries to initialize the locale of the faker and generates fake data
         then returns the new AutofillAddressBase object with the fake data.
@@ -142,7 +142,7 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        organization = fake.company()
+        organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         address_level_2 = fake.city()
         try:
