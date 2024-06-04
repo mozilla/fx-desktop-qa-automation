@@ -1,6 +1,3 @@
-import time
-from selenium.common.exceptions import NoSuchElementException
-
 import pytest
 from selenium.webdriver import Firefox
 
