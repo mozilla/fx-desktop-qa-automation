@@ -1,5 +1,4 @@
 import re
-from time import sleep
 from typing import List
 
 from pypom import Region
