@@ -1,6 +1,6 @@
 from time import sleep
-import pytest
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
@@ -9,6 +9,7 @@ from modules.page_object import AboutPrefs, AddressFill
 from modules.util import Utilities
 
 countries = ["CA", "US"]
+
 
 @pytest.mark.parametrize("country_code", countries)
 def test_private_browsing_form_autofill(driver: Firefox, country_code: str):
