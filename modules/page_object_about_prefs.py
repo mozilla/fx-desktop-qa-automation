@@ -92,12 +92,12 @@ class AboutPrefs(BasePage):
 
     def set_country_autofill_panel(self, country: str) -> BasePage:
         for _ in range(self.TABS_TO_COUNTRY):
-            self.actions.send_keys(Keys.TAB)
+            self.actions.send_keys(Keys.TAB).perform()
 
         self.actions.send_keys(country)
 
         for _ in range(self.TABS_TO_COUNTRY):
-            self.actions.send_keys(Keys.SHIFT + Keys.TAB)
+            self.perform_key_combo(Keys.SHIFT, Keys.TAB)
 
         return self
 
@@ -150,31 +150,13 @@ class AboutPrefs(BasePage):
             "email": autofill_info.email,
         }
 
-        # self.set_country_autofill_panel(fields["country"])
-        # for _ in range(self.TABS_TO_COUNTRY):
-        #     self.actions.send_keys(Keys.TAB).perform()
-
-        # self.actions.send_keys(fields["country"])
-
-        # for _ in range(self.TABS_TO_COUNTRY):
-        #     self.perform_key_combo(Keys.SHIFT, Keys.TAB)
-        #     sleep(1)
-
-        # self.actions.send_keys(Keys.TAB).perform()
-        # sleep(3)
-        # self.perform_key_combo(Keys.TAB, Keys.SHIFT)
+        self.set_country_autofill_panel(fields["country"])
 
         for field in fields:
+            if field == "country":
+                self.actions.send_keys(Keys.TAB)
+                continue
             self.actions.send_keys(fields[field] + Keys.TAB).perform()
-        # self.actions.send_keys(autofill_info.name + Keys.TAB).perform()
-        # self.actions.send_keys(info.organization + Keys.TAB).perform()
-        # self.actions.send_keys(info.address_level_1 + Keys.TAB).perform()
-        # self.actions.send_keys(info.address_level_2 + Keys.TAB).perform()
-        # self.actions.send_keys("Ontario" + Keys.TAB).perform()
-        # self.actions.send_keys("M4W1L1" + Keys.TAB).perform()
-        # self.actions.send_keys("Canada" + Keys.TAB).perform()
-        # self.actions.send_keys("1234567890" + Keys.TAB).perform()
-        # self.actions.send_keys("trash@trash.com" + Keys.TAB).perform()
         self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(Keys.ENTER).perform()
         return self
