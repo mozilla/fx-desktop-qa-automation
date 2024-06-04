@@ -142,7 +142,7 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        organization = fake.company()
+        organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         address_level_2 = fake.city()
         try:

@@ -101,15 +101,48 @@ class AboutPrefs(BasePage):
 
         return self
 
-    def extract_content_from_html(self, initial_string: str) -> str:
+    def extract_content_from_html(self, initial_string: str) -> AutofillAddressBase:
+        """
+        Takes the raw innerHTML and uses regex to filter out the tags.
+
+        >[^<]+<"
+        - > match the closing tag
+        - [^<] match anything that isnt the < tag
+        - +< matches the opening tag
+
+        ...
+
+        Attributes
+        ----------
+        initial_string: str
+            The raw innerHTML content extracted
+        """
         text = re.findall(r">[^<]+<", initial_string)
         clean_text = [s[1:-1] for s in text]
         return clean_text[0]
 
     def extract_and_split_text(self, text: str) -> List[str]:
+        """
+        Takes the raw text and strips it of any extra spaces and splits it by the character ','
+
+        Attributes
+        ----------
+        text: str
+            The raw text extracted from the HTML content, filtered
+        """
         return [item.strip() for item in text.split(",")]
 
     def organize_data_into_obj(self, observed_text: List[str]) -> AutofillAddressBase:
+        """
+        Takes a list of text that has been split into an array and instantiates an AutofillAddressBase object
+
+        ...
+
+        Attributes
+        ----------
+        observed_text: List[str]
+            A list that contains the text for each of the fields of data in an object
+        """
         if len(observed_text) < 8:
             return None
 
@@ -138,6 +171,17 @@ class AboutPrefs(BasePage):
     def fill_autofill_panel_information(
         self, autofill_info: AutofillAddressBase
     ) -> BasePage:
+        """
+        Takes the sample autofill object and fills it into the popup panel in the about:prefs section
+        under saved addresses.
+
+        ...
+
+        Attributes
+        ----------
+        autofill_info: AutofillAddressBase
+            The object containing all of the sample data
+        """
         fields = {
             "name": autofill_info.name,
             "organization": autofill_info.organization,
