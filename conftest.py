@@ -52,6 +52,13 @@ def pytest_addoption(parser):
         help="Size for Fx window, default is '1152x864'",
     )
 
+    parser.addoption(
+        "--private-mode",
+        action="store_true",
+        default=False,
+        help="Run in private mode: --private-mode",
+    )
+
 
 @pytest.fixture()
 def opt_headless(request):

@@ -102,5 +102,6 @@ class AddressFill(Autofill):
 
     def open_private_browsing(self):
         # self.perform_key_combo(Keys.TAB, Keys.SHIFT)
-        self.perform_key_combo(Keys.COMMAND, "t")
+        # self.perform_key_combo(Keys.TAB, Keys.TAB, Keys.TAB)
+        self.perform_key_combo(Keys.COMMAND, Keys.SHIFT, 'p')
         # self.actions.send_keys(Keys.TAB).perform()
