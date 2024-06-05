@@ -21,12 +21,6 @@
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
         "strategy":"css",
         "groups": []
-    },
-
-    "autocomplete-richlistbox-element": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
-        "strategy": "css",
-        "groups": []
-  }
+    }
 
 }
