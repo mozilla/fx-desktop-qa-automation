@@ -59,11 +59,7 @@ class AddressFill(Autofill):
         web_elem = self.get_element("form-field", labels=[field_name])
         ba.clear_and_fill(web_elem, term, press_enter=False)
 
-<<<<<<< as/name-attribute-autofill
-    def click_form_button(self, field_name):
-=======
     def click_form_button(self, field_name: str):
->>>>>>> main
         self.get_element("submit-button", labels=[field_name]).click()
 
     def click(self, name: str, label: str) -> Autofill:
