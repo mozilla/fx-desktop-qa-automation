@@ -17,11 +17,13 @@ def test_autofill_credit_card(driver: Firefox):
     nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
-    credit_card_popoup_obj = CreditCardPopup(driver)
+    credit_card_popup_obj = CreditCardPopup(driver)
 
-    credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
+    credit_card_sample_data = util.fake_credit_card_data()
+    credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
+    autofill_popup_obj.press_doorhanger_save()
 
-    credit_card_fill_obj.verify_all_fields(credit_card_popoup_obj)
+    credit_card_fill_obj.verify_all_fields(credit_card_popup_obj)
 
 
 def test_autofill_four_fields(driver: Firefox):

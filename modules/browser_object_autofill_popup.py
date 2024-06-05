@@ -1,5 +1,6 @@
 import json
 
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -36,7 +37,7 @@ class AutofillPopup(BasePage):
             self.actions.move_to_element(element).perform()
             return self
 
-    def get_nth_element(self, index: str):
+    def get_nth_element(self, index: str) -> WebElement:
         """
         Get the nth element from the autocomplete list.
         Parameters: index (str): The index of the element to retrieve (1-based).
