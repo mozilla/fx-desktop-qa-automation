@@ -1,19 +1,16 @@
-import pytest
-import logging
 import json
-
+import logging
 from time import sleep
 
+import pytest
 from selenium.webdriver import Firefox
-# from selenium.webdriver.common.keys import Keys
 
+# from selenium.webdriver.common.keys import Keys
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.autofill_base import AutofillAddressBase
-
-from modules.page_object import AddressFill, AboutPrefs
-
-from modules.util import Utilities, BrowserActions
+from modules.page_object import AboutPrefs, AddressFill
+from modules.util import BrowserActions, Utilities
 
 countries = ["CA", "US"]
 
@@ -35,14 +32,13 @@ def test_private_browsing_form_autofill(driver: Firefox, country_code: str):
 
     # open in the private browser
 
-
     # double click the name
     address_fill_obj.double_click("form-field", "name")
     with driver.context(driver.CONTEXT_CHROME):
         autofill_popup_obj.get_element("autofill-panel").click()
 
         panel_option = autofill_popup_obj.get_element("autofill-panel-item")
-        extracted_data = panel_option.get_attribute('ac-value')
+        extracted_data = panel_option.get_attribute("ac-value")
         logging.info(f"Extracted data: {extracted_data}")
 
         extracted_data_as_obj = json.loads(extracted_data)

@@ -13,5 +13,5 @@ def set_prefs():
     return [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
-        ("browser.privatebrowsing.autostart", True)
+        ("browser.privatebrowsing.autostart", True),
     ]
