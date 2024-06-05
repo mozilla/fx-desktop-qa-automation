@@ -16,5 +16,17 @@
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
         "groups": []
+    },
+
+    "autofill-profile-option": {
+        "selectorData": "autocomplete-richlistitem",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "update-card-info-popup-button": {
+        "selectorData": "button[label=\"Update existing card\"]",
+        "strategy": "css",
+        "groups": []
     }
 }

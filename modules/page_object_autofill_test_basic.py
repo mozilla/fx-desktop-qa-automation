@@ -59,11 +59,15 @@ class AddressFill(Autofill):
         web_elem = self.get_element("form-field", labels=[field_name])
         ba.clear_and_fill(web_elem, term, press_enter=False)
 
+<<<<<<< as/name-attribute-autofill
     def click_form_button(self, field_name):
+=======
+    def click_form_button(self, field_name: str):
+>>>>>>> main
         self.get_element("submit-button", labels=[field_name]).click()
 
-    def click(self, name: str, *label: str) -> Autofill:
-        elem = self.get_element(name, *label)
+    def click(self, name: str, label: str) -> Autofill:
+        elem = self.get_element(name, labels=[label])
         self.actions.click(elem).perform()
         return self
 
@@ -84,3 +88,14 @@ class AddressFill(Autofill):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
+
+    def double_click(self, name: str, label: str):
+        """
+        Double-click on the specified element.
+
+        Parameters:
+        name (str): The name of the element to double-click.
+        label (str): Additional labels to identify the element (optional).
+        """
+        elem = self.get_element(name, labels=[label])
+        self.actions.double_click(elem).perform()
