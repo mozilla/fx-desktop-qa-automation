@@ -129,7 +129,7 @@ class TabBar(BasePage):
         """Scroll tabs in tab bar using the < and > scroll buttons"""
         logging.info(f"Scrolling tabs {direction}")
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            scroll_button = self.get_element(f"tab-scroll-{direction}")
+            scroll_button = self.get_element(f"tab-scrollbox-{direction}-button")
             scroll_button.click()
         return self
 

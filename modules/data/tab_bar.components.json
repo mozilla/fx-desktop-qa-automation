@@ -91,14 +91,14 @@
         "groups": []
     },
 
-    "tab-scroll-left": {
+    "tab-scrollbox-left-button": {
         "selectorData": "scrollbutton-up",
         "strategy": "id",
         "shadowParent": "tab-scrollbox",
         "groups": []
     },
 
-    "tab-scroll-right": {
+    "tab-scrollbox-right-button": {
         "selectorData": "scrollbutton-down",
         "strategy": "id",
         "shadowParent": "tab-scrollbox",
