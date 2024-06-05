@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -37,12 +39,12 @@ def test_create_address_profile(driver: Firefox, country_code: str):
     inner_content = saved_address_option.get_attribute("innerHTML")
     cleaned_data = about_prefs_obj.extract_content_from_html(inner_content)
     split_text = about_prefs_obj.extract_and_split_text(cleaned_data)
-    print(inner_content)
-    print(cleaned_data)
-    print(split_text)
+    logging.info(f"The HTML Content: {inner_content}")
+    logging.info(f"Cleaned Data: {cleaned_data}")
+    logging.info(f"Split Text: {split_text}")
     observed_data = about_prefs_obj.organize_data_into_obj(split_text)
-    print(autofill_sample_data)
-    print(observed_data)
+    logging.info(f"Original Data: {autofill_sample_data}")
+    logging.info(f"Observed Data: {observed_data}")
 
     # currently ignoring the address level 1 field
     observed_data.telephone = util.normalize_phone_number(observed_data.telephone)
