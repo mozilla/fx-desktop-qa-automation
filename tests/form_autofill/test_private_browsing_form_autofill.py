@@ -20,7 +20,7 @@ def test_private_browsing_form_autofill(driver: Firefox, country_code: str):
     autofill_popup_obj = AutofillPopup(driver)
     util = Utilities()
 
-    address_fill_obj.perform_key_combo(Keys.COMMAND, 't')
+    address_fill_obj.perform_key_combo(Keys.COMMAND, "t")
 
     # TODO: open the browser in incognito mode
     # autofill_sample_data = util.fake_autofill_data(country_code)
