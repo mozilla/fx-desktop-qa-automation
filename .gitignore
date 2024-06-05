@@ -10,6 +10,8 @@ env
 *.zip
 *.gz
 *.7z
+test.sh
+file[0-9]*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

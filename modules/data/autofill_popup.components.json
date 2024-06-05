@@ -10,5 +10,11 @@
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
         "groups": []
+    },
+
+    "autofill-item": {
+        "selectorData": "autocomplete-richlistitem",
+        "strategy": "class",
+        "groups": []
     }
 }
