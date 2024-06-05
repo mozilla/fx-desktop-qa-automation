@@ -84,6 +84,3 @@ class AddressFill(Autofill):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
-
-    def click_form_button(self, field_name):
-        self.get_element("submit-button", labels=[field_name]).click()
