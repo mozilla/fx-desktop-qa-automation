@@ -169,3 +169,7 @@ cython_debug/
 
 # PyCharm
 .idea/
+
+# irrelevant files
+drivers/
+temp.py
