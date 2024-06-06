@@ -1,6 +1,7 @@
 /venv/
 report.html
 assets/
+html_dump/
 /Test Results - .html
 /geckodriver.log
 env
@@ -9,6 +10,8 @@ env
 *.zip
 *.gz
 *.7z
+test.sh
+file[0-9]*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
