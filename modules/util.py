@@ -200,6 +200,7 @@ class Utilities:
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
         to only the <country-code>xxxxxxxxxx format and return it.
 
+        Regex is to remove phone number extensions, e.g 800-555-5555 x555
         Regex explanations: https://docs.python.org/3/library/re.html#regular-expression-syntax
         ...
         Attributes
