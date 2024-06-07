@@ -1,0 +1,35 @@
+{
+    "incontent-search-input": {
+        "selectorData": "fake-editable",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "top-sites-list": {
+        "selectorData", "top-sites-list",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "recommended-by-pocket-list": {
+        "selectorData": "ds-card-grid-include-descriptions",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "article-description": {
+        "selectorData": "div[class='meta']",
+        "strategy": "css",
+        "groups": [
+            "articleTile"
+        ]
+    },
+
+    "story-sponsored-footer": {
+        "selectorData": "story-sponsored-label",
+        "strategy": "class",
+        "groups": [
+            "articleTile"
+        ]
+    }
+}
