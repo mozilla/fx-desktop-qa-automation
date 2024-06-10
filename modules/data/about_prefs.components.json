@@ -121,5 +121,11 @@
         "selectorData": "addresses",
         "strategy": "id",
         "groups": []
+    },
+
+    "panel-popup-stack": {
+        "selectorData": "dialogStack",
+        "strategy": "id",
+        "groups": []
     }
 }
