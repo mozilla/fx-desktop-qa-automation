@@ -94,7 +94,7 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
             break
     browser_action_obj.switch_to_iframe_context(iframe)
 
-    logging.info(f"New data: {credit_card_sample_data_new.expiration_month}")
+    logging.info(f"New data: {credit_card_sample_data_new}")
     logging.info(
         f"Attribute data: {about_prefs_obj.get_element('cc-saved-options').get_attribute("data-l10n-args")}"
     )
