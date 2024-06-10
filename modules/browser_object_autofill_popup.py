@@ -65,3 +65,17 @@ class AutofillPopup(BasePage):
             ac_value_json = json.loads(ac_value)
             actual_name = ac_value_json.get("primary", "")
             return actual_name
+
+    def press_doorhanger_dropdown(self):
+        """
+        Presses the button beside Not now which toggles the dropdown menu in the doorhanger
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("doorhanger-dropdown-button").click()
+
+    def press_doorhanger_dropdown_never_save_cards(self):
+        """
+        Assuming that you have clicked Not Now in the doorhanger, this will click the Never Save Cards option
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("doorhanger-dropdown-button-never-save-cards").click()
