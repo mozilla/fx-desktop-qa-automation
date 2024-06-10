@@ -1,11 +1,10 @@
 import json
 import logging
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -14,6 +13,7 @@ from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
 tabs = [i for i in range(4)]
+
 
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
@@ -59,10 +59,7 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     # ensure the same year or month is not generated
     credit_card_sample_data_new = util.fake_credit_card_data()
     while (
-        len(
-            credit_card_sample_data_new.card_number
-        )
-        < 14
+        len(credit_card_sample_data_new.card_number) < 14
         or credit_card_sample_data_new.card_number[-4:] in info_string
         or credit_card_sample_data_new.expiration_month in info_string
     ):
@@ -92,15 +89,15 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     browser_action_obj.switch_to_content_context()
     dialog_stack = about_prefs_obj.get_element("panel-popup-stack")
     while True:
-        dialog_stack_elements = dialog_stack.find_elements(
-            By.ID, "dialogTemplate"
-        )
+        dialog_stack_elements = dialog_stack.find_elements(By.ID, "dialogTemplate")
         if len(dialog_stack_elements) < 3:
             break
     browser_action_obj.switch_to_iframe_context(iframe)
 
     logging.info(f"New data: {credit_card_sample_data_new.expiration_month}")
-    logging.info(f"Attribute data: {about_prefs_obj.get_element('cc-saved-options').get_attribute("data-l10n-args")}")
+    logging.info(
+        f"Attribute data: {about_prefs_obj.get_element('cc-saved-options').get_attribute("data-l10n-args")}"
+    )
 
     # fetch the edited profile, ensure that the attribute containing the data is new
     about_prefs_obj.expect_not(
