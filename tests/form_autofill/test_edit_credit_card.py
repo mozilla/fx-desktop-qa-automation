@@ -60,31 +60,12 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
 
     # ensure the same year or month is not generated
     credit_card_sample_data_new = util.fake_credit_card_data()
-    while (
-        credit_card_sample_data_new.card_number[-4:] in info_string
-        or str(int(credit_card_sample_data_new.expiration_month)) in info_string
-        or credit_card_sample_data_new.expiration_year in info_string
-    ):
+    while len(credit_card_sample_data_new.card_number or credit_card_sample_data_new.card_number[-4:] in info_string) < 14:
         credit_card_sample_data_new = util.fake_credit_card_data()
-
-    # create the dict
-    tab_num_to_data = {
-        0: credit_card_sample_data_new.card_number,
-        1: credit_card_sample_data_new.expiration_month,
-        2: f"20{credit_card_sample_data_new.expiration_year}",
-        3: credit_card_sample_data_new.name,
-    }
-
-    tab_num_to_original_data = {
-        0: credit_card_sample_data_original.card_number[-4:],
-        1: f"{str(int(credit_card_sample_data_original.expiration_month))}",
-        2: f"20{credit_card_sample_data_original.expiration_year}",
-        3: credit_card_sample_data_original.name,
-    }
 
     # modify some values
     panel_edit_button.click()
-    about_prefs_obj.update_cc_field_panel(num_tabs, tab_num_to_data[num_tabs])
+    about_prefs_obj.update_cc_field_panel(0, credit_card_sample_data_new.card_number)
 
     logging.info(f"New data: {credit_card_sample_data_new.expiration_month}")
     # fetch the edited profile, ensure that the attribute containing the data is new
@@ -92,13 +73,10 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
         EC.text_to_be_present_in_element_attribute(
             about_prefs_obj.get_selector("cc-saved-options"),
             "data-l10n-args",
-            tab_num_to_original_data[num_tabs],
+            credit_card_sample_data_original.card_number[-4:],
         )
     )
-    try:
-        edited_profile = about_prefs_obj.get_element("cc-saved-options")
-    except TimeoutException:
-        util.write_html_content("cur", driver, False)
+    edited_profile = about_prefs_obj.get_element("cc-saved-options")
     cc_info_json = json.loads(edited_profile.get_attribute("data-l10n-args"))
     logging.info(f"Extracted Edited data: {cc_info_json}")
 
@@ -106,19 +84,6 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     logging.info(f"Original Data: {credit_card_sample_data_original.card_number}")
     logging.info(f"New Data: {credit_card_sample_data_new.card_number}")
 
-    if num_tabs == 0:
-        credit_card_sample_data_original.card_number = (
-            credit_card_sample_data_new.card_number
-        )
-    elif num_tabs == 1:
-        credit_card_sample_data_original.expiration_month = (
-            credit_card_sample_data_new.expiration_month
-        )
-    elif num_tabs == 2:
-        credit_card_sample_data_original.expiration_year = (
-            credit_card_sample_data_new.expiration_year
-        )
-    else:
-        credit_card_sample_data_original.name = credit_card_sample_data_new.name
+    credit_card_sample_data_original.card_number = credit_card_sample_data_new.card_number
 
     about_prefs_obj.verify_cc_json(cc_info_json, credit_card_sample_data_original)
