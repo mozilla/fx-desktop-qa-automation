@@ -16,6 +16,7 @@ tabs = [i for i in range(4)]
 
 
 @pytest.mark.parametrize("num_tabs", tabs)
+@pytest.mark.unstable
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     """
     C122390, ensures that editing a credit card profile in the about:prefs
@@ -62,6 +63,7 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
         len(credit_card_sample_data_new.card_number) < 14
         or credit_card_sample_data_new.card_number[-4:] in info_string
         or credit_card_sample_data_new.expiration_month in info_string
+        or credit_card_sample_data_new.expiration_year in info_string
     ):
         credit_card_sample_data_new = util.fake_credit_card_data()
 
