@@ -48,8 +48,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--window-size",
         action="store",
-        default="1366x768",
-        help="Size for Fx window, default is '1366x768'",
+        default="1152x864",
+        help="Size for Fx window, default is '1152x864'",
     )
 
 
