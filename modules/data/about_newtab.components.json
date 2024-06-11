@@ -52,9 +52,7 @@
     "story-sponsored-footer": {
         "selectorData": "article.ds-card > div > div > p.story-sponsored-label",
         "strategy": "css",
-        "groups": [
-            "articleTile"
-        ]
+        "groups": []
     },
 
     "popular-topics-list": {

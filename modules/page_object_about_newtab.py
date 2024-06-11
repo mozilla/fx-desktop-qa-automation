@@ -42,6 +42,8 @@ class AboutNewtab(BasePage):
     """
 
     URL_TEMPLATE = "about:newtab"
+    TOP_SITES_TOTAL = [7, 8]
+    REC_ARTICLE_TOTAL = 21
 
     def set_language_code(self, lang_code: str) -> BasePage:
         """
@@ -108,23 +110,25 @@ class AboutNewtab(BasePage):
         logging.info("Search bar exists")
         self.element_exists("recent-activity-section")
 
-        for i in range(1, 22):
+        for i in range(1, self.REC_ARTICLE_TOTAL + 1):
             document_height = self.driver.execute_script(
                 "return document.body.scrollHeight"
             )
             target_y = int(document_height) // i
             # Sometimes we need to scroll around to force the article tile to load
             # We're waiting until the article tiles load to resolve flake
-            self.driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);"
-            )
-            self.driver.execute_script("window.scrollTo(0, 0);")
-            self.driver.execute_script(f"window.scrollTo(0, {target_y});")
+            for _ in range(2):
+                self.driver.execute_script(
+                    "window.scrollTo(0, document.body.scrollHeight);"
+                )
+                self.driver.execute_script("window.scrollTo(0, 0);")
+                self.driver.execute_script(f"window.scrollTo(0, {target_y});")
             self.get_element("loaded-image-by-index", labels=[str(i)])
 
-        # ODD: Sometimes we get 7 top sites, not 8
-        assert self.count_top_sites() in [7, 8]
-        assert len(self.get_recommended_articles()) == 21
+        assert len(self.get_recommended_articles()) == self.REC_ARTICLE_TOTAL
         assert self.check_article_alignment()
         assert self.count_sponsored_articles() > 0
         assert self.check_popular_topics()
+        logging.info(f"Found {self.count_top_sites()} top sites")
+        # ODD: Sometimes we get 7 top sites, not 8
+        assert self.count_top_sites() in self.TOP_SITES_TOTAL
