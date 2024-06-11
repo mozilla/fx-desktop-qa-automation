@@ -7,10 +7,30 @@
         ]
     },
 
+    "loaded-image": {
+        "selectorData": "div.img-wrapper > picture.loaded",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "card-by-index": {
+        "selectorData": "article-ds-card",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "loaded-image-by-index": {
+        "selectorData": "article.ds-card:nth-child({index}) > div.img-wrapper > picture.loaded",
+        "strategy": "css",
+        "groups": []
+    },
+
     "top-sites-list": {
         "selectorData": "top-sites-list",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "requiredForPage"
+        ]
     },
 
     "recommended-by-pocket-list": {

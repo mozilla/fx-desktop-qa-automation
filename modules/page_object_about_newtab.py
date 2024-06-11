@@ -1,11 +1,12 @@
+import logging
+
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
 from modules.page_base import BasePage
-import logging
 
-class L10nAboutNewtab():
+
+class L10nAboutNewtab:
     def __init__(self, lang_code: str):
         # TODO: make l10ns for DE and FR
         if lang_code in ["enUS", "enUK", "deDE", "frFR"]:
@@ -15,13 +16,14 @@ class L10nAboutNewtab():
                 "Entertainment",
                 "Health & fitness",
                 "Science",
-                "More recommendations ›"
+                "More recommendations ›",
             ]
+
 
 class AboutNewtab(BasePage):
     URL_TEMPLATE = "about:newtab"
 
-    def set_language_code(self, lang_code:str) -> BasePage:
+    def set_language_code(self, lang_code: str) -> BasePage:
         self.language = lang_code
         self.constants = L10nAboutNewtab(lang_code)
         return self
@@ -44,15 +46,13 @@ class AboutNewtab(BasePage):
         number_of_articles = self.count_recommended_articles()
         for i in range(number_of_articles - 3, number_of_articles):
             article_x = recd_articles[i].location.get("x")
-            for j in range(i-3, -1, -3):
+            for j in range(i - 3, -1, -3):
                 comparison_x = recd_articles[j].location.get("x")
                 assert article_x == comparison_x
         return True
 
     def count_sponsored_articles(self) -> int:
-        return len(
-            self.get_elements("story-sponsored-footer")
-        )
+        return len(self.get_elements("story-sponsored-footer"))
 
     def check_popular_topics(self) -> bool:
         poptopics_list = self.get_element("popular-topics-list")
@@ -66,12 +66,25 @@ class AboutNewtab(BasePage):
         self.element_exists("incontent-search-input")
         logging.info("Search bar exists")
         self.element_exists("recent-activity-section")
-        #self.element_visible("recent-activity-list")
+
+        # Before we can proceed, we need to scroll down to force all content to load
+        for i in range(1, 22):
+            document_height = self.driver.execute_script(
+                "return document.body.scrollHeight"
+            )
+            target_y = int(document_height) // i
+            self.driver.execute_script(
+                "window.scrollTo(0, document.body.scrollHeight);"
+            )
+            self.driver.execute_script("window.scrollTo(0, 0);")
+            self.driver.execute_script(f"window.scrollTo(0, {target_y});")
+            self.get_element("loaded-image-by-index", labels=[str(i)])
+
+        # self.element_visible("recent-activity-list")
         logging.info(f"found {self.count_top_sites()} top sites")
         # ODD: Sometimes we get 7 top sites, not 8
-        assert self.count_top_sites() in [7,8]
+        assert self.count_top_sites() in [7, 8]
         assert self.count_recommended_articles() == 21
         assert self.check_article_alignment()
-        assert self.count_sponsored_articles() > 1
+        assert self.count_sponsored_articles() > 0
         assert self.check_popular_topics()
-

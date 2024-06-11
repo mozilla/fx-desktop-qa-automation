@@ -1,4 +1,5 @@
 from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -17,6 +18,7 @@ def add_prefs():
         ),
     ]
 
+
 def test_new_tab_about_blank(driver: Firefox):
     """
     C408037: Test about:blank Pocket layout (US). First step only.
@@ -24,6 +26,7 @@ def test_new_tab_about_blank(driver: Firefox):
     tab_bar = TabBar(driver).open()
     tab_bar.new_tab_by_button()
     assert driver.current_url == "about:blank"
+
 
 def test_localized_pocket_layout_US(driver: Firefox, screenshot):
     """

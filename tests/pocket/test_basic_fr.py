@@ -1,8 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.page_object import AboutBlank
+from modules.page_object import AboutNewtab
 
 
 @pytest.fixture()
@@ -18,10 +17,6 @@ def test_localized_pocket_layout_FR(driver: Firefox):
     """
     C408038: Test about:blank Pocket layout (ROW / FR)
     """
-    tab_bar = TabBar(driver).open()
-    tab_bar.new_tab_by_button()
-
-    driver.switch_to.window(driver.window_handles[-1])
-    about_blank = AboutBlank(driver)
-    about_blank.set_language_code("frFR")
-    about_blank.check_layout()
+    about_newtab = AboutNewtab(driver).open()
+    about_newtab.set_language_code("frFR")
+    about_newtab.check_layout()
