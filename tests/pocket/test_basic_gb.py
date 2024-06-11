@@ -12,10 +12,11 @@ def add_prefs():
     ]
 
 
+@pytest.mark.locale_gb
 def test_localized_pocket_layout_GB(driver: Firefox):
     """
     C559390: Test about:blank Pocket layout (GB)
     """
     about_newtab = AboutNewtab(driver).open()
-    about_newtab.set_language_code("enUK")
+    about_newtab.set_language_code("enGB")
     about_newtab.check_layout()
