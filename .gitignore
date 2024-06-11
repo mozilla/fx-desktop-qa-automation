@@ -1,5 +1,6 @@
 /venv/
-report*
+report.html
+results
 assets/
 html_dump/
 /Test Results - .html
