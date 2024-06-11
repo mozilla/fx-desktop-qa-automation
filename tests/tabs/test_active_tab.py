@@ -19,10 +19,10 @@ def test_active_test(driver: Firefox):
         target_tab = tabs.get_tab(i)
         with driver.context(driver.CONTEXT_CHROME):
             target_tab.click()
-            tab_color = target_tab.value_of_css_property('color')
+            tab_color = target_tab.value_of_css_property("color")
             visibility = target_tab.get_attribute("visuallyselected")
             assert visibility == ""
-            assert tab_color == "rgb(12, 12, 13)"
+            assert tab_color == "rgb(12, 12, 13)" and tab_color != "rgb(21, 20, 26)"
 
     # tabs.new_tab_by_button()
     # target_tab = tabs.get_tab(3)
