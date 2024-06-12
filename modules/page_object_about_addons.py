@@ -1,5 +1,3 @@
-import logging
-
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
@@ -61,14 +59,11 @@ class AboutAddons(BasePage):
         enabled_theme = self.get_element("enabled-theme-title").get_attribute(
             "innerText"
         )
-        logging.info(
-            f"Enabled theme: {enabled_theme}, expected theme: {expected_theme}"
-        )
         return enabled_theme == expected_theme
 
     def check_theme_has_changed(self, original_theme: str) -> BasePage:
         """
-        Ensure that the theme has changed
+        Ensure that the theme has changed.
         """
         assert not self.enabled_theme_matches(original_theme)
         return self

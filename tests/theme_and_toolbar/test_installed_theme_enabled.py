@@ -1,11 +1,12 @@
-from time import sleep
-
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AmoThemes
 
 
 def test_find_more_themes(driver: Firefox):
+    """
+    C118174, first part
+    """
     about_addons = AboutAddons(driver).open()
     about_addons.choose_sidebar_option("theme")
     about_addons.get_element("find-more-themes-button").click()
@@ -18,6 +19,9 @@ def test_find_more_themes(driver: Firefox):
 
 
 def test_installed_theme_enabled(driver: Firefox):
+    """
+    C118174: install a theme and make sure it is set to enabled immediately
+    """
     about_addons = AboutAddons(driver).open()
     about_addons.choose_sidebar_option("theme")
     starting_theme = about_addons.get_element("enabled-theme-title").get_attribute(
