@@ -1,5 +1,4 @@
 import pytest
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
