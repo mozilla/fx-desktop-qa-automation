@@ -18,6 +18,7 @@ def test_open_new_via_hyperlink(driver: Firefox):
     browser.set_chrome_context()
     menu_option = driver.find_element(By.ID, "context-openlinkintab")
     menu_option.click()
+    browser.send_esc()
 
     # Get the title of the new tab
     browser.click_tab_by_index(2)

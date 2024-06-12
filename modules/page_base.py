@@ -7,6 +7,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Union
 
+from pynput.keyboard import Controller, Key
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains, Firefox
@@ -16,6 +17,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.util import PomUtils
+
+keyboard = Controller()
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {
@@ -303,3 +306,9 @@ class BasePage(Page):
             pass
         self.set_content_context()
         return _loaded
+
+    def send_esc(self) -> Page:
+        # Press and release Escape key
+        keyboard.press(Key.esc)
+        keyboard.release(Key.esc)
+        return self
