@@ -29,7 +29,7 @@ def test_clear_form(driver: Firefox, country_code: str):
     new_address_autofill = AddressFill(driver).open()
 
     # Open dropdown and select first option and clear autofill form
-    new_address_autofill.double_click("form-field", "name")
+    new_address_autofill.double_click("form-field", labels=["name"])
     new_address_autofill.click_address()
     new_address_autofill.click("form-field", "name")
     new_address_autofill.click_clear()

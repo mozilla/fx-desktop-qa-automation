@@ -43,7 +43,7 @@ class CreditCardFill(Autofill):
 
     def verify_all_fields(self, ccp: CreditCardPopup):
         for field in self.fields:
-            self.double_click("form-field", field)
+            self.double_click("form-field", labels=[field])
             ccp.verify_popup()
 
     def verify_four_fields(
@@ -61,7 +61,7 @@ class CreditCardFill(Autofill):
         credit_card_sample_data: CreditCardBase
             The object that contains all of the relevant information about the credit card autofill
         """
-        self.double_click("form-field", "cc-name")
+        self.double_click("form-field", labels=["cc-name"])
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ccp.get_element("autofill-profile-option").click()
 
@@ -104,7 +104,7 @@ class CreditCardFill(Autofill):
         """
         Presses the autofill panel that pops up after you double click an input field
         """
-        self.double_click("form-field", "cc-name")
+        self.double_click("form-field", labels=["cc-name"])
         with self.driver.context(self.driver.CONTEXT_CHROME):
             credit_card_popoup_obj.get_element("autofill-profile-option").click()
 

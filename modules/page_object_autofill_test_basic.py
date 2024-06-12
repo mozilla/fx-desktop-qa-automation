@@ -85,13 +85,13 @@ class AddressFill(Autofill):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
 
-    def double_click(self, name: str, label: str):
+    def double_click(self, name: str, labels: list[str]):
         """
         Double-click on the specified element.
 
         Parameters:
         name (str): The name of the element to double-click.
-        label (str): Additional labels to identify the element (optional).
+        labels (list[str]): Additional labels to identify the element (optional).
         """
-        elem = self.get_element(name, labels=[label])
+        elem = self.get_element(name, labels=labels)
         self.actions.double_click(elem).perform()
