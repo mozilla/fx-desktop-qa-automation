@@ -109,6 +109,14 @@
         "selectorData": "tab-icon-image",
         "strategy": "class",
         "groups": []
+    },
+
+    "tab-x-icon": {
+        "selectorData": "image[class='tab-close-button close-icon']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     }
 
 }
