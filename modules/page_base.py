@@ -287,24 +287,24 @@ class BasePage(Page):
         """
         return self.get_element(name, multiple=True, labels=labels)
 
-    def element_exists(self, name: str, *labels) -> Page:
+    def element_exists(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
         self.expect(
             EC.presence_of_element_located(self.get_selector(name, labels=labels))
         )
         return self
 
-    def element_visible(self, name: str, *labels) -> Page:
+    def element_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is visible or timeout"""
         self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
         return self
 
-    def element_clickable(self, name: str, *labels) -> Page:
+    def element_clickable(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is clickable or timeout"""
         self.expect(EC.element_to_be_clickable(self.get_element(name, labels=labels)))
         return self
 
-    def element_selected(self, name: str, *labels) -> Page:
+    def element_selected(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is selected or timeout"""
         self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
         return self

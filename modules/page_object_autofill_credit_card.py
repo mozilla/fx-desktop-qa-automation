@@ -42,6 +42,7 @@ class CreditCardFill(Autofill):
         self.click_form_button("submit")
 
     def verify_all_fields(self, ccp: CreditCardPopup):
+        """Given a CreditCardPopup object, verify all fields"""
         for field in self.fields:
             self.double_click("form-field", labels=[field])
             ccp.verify_popup()
@@ -81,12 +82,13 @@ class CreditCardFill(Autofill):
 
         ...
 
-        Attributes
+        Parameters
         ----------
-            util: Utilities
-                An instance of the Utilities class
-            autofill_popup_obj: AutofillPopup
-                An instance of the AutofillPopup class used to interact with the autofill popup
+
+        util: Utilities
+            An instance of the Utilities class
+        autofill_popup_obj: AutofillPopup
+            An instance of the AutofillPopup class used to interact with the autofill popup
         """
         credit_card_sample_data = util.fake_credit_card_data()
         self.fill_credit_card_info(credit_card_sample_data)
@@ -96,6 +98,23 @@ class CreditCardFill(Autofill):
     def update_field(
         self, field: str, field_data: str, autofill_popup_obj: AutofillPopup
     ):
+        """
+        Updates a field in the form with given data.
+
+        ...
+
+        Parameters
+        ----------
+
+        field: str
+            The name of the field to fill
+
+        field_data: str
+            The data to put in the field
+
+        autofill_popup_obj: AutofillPopup
+            Instantiated AutofillPopup object that describes the existing popup
+        """
         ba = BrowserActions(self.driver)
         self.fill_input_element(ba, field, field_data)
         autofill_popup_obj.press_doorhanger_save()
