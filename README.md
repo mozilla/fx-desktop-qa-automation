@@ -20,11 +20,13 @@ Install the build in a Custom directory as follows per Platform:
 Launch the build manually one time to navigate through any system permission dialogs, then exit Firefox.
 
 ### Getting set up
-- If you don't have Python 3.10 or higher installed install it. When in doubt, download and install
-  it from the official website [Python Downloads](https://www.python.org/downloads/). Make sure to
-  check the option to add Python to the system PATH during installation. For Ubuntu, consider using the
-  [Deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) if your version's apt repo
-  does not contain a version higher than 3.9.
+- If you don't have Python 3.10 or higher installed install it. For most people,
+  [Pyenv](https://github.com/pyenv/pyenv) will be a useful tool. If you don't want that, use your system's
+  package manager or download and install it from the official website
+  [Python Downloads](https://www.python.org/downloads/). Make sure to check the option to add Python to
+  the system PATH during installation. For Ubuntu, consider using the
+  [Deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) if your version's apt repo does
+  not contain a version higher than 3.9.
 - Install pip - run `python -m ensurepip`
   confirm: `pip --version`
 - Download and install GeckoDriver: 
@@ -71,8 +73,20 @@ Launch the build manually one time to navigate through any system permission dia
   - rerun the test suite as above - run: `pytest`
   - or just the failed test; i.e.: `pytest test_amazon.py`
 
-- ### IDE Pycharm Configuration
-- #### Configuration to run tests from the IDE interactive interface
+### Documentation
+
+We are trying documentation with [pdoc](https://pdoc.dev), run the following in a pipenv shell:
+
+```bash
+pdoc --docformat "numpy" modules
+```
+
+This should show you all the documentation pertaining to the helper functions and classes we've
+created. If we make new ones, replace `modules` with the name of any other folder you would
+like to have documentation on.
+
+### IDE Pycharm Configuration
+#### Configuration to run tests from the IDE interactive interface
 - Open Run/Debug Configurations**:
     - Click on the **Current File** in the toolbar and select **Edit Configurations**, or
     - Click on the **More actions** button (three dots) and select **Edit** from the configuration section
