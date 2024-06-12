@@ -307,7 +307,7 @@ class BasePage(Page):
         self.set_content_context()
         return _loaded
 
-    def send_esc(self) -> Page:
+    def send_esc_key(self) -> Page:
         # Press and release Escape key
         keyboard.press(Key.esc)
         keyboard.release(Key.esc)
