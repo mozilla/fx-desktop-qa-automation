@@ -1,6 +1,9 @@
 /venv/
-/report.html
+results.txt
+err_log.txt
+**/report.html
 assets/
+html_dump/
 /Test Results - .html
 /geckodriver.log
 env
@@ -9,6 +12,8 @@ env
 *.zip
 *.gz
 *.7z
+test.sh
+file[0-9]*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -166,3 +171,7 @@ cython_debug/
 
 # PyCharm
 .idea/
+
+# irrelevant files
+drivers/
+temp.py

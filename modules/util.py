@@ -1,4 +1,5 @@
 import logging
+import re
 from random import shuffle
 from typing import Union
 
@@ -104,7 +105,31 @@ class Utilities:
             faker.add_provider(misc)
             return (faker, False)
 
-    def fake_autofill_data(self, country_code: str):
+    def generate_localized_phone_US_CA(self, fake: Faker) -> str:
+        """
+        Generates a phone number that is valid based on the US and CA locale.
+
+        This means that only numbers that do not start with 1 (in the actual phone number not the area code) are considered valid.
+
+        ...
+        Attributes
+        ----------
+        fake : Faker
+            The localized Faker object
+
+        Returns
+        -------
+        str
+            The raw, generated phone number
+        """
+        phone = ""
+        while True:
+            phone = self.normalize_phone_number(fake.phone_number())
+            if phone[:2] != "11":
+                break
+        return phone
+
+    def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
         """
         Given a country code, tries to initialize the locale of the faker and generates fake data
         then returns the new AutofillAddressBase object with the fake data.
@@ -117,7 +142,7 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        organization = fake.company()
+        organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         address_level_2 = fake.city()
         try:
@@ -127,7 +152,7 @@ class Utilities:
         postal_code = fake.postcode()
         country = "CA" if not valid_code else country_code
         email = fake.email()
-        telephone = fake.phone_number()
+        telephone = self.generate_localized_phone_US_CA(fake)
 
         fake_data = AutofillAddressBase(
             name=name,
@@ -143,7 +168,16 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self):
+    def fake_credit_card_data(self) -> CreditCardBase:
+        """
+        Generates fake information related to the CC scenarios.
+
+
+        Returns
+        -------
+        CreditCardBase
+            The object that contains all of the fake data generated.
+        """
         fake = Faker()
         name = fake.name()
         card_number = fake.credit_card_number()
@@ -160,6 +194,44 @@ class Utilities:
         )
 
         return fake_data
+
+    def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
+        """
+        Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
+        to only the <country-code>xxxxxxxxxx format and return it.
+
+        Regex is to remove phone number extensions, e.g 800-555-5555 x555
+        Regex explanations: https://docs.python.org/3/library/re.html#regular-expression-syntax
+        ...
+        Attributes
+        ----------
+        phone : str
+            The phone number to be normalized
+        default_country_code: str
+            By default this is '1' for Canadian and US codes.
+
+        Returns
+        -------
+        str
+            The normalized version of the phone number in the <country code>xxxxxxxxxx format
+        """
+        # sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
+        phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
+        # sub out anything that is not a digit with the empty string to ensure the phone number is formatted with no spaces or special characters
+        digits = re.sub(r"\D", "", phone)
+        ret_val = ""
+
+        # if the phone already contains the area code, ensure we only return the last 10 digits, otherwise a 10 length number is valid
+        if len(digits) > 10:
+            ret_val = digits[-10:]
+        elif len(digits) == 10:
+            ret_val = digits
+        else:
+            logging.warning("No valid phone number could be generated.")
+            return ""
+
+        # return with the country code and the normalized phone number
+        return default_country_code + ret_val
 
 
 class BrowserActions:
@@ -246,6 +318,18 @@ class BrowserActions:
         else:
             raise RuntimeError("More than one element matches text.")
 
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
+
+    def switch_to_content_context(self):
+        """
+        Switches back to the normal context
+        """
+        self.driver.switch_to.default_content()
+
 
 class PomUtils:
     """
@@ -291,6 +375,9 @@ class PomUtils:
         except InvalidArgumentException:
             logging.info("Selenium shadow nav failed.")
             return shadow_from_script()
+        except WebDriverException:
+            logging.info("Cannot use Selenium shadow nav in CONTEXT_CHROME")
+            return shadow_from_script()
         return []
 
     def css_selector_matches_element(
@@ -303,8 +390,32 @@ class PomUtils:
             f"return arguments[0].matches({sel})", element
         )
 
+    def find_shadow_chrome_element(
+        self, nodes: list[WebElement], selector: list
+    ) -> Union[WebElement, None]:
+        logging.info("Selecting element in Chrome Context Shadow DOM...")
+        if selector[0] != By.ID:
+            raise ValueError(
+                "Currently shadow elements in chrome can only be selected by ID."
+            )
+        for node in nodes:
+            node_html = self.driver.execute_script(
+                "return arguments[0].outerHTML;", node
+            )
+            tag = f'id="{selector[1]}"'
+            logging.info(f"Looking for {tag}")
+            logging.info(f"Shadow element code: {node_html}")
+            if tag in node_html:
+                logging.info("Element found, returning...")
+                return node
+        return None
+
     def find_shadow_element(
-        self, shadow_parent: Union[WebElement, ShadowRoot], selector: list
+        self,
+        shadow_parent: Union[WebElement, ShadowRoot],
+        selector: list,
+        multiple=False,
+        context="content",
     ) -> WebElement:
         """
         Given a WebElement with a shadow root attached, find a selector in the
@@ -317,6 +428,8 @@ class PomUtils:
         shadow_nodes = self.get_shadow_content(shadow_parent)
         logging.info(f"Found {len(shadow_nodes)} shadow nodes...")
         logging.info(f"Looking for {selector}...")
+        if context == "chrome":
+            return self.find_shadow_chrome_element(shadow_nodes, selector)
         self.driver.implicitly_wait(0)
         for node in shadow_nodes:
             if self.css_selector_matches_element(node, selector):
@@ -328,13 +441,18 @@ class PomUtils:
                 logging.info("Found a match")
                 matches.extend(elements)
         self.driver.implicitly_wait(original_timeout)
-        if len(matches) == 1:
-            logging.info("Returning match...")
-            return matches[0]
-        elif len(matches):
-            raise WebDriverException(
-                "More than one element matched within a Shadow DOM"
-            )
+        if not multiple:
+            if len(matches) == 1:
+                logging.info("Returning match...")
+                return matches[0]
+            elif len(matches):
+                raise WebDriverException(
+                    "More than one element matched within a Shadow DOM"
+                )
+            else:
+                logging.info("No matches found.")
+                return None
         else:
-            logging.info("No matches found.")
-            return None
+            if not matches:
+                logging.info("No matches found.")
+            return matches
