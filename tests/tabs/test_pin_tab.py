@@ -22,8 +22,8 @@ def test_pin_tab(driver: Firefox):
     first_tab = tabs.get_tab(1)
     with driver.context(driver.CONTEXT_CHROME):
         tabs.actions.context_click(first_tab).perform()
-        tab_item = tab_context_menu.get_context_item("context-menu-pin-tab")
-        tab_item.click()
+        pin_item = tab_context_menu.get_context_item("context-menu-pin-tab")
+        pin_item.click()
 
         # grab the attribute pinned
         pinned_attribute = first_tab.get_attribute("pinned")
@@ -36,3 +36,12 @@ def test_pin_tab(driver: Firefox):
             pinned_attribute = tab.get_attribute("pinned")
             logging.info(f"The pinned attribute is: {pinned_attribute}")
             assert pinned_attribute == "false"
+
+        # unpinning the tab and ensuring it is no longer pinned
+        tabs.actions.context_click(first_tab).perform()
+        unpin_item = tab_context_menu.get_context_item("context-menu-unpin-tab")
+        unpin_item.click()
+
+        pinned_attribute = first_tab.get_attribute("pinned")
+        logging.info(f"The pinned attribute is: {pinned_attribute}")
+        assert pinned_attribute == "false"
