@@ -86,7 +86,9 @@
     "cc-saved-options": {
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "panel-popup-button": {
@@ -117,6 +119,12 @@
 
     "saved-addresses": {
         "selectorData": "addresses",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "panel-popup-stack": {
+        "selectorData": "dialogStack",
         "strategy": "id",
         "groups": []
     }
