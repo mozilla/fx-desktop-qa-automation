@@ -21,11 +21,13 @@ PING_ID = ""
 def confirm_glean_correctness(
     ping_ground: str, ping_test: str, engine_ground: str, engine_test: str
 ) -> bool:
+    """Helper to confirm that the glean ping contains expected info"""
     assert ping_ground == ping_test
     assert engine_ground.lower() == engine_test.lower()
 
 
 def glean_handler(rq: Request) -> Response:
+    """HTTP mock of Glean"""
     global PINGS_WITH_ID
     global PING_ID
     if "X-Debug-Id" in rq.headers.keys():
@@ -51,7 +53,7 @@ def glean_handler(rq: Request) -> Response:
 
 @pytest.mark.ci
 def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
-    # C2234689
+    """C2234689: Test that Glean pings contain expected info"""
     global PINGS_WITH_ID
     global PING_ID
     u = Utilities()

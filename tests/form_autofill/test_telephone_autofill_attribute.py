@@ -14,7 +14,7 @@ countries = ["CA", "US"]
 @pytest.mark.parametrize("country_code", countries)
 def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
     """
-    C122361
+    C122361, ensures that telephone numbers are autofilled
     """
     # instantiate objects
     Navigation(driver).open()
