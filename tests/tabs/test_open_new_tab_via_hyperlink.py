@@ -1,9 +1,6 @@
-import time
-
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import TabBar
 
@@ -14,14 +11,14 @@ def test_open_new_via_hyperlink(driver: Firefox):
     """
     browser = TabBar(driver).open()
     driver.get("https://example.com")
-    example_link = driver.find_element(By.LINK_TEXT, "More information...")
-    browser.actions.context_click(example_link).perform()
+
+    # Use context menu option to open link in new tab
+    hyperlink = driver.find_element(By.LINK_TEXT, "More information...")
+    browser.context_click_element(hyperlink)
     browser.set_chrome_context()
-    # BLOCKER: How do I find the context menu option element?
-    # This is sending keys to the hyperlink
-    # browser.actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ENTER).perform()
-    in_tab = driver.find_element(By.ID, "context-openlinkintab")
-    in_tab.click()
+    menu_option = driver.find_element(By.ID, "context-openlinkintab")
+    menu_option.click()
+
     # Get the title of the new tab
     browser.click_tab_by_index(2)
     browser.expect(EC.title_contains("Example Domains"))

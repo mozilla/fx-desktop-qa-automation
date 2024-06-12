@@ -280,6 +280,10 @@ class BasePage(Page):
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
+    def context_click_element(self, element) -> Page:
+        self.actions.context_click(element).perform()
+        return self
+
     @property
     def loaded(self):
         """
