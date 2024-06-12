@@ -11,6 +11,12 @@
         "groups": []
     },
 
+    "form-button": {
+        "selectorData": "button[type=\"{name}\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
     "select-form-option": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
         "strategy":"css",
