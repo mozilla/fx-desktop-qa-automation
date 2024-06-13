@@ -7,6 +7,11 @@ from modules.page_base import BasePage
 class AboutAddons(BasePage):
     """
     The POM for the about:addons page
+
+    Attributes
+    ----------
+    driver: selenium.webdriver.Firefox
+        WebDriver object under test
     """
 
     URL_TEMPLATE = "about:addons"

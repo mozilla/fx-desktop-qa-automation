@@ -27,7 +27,7 @@ def test_form_autofill_suggestions(driver: Firefox, index: str):
     sample_data_2 = credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
 
     # press the corresponding option (according to the parameter)
-    credit_card_fill_obj.double_click("form-field", "cc-name")
+    credit_card_fill_obj.double_click("form-field", labels=["cc-name"])
     with driver.context(driver.CONTEXT_CHROME):
         panel_option = autofill_popup_obj.get_nth_element(index)
         panel_option.click()

@@ -9,6 +9,9 @@ class CreditCardPopup(BasePage):
     URL_TEMPLATE = ""
 
     def verify_popup(self):
+        """
+        Verifies that the autofill popup is clickable.
+        """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.expect(
                 EC.element_to_be_clickable(self.get_element("autofill-cc-panel"))
