@@ -20,6 +20,7 @@ class AboutPrefs(BasePage):
 
     # number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
+    TABS_TO_SAVE_CC = 5
 
     class Dropdown(Region):
         def __init__(self, page, **kwargs):
@@ -211,3 +212,23 @@ class AboutPrefs(BasePage):
         self.get_element("prefs-button", labels=["Saved payment methods"]).click()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def update_cc_field_panel(self, num_tabs: int, new_info: str) -> BasePage:
+        """
+        Updates a field in the credit card popup panel in about:prefs by pressing the number of tabs and sending the new information
+        ...
+
+        Attributes
+        ----------
+        autofill_info: AutofillAddressBase
+            The object containing all of the sample date
+        """
+        for _ in range(num_tabs):
+            self.actions.send_keys(Keys.TAB).perform()
+
+        self.actions.send_keys(new_info).perform()
+
+        for _ in range(self.TABS_TO_SAVE_CC - num_tabs):
+            self.actions.send_keys(Keys.TAB).perform()
+
+        self.actions.send_keys(Keys.ENTER).perform()

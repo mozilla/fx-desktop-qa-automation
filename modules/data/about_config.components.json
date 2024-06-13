@@ -1,0 +1,15 @@
+{
+    "warning-button": {
+        "selectorData": "warningButton",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "about-config-search-input": {
+        "selectorData": "about-config-search",
+        "strategy": "id",
+        "groups": []
+    }
+}

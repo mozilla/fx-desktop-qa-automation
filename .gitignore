@@ -1,4 +1,6 @@
 /venv/
+results.txt
+err_log.txt
 **/report.html
 assets/
 html_dump/
