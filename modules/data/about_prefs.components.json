@@ -8,6 +8,7 @@
             "searchEngineDropdown"
         ]
     },
+
     "search-engine-dropmarker": {
         "selectorData": "dropmarker",
         "strategy": "tag",
@@ -16,6 +17,7 @@
             "searchEngineDropdown"
         ]
     },
+
     "dropdown-by-label": {
         "selectorData": ".//label[contains(., '{label}')]/following-sibling::hbox/menulist",
         "strategy": "xpath",
@@ -24,6 +26,7 @@
             "dropdownRoot"
         ]
     },
+
     "dropdown-by-current-value": {
         "selectorData": "menulist[label='{value}']",
         "strategy": "css",
@@ -32,6 +35,7 @@
             "dropdownRoot"
         ]
     },
+
     "active-menu-item": {
         "selectorData": "menuitem[_moz-menuactive='true']",
         "strategy": "css",
@@ -39,6 +43,7 @@
             "refresh"
         ]
     },
+
     "find-in-settings": {
         "selectorData": "searchInput",
         "strategy": "id",
@@ -46,32 +51,38 @@
             "requiredForPage"
         ]
     },
+
     "find-in-settings-input": {
         "selectorData": "input[placeholder='Find in Settings']",
         "strategy": "css",
         "shadowParent": "find-in-settings",
         "groups": []
     },
+
     "h2-enhanced-tracking-protection": {
         "selectorData": "h2[data-l10n-id='content-blocking-enhanced-tracking-protection']",
         "strategy": "css",
         "groups": []
     },
+
     "save-and-fill-addresses": {
         "selectorData": "checkbox[label='Save and fill addresses']",
         "strategy": "css",
         "groups": []
     },
+
     "save-and-fill-payment-methods": {
         "selectorData": "checkbox[label='Save and fill payment methods']",
         "strategy": "css",
         "groups": []
     },
+
     "prefs-button": {
         "selectorData": "button[label=\"{name}\"]",
         "strategy": "css",
         "groups": []
     },
+
     "cc-saved-options": {
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",
@@ -79,11 +90,13 @@
             "doNotCache"
         ]
     },
+
     "panel-popup-button": {
         "selectorData": "button[data-l10n-id='{name}']",
         "strategy": "css",
         "groups": []
     },
+
     "browser-popup": {
         "selectorData": "dialogFrame",
         "strategy": "class",
@@ -91,26 +104,31 @@
             "doNotCache"
         ]
     },
+
     "browser-popup-1": {
         "selectorData": "dialogFrame",
         "strategy": "class",
         "groups": []
     },
+
     "browser-popup-2": {
         "selectorData": "browser[contextmenu='contentAreaContextMenu']",
         "strategy": "css",
         "groups": []
     },
+
     "saved-addresses": {
         "selectorData": "addresses",
         "strategy": "id",
         "groups": []
     },
+
     "panel-popup-stack": {
         "selectorData": "dialogStack",
         "strategy": "id",
         "groups": []
     },
+
     "saved-addresses-values": {
         "selectorData": "#addresses option",
         "strategy": "css",
