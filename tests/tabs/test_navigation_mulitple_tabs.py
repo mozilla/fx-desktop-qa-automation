@@ -18,7 +18,7 @@ def test_navigation_mulitple_tabs(driver: Firefox):
         # get the last tab, verify that upon double clicking the left scroll position decreased
         last_tab = tabs.get_tab(21)
         original_location_pre_left = last_tab.location["x"]
-        tabs.double_click("tab-scrollbox-left-button")
+        tabs.double_click("tab-scrollbox-left-button", labels=[])
         new_location_post_left = last_tab.location["x"]
 
         logging.info(f"The original position: {original_location_pre_left}")
@@ -28,7 +28,7 @@ def test_navigation_mulitple_tabs(driver: Firefox):
         # get the first tab, verify that upon clicking the right scroll position increased
         first_tab = tabs.get_tab(1)
         original_location_pre_right = first_tab.location["x"]
-        tabs.double_click("tab-scrollbox-right-button")
+        tabs.double_click("tab-scrollbox-right-button", labels=[])
         new_location_post_right = first_tab.location["x"]
 
         logging.info(f"The original position: {original_location_pre_right}")

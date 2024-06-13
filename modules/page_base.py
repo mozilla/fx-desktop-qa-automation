@@ -294,12 +294,9 @@ class BasePage(Page):
         )
         return self
 
-    def element_visible(self, name: str, element: WebElement = None, *labels) -> Page:
+    def element_visible(self, name: str, *labels) -> Page:
         """Expect helper: wait until element is visible or timeout"""
-        if element is not None:
-            self.expect(EC.visibility_of(element))
-        else:
-            self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
+        self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
         return self
 
     def element_clickable(self, name: str, labels=[]) -> Page:
@@ -317,13 +314,9 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def double_click(self, name: str, label=""):
+    def double_click(self, name: str, labels: list[str]):
         """Actions helper: perform double-click on given element"""
-        elem = None
-        if label == "":
-            elem = self.get_element(name)
-        else:
-            elem = self.get_element(name, labels=[label])
+        elem = self.get_element(name, labels=labels)
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
