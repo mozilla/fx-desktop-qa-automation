@@ -4,6 +4,15 @@ from modules.page_base import BasePage
 
 
 class AboutConfig(BasePage):
+    """
+    The POM for the about:config page
+
+    Attributes
+    ----------
+    driver: selenium.webdriver.Firefox
+        WebDriver object under test
+    """
+
     URL_TEMPLATE = "about:config"
 
     def click_warning_button(self) -> BasePage:
