@@ -1,0 +1,77 @@
+{
+    "incontent-search-input": {
+        "selectorData": "fake-editable",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "loaded-image": {
+        "selectorData": "div.img-wrapper > picture.loaded",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "card-by-index": {
+        "selectorData": "article-ds-card",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "loaded-image-by-index": {
+        "selectorData": "article.ds-card:nth-child({index}) > div.img-wrapper > picture.loaded",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "top-sites-list": {
+        "selectorData": "top-sites-list",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "recommended-by-pocket-list": {
+        "selectorData": "ds-card-grid-include-descriptions",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "article-description": {
+        "selectorData": "div[class='meta']",
+        "strategy": "css",
+        "groups": [
+            "articleTile"
+        ]
+    },
+
+    "story-sponsored-footer": {
+        "selectorData": "article.ds-card > div > div > p.story-sponsored-label",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "popular-topics-list": {
+        "selectorData": ".ds-navigation > ul",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "recent-activity-section": {
+        "selectorData": "discovery-stream",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "recent-activity-list": {
+        "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
+        "strategy": "xpath",
+        "groups": []
+    }
+}

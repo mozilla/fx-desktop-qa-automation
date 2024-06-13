@@ -19,7 +19,7 @@ class Navigation(BasePage):
     def expect_in_content(self, condition) -> BasePage:
         """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):
-            self.expect(condition)
+            self.wait.until(condition)
         return self
 
     def set_awesome_bar(self) -> BasePage:

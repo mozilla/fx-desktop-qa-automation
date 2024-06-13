@@ -10,5 +10,23 @@
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
         "groups": []
+    },
+
+    "autofill-item": {
+        "selectorData": "autocomplete-richlistitem",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "doorhanger-dropdown-button": {
+        "selectorData": "button[aria-label='More actions']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "doorhanger-dropdown-button-never-save-cards": {
+        "selectorData": "menuitem[label='Never save cards']",
+        "strategy": "css",
+        "groups": []
     }
 }

@@ -200,18 +200,8 @@ class Utilities:
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
         to only the <country-code>xxxxxxxxxx format and return it.
 
-        Regex Meanings: \s*(?:x|ext)\s*\d*$
-        \s*: Matches zero or more whitespace characters.
-        (?:x|ext): Group that matches either "x" or "ext".
-        \d*: Matches zero or more digits
-        $: Anchors the match to the end of the string, ensuring that the pattern occurs right at the end.
-        So, the regex matches strings where after any amount of whitespace, there is either an "x" or "ext" followed directly by any number of digits, and nothing else after that until the end of the string.
-        Examples of matching strings include the " x123" of the "4156360998 x123", and the "ext456" of "9087469876ext456".
-
-        Regex Meanings: \D
-        \D: Matches any character that is not a digit.
-        The \D token will match any single character that is a letter, punctuation mark, whitespace, or any other non-digit character.
-
+        Regex is to remove phone number extensions, e.g 800-555-5555 x555
+        Regex explanations: https://docs.python.org/3/library/re.html#regular-expression-syntax
         ...
         Attributes
         ----------
@@ -385,6 +375,9 @@ class PomUtils:
         except InvalidArgumentException:
             logging.info("Selenium shadow nav failed.")
             return shadow_from_script()
+        except WebDriverException:
+            logging.info("Cannot use Selenium shadow nav in CONTEXT_CHROME")
+            return shadow_from_script()
         return []
 
     def css_selector_matches_element(
@@ -397,11 +390,32 @@ class PomUtils:
             f"return arguments[0].matches({sel})", element
         )
 
+    def find_shadow_chrome_element(
+        self, nodes: list[WebElement], selector: list
+    ) -> Union[WebElement, None]:
+        logging.info("Selecting element in Chrome Context Shadow DOM...")
+        if selector[0] != By.ID:
+            raise ValueError(
+                "Currently shadow elements in chrome can only be selected by ID."
+            )
+        for node in nodes:
+            node_html = self.driver.execute_script(
+                "return arguments[0].outerHTML;", node
+            )
+            tag = f'id="{selector[1]}"'
+            logging.info(f"Looking for {tag}")
+            logging.info(f"Shadow element code: {node_html}")
+            if tag in node_html:
+                logging.info("Element found, returning...")
+                return node
+        return None
+
     def find_shadow_element(
         self,
         shadow_parent: Union[WebElement, ShadowRoot],
         selector: list,
         multiple=False,
+        context="content",
     ) -> WebElement:
         """
         Given a WebElement with a shadow root attached, find a selector in the
@@ -414,6 +428,8 @@ class PomUtils:
         shadow_nodes = self.get_shadow_content(shadow_parent)
         logging.info(f"Found {len(shadow_nodes)} shadow nodes...")
         logging.info(f"Looking for {selector}...")
+        if context == "chrome":
+            return self.find_shadow_chrome_element(shadow_nodes, selector)
         self.driver.implicitly_wait(0)
         for node in shadow_nodes:
             if self.css_selector_matches_element(node, selector):

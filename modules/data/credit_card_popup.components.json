@@ -16,5 +16,11 @@
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
         "groups": []
+    },
+
+    "update-card-info-popup-button": {
+        "selectorData": "button[label=\"Update existing card\"]",
+        "strategy": "css",
+        "groups": []
     }
 }

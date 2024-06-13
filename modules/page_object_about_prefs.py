@@ -203,3 +203,11 @@ class AboutPrefs(BasePage):
         self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(Keys.ENTER).perform()
         return self
+
+    def get_saved_payments_popup_iframe(self) -> WebElement:
+        """
+        Returns the iframe object for the dialog panel in the popup
+        """
+        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
+        iframe = self.get_element("browser-popup")
+        return iframe
