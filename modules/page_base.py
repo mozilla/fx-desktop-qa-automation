@@ -273,8 +273,11 @@ class BasePage(Page):
         )
         return self
 
-    def element_visible(self, name: str, *labels) -> Page:
-        self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
+    def element_visible(self, name: str, element: WebElement = None, *labels) -> Page:
+        if element is not None:
+            self.expect(EC.visibility_of(element))
+        else:
+            self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
         return self
 
     def element_clickable(self, name: str, *labels) -> Page:
@@ -289,8 +292,12 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def double_click(self, name: str, label: str):
-        elem = self.get_element(name, labels=[label])
+    def double_click(self, name: str, label=""):
+        elem = None
+        if label == "":
+            elem = self.get_element(name)
+        else:
+            elem = self.get_element(name, labels=[label])
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
