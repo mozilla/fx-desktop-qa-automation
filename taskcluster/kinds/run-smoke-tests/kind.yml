@@ -5,7 +5,6 @@ transforms:
 task-defaults:
   worker-type: t-linux-wayland
   worker:
-    docker-image: {in-tree: linux}
     max-run-time: 1800
     artifacts:
       - name: public/results
