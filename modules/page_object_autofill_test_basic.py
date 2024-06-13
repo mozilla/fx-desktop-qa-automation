@@ -95,3 +95,13 @@ class AddressFill(Autofill):
         """
         elem = self.get_element(name, labels=[label])
         self.actions.double_click(elem).perform()
+
+    def send_keys_to_element(self, name: str, label: str, keys: str):
+        """
+        Send keys to the specified element.
+        """
+        elem = self.get_element(name, labels=[label])
+        current_value = elem.get_attribute("value")
+        new_value = current_value + keys
+        elem.clear()
+        elem.send_keys(new_value)

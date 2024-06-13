@@ -232,3 +232,11 @@ class AboutPrefs(BasePage):
             self.actions.send_keys(Keys.TAB).perform()
 
         self.actions.send_keys(Keys.ENTER).perform()
+
+    def get_save_addresses_popup_iframe(self) -> WebElement:
+        """
+        Returns the iframe object for the dialog panel in the popup
+        """
+        self.get_element("prefs-button", labels=["Saved addresses"]).click()
+        iframe = self.get_element("browser-popup")
+        return iframe

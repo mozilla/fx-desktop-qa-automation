@@ -79,3 +79,11 @@ class AutofillPopup(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("doorhanger-dropdown-button-never-save-cards").click()
+
+    def press_doorhanger_update(self):
+        """
+        Presses the update button on the doorhanger popup.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("doorhanger-update-button").click()
+        return self
