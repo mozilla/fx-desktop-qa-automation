@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar, TabContextMenu
 
-
 def test_pin_tab(driver: Firefox):
     """
     C134722, ensures that tabs can be pinned
@@ -25,6 +24,8 @@ def test_pin_tab(driver: Firefox):
         pin_item = tab_context_menu.get_context_item("context-menu-pin-tab")
         pin_item.click()
 
+        tabs.hide_popup("tabContextMenu")
+
         # grab the attribute pinned
         pinned_attribute = first_tab.get_attribute("pinned")
         logging.info(f"The pinned attribute is: {pinned_attribute}")
@@ -41,6 +42,8 @@ def test_pin_tab(driver: Firefox):
         tabs.actions.context_click(first_tab).perform()
         unpin_item = tab_context_menu.get_context_item("context-menu-unpin-tab")
         unpin_item.click()
+
+        tabs.hide_popup("tabContextMenu")
 
         pinned_attribute = first_tab.get_attribute("pinned")
         logging.info(f"The pinned attribute is: {pinned_attribute}")

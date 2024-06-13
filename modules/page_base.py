@@ -290,6 +290,16 @@ class BasePage(Page):
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
+    def hide_popup(self, context_menu: str) -> Page:
+        """
+        Given the ID of the context menu, it will dismiss the menu.
+
+        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be: tabs.hide_popup("tabContextMenu")
+        """
+        script = f"""document.querySelector("#{context_menu}").hidePopup();
+        """
+        self.driver.execute_script(script)
+
     @property
     def loaded(self):
         """
