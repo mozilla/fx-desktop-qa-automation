@@ -7,7 +7,6 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Union
 
-from pynput.keyboard import Controller, Key
 from pypom import Page
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains, Firefox
@@ -17,8 +16,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.util import PomUtils
-
-keyboard = Controller()
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {
@@ -288,6 +285,10 @@ class BasePage(Page):
         self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
         return self
 
+    def url_contains(self, url_part: str) -> Page:
+        self.expect(EC.url_contains(url_part))
+        return self
+
     def double_click(self, name: str, label: str):
         elem = self.get_element(name, labels=[label])
         EC.element_to_be_clickable(elem)
@@ -296,6 +297,16 @@ class BasePage(Page):
     def context_click_element(self, element) -> Page:
         self.actions.context_click(element).perform()
         return self
+
+    def hide_popup(self, context_menu: str) -> Page:
+        """
+        Given the ID of the context menu, it will dismiss the menu.
+
+        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be: tabs.hide_popup("tabContextMenu")
+        """
+        script = f"""document.querySelector("#{context_menu}").hidePopup();
+        """
+        self.driver.execute_script(script)
 
     @property
     def loaded(self):

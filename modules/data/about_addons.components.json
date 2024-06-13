@@ -21,5 +21,23 @@
         "selectorData": "back-button",
         "strategy": "class",
         "groups": []
+    },
+
+    "enabled-theme-title": {
+        "selectorData": ".theme-enabled-section .addon-name",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "find-more-themes-button": {
+        "selectorData": "button[data-l10n-id='find-more-themes']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "install-theme-button": {
+        "selectorData": "button[data-l10n-id='install-theme-button']",
+        "strategy": "css",
+        "groups": []
     }
 }
