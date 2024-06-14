@@ -343,7 +343,7 @@ class PomUtils:
         The instance of WebDriver under test.
     """
 
-    allowed_selectors = set([By.ID, By.CLASS_NAME, By.TAG_NAME])
+    allowed_selectors_shadow_chrome_element = set([By.ID, By.CLASS_NAME, By.TAG_NAME])
 
     def __init__(self, driver: Firefox):
         self.driver = driver
@@ -396,7 +396,7 @@ class PomUtils:
         self, nodes: list[WebElement], selector: list
     ) -> Union[WebElement, None]:
         logging.info("Selecting element in Chrome Context Shadow DOM...")
-        if selector[0] not in self.allowed_selectors:
+        if selector[0] not in self.allowed_selectors_shadow_chrome_element:
             raise ValueError(
                 "Currently shadow elements in chrome can only be selected by ID, tag and class name."
             )
