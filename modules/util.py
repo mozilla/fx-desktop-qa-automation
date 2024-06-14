@@ -343,7 +343,7 @@ class PomUtils:
         The instance of WebDriver under test.
     """
 
-    allowed_selectors = set([By.ID, By.CLASS_NAME])
+    allowed_selectors = set([By.ID, By.CLASS_NAME, By.TAG_NAME])
 
     def __init__(self, driver: Firefox):
         self.driver = driver
