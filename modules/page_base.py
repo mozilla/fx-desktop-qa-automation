@@ -314,7 +314,7 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def double_click(self, name: str, labels: list[str]):
+    def double_click(self, name: str, labels=[]):
         """Actions helper: perform double-click on given element"""
         elem = self.get_element(name, labels=labels)
         EC.element_to_be_clickable(elem)

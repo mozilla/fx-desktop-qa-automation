@@ -62,8 +62,8 @@ class AddressFill(Autofill):
     def click_form_button(self, field_name: str):
         self.get_element("submit-button", labels=[field_name]).click()
 
-    def click(self, name: str, label: str) -> Autofill:
-        elem = self.get_element(name, labels=[label])
+    def click(self, name: str, labels=[]) -> Autofill:
+        elem = self.get_element(name, labels=labels)
         self.actions.click(elem).perform()
         return self
 
@@ -85,7 +85,7 @@ class AddressFill(Autofill):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
 
-    def double_click(self, name: str, labels: list[str]):
+    def double_click(self, name: str, labels=[]):
         """
         Double-click on the specified element.
 
