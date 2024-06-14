@@ -3,7 +3,7 @@ transforms:
   - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
 
 task-defaults:
-  worker-type: t-linux-wayland-vm
+  worker-type: t-linux-wayland
   worker:
     max-run-time: 1800
     artifacts:
