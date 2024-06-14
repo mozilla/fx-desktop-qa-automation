@@ -10,5 +10,11 @@
         "selectorData": "context_unpinTab",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-reopen-tab": {
+        "selectorData": "context_undoCloseTab",
+        "strategy": "id",
+        "groups": []
     }
 }
