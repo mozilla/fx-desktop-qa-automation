@@ -7,7 +7,7 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
-from modules.util import Utilities, BrowserActions
+from modules.util import BrowserActions, Utilities
 
 
 def test_autofill_cc_cvv(driver: Firefox):
@@ -30,7 +30,9 @@ def test_autofill_cc_cvv(driver: Firefox):
 
     # navigate to prefs
     about_prefs_obj.open()
-    iframe = about_prefs_obj.press_button_get_popup_dialog_iframe("Saved payment methods")
+    iframe = about_prefs_obj.press_button_get_popup_dialog_iframe(
+        "Saved payment methods"
+    )
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # Select the saved cc
@@ -41,11 +43,11 @@ def test_autofill_cc_cvv(driver: Firefox):
     saved_profile.click()
 
     # Click on edit
-    about_prefs_obj.get_element("panel-popup-button", labels=["autofill-manage-edit-button"]).click()
+    about_prefs_obj.get_element(
+        "panel-popup-button", labels=["autofill-manage-edit-button"]
+    ).click()
 
     # Verify that CVV number is not saved under CC profile
     element = about_prefs_obj.get_element("cc-saved-options", multiple=True)
     cvv_not_displayed = not any(cvv in element.text for element in element)
-    assert (
-        cvv_not_displayed
-    ), "CVV is displayed."
+    assert cvv_not_displayed, "CVV is displayed."
