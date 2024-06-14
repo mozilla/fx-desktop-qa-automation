@@ -14,7 +14,14 @@ from modules.util import PomUtils
 
 
 class AboutPrefs(BasePage):
-    """Page Object Model for about:preferences"""
+    """
+    Page Object Model for about:preferences
+
+    Attributes
+    ----------
+    driver: selenium.webdriver.Firefox
+        WebDriver object under test
+    """
 
     URL_TEMPLATE = "about:preferences#{category}"
 
@@ -23,6 +30,10 @@ class AboutPrefs(BasePage):
     TABS_TO_SAVE_CC = 5
 
     class Dropdown(Region):
+        """
+        PyPOM Region factory for Dropdown menus in about:prefs. See PyPOM docs on Regions.
+        """
+
         def __init__(self, page, **kwargs):
             super().__init__(page, **kwargs)
             self.utils = PomUtils(self.driver)
@@ -35,7 +46,8 @@ class AboutPrefs(BasePage):
         def loaded(self):
             return self.root if EC.element_to_be_clickable(self.root) else False
 
-        def select_option(self, option_name):
+        def select_option(self, option_name: str):
+            """Select an option in the dropdown. Does not return self."""
             if not self.dropmarker.get_attribute("open") == "true":
                 self.root.click()
             matching_menuitems = [
@@ -53,9 +65,11 @@ class AboutPrefs(BasePage):
                 raise ValueError("More than one menu item matched search string")
 
     def search_engine_dropdown(self) -> Dropdown:
+        """Returns the Dropdown region for search engine prefs"""
         return self.Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
 
     def find_in_settings(self, term: str) -> BasePage:
+        """Search via the Find in Settings bar, return self."""
         search_input = self.get_element("find-in-settings-input")
         search_input.clear()
         search_input.send_keys(term)
@@ -66,7 +80,6 @@ class AboutPrefs(BasePage):
     ) -> BasePage:
         """
         Does the assertions that ensure all of the extracted information (the cc_info_json) is the same as the generated fake credit_card_fill_obj data.
-
 
         ...
 
@@ -91,6 +104,7 @@ class AboutPrefs(BasePage):
         return iframe
 
     def set_country_autofill_panel(self, country: str) -> BasePage:
+        """Sets the country value in the autofill view"""
         for _ in range(self.TABS_TO_COUNTRY):
             self.actions.send_keys(Keys.TAB).perform()
 
@@ -232,3 +246,11 @@ class AboutPrefs(BasePage):
             self.actions.send_keys(Keys.TAB).perform()
 
         self.actions.send_keys(Keys.ENTER).perform()
+
+    def get_save_addresses_popup_iframe(self) -> WebElement:
+        """
+        Returns the iframe object for the dialog panel in the popup
+        """
+        self.get_element("prefs-button", labels=["Saved addresses"]).click()
+        iframe = self.get_element("browser-popup")
+        return iframe

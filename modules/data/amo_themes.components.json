@@ -1,0 +1,19 @@
+{
+    "recommended-addon": {
+        "selectorData": ".RecommendedAddons .SearchResult-result",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "theme-title": {
+        "selectorData": "AddonTitle",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "install-button": {
+        "selectorData": "AMInstallButton-button",
+        "strategy": "class",
+        "groups": []
+    }
+}

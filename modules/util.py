@@ -395,6 +395,7 @@ class PomUtils:
     def find_shadow_chrome_element(
         self, nodes: list[WebElement], selector: list
     ) -> Union[WebElement, None]:
+        allowed_selectors = set([By.ID, By.CLASS_NAME])
         logging.info("Selecting element in Chrome Context Shadow DOM...")
         if selector[0] not in self.allowed_selectors:
             # if selector[0] != By.ID:
@@ -415,6 +416,7 @@ class PomUtils:
             if tag in node_html:
                 logging.info("Element found, returning...")
                 return node
+
         return None
 
     def find_shadow_element(

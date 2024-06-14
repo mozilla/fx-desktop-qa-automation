@@ -127,5 +127,11 @@
         "selectorData": "dialogStack",
         "strategy": "id",
         "groups": []
+    },
+
+    "saved-addresses-values": {
+        "selectorData": "#addresses option",
+        "strategy": "css",
+        "groups": []
     }
 }

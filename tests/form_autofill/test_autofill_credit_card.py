@@ -67,5 +67,5 @@ def test_enable_disable_form_autofill_cc(driver: Firefox):
     new_credit_card_fill_obj = CreditCardFill(driver).open()
     new_autofill_popup_obj = CreditCardPopup(driver)
 
-    new_credit_card_fill_obj.double_click("form-field", "cc-name")
+    new_credit_card_fill_obj.double_click("form-field", labels=["cc-name"])
     new_autofill_popup_obj.verify_no_popup_panel()
