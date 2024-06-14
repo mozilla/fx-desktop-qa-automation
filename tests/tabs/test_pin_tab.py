@@ -4,6 +4,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar, TabContextMenu
 
+
 def test_pin_tab(driver: Firefox):
     """
     C134722, ensures that tabs can be pinned

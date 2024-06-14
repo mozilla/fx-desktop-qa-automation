@@ -1,7 +1,6 @@
 import logging
 
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import PanelUi, TabBar
 
