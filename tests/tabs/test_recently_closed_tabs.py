@@ -6,12 +6,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.browser_object import PanelUi, TabBar
 
 links = [
-    "https://www.mozilla.org/en-US/",
-    "https://www.google.com/",
-    "https://www.microsoft.com/en-ca/",
-    "https://www.apple.com/",
-    "https://www.notion.so/",
-    "https://www.amazon.com/",
+    "about:about",
+    "about:addons",
+    "about:cache",
+    "about:config",
+    "about:buildconfig",
+    "about:robots",
     "about:blank",
 ]
 

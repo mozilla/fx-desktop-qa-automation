@@ -397,9 +397,8 @@ class PomUtils:
     ) -> Union[WebElement, None]:
         logging.info("Selecting element in Chrome Context Shadow DOM...")
         if selector[0] not in self.allowed_selectors:
-            # if selector[0] != By.ID:
             raise ValueError(
-                "Currently shadow elements in chrome can only be selected by ID and classname."
+                "Currently shadow elements in chrome can only be selected by ID, tag and class name."
             )
         for node in nodes:
             node_html = self.driver.execute_script(
@@ -409,12 +408,14 @@ class PomUtils:
                 tag = f'id="{selector[1]}"'
             elif selector[0] == By.CLASS_NAME:
                 tag = f'class="{selector[1]}"'
-
+            elif selector[0] == By.TAG_NAME:
+                tag = selector[1]
             logging.info(f"Looking for {tag}")
             logging.info(f"Shadow element code: {node_html}")
             if tag in node_html:
                 logging.info("Element found, returning...")
                 return node
+
         return None
 
     def find_shadow_element(

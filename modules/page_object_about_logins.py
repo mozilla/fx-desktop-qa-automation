@@ -23,11 +23,16 @@ class AboutLogins(BasePage):
     URL_TEMPLATE = "about:logins"
 
     def click_add_login_button(self) -> Page:
+        """Click the Add Login button"""
         self.get_element("create-login-button").click()
         logging.info("Clicked add login button")
         return self
 
     def create_new_login(self, form_info: dict) -> Page:
+        """
+        Given a dict with keys that match the valid item types in the
+        new login dialog, create a new login with those values through UI.
+        """
         ba = BrowserActions(self.driver)
         try:
             for item_type, value in form_info.items():
