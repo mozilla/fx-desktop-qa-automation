@@ -14,15 +14,15 @@ tasks:
       cwd: "{checkout}"
       command: |-
         mkdir /builds && \
-        adduser --home /builds/worker --shell /bin/bash --disabled-password --gecos "" worker && \
+        sudo adduser --home /builds/worker --shell /bin/bash --disabled-password --gecos "" worker && \
         mkdir /builds/worker/artifacts && \
-        chown worker:worker /builds/worker/artifacts && \
-        chown worker:worker /root && \
-        chmod u+w /root
-        apt update -y && apt upgrade -y
-        apt install -y git python3-pip python-is-python3 curl jq wget bzip2i libxt6
-        apt install -y libxtst6 libgtk-3-0 libx11-xcb-dev libdbus-glib-1-2 libpci-de
-        rm -rf /var/lib/apt/lists/
+        sudo chown worker:worker /builds/worker/artifacts && \
+        sudo chown worker:worker /root && \
+        sudo chmod u+w /root
+        sudo apt update -y && apt upgrade -y
+        sudo apt install -y git python3-pip python-is-python3 curl jq wget bzip2i libxt6
+        sudo apt install -y libxtst6 libgtk-3-0 libx11-xcb-dev libdbus-glib-1-2 libpci-de
+        sudo rm -rf /var/lib/apt/lists/
         python -m pip install --no-cache --upgrade pip setuptools pytest selenium pipenv ruff
         export PATH=/root/.local/bin:/root/.local/bin:/builds/worker/.local/bin:$PATH
         export HOME=/builds/worker
