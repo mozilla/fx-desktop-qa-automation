@@ -28,5 +28,11 @@
         "selectorData": "menuitem[label='Never save cards']",
         "strategy": "css",
         "groups": []
+    },
+
+    "doorhanger-update-button": {
+        "selectorData": "button[label=\"Update\"]",
+        "strategy": "css",
+        "groups": []
     }
 }
