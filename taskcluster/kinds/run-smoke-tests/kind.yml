@@ -13,6 +13,8 @@ task-defaults:
 
 tasks:
   linux:
+    dependencies:
+      vm-setup: vm-setup-linux
     run:
       using: run-task
       cwd: "{checkout}"
