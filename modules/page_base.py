@@ -294,7 +294,7 @@ class BasePage(Page):
         )
         return self
 
-    def element_visible(self, name: str, *labels) -> Page:
+    def element_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is visible or timeout"""
         self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
         return self
