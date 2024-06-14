@@ -343,6 +343,8 @@ class PomUtils:
         The instance of WebDriver under test.
     """
 
+    allowed_selectors_shadow_chrome_element = set([By.ID, By.CLASS_NAME, By.TAG_NAME])
+
     def __init__(self, driver: Firefox):
         self.driver = driver
 
@@ -393,11 +395,10 @@ class PomUtils:
     def find_shadow_chrome_element(
         self, nodes: list[WebElement], selector: list
     ) -> Union[WebElement, None]:
-        allowed_selectors = set([By.ID, By.TAG_NAME])
         logging.info("Selecting element in Chrome Context Shadow DOM...")
-        if selector[0] not in allowed_selectors:
+        if selector[0] not in self.allowed_selectors_shadow_chrome_element:
             raise ValueError(
-                f"Currently shadow elements in chrome cannot be selected by {selector[0]}"
+                "Currently shadow elements in chrome can only be selected by ID, tag and class name."
             )
         for node in nodes:
             node_html = self.driver.execute_script(
@@ -405,6 +406,8 @@ class PomUtils:
             )
             if selector[0] == By.ID:
                 tag = f'id="{selector[1]}"'
+            elif selector[0] == By.CLASS_NAME:
+                tag = f'class="{selector[1]}"'
             elif selector[0] == By.TAG_NAME:
                 tag = selector[1]
             logging.info(f"Looking for {tag}")
