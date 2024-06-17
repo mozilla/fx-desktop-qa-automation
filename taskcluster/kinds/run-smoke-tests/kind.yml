@@ -1,25 +1,28 @@
----
 transforms:
-  - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
+- fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
 
 task-defaults:
   worker-type: t-linux-large
   worker:
-    docker-image: { in-tree: linux }
+    docker-image: {in-tree: linux}
     max-run-time: 1800
     artifacts:
-      - name: public/results
-        path: /builds/worker/artifacts
-        type: directory
-  routes: |-
-      notify.slack-channel.G016BC5FUHJ.on-failed
-    default: []
-  scopes: |-
-      queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-alerts-sandbox on failure
-      notify:slack-channel:G016BC5FUHJ
-      queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-testeng on success
-      notify:slack-channel:G016BC5FUHJ
-    default: []
+    - name: public/results
+      path: /builds/worker/artifacts
+      type: directory
+  routes:
+    by-level:
+      '3':
+        - notify.slack-channel.G016BC5FUHJ.on-failed
+      default: []
+  scopes:
+    by-level:
+      '3':
+        - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-alerts-sandbox on failure
+        - notify:slack-channel:G016BC5FUHJ
+        - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-testeng on success
+        - notify:slack-channel:G016BC5FUHJ
+      default: []
 
 tasks:
   linux:
