@@ -290,5 +290,5 @@ class AboutPrefs(BasePage):
         """
         address_list = self.get_element("saved-addresses")
         list_html = address_list.get_attribute("innerHtml")
-        assert (list_html is None or "option" not in list_html)
+        assert list_html is None or "option" not in list_html
         return self

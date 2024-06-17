@@ -299,7 +299,7 @@ class BasePage(Page):
     def element_does_not_exist(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
         self.instawait.until_not(
-            EC.presence_of_element_located(self.get_selector(name, labels=labels))
+            EC.presence_of_all_elements_located(self.get_selector(name, labels=labels))
         )
         return self
 

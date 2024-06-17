@@ -2,8 +2,9 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup
-from modules.page_object import (AddressFill, AboutPrefs)
-from modules.util import (Utilities, BrowserActions)
+from modules.page_object import AboutPrefs, AddressFill
+from modules.util import BrowserActions, Utilities
+
 
 @pytest.fixture()
 def set_prefs():
@@ -11,10 +12,12 @@ def set_prefs():
     return [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
-        ("browser.privatebrowsing.autostart", True)
+        ("browser.privatebrowsing.autostart", True),
     ]
 
+
 countries = ["CA", "US"]
+
 
 @pytest.mark.parametrize("country_code", countries)
 def test_private_mode_info_not_saved(driver: Firefox, country_code: str):
@@ -22,7 +25,6 @@ def test_private_mode_info_not_saved(driver: Firefox, country_code: str):
     autofill_popup = AutofillPopup(driver)
     util = Utilities()
     ba = BrowserActions(driver)
-
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
     autofill_sample_data = util.fake_autofill_data(country_code)
