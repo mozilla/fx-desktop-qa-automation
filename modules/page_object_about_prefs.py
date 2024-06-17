@@ -204,7 +204,9 @@ class AboutPrefs(BasePage):
         self.actions.send_keys(Keys.ENTER).perform()
         return self
 
-    def fill_cc_panel_information(self, credit_card_fill_information: CreditCardBase) -> BasePage:
+    def fill_cc_panel_information(
+        self, credit_card_fill_information: CreditCardBase
+    ) -> BasePage:
         """
         Takes the sample cc object and fills it into the popup panel in the about:prefs section
         under saved payment methods.
@@ -230,7 +232,6 @@ class AboutPrefs(BasePage):
         self.actions.send_keys(Keys.TAB).perform()
         # Finally, press enter
         self.actions.send_keys(Keys.ENTER).perform()
-
 
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
