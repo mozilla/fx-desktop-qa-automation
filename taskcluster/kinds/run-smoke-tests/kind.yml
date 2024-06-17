@@ -13,12 +13,12 @@ task-defaults:
 
 tasks:
   linux:
-    dependencies:
-      vm-setup: vm-setup-linux
     run:
       using: run-task
       cwd: "{checkout}"
       command: |-
+        pip3 install 'pipenv==2023.11.15'
+        pip3 install 'ruff>=0.4.8,<0.5'
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
