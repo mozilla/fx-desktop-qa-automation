@@ -219,22 +219,15 @@ class AboutPrefs(BasePage):
         fields = {
             "card_number": credit_card_fill_information.card_number,
             "expiration_month": credit_card_fill_information.expiration_month,
-            "expiration_year": credit_card_fill_information.expiration_year,
+            "expiration_year": f"20{credit_card_fill_information.expiration_year}",
             "name": credit_card_fill_information.name,
         }
 
         for field in fields:
-            if field == "expiration_year":
-                self.actions.send_keys("20" + fields[field] + Keys.TAB).perform()
-            else:
-                self.actions.send_keys(fields[field] + Keys.TAB).perform()
+            self.actions.send_keys(fields[field] + Keys.TAB).perform()
 
-            if field == "name":
-                self.actions.send_keys(Keys.TAB).perform()
-
-            # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
+        # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
         self.actions.send_keys(Keys.TAB).perform()
-
         # Finally, press enter
         self.actions.send_keys(Keys.ENTER).perform()
 

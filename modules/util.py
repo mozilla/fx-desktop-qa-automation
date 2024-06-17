@@ -193,6 +193,20 @@ class Utilities:
             cvv=cvv,
         )
 
+        while len(fake_data.card_number) <= 14:
+            name = fake.name()
+            card_number = fake.credit_card_number()
+            generated_credit_expiry = fake.credit_card_expire()
+            expiration_month, expiration_year = generated_credit_expiry.split("/")
+            cvv = fake.credit_card_security_code()
+            fake_data = CreditCardBase(
+                name=name,
+                card_number=card_number,
+                expiration_month=expiration_month,
+                expiration_year=expiration_year,
+                cvv=cvv,
+            )
+
         return fake_data
 
     def normalize_phone_number(self, phone: str, default_country_code="1") -> str:

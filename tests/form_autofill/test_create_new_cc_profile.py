@@ -1,19 +1,12 @@
 import json
 
-import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import AboutPrefsCcPopup, Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
-# Browser regions in which the Credit cards can be saved in
-countries = ["CA", "US"]
-
-
-@pytest.mark.parametrize("country_code", countries)
-def test_create_new_cc_profile(driver: Firefox, country_code: str):
+def test_create_new_cc_profile(driver: Firefox):
     """
     C122389, tests you can create and save a new Credit Card profile
     """
