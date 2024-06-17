@@ -1,5 +1,7 @@
 transforms:
 - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
+- taskgraph.transforms.run
+- taskgraph.transforms.task
 
 task-defaults:
   worker-type: t-linux-large
