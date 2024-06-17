@@ -21,6 +21,10 @@ countries = ["CA", "US"]
 
 @pytest.mark.parametrize("country_code", countries)
 def test_private_mode_info_not_saved(driver: Firefox, country_code: str):
+    """
+    C122587 - Autofill data not saved in private mode.
+    This only tests the last part of the written TC - case should be divided
+    """
     address_form_fields = AddressFill(driver).open()
     autofill_popup = AutofillPopup(driver)
     util = Utilities()
