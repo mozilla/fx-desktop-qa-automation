@@ -1,4 +1,5 @@
-from time import sleep
+import logging
+import random
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -24,23 +25,65 @@ def test_set_default_profile(driver: Firefox):
     )
     assert first_profile_header is not None
 
-    # ensure not initially set to default
+    cur_default = -1
+
+    # find index that is the current default
+    for i in range(len(profiles)):
+        logging.info(f"Currently searching row {i} for the default profile")
+        cur_profile = profiles[i]
+        table_rows = about_profiles.get_element(
+            "profile-container-item-table-row",
+            multiple=True,
+            parent_element=cur_profile,
+        )
+        first_row = table_rows[0]
+        # find the current default profile
+        default_profile_information = about_profiles.get_element(
+            "profile-container-item-table-row-value", parent_element=first_row
+        )
+        if default_profile_information.get_attribute("innerHTML") == "yes":
+            logging.info(f"Found the default profile at {i}!")
+            cur_default = i
+            break
+
+    # no default profile could be found
+    if cur_default == -1:
+        logging.warn("Could not find a currently active default profile.")
+        assert False
+
+    # select a non default profile randomly
+    profile_index = random.randint(0, len(profiles) - 1)
+    if profile_index == cur_default:
+        profile_index = random.randint(0, len(profiles) - 1)
+
+    # set it as the default and verify the rows
+    logging.info(f"Preparing to set profile {profile_index} to the default.")
+    about_profiles.get_element(
+        "profile-container-item-button",
+        parent_element=profiles[profile_index],
+        labels=["profiles-set-as-default"],
+    ).click()
+
+    # refetch data to ensure no stale elements
+    profile_container = about_profiles.get_element("profile-container")
+    profiles = profile_container.find_elements(By.XPATH, "./child::*")
+
     table_rows = about_profiles.get_element(
-        "profile-container-item-table-row", multiple=True
+        "profile-container-item-table-row",
+        multiple=True,
+        parent_element=profiles[profile_index],
     )
-    # row 0 contains the default profile information
-    first_row_default_profile_value = about_profiles.get_element(
+    default_profile_information = about_profiles.get_element(
         "profile-container-item-table-row-value", parent_element=table_rows[0]
-    ).get_attribute("data-l10n-id")
-    # assert first_row_default_profile_value == "profiles-no"
-    sleep(5)
+    )
+    assert default_profile_information.get_attribute("innerHTML") == "yes"
+    logging.info(f"Verified that profile {profile_index} was set to the default.")
 
-    # First profile is not the default, set to default
-    # about_profiles.get_element("profile-container-item-button", parent_element=first_profile, labels=["profiles-set-as-default"]).click()
-
-    # # refetch items to ensure freshnesss
-    # table_rows = about_profiles.get_element("profile-container-item-table-row", multiple=True)
-    # first_row_default_profile_value = about_profiles.get_element("profile-container-item-table-row-value", parent_element=table_rows[0]).get_attribute("data-l10n-id")
-    # print(first_row_default_profile_value)
-
-    # about_profiles.get_element("profile-container-item-button", parent_element=second_profile, labels=["profiles-set-as-default"]).click()
+    # set the previous default back to default
+    logging.info(f"Preparing to set profile {cur_default} to the default.")
+    original_default = profiles[cur_default]
+    about_profiles.get_element(
+        "profile-container-item-button",
+        parent_element=original_default,
+        labels=["profiles-set-as-default"],
+    ).click()
