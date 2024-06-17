@@ -36,18 +36,8 @@ def test_create_new_cc_profile(driver: Firefox, country_code: str):
     about_prefs_cc_popup.get_element(
         "cc-popup-button", labels=["autofill-manage-add-button"]
     ).click()
-    about_prefs.actions.send_keys(credit_card_sample_data.card_number).perform()
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.actions.send_keys(credit_card_sample_data.expiration_month).perform()
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.actions.send_keys(
-        f"20{credit_card_sample_data.expiration_year}"
-    ).perform()
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.actions.send_keys(credit_card_sample_data.name).perform()
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.actions.send_keys(Keys.ENTER).perform()
+
+    about_prefs.fill_cc_panel_information(credit_card_sample_data)
 
     # get the saved CC data
     cc_profiles = about_prefs_cc_popup.get_all_saved_cc_profiles()

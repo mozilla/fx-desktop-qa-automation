@@ -204,6 +204,41 @@ class AboutPrefs(BasePage):
         self.actions.send_keys(Keys.ENTER).perform()
         return self
 
+    def fill_cc_panel_information(self, credit_card_fill_information: CreditCardBase) -> BasePage:
+        """
+        Takes the sample cc object and fills it into the popup panel in the about:prefs section
+        under saved payment methods.
+
+        ...
+
+        Attributes
+        ----------
+        credit_card_fill_information: CreditCardBase
+            The object containing all of the sample data
+        """
+        fields = {
+            "card_number": credit_card_fill_information.card_number,
+            "expiration_month": credit_card_fill_information.expiration_month,
+            "expiration_year": credit_card_fill_information.expiration_year,
+            "name": credit_card_fill_information.name,
+        }
+
+        for field in fields:
+            if field == "expiration_year":
+                self.actions.send_keys("20" + fields[field] + Keys.TAB).perform()
+            else:
+                self.actions.send_keys(fields[field] + Keys.TAB).perform()
+
+            if field == "name":
+                self.actions.send_keys(Keys.TAB).perform()
+
+            # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
+        self.actions.send_keys(Keys.TAB).perform()
+
+        # Finally, press enter
+        self.actions.send_keys(Keys.ENTER).perform()
+
+
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
