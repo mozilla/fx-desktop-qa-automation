@@ -11,7 +11,7 @@ tasks:
   linux:
     worker:
       env:
-        PATH: /builds/worker/.local/bin:/root/.local/bin:/root/.local/bin/firefox/$PATH
+        PATH: /builds/worker/.local/bin:/root/.local/bin:/root/.local/bin/firefox/:$PATH
     run:
       using: run-task
       cwd: "{checkout}"
