@@ -283,12 +283,3 @@ class AboutPrefs(BasePage):
         self.get_element("prefs-button", labels=["Saved addresses"]).click()
         iframe = self.get_element("browser-popup")
         return iframe
-
-    def verify_no_saved_addresses(self) -> BasePage:
-        """
-        Assert that there are no saved addresses
-        """
-        address_list = self.get_element("saved-addresses")
-        list_html = address_list.get_attribute("innerHtml")
-        assert list_html is None or "option" not in list_html
-        return self
