@@ -1,3 +1,13 @@
 {
+    "profile-container-item-default-header": {
+        "selectorData": "h3[data-l10n-id='profiles-in-use-profile']",
+        "strategy": "css",
+        "groups": []
+    },
 
+    "profile-container": {
+        "selectorData": "profiles",
+        "strategy": "id",
+        "groups": []
+    }
 }
