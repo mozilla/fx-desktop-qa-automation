@@ -177,12 +177,14 @@ class BasePage(Page):
             element_data["selectorData"],
         ]
         if not labels:
+            logging.info("Returned selector.")
             return selector
         braces = re.compile(r"(\{.*?\})")
         match = braces.findall(selector[1])
         for i in range(len(labels)):
             logging.info(f"Replace {match[i]} with {labels[i]}")
             selector[1] = selector[1].replace(match[i], labels[i])
+        logging.info("Returned selector.")
         return selector
 
     def get_element(
@@ -290,6 +292,13 @@ class BasePage(Page):
     def element_exists(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
         self.expect(
+            EC.presence_of_element_located(self.get_selector(name, labels=labels))
+        )
+        return self
+
+    def element_does_not_exist(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element exists or timeout"""
+        self.instawait.until_not(
             EC.presence_of_element_located(self.get_selector(name, labels=labels))
         )
         return self
