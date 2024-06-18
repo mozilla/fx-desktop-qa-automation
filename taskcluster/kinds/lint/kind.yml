@@ -9,7 +9,6 @@ task-defaults:
 
 tasks:
   linux:
-    worker:
     run:
       using: run-task
       cwd: "{checkout}"
