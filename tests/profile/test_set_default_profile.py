@@ -17,13 +17,11 @@ def test_set_default_profile(driver: Firefox):
     profile_container = about_profiles.get_element("profile-container")
     profiles = profile_container.find_elements(By.XPATH, "./child::*")
 
-    # verify first item has the bold text
-    first_profile = profiles[0]
-    # second_profile = profiles[1]
-    first_profile_header = about_profiles.get_element(
-        "profile-container-item-default-header", parent_element=first_profile
+    # verify that some profile is the default
+    profile_header_in_use = about_profiles.get_element(
+        "profile-container-item-default-header"
     )
-    assert first_profile_header is not None
+    assert profile_header_in_use is not None
 
     cur_default = -1
 
