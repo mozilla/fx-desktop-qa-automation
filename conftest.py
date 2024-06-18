@@ -197,6 +197,13 @@ def screenshot(driver: webdriver.Firefox, opt_ci: bool):
     return _screenshot
 
 
+@pytest.fixture()
+def version(driver: webdriver.Firefox):
+    driver.get("about:support")
+    version = driver.find_element("version-box").get_attribute("innerText")
+    return version
+
+
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
     return 19980331
