@@ -50,9 +50,8 @@ def test_set_default_profile(driver: Firefox):
         assert False
 
     # select a non default profile randomly
-    profile_index = random.randint(0, len(profiles) - 1)
-    if profile_index == cur_default:
-        profile_index = random.randint(0, len(profiles) - 1)
+    profile_indices = [i for i in range(len(profiles)) if i != cur_default]
+    profile_index = random.choice(profile_indices)
 
     # set it as the default and verify the rows
     logging.info(f"Preparing to set profile {profile_index} to the default.")
