@@ -87,6 +87,7 @@ class BasePage(Page):
     )
 
     def sys_platform(self):
+        """Return the system platform name"""
         return platform.system()
 
     def set_chrome_context(self):
@@ -265,30 +266,73 @@ class BasePage(Page):
             return self.driver.find_elements(*selector)
 
     def get_elements(self, name: str, labels=[]):
+        """
+        Get multiple elements using get_element()
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+
+        list[selenium.webdriver.remote.webelement.WebElement]
+            The WebElement objects referred to by the element dict.
+        """
         return self.get_element(name, multiple=True, labels=labels)
 
-    def element_exists(self, name: str, *labels) -> Page:
+    def element_exists(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element exists or timeout"""
         self.expect(
             EC.presence_of_element_located(self.get_selector(name, labels=labels))
         )
         return self
 
-    def element_visible(self, name: str, *labels) -> Page:
+    def element_visible(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is visible or timeout"""
         self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
         return self
 
-    def element_clickable(self, name: str, *labels) -> Page:
+    def element_clickable(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is clickable or timeout"""
         self.expect(EC.element_to_be_clickable(self.get_element(name, labels=labels)))
         return self
 
-    def element_selected(self, name: str, *labels) -> Page:
+    def element_selected(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is selected or timeout"""
         self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
         return self
 
-    def double_click(self, name: str, label: str):
-        elem = self.get_element(name, labels=[label])
+    def url_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect(EC.url_contains(url_part))
+        return self
+
+    def double_click(self, name: str, labels=[]):
+        """Actions helper: perform double-click on given element"""
+        elem = self.get_element(name, labels=labels)
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
+
+    def context_click_element(self, element) -> Page:
+        self.actions.context_click(element).perform()
+        return self
+
+    def hide_popup(self, context_menu: str) -> Page:
+        """
+        Given the ID of the context menu, it will dismiss the menu.
+
+        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be: tabs.hide_popup("tabContextMenu")
+        """
+        script = f"""document.querySelector("#{context_menu}").hidePopup();
+        """
+        self.driver.execute_script(script)
 
     @property
     def loaded(self):

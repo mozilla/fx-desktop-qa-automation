@@ -11,6 +11,10 @@ class PanelUi(BasePage):
     URL_TEMPLATE = "about:blank"
 
     class Menu(Region):
+        """
+        PyPOM Region factory for the PanelUi Dropdown menu
+        """
+
         def __init__(self, page, **kwargs):
             super().__init__(page, **kwargs)
             self.utils = PomUtils(self.driver)
@@ -25,16 +29,33 @@ class PanelUi(BasePage):
             return all([EC.presence_of_element_located(el) for el in targeted])
 
     def open_panel_menu(self) -> BasePage:
+        """
+        Opens the PanelUi menu.
+        """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             panel_root = self.get_element("panel-ui-button")
             panel_root.click()
             self.menu = self.Menu(self, root=panel_root)
         return self
 
-    def select_panel_setting(self, name, *labels):
+    def select_panel_setting(self, name: str, *labels) -> BasePage:
+        """
+        Selects a panel setting in PanelUi.
+
+        ...
+
+        Parameters
+        ----------
+
+        name: str
+            Name of setting element
+        labels: *list[str]
+            Labels to pass to get_element()
+        """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             panel_option = self.get_element(name, labels=labels)
             panel_option.click()
+        return self
 
     def navigate_to_about_addons(self):
         """

@@ -48,5 +48,24 @@
         "groups": [
             "menuItem"
         ]
+    },
+
+    "panel-ui-history": {
+        "selectorData": "appMenu-history-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "panel-ui-history-recently-closed": {
+        "selectorData": "appMenuRecentlyClosedTabs",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "panel-ui-history-recently-closed-reopen-tabs": {
+        "selectorData": "toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']",
+        "strategy": "css",
+        "groups": []
     }
+
 }

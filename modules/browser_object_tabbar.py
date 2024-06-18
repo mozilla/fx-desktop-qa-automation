@@ -40,7 +40,7 @@ class TabBar(BasePage):
             self.get_element("newtab-button").click()
         return self
 
-    def new_tab_by_keys(self, sys_platform) -> BasePage:
+    def new_tab_by_keys(self, sys_platform: str) -> BasePage:
         """Use keyboard shortcut to open a new tab"""
         if sys_platform == "Darwin":
             self.actions.key_down(Keys.COMMAND).send_keys("t").key_up(
@@ -137,6 +137,22 @@ class TabBar(BasePage):
         """
         Given an index or a True for the selected attr,
         get the text in the corresponding entry in the all tabs menu.
+
+        ...
+
+        Parameters
+        ----------
+
+        selected: bool
+            Get the selected tab's text? Overrides index.
+
+        index: int
+            Index of List All Tabs menu entry to get text from
+
+        Returns
+        -------
+
+        str: Text of List All Tabs menu entry.
         """
         entry = None
         if selected:
@@ -148,10 +164,26 @@ class TabBar(BasePage):
             "label"
         )
 
-    def get_location_of_all_tabs_entry(self, selected=False, index=0) -> str:
+    def get_location_of_all_tabs_entry(self, selected=False, index=0) -> dict:
         """
         Given an index or a True for the selected attr,
         get the location of the entry in the all tabs menu.
+
+        ...
+
+        Parameters
+        ----------
+
+        selected: bool
+            Get the selected tab's location? Overrides index.
+
+        index: int
+            Index of List All Tabs menu entry whose location we want.
+
+        Returns
+        -------
+
+        dict: location of entry, keys are 'x' and 'y'.
         """
         entry = None
         if selected:
@@ -162,7 +194,20 @@ class TabBar(BasePage):
         return entry.find_element(By.CLASS_NAME, "all-tabs-button").location
 
     def scroll_on_all_tabs_menu(self, down=True, pixels=200) -> BasePage:
-        """Scroll the all tabs menu down or up."""
+        """
+        Scroll the List All Tabs menu down or up.
+
+        ...
+
+        Parameters
+        ----------
+
+        down: bool
+            Should we scroll down? A value of False scrolls up.
+
+        pixels: int
+            The number of pixels to scroll the bar
+        """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             menu = self.get_element("all-tabs-menu")
             # HACK: Can't figure out what the scrollbox selector is, but it's ~4 pixels

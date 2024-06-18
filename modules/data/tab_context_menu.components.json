@@ -1,0 +1,20 @@
+{
+    "context": "chrome",
+    "context-menu-pin-tab": {
+        "selectorData": "context_pinTab",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-unpin-tab": {
+        "selectorData": "context_unpinTab",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-reopen-tab": {
+        "selectorData": "context_undoCloseTab",
+        "strategy": "id",
+        "groups": []
+    }
+}

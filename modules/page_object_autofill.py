@@ -27,4 +27,5 @@ class Autofill(BasePage):
         ba.clear_and_fill(form_field_element, term, press_enter=False)
 
     def click_form_button(self, field_name):
+        """Clicks submit on the form"""
         self.get_element("submit-button", labels=[field_name]).click()
