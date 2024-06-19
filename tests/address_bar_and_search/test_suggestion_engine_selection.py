@@ -1,5 +1,4 @@
 import pytest
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox, Keys
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -21,21 +20,9 @@ def test_search_suggestion_for_engine_selection(driver: Firefox, site: str):
     suggestion_list_items = nav.get_element("search-suggestion-list", multiple=True)
 
     # Filter elements to find the one that matches the desired site
-    suggestion_list_item = None
-    for item in suggestion_list_items:
-        try:
-            if site in item.text:
-                suggestion_list_item = item
-                break
-        except StaleElementReferenceException:
-            # If a stale element exception occurs, re-fetch the suggestion list items
-            suggestion_list_items = nav.get_element(
-                "search-suggestion-list", multiple=True
-            )
-            for new_item in suggestion_list_items:
-                if site in new_item.text:
-                    suggestion_list_item = new_item
-                    break
+    suggestion_list_item = next(
+        (item for item in suggestion_list_items if site in item.text), None
+    )
 
     if suggestion_list_item:
         suggestion_list_item.click()
