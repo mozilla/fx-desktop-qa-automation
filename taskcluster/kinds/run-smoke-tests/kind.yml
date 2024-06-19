@@ -1,30 +1,24 @@
 transforms:
-- fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
-- taskgraph.transforms.run
-- taskgraph.transforms.task
+  - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
 
 task-defaults:
+  label: "Slack Notifier"
+  description: "Notifies the Slack Channel"
   worker-type: t-linux-large
   worker:
     docker-image: {in-tree: linux}
     max-run-time: 1800
     artifacts:
-    - name: public/results
-      path: /builds/worker/artifacts
-      type: directory
+      - name: public/results
+        path: /builds/worker/artifacts
+        type: directory
   routes:
-    by-level:
-      '3':
-        - notify.slack-channel.G016BC5FUHJ.on-failed
-      default: []
+    - notify.slack-channel.G016BC5FUHJ.on-failed
   scopes:
-    by-level:
-      '3':
-        - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-alerts-sandbox on failure
-        - notify:slack-channel:G016BC5FUHJ
-        - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-testeng on success
-        - notify:slack-channel:G016BC5FUHJ
-      default: []
+      - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-alerts-sandbox on failure
+      - notify:slack-channel:G016BC5FUHJ
+      - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-testeng on success
+      - notify:slack-channel:G016BC5FUHJ
 
 tasks:
   linux:
@@ -37,5 +31,3 @@ tasks:
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox .
-        python3, "../scripts/slack_notifier.py"]
-        taskcluster/scripts/slack_notifier.py
