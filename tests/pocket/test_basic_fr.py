@@ -11,6 +11,7 @@ def add_prefs():
         ("browser.ping-centre.log", True),
     ]
 
+
 @pytest.mark.unstable
 @pytest.mark.locale_fr
 def test_localized_pocket_layout_FR(driver: Firefox):

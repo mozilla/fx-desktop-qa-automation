@@ -24,7 +24,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
         tabs.actions.send_keys(Keys.ESCAPE).perform()
 
     # Check that you can scroll the tab out of view
-    for _ in range(14):
+    for _ in range(16):
         tabs.scroll_tabs(tabs.SCROLL_DIRECTION.LEFT)
 
     with driver.context(driver.CONTEXT_CHROME):
@@ -43,7 +43,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
         assert tabs.get_text_of_all_tabs_entry(selected=True).startswith("Gort")
         tabs.actions.send_keys(Keys.ESCAPE).perform()
 
-    for _ in range(19):
+    for _ in range(17):
         tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
     driver.get("about:about")

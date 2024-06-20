@@ -22,4 +22,4 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         python3 -m pipenv install;
-        python3 -m pipenv run pytest -n 4 --fx-executable ./firefox/firefox .
+        python3 -m pipenv run pytest -vs --log-level-cli=INFO -n 4 --fx-executable ./firefox/firefox .
