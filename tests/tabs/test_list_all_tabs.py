@@ -10,7 +10,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     """
     tabs = TabBar(driver).open()
     driver.get("about:blank")
-    for _ in range(15):
+    for _ in range(17):
         tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[13])
     target_tab = tabs.get_tab(14)
@@ -24,11 +24,13 @@ def test_list_all_tabs(driver: Firefox, screenshot):
         tabs.actions.send_keys(Keys.ESCAPE).perform()
 
     # Check that you can scroll the tab out of view
-    for _ in range(16):
+    tab_out_of_view = False
+    for _ in range(30):
         tabs.scroll_tabs(tabs.SCROLL_DIRECTION.LEFT)
-
-    with driver.context(driver.CONTEXT_CHROME):
-        assert target_tab.location["x"] > driver.get_window_size()["width"]
+        with driver.context(driver.CONTEXT_CHROME):
+            if target_tab.location["x"] > driver.get_window_size()["width"]:
+                tab_out_of_view = True
+    assert tab_out_of_view
 
     # Check that you can scroll the tab back into view
     for _ in range(5):

@@ -8,6 +8,7 @@ from modules.browser_object import PanelUi
 
 def test_a_selector(driver: Firefox, version: str):
     logging.info(f"Fx version {version}")
+    assert False
     panel = PanelUi(driver).open()
     panel.open_panel_menu()
     with driver.context(driver.CONTEXT_CHROME):
