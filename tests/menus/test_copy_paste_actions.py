@@ -33,6 +33,8 @@ def test_login_form_copy_paste(driver: Firefox):
 
     # delete all text
     password_field.send_keys(Keys.BACK_SPACE)
+    assert password_field.get_attribute("value") == ""
+
     context_menu.context_click_element(password_field)
     with driver.context(driver.CONTEXT_CHROME):
         context_menu.get_context_item("context-menu-paste").click()
@@ -43,7 +45,7 @@ def test_login_form_copy_paste(driver: Firefox):
 
 
 def test_text_area_copy_paste(driver: Firefox):
-    # initialize obbjects
+    # initialize objects
     text_area_fill = TextAreaFormAutofill(driver).open()
     util = Utilities()
     context_menu = SearchBarContextMenu(driver)
@@ -63,6 +65,8 @@ def test_text_area_copy_paste(driver: Firefox):
 
     # delete all the text and paste
     text_area.send_keys(Keys.BACK_SPACE)
+    assert text_area.get_attribute("value") == ""
+
     context_menu.context_click_element(text_area)
     with driver.context(driver.CONTEXT_CHROME):
         context_menu.get_context_item("context-menu-paste").click()
@@ -95,6 +99,7 @@ def test_search_field_copy_paste(driver: Firefox):
 
     # delete the current text
     search_bar.send_keys(Keys.BACK_SPACE)
+    assert search_bar.get_attribute("value") == ""
 
     # context click and paste the text back
     context_menu.context_click_element(search_bar)
