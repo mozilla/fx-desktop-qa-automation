@@ -14,6 +14,8 @@ if __name__ == "__main__":
 
         print(
             "\n".join(
-                check_output(["pytest", "--run-headless", "-m", "not unstable", *tests]).decode().splitlines()
+                check_output(["pytest", "--run-headless", "-m", "not unstable", *tests])
+                .decode()
+                .splitlines()
             )
         )
