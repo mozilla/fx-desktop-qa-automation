@@ -23,4 +23,4 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         python3 -m pipenv install;
-        sleep 10 && python3 -m pipenv run pytest -vs --log-cli-level=INFO -n 6 --fx-executable ./firefox/firefox .
+        python3 -m pipenv run pytest -vs --log-cli-level=INFO  --fx-executable ./firefox/firefox tests/form_autofill

@@ -2,6 +2,7 @@ import logging
 import os
 import platform
 from typing import List, Tuple
+from time import sleep
 
 import pytest
 from selenium import webdriver
@@ -163,6 +164,11 @@ def driver(
         options = Options()
         if opt_headless or opt_ci:
             options.add_argument("--headless")
+        if opt_ci:
+            for _ in range(60):
+                if os.path.exists("firefox/firefox.sig"):
+                    break
+                sleep(0.5)
         options.binary_location = fx_executable
         for opt, value in set_prefs:
             options.set_preference(opt, value)

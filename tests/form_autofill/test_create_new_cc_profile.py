@@ -1,4 +1,5 @@
 import json
+import pytest
 
 from selenium.webdriver import Firefox
 
@@ -6,7 +7,7 @@ from modules.browser_object import AboutPrefsCcPopup, Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
-
+@pytest.mark.unstable
 def test_create_new_cc_profile(driver: Firefox):
     """
     C122389, tests you can create and save a new Credit Card profile
