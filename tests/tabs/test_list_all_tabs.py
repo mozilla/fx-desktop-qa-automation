@@ -1,10 +1,11 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import TabBar
 
-import logging
 
 @pytest.mark.unstable
 def test_list_all_tabs(driver: Firefox, screenshot):

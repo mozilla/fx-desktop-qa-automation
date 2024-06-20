@@ -7,6 +7,7 @@ from modules.page_object import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
+
 @pytest.mark.unstable
 def test_autofill_credit_card(driver: Firefox):
     """

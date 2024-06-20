@@ -6,6 +6,7 @@ from modules.browser_object_navigation import Navigation
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
+
 @pytest.mark.unstable
 def test_clear_form_credit_card(driver: Firefox):
     """
