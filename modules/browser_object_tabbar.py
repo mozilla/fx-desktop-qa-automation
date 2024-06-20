@@ -6,7 +6,6 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.page_base import BasePage
 
@@ -230,8 +229,8 @@ class TabBar(BasePage):
         Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
         """
         try:
-            WebDriverWait(self.driver, 10).until(
+            self.wait.until(
                 lambda _: len(self.driver.window_handles) == num_tabs
             )
         except TimeoutException:
-            logging.warn("Timeout waiting for the number of windows to be:", 1)
+            logging.warn("Timeout waiting for the number of windows to be:", num_tabs)

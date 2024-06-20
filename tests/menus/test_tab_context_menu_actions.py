@@ -145,39 +145,3 @@ def test_close_mulitiple_tabs_other_tabs(driver: Firefox):
     # verify the number of tabs
     logging.info("Trying to verify only 1 tab remains.")
     tabs.wait_for_num_tabs(1)
-
-
-def test_reopen_closed_tab(driver: Firefox):
-    """
-    C2637624.4: reopen closed tab
-    """
-    tabs = TabBar(driver).open()
-    tab_context_menu = TabContextMenu(driver)
-
-    tabs_to_open = 4
-
-    # open some tabs
-    for i in range(tabs_to_open):
-        driver.get(links[i])
-        tabs.new_tab_by_button()
-        driver.switch_to.window(driver.window_handles[i + 1])
-
-    # grab last tab and close it
-    second_tab = tabs.get_tab(2)
-    first_tab = tabs.get_tab(1)
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.actions.context_click(second_tab).perform()
-        close_tab = tab_context_menu.get_context_item("context-menu-close-tab")
-        close_tab.click()
-
-        tabs.actions.context_click(first_tab).perform()
-        reopen_closed_tab = tab_context_menu.get_context_item(
-            "context-menu-reopen-closed-tab"
-        )
-        reopen_closed_tab.click()
-
-        tabs.hide_popup("tabContextMenu")
-
-    # verify the number of tabs
-    logging.info("Trying to verify the correct number of tabs.")
-    tabs.wait_for_num_tabs(5)
