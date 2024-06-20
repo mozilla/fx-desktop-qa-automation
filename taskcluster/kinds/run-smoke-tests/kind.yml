@@ -17,10 +17,10 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        mkdir -p artifacts
-        pip3 install 'pipenv==2023.11.15'
-        pip3 install 'ruff>=0.4.8,<0.5'
+        mkdir -p artifacts;
+        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'ruff>=0.4.8,<0.5';
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         python3 -m pipenv install;
-        python3 -m pipenv run pytest -vs --log-cli-level=INFO -n 6 --fx-executable ./firefox/firefox .
+        sleep 10 && python3 -m pipenv run pytest -vs --log-cli-level=INFO -n 6 --fx-executable ./firefox/firefox .
