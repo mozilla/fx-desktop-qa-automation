@@ -43,7 +43,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
         assert tabs.get_text_of_all_tabs_entry(selected=True).startswith("Gort")
         tabs.actions.send_keys(Keys.ESCAPE).perform()
 
-    for _ in range(16):
+    for _ in range(19):
         tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
     driver.get("about:about")

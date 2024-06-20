@@ -1,5 +1,6 @@
 import logging
 import random
+import pytest
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -7,6 +8,7 @@ from selenium.webdriver.common.by import By
 from modules.page_object import AboutProfiles
 
 
+@pytest.mark.unstable
 def test_set_default_profile(driver: Firefox):
     """
     C130792, set the default profile through the firefox browser
