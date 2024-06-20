@@ -216,11 +216,15 @@ class TabBar(BasePage):
             menu = self.get_element("all-tabs-menu")
             logging.info(f"menu location: {menu.location}")
             logging.info(f"menu size: {menu.size}")
+
             def get_bar_y():
-                return min([
-                    menu.size["height"] // 2,
-                    self.driver.get_window_size()["height"] // 2
-                ])
+                return min(
+                    [
+                        menu.size["height"] // 2,
+                        self.driver.get_window_size()["height"] // 2,
+                    ]
+                )
+
             # HACK: Can't figure out what the scrollbox selector is, but it's ~4 pixels
             #  off the edge of the menu.
             x_start = menu.location["x"] + menu.size["width"] - 4

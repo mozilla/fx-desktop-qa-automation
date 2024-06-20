@@ -33,8 +33,12 @@ def test_list_all_tabs(driver: Firefox, screenshot):
         tabs.scroll_tabs(tabs.SCROLL_DIRECTION.LEFT)
         with driver.context(driver.CONTEXT_CHROME):
             if target_tab.location["x"] > driver.get_window_size()["width"]:
-                logging.info(f"Tab location {target_tab.location['x']} should be greater...")
-                logging.info(f"...than window width {driver.get_window_size()['width']}")
+                logging.info(
+                    f"Tab location {target_tab.location['x']} should be greater..."
+                )
+                logging.info(
+                    f"...than window width {driver.get_window_size()['width']}"
+                )
                 tab_out_of_view = True
                 break
     assert tab_out_of_view

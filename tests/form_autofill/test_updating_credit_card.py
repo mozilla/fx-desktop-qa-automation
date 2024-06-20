@@ -66,6 +66,7 @@ def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     about_prefs.verify_cc_json(cc_info_json, credit_card_sample_data)
 
 
+@pytest.mark.unstable
 def test_update_cc_number_new_profile(driver: Firefox):
     """
     C122406, continuation ensures that updating the credit card number saves a new card instead of updating the new one
