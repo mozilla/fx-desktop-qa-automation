@@ -191,7 +191,7 @@ def screenshot(driver: webdriver.Firefox, opt_ci: bool):
             filename = filename + ".png"
         artifacts_loc = ""
         if opt_ci:
-            artifacts_loc = os.path.join("/builds", "worker", "artifacts")
+            artifacts_loc = "artifacts"
         driver.save_screenshot(os.path.join(artifacts_loc, filename))
 
     return _screenshot
