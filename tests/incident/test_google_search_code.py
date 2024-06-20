@@ -16,7 +16,7 @@ def test_google_search_code(driver: Firefox):
     nav = Navigation(driver).open()
 
     # Check code generated from the Awesome bar search
-    fx_code = "client=firefox-b-d"
+    fx_code = "client=firefox-b-1-d"
     nav.search("soccer")
     WebDriverWait(driver, 10).until(EC.title_contains("Google Search"))
     search_url = driver.current_url
