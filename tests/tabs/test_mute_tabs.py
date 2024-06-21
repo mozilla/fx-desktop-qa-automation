@@ -6,7 +6,6 @@ from modules.browser_object import TabBar
 
 
 @pytest.mark.audio
-@pytest.mark.xfail(reason="Will fail until we fix CI audio path.")
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
     tabs = TabBar(driver).open()

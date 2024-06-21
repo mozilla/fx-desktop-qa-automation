@@ -85,6 +85,7 @@ curl -O "$FX_LOC"
 
 mv geckodriver*.tar.gz geckodriver.tar.gz
 tar -xvzf geckodriver.tar.gz
+chmod +x geckodriver
 
 if [[ $SYSTEM_NAME == "linux" ]]
 then
