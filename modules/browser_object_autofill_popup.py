@@ -1,5 +1,3 @@
-import json
-
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -53,7 +51,7 @@ class AutofillPopup(BasePage):
                 )
             )
 
-    # TODO: on Nightly, no JSON is returned on get_attribute, on reg Firefox the JSON is returned. When this fails later on, FIX.
+    # This is now just a bare value, not JSON (as of 128.0b3), please update your Firefox under test
     def get_primary_value(self, element):
         """
         Get the primary value from the autocomplete element.
@@ -62,9 +60,7 @@ class AutofillPopup(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ac_value = element.get_attribute("ac-value")
-            ac_value_json = json.loads(ac_value)
-            actual_name = ac_value_json.get("primary", "")
-            return actual_name
+            return ac_value
 
     def press_doorhanger_dropdown(self):
         """

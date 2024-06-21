@@ -43,20 +43,20 @@ def test_update_address(driver: Firefox, country_code: str):
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # Verify no dupe is saved
-    element_list = about_prefs.get_element("saved-addresses", multiple=True)
+    element_list = about_prefs.get_elements("saved-addresses")
     assert (
         len(element_list) == 1
     ), f"Expected 1 saved address, but found {len(element_list)}."
     print("Assertion passed: There is exactly 1 saved address.")
 
     # Assert that "Doe" is present in updated entry
-    element = about_prefs.get_element("saved-addresses-values", multiple=True)
-    found_updated_address = any("Doe" in element.text for element in element)
+    elements = about_prefs.get_elements("saved-addresses-values")
+    found_updated_address = any("Doe" in element.text for element in elements)
     assert (
         found_updated_address
     ), "The value 'Doe' was not found in any of the address entries."
 
     # Print the element that contains "Doe" for verification
-    for element in element:
+    for element in elements:
         if "Doe" in element.text:
             print(f"Assertion passed: entry containing 'Doe': {element.text}")

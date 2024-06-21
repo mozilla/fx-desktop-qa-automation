@@ -1,0 +1,7 @@
+{
+    "street-address-textarea": {
+        "selectorData": "street-address",
+        "strategy": "id",
+        "groups": []
+    }
+}

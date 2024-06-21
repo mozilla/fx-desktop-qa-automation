@@ -1,7 +1,7 @@
 import logging
 import re
 from random import shuffle
-from typing import Union
+from typing import Literal, Union
 
 from faker import Faker
 from faker.providers import internet, misc
@@ -32,6 +32,20 @@ class Utilities:
         chars = list("bdehjlmptvwxz2678-BDEHJLMPTVWXZ")
         shuffle(chars)
         return "".join(chars[:n])
+
+    def generate_random_text(
+        self, type: Literal["word", "sentence", "paragraph"] = "word"
+    ) -> str:
+        """
+        Generates a random word, sentence or paragraph based on what is passed in.
+        """
+        fake = Faker()
+        if type == "word":
+            return fake.word()
+        elif type == "sentence":
+            return fake.sentence()
+        else:
+            return fake.paragraph()
 
     def write_html_content(self, file_name: str, driver: Firefox, chrome: bool):
         """
@@ -192,6 +206,20 @@ class Utilities:
             expiration_year=expiration_year,
             cvv=cvv,
         )
+
+        while len(fake_data.card_number) <= 14:
+            name = fake.name()
+            card_number = fake.credit_card_number()
+            generated_credit_expiry = fake.credit_card_expire()
+            expiration_month, expiration_year = generated_credit_expiry.split("/")
+            cvv = fake.credit_card_security_code()
+            fake_data = CreditCardBase(
+                name=name,
+                card_number=card_number,
+                expiration_month=expiration_month,
+                expiration_year=expiration_year,
+                cvv=cvv,
+            )
 
         return fake_data
 

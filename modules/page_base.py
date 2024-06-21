@@ -177,16 +177,18 @@ class BasePage(Page):
             element_data["selectorData"],
         ]
         if not labels:
+            logging.info("Returned selector.")
             return selector
         braces = re.compile(r"(\{.*?\})")
         match = braces.findall(selector[1])
         for i in range(len(labels)):
             logging.info(f"Replace {match[i]} with {labels[i]}")
             selector[1] = selector[1].replace(match[i], labels[i])
+        logging.info("Returned selector.")
         return selector
 
     def get_element(
-        self, name: str, multiple=False, labels=[]
+        self, name: str, multiple=False, parent_element=None, labels=[]
     ) -> Union[list[WebElement], WebElement]:
         """
         Given a key for a self.elements dict entry, return the Selenium WebElement(s).
@@ -194,6 +196,8 @@ class BasePage(Page):
         If there are items in `labels`, replace instances of {.*} in the "selectorData"
         with items from `labels`, in the order they are given. (Think Rust format macros.)
 
+
+        Note: This method currently does not support finding a child under a parent (given in the JSON) if it has a shadow parent.
         ...
 
         Arguments
@@ -204,6 +208,9 @@ class BasePage(Page):
 
         multiple: bool
             Do we expect a list of WebElements?
+
+        parent_element: WebElement
+            The parent WebElement to search under to narrow the scope instead of searching the entire page
 
         labels: list[str]
             Strings that replace instances of {.*} in the "selectorData" subentry of
@@ -228,7 +235,6 @@ class BasePage(Page):
             cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
-
         if not multiple and "seleniumObject" in self.elements[cache_name]:
             # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
@@ -256,6 +262,17 @@ class BasePage(Page):
                 return self.utils.find_shadow_element(
                     shadow_parent, selector, multiple=multiple, context=self.context
                 )
+        # if the child has a parent tag
+        if parent_element is not None:
+            logging.info("A WebElement parent was detected.")
+            if not multiple:
+                child_element = parent_element.find_element(*selector)
+                if "doNotCache" not in element_data["groups"]:
+                    self.elements[cache_name]["seleniumObject"] = child_element
+                logging.info(f"Returning element {cache_name}.\n")
+                return child_element
+            else:
+                return parent_element.find_elements(*selector)
         if not multiple:
             found_element = self.driver.find_element(*selector)
             if "doNotCache" not in element_data["groups"]:
@@ -294,6 +311,16 @@ class BasePage(Page):
         )
         return self
 
+    def element_does_not_exist(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element exists or timeout"""
+        original_timeout = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        self.instawait.until_not(
+            EC.presence_of_all_elements_located(self.get_selector(name, labels=labels))
+        )
+        self.driver.implicitly_wait(original_timeout)
+        return self
+
     def element_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is visible or timeout"""
         self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
@@ -319,6 +346,14 @@ class BasePage(Page):
         elem = self.get_element(name, labels=labels)
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
+
+    def triple_click(self, name: str, labels=[]):
+        """
+        Actions helper: perform triple-click on a given element
+        """
+        elem = self.get_element(name, labels=labels)
+        EC.element_to_be_clickable(elem)
+        self.actions.move_to_element(elem).click().click().click().perform()
 
     def context_click_element(self, element) -> Page:
         self.actions.context_click(element).perform()
