@@ -164,14 +164,18 @@ def driver(
         options = Options()
         if opt_headless or opt_ci:
             options.add_argument("--headless")
-        if opt_ci:
-            for _ in range(60):
-                if os.path.exists("firefox/firefox.sig"):
-                    break
-                sleep(0.5)
         options.binary_location = fx_executable
         for opt, value in set_prefs:
             options.set_preference(opt, value)
+        if opt_ci:
+            i = 0
+            while i < 60:
+                try:
+                    i += 1
+                    driver = webdriver.Firefox(options=options)
+                    break
+                except PermissionError:
+                    sleep(0.5)
         driver = webdriver.Firefox(options=options)
         separator = "x"
         if separator not in opt_window_size:
