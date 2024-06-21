@@ -8,3 +8,4 @@ from modules.page_object_about_profiles import *
 from modules.page_object_addons_mozilla_org import *
 from modules.page_object_autofill_credit_card import *
 from modules.page_object_autofill_test_basic import *
+from modules.page_object_google_search import *
