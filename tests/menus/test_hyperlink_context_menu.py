@@ -108,7 +108,9 @@ def test_copy_link(driver: Firefox):
 
     # paste and go
     with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("context-menu-paste-and-go").click()
+        paste_and_go = nav.get_element("context-menu-paste-and-go")
+        paste_and_go.click()
+        nav.hide_popup_by_child_node(paste_and_go)
 
     with driver.context(driver.CONTEXT_CONTENT):
         nav.expect(EC.title_contains("Example Domains"))

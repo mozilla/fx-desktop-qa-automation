@@ -375,6 +375,13 @@ class BasePage(Page):
                 """
         self.driver.execute_script(script)
 
+    def hide_popup_by_child_node(self, node: WebElement) -> Page:
+        script = """var element = arguments[0].parentNode;
+                 if (element && element.hidePopup) {
+                    element.hidePopup();
+                 }"""
+        self.driver.execute_script(script, node)
+
     @property
     def loaded(self):
         """
