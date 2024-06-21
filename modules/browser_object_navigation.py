@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -93,4 +94,27 @@ class Navigation(BasePage):
                 )
             else:
                 self.type_in_awesome_bar(term + Keys.ENTER)
+        return self
+
+    def set_search_bar(self) -> BasePage:
+        """Set the search_bar attribute of the Navigation object"""
+        self.set_chrome_context()
+        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        return self
+
+    def search_bar_search(self, term: str) -> BasePage:
+        """
+        Search using the *Old* Search Bar. Returns self.
+
+        Attributes
+        ----------
+
+        term : str
+            The search term
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+            # self.set_search_bar()
+            self.search_bar.click()
+            self.search_bar.send_keys(term + Keys.ENTER)
         return self
