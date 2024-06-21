@@ -106,6 +106,12 @@
         "selectorData": "paste-and-go",
         "strategy": "id",
         "groups": []
+    },
+
+    "private-browsing-icon": {
+        "selectorData": "private-browsing-indicator-icon",
+        "strategy": "class",
+        "groups": []
     }
 
 }

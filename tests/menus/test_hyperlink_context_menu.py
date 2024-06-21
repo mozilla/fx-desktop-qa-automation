@@ -69,6 +69,10 @@ def test_open_link_in_private_window(driver: Firefox):
         nav.expect(EC.title_contains("Example Domains"))
         assert driver.current_url == "https://www.iana.org/help/example-domains"
 
+    # verify its in private mode
+    with driver.context(driver.CONTEXT_CHROME):
+        nav.element_exists("private-browsing-icon")
+
 
 def test_copy_link(driver: Firefox):
     """
