@@ -1,0 +1,46 @@
+{
+    "profile-container": {
+        "selectorData": "profiles",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "profile-container-item-default-header": {
+        "selectorData": "h3[data-l10n-id='profiles-in-use-profile']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "profile-container-item-profile-name": {
+        "selectorData": "h2[data-l10n-id='profiles-name']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "profile-container-item-button": {
+        "selectorData": "button[data-l10n-id='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "profile-container-item-table-row-value": {
+        "selectorData": "td",
+        "strategy": "tag",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "profile-container-item-table-row": {
+        "selectorData": "tr",
+        "strategy": "tag",
+        "groups": [
+            "doNotCache"
+        ]
+    }
+
+}
