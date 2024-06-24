@@ -1,0 +1,19 @@
+{
+    "context-menu-open-in-new-window": {
+        "selectorData": "context-openlink",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-copy-link": {
+        "selectorData": "context-copylink",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-open-in-private-window": {
+        "selectorData": "context-openlinkprivate",
+        "strategy": "id",
+        "groups": []
+    }
+}

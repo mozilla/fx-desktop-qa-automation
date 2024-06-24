@@ -369,6 +369,27 @@ class BasePage(Page):
         """
         self.driver.execute_script(script)
 
+    def hide_popup_by_class(self, class_name: str) -> None:
+        """
+        Given the class name of the context menu, it will dismiss the menu.
+
+        For example, if the context menu corresponds to the class name of 'context-menu',
+        usage would be: tabs.hide_popup_by_class("context-menu")
+        """
+        script = f"""var element = document.querySelector(".{class_name}");
+                 if (element && element.hidePopup) {{
+                     element.hidePopup();
+                 }}
+                """
+        self.driver.execute_script(script)
+
+    def hide_popup_by_child_node(self, node: WebElement) -> Page:
+        script = """var element = arguments[0].parentNode;
+                 if (element && element.hidePopup) {
+                    element.hidePopup();
+                 }"""
+        self.driver.execute_script(script, node)
+
     @property
     def loaded(self):
         """
