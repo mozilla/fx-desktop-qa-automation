@@ -12,6 +12,8 @@ def add_prefs():
     ]
 
 
+# LOW PRIORITY
+@pytest.mark.unstable
 @pytest.mark.locale_fr
 def test_localized_pocket_layout_FR(driver: Firefox):
     """

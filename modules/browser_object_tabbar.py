@@ -1,7 +1,7 @@
 import logging
 from typing import Union
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (NoSuchElementException, TimeoutException)
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -130,8 +130,11 @@ class TabBar(BasePage):
         """Scroll tabs in tab bar using the < and > scroll buttons"""
         logging.info(f"Scrolling tabs {direction}")
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            scroll_button = self.get_element(f"tab-scrollbox-{direction}-button")
-            scroll_button.click()
+            try:
+                scroll_button = self.get_element(f"tab-scrollbox-{direction}-button")
+                scroll_button.click()
+            except NoSuchElementException:
+                logging.info("Could not scroll any further!")
         return self
 
     def get_text_of_all_tabs_entry(self, selected=False, index=0) -> str:
@@ -211,11 +214,22 @@ class TabBar(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             menu = self.get_element("all-tabs-menu")
+            logging.info(f"menu location: {menu.location}")
+            logging.info(f"menu size: {menu.size}")
+
+            def get_bar_y():
+                return min(
+                    [
+                        menu.size["height"] // 2,
+                        self.driver.get_window_size()["height"] // 2,
+                    ]
+                )
+
             # HACK: Can't figure out what the scrollbox selector is, but it's ~4 pixels
             #  off the edge of the menu.
             x_start = menu.location["x"] + menu.size["width"] - 4
             # Grab the middle of the scrollbox area, most likely to hold the bar
-            y_start = menu.location["y"] + (menu.size["height"] // 2)
+            y_start = menu.location["y"] + get_bar_y()
             # +Y is down, -Y is up
             sign = 1 if down else -1
             self.actions.move_by_offset(x_start, y_start)
@@ -229,6 +243,8 @@ class TabBar(BasePage):
         Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
         """
         try:
-            self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
+            self.wait.until(
+                lambda _: len(self.driver.window_handles) == num_tabs
+            )
         except TimeoutException:
             logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
