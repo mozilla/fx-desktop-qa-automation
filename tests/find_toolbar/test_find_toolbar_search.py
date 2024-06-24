@@ -1,7 +1,6 @@
 import logging
 from typing import Callable
 
-import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -31,3 +30,14 @@ def test_find_toolbar_search(driver: Firefox, screenshot: Callable):
 
     # Should be more colors after we highlight part of the word
     assert len(target_colors) > len(ref_colors)
+
+    # Search for something where our target will no longer be the first hit
+    driver.get("about:about")
+    find_toolbar.find("about")
+
+    # Confirm that our target is no longer highlighted by matching colors with reference
+    cleared_link_el = driver.find_element(By.CSS_SELECTOR, f"a[href='{TARGET_LINK}']")
+    cleared_image_loc = screenshot("cleared")
+    cleared_colors = ba.get_all_colors_in_element(cleared_link_el, cleared_image_loc)
+
+    assert ref_colors == cleared_colors
