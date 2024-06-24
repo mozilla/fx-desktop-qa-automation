@@ -347,7 +347,7 @@ class BasePage(Page):
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
-    def triple_click(self, elem: WebElement, labels=[]):
+    def triple_click_element(self, elem: WebElement, labels=[]):
         """
         Actions helper: perform triple-click on given element
 

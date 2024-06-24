@@ -49,7 +49,7 @@ def test_search_code_google_us(driver: Firefox):
     nav.set_content_context()
     driver.get("http://example.com")
     h1_tag = driver.find_element(By.TAG_NAME, "h1")
-    nav.triple_click(h1_tag)
+    nav.triple_click_element(h1_tag)
     nav.context_click_element(h1_tag)
     nav.set_chrome_context()
     menu_option = driver.find_element(By.ID, "context-searchselect")
