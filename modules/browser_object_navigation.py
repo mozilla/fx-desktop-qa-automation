@@ -95,7 +95,7 @@ class Navigation(BasePage):
             else:
                 self.type_in_awesome_bar(term + Keys.ENTER)
         return self
-      
+
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
         self.set_chrome_context()

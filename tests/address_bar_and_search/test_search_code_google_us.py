@@ -1,5 +1,4 @@
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -17,7 +16,6 @@ def test_search_code_google_us(driver: Firefox):
 
     nav = Navigation(driver).open()
     ac = AboutConfig(driver)
-    actions = ActionChains(driver)
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region

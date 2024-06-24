@@ -1,7 +1,7 @@
 import logging
 from typing import Union
 
-from selenium.common.exceptions import (NoSuchElementException, TimeoutException)
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -243,8 +243,6 @@ class TabBar(BasePage):
         Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
         """
         try:
-            self.wait.until(
-                lambda _: len(self.driver.window_handles) == num_tabs
-            )
+            self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
         except TimeoutException:
             logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
