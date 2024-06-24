@@ -23,4 +23,6 @@ if __name__ == "__main__":
                 )
             )
         except CalledProcessError as exc:
-            print("Error", exc.returncode, exc.output)
+            error_lines = "/n".join(exc.output.decode().splitlines())
+            print("Error", exc.returncode, error_lines)
+            raise CalledProcessError
