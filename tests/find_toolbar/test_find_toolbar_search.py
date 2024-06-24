@@ -19,6 +19,9 @@ def compare(a: int, b: int) -> bool:
 
 
 def test_find_toolbar_search(driver: Firefox, screenshot: Callable):
+    """
+    C127239: Perform a search (using the Find Toolbar)
+    """
     driver.get("about:about")
     ba = BrowserActions(driver)
 
