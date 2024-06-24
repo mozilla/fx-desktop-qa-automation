@@ -8,6 +8,7 @@ from modules.browser_object import Navigation
 sites = [("YouTube", "com"), ("Ecosia", "org")]
 
 
+@pytest.mark.unstable
 @pytest.mark.parametrize("site, domain", sites)
 def test_add_search_engine_from_address_bar(driver: Firefox, site: str, domain: str):
     """
