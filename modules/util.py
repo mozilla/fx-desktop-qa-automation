@@ -5,6 +5,7 @@ from typing import Literal, Union
 
 from faker import Faker
 from faker.providers import internet, misc
+from PIL import Image
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -357,6 +358,39 @@ class BrowserActions:
         Switches back to the normal context
         """
         self.driver.switch_to.default_content()
+
+    def get_all_colors_in_element(self, el: WebElement, image_loc: str) -> set:
+        """
+        Given an element and a screenshot of the browser, return all the unique colors in that element.
+        """
+        # Get browser window size and scroll position
+        scroll_position = self.driver.execute_script(
+            "return { x: window.scrollX, y: window.scrollY };"
+        )
+
+        # Get device pixel ratio
+        device_pixel_ratio = self.driver.execute_script(
+            "return window.devicePixelRatio;"
+        )
+
+        # Get X and Y minima and maxima given view position and ratio
+        link_loc = el.location
+        link_size = el.size
+        x_start = int((link_loc["x"] - scroll_position["x"]) * device_pixel_ratio)
+        y_start = int((link_loc["y"] - scroll_position["y"]) * device_pixel_ratio)
+        x_end = x_start + int(link_size["width"] * device_pixel_ratio)
+        y_end = y_start + int(link_size["height"] * device_pixel_ratio)
+
+        # Get pixel color values for every pixel in the element, return the set
+        shot_image = Image.open(image_loc)
+        colors = []
+        logging.info(
+            f"Checking colors in x = ({x_start} : {x_end}), y = ({y_start} : {y_end})"
+        )
+        for x in range(x_start, x_end):
+            for y in range(y_start, y_end):
+                colors.append(shot_image.getpixel((x, y)))
+        return set(colors)
 
 
 class PomUtils:
