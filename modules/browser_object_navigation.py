@@ -94,3 +94,8 @@ class Navigation(BasePage):
             else:
                 self.type_in_awesome_bar(term + Keys.ENTER)
         return self
+
+    def click_in_awesome_bar(self) -> BasePage:
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        return self
