@@ -1,6 +1,7 @@
 import logging
 import os
 import platform
+from subprocess import CalledProcessError, check_call
 from typing import List, Tuple
 
 import pytest
@@ -182,6 +183,20 @@ def driver(
 
     finally:
         driver.quit()
+
+
+@pytest.fixture()
+def unlock_keyring(sys_platform: str):
+    # TODO: add linux and windows unlocks if relevant
+    # TODO: add secrets mgmt and insertion
+    if sys_platform != "Darwin":
+        return None
+    try:
+        check_call(["security", "unlock-keychain"])
+    except CalledProcessError:
+        logging.warning("Failed to unlock keyring: security has errors.")
+    except OSError:
+        logging.warning("Failed to unlock keyring: security executable not found.")
 
 
 @pytest.fixture()
