@@ -1,3 +1,4 @@
+import sys
 from subprocess import CalledProcessError, check_output
 
 if __name__ == "__main__":
@@ -23,6 +24,7 @@ if __name__ == "__main__":
                 )
             )
         except CalledProcessError as exc:
-            error_lines = "/n".join(exc.output.decode().splitlines())
-            print("Error", exc.returncode, error_lines)
-            raise CalledProcessError
+            error_lines = "\n".join(exc.output.decode().splitlines())
+            print("Error", exc.returncode)
+            print(error_lines)
+            sys.exit(1)

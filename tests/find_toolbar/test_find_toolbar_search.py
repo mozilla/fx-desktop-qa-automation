@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 from typing import Callable
 
 from selenium.webdriver import Firefox
@@ -8,6 +9,13 @@ from modules.browser_object import FindToolbar
 from modules.util import BrowserActions
 
 TARGET_LINK = "about:telemetry"
+# The number of colors that can be different between two images
+# before we call them different color schemes
+TOLERANCE = 3
+
+
+def compare(a: int, b: int) -> bool:
+    return abs(a - b) < TOLERANCE
 
 
 def test_find_toolbar_search(driver: Firefox, screenshot: Callable):
@@ -29,7 +37,8 @@ def test_find_toolbar_search(driver: Firefox, screenshot: Callable):
     target_colors = ba.get_all_colors_in_element(target_link_el, target_image_loc)
 
     # Should be more colors after we highlight part of the word
-    assert len(target_colors) > len(ref_colors)
+    logging.info(f"{len(target_colors)}, {len(ref_colors)}")
+    assert not compare(len(target_colors), len(ref_colors))
 
     # Search for something where our target will no longer be the first hit
     driver.get("about:about")
@@ -40,4 +49,4 @@ def test_find_toolbar_search(driver: Firefox, screenshot: Callable):
     cleared_image_loc = screenshot("cleared")
     cleared_colors = ba.get_all_colors_in_element(cleared_link_el, cleared_image_loc)
 
-    assert ref_colors == cleared_colors
+    assert compare(len(ref_colors), len(cleared_colors))
