@@ -1,5 +1,6 @@
 import logging
 import re
+from os import remove
 from random import shuffle
 from typing import Literal, Union
 
@@ -359,10 +360,15 @@ class BrowserActions:
         """
         self.driver.switch_to.default_content()
 
-    def get_all_colors_in_element(self, el: WebElement, image_loc: str) -> set:
+    def get_all_colors_in_element(self, selector: tuple) -> set:
         """
-        Given an element and a screenshot of the browser, return all the unique colors in that element.
+        Given an element selector, return all the unique colors in that element.
         """
+        el = self.driver.find_element(*selector)
+        u = Utilities()
+        image_loc = f"{u.random_string(7)}.png"
+        self.driver.save_screenshot(image_loc)
+
         # Get browser window size and scroll position
         scroll_position = self.driver.execute_script(
             "return { x: window.scrollX, y: window.scrollY };"
@@ -390,6 +396,7 @@ class BrowserActions:
         for x in range(x_start, x_end):
             for y in range(y_start, y_end):
                 colors.append(shot_image.getpixel((x, y)))
+        remove(image_loc)
         return set(colors)
 
 
