@@ -356,9 +356,16 @@ class BasePage(Page):
         elem: str
             The element to be triple clicked
         """
-        # elem = self.get_element(elem, labels=labels)
         EC.element_to_be_clickable(elem)
         self.actions.click(elem).click(elem).click(elem).perform()
+
+    def triple_click(self, name: str, labels=[]):
+        """
+        Actions helper: perform triple-click on a given element
+        """
+        elem = self.get_element(name, labels=labels)
+        EC.element_to_be_clickable(elem)
+        self.actions.move_to_element(elem).click().click().click().perform()
 
     def context_click_element(self, element) -> Page:
         self.actions.context_click(element).perform()
@@ -373,6 +380,27 @@ class BasePage(Page):
         script = f"""document.querySelector("#{context_menu}").hidePopup();
         """
         self.driver.execute_script(script)
+
+    def hide_popup_by_class(self, class_name: str) -> None:
+        """
+        Given the class name of the context menu, it will dismiss the menu.
+
+        For example, if the context menu corresponds to the class name of 'context-menu',
+        usage would be: tabs.hide_popup_by_class("context-menu")
+        """
+        script = f"""var element = document.querySelector(".{class_name}");
+                 if (element && element.hidePopup) {{
+                     element.hidePopup();
+                 }}
+                """
+        self.driver.execute_script(script)
+
+    def hide_popup_by_child_node(self, node: WebElement) -> Page:
+        script = """var element = arguments[0].parentNode;
+                 if (element && element.hidePopup) {
+                    element.hidePopup();
+                 }"""
+        self.driver.execute_script(script, node)
 
     @property
     def loaded(self):
