@@ -1,6 +1,4 @@
 import logging
-from time import sleep
-from typing import Callable
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -18,7 +16,7 @@ def compare(a: int, b: int) -> bool:
     return abs(a - b) < TOLERANCE
 
 
-def test_find_toolbar_search(driver: Firefox, screenshot: Callable):
+def test_find_toolbar_search(driver: Firefox):
     """
     C127239: Perform a search (using the Find Toolbar)
     """
