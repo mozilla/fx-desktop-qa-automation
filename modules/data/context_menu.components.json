@@ -9,5 +9,11 @@
         "selectorData": "context-take-screenshot",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-save-page-as": {
+        "selectorData": "context-savepage",
+        "strategy": "id",
+        "groups": []
     }
 }
