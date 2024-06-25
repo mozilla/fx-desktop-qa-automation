@@ -1,5 +1,3 @@
-import logging
-import os
 import platform
 from time import sleep
 
@@ -8,7 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ImageContextMenu, Navigation, TabBar
 from modules.page_object import WikiFirefoxLogo
-from modules.util import BrowserActions
+from modules.util import BrowserActions, Utilities
 
 
 def test_open_image_in_new_tab(driver: Firefox):
@@ -56,6 +54,7 @@ def test_save_image_as(driver: Firefox):
     image_context_menu = ImageContextMenu(driver)
     nav = Navigation(driver)
     ba = BrowserActions(driver)
+    util = Utilities()
 
     # wait for page to load
     wiki_image_page.wait_for_page_to_load()
@@ -101,33 +100,11 @@ def test_save_image_as(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         nav.wait_for_download_animation_finish(downloads_button)
 
-    saved_image_location = ""
-    if this_platform == "Windows":
-        user = os.environ.get("USERNAME")
-        saved_image_location = (
-            "C:\\Users\\" + user + "\\Downloads\\Firefox_logo,_2019.svg.png"
-        )
-    elif this_platform == "Darwin":
-        user = os.environ.get("USER")
-        saved_image_location = (
-            "/Users/" + user + "/Downloads/Firefox_logo,_2019.svg.png"
-        )
-    elif this_platform == "Linux":
-        user = os.environ.get("USER")
-        saved_image_location = "/home/" + user + "/Downloads/Firefox_logo,_2019.svg.png"
+    saved_image_location = util.get_saved_file_path("Firefox_logo,_2019.svg.png")
 
-    if os.path.exists(saved_image_location):
-        logging.info("The image was saved.")
-    else:
-        logging.warning("The image was not saved.")
-        assert False
+    util.check_file_path_validility(saved_image_location)
 
-    try:
-        os.remove(saved_image_location)
-        logging.info(saved_image_location + " has been deleted.")
-    except OSError as error:
-        logging.warning("There was an error.")
-        logging.warning(error)
+    util.remove_file(saved_image_location)
 
 
 def test_copy_image_link(driver: Firefox):
