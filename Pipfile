@@ -13,6 +13,7 @@ requests = "*"
 pytest-xdist = "*"
 pytest-html = "*"
 pypom = "*"
+jsonpath-ng = "*"
 
 [dev-packages]
 werkzeug = "*"
