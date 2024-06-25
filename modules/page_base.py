@@ -102,7 +102,9 @@ class BasePage(Page):
 
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
+        logging.info("Expecting...")
         if self.context == "chrome":
+            logging.info("Expecting in chrome...")
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 self.wait.until(condition)
         else:
@@ -323,17 +325,21 @@ class BasePage(Page):
 
     def element_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is visible or timeout"""
-        self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
+        self.expect(
+            EC.visibility_of_element_located(self.get_selector(name, labels=labels))
+        )
         return self
 
     def element_clickable(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is clickable or timeout"""
-        self.expect(EC.element_to_be_clickable(self.get_element(name, labels=labels)))
+        self.expect(EC.element_to_be_clickable(self.get_selector(name, labels=labels)))
         return self
 
     def element_selected(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is selected or timeout"""
-        self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
+        self.expect(
+            EC.element_located_to_be_selected(self.get_selector(name, labels=labels))
+        )
         return self
 
     def url_contains(self, url_part: str) -> Page:
