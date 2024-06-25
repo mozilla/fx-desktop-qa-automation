@@ -341,7 +341,9 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def multi_click(self, iters: int, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+    def multi_click(
+        self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
         """Perform multiple clicks at once on an element by name, selector, or WebElement"""
         if self.context == "chrome":
             self.set_chrome_context()
@@ -353,9 +355,7 @@ class BasePage(Page):
             el = reference
         else:
             assert False, "Attempted to multiclick on something unsupported"
-        self.expect(
-            EC.element_to_be_clickable(el)
-        )
+        self.expect(EC.element_to_be_clickable(el))
         if iters == 2:
             self.actions.double_click(el).perform()
         else:
