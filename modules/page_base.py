@@ -317,9 +317,12 @@ class BasePage(Page):
         """Expect helper: wait until element exists or timeout"""
         original_timeout = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
+        if self.context == "chrome":
+            self.set_chrome_context()
         self.instawait.until_not(
             EC.presence_of_all_elements_located(self.get_selector(name, labels=labels))
         )
+        self.set_content_context()
         self.driver.implicitly_wait(original_timeout)
         return self
 
