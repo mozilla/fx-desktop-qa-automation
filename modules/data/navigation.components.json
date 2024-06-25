@@ -1,5 +1,4 @@
 {
-
     "context": "chrome",
     "awesome-bar": {
         "selectorData": "urlbar-input",
@@ -78,12 +77,6 @@
         "groups": []
     },
 
-    "search-one-off-engine-button": {
-        "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^={site}]",
-        "strategy": "css",
-        "groups": []
-    },
-
     "search-one-off-browser-button": {
         "selectorData": "urlbar-engine-one-off-item-{source}",
         "strategy": "id",
@@ -102,9 +95,29 @@
         "groups": []
     },
 
-    "search-suggestion-list": {
-        "selectorData": "div.urlbarView-row[type='search_engine'] span.urlbarView-title",
+    "context-menu-paste-and-go": {
+        "selectorData": "paste-and-go",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "private-browsing-icon": {
+        "selectorData": "private-browsing-indicator-icon",
+        "strategy": "class",
+        "groups": []
+    },
+
+
+    "add-extra-search-engine": {
+        "selectorData": "[id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']",
         "strategy": "css",
-        "groups": ["doNotCache"]
+        "groups": []
+    },
+
+    "search-one-off-engine-button": {
+        "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
+        "strategy": "css",
+        "groups": []
     }
+
 }

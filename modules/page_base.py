@@ -188,7 +188,7 @@ class BasePage(Page):
         return selector
 
     def get_element(
-        self, name: str, multiple=False, labels=[]
+        self, name: str, multiple=False, parent_element=None, labels=[]
     ) -> Union[list[WebElement], WebElement]:
         """
         Given a key for a self.elements dict entry, return the Selenium WebElement(s).
@@ -196,6 +196,8 @@ class BasePage(Page):
         If there are items in `labels`, replace instances of {.*} in the "selectorData"
         with items from `labels`, in the order they are given. (Think Rust format macros.)
 
+
+        Note: This method currently does not support finding a child under a parent (given in the JSON) if it has a shadow parent.
         ...
 
         Arguments
@@ -206,6 +208,9 @@ class BasePage(Page):
 
         multiple: bool
             Do we expect a list of WebElements?
+
+        parent_element: WebElement
+            The parent WebElement to search under to narrow the scope instead of searching the entire page
 
         labels: list[str]
             Strings that replace instances of {.*} in the "selectorData" subentry of
@@ -230,7 +235,6 @@ class BasePage(Page):
             cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
-
         if not multiple and "seleniumObject" in self.elements[cache_name]:
             # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
@@ -258,6 +262,17 @@ class BasePage(Page):
                 return self.utils.find_shadow_element(
                     shadow_parent, selector, multiple=multiple, context=self.context
                 )
+        # if the child has a parent tag
+        if parent_element is not None:
+            logging.info("A WebElement parent was detected.")
+            if not multiple:
+                child_element = parent_element.find_element(*selector)
+                if "doNotCache" not in element_data["groups"]:
+                    self.elements[cache_name]["seleniumObject"] = child_element
+                logging.info(f"Returning element {cache_name}.\n")
+                return child_element
+            else:
+                return parent_element.find_elements(*selector)
         if not multiple:
             found_element = self.driver.find_element(*selector)
             if "doNotCache" not in element_data["groups"]:
@@ -332,6 +347,14 @@ class BasePage(Page):
         EC.element_to_be_clickable(elem)
         self.actions.double_click(elem).perform()
 
+    def triple_click(self, name: str, labels=[]):
+        """
+        Actions helper: perform triple-click on a given element
+        """
+        elem = self.get_element(name, labels=labels)
+        EC.element_to_be_clickable(elem)
+        self.actions.move_to_element(elem).click().click().click().perform()
+
     def context_click_element(self, element) -> Page:
         self.actions.context_click(element).perform()
         return self
@@ -345,6 +368,27 @@ class BasePage(Page):
         script = f"""document.querySelector("#{context_menu}").hidePopup();
         """
         self.driver.execute_script(script)
+
+    def hide_popup_by_class(self, class_name: str) -> None:
+        """
+        Given the class name of the context menu, it will dismiss the menu.
+
+        For example, if the context menu corresponds to the class name of 'context-menu',
+        usage would be: tabs.hide_popup_by_class("context-menu")
+        """
+        script = f"""var element = document.querySelector(".{class_name}");
+                 if (element && element.hidePopup) {{
+                     element.hidePopup();
+                 }}
+                """
+        self.driver.execute_script(script)
+
+    def hide_popup_by_child_node(self, node: WebElement) -> Page:
+        script = """var element = arguments[0].parentNode;
+                 if (element && element.hidePopup) {
+                    element.hidePopup();
+                 }"""
+        self.driver.execute_script(script, node)
 
     @property
     def loaded(self):
