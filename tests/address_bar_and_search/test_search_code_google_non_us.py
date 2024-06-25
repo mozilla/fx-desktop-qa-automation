@@ -11,13 +11,13 @@ from modules.page_object import AboutConfig
 @pytest.fixture()
 def add_prefs():
     return [
-        ("browser.search.region", "US"),
+        ("browser.search.region", "DE"),
     ]
 
 
 def test_search_code_google_us(driver: Firefox):
     """
-    C1365268 - Default Search Code: Google - US
+    C1365269 - Default Search Code: Google - non-US
     This tests multiple ways of sending a search; Awesome bar,
     Search bar and selected text
     """
@@ -29,7 +29,7 @@ def test_search_code_google_us(driver: Firefox):
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region
-        fx_code = "client=firefox-b-1-d"
+        fx_code = "client=firefox-b-d"
         nav.set_content_context()
         search_url = driver.current_url
         assert fx_code in search_url
