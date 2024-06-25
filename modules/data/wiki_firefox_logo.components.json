@@ -1,0 +1,7 @@
+{
+    "firefox-logo": {
+        "selectorData": "mw-mmv-image",
+        "strategy": "class",
+        "groups": []
+    }
+}

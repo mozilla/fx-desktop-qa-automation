@@ -118,6 +118,12 @@
         "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
         "strategy": "css",
         "groups": []
+    },
+
+    "downloads-button": {
+        "selectorData": "downloads-button",
+        "strategy": "id",
+        "groups": []
     }
 
 }
