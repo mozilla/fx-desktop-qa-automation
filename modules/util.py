@@ -1,7 +1,7 @@
 import logging
-import re
-import platform
 import os
+import platform
+import re
 from random import shuffle
 from typing import Literal, Union
 
@@ -56,14 +56,10 @@ class Utilities:
         this_platform = platform.system()
         if this_platform == "Windows":
             user = os.environ.get("USERNAME")
-            saved_image_location = (
-                f"C:\\Users\\{user}\\Downloads\\{file_name}"
-            )
+            saved_image_location = f"C:\\Users\\{user}\\Downloads\\{file_name}"
         elif this_platform == "Darwin":
             user = os.environ.get("USER")
-            saved_image_location = (
-                f"/Users/{user}/Downloads/{file_name}"
-            )
+            saved_image_location = f"/Users/{user}/Downloads/{file_name}"
         elif this_platform == "Linux":
             user = os.environ.get("USER")
             saved_image_location = f"/home/{user}/Downloads/{file_name}"
