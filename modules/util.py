@@ -5,6 +5,7 @@ from typing import Literal, Union
 
 from faker import Faker
 from faker.providers import internet, misc
+from pynput.keyboard import Controller, Key
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -276,6 +277,7 @@ class BrowserActions:
 
     def __init__(self, driver: Firefox):
         self.driver = driver
+        self.controller = Controller()
 
     def clear_and_fill_no_additional_keystroke(self, webelement: WebElement, term: str):
         """
@@ -357,6 +359,13 @@ class BrowserActions:
         Switches back to the normal context
         """
         self.driver.switch_to.default_content()
+
+    def key_press_release(self, key: Key):
+        """
+        Using Pynput, will press and release the key.
+        """
+        self.controller.press(key)
+        self.controller.release(key)
 
 
 class PomUtils:
