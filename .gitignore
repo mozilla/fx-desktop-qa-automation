@@ -7,6 +7,7 @@ html_dump/
 /Test Results - .html
 /geckodriver.log
 env
+*.png
 *.dmg
 *.tar
 *.zip
