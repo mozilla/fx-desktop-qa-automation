@@ -1,10 +1,6 @@
-import logging
-from time import sleep
-
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import FindToolbar
 from modules.util import BrowserActions
@@ -30,6 +26,8 @@ def test_find_toolbar_navigation(driver: Firefox):
     match_status = find_toolbar.get_match_args()
     assert match_status["total"] == 4
 
+    # Sometimes we get a match that isn't the first
+    # (This also tests that the number is correct)
     while match_status["current"] != 1:
         find_toolbar.previous_match()
         match_status = find_toolbar.get_match_args()
@@ -61,9 +59,10 @@ def test_find_toolbar_navigation(driver: Firefox):
     assert len(processes_colors) < len(protections_colors)
     assert not compare(len(processes_colors), len(protections_colors))
 
+    # Check what happens when you go past the last match
     find_toolbar.next_match()
     find_toolbar.element_visible("reached-bottom-label")
 
-    logging.info("go back")
+    # ...And hit Previous on the first match
     find_toolbar.previous_match()
     find_toolbar.element_visible("reached-top-label")
