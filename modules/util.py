@@ -1,4 +1,6 @@
 import logging
+import os
+import platform
 import re
 from os import remove
 from random import shuffle
@@ -7,6 +9,7 @@ from typing import Literal, Union
 from faker import Faker
 from faker.providers import internet, misc
 from PIL import Image
+from pynput.keyboard import Controller, Key
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -28,6 +31,41 @@ class Utilities:
 
     def __init__(self):
         pass
+
+    def remove_file(self, path: str):
+        try:
+            os.remove(path)
+            logging.info(path + " has been deleted.")
+        except OSError as error:
+            logging.warning("There was an error.")
+            logging.warning(error)
+
+    def check_file_path_validility(self, path: str):
+        """
+        Ensures that the path actually exists on the computer
+        """
+        if os.path.exists(path):
+            logging.info("The file was saved.")
+        else:
+            logging.warning("The file was not saved.")
+            assert False
+
+    def get_saved_file_path(self, file_name: str) -> str:
+        """
+        Gets the saved location of a downloaded file depending on the OS.
+        """
+        saved_image_location = ""
+        this_platform = platform.system()
+        if this_platform == "Windows":
+            user = os.environ.get("USERNAME")
+            saved_image_location = f"C:\\Users\\{user}\\Downloads\\{file_name}"
+        elif this_platform == "Darwin":
+            user = os.environ.get("USER")
+            saved_image_location = f"/Users/{user}/Downloads/{file_name}"
+        elif this_platform == "Linux":
+            user = os.environ.get("USER")
+            saved_image_location = f"/home/{user}/Downloads/{file_name}"
+        return saved_image_location
 
     def random_string(self, n: int) -> str:
         """A random string of n alphanum characters, including possible hyphen."""
@@ -278,6 +316,7 @@ class BrowserActions:
 
     def __init__(self, driver: Firefox):
         self.driver = driver
+        self.controller = Controller()
 
     def clear_and_fill_no_additional_keystroke(self, webelement: WebElement, term: str):
         """
@@ -398,6 +437,13 @@ class BrowserActions:
                 colors.append(shot_image.getpixel((x, y)))
         remove(image_loc)
         return set(colors)
+
+    def key_press_release(self, key: Key):
+        """
+        Using Pynput, will press and release the key.
+        """
+        self.controller.press(key)
+        self.controller.release(key)
 
 
 class PomUtils:

@@ -1,0 +1,26 @@
+{
+    "context": "chrome",
+    "context-menu-open-image-in-new-tab": {
+        "selectorData": "context-viewimage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-copy-image-link": {
+        "selectorData": "context-copyimage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-save-image-as": {
+        "selectorData": "context-saveimage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "content-context": {
+        "selectorData": "contentAreaContextMenu",
+        "strategy": "id",
+        "groups": []
+    }
+}
