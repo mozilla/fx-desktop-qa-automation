@@ -1,7 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
 
@@ -18,10 +17,6 @@ class AboutConfig(BasePage):
 
     URL_TEMPLATE = "about:config"
 
-    def click_warning_button(self) -> BasePage:
-        self.get_element("warning-button").click()
-        return self
-
     def search_pref(self, term: str) -> BasePage:
         searchbar = self.get_element("about-config-search-input")
         searchbar.clear()
@@ -35,12 +30,11 @@ class AboutConfig(BasePage):
 
     def toggle_true_false_config(self, term: str) -> BasePage:
         """
-        Main method to toggle a true folse pref in about:config
+        Main method to toggle a true false pref in about:config
         """
         self.set_content_context()
         self.driver.get("about:config")
-        WebDriverWait(self.driver, 10).until(EC.title_contains("Advanced Preferences"))
-        self.click_warning_button()
+        self.expect(EC.title_contains("Advanced Preferences"))
         self.search_pref(term)
         self.toggle_true_false()
         return self

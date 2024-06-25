@@ -17,7 +17,7 @@ def set_prefs():
     """Set prefs"""
     return [
         ("browser.search.region", "US"),
-        ("browser.search.widget.inNavBar", True),
+        ("browser.aboutConfig.showWarning", False),
         ("privacy.donottrackheader.enabled", False),
         ("telemetry.fog.test.localhost_port", 5312),
         ("datareporting.healthreport.uploadEnabled", True),
