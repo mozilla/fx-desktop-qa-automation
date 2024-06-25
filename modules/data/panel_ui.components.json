@@ -50,6 +50,14 @@
         ]
     },
 
+    "find-in-page": {
+        "selectorData": "appMenu-find-button2",
+        "strategy": "id",
+        "groups": [
+            "menuItem"
+        ]
+    },
+
     "panel-ui-history": {
         "selectorData": "appMenu-history-button",
         "strategy": "id",

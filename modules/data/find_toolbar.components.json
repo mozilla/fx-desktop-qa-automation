@@ -1,0 +1,26 @@
+{
+    "context": "chrome",
+    "find-toolbar-input": {
+        "selectorData": "findbar-textbox",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "next-match-button": {
+        "selectorData": "toolbarbutton[data-l10n-id='findbar-next']",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
+
+    "previous-match-button": {
+        "selectorData": "toolbarbutton[data-l10n-id='findbar-previous']",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
+    }
+}

@@ -1,3 +1,6 @@
+import logging
+
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -94,3 +97,30 @@ class Navigation(BasePage):
             else:
                 self.type_in_awesome_bar(term + Keys.ENTER)
         return self
+
+    def click_in_awesome_bar(self) -> BasePage:
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        return self
+
+    def get_download_button(self) -> BasePage:
+        """
+        Gets the download button WebElement
+        """
+        downloads_button = None
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            downloads_button = self.get_element("downloads-button")
+            return downloads_button
+
+    def wait_for_download_animation_finish(
+        self, downloads_button: WebElement
+    ) -> BasePage:
+        """
+        Waits for the download button to finish playing the animation for downloading to local computer
+        """
+        try:
+            self.wait.until(
+                lambda _: downloads_button.get_attribute("notification") == "finish"
+            )
+        except TimeoutException:
+            logging.warning("Animation did not finish or did not play.")

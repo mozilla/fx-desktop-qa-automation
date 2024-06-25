@@ -1,0 +1,16 @@
+{
+    "context": "chrome",
+    "context-menu-copy":
+    {
+        "selectorData": "context-copy",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-paste":
+    {
+        "selectorData": "context-paste",
+        "strategy": "id",
+        "groups": []
+    }
+}
