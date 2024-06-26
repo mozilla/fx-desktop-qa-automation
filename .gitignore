@@ -176,3 +176,4 @@ cython_debug/
 # irrelevant files
 drivers/
 temp.py
+tests/test_scratch.py

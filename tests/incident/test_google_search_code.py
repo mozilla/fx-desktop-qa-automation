@@ -1,22 +1,24 @@
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+from modules.browser_object import Navigation
+
 
 @pytest.mark.incident
-def test_google_search_code(driver):
-    print(" - TEST: Verify Firefox search code for Google SERP")
+def test_google_search_code(driver: Firefox):
+    """
+    C1365268 - Default Search Code: Google - US
+    Only tests the Awesome bar portion of the test for Incident smoke
+    """
 
-    # Enter Search term in URL bar
-    with driver.context(driver.CONTEXT_CHROME):
-        driver.find_element(By.ID, "urlbar-input").send_keys("soccer" + Keys.RETURN)
+    nav = Navigation(driver).open()
 
-    # Check that the search url contains the appropriate search code
-    with driver.context(driver.CONTEXT_CONTENT):
-        fx_code = "client=firefox-b-d"
-        WebDriverWait(driver, 10).until(EC.title_contains("Google Search"))
-        search_url = driver.current_url
-        print("The current url is: " + str(search_url))
-        assert fx_code in search_url
+    # Check code generated from the Awesome bar search
+    fx_code = "client=firefox-b-1-d"
+    nav.search("soccer")
+    WebDriverWait(driver, 10).until(EC.title_contains("Google Search"))
+    search_url = driver.current_url
+    assert fx_code in search_url
+    nav.clear_awesome_bar()
