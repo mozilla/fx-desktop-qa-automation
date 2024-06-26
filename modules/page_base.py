@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Union
 
 from pypom import Page
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -355,13 +355,26 @@ class BasePage(Page):
             el = reference
         else:
             assert False, "Attempted to multiclick on something unsupported"
-        self.expect(EC.element_to_be_clickable(el))
-        if iters == 2:
-            self.actions.double_click(el).perform()
-        else:
-            for _ in range(iters):
-                self.actions.click(el)
-            self.actions.perform()
+
+        # Little cheat: if element doesn't exist in one context, try the other
+        n = 0
+        while n < 2:
+            try:
+                n += 1
+                if iters == 2:
+                    self.actions.double_click(el).perform()
+                else:
+                    for _ in range(iters):
+                        self.actions.click(el)
+                    self.actions.perform()
+                n += 1
+            except NoSuchElementException:
+                if n > 1:
+                    raise NoSuchElementException
+                if self.context == "chrome":
+                    self.set_content_context()
+                else:
+                    self.set_chrome_context()
 
     def double_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
         """Actions helper: perform double-click on given element"""
