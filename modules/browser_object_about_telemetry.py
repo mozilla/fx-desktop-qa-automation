@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 
 from modules.page_base import BasePage
 
@@ -19,6 +20,7 @@ class AboutTelemetry(BasePage):
     def decode_url(self):
         """Decode to base64"""
         self.url_contains("data:application")
+        logging.warn(self.driver.current_url)
         base64_data = self.driver.current_url.split(",")[1]
         decoded_data = base64.b64decode(base64_data).decode("utf-8")
         json_data = json.loads(decoded_data)
