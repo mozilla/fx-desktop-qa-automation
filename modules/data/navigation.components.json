@@ -124,6 +124,12 @@
         "selectorData": "downloads-button",
         "strategy": "id",
         "groups": []
+    },
+
+     "addon-suggestion": {
+        "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
+        "strategy": "css",
+        "groups": []
     }
 
 }
