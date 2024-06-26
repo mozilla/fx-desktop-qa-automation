@@ -8,4 +8,7 @@ def suite_id():
 
 @pytest.fixture()
 def set_prefs():
-    return [("browser.toolbars.bookmarks.visibility", "always")]
+    return [
+        ("browser.toolbars.bookmarks.visibility", "always"),
+        ("browser.search.region", "US"),
+    ]
