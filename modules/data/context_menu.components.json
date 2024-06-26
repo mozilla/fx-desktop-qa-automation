@@ -1,4 +1,11 @@
 {
+      "context": "chrome",
+      "context-menu-search-selected-text": {
+        "selectorData": "context-searchselect",
+        "strategy": "id",
+        "groups": []
+    },
+
     "context-menu-inspect": {
         "selectorData": "context-inspect",
         "strategy": "id",
