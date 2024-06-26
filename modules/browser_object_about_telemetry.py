@@ -20,8 +20,8 @@ class AboutTelemetry(BasePage):
     def decode_url(self):
         """Decode to base64"""
         self.url_contains("data:application")
-        logging.warn(self.driver.current_url)
         base64_data = self.driver.current_url.split(",")[1]
         decoded_data = base64.b64decode(base64_data).decode("utf-8")
         json_data = json.loads(decoded_data)
+        logging.warn(json.dumps(json_data, indent=2))
         return json_data
