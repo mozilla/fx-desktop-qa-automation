@@ -106,6 +106,7 @@ def test_copy_image_link(driver: Firefox):
     """
     C2637622.3: copy an image link and verify its correct
     """
+    # create objs
     nav = Navigation(driver).open()
     wiki_image_page = WikiFirefoxLogo(driver).open()
     image_context_menu = ImageContextMenu(driver)
