@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Union
 
 from pypom import Page
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -350,33 +350,51 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def double_click(self, name: str, labels=[]):
+    def multi_click(
+        self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Perform multiple clicks at once on an element by name, selector, or WebElement"""
+        if self.context == "chrome":
+            self.set_chrome_context()
+        if isinstance(reference, str):
+            el = self.get_element(reference, labels=labels)
+        elif isinstance(reference, tuple):
+            el = self.find_element(**reference)
+        elif isinstance(reference, WebElement):
+            el = reference
+        else:
+            assert False, "Attempted to multiclick on something unsupported"
+
+        # Little cheat: if element doesn't exist in one context, try the other
+        n = 0
+        while n < 2:
+            try:
+                n += 1
+                if iters == 2:
+                    self.actions.double_click(el).perform()
+                else:
+                    for _ in range(iters):
+                        self.actions.click(el)
+                    self.actions.perform()
+                n += 1
+            except NoSuchElementException:
+                if n > 1:
+                    raise NoSuchElementException
+                if self.context == "chrome":
+                    self.set_content_context()
+                else:
+                    self.set_chrome_context()
+
+    def double_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
         """Actions helper: perform double-click on given element"""
-        elem = self.get_element(name, labels=labels)
-        EC.element_to_be_clickable(elem)
-        self.actions.double_click(elem).perform()
+        return self.multi_click(2, reference, labels)
 
-    def triple_click_element(self, elem: WebElement, labels=[]):
-        """
-        Actions helper: perform triple-click on given element
+    def triple_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+        """Actions helper: perform triple-click on a given element"""
+        return self.multi_click(3, reference, labels)
 
-        Arguments
-        ---------
-        elem: str
-            The element to be triple clicked
-        """
-        EC.element_to_be_clickable(elem)
-        self.actions.click(elem).click(elem).click(elem).perform()
-
-    def triple_click(self, name: str, labels=[]):
-        """
-        Actions helper: perform triple-click on a given element
-        """
-        elem = self.get_element(name, labels=labels)
-        EC.element_to_be_clickable(elem)
-        self.actions.move_to_element(elem).click().click().click().perform()
-
-    def context_click_element(self, element) -> Page:
+    def context_click_element(self, element: WebElement) -> Page:
+        """Context (right-) click on an element"""
         self.actions.context_click(element).perform()
         return self
 
