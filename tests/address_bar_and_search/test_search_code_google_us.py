@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import AboutConfig
@@ -37,7 +37,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Check code generated from the Awesome bar search
     nav.search("soccer")
-    nav.expect(ec.title_contains("Google Search"))
+    nav.expect(EC.title_contains("Google Search"))
     search_code_assert()
 
     # Check code generated from the Search bar search
@@ -48,7 +48,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Then run the code check
     nav.search_bar_search("soccer")
-    nav.expect(ec.title_contains("Google Search"))
+    nav.expect(EC.title_contains("Google Search"))
     search_code_assert()
 
     # Check code generated from the context click of selected text
@@ -64,5 +64,5 @@ def test_search_code_google_us(driver: Firefox):
     # Switch to the newly opened tab and run the code check
     window_handles = driver.window_handles
     driver.switch_to.window(window_handles[-1])
-    nav.expect(ec.title_contains("Google Search"))
+    nav.expect(EC.title_contains("Google Search"))
     search_code_assert()
