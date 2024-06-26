@@ -1,15 +1,15 @@
 import time
 
+from jsonpath_ng import parse
 from selenium.webdriver import Firefox
 
 from modules.browser_object_about_telemetry import AboutTelemetry
 from modules.browser_object_navigation import Navigation
-from jsonpath_ng import parse
 
 
 def test_google_search_counts_us(driver: Firefox):
     """
-        C1365026, Test Google Search counts - urlbar US
+    C1365026, Test Google Search counts - urlbar US
     """
     # instantiate objects
     nav = Navigation(driver).open()
@@ -27,6 +27,8 @@ def test_google_search_counts_us(driver: Firefox):
     expr = parse('$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum')
     match = expr.find(json_data)
     assert match[0].value == 1
-    expr2 = parse('$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]')
+    expr2 = parse(
+        '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]'
+    )
     match2 = expr2.find(json_data)
     assert match2[0].value == 1
