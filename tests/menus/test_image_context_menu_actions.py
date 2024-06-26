@@ -26,12 +26,11 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.context_click_element(image_logo)
 
     # open in a new tab
-    with driver.context(driver.CONTEXT_CHROME):
-        open_in_new_tab = image_context_menu.get_context_item(
-            "context-menu-open-image-in-new-tab"
-        )
-        open_in_new_tab.click()
-        wiki_image_page.hide_popup_by_child_node(open_in_new_tab)
+    open_in_new_tab = image_context_menu.get_context_item(
+        "context-menu-open-image-in-new-tab"
+    )
+    image_context_menu.click_context_item(open_in_new_tab)
+    wiki_image_page.hide_popup_by_child_node(open_in_new_tab, chrome=True)
 
     # switch to the second tab and verify the URL
     tabs.wait_for_num_tabs(2)
@@ -64,12 +63,9 @@ def test_save_image_as(driver: Firefox):
     wiki_image_page.context_click_element(image_logo)
 
     # save it
-    with driver.context(driver.CONTEXT_CHROME):
-        save_image_as = image_context_menu.get_context_item(
-            "context-menu-save-image-as"
-        )
-        save_image_as.click()
-        wiki_image_page.hide_popup_by_child_node(save_image_as)
+    save_image_as = image_context_menu.get_context_item("context-menu-save-image-as")
+    image_context_menu.click_context_item(save_image_as)
+    wiki_image_page.hide_popup_by_child_node(save_image_as, chrome=True)
 
     # create the pynput controller
     downloads_button = nav.get_download_button()
@@ -97,8 +93,7 @@ def test_save_image_as(driver: Firefox):
     ba.key_press_release(Key.enter)
 
     # Wait for the animation to complete
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.wait_for_download_animation_finish(downloads_button)
+    nav.wait_for_download_animation_finish(downloads_button)
 
     saved_image_location = util.get_saved_file_path("Firefox_logo,_2019.svg.png")
 
@@ -124,12 +119,11 @@ def test_copy_image_link(driver: Firefox):
     wiki_image_page.context_click_element(image_logo)
 
     # copy the link
-    with driver.context(driver.CONTEXT_CHROME):
-        copy_image_link = image_context_menu.get_context_item(
-            "context-menu-copy-image-link"
-        )
-        copy_image_link.click()
-        wiki_image_page.hide_popup_by_child_node(copy_image_link)
+    copy_image_link = image_context_menu.get_context_item(
+        "context-menu-copy-image-link"
+    )
+    image_context_menu.click_context_item(copy_image_link)
+    wiki_image_page.hide_popup_by_child_node(copy_image_link, chrome=True)
 
     # open a new tab
     tabs.new_tab_by_button()

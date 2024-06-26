@@ -30,9 +30,9 @@ def test_save_page_as(driver: Firefox):
     title_header = example_page.get_element("title-header")
     context_menu.context_click_element(title_header)
 
-    with driver.context(driver.CONTEXT_CHROME):
-        save_page_as = context_menu.get_context_item("context-menu-save-page-as")
-        save_page_as.click()
+    save_page_as = context_menu.get_context_item("context-menu-save-page-as")
+    context_menu.click_context_item(save_page_as)
+    context_menu.hide_popup_by_child_node(save_page_as, chrome=True)
 
     downloads_button = nav.get_download_button()
 
@@ -60,14 +60,11 @@ def test_save_page_as(driver: Firefox):
     ba.key_press_release(Key.enter)
 
     # Wait for the animation to complete
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.wait_for_download_animation_finish(downloads_button)
+    nav.wait_for_download_animation_finish(downloads_button)
 
     # verify and delete downloaded file
     saved_image_location = util.get_saved_file_path("Example Domain.html")
-
     util.check_file_path_validility(saved_image_location)
-
     util.remove_file(saved_image_location)
 
 
@@ -81,19 +78,18 @@ def test_take_screenshot(driver: Firefox):
     example_page = ExamplePage(driver)
 
     # ensure that the screenshot is not present
-    with driver.context(driver.CONTEXT_CHROME):
-        example_page.element_does_not_exist("take-screenshot-box")
+    example_page.element_does_not_exist("take-screenshot-box")
 
     # right click the header
     title_header = example_page.get_element("title-header")
     context_menu.context_click_element(title_header)
 
     # context click the screenshot option and verify its not hidden
-    with driver.context(driver.CONTEXT_CHROME):
-        take_screenshot = context_menu.get_context_item("context-menu-take-screenshot")
-        take_screenshot.click()
-        context_menu.hide_popup_by_child_node(take_screenshot)
+    take_screenshot = context_menu.get_context_item("context-menu-take-screenshot")
+    context_menu.click_context_item(take_screenshot)
+    context_menu.hide_popup_by_child_node(take_screenshot, chrome=True)
 
+    with driver.context(driver.CONTEXT_CHROME):
         screenshot_box = example_page.get_element("take-screenshot-box")
         assert screenshot_box.get_attribute("hidden") is None
 
@@ -111,10 +107,10 @@ def test_inspect(driver: Firefox):
     title_header = example_page.get_element("title-header")
     context_menu.context_click_element(title_header)
 
+    inspect_option = context_menu.get_context_item("context-menu-inspect")
+    context_menu.click_context_item(inspect_option)
+    context_menu.hide_popup_by_child_node(inspect_option, chrome=True)
+
     # find an element present in the dev tools
     with driver.context(driver.CONTEXT_CHROME):
-        inspect_option = context_menu.get_context_item("context-menu-inspect")
-        inspect_option.click()
-        context_menu.hide_popup_by_child_node(inspect_option)
-
         example_page.element_exists("inspect-menu-horizontal-splitter")

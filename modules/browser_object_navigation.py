@@ -142,9 +142,10 @@ class Navigation(BasePage):
         """
         Waits for the download button to finish playing the animation for downloading to local computer
         """
-        try:
-            self.wait.until(
-                lambda _: downloads_button.get_attribute("notification") == "finish"
-            )
-        except TimeoutException:
-            logging.warning("Animation did not finish or did not play.")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            try:
+                self.wait.until(
+                    lambda _: downloads_button.get_attribute("notification") == "finish"
+                )
+            except TimeoutException:
+                logging.warning("Animation did not finish or did not play.")
