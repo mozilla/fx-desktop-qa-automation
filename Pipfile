@@ -13,6 +13,8 @@ requests = "*"
 pytest-xdist = "*"
 pytest-html = "*"
 pypom = "*"
+pillow = "*"
+taskcluster-taskgraph = "==9.0.0"
 
 [dev-packages]
 werkzeug = "*"
@@ -20,4 +22,3 @@ selenium-wire = "*"
 pdoc = "*"
 ruff = "*"
 pytest-variables = "*"
-taskcluster-taskgraph = "*"
