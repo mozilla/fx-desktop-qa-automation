@@ -1,5 +1,6 @@
 transforms:
   - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
+  - taskgraph.transforms.notify:transforms
 
 task-defaults:
   label: "Slack Notifier"
@@ -11,13 +12,11 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
-  routes:
-    - notify.slack-channel.G016BC5FUHJ.on-failed
   scopes:
-      - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-alerts-sandbox on failure
-      - notify:slack-channel:G016BC5FUHJ
-      - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-testeng on success
-      - notify:slack-channel:G016BC5FUHJ
+    - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-alerts-sandbox on failure
+    - notify:slack-channel:G016BC5FUHJ
+    - queue:route:notify.slack-channel.G016BC5FUHJ # notify mobile-testeng on success
+    - notify:slack-channel:G016BC5FUHJ
 
 tasks:
   linux:
@@ -33,3 +32,11 @@ tasks:
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+    notify:
+      recipients:
+        - type: slack-channel
+          channel-id: G016BC5FUHJ
+          status-type: on-defined
+      content:
+        slack:
+          text: "Task Defined!"
