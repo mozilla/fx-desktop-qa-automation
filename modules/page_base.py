@@ -306,6 +306,14 @@ class BasePage(Page):
         """
         return self.get_element(name, multiple=True, labels=labels)
 
+    def get_parent_of(self, name: str, labels=[]) -> WebElement:
+        """
+        Given a name (and labels if needed), return the direct parent node of the element.
+        """
+
+        child = self.get_element(name, labels=labels)
+        return child.find_element(By.XPATH, "..")
+
     def element_exists(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
         self.expect(
