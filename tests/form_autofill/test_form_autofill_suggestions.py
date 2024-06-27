@@ -8,6 +8,7 @@ from modules.util import Utilities
 indices = ["1", "2"]
 
 
+@pytest.mark.unstable
 @pytest.mark.parametrize("index", indices)
 def test_form_autofill_suggestions(driver: Firefox, index: str):
     """

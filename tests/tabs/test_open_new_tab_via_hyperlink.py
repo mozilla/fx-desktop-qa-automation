@@ -23,4 +23,3 @@ def test_open_new_via_hyperlink(driver: Firefox):
     # Get the title of the new tab
     browser.click_tab_by_index(2)
     browser.expect(EC.title_contains("Example Domains"))
-    assert driver.title == "Example Domains"

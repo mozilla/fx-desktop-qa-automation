@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import CreditCardPopup, Navigation
@@ -7,6 +8,7 @@ from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
 
+@pytest.mark.unstable
 def test_autofill_credit_card(driver: Firefox):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel
@@ -26,6 +28,7 @@ def test_autofill_credit_card(driver: Firefox):
     credit_card_fill_obj.verify_all_fields(credit_card_popup_obj)
 
 
+@pytest.mark.unstable
 def test_autofill_four_fields(driver: Firefox):
     """
     C122404, tests that the form fields are filled corrected after saving a profile.

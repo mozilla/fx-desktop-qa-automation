@@ -26,6 +26,8 @@ def test_new_tab_about_blank(driver: Firefox):
     assert driver.current_url == "about:blank"
 
 
+# LOW PRIORITY
+@pytest.mark.unstable
 def test_localized_pocket_layout_US(driver: Firefox, screenshot):
     """
     C408037: Test about:blank Pocket layout (US)

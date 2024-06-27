@@ -1,0 +1,8 @@
+{
+      "context": "chrome",
+      "context-menu-search-selected-text": {
+        "selectorData": "context-searchselect",
+        "strategy": "id",
+        "groups": []
+    }
+}

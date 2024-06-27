@@ -3,13 +3,12 @@ transforms:
   - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
 
 task-defaults:
-  worker-type: t-linux-large
+  worker-type: t-linux-wayland
   worker:
-    docker-image: {in-tree: linux}
     max-run-time: 1800
     artifacts:
       - name: public/results
-        path: /builds/worker/artifacts
+        path: checkouts/vcs/artifacts
         type: directory
 
 tasks:
@@ -18,8 +17,11 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
+        export PATH=$HOME/.local/bin:$PWD:$PATH
+        mkdir -p artifacts;
+        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'ruff>=0.4.8,<0.5';
         ./collect_executables.sh;
-        pulseaudio --start --log-level=3 --log-target=file:/builds/worker/artifacts/pulseaudio_log;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable ./firefox/firefox .
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .

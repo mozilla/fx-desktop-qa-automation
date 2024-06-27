@@ -27,6 +27,6 @@ workers:
       worker-type: '{alias}-gcp'
     t-linux-wayland:
       provisioner: '{trust-domain}-t'
-      implementation: docker-worker
+      implementation: generic-worker
       os: linux
-      worker-type: '{alias}'
+      worker-type: 't-linux-2204-wayland'

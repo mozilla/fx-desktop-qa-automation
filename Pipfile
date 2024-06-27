@@ -14,11 +14,12 @@ pytest-xdist = "*"
 pytest-html = "*"
 pypom = "*"
 jsonpath-ng = "*"
+pillow = "*"
 
 [dev-packages]
 werkzeug = "*"
 selenium-wire = "*"
 pdoc = "*"
-ruff = "*"
+ruff = "0.4.3"
 pytest-variables = "*"
 taskcluster-taskgraph = "*"

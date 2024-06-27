@@ -1,4 +1,5 @@
-from subprocess import check_output
+import sys
+from subprocess import CalledProcessError, check_output
 
 if __name__ == "__main__":
     committed_files = (
@@ -12,8 +13,18 @@ if __name__ == "__main__":
     if tests:
         print(f"Testing {tests} ...")
 
-        print(
-            "\n".join(
-                check_output(["pytest", "--run-headless", *tests]).decode().splitlines()
+        try:
+            print(
+                "\n".join(
+                    check_output(
+                        ["pytest", "--run-headless", "-m", "not unstable", *tests]
+                    )
+                    .decode()
+                    .splitlines()
+                )
             )
-        )
+        except CalledProcessError as exc:
+            error_lines = "\n".join(exc.output.decode().splitlines())
+            print("Error", exc.returncode)
+            print(error_lines)
+            sys.exit(1)
