@@ -1,12 +1,11 @@
 from time import sleep
 
+from mozprofile.profile import FirefoxProfile
 from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutProfiles
 from modules.util import BrowserActions, Utilities
-
-from mozprofile.profile import FirefoxProfile
 
 
 def test_delete_profile_dont_save_files(driver: Firefox):
