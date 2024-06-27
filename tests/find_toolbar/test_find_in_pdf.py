@@ -7,7 +7,6 @@ from selenium.webdriver.common.keys import Keys
 from modules.browser_object import FindToolbar
 from modules.page_base import BasePage
 from modules.page_object import GenericPdf
-from modules.util import BrowserActions
 
 WORD_SEGMENT = "authori"
 MATCH_TWO_COTEXT = "representative must complete"
@@ -32,7 +31,6 @@ def test_find_in_pdf_using_key_combos(driver: Firefox, fillable_pdf_url: str):
     """
     C127271: Search on a PDF page
     """
-    ba = BrowserActions(driver)
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
     find_toolbar = FindToolbar(driver).open_with_key_combo()
     find_toolbar.find(WORD_SEGMENT)
