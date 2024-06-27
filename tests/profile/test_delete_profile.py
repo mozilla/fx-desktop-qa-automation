@@ -6,14 +6,20 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutProfiles
 from modules.util import BrowserActions, Utilities
 
+from mozprofile.profile import FirefoxProfile
+
 
 def test_delete_profile_dont_save_files(driver: Firefox):
     """
     C130789.1: delete the profile with the option "dont delete files"
     """
+    profile = FirefoxProfile()
+    print(profile.profile)
+
     about_profiles = AboutProfiles(driver).open()
-    util = Utilities()
-    ba = BrowserActions(driver)
+    sleep(20)
+    # util = Utilities()
+    # ba = BrowserActions(driver)
     # cannot create the profile atm : (
 
     # util.write_html_content("contentsbefore", driver, False)
@@ -21,7 +27,7 @@ def test_delete_profile_dont_save_files(driver: Firefox):
     # about_profiles.get_element(
     #     "profile-container-item-button", labels=["profiles-remove"]
     # ).click()
-    about_profiles.create_new_profile(util, ba)
+    # about_profiles.create_new_profile(util, ba)
 
     # alert = driver.switch_to.alert
     # sleep(10)

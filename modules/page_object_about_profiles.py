@@ -7,7 +7,6 @@ from selenium.common import NoAlertPresentException
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
-
 class AboutProfiles(BasePage):
     """
     POM for about:profiles page
@@ -19,19 +18,21 @@ class AboutProfiles(BasePage):
         """
         Creates a new profile with a random name
         """
-        self.get_element("create-profile-button").click()
+        pass
+        # profile = Profile()
+        # self.get_element("create-profile-button").click()
 
-        profile_name = util.generate_random_text("word")
+        # profile_name = util.generate_random_text("word")
 
-        current_platform = platform.system()
+        # current_platform = platform.system()
 
-        try:
-            alert = self.driver.switch_to.alert
-            alert_text = alert.text
-            print(f"Alert detected with message: {alert_text}")
-            alert.accept()  # or alert.dismiss()
-        except NoAlertPresentException:
-            print("No alerts detected.")
+        # try:
+        #     alert = self.driver.switch_to.alert
+        #     alert_text = alert.text
+        #     print(f"Alert detected with message: {alert_text}")
+        #     alert.accept()  # or alert.dismiss()
+        # except NoAlertPresentException:
+        #     print("No alerts detected.")
 
         # sleep(0.5)
         # if current_platform == "Linux":
