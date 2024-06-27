@@ -132,7 +132,7 @@
         "selectorData": "downloads-button",
         "strategy": "id",
         "groups": []
-    }
+    },
 
     "search-suggestion-list": {
         "selectorData": "div.urlbarView-row[type='search_engine'] span.urlbarView-title",
