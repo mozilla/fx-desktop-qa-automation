@@ -2,9 +2,9 @@ import platform
 from time import sleep
 
 from pynput.keyboard import Key
+from selenium.common import NoAlertPresentException
 
 from modules.page_base import BasePage
-from selenium.common import NoAlertPresentException
 from modules.util import BrowserActions, Utilities
 
 
@@ -32,7 +32,6 @@ class AboutProfiles(BasePage):
             alert.accept()  # or alert.dismiss()
         except NoAlertPresentException:
             print("No alerts detected.")
-
 
         # sleep(0.5)
         # if current_platform == "Linux":
