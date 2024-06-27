@@ -117,7 +117,6 @@ class Navigation(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-            # self.set_search_bar()
             self.search_bar.click()
             self.search_bar.send_keys(term + Keys.ENTER)
         return self
