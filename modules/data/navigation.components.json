@@ -9,6 +9,14 @@
         ]
     },
 
+    "results-dropdown": {
+        "selectorData": "urlbar-results",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "tab-to-search-text-span": {
         "selectorData": "urlbarView-dynamic-onboardTabToSearch-text-container",
         "strategy": "class",
@@ -118,6 +126,13 @@
         "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
         "strategy": "css",
         "groups": []
-    }
+    },
 
+    "search-suggestion-list": {
+        "selectorData": "div.urlbarView-row[type='search_engine'] span.urlbarView-title",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    }
 }
