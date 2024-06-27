@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 
-sites = ["Google", "Amazon.com", "Bing", "DuckDuckGo", "eBay"]
+sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
 
 
 @pytest.fixture()
