@@ -15,18 +15,29 @@ def test_delete_profile_dont_save_files(driver: Firefox):
     util = Utilities()
     ba = BrowserActions(driver)
     # cannot create the profile atm : (
-    # about_profiles.create_new_profile(util, ba)
 
-    about_profiles.get_element(
-        "profile-container-item-button", labels=["profiles-remove"]
-    ).click()
+    # util.write_html_content("contentsbefore", driver, False)
 
-    ba.key_press_release(Key.tab)
-    ba.key_press_release(Key.tab)
-    ba.key_press_release(Key.tab)
-    ba.key_press_release(Key.tab)
-    ba.key_press_release(Key.tab)
-    sleep(10)
+    # about_profiles.get_element(
+    #     "profile-container-item-button", labels=["profiles-remove"]
+    # ).click()
+    about_profiles.create_new_profile(util, ba)
+
+    # alert = driver.switch_to.alert
+    # sleep(10)
+    # alert.accept()
+    # util.write_html_content("contentsafter", driver, False)
+
+    # ba.key_press_release(Key.tab)
+    # print("hello")
+    # ba.key_press_release(Key.tab)
+    # print('hello')
+    # ba.key_press_release(Key.tab)
+    # print('hello')
+    # ba.key_press_release(Key.tab)
+    # print('hello')
+    # ba.key_press_release(Key.tab)
+    # sleep(10)
 
 
 # def test_delete_profile_delete_files(driver: Firefox):
