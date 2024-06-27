@@ -316,7 +316,7 @@ class Utilities:
         """Parse json and validate json search string with its value"""
         expr = parse(jsonpath_expr)
         match = expr.find(json_data)
-        assert match[0].value == expected_value, f"Expected {expected_value}, but got {match[0].value}"
+        return match[0].value == expected_value, f"Expected {expected_value}, but got {match[0].value}"
 
 
 class BrowserActions:

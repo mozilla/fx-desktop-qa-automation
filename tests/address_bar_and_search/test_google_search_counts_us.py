@@ -25,5 +25,5 @@ def test_google_search_counts_us(driver: Firefox):
 
     # Verify pings are recorded
     json_data = u.decode_url(driver)
-    u.assert_json_value(json_data, '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum', 1)
-    u.assert_json_value(json_data, '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]', 1)
+    assert u.assert_json_value(json_data, '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum', 1)
+    assert u.assert_json_value(json_data, '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]', 1)
