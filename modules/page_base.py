@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Union
 
 from pypom import Page
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -102,7 +102,9 @@ class BasePage(Page):
 
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
+        logging.info("Expecting...")
         if self.context == "chrome":
+            logging.info("Expecting in chrome...")
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 self.wait.until(condition)
         else:
@@ -315,25 +317,32 @@ class BasePage(Page):
         """Expect helper: wait until element exists or timeout"""
         original_timeout = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
+        if self.context == "chrome":
+            self.set_chrome_context()
         self.instawait.until_not(
             EC.presence_of_all_elements_located(self.get_selector(name, labels=labels))
         )
+        self.set_content_context()
         self.driver.implicitly_wait(original_timeout)
         return self
 
     def element_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is visible or timeout"""
-        self.expect(EC.visibility_of(self.get_element(name, labels=labels)))
+        self.expect(
+            EC.visibility_of_element_located(self.get_selector(name, labels=labels))
+        )
         return self
 
     def element_clickable(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is clickable or timeout"""
-        self.expect(EC.element_to_be_clickable(self.get_element(name, labels=labels)))
+        self.expect(EC.element_to_be_clickable(self.get_selector(name, labels=labels)))
         return self
 
     def element_selected(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is selected or timeout"""
-        self.expect(EC.element_to_be_selected(self.get_element(name, labels=labels)))
+        self.expect(
+            EC.element_located_to_be_selected(self.get_selector(name, labels=labels))
+        )
         return self
 
     def element_has_text(self, name: str, text: str, labels=[]) -> Page:
@@ -350,25 +359,55 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def double_click(self, name: str, labels=[]):
+    def multi_click(
+        self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Perform multiple clicks at once on an element by name, selector, or WebElement"""
+        if self.context == "chrome":
+            self.set_chrome_context()
+        if isinstance(reference, str):
+            el = self.get_element(reference, labels=labels)
+        elif isinstance(reference, tuple):
+            el = self.find_element(**reference)
+        elif isinstance(reference, WebElement):
+            el = reference
+        else:
+            assert False, "Attempted to multiclick on something unsupported"
+
+        # Little cheat: if element doesn't exist in one context, try the other
+        n = 0
+        while n < 2:
+            try:
+                n += 1
+                if iters == 2:
+                    self.actions.double_click(el).perform()
+                else:
+                    for _ in range(iters):
+                        self.actions.click(el)
+                    self.actions.perform()
+                n += 1
+            except NoSuchElementException:
+                if n > 1:
+                    raise NoSuchElementException
+                if self.context == "chrome":
+                    self.set_content_context()
+                else:
+                    self.set_chrome_context()
+
+    def double_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
         """Actions helper: perform double-click on given element"""
-        elem = self.get_element(name, labels=labels)
-        EC.element_to_be_clickable(elem)
-        self.actions.double_click(elem).perform()
+        return self.multi_click(2, reference, labels)
 
-    def triple_click(self, name: str, labels=[]):
-        """
-        Actions helper: perform triple-click on a given element
-        """
-        elem = self.get_element(name, labels=labels)
-        EC.element_to_be_clickable(elem)
-        self.actions.move_to_element(elem).click().click().click().perform()
+    def triple_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+        """Actions helper: perform triple-click on a given element"""
+        return self.multi_click(3, reference, labels)
 
-    def context_click_element(self, element) -> Page:
+    def context_click_element(self, element: WebElement) -> Page:
+        """Context (right-) click on an element"""
         self.actions.context_click(element).perform()
         return self
 
-    def hide_popup(self, context_menu: str) -> Page:
+    def hide_popup(self, context_menu: str, chrome=False) -> Page:
         """
         Given the ID of the context menu, it will dismiss the menu.
 
@@ -376,7 +415,11 @@ class BasePage(Page):
         """
         script = f"""document.querySelector("#{context_menu}").hidePopup();
         """
-        self.driver.execute_script(script)
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.driver.execute_script(script)
+        else:
+            self.driver.execute_script(script)
 
     def hide_popup_by_class(self, class_name: str) -> None:
         """
@@ -392,12 +435,16 @@ class BasePage(Page):
                 """
         self.driver.execute_script(script)
 
-    def hide_popup_by_child_node(self, node: WebElement) -> Page:
+    def hide_popup_by_child_node(self, node: WebElement, chrome=False) -> Page:
         script = """var element = arguments[0].parentNode;
                  if (element && element.hidePopup) {
                     element.hidePopup();
                  }"""
-        self.driver.execute_script(script, node)
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.driver.execute_script(script, node)
+        else:
+            self.driver.execute_script(script, node)
 
     @property
     def loaded(self):

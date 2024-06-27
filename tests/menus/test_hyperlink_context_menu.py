@@ -21,13 +21,12 @@ def test_open_link_in_new_window(driver: Firefox):
     hyperlink_context.context_click_element(hyperlink)
 
     # click on the open in new window option
-    with driver.context(driver.CONTEXT_CHROME):
-        open_in_new_window = hyperlink_context.get_context_item(
-            "context-menu-open-in-new-window"
-        )
-        open_in_new_window.click()
 
-        hyperlink_context.hide_popup("contentAreaContextMenu")
+    open_in_new_window = hyperlink_context.get_context_item(
+        "context-menu-open-in-new-window"
+    )
+    hyperlink_context.click_context_item(open_in_new_window)
+    hyperlink_context.hide_popup("contentAreaContextMenu", chrome=True)
 
     # verify there are two instances (two windows)
     tabs.wait_for_num_tabs(2)
@@ -53,13 +52,11 @@ def test_open_link_in_private_window(driver: Firefox):
     hyperlink_context.context_click_element(hyperlink)
 
     # click on the open in new window option
-    with driver.context(driver.CONTEXT_CHROME):
-        open_in_new_window = hyperlink_context.get_context_item(
-            "context-menu-open-in-private-window"
-        )
-        open_in_new_window.click()
-
-        hyperlink_context.hide_popup("contentAreaContextMenu")
+    open_in_new_window = hyperlink_context.get_context_item(
+        "context-menu-open-in-private-window"
+    )
+    hyperlink_context.click_context_item(open_in_new_window)
+    hyperlink_context.hide_popup("contentAreaContextMenu", chrome=True)
 
     # verify there are two instances (two windows)
     tabs.wait_for_num_tabs(2)
@@ -89,13 +86,9 @@ def test_copy_link(driver: Firefox):
     hyperlink_context.context_click_element(hyperlink)
 
     # click on the open in new window option
-    with driver.context(driver.CONTEXT_CHROME):
-        open_in_new_window = hyperlink_context.get_context_item(
-            "context-menu-copy-link"
-        )
-        open_in_new_window.click()
-
-        hyperlink_context.hide_popup("contentAreaContextMenu")
+    open_in_new_window = hyperlink_context.get_context_item("context-menu-copy-link")
+    hyperlink_context.click_context_item(open_in_new_window)
+    hyperlink_context.hide_popup("contentAreaContextMenu", chrome=True)
 
     # open a new tab
     tabs.new_tab_by_button()

@@ -1,7 +1,7 @@
 import logging
 import os
 import platform
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
@@ -185,14 +185,23 @@ def driver(
 
 
 @pytest.fixture()
-def screenshot(driver: webdriver.Firefox, opt_ci: bool):
-    def _screenshot(filename):
+def screenshot(driver: webdriver.Firefox, opt_ci: bool) -> Callable:
+    """
+    Factory fixture that returns a screenshot function.
+    """
+
+    def _screenshot(filename: str) -> str:
+        """
+        Given a short filename, save a screenshot and return the image's full path.
+        """
         if not filename.endswith(".png"):
             filename = filename + ".png"
         artifacts_loc = ""
         if opt_ci:
             artifacts_loc = "artifacts"
-        driver.save_screenshot(os.path.join(artifacts_loc, filename))
+        fullpath = os.path.join(artifacts_loc, filename)
+        driver.save_screenshot(fullpath)
+        return fullpath
 
     return _screenshot
 
