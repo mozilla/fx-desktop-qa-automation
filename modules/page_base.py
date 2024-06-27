@@ -398,7 +398,7 @@ class BasePage(Page):
         self.actions.context_click(element).perform()
         return self
 
-    def hide_popup(self, context_menu: str) -> Page:
+    def hide_popup(self, context_menu: str, chrome=False) -> Page:
         """
         Given the ID of the context menu, it will dismiss the menu.
 
@@ -406,7 +406,11 @@ class BasePage(Page):
         """
         script = f"""document.querySelector("#{context_menu}").hidePopup();
         """
-        self.driver.execute_script(script)
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.driver.execute_script(script)
+        else:
+            self.driver.execute_script(script)
 
     def hide_popup_by_class(self, class_name: str) -> None:
         """
@@ -422,12 +426,16 @@ class BasePage(Page):
                 """
         self.driver.execute_script(script)
 
-    def hide_popup_by_child_node(self, node: WebElement) -> Page:
+    def hide_popup_by_child_node(self, node: WebElement, chrome=False) -> Page:
         script = """var element = arguments[0].parentNode;
                  if (element && element.hidePopup) {
                     element.hidePopup();
                  }"""
-        self.driver.execute_script(script, node)
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.driver.execute_script(script, node)
+        else:
+            self.driver.execute_script(script, node)
 
     @property
     def loaded(self):
