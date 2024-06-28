@@ -301,6 +301,83 @@ class Utilities:
         # return with the country code and the normalized phone number
         return default_country_code + ret_val
 
+    def extract_highest_profile_number(self, profiles_path: str) -> int:
+        """
+        Given the path of the profiles.ini file, it will find the highest profile number that does not exist and return that.
+        """
+        # matching this regex expression
+        pattern = r"\[Profile(\d+)\]"
+        max_profile = -1
+
+        try:
+            with open(profiles_path, "r") as file:
+                for line in file:
+                    match = re.search(pattern, line)
+                    if match:
+                        # this will fetch the second group in the regex matched which is the number only
+                        profile_number = int(match.group(1))
+                        if profile_number > max_profile:
+                            max_profile = profile_number
+            if max_profile == -1:
+                logging.warn("Could not extract any max profiles.")
+                assert False
+        except FileNotFoundError:
+            logging.warn("Could not find the profiles.ini file.")
+            assert False
+
+        return max_profile + 1
+
+    def create_dir(self, path: str, directory_name: str) -> str:
+        """
+        Given the parent path of where the new directory should be and the name of the new directory to be created,
+        a new directory will be created.
+        """
+        new_dir_name = f"{path}/{directory_name}"
+        try:
+            os.makedirs(new_dir_name, exist_ok=False)
+            logging.info(f"The directory {new_dir_name} was created successfully.")
+        except OSError as e:
+            logging.warning(f"The directory {new_dir_name} could not be created.")
+            logging.warning(e)
+            return ""
+        return new_dir_name
+
+    def extract_after_profiles(self, profile_directory: str) -> str:
+        try:
+            # Split the path by '/Profiles'
+            parts = profile_directory.split("/Profiles", 1)
+            if len(parts) > 1:
+                # Return the part after '/Profiles'
+                return parts[1].lstrip("/")  # Remove leading slash if present
+            else:
+                return "No '/Profiles' part found in the path."
+        except Exception as e:
+            return f"Error: {e}"
+
+    def add_new_profile(
+        self,
+        path_to_profiles_ini_file: str,
+        profile_directory: str,
+        profile_number: int,
+    ):
+        """
+        Given the directory of the profile folder, it will add that profile to the profiles.ini file.
+        """
+        display_profile_number = str(profile_number)
+        profile_info = f"""
+[Profile{display_profile_number}]
+Name=New Profile {display_profile_number}
+IsRelative=1
+Path=Profiles/{self.extract_after_profiles(profile_directory)}
+
+        """
+        # Append the new profile information to the file
+        try:
+            with open(path_to_profiles_ini_file, "a") as file:
+                file.write(profile_info)
+        except FileNotFoundError:
+            logging.warning("Could not find the profiles.ini file.")
+
 
 class BrowserActions:
     """

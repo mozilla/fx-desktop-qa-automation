@@ -1,20 +1,25 @@
 from time import sleep
 
-from mozprofile.profile import FirefoxProfile
 from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutProfiles
 from modules.util import BrowserActions, Utilities
 
+# TODO: assign these paths based on OS
+path_to_profile_file = "/Users/sli/Library/Application Support/Firefox"
+path_to_profiles = "/Users/sli/Library/Application Support/Firefox/Profiles"
+path_to_profiles_ini_file = (
+    "/Users/sli/Library/Application Support/Firefox/profiles.ini"
+)
 
-def test_delete_profile_dont_save_files(driver: Firefox):
+
+def test_delete_profile_dont_save_files(create_profile, driver: Firefox):
     """
     C130789.1: delete the profile with the option "dont delete files"
     """
-    profile = FirefoxProfile()
-    print(profile.profile)
 
+    # open firefox and proceed normally
     about_profiles = AboutProfiles(driver).open()
     sleep(20)
     # util = Utilities()
