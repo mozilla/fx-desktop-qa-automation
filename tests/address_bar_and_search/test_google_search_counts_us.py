@@ -1,4 +1,5 @@
 import time
+from time import sleep
 
 import pytest
 from seleniumwire.webdriver import Firefox
@@ -41,6 +42,7 @@ def test_google_search_counts_us(driver: Firefox):
     longwait = google.custom_wait(timeout=50, poll_frequency=1)
 
     longwait.until(lambda d: any(telemetry_sent(rq) for rq in d.requests))
+    sleep(2)  # try to wait for our servers to get the ping
 
     about_telemetry = AboutTelemetry(driver).open()
     u = Utilities()
