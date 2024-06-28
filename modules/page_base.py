@@ -345,6 +345,15 @@ class BasePage(Page):
         )
         return self
 
+    def element_has_text(self, name: str, text: str, labels=[]) -> Page:
+        """Expect helper: wait until element has given text"""
+        self.expect(
+            EC.text_to_be_present_in_element(
+                self.get_selector(name, labels=labels), text
+            )
+        )
+        return self
+
     def url_contains(self, url_part: str) -> Page:
         """Expect helper: wait until driver URL contains given text or timeout"""
         self.expect(EC.url_contains(url_part))
