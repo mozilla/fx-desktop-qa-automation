@@ -20,6 +20,17 @@ class FindToolbar(BasePage):
             self.wait_for_page_to_load()
         return self
 
+    def open_with_key_combo(self) -> BasePage:
+        """Use Cmd/Ctrl + F to open the Find Toolbar, wait for load"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            if self.sys_platform() == "Darwin":
+                mod_key = Keys.COMMAND
+            else:
+                mod_key = Keys.CONTROL
+            self.perform_key_combo(mod_key, "f")
+            self.wait_for_page_to_load()
+        return self
+
     def find(self, term: str) -> BasePage:
         """Use the Find Toolbar to search"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -46,8 +57,33 @@ class FindToolbar(BasePage):
         """Click the Next Match button"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("next-match-button").click()
+        return self
 
     def previous_match(self) -> BasePage:
         """Click the Previous Match button"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("previous-match-button").click()
+        return self
+
+    def rewind_to_first_match(self) -> BasePage:
+        """Go back to match 1 of n"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            position = self.get_match_args()["current"]
+            total = self.get_match_args()["total"]
+            while position != 1:
+                if position < total // 2:
+                    self.previous_match()
+                else:
+                    self.next_match()
+                position = self.get_match_args()["current"]
+        return self
+
+    def navigate_matches_by_keys(self, backwards=False) -> BasePage:
+        """Use F3 and Shift+F3 to navigate matches"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            if backwards:
+                self.perform_key_combo(Keys.SHIFT, Keys.F3)
+            else:
+                logging.info(f"sending {Keys.F3.encode()}")
+                self.actions.send_keys(Keys.F3).perform()
+            return self
