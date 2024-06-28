@@ -1,0 +1,22 @@
+{
+    "title-header": {
+        "selectorData": "h1",
+        "strategy": "tag",
+        "groups": []
+    },
+
+    "inspect-menu-horizontal-splitter": {
+        "selectorData": "devtools-horizontal-splitter",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "take-screenshot-box": {
+        "selectorData": "screenshotsPagePanel",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    }
+
+}

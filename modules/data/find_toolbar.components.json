@@ -4,6 +4,15 @@
         "selectorData": "findbar-textbox",
         "strategy": "class",
         "groups": [
+            "requiredForPage",
+            "doNotCache"
+        ]
+    },
+
+    "find-toolbar-close-button": {
+        "selectorData": "findbar-closebutton",
+        "strategy": "class",
+        "groups": [
             "requiredForPage"
         ]
     },
@@ -22,5 +31,29 @@
         "groups": [
             "requiredForPage"
         ]
+    },
+
+    "matches-label": {
+        "selectorData": "label.found-matches",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "find-status-label": {
+        "selectorData": "findbar-find-status",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "reached-top-label": {
+        "selectorData": "description[data-l10n-id='findbar-wrapped-to-bottom']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "reached-bottom-label": {
+        "selectorData": "description[data-l10n-id='findbar-wrapped-to-top']",
+        "strategy": "css",
+        "groups": []
     }
 }

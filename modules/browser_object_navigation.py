@@ -117,7 +117,6 @@ class Navigation(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-            # self.set_search_bar()
             self.search_bar.click()
             self.search_bar.send_keys(term + Keys.ENTER)
         return self
@@ -142,9 +141,10 @@ class Navigation(BasePage):
         """
         Waits for the download button to finish playing the animation for downloading to local computer
         """
-        try:
-            self.wait.until(
-                lambda _: downloads_button.get_attribute("notification") == "finish"
-            )
-        except TimeoutException:
-            logging.warning("Animation did not finish or did not play.")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            try:
+                self.wait.until(
+                    lambda _: downloads_button.get_attribute("notification") == "finish"
+                )
+            except TimeoutException:
+                logging.warning("Animation did not finish or did not play.")

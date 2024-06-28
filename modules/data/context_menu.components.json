@@ -4,5 +4,23 @@
         "selectorData": "context-searchselect",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-inspect": {
+        "selectorData": "context-inspect",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-take-screenshot": {
+        "selectorData": "context-take-screenshot",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-save-page-as": {
+        "selectorData": "context-savepage",
+        "strategy": "id",
+        "groups": []
     }
 }

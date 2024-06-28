@@ -16,3 +16,10 @@ class ContextMenu(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             return self.get_element(item)
+
+    def click_context_item(self, context_element: WebElement) -> BasePage:
+        """
+        Clicks the context item.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            context_element.click()
