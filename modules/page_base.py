@@ -86,6 +86,10 @@ class BasePage(Page):
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
     )
 
+    def custom_wait(self, **kwargs) -> WebDriverWait:
+        """Create a custom WebDriverWait, see selenium docs for arguments"""
+        return WebDriverWait(self.driver, **kwargs)
+
     def sys_platform(self):
         """Return the system platform name"""
         return platform.system()

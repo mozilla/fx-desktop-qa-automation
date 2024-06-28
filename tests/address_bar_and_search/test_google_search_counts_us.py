@@ -1,10 +1,12 @@
 import time
-from selenium.webdriver import Firefox
 
-from modules.browser_object_about_telemetry import AboutTelemetry
-from modules.browser_object_navigation import Navigation
+from seleniumwire.webdriver import Firefox
 
+from modules.browser_object import Navigation
+from modules.page_object import AboutTelemetry, GoogleSearch
 from modules.util import Utilities
+
+GSTATIC_ENDPOINT = "https://www.gstatic.com/_/mss/boq-search/_/js"
 
 
 def test_google_search_counts_us(driver: Firefox):
@@ -13,8 +15,20 @@ def test_google_search_counts_us(driver: Firefox):
     """
     # instantiate objects
     nav = Navigation(driver).open()
+    google = GoogleSearch(driver)
     nav.search("festival")
-    time.sleep(5)
+
+    def telemetry_sent(rq):
+        return (
+            GSTATIC_ENDPOINT in rq.url
+            and rq.response
+            and rq.response.status_code == 200
+        )
+
+    longwait = google.custom_wait(timeout=50, poll_frequency=1)
+
+    longwait.until(lambda d: any(telemetry_sent(rq) for rq in d.requests))
+
     about_telemetry = AboutTelemetry(driver).open()
     u = Utilities()
 
@@ -25,5 +39,11 @@ def test_google_search_counts_us(driver: Firefox):
 
     # Verify pings are recorded
     json_data = u.decode_url(driver)
-    assert u.assert_json_value(json_data, '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum', 1)
-    assert u.assert_json_value(json_data, '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]', 1)
+    assert u.assert_json_value(
+        json_data, '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum', 1
+    )
+    assert u.assert_json_value(
+        json_data,
+        '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]',
+        1,
+    )
