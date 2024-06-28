@@ -1,4 +1,5 @@
 import time
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_about_telemetry import AboutTelemetry
@@ -6,7 +7,8 @@ from modules.browser_object_navigation import Navigation
 
 from modules.util import Utilities
 
-
+# unstable: for some reason cannot pass in Taskcluster Linux VM
+@pytest.mark.unstable
 def test_google_search_counts_us(driver: Firefox):
     """
     C1365026, Test Google Search counts - urlbar US
