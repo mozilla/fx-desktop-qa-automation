@@ -13,6 +13,10 @@ MATCH_TWO_COTEXT = "representative must complete"
 
 
 class element_parent_has_text:
+    """
+    Custom WebDriverWait event:
+     if an element's parent node contains certain text, return the element (not the parent)"""
+
     def __init__(self, pom: BasePage, name: str, text: str):
         self.name = name
         self.pom = pom
