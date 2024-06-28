@@ -4,8 +4,9 @@ import platform
 from typing import Callable, List, Tuple
 
 import pytest
+from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from seleniumwire import webdriver
+from seleniumwire import webdriver as swebdriver
 
 
 def pytest_addoption(parser):
@@ -128,6 +129,7 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     env_prep,
+    wire: bool,
 ):
     """
     Return the webdriver object.
@@ -158,6 +160,9 @@ def driver(
 
     env_prep: None
         Fixture that does other environment work, like set logging levels.
+
+    wire: bool
+        Use Selenium-Wire?
     """
     try:
         options = Options()
@@ -166,7 +171,11 @@ def driver(
         options.binary_location = fx_executable
         for opt, value in set_prefs:
             options.set_preference(opt, value)
-        driver = webdriver.Firefox(options=options)
+
+        if wire:
+            driver = swebdriver.Firefox(options=options)
+        else:
+            driver = webdriver.Firefox(options=options)
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
@@ -182,6 +191,16 @@ def driver(
 
     finally:
         driver.quit()
+
+
+@pytest.fixture()
+def wire() -> bool:
+    return False
+
+
+@pytest.fixture()
+def add_prefs() -> list:
+    return []
 
 
 @pytest.fixture()

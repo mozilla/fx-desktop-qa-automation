@@ -1,5 +1,6 @@
 import time
 
+import pytest
 from seleniumwire.webdriver import Firefox
 
 from modules.browser_object import Navigation
@@ -7,6 +8,18 @@ from modules.page_object import AboutTelemetry, GoogleSearch
 from modules.util import Utilities
 
 GSTATIC_ENDPOINT = "https://www.gstatic.com/_/mss/boq-search/_/js"
+
+
+@pytest.fixture()
+def add_prefs() -> list:
+    return [
+        ("browser.search.region", "US"),
+    ]
+
+
+@pytest.fixture()
+def wire():
+    return True
 
 
 def test_google_search_counts_us(driver: Firefox):
