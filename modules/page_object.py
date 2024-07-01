@@ -12,3 +12,4 @@ from modules.page_object_example_page import *
 from modules.page_object_generic_pdf import *
 from modules.page_object_google_search import *
 from modules.page_object_wiki_firefox_logo import *
+from modules.page_object_about_telemetry import *

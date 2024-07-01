@@ -1,0 +1,13 @@
+{
+  "category-raw": {
+    "selectorData": "category-raw",
+    "strategy": "id",
+    "groups": []
+  },
+
+  "rawdata-tab": {
+    "selectorData": "//li[@class='tabs-menu-item rawdata ']//a[@id='rawdata-tab']",
+    "strategy": "xpath",
+    "groups": []
+  }
+}
