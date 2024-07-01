@@ -7,6 +7,7 @@ markers = [
     "pynput: test uses pynput package",
     "incident: incident smoke tests",
     "unstable: temporary mark for unstable tests",
+    "slow: test is clocked at more than 30s on modern machines",
     "ci: basic tests to run in ci",
     "locale_de: tests run in DE locale versions",
     "locale_fr: tests run in FR locale versions",
