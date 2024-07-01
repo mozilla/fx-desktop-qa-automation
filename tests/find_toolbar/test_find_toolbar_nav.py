@@ -28,9 +28,7 @@ def test_find_toolbar_navigation(driver: Firefox):
 
     # Sometimes we get a match that isn't the first
     # (This also tests that the number is correct)
-    while match_status["current"] != 1:
-        find_toolbar.previous_match()
-        match_status = find_toolbar.get_match_args()
+    find_toolbar.rewind_to_first_match()
 
     # Ensure that first match is highlighted, others are not
     processes_selector = (By.CSS_SELECTOR, "a[href='about:processes']")

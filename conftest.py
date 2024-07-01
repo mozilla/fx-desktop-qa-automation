@@ -214,3 +214,8 @@ def version(driver: webdriver.Firefox):
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
     return 19980331
+
+
+@pytest.fixture(scope="session")
+def fillable_pdf_url():
+    return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"

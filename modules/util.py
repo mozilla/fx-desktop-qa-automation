@@ -1,9 +1,13 @@
+import base64
+import json
 import logging
 import os
 import platform
 import re
 from os import remove
 from random import shuffle
+from typing import Union
+from jsonpath_ng import parse
 from typing import Literal, Union
 
 from faker import Faker
@@ -301,6 +305,19 @@ class Utilities:
         # return with the country code and the normalized phone number
         return default_country_code + ret_val
 
+    def decode_url(self, driver: Firefox):
+        """Decode to base64"""
+        base64_data = driver.current_url.split(",")[1]
+        decoded_data = base64.b64decode(base64_data).decode("utf-8")
+        json_data = json.loads(decoded_data)
+        return json_data
+
+    def assert_json_value(self, json_data, jsonpath_expr, expected_value):
+        """Parse json and validate json search string with its value"""
+        expr = parse(jsonpath_expr)
+        match = expr.find(json_data)
+        return match[0].value == expected_value, f"Expected {expected_value}, but got {match[0].value}"
+
 
 class BrowserActions:
     """
@@ -365,7 +382,7 @@ class BrowserActions:
                 url_bar.send_keys(term)
 
     def filter_elements_by_attr(
-        self, elements: list[WebElement], attr: str, value: str
+            self, elements: list[WebElement], attr: str, value: str
     ) -> list[WebElement]:
         """
         Given a list of WebElements, return the ones where attribute `attr` has value `value`.
@@ -373,7 +390,7 @@ class BrowserActions:
         return [el for el in elements if el.get_attribute(attr) == value]
 
     def pick_element_from_list_by_text(
-        self, elements: list[WebElement], substr: str
+            self, elements: list[WebElement], substr: str
     ) -> WebElement:
         """
         Given a list of WebElements, return the one where innerText matches `substr`.
@@ -464,7 +481,7 @@ class PomUtils:
         self.driver = driver
 
     def get_shadow_content(
-        self, element: WebElement
+            self, element: WebElement
     ) -> list[Union[WebElement, ShadowRoot]]:
         """
         Given a WebElement, return the shadow DOM root or roots attached to it. Returns a list.
@@ -498,7 +515,7 @@ class PomUtils:
         return []
 
     def css_selector_matches_element(
-        self, element: Union[WebElement, ShadowRoot], selector: list
+            self, element: Union[WebElement, ShadowRoot], selector: list
     ) -> bool:
         if type(element) == ShadowRoot:
             return False
@@ -508,7 +525,7 @@ class PomUtils:
         )
 
     def find_shadow_chrome_element(
-        self, nodes: list[WebElement], selector: list
+            self, nodes: list[WebElement], selector: list
     ) -> Union[WebElement, None]:
         logging.info("Selecting element in Chrome Context Shadow DOM...")
         if selector[0] not in self.allowed_selectors_shadow_chrome_element:
@@ -534,11 +551,11 @@ class PomUtils:
         return None
 
     def find_shadow_element(
-        self,
-        shadow_parent: Union[WebElement, ShadowRoot],
-        selector: list,
-        multiple=False,
-        context="content",
+            self,
+            shadow_parent: Union[WebElement, ShadowRoot],
+            selector: list,
+            multiple=False,
+            context="content",
     ) -> WebElement:
         """
         Given a WebElement with a shadow root attached, find a selector in the
