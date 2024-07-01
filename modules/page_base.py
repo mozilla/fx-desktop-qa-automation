@@ -473,3 +473,8 @@ class BasePage(Page):
             pass
         self.set_content_context()
         return _loaded
+
+    def switch_tab(self):
+        """Get list of all window handles, switch to the newly opened tab"""
+        handles = self.driver.window_handles
+        self.driver.switch_to.window(handles[-1])
