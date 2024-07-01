@@ -79,4 +79,4 @@ if __name__ == "__main__":
 
         generic_model = os.path.join("modules", f"{model_type_name}_object.py")
         with open(generic_model, "a") as fh:
-            fh.write(f"\nfrom modules.{model[:-3]} import {pascalify(model_name)}")
+            fh.write(f"\nfrom modules.{model_type_name}_object_{model_name} import *")

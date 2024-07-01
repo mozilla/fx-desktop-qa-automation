@@ -8,6 +8,18 @@
         ]
     },
 
+    "sync-fxa": {
+        "selectorData": "appMenu-fxa-status2",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "fxa-sign-in": {
+        "selectorData": "#appMenu-fxa-status2 toolbarbutton",
+        "strategy": "css",
+        "groups": []
+    },
+
     "more-tools": {
         "selectorData": "appMenu-more-button2",
         "strategy": "id",
