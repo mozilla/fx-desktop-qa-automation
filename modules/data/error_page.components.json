@@ -1,0 +1,32 @@
+{
+    "error-title": {
+        "selectorData": ".title-text[data-l10n-id='dnsNotFound-title']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "error-short-description": {
+        "selectorData": "errorShortDesc",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "error-suggestion-link": {
+        "selectorData": "#errorShortDesc a[data-l10n-name='website']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "error-long-description-items": {
+        "selectorData": "#errorLongDesc li",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "try-again-button": {
+        "selectorData": "#netErrorButtonContainer #neterrorTryAgainButton",
+        "strategy": "css",
+        "groups": []
+    }
+
+}
