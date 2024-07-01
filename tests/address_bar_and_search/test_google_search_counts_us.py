@@ -2,8 +2,8 @@ import time
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_about_telemetry import AboutTelemetry
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import Navigation
+from modules.page_object import AboutTelemetry
 
 from modules.util import Utilities
 
