@@ -1,3 +1,40 @@
 {
+    "login-email-input": {
+        "selectorData": "input[type='email']",
+        "strategy": "css",
+        "groups": [
+            "requiredForPage"
+        ]
 
+    },
+
+    "submit-button": {
+        "selectorData": "button[type='submit']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "password-input": {
+        "selectorData": "[data-testid='new-password-input-label']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "password-repeat-input": {
+        "selectorData": "[data-testid='verify-password-input-field']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "age-input": {
+        "selectorData": "[data-test-id='verify-password-input-field']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "otp-input": {
+        "selectorData": "[data-test-id='']",
+        "strategy": "css",
+        "groups": []
+    }
 }
