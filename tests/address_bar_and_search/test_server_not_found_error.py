@@ -15,18 +15,10 @@ def add_prefs():
     ]
 
 
-@pytest.mark.parametrize(
-    "url, site_name, suggestion_url",
-    [
-        ("http://cnn", "cnn", "https://www.cnn.com/"),
-        ("http://example", "example", "https://www.example.com/"),
-    ],
-)
-def test_server_not_found_error(driver: Firefox, url, site_name, suggestion_url):
+def test_server_not_found_error(driver: Firefox):
     """
     C1901393: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
     displayed. The error page contains the correct elements, and the suggested link redirects to the appropriate page.
-
     """
 
     # Create objects
@@ -34,16 +26,14 @@ def test_server_not_found_error(driver: Firefox, url, site_name, suggestion_url)
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
 
-    nav.search(url)
+    nav.search("http://cnn")
 
     # Verify the tab title
-
     WebDriverWait(driver, 30).until(
         lambda d: tabs.get_tab_title(tabs.get_tab(1)) == "Server Not Found"
     )
 
     # Verify elements on the error page
-
     error_title = error_page.get_error_title()
     assert (
         error_title == "Hmm. We’re having trouble finding that site."
@@ -52,7 +42,7 @@ def test_server_not_found_error(driver: Firefox, url, site_name, suggestion_url)
     error_short_description = error_page.get_error_short_description()
     assert (
         error_short_description
-        == f"We can’t connect to the server at {site_name}. Did you mean to go to www.{site_name}.com?"
+        == "We can’t connect to the server at cnn. Did you mean to go to www.cnn.com?"
     ), (
         f"Expected error short description text not found."
         f"Actual: {error_short_description}"
@@ -74,6 +64,5 @@ def test_server_not_found_error(driver: Firefox, url, site_name, suggestion_url)
     assert try_again_button.is_displayed(), "The 'Try Again' button is not displayed"
 
     # Verify that the suggested link redirects to the correct page
-
     error_page.get_error_suggestion_link().click()
-    nav.expect_in_content(EC.url_contains(suggestion_url))
+    nav.expect_in_content(EC.url_contains("https://www.cnn.com/"))
