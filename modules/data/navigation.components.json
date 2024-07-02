@@ -134,6 +134,12 @@
         "groups": []
     },
 
+     "addon-suggestion": {
+        "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
+        "strategy": "css",
+        "groups": []
+    },
+
     "search-suggestion-list": {
         "selectorData": "div.urlbarView-row[type='search_engine'] span.urlbarView-title",
         "strategy": "css",
