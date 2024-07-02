@@ -15,10 +15,12 @@ pytest-html = "*"
 pypom = "*"
 pillow = "*"
 taskcluster-taskgraph = "==9.0.0"
+jsonpath-ng = "*"
+pillow = "*"
 
 [dev-packages]
 werkzeug = "*"
 selenium-wire = "*"
 pdoc = "*"
-ruff = "*"
+ruff = "0.4.3"
 pytest-variables = "*"

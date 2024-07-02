@@ -5,7 +5,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TabBar
 
 
-def test_navigation_mulitple_tabs(driver: Firefox):
+def test_navigation_multiple_tabs(driver: Firefox):
     # open 20 tabs
     tabs = TabBar(driver).open()
     num_tabs = 20

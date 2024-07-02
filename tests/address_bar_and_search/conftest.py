@@ -13,14 +13,16 @@ def httpserver_listen_address():
 
 
 @pytest.fixture()
-def set_prefs():
+def set_prefs(add_prefs: dict):
     """Set prefs"""
-    return [
-        ("browser.search.region", "US"),
+    prefs = [
+        ("browser.aboutConfig.showWarning", False),
         ("privacy.donottrackheader.enabled", False),
         ("telemetry.fog.test.localhost_port", 5312),
         ("datareporting.healthreport.uploadEnabled", True),
     ]
+    prefs.extend(add_prefs)
+    return prefs
 
 
 @pytest.fixture()

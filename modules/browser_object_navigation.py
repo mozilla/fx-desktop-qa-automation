@@ -1,3 +1,7 @@
+import logging
+
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -95,7 +99,52 @@ class Navigation(BasePage):
                 self.type_in_awesome_bar(term + Keys.ENTER)
         return self
 
+    def set_search_bar(self) -> BasePage:
+        """Set the search_bar attribute of the Navigation object"""
+        self.set_chrome_context()
+        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        return self
+
+    def search_bar_search(self, term: str) -> BasePage:
+        """
+        Search using the *Old* Search Bar. Returns self.
+
+        Attributes
+        ----------
+
+        term : str
+            The search term
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+            self.search_bar.click()
+            self.search_bar.send_keys(term + Keys.ENTER)
+        return self
+
     def click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         self.awesome_bar.click()
         return self
+
+    def get_download_button(self) -> BasePage:
+        """
+        Gets the download button WebElement
+        """
+        downloads_button = None
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            downloads_button = self.get_element("downloads-button")
+            return downloads_button
+
+    def wait_for_download_animation_finish(
+        self, downloads_button: WebElement
+    ) -> BasePage:
+        """
+        Waits for the download button to finish playing the animation for downloading to local computer
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            try:
+                self.wait.until(
+                    lambda _: downloads_button.get_attribute("notification") == "finish"
+                )
+            except TimeoutException:
+                logging.warning("Animation did not finish or did not play.")

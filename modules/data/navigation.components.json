@@ -9,6 +9,14 @@
         ]
     },
 
+    "results-dropdown": {
+        "selectorData": "urlbar-results",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "tab-to-search-text-span": {
         "selectorData": "urlbarView-dynamic-onboardTabToSearch-text-container",
         "strategy": "class",
@@ -107,6 +115,7 @@
         "groups": []
     },
 
+
     "add-extra-search-engine": {
         "selectorData": "[id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']",
         "strategy": "css",
@@ -117,6 +126,25 @@
         "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
         "strategy": "css",
         "groups": []
-    }
+    },
 
+    "downloads-button": {
+        "selectorData": "downloads-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "addon-suggestion": {
+        "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-suggestion-list": {
+        "selectorData": "div.urlbarView-row[type='search_engine'] span.urlbarView-title",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    }
 }
