@@ -91,7 +91,6 @@ class PanelUi(BasePage):
         """
         Check that FxA Sync Label is set to "Syncing…"
         """
-        syncing = False
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_sync_sign_in_button()
             self.element_has_text("fxa-sync-label", "Syncing")
