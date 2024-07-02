@@ -1,8 +1,4 @@
-import logging
-from time import sleep
-
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import FindToolbar
 from modules.page_base import BasePage
