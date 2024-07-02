@@ -13,17 +13,13 @@ def add_prefs():
         ("browser.search.region", "US"),
     ]
 
-
+@pytest.mark.unstable
 @pytest.mark.parametrize("site", sites)
 def test_search_suggestion_for_engine_selection(driver: Firefox, site: str):
     """
     C1365228 - Test to verify that when entering "@", a list of search engines is suggested, and upon selecting an
     engine, the search is performed using the selected engine.
     """
-
-    # STABILIZE: Remove when Amazon works again
-    if site == "Amazon":
-        pytest.skip("Amazon suggest not currently stable in CI")
 
     nav = Navigation(driver).open()
     nav.type_in_awesome_bar("@")
