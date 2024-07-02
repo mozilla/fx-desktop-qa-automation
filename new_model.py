@@ -1,3 +1,7 @@
+# Create a new POM or BOM. Usage:
+# python new_model.py [model_name | ModelName] [type]
+# where type is either pom or bom
+
 import os
 import re
 import sys
@@ -7,6 +11,7 @@ PASCAL_RE = re.compile(r"^[A-Z][a-zA-Z]*[a-z]$")
 
 
 def snakify(pascal: str) -> str:
+    """Convert PascalCase to snake_case"""
     chars = pascal[0].lower()
     for c in pascal[1:]:
         if c == c.upper():
@@ -17,6 +22,7 @@ def snakify(pascal: str) -> str:
 
 
 def pascalify(snake: str) -> str:
+    """Convert snake_case to PascalCase"""
     chars = snake[0].upper()
     up_flag = False
     for c in snake[1:]:
@@ -34,6 +40,12 @@ model_type = None
 model_name = None
 if len(sys.argv) > 1:
     args = [a.lower() for a in sys.argv]
+    if "-h" in args:
+        print("""
+            Usage:
+            python new_model.py [model_name | ModelName] [type]
+            where type is either pom or bom
+              """)
     if "bom" in args:
         model_type = "bom"
         del sys.argv[args.index("bom")]
