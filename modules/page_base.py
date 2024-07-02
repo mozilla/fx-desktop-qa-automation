@@ -306,6 +306,14 @@ class BasePage(Page):
         """
         return self.get_element(name, multiple=True, labels=labels)
 
+    def get_parent_of(self, name: str, labels=[]) -> WebElement:
+        """
+        Given a name (and labels if needed), return the direct parent node of the element.
+        """
+
+        child = self.get_element(name, labels=labels)
+        return child.find_element(By.XPATH, "..")
+
     def element_exists(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
         self.expect(
@@ -342,6 +350,15 @@ class BasePage(Page):
         """Expect helper: wait until element is selected or timeout"""
         self.expect(
             EC.element_located_to_be_selected(self.get_selector(name, labels=labels))
+        )
+        return self
+
+    def element_has_text(self, name: str, text: str, labels=[]) -> Page:
+        """Expect helper: wait until element has given text"""
+        self.expect(
+            EC.text_to_be_present_in_element(
+                self.get_selector(name, labels=labels), text
+            )
         )
         return self
 
@@ -482,3 +499,8 @@ class BasePage(Page):
             pass
         self.set_content_context()
         return _loaded
+
+    def switch_tab(self):
+        """Get list of all window handles, switch to the newly opened tab"""
+        handles = self.driver.window_handles
+        self.driver.switch_to.window(handles[-1])
