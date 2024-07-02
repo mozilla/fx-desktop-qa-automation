@@ -13,10 +13,10 @@ task-defaults:
         path: checkouts/vcs/artifacts
         type: directory
   scopes:
-    - queue:route:notify.slack-channel.GT8RBT76F # notify mobile-alerts-sandbox on failure
-    - notify:slack-channel:GT8RBT76F
-    - queue:route:notify.slack-channel.GT8RBT76F # notify mobile-testeng on success
-    - notify:slack-channel:GT8RBT76F
+    - queue:route:notify.slack-channel.C016BC5FUHJ # notify mobile-alerts-sandbox on failure
+    - notify:slack-channel:C016BC5FUHJ
+    - queue:route:notify.slack-channel.C016BC5FUHJ # notify mobile-testeng on success
+    - notify:slack-channel:C016BC5FUHJ
 
 tasks:
   linux:
@@ -35,7 +35,7 @@ tasks:
     notify:
       recipients:
         - type: slack-channel
-          channel-id: GT8RBT76F
+          channel-id: C016BC5FUHJ
           status-type: on-defined
       content:
         slack:
