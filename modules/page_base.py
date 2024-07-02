@@ -234,6 +234,7 @@ class BasePage(Page):
             logging.info(f"Getting multiple elements by name {name}")
         if labels:
             logging.info(f"Labels: {labels}")
+        logging.info(f"Groups: {self.elements[name]['groups']}")
         cache_name = name
         if labels:
             labelscode = "".join(labels)
@@ -260,6 +261,7 @@ class BasePage(Page):
                     shadow_parent, selector, context=self.context
                 )
                 if "doNotCache" not in element_data["groups"]:
+                    logging.info("Not caching...")
                     self.elements[cache_name]["seleniumObject"] = shadow_element
                 return shadow_element
             else:
@@ -281,6 +283,7 @@ class BasePage(Page):
         if not multiple:
             found_element = self.driver.find_element(*selector)
             if "doNotCache" not in element_data["groups"]:
+                logging.info("Caching...")
                 self.elements[cache_name]["seleniumObject"] = found_element
             logging.info(f"Returning element {cache_name}.\n")
             return found_element
@@ -370,7 +373,9 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
-    def fill(self, name: str, term: str, clear_first=True, press_enter=True, labels=[]) -> Page:
+    def fill(
+        self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
+    ) -> Page:
         if self.context == "chrome":
             self.set_chrome_context()
         el = self.get_element(name, labels=labels)
@@ -427,6 +432,16 @@ class BasePage(Page):
     def context_click_element(self, element: WebElement) -> Page:
         """Context (right-) click on an element"""
         self.actions.context_click(element).perform()
+        return self
+
+    def wait_for_num_tabs(self, num_tabs: int) -> Page:
+        """
+        Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
+        """
+        try:
+            self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
+        except TimeoutException:
+            logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
         return self
 
     def hide_popup(self, context_menu: str, chrome=False) -> Page:

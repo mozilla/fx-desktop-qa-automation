@@ -15,8 +15,8 @@
         "groups": []
     },
 
-    "finish-account-setup-button": {
-        "selectorData": "PanelUI-fxa-menu-syncnow-button" ,
+    "fxa-manage-account-button": {
+        "selectorData": "fxa-manage-account-button",
         "strategy": "id",
         "groups": []
     },

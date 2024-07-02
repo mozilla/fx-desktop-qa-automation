@@ -1,6 +1,8 @@
+import logging
+
 from pypom import Region
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 from modules.util import PomUtils
@@ -67,33 +69,30 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("manage-themes").click()
 
-    def click_sync_sign_in_button(self):
+    def click_sync_sign_in_button(self) -> BasePage:
         """
         Click FxA sync button.
         """
-        self.select_panel_setting("fxa-sign-in")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.open_panel_menu()
+            self.select_panel_setting("fxa-sign-in")
+        return self
+
+    def manage_fxa_account(self) -> BasePage:
+        """
+        Open the FxA management flow.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_sync_sign_in_button()
+            self.get_element("fxa-manage-account-button").click()
+        return self
 
     def confirm_sync_in_progress(self) -> BasePage:
         """
-        Check that FxA Sync Label is set to "Syncing..."
+        Check that FxA Sync Label is set to "Syncing…"
         """
         syncing = False
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            for _ in range(30):
-                self.open_panel_menu()
-                self.click_sync_sign_in_button()
-                try:
-                    self.custom_wait(timeout=1).until(
-                        EC.text_to_be_present_in_element(
-                            self.get_selector('fxa-sync-label'),
-                            "Syncing"
-                        )
-                    )
-                    syncing = True
-                except TimeoutException:
-                    pass
-                finally:
-                    self.get_element("panel-ui-button").click()
-            if not syncing:
-                assert False, "Sync is not in progress."
+            self.click_sync_sign_in_button()
+            self.element_has_text("fxa-sync-label", "Syncing")
         return self

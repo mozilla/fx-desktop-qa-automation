@@ -11,7 +11,9 @@
     "submit-button": {
         "selectorData": "button[type='submit']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "password-input": {
@@ -57,13 +59,7 @@
     },
 
     "login-password-input": {
-        "selectorData": "password",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "submit-button": {
-        "selectorData": "button[type='submit']",
+        "selectorData": "input#password",
         "strategy": "css",
         "groups": []
     },
