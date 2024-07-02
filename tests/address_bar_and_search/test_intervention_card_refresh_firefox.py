@@ -3,8 +3,13 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 
-ALLOWED_RGB_BEFORE_VALUES = set(["rgba(207, 207, 216, 0.33)", "color(srgb 0 0 0 / 0.13)", "rgba(0, 0, 0, 0.33)"])
-ALLOWED_RGB_AFTER_VALUES = set(["color(srgb 0 0 0 / 0.6)", "color(srgb 0.984314 0.984314 0.996078 / 0.6)"])
+ALLOWED_RGB_BEFORE_VALUES = set(
+    ["rgba(207, 207, 216, 0.33)", "color(srgb 0 0 0 / 0.13)", "rgba(0, 0, 0, 0.33)"]
+)
+ALLOWED_RGB_AFTER_VALUES = set(
+    ["color(srgb 0 0 0 / 0.6)", "color(srgb 0.984314 0.984314 0.996078 / 0.6)"]
+)
+
 
 # Set search region
 @pytest.fixture()
