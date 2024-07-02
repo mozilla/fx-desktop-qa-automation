@@ -1,5 +1,6 @@
 from pypom import Region
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 from modules.page_base import BasePage
 from modules.util import PomUtils
@@ -71,3 +72,28 @@ class PanelUi(BasePage):
         Click FxA sync button.
         """
         self.select_panel_setting("fxa-sign-in")
+
+    def confirm_sync_in_progress(self) -> BasePage:
+        """
+        Check that FxA Sync Label is set to "Syncing..."
+        """
+        syncing = False
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            for _ in range(30):
+                self.open_panel_menu()
+                self.click_sync_sign_in_button()
+                try:
+                    self.custom_wait(timeout=1).until(
+                        EC.text_to_be_present_in_element(
+                            self.get_selector('fxa-sync-label'),
+                            "Syncing"
+                        )
+                    )
+                    syncing = True
+                except TimeoutException:
+                    pass
+                finally:
+                    self.get_element("panel-ui-button").click()
+            if not syncing:
+                assert False, "Sync is not in progress."
+        return self

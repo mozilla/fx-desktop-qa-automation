@@ -15,7 +15,7 @@
     },
 
     "password-input": {
-        "selectorData": "[data-testid='new-password-input-label']",
+        "selectorData": "[data-testid='new-password-input-field']",
         "strategy": "css",
         "groups": []
     },
@@ -27,14 +27,50 @@
     },
 
     "age-input": {
-        "selectorData": "[data-test-id='verify-password-input-field']",
+        "selectorData": "[data-testid='age-input-field']",
         "strategy": "css",
         "groups": []
     },
 
+    "card-header": {
+        "selectorData": "card-header",
+        "strategy": "class",
+        "groups": []
+    },
+
     "otp-input": {
-        "selectorData": "[data-test-id='']",
+        "selectorData": "[data-testid='confirm-signup-code-input-field']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "connected-heading": {
+        "selectorData": "fxa-connected-heading",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "continue-browsing-link": {
+        "selectorData": "cad-not-now",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "login-password-input": {
+        "selectorData": "password",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "submit-button": {
+        "selectorData": "button[type='submit']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "sign-in-button": {
+        "selectorData": "use-logged-in",
+        "strategy": "id",
         "groups": []
     }
 }

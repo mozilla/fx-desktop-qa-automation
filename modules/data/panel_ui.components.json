@@ -4,8 +4,21 @@
         "selectorData": "PanelUI-menu-button",
         "strategy": "id",
         "groups": [
-            "requiredForPage"
+            "requiredForPage",
+            "doNotCache"
         ]
+    },
+
+    "sync-user-button": {
+        "selectorData": "toolbarbutton[id='fxa-toolbar-menu-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "finish-account-setup-button": {
+        "selectorData": "PanelUI-fxa-menu-syncnow-button" ,
+        "strategy": "id",
+        "groups": []
     },
 
     "sync-fxa": {
@@ -18,6 +31,14 @@
         "selectorData": "#appMenu-fxa-status2 toolbarbutton",
         "strategy": "css",
         "groups": []
+    },
+
+    "fxa-sync-label": {
+        "selectorData": "syncnow-label",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "more-tools": {

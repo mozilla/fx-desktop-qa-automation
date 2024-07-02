@@ -100,6 +100,9 @@ class BasePage(Page):
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
 
+    def custom_wait(self, **kwargs):
+        return WebDriverWait(self.driver, **kwargs)
+
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
         logging.info("Expecting...")
@@ -365,6 +368,17 @@ class BasePage(Page):
     def url_contains(self, url_part: str) -> Page:
         """Expect helper: wait until driver URL contains given text or timeout"""
         self.expect(EC.url_contains(url_part))
+        return self
+
+    def fill(self, name: str, term: str, clear_first=True, press_enter=True, labels=[]) -> Page:
+        if self.context == "chrome":
+            self.set_chrome_context()
+        el = self.get_element(name, labels=labels)
+        self.element_clickable(name, labels=labels)
+        if clear_first:
+            el.clear()
+        end = Keys.ENTER if press_enter else ""
+        el.send_keys(f"{term}{end}")
         return self
 
     def multi_click(
