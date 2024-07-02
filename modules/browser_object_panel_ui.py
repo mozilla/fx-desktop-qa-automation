@@ -1,7 +1,4 @@
-import logging
-
 from pypom import Region
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage

@@ -1,5 +1,3 @@
-from time import sleep
-
 from modules.page_base import BasePage
 
 
