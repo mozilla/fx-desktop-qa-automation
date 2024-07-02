@@ -44,7 +44,9 @@
     "refresh-intervention-card": {
         "selectorData": "div[tip-type=\"intervention_refresh\"]",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "fx-refresh-text": {
@@ -68,6 +70,12 @@
     "fx-refresh-menu-get-help-item": {
         "selectorData": "menuitem[data-l10n-id=\"urlbar-result-menu-tip-get-help\"]",
         "strategy": "css",
+        "groups": []
+    },
+
+    "fx-refresh-menu-get-help-item-get-help": {
+        "selectorData": "urlbarView-result-menuitem",
+        "strategy": "class",
         "groups": []
     },
 
@@ -122,6 +130,12 @@
 
     "downloads-button": {
         "selectorData": "downloads-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "search-results-container": {
+        "selectorData": "urlbar-results",
         "strategy": "id",
         "groups": []
     }
