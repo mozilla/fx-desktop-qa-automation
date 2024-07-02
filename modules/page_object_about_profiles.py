@@ -1,8 +1,4 @@
-import platform
-from time import sleep
-
 from pynput.keyboard import Key
-from selenium.common import NoAlertPresentException
 
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities

@@ -128,6 +128,7 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     env_prep,
+    create_profile,
 ):
     """
     Return the webdriver object.
@@ -167,6 +168,8 @@ def driver(
         for opt, value in set_prefs:
             options.set_preference(opt, value)
         driver = webdriver.Firefox(options=options)
+        # assign the profile name for when creating a profile is necessary
+        driver.profile_name = create_profile
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
@@ -214,3 +217,17 @@ def version(driver: webdriver.Firefox):
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
     return 19980331
+
+
+@pytest.fixture()
+def create_profile():
+    return None
+    # util = Utilities()
+    # # find the highest profile number
+    # profile_number = util.extract_highest_profile_number(path_to_profiles_ini_file)
+    # # create a new directory in the profiles dir
+    # new_profile_path = util.create_dir(
+    #     path_to_profiles, f"profile{str(profile_number)}"
+    # )
+    # # append a new profile on the profiles.ini
+    # util.add_new_profile(path_to_profiles_ini_file, new_profile_path, profile_number)

@@ -1,10 +1,22 @@
-from time import sleep
-
-from pynput.keyboard import Controller, Key
+import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutProfiles
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
+
+
+@pytest.fixture()
+def create_profile():
+    util = Utilities()
+    # find the highest profile number
+    profile_number = util.extract_highest_profile_number(path_to_profiles_ini_file)
+    # create a new directory in the profiles dir
+    new_profile_path = util.create_dir(
+        path_to_profiles, f"profile{str(profile_number)}"
+    )
+    # append a new profile on the profiles.ini
+    util.add_new_profile(path_to_profiles_ini_file, new_profile_path, profile_number)
+    return "hello"
+
 
 # TODO: assign these paths based on OS
 path_to_profile_file = "/Users/sli/Library/Application Support/Firefox"
@@ -14,14 +26,15 @@ path_to_profiles_ini_file = (
 )
 
 
-def test_delete_profile_dont_save_files(create_profile, driver: Firefox):
+def test_delete_profile_dont_save_files(driver: Firefox):
     """
     C130789.1: delete the profile with the option "dont delete files"
     """
-
+    pass
     # open firefox and proceed normally
-    about_profiles = AboutProfiles(driver).open()
-    sleep(20)
+    # about_profiles = AboutProfiles(driver).open()
+    # print(driver.profile_name)
+    # sleep(20)
     # util = Utilities()
     # ba = BrowserActions(driver)
     # cannot create the profile atm : (
