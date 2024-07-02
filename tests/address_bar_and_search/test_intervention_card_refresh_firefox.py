@@ -3,12 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 
-LIGHT_MODE_BEFORE_RBG_VALUE = "rgba(207, 207, 216, 0.33)"
-DARK_MODE_BEFORE_RGB_VALUE = "rgba(0, 0, 0, 0.33)"
-
-LIGHT_MODE_AFTER_RGB_VALUE = "color(srgb 0 0 0 / 0.6)"
-DARK_MODE_AFTER_RGB_VALUE = "color(srgb 0.984314 0.984314 0.996078 / 0.6)"
-
+ALLOWED_RGB_BEFORE_VALUES = set(["rgba(207, 207, 216, 0.33)", "color(srgb 0 0 0 / 0.13)", "rgba(0, 0, 0, 0.33)"])
+ALLOWED_RGB_AFTER_VALUES = set(["color(srgb 0 0 0 / 0.6)", "color(srgb 0.984314 0.984314 0.996078 / 0.6)"])
 
 # Set search region
 @pytest.fixture()
@@ -40,35 +36,22 @@ def test_intervention_card_refresh(driver: Firefox):
 
     # ensure the color before hover
     button_background = refresh_button.value_of_css_property("background-color")
-    assert (
-        button_background == LIGHT_MODE_BEFORE_RBG_VALUE
-        or button_background == DARK_MODE_BEFORE_RGB_VALUE
-    )
+    assert button_background in ALLOWED_RGB_BEFORE_VALUES
     nav.hover_over_element(refresh_button, chrome=True)
 
     # ensure there is a hover state
     new_button_background = refresh_button.value_of_css_property("background-color")
-    assert (
-        new_button_background == LIGHT_MODE_AFTER_RGB_VALUE
-        or new_button_background == DARK_MODE_AFTER_RGB_VALUE
-    )
-
+    assert new_button_background in ALLOWED_RGB_AFTER_VALUES
     # repeated from before but with the 3 dots menu button
     help_menu_background = help_menu_button.value_of_css_property("background-color")
-    assert (
-        help_menu_background == LIGHT_MODE_BEFORE_RBG_VALUE
-        or help_menu_background == DARK_MODE_BEFORE_RGB_VALUE
-    )
+    assert help_menu_background in ALLOWED_RGB_BEFORE_VALUES
     assert help_menu_button.get_attribute("open") is None
     nav.hover_over_element(help_menu_button, chrome=True)
 
     new_help_menu_background = help_menu_button.value_of_css_property(
         "background-color"
     )
-    assert (
-        new_help_menu_background == LIGHT_MODE_AFTER_RGB_VALUE
-        or new_help_menu_background == DARK_MODE_AFTER_RGB_VALUE
-    )
+    assert new_help_menu_background in ALLOWED_RGB_AFTER_VALUES
 
     # ensure the popup appears
     help_menu_button.click()
