@@ -1,3 +1,5 @@
+import base64
+import json
 import logging
 import os
 import platform
@@ -8,6 +10,7 @@ from typing import Literal, Union
 
 from faker import Faker
 from faker.providers import internet, misc
+from jsonpath_ng import parse
 from PIL import Image
 from pynput.keyboard import Controller, Key
 from selenium.common.exceptions import (
@@ -301,6 +304,22 @@ class Utilities:
         # return with the country code and the normalized phone number
         return default_country_code + ret_val
 
+    def decode_url(self, driver: Firefox):
+        """Decode to base64"""
+        base64_data = driver.current_url.split(",")[1]
+        decoded_data = base64.b64decode(base64_data).decode("utf-8")
+        json_data = json.loads(decoded_data)
+        return json_data
+
+    def assert_json_value(self, json_data, jsonpath_expr, expected_value):
+        """Parse json and validate json search string with its value"""
+        expr = parse(jsonpath_expr)
+        match = expr.find(json_data)
+        return (
+            match[0].value == expected_value,
+            f"Expected {expected_value}, but got {match[0].value}",
+        )
+
     def extract_highest_profile_number(self, profiles_path: str) -> int:
         """
         Given the path of the profiles.ini file, it will find the highest profile number that does not exist and return that.
@@ -417,21 +436,6 @@ class BrowserActions:
     def __init__(self, driver: Firefox):
         self.driver = driver
         self.controller = Controller()
-
-    def clear_and_fill_no_additional_keystroke(self, webelement: WebElement, term: str):
-        """
-        Given a WebElement, send it the string `term` with no additional keystrokes.
-
-        ...
-
-        Attributes
-        ----------
-        webelement : selenium.webdriver.remote.webelement.WebElement
-        term : str
-            The string to send to this element
-        """
-        webelement.clear()
-        webelement.send_keys(term)
 
     def clear_and_fill(self, webelement: WebElement, term: str, press_enter=True):
         """

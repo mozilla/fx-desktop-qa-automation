@@ -13,7 +13,9 @@ requests = "*"
 pytest-xdist = "*"
 pytest-html = "*"
 pypom = "*"
+jsonpath-ng = "*"
 pillow = "*"
+pyfxa = "*"
 
 [dev-packages]
 werkzeug = "*"
