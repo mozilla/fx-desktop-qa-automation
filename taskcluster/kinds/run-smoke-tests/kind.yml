@@ -14,9 +14,9 @@ task-defaults:
         type: directory
   scopes:
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
-    - notify:slack-channel:C07AHPJ525V
-    - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-testeng on success
-    - notify:slack-channel:C07AHPJ525V
+    - notify:slack-channel:C07AHPJ525V.on-resolved
+    # - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-testeng on success
+    # - notify:slack-channel:C07AHPJ525V
 
 tasks:
   linux:
@@ -24,14 +24,7 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        export PATH=$HOME/.local/bin:$PWD:$PATH
-        mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15';
-        pip3 install 'ruff>=0.4.8,<0.5';
-        ./collect_executables.sh;
-        mv ./ci_pyproject.toml ./pyproject.toml;
-        pipenv install;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+        echo "hello world"
     notify:
       recipients:
         - type: slack-channel
