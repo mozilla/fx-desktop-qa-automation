@@ -5,6 +5,7 @@
         "groups": [
             "requiredForPage"
         ]
+
     },
 
     "submit-button": {
@@ -15,13 +16,13 @@
         ]
     },
 
-    "password-input": {
+    "signup-password-input": {
         "selectorData": "[data-testid='new-password-input-field']",
         "strategy": "css",
         "groups": []
     },
 
-    "password-repeat-input": {
+    "signup-password-repeat-input": {
         "selectorData": "[data-testid='verify-password-input-field']",
         "strategy": "css",
         "groups": []

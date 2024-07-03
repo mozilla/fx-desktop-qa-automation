@@ -1,11 +1,8 @@
 from modules.page_base import BasePage
 
 
-class FxaNewAccount(BasePage):
-    """
-    Page Object Model for FxA signup flow.
-    Initialize with fxa_url=<the url of the FxA instance>
-    """
+class FxaHome(BasePage):
+    """Page Object Model for FxA pages"""
 
     URL_TEMPLATE = "{fxa_url}"
 
@@ -15,10 +12,16 @@ class FxaNewAccount(BasePage):
         self.get_element("submit-button").click()
         return self
 
+    def fill_password(self, password: str) -> BasePage:
+        self.fill("login-password-input", password, press_enter=False)
+        self.get_element("submit-button").click()
+        self.element_exists("connected-heading")
+        return self
+
     def create_new_account(self, password: str, age=30) -> BasePage:
         """Fill out the password and age fields, then submit and wait for code"""
-        self.fill("password-input", password, press_enter=False)
-        self.fill("password-repeat-input", password, press_enter=False)
+        self.fill("signup-password-input", password, press_enter=False)
+        self.fill("signup-password-repeat-input", password, press_enter=False)
         self.fill("age-input", str(age), press_enter=False)
         self.get_element("submit-button").click()
         self.element_has_text("card-header", "Enter confirmation code")
