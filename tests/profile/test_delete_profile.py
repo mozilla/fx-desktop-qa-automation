@@ -19,8 +19,6 @@ path_to_profiles_ini_file = (
 
 # take util helper into profile pom
 # make fixture for the profile path
-# add try finally for cleanup
-
 
 @pytest.fixture()
 def create_profile():
@@ -33,7 +31,7 @@ def create_profile():
     )
     # create a copy of the profiles.ini to make restoration easy
     util.create_file_copy(
-        path_to_profiles_ini_file, f"{path_to_profile_file}/profilescopy.ini"
+        path_to_profiles_ini_file, os.path.join(path_to_profile_file, "profilescopy.ini")
     )
     # append a new profile on the profiles.ini
     util.add_new_profile(path_to_profiles_ini_file, new_profile_path, profile_number)
@@ -59,7 +57,7 @@ def test_delete_profile_dont_save_files(driver: Firefox):
             profile_header = about_profiles.get_element(
                 "profile-container-item-profile-name", parent_element=profile
             )
-            print(profile_header.get_attribute("innerHTML"))
+            logging.info(f"Current detected profile: {profile_header.get_attribute("innerHTML")}")
             if (
                 profile_header.get_attribute("innerHTML")
                 == f"Profile: New Profile {str(profile_number)}"
@@ -84,32 +82,37 @@ def test_delete_profile_dont_save_files(driver: Firefox):
         alert.accept()
 
         # verify that local files were not deleted
-        if os.path.isdir(f"{path_to_profiles}/profile{str(profile_number)}"):
+        joined_path = os.path.join(path_to_profiles, f"profile{str(profile_number)}")
+        if os.path.isdir(joined_path):
             logging.info(
-                f"The directory '{path_to_profiles}/profile{str(profile_number)}' exists."
+                f"The directory '{joined_path}' exists."
             )
         else:
-            assert False, f"The directory '{path_to_profiles}/profile{str(profile_number)}' does not exist."
+            assert False, f"The directory '{joined_path}' does not exist."
 
     # relevant file system cleanup
     finally:
         # delete the profile directory
         try:
             # basically rm -rf. very dangerous, stay cautious of the path
-            shutil.rmtree(f"{path_to_profiles}/profile{str(profile_number)}")
+            profile_folder_path = os.path.join(path_to_profiles, f"profile{str(profile_number)}")
+            shutil.rmtree(profile_folder_path)
+            logging.info("Successfully deleted newly created profile directory.")
         except Exception as e:
             logging.warning(f"Could not remove the profile directory: {e}")
 
         # delete the profiles.ini file
         try:
             os.remove(path_to_profiles_ini_file)
+            logging.info("Successfully removed the modified profiles.ini file.")
         except Exception as e:
             logging.warning(f"Could not delete the modified profiles.ini file. {e}")
 
         # rename the profilescopy.ini file to profiles.ini
         try:
             os.rename(
-                f"{path_to_profile_file}/profilescopy.ini", path_to_profiles_ini_file
+                os.path.join(path_to_profile_file, "profilescopy.ini"), path_to_profiles_ini_file
             )
+            logging.info("Sucessfully renamed the copied original profiles.ini file.")
         except Exception as e:
-            logging.warning(f"Could not rename the copy of profiles.ini. {e}")
+            logging.warning(f"Could not rename the copy of profiles.ini: {e}")
