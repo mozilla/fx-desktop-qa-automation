@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import getpass
 
 import pytest
 from selenium.webdriver import Firefox
@@ -10,19 +11,29 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.page_object import AboutProfiles
 from modules.util import Utilities
 
-# TODO: assign these paths based on OS
-path_to_profile_file = "/Users/sli/Library/Application Support/Firefox"
-path_to_profiles = "/Users/sli/Library/Application Support/Firefox/Profiles"
-path_to_profiles_ini_file = (
-    "/Users/sli/Library/Application Support/Firefox/profiles.ini"
-)
-
-# take util helper into profile pom
-# make fixture for the profile path
-
+@pytest.fixture()
+def get_profile_paths(sys_platform):
+    user = getpass.getuser()
+    path_to_profile_file = ""
+    path_to_profiles = ""
+    path_to_profiles_ini_file = ""
+    if sys_platform == "Windows":
+        path_to_profile_file = f"C:\\Users\\{user}\\AppData\\Roaming\\Mozilla\\Firefox"
+        path_to_profiles = f"C:\\Users\\{user}\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles"
+        path_to_profiles_ini_file = f"C:\\Users\\{user}\\AppData\\Roaming\\Mozilla\\Firefox\\profiles.ini"
+    elif sys_platform == "Darwin":
+        path_to_profile_file = f"/Users/{user}/Library/Application Support/Firefox"
+        path_to_profiles = f"/Users/{user}/Library/Application Support/Firefox/Profiles"
+        path_to_profiles_ini_file = f"/Users/{user}/Library/Application Support/Firefox/profiles.ini"
+    else:
+        path_to_profile_file = os.path.expanduser("~/.mozilla/firefox")
+        path_to_profiles = os.path.expanduser("~/.mozilla/firefox/profiles")
+        path_to_profiles_ini_file = os.path.expanduser("~/.mozilla/firefox/profiles.ini")
+    return path_to_profiles, path_to_profiles_ini_file, path_to_profile_file
 
 @pytest.fixture()
-def create_profile():
+def create_profile(get_profile_paths):
+    path_to_profiles, path_to_profiles_ini_file, path_to_profile_file = get_profile_paths
     util = Utilities()
     # find the highest profile number
     profile_number = util.extract_highest_profile_number(path_to_profiles_ini_file)
@@ -41,11 +52,12 @@ def create_profile():
     return profile_number
 
 
-def test_delete_profile_dont_save_files(driver: Firefox):
+def test_delete_profile_dont_save_files(driver: Firefox, get_profile_paths):
     """
     C130789.1: delete the profile with the option "dont delete files"
     """
     try:
+        path_to_profiles, path_to_profiles_ini_file, path_to_profile_file = get_profile_paths
         # open firefox and proceed normally, get the name of the profile
         about_profiles = AboutProfiles(driver).open()
         profile_number = driver.profile_number
