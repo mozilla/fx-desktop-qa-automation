@@ -101,7 +101,14 @@ class BasePage(Page):
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
 
-    def custom_wait(self, **kwargs):
+    def custom_wait(self, **kwargs) -> WebDriverWait:
+        """
+        Create a custom WebDriverWait object, refer to Selenium docs
+        for explanations of the arguments.
+        Examples:
+          self.custom_wait(timeout=45).until(<condition>)
+          self.custom_wait(poll_frequency=1).until(<condition>)
+        """
         return WebDriverWait(self.driver, **kwargs)
 
     def expect(self, condition) -> Page:
@@ -242,6 +249,8 @@ class BasePage(Page):
             cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
+        if multiple:
+            logging.info(f"Multiples: Not caching {cache_name}...")
         if not multiple and "seleniumObject" in self.elements[cache_name]:
             # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
@@ -262,7 +271,7 @@ class BasePage(Page):
                     shadow_parent, selector, context=self.context
                 )
                 if "doNotCache" not in element_data["groups"]:
-                    logging.info("Not caching...")
+                    logging.info(f"Not caching {cache_name}...")
                     self.elements[cache_name]["seleniumObject"] = shadow_element
                 return shadow_element
             else:
@@ -284,7 +293,7 @@ class BasePage(Page):
         if not multiple:
             found_element = self.driver.find_element(*selector)
             if "doNotCache" not in element_data["groups"]:
-                logging.info("Caching...")
+                logging.info(f"Caching {cache_name}...")
                 self.elements[cache_name]["seleniumObject"] = found_element
             logging.info(f"Returning element {cache_name}.\n")
             return found_element
@@ -377,6 +386,30 @@ class BasePage(Page):
     def fill(
         self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
     ) -> Page:
+        """
+        Get a fillable element and fill it with text. Return self.
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        term: str
+            The text to enter into the element
+
+        clear_first: bool
+            Call .clear() on the element first. Default True
+
+        press_enter: bool
+            Press Keys.ENTER after filling the element. Default True
+        """
         if self.context == "chrome":
             self.set_chrome_context()
         el = self.get_element(name, labels=labels)
