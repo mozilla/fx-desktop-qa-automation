@@ -2,7 +2,10 @@ from modules.page_base import BasePage
 
 
 class FxaNewAccount(BasePage):
-    """Page Object Model for FxA signup flow"""
+    """
+    Page Object Model for FxA signup flow.
+    Initialize with fxa_url=<the url of the FxA instance>
+    """
 
     URL_TEMPLATE = "{fxa_url}"
 
