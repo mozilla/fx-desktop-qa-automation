@@ -146,5 +146,11 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "firefox-suggest": {
+    "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
+    "strategy": "css",
+    "groups": []
     }
 }
