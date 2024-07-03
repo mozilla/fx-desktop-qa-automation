@@ -24,7 +24,9 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        echo "hello world"
+        export PATH=$HOME/.local/bin:$PWD:$PATH
+        mkdir -p artifacts;
+        echo "hello"
     notify:
       recipients:
         - type: slack-channel
