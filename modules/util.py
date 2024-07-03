@@ -337,21 +337,6 @@ class BrowserActions:
         self.driver = driver
         self.controller = Controller()
 
-    def clear_and_fill_no_additional_keystroke(self, webelement: WebElement, term: str):
-        """
-        Given a WebElement, send it the string `term` with no additional keystrokes.
-
-        ...
-
-        Attributes
-        ----------
-        webelement : selenium.webdriver.remote.webelement.WebElement
-        term : str
-            The string to send to this element
-        """
-        webelement.clear()
-        webelement.send_keys(term)
-
     def clear_and_fill(self, webelement: WebElement, term: str, press_enter=True):
         """
         Given a WebElement, send it the string `term` to it followed by optionally pressing ENTER.
