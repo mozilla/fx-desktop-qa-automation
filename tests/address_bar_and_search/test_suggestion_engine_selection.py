@@ -13,6 +13,7 @@ def add_prefs():
         ("browser.search.region", "US"),
     ]
 
+
 @pytest.mark.unstable
 @pytest.mark.parametrize("site", sites)
 def test_search_suggestion_for_engine_selection(driver: Firefox, site: str):

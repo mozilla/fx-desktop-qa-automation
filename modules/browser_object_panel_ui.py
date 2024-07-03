@@ -75,6 +75,15 @@ class PanelUi(BasePage):
             self.select_panel_setting("fxa-sign-in")
         return self
 
+    def log_out_fxa(self) -> BasePage:
+        """
+        Click FxA signout button.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_sync_sign_in_button()
+            self.get_element("fxa-sign-out-button")
+        return self
+
     def manage_fxa_account(self) -> BasePage:
         """
         Open the FxA management flow.

@@ -21,6 +21,12 @@
         "groups": []
     },
 
+    "fxa-sign-out-button": {
+        "selectorData": "PanelUI-fxa-menu-account-signout-button",
+        "strategy": "id",
+        "groups": []
+    },
+
     "sync-fxa": {
         "selectorData": "appMenu-fxa-status2",
         "strategy": "id",
