@@ -336,10 +336,9 @@ class Utilities:
         try:
             os.makedirs(new_dir_name, exist_ok=False)
             logging.info(f"The directory {new_dir_name} was created successfully.")
-        except OSError as e:
+        except OSError:
             logging.warning(f"The directory {new_dir_name} could not be created.")
-            logging.warning(e)
-            return ""
+            raise
         return new_dir_name
 
     def extract_after_profiles(self, profile_directory: str) -> str:
@@ -377,6 +376,30 @@ Path=Profiles/{self.extract_after_profiles(profile_directory)}
                 file.write(profile_info)
         except FileNotFoundError:
             logging.warning("Could not find the profiles.ini file.")
+
+    def create_file_copy(self, src_path: str, dest_path: str):
+        """
+        Duplicate a file, given a source path and the destination to copy to. Raises an error if it cannot be copied.
+        """
+        try:
+            with open(src_path, "rb") as src_file:
+                with open(dest_path, "wb") as dest_file:
+                    dest_file.write(src_file.read())
+            logging.info(f"File duplicated from {src_path} to {dest_path}.")
+        except Exception as e:
+            logging.warning(f"An unexpected error occurred: {e}")
+            raise
+
+    def delete_file(self, file_path: str):
+        """
+        Delete a file given the file_path
+        """
+        try:
+            os.remove(file_path)
+            logging.info(f"Successfully deleted {file_path}.")
+        except Exception:
+            logging.warning(f"Could not delete {file_path}.")
+            raise
 
 
 class BrowserActions:

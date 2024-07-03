@@ -169,7 +169,7 @@ def driver(
             options.set_preference(opt, value)
         driver = webdriver.Firefox(options=options)
         # assign the profile name for when creating a profile is necessary
-        driver.profile_name = create_profile
+        driver.profile_number = create_profile
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
