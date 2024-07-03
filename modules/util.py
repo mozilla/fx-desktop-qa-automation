@@ -308,7 +308,8 @@ class Utilities:
         """Decode to base64"""
         base64_data = driver.current_url.split(",")[1]
         decoded_data = base64.b64decode(base64_data).decode("utf-8")
-        json_data = json.loads(decoded_data)
+        normalized_str = decoded_data.replace('\r\n', '\n')
+        json_data = json.loads(normalized_str)
         return json_data
 
     def assert_json_value(self, json_data, jsonpath_expr, expected_value):
