@@ -20,6 +20,7 @@ path_to_profiles_ini_file = (
 # take util helper into profile pom
 # make fixture for the profile path
 
+
 @pytest.fixture()
 def create_profile():
     util = Utilities()
@@ -31,7 +32,8 @@ def create_profile():
     )
     # create a copy of the profiles.ini to make restoration easy
     util.create_file_copy(
-        path_to_profiles_ini_file, os.path.join(path_to_profile_file, "profilescopy.ini")
+        path_to_profiles_ini_file,
+        os.path.join(path_to_profile_file, "profilescopy.ini"),
     )
     # append a new profile on the profiles.ini
     util.add_new_profile(path_to_profiles_ini_file, new_profile_path, profile_number)
@@ -57,7 +59,9 @@ def test_delete_profile_dont_save_files(driver: Firefox):
             profile_header = about_profiles.get_element(
                 "profile-container-item-profile-name", parent_element=profile
             )
-            logging.info(f"Current detected profile: {profile_header.get_attribute("innerHTML")}")
+            logging.info(
+                f"Current detected profile: {profile_header.get_attribute("innerHTML")}"
+            )
             if (
                 profile_header.get_attribute("innerHTML")
                 == f"Profile: New Profile {str(profile_number)}"
@@ -84,9 +88,7 @@ def test_delete_profile_dont_save_files(driver: Firefox):
         # verify that local files were not deleted
         joined_path = os.path.join(path_to_profiles, f"profile{str(profile_number)}")
         if os.path.isdir(joined_path):
-            logging.info(
-                f"The directory '{joined_path}' exists."
-            )
+            logging.info(f"The directory '{joined_path}' exists.")
         else:
             assert False, f"The directory '{joined_path}' does not exist."
 
@@ -95,7 +97,9 @@ def test_delete_profile_dont_save_files(driver: Firefox):
         # delete the profile directory
         try:
             # basically rm -rf. very dangerous, stay cautious of the path
-            profile_folder_path = os.path.join(path_to_profiles, f"profile{str(profile_number)}")
+            profile_folder_path = os.path.join(
+                path_to_profiles, f"profile{str(profile_number)}"
+            )
             shutil.rmtree(profile_folder_path)
             logging.info("Successfully deleted newly created profile directory.")
         except Exception as e:
@@ -111,7 +115,8 @@ def test_delete_profile_dont_save_files(driver: Firefox):
         # rename the profilescopy.ini file to profiles.ini
         try:
             os.rename(
-                os.path.join(path_to_profile_file, "profilescopy.ini"), path_to_profiles_ini_file
+                os.path.join(path_to_profile_file, "profilescopy.ini"),
+                path_to_profiles_ini_file,
             )
             logging.info("Sucessfully renamed the copied original profiles.ini file.")
         except Exception as e:
