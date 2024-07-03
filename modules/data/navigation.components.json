@@ -148,12 +148,6 @@
         ]
     },
 
-    "accept-cookies": {
-    "selectorData": "L2AGLb",
-    "strategy": "id",
-    "groups": []
-    },
-
     "search-result": {
     "selectorData": "//div[@data-text-ad]//a",
     "strategy": "xpath",

@@ -4,6 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
+from modules.page_object_about_config import AboutConfig
 
 from modules.page_object_about_telemetry import AboutTelemetry
 from modules.util import Utilities
@@ -22,12 +23,14 @@ def test_sap_google_adclick(driver: Firefox):
     """
     # instantiate objects
     nav = Navigation(driver).open()
-    nav.search("iphone")
-    time.sleep(2)
+    about_config = AboutConfig(driver)
     u = Utilities()
 
-    # click on any ad
-    nav.get_element("accept-cookies").click()
+    # change pref value in order to not display accept cookies banner
+    about_config.change_pref_value("cookiebanners.service.mode", 1)
+
+    # search and click on an ad
+    nav.search("iphone")
     nav.get_element("search-result").click()
     time.sleep(2)
 
