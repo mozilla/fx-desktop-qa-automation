@@ -12,9 +12,11 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
+  routes:
+    - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
-    - notify:slack-channel:C07AHPJ525V.on-resolved
+    - notify:slack-channel:C07AHPJ525V
     # - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-testeng on success
     # - notify:slack-channel:C07AHPJ525V
 
