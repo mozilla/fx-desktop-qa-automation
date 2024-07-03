@@ -52,7 +52,9 @@
     "refresh-intervention-card": {
         "selectorData": "div[tip-type=\"intervention_refresh\"]",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "fx-refresh-text": {
@@ -76,6 +78,12 @@
     "fx-refresh-menu-get-help-item": {
         "selectorData": "menuitem[data-l10n-id=\"urlbar-result-menu-tip-get-help\"]",
         "strategy": "css",
+        "groups": []
+    },
+
+    "fx-refresh-menu-get-help-item-get-help": {
+        "selectorData": "urlbarView-result-menuitem",
+        "strategy": "class",
         "groups": []
     },
 
@@ -134,7 +142,13 @@
         "groups": []
     },
 
-     "addon-suggestion": {
+    "search-results-container": {
+        "selectorData": "urlbar-results",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "addon-suggestion": {
         "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
         "strategy": "css",
         "groups": []
