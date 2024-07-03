@@ -5,7 +5,7 @@ import platform
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
 from pypom import Page
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -453,6 +453,32 @@ class BasePage(Page):
                 self.driver.execute_script(script, node)
         else:
             self.driver.execute_script(script, node)
+
+    def hover_over_element(self, element: WebElement, chrome=False):
+        """
+        Hover over the specified element.
+        Parameters: element (str): The element to hover over.
+
+        Default tries to hover something in the chrome context
+        """
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.actions.move_to_element(element).perform()
+        else:
+            self.actions.move_to_element(element).perform()
+        return self
+
+    def get_all_children(self, element: WebElement, chrome=False) -> List[WebElement]:
+        """
+        Gets all the children of a webelement
+        """
+        children = None
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                children = element.find_elements(By.XPATH, "./*")
+        else:
+            children = element.find_elements(By.XPATH, "./*")
+        return children
 
     @property
     def loaded(self):
