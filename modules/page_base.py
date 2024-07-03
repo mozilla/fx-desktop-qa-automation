@@ -242,8 +242,6 @@ class BasePage(Page):
             cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
-        if multiple:
-            logging.info(f"Multiples: Not caching {cache_name}...")
         if not multiple and "seleniumObject" in self.elements[cache_name]:
             # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
