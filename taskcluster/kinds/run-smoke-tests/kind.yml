@@ -19,6 +19,23 @@ task-defaults:
     - notify:slack-channel:C07AHPJ525V
     # - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-testeng on success
     # - notify:slack-channel:C07AHPJ525V
+  notify:
+    recipients:
+      - type: slack-channel
+        channel-id: C07AHPJ525V
+        status-type: on-resolved
+    content:
+      slack:
+        # blocks: [
+        #           {
+        #             "type": "section",
+        #             "text": {
+        #               "type": "mrkdwn",
+        #               "text": "${task[name]} with id $taskId has finished!"
+        #             }
+        #           }
+        #         ]
+        text: "{task[name]} with id $taskId has finished!"
 
 tasks:
   linux:
@@ -29,20 +46,3 @@ tasks:
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         echo "hello"
-    notify:
-      recipients:
-        - type: slack-channel
-          channel-id: C07AHPJ525V
-          status-type: on-defined
-      content:
-        slack:
-          # blocks: [
-          #           {
-          #             "type": "section",
-          #             "text": {
-          #               "type": "mrkdwn",
-          #               "text": "${task[name]} with id $taskId has finished!"
-          #             }
-          #           }
-          #         ]
-          text: "{task[name]} with id $taskId has finished!"
