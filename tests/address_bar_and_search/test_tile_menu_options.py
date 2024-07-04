@@ -29,11 +29,17 @@ REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE = set(
 )
 
 REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
-    ["Open in a New Window", "Open in a New Private Window", "Dismiss", "Our sponsors &amp; your privacy"]
+    [
+        "Open in a New Window",
+        "Open in a New Private Window",
+        "Dismiss",
+        "Our sponsors &amp; your privacy",
+    ]
 )
 
 # first value in a tuple is the index of the card, second is the status of sponsorship
 card_indices = [(3, False), (0, True)]
+
 
 @pytest.fixture()
 def add_prefs():
@@ -79,6 +85,7 @@ def test_default_tile_hover_states(driver: Firefox):
         three_dot_menu.value_of_css_property("background-color")
         in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
     )
+
 
 @pytest.mark.parametrize("index, sponsored", card_indices)
 def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool):
