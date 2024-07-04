@@ -41,7 +41,7 @@ tasks:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "This is a message sent from Taskcluster."
+                        "text": "${task[name]} with id $taskId has finished!"
                       }
                     }
                   ]
