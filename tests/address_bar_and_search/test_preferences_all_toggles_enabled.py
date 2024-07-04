@@ -35,9 +35,9 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
     u.search("iphone", with_enter=False)
     time.sleep(20)
     with (driver.context(driver.CONTEXT_CHROME)):
-        assert nav.get_elements("firefox-suggestion")
+        assert nav.get_elements("sponsored-suggestion")
 
     # Check if a non-sponsored suggestion is displayed
     u.search("wiki", with_enter=False)
     with (driver.context(driver.CONTEXT_CHROME)):
-        assert not nav.get_elements("firefox-suggestion")
+        assert not nav.get_elements("sponsored-suggestion")

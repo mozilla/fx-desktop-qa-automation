@@ -148,7 +148,7 @@
         ]
     },
 
-    "firefox-suggestion": {
+    "sponsored-suggestion": {
         "selectorData": "urlbarView-row-body-description",
         "strategy": "class",
         "groups": []
