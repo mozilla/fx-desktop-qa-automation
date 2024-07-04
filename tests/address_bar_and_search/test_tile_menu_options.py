@@ -28,6 +28,12 @@ REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE = set(
     ["Pin", "Edit", "Open in a New Window", "Open in a New Private Window", "Dismiss"]
 )
 
+REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
+    ["Open in a New Window", "Open in a New Private Window", "Dismiss", "Our sponsors &amp; your privacy"]
+)
+
+# first value in a tuple is the index of the card, second is the status of sponsorship
+card_indices = [(3, False), (0, True)]
 
 @pytest.fixture()
 def add_prefs():
@@ -74,8 +80,8 @@ def test_default_tile_hover_states(driver: Firefox):
         in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
     )
 
-
-def test_tile_context_menu_options(driver: Firefox):
+@pytest.mark.parametrize("index, sponsored", card_indices)
+def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool):
     """
     C1533798.2: Ensure that a website has the appropriate context menu actions in the tile.
     """
@@ -90,8 +96,8 @@ def test_tile_context_menu_options(driver: Firefox):
     driver.switch_to.window(driver.window_handles[-1])
     suggested_cards = nav.get_element("sponsored-site-card", multiple=True)
 
-    # pick the second card since its not pinned
-    card = suggested_cards[1]
+    # pick the fourth card since it is not a sponsored tile
+    card = suggested_cards[index]
     nav.hover_over_element(card)
 
     # press the three dots option
@@ -111,16 +117,24 @@ def test_tile_context_menu_options(driver: Firefox):
         for option in child_options
         if option.get_attribute("innerHTML") != ""
     ]
+
     matched_regex = util.match_regex(
         r"<button[^>]*><span[^>]*>([^<]*)</span></button>", option_html_logs
     )
 
+    # according to the status of sponsored, look at different context menu actions
+    set_in_use = set()
+    if sponsored:
+        set_in_use = REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE
+    else:
+        set_in_use = REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE
+
     # ensure we match each option
     for match in matched_regex:
-        if match in REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE:
-            REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE.remove(match)
+        if match in set_in_use:
+            set_in_use.remove(match)
             logging.info(f"Detected the context item: {match}")
 
     assert (
-        len(REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE) == 0
+        len(set_in_use) == 0
     ), "Did not find all of the required context menu actions."

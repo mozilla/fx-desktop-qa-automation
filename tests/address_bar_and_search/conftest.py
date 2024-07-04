@@ -24,6 +24,7 @@ def set_prefs(add_prefs: dict):
         ("browser.newtabpage.activity-stream.system.showSponsored", True),
         ("browser.newtabpage.activity-stream.showSponsoredTopSites", True),
         ("browser.topsites.useRemoteSetting", True),
+        ("browser.topsites.contile.enabled", True)
     ]
     prefs.extend(add_prefs)
     return prefs
