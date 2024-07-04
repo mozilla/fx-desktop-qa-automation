@@ -270,7 +270,7 @@ class Utilities:
         self, file_path: str, element: WebElement, driver: Firefox, chrome=False
     ):
         """
-        Executes JavaScript to get all of the CSS properties of a WebElement then dumps it in the specified file path location
+        Executes JavaScript to get all of the CSS properties of a WebElement then dumps it in the specified file path location. Outputs in JSON format
         """
         css_properties = ""
         if chrome:
