@@ -38,7 +38,6 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
         assert nav.get_elements("firefox-suggestion")
 
     # Check if a non-sponsored suggestion is displayed
-    time.sleep(20)
     u.search("wiki", with_enter=False)
     with (driver.context(driver.CONTEXT_CHROME)):
         assert not nav.get_elements("firefox-suggestion")
