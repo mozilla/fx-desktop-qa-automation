@@ -36,4 +36,13 @@ tasks:
           status-type: on-defined
       content:
         slack:
+          blocks: [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "This is a message sent from Taskcluster."
+                      }
+                    }
+                  ]
           text: "Task Defined!"
