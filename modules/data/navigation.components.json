@@ -152,5 +152,11 @@
         "selectorData": "urlbarView-row-body-description",
         "strategy": "class",
         "groups": []
+    },
+
+    "firefox-suggest": {
+        "selectorData": "div[label='Firefox Suggest'] > span.urlbarView-row-inner, div[label='Firefox Suggest'] + div.urlbarView-row",
+        "strategy": "css",
+        "groups": []
     }
 }

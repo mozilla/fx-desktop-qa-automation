@@ -41,3 +41,4 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
     u.search("wiki", with_enter=False)
     with (driver.context(driver.CONTEXT_CHROME)):
         assert not nav.get_elements("sponsored-suggestion")
+        assert nav.get_element("firefox-suggest").is_displayed()
