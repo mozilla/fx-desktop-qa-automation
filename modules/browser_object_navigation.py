@@ -121,6 +121,30 @@ class Navigation(BasePage):
             self.search_bar.send_keys(term + Keys.ENTER)
         return self
 
+    def type_in_search_bar(self, term: str) -> BasePage:
+        """
+        Type in the *Old* Search Bar. Returns self.
+
+        Attributes
+        ----------
+
+        term : str
+            The search term
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+            self.search_bar.click()
+            self.search_bar.send_keys(term)
+        return self
+
+    def click_on_change_search_settings_button(self) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+            self.search_bar.click()
+            self.change_search_settings_button= self.find_element(By.ID, "searchbar-anon-search-settings")
+            self.change_search_settings_button.click()
+        return self
+
     def click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         self.awesome_bar.click()
