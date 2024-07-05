@@ -66,6 +66,13 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("manage-themes").click()
 
+    def navigate_to_customize_toolbar(self):
+        """
+        On the hamburger menu > More Tools > Customize Toolbar
+        """
+        self.select_panel_setting("more-tools")
+        self.select_panel_setting("customize-toolbar")
+
     def click_sync_sign_in_button(self) -> BasePage:
         """
         Click FxA sync button.
