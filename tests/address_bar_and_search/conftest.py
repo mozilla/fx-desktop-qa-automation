@@ -20,6 +20,11 @@ def set_prefs(add_prefs: dict):
         ("privacy.donottrackheader.enabled", False),
         ("telemetry.fog.test.localhost_port", 5312),
         ("datareporting.healthreport.uploadEnabled", True),
+        ("browser.newtabpage.enabled", True),
+        ("browser.newtabpage.activity-stream.system.showSponsored", True),
+        ("browser.newtabpage.activity-stream.showSponsoredTopSites", True),
+        ("browser.topsites.useRemoteSetting", True),
+        ("browser.topsites.contile.enabled", True),
     ]
     prefs.extend(add_prefs)
     return prefs
