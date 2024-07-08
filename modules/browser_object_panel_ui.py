@@ -81,7 +81,7 @@ class PanelUi(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_sync_sign_in_button()
-            self.get_element("fxa-sign-out-button")
+            self.get_element("fxa-sign-out-button").click()
         return self
 
     def manage_fxa_account(self) -> BasePage:
