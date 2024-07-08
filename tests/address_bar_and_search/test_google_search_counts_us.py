@@ -8,6 +8,13 @@ from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
 
+@pytest.fixture()
+def add_prefs():
+    return [
+        ("browser.search.region", "US"),
+    ]
+
+
 # unstable: for some reason cannot pass in Taskcluster Linux VM
 @pytest.mark.unstable
 def test_google_search_counts_us(driver: Firefox):
