@@ -11,9 +11,7 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
+    return [("browser.search.region", "US"), ("cookiebanners.service.mode", 1)]
 
 
 def test_google_withads_url_bar_us(driver: Firefox):
@@ -23,11 +21,7 @@ def test_google_withads_url_bar_us(driver: Firefox):
 
     # instantiate objects
     nav = Navigation(driver).open()
-    about_config = AboutConfig(driver)
     util = Utilities()
-
-    # change pref value in order to not display accept cookies banner
-    about_config.change_pref_value("cookiebanners.service.mode", 1)
 
     nav.search("iphone")
     time.sleep(5)
