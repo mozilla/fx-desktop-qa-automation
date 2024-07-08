@@ -75,6 +75,15 @@ class PanelUi(BasePage):
             self.select_panel_setting("fxa-sign-in")
         return self
 
+    def log_out_fxa(self) -> BasePage:
+        """
+        Click FxA signout button.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_sync_sign_in_button()
+            self.get_element("fxa-sign-out-button").click()
+        return self
+
     def manage_fxa_account(self) -> BasePage:
         """
         Open the FxA management flow.
@@ -90,5 +99,19 @@ class PanelUi(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_sync_sign_in_button()
-            self.element_has_text("fxa-sync-label", "Syncing")
+            self.custom_wait(timeout=30, poll_frequency=0.5).until(
+                EC.text_to_be_present_in_element(
+                    self.get_selector("fxa-sync-label"), "Syncing"
+                )
+            )
+        return self
+
+    def start_sync(self) -> BasePage:
+        """
+        Start FxA sync
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_sync_sign_in_button()
+            self.element_has_text("fxa-sync-label", "Sync now")
+            self.get_element("fxa-sync-label").click()
         return self
