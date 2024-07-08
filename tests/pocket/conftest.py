@@ -33,6 +33,10 @@ def set_prefs(add_prefs: dict):
         ("browser.newtabpage.activity-stream.feeds.system.topstories", True),
         ("browser.newtabpage.activity-stream.showSponsoredTopSites", True),
         ("browser.ping-centre.log", True),
+        (
+            "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites",
+            True,
+        ),
     ]
     prefs.extend(add_prefs)
     return prefs

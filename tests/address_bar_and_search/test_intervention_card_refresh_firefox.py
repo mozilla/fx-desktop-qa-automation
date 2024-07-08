@@ -19,6 +19,7 @@ def add_prefs():
     ]
 
 
+@pytest.mark.unstable
 def test_intervention_card_refresh(driver: Firefox):
     """
     C1365204.1: regular firefox, check the intervention card
