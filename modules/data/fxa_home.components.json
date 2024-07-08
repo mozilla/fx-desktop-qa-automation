@@ -40,8 +40,20 @@
         "groups": []
     },
 
-    "otp-input": {
+    "signup-otp-input": {
         "selectorData": "[data-testid='confirm-signup-code-input-field']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "signin-otp-input": {
+        "selectorData": "[data-testid='signin-token-code-input-field']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "otp-input": {
+        "selectorData": "input[inputmode='numeric']",
         "strategy": "css",
         "groups": []
     },
@@ -59,7 +71,7 @@
     },
 
     "login-password-input": {
-        "selectorData": "input#password",
+        "selectorData": "input[type='password']",
         "strategy": "css",
         "groups": []
     },

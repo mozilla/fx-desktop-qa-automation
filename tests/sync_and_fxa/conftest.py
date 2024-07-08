@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from time import sleep
 
 import pytest
@@ -37,6 +38,11 @@ def fxa_url(fxa_env):
 
 
 @pytest.fixture()
+def start_time():
+    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+
+@pytest.fixture()
 def set_prefs(fxa_url):
     """Set prefs"""
     return [("identity.fxaccounts.autoconfig.uri", fxa_url)]
@@ -56,28 +62,36 @@ def new_fxa_prep(fxa_url: str, acct_password: str) -> FxaPrep:
 
 
 @pytest.fixture()
+def restmail_session(fxa_test_account) -> TestEmailAccount:
+    return TestEmailAccount(email=fxa_test_account[0])
+
+
+@pytest.fixture()
 def create_fxa(new_fxa_prep: FxaPrep, get_otp_code) -> FxaPrep:
-    """Create a FxA from a PyFxA object"""
+    """Create FxA from a PyFxA object"""
     new_fxa_prep.create_account()
     new_fxa_prep.session.verify_email_code(get_otp_code())
     return new_fxa_prep
 
 
 @pytest.fixture()
-def get_otp_code(new_fxa_prep: FxaPrep):
+def get_otp_code(start_time: str):
     """Function factory: wait for the OTP email, then return the OTP code"""
 
-    def _get_otp_code() -> str:
-        acct = new_fxa_prep.restmail
+    def _get_otp_code(restmail: TestEmailAccount) -> str:
+        acct = restmail
+        code_header_names = ["x-verify-short-code", "x-signin-verify-code"]
         logging.info("==========")
         for _ in range(60):
             acct.fetch()
             logging.info("---")
             for m in acct.messages:
-                logging.info("Email headers")
-                logging.info(m["headers"])
-                if "x-verify-short-code" in m["headers"]:
-                    return m["headers"]["x-verify-short-code"]
+                logging.info("Parsing email message...")
+                if m["receivedAt"] < start_time:
+                    continue
+                for header in code_header_names:
+                    if header in m["headers"]:
+                        return m["headers"][header]
             sleep(0.5)
         assert False, f"No OTP code found in {acct.email}."
 

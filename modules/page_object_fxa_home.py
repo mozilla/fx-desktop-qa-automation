@@ -1,3 +1,6 @@
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.page_base import BasePage
 
 
@@ -13,9 +16,15 @@ class FxaHome(BasePage):
         return self
 
     def fill_password(self, password: str) -> BasePage:
+        self.set_content_context()
         self.fill("login-password-input", password, press_enter=False)
         self.get_element("submit-button").click()
-        self.element_exists("connected-heading")
+        try:
+            self.custom_wait(timeout=3).until(
+                EC.presence_of_element_located(self.get_selector("connected-heading"))
+            )
+        except (TimeoutException, NoSuchElementException):
+            self.element_exists("otp-input")
         return self
 
     def create_new_account(self, password: str, age=30) -> BasePage:
@@ -23,11 +32,12 @@ class FxaHome(BasePage):
         self.fill("signup-password-input", password, press_enter=False)
         self.fill("signup-password-repeat-input", password, press_enter=False)
         self.fill("age-input", str(age), press_enter=False)
+        self.element_clickable("submit-button")
         self.get_element("submit-button").click()
         self.element_has_text("card-header", "Enter confirmation code")
         return self
 
-    def confirm_new_account(self, otp: str) -> BasePage:
+    def fill_otp_code(self, otp: str) -> BasePage:
         """Given an OTP, confirm the account, submit, and wait for account activation"""
         self.fill("otp-input", otp, press_enter=False)
         self.get_element("submit-button").click()
