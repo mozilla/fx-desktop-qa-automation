@@ -5,12 +5,13 @@ import platform
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
 from pypom import Page
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -99,6 +100,16 @@ class BasePage(Page):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
+
+    def custom_wait(self, **kwargs) -> WebDriverWait:
+        """
+        Create a custom WebDriverWait object, refer to Selenium docs
+        for explanations of the arguments.
+        Examples:
+          self.custom_wait(timeout=45).until(<condition>)
+          self.custom_wait(poll_frequency=1).until(<condition>)
+        """
+        return WebDriverWait(self.driver, **kwargs)
 
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
@@ -231,12 +242,15 @@ class BasePage(Page):
             logging.info(f"Getting multiple elements by name {name}")
         if labels:
             logging.info(f"Labels: {labels}")
+        logging.info(f"Groups: {self.elements[name]['groups']}")
         cache_name = name
         if labels:
             labelscode = "".join(labels)
             cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
+        if multiple:
+            logging.info(f"Multiples: Not caching {cache_name}...")
         if not multiple and "seleniumObject" in self.elements[cache_name]:
             # no caching for multiples
             cached_element = self.elements[cache_name]["seleniumObject"]
@@ -257,6 +271,7 @@ class BasePage(Page):
                     shadow_parent, selector, context=self.context
                 )
                 if "doNotCache" not in element_data["groups"]:
+                    logging.info(f"Not caching {cache_name}...")
                     self.elements[cache_name]["seleniumObject"] = shadow_element
                 return shadow_element
             else:
@@ -278,6 +293,7 @@ class BasePage(Page):
         if not multiple:
             found_element = self.driver.find_element(*selector)
             if "doNotCache" not in element_data["groups"]:
+                logging.info(f"Caching {cache_name}...")
                 self.elements[cache_name]["seleniumObject"] = found_element
             logging.info(f"Returning element {cache_name}.\n")
             return found_element
@@ -367,6 +383,43 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
+    def fill(
+        self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
+    ) -> Page:
+        """
+        Get a fillable element and fill it with text. Return self.
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        term: str
+            The text to enter into the element
+
+        clear_first: bool
+            Call .clear() on the element first. Default True
+
+        press_enter: bool
+            Press Keys.ENTER after filling the element. Default True
+        """
+        if self.context == "chrome":
+            self.set_chrome_context()
+        el = self.get_element(name, labels=labels)
+        self.element_clickable(name, labels=labels)
+        if clear_first:
+            el.clear()
+        end = Keys.ENTER if press_enter else ""
+        el.send_keys(f"{term}{end}")
+        return self
+
     def multi_click(
         self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
@@ -415,6 +468,16 @@ class BasePage(Page):
         self.actions.context_click(element).perform()
         return self
 
+    def wait_for_num_tabs(self, num_tabs: int) -> Page:
+        """
+        Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
+        """
+        try:
+            self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
+        except TimeoutException:
+            logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
+        return self
+
     def hide_popup(self, context_menu: str, chrome=False) -> Page:
         """
         Given the ID of the context menu, it will dismiss the menu.
@@ -453,6 +516,32 @@ class BasePage(Page):
                 self.driver.execute_script(script, node)
         else:
             self.driver.execute_script(script, node)
+
+    def hover_over_element(self, element: WebElement, chrome=False):
+        """
+        Hover over the specified element.
+        Parameters: element (str): The element to hover over.
+
+        Default tries to hover something in the chrome context
+        """
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.actions.move_to_element(element).perform()
+        else:
+            self.actions.move_to_element(element).perform()
+        return self
+
+    def get_all_children(self, element: WebElement, chrome=False) -> List[WebElement]:
+        """
+        Gets all the children of a webelement
+        """
+        children = None
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                children = element.find_elements(By.XPATH, "./*")
+        else:
+            children = element.find_elements(By.XPATH, "./*")
+        return children
 
     @property
     def loaded(self):
