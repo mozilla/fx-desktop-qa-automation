@@ -19,6 +19,7 @@ class FxaHome(BasePage):
         self.set_content_context()
         self.fill("login-password-input", password, press_enter=False)
         self.get_element("submit-button").click()
+        # If OTP is needed, wait for the field to be ready, else move on.
         try:
             self.custom_wait(timeout=3).until(
                 EC.presence_of_element_located(self.get_selector("connected-heading"))

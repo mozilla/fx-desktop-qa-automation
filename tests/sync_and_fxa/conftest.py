@@ -63,7 +63,8 @@ def new_fxa_prep(fxa_url: str, acct_password: str) -> FxaPrep:
 
 @pytest.fixture()
 def restmail_session(fxa_test_account) -> TestEmailAccount:
-    return TestEmailAccount(email=fxa_test_account[0])
+    (username, _) = fxa_test_account
+    return TestEmailAccount(email=username)
 
 
 @pytest.fixture()
@@ -89,9 +90,9 @@ def get_otp_code(start_time: str):
                 logging.info("Parsing email message...")
                 if m["receivedAt"] < start_time:
                     continue
-                for header in code_header_names:
-                    if header in m["headers"]:
-                        return m["headers"][header]
+                for header_name in code_header_names:
+                    if header_name in m["headers"]:
+                        return m["headers"][header_name]
             sleep(0.5)
         assert False, f"No OTP code found in {acct.email}."
 
