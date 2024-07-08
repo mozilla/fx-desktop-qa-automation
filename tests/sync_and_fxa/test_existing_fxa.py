@@ -32,7 +32,7 @@ def test_sync_existing_fxa(
 
     try:
         fxa.custom_wait(timeout=1).until(
-            EC.presence_of_element_located(fxa.get_element("signin-otp-input"))
+            EC.presence_of_element_located(fxa.get_selector("signin-otp-input"))
         )
         otp = get_otp_code(restmail_session)
         logging.info(f"otp code: {otp}")
