@@ -73,5 +73,11 @@
         "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
         "strategy": "xpath",
         "groups": []
+    },
+
+    "body-logo": {
+        "selectorData": "logo",
+        "strategy": "class",
+        "groups": []
     }
 }
