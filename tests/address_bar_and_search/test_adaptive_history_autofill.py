@@ -44,8 +44,11 @@ def test_add_adaptive_history_autofill(driver: Firefox):
         EC.url_contains("https://www.nationalgeographic.com/science/")
     )
 
+    tabs.set_content_context()
+
     # Open a new tab, type the first 3 characters of the visited URL
     tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[-1])
     nav.type_in_awesome_bar("nat")
 
