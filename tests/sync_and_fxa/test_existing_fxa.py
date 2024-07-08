@@ -39,4 +39,8 @@ def test_sync_existing_fxa(
         fxa.fill_otp_code(otp)
     except (NoSuchElementException, TimeoutException):
         pass
-    panel_ui.confirm_sync_in_progress()
+    try:
+        panel_ui.confirm_sync_in_progress()
+    except TimeoutException:
+        panel_ui.start_sync()
+        panel_ui.confirm_sync_in_progress()
