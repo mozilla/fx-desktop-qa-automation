@@ -152,5 +152,11 @@
     "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
     "strategy": "css",
     "groups": []
+    },
+
+    "search-result-autofill-adaptive-element": {
+        "selectorData": ".//*[@type='autofill_adaptive']",
+        "strategy": "xpath",
+        "groups": []
     }
 }
