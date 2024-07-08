@@ -99,7 +99,11 @@ class PanelUi(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_sync_sign_in_button()
-            self.element_has_text("fxa-sync-label", "Syncing")
+            self.custom_wait(timeout=30, poll_frequency=0.5).until(
+                EC.text_to_be_present_in_element(
+                    self.get_selector("fxa-sync-label"), "Syncing"
+                )
+            )
         return self
 
     def start_sync(self) -> BasePage:
