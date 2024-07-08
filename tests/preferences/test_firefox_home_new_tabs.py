@@ -1,8 +1,10 @@
 from time import sleep
 
 from selenium.webdriver import Firefox
-from modules.page_object import AboutPrefs, AboutNewtab
+
 from modules.browser_object import TabBar
+from modules.page_object import AboutNewtab, AboutPrefs
+
 
 def test_firefox_home_new_tab(driver: Firefox):
     """
@@ -15,7 +17,9 @@ def test_firefox_home_new_tab(driver: Firefox):
     drop_down = about_prefs.get_element("home-new-tabs-dropdown")
     drop_down.click()
 
-    home_option = about_prefs.get_element("home-new-tabs-dropdown-option-default", parent_element=drop_down)
+    home_option = about_prefs.get_element(
+        "home-new-tabs-dropdown-option-default", parent_element=drop_down
+    )
     home_option.click()
 
     assert drop_down.get_attribute("label") == "Firefox Home (Default)"
