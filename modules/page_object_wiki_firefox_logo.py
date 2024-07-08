@@ -21,6 +21,7 @@ class WikiFirefoxLogo(BasePage):
         return self.get_element("firefox-logo")
 
     def verify_opened_image_url(self):
+        self.url_contains("wikimedia")
         current_url = self.driver.current_url
 
         pattern = r"https://upload\.wikimedia\.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019\.svg/\d+px-Firefox_logo%2C_2019\.svg\.png"

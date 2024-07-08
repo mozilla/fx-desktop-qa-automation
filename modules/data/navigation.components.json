@@ -160,5 +160,29 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "sponsored-site-card": {
+        "selectorData": "top-site-outer",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "sponsored-site-card-menu-button": {
+        "selectorData": "button[class=\"context-menu-button icon\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "sponsored-site-context-menu": {
+        "selectorData": "context-menu",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "sponsored-site-context-menu-list": {
+        "selectorData": "ul[class=\"context-menu-list\"]",
+        "strategy": "css",
+        "groups": []
     }
 }
