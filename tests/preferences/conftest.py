@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    return ("S2241", "Preferences")
+    return ("2241", "Preferences")
 
 
 @pytest.fixture()
