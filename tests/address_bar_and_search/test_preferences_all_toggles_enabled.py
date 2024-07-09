@@ -1,5 +1,5 @@
 import logging
-import time
+from time import sleep
 
 import pytest
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -12,7 +12,7 @@ from modules.util import BrowserActions
 
 
 @pytest.mark.slow
-def test_preferences_all_toggles_enabled(driver: Firefox, screenshot):
+def test_preferences_all_toggles_enabled(driver: Firefox):
     """
     C1618400: Preferences - All toggles buttons Enabled
     """
@@ -36,16 +36,18 @@ def test_preferences_all_toggles_enabled(driver: Firefox, screenshot):
     ), f"Checkbox with selector '{sponsors_checkbox}' is not checked"
 
     # Check if sponsored suggestion is displayed. Using long sleeps otherwise sponsored suggestions won't be displayed
-    time.sleep(20)
+    sleep(20)
     u.search("iphone", with_enter=False)
     with driver.context(driver.CONTEXT_CHROME):
         try:
             nav.get_element("sponsored-suggestion")
         except (NoSuchElementException, TimeoutException):
             u.search("iphone", with_enter=False)
-            time.sleep(20)
-        logging.info(nav.get_element("sponsored-suggestion").get_attribute("innerText"))
-        screenshot("sugg-spons")
+            sleep(20)
+        logging.info(
+            "Label text:"
+            + nav.get_element("sponsored-suggestion").get_attribute("innerText")
+        )
         assert any(
             [
                 el.get_attribute("innerText") == "Sponsored"

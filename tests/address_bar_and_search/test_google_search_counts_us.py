@@ -1,4 +1,4 @@
-import time
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -17,7 +17,7 @@ def test_google_search_counts_us(driver: Firefox):
     # instantiate objects
     nav = Navigation(driver).open()
     nav.search("festival")
-    time.sleep(5)
+    sleep(5)
     about_telemetry = AboutTelemetry(driver).open()
     u = Utilities()
 

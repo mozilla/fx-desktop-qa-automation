@@ -1,4 +1,4 @@
-import time
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -30,9 +30,9 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
     }
 
     nav = Navigation(driver).open()
-    time.sleep(20)
+    sleep(20)
     nav.set_awesome_bar()
-    time.sleep(20)
+    sleep(20)
     nav.awesome_bar.click()
 
     for input_text, addon_name in input_to_addon_name.items():
