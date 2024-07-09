@@ -20,7 +20,6 @@ def fxa_test_account():
     return ("dte_stage_permanent@restmail.net", "Test123???")
 
 
-@pytest.mark.unstable
 def test_sync_existing_fxa(
     driver: Firefox, fxa_test_account: Tuple[str, str], restmail_session, get_otp_code
 ):
@@ -38,6 +37,7 @@ def test_sync_existing_fxa(
         otp = get_otp_code(restmail_session)
         logging.info(f"otp code: {otp}")
         fxa.fill_otp_code(otp)
+        fxa.finish_account_setup(password)
     except (NoSuchElementException, TimeoutException):
         pass
     panel_ui.confirm_sync_in_progress()
