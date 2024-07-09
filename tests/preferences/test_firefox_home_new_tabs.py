@@ -4,7 +4,6 @@ from modules.browser_object import TabBar
 from modules.page_object import AboutNewtab, AboutPrefs
 
 
-
 def test_firefox_home_new_tab(driver: Firefox):
     """
     C161472: setting the default new window to be Firefox Home
