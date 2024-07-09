@@ -162,6 +162,12 @@
         ]
     },
 
+    "sponsored-suggestion": {
+        "selectorData": "urlbarView-row-body-description",
+        "strategy": "class",
+        "groups": []
+    },
+
     "firefox-suggest": {
     "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
     "strategy": "css",
