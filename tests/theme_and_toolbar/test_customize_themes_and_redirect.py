@@ -28,7 +28,7 @@ def test_redirect_to_addons(driver: Firefox):
 @pytest.mark.parametrize("theme_name", list(themes.keys()))
 def test_open_addons(driver: Firefox, theme_name: str):
     """
-    C118173, continutation ensures that all the themes are set correctly
+    C118173, continuation ensures that all the themes are set correctly
     """
     nav = Navigation(driver).open()
     abt_addons = AboutAddons(driver).open()
