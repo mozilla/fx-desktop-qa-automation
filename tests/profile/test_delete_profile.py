@@ -14,10 +14,13 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def get_profile_paths(sys_platform):
+    # get the user
     user = getpass.getuser()
     path_to_profile_file = ""
     path_to_profiles = ""
     path_to_profiles_ini_file = ""
+
+    # find the correct paths for the relevant data
     if sys_platform == "Windows":
         path_to_profile_file = f"C:\\Users\\{user}\\AppData\\Roaming\\Mozilla\\Firefox"
         path_to_profiles = (
@@ -86,7 +89,7 @@ def test_delete_profile_dont_save_files(driver: Firefox, get_profile_paths):
                 "profile-container-item-profile-name", parent_element=profile
             )
             logging.info(
-                f"Current detected profile: {profile_header.get_attribute("innerHTML")}"
+                f"Current detected profile: {profile_header.get_attribute('innerHTML')}"
             )
             if (
                 profile_header.get_attribute("innerHTML")
