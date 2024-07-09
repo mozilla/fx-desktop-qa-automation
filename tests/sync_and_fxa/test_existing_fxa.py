@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 from typing import Tuple
 
 import pytest
@@ -42,8 +41,6 @@ def test_sync_existing_fxa(
         otp = get_otp_code(restmail_session)
         logging.info(f"otp code: {otp}")
         fxa.fill_otp_code(otp)
-        sleep(5)
-        screenshot("otp_filled")
     except (NoSuchElementException, TimeoutException):
         pass
     panel_ui.confirm_sync_in_progress()
