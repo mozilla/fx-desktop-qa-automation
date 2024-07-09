@@ -50,7 +50,6 @@ def test_search_term_persists(driver: Firefox):
     # Perform a search using the URL bar.
     nav.search(FIRST_SEARCH)
     tab.expect_title_contains("Google Search")
-    nav.set_chrome_context()
     address_bar_text = nav.get_awesome_bar_text()
     assert FIRST_SEARCH == address_bar_text
 
@@ -78,6 +77,5 @@ def test_search_term_persists(driver: Firefox):
     # Again, perform a search using the URL bar.
     nav.search(FIRST_SEARCH)
     tab.expect_title_contains("Google Search")
-    nav.set_chrome_context()
     address_bar_text = nav.get_awesome_bar_text()
     assert FIRST_SEARCH == address_bar_text
