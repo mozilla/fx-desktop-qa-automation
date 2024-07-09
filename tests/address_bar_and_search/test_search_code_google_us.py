@@ -17,6 +17,7 @@ def add_prefs():
 
 # Set constant
 FX_SEARCH_CODE = "client=firefox-b-1-d"
+SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 
 
 def test_search_code_google_us(driver: Firefox):
@@ -46,8 +47,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Check code generated from the Search bar search
     # First enable search bar via about:config
-    pref = "browser.search.widget.inNavBar"
-    ac.toggle_true_false_config(pref)
+    ac.toggle_true_false_config(SEARCH_BAR_PREF)
     nav.clear_awesome_bar()
 
     # Then run the code check

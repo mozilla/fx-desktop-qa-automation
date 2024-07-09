@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import AboutConfig
@@ -15,8 +14,9 @@ def add_prefs():
     ]
 
 
-# Set constant
+# Set constants
 FX_SEARCH_CODE = "client=firefox-b-d"
+SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 
 
 def test_search_code_google_us(driver: Firefox):
@@ -46,8 +46,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Check code generated from the Search bar search
     # First enable search bar via about:config
-    pref = "browser.search.widget.inNavBar"
-    ac.toggle_true_false_config(pref)
+    ac.toggle_true_false_config(SEARCH_BAR_PREF)
     nav.clear_awesome_bar()
 
     # Then run the code check
