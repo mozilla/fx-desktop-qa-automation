@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 from typing import Tuple
 
 import pytest
@@ -21,7 +22,11 @@ def fxa_test_account():
 
 
 def test_sync_existing_fxa(
-    driver: Firefox, fxa_test_account: Tuple[str, str], restmail_session, get_otp_code
+    driver: Firefox,
+    fxa_test_account: Tuple[str, str],
+    restmail_session,
+    get_otp_code,
+    screenshot,
 ):
     (username, password) = fxa_test_account
     panel_ui = PanelUi(driver)
@@ -37,7 +42,8 @@ def test_sync_existing_fxa(
         otp = get_otp_code(restmail_session)
         logging.info(f"otp code: {otp}")
         fxa.fill_otp_code(otp)
-        fxa.finish_account_setup(password)
+        sleep(5)
+        screenshot("otp_filled")
     except (NoSuchElementException, TimeoutException):
         pass
     panel_ui.confirm_sync_in_progress()
