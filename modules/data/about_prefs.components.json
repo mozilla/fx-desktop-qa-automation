@@ -135,6 +135,18 @@
         "groups": []
     },
 
+    "firefox-suggest-nonsponsored": {
+        "selectorData": "firefoxSuggestNonsponsored",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "firefox-suggest-sponsored": {
+        "selectorData": "firefoxSuggestSponsored",
+        "strategy": "id",
+        "groups": []
+    },
+
     "home-new-tabs-dropdown": {
         "selectorData": "newTabMode",
         "strategy": "id",
