@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
-from modules.browser_object import ContextMenu, Navigation
+from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import AboutConfig
 
 
@@ -13,6 +13,10 @@ def add_prefs():
     return [
         ("browser.search.region", "DE"),
     ]
+
+
+# Set constant
+FX_SEARCH_CODE = "client=firefox-b-d"
 
 
 def test_search_code_google_us(driver: Firefox):
@@ -26,18 +30,18 @@ def test_search_code_google_us(driver: Firefox):
     nav = Navigation(driver).open()
     ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
+    tab = TabBar(driver)
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region
-        fx_code = "client=firefox-b-d"
         nav.set_content_context()
         search_url = driver.current_url
-        assert fx_code in search_url
+        assert FX_SEARCH_CODE in search_url
         nav.clear_awesome_bar()
 
     # Check code generated from the Awesome bar search
     nav.search("soccer")
-    nav.expect(ec.title_contains("Google Search"))
+    tab.expect_title_contains("Google Search")
     search_code_assert()
 
     # Check code generated from the Search bar search
@@ -48,7 +52,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Then run the code check
     nav.search_bar_search("soccer")
-    nav.expect(ec.title_contains("Google Search"))
+    tab.expect_title_contains("Google Search")
     search_code_assert()
 
     # Check code generated from the context click of selected text
@@ -64,5 +68,5 @@ def test_search_code_google_us(driver: Firefox):
     # Switch to the newly opened tab and run the code check
     window_handles = driver.window_handles
     driver.switch_to.window(window_handles[-1])
-    nav.expect(ec.title_contains("Google Search"))
+    tab.expect_title_contains("Google Search")
     search_code_assert()

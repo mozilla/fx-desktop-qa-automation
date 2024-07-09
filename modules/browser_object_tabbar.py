@@ -106,6 +106,13 @@ class TabBar(BasePage):
             )
         return self
 
+    def expect_title_contains(self, text: str) -> BasePage:
+        """
+        Check if the page title contains given text
+        """
+        self.expect(EC.title_contains(text))
+        return self
+
     def open_all_tabs_list(self) -> BasePage:
         """Click the Tab Visibility / List All Tabs button"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
