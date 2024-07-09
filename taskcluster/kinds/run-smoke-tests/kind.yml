@@ -39,7 +39,7 @@ tasks:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "${task.metadata.name} has started to run."
+                        "text": "${task.metadata.name} has started to run. The ID is ${status.taskId}"
                       }
                     }
                   ]
