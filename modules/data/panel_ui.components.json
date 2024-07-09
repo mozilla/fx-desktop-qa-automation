@@ -4,7 +4,40 @@
         "selectorData": "PanelUI-menu-button",
         "strategy": "id",
         "groups": [
-            "requiredForPage"
+            "requiredForPage",
+            "doNotCache"
+        ]
+    },
+
+    "sync-user-button": {
+        "selectorData": "toolbarbutton[id='fxa-toolbar-menu-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fxa-manage-account-button": {
+        "selectorData": "fxa-manage-account-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "sync-fxa": {
+        "selectorData": "appMenu-fxa-status2",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "fxa-sign-in": {
+        "selectorData": "#appMenu-fxa-status2 toolbarbutton",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fxa-sync-label": {
+        "selectorData": "syncnow-label",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
         ]
     },
 

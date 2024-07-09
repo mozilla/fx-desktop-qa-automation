@@ -6,7 +6,7 @@ import platform
 import re
 from os import remove
 from random import shuffle
-from typing import Literal, Union
+from typing import List, Literal, Union
 
 from faker import Faker
 from faker.providers import internet, misc
@@ -266,6 +266,56 @@ class Utilities:
 
         return fake_data
 
+    def write_css_properties(
+        self, file_path: str, element: WebElement, driver: Firefox, chrome=False
+    ):
+        """
+        Executes JavaScript to get all of the CSS properties of a WebElement then dumps it in the specified file path location. Outputs in JSON format
+        """
+        css_properties = ""
+        if chrome:
+            with driver.context(driver.CONTEXT_CHROME):
+                css_properties = driver.execute_script(
+                    """
+var s = window.getComputedStyle(arguments[0]);
+var props = {};
+for (var i = 0; i < s.length; i++) {
+    props[s[i]] = s.getPropertyValue(s[i]);
+}
+return props;
+            """,
+                    element,
+                )
+
+        else:
+            css_properties = driver.execute_script(
+                """
+var s = window.getComputedStyle(arguments[0]);
+var props = {};
+for (var i = 0; i < s.length; i++) {
+    props[s[i]] = s.getPropertyValue(s[i]);
+}
+return props;
+    """,
+                element,
+            )
+
+        with open(file_path, "w") as file:
+            json.dump(css_properties, file, indent=4)
+        logging.info(f"CSS properties saved to {file_path}")
+
+    def match_regex(self, pattern: str, to_match: List[str]) -> List[str]:
+        """
+        Given a list of logs/strings, this method will return the matches within the string that match the given regex expression.
+        """
+        matches = []
+        for string in to_match:
+            match = re.findall(pattern, string)
+            if len(match) > 0:
+                matches.append(match[0])
+
+        return matches
+
     def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
         """
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
@@ -336,21 +386,6 @@ class BrowserActions:
     def __init__(self, driver: Firefox):
         self.driver = driver
         self.controller = Controller()
-
-    def clear_and_fill_no_additional_keystroke(self, webelement: WebElement, term: str):
-        """
-        Given a WebElement, send it the string `term` with no additional keystrokes.
-
-        ...
-
-        Attributes
-        ----------
-        webelement : selenium.webdriver.remote.webelement.WebElement
-        term : str
-            The string to send to this element
-        """
-        webelement.clear()
-        webelement.send_keys(term)
 
     def clear_and_fill(self, webelement: WebElement, term: str, press_enter=True):
         """
