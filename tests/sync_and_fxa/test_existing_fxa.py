@@ -27,6 +27,7 @@ def test_sync_existing_fxa(
     get_otp_code,
     screenshot,
 ):
+    """C131098: User is able to log in with existing FxAccount"""
     (username, password) = fxa_test_account
     panel_ui = PanelUi(driver)
     panel_ui.click_sync_sign_in_button()
