@@ -4,7 +4,6 @@ from time import sleep
 import pytest
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs

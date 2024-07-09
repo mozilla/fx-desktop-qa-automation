@@ -4,7 +4,6 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutNewtab
 from modules.util import Utilities
 
@@ -48,7 +47,6 @@ def test_default_tile_hover_states(driver: Firefox):
     """
     # instantiate objects
     newtab = AboutNewtab(driver).open()
-    tabs = TabBar(driver)
 
     top_card = newtab.get_element("sponsored-site-card")
 
@@ -87,7 +85,6 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
     # initialize objects
     newtab = AboutNewtab(driver).open()
     sleep(3)  # allow page to load, waiting for image isn't enough
-    tabs = TabBar(driver)
     util = Utilities()
 
     suggested_cards = newtab.get_elements("sponsored-site-card")

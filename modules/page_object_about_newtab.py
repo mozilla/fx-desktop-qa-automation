@@ -1,8 +1,5 @@
 import logging
-from datetime import datetime, timedelta
-from time import sleep
 
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
