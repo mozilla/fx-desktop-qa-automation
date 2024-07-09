@@ -15,6 +15,7 @@ def add_prefs():
     ]
 
 
+@pytest.mark.slow
 def test_preferences_all_toggles_enabled(driver: Firefox):
     """
     C1618400: Preferences - All toggles buttons Enabled
@@ -30,7 +31,7 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
     sponsors_checkbox = about_prefs.get_element("firefox-suggest-sponsored")
     assert sponsors_checkbox.is_selected(), f"Checkbox with selector '{sponsors_checkbox}' is not checked"
 
-    # Check if sponsored suggestion is displayed
+    # Check if sponsored suggestion is displayed. Using long sleeps otherwise sponsored suggestions won't be displayed
     time.sleep(20)
     u.search("iphone", with_enter=False)
     time.sleep(20)
