@@ -17,8 +17,6 @@ task-defaults:
   scopes:
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
-    # - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-testeng on success
-    # - notify:slack-channel:C07AHPJ525V
 
 tasks:
   linux:
@@ -28,7 +26,7 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        echo "hello"
+        pwd
     notify:
       recipients:
         - type: slack-channel
@@ -41,7 +39,7 @@ tasks:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "${task.metadata.name} has run."
+                        "text": "${task.metadata.name} has started to run."
                       }
                     }
                   ]
