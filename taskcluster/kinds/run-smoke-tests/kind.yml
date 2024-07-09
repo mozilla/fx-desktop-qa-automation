@@ -36,7 +36,7 @@ tasks:
       recipients:
         - type: slack-channel
           channel-id: C07AHPJ525V
-          status-type: on-resolved
+          status-type: on-defined
       content:
         slack:
           blocks: [
