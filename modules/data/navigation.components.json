@@ -168,15 +168,21 @@
         "groups": []
     },
 
-    "sponsored-site-card": {
-        "selectorData": "top-site-outer",
-        "strategy": "class",
+    "firefox-suggest": {
+    "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
+    "strategy": "css",
+    "groups": []
+    },
+
+    "search-result-autofill-adaptive-element": {
+        "selectorData": ".//*[@type='autofill_adaptive']",
+        "strategy": "xpath",
         "groups": []
     },
 
-    "firefox-suggest": {
-        "selectorData": "div[label='Firefox Suggest'] > span.urlbarView-row-inner, div[label='Firefox Suggest'] + div.urlbarView-row",
-        "strategy": "css",
+    "sponsored-site-card": {
+        "selectorData": "top-site-outer",
+        "strategy": "class",
         "groups": []
     },
 
