@@ -105,36 +105,6 @@ class AboutNewtab(BasePage):
         assert checked_topics == self.constants.popular_topics
         return True
 
-    def wait_for_top_site_image_to_load(
-        self, image_div: WebElement, timeout=10
-    ) -> BasePage:
-        """
-        Check if image is set to background in a div
-        """
-        background_image_url = self.driver.execute_script(
-            "return window.getComputedStyle(arguments[0]).getPropertyValue('background-image');",
-            image_div,
-        )
-        background_image_url = background_image_url.split('"')[1]
-        loaded_script = """
-            var img = new Image();
-            img.src = arguments[0];
-            img.onload = function() {
-                return true;
-            };
-            img.onerror = function() {
-                return false;
-            };
-            return img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
-        """
-        start = datetime.utcnow()
-        current = datetime.utcnow()
-        while current - start < timedelta(seconds=timeout):
-            if self.driver.execute_script(loaded_script, background_image_url):
-                return self
-            current = datetime.utcnow()
-        raise TimeoutException
-
     def check_layout(self) -> BasePage:
         """
         Main method to check about:newtab layout is as expected
