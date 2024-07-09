@@ -1,5 +1,3 @@
-from time import sleep
-
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
@@ -10,10 +8,12 @@ def test_firefox_home_new_tab(driver: Firefox):
     """
     C161472: setting the default new window to be Firefox Home
     """
+    # instantiate objs
     about_prefs = AboutPrefs(driver, category="home").open()
     tabs = TabBar(driver)
     about_new_tab = AboutNewtab(driver)
 
+    # click the dropdown
     drop_down = about_prefs.get_element("home-new-tabs-dropdown")
     drop_down.click()
 
