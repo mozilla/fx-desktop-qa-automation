@@ -1,10 +1,11 @@
 import logging
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.page_object import Navigation
+from modules.browser_object import Navigation, TabBar
+from modules.page_object import AboutNewtab
 from modules.util import Utilities
 
 ALLOWED_RGB_BEFORE_VALUES_CARD = set(["rgba(0, 0, 0, 0)"])
@@ -41,46 +42,37 @@ REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
 card_indices = [(3, False), (0, True)]
 
 
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 def test_default_tile_hover_states(driver: Firefox):
     """
     C1533798.1: Ensure that hover states work correctly
     """
     # instantiate objects
-    nav = Navigation(driver).open()
+    newtab = AboutNewtab(driver).open()
     tabs = TabBar(driver)
 
-    # open a new tab and switch to it
-    tabs.new_tab_by_button()
-    tabs.wait_for_num_tabs(2)
-    driver.switch_to.window(driver.window_handles[-1])
-    top_card = nav.get_element("sponsored-site-card")
+    top_card = newtab.get_element("sponsored-site-card")
 
     # assert the hover state
     assert (
         top_card.value_of_css_property("background-color")
         in ALLOWED_RGB_BEFORE_VALUES_CARD
     )
-    tabs.hover_over_element(top_card)
+
+    newtab.hover_over_element(top_card)
+    top_card = newtab.get_element("sponsored-site-card")
     assert (
         top_card.value_of_css_property("background-color")
         in ALLOWED_RGB_AFTER_VALUES_CARD
     )
 
-    three_dot_menu = nav.get_element("sponsored-site-card-menu-button")
-
+    three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
     # assert the hover state again for the three dots
     assert (
         three_dot_menu.value_of_css_property("background-color")
         in ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS
     )
-    tabs.hover_over_element(three_dot_menu)
+    newtab.hover_over_element(three_dot_menu)
+    three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
     assert (
         three_dot_menu.value_of_css_property("background-color")
         in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
@@ -93,29 +85,30 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
     C1533798.2: Ensure that a website has the appropriate context menu actions in the tile.
     """
     # initialize objects
-    nav = Navigation(driver).open()
+    newtab = AboutNewtab(driver).open()
+    sleep(3)  # allow page to load, waiting for image isn't enough
     tabs = TabBar(driver)
     util = Utilities()
 
-    # open a new tab, switch to it and get the sponsored card
-    tabs.new_tab_by_button()
-    tabs.wait_for_num_tabs(2)
-    driver.switch_to.window(driver.window_handles[-1])
-    suggested_cards = nav.get_element("sponsored-site-card", multiple=True)
+    suggested_cards = newtab.get_elements("sponsored-site-card")
 
-    # pick the fourth card since it is not a sponsored tile
+    # parametrized to pick sponsored and non-sponsored top site cards
     card = suggested_cards[index]
-    nav.hover_over_element(card)
+    newtab.hover_over_element(card)
+
+    # re-get the elements since they stale on hover
+    suggested_cards = newtab.get_elements("sponsored-site-card")
+    card = suggested_cards[index]
 
     # press the three dots option
-    three_dot_menu = nav.get_element(
+    three_dot_menu = newtab.get_element(
         "sponsored-site-card-menu-button", parent_element=card
     )
     three_dot_menu.click()
 
     # get all of the context menu actions
-    context_menu_list = nav.get_element("sponsored-site-context-menu-list")
-    child_options = nav.get_all_children(context_menu_list)
+    context_menu_list = newtab.get_element("sponsored-site-context-menu-list")
+    child_options = newtab.get_all_children(context_menu_list)
     logging.info(f"There are {len(child_options)} context options")
 
     # match appropriate regex to extract the word of the context menu option

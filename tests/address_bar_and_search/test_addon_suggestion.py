@@ -7,13 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.browser_object import Navigation
 
 
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 @pytest.mark.slow
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """

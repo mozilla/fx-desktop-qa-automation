@@ -9,7 +9,7 @@ from modules.page_object import AboutConfig
 
 # Set search region
 @pytest.fixture()
-def add_prefs():
+def overwrite_prefs():
     return [
         ("browser.search.region", "DE"),
     ]

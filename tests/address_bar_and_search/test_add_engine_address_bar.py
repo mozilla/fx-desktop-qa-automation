@@ -8,14 +8,6 @@ from modules.browser_object import Navigation
 sites = [("YouTube", "com"), ("Ecosia", "org")]
 
 
-# Set search region
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 @pytest.mark.unstable
 @pytest.mark.parametrize("site, domain", sites)
 def test_add_search_engine_from_address_bar(driver: Firefox, site: str, domain: str):

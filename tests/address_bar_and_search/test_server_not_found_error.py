@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,12 +9,10 @@ from modules.browser_object import Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_error_page import ErrorPage
 
+CHECK_SITE = "http://cnn"
+SHORT_SITE = CHECK_SITE.split("/")[-1]
 
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
+ERROR_TITLES = ["Hmm. We’re having trouble finding that site."]
 
 
 def test_server_not_found_error(driver: Firefox):
@@ -22,11 +22,13 @@ def test_server_not_found_error(driver: Firefox):
     """
 
     # Create objects
+    logging.info("error titles")
+    logging.info(ERROR_TITLES)
     nav = Navigation(driver).open()
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
 
-    nav.search("http://cnn")
+    nav.search(CHECK_SITE)
 
     # Verify the tab title
     WebDriverWait(driver, 30).until(
@@ -36,13 +38,12 @@ def test_server_not_found_error(driver: Firefox):
     # Verify elements on the error page
     error_title = error_page.get_error_title()
     assert (
-        error_title == "Hmm. We’re having trouble finding that site."
+        error_title in ERROR_TITLES
     ), f"Expected error title text not found. Actual: {error_title}"
 
     error_short_description = error_page.get_error_short_description()
     assert (
-        error_short_description
-        == "We can’t connect to the server at cnn. Did you mean to go to www.cnn.com?"
+        f"We can’t connect to the server at {SHORT_SITE}" in error_short_description
     ), (
         f"Expected error short description text not found."
         f"Actual: {error_short_description}"

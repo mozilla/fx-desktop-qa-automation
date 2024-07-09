@@ -7,14 +7,6 @@ from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import AboutConfig
 
 
-# Set search region
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 def test_search_code_google_us(driver: Firefox):
     """
     C1365268 - Default Search Code: Google - US

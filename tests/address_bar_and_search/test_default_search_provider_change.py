@@ -12,13 +12,6 @@ from modules.browser_object_context_menu import ContextMenu
 from modules.page_object import AboutConfig, AboutPrefs
 
 
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 def test_default_search_provider_change(driver: Firefox):
     """
     C1365245 - This test makes sure that the default search

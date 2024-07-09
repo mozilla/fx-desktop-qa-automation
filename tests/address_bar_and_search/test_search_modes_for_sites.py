@@ -7,14 +7,6 @@ from modules.browser_object import Navigation
 sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
 
 
-# Set search region
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 @pytest.mark.ci
 @pytest.mark.parametrize("site", sites)
 def test_search_modes_for_sites(driver: Firefox, site: str):

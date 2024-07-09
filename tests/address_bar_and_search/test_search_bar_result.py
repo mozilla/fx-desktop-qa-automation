@@ -7,13 +7,6 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutConfig
 
 
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 def test_search_bar_results(driver: Firefox):
     """
     C1365213 - The Search Bar provides valid results for specific search terms
