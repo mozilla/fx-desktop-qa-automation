@@ -44,7 +44,6 @@ def test_sap_google_adclick(driver: Firefox):
 
     # Verify pings are recorded
     json_data = u.decode_url(driver)
-    logging.warn(json_data)
     assert u.assert_json_value(
         json_data, '$..keyedScalars.["browser.search.adclicks.urlbar"].["google:tagged"]', 1
     )
