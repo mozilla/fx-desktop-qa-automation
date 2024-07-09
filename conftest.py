@@ -180,7 +180,8 @@ def driver(
                 separator = " "
         winsize = [int(s) for s in opt_window_size.split(separator)]
         driver.set_window_size(*winsize)
-        driver.implicitly_wait(opt_implicit_timeout)
+        timeout = 30 if opt_ci else opt_implicit_timeout
+        driver.implicitly_wait(timeout)
         yield driver
 
     finally:
