@@ -13,7 +13,17 @@ def httpserver_listen_address():
 
 
 @pytest.fixture()
-def set_prefs(add_prefs: dict):
+def add_prefs():
+    return []
+
+
+@pytest.fixture()
+def overwrite_prefs():
+    return []
+
+
+@pytest.fixture()
+def set_prefs(add_prefs: dict, overwrite_prefs):
     """Set prefs"""
     prefs = [
         ("browser.aboutConfig.showWarning", False),
@@ -25,8 +35,13 @@ def set_prefs(add_prefs: dict):
         ("browser.newtabpage.activity-stream.showSponsoredTopSites", True),
         ("browser.topsites.useRemoteSetting", True),
         ("browser.topsites.contile.enabled", True),
+        ("browser.search.region", "US"),
     ]
     prefs.extend(add_prefs)
+    for overwrite_pref in overwrite_prefs:
+        match = [pref for pref in prefs if pref[0] == overwrite_pref[0]]
+        if match:
+            prefs[prefs.index(match[0])] = overwrite_pref
     return prefs
 
 

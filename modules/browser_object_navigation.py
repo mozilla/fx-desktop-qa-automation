@@ -37,6 +37,15 @@ class Navigation(BasePage):
         self.set_awesome_bar()
         return self.awesome_bar
 
+    def get_awesome_bar_text(self):
+        """
+        Get the text directly from the awesome bar.
+        This is different from 'driver.current_url' which pulls from href
+        """
+        self.set_chrome_context()
+        awesome_bar = self.get_element("awesome-bar").get_attribute("value")
+        return awesome_bar
+
     def clear_awesome_bar(self) -> BasePage:
         """Clear the Awesome Bar. Prefer this over get_element("awesome-bar").clear()"""
         self.set_awesome_bar()
