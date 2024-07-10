@@ -1,4 +1,3 @@
-
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
@@ -36,9 +35,13 @@ def test_language_pack_install_about_preferences(driver: Firefox):
     )
 
     # activate the italian language
-    dropdown_selection = about_prefs.get_element("language-set-alternatives-popup-select-language")
+    dropdown_selection = about_prefs.get_element(
+        "language-set-alternatives-popup-select-language"
+    )
     dropdown_selection.click()
-    about_prefs.get_element("language-set-alternatives-popup-select-language-italian").click()
+    about_prefs.get_element(
+        "language-set-alternatives-popup-select-language-italian"
+    ).click()
     dropdown_selection.click()
     about_prefs.get_element("language-add-button").click()
     about_prefs.get_element("language-list-item").click()
