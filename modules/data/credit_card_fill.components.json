@@ -1,18 +1,18 @@
 {
     "form-field": {
-        "selectorData": "input[autocomplete=\"{name}\"]",
+        "selectorData": "input[autocomplete='{name}']",
         "strategy": "css",
         "groups": []
     },
 
     "submit-button": {
-        "selectorData": "input[type=\"{name}\"]",
+        "selectorData": "input[type='{name}']",
         "strategy": "css",
         "groups": []
     },
 
     "form-button": {
-        "selectorData": "button[type=\"{name}\"]",
+        "selectorData": "button[type='{name}']",
         "strategy": "css",
         "groups": []
     },

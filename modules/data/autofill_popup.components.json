@@ -31,7 +31,7 @@
     },
 
     "doorhanger-update-button": {
-        "selectorData": "button[label=\"Update\"]",
+        "selectorData": "button[label='Update']",
         "strategy": "css",
         "groups": []
     }
