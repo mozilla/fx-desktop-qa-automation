@@ -153,6 +153,24 @@
         "groups": []
     },
 
+    "language-set-alternatives-button": {
+        "selectorData": "manageBrowserLanguagesButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-lanuages": {
+        "selectorData": "availableLocales",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-lanuages-search-more": {
+        "selectorData": "primaryBrowserLocaleSearch",
+        "strategy": "id",
+        "groups": []
+    },
+
     "home-new-tabs-dropdown": {
         "selectorData": "newTabMode",
         "strategy": "id",
