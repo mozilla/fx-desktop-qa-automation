@@ -1,4 +1,3 @@
-import logging
 import time
 
 import pytest
@@ -6,16 +5,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_config import AboutConfig
-
 from modules.page_object_about_telemetry import AboutTelemetry
 from modules.util import Utilities
-
-
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
 
 
 def test_sap_google_adclick(driver: Firefox):
@@ -45,5 +36,7 @@ def test_sap_google_adclick(driver: Firefox):
     # Verify pings are recorded
     json_data = u.decode_url(driver)
     assert u.assert_json_value(
-        json_data, '$..keyedScalars.["browser.search.adclicks.urlbar"].["google:tagged"]', 1
+        json_data,
+        '$..keyedScalars.["browser.search.adclicks.urlbar"].["google:tagged"]',
+        1,
     )

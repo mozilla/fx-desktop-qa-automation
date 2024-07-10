@@ -1,17 +1,8 @@
-import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutConfig
-
-
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
 
 # Set constants
 SEARCH_BAR_PREF = "browser.search.widget.inNavBar"

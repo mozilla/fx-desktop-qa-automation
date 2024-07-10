@@ -18,14 +18,6 @@ PINGS_WITH_ID = 0
 PING_ID = ""
 
 
-# Set search region
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 def confirm_glean_correctness(
     ping_ground: str, ping_test: str, engine_ground: str, engine_test: str
 ) -> bool:

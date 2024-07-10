@@ -49,4 +49,3 @@ class AboutConfig(BasePage):
         pref_edit.send_keys(value)
         pref_edit_button.click()
         return self
-

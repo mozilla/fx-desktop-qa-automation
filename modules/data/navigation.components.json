@@ -169,9 +169,9 @@
     },
 
     "firefox-suggest": {
-    "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
-    "strategy": "css",
-    "groups": []
+        "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
+        "strategy": "css",
+        "groups": []
     },
 
     "search-result-autofill-adaptive-element": {
@@ -180,33 +180,9 @@
         "groups": []
     },
 
-    "sponsored-site-card": {
-        "selectorData": "top-site-outer",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "sponsored-site-card-menu-button": {
-        "selectorData": "button[class=\"context-menu-button icon\"]",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "sponsored-site-context-menu": {
-        "selectorData": "context-menu",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "sponsored-site-context-menu-list": {
-        "selectorData": "ul[class=\"context-menu-list\"]",
-        "strategy": "css",
-        "groups": []
-    },
-
     "search-result": {
-    "selectorData": "//div[@data-text-ad]//a",
-    "strategy": "xpath",
-    "groups": []
+        "selectorData": "//div[@data-text-ad]//a",
+        "strategy": "xpath",
+        "groups": []
     }
 }
