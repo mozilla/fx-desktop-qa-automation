@@ -21,7 +21,7 @@ def test_google_search_counts_us(driver: Firefox):
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry = AboutTelemetry(driver).open()
-    sleep(2)
+    sleep(5)
     about_telemetry.get_element("category-raw").click()
     about_telemetry.switch_tab()
     about_telemetry.get_element("rawdata-tab").click()
