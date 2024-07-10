@@ -151,5 +151,17 @@
         "selectorData": "firefoxSuggestSponsored",
         "strategy": "id",
         "groups": []
+    },
+
+    "home-new-tabs-dropdown": {
+        "selectorData": "newTabMode",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "home-new-tabs-dropdown-option-default": {
+        "selectorData": "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]",
+        "strategy": "css",
+        "groups": []
     }
 }

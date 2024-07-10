@@ -105,5 +105,11 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "body-logo": {
+        "selectorData": "logo",
+        "strategy": "class",
+        "groups": []
     }
 }
