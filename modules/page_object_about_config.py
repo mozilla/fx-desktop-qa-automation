@@ -38,3 +38,14 @@ class AboutConfig(BasePage):
         self.search_pref(term)
         self.toggle_true_false()
         return self
+
+    def change_pref_value(self, term: str, value) -> BasePage:
+        self.set_content_context()
+        self.driver.get("about:config")
+        self.search_pref(term)
+        pref_edit_button = self.get_element("cell-edit")
+        pref_edit_button.click()
+        pref_edit = self.get_element("form-edit")
+        pref_edit.send_keys(value)
+        pref_edit_button.click()
+        return self
