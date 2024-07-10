@@ -45,6 +45,5 @@ def test_sync_existing_fxa(
     except (NoSuchElementException, TimeoutException):
         pass
     with driver.context(driver.CONTEXT_CHROME):
-        screenshot("chrome_confirm_sync")
-    screenshot("confirm_sync")
+        screenshot("test_sync_existing_fxa_chrome")
     panel_ui.confirm_sync_in_progress()
