@@ -202,5 +202,11 @@
         "selectorData": "ul[class=\"context-menu-list\"]",
         "strategy": "css",
         "groups": []
+    },
+
+    "search-result": {
+    "selectorData": "//div[@data-text-ad]//a",
+    "strategy": "xpath",
+    "groups": []
     }
 }
