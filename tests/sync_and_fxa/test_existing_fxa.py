@@ -44,4 +44,5 @@ def test_sync_existing_fxa(
         fxa.fill_otp_code(otp)
     except (NoSuchElementException, TimeoutException):
         pass
-    panel_ui.confirm_sync_in_progress()
+    with driver.context(driver.CONTEXT_CHROME):
+        panel_ui.confirm_sync_in_progress()
