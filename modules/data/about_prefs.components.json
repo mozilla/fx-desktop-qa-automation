@@ -78,7 +78,7 @@
     },
 
     "prefs-button": {
-        "selectorData": "button[label=\"{name}\"]",
+        "selectorData": "button[label='{name}']",
         "strategy": "css",
         "groups": []
     },
@@ -168,8 +168,45 @@
     },
 
     "language-set-alternatives-popup-select-language-search-more": {
-        "selectorData": "menuitem[label=\"Search for more languages…\"]",
+        "selectorData": "menuitem[label='Search for more languages…']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-language-italian": {
+        "selectorData": "menuitem[label='Italiano']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "languages-shadow-root": {
+        "selectorData": "dialog[buttons='accept,cancel,help']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-accept-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "languages-shadow-root",
+        "groups": []
+    },
+
+    "language-add-button": {
+        "selectorData": "add",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-list-item": {
+        "selectorData": "locale-it",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "html-root": {
+        "selectorData": "preferences-root",
+        "strategy": "id",
         "groups": []
     },
 
