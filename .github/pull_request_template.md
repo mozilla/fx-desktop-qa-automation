@@ -4,7 +4,7 @@ Please include a summary of the changes and the related issue. Please also inclu
 
 ## Bugzilla bug ID
 
-**ID:**
+**Testrail:**
 **Link:**
 
 ## Type of change

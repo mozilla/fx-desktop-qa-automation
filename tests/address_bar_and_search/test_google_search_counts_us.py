@@ -1,4 +1,4 @@
-import time
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -6,13 +6,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
 from modules.util import Utilities
-
-
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
 
 
 # unstable: for some reason cannot pass in Taskcluster Linux VM
@@ -24,7 +17,7 @@ def test_google_search_counts_us(driver: Firefox):
     # instantiate objects
     nav = Navigation(driver).open()
     nav.search("festival")
-    time.sleep(5)
+    sleep(5)
     about_telemetry = AboutTelemetry(driver).open()
     u = Utilities()
 
