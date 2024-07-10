@@ -383,6 +383,20 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
+    def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
+        """
+        Given a part of a URL and a regex, wait for that substring to exist in
+        the current URL, then match the regex against the current URL.
+        (This gives us the benefit of fast failure.)
+        """
+        self.url_contains(url_substr)
+        current_url = self.driver.current_url
+
+        assert re.match(
+            pattern, current_url
+        ), f"URL does not match the expected pattern: {current_url}"
+        return self
+
     def fill(
         self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
     ) -> Page:
