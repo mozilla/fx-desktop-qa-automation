@@ -165,21 +165,23 @@
     "sponsored-suggestion": {
         "selectorData": "urlbarView-row-body-description",
         "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
+        "groups": []
     },
 
     "firefox-suggest": {
         "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
         "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
+        "groups": []
     },
 
     "search-result-autofill-adaptive-element": {
         "selectorData": ".//*[@type='autofill_adaptive']",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "search-result": {
+        "selectorData": "//div[@data-text-ad]//a",
         "strategy": "xpath",
         "groups": []
     }
