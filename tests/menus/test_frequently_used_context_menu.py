@@ -28,7 +28,7 @@ def test_save_page_as(driver: Firefox):
 
     # right click something that is not a hyperlink
     title_header = example_page.get_element("title-header")
-    context_menu.context_click_element(title_header)
+    context_menu.context_click(title_header)
 
     save_page_as = context_menu.get_context_item("context-menu-save-page-as")
     context_menu.click_context_item(save_page_as)
@@ -82,7 +82,7 @@ def test_take_screenshot(driver: Firefox):
 
     # right click the header
     title_header = example_page.get_element("title-header")
-    context_menu.context_click_element(title_header)
+    context_menu.context_click(title_header)
 
     # context click the screenshot option and verify its not hidden
     take_screenshot = context_menu.get_context_item("context-menu-take-screenshot")
@@ -105,7 +105,7 @@ def test_inspect(driver: Firefox):
 
     # right click something that is not a hyperlink
     title_header = example_page.get_element("title-header")
-    context_menu.context_click_element(title_header)
+    context_menu.context_click(title_header)
 
     inspect_option = context_menu.get_context_item("context-menu-inspect")
     context_menu.click_context_item(inspect_option)

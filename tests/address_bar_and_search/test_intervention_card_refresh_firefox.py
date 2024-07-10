@@ -35,7 +35,7 @@ def test_intervention_card_refresh(driver: Firefox):
     # ensure the color before hover
     button_background = refresh_button.value_of_css_property("background-color")
     assert button_background in ALLOWED_RGB_BEFORE_VALUES
-    nav.hover_over_element(refresh_button, chrome=True)
+    nav.hover(refresh_button)
 
     # ensure there is a hover state
     new_button_background = refresh_button.value_of_css_property("background-color")
@@ -44,7 +44,7 @@ def test_intervention_card_refresh(driver: Firefox):
     help_menu_background = help_menu_button.value_of_css_property("background-color")
     assert help_menu_background in ALLOWED_RGB_BEFORE_VALUES
     assert help_menu_button.get_attribute("open") is None
-    nav.hover_over_element(help_menu_button, chrome=True)
+    nav.hover(help_menu_button, chrome=True)
 
     new_help_menu_background = help_menu_button.value_of_css_property(
         "background-color"

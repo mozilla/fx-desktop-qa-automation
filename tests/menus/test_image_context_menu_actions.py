@@ -29,7 +29,7 @@ def test_open_image_in_new_tab(driver: Firefox):
 
     # get the image and context click it
     image_logo = wiki_image_page.get_element("mediawiki-image")
-    wiki_image_page.context_click_element(image_logo)
+    wiki_image_page.context_click(image_logo)
 
     # open in a new tab
     open_in_new_tab = image_context_menu.get_context_item(
@@ -66,7 +66,7 @@ def test_save_image_as(driver: Firefox):
 
     # get the image and context click it
     image_logo = wiki_image_page.get_element("mediawiki-image")
-    wiki_image_page.context_click_element(image_logo)
+    wiki_image_page.context_click(image_logo)
 
     # save it
     save_image_as = image_context_menu.get_context_item("context-menu-save-image-as")
@@ -123,7 +123,7 @@ def test_copy_image_link(driver: Firefox):
 
     # get the image and context click it
     image_logo = wiki_image_page.get_element("mediawiki-image")
-    wiki_image_page.context_click_element(image_logo)
+    wiki_image_page.context_click(image_logo)
 
     # copy the link
     copy_image_link = image_context_menu.get_context_item(
@@ -139,7 +139,7 @@ def test_copy_image_link(driver: Firefox):
 
     # # context click and paste
     search_bar = nav.get_awesome_bar()
-    nav.context_click_element(search_bar)
+    nav.context_click(search_bar)
 
     # paste and go
     with driver.context(driver.CONTEXT_CHROME):

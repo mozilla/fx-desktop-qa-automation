@@ -14,7 +14,7 @@ def test_open_new_via_hyperlink(driver: Firefox):
 
     # Use context menu option to open link in new tab
     hyperlink = driver.find_element(By.LINK_TEXT, "More information...")
-    browser.context_click_element(hyperlink)
+    browser.context_click(hyperlink)
     browser.set_chrome_context()
     menu_option = driver.find_element(By.ID, "context-openlinkintab")
     menu_option.click()

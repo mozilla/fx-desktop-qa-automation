@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
-from modules.page_object import AboutConfig
+from modules.page_object import AboutConfig, GenericPage
 
 
 # Set search region
@@ -19,7 +19,7 @@ FX_SEARCH_CODE = "client=firefox-b-d"
 SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 
 
-def test_search_code_google_us(driver: Firefox):
+def test_search_code_google_non_us(driver: Firefox):
     """
     C1365269 - Default Search Code: Google - non-US
     This tests multiple ways of sending a search; Awesome bar,
@@ -31,6 +31,7 @@ def test_search_code_google_us(driver: Firefox):
     ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
     tab = TabBar(driver)
+    example = GenericPage(driver, url="http://example.com")
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region
@@ -55,12 +56,11 @@ def test_search_code_google_us(driver: Firefox):
     search_code_assert()
 
     # Check code generated from the context click of selected text
-    nav.set_content_context()
-    driver.get("http://example.com")
-    h1_tag = driver.find_element(By.TAG_NAME, "h1")
-    nav.triple_click(h1_tag)
-    nav.context_click_element(h1_tag)
-    nav.set_chrome_context()
+    with driver.context(driver.CONTEXT_CONTENT):
+        example.open()
+        h1_tag = (By.TAG_NAME, "h1")
+        example.triple_click(h1_tag)
+        example.context_click(h1_tag)
     context_menu.get_context_item("context-menu-search-selected-text").click()
     nav.hide_popup("contentAreaContextMenu")
 

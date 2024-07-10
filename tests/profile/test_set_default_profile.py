@@ -16,8 +16,7 @@ def test_set_default_profile(driver: Firefox):
     about_profiles = AboutProfiles(driver).open()
 
     # get the profiles container, extract all relevant children under it.
-    profile_container = about_profiles.get_element("profile-container")
-    profiles = profile_container.find_elements(By.XPATH, "./child::*")
+    about_profiles.get_all_children("profile-container")
 
     # verify that some profile is the default
     profile_header_in_use = about_profiles.get_element(
@@ -64,8 +63,7 @@ def test_set_default_profile(driver: Firefox):
     ).click()
 
     # refetch data to ensure no stale elements
-    profile_container = about_profiles.get_element("profile-container")
-    profiles = profile_container.find_elements(By.XPATH, "./child::*")
+    about_profiles.get_all_children("profile-container")
 
     table_rows = about_profiles.get_element(
         "profile-container-item-table-row",
