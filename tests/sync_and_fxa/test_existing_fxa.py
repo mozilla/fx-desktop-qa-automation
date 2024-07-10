@@ -25,6 +25,7 @@ def test_sync_existing_fxa(
     fxa_test_account: Tuple[str, str],
     restmail_session,
     get_otp_code,
+    screenshot,
 ):
     """C131098: User is able to log in with existing FxAccount"""
     (username, password) = fxa_test_account
@@ -43,4 +44,5 @@ def test_sync_existing_fxa(
         fxa.fill_otp_code(otp)
     except (NoSuchElementException, TimeoutException):
         pass
+    screenshot("confirm_sync")
     panel_ui.confirm_sync_in_progress()
