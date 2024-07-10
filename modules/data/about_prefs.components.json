@@ -159,15 +159,17 @@
         "groups": []
     },
 
-    "language-set-alternatives-popup-select-lanuages": {
+    "language-set-alternatives-popup-select-language": {
         "selectorData": "availableLocales",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
-    "language-set-alternatives-popup-select-lanuages-search-more": {
-        "selectorData": "primaryBrowserLocaleSearch",
-        "strategy": "id",
+    "language-set-alternatives-popup-select-language-search-more": {
+        "selectorData": "menuitem[label=\"Search for more languages…\"]",
+        "strategy": "css",
         "groups": []
     },
 
