@@ -24,7 +24,7 @@ def test_sap_google_adclick(driver: Firefox):
     # search and click on an ad
     nav.search("iphone")
     nav.get_element("search-result").click()
-    time.sleep(5)
+    time.sleep(2)
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry = AboutTelemetry(driver).open()
