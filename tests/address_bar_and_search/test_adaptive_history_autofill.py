@@ -10,7 +10,6 @@ from modules.browser_object_tabbar import TabBar
 @pytest.fixture()
 def add_prefs():
     return [
-        ("browser.search.region", "US"),
         ("browser.urlbar.autoFill.adaptiveHistory.enabled", True),
     ]
 
@@ -34,7 +33,7 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     driver.switch_to.window(driver.window_handles[1])
 
     with driver.context(driver.CONTEXT_CHROME):
-        x_icon = tabs.get_element("tab-x-icon", multiple=True)
+        x_icon = tabs.get_elements("tab-x-icon")
         x_icon[0].click()
 
     # Type the first 3 characters of the visited URL in the address bar and select the suggested URL

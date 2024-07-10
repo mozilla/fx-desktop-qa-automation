@@ -11,5 +11,17 @@
         "selectorData": "about-config-search",
         "strategy": "id",
         "groups": []
+    },
+
+    "cell-edit": {
+        "selectorData": "cell-edit",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "form-edit": {
+        "selectorData": "//input[@aria-label='cookiebanners.service.mode']",
+        "strategy": "xpath",
+        "groups": []
     }
 }
