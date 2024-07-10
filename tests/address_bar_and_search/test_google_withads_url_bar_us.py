@@ -5,13 +5,12 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
-from modules.page_object_about_config import AboutConfig
 from modules.util import Utilities
 
 
 @pytest.fixture()
 def add_prefs():
-    return [("browser.search.region", "US"), ("cookiebanners.service.mode", 1)]
+    return [("cookiebanners.service.mode", 1)]
 
 
 def test_google_withads_url_bar_us(driver: Firefox):

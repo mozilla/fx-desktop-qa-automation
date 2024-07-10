@@ -9,7 +9,6 @@ from modules.page_object import AboutConfig
 @pytest.fixture()
 def add_prefs():
     return [
-        ("browser.search.region", "US"),
         ("browser.urlbar.showSearchTerms.enabled", True),
         ("browser.urlbar.showSearchTerms.featureGate", True),
     ]

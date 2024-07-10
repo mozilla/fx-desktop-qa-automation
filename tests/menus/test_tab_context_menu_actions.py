@@ -41,7 +41,7 @@ def test_duplicate_tab(driver: Firefox):
     assert current_page == links[0]
 
 
-def test_close_mulitiple_tabs_to_right(driver: Firefox):
+def test_close_multiple_tabs_to_right(driver: Firefox):
     """
     C2637624.3.1: close multiple tabs actions (close all the right)
     """
@@ -59,10 +59,10 @@ def test_close_mulitiple_tabs_to_right(driver: Firefox):
     first_tab = tabs.get_tab(1)
     with driver.context(driver.CONTEXT_CHROME):
         tabs.actions.context_click(first_tab).perform()
-        close_mulitple_tabs = tab_context_menu.get_context_item(
+        close_multiple_tabs = tab_context_menu.get_context_item(
             "context-menu-close-multiple-tabs"
         )
-        close_mulitple_tabs.click()
+        close_multiple_tabs.click()
 
         close_tabs_to_right = tab_context_menu.get_context_item(
             "context-menu-close-multiple-tabs-to-right"
@@ -75,7 +75,7 @@ def test_close_mulitiple_tabs_to_right(driver: Firefox):
     tabs.wait_for_num_tabs(1)
 
 
-def test_close_mulitiple_tabs_to_left(driver: Firefox):
+def test_close_multiple_tabs_to_left(driver: Firefox):
     """
     C2264627.3.2: close multiple tabs actions (close all the left)
     """
@@ -94,10 +94,10 @@ def test_close_mulitiple_tabs_to_left(driver: Firefox):
     last_tab = tabs.get_tab(tabs_to_open + 1)
     with driver.context(driver.CONTEXT_CHROME):
         tabs.actions.context_click(last_tab).perform()
-        close_mulitple_tabs = tab_context_menu.get_context_item(
+        close_multiple_tabs = tab_context_menu.get_context_item(
             "context-menu-close-multiple-tabs"
         )
-        close_mulitple_tabs.click()
+        close_multiple_tabs.click()
 
         close_tabs_to_left = tab_context_menu.get_context_item(
             "context-menu-close-multiple-tabs-to-left"
@@ -111,7 +111,7 @@ def test_close_mulitiple_tabs_to_left(driver: Firefox):
     tabs.wait_for_num_tabs(1)
 
 
-def test_close_mulitiple_tabs_other_tabs(driver: Firefox):
+def test_close_multiple_tabs_other_tabs(driver: Firefox):
     """
     C2264627.3.3: close multiple tabs actions (close all the left)
     """
@@ -130,10 +130,10 @@ def test_close_mulitiple_tabs_other_tabs(driver: Firefox):
     second_tab = tabs.get_tab(2)
     with driver.context(driver.CONTEXT_CHROME):
         tabs.actions.context_click(second_tab).perform()
-        close_mulitple_tabs = tab_context_menu.get_context_item(
+        close_multiple_tabs = tab_context_menu.get_context_item(
             "context-menu-close-multiple-tabs"
         )
-        close_mulitple_tabs.click()
+        close_multiple_tabs.click()
 
         close_other_tabs = tab_context_menu.get_context_item(
             "context-menu-close-multiple-tabs-other-tabs"

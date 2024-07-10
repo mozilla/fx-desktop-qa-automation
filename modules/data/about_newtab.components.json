@@ -2,9 +2,7 @@
     "incontent-search-input": {
         "selectorData": "fake-editable",
         "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "loaded-image": {
@@ -25,20 +23,40 @@
         "groups": []
     },
 
+    "sponsored-site-card": {
+        "selectorData": "top-site-outer",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage",
+            "doNotCache"
+        ]
+    },
+
+    "top-site-image-by-index": {
+        "selectorData": ".top-sites-list li:nth-of-type({index}) .top-site-icon.rich-icon",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "sponsored-site-card-menu-button": {
+        "selectorData": "button[class=\"context-menu-button icon\"]",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+
     "top-sites-list": {
         "selectorData": "top-sites-list",
         "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "recommended-by-pocket-list": {
         "selectorData": "ds-card-grid-include-descriptions",
         "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "article-description": {
@@ -58,9 +76,7 @@
     "popular-topics-list": {
         "selectorData": ".ds-navigation > ul",
         "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "recent-activity-section": {
@@ -73,6 +89,22 @@
         "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
         "strategy": "xpath",
         "groups": []
+    },
+
+    "sponsored-site-context-menu": {
+        "selectorData": "context-menu",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "sponsored-site-context-menu-list": {
+        "selectorData": "ul[class=\"context-menu-list\"]",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "body-logo": {

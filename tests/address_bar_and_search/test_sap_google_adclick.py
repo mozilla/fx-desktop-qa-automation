@@ -1,4 +1,3 @@
-import logging
 import time
 
 import pytest
@@ -8,13 +7,6 @@ from modules.browser_object_navigation import Navigation
 from modules.page_object_about_config import AboutConfig
 from modules.page_object_about_telemetry import AboutTelemetry
 from modules.util import Utilities
-
-
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
 
 
 def test_sap_google_adclick(driver: Firefox):
