@@ -133,5 +133,17 @@
         "selectorData": "#addresses option",
         "strategy": "css",
         "groups": []
+    },
+
+    "firefox-suggest-nonsponsored": {
+        "selectorData": "firefoxSuggestNonsponsored",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "firefox-suggest-sponsored": {
+        "selectorData": "firefoxSuggestSponsored",
+        "strategy": "id",
+        "groups": []
     }
 }

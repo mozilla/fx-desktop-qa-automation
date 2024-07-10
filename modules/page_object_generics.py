@@ -1,6 +1,14 @@
 from modules.page_base import BasePage
 
 
+class GenericPage(BasePage):
+    """
+    Generic POM for a page we don't care to map
+    """
+
+    URL_TEMPLATE = "{url}"
+
+
 class GenericPdf(BasePage):
     """
     Generic POM for any page with an open PDF in it.
