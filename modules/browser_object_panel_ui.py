@@ -1,4 +1,5 @@
 from pypom import Region
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -112,7 +113,7 @@ class PanelUi(BasePage):
                         self.get_selector("fxa-sync-label"), "Sync"
                     )
                 )
-            except:
+            except (NoSuchElementException, TimeoutException):
                 self.get_element("panel-ui-button").click()
                 self.click_sync_sign_in_button()
             self.custom_wait(timeout=30, poll_frequency=0.5).until(
