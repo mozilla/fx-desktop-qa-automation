@@ -1,44 +1,46 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutAddons, AboutPrefs, GenericPage
+from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages
 
-LANGUAGE_ADDONS_LINK = "https://addons.mozilla.org/en-US/firefox/language-tools/"
-LANGUAGES = [("Italiano", "it", "Imposta alternative…")]
+LANGUAGES = [
+    (
+        "Italiano",
+        "LanguageTools-table-row LanguageTools-lang-it",
+        "it",
+        "Imposta alternative…",
+    )
+]
 
 
-@pytest.mark.parametrize("drop_down_name, shortform, localized_text", LANGUAGES)
+@pytest.mark.parametrize(
+    "drop_down_name, language_label, shortform, localized_text", LANGUAGES
+)
 def test_language_pack_install_from_addons(
-    driver: Firefox, drop_down_name: str, shortform: str, localized_text: str
+    driver: Firefox,
+    drop_down_name: str,
+    language_label: str,
+    shortform: str,
+    localized_text: str,
 ):
     """
     C1549408: verify that installing a language pack from about:addons will correctly change the locale
     """
-    # declaring objects and navigating
-    generic_page = GenericPage(driver)
-    driver.get(LANGUAGE_ADDONS_LINK)
+    # instantiate objects
+    amo_languages = AmoLanguages(driver).open()
 
     # ensuring the page was loaded
-    generic_page.custom_wait(timeout=20).until(
-        lambda _: generic_page.get_element("language-addons-title") is not None
-    )
+    amo_languages.wait_for_language_page_to_load()
 
     # grab the appropriate link and wait until the page is loaded
-    language_row = generic_page.get_element("language-addons-row")
-    generic_page.get_element(
-        "language-addons-row-link", parent_element=language_row
-    ).click()
-    generic_page.custom_wait(timeout=20).until(
-        lambda _: generic_page.get_element("language-addons-subpage-header") is not None
-    )
-
-    generic_page.get_element("language-addons-subpage-add-to-firefox").click()
+    amo_languages.find_language_row_and_navigate(language_label)
+    amo_languages.get_element("language-addons-subpage-add-to-firefox").click()
 
     with driver.context(driver.CONTEXT_CHROME):
         # click one for "Add"
-        generic_page.get_element("language-install-popup-add").click()
+        amo_languages.get_element("language-install-popup-add").click()
         # click second time for "Okay", the button is not cached which allows for two different buttons to be different
-        generic_page.get_element("language-install-popup-add").click()
+        amo_languages.get_element("language-install-popup-add").click()
 
     # ensure that the about:addons has the language listed
     about_addons = AboutAddons(driver).open()
