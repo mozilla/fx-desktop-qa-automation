@@ -1,22 +1,10 @@
 from time import sleep
 
-import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object import Navigation
-from modules.browser_object_context_menu import ContextMenu
 from modules.page_object import AboutConfig, AboutPrefs
-
-
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
 
 
 def test_default_search_provider_change(driver: Firefox):

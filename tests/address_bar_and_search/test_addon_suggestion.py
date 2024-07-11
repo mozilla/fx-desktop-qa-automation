@@ -1,17 +1,10 @@
-import time
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
-
-
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
 
 
 @pytest.mark.slow
@@ -37,9 +30,9 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
     }
 
     nav = Navigation(driver).open()
-    time.sleep(20)
+    sleep(20)
     nav.set_awesome_bar()
-    time.sleep(20)
+    sleep(20)
     nav.awesome_bar.click()
 
     for input_text, addon_name in input_to_addon_name.items():

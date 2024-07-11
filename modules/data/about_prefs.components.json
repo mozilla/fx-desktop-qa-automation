@@ -78,7 +78,7 @@
     },
 
     "prefs-button": {
-        "selectorData": "button[label=\"{name}\"]",
+        "selectorData": "button[label='{name}']",
         "strategy": "css",
         "groups": []
     },
@@ -135,6 +135,12 @@
         "groups": []
     },
 
+    "show-suggestions": {
+        "selectorData": "checkbox[data-l10n-id='search-show-suggestions-option']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "firefox-suggest-nonsponsored": {
         "selectorData": "firefoxSuggestNonsponsored",
         "strategy": "id",
@@ -144,6 +150,75 @@
     "firefox-suggest-sponsored": {
         "selectorData": "firefoxSuggestSponsored",
         "strategy": "id",
+        "groups": []
+    },
+
+    "language-set-alternatives-button": {
+        "selectorData": "manageBrowserLanguagesButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-language": {
+        "selectorData": "availableLocales",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "language-set-alternatives-popup-select-language-search-more": {
+        "selectorData": "menuitem[label='Search for more languages…']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-language-italian": {
+        "selectorData": "menuitem[label='Italiano']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "languages-shadow-root": {
+        "selectorData": "dialog[buttons='accept,cancel,help']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-accept-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "languages-shadow-root",
+        "groups": []
+    },
+
+    "language-add-button": {
+        "selectorData": "add",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-list-item": {
+        "selectorData": "locale-it",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "html-root": {
+        "selectorData": "preferences-root",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "home-new-tabs-dropdown": {
+        "selectorData": "newTabMode",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "home-new-tabs-dropdown-option-default": {
+        "selectorData": "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]",
+        "strategy": "css",
         "groups": []
     }
 }
