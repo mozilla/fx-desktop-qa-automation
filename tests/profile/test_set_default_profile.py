@@ -3,7 +3,6 @@ import random
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
 from modules.page_object import AboutProfiles
 
@@ -16,7 +15,7 @@ def test_set_default_profile(driver: Firefox):
     about_profiles = AboutProfiles(driver).open()
 
     # get the profiles container, extract all relevant children under it.
-    about_profiles.get_all_children("profile-container")
+    profiles = about_profiles.get_all_children("profile-container")
 
     # verify that some profile is the default
     profile_header_in_use = about_profiles.get_element(
@@ -63,7 +62,7 @@ def test_set_default_profile(driver: Firefox):
     ).click()
 
     # refetch data to ensure no stale elements
-    about_profiles.get_all_children("profile-container")
+    profiles = about_profiles.get_all_children("profile-container")
 
     table_rows = about_profiles.get_element(
         "profile-container-item-table-row",

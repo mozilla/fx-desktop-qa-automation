@@ -510,6 +510,18 @@ class BasePage(Page):
             self.actions.move_to_element(el).perform()
         return self
 
+    def get_all_children(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> List[WebElement]:
+        """
+        Gets all the children of a webelement
+        """
+        children = None
+        with self.driver.context(self.context_id):
+            element = self.fetch(reference, labels)
+            children = element.find_elements(By.XPATH, "./*")
+        return children
+
     def wait_for_num_tabs(self, num_tabs: int) -> Page:
         """
         Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
@@ -563,15 +575,6 @@ class BasePage(Page):
                 self.driver.execute_script(script, node)
         else:
             self.driver.execute_script(script, node)
-
-    def get_all_children(self, element: WebElement) -> List[WebElement]:
-        """
-        Gets all the children of a webelement
-        """
-        children = None
-        with self.driver.context(self.context_id):
-            children = element.find_elements(By.XPATH, "./*")
-        return children
 
     @property
     def loaded(self):

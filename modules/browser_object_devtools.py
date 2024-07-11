@@ -1,5 +1,3 @@
-from selenium.webdriver.remote.webelement import WebElement
-
 from modules.page_base import BasePage
 
 
