@@ -1,4 +1,5 @@
-## fx-desktop-qa-automation
+## Project STARfox
+*S*moke *T*est *A*utomation *R*epository for Firefox Desktop
 A Python Selenium based set of tests for smoke testing of Firefox, including Fx incident smoke testing.
 
 ### Build under test
