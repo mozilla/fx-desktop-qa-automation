@@ -59,7 +59,9 @@ class AboutPrefs(BasePage):
                 return False
             elif len(matching_menuitems) == 1:
                 if double_click:
-                    AboutPrefs(self.driver).double_click(reference=matching_menuitems[0])
+                    AboutPrefs(self.driver).double_click(
+                        reference=matching_menuitems[0]
+                    )
                 else:
                     matching_menuitems[0].click()
                     self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))

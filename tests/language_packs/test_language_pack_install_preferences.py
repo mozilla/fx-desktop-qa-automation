@@ -6,8 +6,11 @@ from modules.util import BrowserActions
 
 LANGUAGES = [("it", "Imposta alternative…")]
 
+
 @pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
-def test_language_pack_install_about_preferences(driver: Firefox, shortform: str, localized_text: str):
+def test_language_pack_install_about_preferences(
+    driver: Firefox, shortform: str, localized_text: str
+):
     """
     C1549409: language packs can be installed from about:preferences and firefox is correctly localized
     """
@@ -53,6 +56,7 @@ def test_language_pack_install_about_preferences(driver: Firefox, shortform: str
     # final asserts to ensure language is set
     ba.switch_to_content_context()
     about_prefs.custom_wait(timeout=15).until(
-        lambda _: about_prefs.get_element("html-root").get_attribute("lang") == shortform
+        lambda _: about_prefs.get_element("html-root").get_attribute("lang")
+        == shortform
     )
     assert alternative_button.get_attribute("label") == localized_text
