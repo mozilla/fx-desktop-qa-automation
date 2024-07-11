@@ -276,21 +276,3 @@ class CreditCardFill(Autofill):
             credit_card_sample_data.expiration_year,
         )
         return self
-
-    def click_credit_card(self):
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("select-form-option").click()
-        return self
-
-    def click_clear(self):
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("clear-creditcard").click()
-        return self
-
-    def verify_autofill_displayed(self):
-        """
-        Verifies that the autofill suggestions are displayed.
-        """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            element = self.get_element("select-form-option")
-            self.expect(EC.visibility_of(element))

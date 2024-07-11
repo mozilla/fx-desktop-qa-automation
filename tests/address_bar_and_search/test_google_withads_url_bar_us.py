@@ -25,7 +25,7 @@ def test_google_withads_url_bar_us(driver: Firefox):
     nav.search("iphone")
     time.sleep(5)
     about_telemetry = AboutTelemetry(driver).open()
-    time.sleep(2)
+    time.sleep(5)
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry.get_element("category-raw").click()

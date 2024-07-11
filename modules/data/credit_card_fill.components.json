@@ -15,17 +15,5 @@
         "selectorData": "button[type='{name}']",
         "strategy": "css",
         "groups": []
-    },
-
-    "select-form-option": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
-        "strategy":"css",
-        "groups": []
-    },
-
-    "clear-creditcard": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
-        "strategy":"css",
-         "groups": []
     }
 }

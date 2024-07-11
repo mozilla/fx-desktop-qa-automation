@@ -34,5 +34,23 @@
         "selectorData": "button[label='Update']",
         "strategy": "css",
         "groups": []
+    },
+
+    "clear-address": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
+        "strategy":"css",
+        "groups": []
+    },
+
+    "select-form-option": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
+        "strategy":"css",
+        "groups": []
+    },
+
+    "clear-creditcard": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
+        "strategy":"css",
+         "groups": []
     }
 }

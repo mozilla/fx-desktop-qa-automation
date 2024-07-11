@@ -4,7 +4,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, Devtools
+from modules.browser_object import ContextMenu, Devtools, Navigation
 from modules.page_object import ExamplePage
 from modules.util import BrowserActions, Utilities
 
@@ -112,4 +112,3 @@ def test_inspect(driver: Firefox):
     context_menu.click_context_item(inspect_option)
     context_menu.hide_popup_by_child_node(inspect_option, chrome=True)
     devtools.check_opened()
-

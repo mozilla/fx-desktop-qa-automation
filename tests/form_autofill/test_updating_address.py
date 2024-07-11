@@ -28,7 +28,7 @@ def test_update_address(driver: Firefox, country_code: str):
 
     # Double-click on the name field to trigger the autocomplete dropdown
     address_form_fields.double_click("form-field", labels=["name"])
-    address_form_fields.click_address()
+    autofill_popup_panel.click_address()
 
     # Add a middle name inside the Name field
     address_form_fields.click("form-field", labels=["name"])

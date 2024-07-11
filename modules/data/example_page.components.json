@@ -12,6 +12,11 @@
         "groups": [
             "doNotCache"
         ]
-    }
+    },
 
+    "more-information": {
+        "selectorData": "More information...",
+        "strategy": "link_text",
+        "groups": []
+    }
 }

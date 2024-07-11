@@ -148,7 +148,11 @@ class BasePage(Page):
         # We should expect an key-value pair of "context": "chrome" for Browser Objs
         if "context" in self.elements:
             self.context = self.elements["context"]
-            self.context_id = self.driver.CONTEXT_CHROME if self.context == "chrome" else self.driver.CONTEXT_CONTENT
+            self.context_id = (
+                self.driver.CONTEXT_CHROME
+                if self.context == "chrome"
+                else self.driver.CONTEXT_CONTENT
+            )
             del self.elements["context"]
         else:
             self.context = "content"
@@ -345,7 +349,9 @@ class BasePage(Page):
         self.driver.implicitly_wait(0)
         with self.driver.context(self.context_id):
             self.instawait.until_not(
-                EC.presence_of_all_elements_located(self.get_selector(name, labels=labels))
+                EC.presence_of_all_elements_located(
+                    self.get_selector(name, labels=labels)
+                )
             )
         self.driver.implicitly_wait(original_timeout)
         return self
@@ -483,7 +489,9 @@ class BasePage(Page):
         """Actions helper: perform triple-click on a given element"""
         return self.multi_click(3, reference, labels)
 
-    def context_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+    def context_click(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
         """Context (right-) click on an element"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
@@ -555,7 +563,6 @@ class BasePage(Page):
                 self.driver.execute_script(script, node)
         else:
             self.driver.execute_script(script, node)
-
 
     def get_all_children(self, element: WebElement) -> List[WebElement]:
         """
