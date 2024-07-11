@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
-from modules.page_object import AboutConfig, GenericPage
+from modules.page_object import AboutConfig, ExamplePage
 
 # Set constant
 FX_SEARCH_CODE = "client=firefox-b-1-d"
@@ -22,7 +22,7 @@ def test_search_code_google_us(driver: Firefox):
     ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
     tab = TabBar(driver)
-    example = GenericPage(driver, url="http://example.com")
+    example = ExamplePage(driver)
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region

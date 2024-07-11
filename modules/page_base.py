@@ -148,11 +148,19 @@ class BasePage(Page):
         # We should expect an key-value pair of "context": "chrome" for Browser Objs
         if "context" in self.elements:
             self.context = self.elements["context"]
-            self.context_id = self.driver.CONTEXT_CHROME if self.elements["context"] == "chrome" else self.driver.CONTEXT_CONTENT
+            self.context_id = self.driver.CONTEXT_CHROME if self.context == "chrome" else self.driver.CONTEXT_CONTENT
             del self.elements["context"]
         else:
             self.context = "content"
             self.context_id = self.driver.CONTEXT_CONTENT
+        # If we find a key-value pair for "do-not-cache", add all elements to that group
+        doNotCache = self.elements.get("do-not-cache")
+        if "do-not-cache" in self.elements:
+            del self.elements["do-not-cache"]
+        if doNotCache:
+            for key in self.elements.keys():
+                logging.info(f"adding do-not-cache to {key}")
+                self.elements[key]["groups"].append("doNotCache")
 
     def get_selector(self, name: str, labels=[]) -> list:
         """

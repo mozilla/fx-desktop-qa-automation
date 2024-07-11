@@ -1,5 +1,6 @@
 {
     "context": "chrome",
+    "do-not-cache": true,
     "context-menu-copy":
     {
         "selectorData": "context-copy",

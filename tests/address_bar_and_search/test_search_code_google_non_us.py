@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
-from modules.page_object import AboutConfig, GenericPage
+from modules.page_object import AboutConfig, ExamplePage
 
 
 # Set search region
@@ -31,7 +31,7 @@ def test_search_code_google_non_us(driver: Firefox):
     ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
     tab = TabBar(driver)
-    example = GenericPage(driver, url="http://example.com")
+    example = ExamplePage(driver)
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region

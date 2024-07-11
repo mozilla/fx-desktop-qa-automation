@@ -1,5 +1,6 @@
 {
     "context": "chrome",
+    "do-not-cache": true,
     "context-menu-pin-tab": {
         "selectorData": "context_pinTab",
         "strategy": "id",
