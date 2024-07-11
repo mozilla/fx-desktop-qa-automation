@@ -11,14 +11,6 @@ ALLOWED_RGB_AFTER_VALUES = set(
 )
 
 
-# Set search region
-@pytest.fixture()
-def add_prefs():
-    return [
-        ("browser.search.region", "US"),
-    ]
-
-
 @pytest.mark.unstable
 def test_intervention_card_refresh(driver: Firefox):
     """
