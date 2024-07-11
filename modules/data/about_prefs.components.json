@@ -220,5 +220,11 @@
         "selectorData": "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]",
         "strategy": "css",
         "groups": []
+    },
+
+    "language-dropdown": {
+        "selectorData": "primaryBrowserLocale",
+        "strategy": "id",
+        "groups": []
     }
 }
