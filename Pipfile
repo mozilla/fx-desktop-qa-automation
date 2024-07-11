@@ -17,6 +17,7 @@ taskcluster-taskgraph = "==9.0.0"
 jsonpath-ng = "*"
 pillow = "*"
 pyfxa = "*"
+pytest-json-report = "*"
 
 [dev-packages]
 werkzeug = "*"

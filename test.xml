@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="pytest" errors="0" failures="0" skipped="0" tests="3" time="11.679" timestamp="2024-07-11T13:45:32.796507" hostname="CDK6DHWKW7.local">
+		<testcase classname="tests.menus.test_copy_paste_actions" name="test_login_form_copy_paste" time="3.602" />
+		<testcase classname="tests.menus.test_copy_paste_actions" name="test_text_area_copy_paste" time="3.627" />
+		<testcase classname="tests.menus.test_copy_paste_actions" name="test_search_field_copy_paste" time="4.314" />
+	</testsuite>
+</testsuites>
