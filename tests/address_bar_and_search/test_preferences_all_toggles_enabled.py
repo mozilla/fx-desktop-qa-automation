@@ -64,4 +64,3 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
                 for el in nav.get_elements("sponsored-suggestion")
             ]
         )
-
