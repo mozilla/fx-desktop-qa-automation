@@ -1,10 +1,15 @@
 from time import sleep
+
+import pytest
 from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs
 
-cryptominers_url = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
+CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
 
+@pytest.fixture()
+def add_prefs():
+    return []
 
 def test_blocking_cryptominers(driver: Firefox):
     # instantiate objects
@@ -20,7 +25,7 @@ def test_blocking_cryptominers(driver: Firefox):
     sleep(2)
 
     # Access url and click on the shield icon and verify that cryptominers are blocked
-    driver.get(cryptominers_url)
+    driver.get(CRYPTOMINERS_URL)
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("shield-icon").click()
         assert nav.get_element("cryptominers").is_displayed()
