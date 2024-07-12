@@ -79,7 +79,7 @@ tasks:
                       "elements": [
                           {
                               "type": "mrkdwn",
-                              "text": ":testops-notify: created by <https://mozilla-hub.atlassian.net/wiki/spaces/MTE/overview|Mobile Test Engineering>"
+                              "text": ":testops-notify: created by Desktop QA Test Engineering"
                           }
                       ]
                     }
