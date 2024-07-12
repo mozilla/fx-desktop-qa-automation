@@ -3,13 +3,12 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    return ("X", "Security and Privacy")
+    return ("5833", "Security and Privacy")
 
 
 @pytest.fixture()
-def set_prefs(add_prefs=None):
+def set_prefs(add_prefs: dict):
     """Set prefs"""
     prefs = []
-    if add_prefs is not None:
-        prefs.extend(add_prefs)
+    prefs.extend(add_prefs)
     return prefs
