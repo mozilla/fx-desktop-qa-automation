@@ -41,11 +41,47 @@ tasks:
         slack:
           blocks: [
                     {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "firefox-desktop :firefox: ${task.metadata.name}\n "
+                      }
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
+                      }
+                    },
+                    {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "${task.metadata.name} has started to run. The ID is ${status.taskId}. Look at <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result>"
+                        "text": "*Owner*: ${task.metadata.owner}"
                       }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
+                      }
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "type": "context",
+                      "elements": [
+                          {
+                              "type": "mrkdwn",
+                              "text": ":testops-notify: created by <https://mozilla-hub.atlassian.net/wiki/spaces/MTE/overview|Mobile Test Engineering>"
+                          }
+                      ]
                     }
                   ]
           text: "{task[name]} with id $taskId has finished!"
