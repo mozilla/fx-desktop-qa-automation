@@ -13,6 +13,7 @@ env
 *.zip
 *.gz
 *.7z
+*.xml
 test.sh
 file[0-9]*.txt
 
