@@ -14,8 +14,8 @@ def test_no_trackers_detected(driver: Firefox):
     """
     C446391 No trackers are detected
     """
+    # instantiate object and access url
     nav = Navigation(driver)
-    sleep(4)
     driver.get(NOTRACKERS_URL)
 
     # Click on the shield icon and verify that trackers are detected
