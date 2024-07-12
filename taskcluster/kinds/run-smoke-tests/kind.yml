@@ -44,7 +44,7 @@ tasks:
                       "type": "header",
                       "text": {
                         "type": "plain_text",
-                        "text": "firefox-desktop :firefox: ${task.metadata}\n "
+                        "text": "firefox-desktop :firefox: ${task.metadata.name}\n "
                       }
                     },
                     {
@@ -62,6 +62,13 @@ tasks:
                       "text": {
                         "type": "mrkdwn",
                         "text": "*Owner*: ${task.metadata.owner}"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "<https://github.com/mozilla/fx-desktop-qa-automation/commit/${task.metadata.headRev}|Commit>"
                       }
                     },
                     {
