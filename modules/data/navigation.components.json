@@ -184,5 +184,18 @@
         "selectorData": "//div[@data-text-ad]//a",
         "strategy": "xpath",
         "groups": []
+    },
+
+    "shield-icon": {
+        "selectorData": "tracking-protection-icon-container",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cryptominers": {
+        "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked",
+        "strategy": "css",
+        "groups": []
     }
+
 }
