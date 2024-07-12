@@ -196,6 +196,11 @@
         "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked",
         "strategy": "css",
         "groups": []
-    }
+    },
 
+    "no-trackers-detected": {
+        "selectorData": "protections-popup-no-trackers-found-description",
+        "strategy": "id",
+        "groups": []
+    }
 }
