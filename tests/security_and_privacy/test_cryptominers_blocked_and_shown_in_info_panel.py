@@ -2,7 +2,7 @@ from time import sleep
 from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 
-url = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
+cryptominers_url = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
 
 
 def test_cryptominers_blocked_and_shown_in_info_panel(driver: Firefox):
@@ -11,8 +11,8 @@ def test_cryptominers_blocked_and_shown_in_info_panel(driver: Firefox):
     """
     # Access URL, needed sleep otherwise cryptomining will be displayed as unblocked
     nav = Navigation(driver)
-    sleep(2)
-    driver.get(url)
+    sleep(4)
+    driver.get(cryptominers_url)
 
     # Click on the shield icon and verify that cryptominers are blocked
     with driver.context(driver.CONTEXT_CHROME):
