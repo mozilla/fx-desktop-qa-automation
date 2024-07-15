@@ -1,3 +1,5 @@
+from typing import Union
+
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -17,6 +19,14 @@ class AutofillPopup(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("doorhanger-save-button").click()
+
+    def verify_autofill_displayed(self):
+        """Confirms that autofill popup has loaded"""
+        self.element_clickable("autofill-panel")
+
+    def verify_element_displayed(self, reference: Union[str, tuple, WebElement]):
+        """Confirms that an element exists in popup"""
+        self.element_clickable(reference)
 
     def verify_no_popup_panel(self):
         """
@@ -52,6 +62,26 @@ class AutofillPopup(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ac_value = element.get_attribute("ac-value")
             return ac_value
+
+    def click_address(self) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("select-form-option").click()
+        return self
+
+    def click_clear_address(self) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("clear-address").click()
+        return self
+
+    def click_credit_card(self) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("select-form-option").click()
+        return self
+
+    def click_clear_credit_card(self) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("clear-creditcard").click()
+        return self
 
     def press_doorhanger_dropdown(self):
         """
