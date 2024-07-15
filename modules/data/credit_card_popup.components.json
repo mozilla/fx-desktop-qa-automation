@@ -13,7 +13,7 @@
     },
 
     "update-card-info-popup-button": {
-        "selectorData": "button[label=\"Update existing card\"]",
+        "selectorData": "button[label='Update existing card']",
         "strategy": "css",
         "groups": []
     },
