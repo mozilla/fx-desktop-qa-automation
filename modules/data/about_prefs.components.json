@@ -222,6 +222,36 @@
         "groups": []
     },
 
+    "custom-radio": {
+        "selectorData": "customRadio",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-checkbox": {
+        "selectorData": "contentBlockingBlockCookiesCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-checkbox": {
+        "selectorData": "contentBlockingTrackingProtectionCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "known-fingerprints-checkbox": {
+        "selectorData": "contentBlockingFingerprintersCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "suspected-fingerprints-checkbox": {
+        "selectorData": "contentBlockingFingerprintingProtectionCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
     "language-dropdown": {
         "selectorData": "primaryBrowserLocale",
         "strategy": "id",
