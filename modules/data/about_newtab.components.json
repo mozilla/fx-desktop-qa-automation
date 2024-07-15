@@ -39,7 +39,7 @@
     },
 
     "sponsored-site-card-menu-button": {
-        "selectorData": "button[class=\"context-menu-button icon\"]",
+        "selectorData": "button[class='context-menu-button icon']",
         "strategy": "css",
         "groups": [
             "doNotCache"

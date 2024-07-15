@@ -30,9 +30,9 @@ def test_clear_form(driver: Firefox, country_code: str):
 
     # Open dropdown and select first option and clear autofill form
     new_address_autofill.double_click("form-field", labels=["name"])
-    new_address_autofill.click_address()
+    address_autofill_popup.click_address()
     new_address_autofill.click("form-field", labels=["name"])
-    new_address_autofill.click_clear()
+    address_autofill_popup.click_clear_address()
     new_address_autofill.click("form-field", labels=["name"])
     # Verify that the form autofill suggestions are displayed.
-    new_address_autofill.verify_autofill_displayed()
+    address_autofill_popup.verify_element_displayed("select-form-option")

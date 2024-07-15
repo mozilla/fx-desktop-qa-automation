@@ -25,15 +25,16 @@ def test_google_withads_url_bar_us(driver: Firefox):
     nav.search("iphone")
     time.sleep(5)
     about_telemetry = AboutTelemetry(driver).open()
-    time.sleep(2)
+    time.sleep(5)
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_tab()
+    about_telemetry.switch_to_new_tab()
     about_telemetry.get_element("rawdata-tab").click()
 
     # Verify the following ping is recorded: ""browser.search.withads.urlbar": { "google:tagged": 1}".
-    json_data = util.decode_url(driver)
-    assert util.assert_json_value(
-        json_data, '$..["browser.search.withads.urlbar"].["google:tagged"]', 1
-    )
+    with driver.context(driver.CONTEXT_CONTENT):
+        json_data = util.decode_url(driver)
+        assert util.assert_json_value(
+            json_data, '$..["browser.search.withads.urlbar"].["google:tagged"]', 1
+        )
