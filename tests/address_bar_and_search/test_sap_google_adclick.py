@@ -1,5 +1,6 @@
 import time
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
@@ -8,6 +9,7 @@ from modules.page_object_about_telemetry import AboutTelemetry
 from modules.util import Utilities
 
 
+@pytest.mark.unstable
 def test_sap_google_adclick(driver: Firefox):
     """
     C1365108, Test SAP Google adclick - URL bar - US
