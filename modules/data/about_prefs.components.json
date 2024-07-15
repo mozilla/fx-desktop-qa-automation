@@ -273,6 +273,7 @@
         "groups": [
             "doNotCache"
         ]
+    },
 
     "language-dropdown": {
         "selectorData": "primaryBrowserLocale",
