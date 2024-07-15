@@ -1,10 +1,9 @@
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, PanelUi
+from modules.browser_object import PanelUi, TabBar
+from modules.page_object import AboutNewtab, AboutPrefs
 
-from modules.page_object import AboutPrefs, AboutNewtab
 
 @pytest.fixture()
 def set_prefs():
