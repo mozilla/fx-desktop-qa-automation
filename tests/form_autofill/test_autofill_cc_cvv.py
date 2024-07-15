@@ -11,7 +11,6 @@ from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
 
-@pytest.mark.unstable
 def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number

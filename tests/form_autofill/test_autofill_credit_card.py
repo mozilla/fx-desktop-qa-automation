@@ -8,7 +8,6 @@ from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
 
-@pytest.mark.unstable
 def test_autofill_credit_card(driver: Firefox):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel
