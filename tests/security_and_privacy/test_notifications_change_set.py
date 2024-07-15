@@ -19,7 +19,9 @@ def add_prefs():
 
 
 @pytest.mark.parametrize("button_data, button_text, permission", associated_labels)
-def test_notifications_allow(driver: Firefox, button_data: str, button_text: str, permission: str):
+def test_notifications_allow(
+    driver: Firefox, button_data: str, button_text: str, permission: str
+):
     """
     C159150: verifies that changing different settings allows for notifcations to be blocked
     """
