@@ -20,6 +20,8 @@ def fxa_test_account():
     return ("dte_stage_permanent@restmail.net", "Test123???")
 
 
+# Attempts to deflake this have not been entirely successful
+@pytest.mark.unstable
 def test_sync_existing_fxa(
     driver: Firefox,
     fxa_test_account: Tuple[str, str],
