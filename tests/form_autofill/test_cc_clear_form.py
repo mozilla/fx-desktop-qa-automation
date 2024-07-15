@@ -28,7 +28,7 @@ def test_clear_form_credit_card(driver: Firefox):
 
     # Open dropdown, select first option, clear autofill form and verify autofill is displayed
     new_credit_card_autofill.get_element("form-field", labels=["cc-name"]).click()
-    new_credit_card_autofill.click_credit_card()
+    autofill_popup.click_credit_card()
     new_credit_card_autofill.get_element("form-field", labels=["cc-name"]).click()
-    new_credit_card_autofill.click_clear()
-    new_credit_card_autofill.verify_autofill_displayed()
+    autofill_popup.click_clear_credit_card()
+    autofill_popup.verify_autofill_displayed()

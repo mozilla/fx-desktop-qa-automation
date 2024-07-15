@@ -24,3 +24,35 @@ class AmoThemes(BasePage):
             self.driver.find_element(By.CSS_SELECTOR, "button[label='Add']").click()
             self.driver.find_element(By.CSS_SELECTOR, "button[label='Okay']").click()
         return self
+
+
+class AmoLanguages(BasePage):
+    """
+    POM for AMO Languages
+    """
+
+    URL_TEMPLATE = "https://addons.mozilla.org/en-US/firefox/language-tools/"
+
+    def wait_for_language_page_to_load(self) -> BasePage:
+        """
+        Waits until the language page is loaded
+        """
+        self.custom_wait(timeout=20).until(
+            lambda _: self.get_element("language-addons-title") is not None
+        )
+        return self
+
+    def find_language_row_and_navigate(self, language_label: str) -> BasePage:
+        """
+        Finds the row that corresponds with the language_label and clicks into it
+        """
+        language_row = self.get_element("language-addons-row", labels=[language_label])
+        self.get_element(
+            "language-addons-row-link", parent_element=language_row
+        ).click()
+
+        # ensuring the subpage of the language is loaded
+        self.custom_wait(timeout=20).until(
+            lambda _: self.get_element("language-addons-subpage-header") is not None
+        )
+        return self

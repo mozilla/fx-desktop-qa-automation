@@ -273,5 +273,10 @@
         "groups": [
             "doNotCache"
         ]
+
+    "language-dropdown": {
+        "selectorData": "primaryBrowserLocale",
+        "strategy": "id",
+        "groups": []
     }
 }

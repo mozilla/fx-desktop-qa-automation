@@ -1,31 +1,19 @@
 {
     "form-field": {
-        "selectorData": "input[autocomplete=\"{name}\"]",
+        "selectorData": "input[autocomplete='{name}']",
         "strategy": "css",
         "groups": []
     },
 
     "submit-button": {
-        "selectorData": "input[type=\"{name}\"]",
+        "selectorData": "input[type='{name}']",
         "strategy": "css",
         "groups": []
     },
 
     "form-button": {
-        "selectorData": "button[type=\"{name}\"]",
+        "selectorData": "button[type='{name}']",
         "strategy": "css",
         "groups": []
-    },
-
-    "select-form-option": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
-        "strategy":"css",
-        "groups": []
-    },
-
-    "clear-creditcard": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
-        "strategy":"css",
-         "groups": []
     }
 }

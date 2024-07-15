@@ -18,7 +18,7 @@ def test_open_link_in_new_window(driver: Firefox):
     nav.open()
     driver.get("https://example.com")
     hyperlink = driver.find_element(By.LINK_TEXT, "More information...")
-    hyperlink_context.context_click_element(hyperlink)
+    hyperlink_context.context_click(hyperlink)
 
     # click on the open in new window option
 
@@ -49,7 +49,7 @@ def test_open_link_in_private_window(driver: Firefox):
     nav.open()
     driver.get("https://example.com")
     hyperlink = driver.find_element(By.LINK_TEXT, "More information...")
-    hyperlink_context.context_click_element(hyperlink)
+    hyperlink_context.context_click(hyperlink)
 
     # click on the open in new window option
     open_in_new_window = hyperlink_context.get_context_item(
@@ -83,7 +83,7 @@ def test_copy_link(driver: Firefox):
     nav.open()
     driver.get("https://example.com")
     hyperlink = driver.find_element(By.LINK_TEXT, "More information...")
-    hyperlink_context.context_click_element(hyperlink)
+    hyperlink_context.context_click(hyperlink)
 
     # click on the open in new window option
     open_in_new_window = hyperlink_context.get_context_item("context-menu-copy-link")
@@ -97,7 +97,7 @@ def test_copy_link(driver: Firefox):
 
     # # context click and paste
     search_bar = nav.get_awesome_bar()
-    nav.context_click_element(search_bar)
+    nav.context_click(search_bar)
 
     # paste and go
     with driver.context(driver.CONTEXT_CHROME):
