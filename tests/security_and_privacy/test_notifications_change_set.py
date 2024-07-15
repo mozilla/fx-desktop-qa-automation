@@ -1,5 +1,6 @@
-import pytest
 import logging
+
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs, GenericPage
