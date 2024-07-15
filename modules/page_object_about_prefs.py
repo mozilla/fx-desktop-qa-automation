@@ -283,3 +283,9 @@ class AboutPrefs(BasePage):
         self.get_element("prefs-button", labels=["Saved addresses"]).click()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def get_iframe(self) -> WebElement:
+        """
+        Gets the webelement for the iframe that commonly appears in about:preferences
+        """
+        return self.get_element("browser-popup")

@@ -250,5 +250,41 @@
         "selectorData": "contentBlockingFingerprintingProtectionCheckbox",
         "strategy": "id",
         "groups": []
+    },
+
+    "notifications-allow-button": {
+        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "notifications-block-button": {
+        "selectorData": "button[class='popup-notification-secondary-button footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permissions-notifications-button": {
+        "selectorData": "notificationSettingsButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites": {
+        "selectorData": "permissionsBox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites-item": {
+        "selectorData": "richlistitem[origin='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites-item-status": {
+        "selectorData": "website-status",
+        "strategy": "class",
+        "groups": []
     }
 }

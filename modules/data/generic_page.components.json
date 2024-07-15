@@ -3,5 +3,17 @@
         "selectorData": "body",
         "strategy": "tag",
         "groups": []
+    },
+
+    "authorize-notiifcations-button": {
+        "selectorData": "button[onclick='notify.authorize()']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "show-notifications-button": {
+        "selectorData": "button[onclick='notify.show()']",
+        "strategy": "css",
+        "groups": []
     }
 }

@@ -370,6 +370,22 @@ return props;
             f"Expected {expected_value}, but got {match[0].value}",
         )
 
+    def trim_url_to_last_slash(self, url: str):
+        """
+        Given a URL, it will create a copy and trim it to the first slash. It does not include the last / after trimming.
+        """
+        # Find the position of the last slash
+        last_slash_index = url.rfind("/")
+
+        # Slice the string up to and including the last slash
+        if last_slash_index != -1:
+            trimmed_url = url[:last_slash_index]
+        else:
+            logging.warn("Couldn't find the last instance of a /.")
+            trimmed_url = url
+
+        return trimmed_url
+
 
 class BrowserActions:
     """
