@@ -29,7 +29,7 @@ def test_google_withads_url_bar_us(driver: Firefox):
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_tab()
+    about_telemetry.switch_to_new_tab()
     about_telemetry.get_element("rawdata-tab").click()
 
     # Verify the following ping is recorded: ""browser.search.withads.urlbar": { "google:tagged": 1}".

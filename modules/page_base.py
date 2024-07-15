@@ -114,12 +114,14 @@ class BasePage(Page):
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
         with self.driver.context(self.context_id):
+            logging.info(f"Expecting in {self.context_id}...")
             self.wait.until(condition)
         return self
 
     def expect_not(self, condition) -> Page:
         """Use the Page's to wait until assert a condition is not true or wait until timeout"""
         with self.driver.context(self.context_id):
+            logging.info(f"Expecting NOT in {self.context_id}...")
             self.wait.until_not(condition)
         return self
 
@@ -451,7 +453,9 @@ class BasePage(Page):
             return self.find_element(*reference)
         elif isinstance(reference, WebElement):
             return reference
-        assert False, "Attempted to multiclick on something unsupported"
+        assert (
+            False
+        ), "Bad fetch: only selectors, selector names, or WebElements allowed."
 
     def multi_click(
         self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
@@ -460,25 +464,26 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
 
+            def execute_multi_click():
+                if iters == 2:
+                    self.actions.double_click(el).perform()
+                else:
+                    for _ in range(iters):
+                        self.actions.click(el)
+                    self.actions.perform()
+
             # Little cheat: if element doesn't exist in one context, try the other
-            n = 0
-            while n < 2:
-                try:
-                    n += 1
-                    if iters == 2:
-                        self.actions.double_click(el).perform()
-                    else:
-                        for _ in range(iters):
-                            self.actions.click(el)
-                        self.actions.perform()
-                    n += 1
-                except NoSuchElementException:
-                    if n > 1:
-                        raise NoSuchElementException
-                    if self.context == "chrome":
-                        self.set_content_context()
-                    else:
-                        self.set_chrome_context()
+            try:
+                execute_multi_click()
+            except NoSuchElementException:
+                opposite_context = (
+                    self.driver.CONTEXT_CONTENT
+                    if self.context == "chrome"
+                    else self.driver.CONTEXT_CHROME
+                )
+                with self.driver.context(opposite_context):
+                    execute_multi_click()
+
         return self
 
     def double_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
@@ -532,7 +537,7 @@ class BasePage(Page):
             logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
         return self
 
-    def switch_tab(self):
+    def switch_to_new_tab(self):
         """Get list of all window handles, switch to the newly opened tab"""
         handles = self.driver.window_handles
         self.driver.switch_to.window(handles[-1])

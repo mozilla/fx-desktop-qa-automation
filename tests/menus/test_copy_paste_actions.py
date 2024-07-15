@@ -58,7 +58,6 @@ def test_text_area_copy_paste(driver: Firefox):
 
     # copy the text
     text_area_fill.triple_click("street-address-textarea")
-    logging.info(f"{driver.current_url} 😇")
     text_area_fill.context_click(text_area)
     with driver.context(driver.CONTEXT_CHROME):
         context_menu.get_context_item("context-menu-copy").click()
