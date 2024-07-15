@@ -1,8 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object_navigation import Navigation
 
 NOTRACKERS_URL = "http://example.com/"
+
 
 @pytest.fixture()
 def add_prefs():
