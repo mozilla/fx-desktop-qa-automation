@@ -234,12 +234,16 @@ class TabBar(BasePage):
 
             # HACK: Can't figure out what the scrollbox selector is, but it's ~4 pixels
             #  off the edge of the menu.
-            x_start = menu.location["x"] + menu.size["width"] - 4
+            x_start = menu.size["width"] - 4
             # Grab the middle of the scrollbox area, most likely to hold the bar
-            y_start = menu.location["y"] + get_bar_y()
+            y_start = get_bar_y()
             # +Y is down, -Y is up
             sign = 1 if down else -1
-            self.actions.move_by_offset(x_start, y_start)
+
+            logging.info(f"🥶 xoffset: {x_start}, yoffset: {y_start}")
+            logging.info(f"target offset: {(sign * pixels)}")
+
+            self.actions.move_to_element_with_offset(menu, x_start, y_start)
             self.actions.click_and_hold()
             self.actions.move_by_offset(0, (sign * pixels))
             self.actions.release()

@@ -69,6 +69,14 @@
         ]
     },
 
+    "all-tabs-menu-scrollbar": {
+        "selectorData": "#alltabs-popup scrollbox",
+        "strategy": "css",
+        "groups": [
+            "allTabsMenu"
+        ]
+    },
+
     "all-tabs-entry": {
         "selectorData": "all-tabs-item",
         "strategy": "class",
