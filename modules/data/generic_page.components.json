@@ -15,5 +15,11 @@
         "selectorData": "button[onclick='notify.show()']",
         "strategy": "css",
         "groups": []
+    },
+  
+    "mediawiki-image": {
+        "selectorData": "mw-mmv-image",
+        "strategy": "class",
+        "groups": []
     }
 }

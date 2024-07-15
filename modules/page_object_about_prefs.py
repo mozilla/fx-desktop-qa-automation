@@ -46,7 +46,7 @@ class AboutPrefs(BasePage):
         def loaded(self):
             return self.root if EC.element_to_be_clickable(self.root) else False
 
-        def select_option(self, option_name: str):
+        def select_option(self, option_name: str, double_click=False):
             """Select an option in the dropdown. Does not return self."""
             if not self.dropmarker.get_attribute("open") == "true":
                 self.root.click()
@@ -58,8 +58,13 @@ class AboutPrefs(BasePage):
             if len(matching_menuitems) == 0:
                 return False
             elif len(matching_menuitems) == 1:
-                matching_menuitems[0].click()
-                self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
+                if double_click:
+                    AboutPrefs(self.driver).double_click(
+                        reference=matching_menuitems[0]
+                    )
+                else:
+                    matching_menuitems[0].click()
+                    self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
                 return self
             else:
                 raise ValueError("More than one menu item matched search string")

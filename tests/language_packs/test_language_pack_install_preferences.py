@@ -1,10 +1,16 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
+LANGUAGES = [("it", "Imposta alternative…")]
 
-def test_language_pack_install_about_preferences(driver: Firefox):
+
+@pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
+def test_language_pack_install_about_preferences(
+    driver: Firefox, shortform: str, localized_text: str
+):
     """
     C1549409: language packs can be installed from about:preferences and firefox is correctly localized
     """
@@ -49,5 +55,8 @@ def test_language_pack_install_about_preferences(driver: Firefox):
 
     # final asserts to ensure language is set
     ba.switch_to_content_context()
-    assert about_prefs.get_element("html-root").get_attribute("lang") == "it"
-    assert alternative_button.get_attribute("label") == "Imposta alternative…"
+    about_prefs.custom_wait(timeout=15).until(
+        lambda _: about_prefs.get_element("html-root").get_attribute("lang")
+        == shortform
+    )
+    assert alternative_button.get_attribute("label") == localized_text

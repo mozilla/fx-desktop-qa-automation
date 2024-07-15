@@ -1,6 +1,7 @@
 {
-      "context": "chrome",
-      "context-menu-search-selected-text": {
+    "context": "chrome",
+    "do-not-cache": true,
+    "context-menu-search-selected-text": {
         "selectorData": "context-searchselect",
         "strategy": "id",
         "groups": []

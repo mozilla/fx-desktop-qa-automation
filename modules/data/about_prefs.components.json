@@ -286,5 +286,11 @@
         "selectorData": "website-status",
         "strategy": "class",
         "groups": []
+    },
+  
+    "language-dropdown": {
+        "selectorData": "primaryBrowserLocale",
+        "strategy": "id",
+        "groups": []
     }
 }

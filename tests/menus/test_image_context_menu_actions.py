@@ -5,8 +5,14 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ImageContextMenu, Navigation, TabBar
-from modules.page_object import WikiFirefoxLogo
+from modules.page_object import GenericPage
 from modules.util import BrowserActions, Utilities
+
+LINK_IMAGE_URL = (
+    "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
+)
+LOADED_IMAGE_URL = r"https://upload\.wikimedia\.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019\.svg/\d+px-Firefox_logo%2C_2019\.svg\.png"
+SAVED_FILENAME = "Firefox_logo,_2019.svg.png"
 
 
 def test_open_image_in_new_tab(driver: Firefox):
@@ -14,7 +20,7 @@ def test_open_image_in_new_tab(driver: Firefox):
     C2637622.1: open an image in a new tab
     """
     # create objs
-    wiki_image_page = WikiFirefoxLogo(driver).open()
+    wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ImageContextMenu(driver)
     tabs = TabBar(driver)
 
@@ -22,8 +28,8 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.wait_for_page_to_load()
 
     # get the image and context click it
-    image_logo = wiki_image_page.get_image()
-    wiki_image_page.context_click_element(image_logo)
+    image_logo = wiki_image_page.get_element("mediawiki-image")
+    wiki_image_page.context_click(image_logo)
 
     # open in a new tab
     open_in_new_tab = image_context_menu.get_context_item(
@@ -36,7 +42,7 @@ def test_open_image_in_new_tab(driver: Firefox):
     tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[1])
     wiki_image_page.wait_for_page_to_load()
-    wiki_image_page.verify_opened_image_url()
+    wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
 
 
 @pytest.mark.unstable
@@ -49,7 +55,7 @@ def test_save_image_as(driver: Firefox):
     except ModuleNotFoundError:
         pytest.skip("Could not load pynput")
 
-    wiki_image_page = WikiFirefoxLogo(driver).open()
+    wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ImageContextMenu(driver)
     nav = Navigation(driver)
     ba = BrowserActions(driver)
@@ -59,8 +65,8 @@ def test_save_image_as(driver: Firefox):
     wiki_image_page.wait_for_page_to_load()
 
     # get the image and context click it
-    image_logo = wiki_image_page.get_image()
-    wiki_image_page.context_click_element(image_logo)
+    image_logo = wiki_image_page.get_element("mediawiki-image")
+    wiki_image_page.context_click(image_logo)
 
     # save it
     save_image_as = image_context_menu.get_context_item("context-menu-save-image-as")
@@ -95,7 +101,7 @@ def test_save_image_as(driver: Firefox):
     # Wait for the animation to complete
     nav.wait_for_download_animation_finish(downloads_button)
 
-    saved_image_location = util.get_saved_file_path("Firefox_logo,_2019.svg.png")
+    saved_image_location = util.get_saved_file_path(SAVED_FILENAME)
 
     util.check_file_path_validility(saved_image_location)
 
@@ -108,7 +114,7 @@ def test_copy_image_link(driver: Firefox):
     """
     # create objs
     nav = Navigation(driver).open()
-    wiki_image_page = WikiFirefoxLogo(driver).open()
+    wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ImageContextMenu(driver)
     tabs = TabBar(driver)
 
@@ -116,8 +122,8 @@ def test_copy_image_link(driver: Firefox):
     wiki_image_page.wait_for_page_to_load()
 
     # get the image and context click it
-    image_logo = wiki_image_page.get_image()
-    wiki_image_page.context_click_element(image_logo)
+    image_logo = wiki_image_page.get_element("mediawiki-image")
+    wiki_image_page.context_click(image_logo)
 
     # copy the link
     copy_image_link = image_context_menu.get_context_item(
@@ -133,7 +139,7 @@ def test_copy_image_link(driver: Firefox):
 
     # # context click and paste
     search_bar = nav.get_awesome_bar()
-    nav.context_click_element(search_bar)
+    nav.context_click(search_bar)
 
     # paste and go
     with driver.context(driver.CONTEXT_CHROME):
@@ -143,4 +149,4 @@ def test_copy_image_link(driver: Firefox):
 
     wiki_image_page.wait_for_page_to_load()
     with driver.context(driver.CONTEXT_CONTENT):
-        wiki_image_page.verify_opened_image_url()
+        wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
