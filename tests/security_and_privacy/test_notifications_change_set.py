@@ -1,4 +1,5 @@
 import pytest
+import logging
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs, GenericPage
@@ -30,6 +31,12 @@ def test_notifications_allow(driver: Firefox, button_data: str, button_text: str
     alert_page.get_element("authorize-notiifcations-button").click()
     with driver.context(driver.CONTEXT_CHROME):
         about_prefs.get_element(button_data).click()
+
+        check_notification_script = """
+    return Notification.permission;
+"""
+    permission_status = driver.execute_script(check_notification_script)
+    logging.info(f"Notification permission status: {permission_status}")
 
     about_prefs.open()
     about_prefs.get_element("permissions-notifications-button").click()
