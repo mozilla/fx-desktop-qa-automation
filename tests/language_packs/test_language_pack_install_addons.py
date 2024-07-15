@@ -57,7 +57,7 @@ def test_language_pack_install_from_addons(
     about_prefs = AboutPrefs(driver, category="general").open()
     language_dropdown = about_prefs.get_element("language-dropdown")
     dropdown = about_prefs.Dropdown(page=about_prefs, root=language_dropdown)
-    dropdown.select_option(drop_down_name, double_click=True)
+    dropdown.select_option(drop_down_name, double_click=True, wait_for_selection=False)
 
     about_prefs.custom_wait(timeout=15).until(
         lambda _: about_prefs.get_element("html-root").get_attribute("lang")
