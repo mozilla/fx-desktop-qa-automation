@@ -39,5 +39,17 @@
         "selectorData": "button[data-l10n-id='install-theme-button']",
         "strategy": "css",
         "groups": []
+    },
+
+    "languages-addon-list": {
+        "selectorData": "locale-enabled-section",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "languages-addon-list-card": {
+        "selectorData": "addon-card",
+        "strategy": "tag",
+        "groups": []
     }
 }

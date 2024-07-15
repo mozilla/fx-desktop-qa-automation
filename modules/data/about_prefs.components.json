@@ -256,5 +256,11 @@
         "selectorData": "contentBlockingFingerprintingProtectionCheckbox",
         "strategy": "id",
         "groups": []
+    },
+
+    "language-dropdown": {
+        "selectorData": "primaryBrowserLocale",
+        "strategy": "id",
+        "groups": []
     }
 }
