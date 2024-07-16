@@ -2,6 +2,8 @@
     "login-input-field": {
         "selectorData": "input[autocomplete='{name}']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     }
 }

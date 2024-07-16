@@ -16,6 +16,7 @@ pypom = "*"
 jsonpath-ng = "*"
 pillow = "*"
 pyfxa = "*"
+pytest-rerunfailures = "*"
 
 [dev-packages]
 werkzeug = "*"
