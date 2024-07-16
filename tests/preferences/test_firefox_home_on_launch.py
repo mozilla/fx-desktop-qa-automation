@@ -33,9 +33,9 @@ def test_firefox_home_on_launch(driver: Firefox, sys_platform: str):
     assert drop_down.get_attribute("label") == "Firefox Home (Default)"
     panel_ui.open_panel_menu()
     panel_ui.select_panel_setting("panel-ui-new-window")
-    # # wait for the number of tabs and switch
+    # wait for the number of tabs and switch
     tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[-1])
-    # sleep(10)
+
     # make sure we are on the correct new tab page
     assert new_tab.get_element("body-logo") is not None
