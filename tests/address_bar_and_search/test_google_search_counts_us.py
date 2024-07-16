@@ -22,7 +22,7 @@ def test_google_search_counts_us(driver: Firefox):
     about_telemetry = AboutTelemetry(driver).open()
     sleep(2)
     about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_tab()
+    about_telemetry.switch_to_new_tab()
     about_telemetry.get_element("rawdata-tab").click()
 
     # Verify pings are recorded

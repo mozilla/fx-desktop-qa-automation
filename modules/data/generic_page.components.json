@@ -3,5 +3,11 @@
         "selectorData": "body",
         "strategy": "tag",
         "groups": []
+    },
+
+    "mediawiki-image": {
+        "selectorData": "mw-mmv-image",
+        "strategy": "class",
+        "groups": []
     }
 }
