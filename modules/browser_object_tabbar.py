@@ -224,26 +224,18 @@ class TabBar(BasePage):
             logging.info(f"menu location: {menu.location}")
             logging.info(f"menu size: {menu.size}")
 
-            def get_bar_y():
-                return min(
-                    [
-                        menu.size["height"] // 2,
-                        self.driver.get_window_size()["height"] // 2,
-                    ]
-                )
-
             # HACK: Can't figure out what the scrollbox selector is, but it's ~4 pixels
             #  off the edge of the menu.
-            x_start = menu.size["width"] - 4
-            # Grab the middle of the scrollbox area, most likely to hold the bar
-            y_start = get_bar_y()
+            x_start = (menu.size["width"] / 2.0) - 4.0
             # +Y is down, -Y is up
             sign = 1 if down else -1
 
-            logging.info(f"🥶 xoffset: {x_start}, yoffset: {y_start}")
-            logging.info(f"target offset: {(sign * pixels)}")
+            # Get device pixel ratio
+            device_pixel_ratio = self.driver.execute_script(
+                "return window.devicePixelRatio;"
+            )
 
-            self.actions.move_to_element_with_offset(menu, x_start, y_start)
+            self.actions.move_to_element_with_offset(menu, x_start, 0)
             self.actions.click_and_hold()
             self.actions.move_by_offset(0, (sign * pixels))
             self.actions.release()

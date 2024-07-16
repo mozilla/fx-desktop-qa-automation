@@ -65,12 +65,8 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     entry_out_of_view = False
     with driver.context(driver.CONTEXT_CHROME):
         tabs.open_all_tabs_list()
-        sleep(20)
-        screenshot("list-all-tabs")
-        for _ in range(10):
+        for _ in range(3):
             all_tabs_menu = tabs.get_element("all-tabs-menu")
-            with open("list-all-tabs.html", "w") as fh:
-                fh.write(driver.page_source)
             tabs.scroll_on_all_tabs_menu(down=False)
             about_about_location = tabs.get_location_of_all_tabs_entry(selected=True)
             all_tabs_menu = tabs.get_element("all-tabs-menu")
