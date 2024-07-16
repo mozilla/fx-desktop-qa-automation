@@ -107,6 +107,12 @@
         "selectorData": "toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']",
         "strategy": "css",
         "groups": []
+    },
+
+    "panel-ui-new-private-window": {
+        "selectorData": "appMenu-new-private-window-button2",
+        "strategy": "id",
+        "groups": []
     }
 
 }

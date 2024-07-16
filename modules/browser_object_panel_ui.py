@@ -132,3 +132,12 @@ class PanelUi(BasePage):
             self.element_has_text("fxa-sync-label", "Sync now")
             self.get_element("fxa-sync-label").click()
         return self
+
+    def open_private_window(self) -> BasePage:
+        """
+        Opens a new window in private browsing mode using the panel
+        """
+        self.open_panel_menu()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("panel-ui-new-private-window").click()
+        return self

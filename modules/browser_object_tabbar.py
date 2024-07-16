@@ -244,3 +244,12 @@ class TabBar(BasePage):
             self.actions.move_by_offset(0, (sign * pixels))
             self.actions.release()
             self.actions.perform()
+
+    def close_tab_of_index(self, index: int) -> BasePage:
+        """
+        Given the index of the tab, it closes that tab.
+        """
+        cur_tab = self.click_tab_by_index(index)
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("tab-x-icon", parent_element=cur_tab).click()
+        return self
