@@ -5,7 +5,7 @@
         "groups": []
     },
 
-    "authorize-notiifcations-button": {
+    "authorize-notifications-button": {
         "selectorData": "button[onclick='notify.authorize()']",
         "strategy": "css",
         "groups": []
@@ -16,7 +16,7 @@
         "strategy": "css",
         "groups": []
     },
-  
+
     "mediawiki-image": {
         "selectorData": "mw-mmv-image",
         "strategy": "class",

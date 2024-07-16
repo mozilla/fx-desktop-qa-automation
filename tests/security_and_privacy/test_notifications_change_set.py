@@ -36,8 +36,8 @@ def test_notifications_allow(
         about_prefs.get_element(button_data).click()
 
     check_notification_script = """
-    return Notification.permission;
-"""
+        return Notification.permission;
+    """
     permission_status = driver.execute_script(check_notification_script)
 
     logging.info(f"Notification permission status: {permission_status}")
