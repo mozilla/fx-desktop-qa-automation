@@ -41,7 +41,8 @@ def test_tls_v1_2_protocol(driver: Firefox):
             EC.presence_of_element_located((By.ID, "security-technical-shortform"))
         )
 
-        expected_technical_details = "Connection Encrypted (TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, 128 bit keys, TLS 1.2)"
+        expected_technical_details = ("Connection Encrypted (TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, 256 bit keys, "
+                                      "TLS 1.2)")
         assert (
             technical_details.get_attribute("value") == expected_technical_details
         ), f"Expected '{expected_technical_details}' but found '{technical_details.get_attribute('value')}'"
