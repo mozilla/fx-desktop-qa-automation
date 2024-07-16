@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import TabBar
 
+ROBOT_TAB = 16
+
 
 def test_list_all_tabs(driver: Firefox, screenshot):
     """
@@ -16,8 +18,8 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     driver.get("about:blank")
     for _ in range(17):
         tabs.new_tab_by_button()
-    driver.switch_to.window(driver.window_handles[14])
-    target_tab = tabs.get_tab(15)
+    driver.switch_to.window(driver.window_handles[ROBOT_TAB - 1])
+    target_tab = tabs.get_tab(ROBOT_TAB)
     driver.get("about:robots")
     with driver.context(driver.CONTEXT_CHROME):
         assert tabs.get_tab_title(target_tab).startswith("Gort")
@@ -32,7 +34,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     for _ in range(40):
         tabs.scroll_tabs(tabs.SCROLL_DIRECTION.LEFT)
         with driver.context(driver.CONTEXT_CHROME):
-            if target_tab.location["x"] > driver.get_window_size()["width"]:
+            if target_tab.location["x"] > (driver.get_window_size()["width"]):
                 logging.info(
                     f"Tab location {target_tab.location['x']} should be greater..."
                 )
