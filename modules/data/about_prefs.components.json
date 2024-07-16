@@ -252,6 +252,18 @@
         "groups": []
     },
 
+    "notifications-allow-button": {
+        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "notifications-block-button": {
+        "selectorData": "button[class='popup-notification-secondary-button footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "cookies-shadow-root": {
         "selectorData": "dialog[buttons='accept,cancel']",
         "strategy": "css",
@@ -273,18 +285,6 @@
         "groups": [
             "doNotCache"
         ]
-    },
-
-    "notifications-allow-button": {
-        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "notifications-block-button": {
-        "selectorData": "button[class='popup-notification-secondary-button footer-button']",
-        "strategy": "css",
-        "groups": []
     },
 
     "permissions-notifications-button": {
@@ -310,7 +310,7 @@
         "strategy": "class",
         "groups": []
     },
-  
+
     "language-dropdown": {
         "selectorData": "primaryBrowserLocale",
         "strategy": "id",
