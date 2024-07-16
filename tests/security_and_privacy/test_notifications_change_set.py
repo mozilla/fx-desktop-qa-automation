@@ -31,7 +31,7 @@ def test_notifications_allow(
     alert_page = GenericPage(driver, url=NOTIFICATIONS_SITE).open()
     about_prefs = AboutPrefs(driver, category="privacy")
 
-    alert_page.get_element("authorize-notiifcations-button").click()
+    alert_page.get_element("authorize-notifications-button").click()
     with driver.context(driver.CONTEXT_CHROME):
         about_prefs.get_element(button_data).click()
 
