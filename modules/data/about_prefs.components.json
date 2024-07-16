@@ -263,6 +263,20 @@
         "strategy": "css",
         "groups": []
     },
+      
+    "cookies-shadow-root": {
+        "selectorData": "dialog[buttons='accept,cancel']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "clear-data-dialog-options": {
+        "selectorData": "hbox.checkbox-label-box",
+        "strategy": "css",
+        "groups": []
+    },
 
     "permissions-notifications-button": {
         "selectorData": "notificationSettingsButton",
@@ -288,6 +302,15 @@
         "groups": []
     },
   
+    "clear-data-accept-button": {
+        "selectorData": "[class='button-text'][value='Clear']",
+        "strategy": "css",
+        "shadowParent": "cookies-shadow-root",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "language-dropdown": {
         "selectorData": "primaryBrowserLocale",
         "strategy": "id",

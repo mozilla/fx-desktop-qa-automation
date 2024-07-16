@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.page_base import BasePage
-from modules.util import PomUtils
+from modules.util import BrowserActions, PomUtils
 
 
 class AboutPrefs(BasePage):
@@ -289,8 +289,35 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
+
     def get_iframe(self) -> WebElement:
         """
         Gets the webelement for the iframe that commonly appears in about:preferences
         """
         return self.get_element("browser-popup")
+
+    
+    def get_clear_cookie_data_value(self) -> int:
+        """
+        With the 'Clear browsing data and cookies' popup open,
+        returns the <memory used> value of the option for 'Cookies and site data (<memory used>)'.
+        The <memory used> value for no cookies is '0 bytes', otherwise values are '### MB', or '### KB'
+        """
+        # Find the dialog option elements containing the checkbox label
+        options = self.get_elements("clear-data-dialog-options")
+
+        # Extract the text from the label the second option
+        second_option = options[1]
+        label_text = second_option.text
+        print(f"The text of the option is: {label_text}")
+
+        # Use a regular expression to find the memory usage
+        match = re.search(r"\d+", label_text)
+
+        if match:
+            number_str = match.group()  # Extract the matched number as a string
+            number = int(number_str)  # Convert the number to an integer
+            print(f"The extracted value is: {number}")
+            return number
+        else:
+            print("No number found in the string")
