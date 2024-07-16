@@ -46,7 +46,9 @@ class AboutPrefs(BasePage):
         def loaded(self):
             return self.root if EC.element_to_be_clickable(self.root) else False
 
-        def select_option(self, option_name: str, double_click=False):
+        def select_option(
+            self, option_name: str, double_click=False, wait_for_selection=True
+        ):
             """Select an option in the dropdown. Does not return self."""
             if not self.dropmarker.get_attribute("open") == "true":
                 self.root.click()
@@ -64,6 +66,7 @@ class AboutPrefs(BasePage):
                     )
                 else:
                     matching_menuitems[0].click()
+                if wait_for_selection:
                     self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
                 return self
             else:

@@ -53,6 +53,18 @@ class TabBar(BasePage):
             ).perform()
         return self
 
+    def new_window_by_keys(self, sys_platform: str) -> BasePage:
+        """Use keyboard shortcut to open a new tab"""
+        if sys_platform == "Darwin":
+            self.actions.key_down(Keys.COMMAND).send_keys("n").key_up(
+                Keys.COMMAND
+            ).perform()
+        else:
+            self.actions.key_down(Keys.CONTROL).send_keys("n").key_up(
+                Keys.CONTROL
+            ).perform()
+        return self
+
     def click_tab_by_title(self, title: str) -> BasePage:
         """Given a full page title, click the corresponding tab"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
