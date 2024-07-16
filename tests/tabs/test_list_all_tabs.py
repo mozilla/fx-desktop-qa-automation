@@ -8,7 +8,6 @@ from selenium.webdriver.common.keys import Keys
 from modules.browser_object import TabBar
 
 
-@pytest.mark.unstable
 def test_list_all_tabs(driver: Firefox, screenshot):
     """
     C134655, check that the List All Tabs button and menu act as expected.
