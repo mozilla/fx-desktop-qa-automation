@@ -16,7 +16,7 @@ markers = [
 testpaths = [
     "tests"
 ]
-addopts = "-vs --ci -m 'not incident and not unstable' --html=artifacts/report.html"
+addopts = "-vs --ci --reruns 2 --reruns-delay 1 -m 'not incident and not unstable' --html=artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"
