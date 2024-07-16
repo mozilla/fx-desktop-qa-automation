@@ -56,7 +56,7 @@ def test_notifications_allow(
 
     website_item = about_prefs.get_element(
         "permissions-notifications-popup-websites-item",
-        labels=[util.trim_url_to_last_slash(NOTIFICATIONS_SITE)],
+        labels=[util.get_domain_from_url(NOTIFICATIONS_SITE)],
     )
 
     notification_website_status = about_prefs.get_element(

@@ -7,6 +7,7 @@ import re
 from os import remove
 from random import shuffle
 from typing import List, Literal, Union
+from urllib.parse import urlparse, urlunparse
 
 from faker import Faker
 from faker.providers import internet, misc
@@ -370,21 +371,15 @@ return props;
             f"Expected {expected_value}, but got {match[0].value}",
         )
 
-    def trim_url_to_last_slash(self, url: str):
+    def get_domain_from_url(self, url: str) -> str:
         """
-        Given a URL, it will create a copy and trim it to the first slash. It does not include the last / after trimming.
+        Given a URL, it will extract the domain of the URL.
+
+        For example, "https://www.example.com/path/to/page?query=123#fragment" will product "https://www.example.com"
         """
-        # Find the position of the last slash
-        last_slash_index = url.rfind("/")
-
-        # Slice the string up to and including the last slash
-        if last_slash_index != -1:
-            trimmed_url = url[:last_slash_index]
-        else:
-            logging.warn("Couldn't find the last instance of a /.")
-            trimmed_url = url
-
-        return trimmed_url
+        parsed_url = urlparse(url)
+        domain_parsed_url = parsed_url._replace(path="")
+        return urlunparse(domain_parsed_url)
 
 
 class BrowserActions:
