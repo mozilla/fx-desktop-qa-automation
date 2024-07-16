@@ -230,11 +230,6 @@ class TabBar(BasePage):
             # +Y is down, -Y is up
             sign = 1 if down else -1
 
-            # Get device pixel ratio
-            device_pixel_ratio = self.driver.execute_script(
-                "return window.devicePixelRatio;"
-            )
-
             self.actions.move_to_element_with_offset(menu, x_start, 0)
             self.actions.click_and_hold()
             self.actions.move_by_offset(0, (sign * pixels))
