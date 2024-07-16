@@ -9,11 +9,6 @@ from modules.page_object_about_prefs import AboutPrefs
 CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 def test_blocking_cryptominers(driver: Firefox):
     # instantiate objects
     nav = Navigation(driver).open()

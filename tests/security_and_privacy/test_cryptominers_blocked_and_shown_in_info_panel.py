@@ -8,11 +8,6 @@ from modules.browser_object_navigation import Navigation
 CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 def test_cryptominers_blocked_and_shown_in_info_panel(driver: Firefox):
     """
     C450232: Cryptominers are blocked and shown in Standard mode in the Information pannel

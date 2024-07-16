@@ -6,11 +6,6 @@ from modules.browser_object_navigation import Navigation
 NOTRACKERS_URL = "http://example.com/"
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 def test_no_trackers_detected(driver: Firefox):
     """
     C446391 No trackers are detected

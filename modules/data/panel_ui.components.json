@@ -41,6 +41,12 @@
         ]
     },
 
+    "new-private-window-option": {
+        "selectorData": "appMenu-new-private-window-button2",
+        "strategy": "id",
+        "groups": []
+    },
+
     "more-tools": {
         "selectorData": "appMenu-more-button2",
         "strategy": "id",
