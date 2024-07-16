@@ -1,5 +1,6 @@
 {
     "context": "chrome",
+    "do-not-cache": true,
     "context-menu-open-image-in-new-tab": {
         "selectorData": "context-viewimage",
         "strategy": "id",

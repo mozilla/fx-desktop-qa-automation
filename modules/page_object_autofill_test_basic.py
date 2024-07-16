@@ -67,16 +67,6 @@ class AddressFill(Autofill):
         self.actions.click(elem).perform()
         return self
 
-    def click_address(self) -> Autofill:
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("select-address").click()
-        return self
-
-    def click_clear(self) -> Autofill:
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("clear-address").click()
-        return self
-
     def verify_autofill_displayed(self):
         """
         Verifies that the autofill suggestions are displayed.

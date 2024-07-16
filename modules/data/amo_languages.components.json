@@ -1,0 +1,39 @@
+{
+    "language-addons-title": {
+        "selectorData": "Card-header-text",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "language-addons-row": {
+        "selectorData": "tr[class='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-addons-row-link": {
+        "selectorData": "a",
+        "strategy": "tag",
+        "groups": []
+    },
+
+    "language-addons-subpage-add-to-firefox": {
+        "selectorData": "div[class='AMInstallButton AMInstallButton--noDownloadLink']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-install-popup-add": {
+        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "language-addons-subpage-header": {
+        "selectorData": "AddonTitle",
+        "strategy": "class",
+        "groups": []
+    }
+}
