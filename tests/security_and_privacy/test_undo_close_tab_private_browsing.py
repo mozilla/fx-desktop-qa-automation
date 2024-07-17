@@ -31,16 +31,14 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
     tabs.switch_to_new_tab()
 
     # navigate to the URL
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.search(VISIT_URL)
+    nav.search(VISIT_URL)
 
     # ensure its loaded
     generic_page.url_contains("about:about")
 
     # close the most recent window
-    with driver.context(driver.CONTEXT_CHROME):
-        cur_tab = tabs.get_tab_by_title("About About")
-        tabs.close_tab(cur_tab)
+    cur_tab = tabs.get_tab_by_title("About About")
+    tabs.close_tab(cur_tab)
 
     # ensuring that one of the tabs was closed properly
     tabs.wait_for_num_tabs(2)
