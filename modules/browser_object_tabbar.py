@@ -53,11 +53,28 @@ class TabBar(BasePage):
             ).perform()
         return self
 
+    def reopen_closed_tab_by_keys(self, sys_platform: str) -> BasePage:
+        """Use keyboard shortcut to reopen a last closed tab"""
+        if sys_platform == "Darwin":
+            self.actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).send_keys(
+                "t"
+            ).key_up(Keys.SHIFT).key_up(Keys.COMMAND).perform()
+        else:
+            self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys(
+                "t"
+            ).key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+        return self
+
     def click_tab_by_title(self, title: str) -> BasePage:
         """Given a full page title, click the corresponding tab"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("tab-by-title", labels=[title]).click()
         return self
+
+    def get_tab_by_title(self, title: str) -> BasePage:
+        """Given a full page title, return the corresponding tab"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            return self.get_element("tab-by-title", labels=[title])
 
     def click_tab_by_index(self, index: int) -> BasePage:
         """Given a tab index (int), click the corresponding tab"""
@@ -245,11 +262,11 @@ class TabBar(BasePage):
             self.actions.release()
             self.actions.perform()
 
-    def close_tab_of_index(self, index: int) -> BasePage:
+    def close_tab(self, tab: WebElement) -> BasePage:
         """
         Given the index of the tab, it closes that tab.
         """
-        cur_tab = self.click_tab_by_index(index)
+        # cur_tab = self.click_tab_by_index(index)
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("tab-x-icon", parent_element=cur_tab).click()
+            self.get_element("tab-x-icon", parent_element=tab).click()
         return self

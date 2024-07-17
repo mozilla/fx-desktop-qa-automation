@@ -1,24 +1,10 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation, PanelUi, TabBar
+from modules.page_object import GenericPage
 
 VISIT_URL = "about:about"
-
-links = [
-    "about:about",
-    "about:addons",
-    "about:cache",
-    "about:config",
-    "about:buildconfig",
-    "about:robots",
-    "about:blank",
-]
-
-link_set = set(links)
 
 
 @pytest.fixture()
@@ -26,14 +12,15 @@ def add_prefs():
     return []
 
 
-def test_undo_close_tab_private_browsing(driver: Firefox):
+def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
     """
     C120118: ensure that you can close a tab in private browsing window
     """
     # instantiate objs
-    panel_ui = PanelUi(driver)
-    nav = Navigation(driver).open()
+    panel_ui = PanelUi(driver).open()
+    nav = Navigation(driver)
     tabs = TabBar(driver)
+    generic_page = GenericPage(driver, url="about:about")
 
     # open a new private window and open a new tab
     panel_ui.open_private_window()
@@ -43,16 +30,24 @@ def test_undo_close_tab_private_browsing(driver: Firefox):
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
-    # navigate to the URL NOTE: TEMPORARY GET AWESOME BAR PRIVATE. ADD SUPPORT FOR IT IN NAVIGATION
+    # navigate to the URL
     with driver.context(driver.CONTEXT_CHROME):
-        search_bar = nav.get_element("awesome-bar-private")
-        search_bar.send_keys(VISIT_URL + Keys.ENTER)
-    tabs.wait_for_num_tabs(3)
-    # tabs.switch_to_new_tab()
-    # for _ in range(100):
-    #     print(len(driver.window_handles))
-    #     sleep(0.5)
+        nav.search(VISIT_URL)
 
-    tabs.close_tab_of_index(0)
+    # ensure its loaded
+    generic_page.url_contains("about:about")
 
-    sleep(40)
+    # close the most recent window
+    with driver.context(driver.CONTEXT_CHROME):
+        cur_tab = tabs.get_tab_by_title("About About")
+        tabs.close_tab(cur_tab)
+
+    # ensuring that one of the tabs was closed properly
+    tabs.wait_for_num_tabs(2)
+    assert len(driver.window_handles) == 2
+
+    # ensure the last tab can be reopened
+    with driver.context(driver.CONTEXT_CHROME):
+        tabs.reopen_closed_tab_by_keys(sys_platform)
+        tabs.wait_for_num_tabs(2)
+        assert driver.title == "About About — Private Browsing"
