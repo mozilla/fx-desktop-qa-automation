@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,7 +26,7 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
 
     # open a new private window and open a new tab
     panel_ui.open_private_window()
-    tabs.switch_to_new_tab()
+    tabs.switch_to_new_window()
 
     # open a new tab
     tabs.new_tab_by_button()
@@ -48,4 +50,9 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
     with driver.context(driver.CONTEXT_CHROME):
         tabs.reopen_closed_tab_by_keys(sys_platform)
         tabs.wait_for_num_tabs(2)
-        assert driver.title == "About About — Private Browsing"
+        tabs.switch_to_new_tab()
+        logging.info(f"The observed title in the chrome context is {driver.title}")
+        tabs.title_contains("Private Browsing")
+
+    logging.info(f"The observed title in the content context is {driver.title}")
+    generic_page.title_contains("About About")

@@ -391,6 +391,11 @@ class BasePage(Page):
         self.expect(EC.url_contains(url_part))
         return self
 
+    def title_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect(EC.title_contains(url_part))
+        return self
+
     def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
         """
         Given a part of a URL and a regex, wait for that substring to exist in
@@ -545,11 +550,13 @@ class BasePage(Page):
 
     def wait_for_num_windows(self, num: int) -> Page:
         """Wait for the number of open tabs + windows to equal given int"""
-        return self.wait_for_num_tabs(num)
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            return self.wait_for_num_tabs(num)
 
     def switch_to_new_window(self) -> Page:
         """Switch to newest window"""
-        return self.switch_to_new_tab()
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            return self.switch_to_new_tab()
 
     def hide_popup(self, context_menu: str, chrome=False) -> Page:
         """
