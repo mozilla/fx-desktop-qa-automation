@@ -5,6 +5,18 @@
         "groups": []
     },
 
+    "authorize-notifications-button": {
+        "selectorData": "button[onclick='notify.authorize()']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "show-notifications-button": {
+        "selectorData": "button[onclick='notify.show()']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "mediawiki-image": {
         "selectorData": "mw-mmv-image",
         "strategy": "class",

@@ -316,3 +316,9 @@ class AboutPrefs(BasePage):
             return number
         else:
             print("No number found in the string")
+
+    def get_iframe(self) -> WebElement:
+        """
+        Gets the webelement for the iframe that commonly appears in about:preferences
+        """
+        return self.get_element("browser-popup")
