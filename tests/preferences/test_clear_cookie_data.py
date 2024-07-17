@@ -27,7 +27,7 @@ def test_clear_cookie_data(driver: Firefox):
 
     # Check for a non-zero value of the 'Cookies and site data' option
     cookie_value = about_prefs.get_clear_cookie_data_value()
-    assert cookie_value is not 0
+    assert cookie_value != 0
 
     # Then clear the cookies and site data
     about_prefs.get_element("clear-data-accept-button").click()
@@ -35,4 +35,4 @@ def test_clear_cookie_data(driver: Firefox):
     # Finally, check the value of the dialog option, it should be 0
     open_clear_cookies_data_dialog()
     cookie_value2 = about_prefs.get_clear_cookie_data_value()
-    assert cookie_value2 is 0
+    assert cookie_value2 == 0
