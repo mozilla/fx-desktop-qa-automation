@@ -16,12 +16,12 @@ pypom = "*"
 jsonpath-ng = "*"
 pillow = "*"
 pyfxa = "*"
+ruff = "0.5.2"
 pytest-rerunfailures = "*"
 
 [dev-packages]
 werkzeug = "*"
 selenium-wire = "*"
 pdoc = "*"
-ruff = "0.4.3"
 pytest-variables = "*"
 taskcluster-taskgraph = "*"

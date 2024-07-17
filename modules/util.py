@@ -7,6 +7,7 @@ import re
 from os import remove
 from random import shuffle
 from typing import List, Literal, Union
+from urllib.parse import urlparse, urlunparse
 
 from faker import Faker
 from faker.providers import internet, misc
@@ -369,6 +370,16 @@ return props;
             match[0].value == expected_value,
             f"Expected {expected_value}, but got {match[0].value}",
         )
+
+    def get_domain_from_url(self, url: str) -> str:
+        """
+        Given a URL, it will extract the domain of the URL.
+
+        For example, "https://www.example.com/path/to/page?query=123#fragment" will product "https://www.example.com"
+        """
+        parsed_url = urlparse(url)
+        domain_parsed_url = parsed_url._replace(path="")
+        return urlunparse(domain_parsed_url)
 
 
 class BrowserActions:

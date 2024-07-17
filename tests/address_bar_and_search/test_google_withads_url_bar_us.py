@@ -1,4 +1,4 @@
-import time
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -23,9 +23,9 @@ def test_google_withads_url_bar_us(driver: Firefox):
     util = Utilities()
 
     nav.search("iphone")
-    time.sleep(5)
+    sleep(5)
     about_telemetry = AboutTelemetry(driver).open()
-    time.sleep(5)
+    sleep(5)
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry.get_element("category-raw").click()

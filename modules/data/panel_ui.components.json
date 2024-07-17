@@ -91,6 +91,12 @@
         ]
     },
 
+    "panel-ui-new-window": {
+        "selectorData": "appMenu-new-window-button2",
+        "strategy": "id",
+        "groups": []
+    },
+
     "panel-ui-history": {
         "selectorData": "appMenu-history-button",
         "strategy": "id",
