@@ -14,6 +14,7 @@ def test_open_link_in_private_window(driver: Firefox):
     example.context_click("more-information")
     context_menu.click_context_item("context-menu-open-link-in-new-private-window")
     nav.wait_for_num_windows(2)
+    # context_menu.hide_popup_by_child_node("context-menu-open-link-in-new-private-window")
     nav.switch_to_new_window()
     with driver.context(driver.CONTEXT_CHROME):
         pass
