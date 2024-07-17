@@ -202,5 +202,23 @@
         "selectorData": "protections-popup-no-trackers-found-description",
         "strategy": "id",
         "groups": []
+    },
+
+    "lock-icon": {
+    "selectorData": "identity-icon",
+    "strategy": "id",
+    "groups": []
+    },
+
+    "connection-secure-button": {
+        "selectorData": "identity-popup-security-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "more-information-button": {
+        "selectorData": "identity-popup-more-info",
+        "strategy": "id",
+        "groups": []
     }
 }
