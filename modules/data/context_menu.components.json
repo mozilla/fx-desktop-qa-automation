@@ -7,6 +7,12 @@
         "groups": []
     },
 
+    "context-menu-open-link-in-new-private-window": {
+        "selectorData": "context-openlinkprivate",
+        "strategy": "id",
+        "groups": []
+    },
+
     "context-menu-inspect": {
         "selectorData": "context-inspect",
         "strategy": "id",
