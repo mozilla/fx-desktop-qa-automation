@@ -28,3 +28,11 @@ class ContextMenu(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.fetch(reference, labels=labels).click()
             return self
+
+    def click_and_hide(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.fetch(reference, labels=labels).click()
+            self.hide_popup_by_child_node(reference, labels=labels)
+            return self
