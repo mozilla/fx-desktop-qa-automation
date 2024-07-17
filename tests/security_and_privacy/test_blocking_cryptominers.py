@@ -1,17 +1,11 @@
 from time import sleep
 
-import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs
 
 CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
-
-
-@pytest.fixture()
-def add_prefs():
-    return []
 
 
 def test_blocking_cryptominers(driver: Firefox):
