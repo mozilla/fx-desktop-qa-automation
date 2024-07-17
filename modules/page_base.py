@@ -537,10 +537,19 @@ class BasePage(Page):
             logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
         return self
 
-    def switch_to_new_tab(self):
+    def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
         handles = self.driver.window_handles
         self.driver.switch_to.window(handles[-1])
+        return self
+
+    def wait_for_num_windows(self, num: int) -> Page:
+        """Wait for the number of open tabs + windows to equal given int"""
+        return self.wait_for_num_tabs(num)
+
+    def switch_to_new_window(self) -> Page:
+        """Switch to newest window"""
+        return self.switch_to_new_tab()
 
     def hide_popup(self, context_menu: str, chrome=False) -> Page:
         """

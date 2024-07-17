@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.page_base import BasePage
-from modules.util import BrowserActions, PomUtils
+from modules.util import PomUtils
 
 
 class AboutPrefs(BasePage):

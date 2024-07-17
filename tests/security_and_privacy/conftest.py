@@ -7,6 +7,11 @@ def suite_id():
 
 
 @pytest.fixture()
+def add_prefs():
+    return []
+
+
+@pytest.fixture()
 def set_prefs(add_prefs: dict):
     """Set prefs"""
     prefs = []

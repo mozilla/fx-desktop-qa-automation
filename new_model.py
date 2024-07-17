@@ -6,7 +6,7 @@ import os
 import re
 import sys
 
-SNAKE_RE = re.compile(r"^[a-z](_[a-z])*[a-z]$")
+SNAKE_RE = re.compile(r"^[a-z]+([_a-z][a-z])*$")
 PASCAL_RE = re.compile(r"^[A-Z][a-zA-Z]*[a-z]$")
 
 
@@ -61,20 +61,38 @@ if len(sys.argv) > 1:
 
 
 if __name__ == "__main__":
+    first = True
+    second = False
     while not model_type:
+        if second:
+            print("Please enter POM or BOM.")
         resp = input("What type of model is this? ")
         resp = resp.strip().lower()
         if resp not in ["pom", "bom"]:
             resp = None
         model_type = resp
+        if second:
+            second = False
+        if first:
+            first = False
+            second = True
 
+    first = True
+    second = False
     while not model_name:
+        if second:
+            print("Please enter the name in either snake_case or PascalCase.")
         resp = input("What is the name of the model? ")
         resp = resp.strip()
         if SNAKE_RE.match(resp):
             model_name = resp
         elif PASCAL_RE.match(resp):
             model_name = snakify(resp)
+        if second:
+            second = False
+        if first:
+            first = False
+            second = True
 
     model_type_name = "page" if model_type == "pom" else "browser"
 
