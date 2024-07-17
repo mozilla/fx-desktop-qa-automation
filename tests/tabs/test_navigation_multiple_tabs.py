@@ -1,12 +1,10 @@
 import logging
 
-import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
 
 
-@pytest.mark.unstable
 def test_navigation_multiple_tabs(driver: Firefox):
     # open 20 tabs
     tabs = TabBar(driver).open()

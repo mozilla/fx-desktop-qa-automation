@@ -1,13 +1,13 @@
 import logging
 
-import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import TabBar
 
+ROBOT_TAB = 16
 
-@pytest.mark.unstable
+
 def test_list_all_tabs(driver: Firefox, screenshot):
     """
     C134655, check that the List All Tabs button and menu act as expected.
@@ -16,8 +16,8 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     driver.get("about:blank")
     for _ in range(17):
         tabs.new_tab_by_button()
-    driver.switch_to.window(driver.window_handles[14])
-    target_tab = tabs.get_tab(15)
+    driver.switch_to.window(driver.window_handles[ROBOT_TAB - 1])
+    target_tab = tabs.get_tab(ROBOT_TAB)
     driver.get("about:robots")
     with driver.context(driver.CONTEXT_CHROME):
         assert tabs.get_tab_title(target_tab).startswith("Gort")
@@ -32,7 +32,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     for _ in range(40):
         tabs.scroll_tabs(tabs.SCROLL_DIRECTION.LEFT)
         with driver.context(driver.CONTEXT_CHROME):
-            if target_tab.location["x"] > driver.get_window_size()["width"]:
+            if target_tab.location["x"] > (driver.get_window_size()["width"]):
                 logging.info(
                     f"Tab location {target_tab.location['x']} should be greater..."
                 )
@@ -64,7 +64,8 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     entry_out_of_view = False
     with driver.context(driver.CONTEXT_CHROME):
         tabs.open_all_tabs_list()
-        for _ in range(10):
+        for _ in range(3):
+            all_tabs_menu = tabs.get_element("all-tabs-menu")
             tabs.scroll_on_all_tabs_menu(down=False)
             about_about_location = tabs.get_location_of_all_tabs_entry(selected=True)
             all_tabs_menu = tabs.get_element("all-tabs-menu")
