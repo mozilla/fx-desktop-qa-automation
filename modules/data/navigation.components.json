@@ -9,14 +9,6 @@
         ]
     },
 
-    "awesome-bar-private": {
-        "selectorData": "urlbar-input",
-        "strategy": "id",
-        "groups": [
-            "awesomeBar"
-        ]
-    },
-
     "results-dropdown": {
         "selectorData": "urlbar-results",
         "strategy": "id",
