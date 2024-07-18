@@ -3,8 +3,8 @@ transforms:
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Slack Notifier"
-  description: "Notifies the Slack Channel"
+  label: "Smoke Tests"
+  description: "Runs Smoke Tests and Notifies Slack"
   worker-type: t-linux-wayland
   worker:
     max-run-time: 1800
