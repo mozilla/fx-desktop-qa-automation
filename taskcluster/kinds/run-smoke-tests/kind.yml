@@ -26,7 +26,7 @@ tasks:
         pipenv install;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
   windows:
-    worker-type: t-win11-64
+    worker-type: t-win11-64-source
     run:
       using: run-task
       cwd: "{checkout}"
