@@ -104,9 +104,18 @@ class TabBar(BasePage):
             else:
                 # if we get an unexpected type, we shouldn't assume that the user wants sys exit
                 # but we have to cause problems for them nonetheless
-                assert False
+                assert False, "Error getting tab root"
                 tab = None
             return tab
+
+    def is_pinned(self, tab_root: WebElement) -> bool:
+        """Is this tab pinned?"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            pinned = tab_root.get_attribute("pinned")
+            if pinned in ["true", "false"]:
+                return pinned == "true"
+            else:
+                assert False, "Error checking tab pinned status"
 
     def click_tab_mute_button(self, identifier: Union[str, int]) -> BasePage:
         """Click the tab icon overlay, no matter what's happening with media"""
