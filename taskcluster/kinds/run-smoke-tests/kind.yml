@@ -3,7 +3,6 @@ transforms:
   - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
 
 task-defaults:
-  worker-type: t-linux-wayland
   worker:
     max-run-time: 1800
     artifacts:
@@ -13,6 +12,21 @@ task-defaults:
 
 tasks:
   linux:
+    worker-type: t-linux-wayland
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        export PATH=$HOME/.local/bin:$PWD:$PATH
+        mkdir -p artifacts;
+        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'ruff>=0.4.8,<0.5';
+        ./collect_executables.sh;
+        mv ./ci_pyproject.toml ./pyproject.toml;
+        pipenv install;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+  windows:
+    worker-type: t-win11-64
     run:
       using: run-task
       cwd: "{checkout}"
