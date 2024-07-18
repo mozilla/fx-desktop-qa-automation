@@ -14,3 +14,4 @@ from modules.page_object_example_page import *
 from modules.page_object_fxa_home import *
 from modules.page_object_generics import *
 from modules.page_object_google_search import *
+from modules.page_object_autofill_login import *
