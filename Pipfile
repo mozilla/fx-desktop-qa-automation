@@ -17,11 +17,11 @@ taskcluster-taskgraph = "==9.0.0"
 jsonpath-ng = "*"
 pillow = "*"
 pyfxa = "*"
-pytest-json-report = "*"
+ruff = "0.5.2"
+pytest-rerunfailures = "*"
 
 [dev-packages]
 werkzeug = "*"
 selenium-wire = "*"
 pdoc = "*"
-ruff = "0.4.3"
 pytest-variables = "*"

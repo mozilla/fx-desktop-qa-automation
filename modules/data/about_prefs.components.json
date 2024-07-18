@@ -78,7 +78,7 @@
     },
 
     "prefs-button": {
-        "selectorData": "button[label=\"{name}\"]",
+        "selectorData": "button[label='{name}']",
         "strategy": "css",
         "groups": []
     },
@@ -153,8 +153,71 @@
         "groups": []
     },
 
+    "language-set-alternatives-button": {
+        "selectorData": "manageBrowserLanguagesButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-language": {
+        "selectorData": "availableLocales",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "language-set-alternatives-popup-select-language-search-more": {
+        "selectorData": "menuitem[label='Search for more languages…']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-set-alternatives-popup-select-language-italian": {
+        "selectorData": "menuitem[label='Italiano']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "languages-shadow-root": {
+        "selectorData": "dialog[buttons='accept,cancel,help']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-accept-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "languages-shadow-root",
+        "groups": []
+    },
+
+    "language-add-button": {
+        "selectorData": "add",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-list-item": {
+        "selectorData": "locale-it",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "html-root": {
+        "selectorData": "preferences-root",
+        "strategy": "id",
+        "groups": []
+    },
+
     "home-new-tabs-dropdown": {
         "selectorData": "newTabMode",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "home-new-window-dropdown": {
+        "selectorData": "homeMode",
         "strategy": "id",
         "groups": []
     },
@@ -162,6 +225,101 @@
     "home-new-tabs-dropdown-option-default": {
         "selectorData": "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]",
         "strategy": "css",
+        "groups": []
+    },
+
+    "custom-radio": {
+        "selectorData": "customRadio",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-checkbox": {
+        "selectorData": "contentBlockingBlockCookiesCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-checkbox": {
+        "selectorData": "contentBlockingTrackingProtectionCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "known-fingerprints-checkbox": {
+        "selectorData": "contentBlockingFingerprintersCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "suspected-fingerprints-checkbox": {
+        "selectorData": "contentBlockingFingerprintingProtectionCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "notifications-allow-button": {
+        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "notifications-block-button": {
+        "selectorData": "button[class='popup-notification-secondary-button footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cookies-shadow-root": {
+        "selectorData": "dialog[buttons='accept,cancel']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "clear-data-dialog-options": {
+        "selectorData": "hbox.checkbox-label-box",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "clear-data-accept-button": {
+        "selectorData": "[class='button-text'][value='Clear']",
+        "strategy": "css",
+        "shadowParent": "cookies-shadow-root",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "permissions-notifications-button": {
+        "selectorData": "notificationSettingsButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites": {
+        "selectorData": "permissionsBox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites-item": {
+        "selectorData": "richlistitem[origin='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites-item-status": {
+        "selectorData": "website-status",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "language-dropdown": {
+        "selectorData": "primaryBrowserLocale",
+        "strategy": "id",
         "groups": []
     }
 }

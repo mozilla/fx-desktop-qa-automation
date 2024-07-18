@@ -5,11 +5,6 @@
         "groups": []
     },
 
-    "inspect-menu-horizontal-splitter": {
-        "selectorData": "devtools-horizontal-splitter",
-        "strategy": "class",
-        "groups": []
-    },
 
     "take-screenshot-box": {
         "selectorData": "screenshotsPagePanel",
@@ -17,6 +12,11 @@
         "groups": [
             "doNotCache"
         ]
-    }
+    },
 
+    "more-information": {
+        "selectorData": "More information...",
+        "strategy": "link_text",
+        "groups": []
+    }
 }
