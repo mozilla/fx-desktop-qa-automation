@@ -35,8 +35,3 @@ workers:
       implementation: generic-worker
       os: windows
       worker-type: '{alias}'
-    t-osx-1400-m2:
-      provisioner: releng-hardware
-      implementation: generic-worker
-      os: macosx
-      worker-type: 'gecko-{alias}'
