@@ -604,9 +604,7 @@ class BasePage(Page):
                     element.hidePopup();
                  }"""
         with self.driver.context(self.context_id):
-            result = self.driver.execute_script(script, node)
-            logging.info(f"hide popup result: {result}")
-        return self
+            self.driver.execute_script(script, node)
 
     @property
     def loaded(self):

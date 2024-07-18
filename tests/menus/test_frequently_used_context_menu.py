@@ -105,4 +105,5 @@ def test_inspect(driver: Firefox):
     example_page.context_click(title_header)
 
     context_menu.click_and_hide_menu("context-menu-inspect")
+
     devtools.check_opened()
