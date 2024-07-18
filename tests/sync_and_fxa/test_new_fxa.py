@@ -15,6 +15,9 @@ def acct_password():
     return "Test123???"
 
 
+@pytest.mark.skip(
+    "Stop spamming stage with fake accounts; remove when we implement acct delete"
+)
 def test_sync_new_fxa(driver: Firefox, fxa_url: str, new_fxa_prep: dict, get_otp_code):
     """C131094: The user is able to create a new Firefox Account"""
 
