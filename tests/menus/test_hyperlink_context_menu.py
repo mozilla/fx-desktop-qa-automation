@@ -1,6 +1,4 @@
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import HyperlinkContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
@@ -10,26 +8,23 @@ def test_open_link_in_new_window(driver: Firefox):
     """
     C2637621.2: open link in new window
     """
-    nav = Navigation(driver)
     hyperlink_context = HyperlinkContextMenu(driver)
     tabs = TabBar(driver)
-    example = ExamplePage(driver).open()
+    example = ExamplePage(driver)
+    example.open()
 
     # right click the hyperlink
     example.context_click("more-information")
 
     # click on the open in new window option
-    open_in_new_window = hyperlink_context.click_and_hide_menu(
-        "context-menu-open-in-new-window"
-    )
+    hyperlink_context.click_and_hide_menu("context-menu-open-in-new-window")
 
     # verify there are two instances (two windows)
     tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[1])
 
-    with driver.context(driver.CONTEXT_CONTENT):
-        nav.expect(EC.title_contains("Example Domains"))
-        assert driver.current_url == "https://www.iana.org/help/example-domains"
+    example.title_contains(example.MORE_INFO_TITLE)
+    example.url_contains(example.MORE_INFO_URL)
 
 
 """
@@ -64,6 +59,5 @@ def test_copy_link(driver: Firefox):
     # paste and go
     nav.click_and_hide_menu("context-menu-paste-and-go")
 
-    with driver.context(driver.CONTEXT_CONTENT):
-        nav.expect(EC.title_contains("Example Domains"))
-        assert driver.current_url == "https://www.iana.org/help/example-domains"
+    example.title_contains(example.MORE_INFO_TITLE)
+    example.url_contains(example.MORE_INFO_URL)

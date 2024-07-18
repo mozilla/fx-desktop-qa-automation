@@ -12,13 +12,6 @@ class ContextMenu(BasePage):
 
     URL_TEMPLATE = ""
 
-    def get_context_item(self, item: str) -> WebElement:
-        """
-        Gets the context menu item from the context menu
-        """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            return self.get_element(item)
-
     def click_context_item(
         self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> BasePage:
