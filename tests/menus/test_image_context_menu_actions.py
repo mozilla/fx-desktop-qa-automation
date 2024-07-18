@@ -36,7 +36,7 @@ def test_open_image_in_new_tab(driver: Firefox):
         "context-menu-open-image-in-new-tab"
     )
     image_context_menu.click_context_item(open_in_new_tab)
-    wiki_image_page.hide_popup_by_child_node(open_in_new_tab, chrome=True)
+    image_context_menu.hide_popup_by_child_node(open_in_new_tab)
 
     # switch to the second tab and verify the URL
     tabs.wait_for_num_tabs(2)
@@ -71,7 +71,7 @@ def test_save_image_as(driver: Firefox):
     # save it
     save_image_as = image_context_menu.get_context_item("context-menu-save-image-as")
     image_context_menu.click_context_item(save_image_as)
-    wiki_image_page.hide_popup_by_child_node(save_image_as, chrome=True)
+    image_context_menu.hide_popup_by_child_node(save_image_as)
 
     # create the pynput controller
     downloads_button = nav.get_download_button()
@@ -130,7 +130,7 @@ def test_copy_image_link(driver: Firefox):
         "context-menu-copy-image-link"
     )
     image_context_menu.click_context_item(copy_image_link)
-    wiki_image_page.hide_popup_by_child_node(copy_image_link, chrome=True)
+    image_context_menu.hide_popup_by_child_node(copy_image_link)
 
     # open a new tab
     tabs.new_tab_by_button()

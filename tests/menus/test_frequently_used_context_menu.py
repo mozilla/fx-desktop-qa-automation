@@ -32,7 +32,7 @@ def test_save_page_as(driver: Firefox):
 
     save_page_as = context_menu.get_context_item("context-menu-save-page-as")
     context_menu.click_context_item(save_page_as)
-    context_menu.hide_popup_by_child_node(save_page_as, chrome=True)
+    context_menu.hide_popup_by_child_node(save_page_as)
 
     downloads_button = nav.get_download_button()
 
@@ -87,7 +87,7 @@ def test_take_screenshot(driver: Firefox):
     # context click the screenshot option and verify its not hidden
     take_screenshot = context_menu.get_context_item("context-menu-take-screenshot")
     context_menu.click_context_item(take_screenshot)
-    context_menu.hide_popup_by_child_node(take_screenshot, chrome=True)
+    context_menu.hide_popup_by_child_node(take_screenshot)
 
     with driver.context(driver.CONTEXT_CHROME):
         screenshot_box = example_page.get_element("take-screenshot-box")
@@ -110,5 +110,5 @@ def test_inspect(driver: Firefox):
 
     inspect_option = context_menu.get_context_item("context-menu-inspect")
     context_menu.click_context_item(inspect_option)
-    context_menu.hide_popup_by_child_node(inspect_option, chrome=True)
+    context_menu.hide_popup_by_child_node(inspect_option)
     devtools.check_opened()

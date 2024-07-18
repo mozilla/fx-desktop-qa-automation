@@ -558,7 +558,7 @@ class BasePage(Page):
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             return self.switch_to_new_tab()
 
-    def hide_popup(self, context_menu: str, chrome=False) -> Page:
+    def hide_popup(self, context_menu: str, chrome=True) -> Page:
         """
         Given the ID of the context menu, it will dismiss the menu.
 
@@ -586,15 +586,15 @@ class BasePage(Page):
                 """
         self.driver.execute_script(script)
 
-    def hide_popup_by_child_node(self, node: WebElement, chrome=False) -> Page:
+    def hide_popup_by_child_node(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        node = self.fetch(reference, labels=labels)
         script = """var element = arguments[0].parentNode;
                  if (element && element.hidePopup) {
                     element.hidePopup();
                  }"""
-        if chrome:
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.driver.execute_script(script, node)
-        else:
+        with self.driver.context(self.context_id):
             self.driver.execute_script(script, node)
 
     @property
