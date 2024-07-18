@@ -321,5 +321,35 @@
         "selectorData": "primaryBrowserLocale",
         "strategy": "id",
         "groups": []
+    },
+
+    "cookies-privacy-label": {
+        "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cookies-delete-on-close": {
+        "selectorData": "deleteOnClose",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "logins-ask-to-save-password": {
+        "selectorData": "savePasswords",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "logins-exceptions": {
+        "selectorData": "passwordExceptions",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "history-privacy-label": {
+        "selectorData": "description[data-l10n-id='history-dontremember-description']",
+        "strategy": "css",
+        "groups": []
     }
 }
