@@ -1,8 +1,10 @@
 from time import sleep
+
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import GenericPage, LoginAutofill
+
 
 def test_no_password_doorhanger_private_browsing(driver: Firefox):
     """
