@@ -1,3 +1,5 @@
+from typing import Union
+
 from selenium.webdriver.remote.webelement import WebElement
 
 from modules.page_base import BasePage
@@ -17,9 +19,20 @@ class ContextMenu(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             return self.get_element(item)
 
-    def click_context_item(self, context_element: WebElement) -> BasePage:
+    def click_context_item(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> BasePage:
         """
         Clicks the context item.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            context_element.click()
+            self.fetch(reference, labels=labels).click()
+            return self
+
+    def click_and_hide(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.fetch(reference, labels=labels).click()
+            self.hide_popup_by_child_node(reference, labels=labels)
+            return self
