@@ -1,13 +1,8 @@
-# import logging
 import pytest
-
-# from time import sleep
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
-
-# from modules.page_object_about_prefs import AboutPrefs
-# from modules.util import Utilities
+from modules.page_object_about_prefs import AboutPrefs
 
 links = [
     "about:about",
@@ -19,7 +14,8 @@ links = [
     "about:blank",
 ]
 
-link_set = set(links)
+COOKIE_LABEL_TEXT = "Based on your history settings, Firefox deletes cookies and site data from your session when you close the browser."
+HISTORY_LABEL_TEXT = "Firefox will use the same settings as private browsing, and will not remember any history as you browse the Web."
 
 
 @pytest.fixture()
@@ -27,12 +23,28 @@ def add_prefs():
     return [("browser.privatebrowsing.autostart", True)]
 
 
-# def test_never_remember_browsing_history_settings(driver: Firefox):
-#     """
-#     C102381.1: Ensure that setting the browser to never remember history has the correct configurations in about:preferences
-#     """
-#     # about_prefs = AboutPrefs(driver, category="privacy").open()
-#     pass
+def test_never_remember_browsing_history_settings(driver: Firefox):
+    """
+    C102381.1: Ensure that setting the browser to never remember history has the correct configurations in about:preferences
+    """
+    # instantiate objs
+    about_prefs = AboutPrefs(driver, category="privacy").open()
+
+    # perform all about:preferences#privacy assertions according to testrail
+    cookies_label = about_prefs.get_element("cookies-privacy-label")
+    assert cookies_label.get_attribute("innerHTML") == COOKIE_LABEL_TEXT
+
+    delete_cookies_checkbox = about_prefs.get_element("cookies-delete-on-close")
+    assert delete_cookies_checkbox.get_attribute("checked") == "true"
+
+    save_password = about_prefs.get_element("logins-ask-to-save-password")
+    assert save_password.get_attribute("checked") is None
+
+    login_exceptions = about_prefs.get_element("logins-exceptions")
+    assert login_exceptions.get_attribute("disabled") == "true"
+
+    history_label = about_prefs.get_element("history-privacy-label")
+    assert history_label.get_attribute("innerHTML") == HISTORY_LABEL_TEXT
 
 
 def test_never_remember_browsing_history_from_panel(driver: Firefox):
