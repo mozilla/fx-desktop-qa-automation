@@ -69,10 +69,9 @@ def test_never_remember_browsing_history_from_panel(driver: Firefox):
         for i in range(num_tabs):
             x_icon[i].click()
 
-    panel_ui.open_panel_menu()
+        panel_ui.open_panel_menu()
 
-    # go into the history tab
-    with driver.context(driver.CONTEXT_CHROME):
+        # go into the history tab
         panel_ui.get_element("panel-ui-history").click()
 
         # check for history
