@@ -125,6 +125,12 @@
         "selectorData": "appMenu-new-private-window-button2",
         "strategy": "id",
         "groups": []
+    },
+
+    "recent-history-content": {
+        "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
+        "strategy": "css",
+        "groups": []
     }
 
 }
