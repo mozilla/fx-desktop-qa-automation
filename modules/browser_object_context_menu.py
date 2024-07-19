@@ -12,7 +12,6 @@ class ContextMenu(BasePage):
 
     URL_TEMPLATE = ""
 
-    
     def click_context_item(
         self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> BasePage:
