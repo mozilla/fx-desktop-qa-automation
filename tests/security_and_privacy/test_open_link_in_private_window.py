@@ -1,10 +1,8 @@
-import logging
 
-import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
-from modules.page_object import ExamplePage, GenericPage
+from modules.page_object import ExamplePage
 
 
 def test_open_link_in_private_window(driver: Firefox):

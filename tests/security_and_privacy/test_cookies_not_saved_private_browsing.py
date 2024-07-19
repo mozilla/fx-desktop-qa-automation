@@ -1,10 +1,10 @@
-import logging
-from time import sleep
+
 from selenium.webdriver import Firefox
 
+from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutPrefs, GenericPage
-from modules.browser_object import Navigation, TabBar, PanelUi
 from modules.util import BrowserActions
+
 
 def test_cookies_not_saved_private_browsing(driver: Firefox):
     """
@@ -14,7 +14,9 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy")
     panel_ui = PanelUi(driver).open()
     nav = Navigation(driver)
-    wiki_page = GenericPage(driver, url="https://ro.wikipedia.org/wiki/Pagina_principal%C4%83")
+    wiki_page = GenericPage(
+        driver, url="https://ro.wikipedia.org/wiki/Pagina_principal%C4%83"
+    )
     ba = BrowserActions(driver)
 
     # open new private window
