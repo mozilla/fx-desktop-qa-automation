@@ -1,3 +1,6 @@
+import sys
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -6,9 +9,6 @@ from modules.util import BrowserActions
 
 LANGUAGES = [("it", "Imposta alternative…")]
 
-
-import sys
-from os import environ
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("win")
 

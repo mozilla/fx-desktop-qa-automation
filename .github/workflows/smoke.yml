@@ -8,8 +8,10 @@ on:
   pull_request:
     types: created
 jobs:
-  Smoke-Windows:
-    runs-on: windows-latest
+  Smoke-Win-and-Mac:
+    runs-on:
+      - windows-latest
+      - macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
