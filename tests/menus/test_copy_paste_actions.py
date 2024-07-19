@@ -18,9 +18,7 @@ def test_login_form_copy_paste(driver: Firefox):
     random_text = util.generate_random_text("sentence")
 
     # get the field and send text
-    password_field = login_fill.get_element(
-        "input-field", labels=["current-password"]
-    )
+    password_field = login_fill.get_element("input-field", labels=["current-password"])
     password_field.send_keys(random_text)
     logging.info(f"Sent the text {random_text} to the textarea.")
 
