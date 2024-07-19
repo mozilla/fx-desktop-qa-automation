@@ -8,10 +8,28 @@ on:
   pull_request:
     types: created
 jobs:
-  Smoke-Win-and-Mac:
-    runs-on:
-      - windows-latest
-      - macos-latest
+  Smoke-Windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          ./collect_executables.sh;
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+      - name: Run Smoke Tests in Win
+        run: pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+  Smoke-MacOS:
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
