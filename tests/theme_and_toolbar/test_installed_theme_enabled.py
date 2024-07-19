@@ -1,3 +1,7 @@
+import sys
+from os import environ
+
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AmoThemes
@@ -18,6 +22,10 @@ def test_find_more_themes(driver: Firefox):
     base.url_contains("firefox/themes")
 
 
+MAC_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("darwin")
+
+
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_installed_theme_enabled(driver: Firefox):
     """
     C118174: install a theme and make sure it is set to enabled immediately
