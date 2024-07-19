@@ -5,6 +5,7 @@
 
 ## Determine OS and arch
 UNAME_A=$(uname -a)
+echo "uname -a: ${UNAME_A}"
 if [ -n "$WSL_DISTRO_NAME" ]
 then
     SYSTEM_NAME="win"

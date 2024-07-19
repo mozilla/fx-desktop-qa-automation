@@ -33,7 +33,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: test artifacts
+          name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
     runs-on: macos-latest
@@ -60,5 +60,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: test artifacts
+          name: artifacts-mac
           path: artifacts-mac
