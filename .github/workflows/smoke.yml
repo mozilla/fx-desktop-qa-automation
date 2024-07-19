@@ -1,0 +1,27 @@
+name: Mac and Windows Smoke
+
+run-name: ${{ github.actor }} is running smoke tests
+on:
+  pull_request:
+    types:
+      - created
+jobs:
+  Smoke-Windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          ./collect_executables.sh;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+      - name: Run Smoke Tests in Win
+        run: pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
