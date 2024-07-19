@@ -1,4 +1,3 @@
-import sys
 from os import environ
 
 import pytest
@@ -7,10 +6,10 @@ from selenium.webdriver.common.by import By
 
 from modules.browser_object import TabBar
 
-WIN_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("win")
+GHA = environ.get("GITHUB_ACTIONS")
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""

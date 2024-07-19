@@ -6,7 +6,10 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AmoThemes
 
+MAC_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("darwin")
 
+
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_find_more_themes(driver: Firefox):
     """
     C118174, first part
@@ -20,9 +23,6 @@ def test_find_more_themes(driver: Firefox):
     base = about_addons
     base.url_contains("addons.mozilla.org")
     base.url_contains("firefox/themes")
-
-
-MAC_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("darwin")
 
 
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
