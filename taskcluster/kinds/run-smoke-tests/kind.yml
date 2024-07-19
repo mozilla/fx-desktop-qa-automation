@@ -68,7 +68,7 @@ tasks:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "<https://github.com/mozilla/fx-desktop-qa-automation/commit/${task.metadata.source}|Commit>"
+                        "text": "*Commit*: <${task.metadata.source}>"
                       }
                     },
                     {
