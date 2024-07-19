@@ -13,6 +13,13 @@ def add_prefs():
     return [("cookiebanners.service.mode", 1)]
 
 
+import sys
+from os import environ
+
+MAC_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("darwin")
+
+
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_google_withads_url_bar_us(driver: Firefox):
     """
     C1365070, verify that Google withads URL bar - US is recorder into telemetry
