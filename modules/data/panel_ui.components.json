@@ -131,6 +131,18 @@
         "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
         "strategy": "css",
         "groups": []
+    },
+
+    "panel-ui-history-recent-history-container": {
+        "selectorData": "appMenu_historyMenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "panel-ui-history-recent-history-item": {
+        "selectorData": "toolbarbutton",
+        "strategy": "tag",
+        "groups": []
     }
 
 }

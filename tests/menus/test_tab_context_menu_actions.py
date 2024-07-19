@@ -29,11 +29,8 @@ def test_duplicate_tab(driver: Firefox):
 
     # context click
     first_tab = tabs.get_tab(1)
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.actions.context_click(first_tab).perform()
-        duplicate_item = tab_context_menu.get_context_item("context-menu-duplicate-tab")
-        duplicate_item.click()
-        tabs.hide_popup("tabContextMenu")
+    tabs.context_click(first_tab)
+    tab_context_menu.click_and_hide_menu("context-menu-duplicate-tab")
 
     # get the current tab and assert the url
     driver.switch_to.window(driver.window_handles[tabs_to_open + 1])
@@ -57,19 +54,13 @@ def test_close_multiple_tabs_to_right(driver: Firefox):
         driver.switch_to.window(driver.window_handles[i + 1])
 
     first_tab = tabs.get_tab(1)
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.actions.context_click(first_tab).perform()
-        close_multiple_tabs = tab_context_menu.get_context_item(
-            "context-menu-close-multiple-tabs"
-        )
-        close_multiple_tabs.click()
+    tabs.context_click(first_tab)
+    tab_context_menu.click_context_item("context-menu-close-multiple-tabs")
 
-        close_tabs_to_right = tab_context_menu.get_context_item(
-            "context-menu-close-multiple-tabs-to-right"
-        )
-        close_tabs_to_right.click()
+    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-to-right")
 
-        tabs.hide_popup("tabContextMenu")
+    # Click-and-hide won't hide the parent popup
+    tabs.hide_popup("tabContextMenu")
 
     logging.info("Trying to verify only 1 tab remains.")
     tabs.wait_for_num_tabs(1)
@@ -92,19 +83,13 @@ def test_close_multiple_tabs_to_left(driver: Firefox):
 
     # close all tabs left of the last tab
     last_tab = tabs.get_tab(tabs_to_open + 1)
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.actions.context_click(last_tab).perform()
-        close_multiple_tabs = tab_context_menu.get_context_item(
-            "context-menu-close-multiple-tabs"
-        )
-        close_multiple_tabs.click()
+    tabs.context_click(last_tab)
+    tab_context_menu.click_context_item("context-menu-close-multiple-tabs")
 
-        close_tabs_to_left = tab_context_menu.get_context_item(
-            "context-menu-close-multiple-tabs-to-left"
-        )
-        close_tabs_to_left.click()
+    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-to-left")
 
-        tabs.hide_popup("tabContextMenu")
+    # Click-and-hide won't hide the parent popup
+    tabs.hide_popup("tabContextMenu")
 
     # verify number of tabs
     logging.info("Trying to verify only 1 tab remains.")
@@ -115,7 +100,7 @@ def test_close_multiple_tabs_other_tabs(driver: Firefox):
     """
     C2264627.3.3: close multiple tabs actions (close all the left)
     """
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     tab_context_menu = TabContextMenu(driver)
 
     tabs_to_open = 4
@@ -128,19 +113,14 @@ def test_close_multiple_tabs_other_tabs(driver: Firefox):
 
     # grab second tab and close all other tabs using the context menu
     second_tab = tabs.get_tab(2)
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.actions.context_click(second_tab).perform()
-        close_multiple_tabs = tab_context_menu.get_context_item(
-            "context-menu-close-multiple-tabs"
-        )
-        close_multiple_tabs.click()
+    tabs.context_click(second_tab)
+    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs")
 
-        close_other_tabs = tab_context_menu.get_context_item(
-            "context-menu-close-multiple-tabs-other-tabs"
-        )
-        close_other_tabs.click()
+    tabs.context_click(second_tab)
+    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-other-tabs")
 
-        tabs.hide_popup("tabContextMenu")
+    # Click-and-hide won't hide the parent popup
+    tabs.hide_popup("tabContextMenu")
 
     # verify the number of tabs
     logging.info("Trying to verify only 1 tab remains.")
