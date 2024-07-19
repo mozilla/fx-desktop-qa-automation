@@ -1,0 +1,19 @@
+name: Mac and Windows Smoke
+
+run-name: ${{ github.actor }} is running smoke tests
+on:
+  push:
+    branches: ["bc/gha"]
+  pull_request:
+    types:
+      - created
+jobs:
+  Smoke-Windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
