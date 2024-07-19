@@ -43,6 +43,7 @@ fi
 
 # Find the version of Geckodriver that matches arch
 FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
+echo "$FILENAME"
 
 # 20 is arbitrary and may break if future releases of Geckodriver have more than 20 channels
 for i in {0..20}
@@ -82,8 +83,6 @@ FX_LINK_HTML=$(curl -s https://download.mozilla.org/\?product\=firefox${CHANNEL}
 FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
-
-sleep 3
 
 mv geckodriver*.tar.gz geckodriver.tar.gz
 tar -xvzf geckodriver.tar.gz
