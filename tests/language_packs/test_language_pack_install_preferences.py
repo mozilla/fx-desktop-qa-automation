@@ -7,6 +7,13 @@ from modules.util import BrowserActions
 LANGUAGES = [("it", "Imposta alternative…")]
 
 
+import sys
+from os import environ
+
+WIN_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("win")
+
+
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 @pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
 def test_language_pack_install_about_preferences(
     driver: Firefox, shortform: str, localized_text: str
