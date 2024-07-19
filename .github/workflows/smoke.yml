@@ -28,6 +28,11 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in Win
         run: pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test artifacts
+          path: artifacts
   Smoke-MacOS:
     runs-on: macos-latest
     steps:
@@ -47,4 +52,9 @@ jobs:
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
       - name: Run Smoke Tests in MacOS
-        run: pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/[amt]*
+        run: pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test artifacts
+          path: artifacts
