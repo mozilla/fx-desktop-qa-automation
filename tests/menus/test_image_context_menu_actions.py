@@ -32,11 +32,7 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.context_click(image_logo)
 
     # open in a new tab
-    open_in_new_tab = image_context_menu.get_context_item(
-        "context-menu-open-image-in-new-tab"
-    )
-    image_context_menu.click_context_item(open_in_new_tab)
-    image_context_menu.hide_popup_by_child_node(open_in_new_tab)
+    image_context_menu.click_and_hide_menu("context-menu-open-image-in-new-tab")
 
     # switch to the second tab and verify the URL
     tabs.wait_for_num_tabs(2)
@@ -69,9 +65,7 @@ def test_save_image_as(driver: Firefox):
     wiki_image_page.context_click(image_logo)
 
     # save it
-    save_image_as = image_context_menu.get_context_item("context-menu-save-image-as")
-    image_context_menu.click_context_item(save_image_as)
-    image_context_menu.hide_popup_by_child_node(save_image_as)
+    image_context_menu.click_and_hide_menu("context-menu-save-image-as")
 
     # create the pynput controller
     downloads_button = nav.get_download_button()
@@ -126,26 +120,19 @@ def test_copy_image_link(driver: Firefox):
     wiki_image_page.context_click(image_logo)
 
     # copy the link
-    copy_image_link = image_context_menu.get_context_item(
-        "context-menu-copy-image-link"
-    )
-    image_context_menu.click_context_item(copy_image_link)
-    image_context_menu.hide_popup_by_child_node(copy_image_link)
+    image_context_menu.click_and_hide_menu("context-menu-copy-image-link")
 
     # open a new tab
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[1])
 
-    # # context click and paste
+    # context click and paste
     search_bar = nav.get_awesome_bar()
     nav.context_click(search_bar)
 
     # paste and go
-    with driver.context(driver.CONTEXT_CHROME):
-        paste_and_go = nav.get_element("context-menu-paste-and-go")
-        paste_and_go.click()
-        nav.hide_popup_by_child_node(paste_and_go)
+    nav.click_and_hide_menu("context-menu-paste-and-go")
 
     wiki_image_page.wait_for_page_to_load()
     with driver.context(driver.CONTEXT_CONTENT):

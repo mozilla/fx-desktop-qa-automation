@@ -508,6 +508,15 @@ class BasePage(Page):
             self.actions.context_click(el).perform()
         return self
 
+    def click_and_hide_menu(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Click an option in a context menu, then hide it"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.fetch(reference, labels=labels).click()
+            self.hide_popup_by_child_node(reference, labels=labels)
+            return self
+
     def hover(self, reference: Union[str, tuple, WebElement], labels=[]):
         """
         Hover over the specified element.

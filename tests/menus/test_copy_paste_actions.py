@@ -27,18 +27,14 @@ def test_login_form_copy_paste(driver: Firefox):
     # triple click and copy text
     login_fill.triple_click("login-input-field", labels=["current-password"])
     login_fill.context_click(password_field)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.get_context_item("context-menu-copy").click()
-        login_fill.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-copy")
 
     # delete all text
     password_field.send_keys(Keys.BACK_SPACE)
     assert password_field.get_attribute("value") == ""
 
     login_fill.context_click(password_field)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.get_context_item("context-menu-paste").click()
-        login_fill.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-paste")
 
     # final assertion
     assert password_field.get_attribute("value") != random_text
@@ -59,18 +55,14 @@ def test_text_area_copy_paste(driver: Firefox):
     # copy the text
     text_area_fill.triple_click("street-address-textarea")
     text_area_fill.context_click(text_area)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.get_context_item("context-menu-copy").click()
-        text_area_fill.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-copy")
 
     # delete all the text and paste
     text_area.send_keys(Keys.BACK_SPACE)
     assert text_area.get_attribute("value") == ""
 
     text_area_fill.context_click(text_area)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.get_context_item("context-menu-paste").click()
-        text_area_fill.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-paste")
 
     # check value
     assert text_area.get_attribute("value") == random_text
@@ -93,9 +85,7 @@ def test_search_field_copy_paste(driver: Firefox):
 
     # context click
     google_search.context_click(search_bar)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.get_context_item("context-menu-copy").click()
-        google_search.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-copy")
 
     # delete the current text
     search_bar.send_keys(Keys.BACK_SPACE)
@@ -103,9 +93,7 @@ def test_search_field_copy_paste(driver: Firefox):
 
     # context click and paste the text back
     google_search.context_click(search_bar)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.get_context_item("context-menu-paste").click()
-        google_search.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-paste")
 
     # assert the value is correct
     assert search_bar.get_attribute("value") == random_text

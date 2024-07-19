@@ -24,13 +24,8 @@ def test_reopen_tab_through_context_menu(driver: Firefox):
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
 
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.actions.context_click(remaining_tab).perform()
-        reopen_item = tab_context_menu.get_context_item("context-menu-reopen-tab")
-        reopen_item.click()
+    tabs.context_click(remaining_tab)
+    tab_context_menu.click_and_hide_menu("context-menu-reopen-tab")
 
-        # tab numbers are not reused, so the reopened tab is 1 higher
-        reopened_tab = tabs.get_tab(tabs_to_open + 1)
-        assert tabs.get_tab_title(reopened_tab).startswith("Gort")
-
-        tabs.hide_popup("tabContextMenu")
+    reopened_tab = tabs.get_tab(tabs_to_open + 1)
+    assert tabs.get_tab_title(reopened_tab).startswith("Gort")
