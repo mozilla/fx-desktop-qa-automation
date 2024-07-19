@@ -9,11 +9,6 @@ FACEBOOK_URL = "https://www.facebook.com/"
 AMAZON_URL = "https://www.amazon.com/"
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 def test_websites_visited_in_private_browser_not_displayed_in_awesome_bar(
     driver: Firefox,
 ):
