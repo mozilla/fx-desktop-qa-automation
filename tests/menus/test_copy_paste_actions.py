@@ -19,13 +19,13 @@ def test_login_form_copy_paste(driver: Firefox):
 
     # get the field and send text
     password_field = login_fill.get_element(
-        "login-input-field", labels=["current-password"]
+        "input-field", labels=["current-password"]
     )
     password_field.send_keys(random_text)
     logging.info(f"Sent the text {random_text} to the textarea.")
 
     # triple click and copy text
-    login_fill.triple_click("login-input-field", labels=["current-password"])
+    login_fill.triple_click("input-field", labels=["current-password"])
     login_fill.context_click(password_field)
     context_menu.click_and_hide_menu("context-menu-copy")
 
