@@ -182,7 +182,8 @@ def driver(
         yield driver
 
     finally:
-        driver.quit()
+        if "driver" in locals() or "driver" in globals():
+            driver.quit()
 
 
 @pytest.fixture()
