@@ -1,3 +1,5 @@
+import sys
+from os import environ
 from time import sleep
 
 import pytest
@@ -13,10 +15,7 @@ def add_prefs():
     return [("cookiebanners.service.mode", 1)]
 
 
-import sys
-from os import environ
-
-MAC_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("darwin")
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")

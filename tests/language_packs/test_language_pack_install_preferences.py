@@ -10,7 +10,7 @@ from modules.util import BrowserActions
 LANGUAGES = [("it", "Imposta alternative…")]
 
 
-WIN_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("win")
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")

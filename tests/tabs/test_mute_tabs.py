@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 
 from modules.browser_object import TabBar
 
-GHA = environ.get("GITHUB_ACTIONS")
+GHA = environ.get("GITHUB_ACTIONS") == "true"
 
 
 @pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")

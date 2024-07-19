@@ -6,7 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AmoThemes
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") and sys.platform.startswith("darwin")
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
