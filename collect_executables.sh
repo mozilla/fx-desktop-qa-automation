@@ -83,6 +83,8 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
 
+sleep 3
+
 mv geckodriver*.tar.gz geckodriver.tar.gz
 tar -xvzf geckodriver.tar.gz
 chmod +x geckodriver
