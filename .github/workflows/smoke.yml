@@ -28,7 +28,7 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in Win
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/preferences
+          pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
           mv artifacts artifacts-win
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

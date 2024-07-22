@@ -49,6 +49,7 @@ FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
 for i in {0..20}
 do
     GECKO_LINK=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq ".[\"assets\"][${i}][\"browser_download_url\"]" | tr -d '"')
+    echo "$GECKO_LINK"
     if [[ $GECKO_LINK == *"${FILENAME}"* ]] && [[ $GECKO_LINK != *".asc" ]]
     then
         curl -OL "$GECKO_LINK"
