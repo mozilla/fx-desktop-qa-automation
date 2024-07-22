@@ -39,9 +39,5 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     iframe = about_prefs.get_iframe()
     ba.switch_to_iframe_context(iframe)
 
-    # ensure none are listed
-    sitelist = about_prefs.get_element("cookies-manage-data-sitelist")
-    sites = about_prefs.get_all_children(sitelist)
-
-    # note when there are 0 children, this is a bit slow
-    assert len(sites) == 0
+    # wait for no children listed in the cookies menu
+    about_prefs.wait_for_no_children("cookies-manage-data-sitelist")

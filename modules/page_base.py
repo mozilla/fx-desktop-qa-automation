@@ -551,6 +551,16 @@ class BasePage(Page):
             logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
         return self
 
+    def wait_for_no_children(
+        self, parent: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """
+        Waits for 0 children under the given parent, the wait is instant
+        """
+        self.instawait.until(
+            lambda _: len(self.get_all_children(self.fetch(parent, labels))) == 0
+        )
+
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
         handles = self.driver.window_handles
