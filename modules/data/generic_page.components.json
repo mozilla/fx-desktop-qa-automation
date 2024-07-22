@@ -21,5 +21,23 @@
         "selectorData": "mw-mmv-image",
         "strategy": "class",
         "groups": []
+    },
+
+    "simulated-tracker-block-status": {
+        "selectorData": "blacklisted-blocked",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "simulated-tracker-load-status": {
+        "selectorData": "whitelisted-loaded",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "simulated-tracker-dnt-status": {
+        "selectorData": "dnt-on",
+        "strategy": "id",
+        "groups": []
     }
 }

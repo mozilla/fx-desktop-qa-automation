@@ -536,6 +536,7 @@ class BasePage(Page):
         Gets all the children of a webelement
         """
         children = None
+        print(self.context_id)
         with self.driver.context(self.context_id):
             element = self.fetch(reference, labels)
             children = element.find_elements(By.XPATH, "./*")
