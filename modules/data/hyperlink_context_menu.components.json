@@ -1,4 +1,5 @@
 {
+    "context": "chrome",
     "do-not-cache": true,
     "context-menu-open-in-new-window": {
         "selectorData": "context-openlink",

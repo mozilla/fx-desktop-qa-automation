@@ -508,6 +508,15 @@ class BasePage(Page):
             self.actions.context_click(el).perform()
         return self
 
+    def click_and_hide_menu(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Click an option in a context menu, then hide it"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.fetch(reference, labels=labels).click()
+            self.hide_popup_by_child_node(reference, labels=labels)
+            return self
+
     def hover(self, reference: Union[str, tuple, WebElement], labels=[]):
         """
         Hover over the specified element.
@@ -531,6 +540,19 @@ class BasePage(Page):
             element = self.fetch(reference, labels)
             children = element.find_elements(By.XPATH, "./*")
         return children
+
+    def wait_for_no_children(
+        self, parent: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """
+        Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
+        """
+        driver_wait = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            assert len(self.get_all_children(self.fetch(parent, labels))) == 0
+        finally:
+            self.driver.implicitly_wait(driver_wait)
 
     def wait_for_num_tabs(self, num_tabs: int) -> Page:
         """

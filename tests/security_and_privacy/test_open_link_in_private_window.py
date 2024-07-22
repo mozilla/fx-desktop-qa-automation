@@ -1,10 +1,7 @@
-import logging
-
-import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
-from modules.page_object import ExamplePage, GenericPage
+from modules.page_object import ExamplePage
 
 
 def test_open_link_in_private_window(driver: Firefox):
@@ -15,7 +12,8 @@ def test_open_link_in_private_window(driver: Firefox):
     nav = Navigation(driver)
 
     example.context_click("more-information")
-    context_menu.click_and_hide("context-menu-open-link-in-new-private-window")
+    context_menu.click_and_hide_menu("context-menu-open-link-in-new-private-window")
+
     nav.wait_for_num_windows(2)
     nav.switch_to_new_window()
     with driver.context(driver.CONTEXT_CHROME):

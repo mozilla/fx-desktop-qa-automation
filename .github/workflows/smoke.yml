@@ -6,7 +6,7 @@ on:
   push:
     branches: "bc/gha"
   pull_request:
-    types: created
+
 jobs:
   Smoke-Windows:
     runs-on: windows-latest

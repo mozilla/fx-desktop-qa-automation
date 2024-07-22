@@ -51,8 +51,7 @@ def test_search_code_google_us(driver: Firefox):
         h1_tag = (By.TAG_NAME, "h1")
         example.triple_click(h1_tag)
         example.context_click(h1_tag)
-    context_menu.get_context_item("context-menu-search-selected-text").click()
-    nav.hide_popup("contentAreaContextMenu")
+    context_menu.click_and_hide_menu("context-menu-search-selected-text")
 
     # Switch to the newly opened tab and run the code check
     window_handles = driver.window_handles
