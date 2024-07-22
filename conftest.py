@@ -1,6 +1,7 @@
 import logging
 import os
 import platform
+from time import sleep
 from typing import Callable, List, Tuple
 
 import pytest
@@ -166,6 +167,8 @@ def driver(
         options.binary_location = fx_executable
         for opt, value in set_prefs:
             options.set_preference(opt, value)
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            sleep(5)
         driver = webdriver.Firefox(options=options)
         separator = "x"
         if separator not in opt_window_size:
