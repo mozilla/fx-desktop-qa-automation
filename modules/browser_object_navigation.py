@@ -183,3 +183,10 @@ class Navigation(BasePage):
                 )
             except TimeoutException:
                 logging.warning("Animation did not finish or did not play.")
+
+    def open_tracker_panel(self) -> BasePage:
+        """
+        Clicks the shield icon and opens the panel associated with it
+        """
+        self.get_element("shield-icon").click()
+        return self

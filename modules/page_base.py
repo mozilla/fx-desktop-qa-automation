@@ -606,13 +606,6 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             self.driver.execute_script(script, node)
 
-    def open_tracker_panel(self) -> Page:
-        """
-        Clicks the shield icon and opens the panel associated with it
-        """
-        self.get_element("shield-icon").click()
-        return self
-
     @property
     def loaded(self):
         """
