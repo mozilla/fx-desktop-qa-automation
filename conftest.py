@@ -6,6 +6,7 @@ from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.options import Options
 
 
@@ -167,8 +168,6 @@ def driver(
         options.binary_location = fx_executable
         for opt, value in set_prefs:
             options.set_preference(opt, value)
-        if os.environ.get("GITHUB_ACTIONS") == "true":
-            sleep(5)
         driver = webdriver.Firefox(options=options)
         separator = "x"
         if separator not in opt_window_size:
@@ -183,7 +182,8 @@ def driver(
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         yield driver
-
+    except WebDriverException as e:
+        print(f"exception: {e}")
     finally:
         if "driver" in locals() or "driver" in globals():
             driver.quit()
