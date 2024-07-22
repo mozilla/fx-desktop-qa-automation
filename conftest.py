@@ -183,7 +183,7 @@ def driver(
         driver.implicitly_wait(timeout)
         yield driver
     except WebDriverException as e:
-        print(f"exception: {e}")
+        logging.warning(f"DRIVER exception: {e}")
     finally:
         if "driver" in locals() or "driver" in globals():
             driver.quit()

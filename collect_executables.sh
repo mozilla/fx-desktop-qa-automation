@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "~~collect executables~~"
 
 # Usage: ./collect_executables.sh [channel]
 # Collects geckodriver and Fx, default channel is Beta.
