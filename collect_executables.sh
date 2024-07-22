@@ -10,6 +10,12 @@ echo "uname -a: ${UNAME_A}"
 if [ -n "$WSL_DISTRO_NAME" ] || [[ $UNAME_A == *"MINGW"* ]]
 then
     SYSTEM_NAME="win"
+    if [[ $UNAME_A == *"x86_64"* ]]
+    then
+        BITS="64"
+    else
+        BITS="32"
+    fi
 else
     if [[ $UNAME_A == *"Darwin"* ]]
     then
@@ -85,6 +91,7 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
 
+ls geckodriver*
 mv "geckodriver*.${EXT}" "geckodriver.${EXT}"
 if [[ $EXT == "zip" ]]
 then
