@@ -21,20 +21,15 @@ class LoginAutofill(Autofill):
 
         def fill_username(self, username: str) -> None:
             if self.username_field is None:
-                username_fields = self.parent.get_elements("username-field")
-                self.username_field = username_fields[1]
+                self.username_field = self.parent.get_element("username-login-field")
             self.username_field.send_keys(username)
 
         def fill_password(self, password: str) -> None:
             if self.password_field is None:
-                password_fields = self.parent.get_elements(
-                    "input-field", labels=["current-password"]
-                )
-                self.password_field = password_fields[0]
+                self.password_field = self.parent.get_element("password-login-field")
             self.password_field.send_keys(password)
 
         def submit(self) -> None:
             if self.submit_button is None:
-                submit_buttons = self.parent.get_elements("submit-form")
-                self.submit_button = submit_buttons[0]
+                self.submit_button = self.parent.get_element("submit-button-login")
             self.submit_button.click()

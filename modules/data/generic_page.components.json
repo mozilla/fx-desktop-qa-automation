@@ -23,6 +23,18 @@
         "groups": []
     },
 
+    "wiki-search-bar": {
+        "selectorData": "searchInput",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "wiki-search-button": {
+        "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "simulated-tracker-block-status": {
         "selectorData": "blacklisted-blocked",
         "strategy": "id",
