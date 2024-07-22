@@ -1,0 +1,56 @@
+{
+    "context": "chrome",
+    "tracker-title": {
+        "selectorData": "protections-popup-mainView-panel-header-span",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracker-cross-site-tracking": {
+        "selectorData": "protections-popup-category-cookies",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracker-tracking-content": {
+        "selectorData": "protections-popup-category-trackers",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-social-media": {
+        "selectorData": "protections-popup-category-socialblock",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-finger-prints": {
+        "selectorData": "protections-popup-category-fingerprinters",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-crypto-miners": {
+        "selectorData": "protections-popup-category-cryptominers",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-cross-site-tracking-items": {
+        "selectorData": "vbox[class='protections-popup-cookiesView-list-section']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "tracking-cross-site-tracking-item": {
+        "selectorData": "protections-popup-list-host-label",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "tracking-allowed-content-item": {
+        "selectorData": "protections-popup-list-host-label",
+        "strategy": "class",
+        "groups": []
+    }
+}
