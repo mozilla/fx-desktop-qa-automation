@@ -84,8 +84,13 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
 
-mv geckodriver*.tar.gz geckodriver.tar.gz
-tar -xvzf geckodriver.tar.gz
+mv "geckodriver*.{$EXT}" "geckodriver.{$EXT}"
+if [[ $EXT == "zip" ]]
+then
+    unzip geckodriver.zip
+else
+    tar -xvzf geckodriver.tar.gz
+fi
 chmod +x geckodriver
 
 if [[ $SYSTEM_NAME == "linux" ]]
