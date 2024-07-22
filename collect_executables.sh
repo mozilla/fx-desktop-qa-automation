@@ -7,7 +7,7 @@ echo "~~collect executables~~"
 ## Determine OS and arch
 UNAME_A=$(uname -a)
 echo "uname -a: ${UNAME_A}"
-if [ -n "$WSL_DISTRO_NAME" ]
+if [ -n "$WSL_DISTRO_NAME" ] || [[ $UNAME_A == *"MINGW"* ]]
 then
     SYSTEM_NAME="win"
 else
