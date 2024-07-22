@@ -45,6 +45,7 @@ fi
 
 # Find the version of Geckodriver that matches arch
 FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
+echo "FILENAME ${FILENAME}"
 # 20 is arbitrary and may break if future releases of Geckodriver have more than 20 channels
 for i in {0..20}
 do
@@ -84,7 +85,7 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
 
-mv "geckodriver*.{$EXT}" "geckodriver.{$EXT}"
+mv "geckodriver*.${EXT}" "geckodriver.${EXT}"
 if [[ $EXT == "zip" ]]
 then
     unzip geckodriver.zip
