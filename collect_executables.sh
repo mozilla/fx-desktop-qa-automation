@@ -86,8 +86,8 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
 
-ls geckodriver*
-mv "geckodriver*.${EXT}" "geckodriver.${EXT}"
+GD_FILE=$(ls geckodriver*)
+mv "$GD_FILE" "geckodriver.${EXT}"
 if [[ $EXT == "zip" ]]
 then
     unzip geckodriver.zip
