@@ -189,7 +189,9 @@
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "cryptominers": {
@@ -256,5 +258,19 @@
         "selectorData": "protections-popup-category-cryptominers",
         "strategy": "id",
         "groups": []
+    },
+
+    "tracking-cross-site-tracking-items": {
+        "selectorData": "protections-popup-cookiesView-list-section",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "refresh-button": {
+        "selectorData": "reload-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }
