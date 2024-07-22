@@ -37,11 +37,6 @@ else
     fi
 fi
 
-if [[ "$SYSTEM_NAME" == "win" ]] && [[ -z $ARCH ]] && [[ $BITS = "64" ]]
-then
-    BITS=32
-fi
-
 if [[ $SYSTEM_NAME == "win" ]]
 then
     EXT="zip"
