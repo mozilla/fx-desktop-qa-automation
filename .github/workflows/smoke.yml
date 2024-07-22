@@ -3,9 +3,7 @@ name: Mac and Windows Smoke
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
-  push:
-    branches: "bc/gha"
-  pull_request:
+  pull_request: created
 
 jobs:
   Smoke-Windows:
