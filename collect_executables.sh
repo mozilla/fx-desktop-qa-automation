@@ -94,6 +94,16 @@ then
 else
     tar -xvzf geckodriver.tar.gz
 fi
+
+# Wait up to 10 seconds for geckodriver to exist
+for ((i=0; i<200; i++))
+do
+    if [ -f geckodriver ]
+    then
+        break
+    fi
+    sleep 0.2
+done
 chmod +x geckodriver
 
 if [[ $SYSTEM_NAME == "linux" ]]
