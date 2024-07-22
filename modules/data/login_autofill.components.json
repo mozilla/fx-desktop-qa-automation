@@ -1,7 +1,31 @@
 {
-    "login-input-field": {
+    "input-field": {
         "selectorData": "input[autocomplete='{name}']",
         "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "username-field": {
+        "selectorData": "input[placeholder='username']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "submit-form": {
+        "selectorData": "input[value='Log In']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "save-login-popup": {
+        "selectorData": "notification-popup",
+        "strategy": "id",
         "groups": [
             "doNotCache"
         ]
