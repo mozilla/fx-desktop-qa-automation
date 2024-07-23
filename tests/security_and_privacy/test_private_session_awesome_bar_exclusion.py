@@ -7,6 +7,8 @@ YOUTUBE_URL = "https://www.youtube.com/"
 FACEBOOK_URL = "https://www.facebook.com/"
 AMAZON_URL = "https://www.amazon.com/"
 
+WEBSITES = [YOUTUBE_URL, FACEBOOK_URL, AMAZON_URL]
+
 
 def test_websites_visited_in_private_browser_not_displayed_in_awesome_bar(
     driver: Firefox,
@@ -17,18 +19,18 @@ def test_websites_visited_in_private_browser_not_displayed_in_awesome_bar(
     """
 
     initial_window_handle = driver.current_window_handle
-
     nav = Navigation(driver)
     panel_ui = PanelUi(driver)
+
     panel_ui.open_private_window()
     panel_ui.switch_to_new_window()
 
-    for url in [YOUTUBE_URL, FACEBOOK_URL, AMAZON_URL]:
+    for url in WEBSITES:
         driver.get(url)
 
     driver.switch_to.window(initial_window_handle)
 
-    for url in [YOUTUBE_URL, FACEBOOK_URL, AMAZON_URL]:
+    for url in WEBSITES:
         nav.type_in_awesome_bar(url)
         url_element = nav.get_element("search-result-url")
         action_element = nav.get_element("search-result-action-term")
