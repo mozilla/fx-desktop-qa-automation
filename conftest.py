@@ -1,7 +1,6 @@
 import logging
 import os
 import platform
-from time import sleep
 from typing import Callable, List, Tuple
 
 import pytest
