@@ -34,11 +34,6 @@ jobs:
         with:
           name: artifacts-win
           path: artifacts-win
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: artifacts-win
-          path: downloaded-artifacts/
   Smoke-MacOS:
     runs-on: macos-latest
     steps:
@@ -66,8 +61,28 @@ jobs:
         with:
           name: artifacts-mac
           path: artifacts-mac
-      - name: Download artifact
+
+  Use-Artifacts:
+    runs-on: ubuntu-latest
+    needs: Smoke-Windows
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifacts-win
+          path: downloaded-artifacts/windows/
+      - name: Download MacOS artifact
         uses: actions/download-artifact@v2
         with:
           name: artifacts-mac
-          path: downloaded-artifacts/
+          path: downloaded-artifacts/macos/
+      - name: List downloaded files
+        run: ls downloaded-artifacts/
+      - name: List downloaded MacOS files
+        run: ls downloaded-artifacts/macos/
+      # - name: Use artifact
+      #   run: |
+      #     # Add your commands here to use the downloaded artifacts
+      #     cat downloaded-artifacts/artifacts-win/some-file.txt
