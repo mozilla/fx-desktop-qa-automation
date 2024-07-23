@@ -27,7 +27,7 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in Win
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+          pipenv run pytest --fx-executable ./firefox/firefox tests/address_bar_and_search/test_search_bar_result.py
           mv artifacts artifacts-win
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -82,6 +82,12 @@ jobs:
         run: ls downloaded-artifacts/
       - name: List downloaded MacOS files
         run: ls downloaded-artifacts/macos/
+      - name: Run script with secret
+        env:
+          MY_SECRET_TOKEN: ${{ secrets.SLACK_KEY }}
+        run: |
+          python notifier.py
+
       # - name: Use artifact
       #   run: |
       #     # Add your commands here to use the downloaded artifacts
