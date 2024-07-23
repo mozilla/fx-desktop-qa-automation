@@ -1,13 +1,22 @@
 #!/bin/bash
+echo "~~collect executables~~"
 
 # Usage: ./collect_executables.sh [channel]
 # Collects geckodriver and Fx, default channel is Beta.
 
 ## Determine OS and arch
 UNAME_A=$(uname -a)
-if [ -n "$WSL_DISTRO_NAME" ]
+## Save the system arch info
+echo "uname -a: ${UNAME_A}"
+if [ -n "$WSL_DISTRO_NAME" ] || [[ $UNAME_A == *"MINGW"* ]]
 then
     SYSTEM_NAME="win"
+    if [[ $UNAME_A == *"x86_64"* ]]
+    then
+        BITS="64"
+    else
+        BITS="32"
+    fi
 else
     if [[ $UNAME_A == *"Darwin"* ]]
     then
@@ -29,11 +38,6 @@ else
     fi
 fi
 
-if [[ "$SYSTEM_NAME" == "win" ]] && [[ -z $ARCH ]] && [[ $BITS = "64" ]]
-then
-    BITS=32
-fi
-
 if [[ $SYSTEM_NAME == "win" ]]
 then
     EXT="zip"
@@ -43,14 +47,13 @@ fi
 
 # Find the version of Geckodriver that matches arch
 FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
-
+echo "FILENAME ${FILENAME}"
 # 20 is arbitrary and may break if future releases of Geckodriver have more than 20 channels
 for i in {0..20}
 do
     GECKO_LINK=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq ".[\"assets\"][${i}][\"browser_download_url\"]" | tr -d '"')
     if [[ $GECKO_LINK == *"${FILENAME}"* ]] && [[ $GECKO_LINK != *".asc" ]]
     then
-        echo "$GECKO_LINK"
         curl -OL "$GECKO_LINK"
     fi
 done
@@ -83,8 +86,24 @@ FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
 
-mv geckodriver*.tar.gz geckodriver.tar.gz
-tar -xvzf geckodriver.tar.gz
+GD_FILE=$(ls geckodriver*)
+mv "$GD_FILE" "geckodriver.${EXT}"
+if [[ $EXT == "zip" ]]
+then
+    unzip geckodriver.zip
+else
+    tar -xvzf geckodriver.tar.gz
+fi
+
+# Wait up to 10 seconds for geckodriver to exist
+for ((i=0; i<200; i++))
+do
+    if [ -f geckodriver ]
+    then
+        break
+    fi
+    sleep 0.2
+done
 chmod +x geckodriver
 
 if [[ $SYSTEM_NAME == "linux" ]]

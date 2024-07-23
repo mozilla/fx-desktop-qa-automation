@@ -1,19 +1,62 @@
+---
 name: Mac and Windows Smoke
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
-  push:
-    branches: ["bc/gha"]
   pull_request:
-    types:
-      - created
+
 jobs:
   Smoke-Windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          bash collect_executables.sh;
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+      - name: Run Smoke Tests in Win
+        run: |
+          pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+          mv artifacts artifacts-win
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-win
+          path: artifacts-win
+  Smoke-MacOS:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          bash collect_executables.sh;
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+      - name: Run Smoke Tests in MacOS
+        run: |
+          pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests
+          mv artifacts artifacts-mac
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-mac
+          path: artifacts-mac
