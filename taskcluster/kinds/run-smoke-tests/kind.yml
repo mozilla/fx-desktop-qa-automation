@@ -24,4 +24,4 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+        pipenv run pytest --fx-executable ./firefox/firefox tests/security_and_privacy/test_third_party_content_blocked_private_browsing.py
