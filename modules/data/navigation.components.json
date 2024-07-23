@@ -189,7 +189,9 @@
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "cryptominers": {
@@ -220,5 +222,25 @@
         "selectorData": "identity-popup-more-info",
         "strategy": "id",
         "groups": []
+    },
+
+    "search-result-url": {
+        "selectorData": ".urlbarView-title.urlbarView-overflowable[is-url='']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-result-action-term": {
+        "selectorData": ".urlbarView-action",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "refresh-button": {
+        "selectorData": "reload-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }

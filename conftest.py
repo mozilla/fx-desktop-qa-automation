@@ -5,6 +5,7 @@ from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.options import Options
 
 
@@ -180,9 +181,11 @@ def driver(
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         yield driver
-
+    except WebDriverException as e:
+        logging.warning(f"DRIVER exception: {e}")
     finally:
-        driver.quit()
+        if "driver" in locals() or "driver" in globals():
+            driver.quit()
 
 
 @pytest.fixture()

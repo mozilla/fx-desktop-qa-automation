@@ -78,7 +78,7 @@
     },
 
     "prefs-button": {
-        "selectorData": "button[label='{name}']",
+        "selectorData": "button[label^='{name}']",
         "strategy": "css",
         "groups": []
     },
@@ -236,6 +236,18 @@
 
     "cookies-checkbox": {
         "selectorData": "contentBlockingBlockCookiesCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-manage-data": {
+        "selectorData": "siteDataSettings",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-manage-data-sitelist": {
+        "selectorData": "sitesList",
         "strategy": "id",
         "groups": []
     },

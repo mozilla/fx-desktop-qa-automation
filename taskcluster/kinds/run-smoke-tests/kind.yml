@@ -4,7 +4,7 @@ transforms:
 
 task-defaults:
   label: "Smoke Tests"
-  description: "Runs Smoke Tests and Notifies Slack"
+  description: "Runs Smoke Tests (linux) and Notifies Slack"
   worker-type: t-linux-wayland
   worker:
     max-run-time: 1800
@@ -62,13 +62,6 @@ tasks:
                       "text": {
                         "type": "mrkdwn",
                         "text": "*Owner*: ${task.metadata.owner}"
-                      }
-                    },
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "*Commit*: <${task.metadata.source}>"
                       }
                     },
                     {

@@ -1,5 +1,3 @@
-import logging
-
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar, TabContextMenu

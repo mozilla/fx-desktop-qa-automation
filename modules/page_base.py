@@ -541,6 +541,19 @@ class BasePage(Page):
             children = element.find_elements(By.XPATH, "./*")
         return children
 
+    def wait_for_no_children(
+        self, parent: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """
+        Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
+        """
+        driver_wait = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            assert len(self.get_all_children(self.fetch(parent, labels))) == 0
+        finally:
+            self.driver.implicitly_wait(driver_wait)
+
     def wait_for_num_tabs(self, num_tabs: int) -> Page:
         """
         Waits for the driver.window_handles to be updated accordingly with the number of tabs requested

@@ -15,7 +15,7 @@ def test_clear_cookie_data(driver: Firefox):
     def open_clear_cookies_data_dialog():
         about_prefs.open()
         clear_data_popup = about_prefs.press_button_get_popup_dialog_iframe(
-            "Clear Data…"
+            "Clear Data"
         )
         ba.switch_to_iframe_context(clear_data_popup)
 
