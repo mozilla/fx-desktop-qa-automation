@@ -1,5 +1,3 @@
-from selenium.webdriver import Firefox
-
 from modules.page_object_autofill import Autofill
 
 

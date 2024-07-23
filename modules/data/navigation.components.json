@@ -189,7 +189,9 @@
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "cryptominers": {
@@ -232,5 +234,13 @@
         "selectorData": ".urlbarView-action",
         "strategy": "css",
         "groups": []
+    },
+
+    "refresh-button": {
+        "selectorData": "reload-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }
