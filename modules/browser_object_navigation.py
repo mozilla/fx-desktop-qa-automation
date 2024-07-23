@@ -188,5 +188,6 @@ class Navigation(BasePage):
         """
         Clicks the shield icon and opens the panel associated with it
         """
+        self.set_chrome_context()
         self.get_element("shield-icon").click()
         return self

@@ -98,7 +98,7 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
 
 def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox):
     """
-    C446323.3: Ensure that the statuses of some third party content is loaded properly
+    C446323.3: Ensure that the statuses of some third party content are loaded properly
     """
     # instantiate objects
     panel_ui = PanelUi(driver).open()
