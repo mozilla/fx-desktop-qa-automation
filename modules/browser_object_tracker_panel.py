@@ -1,4 +1,3 @@
-import datetime
 import logging
 from typing import List
 
@@ -17,7 +16,7 @@ class TrackerPanel(BasePage):
     URL_TEMPLATE = ""
 
     def wait_for_blocked_tracking_icon(
-        self, nav: Navigation, page: BasePage, screenshot
+        self, nav: Navigation, page: BasePage
     ) -> BasePage:
         """
         Waits for the shield icon to indicate that cookies/trackers are being blocked by continuously refresing the page
@@ -35,7 +34,6 @@ class TrackerPanel(BasePage):
                 page.open()
                 page.wait_for_page_to_load()
             shield_icon = self.get_element("shield-icon")
-            screenshot(str(datetime.datetime.now()))
             if (
                 shield_icon.get_attribute("data-l10n-id")
                 == "tracking-protection-icon-active-container"

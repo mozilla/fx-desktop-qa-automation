@@ -18,7 +18,7 @@ SECOND_TRACKER_WEBSITE = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
 def test_third_party_content_blocked_private_browsing_cross_site(
-    driver: Firefox, screenshot
+    driver: Firefox
 ):
     """
     C446323.1: Ensure that third party content is blocked correctly
@@ -35,7 +35,7 @@ def test_third_party_content_blocked_private_browsing_cross_site(
 
     # open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website, screenshot)
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
     # verify the indicator
     driver.set_context(driver.CONTEXT_CHROME)
@@ -61,7 +61,7 @@ def test_third_party_content_blocked_private_browsing_cross_site(
 
 
 def test_third_party_content_blocked_private_browsing_allowed_tracking(
-    driver: Firefox, screenshot
+    driver: Firefox
 ):
     """
     C446323.2: Ensure that some third party content is allowed
@@ -78,7 +78,7 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
 
     # open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website, screenshot)
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
     # verify the indicator
     driver.set_context(driver.CONTEXT_CHROME)
@@ -101,7 +101,7 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
 
 
 def test_third_party_content_private_browsing_tracking_statuses(
-    driver: Firefox, screenshot
+    driver: Firefox
 ):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
@@ -118,7 +118,7 @@ def test_third_party_content_private_browsing_tracking_statuses(
 
     # open the tracker website
     tracker_website.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website, screenshot)
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
     # verify the indicator
     tracker_panel.verify_tracker_shield_indicator(nav)
