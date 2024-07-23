@@ -220,5 +220,17 @@
         "selectorData": "identity-popup-more-info",
         "strategy": "id",
         "groups": []
+    },
+
+    "search-result-url": {
+        "selectorData": ".urlbarView-title.urlbarView-overflowable[is-url='']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-result-action-term": {
+        "selectorData": ".urlbarView-action",
+        "strategy": "css",
+        "groups": []
     }
 }
