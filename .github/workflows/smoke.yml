@@ -33,6 +33,11 @@ jobs:
         with:
           name: artifacts-win
           path: artifacts-win
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifacts-win
+          path: downloaded-artifacts/
   Smoke-MacOS:
     runs-on: macos-latest
     steps:
@@ -60,3 +65,8 @@ jobs:
         with:
           name: artifacts-mac
           path: artifacts-mac
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifacts-mac
+          path: downloaded-artifacts/
