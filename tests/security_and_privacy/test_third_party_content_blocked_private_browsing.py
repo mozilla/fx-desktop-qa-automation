@@ -17,7 +17,9 @@ FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pa
 SECOND_TRACKER_WEBSITE = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
-def test_third_party_content_blocked_private_browsing_cross_site(driver: Firefox, screenshot):
+def test_third_party_content_blocked_private_browsing_cross_site(
+    driver: Firefox, screenshot
+):
     """
     C446323.1: Ensure that third party content is blocked correctly
     """
@@ -58,7 +60,9 @@ def test_third_party_content_blocked_private_browsing_cross_site(driver: Firefox
     assert found_tracker
 
 
-def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: Firefox, screenshot):
+def test_third_party_content_blocked_private_browsing_allowed_tracking(
+    driver: Firefox, screenshot
+):
     """
     C446323.2: Ensure that some third party content is allowed
     """
@@ -74,6 +78,7 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
 
     # open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
+    tracker_website.wait_for_page_to_load()
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website, screenshot)
 
     # verify the indicator
@@ -96,7 +101,9 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
         assert item.get_attribute("value") in ALLOWED_TRACKING_URLS
 
 
-def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox, screenshot):
+def test_third_party_content_private_browsing_tracking_statuses(
+    driver: Firefox, screenshot
+):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
     """
