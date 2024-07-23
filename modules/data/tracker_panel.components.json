@@ -52,5 +52,14 @@
         "selectorData": "protections-popup-list-host-label",
         "strategy": "class",
         "groups": []
+    },
+
+    "shield-icon": {
+        "selectorData": "tracking-protection-icon-container",
+        "strategy": "id",
+        "groups": [
+            "doNotCache",
+            "requiredForPage"
+        ]
     }
 }

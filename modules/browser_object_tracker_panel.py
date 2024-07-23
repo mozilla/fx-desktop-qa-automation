@@ -34,7 +34,7 @@ class TrackerPanel(BasePage):
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 page.open()
                 page.wait_for_page_to_load()
-            shield_icon = nav.get_element("shield-icon")
+            shield_icon = self.get_element("shield-icon")
             screenshot(str(datetime.datetime.now()))
             if (
                 shield_icon.get_attribute("data-l10n-id")
@@ -57,7 +57,7 @@ class TrackerPanel(BasePage):
         Verifies that the shield icon is
         """
         with self.driver.context(self.context_id):
-            shield_icon = nav.get_element("shield-icon")
+            shield_icon = self.get_element("shield-icon")
             assert (
                 shield_icon.get_attribute("data-l10n-id")
                 == "tracking-protection-icon-active-container"
