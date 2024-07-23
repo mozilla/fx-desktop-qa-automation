@@ -37,11 +37,15 @@ def test_cross_site_trackrs_crypto_fingerprinter_blocked(driver: Firefox):
         if item.get_attribute("id") == "protections-popup-blocking-section-header":
             add_allowed = False
             add_blocked = True
-        elif item.get_attribute("id") == "protections-popup-not-blocking-section-header":
+        elif (
+            item.get_attribute("id") == "protections-popup-not-blocking-section-header"
+        ):
             add_allowed = True
             add_blocked = False
         else:
-            child_labels = tracker_panel.get_element("tracking-item-container-label", multiple=True, parent_element=item)
+            child_labels = tracker_panel.get_element(
+                "tracking-item-container-label", multiple=True, parent_element=item
+            )
             for child in child_labels:
                 label = child.get_attribute("innerHTML")
                 if add_blocked:
