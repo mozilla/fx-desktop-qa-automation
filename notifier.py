@@ -1,9 +1,10 @@
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
 import os
 
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+
 # Your OAuth access token
-token = os.getenv('SLACK_KEY')
+token = os.getenv("SLACK_KEY")
 
 # Initialize a Web API client
 client = WebClient(token=token)

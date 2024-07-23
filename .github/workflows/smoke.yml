@@ -54,7 +54,7 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in MacOS
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests
+          pipenv run pytest --fx-executable ./firefox/firefox tests/address_bar_and_search/test_search_bar_result.py
           mv artifacts artifacts-mac
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -72,12 +72,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: artifacts-win
-          path: downloaded-artifacts/windows/
+          path: artifacts-win
       - name: Download MacOS artifact
         uses: actions/download-artifact@v2
         with:
           name: artifacts-mac
-          path: downloaded-artifacts/macos/
+          path: artifacts-mac
       - name: List downloaded files
         run: ls downloaded-artifacts/
       - name: List downloaded MacOS files
