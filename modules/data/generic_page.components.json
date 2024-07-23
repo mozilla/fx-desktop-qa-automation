@@ -24,8 +24,8 @@
     },
 
     "wiki-search-bar": {
-        "selectorData": "searchInput",
-        "strategy": "id",
+        "selectorData": "cdx-text-input__input",
+        "strategy": "class",
         "groups": []
     },
 
