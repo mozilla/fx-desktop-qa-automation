@@ -78,7 +78,6 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
 
     # open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    tracker_website.wait_for_page_to_load()
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website, screenshot)
 
     # verify the indicator

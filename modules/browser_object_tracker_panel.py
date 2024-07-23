@@ -32,6 +32,7 @@ class TrackerPanel(BasePage):
         def shield_active() -> bool:
             nav.get_element("refresh-button").click()
             with self.driver.context(self.driver.CONTEXT_CONTENT):
+                page.open()
                 page.wait_for_page_to_load()
             shield_icon = nav.get_element("shield-icon")
             screenshot(str(datetime.datetime.now()))
