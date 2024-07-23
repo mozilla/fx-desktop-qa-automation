@@ -52,7 +52,7 @@ class TrackerPanel(BasePage):
 
     def verify_tracker_shield_indicator(self, nav: Navigation) -> BasePage:
         """
-        Verifies that the shield icon is
+        Verifies that the shield icon is in the correct mode
         """
         with self.driver.context(self.context_id):
             shield_icon = self.get_element("shield-icon")
