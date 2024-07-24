@@ -1,10 +1,11 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutPrefs, GenericPage
 from modules.util import BrowserActions
 
-
+@pytest.mark.unstable
 def test_cookies_not_saved_private_browsing(driver: Firefox):
     """
     C101677: ensure that cookies are not saved after using private browsing
