@@ -61,5 +61,11 @@
             "doNotCache",
             "requiredForPage"
         ]
-    }
+    },
+
+     "tracking-subview": {
+         "selectorData": "protections-popup-trackersView",
+         "strategy": "id",
+         "groups": []
+     }
 }

@@ -258,6 +258,18 @@
         "groups": []
     },
 
+    "tracking-in-all-windows": {
+        "selectorData": "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cryptominers-checkbox": {
+        "selectorData": "contentBlockingCryptominersCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
     "known-fingerprints-checkbox": {
         "selectorData": "contentBlockingFingerprintersCheckbox",
         "strategy": "id",
