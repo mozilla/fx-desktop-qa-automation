@@ -242,5 +242,17 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "known-fingerprints": {
+        "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.blocked.subviewbutton-nav",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fingerprints-blocked-subpanel": {
+        "selectorData": "protections-popup-fingerprintersView",
+        "strategy": "id",
+        "groups": []
     }
 }
