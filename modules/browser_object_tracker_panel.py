@@ -50,6 +50,35 @@ class TrackerPanel(BasePage):
             )
         return self
 
+    def wait_for_trackers(self, nav: Navigation, page: BasePage) -> BasePage:
+        """
+        Waits for trackers to appear
+
+        Remember to open the passed in page beforehand, this waits for the page to load.
+
+        Example Usage:
+        first_tracker_website.open()
+        tracker_panel.wait_for_blocked_tracking_icon(nav, first_tracker_website)
+        """
+
+        def message_not_present() -> bool:
+            nav.get_element("refresh-button").click()
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                page.open()
+                page.wait_for_page_to_load()
+            self.get_element("shield-icon").click()
+            no_trackers_message = self.get_element("no-trackers-message")
+            if no_trackers_message.get_attribute("hidden") == "true":
+                return True
+            return False
+
+        try:
+            with self.driver.context(self.context_id):
+                self.wait.until(lambda _: message_not_present())
+        except TimeoutException:
+            logging.warning("No trackers were ever detected after the timeout period.")
+        return self
+
     def verify_tracker_shield_indicator(self, nav: Navigation) -> BasePage:
         """
         Verifies that the shield icon is in the correct mode

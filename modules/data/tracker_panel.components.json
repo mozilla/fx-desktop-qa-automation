@@ -61,5 +61,11 @@
             "doNotCache",
             "requiredForPage"
         ]
+    },
+
+    "no-trackers-message": {
+        "selectorData": "protections-popup-no-trackers-found-description",
+        "strategy": "id",
+        "groups": []
     }
 }
