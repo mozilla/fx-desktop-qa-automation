@@ -1,6 +1,7 @@
 from selenium.webdriver.remote.webelement import WebElement
 
 from modules.page_base import BasePage
+from selenium.webdriver.common.keys import Keys
 
 
 class GoogleSearch(BasePage):
@@ -16,6 +17,13 @@ class GoogleSearch(BasePage):
         """
         search_bar = self.get_search_bar_element()
         search_bar.send_keys(text)
+
+    def press_enter_search_bar(self) -> BasePage:
+        """
+        Sends Enter into the search bar
+        """
+        search_bar = self.get_search_bar_element()
+        search_bar.send_keys(Keys.ENTER)
 
     def get_search_bar_element(self) -> WebElement:
         """
