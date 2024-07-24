@@ -5,7 +5,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs
 
-FINGERPRINTERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
+FINGERPRINTERS_URL = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
+)
 
 
 def test_blocking_fingerprinter(driver: Firefox):
