@@ -5,6 +5,7 @@ from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutPrefs, GenericPage
 from modules.util import BrowserActions
 
+
 @pytest.mark.unstable
 def test_cookies_not_saved_private_browsing(driver: Firefox):
     """
