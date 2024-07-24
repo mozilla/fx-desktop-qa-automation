@@ -1,4 +1,3 @@
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -7,9 +6,8 @@ from modules.browser_object import Navigation, TrackerPanel
 from modules.page_object import GenericPage
 
 FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
-ALLOWED_TRACKING_URLS = set(
+ALLOWED_COOKIES = set(
     [
-        "https://content-track-digest256.dummytracker.org",
         "https://ads-track-digest256.dummytracker.org",
         "https://social-track-digest256.dummytracker.org",
         "https://analytics-track-digest256.dummytracker.org",
@@ -20,7 +18,6 @@ ALLOWED_TRACKING_URLS = set(
 @pytest.fixture()
 def add_prefs():
     return [
-        ("network.cookie.cookieBehavior", 0),
         ("privacy.trackingprotection.pbmode.enabled", False),
         ("privacy.trackingprotection.cryptomining.enabled", False),
         ("privacy.trackingprotection.fingerprinting.enabled", False),
@@ -30,7 +27,7 @@ def add_prefs():
 
 def test_cross_site_tracking_cookies_blocked(driver: Firefox):
     """
-    C446402: Ensures the
+    C446402: Ensures the cross tracking cookies are displayed in the tracker panel
     """
     # instantiate objects
     nav = Navigation(driver)
@@ -41,6 +38,7 @@ def test_cross_site_tracking_cookies_blocked(driver: Firefox):
     driver.set_context(driver.CONTEXT_CHROME)
     nav.open_tracker_panel()
 
-    # # fetch the items in the cross site trackers
+    # fetch the items in the cross site trackers and verify
     cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
-    sleep(40)
+    for item in cross_site_trackers:
+        assert item.get_attribute("value") in ALLOWED_COOKIES
