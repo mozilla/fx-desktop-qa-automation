@@ -26,9 +26,7 @@
     "wiki-search-bar": {
         "selectorData": "cdx-text-input__input",
         "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "wiki-search-button": {
