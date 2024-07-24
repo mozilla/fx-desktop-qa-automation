@@ -16,7 +16,6 @@ def test_blocked_tracking_content(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy").open()
     tracker_panel = TrackerPanel(driver)
 
-    about_prefs.set_etp_custom_mode()
     about_prefs.set_etp_custom_mode_options(["tracking"])
     about_prefs.get_element("tracking-in-all-windows").click()
 
@@ -37,7 +36,6 @@ def test_allowed_tracking_content(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy").open()
     tracker_panel = TrackerPanel(driver)
 
-    about_prefs.set_etp_custom_mode()
     about_prefs.set_etp_custom_mode_options(["tracking"])
 
     driver.get(Tracker_URL)
