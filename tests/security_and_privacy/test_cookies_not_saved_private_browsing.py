@@ -5,7 +5,7 @@ from modules.page_object import AboutPrefs, GenericPage, GoogleSearch
 from modules.util import BrowserActions
 
 
-def test_cookies_not_saved_private_browsing(driver: Firefox):
+def test_cookies_not_saved_private_browsing(driver: Firefox, screenshot):
     """
     C101677: ensure that cookies are not saved after using private browsing
     """
@@ -21,6 +21,7 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     nav.switch_to_new_window()
 
     # open the google page and perform a search
+    screenshot("1")
     google_search.open()
     google_search.type_in_search_bar("hello")
     google_search.press_enter_search_bar()
