@@ -94,7 +94,7 @@ jobs:
         run: ls artifacts-mac/
       - name: Run script with secret
         env:
-          MY_SECRET_TOKEN: ${{ secrets.SLACK_KEY }}
+          SLACK_KEY: ${{ secrets.SLACK_KEY }}
         run: |
           pipenv run python notifier.py
 
