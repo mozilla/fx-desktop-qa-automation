@@ -240,6 +240,12 @@
         "groups": []
     },
 
+    "cookies-second-menu-item": {
+        "selectorData": "isolateCookiesSocialMedia",
+        "strategy": "id",
+        "groups": []
+    },
+
     "cookies-manage-data": {
         "selectorData": "siteDataSettings",
         "strategy": "id",
