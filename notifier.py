@@ -12,8 +12,9 @@ client = WebClient(token=token)
 try:
     response = client.chat_postMessage(
         channel="#monitoring",  # Channel ID or name (e.g., #general)
-        text="Hello, world!",
+        text="from actions... 1",
     )
+    print("i have sent the message.")
 except SlackApiError as e:
     print(f"Error sending message: {e.response['error']}")
 
