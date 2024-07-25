@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import List, Union
 
 from pypom import Page
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, NoAlertPresentException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -568,6 +568,18 @@ class BasePage(Page):
         """Get list of all window handles, switch to the newly opened tab"""
         handles = self.driver.window_handles
         self.driver.switch_to.window(handles[-1])
+        return self
+
+    def switch_to_alert(self) -> Page:
+        """Wait for an alert to appear, then switch to it"""
+        def alert_present(driver) -> bool:
+            try:
+                driver.switch_to.alert
+                return True
+            except NoAlertPresentException:
+                return False
+
+        self.expect(alert_present)
         return self
 
     def wait_for_num_windows(self, num: int) -> Page:

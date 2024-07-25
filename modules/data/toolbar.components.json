@@ -1,0 +1,9 @@
+{
+    "context": "chrome",
+    "do-not-cache": true,
+    "downloads-item-by-file": {
+        "selectorData": ".downloadMainArea image[src*='{filename}']",
+        "strategy": "css",
+        "groups": []
+    }
+}

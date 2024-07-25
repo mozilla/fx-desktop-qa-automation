@@ -1,0 +1,43 @@
+{
+    "context": "chrome",
+    "do-not-cache": true,
+    "show-in-file-browser": {
+        "selectorData": "downloadShowMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "copy-download-link": {
+        "selectorData": "downloadCopyLocationMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "delete": {
+        "selectorData": "downloadDeleteFileMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "remove-from-history": {
+        "selectorData": "downloadRemoveFromHistoryMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "clear-downloads": {
+        "selectorData": "menuitem[data-l10n-id='downloads-cmd-clear-downloads']",
+        "strategy": "css",
+        "groups": [
+            "downloadOption"
+        ]
+    }
+}

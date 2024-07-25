@@ -13,7 +13,7 @@ class AboutDownloads(BasePage):
 
     URL_TEMPLATE = "about:downloads"
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         """Checks to see if downloads page is empty"""
         found = False
         try:
@@ -21,3 +21,7 @@ class AboutDownloads(BasePage):
             found = True
         finally:
             return found
+
+    def get_downloads(self) -> list:
+        """Get all download targets"""
+        return self.get_elements("download-target")
