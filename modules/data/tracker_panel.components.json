@@ -67,5 +67,17 @@
          "selectorData": "protections-popup-trackersView",
          "strategy": "id",
          "groups": []
-     }
+     },
+  
+    "social-media-tracker-content": {
+        "selectorData": "protections-popup-category-socialblock",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "social-media-subview": {
+        "selectorData": "protections-popup-socialblockView",
+        "strategy": "id",
+        "groups": []
+    }
 }
