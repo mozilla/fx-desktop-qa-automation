@@ -258,6 +258,12 @@
         "groups": []
     },
 
+    "cryptominers-checkbox": {
+        "selectorData": "contentBlockingCryptominersCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
     "known-fingerprints-checkbox": {
         "selectorData": "contentBlockingFingerprintersCheckbox",
         "strategy": "id",
