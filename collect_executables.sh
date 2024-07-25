@@ -81,8 +81,10 @@ else
         CHANNEL=""
     fi
 fi
+
 FX_LINK_HTML=$(curl -s https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
 FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
+echo "Firefox download link: $FX_LOC"
 
 curl -O "$FX_LOC"
 
@@ -104,7 +106,14 @@ do
     fi
     sleep 0.2
 done
-chmod +x geckodriver
+
+# ensure that the geckodriver exists before changing permissions, otherwise fail
+if [ -f geckodriver ]; then
+    chmod +x geckodriver
+else
+    echo "geckodriver not found after extraction."
+    exit 1
+fi
 
 if [[ $SYSTEM_NAME == "linux" ]]
 then
