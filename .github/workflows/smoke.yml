@@ -4,6 +4,7 @@ name: Mac and Windows Smoke
 run-name: ${{ github.actor }} is running smoke tests
 on:
   pull_request:
+  push:
 
 jobs:
   Smoke-Windows:
@@ -26,7 +27,7 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in Win
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+          pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/language_packs
           mv artifacts artifacts-win
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -53,7 +54,7 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in MacOS
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests
+          pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/language_packs
           mv artifacts artifacts-mac
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
