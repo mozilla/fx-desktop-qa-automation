@@ -1,5 +1,5 @@
 import logging
-from typing import List, Set, Optional
+from typing import List, Optional, Set
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
