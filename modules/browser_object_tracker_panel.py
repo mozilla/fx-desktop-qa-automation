@@ -1,5 +1,5 @@
 import logging
-from typing import List, Set
+from typing import List, Set, Optional
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
@@ -16,7 +16,7 @@ class TrackerPanel(BasePage):
     URL_TEMPLATE = ""
 
     def verify_allowed_blocked_trackers(
-        self, allowed: Set[str], blocked: Set[str]
+        self, allowed: Optional[Set[str]] = None, blocked: Optional[Set[str]] = None
     ) -> bool:
         """
         Given two sets of strings, one representing the allowed names of the type of trackers and one representing the blocked types of trackres,
@@ -30,6 +30,11 @@ class TrackerPanel(BasePage):
 
         assert tracker_panel.verify_allowed_blocked_trackers(allowed, blocked)
         """
+        if allowed is None:
+            allowed = set()
+        if blocked is None:
+            blocked = set()
+
         rm_blocked = False
         rm_allowed = False
 
