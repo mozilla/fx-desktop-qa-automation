@@ -1,14 +1,21 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, TrackerPanel
 from modules.page_object import GenericPage
 
+urls = [
+    "https://www.bbc.com/",
+    "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection",
+]
 
-def test_detected_blocked_trackers_found(driver: Firefox):
+
+@pytest.mark.parametrize("url", urls)
+def test_detected_blocked_trackers_found(driver: Firefox, url: str):
     """
     C446392: Ensure that the correct trackers are allowed and blocked
     """
-    generic_page = GenericPage(driver, url="https://www.bbc.com/")
+    generic_page = GenericPage(driver, url=url)
     tracker_panel = TrackerPanel(driver)
     nav = Navigation(driver).open()
 
