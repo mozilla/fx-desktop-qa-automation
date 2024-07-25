@@ -61,20 +61,20 @@ class TrackerPanel(BasePage):
         tracker_panel.wait_for_blocked_tracking_icon(nav, first_tracker_website)
         """
 
-        def message_not_present() -> bool:
+        def message_present() -> bool:
             nav.get_element("refresh-button").click()
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 page.open()
                 page.wait_for_page_to_load()
             self.get_element("shield-icon").click()
             no_trackers_message = self.get_element("no-trackers-message")
-            if no_trackers_message.get_attribute("hidden") == "true":
+            if no_trackers_message.get_attribute("hidden") is None:
                 return True
             return False
 
         try:
             with self.driver.context(self.context_id):
-                self.wait.until(lambda _: message_not_present())
+                self.wait.until_not(lambda _: message_present())
         except TimeoutException:
             logging.warning("No trackers were ever detected after the timeout period.")
         return self
