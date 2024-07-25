@@ -64,7 +64,9 @@ jobs:
 
   Use-Artifacts:
     runs-on: ubuntu-latest
-    needs: Smoke-Windows
+    needs:
+      - Smoke-Windows
+      - Smoke-MacOS
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -79,9 +81,9 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
       - name: List downloaded files
-        run: ls downloaded-artifacts/
+        run: ls artifacts-win/
       - name: List downloaded MacOS files
-        run: ls downloaded-artifacts/macos/
+        run: ls artifacts-mac/
       - name: Run script with secret
         env:
           MY_SECRET_TOKEN: ${{ secrets.SLACK_KEY }}
