@@ -1,3 +1,4 @@
+from time import sleep
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, TrackerPanel
@@ -14,6 +15,9 @@ def test_cross_site_trackrs_crypto_fingerprinter_blocked(driver: Firefox):
     tracker_page = GenericPage(driver, url=TRACKER_URL)
     tracker_panel = TrackerPanel(driver)
     nav = Navigation(driver).open()
+
+    # hard wait for fingerprinter blocker
+    sleep(4)
 
     # wait for the shield icon
     tracker_page.open()
