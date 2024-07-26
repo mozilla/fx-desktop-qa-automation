@@ -25,3 +25,8 @@ class AboutDownloads(BasePage):
     def get_downloads(self) -> list:
         """Get all download targets"""
         return self.get_elements("download-target")
+
+    def wait_for_num_downloads(self, num: int) -> BasePage:
+        """Wait for the number of downloads to equal num"""
+        self.expect(lambda _: len(self.get_downloads()) == num)
+        return self

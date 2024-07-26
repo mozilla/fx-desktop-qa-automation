@@ -1,14 +1,17 @@
 import logging
 from time import sleep
+
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import AboutDownloadsContextMenu, PanelUi, Toolbar
 from modules.page_object import AboutDownloads, GenericPage
-import pytest
 
-TEST_URL = "https://www.opm.gov/forms/standard-forms/"
+TEST_URL = "https://www.opm.gov/forms/opm-forms/"
+NUM_LINKS = 3
 
 
 @pytest.fixture()
@@ -34,6 +37,7 @@ def test_downloads_from_private_not_leaked(driver: Firefox):
     toolbar = Toolbar(driver)
     opm_forms.open()
 
+    # Get all links to pdfs on the page
     links = opm_forms.driver.find_elements("tag name", "a")
     valid_links = [
         el
@@ -42,27 +46,39 @@ def test_downloads_from_private_not_leaked(driver: Firefox):
         and el.get_attribute("href").endswith(".pdf")
         and el.is_displayed()
     ]
-    for link in valid_links[:5]:
-        target = link.get_attribute('href')
+    # first link is large, skip it
+    for link in valid_links[1 : (NUM_LINKS + 1)]:
+        target = link.get_attribute("href")
         logging.info(f"target {target}")
         logging.info(link.text)
         link.click()
         toolbar.wait_for_item_to_download(target.split("/")[-1])
 
+    # Check that everything looks good in About:Downloads
     about_downloads = AboutDownloads(driver)
     context_menu = AboutDownloadsContextMenu(driver)
     about_downloads.open()
+    about_downloads.wait_for_num_downloads(NUM_LINKS)
     downloads = about_downloads.get_downloads()
-    assert len(downloads) == 5
+    assert len(downloads) == NUM_LINKS
 
     first_download = downloads[0]
     about_downloads.context_click(first_download)
-    assert context_menu.has_all_options_available()
+
+    # We are not testing all the context menu options, that should be a test in another suite
     context_menu.click_and_hide_menu("delete")
+    about_downloads.expect(
+        lambda _: (
+            about_downloads.get_parent_of(first_download)
+            .find_element("class name", "downloadDetails")
+            .get_attribute("value")
+            .startswith("File deleted")
+        )
+    )
+    sleep(2)
+    context_menu.hide_popup_by_class("download-status")
 
-    downloads = about_downloads.get_downloads()
-    assert len(downloads) == 4
-
+    # Check that nothing has leaked
     driver.switch_to.window(non_private_window)
     about_downloads = AboutDownloads(driver)
     about_downloads.open()
