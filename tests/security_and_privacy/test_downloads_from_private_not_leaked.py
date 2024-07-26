@@ -66,6 +66,7 @@ def test_downloads_from_private_not_leaked(driver: Firefox):
     about_downloads.context_click(first_download)
 
     # We are not testing all the context menu options, that should be a test in another suite
+    context_menu.has_all_options_available()
     context_menu.click_and_hide_menu("delete")
     about_downloads.expect(
         lambda _: (
