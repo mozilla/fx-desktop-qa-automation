@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -75,8 +74,6 @@ def test_downloads_from_private_not_leaked(driver: Firefox):
             .startswith("File deleted")
         )
     )
-    sleep(2)
-    context_menu.hide_popup_by_class("download-status")
 
     # Check that nothing has leaked
     driver.switch_to.window(non_private_window)

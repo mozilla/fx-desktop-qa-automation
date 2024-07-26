@@ -642,8 +642,7 @@ class BasePage(Page):
                  if (element && element.hidePopup) {
                     element.hidePopup();
                  }"""
-        with self.driver.context(self.context_id):
-            self.driver.execute_script(script, node)
+        self.driver.execute_script(script, node)
 
     @property
     def loaded(self):
