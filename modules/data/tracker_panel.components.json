@@ -63,6 +63,12 @@
         ]
     },
 
+     "tracking-subview": {
+         "selectorData": "protections-popup-trackersView",
+         "strategy": "id",
+         "groups": []
+     },
+  
     "social-media-tracker-content": {
         "selectorData": "protections-popup-category-socialblock",
         "strategy": "id",
