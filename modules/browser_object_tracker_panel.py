@@ -19,7 +19,7 @@ class TrackerPanel(BasePage):
         self, allowed: Optional[Set[str]] = None, blocked: Optional[Set[str]] = None
     ) -> bool:
         """
-        Given two sets of strings, one representing the allowed names of the type of trackers and one representing the blocked types of trackres,
+        Given two sets of strings, one representing the allowed names of the type of trackers and one representing the blocked types of trackers,
         this function will return True if the tracking panel matches all of the entries in the sets, False if otherwise.
 
         Note: Strings in the set MUST be exactly the ones displayed in the tracker panel, otherwise this might fail.
