@@ -18,6 +18,7 @@ def add_prefs():
     return [("pdfjs.disabled", True)]
 
 
+@pytest.mark.slow
 def test_downloads_from_private_not_leaked(driver: Firefox):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
 
@@ -48,7 +49,7 @@ def test_downloads_from_private_not_leaked(driver: Firefox):
     # first link is large, skip it
     for link in valid_links[1 : (NUM_LINKS + 1)]:
         target = link.get_attribute("href")
-        logging.info(f"target {target}")
+        logging.info(f"Downloading target {target}:")
         logging.info(link.text)
         link.click()
         toolbar.wait_for_item_to_download(target.split("/")[-1])
