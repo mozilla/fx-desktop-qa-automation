@@ -20,14 +20,25 @@ def add_prefs():
 
 
 @pytest.fixture()
-def delete_files():
+def delete_files(sys_platform):
     """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
+
+    def _delete_files():
+        if sys_platform.startswith("Win"):
+            if os.environ.get("GITHUB_ACTIONS") == "true":
+                downloads_folder = os.path.join(
+                    "C:", "Users", "runneradmin", "Downloads"
+                )
+        else:
+            home_folder = os.environ.get("HOME")
+            downloads_folder = os.path.join(home_folder, "Downloads")
+        for file in os.listdir(downloads_folder):
+            if file.startswith("opm") and file.endswith("pdf"):
+                os.remove(os.path.join(downloads_folder, file))
+
+    _delete_files()
     yield True
-    home_folder = os.environ.get("HOME")
-    downloads_folder = os.path.join(home_folder, "Downloads")
-    for file in os.listdir(downloads_folder):
-        if file.startswith("opm") and file.endswith("pdf"):
-            os.remove(os.path.join(downloads_folder, file))
+    _delete_files()
 
 
 @pytest.mark.slow
