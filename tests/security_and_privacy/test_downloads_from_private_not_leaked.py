@@ -1,4 +1,5 @@
 import logging
+import os
 
 import pytest
 from selenium.webdriver import Firefox
@@ -18,8 +19,19 @@ def add_prefs():
     return [("pdfjs.disabled", True)]
 
 
+@pytest.fixture()
+def delete_files():
+    """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
+    yield True
+    home_folder = os.environ.get("HOME")
+    downloads_folder = os.path.join(home_folder, "Downloads")
+    for file in os.listdir(downloads_folder):
+        if file.startswith("opm") and file.endswith("pdf"):
+            os.remove(os.path.join(downloads_folder, file))
+
+
 @pytest.mark.slow
-def test_downloads_from_private_not_leaked(driver: Firefox):
+def test_downloads_from_private_not_leaked(driver: Firefox, delete_files):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
 
     # We're going to assume no downloads as every test is run in a new instance

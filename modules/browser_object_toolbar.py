@@ -6,9 +6,12 @@ from modules.page_base import BasePage
 
 
 class Toolbar(BasePage):
+    """BOM for the toolbar, other than the awesome bar and the panel UI"""
+
     URL_TEMPLATE = ""
 
     def wait_for_item_to_download(self, filename: str) -> BasePage:
+        """Check the downloads tool in the toolbar to wait for a given file to download"""
         original_timeout = self.driver.timeouts.implicit_wait
         try:
             # Whatever our timeout, we want to lengthen it because downloads
