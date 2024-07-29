@@ -54,6 +54,18 @@
         "groups": []
     },
 
+    "tracking-item-container": {
+        "selectorData": "protections-popup-category-list",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-item-container-label": {
+        "selectorData": "protections-popup-cookies-category-label",
+        "strategy": "id",
+        "groups": []
+    },
+
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",
@@ -61,5 +73,23 @@
             "doNotCache",
             "requiredForPage"
         ]
+    },
+
+     "tracking-subview": {
+         "selectorData": "protections-popup-trackersView",
+         "strategy": "id",
+         "groups": []
+     },
+  
+    "social-media-tracker-content": {
+        "selectorData": "protections-popup-category-socialblock",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "social-media-subview": {
+        "selectorData": "protections-popup-socialblockView",
+        "strategy": "id",
+        "groups": []
     }
 }

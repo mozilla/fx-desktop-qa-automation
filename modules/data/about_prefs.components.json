@@ -240,6 +240,12 @@
         "groups": []
     },
 
+    "cookies-second-menu-item": {
+        "selectorData": "isolateCookiesSocialMedia",
+        "strategy": "id",
+        "groups": []
+    },
+
     "cookies-manage-data": {
         "selectorData": "siteDataSettings",
         "strategy": "id",
@@ -254,6 +260,24 @@
 
     "tracking-checkbox": {
         "selectorData": "contentBlockingTrackingProtectionCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cryptominers-checkbox": {
+        "selectorData": "contentBlockingCryptominersCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-in-all-windows": {
+        "selectorData": "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cryptominers-checkbox": {
+        "selectorData": "contentBlockingCryptominersCheckbox",
         "strategy": "id",
         "groups": []
     },
