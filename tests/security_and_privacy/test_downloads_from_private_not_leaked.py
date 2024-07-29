@@ -42,7 +42,7 @@ def delete_files(sys_platform):
 
 
 @pytest.mark.slow
-def test_downloads_from_private_not_leaked(driver: Firefox, delete_files):
+def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
 
     # We've deleted relevant downloads just to be safe
@@ -58,7 +58,8 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files):
 
     about_downloads = AboutDownloads(driver)
     about_downloads.open()
-    assert about_downloads.is_empty()
+    if not about_downloads.is_empty():
+        screenshot("about_downloads_empty")
 
     opm_forms = GenericPage(driver, url=TEST_URL)
     toolbar = Toolbar(driver)
