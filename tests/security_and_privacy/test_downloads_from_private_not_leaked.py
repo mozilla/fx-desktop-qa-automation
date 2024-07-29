@@ -59,7 +59,8 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
     about_downloads = AboutDownloads(driver)
     about_downloads.open()
     if not about_downloads.is_empty():
-        screenshot("about_downloads_empty")
+        screenshot("about_downloads_not_empty")
+        logging.warning("About:Downloads is not registering as empty")
 
     opm_forms = GenericPage(driver, url=TEST_URL)
     toolbar = Toolbar(driver)
