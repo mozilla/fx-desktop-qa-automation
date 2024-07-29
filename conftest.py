@@ -8,16 +8,18 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.options import Options
 
+
 def pytest_exception_interact(node, call, report):
     if report.failed:
         try:
             # Attempt to access the driver fixture from the node
-            driver = node.funcargs['driver']
+            driver = node.funcargs["driver"]
             # Now you can interact with the driver, for example, log HTML content
             if driver:
                 print("Logging current page HTML:", driver.page_source)
         except:
             pass
+
 
 def pytest_addoption(parser):
     """Set custom command-line options"""
@@ -128,6 +130,7 @@ def fx_executable(request, sys_platform):
 @pytest.fixture(autouse=True)
 def env_prep():
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
+
 
 @pytest.fixture(autouse=True)
 def driver(
