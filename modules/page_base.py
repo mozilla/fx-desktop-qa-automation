@@ -583,19 +583,6 @@ class BasePage(Page):
         self.driver.switch_to.window(handles[-1])
         return self
 
-    def switch_to_alert(self) -> Page:
-        """Wait for an alert to appear, then switch to it"""
-
-        def alert_present(driver) -> bool:
-            try:
-                driver.switch_to.alert
-                return True
-            except NoAlertPresentException:
-                return False
-
-        self.expect(alert_present)
-        return self
-
     def wait_for_num_windows(self, num: int) -> Page:
         """Wait for the number of open tabs + windows to equal given int"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):
