@@ -1,24 +1,68 @@
 import logging
 import os
 import platform
+import datetime
 from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import Firefox
 
+def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
+    """
+    Screenshots the current browser, saves with appropriate test name and date for reference
+    """
+    artifacts_loc = "artifacts" if opt_ci else ""
+    current_time = str(datetime.datetime.now())
+    filename = f"{test_name}_{current_time}_image"
+    if not filename.endswith(".png"):
+        filename = filename + ".png"
+        artifacts_loc = ""
+        if opt_ci:
+            artifacts_loc = "artifacts"
+        fullpath = os.path.join(artifacts_loc, filename)
+        driver.save_screenshot(fullpath)
+    return
+
+def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
+    """
+    Logs the current browser content, with the appropriate test name and date for reference.
+    """
+    artifacts_loc = "artifacts" if opt_ci else ""
+    current_time = str(datetime.datetime.now())
+    fullpath_chrome = os.path.join(artifacts_loc, f"{test_name}_{current_time}_content.html")
+    fullpath_content = os.path.join(artifacts_loc, f"{test_name}_{current_time}_chrome.html")
+
+    # Save Chrome context page source
+    with open(fullpath_chrome, "w") as fh:
+        with driver.context(driver.CONTEXT_CHROME):
+            output_contents = driver.page_source
+            fh.write(output_contents)
+
+    # Save Content context page source
+    with open(fullpath_content, "w") as fh:
+        output_contents = driver.page_source.replace("><", ">\n<")
+        fh.write(output_contents)
+    return
 
 def pytest_exception_interact(node, call, report):
+    """
+    Method that wraps all test execution, on any exception/failure an artifact with the information about the failure is kept.
+    """
     if report.failed:
         try:
-            # Attempt to access the driver fixture from the node
+            test_name = node.name
+            logging.info(f"Handling exception for test: {test_name}")
             driver = node.funcargs["driver"]
-            # Now you can interact with the driver, for example, log HTML content
+            opt_ci = node.funcargs["opt_ci"]
             if driver:
-                print("Logging current page HTML:", driver.page_source)
-        except:
-            pass
+                log_content(opt_ci, driver, test_name)
+                screenshot_content(driver, opt_ci, test_name)
+        except Exception as e:
+            logging.warning("Something went wrong with the exception catching.")
+            raise e
 
 
 def pytest_addoption(parser):
@@ -140,7 +184,7 @@ def driver(
     set_prefs: List[Tuple],
     opt_ci: bool,
     opt_window_size: str,
-    env_prep,
+    env_prep
 ):
     """
     Return the webdriver object.
@@ -235,3 +279,27 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+
+
+def log_page_content(driver: webdriver.Firefox, opt_ci: bool):
+    """
+    Function that saves the html content into the artifacts on a failed test
+    """
+    def _log_page_content(opt_ci: bool):
+        artifacts_loc = "artifacts" if opt_ci else ""
+        fullpath_chrome = os.path.join(artifacts_loc, "page_source_chrome.html")
+        fullpath_content = os.path.join(artifacts_loc, "page_source_content.html")
+
+        # Save Chrome context page source
+        with open(fullpath_chrome, "w") as fh:
+            driver.switch_to.context(driver.CONTEXT_CHROME)
+            output_contents = driver.page_source.replace("><", ">\n<")
+            fh.write(output_contents)
+
+        # Save Content context page source
+        with open(fullpath_content, "w") as fh:
+            driver.switch_to.context(driver.CONTEXT_CONTENT)
+            output_contents = driver.page_source.replace("><", ">\n<")
+            fh.write(output_contents)
+
+    return _log_page_content(opt_ci)
