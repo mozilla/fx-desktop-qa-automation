@@ -75,12 +75,18 @@
         ]
     },
 
-     "tracking-subview": {
-         "selectorData": "protections-popup-trackersView",
-         "strategy": "id",
-         "groups": []
-     },
-  
+    "no-trackers-message": {
+        "selectorData": "protections-popup-no-trackers-found-description",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-subview": {
+        "selectorData": "protections-popup-trackersView",
+        "strategy": "id",
+        "groups": []
+    },
+
     "social-media-tracker-content": {
         "selectorData": "protections-popup-category-socialblock",
         "strategy": "id",
