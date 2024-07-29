@@ -21,6 +21,7 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           bash collect_executables.sh;
+          sleep 3;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
@@ -48,6 +49,7 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           bash collect_executables.sh;
+          sleep 3;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
