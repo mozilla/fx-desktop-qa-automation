@@ -51,5 +51,11 @@
         "selectorData": "dnt-on",
         "strategy": "id",
         "groups": []
+    },
+
+    "pdf-link": {
+        "selectorData": "a[href$='.pdf']",
+        "strategy": "css",
+        "groups": []
     }
 }

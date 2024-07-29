@@ -105,6 +105,7 @@ do
     sleep 0.2
 done
 chmod +x geckodriver
+./geckodriver --version
 
 if [[ $SYSTEM_NAME == "linux" ]]
 then

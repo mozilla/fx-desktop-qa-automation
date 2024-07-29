@@ -8,7 +8,11 @@ from pathlib import Path
 from typing import List, Union
 
 from pypom import Page
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    NoAlertPresentException,
+    NoSuchElementException,
+    TimeoutException,
+)
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -330,12 +334,14 @@ class BasePage(Page):
         """
         return self.get_element(name, multiple=True, labels=labels)
 
-    def get_parent_of(self, name: str, labels=[]) -> WebElement:
+    def get_parent_of(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> WebElement:
         """
-        Given a name (and labels if needed), return the direct parent node of the element.
+        Given a name + labels, a WebElement, or a tuple, return the direct parent node of the element.
         """
 
-        child = self.get_element(name, labels=labels)
+        child = self.fetch(reference, labels=labels)
         return child.find_element(By.XPATH, "..")
 
     def element_exists(self, name: str, labels=[]) -> Page:
@@ -383,6 +389,13 @@ class BasePage(Page):
             EC.text_to_be_present_in_element(
                 self.get_selector(name, labels=labels), text
             )
+        )
+        return self
+
+    def element_not_visible(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is not visible or timeout"""
+        self.expect_not(
+            EC.visibility_of_element_located(self.get_selector(name, labels=labels))
         )
         return self
 
@@ -616,8 +629,7 @@ class BasePage(Page):
                  if (element && element.hidePopup) {
                     element.hidePopup();
                  }"""
-        with self.driver.context(self.context_id):
-            self.driver.execute_script(script, node)
+        self.driver.execute_script(script, node)
 
     @property
     def loaded(self):
