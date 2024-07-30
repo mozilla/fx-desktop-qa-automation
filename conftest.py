@@ -1,8 +1,8 @@
-import sys
 import datetime
 import logging
 import os
 import platform
+import sys
 from typing import Callable, List, Tuple
 
 import pytest
@@ -65,7 +65,7 @@ def pytest_exception_interact(node, call, report):
         try:
             test_name = node.name
             logging.info(f"Handling exception for test: {test_name}")
-            print(f"NODE LOGS HERE {node.funcargs}", file=sys.stderr)
+            print(f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}", file=sys.stderr)
             driver = node.funcargs["driver"]
             opt_ci = node.funcargs["opt_ci"]
             if driver:
