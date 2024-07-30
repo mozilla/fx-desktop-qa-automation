@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    return ("S67", "Crash Reporter")
+    return ("S2126", "Reader View")
 
 
 @pytest.fixture()
