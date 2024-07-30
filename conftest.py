@@ -21,6 +21,7 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     """
     artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
+    current_time = re.sub(r"[^\w_. -]", "_", current_time)
     filename = f"{test_name}_{current_time}_image"
     if not filename.endswith(".png"):
         filename = filename + ".png"
