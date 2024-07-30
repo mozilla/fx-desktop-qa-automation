@@ -12,6 +12,7 @@ from selenium.webdriver.firefox.options import Options
 
 # pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
 
+
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     """
     Screenshots the current browser, saves with appropriate test name and date for reference
