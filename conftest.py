@@ -5,8 +5,11 @@ from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 def pytest_addoption(parser):
@@ -180,8 +183,11 @@ def driver(
         driver.set_window_size(*winsize)
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
+        WebDriverWait(driver, timeout=40).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
         yield driver
-    except WebDriverException as e:
+    except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
         if "driver" in locals() or "driver" in globals():
