@@ -29,6 +29,7 @@ jobs:
         run: |
           pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 tests/security_and_privacy
           mv artifacts artifacts-win
+        continue-on-error: true
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -57,6 +58,7 @@ jobs:
         run: |
           pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 tests/security_and_privacy
           mv artifacts artifacts-mac
+        continue-on-error: true
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -2,8 +2,8 @@ import datetime
 import logging
 import os
 import platform
-import sys
 import re
+import sys
 from typing import Callable, List, Tuple
 
 import pytest
@@ -38,7 +38,7 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     """
     artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
-    current_time = re.sub(r'[^\w_. -]', '_', current_time)
+    current_time = re.sub(r"[^\w_. -]", "_", current_time)
     fullpath_chrome = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_content.html"
     )
