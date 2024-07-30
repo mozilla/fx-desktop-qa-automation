@@ -31,7 +31,7 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/security_and_privacy
+        pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 tests/security_and_privacy
     notify:
       recipients:
         - type: slack-channel
