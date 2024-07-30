@@ -11,8 +11,6 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 
-# pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
-
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     """
@@ -39,13 +37,13 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     )
 
     # Save Chrome context page source
-    with open(fullpath_chrome, "w") as fh:
+    with open(fullpath_chrome, "w", encoding="utf-8") as fh:
         with driver.context(driver.CONTEXT_CHROME):
             output_contents = driver.page_source
             fh.write(output_contents)
 
     # Save Content context page source
-    with open(fullpath_content, "w") as fh:
+    with open(fullpath_content, "w", encoding="utf-8") as fh:
         output_contents = driver.page_source
         fh.write(output_contents)
     return
