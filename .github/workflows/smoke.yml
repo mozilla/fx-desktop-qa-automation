@@ -30,7 +30,7 @@ jobs:
           pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 tests/security_and_privacy
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
-          exit $TEST_EXIT_CODE
+          exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
