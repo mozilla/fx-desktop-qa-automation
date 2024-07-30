@@ -41,10 +41,10 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
     fullpath_chrome = os.path.join(
-        artifacts_loc, f"{test_name}_{current_time}_content.html"
+        artifacts_loc, f"{test_name}_{current_time}_content.txt"
     )
     fullpath_content = os.path.join(
-        artifacts_loc, f"{test_name}_{current_time}_chrome.html"
+        artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
 
     # Save Chrome context page source
@@ -55,7 +55,7 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
 
     # Save Content context page source
     with open(fullpath_content, "w") as fh:
-        output_contents = driver.page_source.replace("><", ">\n<")
+        output_contents = driver.page_source
         fh.write(output_contents)
     return
 
