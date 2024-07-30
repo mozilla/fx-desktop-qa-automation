@@ -65,9 +65,12 @@ def pytest_exception_interact(node, call, report):
         try:
             test_name = node.name
             logging.info(f"Handling exception for test: {test_name}")
-            print(f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}", file=sys.stderr)
-            driver = node.funcargs["driver"]
-            opt_ci = node.funcargs["opt_ci"]
+            print(
+                f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}",
+                file=sys.stderr,
+            )
+            driver = node.funcargs.get("driver")
+            opt_ci = node.funcargs.get("opt_ci")
             if driver:
                 log_content(opt_ci, driver, test_name)
                 screenshot_content(driver, opt_ci, test_name)
