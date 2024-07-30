@@ -1,5 +1,3 @@
-from time import sleep
-
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
