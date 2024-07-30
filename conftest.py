@@ -3,7 +3,6 @@ import logging
 import os
 import platform
 import re
-import sys
 from typing import Callable, List, Tuple
 
 import pytest
@@ -19,18 +18,10 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     """
     Screenshots the current browser, saves with appropriate test name and date for reference
     """
-    artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
     filename = f"{test_name}_{current_time}_image"
-    if not filename.endswith(".png"):
-        filename = filename + ".png"
-        artifacts_loc = ""
-        if opt_ci:
-            artifacts_loc = "artifacts"
-        fullpath = os.path.join(artifacts_loc, filename)
-        driver.save_screenshot(fullpath)
-    return
+    _screenshot(filename, driver, opt_ci)
 
 
 def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
@@ -67,10 +58,9 @@ def pytest_exception_interact(node, call, report):
     if report.failed:
         try:
             test_name = node.name
-            logging.info(f"Handling exception for test: {test_name}")
-            print(
-                f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}",
-                file=sys.stderr,
+            logging.error(f"Handling exception for test: {test_name}")
+            logging.error(
+                f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
             )
             driver = node.funcargs.get("driver")
             opt_ci = node.funcargs.get("opt_ci")
@@ -125,6 +115,17 @@ def pytest_addoption(parser):
         default="1152x864",
         help="Size for Fx window, default is '1152x864'",
     )
+
+
+def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
+    if not filename.endswith(".png"):
+        filename = filename + ".png"
+    artifacts_loc = ""
+    if opt_ci:
+        artifacts_loc = "artifacts"
+    fullpath = os.path.join(artifacts_loc, filename)
+    driver.save_screenshot(fullpath)
+    return fullpath
 
 
 @pytest.fixture()
@@ -267,20 +268,10 @@ def screenshot(driver: webdriver.Firefox, opt_ci: bool) -> Callable:
     Factory fixture that returns a screenshot function.
     """
 
-    def _screenshot(filename: str) -> str:
-        """
-        Given a short filename, save a screenshot and return the image's full path.
-        """
-        if not filename.endswith(".png"):
-            filename = filename + ".png"
-        artifacts_loc = ""
-        if opt_ci:
-            artifacts_loc = "artifacts"
-        fullpath = os.path.join(artifacts_loc, filename)
-        driver.save_screenshot(fullpath)
-        return fullpath
+    def screenshot_wrapper(filename: str) -> str:
+        return _screenshot(filename, driver, opt_ci)
 
-    return _screenshot
+    return screenshot_wrapper
 
 
 @pytest.fixture()
@@ -296,28 +287,3 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
-
-
-def log_page_content(driver: webdriver.Firefox, opt_ci: bool):
-    """
-    Function that saves the html content into the artifacts on a failed test
-    """
-
-    def _log_page_content(opt_ci: bool):
-        artifacts_loc = "artifacts" if opt_ci else ""
-        fullpath_chrome = os.path.join(artifacts_loc, "page_source_chrome.html")
-        fullpath_content = os.path.join(artifacts_loc, "page_source_content.html")
-
-        # Save Chrome context page source
-        with open(fullpath_chrome, "w") as fh:
-            driver.switch_to.context(driver.CONTEXT_CHROME)
-            output_contents = driver.page_source.replace("><", ">\n<")
-            fh.write(output_contents)
-
-        # Save Content context page source
-        with open(fullpath_content, "w") as fh:
-            driver.switch_to.context(driver.CONTEXT_CONTENT)
-            output_contents = driver.page_source.replace("><", ">\n<")
-            fh.write(output_contents)
-
-    return _log_page_content(opt_ci)
