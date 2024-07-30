@@ -31,6 +31,7 @@ jobs:
           mv artifacts artifacts-win
         continue-on-error: true
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win
@@ -60,6 +61,7 @@ jobs:
           mv artifacts artifacts-mac
         continue-on-error: true
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac
