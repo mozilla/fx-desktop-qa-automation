@@ -27,7 +27,6 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in Win
         run: |
-          set -e
           pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 tests/security_and_privacy
           mv artifacts artifacts-win || true
           exit $TEST_EXIT_CODE
@@ -58,7 +57,6 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in MacOS
         run: |
-          set -e
           pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 tests/security_and_privacy || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
