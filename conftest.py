@@ -1,14 +1,16 @@
+import datetime
 import logging
 import os
 import platform
-import datetime
 from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
+
+# pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     """
@@ -26,14 +28,19 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
         driver.save_screenshot(fullpath)
     return
 
+
 def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     """
     Logs the current browser content, with the appropriate test name and date for reference.
     """
     artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
-    fullpath_chrome = os.path.join(artifacts_loc, f"{test_name}_{current_time}_content.html")
-    fullpath_content = os.path.join(artifacts_loc, f"{test_name}_{current_time}_chrome.html")
+    fullpath_chrome = os.path.join(
+        artifacts_loc, f"{test_name}_{current_time}_content.html"
+    )
+    fullpath_content = os.path.join(
+        artifacts_loc, f"{test_name}_{current_time}_chrome.html"
+    )
 
     # Save Chrome context page source
     with open(fullpath_chrome, "w") as fh:
@@ -47,6 +54,7 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
         fh.write(output_contents)
     return
 
+
 def pytest_exception_interact(node, call, report):
     """
     Method that wraps all test execution, on any exception/failure an artifact with the information about the failure is kept.
@@ -55,6 +63,7 @@ def pytest_exception_interact(node, call, report):
         try:
             test_name = node.name
             logging.info(f"Handling exception for test: {test_name}")
+            logging.info(node.funcargs)
             driver = node.funcargs["driver"]
             opt_ci = node.funcargs["opt_ci"]
             if driver:
@@ -184,7 +193,7 @@ def driver(
     set_prefs: List[Tuple],
     opt_ci: bool,
     opt_window_size: str,
-    env_prep
+    env_prep,
 ):
     """
     Return the webdriver object.
@@ -285,6 +294,7 @@ def log_page_content(driver: webdriver.Firefox, opt_ci: bool):
     """
     Function that saves the html content into the artifacts on a failed test
     """
+
     def _log_page_content(opt_ci: bool):
         artifacts_loc = "artifacts" if opt_ci else ""
         fullpath_chrome = os.path.join(artifacts_loc, "page_source_chrome.html")
