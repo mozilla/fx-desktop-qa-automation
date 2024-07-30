@@ -64,7 +64,7 @@ def pytest_exception_interact(node, call, report):
         try:
             test_name = node.name
             logging.info(f"Handling exception for test: {test_name}")
-            logging.info(node.funcargs)
+            print(f"NODE LOGS HERE {node.funcargs}")
             driver = node.funcargs["driver"]
             opt_ci = node.funcargs["opt_ci"]
             if driver:
