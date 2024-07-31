@@ -3,7 +3,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ReaderView
 from modules.page_object import GenericPage
 
-WIKI_URL = "https://en.wikipedia.org/wiki/United_States"
+WIKI_URL = (
+    "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
+)
 
 
 def test_reader_view_open_close_using_searchbar(driver: Firefox):
@@ -25,10 +27,6 @@ def test_reader_view_open_close_using_keys(driver: Firefox):
     wiki_page = GenericPage(driver, url=WIKI_URL)
     reader_view = ReaderView(driver)
 
-    # DOES NOT WORK RIGHT NOW, NOT SURE WHY
     wiki_page.open()
     reader_view.open_reader_view_keys()
     reader_view.close_reader_view_keys()
-
-
-# how do you press the view menu at the top in selenium?
