@@ -1,8 +1,15 @@
 from selenium.webdriver import Firefox
 import pytest
 import locale
+from time import sleep
 
 from modules.page_object import AboutPrefs
+
+@pytest.fixture()
+def set_prefs():
+    return [
+        ("services.sync.prefs.sync-seen.intl.accept_languages", True)
+    ]
 
 @pytest.fixture()
 def change_locale():
@@ -17,3 +24,6 @@ def change_locale():
 def test_lang_pack_changed_from_about_prefs(driver: Firefox, change_locale):
     """C1771617 The language can be changed in about:preferences, locale in non-enUS, Fx in enUS"""
     about_prefs = AboutPrefs(driver, category="general")
+    about_prefs.open()
+    sleep(100)
+
