@@ -1,1 +1,13 @@
-{}
+{
+    "reader-view-button": {
+        "selectorData": "reader-mode-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "reader-toolbar": {
+        "selectorData": "div[class='toolbar reader-toolbar']",
+        "strategy": "css",
+        "groups": []
+    }
+}
