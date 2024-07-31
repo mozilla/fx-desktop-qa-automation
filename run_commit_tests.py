@@ -1,5 +1,8 @@
+import re
 import sys
 from subprocess import CalledProcessError, check_output
+
+TEST_RE = re.compile(r"tests/.*test\w+\.py")
 
 if __name__ == "__main__":
     committed_files = (
@@ -8,7 +11,7 @@ if __name__ == "__main__":
         .splitlines()
     )
 
-    tests = [f for f in committed_files if f.startswith("test") and f.endswith(".py")]
+    tests = [f for f in committed_files if TEST_RE.match(f)]
 
     if tests:
         print(f"Testing {tests} ...")
@@ -17,7 +20,15 @@ if __name__ == "__main__":
             print(
                 "\n".join(
                     check_output(
-                        ["pytest", "--run-headless", "-m", "not unstable", *tests]
+                        [
+                            "pytest",
+                            "--run-headless",
+                            "-m",
+                            "not unstable",
+                            "-n",
+                            "4",
+                            *tests,
+                        ]
                     )
                     .decode()
                     .splitlines()
@@ -27,4 +38,6 @@ if __name__ == "__main__":
             error_lines = "\n".join(exc.output.decode().splitlines())
             print("Error", exc.returncode)
             print(error_lines)
-            sys.exit(1)
+            # pass if no files are runnable
+            if exc.returncode != 5:
+                sys.exit(1)

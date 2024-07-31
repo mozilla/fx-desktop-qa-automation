@@ -1,0 +1,69 @@
+---
+name: Mac and Windows Smoke
+
+run-name: ${{ github.actor }} is running smoke tests
+on:
+  pull_request:
+
+jobs:
+  Smoke-Windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          bash collect_executables.sh;
+          sleep 3;
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+      - name: Run Smoke Tests in Win
+        run: |
+          pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+          $env:TEST_EXIT_CODE = $LASTEXITCODE
+          mv artifacts artifacts-win || true
+          exit $env:TEST_EXIT_CODE
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-win
+          path: artifacts-win
+  Smoke-MacOS:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          bash collect_executables.sh;
+          sleep 3;
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+      - name: Run Smoke Tests in MacOS
+        run: |
+          pipenv run pytest --fx-executable ./firefox/firefox -s -n 4 . || TEST_EXIT_CODE=$?
+          mv artifacts artifacts-mac || true
+          exit $TEST_EXIT_CODE
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-mac
+          path: artifacts-mac

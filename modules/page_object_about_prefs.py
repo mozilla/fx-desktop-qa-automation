@@ -46,7 +46,9 @@ class AboutPrefs(BasePage):
         def loaded(self):
             return self.root if EC.element_to_be_clickable(self.root) else False
 
-        def select_option(self, option_name: str, double_click=False):
+        def select_option(
+            self, option_name: str, double_click=False, wait_for_selection=True
+        ):
             """Select an option in the dropdown. Does not return self."""
             if not self.dropmarker.get_attribute("open") == "true":
                 self.root.click()
@@ -64,6 +66,7 @@ class AboutPrefs(BasePage):
                     )
                 else:
                     matching_menuitems[0].click()
+                if wait_for_selection:
                     self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
                 return self
             else:
@@ -288,3 +291,34 @@ class AboutPrefs(BasePage):
         self.get_element("prefs-button", labels=["Saved addresses"]).click()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def get_clear_cookie_data_value(self) -> int:
+        """
+        With the 'Clear browsing data and cookies' popup open,
+        returns the <memory used> value of the option for 'Cookies and site data (<memory used>)'.
+        The <memory used> value for no cookies is '0 bytes', otherwise values are '### MB', or '### KB'
+        """
+        # Find the dialog option elements containing the checkbox label
+        options = self.get_elements("clear-data-dialog-options")
+
+        # Extract the text from the label the second option
+        second_option = options[1]
+        label_text = second_option.text
+        print(f"The text of the option is: {label_text}")
+
+        # Use a regular expression to find the memory usage
+        match = re.search(r"\d+", label_text)
+
+        if match:
+            number_str = match.group()  # Extract the matched number as a string
+            number = int(number_str)  # Convert the number to an integer
+            print(f"The extracted value is: {number}")
+            return number
+        else:
+            print("No number found in the string")
+
+    def get_iframe(self) -> WebElement:
+        """
+        Gets the webelement for the iframe that commonly appears in about:preferences
+        """
+        return self.get_element("browser-popup")

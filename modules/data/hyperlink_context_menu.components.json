@@ -1,4 +1,6 @@
 {
+    "context": "chrome",
+    "do-not-cache": true,
     "context-menu-open-in-new-window": {
         "selectorData": "context-openlink",
         "strategy": "id",
@@ -7,6 +9,12 @@
 
     "context-menu-copy-link": {
         "selectorData": "context-copylink",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-save-link": {
+        "selectorData": "context-savelink",
         "strategy": "id",
         "groups": []
     },

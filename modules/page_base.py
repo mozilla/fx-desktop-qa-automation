@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import List, Union
 
 from pypom import Page
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+)
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -113,21 +116,15 @@ class BasePage(Page):
 
     def expect(self, condition) -> Page:
         """Use the Page's wait object to assert a condition or wait until timeout"""
-        logging.info("Expecting...")
-        if self.context == "chrome":
-            logging.info("Expecting in chrome...")
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.wait.until(condition)
-        else:
+        with self.driver.context(self.context_id):
+            logging.info(f"Expecting in {self.context_id}...")
             self.wait.until(condition)
         return self
 
     def expect_not(self, condition) -> Page:
         """Use the Page's to wait until assert a condition is not true or wait until timeout"""
-        if self.context == "chrome":
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.wait.until_not(condition)
-        else:
+        with self.driver.context(self.context_id):
+            logging.info(f"Expecting NOT in {self.context_id}...")
             self.wait.until_not(condition)
         return self
 
@@ -156,9 +153,23 @@ class BasePage(Page):
         # We should expect an key-value pair of "context": "chrome" for Browser Objs
         if "context" in self.elements:
             self.context = self.elements["context"]
+            self.context_id = (
+                self.driver.CONTEXT_CHROME
+                if self.context == "chrome"
+                else self.driver.CONTEXT_CONTENT
+            )
             del self.elements["context"]
         else:
             self.context = "content"
+            self.context_id = self.driver.CONTEXT_CONTENT
+        # If we find a key-value pair for "do-not-cache", add all elements to that group
+        doNotCache = self.elements.get("do-not-cache")
+        if "do-not-cache" in self.elements:
+            del self.elements["do-not-cache"]
+        if doNotCache:
+            for key in self.elements.keys():
+                logging.info(f"adding do-not-cache to {key}")
+                self.elements[key]["groups"].append("doNotCache")
 
     def get_selector(self, name: str, labels=[]) -> list:
         """
@@ -322,12 +333,14 @@ class BasePage(Page):
         """
         return self.get_element(name, multiple=True, labels=labels)
 
-    def get_parent_of(self, name: str, labels=[]) -> WebElement:
+    def get_parent_of(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> WebElement:
         """
-        Given a name (and labels if needed), return the direct parent node of the element.
+        Given a name + labels, a WebElement, or a tuple, return the direct parent node of the element.
         """
 
-        child = self.get_element(name, labels=labels)
+        child = self.fetch(reference, labels=labels)
         return child.find_element(By.XPATH, "..")
 
     def element_exists(self, name: str, labels=[]) -> Page:
@@ -341,12 +354,12 @@ class BasePage(Page):
         """Expect helper: wait until element exists or timeout"""
         original_timeout = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
-        if self.context == "chrome":
-            self.set_chrome_context()
-        self.instawait.until_not(
-            EC.presence_of_all_elements_located(self.get_selector(name, labels=labels))
-        )
-        self.set_content_context()
+        with self.driver.context(self.context_id):
+            self.instawait.until_not(
+                EC.presence_of_all_elements_located(
+                    self.get_selector(name, labels=labels)
+                )
+            )
         self.driver.implicitly_wait(original_timeout)
         return self
 
@@ -378,9 +391,35 @@ class BasePage(Page):
         )
         return self
 
+    def element_not_visible(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is not visible or timeout"""
+        self.expect_not(
+            EC.visibility_of_element_located(self.get_selector(name, labels=labels))
+        )
+        return self
+
     def url_contains(self, url_part: str) -> Page:
         """Expect helper: wait until driver URL contains given text or timeout"""
         self.expect(EC.url_contains(url_part))
+        return self
+
+    def title_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect(EC.title_contains(url_part))
+        return self
+
+    def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
+        """
+        Given a part of a URL and a regex, wait for that substring to exist in
+        the current URL, then match the regex against the current URL.
+        (This gives us the benefit of fast failure.)
+        """
+        self.url_contains(url_substr)
+        current_url = self.driver.current_url
+
+        assert re.match(
+            pattern, current_url
+        ), f"URL does not match the expected pattern: {current_url}"
         return self
 
     def fill(
@@ -420,40 +459,49 @@ class BasePage(Page):
         el.send_keys(f"{term}{end}")
         return self
 
+    def fetch(self, reference: Union[str, tuple, WebElement], labels=[]) -> WebElement:
+        """
+        Given an element name, a selector, or a WebElement, return the
+        corresponding WebElement.
+        """
+        if isinstance(reference, str):
+            return self.get_element(reference, labels=labels)
+        elif isinstance(reference, tuple):
+            return self.find_element(*reference)
+        elif isinstance(reference, WebElement):
+            return reference
+        assert (
+            False
+        ), "Bad fetch: only selectors, selector names, or WebElements allowed."
+
     def multi_click(
         self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Perform multiple clicks at once on an element by name, selector, or WebElement"""
-        if self.context == "chrome":
-            self.set_chrome_context()
-        if isinstance(reference, str):
-            el = self.get_element(reference, labels=labels)
-        elif isinstance(reference, tuple):
-            el = self.find_element(**reference)
-        elif isinstance(reference, WebElement):
-            el = reference
-        else:
-            assert False, "Attempted to multiclick on something unsupported"
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
 
-        # Little cheat: if element doesn't exist in one context, try the other
-        n = 0
-        while n < 2:
-            try:
-                n += 1
+            def execute_multi_click():
                 if iters == 2:
                     self.actions.double_click(el).perform()
                 else:
                     for _ in range(iters):
                         self.actions.click(el)
                     self.actions.perform()
-                n += 1
+
+            # Little cheat: if element doesn't exist in one context, try the other
+            try:
+                execute_multi_click()
             except NoSuchElementException:
-                if n > 1:
-                    raise NoSuchElementException
-                if self.context == "chrome":
-                    self.set_content_context()
-                else:
-                    self.set_chrome_context()
+                opposite_context = (
+                    self.driver.CONTEXT_CONTENT
+                    if self.context == "chrome"
+                    else self.driver.CONTEXT_CHROME
+                )
+                with self.driver.context(opposite_context):
+                    execute_multi_click()
+
+        return self
 
     def double_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
         """Actions helper: perform double-click on given element"""
@@ -463,10 +511,60 @@ class BasePage(Page):
         """Actions helper: perform triple-click on a given element"""
         return self.multi_click(3, reference, labels)
 
-    def context_click_element(self, element: WebElement) -> Page:
+    def context_click(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
         """Context (right-) click on an element"""
-        self.actions.context_click(element).perform()
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.actions.context_click(el).perform()
         return self
+
+    def click_and_hide_menu(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Click an option in a context menu, then hide it"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.fetch(reference, labels=labels).click()
+            self.hide_popup_by_child_node(reference, labels=labels)
+            return self
+
+    def hover(self, reference: Union[str, tuple, WebElement], labels=[]):
+        """
+        Hover over the specified element.
+        Parameters: element (str): The element to hover over.
+
+        Default tries to hover something in the chrome context
+        """
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.actions.move_to_element(el).perform()
+        return self
+
+    def get_all_children(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> List[WebElement]:
+        """
+        Gets all the children of a webelement
+        """
+        children = None
+        with self.driver.context(self.context_id):
+            element = self.fetch(reference, labels)
+            children = element.find_elements(By.XPATH, "./*")
+        return children
+
+    def wait_for_no_children(
+        self, parent: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """
+        Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
+        """
+        driver_wait = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            assert len(self.get_all_children(self.fetch(parent, labels))) == 0
+        finally:
+            self.driver.implicitly_wait(driver_wait)
 
     def wait_for_num_tabs(self, num_tabs: int) -> Page:
         """
@@ -478,7 +576,23 @@ class BasePage(Page):
             logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
         return self
 
-    def hide_popup(self, context_menu: str, chrome=False) -> Page:
+    def switch_to_new_tab(self) -> Page:
+        """Get list of all window handles, switch to the newly opened tab"""
+        handles = self.driver.window_handles
+        self.driver.switch_to.window(handles[-1])
+        return self
+
+    def wait_for_num_windows(self, num: int) -> Page:
+        """Wait for the number of open tabs + windows to equal given int"""
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            return self.wait_for_num_tabs(num)
+
+    def switch_to_new_window(self) -> Page:
+        """Switch to newest window"""
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            return self.switch_to_new_tab()
+
+    def hide_popup(self, context_menu: str, chrome=True) -> Page:
         """
         Given the ID of the context menu, it will dismiss the menu.
 
@@ -506,42 +620,15 @@ class BasePage(Page):
                 """
         self.driver.execute_script(script)
 
-    def hide_popup_by_child_node(self, node: WebElement, chrome=False) -> Page:
+    def hide_popup_by_child_node(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        node = self.fetch(reference, labels=labels)
         script = """var element = arguments[0].parentNode;
                  if (element && element.hidePopup) {
                     element.hidePopup();
                  }"""
-        if chrome:
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.driver.execute_script(script, node)
-        else:
-            self.driver.execute_script(script, node)
-
-    def hover_over_element(self, element: WebElement, chrome=False):
-        """
-        Hover over the specified element.
-        Parameters: element (str): The element to hover over.
-
-        Default tries to hover something in the chrome context
-        """
-        if chrome:
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.actions.move_to_element(element).perform()
-        else:
-            self.actions.move_to_element(element).perform()
-        return self
-
-    def get_all_children(self, element: WebElement, chrome=False) -> List[WebElement]:
-        """
-        Gets all the children of a webelement
-        """
-        children = None
-        if chrome:
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                children = element.find_elements(By.XPATH, "./*")
-        else:
-            children = element.find_elements(By.XPATH, "./*")
-        return children
+        self.driver.execute_script(script, node)
 
     @property
     def loaded(self):
@@ -562,8 +649,3 @@ class BasePage(Page):
             pass
         self.set_content_context()
         return _loaded
-
-    def switch_tab(self):
-        """Get list of all window handles, switch to the newly opened tab"""
-        handles = self.driver.window_handles
-        self.driver.switch_to.window(handles[-1])

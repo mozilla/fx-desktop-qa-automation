@@ -4,7 +4,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation
+from modules.browser_object import ContextMenu, Devtools, Navigation
 from modules.page_object import ExamplePage
 from modules.util import BrowserActions, Utilities
 
@@ -28,11 +28,9 @@ def test_save_page_as(driver: Firefox):
 
     # right click something that is not a hyperlink
     title_header = example_page.get_element("title-header")
-    context_menu.context_click_element(title_header)
+    example_page.context_click(title_header)
 
-    save_page_as = context_menu.get_context_item("context-menu-save-page-as")
-    context_menu.click_context_item(save_page_as)
-    context_menu.hide_popup_by_child_node(save_page_as, chrome=True)
+    context_menu.click_and_hide_menu("context-menu-save-page-as")
 
     downloads_button = nav.get_download_button()
 
@@ -82,12 +80,10 @@ def test_take_screenshot(driver: Firefox):
 
     # right click the header
     title_header = example_page.get_element("title-header")
-    context_menu.context_click_element(title_header)
+    example_page.context_click(title_header)
 
     # context click the screenshot option and verify its not hidden
-    take_screenshot = context_menu.get_context_item("context-menu-take-screenshot")
-    context_menu.click_context_item(take_screenshot)
-    context_menu.hide_popup_by_child_node(take_screenshot, chrome=True)
+    context_menu.click_and_hide_menu("context-menu-take-screenshot")
 
     with driver.context(driver.CONTEXT_CHROME):
         screenshot_box = example_page.get_element("take-screenshot-box")
@@ -102,15 +98,12 @@ def test_inspect(driver: Firefox):
     context_menu = ContextMenu(driver)
     driver.get("https://example.com")
     example_page = ExamplePage(driver)
+    devtools = Devtools(driver)
 
     # right click something that is not a hyperlink
     title_header = example_page.get_element("title-header")
-    context_menu.context_click_element(title_header)
+    example_page.context_click(title_header)
 
-    inspect_option = context_menu.get_context_item("context-menu-inspect")
-    context_menu.click_context_item(inspect_option)
-    context_menu.hide_popup_by_child_node(inspect_option, chrome=True)
+    context_menu.click_and_hide_menu("context-menu-inspect")
 
-    # find an element present in the dev tools
-    with driver.context(driver.CONTEXT_CHROME):
-        example_page.element_exists("inspect-menu-horizontal-splitter")
+    devtools.check_opened()

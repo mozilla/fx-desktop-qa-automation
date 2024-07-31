@@ -2,6 +2,8 @@
 results.txt
 err_log.txt
 **/report.html
+**/result.xml
+**/report.xml
 assets/
 html_dump/
 /Test Results - .html
@@ -13,6 +15,7 @@ env
 *.zip
 *.gz
 *.7z
+*.xml
 test.sh
 file[0-9]*.txt
 

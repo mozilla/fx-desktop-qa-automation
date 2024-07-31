@@ -41,6 +41,12 @@
         ]
     },
 
+    "new-private-window-option": {
+        "selectorData": "appMenu-new-private-window-button2",
+        "strategy": "id",
+        "groups": []
+    },
+
     "more-tools": {
         "selectorData": "appMenu-more-button2",
         "strategy": "id",
@@ -91,6 +97,12 @@
         ]
     },
 
+    "panel-ui-new-window": {
+        "selectorData": "appMenu-new-window-button2",
+        "strategy": "id",
+        "groups": []
+    },
+
     "panel-ui-history": {
         "selectorData": "appMenu-history-button",
         "strategy": "id",
@@ -106,6 +118,30 @@
     "panel-ui-history-recently-closed-reopen-tabs": {
         "selectorData": "toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "panel-ui-new-private-window": {
+        "selectorData": "appMenu-new-private-window-button2",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "recent-history-content": {
+        "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "panel-ui-history-recent-history-container": {
+        "selectorData": "appMenu_historyMenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "panel-ui-history-recent-history-item": {
+        "selectorData": "toolbarbutton",
+        "strategy": "tag",
         "groups": []
     }
 

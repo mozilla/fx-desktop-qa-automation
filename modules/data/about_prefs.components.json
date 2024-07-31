@@ -78,7 +78,7 @@
     },
 
     "prefs-button": {
-        "selectorData": "button[label='{name}']",
+        "selectorData": "button[label^='{name}']",
         "strategy": "css",
         "groups": []
     },
@@ -216,6 +216,12 @@
         "groups": []
     },
 
+    "home-new-window-dropdown": {
+        "selectorData": "homeMode",
+        "strategy": "id",
+        "groups": []
+    },
+
     "home-new-tabs-dropdown-option-default": {
         "selectorData": "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]",
         "strategy": "css",
@@ -234,9 +240,39 @@
         "groups": []
     },
 
+    "cookies-second-menu-item": {
+        "selectorData": "isolateCookiesSocialMedia",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-manage-data": {
+        "selectorData": "siteDataSettings",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-manage-data-sitelist": {
+        "selectorData": "sitesList",
+        "strategy": "id",
+        "groups": []
+    },
+
     "tracking-checkbox": {
         "selectorData": "contentBlockingTrackingProtectionCheckbox",
         "strategy": "id",
+        "groups": []
+    },
+
+    "cryptominers-checkbox": {
+        "selectorData": "contentBlockingCryptominersCheckbox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "tracking-in-all-windows": {
+        "selectorData": "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']",
+        "strategy": "css",
         "groups": []
     },
 
@@ -252,19 +288,110 @@
         "groups": []
     },
 
+    "notifications-allow-button": {
+        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "notifications-block-button": {
+        "selectorData": "button[class='popup-notification-secondary-button footer-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cookies-shadow-root": {
+        "selectorData": "dialog[buttons='accept,cancel']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "clear-data-dialog-options": {
+        "selectorData": "hbox.checkbox-label-box",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "clear-data-accept-button": {
+        "selectorData": "[class='button-text'][value='Clear']",
+        "strategy": "css",
+        "shadowParent": "cookies-shadow-root",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "permissions-notifications-button": {
+        "selectorData": "notificationSettingsButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites": {
+        "selectorData": "permissionsBox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites-item": {
+        "selectorData": "richlistitem[origin='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permissions-notifications-popup-websites-item-status": {
+        "selectorData": "website-status",
+        "strategy": "class",
+        "groups": []
+    },
+
     "language-dropdown": {
         "selectorData": "primaryBrowserLocale",
         "strategy": "id",
         "groups": []
     },
-        "update_available_button": {
+
+    "update_available_button": {
         "selectorData": "updateButton",
         "strategy": "id",
         "groups": []
     },
-        "up_to_date_button": {
+
+    "up_to_date_button": {
         "selectorData": "checkForUpdatesButton3",
         "strategy": "id",
+        "groups": []
+    },
+
+    "cookies-privacy-label": {
+        "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cookies-delete-on-close": {
+        "selectorData": "deleteOnClose",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "logins-ask-to-save-password": {
+        "selectorData": "savePasswords",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "logins-exceptions": {
+        "selectorData": "passwordExceptions",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "history-privacy-label": {
+        "selectorData": "description[data-l10n-id='history-dontremember-description']",
+        "strategy": "css",
         "groups": []
     }
 }

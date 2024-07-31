@@ -3,5 +3,59 @@
         "selectorData": "body",
         "strategy": "tag",
         "groups": []
+    },
+
+    "authorize-notifications-button": {
+        "selectorData": "button[onclick='notify.authorize()']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "show-notifications-button": {
+        "selectorData": "button[onclick='notify.show()']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "mediawiki-image": {
+        "selectorData": "mw-mmv-image",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "wiki-search-bar": {
+        "selectorData": "cdx-text-input__input",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "wiki-search-button": {
+        "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "simulated-tracker-block-status": {
+        "selectorData": "blacklisted-blocked",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "simulated-tracker-load-status": {
+        "selectorData": "whitelisted-loaded",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "simulated-tracker-dnt-status": {
+        "selectorData": "dnt-on",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "pdf-link": {
+        "selectorData": "a[href$='.pdf']",
+        "strategy": "css",
+        "groups": []
     }
 }

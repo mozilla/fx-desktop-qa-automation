@@ -7,3 +7,6 @@ class ExamplePage(BasePage):
     """
 
     URL_TEMPLATE = "https://example.com/"
+    TITLE = "Example Domain"
+    MORE_INFO_URL = "https://www.iana.org/help/example-domains"
+    MORE_INFO_TITLE = "Example Domains"

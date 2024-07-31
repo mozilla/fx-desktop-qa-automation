@@ -1,5 +1,6 @@
-import time
+from time import sleep
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
@@ -8,6 +9,7 @@ from modules.page_object_about_telemetry import AboutTelemetry
 from modules.util import Utilities
 
 
+@pytest.mark.unstable
 def test_sap_google_adclick(driver: Firefox):
     """
     C1365108, Test SAP Google adclick - URL bar - US
@@ -23,13 +25,13 @@ def test_sap_google_adclick(driver: Firefox):
     # search and click on an ad
     nav.search("iphone")
     nav.get_element("search-result").click()
-    time.sleep(2)
+    sleep(2)
 
     # Click on Raw JSON, switch tab and click on Raw Data
     about_telemetry = AboutTelemetry(driver).open()
-    time.sleep(2)
+    sleep(2)
     about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_tab()
+    about_telemetry.switch_to_new_tab()
     about_telemetry.get_element("rawdata-tab").click()
 
     # Verify pings are recorded

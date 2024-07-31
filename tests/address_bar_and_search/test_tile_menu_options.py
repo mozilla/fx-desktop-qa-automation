@@ -38,7 +38,7 @@ REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
 )
 
 # first value in a tuple is the index of the card, second is the status of sponsorship
-card_indices = [(3, False), (0, True)]
+card_indices = [(4, False), (0, True)]
 
 
 def test_default_tile_hover_states(driver: Firefox):
@@ -56,7 +56,7 @@ def test_default_tile_hover_states(driver: Firefox):
         in ALLOWED_RGB_BEFORE_VALUES_CARD
     )
 
-    newtab.hover_over_element(top_card)
+    newtab.hover(top_card)
     top_card = newtab.get_element("sponsored-site-card")
     assert (
         top_card.value_of_css_property("background-color")
@@ -69,7 +69,7 @@ def test_default_tile_hover_states(driver: Firefox):
         three_dot_menu.value_of_css_property("background-color")
         in ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS
     )
-    newtab.hover_over_element(three_dot_menu)
+    newtab.hover(three_dot_menu)
     three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
     assert (
         three_dot_menu.value_of_css_property("background-color")
@@ -91,7 +91,7 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
 
     # parametrized to pick sponsored and non-sponsored top site cards
     card = suggested_cards[index]
-    newtab.hover_over_element(card)
+    newtab.hover(card)
 
     # re-get the elements since they stale on hover
     suggested_cards = newtab.get_elements("sponsored-site-card")

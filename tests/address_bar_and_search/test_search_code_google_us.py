@@ -1,9 +1,8 @@
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
-from modules.page_object import AboutConfig
+from modules.page_object import AboutConfig, ExamplePage
 
 # Set constant
 FX_SEARCH_CODE = "client=firefox-b-1-d"
@@ -22,6 +21,7 @@ def test_search_code_google_us(driver: Firefox):
     ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
     tab = TabBar(driver)
+    example = ExamplePage(driver)
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region
@@ -32,7 +32,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Check code generated from the Awesome bar search
     nav.search("soccer")
-    nav.expect(EC.title_contains("Google Search"))
+    tab.expect_title_contains("Google Search")
     search_code_assert()
 
     # Check code generated from the Search bar search
@@ -46,14 +46,12 @@ def test_search_code_google_us(driver: Firefox):
     search_code_assert()
 
     # Check code generated from the context click of selected text
-    nav.set_content_context()
-    driver.get("http://example.com")
-    h1_tag = driver.find_element(By.TAG_NAME, "h1")
-    nav.triple_click(h1_tag)
-    nav.context_click_element(h1_tag)
-    nav.set_chrome_context()
-    context_menu.get_context_item("context-menu-search-selected-text").click()
-    nav.hide_popup("contentAreaContextMenu")
+    with driver.context(driver.CONTEXT_CONTENT):
+        example.open()
+        h1_tag = (By.TAG_NAME, "h1")
+        example.triple_click(h1_tag)
+        example.context_click(h1_tag)
+    context_menu.click_and_hide_menu("context-menu-search-selected-text")
 
     # Switch to the newly opened tab and run the code check
     window_handles = driver.window_handles

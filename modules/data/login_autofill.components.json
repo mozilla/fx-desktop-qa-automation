@@ -1,7 +1,51 @@
 {
-    "login-input-field": {
+    "input-field": {
         "selectorData": "input[autocomplete='{name}']",
         "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "username-field": {
+        "selectorData": "input[placeholder='username']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "submit-form": {
+        "selectorData": "input[value='Log In']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "save-login-popup": {
+        "selectorData": "notification-popup",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "username-login-field": {
+        "selectorData": "/html/body/div[1]/form[2]/input[1]",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "password-login-field": {
+        "selectorData": "/html/body/div[1]/form[2]/input[2]",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "submit-button-login": {
+        "selectorData": "/html/body/div[1]/form[2]/input[3]",
+        "strategy": "xpath",
         "groups": []
     }
 }

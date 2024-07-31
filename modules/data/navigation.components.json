@@ -30,7 +30,7 @@
     },
 
     "overflow-item": {
-        "selectorData": "[class=\"urlbarView-title urlbarView-overflowable\"]",
+        "selectorData": "[class='urlbarView-title urlbarView-overflowable']",
         "strategy": "css",
         "groups": []
     },
@@ -50,7 +50,7 @@
     },
 
     "refresh-intervention-card": {
-        "selectorData": "div[tip-type=\"intervention_refresh\"]",
+        "selectorData": "div[tip-type='intervention_refresh']",
         "strategy": "css",
         "groups": [
             "doNotCache"
@@ -58,25 +58,25 @@
     },
 
     "fx-refresh-text": {
-        "selectorData": "span[data-l10n-id=\"intervention-refresh-profile\"]",
+        "selectorData": "span[data-l10n-id='intervention-refresh-profile']",
         "strategy": "css",
         "groups": []
     },
 
     "fx-refresh-button": {
-        "selectorData": "span[role=\"button\"][data-l10n-id=\"intervention-refresh-profile-confirm\"]",
+        "selectorData": "span[role='button'][data-l10n-id='intervention-refresh-profile-confirm']",
         "strategy": "css",
         "groups": []
     },
 
     "fx-refresh-menu": {
-        "selectorData": "span[data-l10n-id=\"urlbar-result-menu-button\"][title=\"Open menu\"]",
+        "selectorData": "span[data-l10n-id='urlbar-result-menu-button'][title='Open menu']",
         "strategy": "css",
         "groups": []
     },
 
     "fx-refresh-menu-get-help-item": {
-        "selectorData": "menuitem[data-l10n-id=\"urlbar-result-menu-tip-get-help\"]",
+        "selectorData": "menuitem[data-l10n-id='urlbar-result-menu-tip-get-help']",
         "strategy": "css",
         "groups": []
     },
@@ -88,7 +88,7 @@
     },
 
     "search-engine-suggestion-row": {
-        "selectorData": "div[class=\"urlbarView-row\"][type=\"search_engine\"]",
+        "selectorData": "div[class='urlbarView-row'][type='search_engine']",
         "strategy": "css",
         "groups": []
     },
@@ -169,7 +169,7 @@
     },
 
     "firefox-suggest": {
-        "selectorData": "div.urlbarView-row[label=\"Firefox Suggest\"] > span.urlbarView-row-inner",
+        "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
         "strategy": "css",
         "groups": []
     },
@@ -189,7 +189,9 @@
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "cryptominers": {
@@ -218,6 +220,38 @@
 
     "more-information-button": {
         "selectorData": "identity-popup-more-info",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "search-result-url": {
+        "selectorData": ".urlbarView-title.urlbarView-overflowable[is-url='']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "search-result-action-term": {
+        "selectorData": ".urlbarView-action",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "refresh-button": {
+        "selectorData": "reload-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "known-fingerprints": {
+        "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.blocked.subviewbutton-nav",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "fingerprints-blocked-subpanel": {
+        "selectorData": "protections-popup-fingerprintersView",
         "strategy": "id",
         "groups": []
     }

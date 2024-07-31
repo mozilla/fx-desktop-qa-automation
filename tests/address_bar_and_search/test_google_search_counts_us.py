@@ -1,3 +1,5 @@
+import sys
+from os import environ
 from time import sleep
 
 import pytest
@@ -7,7 +9,10 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
+
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_google_search_counts_us(driver: Firefox):
     """
     C1365026, Test Google Search counts - urlbar US
@@ -22,7 +27,7 @@ def test_google_search_counts_us(driver: Firefox):
     about_telemetry = AboutTelemetry(driver).open()
     sleep(2)
     about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_tab()
+    about_telemetry.switch_to_new_tab()
     about_telemetry.get_element("rawdata-tab").click()
 
     # Verify pings are recorded
