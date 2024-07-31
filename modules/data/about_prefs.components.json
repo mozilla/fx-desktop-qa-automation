@@ -256,5 +256,15 @@
         "selectorData": "primaryBrowserLocale",
         "strategy": "id",
         "groups": []
+    },
+        "update_available_button": {
+        "selectorData": "updateButton",
+        "strategy": "id",
+        "groups": []
+    },
+        "up_to_date_button": {
+        "selectorData": "checkForUpdatesButton3",
+        "strategy": "id",
+        "groups": []
     }
 }
