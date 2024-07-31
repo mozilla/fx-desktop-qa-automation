@@ -14,8 +14,10 @@ class ReaderView(BasePage):
         """
         Opens the reader view using the search bar
         """
+        before_page_source = self.driver.page_source
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("reader-view-button").click()
+        self.wait.until(lambda _: self.driver.page_source != before_page_source)
         self.wait_for_reader_view_open()
         return self
 
@@ -23,16 +25,15 @@ class ReaderView(BasePage):
         """
         Opens the reader view using keys
         """
-        if self.sys_platform() == "Darwin":
-            self.actions.key_down(Keys.COMMAND).key_down(Keys.ALT).send_keys(
-                "r"
-            ).key_up(Keys.ALT).key_up(Keys.COMMAND).perform()
-        elif self.sys_platform() == "Linux":
-            self.actions.key_down(Keys.CONTROL).key_down(Keys.ALT).send_keys(
-                "r"
-            ).key_up(Keys.ALT).key_up(Keys.CONTROL).perform()
-        else:
-            self.actions.send_keys(Keys.F9).perform()
+        before_page_source = self.driver.page_source
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            if self.sys_platform() == "Darwin":
+                self.perform_key_combo(Keys.COMMAND, Keys.ALT, "r")
+            elif self.sys_platform() == "Linux":
+                self.perform_key_combo(Keys.CONTROL, Keys.ALT, "r")
+            else:
+                self.perform_key_combo(Keys.F9)
+        self.wait.until(lambda _: self.driver.page_source != before_page_source)
         self.wait_for_reader_view_open()
         return self
 
@@ -40,25 +41,26 @@ class ReaderView(BasePage):
         """
         Closes the reader view using the search bar
         """
+        before_page_source = self.driver.page_source
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("reader-view-button").click()
+        self.wait.until(lambda _: self.driver.page_source != before_page_source)
         self.wait_for_reader_view_closed()
         return self
 
-    def close_reader_view_keys(self, sys_platform: str) -> BasePage:
+    def close_reader_view_keys(self) -> BasePage:
         """
         Closes the reader view using keys
         """
-        if sys_platform == "Darwin":
-            self.actions.key_down(Keys.COMMAND).key_down(Keys.ALT).send_keys(
-                "r"
-            ).key_up(Keys.ALT).key_up(Keys.COMMAND).perform()
-        elif sys_platform == "Linux":
-            self.actions.key_down(Keys.CONTROL).key_down(Keys.ALT).send_keys(
-                "r"
-            ).key_up(Keys.ALT).key_up(Keys.CONTROL).perform()
-        else:
-            self.actions.send_keys(Keys.F9).perform()
+        before_page_source = self.driver.page_source
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            if self.sys_platform() == "Darwin":
+                self.perform_key_combo(Keys.COMMAND, Keys.ALT, "r")
+            elif self.sys_platform() == "Linux":
+                self.perform_key_combo(Keys.CONTROL, Keys.ALT, "r")
+            else:
+                self.perform_key_combo(Keys.F9)
+        self.wait.until(lambda _: self.driver.page_source != before_page_source)
         self.wait_for_reader_view_closed()
         return self
 
