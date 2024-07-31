@@ -1,4 +1,5 @@
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 import pytest
 import locale
 from time import sleep
@@ -25,5 +26,13 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox, change_locale):
     """C1771617 The language can be changed in about:preferences, locale in non-enUS, Fx in enUS"""
     about_prefs = AboutPrefs(driver, category="general")
     about_prefs.open()
-    sleep(100)
+    about_prefs.get_element("language-set-alternative-button").click()
+    driver.switch_to.frame(about_prefs.get_iframe())
+    select = about_prefs.get_element("language-settings-select")
+    select.click()
+    search = about_prefs.get_element("language-settings-search")
+    search.click()
+    about_prefs.driver.execute_script("arguments[0].removeAttribute('open');", select)
+
+    sleep(3)
 

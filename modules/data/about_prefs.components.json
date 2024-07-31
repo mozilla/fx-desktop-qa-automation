@@ -381,5 +381,54 @@
         "selectorData": "description[data-l10n-id='history-dontremember-description']",
         "strategy": "css",
         "groups": []
+    },
+
+    "language-set-alternative-button": {
+        "selectorData": "[data-l10n-id='manage-browser-languages-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-settings-content": {
+        "selectorData": "[data-l10n-id='browser-languages-window2']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-settings-dialog": {
+        "selectorData": "BrowserLanguagesDialog",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-settings-select": {
+        "selectorData": "[data-l10n-id='browser-languages-select-language']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-search-dropdown": {
+        "selectorData": "label-box",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-settings-dropdown": {
+        "selectorData": ".in-menulist[hasbeenopened='true']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-settings-search": {
+        "selectorData": "menuitem[value='search']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-option-by-code": {
+        "selectorData": "[value='{}']",
+        "strategy": "css",
+        "shadowParent": "language-settings-dropdown",
+        "groups": []
     }
 }
