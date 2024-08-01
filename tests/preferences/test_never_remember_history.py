@@ -19,10 +19,10 @@ def test_never_remember_history(driver: Firefox, sys_platform: str):
     C143604: Make sure to set the pref via about:preferences, then check in about:config that the pref has been changed
     """
 
-    AboutPrefs(driver, category="privacy").open()
+    about_prefs = AboutPrefs(driver, category="privacy").open()
 
     # Change the settings to not remember the browser history
-    history_menulist = driver.find_element(By.ID, "historyMode")
+    history_menulist = about_prefs.get_history_menulist()
     menulist_popup = history_menulist.find_element(By.TAG_NAME, "menupopup")
     options = menulist_popup.find_elements(By.TAG_NAME, "menuitem")
 

@@ -387,5 +387,11 @@
         "selectorData": "description[data-l10n-id='history-dontremember-description']",
         "strategy": "css",
         "groups": []
+    },
+
+    "history_menulist": {
+        "selectorData": "historyMode",
+        "strategy": "id",
+        "groups": []
     }
 }
