@@ -11,7 +11,7 @@ client = WebClient(token=token)
 
 try:
     response = client.chat_postMessage(
-        channel="#monitoring",  # Channel ID or name (e.g., #general)
+        channel="#desktop-qa-monitoring-notifier",  # Channel ID or name (e.g., #general)
         text="from actions... 1",
     )
     print("i have sent the message.")
