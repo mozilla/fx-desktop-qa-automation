@@ -120,8 +120,7 @@ then
 else
     if [[ $SYSTEM_NAME == "win" ]]
     then
-        unzip firefox*.zip
-        echo "./firefox/firefox" > fx_location
+        mv Firefox*.exe setup.exe
     else
         if [[ $SYSTEM_NAME == "macos" ]]
         then
