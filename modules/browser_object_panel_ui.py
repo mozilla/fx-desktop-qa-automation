@@ -150,3 +150,12 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("panel-ui-history").click()
         return self
+
+    def open_bookmarks_menu(self) -> BasePage:
+        """
+        Opens the Bookmarks menu
+        """
+        self.open_panel_menu()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("panel-ui-bookmarks").click()
+        return self

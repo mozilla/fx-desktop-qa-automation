@@ -143,6 +143,17 @@
         "selectorData": "toolbarbutton",
         "strategy": "tag",
         "groups": []
-    }
+    },
 
+    "panel-ui-bookmarks": {
+        "selectorData": "appMenu-bookmarks-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "mozilla-bookmarked": {
+        "selectorData": "toolbarbutton > label[value='Internet for people, not profit — Mozilla (US)']",
+        "strategy": "css",
+        "groups": []
+    }
 }
