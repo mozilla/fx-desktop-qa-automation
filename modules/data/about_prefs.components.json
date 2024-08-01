@@ -353,6 +353,18 @@
         "groups": []
     },
 
+    "update_available_button": {
+        "selectorData": "updateButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "up_to_date_button": {
+        "selectorData": "checkForUpdatesButton3",
+        "strategy": "id",
+        "groups": []
+    },
+
     "cookies-privacy-label": {
         "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']",
         "strategy": "css",
