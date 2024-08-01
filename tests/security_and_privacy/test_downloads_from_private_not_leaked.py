@@ -3,9 +3,6 @@ import os
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import AboutDownloadsContextMenu, PanelUi, Toolbar
 from modules.page_object import AboutDownloads, GenericPage

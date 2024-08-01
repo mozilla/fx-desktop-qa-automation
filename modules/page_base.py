@@ -9,7 +9,6 @@ from typing import List, Union
 
 from pypom import Page
 from selenium.common.exceptions import (
-    NoAlertPresentException,
     NoSuchElementException,
     NoSuchWindowException,
     TimeoutException,

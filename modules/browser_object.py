@@ -8,6 +8,7 @@ from modules.browser_object_hyperlink_context_menu import *
 from modules.browser_object_image_context_menu import *
 from modules.browser_object_navigation import *
 from modules.browser_object_panel_ui import *
+from modules.browser_object_reader_view import *
 from modules.browser_object_search_bar_context_menu import *
 from modules.browser_object_tab_context_menu import *
 from modules.browser_object_tabbar import *
