@@ -68,12 +68,12 @@ class ReaderView(BasePage):
         """
         Checks to see if the reader view toolbar is present demonstrating that the reader view is open.
         """
-        self.wait.until(lambda _: self.element_exists("reader-toolbar"))
+        self.element_exists("reader-toolbar")
         return self
 
     def wait_for_reader_view_closed(self) -> BasePage:
         """
         Checks to see if the reader view toolbar is not present, demonstrating that reader view is not open.
         """
-        self.wait.until(lambda _: self.element_does_not_exist("reader-toolbar"))
+        self.element_does_not_exist("reader-toolbar")
         return self
