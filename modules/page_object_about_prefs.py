@@ -317,6 +317,13 @@ class AboutPrefs(BasePage):
         else:
             print("No number found in the string")
 
+    def get_manage_data_site_element(self, site: str) -> WebElement:
+        """
+        Returns the WebElement for the given site in the manage site data popup
+        """
+        element = self.get_element("manage-cookies-site", labels=[site])
+        return element
+
     def get_iframe(self) -> WebElement:
         """
         Gets the webelement for the iframe that commonly appears in about:preferences

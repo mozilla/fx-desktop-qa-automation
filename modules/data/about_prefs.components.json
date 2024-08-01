@@ -323,6 +323,15 @@
         ]
     },
 
+    "manage-data-save-changes-button": {
+        "selectorData": "[class='button-text'][value='Save Changes']",
+        "strategy": "css",
+        "shadowParent": "cookies-shadow-root",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "permissions-notifications-button": {
         "selectorData": "notificationSettingsButton",
         "strategy": "id",
@@ -392,6 +401,24 @@
     "history-privacy-label": {
         "selectorData": "description[data-l10n-id='history-dontremember-description']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "manage-cookies-site": {
+        "selectorData": "richlistitem[host='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "remove-selected-button": {
+        "selectorData": "removeSelected",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "remove-all-button": {
+        "selectorData": "removeAll",
+        "strategy": "id",
         "groups": []
     },
 
