@@ -121,6 +121,7 @@ else
     if [[ $SYSTEM_NAME == "win" ]]
     then
         mv Firefox*.exe setup.exe
+        ls .
     else
         if [[ $SYSTEM_NAME == "macos" ]]
         then

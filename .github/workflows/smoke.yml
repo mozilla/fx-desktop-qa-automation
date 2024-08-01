@@ -21,11 +21,13 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           bash collect_executables.sh;
-          setup.exe /S
-          sleep 10;
+          ls .;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
+      - name: Run Setup.exe
+        run: |
+          .\setup.exe /silent
       - name: Run Smoke Tests in Win
         run: |
           pipenv run pytest -n 4 .
