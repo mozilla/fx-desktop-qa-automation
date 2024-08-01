@@ -77,3 +77,10 @@ class ReaderView(BasePage):
         """
         self.element_does_not_exist("reader-toolbar")
         return self
+
+    def click_toolbar_option(self, option: str) -> BasePage:
+        """
+        Clicks on the toolbar option
+        """
+        self.get_element(option).click()
+        return self

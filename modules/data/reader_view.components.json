@@ -9,5 +9,83 @@
         "selectorData": "div[class='toolbar reader-toolbar']",
         "strategy": "css",
         "groups": []
+    },
+
+    "reader-toolbar-panel": {
+        "selectorData": "dropdown-popup",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "reader-toolbar-panel-serif": {
+        "selectorData": "serif-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "reader-toolbar-panel-sans-serif": {
+        "selectorData": "sans-serif-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-type": {
+        "selectorData": "button[class='dropdown-toggle toolbar-button style-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "toolbar-size-minus": {
+        "selectorData": "minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-size-plus": {
+        "selectorData": "plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-width-minus": {
+        "selectorData": "content-width-minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-width-plus": {
+        "selectorData": "content-width-plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-line-height-minus": {
+        "selectorData": "line-height-minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-line-height-plus": {
+        "selectorData": "line-height-plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-light": {
+        "selectorData": "light-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-dark": {
+        "selectorData": "dark-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-sepia": {
+        "selectorData": "sepia-button",
+        "strategy": "class",
+        "groups": []
     }
 }
