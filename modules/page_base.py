@@ -11,6 +11,7 @@ from pypom import Page
 from selenium.common.exceptions import (
     NoAlertPresentException,
     NoSuchElementException,
+    NoSuchWindowException,
     TimeoutException,
 )
 from selenium.webdriver import ActionChains, Firefox
@@ -104,6 +105,14 @@ class BasePage(Page):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
+
+    def opposite_context(self):
+        """Return the context that is *not* in use"""
+        return (
+            self.driver.CONTEXT_CONTENT
+            if self._xul_source_snippet in self.driver.page_source
+            else self.driver.CONTEXT_CHROME
+        )
 
     def custom_wait(self, **kwargs) -> WebDriverWait:
         """
@@ -399,6 +408,17 @@ class BasePage(Page):
         )
         return self
 
+    def element_attribute_contains(
+        self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
+    ) -> Page:
+        """Expect helper: wait until element attribute contains certain value"""
+        self.expect(
+            EC.text_to_be_present_in_element_attribute(
+                self.get_selector(name, labels=labels), attr_name, str(attr_value)
+            )
+        )
+        return self
+
     def url_contains(self, url_part: str) -> Page:
         """Expect helper: wait until driver URL contains given text or timeout"""
         self.expect(EC.url_contains(url_part))
@@ -475,6 +495,12 @@ class BasePage(Page):
             False
         ), "Bad fetch: only selectors, selector names, or WebElements allowed."
 
+    def click_on(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+        """Click on an element, no matter the context, return the page"""
+        with self.driver.context(self.context_id):
+            self.fetch(reference, labels).click()
+        return self
+
     def multi_click(
         self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
@@ -494,12 +520,7 @@ class BasePage(Page):
             try:
                 execute_multi_click()
             except NoSuchElementException:
-                opposite_context = (
-                    self.driver.CONTEXT_CONTENT
-                    if self.context == "chrome"
-                    else self.driver.CONTEXT_CHROME
-                )
-                with self.driver.context(opposite_context):
+                with self.driver.context(self.opposite_context()):
                     execute_multi_click()
 
         return self
@@ -607,29 +628,47 @@ class BasePage(Page):
         else:
             self.driver.execute_script(script)
 
-    def hide_popup_by_class(self, class_name: str) -> None:
+    def hide_popup_by_class(self, class_name: str, retry=False) -> None:
         """
         Given the class name of the context menu, it will dismiss the menu.
 
         For example, if the context menu corresponds to the class name of 'context-menu',
         usage would be: tabs.hide_popup_by_class("context-menu")
         """
-        script = f"""var element = document.querySelector(".{class_name}");
-                 if (element && element.hidePopup) {{
-                     element.hidePopup();
-                 }}
-                """
-        self.driver.execute_script(script)
+        try:
+            with self.driver.context(self.context_id):
+                script = f"""var element = document.querySelector(".{class_name}");
+                         if (element && element.hidePopup) {{
+                             element.hidePopup();
+                         }}
+                        """
+                self.driver.execute_script(script, node)
+        except NoSuchWindowException:
+            if not retry:
+                with self.driver.context(self.opposite_context()):
+                    self.hide_popup_by_class(class_name, True)
+            else:
+                raise NoSuchWindowException
 
     def hide_popup_by_child_node(
-        self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: Union[str, tuple, WebElement], labels=[], retry=False
     ) -> Page:
-        node = self.fetch(reference, labels=labels)
-        script = """var element = arguments[0].parentNode;
-                 if (element && element.hidePopup) {
-                    element.hidePopup();
-                 }"""
-        self.driver.execute_script(script, node)
+        try:
+            with self.driver.context(self.context_id):
+                logging.info("hide popup child: start")
+                node = self.fetch(reference, labels=labels)
+                logging.info("hide popup child: fetched")
+                script = """var element = arguments[0].parentNode;
+                         if (element && element.hidePopup) {
+                            element.hidePopup();
+                         }"""
+                self.driver.execute_script(script, node)
+        except NoSuchWindowException:
+            if not retry:
+                with self.driver.context(self.opposite_context()):
+                    self.hide_popup_by_child_node(reference, labels, True)
+            else:
+                raise NoSuchWindowException
 
     @property
     def loaded(self):

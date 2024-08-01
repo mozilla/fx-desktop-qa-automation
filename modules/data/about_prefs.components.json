@@ -426,9 +426,27 @@
     },
 
     "language-option-by-code": {
-        "selectorData": "[value='{}']",
+        "selectorData": "menuitem[value='{}']",
         "strategy": "css",
-        "shadowParent": "language-settings-dropdown",
+        "groups": []
+    },
+
+    "language-added-list": {
+        "selectorData": "selectedLocales",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "language-settings-add-button": {
+        "selectorData": "button[data-l10n-id='languages-customize-add']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "language-settings-ok": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "language-settings-dialog",
         "groups": []
     }
 }

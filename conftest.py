@@ -5,11 +5,11 @@ from typing import Callable, List, Tuple
 
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException, TimeoutException
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 def pytest_addoption(parser):
