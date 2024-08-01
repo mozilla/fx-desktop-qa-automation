@@ -82,5 +82,7 @@ class ReaderView(BasePage):
         """
         Clicks on the toolbar option
         """
-        self.get_element(option).click()
+        toolbar_option = self.get_element(option)
+        self.element_clickable(option)
+        toolbar_option.click()
         return self

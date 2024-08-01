@@ -31,7 +31,6 @@ def test_type_control_panel_font(driver: Firefox):
     reader_view.click_toolbar_option("toolbar-type")
 
     body = web_page.get_element("body")
-    util.write_css_properties("body_before", body, driver, False)
 
     reader_view.wait.until(
         lambda _: "sans-serif" in body.value_of_css_property("font-family")
