@@ -24,5 +24,3 @@ def test_bookmark_website_via_star(driver: Firefox):
     panel.open_bookmarks_menu()
     with driver.context(driver.CONTEXT_CHROME):
         assert panel.get_element("mozilla-bookmarked").is_displayed()
-
-
