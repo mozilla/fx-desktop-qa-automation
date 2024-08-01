@@ -126,6 +126,7 @@ else
         if [[ $SYSTEM_NAME == "macos" ]]
         then
             VOLUME=$(hdiutil attach Firefox*.dmg | grep -Eo '/Volumes/Firefox.*$')
+            ls /Volumes
             echo "$VOLUME/Firefox.app/Contents/MacOS/firefox" > fx_location
         fi
     fi

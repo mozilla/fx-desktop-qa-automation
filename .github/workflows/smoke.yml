@@ -27,7 +27,8 @@ jobs:
           pipenv install;
       - name: Run Setup.exe
         run: |
-          .\setup.exe /silent
+          .\setup.exe /silent;
+          Start-Sleep -Seconds 10;
       - name: Run Smoke Tests in Win
         run: |
           pipenv run pytest -n 4 .
