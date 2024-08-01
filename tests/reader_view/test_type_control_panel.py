@@ -24,7 +24,6 @@ def test_type_control_panel_font(driver: Firefox):
     """
     web_page = GenericPage(driver, url=READER_VIEW_URL)
     reader_view = ReaderView(driver)
-    util = Utilities()
 
     web_page.open()
     reader_view.open_reader_view_searchbar()
