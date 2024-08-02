@@ -64,7 +64,7 @@ def test_language_pack_install_from_addons(
         == shortform
     )
     assert (
-        about_prefs.get_element("language-set-alternatives-button").get_attribute(
+        about_prefs.get_element("language-set-alternative-button").get_attribute(
             "label"
         )
         == localized_text
