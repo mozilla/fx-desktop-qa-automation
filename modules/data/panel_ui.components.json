@@ -151,8 +151,8 @@
         "groups": []
     },
 
-    "mozilla-bookmarked": {
-        "selectorData": "toolbarbutton > label[value='Internet for people, not profit — Mozilla (US)']",
+    "bookmark-by-title": {
+        "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
         "strategy": "css",
         "groups": []
     }

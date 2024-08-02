@@ -23,4 +23,4 @@ def test_bookmark_website_via_star(driver: Firefox):
 
     # Verify that the bookmark is displayed in bookmarks menu
     panel.open_bookmarks_menu()
-    panel.element_visible("mozilla-bookmarked")
+    panel.element_visible("bookmark-by-title", labels=["Internet for people"])
