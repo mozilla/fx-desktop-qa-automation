@@ -426,5 +426,23 @@
         "selectorData": "historyMode",
         "strategy": "id",
         "groups": []
+    },
+
+    "manage-cookies-site": {
+        "selectorData": "richlistitem[host='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "remove-selected-button": {
+        "selectorData": "removeSelected",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "remove-all-button": {
+        "selectorData": "removeAll",
+        "strategy": "id",
+        "groups": []
     }
 }

@@ -1,10 +1,11 @@
+from time import sleep
+
 import pytest
+from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
-from pynput.keyboard import Controller, Key
-from time import sleep
 
 COOKIE_SITE = "google.com"
 
@@ -79,4 +80,4 @@ def test_manage_cookie_data(driver: Firefox):
 
     # All the cookies and site data are deleted.
     cookie_list_post_remove = about_prefs.get_elements("cookies-manage-data-sitelist")
-    assert len(cookie_list_post_remove) == 1 # NOTE: always an empty item here
+    assert len(cookie_list_post_remove) == 1  # NOTE: always an empty item here
