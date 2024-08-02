@@ -18,9 +18,8 @@ def test_bookmark_website_via_star(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.get_element("save-bookmark-button").click()
-        assert nav.get_element("blue-star-button").is_displayed()
+        nav.element_visible("blue-star-button")
 
     # Verify that the bookmark is displayed in bookmarks menu
     panel.open_bookmarks_menu()
-    with driver.context(driver.CONTEXT_CHROME):
-        assert panel.get_element("mozilla-bookmarked").is_displayed()
+    panel.element_visible("mozilla-bookmarked")
