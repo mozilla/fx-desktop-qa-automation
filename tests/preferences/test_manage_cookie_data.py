@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
@@ -8,6 +9,7 @@ from time import sleep
 COOKIE_SITE = "google.com"
 
 
+@pytest.mark.pynput
 def test_manage_cookie_data(driver: Firefox):
     """
     C143633 - Cookies and Site Data can be managed
