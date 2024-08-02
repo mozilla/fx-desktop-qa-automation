@@ -31,10 +31,10 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
-    fullpath_chrome = os.path.join(
+    fullpath_content = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_content.txt"
     )
-    fullpath_content = os.path.join(
+    fullpath_chrome = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
 
@@ -50,6 +50,11 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
         fh.write(output_contents)
     return
 
+def sanitize_filename(filename):
+    # Remove invalid characters
+    sanitized = re.sub(r'[<>:"/\\|?*]', '', filename)
+    # Limit to 200 characters
+    return sanitized[:200]
 
 def pytest_exception_interact(node, call, report):
     """
@@ -58,6 +63,7 @@ def pytest_exception_interact(node, call, report):
     if report.failed:
         try:
             test_name = node.name
+            test_name = sanitize_filename(test_name)
             logging.error(f"Handling exception for test: {test_name}")
             logging.error(
                 f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
