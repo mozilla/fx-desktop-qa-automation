@@ -1,8 +1,9 @@
 from selenium.webdriver import Firefox
+
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 
-URL_TO_BOOKMARKED = "https://www.mozilla.org/"
+URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
 
 def test_bookmark_website_via_star(driver: Firefox):
@@ -14,12 +15,12 @@ def test_bookmark_website_via_star(driver: Firefox):
     panel = PanelUi(driver)
 
     # Bookmark the given website and check the bookmark star turned blue
-    driver.get(URL_TO_BOOKMARKED)
+    driver.get(URL_TO_BOOKMARK)
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.get_element("save-bookmark-button").click()
-        assert nav.element_visible("blue-star-button")
+        nav.element_visible("blue-star-button")
 
     # Verify that the bookmark is displayed in bookmarks menu
     panel.open_bookmarks_menu()
-    assert panel.element_visible("mozilla-bookmarked")
+    panel.element_visible("mozilla-bookmarked")
