@@ -18,6 +18,7 @@ READER_VIEW_URL = (
 )
 
 
+@pytest.mark.unstable
 def test_type_control_panel_font(driver: Firefox):
     """
     C130919: Ensure the functionality of the type control panels works
@@ -41,6 +42,7 @@ def test_type_control_panel_font(driver: Firefox):
     )
 
 
+@pytest.mark.unstable
 @pytest.mark.parametrize("type", size_controllers)
 def test_type_control_panel_size(driver: Firefox, type: str):
     """
@@ -75,6 +77,7 @@ def test_type_control_panel_size(driver: Firefox, type: str):
         )
 
 
+@pytest.mark.unstable
 @pytest.mark.parametrize("type", size_controllers)
 def test_type_control_panel_width(driver: Firefox, type: str):
     """
@@ -114,6 +117,7 @@ def test_type_control_panel_width(driver: Firefox, type: str):
         )
 
 
+@pytest.mark.unstable
 @pytest.mark.parametrize("type", size_controllers)
 def test_type_control_panel_line_height(driver: Firefox, type: str):
     """
@@ -148,6 +152,7 @@ def test_type_control_panel_line_height(driver: Firefox, type: str):
         )
 
 
+@pytest.mark.unstable
 @pytest.mark.parametrize("theme, intended_color", themes)
 def test_type_control_panel_themes(driver: Firefox, theme: str, intended_color: str):
     """

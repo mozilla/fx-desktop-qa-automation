@@ -86,3 +86,11 @@ class ReaderView(BasePage):
         # self.element_clickable(option)
         toolbar_option.click()
         return self
+
+    def open_advanced_options(self) -> BasePage:
+        """
+        Assuming the type panel is already open, this method will press the advanced accordian
+        """
+        self.get_element("toolbar-advanced").click()
+        self.element_clickable("toolbar-text-align-left")
+        return self
