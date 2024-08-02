@@ -116,15 +116,17 @@ then
     ls firefox*.tar.bz2
     mv firefox*.tar.bz2 firefox.tar.bz2
     tar -xvjf firefox.tar.bz2
+    echo "./firefox/firefox" > fx_location
 else
     if [[ $SYSTEM_NAME == "win" ]]
     then
-        unzip firefox*.zip
+        mv Firefox*.exe setup.exe
+        ls .
     else
         if [[ $SYSTEM_NAME == "macos" ]]
         then
-            MOUNT_OUTPUT=$(hdiutil attach Firefox*.dmg)
-
+            hdiutil attach Firefox*.dmg
+            echo "/Volume/Firefox/Firefox.app/Contents/MacOS/firefox" > fx_location
         fi
     fi
 fi

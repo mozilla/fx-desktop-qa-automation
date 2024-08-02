@@ -1,5 +1,6 @@
 /venv/
 test*.txt
+fx_location
 results.txt
 err_log.txt
 **/report.html
