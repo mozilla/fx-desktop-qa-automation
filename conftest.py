@@ -31,10 +31,10 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
-    fullpath_chrome = os.path.join(
+    fullpath_content = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_content.txt"
     )
-    fullpath_content = os.path.join(
+    fullpath_chrome = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
 

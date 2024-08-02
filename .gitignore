@@ -1,4 +1,5 @@
 /venv/
+test*.txt
 results.txt
 err_log.txt
 **/report.html
