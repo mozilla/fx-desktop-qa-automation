@@ -6,10 +6,12 @@ import re
 from typing import Callable, List, Tuple
 
 import pytest
-from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
@@ -239,7 +241,7 @@ def driver(
         options.binary_location = fx_executable
         for opt, value in set_prefs:
             options.set_preference(opt, value)
-        driver = webdriver.Firefox(options=options)
+        driver = Firefox(options=options)
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
@@ -252,8 +254,11 @@ def driver(
         driver.set_window_size(*winsize)
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
+        WebDriverWait(driver, timeout=40).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
         yield driver
-    except WebDriverException as e:
+    except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
         if "driver" in locals() or "driver" in globals():
@@ -261,7 +266,7 @@ def driver(
 
 
 @pytest.fixture()
-def screenshot(driver: webdriver.Firefox, opt_ci: bool) -> Callable:
+def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
     """
     Factory fixture that returns a screenshot function.
     """
@@ -273,7 +278,7 @@ def screenshot(driver: webdriver.Firefox, opt_ci: bool) -> Callable:
 
 
 @pytest.fixture()
-def version(driver: webdriver.Firefox):
+def version(driver: Firefox):
     return driver.capabilities["browserVersion"]
 
 
