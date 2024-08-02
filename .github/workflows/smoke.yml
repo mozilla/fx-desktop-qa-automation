@@ -40,10 +40,11 @@ jobs:
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success'
         run: |
+          rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          mv artifacts/* artifacts-win/ || true
+          mv -r artifacts/* artifacts-win/ || true
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
@@ -79,7 +80,7 @@ jobs:
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable $(cat ./fx_location) -s -n 4 . || TEST_EXIT_CODE=$?
-          mv artifacts/* artifacts-mac/ || true
+          mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
