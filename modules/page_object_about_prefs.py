@@ -322,3 +322,9 @@ class AboutPrefs(BasePage):
         Gets the webelement for the iframe that commonly appears in about:preferences
         """
         return self.get_element("browser-popup")
+
+    def get_history_menulist(self) -> WebElement:
+        """
+        Gets the webelement for the list of history items that appear in about:preferences
+        """
+        return self.get_element("history_menulist")
