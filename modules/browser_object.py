@@ -13,3 +13,4 @@ from modules.browser_object_tab_context_menu import *
 from modules.browser_object_tabbar import *
 from modules.browser_object_toolbar import *
 from modules.browser_object_tracker_panel import *
+from modules.browser_object_pdf_viewer import *

@@ -13,5 +13,11 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "body": {
+        "selectorData": "viewer",
+        "strategy": "id",
+        "groups": []
     }
 }
