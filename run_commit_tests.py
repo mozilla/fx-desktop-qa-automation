@@ -24,7 +24,7 @@ if __name__ == "__main__":
                             "pytest",
                             "--run-headless",
                             "-m",
-                            "not unstable",
+                            "not unstable and not pynput",
                             "-n",
                             "4",
                             *tests,

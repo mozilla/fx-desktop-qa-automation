@@ -236,7 +236,7 @@ def driver(
     """
     try:
         options = Options()
-        if opt_headless or opt_ci:
+        if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
         for opt, value in set_prefs:

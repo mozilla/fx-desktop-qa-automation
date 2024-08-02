@@ -9,7 +9,7 @@ from modules.page_object import ExamplePage
 from modules.util import BrowserActions, Utilities
 
 
-@pytest.mark.unstable
+@pytest.mark.pynput
 def test_save_page_as(driver: Firefox):
     """
     C2637623.1: save page as

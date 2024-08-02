@@ -41,7 +41,7 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
 
 
-@pytest.mark.unstable
+@pytest.mark.pynput
 def test_save_image_as(driver: Firefox):
     """
     C2637622.2: save image as
