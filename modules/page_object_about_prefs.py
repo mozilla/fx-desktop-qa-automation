@@ -346,3 +346,9 @@ class AboutPrefs(BasePage):
 
         self.get_element("language-settings-ok").click()
         return self
+
+    def get_history_menulist(self) -> WebElement:
+        """
+        Gets the webelement for the list of history items that appear in about:preferences
+        """
+        return self.get_element("history_menulist")

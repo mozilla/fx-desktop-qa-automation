@@ -460,5 +460,11 @@
         "strategy": "css",
         "shadowParent": "language-settings-dialog",
         "groups": []
+    },
+
+    "history_menulist": {
+        "selectorData": "historyMode",
+        "strategy": "id",
+        "groups": []
     }
 }
