@@ -641,7 +641,7 @@ class BasePage(Page):
                              element.hidePopup();
                          }}
                         """
-                self.driver.execute_script(script, node)
+                self.driver.execute_script(script)
         except NoSuchWindowException:
             if not retry:
                 with self.driver.context(self.opposite_context()):
