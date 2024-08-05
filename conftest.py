@@ -38,16 +38,19 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
         artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
 
-    # Save Chrome context page source
-    with open(fullpath_chrome, "w", encoding="utf-8") as fh:
-        with driver.context(driver.CONTEXT_CHROME):
+    try:
+        # Save Chrome context page source
+        with open(fullpath_chrome, "w", encoding="utf-8") as fh:
+            with driver.context(driver.CONTEXT_CHROME):
+                output_contents = driver.page_source
+                fh.write(output_contents)
+
+        # Save Content context page source
+        with open(fullpath_content, "w", encoding="utf-8") as fh:
             output_contents = driver.page_source
             fh.write(output_contents)
-
-    # Save Content context page source
-    with open(fullpath_content, "w", encoding="utf-8") as fh:
-        output_contents = driver.page_source
-        fh.write(output_contents)
+    except Exception as e:
+        logging.error(f"Could not log the html content because of {e}")
     return
 
 
