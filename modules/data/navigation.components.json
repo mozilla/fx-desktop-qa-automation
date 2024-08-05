@@ -254,5 +254,23 @@
         "selectorData": "protections-popup-fingerprintersView",
         "strategy": "id",
         "groups": []
+    },
+
+    "star-button": {
+        "selectorData": "star-button-box",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "save-bookmark-button": {
+        "selectorData": "editBookmarkPanelDoneButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "blue-star-button": {
+        "selectorData": "image[id='star-button'][starred='true']",
+        "strategy": "css",
+        "groups": []
     }
 }
