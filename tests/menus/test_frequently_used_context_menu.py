@@ -1,4 +1,5 @@
 import platform
+from os import environ
 from time import sleep
 
 import pytest
@@ -8,8 +9,11 @@ from modules.browser_object import ContextMenu, Devtools, Navigation
 from modules.page_object import ExamplePage
 from modules.util import BrowserActions, Utilities
 
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
-@pytest.mark.pynput
+
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.headed
 def test_save_page_as(driver: Firefox):
     """
     C2637623.1: save page as

@@ -59,14 +59,17 @@ def pytest_exception_interact(node, call, report):
         try:
             test_name = node.name
             logging.error(f"Handling exception for test: {test_name}")
-            logging.error(
-                f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
-            )
-            driver = node.funcargs.get("driver")
-            opt_ci = node.funcargs.get("opt_ci")
-            if driver:
-                log_content(opt_ci, driver, test_name)
-                screenshot_content(driver, opt_ci, test_name)
+            if hasattr(node, "funcargs"):
+                logging.error(
+                    f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
+                )
+                driver = node.funcargs.get("driver")
+                opt_ci = node.funcargs.get("opt_ci")
+                if driver:
+                    log_content(opt_ci, driver, test_name)
+                    screenshot_content(driver, opt_ci, test_name)
+            else:
+                logging.error("Error occurred during collection.")
         except Exception as e:
             logging.warning("Something went wrong with the exception catching.")
             raise e
