@@ -35,7 +35,7 @@ jobs:
         run: |
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          Get-ChildItem -Path ".\\artifacts\\*" -Recurse | Move-Item -Destination ".\\artifacts-win" || true
+          mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success'
@@ -44,7 +44,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          mv -r artifacts/* artifacts-win/ || true
+          Get-ChildItem -Path ".\\artifacts\\*" -Recurse | Move-Item -Destination ".\\artifacts-win" || true
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
