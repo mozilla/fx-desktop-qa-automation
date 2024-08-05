@@ -35,7 +35,7 @@ jobs:
         run: |
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          mv artifacts artifacts-win || true
+          Get-ChildItem -Path ".\\artifacts\\*" -Recurse | Move-Item -Destination ".\\artifacts-win" || true
           exit $env:TEST_EXIT_CODE
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success'
