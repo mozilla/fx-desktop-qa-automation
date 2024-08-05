@@ -619,13 +619,13 @@ class BasePage(Page):
 
         For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be: tabs.hide_popup("tabContextMenu")
         """
-        script = f"""document.querySelector("#{context_menu}").hidePopup();
-        """
+        script = f'document.querySelector("#{context_menu}").hidePopup();'
         if chrome:
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 self.driver.execute_script(script)
         else:
-            self.driver.execute_script(script)
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                self.driver.execute_script(script)
 
     def hide_popup_by_class(self, class_name: str, retry=False) -> None:
         """

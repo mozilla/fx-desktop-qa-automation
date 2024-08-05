@@ -102,7 +102,10 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
             .startswith("File deleted")
         )
     )
-    context_menu.hide_popup_by_child_node("copy-download-link")
+
+    script = 'document.querySelector("#downloadsContextMenu").hidePopup();'
+    with driver.context(driver.CONTEXT_CONTENT):
+        driver.execute_script(script)
 
     # Check that nothing has leaked
     driver.switch_to.window(non_private_window)
