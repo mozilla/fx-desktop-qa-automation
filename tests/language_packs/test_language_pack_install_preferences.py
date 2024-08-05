@@ -1,11 +1,7 @@
-import sys
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
-from modules.util import BrowserActions
 
 LANGUAGES = [("it", "Imposta alternative")]
 
