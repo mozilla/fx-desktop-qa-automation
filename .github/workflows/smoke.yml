@@ -44,7 +44,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          rm artifacts/assets
+          rm artifacts/assets -r -Force
           mv artifacts/* artifacts-win
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
