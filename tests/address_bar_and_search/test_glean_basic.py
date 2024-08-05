@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from werkzeug.wrappers import Request, Response
 
 from modules.browser_object import Navigation
-from modules.page_object import AboutGlean, AboutPrefs, GenericPage
+from modules.page_object import AboutGlean, AboutPrefs
 from modules.util import Utilities
 
 PINGS_WITH_ID = 0
@@ -68,7 +68,6 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     about_glean.change_ping_id(ping)
 
     # Search 1 (Google)
-    page = GenericPage(driver, url="")
     nav = Navigation(driver).open()
     nav.search("trombone")
     nav.expect_in_content(EC.title_contains("Search"))

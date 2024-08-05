@@ -103,7 +103,7 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
         )
     )
 
-    script = f'document.querySelector("#downloadsContextMenu").hidePopup();'
+    script = 'document.querySelector("#downloadsContextMenu").hidePopup();'
     with driver.context(driver.CONTEXT_CONTENT):
         driver.execute_script(script)
 
