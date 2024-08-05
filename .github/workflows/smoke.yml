@@ -31,7 +31,7 @@ jobs:
           Start-Sleep -Seconds 10;
       - name: Run Smoke Tests in Win
         run: |
-          pipenv run pytest -n 4 tests/address*
+          pipenv run pytest -n 4 tests/address_bar_and_search
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
