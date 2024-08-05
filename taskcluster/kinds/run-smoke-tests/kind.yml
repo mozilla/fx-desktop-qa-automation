@@ -31,7 +31,7 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable $(cat ./fx_location) -n 4 tests/address*
+        pipenv run pytest --fx-executable $(cat ./fx_location) -n 4 .
     notify:
       recipients:
         - type: slack-channel
