@@ -201,9 +201,7 @@ def test_type_control_panel_character_spacing(driver: Firefox):
     before_character_spacing = int(
         util.remove_all_non_numbers(container.value_of_css_property("--letter-spacing"))
     )
-    content_character_spacing_slider = reader_view.get_element(
-        "slider"
-    )
+    content_character_spacing_slider = reader_view.get_element("slider")
     reader_view.change_slider_value(content_character_spacing_slider)
 
     reader_view.wait.until(
