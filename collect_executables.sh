@@ -52,18 +52,10 @@ fi
 # Find the version of Geckodriver that matches arch
 FILENAME="-${SYSTEM_NAME}${BITS}${ARCH}.${EXT}"
 echo "FILENAME ${FILENAME}"
-GECKO_LINK=""
-i=0
-while [[ "$GECKO_LINK" != *"assets"* ]] && [[ $i != 20 ]]
-do
-    i=$((i + 1))
-    GECKO_LINK=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest)
-done
-
 # 20 is arbitrary and may break if future releases of Geckodriver have more than 20 channels
 for i in {0..20}
 do
-    echo "${GECKO_LINK}" | jq ".[\"assets\"][${i}][\"browser_download_url\"]" | tr -d '"'
+    GECKO_LINK=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq ".[\"assets\"][${i}][\"browser_download_url\"]" | tr -d '"')
     if [[ $GECKO_LINK == *"${FILENAME}"* ]] && [[ $GECKO_LINK != *".asc" ]]
     then
         curl -OL "$GECKO_LINK"
