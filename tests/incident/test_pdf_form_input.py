@@ -14,7 +14,7 @@ def test_url():
 
 
 @pytest.mark.incident
-@pytest.mark.pynput
+@pytest.mark.headed
 def test_pdf_form_fill(driver, test_url):
     try:
         from pynput.keyboard import Controller, Key

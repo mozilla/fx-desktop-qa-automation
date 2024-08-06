@@ -26,14 +26,26 @@ jobs:
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
       - name: Run Setup.exe
+        id: setup
         run: |
           .\setup.exe /silent;
           Start-Sleep -Seconds 10;
       - name: Run Smoke Tests in Win
+        if: steps.setup.conclusion == 'success'
         run: |
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
+          exit $env:TEST_EXIT_CODE
+      - name: Run Smoke Tests in Win (Headed)
+        if: steps.setup.conclusion == 'success'
+        run: |
+          rm ./pyproject.toml;
+          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          pipenv run pytest -n 4 .
+          $env:TEST_EXIT_CODE = $LASTEXITCODE
+          rm artifacts/assets -r -Force
+          mv artifacts/* artifacts-win
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
@@ -64,6 +76,12 @@ jobs:
         run: |
           pipenv run pytest --fx-executable $(cat ./fx_location) -s -n 4 . || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
+          exit $TEST_EXIT_CODE
+      - name: Run Smoke Tests in MacOS (Headed)
+        run: |
+          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          pipenv run pytest --fx-executable $(cat ./fx_location) -s -n 4 . || TEST_EXIT_CODE=$?
+          mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()

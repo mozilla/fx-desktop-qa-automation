@@ -5,7 +5,7 @@ log_cli = true
 log_cli_level = "info"
 markers = [
     "audio: test is reliant on audio",
-    "pynput: test uses pynput package",
+    "headed: test must run in headed mode (e.g. uses pynput)",
     "incident: incident smoke tests",
     "unstable: temporary mark for unstable tests",
     "slow: test is clocked at more than 30s on modern machines",
