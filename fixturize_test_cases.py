@@ -18,7 +18,7 @@ for root, _, files in os.walk("tests"):
                     print(f"Found multiple case_nums: {case_num} and {m[2]}")
                 case_num = m[2]
             if case_num:
-                with open("filepath", "w") as fh:
+                with open(filepath, "w") as fh:
                     lines = "\n".join(
                         [
                             "",
@@ -28,28 +28,21 @@ for root, _, files in os.walk("tests"):
                             "",
                         ]
                     )
-                    # fh.write("import pytest\n")
-                    print("import pytest")
+                    fh.write("import pytest\n")
                     imports = True
                     for i in range(len(script)):
                         line = script[i]
                         if (
                             not (
                                 len(line.strip()) == 0
-                                or line.strip().startswith("'")
-                                or line.strip().startswith('"')
-                                or line.strip().startswith("#")
                                 or line.strip().startswith("import")
                                 or line.strip().startswith("from")
                             )
                             and imports
                         ):
-                            # fh.write(lines)
-                            print(lines)
+                            fh.write(lines)
                             imports = False
-                        else:
-                            # fh.write(f"{line}")
-                            print(line)
+                        fh.write(f"{line}")
                     # print(filepath)
                     # print(lines)
                     # print("-=----=-")
