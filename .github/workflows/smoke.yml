@@ -72,6 +72,7 @@ jobs:
           pip3 install 'ruff>=0.4.8,<0.5';
           bash collect_executables.sh;
           curl -OL https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-macos-aarch64.tar.gz
+          tar -xvzf geckodriver.tar.gz
           $(cat ./fx_location) --version;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
