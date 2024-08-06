@@ -159,3 +159,12 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("panel-ui-bookmarks").click()
         return self
+
+    def open_manage_history(self) -> BasePage:
+        """
+        Opens the History Library dialog
+        """
+        self.open_history_menu()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("manage-history-button").click()
+        return self

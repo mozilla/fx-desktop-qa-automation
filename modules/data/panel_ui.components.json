@@ -155,5 +155,10 @@
         "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
         "strategy": "css",
         "groups": []
+    },
+    "manage-history-button": {
+        "selectorData": "PanelUI-historyMore",
+        "strategy": "id",
+        "groups": []
     }
 }
