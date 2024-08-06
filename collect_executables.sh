@@ -126,7 +126,7 @@ else
         if [[ $SYSTEM_NAME == "macos" ]]
         then
             hdiutil attach Firefox*.dmg
-            echo "/Volume/Firefox/Firefox.app/Contents/MacOS/firefox" > fx_location
+            echo "/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox" > fx_location
         fi
     fi
 fi
