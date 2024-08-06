@@ -1,7 +1,7 @@
 from selenium.webdriver import Keys
 
 from modules.page_base import BasePage
-
+from selenium.webdriver.remote.webelement import WebElement
 
 class ReaderView(BasePage):
     """
@@ -93,4 +93,11 @@ class ReaderView(BasePage):
         """
         self.get_element("toolbar-advanced").click()
         self.element_clickable("toolbar-text-align-left")
+        return self
+
+    def change_slider_value(self, slider: WebElement, increase=True) -> BasePage:
+        if increase:
+            slider.send_keys(Keys.RIGHT)
+        else:
+            slider.send_keys(Keys.LEFT)
         return self

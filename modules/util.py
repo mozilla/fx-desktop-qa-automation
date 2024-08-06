@@ -382,7 +382,7 @@ return props;
         return urlunparse(domain_parsed_url)
 
     def remove_all_non_numbers(self, item: str) -> str:
-        return re.sub(r"\D", "", item)
+        return re.sub(r"[^\d-]", "", item)
 
 
 class BrowserActions:
