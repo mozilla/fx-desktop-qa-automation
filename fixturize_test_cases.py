@@ -23,6 +23,7 @@ for root, _, files in os.walk("tests"):
                             f'    return "{case_num}"',
                         ]
                     )
+                    fh.write(lines)
                     # print(filepath)
                     # print(lines)
                     # print("-=----=-")
