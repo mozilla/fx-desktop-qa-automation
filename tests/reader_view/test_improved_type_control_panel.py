@@ -105,10 +105,9 @@ def test_type_control_panel_text_alignment(
         == intended_alignment
     )
 
+
 @pytest.mark.parametrize("width", slider_options)
-def test_type_control_panel_content_width(
-    driver: Firefox, width: str
-):
+def test_type_control_panel_content_width(driver: Firefox, width: str):
     """
     C130919.4: Ensure the functionality of the type control panels works
     """
@@ -119,24 +118,35 @@ def test_type_control_panel_content_width(
     prep_test(web_page, reader_view)
 
     body = web_page.get_element("body")
-    before_content_width = int(util.remove_all_non_numbers(body.value_of_css_property("--content-width")))
+    before_content_width = int(
+        util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
+    )
     content_width_slider = reader_view.get_element("slider-content-width")
 
     if width == "decrease":
         reader_view.change_slider_value(content_width_slider, increase=False)
         reader_view.wait.until(
-            lambda _: int(util.remove_all_non_numbers(body.value_of_css_property("--content-width"))) < before_content_width
+            lambda _: int(
+                util.remove_all_non_numbers(
+                    body.value_of_css_property("--content-width")
+                )
+            )
+            < before_content_width
         )
     else:
         reader_view.change_slider_value(content_width_slider)
         reader_view.wait.until(
-            lambda _: int(util.remove_all_non_numbers(body.value_of_css_property("--content-width"))) > before_content_width
+            lambda _: int(
+                util.remove_all_non_numbers(
+                    body.value_of_css_property("--content-width")
+                )
+            )
+            > before_content_width
         )
 
+
 @pytest.mark.parametrize("line_height", slider_options)
-def test_type_control_panel_line_spacing(
-    driver: Firefox, line_height: str
-):
+def test_type_control_panel_line_spacing(driver: Firefox, line_height: str):
     """
     C130919.5: Ensure the functionality of the type control panels works
     """
@@ -147,23 +157,30 @@ def test_type_control_panel_line_spacing(
     prep_test(web_page, reader_view)
 
     body = web_page.get_element("body")
-    before_block_size = int(util.remove_all_non_numbers(body.value_of_css_property("block-size")))
+    before_block_size = int(
+        util.remove_all_non_numbers(body.value_of_css_property("block-size"))
+    )
     content_line_spacer_slider = reader_view.get_element("slider-line-spacing")
 
     if line_height == "decrease":
         reader_view.change_slider_value(content_line_spacer_slider, increase=False)
         reader_view.wait.until(
-            lambda _: int(util.remove_all_non_numbers(body.value_of_css_property("block-size"))) < before_block_size
+            lambda _: int(
+                util.remove_all_non_numbers(body.value_of_css_property("block-size"))
+            )
+            < before_block_size
         )
     else:
         reader_view.change_slider_value(content_line_spacer_slider)
         reader_view.wait.until(
-            lambda _: int(util.remove_all_non_numbers(body.value_of_css_property("block-size"))) > before_block_size
+            lambda _: int(
+                util.remove_all_non_numbers(body.value_of_css_property("block-size"))
+            )
+            > before_block_size
         )
 
-def test_type_control_panel_character_spacing(
-    driver: Firefox
-):
+
+def test_type_control_panel_character_spacing(driver: Firefox):
     """
     C130919.6: Ensure the functionality of the type control panels works
     """
@@ -175,17 +192,25 @@ def test_type_control_panel_character_spacing(
     reader_view.open_advanced_options()
 
     container = web_page.get_element("container-div")
-    before_character_spacing = int(util.remove_all_non_numbers(container.value_of_css_property("--letter-spacing")))
-    content_character_spacing_slider = reader_view.get_element("slider-character-spacing")
+    before_character_spacing = int(
+        util.remove_all_non_numbers(container.value_of_css_property("--letter-spacing"))
+    )
+    content_character_spacing_slider = reader_view.get_element(
+        "slider-character-spacing"
+    )
     reader_view.change_slider_value(content_character_spacing_slider)
 
     reader_view.wait.until(
-        lambda _: int(util.remove_all_non_numbers(container.value_of_css_property("--letter-spacing"))) > before_character_spacing
+        lambda _: int(
+            util.remove_all_non_numbers(
+                container.value_of_css_property("--letter-spacing")
+            )
+        )
+        > before_character_spacing
     )
 
-def test_type_control_panel_word_spacing(
-    driver: Firefox
-):
+
+def test_type_control_panel_word_spacing(driver: Firefox):
     """
     C130919.7: Ensure the functionality of the type control panels works
     """
@@ -197,10 +222,17 @@ def test_type_control_panel_word_spacing(
     reader_view.open_advanced_options()
 
     container = web_page.get_element("container-div")
-    before_word_spacing = int(util.remove_all_non_numbers(container.value_of_css_property("--word-spacing")))
+    before_word_spacing = int(
+        util.remove_all_non_numbers(container.value_of_css_property("--word-spacing"))
+    )
     content_word_spacing_slider = reader_view.get_element("slider-word-spacing")
     reader_view.change_slider_value(content_word_spacing_slider)
 
     reader_view.wait.until(
-        lambda _: int(util.remove_all_non_numbers(container.value_of_css_property("--word-spacing"))) > before_word_spacing
+        lambda _: int(
+            util.remove_all_non_numbers(
+                container.value_of_css_property("--word-spacing")
+            )
+        )
+        > before_word_spacing
     )
