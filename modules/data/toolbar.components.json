@@ -18,5 +18,11 @@
         "selectorData": "customizableui-special-spring1",
         "strategy": "id",
         "groups": []
+    },
+
+    "popup-notification": {
+        "selectorData": "popupnotification",
+        "strategy": "tag",
+        "groups": []
     }
 }

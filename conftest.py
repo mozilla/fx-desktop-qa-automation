@@ -31,24 +31,34 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     artifacts_loc = "artifacts" if opt_ci else ""
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
-    fullpath_chrome = os.path.join(
+    fullpath_content = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_content.txt"
     )
-    fullpath_content = os.path.join(
+    fullpath_chrome = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
 
-    # Save Chrome context page source
-    with open(fullpath_chrome, "w", encoding="utf-8") as fh:
-        with driver.context(driver.CONTEXT_CHROME):
+    try:
+        # Save Chrome context page source
+        with open(fullpath_chrome, "w", encoding="utf-8") as fh:
+            with driver.context(driver.CONTEXT_CHROME):
+                output_contents = driver.page_source
+                fh.write(output_contents)
+
+        # Save Content context page source
+        with open(fullpath_content, "w", encoding="utf-8") as fh:
             output_contents = driver.page_source
             fh.write(output_contents)
-
-    # Save Content context page source
-    with open(fullpath_content, "w", encoding="utf-8") as fh:
-        output_contents = driver.page_source
-        fh.write(output_contents)
+    except Exception as e:
+        logging.error(f"Could not log the html content because of {e}")
     return
+
+
+def sanitize_filename(filename):
+    # Remove invalid characters
+    sanitized = re.sub(r'[<>:"/\\|?*]', "", filename)
+    # Limit to 200 characters
+    return sanitized[:200]
 
 
 def pytest_exception_interact(node, call, report):
@@ -58,15 +68,19 @@ def pytest_exception_interact(node, call, report):
     if report.failed:
         try:
             test_name = node.name
+            test_name = sanitize_filename(test_name)
             logging.error(f"Handling exception for test: {test_name}")
-            logging.error(
-                f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
-            )
-            driver = node.funcargs.get("driver")
-            opt_ci = node.funcargs.get("opt_ci")
-            if driver:
-                log_content(opt_ci, driver, test_name)
-                screenshot_content(driver, opt_ci, test_name)
+            if hasattr(node, "funcargs"):
+                logging.error(
+                    f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
+                )
+                driver = node.funcargs.get("driver")
+                opt_ci = node.funcargs.get("opt_ci")
+                if driver:
+                    log_content(opt_ci, driver, test_name)
+                    screenshot_content(driver, opt_ci, test_name)
+            else:
+                logging.error("Error occurred during collection.")
         except Exception as e:
             logging.warning("Something went wrong with the exception catching.")
             raise e
@@ -236,7 +250,7 @@ def driver(
     """
     try:
         options = Options()
-        if opt_headless or opt_ci:
+        if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
         for opt, value in set_prefs:

@@ -13,5 +13,23 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "body": {
+        "selectorData": "viewer",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "zoom-out": {
+        "selectorData": "zoomOut",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "zoom-in": {
+        "selectorData": "zoomIn",
+        "strategy": "id",
+        "groups": []
     }
 }
