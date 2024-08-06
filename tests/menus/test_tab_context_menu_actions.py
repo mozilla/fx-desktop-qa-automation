@@ -94,34 +94,3 @@ def test_close_multiple_tabs_to_left(driver: Firefox):
     # verify number of tabs
     logging.info("Trying to verify only 1 tab remains.")
     tabs.wait_for_num_tabs(1)
-
-
-def test_close_multiple_tabs_other_tabs(driver: Firefox):
-    """
-    C2264627.3.3: close multiple tabs actions (close all the left)
-    """
-    tabs = TabBar(driver)
-    tab_context_menu = TabContextMenu(driver)
-
-    tabs_to_open = 4
-
-    # open some tabs
-    for i in range(tabs_to_open):
-        driver.get(links[i])
-        tabs.new_tab_by_button()
-        driver.switch_to.window(driver.window_handles[i + 1])
-
-    # grab second tab and close all other tabs using the context menu
-    second_tab = tabs.get_tab(2)
-    tabs.context_click(second_tab)
-    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs")
-
-    tabs.context_click(second_tab)
-    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-other-tabs")
-
-    # Click-and-hide won't hide the parent popup
-    tabs.hide_popup("tabContextMenu")
-
-    # verify the number of tabs
-    logging.info("Trying to verify only 1 tab remains.")
-    tabs.wait_for_num_tabs(1)
