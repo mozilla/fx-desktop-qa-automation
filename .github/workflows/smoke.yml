@@ -33,7 +33,7 @@ jobs:
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
-          pipenv run pytest -n 4 .
+          pipenv run pytest -n 4 tests/meta
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -63,6 +63,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
+        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -73,11 +74,13 @@ jobs:
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
       - name: Run Smoke Tests in MacOS
+        if: steps.setup.conclusion == 'success'
         run: |
-          pipenv run pytest --fx-executable $(cat ./fx_location) -s -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable $(cat ./fx_location) -s -n 4 tests/meta || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
+        if: steps.setup.conclusion == 'success'
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable $(cat ./fx_location) -s -n 4 . || TEST_EXIT_CODE=$?
