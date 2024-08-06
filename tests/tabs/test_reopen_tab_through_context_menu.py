@@ -1,6 +1,12 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar, TabContextMenu
+
+
+@pytest.fixture()
+def test_case():
+    return "134648"
 
 
 def test_reopen_tab_through_context_menu(driver: Firefox):

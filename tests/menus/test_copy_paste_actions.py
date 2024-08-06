@@ -1,5 +1,6 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
@@ -8,6 +9,11 @@ from modules.page_object import GoogleSearch
 from modules.page_object_autofill_login import LoginAutofill
 from modules.page_object_form_autofill_textarea import TextAreaFormAutofill
 from modules.util import Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "2264626"
 
 
 def test_login_form_copy_paste(driver: Firefox):

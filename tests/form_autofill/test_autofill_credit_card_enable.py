@@ -8,6 +8,11 @@ from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "122388"
+
+
 def test_enable_disable_form_autofill_cc(driver: Firefox):
     """
     C122388, tests that after saving cc information and toggling the autofill credit

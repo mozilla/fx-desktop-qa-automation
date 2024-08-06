@@ -6,6 +6,11 @@ from modules.page_object import AboutNewtab
 
 
 @pytest.fixture()
+def test_case():
+    return "408037"
+
+
+@pytest.fixture()
 def add_prefs():
     return [
         ("browser.search.region", "US"),

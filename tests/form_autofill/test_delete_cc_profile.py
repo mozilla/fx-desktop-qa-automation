@@ -8,6 +8,11 @@ from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "122391"
+
+
 @pytest.mark.unstable
 def test_delete_cc_profile(driver: Firefox):
     """

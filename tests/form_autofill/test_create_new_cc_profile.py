@@ -8,6 +8,11 @@ from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "122389"
+
+
 @pytest.mark.unstable
 def test_create_new_cc_profile(driver: Firefox):
     """

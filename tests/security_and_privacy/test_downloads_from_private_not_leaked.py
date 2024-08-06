@@ -7,6 +7,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import AboutDownloadsContextMenu, PanelUi, Toolbar
 from modules.page_object import AboutDownloads, GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "101674"
+
+
 TEST_URL = "https://www.opm.gov/forms/opm-forms/"
 NUM_LINKS = 3
 

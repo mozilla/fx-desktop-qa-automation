@@ -1,7 +1,13 @@
+import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import HyperlinkContextMenu, Navigation, TabBar
+from modules.browser_object import HyperlinkContextMenu, TabBar
 from modules.page_object import ExamplePage
+
+
+@pytest.fixture()
+def test_case():
+    return "2637621"
 
 
 def test_open_link_in_new_window(driver: Firefox):

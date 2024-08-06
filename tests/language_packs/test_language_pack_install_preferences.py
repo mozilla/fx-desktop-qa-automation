@@ -3,6 +3,12 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 
+
+@pytest.fixture()
+def test_case():
+    return "1549409"
+
+
 LANGUAGES = [("it", "Imposta alternative")]
 
 

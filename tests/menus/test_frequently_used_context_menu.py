@@ -9,6 +9,11 @@ from modules.page_object import ExamplePage
 from modules.util import BrowserActions, Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "2637623"
+
+
 @pytest.mark.unstable
 def test_save_page_as(driver: Firefox):
     """

@@ -1,8 +1,21 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, TabContextMenu
+from modules.browser_object import (
+    HyperlinkContextMenu,
+    Navigation,
+    TabBar,
+    TabContextMenu,
+)
+from modules.page_object import ExamplePage
+
+
+@pytest.fixture()
+def test_case():
+    return "2264627"
+
 
 links = [
     "about:about",
@@ -10,12 +23,6 @@ links = [
     "about:cache",
     "about:config",
 ]
-
-
-from selenium.webdriver import Firefox
-
-from modules.browser_object import HyperlinkContextMenu, Navigation, TabBar
-from modules.page_object import ExamplePage
 
 
 def test_close_multiple_tabs_to_left(driver: Firefox):

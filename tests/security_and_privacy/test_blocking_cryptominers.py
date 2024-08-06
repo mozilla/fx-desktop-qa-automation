@@ -1,7 +1,14 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, TrackerPanel
 from modules.page_object import AboutPrefs, GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "450232"
+
 
 CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
 

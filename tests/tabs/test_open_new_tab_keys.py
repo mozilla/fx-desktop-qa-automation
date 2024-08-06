@@ -1,7 +1,13 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134442"
 
 
 def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):

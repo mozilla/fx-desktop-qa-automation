@@ -6,6 +6,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.browser_object import Navigation
 
 
+@pytest.fixture()
+def test_case():
+    return "1365268"
+
+
 @pytest.mark.incident
 def test_google_search_code(driver: Firefox):
     """

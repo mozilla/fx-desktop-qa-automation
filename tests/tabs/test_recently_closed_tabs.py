@@ -1,8 +1,15 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134648"
+
 
 links = [
     "about:about",

@@ -9,6 +9,11 @@ from modules.page_object_about_telemetry import AboutTelemetry
 from modules.util import Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "1365108"
+
+
 @pytest.mark.unstable
 def test_sap_google_adclick(driver: Firefox):
     """

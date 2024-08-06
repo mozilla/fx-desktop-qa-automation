@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import PanelUi, TabBar, TabContextMenu, Toolbar
 from modules.page_object import AboutPrefs, GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "1771617"
+
+
 MORE_TOOLS_PT = "Mais ferramentas"
 DUPLICATE_TAB_PT = "Duplicar aba"
 SCREEN_CAP_URL = (

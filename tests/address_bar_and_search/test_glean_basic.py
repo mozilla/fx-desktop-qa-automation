@@ -14,6 +14,12 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutGlean, AboutPrefs, GenericPage
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "2234689"
+
+
 PINGS_WITH_ID = 0
 PING_ID = ""
 

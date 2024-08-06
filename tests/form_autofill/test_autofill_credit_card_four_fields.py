@@ -3,9 +3,13 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import CreditCardPopup, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122404"
 
 
 @pytest.mark.unstable

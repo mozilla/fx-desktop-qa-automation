@@ -1,7 +1,13 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import ExamplePage
+
+
+@pytest.fixture()
+def test_case():
+    return "101662"
 
 
 def test_open_link_in_private_window(driver: Firefox):

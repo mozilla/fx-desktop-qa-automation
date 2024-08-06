@@ -5,6 +5,11 @@ from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutConfig
 
 
+@pytest.fixture()
+def test_case():
+    return "2153943"
+
+
 # Set search region
 @pytest.fixture()
 def add_prefs():

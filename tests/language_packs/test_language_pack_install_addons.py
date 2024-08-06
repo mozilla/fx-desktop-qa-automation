@@ -3,6 +3,12 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages
 
+
+@pytest.fixture()
+def test_case():
+    return "1549408"
+
+
 LANGUAGES = [
     (
         "Italiano",

@@ -7,6 +7,12 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
 
+
+@pytest.fixture()
+def test_case():
+    return "134647"
+
+
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 

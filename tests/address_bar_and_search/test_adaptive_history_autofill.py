@@ -8,6 +8,11 @@ from modules.browser_object_tabbar import TabBar
 
 
 @pytest.fixture()
+def test_case():
+    return "1814373"
+
+
+@pytest.fixture()
 def add_prefs():
     return [
         ("browser.urlbar.autoFill.adaptiveHistory.enabled", True),
