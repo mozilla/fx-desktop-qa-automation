@@ -50,11 +50,13 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
         fh.write(output_contents)
     return
 
+
 def sanitize_filename(filename):
     # Remove invalid characters
-    sanitized = re.sub(r'[<>:"/\\|?*]', '', filename)
+    sanitized = re.sub(r'[<>:"/\\|?*]', "", filename)
     # Limit to 200 characters
     return sanitized[:200]
+
 
 def pytest_exception_interact(node, call, report):
     """
