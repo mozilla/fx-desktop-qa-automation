@@ -31,5 +31,11 @@
         "selectorData": "zoomIn",
         "strategy": "id",
         "groups": []
+    },
+
+    "download": {
+        "selectorData": "download",
+        "strategy": "id",
+        "groups": []
     }
 }
