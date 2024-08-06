@@ -12,6 +12,7 @@ WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("w
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_navigation_multiple_tabs(driver: Firefox):
+    """C134647 - Verify that Multiple Tabs can be closed via the context menu"""
     # open 20 tabs
     tabs = TabBar(driver).open()
     num_tabs = 20

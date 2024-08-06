@@ -7,6 +7,7 @@ CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/f
 
 
 def test_blocking_cryptominers(driver: Firefox):
+    """C450232 - Cryptominers are blocked and shown in Standard mode in the Information panel"""
     # instantiate objects
     nav = Navigation(driver).open()
     about_prefs = AboutPrefs(driver, category="privacy").open()
