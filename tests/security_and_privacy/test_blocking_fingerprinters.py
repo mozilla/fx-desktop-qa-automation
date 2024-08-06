@@ -1,3 +1,4 @@
+import pytest
 from time import sleep
 
 from selenium.webdriver import Firefox
@@ -10,6 +11,7 @@ FINGERPRINTERS_URL = (
 )
 
 
+@pytest.mark.unstable
 def test_blocking_fingerprinter(driver: Firefox):
     """
     C446404: Blocking Fingerprinters
