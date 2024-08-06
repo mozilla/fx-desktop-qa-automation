@@ -12,6 +12,9 @@ for root, _, files in os.walk("tests"):
                 m = TEST_CASE_RE.match(line.strip())
                 if not m:
                     continue
+                if case_num and case_num != m[2]:
+                    print(filepath)
+                    print(f"Found multiple case_nums: {case_num} and {m[2]}")
                 case_num = m[2]
             if case_num:
                 with open(filepath, "a") as fh:
@@ -23,7 +26,7 @@ for root, _, files in os.walk("tests"):
                             f'    return "{case_num}"',
                         ]
                     )
-                    fh.write(lines)
+                    # fh.write(lines)
                     # print(filepath)
                     # print(lines)
                     # print("-=----=-")
