@@ -246,6 +246,7 @@ class BasePage(Page):
         selenium.webdriver.remote.webelement.WebElement
             The WebElement object referred to by the element dict.
         """
+        logging.info(self.elements)
         logging.info("====")
         if not multiple:
             logging.info(f"Getting element {name}")

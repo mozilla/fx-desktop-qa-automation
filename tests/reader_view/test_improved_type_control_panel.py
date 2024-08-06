@@ -117,11 +117,13 @@ def test_type_control_panel_content_width(driver: Firefox, width: str):
 
     prep_test(web_page, reader_view)
 
+    reader_view.change_slider_element_shadow_parent("toolbar-content-width")
+
     body = web_page.get_element("body")
     before_content_width = int(
         util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
     )
-    content_width_slider = reader_view.get_element("slider-content-width")
+    content_width_slider = reader_view.get_element("slider")
 
     if width == "decrease":
         reader_view.change_slider_value(content_width_slider, increase=False)
@@ -156,11 +158,13 @@ def test_type_control_panel_line_spacing(driver: Firefox, line_height: str):
 
     prep_test(web_page, reader_view)
 
+    reader_view.change_slider_element_shadow_parent("toolbar-line-spacing")
+
     body = web_page.get_element("body")
     before_block_size = int(
         util.remove_all_non_numbers(body.value_of_css_property("block-size"))
     )
-    content_line_spacer_slider = reader_view.get_element("slider-line-spacing")
+    content_line_spacer_slider = reader_view.get_element("slider")
 
     if line_height == "decrease":
         reader_view.change_slider_value(content_line_spacer_slider, increase=False)
@@ -191,12 +195,14 @@ def test_type_control_panel_character_spacing(driver: Firefox):
     prep_test(web_page, reader_view)
     reader_view.open_advanced_options()
 
+    reader_view.change_slider_element_shadow_parent("toolbar-character-spacing")
+
     container = web_page.get_element("container-div")
     before_character_spacing = int(
         util.remove_all_non_numbers(container.value_of_css_property("--letter-spacing"))
     )
     content_character_spacing_slider = reader_view.get_element(
-        "slider-character-spacing"
+        "slider"
     )
     reader_view.change_slider_value(content_character_spacing_slider)
 
@@ -221,11 +227,13 @@ def test_type_control_panel_word_spacing(driver: Firefox):
     prep_test(web_page, reader_view)
     reader_view.open_advanced_options()
 
+    reader_view.change_slider_element_shadow_parent("toolbar-word-spacing")
+
     container = web_page.get_element("container-div")
     before_word_spacing = int(
         util.remove_all_non_numbers(container.value_of_css_property("--word-spacing"))
     )
-    content_word_spacing_slider = reader_view.get_element("slider-word-spacing")
+    content_word_spacing_slider = reader_view.get_element("slider")
     reader_view.change_slider_value(content_word_spacing_slider)
 
     reader_view.wait.until(
