@@ -30,6 +30,7 @@ jobs:
         run: |
           .\setup.exe /S /D="C:\Program Files\Custom Firefox";
           Start-Sleep -Seconds 10;
+          dir 'C:\Program Files'
           & 'C:\Program Files\Custom Firefox\firefox.exe' --version
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
@@ -78,14 +79,15 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           cat ./fx_location
-          pipenv run pytest --fx-executable "$(cat ./fx_location)" -s -n 4 tests/meta || TEST_EXIT_CODE=$?
+          echo "pytest --fx-executable $(cat ./fx_location)"
+          pipenv run pytest --fx-executable "$(cat ./fx_location)" -n 4 tests/meta || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success'
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable "$(cat ./fx_location)" -s -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable "$(cat ./fx_location)" -n 4 . || TEST_EXIT_CODE=$?
           mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
