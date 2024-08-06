@@ -1,17 +1,20 @@
 import os
-import time
 import platform
+import time
+
 import pytest
+from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from pynput.keyboard import Controller, Key
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object import GenericPdf
 
+
 @pytest.fixture()
 def add_prefs():
     return []
+
 
 def test_pdf_download(driver: Firefox, fillable_pdf_url: str):
     """
@@ -49,6 +52,10 @@ def test_pdf_download(driver: Firefox, fillable_pdf_url: str):
         saved_pdf_location = f"/home/{user}/Downloads/{file_name}"
 
     # Verify if the file exists
-    assert os.path.exists(saved_pdf_location), f"The file was not downloaded to {saved_pdf_location}."
+    assert os.path.exists(
+        saved_pdf_location
+    ), f"The file was not downloaded to {saved_pdf_location}."
 
-    print(f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}.")
+    print(
+        f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
+    )
