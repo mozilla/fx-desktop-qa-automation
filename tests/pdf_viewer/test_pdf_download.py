@@ -21,7 +21,6 @@ def test_pdf_download(driver: Firefox, fillable_pdf_url: str):
     C3932: PDF files can be successfully downloaded via pdf.js
     """
     GenericPdf(driver, pdf_url=fillable_pdf_url).open()
-    nav = Navigation(driver)
     keyboard = Controller()
 
     # Click the download button
