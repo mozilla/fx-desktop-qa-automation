@@ -7,6 +7,10 @@ echo "~~collect executables~~"
 ## Determine OS and arch
 UNAME_A=$(uname -a)
 ## Save the system arch info
+if [ -n "$COLLECT_LANG" ]
+then
+    COLLECT_LANG=en-US
+fi
 echo "uname -a: ${UNAME_A}"
 if [ -n "$WSL_DISTRO_NAME" ] || [[ $UNAME_A == *"MINGW"* ]]
 then
@@ -81,7 +85,7 @@ else
         CHANNEL=""
     fi
 fi
-FX_LINK_HTML=$(curl -s https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=en-US)
+FX_LINK_HTML=$(curl -s https://download.mozilla.org/\?product\=firefox${CHANNEL}-latest-ssl\&os\=${FX_SYS_NAME}\&lang\=${COLLECT_LANG})
 FX_LOC=$(echo "$FX_LINK_HTML" | awk -F '"' '{print $2}')
 
 curl -O "$FX_LOC"
@@ -112,4 +116,17 @@ then
     ls firefox*.tar.bz2
     mv firefox*.tar.bz2 firefox.tar.bz2
     tar -xvjf firefox.tar.bz2
+    echo "./firefox/firefox" > fx_location
+else
+    if [[ $SYSTEM_NAME == "win" ]]
+    then
+        mv Firefox*.exe setup.exe
+        ls .
+    else
+        if [[ $SYSTEM_NAME == "macos" ]]
+        then
+            hdiutil attach Firefox*.dmg
+            echo "/Volume/Firefox/Firefox.app/Contents/MacOS/firefox" > fx_location
+        fi
+    fi
 fi

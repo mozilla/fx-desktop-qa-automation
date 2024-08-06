@@ -10,7 +10,7 @@ from modules.util import BrowserActions
 COOKIE_SITE = "google.com"
 
 
-@pytest.mark.pynput
+@pytest.mark.headed
 def test_manage_cookie_data(driver: Firefox):
     """
     C143633 - Cookies and Site Data can be managed

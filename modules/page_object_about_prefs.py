@@ -330,6 +330,30 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("browser-popup")
 
+    def set_alternative_language(self, lang_code: str) -> BasePage:
+        """Changes the browser language"""
+        self.get_element("language-set-alternative-button").click()
+        self.driver.switch_to.frame(self.get_iframe())
+
+        # Download the language options
+        select_language = self.get_element("language-settings-select")
+        select_language.click()
+        search_languages = self.get_element("language-settings-search")
+        search_languages.click()
+        select_language.click()
+
+        # Select the language, add, and make sure it appears
+        select_language.click()
+        self.get_element("language-option-by-code", labels=[lang_code]).click()
+        select_language.click()
+        self.get_element("language-settings-add-button").click()
+        self.element_attribute_contains(
+            "language-added-list", "last-selected", f"locale-{lang_code}"
+        )
+
+        self.get_element("language-settings-ok").click()
+        return self
+
     def get_history_menulist(self) -> WebElement:
         """
         Gets the webelement for the list of history items that appear in about:preferences

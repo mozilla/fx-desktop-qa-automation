@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from werkzeug.wrappers import Request, Response
 
 from modules.browser_object import Navigation
-from modules.page_object import AboutGlean, AboutPrefs
+from modules.page_object import AboutGlean, AboutPrefs, GenericPage
 from modules.util import Utilities
 
 PINGS_WITH_ID = 0
@@ -40,7 +40,7 @@ def glean_handler(rq: Request) -> Response:
             if PINGS_WITH_ID == 0:
                 engine_ground = "Google"
             else:
-                engine_ground = "DuckDuckGo"
+                engine_ground = "Bing"
             confirm_glean_correctness(
                 ping_ground=PING_ID,
                 ping_test=ping_id,
@@ -68,24 +68,23 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     about_glean.change_ping_id(ping)
 
     # Search 1 (Google)
+    page = GenericPage(driver, url="")
     nav = Navigation(driver).open()
     nav.search("trombone")
-    nav.expect_in_content(EC.title_contains("Search"))
-    nav.expect_in_content(
+    page.title_contains("Search")
+    page.expect(
         EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='navigation']"))
     )
 
     # Change default search engine
     about_prefs = AboutPrefs(driver, category="search").open()
-    about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
+    about_prefs.search_engine_dropdown().select_option("Bing")
 
-    # Search 2 (DDG)
+    # Search 2 (Bing)
     nav = Navigation(driver).open()
-    (
-        nav.search("trumpet")
-        .expect_in_content(EC.title_contains("DuckDuckGo"))
-        .expect_in_content(EC.visibility_of_element_located((By.ID, "more-results")))
-    )
+    nav.search("trumpet")
+    page.url_contains("bing.com")
+    page.expect(EC.visibility_of_element_located((By.ID, "b_context")))
 
     # We could go back to about:glean, but this is faster
     with driver.context(driver.CONTEXT_CHROME):
