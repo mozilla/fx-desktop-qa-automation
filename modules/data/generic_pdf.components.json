@@ -15,6 +15,12 @@
         ]
     },
 
+    "html-body": {
+        "selectorData": "html",
+        "strategy": "tag",
+        "groups": []
+    },
+
     "body": {
         "selectorData": "viewer",
         "strategy": "id",
@@ -30,6 +36,18 @@
     "zoom-in": {
         "selectorData": "zoomIn",
         "strategy": "id",
+        "groups": []
+    },
+
+    "pdf-page": {
+        "selectorData": "div[data-page-number='{number}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "page-one-item": {
+        "selectorData": "/html/body/div[1]/div[2]/div[8]/div[2]/div[1]/div[2]/span[2]",
+        "strategy": "xpath",
         "groups": []
     }
 }
