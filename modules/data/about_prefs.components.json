@@ -272,6 +272,15 @@
         ]
     },
 
+    "manage-data-save-changes-button": {
+        "selectorData": "[class='button-text'][value='Save Changes']",
+        "strategy": "css",
+        "shadowParent": "cookies-shadow-root",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "permissions-notifications-button": {
         "selectorData": "notificationSettingsButton",
         "strategy": "id",
@@ -344,9 +353,21 @@
         "groups": []
     },
 
+    "manage-cookies-site": {
+        "selectorData": "richlistitem[host='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "language-set-alternative-button": {
         "selectorData": "[data-l10n-id='manage-browser-languages-button']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "remove-selected-button": {
+        "selectorData": "removeSelected",
+        "strategy": "id",
         "groups": []
     },
 
@@ -358,6 +379,12 @@
 
     "language-settings-dialog": {
         "selectorData": "BrowserLanguagesDialog",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "remove-all-button": {
+        "selectorData": "removeAll",
         "strategy": "id",
         "groups": []
     },
@@ -413,6 +440,24 @@
 
     "history_menulist": {
         "selectorData": "historyMode",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "manage-cookies-site": {
+        "selectorData": "richlistitem[host='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "remove-selected-button": {
+        "selectorData": "removeSelected",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "remove-all-button": {
+        "selectorData": "removeAll",
         "strategy": "id",
         "groups": []
     }
