@@ -1,5 +1,6 @@
 import datetime
 
+
 def generate_filename():
     """Generates a filename with the current date and time in the specified format."""
     current_time = datetime.datetime.now()
