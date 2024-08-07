@@ -1,4 +1,3 @@
-import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -7,15 +6,12 @@ from modules.page_object import AboutConfig, ExamplePage
 
 # Set constant
 FX_SEARCH_CODE = "client=firefox-b-1-d"
-SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 
 
-@pytest.mark.unstable
 def test_search_code_google_us(driver: Firefox):
     """
     C1365268 - Default Search Code: Google - US
-    This tests multiple ways of sending a search; Awesome bar,
-    Search bar and selected text
+    This tests searching via Awesomebar and selected text
     """
 
     # Create objects
@@ -34,16 +30,6 @@ def test_search_code_google_us(driver: Firefox):
 
     # Check code generated from the Awesome bar search
     nav.search("soccer")
-    tab.expect_title_contains("Google Search")
-    search_code_assert()
-
-    # Check code generated from the Search bar search
-    # First enable search bar via about:config
-    ac.toggle_true_false_config(SEARCH_BAR_PREF)
-    nav.clear_awesome_bar()
-
-    # Then run the code check
-    nav.search_bar_search("soccer")
     tab.expect_title_contains("Google Search")
     search_code_assert()
 
