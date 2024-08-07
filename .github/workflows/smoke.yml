@@ -29,7 +29,7 @@ jobs:
           unzip geckodriver.zip
 
       - name: Download Beta
-        run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-latest-beta&os=win64&lang=en-US" -OutFile "setup.exe"
+        run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "setup.exe"
 
       - name: Install Beta
         run: |
@@ -117,7 +117,7 @@ jobs:
       - name: Install Firefox
         id: setup
         run: |
-          curl -o Firefox.dmg -L "https://download.mozilla.org/?product=firefox-latest&os=osx&lang=en-US"
+          curl -o Firefox.dmg -L "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=osx&lang=en-US"
           hdiutil attach Firefox.dmg
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
