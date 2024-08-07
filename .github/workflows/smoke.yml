@@ -32,7 +32,9 @@ jobs:
       - name: Run Setup.exe
         id: setup
         run: |
-          .\setup.exe /D="C:\Program Files\Custom Firefox";
+          mkdir 'C:\Program Files\Custom Firefox';
+          .\setup.exe /S /D="C:\Program Files\Custom Firefox";
+          echo "Setup complete"
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
@@ -86,14 +88,14 @@ jobs:
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         run: |
-          pipenv run pytest --fx-executable /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/meta || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/meta || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success'
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
           mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
