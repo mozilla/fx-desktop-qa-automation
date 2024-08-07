@@ -33,12 +33,12 @@ jobs:
         id: setup
         run: |
           .\setup.exe /D="C:\Program Files\Custom Firefox";
-          Start-Sleep -Seconds 20;
-          dir 'C:\Program Files'
-          & 'C:\Program Files\Custom Firefox\firefox.exe' --version
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
+          Start-Sleep -Seconds 20;
+          dir 'C:\Program Files'
+          & 'C:\Program Files\Custom Firefox\firefox.exe' --version
           pipenv run pytest -n 4 tests/meta
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -73,7 +73,7 @@ jobs:
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          curl -OL https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-macos-aarch64.tar.gz
+          curl -o geckodriver.tar.gz -L https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-macos-aarch64.tar.gz
           tar -xvzf geckodriver.tar.gz
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
