@@ -20,11 +20,15 @@ jobs:
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          bash collect_executables.sh;
-          ls .;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
+      - name: Download Geckodriver
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip" -OutFile "geckodriver.zip"
+          unzip geckodriver.zip
+      - name: Download Beta
+        run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US" -OutFile "setup.exe"
       - name: Run Setup.exe
         id: setup
         run: |
@@ -65,31 +69,31 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
-        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          bash collect_executables.sh;
           curl -OL https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-macos-aarch64.tar.gz
           tar -xvzf geckodriver.tar.gz
-          $(cat ./fx_location) --version;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
+      - name: Install Firefox
+        id: setup
+        run: |
+          curl -o Firefox.dmg -L "https://download.mozilla.org/?product=firefox-latest&os=osx&lang=en-US"
+          hdiutil attach Firefox.dmg
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         run: |
-          cat ./fx_location
-          echo "pytest --fx-executable $(cat ./fx_location)"
-          pipenv run pytest --fx-executable "$(cat ./fx_location)" -n 4 tests/meta || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/meta || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success'
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable "$(cat ./fx_location)" -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
           mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
