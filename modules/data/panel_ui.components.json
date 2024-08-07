@@ -143,6 +143,24 @@
         "selectorData": "toolbarbutton",
         "strategy": "tag",
         "groups": []
+    },
+
+    "panel-ui-bookmarks": {
+        "selectorData": "appMenu-bookmarks-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmark-by-title": {
+        "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "bookmark-current-tab": {
+        "selectorData": "panelMenuBookmarkThisPage",
+        "strategy": "id",
+        "groups": []
     }
 
 }

@@ -31,7 +31,10 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+        pipenv run pytest --fx-executable $(cat ./fx_location) tests/address_bar_and_search/test_search_bar_result.py;
+
+  # mv ./ci_pyproject_headed.toml ./pyproject.toml;
+  # pipenv run pytest --fx-executable $(cat ./fx_location) -n 4 .
     notify:
       recipients:
         - type: slack-channel
@@ -40,55 +43,55 @@ tasks:
       content:
         slack:
           blocks: [
-                    {
-                      "type": "header",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "firefox-desktop :firefox: ${task.metadata.name}\n "
-                      }
-                    },
-                    {
-                      "type": "divider"
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
-                      }
-                    },
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "*Owner*: ${task.metadata.owner}"
-                      }
-                    },
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "*Commit*: <${task.metadata.source}>"
-                      }
-                    },
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
-                      }
-                    },
-                    {
-                      "type": "divider"
-                    },
-                    {
-                      "type": "context",
-                      "elements": [
-                          {
-                              "type": "mrkdwn",
-                              "text": ":testops-notify: created by Desktop QA Test Engineering"
-                          }
-                      ]
-                    }
-                  ]
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "firefox-desktop :firefox: ${task.metadata.name}\n "
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Owner*: ${task.metadata.owner}"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Commit*: <${task.metadata.source}>"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":testops-notify: created by Desktop QA Test Engineering"
+                }
+              ]
+            }
+          ]
           text: "{task[name]} with id $taskId has finished!"

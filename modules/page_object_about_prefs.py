@@ -34,28 +34,38 @@ class AboutPrefs(BasePage):
         PyPOM Region factory for Dropdown menus in about:prefs. See PyPOM docs on Regions.
         """
 
-        def __init__(self, page, **kwargs):
+        def __init__(self, page, require_shadow=True, **kwargs):
             super().__init__(page, **kwargs)
             self.utils = PomUtils(self.driver)
-            self.shadow_elements = self.utils.get_shadow_content(self.root)
-            self.dropmarker = next(
-                el for el in self.shadow_elements if el.tag_name == "dropmarker"
-            )
+            if require_shadow:
+                self.shadow_elements = self.utils.get_shadow_content(self.root)
+                self.dropmarker = next(
+                    el for el in self.shadow_elements if el.tag_name == "dropmarker"
+                )
 
         @property
         def loaded(self):
             return self.root if EC.element_to_be_clickable(self.root) else False
 
         def select_option(
-            self, option_name: str, double_click=False, wait_for_selection=True
+            self,
+            option_name: str,
+            double_click=False,
+            wait_for_selection=True,
+            option_tag="menuitem",
+            label_name="label",
         ):
             """Select an option in the dropdown. Does not return self."""
-            if not self.dropmarker.get_attribute("open") == "true":
+            try:
+                if not self.dropmarker.get_attribute("open") == "true":
+                    self.root.click()
+            except AttributeError:
                 self.root.click()
+
             matching_menuitems = [
                 el
-                for el in self.root.find_elements(By.CSS_SELECTOR, "menuitem")
-                if el.get_attribute("label") == option_name
+                for el in self.root.find_elements(By.CSS_SELECTOR, option_tag)
+                if el.get_attribute(label_name) == option_name
             ]
             if len(matching_menuitems) == 0:
                 return False
@@ -317,8 +327,45 @@ class AboutPrefs(BasePage):
         else:
             print("No number found in the string")
 
+    def get_manage_data_site_element(self, site: str) -> WebElement:
+        """
+        Returns the WebElement for the given site in the manage site data popup
+        """
+        element = self.get_element("manage-cookies-site", labels=[site])
+        return element
+
     def get_iframe(self) -> WebElement:
         """
         Gets the webelement for the iframe that commonly appears in about:preferences
         """
         return self.get_element("browser-popup")
+
+    def set_alternative_language(self, lang_code: str) -> BasePage:
+        """Changes the browser language"""
+        self.get_element("language-set-alternative-button").click()
+        self.driver.switch_to.frame(self.get_iframe())
+
+        # Download the language options
+        select_language = self.get_element("language-settings-select")
+        select_language.click()
+        search_languages = self.get_element("language-settings-search")
+        search_languages.click()
+        select_language.click()
+
+        # Select the language, add, and make sure it appears
+        select_language.click()
+        self.get_element("language-option-by-code", labels=[lang_code]).click()
+        select_language.click()
+        self.get_element("language-settings-add-button").click()
+        self.element_attribute_contains(
+            "language-added-list", "last-selected", f"locale-{lang_code}"
+        )
+
+        self.get_element("language-settings-ok").click()
+        return self
+
+    def get_history_menulist(self) -> WebElement:
+        """
+        Gets the webelement for the list of history items that appear in about:preferences
+        """
+        return self.get_element("history_menulist")

@@ -1,0 +1,22 @@
+[tool.pytest.ini_options]
+generate_report_on_test = true
+log_cli = true
+log_cli_level = "warn"
+markers = [
+    "audio: test is reliant on audio",
+    "headed: test must run in headed mode (e.g. uses pynput)",
+    "incident: incident smoke tests",
+    "unstable: temporary mark for unstable tests",
+    "slow: test is clocked at more than 30s on modern machines",
+    "ci: basic tests to run in ci",
+    "locale_de: tests run in DE locale versions",
+    "locale_fr: tests run in FR locale versions",
+    "locale_gb: tests run in GB locale versions"
+]
+testpaths = [
+    "tests"
+]
+addopts = "-vs --ci --reruns 4 --reruns-delay 1 -m 'not incident and not unstable and headed' --html=artifacts/report_headed.html"
+
+[tool.ruff]
+target-version = "py310"

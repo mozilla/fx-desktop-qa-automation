@@ -22,14 +22,34 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           bash collect_executables.sh;
+          ls .;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-      - name: Run Smoke Tests in Win
+      - name: Run Setup.exe
+        id: setup
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox tests/address_bar_and_search/test_search_bar_result.py
-          mv artifacts artifacts-win
+          .\setup.exe /silent;
+          Start-Sleep -Seconds 10;
+      - name: Run Smoke Tests in Win
+        if: steps.setup.conclusion == 'success'
+        run: |
+          pipenv run pytest tests/address_bar_and_search/test_search_bar_result.py
+          $env:TEST_EXIT_CODE = $LASTEXITCODE
+          mv artifacts artifacts-win || true
+          exit $env:TEST_EXIT_CODE
+      - name: Run Smoke Tests in Win (Headed)
+        if: steps.setup.conclusion == 'success'
+        run: |
+          rm ./pyproject.toml;
+          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          pipenv run pytest tests/address_bar_and_search/test_search_bar_result.py
+          $env:TEST_EXIT_CODE = $LASTEXITCODE
+          rm artifacts/assets -r -Force
+          mv artifacts/* artifacts-win
+          exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win
@@ -49,14 +69,23 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           bash collect_executables.sh;
+          sleep 3;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
       - name: Run Smoke Tests in MacOS
         run: |
-          pipenv run pytest --fx-executable ./firefox/firefox tests/address_bar_and_search/test_search_bar_result.py
-          mv artifacts artifacts-mac
+          pipenv run pytest --fx-executable $(cat ./fx_location) tests/address_bar_and_search/test_search_bar_result.py || TEST_EXIT_CODE=$?
+          mv artifacts artifacts-mac || true
+          exit $TEST_EXIT_CODE
+      - name: Run Smoke Tests in MacOS (Headed)
+        run: |
+          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          pipenv run pytest --fx-executable $(cat ./fx_location) tests/address_bar_and_search/test_search_bar_result.py || TEST_EXIT_CODE=$?
+          mv -r artifacts/* artifacts-mac/ || true
+          exit $TEST_EXIT_CODE
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac

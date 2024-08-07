@@ -5,6 +5,12 @@
         "groups": []
     },
 
+    "container-div": {
+        "selectorData": "container",
+        "strategy": "class",
+        "groups": []
+    },
+
     "authorize-notifications-button": {
         "selectorData": "button[onclick='notify.authorize()']",
         "strategy": "css",
@@ -50,6 +56,12 @@
     "simulated-tracker-dnt-status": {
         "selectorData": "dnt-on",
         "strategy": "id",
+        "groups": []
+    },
+
+    "pdf-link": {
+        "selectorData": "a[href$='.pdf']",
+        "strategy": "css",
         "groups": []
     }
 }
