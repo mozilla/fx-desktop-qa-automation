@@ -34,13 +34,12 @@ jobs:
         run: |
           mkdir 'C:\Program Files\Custom Firefox';
           .\setup.exe /S /D="C:\Program Files\Custom Firefox";
-          echo "Setup complete"
+          dir 'C:\Program Files\Custom Firefox';
+          echo "Setup complete";
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
           Start-Sleep -Seconds 20;
-          dir 'C:\Program Files'
-          dir 'C:\Program Files\Custom Firefox'
           & 'C:\Program Files\Custom Firefox\firefox.exe' --version
           pipenv run pytest -n 4 tests/meta
           $env:TEST_EXIT_CODE = $LASTEXITCODE
