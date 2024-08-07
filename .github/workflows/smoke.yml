@@ -6,97 +6,66 @@ on:
   pull_request:
 
 jobs:
-  Smoke-Windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: |
-          mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
-      - name: Download Geckodriver
-        run: |
-          Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip" -OutFile "geckodriver.zip"
-          unzip geckodriver.zip
-
-      - name: Download Beta
-        run: |
-          Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "setup.exe"
-          mkdir "C:\Program Files\Custom Firefox"
-
-      - name: Install Beta
-        run: |
-          echo "Starting Firefox installation..."
-          .\setup.exe /S /D="C:\Program Files\Custom Firefox"
-          echo "Firefox installation completed."
-        shell: cmd
-
-      - name: Verify installation directory
-        run: |
-          if (Test-Path "C:\Program Files\Custom Firefox") {
-            echo "Installation directory exists."
-          } else {
-            echo "Installation directory does not exist."
-          }
-        shell: powershell
-
-      - name: List installed files
-        run: |
-          if (Test-Path "C:\Program Files\Custom Firefox") {
-            Get-ChildItem "C:\Program Files\Custom Firefox" -Recurse
-          } else {
-            echo "Installation directory does not exist."
-          }
-        shell: powershell
-
-      - name: Verify Firefox executable
-        run: |
-          if (Test-Path "C:\Program Files\Custom Firefox\firefox.exe") {
-            echo "Firefox executable exists."
-          } else {
-            echo "Firefox executable does not exist."
-          }
-        shell: powershell
-
-      - name: Check Firefox version
-        run: |
-          & "C:\Program Files\Custom Firefox\firefox.exe" --version
-        shell: powershell
-
-      - name: Run Smoke Tests in Win
-        if: steps.setup.conclusion == 'success'
-        run: |
-          Start-Sleep -Seconds 20;
-          & 'C:\Program Files\Custom Firefox\firefox.exe' --version
-          pipenv run pytest -n 4 tests/meta
-          $env:TEST_EXIT_CODE = $LASTEXITCODE
-          mv artifacts artifacts-win || true
-          exit $env:TEST_EXIT_CODE
-      - name: Run Smoke Tests in Win (Headed)
-        if: steps.setup.conclusion == 'success'
-        run: |
-          rm ./pyproject.toml;
-          mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest -n 4 .
-          $env:TEST_EXIT_CODE = $LASTEXITCODE
-          rm artifacts/assets -r -Force
-          mv artifacts/* artifacts-win
-          exit $env:TEST_EXIT_CODE
-      - name: Upload artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts-win
-          path: artifacts-win
+    Smoke-Windows:
+      runs-on: windows-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Set up Python 3.11
+          uses: actions/setup-python@v5
+          with:
+            python-version: "3.11"
+        - name: Install dependencies
+          run: |
+            mkdir -p artifacts;
+            pip3 install 'pipenv==2023.11.15';
+            pip3 install 'ruff>=0.4.8,<0.5';
+            rm ./pyproject.toml;
+            mv ./ci_pyproject.toml ./pyproject.toml;
+            pipenv install;
+        - name: Download Geckodriver
+          run: |
+            Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip" -OutFile "geckodriver.zip"
+            unzip geckodriver.zip
+          shell: pwsh
+        - name: Download Beta
+          run: |
+            Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "${{ github.workspace }}\setup.exe"
+            New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          shell: pwsh
+        - name: Install Beta
+          run: |
+            echo "Starting Firefox installation..."
+            $exitcode = Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+            if ($exitcode -eq 0) {
+              echo "Firefox installation completed."
+            } else {
+              echo "Firefox installation failed."
+            }
+          shell: pwsh
+        - name: Run Smoke Tests in Win
+          run: |
+            Start-Sleep -Seconds 20;
+            Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
+            pipenv run pytest -n 4 tests/meta
+            $env:TEST_EXIT_CODE = $LASTEXITCODE
+            mv artifacts artifacts-win || true
+            exit $env:TEST_EXIT_CODE
+        - name: Run Smoke Tests in Win (Headed)
+          run: |
+            rm ./pyproject.toml;
+            mv ./ci_pyproject_headed.toml ./pyproject.toml;
+            pipenv run pytest -n 4 .
+            $env:TEST_EXIT_CODE = $LASTEXITCODE
+            rm artifacts/assets -r -Force
+            mv artifacts/* artifacts-win
+            exit $env:TEST_EXIT_CODE
+        - name: Upload artifacts
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: artifacts-win
+            path: artifacts-win
   Smoke-MacOS:
     runs-on: macos-latest
     steps:
