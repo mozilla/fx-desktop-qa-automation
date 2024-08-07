@@ -33,7 +33,7 @@
         "groups": []
     },
 
-    "download": {
+    "download-button": {
         "selectorData": "download",
         "strategy": "id",
         "groups": []
