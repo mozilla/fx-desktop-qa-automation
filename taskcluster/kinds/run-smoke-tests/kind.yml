@@ -31,7 +31,7 @@ tasks:
         ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable $(cat ./fx_location) tests/address_bar_and_search/test_search_bar_result.py;
+        pipenv run pytest --fx-executable $(cat ./fx_location) tests/form_autofill/test_address_autofill_attribute.py;
 
   # mv ./ci_pyproject_headed.toml ./pyproject.toml;
   # pipenv run pytest --fx-executable $(cat ./fx_location) -n 4 .

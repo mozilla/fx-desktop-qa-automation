@@ -34,7 +34,7 @@ jobs:
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
-          pipenv run pytest tests/address_bar_and_search/test_search_bar_result.py
+          pipenv run pytest tests/form_autofill/test_address_autofill_attribute.py
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -43,7 +43,7 @@ jobs:
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest tests/address_bar_and_search/test_search_bar_result.py
+          pipenv run pytest tests/form_autofill/test_address_autofill_attribute.py
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           mv artifacts/* artifacts-win
@@ -75,13 +75,13 @@ jobs:
           pipenv install;
       - name: Run Smoke Tests in MacOS
         run: |
-          pipenv run pytest --fx-executable $(cat ./fx_location) tests/address_bar_and_search/test_search_bar_result.py || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable $(cat ./fx_location) tests/form_autofill/test_address_autofill_attribute.py || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable $(cat ./fx_location) tests/address_bar_and_search/test_search_bar_result.py || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable $(cat ./fx_location) tests/form_autofill/test_address_autofill_attribute.py || TEST_EXIT_CODE=$?
           mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
