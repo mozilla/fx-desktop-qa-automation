@@ -22,9 +22,7 @@ def test_navigation_keys(driver: Firefox):
     body.send_keys(Keys.DOWN)
 
     # wait for scrolling down
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] < initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
 
     # scroll down using right key
     down_key_difference = abs(page_one_item.location["y"] - initial_location)
@@ -32,9 +30,7 @@ def test_navigation_keys(driver: Firefox):
     body.send_keys(Keys.RIGHT)
 
     # wait for scrolling down, ensure that right key goes down more than down key
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] < initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
     right_key_difference = abs(page_one_item.location["y"] - initial_location)
     assert right_key_difference > down_key_difference
 
@@ -43,9 +39,7 @@ def test_navigation_keys(driver: Firefox):
     body.send_keys(Keys.END)
 
     # wait for scrolling down, ensure that end key goes down more than right key
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] < initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
     end_key_difference = abs(page_one_item.location["y"] - initial_location)
     assert end_key_difference > right_key_difference
 
@@ -54,9 +48,7 @@ def test_navigation_keys(driver: Firefox):
     body.send_keys(Keys.UP)
 
     # wait for scrolling up
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] > initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
 
     # scroll up using left key
     up_key_difference = abs(page_one_item.location["y"] - initial_location)
@@ -64,9 +56,7 @@ def test_navigation_keys(driver: Firefox):
     body.send_keys(Keys.LEFT)
 
     # wait for scrolling up, ensure that left key goes up more than up key
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] > initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
     left_key_difference = abs(page_one_item.location["y"] - initial_location)
     assert left_key_difference > up_key_difference
 
@@ -75,12 +65,11 @@ def test_navigation_keys(driver: Firefox):
     body.send_keys(Keys.HOME)
 
     # wait for scrolling up, ensure that home key goes up more than left key
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] > initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
 
     home_key_difference = abs(page_one_item.location["y"] - initial_location)
     assert home_key_difference > left_key_difference
+
 
 def test_navigation_next_prev(driver: Firefox):
     """
@@ -92,13 +81,9 @@ def test_navigation_next_prev(driver: Firefox):
     initial_location = page_one_item.location["y"]
     pdf_viewer.get_element("scroll-next").click()
 
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] < initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
 
     initial_location = page_one_item.location["y"]
     pdf_viewer.get_element("scroll-prev").click()
 
-    pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] > initial_location
-    )
+    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
