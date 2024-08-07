@@ -45,3 +45,8 @@ def test_download_panel_triggered_on_content_disposition_attachment(driver: Fire
     assert (
         len(driver.window_handles) == 2
     ), f"Expected 2 tabs, but found {len(driver.window_handles)}"
+
+    tabs.switch_to_new_tab()
+    assert driver.current_url.startswith(
+        "file://"
+    ), "Expected URL to start with 'file://'"
