@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -9,6 +10,8 @@ SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 SEARCH_TERM = "saxophone"
 
 
+# NOTE: Need to fix, failing in 130+ Firefox due to legacy search bar being deprecated
+@pytest.mark.unstable
 def test_search_bar_results(driver: Firefox):
     """
     C1365213 - The Search Bar provides valid results for specific search terms

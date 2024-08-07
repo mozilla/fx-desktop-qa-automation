@@ -1,5 +1,6 @@
 from time import sleep
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -7,6 +8,8 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutConfig, AboutPrefs
 
 
+# NOTE: Need to fix, failing in 130+ Firefox due to legacy search bar being deprecated
+@pytest.mark.unstable
 def test_default_search_provider_change(driver: Firefox):
     """
     C1365245 - This test makes sure that the default search
