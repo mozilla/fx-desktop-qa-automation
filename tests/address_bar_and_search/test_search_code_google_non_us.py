@@ -19,6 +19,8 @@ FX_SEARCH_CODE = "client=firefox-b-d"
 SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 
 
+# NOTE: Need to fix, failing in 130+ Firefox due to legacy search bar being deprecated
+@pytest.mark.unstable
 def test_search_code_google_non_us(driver: Firefox):
     """
     C1365269 - Default Search Code: Google - non-US

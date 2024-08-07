@@ -5,6 +5,12 @@
         "groups": []
     },
 
+    "container-div": {
+        "selectorData": "container",
+        "strategy": "class",
+        "groups": []
+    },
+
     "authorize-notifications-button": {
         "selectorData": "button[onclick='notify.authorize()']",
         "strategy": "css",
