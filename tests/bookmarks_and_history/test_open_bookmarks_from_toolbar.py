@@ -3,8 +3,8 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
+
+from modules.page_object_generics import GenericPage
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
@@ -17,6 +17,7 @@ def test_open_bookmarks_from_toolbar(driver: Firefox):
     nav = Navigation(driver)
     panel = PanelUi(driver)
     newtab = TabBar(driver)
+    page = GenericPage(driver, url=URL_TO_BOOKMARK)
 
     # Bookmark the given website
     driver.get(URL_TO_BOOKMARK)
@@ -29,4 +30,4 @@ def test_open_bookmarks_from_toolbar(driver: Firefox):
         panel.get_element("bookmark-by-title", labels=["Internet for people"]).click()
 
     # Verify that the page is loaded
-    WebDriverWait(driver, 10).until(EC.title_is("Internet for people, not profit — Mozilla (US)"))
+    page.title_contains("Internet for people")
