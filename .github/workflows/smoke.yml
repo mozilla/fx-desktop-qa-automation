@@ -34,7 +34,7 @@ jobs:
       - name: Install Beta
         run: |
           echo "Starting Firefox installation..."
-          .\firefox-installer.exe /S /D="C:\Program Files\Custom Firefox"
+          .\setup.exe /S /D="C:\Program Files\Custom Firefox"
           echo "Firefox installation completed."
         shell: cmd
 
