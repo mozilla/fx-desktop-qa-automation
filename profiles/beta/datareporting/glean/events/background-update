@@ -1,0 +1,3 @@
+{"timestamp":84164599,"category":"nimbus_events","name":"enrollment","extra":{"experiment":"csv-import","experiment_type":"rollout","branch":"enable-csv-import","glean_timestamp":"1716381910730"}}
+{"timestamp":84164624,"category":"nimbus_events","name":"enrollment","extra":{"experiment":"address-autofill-desktop-pref-nightly-rollout","glean_timestamp":"1716381910755","branch":"enable-address-autofill","experiment_type":"rollout"}}
+{"timestamp":84164632,"category":"nimbus_events","name":"enrollment","extra":{"branch":"control","glean_timestamp":"1716381910764","experiment_type":"rollout","experiment":"showing-3rd-sponsored-tile-on-the-newtab-page-rollout-to-non-release"}}

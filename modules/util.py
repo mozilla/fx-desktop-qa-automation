@@ -4,6 +4,8 @@ import logging
 import os
 import platform
 import re
+import shutil
+import tempfile
 from os import remove
 from random import shuffle
 from typing import List, Literal, Union
@@ -380,6 +382,49 @@ return props;
         parsed_url = urlparse(url)
         domain_parsed_url = parsed_url._replace(path="")
         return urlunparse(domain_parsed_url)
+
+    def create_temp_profile(self, name: str = 'beta') -> str:
+        """
+        Creates a temporary profile for testing given the name of the stored profile directory.
+        ...
+        Attributes
+        ----------
+        name : str
+        Name of the profile directory stored here in the repo
+        Defaults to 'beta'
+
+        Returns
+        -------
+        str
+        The path of the temporary profile directory
+        """
+
+        # Get the current working directory
+        current_directory = os.getcwd()
+        # Print the current directory
+        logging.info("Current Directory: " + current_directory)
+        this_platform = platform.system()
+        if this_platform == "Darwin":
+            profiles_dir = "/profiles/"
+        else:
+            profiles_dir = "\\profiles\\"
+        # Path to the desired Firefox profile directory
+        original_profile_path = current_directory + profiles_dir + name
+
+        # Create a temporary directory for the cloned profile
+        temp_profile_path = tempfile.mkdtemp()
+
+        # Copy the original profile to the temporary directory
+        shutil.copytree(original_profile_path, temp_profile_path, dirs_exist_ok=True)
+        return temp_profile_path
+
+    def remove_temp_profile(self, path: str):
+        try:
+            # Remove the tempo profile directory and its contents
+            shutil.rmtree(path)
+            print(f"Successfully removed: {path}")
+        except Exception as e:
+            print(f"Error removing {path}: {e}")
 
 
 class BrowserActions:

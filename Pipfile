@@ -19,6 +19,7 @@ pillow = "*"
 pyfxa = "*"
 ruff = "0.5.2"
 pytest-rerunfailures = "*"
+webdriver_manager = "*"
 
 [dev-packages]
 werkzeug = "*"
