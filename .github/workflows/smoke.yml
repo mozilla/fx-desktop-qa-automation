@@ -29,7 +29,9 @@ jobs:
           unzip geckodriver.zip
 
       - name: Download Beta
-        run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "setup.exe"
+        run: |
+          Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "setup.exe"
+          mkdir "C:\Program Files\Custom Firefox"
 
       - name: Install Beta
         run: |
