@@ -27,15 +27,50 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip" -OutFile "geckodriver.zip"
           unzip geckodriver.zip
+
       - name: Download Beta
-        run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US" -OutFile "setup.exe"
-      - name: Run Setup.exe
-        id: setup
+        run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-latest-beta&os=win64&lang=en-US" -OutFile "setup.exe"
+[200~      - name: Install Firefox to a specific location
+
+      - name: Install Beta
         run: |
-          mkdir 'C:\Program Files\Custom Firefox';
-          .\setup.exe /S /D="C:\Program Files\Custom Firefox";
-          dir 'C:\Program Files\Custom Firefox';
-          echo "Setup complete";
+          echo "Starting Firefox installation..."
+          .\firefox-installer.exe /S /D="C:\Program Files\Custom Firefox"
+          echo "Firefox installation completed."
+        shell: cmd
+
+      - name: Verify installation directory
+        run: |
+          if (Test-Path "C:\Program Files\Custom Firefox") {
+            echo "Installation directory exists."
+          } else {
+            echo "Installation directory does not exist."
+          }
+        shell: powershell
+
+      - name: List installed files
+        run: |
+          if (Test-Path "C:\Program Files\Custom Firefox") {
+            Get-ChildItem "C:\Program Files\Custom Firefox" -Recurse
+          } else {
+            echo "Installation directory does not exist."
+          }
+        shell: powershell
+
+      - name: Verify Firefox executable
+        run: |
+          if (Test-Path "C:\Program Files\Custom Firefox\firefox.exe") {
+            echo "Firefox executable exists."
+          } else {
+            echo "Firefox executable does not exist."
+          }
+        shell: powershell
+
+      - name: Check Firefox version
+        run: |
+          & "C:\Program Files\Custom Firefox\firefox.exe" --version
+        shell: powershell
+
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
