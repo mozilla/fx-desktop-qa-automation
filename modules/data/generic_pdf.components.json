@@ -39,6 +39,18 @@
         "groups": []
     },
 
+    "scroll-next": {
+        "selectorData": "next",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "scroll-prev": {
+        "selectorData": "previous",
+        "strategy": "id",
+        "groups": []
+    },
+
     "pdf-page": {
         "selectorData": "div[data-page-number='{number}']",
         "strategy": "css",
