@@ -16,7 +16,6 @@ def test_search_code_google_us(driver: Firefox):
 
     # Create objects
     nav = Navigation(driver).open()
-    ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
     tab = TabBar(driver)
     example = ExamplePage(driver)
