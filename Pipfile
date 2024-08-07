@@ -20,6 +20,8 @@ pyfxa = "*"
 ruff = "0.5.2"
 pytest-rerunfailures = "*"
 slack-sdk = "*"
+google-cloud-storage = "*"
+google-auth = "*"
 
 [dev-packages]
 werkzeug = "*"
