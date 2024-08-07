@@ -30,7 +30,6 @@ jobs:
 
       - name: Download Beta
         run: Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-latest-beta&os=win64&lang=en-US" -OutFile "setup.exe"
-[200~      - name: Install Firefox to a specific location
 
       - name: Install Beta
         run: |
