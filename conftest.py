@@ -168,6 +168,20 @@ def sys_platform():
 
 
 @pytest.fixture()
+def downloads_folder(sys_platform):
+    """Return the downloads folder location for this OS"""
+    if sys_platform == "Windows":
+        user = os.environ.get("USERNAME")
+        return f"C:\\Users\\{user}\\Downloads"
+    elif sys_platform == "Darwin":  # MacOS
+        user = os.environ.get("USER")
+        return f"/Users/{user}/Downloads"
+    elif sys_platform == "Linux":
+        user = os.environ.get("USER")
+        return f"/home/{user}/Downloads"
+
+
+@pytest.fixture()
 def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
