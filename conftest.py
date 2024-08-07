@@ -76,7 +76,7 @@ def pytest_exception_interact(node, call, report):
                 )
                 driver = node.funcargs.get("driver")
                 opt_ci = node.funcargs.get("opt_ci")
-                if driver:
+                if driver and opt_ci:
                     log_content(opt_ci, driver, test_name)
                     screenshot_content(driver, opt_ci, test_name)
             else:
