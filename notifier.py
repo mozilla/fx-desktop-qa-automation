@@ -95,7 +95,7 @@ def list_and_write(source_directory):
             list_and_write(os.path.join(source_directory, filename))
 
 
-list_artifacts()
+list_and_write()
 send_slack_message()
 
 # Your OAuth access token
