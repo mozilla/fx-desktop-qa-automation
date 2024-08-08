@@ -15,7 +15,7 @@ env
 *.png
 *.dmg
 *.tar
-*.zip
+./*.zip
 *.gz
 *.7z
 *.xml
