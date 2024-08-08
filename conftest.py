@@ -3,7 +3,8 @@ import logging
 import os
 import platform
 import re
-from typing import Callable, List, Tuple
+from shutil import unpack_archive
+from typing import Callable, List, Tuple, Union
 
 import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -76,7 +77,8 @@ def pytest_exception_interact(node, call, report):
                 )
                 driver = node.funcargs.get("driver")
                 opt_ci = node.funcargs.get("opt_ci")
-                if driver:
+                if driver and opt_ci:
+                    logging.info("Writing artifacts...")
                     log_content(opt_ci, driver, test_name)
                     screenshot_content(driver, opt_ci, test_name)
             else:
@@ -222,6 +224,15 @@ def env_prep():
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
 
 
+@pytest.fixture()
+def use_profile():
+    """
+    Return or yield <string> in a fixture of this name in a test
+    to use ./profiles/<string> as the profile for a given test
+    """
+    yield False
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
@@ -230,7 +241,9 @@ def driver(
     set_prefs: List[Tuple],
     opt_ci: bool,
     opt_window_size: str,
+    use_profile: Union[bool, str],
     env_prep,
+    tmp_path,
 ):
     """
     Return the webdriver object.
@@ -259,6 +272,9 @@ def driver(
     opt_window_size: str
         String describing the window size for the Firefox window.
 
+    use_profile: Union[bool, str]
+        Location inside ./profiles to find the profile to use, False if no profile needed.
+
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
@@ -267,6 +283,10 @@ def driver(
         if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
+        if use_profile:
+            profile_path = tmp_path / use_profile
+            unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
+            options.profile = profile_path
         for opt, value in set_prefs:
             options.set_preference(opt, value)
         driver = Firefox(options=options)
