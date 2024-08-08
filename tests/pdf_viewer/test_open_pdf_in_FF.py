@@ -2,8 +2,8 @@ import os
 import time
 
 import pytest
-
 from selenium.webdriver import Firefox
+
 from modules.page_object import GenericPdf
 
 
@@ -13,7 +13,9 @@ def add_prefs():
 
 
 @pytest.mark.headed
-def test_open_pdf_in_ff(driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform):
+def test_open_pdf_in_ff(
+    driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform
+):
     """
     C936503: PDF files can be successfully opened in Firefox
     """
@@ -57,9 +59,13 @@ def test_open_pdf_in_ff(driver: Firefox, fillable_pdf_url: str, downloads_folder
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Verify if the file exists
-    assert os.path.exists(saved_pdf_location), f"The file was not downloaded to {saved_pdf_location}."
+    assert os.path.exists(
+        saved_pdf_location
+    ), f"The file was not downloaded to {saved_pdf_location}."
 
-    print(f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}.")
+    print(
+        f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
+    )
 
     file_url = f"file://{saved_pdf_location}"
     driver.get(file_url)
@@ -70,4 +76,7 @@ def test_open_pdf_in_ff(driver: Firefox, fillable_pdf_url: str, downloads_folder
     # Verify that the PDF viewer is loaded
     assert "pdf" in driver.current_url, "The PDF viewer did not load correctly."
     assert "i-9.pdf" in driver.title, "The PDF file did not open correctly."
-    print(f"Test passed: The PDF file {file_name} has been opened correctly in Firefox.")
+    print(
+        f"Test passed: The PDF file {file_name} has been opened correctly in Firefox."
+    )
+    driver.quit()
