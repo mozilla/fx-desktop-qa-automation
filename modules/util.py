@@ -381,6 +381,9 @@ return props;
         domain_parsed_url = parsed_url._replace(path="")
         return urlunparse(domain_parsed_url)
 
+    def remove_all_non_numbers(self, item: str) -> str:
+        return re.sub(r"[^\d-]", "", item)
+
 
 class BrowserActions:
     """

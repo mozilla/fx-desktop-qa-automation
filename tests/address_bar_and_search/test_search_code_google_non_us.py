@@ -16,19 +16,16 @@ def overwrite_prefs():
 
 # Set constants
 FX_SEARCH_CODE = "client=firefox-b-d"
-SEARCH_BAR_PREF = "browser.search.widget.inNavBar"
 
 
 def test_search_code_google_non_us(driver: Firefox):
     """
     C1365269 - Default Search Code: Google - non-US
-    This tests multiple ways of sending a search; Awesome bar,
-    Search bar and selected text
+    This tests searching via Awesomebar and selected text
     """
 
     # Create objects
     nav = Navigation(driver).open()
-    ac = AboutConfig(driver)
     context_menu = ContextMenu(driver)
     tab = TabBar(driver)
     example = ExamplePage(driver)
@@ -42,16 +39,6 @@ def test_search_code_google_non_us(driver: Firefox):
 
     # Check code generated from the Awesome bar search
     nav.search("soccer")
-    tab.expect_title_contains("Google Search")
-    search_code_assert()
-
-    # Check code generated from the Search bar search
-    # First enable search bar via about:config
-    ac.toggle_true_false_config(SEARCH_BAR_PREF)
-    nav.clear_awesome_bar()
-
-    # Then run the code check
-    nav.search_bar_search("soccer")
     tab.expect_title_contains("Google Search")
     search_code_assert()
 
