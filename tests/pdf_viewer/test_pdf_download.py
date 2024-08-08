@@ -3,7 +3,6 @@ import time
 
 import pytest
 from selenium.webdriver import Firefox
-
 from modules.page_object import GenericPdf
 
 
@@ -13,9 +12,7 @@ def add_prefs():
 
 
 @pytest.mark.headed
-def test_pdf_download(
-    driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform
-):
+def test_pdf_download(driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform):
     """
     C3932: PDF files can be successfully downloaded via pdf.js
     """

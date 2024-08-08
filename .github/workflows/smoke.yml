@@ -21,25 +21,38 @@ jobs:
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          bash collect_executables.sh;
-          ls .;
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-      - name: Run Setup.exe
-        id: setup
+      - name: Download Geckodriver
         run: |
-          .\setup.exe /silent;
-          Start-Sleep -Seconds 10;
+          Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip" -OutFile "geckodriver.zip"
+          unzip geckodriver.zip
+        shell: pwsh
+      - name: Download Beta
+        run: |
+          Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "${{ github.workspace }}\setup.exe"
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+        shell: pwsh
+      - name: Install Beta
+        run: |
+          echo "Starting Firefox installation..."
+          $exitcode = Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          if ($exitcode -eq 0) {
+            echo "Firefox installation completed."
+          } else {
+            echo "Firefox installation failed."
+          }
+        shell: pwsh
       - name: Run Smoke Tests in Win
-        if: steps.setup.conclusion == 'success'
         run: |
-          pipenv run pytest tests/form_autofill/test_address_autofill_attribute.py
+          Start-Sleep -Seconds 20;
+          Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
+          pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
       - name: Run Smoke Tests in Win (Headed)
-        if: steps.setup.conclusion == 'success'
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
@@ -68,21 +81,28 @@ jobs:
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          bash collect_executables.sh;
-          sleep 3;
+          curl -o geckodriver.tar.gz -L https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-macos-aarch64.tar.gz
+          tar -xvzf geckodriver.tar.gz
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-      - name: Run Smoke Tests in MacOS
+      - name: Install Firefox
+        id: setup
         run: |
-          pipenv run pytest --fx-executable $(cat ./fx_location) tests/form_autofill/test_address_autofill_attribute.py || TEST_EXIT_CODE=$?
+          curl -o Firefox.dmg -L "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=osx&lang=en-US"
+          hdiutil attach Firefox.dmg
+      - name: Run Smoke Tests in MacOS
+        if: steps.setup.conclusion == 'success'
+        run: |
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox tests/form_autofill/test_address_autofill_attribute.py || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
+        if: steps.setup.conclusion == 'success'
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable $(cat ./fx_location) tests/menus/test_frequently_used_context_menu.py::test_save_page_as || TEST_EXIT_CODE=$?
-          mv artifacts/* artifacts-mac || true
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox tests/menus/test_frequently_used_context_menu.py::test_save_page_as || TEST_EXIT_CODE=$?
+          mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
