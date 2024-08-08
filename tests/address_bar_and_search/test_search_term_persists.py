@@ -29,7 +29,6 @@ def test_search_term_persists(driver: Firefox):
     nav = Navigation(driver).open()
     tab = TabBar(driver)
 
-
     # Perform a search using the URL bar.
     nav.search(FIRST_SEARCH)
     tab.expect_title_contains("Google Search")
