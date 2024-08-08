@@ -37,5 +37,17 @@
         "selectorData": "download",
         "strategy": "id",
         "groups": []
+    },
+
+    "first-name-field": {
+        "selectorData": "pdfjs_internal_id_638R",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "edited-field": {
+        "selectorData": "[id='pdfjs_internal_id_638R'][value='Mark']",
+        "strategy": "css",
+        "groups": []
     }
 }
