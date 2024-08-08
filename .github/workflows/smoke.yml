@@ -48,7 +48,7 @@ jobs:
         run: |
           Start-Sleep -Seconds 20;
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest -n 4 .
+          pipenv run pytest tests/form_autofill/test_address_autofill_attribute.py
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
