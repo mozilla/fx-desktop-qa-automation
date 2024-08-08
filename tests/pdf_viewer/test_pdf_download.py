@@ -66,3 +66,4 @@ def test_pdf_download(
     print(
         f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
     )
+    driver.quit()
