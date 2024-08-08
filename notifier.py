@@ -1,29 +1,30 @@
-# def write_read():
-#     """Write and read a blob from GCS using file-like IO"""
-#     # The ID of your GCS bucket
-#     bucket_name = "notifier-artifact-bucket"
-#     # The ID of your new GCS object
-#     blob_name = "new_folder/new_file.txt"
-#     # Path to your service account key file
-#     key_path = "credentials.json"
-#     # Load credentials from the service account key file
-#     credentials = service_account.Credentials.from_service_account_file(key_path)
-#     # Initialize the client with explicit credentials
-#     storage_client = storage.Client(credentials=credentials)
-#     bucket = storage_client.bucket(bucket_name)
-#     blob = bucket.blob(blob_name)
-#     # Set the Content-Type before writing
-#     blob.content_type = 'text/plain'
-#     # Write data to the blob
-#     with blob.open("w", content_type='text/plain') as f:
-#         f.write("Hello world")
-# write_read()
 import os
 
 from google.cloud import storage
 from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+
+def write_read():
+    """Write and read a blob from GCS using file-like IO"""
+    # The ID of your GCS bucket
+    bucket_name = "notifier-artifact-bucket"
+    # The ID of your new GCS object
+    blob_name = "new_folder/new_file.txt"
+    # Path to your service account key file
+    key_path = "credentials.json"
+    # Load credentials from the service account key file
+    credentials = service_account.Credentials.from_service_account_file(key_path)
+    # Initialize the client with explicit credentials
+    storage_client = storage.Client(credentials=credentials)
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    # Set the Content-Type before writing
+    blob.content_type = 'text/plain'
+    # Write data to the blob
+    with blob.open("w", content_type='text/plain') as f:
+        f.write("Hello world")
+write_read()
 
 # Your OAuth access token
 token = os.getenv("SLACK_KEY")
