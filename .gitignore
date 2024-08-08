@@ -1,4 +1,5 @@
 /venv/
+.DS_Store
 test*.txt
 fx_location
 test*txt
@@ -10,13 +11,13 @@ err_log.txt
 **/report.xml
 assets/
 html_dump/
-/Test Results - .html
-/geckodriver.log
+Test*.html
+geckodriver.log
 env
 *.png
 *.dmg
 *.tar
-*.zip
+./*.zip
 *.gz
 *.7z
 *.xml
