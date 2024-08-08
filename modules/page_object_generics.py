@@ -1,3 +1,5 @@
+from time import sleep
+
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -40,3 +42,9 @@ class GenericPdf(BasePage):
             self.perform_key_combo(Keys.COMMAND, "-")
         else:
             self.perform_key_combo(Keys.CONTROL, "-")
+
+    def jump_to_page(self, page_number: int) -> BasePage:
+        page_input = self.get_element("page-input")
+        self.double_click(page_input)
+        page_input.send_keys(Keys.BACK_SPACE + str(page_number) + Keys.ENTER)
+        return self

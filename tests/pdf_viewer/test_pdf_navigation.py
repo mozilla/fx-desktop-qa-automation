@@ -87,3 +87,27 @@ def test_navigation_next_prev(driver: Firefox):
     pdf_viewer.get_element("scroll-prev").click()
 
     pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
+
+
+def test_navigation_page_numbers(driver: Firefox):
+    """
+    C3927.3: Ensure that you can navigate through a PDF using the numbers at the top
+    """
+    pdf_viewer = GenericPdf(driver, pdf_url=PDF_URL).open()
+
+    page_one_item = pdf_viewer.get_element("page-one-item")
+    original_position = page_one_item.location["y"]
+
+    pdf_viewer.jump_to_page(2)
+    second_page_position = page_one_item.location["y"]
+    one_page_delta = abs(original_position - second_page_position)
+
+    pdf_viewer.jump_to_page(4)
+    fourth_page_position = page_one_item.location["y"]
+    two_page_delta = abs(fourth_page_position - second_page_position)
+
+    assert (2 * one_page_delta) - 10 <= two_page_delta <= (2 * one_page_delta) + 10
+
+    pdf_viewer.jump_to_page(1)
+    first_page_position = page_one_item.location["y"]
+    assert first_page_position == original_position
