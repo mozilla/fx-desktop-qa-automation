@@ -37,5 +37,11 @@
         "selectorData": "download",
         "strategy": "id",
         "groups": []
+    },
+
+    "zipcode-field": {
+        "selectorData": "pdfjs_internal_id_625R",
+        "strategy": "id",
+        "groups": []
     }
 }
