@@ -78,7 +78,7 @@ def list_and_write(source_directory: str, cur_call: int):
         # if the item is a file, directly upload
         if os.path.isfile(source_path):
             new_filename = filename
-            target_path = os.path.join(source_directory, new_filename)
+            target_path = os.path.join(f"{time_now}", (os.path.join(source_directory, new_filename)))
 
             content_type = get_content_type(source_path)
             blob = bucket.blob(target_path)
@@ -97,11 +97,11 @@ def list_and_write(source_directory: str, cur_call: int):
         elif os.path.isdir(source_path):
             list_and_write(os.path.join(source_directory, filename), cur_call + 1)
 
+time_now = get_current_timestamp()
 
 try:
-    time_now = get_current_timestamp()
-    list_and_write(f"{time_now}/artifacts-mac", 0)
-    list_and_write(f"{time_now}/artifacts-win", 0)
+    list_and_write("artifacts-mac", 0)
+    list_and_write("artifacts-win", 0)
 except Exception as e:
     print("The artifact upload process ran into some issues: ", e)
 send_slack_message()
