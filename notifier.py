@@ -50,6 +50,7 @@ def send_slack_message():
     except SlackApiError as e:
         print(f"Error sending message: {e.response['error']}")
 
+
 def list_artifacts():
     try:
         # List all files and directories in the specified path
@@ -59,6 +60,7 @@ def list_artifacts():
         print("Directory contents (mac):", contents_mac)
     except FileNotFoundError:
         print("Directory not found:")
+
 
 list_artifacts()
 write_read()
