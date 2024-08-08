@@ -12,9 +12,18 @@ def add_prefs():
     return []
 
 
+@pytest.fixture()
+def delete_files_regex_string():
+    return r"i-9.*\.pdf"
+
+
 @pytest.mark.headed
 def test_pdf_download(
-    driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    sys_platform,
+    delete_files,
 ):
     """
     C3932: PDF files can be successfully downloaded via pdf.js
