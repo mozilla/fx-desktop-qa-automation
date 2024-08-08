@@ -468,10 +468,10 @@
         "groups": []
     },
 
-    "pdf-open-in-firefox": {
-        "selectorData": "richlistitem:nth-of-type(4) menulist[label='Open in Firefox']",
+    "pdf-actions-menu": {
+        "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
         "strategy": "css",
         "groups": []
-
     }
+
 }
