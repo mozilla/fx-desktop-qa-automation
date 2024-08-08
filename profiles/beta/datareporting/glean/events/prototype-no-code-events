@@ -1,2 +1,0 @@
-{"timestamp":84141066,"category":"browser.usage","name":"interaction","extra":{"flow_id":"{15a1e275-88de-4548-9355-ed844861c83a}","source":"tabs-bar","glean_timestamp":"1716381887198","widget_id":"tab-close-button"},"execution_counter":3}
-{"timestamp":84164699,"category":"glean","name":"restarted","extra":{"glean_timestamp":"1716381910831","glean.startup.date":"2024-05-22T07:45-05:00"},"execution_counter":4}
