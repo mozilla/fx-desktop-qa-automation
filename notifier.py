@@ -6,33 +6,32 @@ from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
+# def write_read():
+#     """Write and read a blob from GCS using file-like IO"""
+#     # The ID of your GCS bucket
+#     bucket_name = "notifier-artifact-bucket"
+#     # The ID of your new GCS object
+#     blob_name = "new_folder/new_file.txt"
+#     # Path to your service account key file
+#     # key_path = "credentials.json"
 
-def write_read():
-    """Write and read a blob from GCS using file-like IO"""
-    # The ID of your GCS bucket
-    bucket_name = "notifier-artifact-bucket"
-    # The ID of your new GCS object
-    blob_name = "new_folder/new_file.txt"
-    # Path to your service account key file
-    # key_path = "credentials.json"
+#     # Using stored JSON
+#     credential_string = os.getenv("GCP_CREDENTIAL")
+#     credentials_dict = json.loads(credential_string)
 
-    # Using stored JSON
-    credential_string = os.getenv("GCP_CREDENTIAL")
-    credentials_dict = json.loads(credential_string)
-
-    # Load credentials from the service account key file
-    credentials = service_account.Credentials.from_service_account_info(
-        credentials_dict
-    )
-    # Initialize the client with explicit credentials
-    storage_client = storage.Client(credentials=credentials)
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(blob_name)
-    # Set the Content-Type before writing
-    blob.content_type = "text/plain"
-    # Write data to the blob
-    with blob.open("w", content_type="text/plain") as f:
-        f.write("Hello world")
+#     # Load credentials from the service account key file
+#     credentials = service_account.Credentials.from_service_account_info(
+#         credentials_dict
+#     )
+#     # Initialize the client with explicit credentials
+#     storage_client = storage.Client(credentials=credentials)
+#     bucket = storage_client.bucket(bucket_name)
+#     blob = bucket.blob(blob_name)
+#     # Set the Content-Type before writing
+#     blob.content_type = "text/plain"
+#     # Write data to the blob
+#     with blob.open("w", content_type="text/plain") as f:
+#         f.write("Hello world")
 
 
 def send_slack_message():
@@ -62,8 +61,41 @@ def list_artifacts():
         print("Directory not found:")
 
 
+def list_and_write(source_directory):
+    bucket_name = "notifier-artifact-bucket"
+
+    credential_string = os.getenv("GCP_CREDENTIAL")
+    credentials_dict = json.loads(credential_string)
+
+    credentials = service_account.Credentials.from_service_account_info(
+        credentials_dict
+    )
+
+    storage_client = storage.Client(credentials=credentials)
+    bucket = storage_client.bucket(bucket_name)
+    # Loop through each file in the specified source directory
+    for filename in os.listdir(source_directory):
+        source_path = os.path.join(source_directory, filename)
+        if os.path.isfile(source_path):
+            new_filename = filename
+            target_path = os.path.join(source_directory, new_filename)
+
+            blob = bucket.blob(target_path)
+            # Set the Content-Type before writing
+            blob.content_type = "text/plain"
+            # Write data to the blob
+            with (
+                open(source_path, "r") as infile,
+                blob.open("w", content_type="text/plain") as f,
+            ):
+                contents = infile.read()
+                f.write(contents)
+
+        elif os.path.isdir(source_path):
+            list_and_write(os.path.join(source_directory, filename))
+
+
 list_artifacts()
-write_read()
 send_slack_message()
 
 # Your OAuth access token
