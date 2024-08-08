@@ -44,9 +44,6 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest tests/form_autofill/test_address_autofill_attribute.py
-          $env:TEST_EXIT_CODE = $LASTEXITCODE
-          rm artifacts/assets -r -Force
-          exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
