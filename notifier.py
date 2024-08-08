@@ -1,9 +1,11 @@
 import os
+import json
 
 from google.cloud import storage
 from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+
 
 def write_read():
     """Write and read a blob from GCS using file-like IO"""
@@ -12,21 +14,25 @@ def write_read():
     # The ID of your new GCS object
     blob_name = "new_folder/new_file.txt"
     # Path to your service account key file
-    key_path = "credentials.json"
+    # key_path = "credentials.json"
+
+    # Using stored JSON
+    credential_string = os.getenv("GCP_CREDENTIAL")
+    credentials_dict = json.loads(credential_string)
+
     # Load credentials from the service account key file
-    credentials = service_account.Credentials.from_service_account_file(key_path)
+    credentials = service_account.Credentials.from_service_account_info(credentials_dict)
     # Initialize the client with explicit credentials
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
     # Set the Content-Type before writing
-    blob.content_type = 'text/plain'
+    blob.content_type = "text/plain"
     # Write data to the blob
-    with blob.open("w", content_type='text/plain') as f:
+    with blob.open("w", content_type="text/plain") as f:
         f.write("Hello world")
-write_read()
 
-# Your OAuth access token
+
 token = os.getenv("SLACK_KEY")
 
 # Initialize a Web API client
@@ -40,6 +46,10 @@ try:
     print("i have sent the message.")
 except SlackApiError as e:
     print(f"Error sending message: {e.response['error']}")
+
+write_read()
+
+# Your OAuth access token
 
 
 # {

@@ -43,7 +43,7 @@ jobs:
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest tests/menus/test_image_context_menu_actions.py::test_save_image_as
+          pipenv run pytest tests/menus/test_frequently_used_context_menu.py::test_save_page_as
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           mv artifacts/* artifacts-win || true
@@ -81,7 +81,7 @@ jobs:
       - name: Run Smoke Tests in MacOS (Headed)
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable $(cat ./fx_location) tests/menus/test_image_context_menu_actions.py::test_save_image_as || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable $(cat ./fx_location) tests/menus/test_frequently_used_context_menu.py::test_save_page_as || TEST_EXIT_CODE=$?
           mv -r artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
@@ -124,6 +124,7 @@ jobs:
       - name: Run script with secret
         env:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
+          GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
         run: |
           pipenv run python notifier.py
 
