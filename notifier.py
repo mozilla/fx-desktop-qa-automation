@@ -1,12 +1,13 @@
-import json
-import os
-import mimetypes
 import datetime
+import json
+import mimetypes
+import os
 
 from google.cloud import storage
 from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+
 
 def send_slack_message():
     token = os.getenv("SLACK_KEY")
@@ -34,12 +35,14 @@ def list_artifacts():
     except FileNotFoundError:
         print("Directory not found:")
 
+
 def get_content_type(filename):
     """
     Return the MIME type based on the filename extension.
     """
     content_type, _ = mimetypes.guess_type(filename)
-    return content_type or 'text/plain'
+    return content_type or "text/plain"
+
 
 def get_current_timestamp():
     """
@@ -69,7 +72,6 @@ def list_and_write(source_directory: str, cur_call: int):
 
     # Loop through each file in the specified source directory
     for filename in os.listdir(source_directory):
-
         # the current directory
         source_path = os.path.join(source_directory, filename)
 
@@ -93,7 +95,8 @@ def list_and_write(source_directory: str, cur_call: int):
 
         # if the item is a file, increment recursion count and recurse on the directory
         elif os.path.isdir(source_path):
-            list_and_write(os.path.join(source_directory, filename), cur_call+1)
+            list_and_write(os.path.join(source_directory, filename), cur_call + 1)
+
 
 try:
     time_now = get_current_timestamp()
