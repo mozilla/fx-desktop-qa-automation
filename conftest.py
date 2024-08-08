@@ -212,6 +212,10 @@ def env_prep():
 
 @pytest.fixture()
 def use_profile():
+    """
+    Return or yield <string> in a fixture of this name in a test
+    to use ./profiles/<string> as the profile for a given test
+    """
     yield False
 
 
