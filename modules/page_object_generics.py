@@ -1,5 +1,3 @@
-from time import sleep
-
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -47,4 +45,9 @@ class GenericPdf(BasePage):
         page_input = self.get_element("page-input")
         self.double_click(page_input)
         page_input.send_keys(Keys.BACK_SPACE + str(page_number) + Keys.ENTER)
+        return self
+
+    def open_toolbar_menu(self) -> BasePage:
+        self.get_element("toolbar-toggle").click()
+        self.element_visible("toolbar-container")
         return self

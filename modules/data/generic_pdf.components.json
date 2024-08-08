@@ -67,5 +67,41 @@
         "selectorData": "pageNumber",
         "strategy": "id",
         "groups": []
+    },
+
+    "toolbar-toggle": {
+        "selectorData": "secondaryToolbarToggle",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-container": {
+        "selectorData": "secondaryToolbarButtonContainer",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-hand-tool": {
+        "selectorData": "cursorHandTool",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-select-tool": {
+        "selectorData": "cursorSelectTool",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-rotate-cw": {
+        "selectorData": "pageRotateCw",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-rotate-ccw": {
+        "selectorData": "pageRotateCcw",
+        "strategy": "id",
+        "groups": []
     }
 }
