@@ -1,3 +1,0 @@
-1723133270024	SessionStore.LogManager	DEBUG	Flushing file log
-1723133270027	SessionStore.LogManager	DEBUG	Log cleanup threshold time: 1722269270027
-1723133270027	SessionStore.LogManager	DEBUG	Done deleting files.

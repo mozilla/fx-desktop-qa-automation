@@ -3,7 +3,7 @@ import logging
 import os
 import platform
 import re
-from shutil import copytree
+from shutil import unpack_archive
 from typing import Callable, List, Tuple, Union
 
 import pytest
@@ -271,7 +271,7 @@ def driver(
         options.binary_location = fx_executable
         if use_profile:
             profile_path = tmp_path / use_profile
-            copytree(os.path.join("profiles", use_profile), profile_path)
+            unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
             options.profile = profile_path
         for opt, value in set_prefs:
             options.set_preference(opt, value)

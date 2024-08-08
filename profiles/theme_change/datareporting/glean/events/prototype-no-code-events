@@ -1,5 +1,0 @@
-{"timestamp":2645185061,"category":"browser.usage","name":"interaction","extra":{"flow_id":"{babcf1ba-0b62-409d-9732-4441ee05fc8b}","glean_timestamp":"1723133488848","source":"tabs-bar","widget_id":"tab-close-button"}}
-{"timestamp":2645186034,"category":"browser.usage","name":"interaction","extra":{"widget_id":"urlbar-input","flow_id":"{babcf1ba-0b62-409d-9732-4441ee05fc8b}","source":"nav-bar","glean_timestamp":"1723133489822"}}
-{"timestamp":2645233905,"category":"browser.usage","name":"interaction","extra":{"source":"nav-bar","glean_timestamp":"1723133537692","flow_id":"{babcf1ba-0b62-409d-9732-4441ee05fc8b}","widget_id":"PanelUI-menu-button"}}
-{"timestamp":2645239640,"category":"browser.usage","name":"interaction","extra":{"flow_id":"{babcf1ba-0b62-409d-9732-4441ee05fc8b}","glean_timestamp":"1723133543427","source":"app-menu","widget_id":"appMenu-settings-button"}}
-{"timestamp":2645253533,"category":"browser.usage","name":"interaction","extra":{"flow_id":"{babcf1ba-0b62-409d-9732-4441ee05fc8b}","widget_id":"web-appearance-manage-themes-link","source":"preferences_paneGeneral","glean_timestamp":"1723133557320"}}
