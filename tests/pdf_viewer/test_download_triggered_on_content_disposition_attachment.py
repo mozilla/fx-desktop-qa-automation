@@ -16,7 +16,7 @@ CONTENT_DISPOSITION_ATTACHMENT_URL = (
 @pytest.mark.headed
 def test_download_panel_triggered_on_content_disposition_attachment(driver: Firefox):
     """
-    C936502: Ensure that the "Always ask" option in Firefox Applications settings
+    C936502: Ensure that the Always ask option in Firefox Applications settings
     triggers the download panel for PDFs with Content-Disposition: attachment.
     """
 
