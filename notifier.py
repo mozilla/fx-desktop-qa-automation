@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 from google.cloud import storage
 from google.oauth2 import service_account
@@ -21,7 +21,9 @@ def write_read():
     credentials_dict = json.loads(credential_string)
 
     # Load credentials from the service account key file
-    credentials = service_account.Credentials.from_service_account_info(credentials_dict)
+    credentials = service_account.Credentials.from_service_account_info(
+        credentials_dict
+    )
     # Initialize the client with explicit credentials
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
@@ -33,21 +35,34 @@ def write_read():
         f.write("Hello world")
 
 
-token = os.getenv("SLACK_KEY")
+def send_slack_message():
+    token = os.getenv("SLACK_KEY")
 
-# Initialize a Web API client
-client = WebClient(token=token)
+    # Initialize a Web API client
+    client = WebClient(token=token)
 
-try:
-    response = client.chat_postMessage(
-        channel="#desktop-qa-monitoring-notifier",  # Channel ID or name (e.g., #general)
-        text="from ACTIONS... 1",
-    )
-    print("i have sent the message.")
-except SlackApiError as e:
-    print(f"Error sending message: {e.response['error']}")
+    try:
+        response = client.chat_postMessage(
+            channel="#desktop-qa-monitoring-notifier",  # Channel ID or name (e.g., #general)
+            text="from ACTIONS... 1",
+        )
+        print("i have sent the message.")
+    except SlackApiError as e:
+        print(f"Error sending message: {e.response['error']}")
 
+def list_artifacts():
+    try:
+        # List all files and directories in the specified path
+        contents_windows = os.listdir("artifacts-win")
+        contents_mac = os.listdir("artifacts-mac")
+        print("Directory contents (windows):", contents_windows)
+        print("Directory contents (mac):", contents_mac)
+    except FileNotFoundError:
+        print("Directory not found:")
+
+list_artifacts()
 write_read()
+send_slack_message()
 
 # Your OAuth access token
 

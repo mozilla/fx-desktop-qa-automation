@@ -82,7 +82,7 @@ jobs:
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable $(cat ./fx_location) tests/menus/test_frequently_used_context_menu.py::test_save_page_as || TEST_EXIT_CODE=$?
-          mv -r artifacts/* artifacts-mac/ || true
+          mv artifacts/* artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
