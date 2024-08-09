@@ -4,9 +4,8 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_prefs import AboutPrefs
+from modules.browser_object import Navigation, TabBar
+from modules.page_object import AboutPrefs, GenericPdf
 
 CONTENT_DISPOSITION_ATTACHMENT_URL = (
     "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf"
@@ -45,6 +44,4 @@ def test_download_panel_triggered_on_content_disposition_attachment(driver: Fire
     ), f"Expected 2 tabs, but found {len(driver.window_handles)}"
 
     tabs.switch_to_new_tab()
-    assert driver.current_url.startswith(
-        "file://"
-    ), "Expected URL to start with 'file://'"
+    GenericPdf(driver, pdf_url="").url_contains("file:")
