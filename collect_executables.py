@@ -7,6 +7,7 @@ import json
 from os import environ
 from platform import uname
 from sys import argv
+from time import sleep
 
 import requests
 
@@ -59,6 +60,13 @@ if not language:
     language = "en-US"
 
 gecko_rs_obj = requests.get(GECKO_API_URL).json()
+
+for _ in range(4):
+    if gecko_rs_obj:
+        break
+    sleep(2)
+    gecko_rs_obj = requests.get(GECKO_API_URL).json()
+
 urls = [
     a.get("browser_download_url")
     for a in gecko_rs_obj.get("assets")
