@@ -59,7 +59,7 @@ if "-g" in argv:
         gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
     # If we failed, just dump any old link, maybe update this on new gecko release
-    if gecko_rs_obj is None:
+    if not gecko_rs_obj.get("assets"):
         print(
             f"https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-{get_gd_platform()}.zip"
         )
