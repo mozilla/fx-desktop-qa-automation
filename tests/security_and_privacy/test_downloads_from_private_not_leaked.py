@@ -22,6 +22,7 @@ def delete_files_regex_string():
 
 
 @pytest.mark.slow
+@pytest.mark.audio
 def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
 
