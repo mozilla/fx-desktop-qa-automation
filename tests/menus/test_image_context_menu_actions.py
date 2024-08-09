@@ -60,7 +60,6 @@ def test_save_image_as(driver: Firefox):
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ImageContextMenu(driver)
     nav = Navigation(driver)
-    ba = BrowserActions(driver)
     util = Utilities()
 
     # wait for page to load

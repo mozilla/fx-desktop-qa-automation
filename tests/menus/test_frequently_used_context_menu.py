@@ -36,7 +36,6 @@ def test_save_page_as(driver: Firefox):
     example_page = ExamplePage(driver)
     nav = Navigation(driver)
     util = Utilities()
-    ba = BrowserActions(driver)
 
     # right click something that is not a hyperlink
     title_header = example_page.get_element("title-header")
