@@ -185,3 +185,6 @@ cython_debug/
 drivers/
 temp.py
 tests/test_scratch.py
+
+# Do not ignore
+!tests/downloads

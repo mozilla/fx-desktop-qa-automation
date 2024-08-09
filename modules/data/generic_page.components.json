@@ -63,5 +63,11 @@
         "selectorData": "a[href$='.pdf']",
         "strategy": "css",
         "groups": []
+    },
+
+    "sample-doc-download": {
+        "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
+        "strategy": "css",
+        "groups": []
     }
 }

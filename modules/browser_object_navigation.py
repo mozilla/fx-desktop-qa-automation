@@ -161,7 +161,7 @@ class Navigation(BasePage):
         self.awesome_bar.click()
         return self
 
-    def get_download_button(self) -> BasePage:
+    def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement
         """

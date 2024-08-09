@@ -139,7 +139,9 @@
     "downloads-button": {
         "selectorData": "downloads-button",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "search-results-container": {
@@ -270,6 +272,12 @@
 
     "blue-star-button": {
         "selectorData": "image[id='star-button'][starred='true']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "download-panel-item": {
+        "selectorData": "vbox[class='downloadContainer']",
         "strategy": "css",
         "groups": []
     }
