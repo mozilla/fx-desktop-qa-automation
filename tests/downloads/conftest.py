@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    return ("S65", "PDF Viewer")
+    return ("S29219", "Downloads")
 
 
 @pytest.fixture()
