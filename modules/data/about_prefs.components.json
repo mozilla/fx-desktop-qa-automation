@@ -460,5 +460,18 @@
         "selectorData": "removeAll",
         "strategy": "id",
         "groups": []
+    },
+
+    "pdf-content-type": {
+       "selectorData": "//*[local-name()='hbox' and @class='typeContainer']//*[local-name()='label' and @class='typeDescription' and text()='Portable Document Format (PDF)']",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "pdf-actions-menu": {
+        "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
+        "strategy": "css",
+        "groups": []
     }
+
 }
