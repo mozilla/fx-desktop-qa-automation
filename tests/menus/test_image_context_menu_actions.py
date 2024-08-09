@@ -71,7 +71,7 @@ def test_save_image_as(driver: Firefox):
     downloads_button = nav.get_download_button()
 
     # wait some time before interacting with the system dialog
-    sleep(0.5)
+    sleep(3)
 
     this_platform = platform.system()
     if this_platform == "Linux":

@@ -92,6 +92,7 @@ jobs:
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         run: |
+          /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox tests/downloads/test_add_mime_type_doc.py || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
