@@ -6,7 +6,7 @@ Set env var FX_LOCALE to get a different locale build."""
 import json
 from os import environ
 from platform import uname
-from sys import argv
+from sys import argv, exit
 from time import sleep
 
 import requests
@@ -51,11 +51,19 @@ def get_gd_platform():
 if "-g" in argv:
     gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
+    # In mac, sometimes this request fails to produce a link
     for _ in range(4):
         if gecko_rs_obj:
             break
         sleep(2)
         gecko_rs_obj = requests.get(GECKO_API_URL).json()
+
+    # If we failed, just dump any old link, maybe update this on new gecko release
+    if gecko_rs_obj is None:
+        print(
+            f"https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-{get_gd_platform()}.zip"
+        )
+        exit()
 
     urls = [
         a.get("browser_download_url")
@@ -64,6 +72,7 @@ if "-g" in argv:
     ]
     gecko_download_url = [u for u in urls if get_gd_platform() in u][0]
     print(gecko_download_url)
+
 else:
     channel = environ.get("FX_CHANNEL")
     # if channel doesn't exist use beta, if blank leave blank (for Release)
