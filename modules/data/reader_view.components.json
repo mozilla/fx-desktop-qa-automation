@@ -101,6 +101,18 @@
         "groups": []
     },
 
+    "toolbar-theme-contrast": {
+        "selectorData": "contrast-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-gray": {
+        "selectorData": "gray-button",
+        "strategy": "class",
+        "groups": []
+    },
+
     "toolbar-font-selector": {
         "selectorData": "font-type-selector",
         "strategy": "id",
@@ -158,6 +170,12 @@
     "slider": {
         "selectorData": "inputSlider",
         "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-theme": {
+        "selectorData": "button[class='dropdown-toggle toolbar-button colors-button']",
+        "strategy": "css",
         "groups": []
     }
 }
