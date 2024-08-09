@@ -1,3 +1,4 @@
+
 /venv/
 .DS_Store
 test*.txt
@@ -185,3 +186,6 @@ cython_debug/
 drivers/
 temp.py
 tests/test_scratch.py
+
+# Credentials
+credentials.json
