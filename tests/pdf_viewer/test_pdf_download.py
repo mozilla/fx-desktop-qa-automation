@@ -12,6 +12,11 @@ def add_prefs():
     return []
 
 
+@pytest.fixture()
+def delete_files_regex_string():
+    return r"i-9.*\.pdf"
+
+
 @pytest.mark.headed
 def test_pdf_download(
     driver: Firefox,
