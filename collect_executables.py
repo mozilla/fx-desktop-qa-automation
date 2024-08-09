@@ -48,34 +48,33 @@ def get_gd_platform():
         return "win32"
 
 
-channel = environ.get("FX_CHANNEL")
-# if channel doesn't exist use beta, if blank leave blank (for Release)
-# ...otherwise prepend hyphen
-if channel is None:
-    channel = "-beta"
-elif channel:
-    channel = f"-{channel.lower()}"
-language = environ.get("FX_LOCALE")
-if not language:
-    language = "en-US"
-
-gecko_rs_obj = requests.get(GECKO_API_URL).json()
-
-for _ in range(4):
-    if gecko_rs_obj:
-        break
-    sleep(2)
+if "-g" in argv:
     gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
-urls = [
-    a.get("browser_download_url")
-    for a in gecko_rs_obj.get("assets")
-    if not a.get("browser_download_url").endswith(".asc")
-]
-gecko_download_url = [u for u in urls if get_gd_platform() in u][0]
-fx_download_url = f"https://download.mozilla.org/?product=firefox{channel}-latest-ssl&os={get_fx_platform()}&lang={language}"
+    for _ in range(4):
+        if gecko_rs_obj:
+            break
+        sleep(2)
+        gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
-if "-g" in argv:
+    urls = [
+        a.get("browser_download_url")
+        for a in gecko_rs_obj.get("assets")
+        if not a.get("browser_download_url").endswith(".asc")
+    ]
+    gecko_download_url = [u for u in urls if get_gd_platform() in u][0]
     print(gecko_download_url)
 else:
+    channel = environ.get("FX_CHANNEL")
+    # if channel doesn't exist use beta, if blank leave blank (for Release)
+    # ...otherwise prepend hyphen
+    if channel is None:
+        channel = "-beta"
+    elif channel:
+        channel = f"-{channel.lower()}"
+    language = environ.get("FX_LOCALE")
+    if not language:
+        language = "en-US"
+
+    fx_download_url = f"https://download.mozilla.org/?product=firefox{channel}-latest-ssl&os={get_fx_platform()}&lang={language}"
     print(fx_download_url)
