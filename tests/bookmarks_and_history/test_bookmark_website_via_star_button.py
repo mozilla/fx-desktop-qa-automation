@@ -13,7 +13,6 @@ def test_bookmark_website_via_star(driver: Firefox):
     # instantiate object
     nav = Navigation(driver)
     panel = PanelUi(driver)
-    # random comment
 
     # Bookmark the given website and check the bookmark star turned blue
     driver.get(URL_TO_BOOKMARK)

@@ -13,15 +13,11 @@ def add_prefs():
 
 
 @pytest.mark.headed
-def test_pdf_download(
-    driver: Firefox,
-    fillable_pdf_url: str,
-    downloads_folder: str,
-    sys_platform,
-    delete_files,
+def test_open_pdf_in_ff(
+    driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform
 ):
     """
-    C3932: PDF files can be successfully downloaded via pdf.js
+    C936503: PDF files can be successfully opened in Firefox
     """
     from pynput.keyboard import Controller, Key
 
@@ -70,3 +66,17 @@ def test_pdf_download(
     print(
         f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
     )
+
+    file_url = f"file://{saved_pdf_location}"
+    driver.get(file_url)
+
+    # Allow time for the PDF to load
+    time.sleep(5)
+
+    # Verify that the PDF viewer is loaded
+    assert "pdf" in driver.current_url, "The PDF viewer did not load correctly."
+    assert "i-9.pdf" in driver.title, "The PDF file did not open correctly."
+    print(
+        f"Test passed: The PDF file {file_name} has been opened correctly in Firefox."
+    )
+    driver.quit()
