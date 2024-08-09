@@ -25,13 +25,15 @@ jobs:
           pipenv install;
       - name: Download Geckodriver
         run: |
-          $gecko_url = pipenv run python collect_executables.py -g
+          $gecko_url = (pipenv run python collect_executables.py -g) -join "`n"
+          echo $gecko_url
           Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
         shell: pwsh
       - name: Download Beta
         run: |
-          $fx_url = pipenv run python collect_executables.py
+          $fx_url = (pipenv run python collect_executables.py) -join "`n"
+          echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
