@@ -117,7 +117,7 @@
         "groups": []
     },
 
-    "edited-field": {
+    "edited-name-field": {
         "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
         "groups": []

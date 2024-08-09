@@ -54,4 +54,4 @@ def test_download_pdf_with_form_fields(driver: Firefox, fillable_pdf_url: str, d
 
     # Open the saved pdf and check if the edited field is displayed
     driver.get('file://' + os.path.realpath(saved_pdf_location))
-    assert pdf_page.get_element("edited-field").is_displayed()
+    assert pdf_page.get_element("edited-name-field").is_displayed()
