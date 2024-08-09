@@ -109,5 +109,17 @@
         "selectorData": "pageRotateCcw",
         "strategy": "id",
         "groups": []
+    },
+
+    "first-name-field": {
+        "selectorData": "input[name='First Name Given Name']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "edited-name-field": {
+        "selectorData": "input[name='First Name Given Name'][value='Mark']",
+        "strategy": "css",
+        "groups": []
     }
 }
