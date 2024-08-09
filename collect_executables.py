@@ -60,8 +60,10 @@ if "-g" in argv:
 
     # If we failed, just dump any old link, maybe update this on new gecko release
     if not gecko_rs_obj.get("assets"):
+        gd_platform = get_gd_platform()
+        ext = "zip" if "win" in gd_platform else "tar.gz"
         print(
-            f"https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-{get_gd_platform()}.zip"
+            f"https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-{gd_platform}.{ext}"
         )
         exit()
 
