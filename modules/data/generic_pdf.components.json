@@ -40,13 +40,13 @@
     },
 
     "first-name-field": {
-        "selectorData": "pdfjs_internal_id_638R",
-        "strategy": "id",
+        "selectorData": "input[name='First Name Given Name']",
+        "strategy": "css",
         "groups": []
     },
 
     "edited-field": {
-        "selectorData": "[id='pdfjs_internal_id_638R'][value='Mark']",
+        "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
         "groups": []
     }
