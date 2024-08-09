@@ -38,10 +38,12 @@ jobs:
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Install Beta
+        id: setup
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
         shell: pwsh
       - name: Run Smoke Tests in Win
+        if: steps.setup.conclusion == 'success'
         run: |
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest -n 4 .
@@ -73,6 +75,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
+        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
