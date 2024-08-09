@@ -22,7 +22,7 @@ def get_fx_platform():
             return "linux64"
         return "linux"
     if u.system == "Windows":
-        if u.machine == "AMD64":
+        if u.machine == "AMD64" and not environ.get("GITHUB_ACTIONS"):
             return "win64-aarch64"
         if "64" in u.machine:
             return "win64"
@@ -40,7 +40,7 @@ def get_gd_platform():
             return "linux64"
         return "linux32"
     if u.system == "Windows":
-        if u.machine == "AMD64":
+        if u.machine == "AMD64" and not environ.get("GITHUB_ACTIONS"):
             return "win-aarch64"
         if "64" in u.machine:
             return "win64"
