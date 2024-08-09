@@ -326,6 +326,38 @@ def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
 
 
 @pytest.fixture()
+def delete_files_regex_string():
+    """
+    Tell the delete_files fixture re.match() what files to delete.
+    In ./conftest.py, use a regex that is unlikely to match things.
+    """
+    return r"zzxqxzqx"
+
+
+@pytest.fixture()
+def delete_files(sys_platform, delete_files_regex_string):
+    """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
+
+    def _delete_files():
+        if sys_platform.startswith("Win"):
+            if os.environ.get("GITHUB_ACTIONS") == "true":
+                downloads_folder = os.path.join(
+                    "C:", "Users", "runneradmin", "Downloads"
+                )
+        else:
+            home_folder = os.environ.get("HOME")
+            downloads_folder = os.path.join(home_folder, "Downloads")
+        for file in os.listdir(downloads_folder):
+            delete_files_regex = re.compile(delete_files_regex_string)
+            if delete_files_regex.match(file):
+                os.remove(os.path.join(downloads_folder, file))
+
+    _delete_files()
+    yield True
+    _delete_files()
+
+
+@pytest.fixture()
 def version(driver: Firefox):
     return driver.capabilities["browserVersion"]
 
