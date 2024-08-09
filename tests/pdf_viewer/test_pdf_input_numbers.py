@@ -38,3 +38,4 @@ def test_pdf_input_numbers(driver: Firefox, fillable_pdf_url: str):
     print(
         "Test passed: Numeric field has been filled correctly and the value persists."
     )
+    driver.quit()
