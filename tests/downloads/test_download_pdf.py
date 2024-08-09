@@ -7,18 +7,8 @@ from selenium.webdriver import Firefox
 from modules.page_object import GenericPdf
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
-@pytest.fixture()
-def delete_files_regex_string():
-    return r"i-9.*\.pdf"
-
-
 @pytest.mark.headed
-def test_pdf_download(
+def test_download_pdf(
     driver: Firefox,
     fillable_pdf_url: str,
     downloads_folder: str,
@@ -26,7 +16,7 @@ def test_pdf_download(
     delete_files,
 ):
     """
-    C3932: PDF files can be successfully downloaded via pdf.js
+    C1756769: Verify that the user can Download a PDF
     """
     from pynput.keyboard import Controller, Key
 

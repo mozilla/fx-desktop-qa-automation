@@ -25,27 +25,26 @@ jobs:
           pipenv install;
       - name: Download Geckodriver
         run: |
-          Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip" -OutFile "geckodriver.zip"
+          $gecko_url = (pipenv run python collect_executables.py -g) -join "`n"
+          echo $gecko_url
+          Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
         shell: pwsh
       - name: Download Beta
         run: |
-          Invoke-WebRequest -Uri "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=win64&lang=en-US" -OutFile "${{ github.workspace }}\setup.exe"
+          $fx_url = (pipenv run python collect_executables.py) -join "`n"
+          echo $fx_url
+          Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Install Beta
+        id: setup
         run: |
-          echo "Starting Firefox installation..."
-          $exitcode = Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
-          if ($exitcode -eq 0) {
-            echo "Firefox installation completed."
-          } else {
-            echo "Firefox installation failed."
-          }
+          Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
         shell: pwsh
       - name: Run Smoke Tests in Win
+        if: steps.setup.conclusion == 'success'
         run: |
-          Start-Sleep -Seconds 20;
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
@@ -76,23 +75,19 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
+        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          curl -o geckodriver.tar.gz -L https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-macos-aarch64.tar.gz
-          tar -xvzf geckodriver.tar.gz
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-      - name: Install Firefox
-        id: setup
-        run: |
-          curl -o Firefox.dmg -L "https://download.mozilla.org/?product=firefox-beta-latest-ssl&os=osx&lang=en-US"
-          hdiutil attach Firefox.dmg
+          bash ./collect_executables.sh;
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         run: |
+          /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE

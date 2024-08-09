@@ -1,6 +1,8 @@
 import time
+
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.page_object_generics import GenericPdf
 
 
