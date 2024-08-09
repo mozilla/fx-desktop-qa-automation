@@ -28,12 +28,12 @@ tasks:
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
-        ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable $(cat ./fx_location) -n 4 .;
+        ./collect_executables.sh;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .;
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable $(cat ./fx_location) -n 4 .
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
     notify:
       recipients:
         - type: slack-channel
