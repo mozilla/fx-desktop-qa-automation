@@ -2,12 +2,13 @@ import datetime
 import json
 import mimetypes
 import os
+from typing import List
 
 from google.cloud import storage
 from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from typing import List
+
 from blocks import return_slack_blocks
 
 
@@ -22,7 +23,7 @@ def send_slack_message(report_file: str):
         client.chat_postMessage(
             channel="#desktop-qa-monitoring-notifier",
             text="Important update from ACTIONS...",  # This is required but can be anything if blocks are used
-            blocks=return_slack_blocks(report_file)
+            blocks=return_slack_blocks(report_file),
         )
     except SlackApiError as e:
         print(f"Error sending message: {e.response['error']}")
@@ -51,19 +52,17 @@ def get_current_timestamp():
 def list_and_write(source_directory: str, links: List[str]):
     print(f"Trying to traverse {source_directory} and write files...")
 
-    for (root, dirs, files) in os.walk(source_directory):
+    for root, dirs, files in os.walk(source_directory):
         for file in files:
             fullpath = os.path.join(root, file)
 
-            target_path = os.path.join(
-                f"{time_now}", (fullpath)
-            )
+            target_path = os.path.join(f"{time_now}", (fullpath))
 
             content_type = get_content_type(file)
             blob = bucket.blob(target_path)
             blob.content_type = content_type
-            read_mode = 'rb' if content_type == "image/png" else 'r'
-            write_mode = 'wb' if content_type == "image/png" else 'w'
+            read_mode = "rb" if content_type == "image/png" else "r"
+            write_mode = "wb" if content_type == "image/png" else "w"
 
             links.append(f"{root_url}{target_path}")
 
@@ -73,6 +72,7 @@ def list_and_write(source_directory: str, links: List[str]):
             ):
                 contents = infile.read()
                 f.write(contents)
+
 
 def compile_link_file(links_win: List[str], links_mac: List[str]):
     print("Compiling the current artifact link file...")
@@ -84,11 +84,11 @@ def compile_link_file(links_win: List[str], links_mac: List[str]):
     bucket = storage_client.bucket(bucket_name)
 
     blob = bucket.blob(output_file_path)
-    with blob.open('w', content_type=content_type) as f:
+    with blob.open("w", content_type=content_type) as f:
         f.write("Windows Artifacts:\n\n")
 
         for url in links_win:
-            f.write(url + '\n')
+            f.write(url + "\n")
 
         f.write("\nMac Artifacts:\n\n")
 
