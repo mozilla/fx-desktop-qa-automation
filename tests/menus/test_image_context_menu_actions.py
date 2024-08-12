@@ -6,7 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ImageContextMenu, Navigation, TabBar
 from modules.page_object import GenericPage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 LINK_IMAGE_URL = (
     "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"

@@ -7,33 +7,25 @@ from google.cloud import storage
 from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from typing import List
+from blocks import return_slack_blocks
 
 
-def send_slack_message():
+def send_slack_message(report_file: str):
+    print("Trying to send Slack Message...")
     token = os.getenv("SLACK_KEY")
 
     # Initialize a Web API client
     client = WebClient(token=token)
 
     try:
-        response = client.chat_postMessage(
-            channel="#desktop-qa-monitoring-notifier",  # Channel ID or name (e.g., #general)
-            text="from ACTIONS... 1",
+        client.chat_postMessage(
+            channel="#desktop-qa-monitoring-notifier",
+            text="Important update from ACTIONS...",  # This is required but can be anything if blocks are used
+            blocks=return_slack_blocks(report_file)
         )
-        print("i have sent the message.")
     except SlackApiError as e:
         print(f"Error sending message: {e.response['error']}")
-
-
-def list_artifacts():
-    try:
-        # List all files and directories in the specified path
-        contents_windows = os.listdir("artifacts-win")
-        contents_mac = os.listdir("artifacts-mac")
-        print("Directory contents (windows):", contents_windows)
-        print("Directory contents (mac):", contents_mac)
-    except FileNotFoundError:
-        print("Directory not found:")
 
 
 def get_content_type(filename):
@@ -50,80 +42,85 @@ def get_current_timestamp():
 
     :return: str, formatted timestamp
     """
+    print("Getting the current date...")
     now = datetime.datetime.now()
-    formatted_timestamp = now.strftime("%Y-%m-%d_%H%M_%S")
+    formatted_timestamp = now.strftime("%Y-%m-%d-%H%M_%S")
     return formatted_timestamp
 
 
-# FIX THIS
-def list_and_write(source_directory: str, cur_call: int):
-    if cur_call > 5:
-        print("This function has recursed too many times. Stopping execution")
-        return
+def list_and_write(source_directory: str, links: List[str]):
+    print(f"Trying to traverse {source_directory} and write files...")
 
-    bucket_name = "notifier-artifact-bucket"
+    for (root, dirs, files) in os.walk(source_directory):
+        for file in files:
+            fullpath = os.path.join(root, file)
 
+            target_path = os.path.join(
+                f"{time_now}", (fullpath)
+            )
+
+            content_type = get_content_type(file)
+            blob = bucket.blob(target_path)
+            blob.content_type = content_type
+            read_mode = 'rb' if content_type == "image/png" else 'r'
+            write_mode = 'wb' if content_type == "image/png" else 'w'
+
+            links.append(f"{root_url}{target_path}")
+
+            with (
+                open(fullpath, read_mode) as infile,
+                blob.open(write_mode, content_type=content_type) as f,
+            ):
+                contents = infile.read()
+                f.write(contents)
+
+def compile_link_file(links_win: List[str], links_mac: List[str]):
+    print("Compiling the current artifact link file...")
+    links_mac.sort()
+    links_win.sort()
+
+    output_file_path = os.path.join(time_now, "full_report.txt")
+    content_type = get_content_type(output_file_path)
+    bucket = storage_client.bucket(bucket_name)
+
+    blob = bucket.blob(output_file_path)
+    with blob.open('w', content_type=content_type) as f:
+        f.write("Windows Artifacts:\n\n")
+
+        for url in links_win:
+            f.write(url + '\n')
+
+        f.write("\nMac Artifacts:\n\n")
+
+        for url in links_mac:
+            f.write(url + "\n")
+    return f"{root_url}full_report.txt"
+
+
+time_now = get_current_timestamp()
+links_win = []
+links_mac = []
+root_url = "https://storage.googleapis.com/notifier-artifact-bucket/"
+report_file = ""
+
+try:
     credential_string = os.getenv("GCP_CREDENTIAL")
     credentials_dict = json.loads(credential_string)
     credentials = service_account.Credentials.from_service_account_info(
         credentials_dict
     )
     storage_client = storage.Client(credentials=credentials)
+    bucket_name = "notifier-artifact-bucket"
     bucket = storage_client.bucket(bucket_name)
-
-    for (root, dirs, files) in os.walk("/path/to/dir"):
-        for file in files:
-            fullpath = os.path.join(root, file)
-    # # Loop through each file in the specified source directory
-    # for filename in os.listdir(source_directory):
-    #     # the current directory
-    #     source_path = os.path.join(source_directory, filename)
-
-    #     # if the item is a file, directly upload
-    #     if os.path.isfile(source_path):
-    #         new_filename = filename
-    #         target_path = os.path.join(
-    #             f"{time_now}", (os.path.join(source_directory, new_filename))
-    #         )
-
-    #         content_type = get_content_type(source_path)
-    #         blob = bucket.blob(target_path)
-    #         blob.content_type = content_type
-
-    #         with (
-    #             open(source_path, "r") as infile,
-    #             blob.open("w", content_type=content_type) as f,
-    #         ):
-    #             contents = infile.read()
-    #             f.write(contents)
-
-    #         # TODO: return the URL that it has
-
-    #     # if the item is a file, increment recursion count and recurse on the directory
-    #     elif os.path.isdir(source_path):
-    #         list_and_write(os.path.join(source_directory, filename), cur_call + 1)
-
-
-time_now = get_current_timestamp()
-
-try:
-    list_and_write("artifacts-mac", 0)
-    list_and_write("artifacts-win", 0)
+    list_and_write("artifacts-mac", links_mac)
+    list_and_write("artifacts-win", links_win)
 except Exception as e:
     print("The artifact upload process ran into some issues: ", e)
-send_slack_message()
-
-# Your OAuth access token
 
 
-# {
-#     "display_information": {
-#         "name": "Demo App"
-#     },
-#     "settings": {
-#         "org_deploy_enabled": false,
-#         "socket_mode_enabled": false,
-#         "is_hosted": false,
-#         "token_rotation_enabled": false
-#     }
-# }
+try:
+    report_file = compile_link_file(links_win, links_mac)
+except Exception as e:
+    print(f"The link compilation had some issues: {e}")
+
+send_slack_message(report_file)
