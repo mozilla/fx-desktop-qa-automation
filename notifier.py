@@ -94,7 +94,7 @@ def compile_link_file(links_win: List[str], links_mac: List[str]):
 
         for url in links_mac:
             f.write(url + "\n")
-    return f"{root_url}full_report.txt"
+    return f"{root_url}{time_now}/full_report.txt"
 
 
 time_now = get_current_timestamp()
