@@ -124,3 +124,5 @@ except Exception as e:
     print(f"The link compilation had some issues: {e}")
 
 send_slack_message(report_file)
+
+print("Message sent! Script finished successfully.")

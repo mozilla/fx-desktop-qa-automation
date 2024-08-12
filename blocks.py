@@ -1,7 +1,11 @@
 import os
 
-
 def return_slack_blocks(report_file: str):
+    task_text = f"*Task*: {os.getenv("GITHUB_REF_NAME")}"
+    owner_text = f"*Owner*: {os.getenv("GITHUB_ACTOR")}"
+    commit_text = f"*Commit*: https://github.com/mozilla/fx-desktop-qa-automation/commit/{os.getenv("GITHUB_SHA")}"
+    test_summary_text = f"*Test Summary*: {report_file} :debug:"
+
     return [
         {
             "type": "header",
@@ -15,25 +19,25 @@ def return_slack_blocks(report_file: str):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Task*: {os.getenv("GITHUB_REF_NAME")}",
+                "text": task_text,
             },
         },
         {
             "type": "section",
-            "text": {"type": "mrkdwn", "text": f"*Owner*: {os.getenv("GITHUB_ACTOR")}"},
+            "text": {"type": "mrkdwn", "text": owner_text},
         },
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Commit*: https://github.com/mozilla/fx-desktop-qa-automation/commit/{os.getenv("GITHUB_SHA")}",
+                "text": commit_text,
             },
         },
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Test Summary*: {report_file} :debug:",
+                "text": test_summary_text,
             },
         },
         {"type": "divider"},
