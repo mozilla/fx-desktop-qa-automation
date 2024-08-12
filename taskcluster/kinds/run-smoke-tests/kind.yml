@@ -32,10 +32,9 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox tests/form_autofill/test_address_autofill_attribute.py;
-
-  # mv ./ci_pyproject_headed.toml ./pyproject.toml;
-  # pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .;
+        mv ./ci_pyproject_headed.toml ./pyproject.toml;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
     notify:
       recipients:
         - type: slack-channel
