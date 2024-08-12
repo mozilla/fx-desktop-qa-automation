@@ -472,6 +472,11 @@
         "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
         "strategy": "css",
         "groups": []
-    }
+    },
 
+    "zip-mime-type": {
+        "selectorData": "richlistitem[type='{item}']",
+        "strategy": "css",
+        "groups": []
+    }
 }
