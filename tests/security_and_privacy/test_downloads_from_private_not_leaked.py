@@ -26,7 +26,7 @@ def delete_files_regex_string():
 def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
 
-    # We've deleted relevant downloads just to be safe
+    # We've deleted relevant downloads_file just to be safe
     non_private_window = driver.current_window_handle
     panelui = PanelUi(driver).open_panel_menu()
     panelui.select_panel_setting("new-private-window-option")
