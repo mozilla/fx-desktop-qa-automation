@@ -55,6 +55,7 @@ def get_current_timestamp():
     return formatted_timestamp
 
 
+# FIX THIS
 def list_and_write(source_directory: str, cur_call: int):
     if cur_call > 5:
         print("This function has recursed too many times. Stopping execution")
@@ -70,34 +71,37 @@ def list_and_write(source_directory: str, cur_call: int):
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
 
-    # Loop through each file in the specified source directory
-    for filename in os.listdir(source_directory):
-        # the current directory
-        source_path = os.path.join(source_directory, filename)
+    for (root, dirs, files) in os.walk("/path/to/dir"):
+        for file in files:
+            fullpath = os.path.join(root, file)
+    # # Loop through each file in the specified source directory
+    # for filename in os.listdir(source_directory):
+    #     # the current directory
+    #     source_path = os.path.join(source_directory, filename)
 
-        # if the item is a file, directly upload
-        if os.path.isfile(source_path):
-            new_filename = filename
-            target_path = os.path.join(
-                f"{time_now}", (os.path.join(source_directory, new_filename))
-            )
+    #     # if the item is a file, directly upload
+    #     if os.path.isfile(source_path):
+    #         new_filename = filename
+    #         target_path = os.path.join(
+    #             f"{time_now}", (os.path.join(source_directory, new_filename))
+    #         )
 
-            content_type = get_content_type(source_path)
-            blob = bucket.blob(target_path)
-            blob.content_type = content_type
+    #         content_type = get_content_type(source_path)
+    #         blob = bucket.blob(target_path)
+    #         blob.content_type = content_type
 
-            with (
-                open(source_path, "r") as infile,
-                blob.open("w", content_type=content_type) as f,
-            ):
-                contents = infile.read()
-                f.write(contents)
+    #         with (
+    #             open(source_path, "r") as infile,
+    #             blob.open("w", content_type=content_type) as f,
+    #         ):
+    #             contents = infile.read()
+    #             f.write(contents)
 
-            # TODO: return the URL that it has
+    #         # TODO: return the URL that it has
 
-        # if the item is a file, increment recursion count and recurse on the directory
-        elif os.path.isdir(source_path):
-            list_and_write(os.path.join(source_directory, filename), cur_call + 1)
+    #     # if the item is a file, increment recursion count and recurse on the directory
+    #     elif os.path.isdir(source_path):
+    #         list_and_write(os.path.join(source_directory, filename), cur_call + 1)
 
 
 time_now = get_current_timestamp()

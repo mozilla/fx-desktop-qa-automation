@@ -17,32 +17,16 @@ def add_prefs():
 
 
 @pytest.fixture()
-def delete_files(sys_platform):
-    """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
-
-    def _delete_files():
-        if sys_platform.startswith("Win"):
-            if os.environ.get("GITHUB_ACTIONS") == "true":
-                downloads_folder = os.path.join(
-                    "C:", "Users", "runneradmin", "Downloads"
-                )
-        else:
-            home_folder = os.environ.get("HOME")
-            downloads_folder = os.path.join(home_folder, "Downloads")
-        for file in os.listdir(downloads_folder):
-            if file.startswith("opm") and file.endswith("pdf"):
-                os.remove(os.path.join(downloads_folder, file))
-
-    _delete_files()
-    yield True
-    _delete_files()
+def delete_files_regex_string():
+    return r"opm.*\.pdf"
 
 
 @pytest.mark.slow
+@pytest.mark.audio
 def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
 
-    # We've deleted relevant downloads just to be safe
+    # We've deleted relevant downloads_file just to be safe
     non_private_window = driver.current_window_handle
     panelui = PanelUi(driver).open_panel_menu()
     panelui.select_panel_setting("new-private-window-option")
