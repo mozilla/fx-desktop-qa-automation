@@ -109,5 +109,24 @@
         "selectorData": "pageRotateCcw",
         "strategy": "id",
         "groups": []
-    }
+    },
+
+    "first-name-field": {
+        "selectorData": "input[name='First Name Given Name']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "first-checkbox": {
+        "selectorData": "input[name='CB_1']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "state-dropdown-field": {
+        "selectorData": "input[name='State']",
+        "strategy": "css",
+        "groups": []
+    },
+
 }
