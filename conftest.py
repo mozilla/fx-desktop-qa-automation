@@ -3,7 +3,6 @@ import logging
 import os
 import platform
 import re
-import signal
 from shutil import unpack_archive
 from typing import Callable, List, Tuple, Union
 
@@ -243,7 +242,6 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
-    kill_process: bool,
     env_prep,
     tmp_path,
 ):
@@ -276,9 +274,6 @@ def driver(
 
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
-
-    kill_process: bool
-        Should we kill the driver process in teardown rather than using driver.quit()?
 
     env_prep: None
         Fixture that does other environment work, like set logging levels.
@@ -314,9 +309,7 @@ def driver(
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
-        if kill_process:
-            os.kill(driver.service.process.pid, signal.SIGKILL)
-        elif "driver" in locals() or "driver" in globals():
+        if "driver" in locals() or "driver" in globals():
             driver.quit()
 
 
@@ -372,12 +365,6 @@ def version(driver: Firefox):
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
     return 19980331
-
-
-@pytest.fixture()
-def kill_process():
-    """Kill driver during teardown instead of driver.quit()"""
-    return False
 
 
 @pytest.fixture(scope="session")

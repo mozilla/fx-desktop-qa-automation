@@ -3,6 +3,7 @@ import logging
 import os
 import platform
 import re
+import signal
 from copy import deepcopy
 from pathlib import Path
 from typing import List, Union
@@ -94,6 +95,13 @@ class BasePage(Page):
     def sys_platform(self):
         """Return the system platform name"""
         return platform.system()
+
+    def kill_process(self):
+        """Hard kill the driver process"""
+        if self.sys_platform().startswith("Win"):
+            os.kill(self.driver.service.process.pid, signal.CTRL_BREAK_EVENT)
+        else:
+            os.kill(self.driver.service.process.pid, signal.SIGKILL)
 
     def set_chrome_context(self):
         """Make sure the Selenium driver is using CONTEXT_CHROME"""
