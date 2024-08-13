@@ -5,10 +5,15 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
+from modules.browser_object import TabBar
 from modules.page_object import GenericPdf
 
 
-@pytest.mark.headed
+@pytest.fixture()
+def kill_process():
+    return True
+
+
 def test_pdf_input_numbers(driver: Firefox, fillable_pdf_url: str):
     """
     C1017528: Input data in numeric fields
