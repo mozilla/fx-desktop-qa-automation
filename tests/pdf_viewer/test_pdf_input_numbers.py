@@ -1,5 +1,5 @@
-import time
 import os
+import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -14,12 +14,13 @@ def delete_files_regex_string():
 
 
 @pytest.mark.headed
-def test_pdf_input_numbers(driver: Firefox,
-                           fillable_pdf_url: str,
-                           downloads_folder: str,
-                           sys_platform,
-                           delete_files,
-                           ):
+def test_pdf_input_numbers(
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    sys_platform,
+    delete_files,
+):
     """
     C1017528: Input data in numeric fields
     """
