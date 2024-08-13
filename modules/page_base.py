@@ -99,7 +99,7 @@ class BasePage(Page):
     def kill_process(self):
         """Hard kill the driver process"""
         if self.sys_platform().startswith("Win"):
-            os.kill(self.driver.service.process.pid, signal.CTRL_BREAK_EVENT)
+            os.kill(self.driver.service.process.pid, signal.CTRL_C_EVENT)
         else:
             os.kill(self.driver.service.process.pid, signal.SIGKILL)
 
