@@ -25,5 +25,3 @@ def test_pdf_input_numbers(driver: Firefox, fillable_pdf_url: str):
 
     # Verify the value is still present
     pdf.element_attribute_contains("zipcode-field", "value", test_value)
-
-    pdf.kill_process()

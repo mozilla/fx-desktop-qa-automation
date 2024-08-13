@@ -97,15 +97,6 @@ class BasePage(Page):
         """Return the system platform name"""
         return platform.system()
 
-    def kill_process(self):
-        """Hard kill the driver process"""
-        if self.sys_platform().startswith("Win"):
-            check_output(
-                ["taskkill", "/F", "/T", "/PID", self.driver.service.process.pid]
-            )
-        else:
-            os.kill(self.driver.service.process.pid, signal.SIGKILL)
-
     def set_chrome_context(self):
         """Make sure the Selenium driver is using CONTEXT_CHROME"""
         if self._xul_source_snippet not in self.driver.page_source:
