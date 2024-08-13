@@ -6,6 +6,7 @@ import re
 import signal
 from copy import deepcopy
 from pathlib import Path
+from subprocess import check_output
 from typing import List, Union
 
 from pypom import Page
@@ -99,7 +100,9 @@ class BasePage(Page):
     def kill_process(self):
         """Hard kill the driver process"""
         if self.sys_platform().startswith("Win"):
-            os.kill(self.driver.service.process.pid, signal.CTRL_C_EVENT)
+            check_output(
+                ["taskkill", "/F", "/T", "/PID", self.driver.service.process.pid]
+            )
         else:
             os.kill(self.driver.service.process.pid, signal.SIGKILL)
 
