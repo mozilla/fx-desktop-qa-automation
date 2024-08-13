@@ -1,7 +1,9 @@
 import time
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
+
 from modules.page_object_generics import GenericPdf
 
 
@@ -12,11 +14,11 @@ def delete_files_regex_string():
 
 @pytest.mark.headed
 def test_pdf_data_can_be_cleared(
-        driver: Firefox,
-        fillable_pdf_url: str,
-        downloads_folder: str,
-        sys_platform,
-        ):
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    sys_platform,
+):
     """
     C1017495 :Check if data can be cleared
     """
@@ -77,9 +79,11 @@ def test_pdf_data_can_be_cleared(
     # Assert that all fields are reset to their default state
     assert name_field.get_attribute("value") == "", "Text field did not reset."
     assert not checkbox.is_selected(), "Checkbox did not reset."
-    default_option = driver.find_element(By.XPATH, "//option[@value='']")
+    default_option = pdf.get_element("state-dropdown-field")
     assert default_option.is_selected(), "Dropdown did not reset."
 
-    print("Test passed: All interactions performed correctly, and the form resets after page refresh.")
+    print(
+        "Test passed: All interactions performed correctly, and the form resets after page refresh."
+    )
 
     driver.quit()

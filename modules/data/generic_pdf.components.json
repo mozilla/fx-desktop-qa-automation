@@ -124,9 +124,9 @@
     },
 
     "state-dropdown-field": {
-        "selectorData": "input[name='State']",
+        "selectorData": "select[name='State']",
         "strategy": "css",
         "groups": []
-    },
+    }
 
 }
