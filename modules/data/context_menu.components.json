@@ -29,5 +29,11 @@
         "selectorData": "context-savepage",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-add-bookmark": {
+        "selectorData": "placesContext_new:bookmark",
+        "strategy": "id",
+        "groups": []
     }
 }

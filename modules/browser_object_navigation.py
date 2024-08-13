@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
 
 
@@ -191,3 +192,25 @@ class Navigation(BasePage):
         with self.driver.context(self.context_id):
             self.get_element("shield-icon").click()
             return self
+
+    def bookmark_page_other(self) -> BasePage:
+        with self.driver.context(self.context_id):
+            self.get_element("star-button").click()
+            dropdown = self.get_element("bookmarks-type-dropdown")
+            dropdown.click()
+            self.get_element("bookmarks-type-dropdown-other").click()
+            dropdown.click()
+            self.get_element("save-bookmark-button").click()
+
+    def add_bookmark_advanced(self, bookmark_data: Bookmark) -> BasePage:
+        with self.driver.context(self.context_id):
+            # fill name
+            self.get_element("new-bookmark-name-field").send_keys(bookmark_data.name)
+            # fill url
+            self.get_element("new-bookmark-url-field").send_keys(bookmark_data.url)
+            # fill tags
+            self.get_element("new-bookmark-tags-field").send_keys(bookmark_data.tags)
+            # fill keywords
+            self.get_element("new-bookmark-keyword-field").send_keys(
+                bookmark_data.keyword
+            )
