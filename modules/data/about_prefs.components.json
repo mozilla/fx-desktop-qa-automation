@@ -474,7 +474,7 @@
         "groups": []
     },
 
-    "zip-mime-type": {
+    "mime-type": {
         "selectorData": "richlistitem[type='{item}']",
         "strategy": "css",
         "groups": []
