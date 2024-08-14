@@ -30,3 +30,11 @@ workers:
       implementation: generic-worker
       os: linux
       worker-type: 't-linux-2204-wayland'
+    t-mac:
+      provisioner: releng-hardware
+      implementation: generic-worker
+      os: macosx
+      worker-type:
+        by-level:
+          "3": mozilla-b-3-osx
+          default: mozilla-b-1-osx
