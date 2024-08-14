@@ -339,5 +339,11 @@
         "selectorData": "browser[class='dialogFrame']",
         "strategy": "css",
         "groups": []
+    },
+
+    "bookmark-robots": {
+        "selectorData": "menuitem[label='Robots 2']",
+        "strategy": "css",
+        "groups": []
     }
 }

@@ -1,5 +1,3 @@
-from time import sleep
-
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
@@ -31,8 +29,8 @@ def test_add_new_other_bookmark(driver: Firefox):
         context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
         nav.hide_popup("OtherBookmarksPopup")
 
-    # sleep(5)
     nav.add_bookmark_advanced(Bookmark(url="about:robots", name="Robots 2"), ba)
 
-    # while 1:
-    #     pass
+    with driver.context(driver.CONTEXT_CHROME):
+        nav.get_element("other-bookmarks").click()
+        assert nav.get_element("bookmark-robots") is not None
