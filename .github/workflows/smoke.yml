@@ -57,7 +57,7 @@ jobs:
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
-          mv artifacts/* artifacts-win || true
+          mv -n artifacts/* artifacts-win || true
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
@@ -96,7 +96,7 @@ jobs:
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
-          mv artifacts/* artifacts-mac/ || true
+          mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
