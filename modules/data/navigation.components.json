@@ -320,5 +320,24 @@
         "selectorData": "editBMPanel_keywordField",
         "strategy": "id",
         "groups": []
+    },
+
+    "bookmark-dialog": {
+        "selectorData": "bookmarkpropertiesdialog",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmark-accept-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "bookmark-dialog",
+        "groups": []
+    },
+
+    "bookmark-iframe": {
+        "selectorData": "browser[class='dialogFrame']",
+        "strategy": "css",
+        "groups": []
     }
 }

@@ -1,7 +1,10 @@
+from time import sleep
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import GenericPage
+from modules.classes.bookmark import Bookmark
+from modules.util import BrowserActions
 
 BOOKMARK_URL = "about:robots"
 
@@ -11,6 +14,7 @@ def test_add_new_other_bookmark(driver: Firefox):
     C2084518: verify user can add another bookmark from other bookmarks
     """
     nav = Navigation(driver)
+    ba = BrowserActions(driver)
     GenericPage(driver, url=BOOKMARK_URL).open()
     context_menu = ContextMenu(driver)
 
@@ -25,6 +29,9 @@ def test_add_new_other_bookmark(driver: Firefox):
 
         context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
         nav.hide_popup("OtherBookmarksPopup")
+
+    # sleep(5)
+    nav.add_bookmark_advanced(Bookmark(url="about:robots", name="Robots 2"), ba)
 
     # while 1:
     #     pass

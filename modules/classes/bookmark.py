@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Bookmark:
+    url: str
     name: str | None = None
-    url: str | None = None
     tags: str | None = None
     keyword: str | None = None
     """
