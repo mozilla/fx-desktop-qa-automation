@@ -14,10 +14,11 @@ def delete_files_regex_string():
 
 @pytest.mark.headed
 def test_pdf_data_can_be_cleared(
-    driver: Firefox,
-    fillable_pdf_url: str,
-    downloads_folder: str,
-    sys_platform,
+        driver: Firefox,
+        fillable_pdf_url: str,
+        downloads_folder: str,
+        sys_platform,
+        delete_files
 ):
     """
     C1017495 :Check if data can be cleared
@@ -68,13 +69,13 @@ def test_pdf_data_can_be_cleared(
     # Assert checkbox is unchecked
     assert not checkbox.is_selected(), "Checkbox was not deselected."
 
-    # Step 6: Refresh the page and ensure the form is reset
-    driver.refresh()
-    time.sleep(2)
-    # Handle the "Leave Page" dialog
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
-    time.sleep(2)
+    # Step 6: Clear the state selection and insure the field is empty
+    dropdown.click()
+    default_option = driver.find_element(By.XPATH, "//option[@value=' ']")
+    default_option.click()
+    time.sleep(1)
+    # Assert dropdown is cleared (default option selected)
+    assert default_option.is_selected(), "Dropdown value was not cleared."
 
     # Assert that all fields are reset to their default state
     assert name_field.get_attribute("value") == "", "Text field did not reset."
@@ -86,4 +87,28 @@ def test_pdf_data_can_be_cleared(
         "Test passed: All interactions performed correctly, and the form resets after page refresh."
     )
 
-    driver.quit()
+    # Save the doc so that the test can end
+    download_button = pdf.get_element("download-button")
+    download_button.click()
+
+    time.sleep(2)
+
+    if sys_platform == "Linux":
+        keyboard.press(Key.alt)
+        keyboard.press(Key.tab)
+        keyboard.release(Key.tab)
+        keyboard.release(Key.alt)
+        time.sleep(1)
+        keyboard.press(Key.alt)
+        keyboard.press(Key.tab)
+        keyboard.release(Key.tab)
+        keyboard.release(Key.alt)
+        time.sleep(1)
+        keyboard.press(Key.tab)
+        keyboard.release(Key.tab)
+        time.sleep(1)
+        keyboard.press(Key.tab)
+        keyboard.release(Key.tab)
+
+    keyboard.press(Key.enter)
+    keyboard.release(Key.enter)
