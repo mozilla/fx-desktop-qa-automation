@@ -31,4 +31,4 @@ def test_add_zip_type(driver: Firefox):
 
     # Open about:preferences and check that zip mime type is present in the application list
     about_prefs.open()
-    about_prefs.element_exists("zip-mime-type", labels=["application/zip"])
+    about_prefs.element_exists("mime-type", labels=["application/zip"])
