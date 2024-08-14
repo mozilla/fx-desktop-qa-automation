@@ -2,6 +2,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPage
 
 URL_TO_EDIT = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
@@ -16,7 +17,7 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
     panel = PanelUi(driver)
 
     # Bookmark the given website and open the edit bookmark panel
-    driver.get(URL_TO_EDIT)
+    GenericPage(driver, url=URL_TO_EDIT).open()
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.get_element("save-bookmark-button").click()
@@ -49,7 +50,7 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
         nav.get_element("star-button").click()
         panel.get_element("show-editor-when-saving-checkbox").click()
         nav.get_element("save-bookmark-button").click()
-    driver.get(URL_TO_SAVE)
+    GenericPage(driver, url=URL_TO_SAVE).open()
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         assert not nav.get_element("edit-bookmark-panel").is_displayed()
