@@ -1,6 +1,6 @@
 import logging
-
 from time import sleep
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
+
 
 class Navigation(BasePage):
     """Page Object Model for nav buttons and AwesomeBar"""
@@ -203,20 +204,26 @@ class Navigation(BasePage):
             dropdown.click()
             self.get_element("save-bookmark-button").click()
 
-    def add_bookmark_advanced(self, bookmark_data: Bookmark, ba: BrowserActions) -> BasePage:
+    def add_bookmark_advanced(
+        self, bookmark_data: Bookmark, ba: BrowserActions
+    ) -> BasePage:
         with self.driver.context(self.context_id):
             iframe = self.get_element("bookmark-iframe")
             ba.switch_to_iframe_context(iframe)
             Utilities().write_html_content("now", self.driver, True)
             sleep(5)
             if bookmark_data.name is not None:
-            # fill name
-                self.get_element("new-bookmark-name-field").send_keys(bookmark_data.name)
+                # fill name
+                self.get_element("new-bookmark-name-field").send_keys(
+                    bookmark_data.name
+                )
             # fill url
             self.get_element("new-bookmark-url-field").send_keys(bookmark_data.url)
             # fill tags
             if bookmark_data.tags is not None:
-                self.get_element("new-bookmark-tags-field").send_keys(bookmark_data.tags)
+                self.get_element("new-bookmark-tags-field").send_keys(
+                    bookmark_data.tags
+                )
             # fill keywords
             if bookmark_data.keyword is not None:
                 self.get_element("new-bookmark-keyword-field").send_keys(

@@ -1,9 +1,10 @@
 from time import sleep
+
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
-from modules.page_object import GenericPage
 from modules.classes.bookmark import Bookmark
+from modules.page_object import GenericPage
 from modules.util import BrowserActions
 
 BOOKMARK_URL = "about:robots"
