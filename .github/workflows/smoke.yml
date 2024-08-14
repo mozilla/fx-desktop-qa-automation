@@ -57,7 +57,16 @@ jobs:
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
-          mv -n artifacts/* artifacts-win || true
+          Get-ChildItem -Path "artifacts" | ForEach-Object {
+              $destPath = "artifacts-win\" + $_.Name
+              if (-not (Test-Path -Path $destPath)) {
+                  try {
+                      Move-Item -Path $_.FullName -Destination $destPath
+                  } catch {
+                      # Ignore errors and continue
+                  }
+              }
+          }
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: always()
