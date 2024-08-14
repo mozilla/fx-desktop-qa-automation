@@ -119,6 +119,7 @@ jobs:
     needs:
       - Smoke-Windows
       - Smoke-MacOS
+    if: always()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
