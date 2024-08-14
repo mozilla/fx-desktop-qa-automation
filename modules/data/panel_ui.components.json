@@ -161,6 +161,35 @@
         "selectorData": "panelMenuBookmarkThisPage",
         "strategy": "id",
         "groups": []
-    }
+    },
 
+    "bookmark-location": {
+        "selectorData": "editBMPanel_folderMenuList",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks": {
+        "selectorData": "editBMPanel_unfiledRootItem",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "show-editor-when-saving-checkbox": {
+        "selectorData": "editBookmarkPanel_showForNewBookmarks",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks-toolbar": {
+        "selectorData": "OtherBookmarks",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks-by-title": {
+        "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
+        "strategy": "css",
+        "groups": []
+    }
 }
