@@ -45,6 +45,12 @@
         "groups": []
     },
 
+    "zipcode-field": {
+        "selectorData": "input[name='ZIP Code']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "scroll-next": {
         "selectorData": "next",
         "strategy": "id",
@@ -125,6 +131,12 @@
 
     "state-dropdown-field": {
         "selectorData": "select[name='State']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "edited-name-field": {
+        "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
         "groups": []
     }
