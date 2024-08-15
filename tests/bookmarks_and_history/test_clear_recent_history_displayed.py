@@ -2,6 +2,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
 
+
 def test_clear_recent_history_displayed(driver: Firefox):
     """
     C172043: Clear recent history panel displayed
