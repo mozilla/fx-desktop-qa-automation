@@ -21,7 +21,7 @@ def send_slack_message(report_file: str):
 
     try:
         client.chat_postMessage(
-            channel="#desktop-qa-monitoring-notifier",
+            channel="C07AHPJ525V",
             text="Important update from ACTIONS...",  # This is required but can be anything if blocks are used
             blocks=return_slack_blocks(report_file),
         )
