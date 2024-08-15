@@ -8,6 +8,7 @@ from modules.page_object import GenericPdf
 
 
 @pytest.mark.headed
+@pytest.mark.unstable
 def test_download_pdf(
     driver: Firefox,
     fillable_pdf_url: str,
