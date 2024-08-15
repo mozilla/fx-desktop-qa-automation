@@ -3,7 +3,6 @@ Use -g to get geckodriver, otherwise you will get Fx.
 Set env var FX_CHANNEL to get non-beta, blank string for Release.
 Set env var FX_LOCALE to get a different locale build."""
 
-import json
 from os import environ
 from platform import uname
 from sys import argv, exit

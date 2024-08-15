@@ -3,10 +3,8 @@ import logging
 import os
 import platform
 import re
-import signal
 from copy import deepcopy
 from pathlib import Path
-from subprocess import check_output
 from typing import List, Union
 
 from pypom import Page
