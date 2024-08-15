@@ -45,6 +45,12 @@
         "groups": []
     },
 
+    "zipcode-field": {
+        "selectorData": "input[name='ZIP Code']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "scroll-next": {
         "selectorData": "next",
         "strategy": "id",
