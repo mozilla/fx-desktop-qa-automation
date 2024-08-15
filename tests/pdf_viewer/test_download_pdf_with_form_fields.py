@@ -7,6 +7,7 @@ from modules.page_object_generics import GenericPdf
 
 
 @pytest.mark.headed
+@pytest.mark.unstable
 def test_download_pdf_with_form_fields(driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform):
     """
     C1020326 Download pdf with form fields
