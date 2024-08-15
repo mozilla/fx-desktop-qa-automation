@@ -13,7 +13,6 @@ def set_prefs():
     """Set prefs"""
     return []
 
-
 @pytest.fixture()
 def delete_files(sys_platform):
     """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
