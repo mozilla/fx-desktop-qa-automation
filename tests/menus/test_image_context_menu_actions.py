@@ -42,7 +42,7 @@ def test_open_image_in_new_tab(driver: Firefox):
 
 
 @pytest.mark.headed
-@pytest.test.unstable
+@pytest.mark.unstable
 def test_save_image_as(driver: Firefox):
     """
     C2637622.2: save image as
