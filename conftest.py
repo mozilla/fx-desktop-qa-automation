@@ -5,6 +5,7 @@ import platform
 import re
 from shutil import unpack_archive
 from typing import Callable, List, Tuple, Union
+from PIL import ImageGrab
 
 import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -22,7 +23,10 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
     filename = f"{test_name}_{current_time}_image"
-    _screenshot(filename, driver, opt_ci)
+    try:
+        _screenshot_whole_screen(filename, driver, opt_ci)
+    except Exception as e:
+        logging.error(f"Unable to screenshot entire screen {e}")
 
 
 def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
@@ -70,9 +74,9 @@ def pytest_exception_interact(node, call, report):
         try:
             test_name = node.name
             test_name = sanitize_filename(test_name)
-            logging.error(f"Handling exception for test: {test_name}")
+            logging.info(f"Handling exception for test: {test_name}")
             if hasattr(node, "funcargs"):
-                logging.error(
+                logging.info(
                     f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
                 )
                 driver = node.funcargs.get("driver")
@@ -84,8 +88,7 @@ def pytest_exception_interact(node, call, report):
             else:
                 logging.error("Error occurred during collection.")
         except Exception as e:
-            logging.warning("Something went wrong with the exception catching.")
-            raise e
+            logging.error("Something went wrong with the exception catching.")
 
 
 def pytest_addoption(parser):
@@ -141,6 +144,17 @@ def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
         artifacts_loc = "artifacts"
     fullpath = os.path.join(artifacts_loc, filename)
     driver.save_screenshot(fullpath)
+    return fullpath
+
+def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
+    if not filename.endswith(".png"):
+        filename = filename + ".png"
+    artifacts_loc = ""
+    if opt_ci:
+        artifacts_loc = "artifacts"
+    fullpath = os.path.join(artifacts_loc, filename)
+    screenshot = ImageGrab.grab()
+    screenshot.save(fullpath)
     return fullpath
 
 
