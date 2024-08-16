@@ -5,9 +5,9 @@ import platform
 import re
 from shutil import unpack_archive
 from typing import Callable, List, Tuple, Union
-from PIL import ImageGrab
 
 import pytest
+from PIL import ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -24,7 +24,8 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
     filename = f"{test_name}_{current_time}_image"
     try:
-        _screenshot_whole_screen(filename, driver, opt_ci)
+        _screenshot_whole_screen(f"{filename}_screen", driver, opt_ci)
+        _screenshot(filename, driver, opt_ci)
     except Exception as e:
         logging.error(f"Unable to screenshot entire screen {e}")
 
@@ -145,6 +146,7 @@ def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
     fullpath = os.path.join(artifacts_loc, filename)
     driver.save_screenshot(fullpath)
     return fullpath
+
 
 def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
     if not filename.endswith(".png"):
