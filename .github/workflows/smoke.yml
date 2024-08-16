@@ -46,7 +46,7 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest tests/downloads/test_download_pdf.py
+          pipenv run pytest tests/downloads/test_rando.py
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -88,7 +88,7 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox tests/downloads/test_download_pdf.py || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox tests/downloads/test_rando.py || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
