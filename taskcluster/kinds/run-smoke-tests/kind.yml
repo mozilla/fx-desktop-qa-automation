@@ -32,9 +32,9 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox tests/downloads/test_rando.py;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4;
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable ./firefox/firefox tests/downloads/test_download_pdf.py
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4
     notify:
       recipients:
         - type: slack-channel
