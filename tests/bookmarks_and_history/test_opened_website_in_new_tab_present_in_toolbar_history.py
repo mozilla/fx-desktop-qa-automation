@@ -24,7 +24,7 @@ def test_the_website_opened_in_new_tab_is_present_in_history_menu(driver: Firefo
 
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
-    driver.switch_to.window(driver.window_handles[1])
+    tabs.switch_to_new_tab()
 
     GenericPage(driver, url=YOUTUBE_URL).open()
 
