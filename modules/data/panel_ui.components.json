@@ -133,6 +133,12 @@
         "groups": []
     },
 
+    "recent-history-info": {
+        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']",
+        "strategy": "css",
+        "groups":[]
+    },
+
     "panel-ui-history-recent-history-container": {
         "selectorData": "appMenu_historyMenu",
         "strategy": "id",
