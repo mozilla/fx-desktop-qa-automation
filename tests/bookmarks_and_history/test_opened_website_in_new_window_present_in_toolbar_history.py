@@ -26,7 +26,7 @@ def test_the_website_opened_in_new_window_is_present_in_history_menu(driver: Fir
     panel_ui.open_panel_menu()
     panel_ui.select_panel_setting("panel-ui-new-window")
     tabs.wait_for_num_tabs(2)
-    driver.switch_to.window(driver.window_handles[-1])
+    tabs.switch_to_new_window()
 
     GenericPage(driver, url=YOUTUBE_URL).open()
 
