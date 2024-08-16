@@ -133,6 +133,12 @@
         "groups": []
     },
 
+    "clear-recent-history": {
+        "selectorData" :"appMenuClearRecentHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
     "panel-ui-history-recent-history-container": {
         "selectorData": "appMenu_historyMenu",
         "strategy": "id",

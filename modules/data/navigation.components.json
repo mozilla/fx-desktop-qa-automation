@@ -272,5 +272,11 @@
         "selectorData": "image[id='star-button'][starred='true']",
         "strategy": "css",
         "groups": []
+    },
+
+    "download-panel-item": {
+        "selectorData": "downloadTarget",
+        "strategy": "class",
+        "groups": []
     }
 }
