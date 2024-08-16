@@ -46,7 +46,7 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
-          python -c "import platform; print(platform.version())"
+          python -c "import platform; print(platform.uname())"
           pipenv run pytest -n 4 tests/meta
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -89,7 +89,7 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          python -c "import platform; print(platform.version())"
+          python -c "import platform; print(platform.uname())"
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/meta || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
