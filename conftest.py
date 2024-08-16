@@ -7,7 +7,7 @@ from shutil import unpack_archive
 from typing import Callable, List, Tuple, Union
 
 import pytest
-from PIL import ImageGrab, Image
+from PIL import Image, ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -167,7 +167,7 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
         # compress the image (OSX generates large screenshots)
         image = Image.open(fullpath)
         width, height = image.size
-        new_size = (width//2, height//2)
+        new_size = (width // 2, height // 2)
         resized_image = image.resize(new_size)
         resized_image.save(fullpath, optimize=True, quality=50)
     elif platform.system() == "Linux":

@@ -51,6 +51,7 @@ jobs:
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
       - name: Run Smoke Tests in Win (Headed)
+        if: steps.setup.conclusion == 'success' && always()
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
@@ -92,7 +93,7 @@ jobs:
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
-        if: steps.setup.conclusion == 'success'
+        if: steps.setup.conclusion == 'success' && always()
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox tests/downloads/test_download_pdf.py || TEST_EXIT_CODE=$?
