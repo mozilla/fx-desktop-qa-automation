@@ -7,7 +7,7 @@ from shutil import unpack_archive
 from typing import Callable, List, Tuple, Union
 
 import pytest
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -25,9 +25,13 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     filename = f"{test_name}_{current_time}_image"
     try:
         _screenshot_whole_screen(f"{filename}_screen", driver, opt_ci)
-        _screenshot(filename, driver, opt_ci)
     except Exception as e:
         logging.error(f"Unable to screenshot entire screen {e}")
+
+    try:
+        _screenshot(filename, driver, opt_ci)
+    except Exception as e:
+        logging.error(f"Unable to screenshot driver window {e}")
 
 
 def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
@@ -155,8 +159,22 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
     if opt_ci:
         artifacts_loc = "artifacts"
     fullpath = os.path.join(artifacts_loc, filename)
-    screenshot = ImageGrab.grab()
-    screenshot.save(fullpath)
+    screenshot = None
+    if platform.system() == "Darwin":
+        screenshot = ImageGrab.grab()
+        screenshot.save(fullpath)
+
+        # compress the image (OSX generates large screenshots)
+        image = Image.open(fullpath)
+        width, height = image.size
+        new_size = (width//2, height//2)
+        resized_image = image.resize(new_size)
+        resized_image.save(fullpath, optimize=True, quality=50)
+    elif platform.system() == "Linux":
+        return None
+    else:
+        screenshot = ImageGrab.grab()
+        screenshot.save(fullpath)
     return fullpath
 
 
