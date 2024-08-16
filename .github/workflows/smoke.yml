@@ -90,6 +90,7 @@ jobs:
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           python -c "import platform; print(platform.uname())"
+          python -c "import platform; print(platform.mac_ver())"
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/meta || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
