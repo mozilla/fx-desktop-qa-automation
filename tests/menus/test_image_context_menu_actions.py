@@ -6,7 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ImageContextMenu, Navigation, TabBar
 from modules.page_object import GenericPage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 LINK_IMAGE_URL = (
     "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
@@ -42,6 +42,7 @@ def test_open_image_in_new_tab(driver: Firefox):
 
 
 @pytest.mark.headed
+@pytest.mark.unstable
 def test_save_image_as(driver: Firefox):
     """
     C2637622.2: save image as
