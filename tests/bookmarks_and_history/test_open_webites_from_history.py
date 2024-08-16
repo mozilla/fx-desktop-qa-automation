@@ -1,17 +1,20 @@
-import pytest
 import random
 
+import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import PanelUi
+
 
 @pytest.fixture()
 def use_profile():
     return "theme_change"
 
+
 def trim_url(url: str) -> str:
-    colon_index = url.find(':')
+    colon_index = url.find(":")
     if colon_index != -1:
-        return url[colon_index + 1:].strip()
+        return url[colon_index + 1 :].strip()
     else:
         return ""
 
@@ -29,7 +32,7 @@ def test_open_websites_from_history(driver: Firefox):
         if len(history_items) == 0:
             assert False, "There is no history."
 
-        rand_index = random.randint(0, len(history_items)-1)
+        rand_index = random.randint(0, len(history_items) - 1)
         url_to_visit = history_items[rand_index].get_attribute("image")
         website_label = history_items[rand_index].get_attribute("label")
 
