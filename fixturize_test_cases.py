@@ -10,6 +10,8 @@ for root, _, files in os.walk("tests"):
             filepath = os.path.join(root, file)
             script = open(filepath).readlines()
             for line in script:
+                if "def test_case" in line:
+                    break
                 m = TEST_CASE_RE.match(line.strip())
                 if not m:
                     continue

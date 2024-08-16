@@ -3,7 +3,8 @@ import logging
 import os
 import platform
 import re
-from typing import Callable, List, Tuple
+from shutil import unpack_archive
+from typing import Callable, List, Tuple, Union
 
 import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -76,7 +77,8 @@ def pytest_exception_interact(node, call, report):
                 )
                 driver = node.funcargs.get("driver")
                 opt_ci = node.funcargs.get("opt_ci")
-                if driver:
+                if driver and opt_ci:
+                    logging.info("Writing artifacts...")
                     log_content(opt_ci, driver, test_name)
                     screenshot_content(driver, opt_ci, test_name)
             else:
@@ -168,6 +170,20 @@ def sys_platform():
 
 
 @pytest.fixture()
+def downloads_folder(sys_platform):
+    """Return the downloads folder location for this OS"""
+    if sys_platform == "Windows":
+        user = os.environ.get("USERNAME")
+        return f"C:\\Users\\{user}\\Downloads"
+    elif sys_platform == "Darwin":  # MacOS
+        user = os.environ.get("USER")
+        return f"/Users/{user}/Downloads"
+    elif sys_platform == "Linux":
+        user = os.environ.get("USER")
+        return f"/home/{user}/Downloads"
+
+
+@pytest.fixture()
 def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
@@ -208,6 +224,15 @@ def env_prep():
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
 
 
+@pytest.fixture()
+def use_profile():
+    """
+    Return or yield <string> in a fixture of this name in a test
+    to use ./profiles/<string> as the profile for a given test
+    """
+    yield False
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
@@ -216,7 +241,9 @@ def driver(
     set_prefs: List[Tuple],
     opt_ci: bool,
     opt_window_size: str,
+    use_profile: Union[bool, str],
     env_prep,
+    tmp_path,
 ):
     """
     Return the webdriver object.
@@ -245,14 +272,21 @@ def driver(
     opt_window_size: str
         String describing the window size for the Firefox window.
 
+    use_profile: Union[bool, str]
+        Location inside ./profiles to find the profile to use, False if no profile needed.
+
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
     try:
         options = Options()
-        if opt_headless or opt_ci:
+        if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
+        if use_profile:
+            profile_path = tmp_path / use_profile
+            unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
+            options.profile = profile_path
         for opt, value in set_prefs:
             options.set_preference(opt, value)
         driver = Firefox(options=options)
@@ -289,6 +323,38 @@ def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
         return _screenshot(filename, driver, opt_ci)
 
     return screenshot_wrapper
+
+
+@pytest.fixture()
+def delete_files_regex_string():
+    """
+    Tell the delete_files fixture re.match() what files to delete.
+    In ./conftest.py, use a regex that is unlikely to match things.
+    """
+    return r"zzxqxzqx"
+
+
+@pytest.fixture()
+def delete_files(sys_platform, delete_files_regex_string):
+    """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
+
+    def _delete_files():
+        if sys_platform.startswith("Win"):
+            if os.environ.get("GITHUB_ACTIONS") == "true":
+                downloads_folder = os.path.join(
+                    "C:", "Users", "runneradmin", "Downloads"
+                )
+        else:
+            home_folder = os.environ.get("HOME")
+            downloads_folder = os.path.join(home_folder, "Downloads")
+        for file in os.listdir(downloads_folder):
+            delete_files_regex = re.compile(delete_files_regex_string)
+            if delete_files_regex.match(file):
+                os.remove(os.path.join(downloads_folder, file))
+
+    _delete_files()
+    yield True
+    _delete_files()
 
 
 @pytest.fixture()

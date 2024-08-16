@@ -6,7 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ImageContextMenu, Navigation, TabBar
 from modules.page_object import GenericPage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -47,20 +47,26 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
 
 
+@pytest.mark.headed
 @pytest.mark.unstable
 def test_save_image_as(driver: Firefox):
     """
     C2637622.2: save image as
     """
     try:
-        from pynput.keyboard import Key
+        from pynput.keyboard import Controller, Key
     except ModuleNotFoundError:
         pytest.skip("Could not load pynput")
+
+    controller = Controller()
+
+    def key_press_release(key: Key):
+        controller.press(key)
+        controller.release(key)
 
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ImageContextMenu(driver)
     nav = Navigation(driver)
-    ba = BrowserActions(driver)
     util = Utilities()
 
     # wait for page to load
@@ -77,26 +83,26 @@ def test_save_image_as(driver: Firefox):
     downloads_button = nav.get_download_button()
 
     # wait some time before interacting with the system dialog
-    sleep(0.5)
+    sleep(3)
 
     this_platform = platform.system()
     if this_platform == "Linux":
-        ba.controller.press(Key.alt)
-        ba.controller.press(Key.tab)
-        ba.controller.release(Key.tab)
-        ba.controller.release(Key.alt)
+        controller.press(Key.alt)
+        controller.press(Key.tab)
+        controller.release(Key.tab)
+        controller.release(Key.alt)
 
-        ba.controller.press(Key.alt)
-        ba.controller.press(Key.tab)
-        ba.controller.release(Key.tab)
-        ba.controller.release(Key.alt)
+        controller.press(Key.alt)
+        controller.press(Key.tab)
+        controller.release(Key.tab)
+        controller.release(Key.alt)
 
-        ba.key_press_release(Key.tab)
+        key_press_release(Key.tab)
 
-        ba.key_press_release(Key.tab)
+        key_press_release(Key.tab)
 
     # Press and release the Enter key
-    ba.key_press_release(Key.enter)
+    key_press_release(Key.enter)
 
     # Wait for the animation to complete
     nav.wait_for_download_animation_finish(downloads_button)

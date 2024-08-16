@@ -133,6 +133,12 @@
         "groups": []
     },
 
+    "clear-recent-history": {
+        "selectorData" :"appMenuClearRecentHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
     "panel-ui-history-recent-history-container": {
         "selectorData": "appMenu_historyMenu",
         "strategy": "id",
@@ -155,5 +161,12 @@
         "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
         "strategy": "css",
         "groups": []
+    },
+
+    "bookmark-current-tab": {
+        "selectorData": "panelMenuBookmarkThisPage",
+        "strategy": "id",
+        "groups": []
     }
+
 }

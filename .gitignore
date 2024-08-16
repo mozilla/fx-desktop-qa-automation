@@ -1,6 +1,10 @@
+
 /venv/
+.DS_Store
 test*.txt
 fx_location
+test*txt
+test*png
 results.txt
 err_log.txt
 **/report.html
@@ -8,13 +12,13 @@ err_log.txt
 **/report.xml
 assets/
 html_dump/
-/Test Results - .html
-/geckodriver.log
+Test*.html
+geckodriver.log
 env
 *.png
 *.dmg
 *.tar
-*.zip
+./*.zip
 *.gz
 *.7z
 *.xml
@@ -34,7 +38,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+./downloads/
 eggs/
 .eggs/
 lib/
@@ -182,3 +186,6 @@ cython_debug/
 drivers/
 temp.py
 tests/test_scratch.py
+
+# Credentials
+credentials.json

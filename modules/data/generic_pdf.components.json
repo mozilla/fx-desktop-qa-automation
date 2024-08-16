@@ -15,6 +15,12 @@
         ]
     },
 
+    "html-body": {
+        "selectorData": "html",
+        "strategy": "tag",
+        "groups": []
+    },
+
     "body": {
         "selectorData": "viewer",
         "strategy": "id",
@@ -30,6 +36,96 @@
     "zoom-in": {
         "selectorData": "zoomIn",
         "strategy": "id",
+        "groups": []
+    },
+
+    "download-button": {
+        "selectorData": "download",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "zipcode-field": {
+        "selectorData": "input[name='ZIP Code']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "scroll-next": {
+        "selectorData": "next",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "scroll-prev": {
+        "selectorData": "previous",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "pdf-page": {
+        "selectorData": "div[data-page-number='{number}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "page-one-item": {
+        "selectorData": "/html/body/div[1]/div[2]/div[8]/div[2]/div[1]/div[2]/span[2]",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "page-input": {
+        "selectorData": "pageNumber",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-toggle": {
+        "selectorData": "secondaryToolbarToggle",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-container": {
+        "selectorData": "secondaryToolbarButtonContainer",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-hand-tool": {
+        "selectorData": "cursorHandTool",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-select-tool": {
+        "selectorData": "cursorSelectTool",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-rotate-cw": {
+        "selectorData": "pageRotateCw",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-rotate-ccw": {
+        "selectorData": "pageRotateCcw",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "first-name-field": {
+        "selectorData": "input[name='First Name Given Name']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "edited-name-field": {
+        "selectorData": "input[name='First Name Given Name'][value='Mark']",
+        "strategy": "css",
         "groups": []
     }
 }

@@ -13,7 +13,6 @@ from faker import Faker
 from faker.providers import internet, misc
 from jsonpath_ng import parse
 from PIL import Image
-from pynput.keyboard import Controller, Key
 from selenium.common.exceptions import (
     InvalidArgumentException,
     WebDriverException,
@@ -381,6 +380,9 @@ return props;
         domain_parsed_url = parsed_url._replace(path="")
         return urlunparse(domain_parsed_url)
 
+    def remove_all_non_numbers(self, item: str) -> str:
+        return re.sub(r"[^\d-]", "", item)
+
 
 class BrowserActions:
     """
@@ -396,7 +398,6 @@ class BrowserActions:
 
     def __init__(self, driver: Firefox):
         self.driver = driver
-        self.controller = Controller()
 
     def clear_and_fill(self, webelement: WebElement, term: str, press_enter=True):
         """
@@ -502,13 +503,6 @@ class BrowserActions:
                 colors.append(shot_image.getpixel((x, y)))
         remove(image_loc)
         return set(colors)
-
-    def key_press_release(self, key: Key):
-        """
-        Using Pynput, will press and release the key.
-        """
-        self.controller.press(key)
-        self.controller.release(key)
 
 
 class PomUtils:

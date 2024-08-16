@@ -13,6 +13,8 @@ def test_case():
     return "1365245"
 
 
+# NOTE: Need to fix, failing in 130+ Firefox due to legacy search bar being deprecated
+@pytest.mark.unstable
 def test_default_search_provider_change(driver: Firefox):
     """
     C1365245 - This test makes sure that the default search

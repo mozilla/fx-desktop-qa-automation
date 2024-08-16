@@ -11,8 +11,170 @@
         "groups": []
     },
 
-    "reader-toolbar-close": {
-        "selectorData": "button[class='close-button toolbar-button']",
+    "reader-toolbar-panel": {
+        "selectorData": "dropdown-popup",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "reader-toolbar-panel-serif": {
+        "selectorData": "serif-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "reader-toolbar-panel-sans-serif": {
+        "selectorData": "sans-serif-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-type": {
+        "selectorData": "button.dropdown-toggle.toolbar-button[class$='style-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "toolbar-size-minus": {
+        "selectorData": "minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-textsize-minus": {
+        "selectorData": "text-size-minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-size-plus": {
+        "selectorData": "plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-textsize-plus": {
+        "selectorData": "text-size-plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-width-minus": {
+        "selectorData": "content-width-minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-width-plus": {
+        "selectorData": "content-width-plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-line-height-minus": {
+        "selectorData": "line-height-minus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-line-height-plus": {
+        "selectorData": "line-height-plus-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-light": {
+        "selectorData": "light-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-dark": {
+        "selectorData": "dark-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-sepia": {
+        "selectorData": "sepia-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-contrast": {
+        "selectorData": "contrast-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-theme-gray": {
+        "selectorData": "gray-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-font-selector": {
+        "selectorData": "font-type-selector",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-text-align-left": {
+        "selectorData": "left-align-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-text-align-center": {
+        "selectorData": "center-align-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-text-align-right": {
+        "selectorData": "right-align-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "toolbar-advanced": {
+        "selectorData": "about-reader-advanced-layout-header",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-content-width": {
+        "selectorData": "moz-slider[data-l10n-id='about-reader-content-width-label']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "toolbar-line-spacing": {
+        "selectorData": "moz-slider[data-l10n-id='about-reader-line-spacing-label']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "toolbar-character-spacing": {
+        "selectorData": "moz-slider[data-l10n-id='about-reader-character-spacing-label']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "toolbar-word-spacing": {
+        "selectorData": "moz-slider[data-l10n-id='about-reader-word-spacing-label']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "slider": {
+        "selectorData": "inputSlider",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-theme": {
+        "selectorData": "button[class='dropdown-toggle toolbar-button colors-button']",
         "strategy": "css",
         "groups": []
     }
