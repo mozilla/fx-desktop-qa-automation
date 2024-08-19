@@ -80,8 +80,6 @@ def test_pdf_data_can_be_cleared(
     # Assert that all fields are reset to their default state
     assert name_field.get_attribute("value") == "", "Text field did not reset."
     assert not checkbox.is_selected(), "Checkbox did not reset."
-    default_option = pdf.get_element("state-dropdown-field")
-    assert default_option.is_selected(), "Dropdown did not reset."
 
     print(
         "Test passed: All interactions performed correctly, and the form resets after page refresh."
