@@ -45,7 +45,7 @@ def test_type_control_panel_font(driver: Firefox, font: str):
     )
     font_dropdown_root = reader_view.get_element("toolbar-font-selector")
     font_dropdown = Dropdown(
-        page=reader_view, driver=driver, require_shadow=False, root=font_dropdown_root
+        page=reader_view, require_shadow=False, root=font_dropdown_root
     )
     font_dropdown.select_option(
         f"about-reader-font-type-{font}", option_tag="option", label_name="data-l10n-id"
