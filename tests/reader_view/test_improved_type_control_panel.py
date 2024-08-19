@@ -2,7 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ReaderView
-from modules.page_object import AboutPrefs, GenericPage
+from modules.components.dropdown import Dropdown
+from modules.page_object import GenericPage
 from modules.util import Utilities
 
 size_controllers = ["minus", "plus"]
@@ -43,7 +44,7 @@ def test_type_control_panel_font(driver: Firefox, font: str):
         lambda _: "sans-serif" in body.value_of_css_property("font-family")
     )
     font_dropdown_root = reader_view.get_element("toolbar-font-selector")
-    font_dropdown = AboutPrefs(driver).Dropdown(
+    font_dropdown = Dropdown(
         page=reader_view, require_shadow=False, root=font_dropdown_root
     )
     font_dropdown.select_option(

@@ -22,19 +22,19 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
         nav.get_element("star-button").click()
         nav.get_element("save-bookmark-button").click()
 
-    # Change bookmark name and location
+        # Change bookmark name and location
         nav.get_element("star-button").click()
         nav.get_element("edit-bookmark-panel").send_keys("Mozilla Firefox")
         panel.get_element("bookmark-location").click()
         panel.get_element("other-bookmarks").click()
         nav.get_element("save-bookmark-button").click()
 
-    # Check bookmark name and location are changed in the bookmarks toolbar
+        # Check bookmark name and location are changed in the bookmarks toolbar
         panel.get_element("other-bookmarks-toolbar").click()
         panel.element_visible("other-bookmarks-by-title", labels=["Mozilla Firefox"])
         panel.get_element("other-bookmarks-toolbar").click()
 
-    # Uncheck show editor when saving and verify that panel isn't displayed when bookmark a new website
+        # Uncheck show editor when saving and verify that panel isn't displayed when bookmark a new website
         nav.get_element("star-button").click()
         panel.get_element("show-editor-when-saving-checkbox").click()
         nav.get_element("save-bookmark-button").click()
@@ -42,4 +42,3 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.element_not_visible("edit-bookmark-panel")
-        

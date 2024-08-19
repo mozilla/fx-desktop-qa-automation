@@ -63,5 +63,18 @@
         "selectorData": "a[href$='.pdf']",
         "strategy": "css",
         "groups": []
+    },
+
+    "clear-history-button-box": {
+        "selectorData": "dialog",
+        "strategy": "tag",
+        "groups": []
+    },
+
+    "clear-history-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "clear-history-button-box",
+        "groups": []
     }
 }

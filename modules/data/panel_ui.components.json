@@ -175,6 +175,24 @@
         "groups": []
     },
 
+    "iframe": {
+        "selectorData": "dialogFrame",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "clear-history-dropdown": {
+        "selectorData": "sanitizeDurationPopup",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "all-history-warning": {
+        "selectorData": "sanitizeEverythingWarningBox",
+        "strategy": "id",
+        "groups": []
+    },
+
     "bookmark-location": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
