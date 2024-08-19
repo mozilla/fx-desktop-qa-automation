@@ -29,12 +29,7 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
         panel.get_element("other-bookmarks").click()
         nav.get_element("save-bookmark-button").click()
 
-    # Check bookmark name is changed in hamburger menu and dismiss menu
-        panel.open_bookmarks_menu()
-        panel.element_visible("bookmark-by-title", labels=["Mozilla Firefox"])
-        panel.get_element("panel-ui-button").click()
-
-    # Check location is changed in the toolbar
+    # Check bookmark name and location are changed in the bookmarks toolbar
         panel.get_element("other-bookmarks-toolbar").click()
         panel.element_visible("other-bookmarks-by-title", labels=["Mozilla Firefox"])
         panel.get_element("other-bookmarks-toolbar").click()
