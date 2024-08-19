@@ -42,3 +42,4 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.element_not_visible("edit-bookmark-panel")
+        
