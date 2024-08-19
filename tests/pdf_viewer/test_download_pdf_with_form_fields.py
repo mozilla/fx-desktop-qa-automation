@@ -68,4 +68,4 @@ def test_download_pdf_with_form_fields(
 
     # Open the saved pdf and check if the edited field is displayed
     driver.get("file://" + os.path.realpath(saved_pdf_location))
-    assert pdf_page.get_element("edited-name-field").is_displayed()
+    pdf_page.element_visible("edited-name-field")
