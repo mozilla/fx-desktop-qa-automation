@@ -3,6 +3,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TabBar
 from modules.page_object import AboutNewtab, AboutPrefs
 
+from modules.components.dropdown import Dropdown
 
 def test_firefox_home_new_tab(driver: Firefox):
     """
@@ -15,7 +16,7 @@ def test_firefox_home_new_tab(driver: Firefox):
 
     # click the dropdown
     drop_down = about_prefs.get_element("home-new-tabs-dropdown")
-    dropdown = about_prefs.Dropdown(page=about_prefs, root=drop_down)
+    dropdown = Dropdown(page=about_prefs, root=drop_down)
     dropdown.select_option("Firefox Home (Default)")
 
     # make sure that the option was selected correctly

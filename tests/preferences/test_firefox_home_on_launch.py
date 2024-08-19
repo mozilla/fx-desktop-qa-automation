@@ -5,6 +5,8 @@ from modules.browser_object import PanelUi, TabBar
 from modules.page_object import AboutNewtab, AboutPrefs
 
 
+from modules.components.dropdown import Dropdown
+
 @pytest.fixture()
 def set_prefs():
     """Set prefs"""
@@ -26,7 +28,7 @@ def test_firefox_home_on_launch(driver: Firefox, sys_platform: str):
 
     # click the dropdown
     drop_down = about_prefs.get_element("home-new-window-dropdown")
-    dropdown = about_prefs.Dropdown(page=about_prefs, root=drop_down)
+    dropdown = Dropdown(page=about_prefs, root=drop_down)
     dropdown.select_option("Firefox Home (Default)", double_click=True)
 
     # make sure that the option was selected correctly
