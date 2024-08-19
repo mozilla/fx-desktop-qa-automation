@@ -5,7 +5,7 @@ transforms:
 task-defaults:
   label: "Smoke Tests"
   description: "Runs Smoke Tests and Notifies Slack"
-  worker-type: t-linux-wayland
+  worker-type: t-win2022
   worker:
     max-run-time: 1800
     artifacts:
@@ -30,9 +30,9 @@ tasks:
         pip install 'ruff>=0.4.8,<0.5';
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
+        python -c "import platform; print(platform.uname())"
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        python3 -c "import platform; print(platform.uname())"
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/meta;
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/menus

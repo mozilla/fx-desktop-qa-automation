@@ -38,3 +38,8 @@ workers:
         by-level:
           "3": mozilla-b-3-osx
           default: mozilla-b-1-osx
+    t-win2022:
+      provisioner: 'mozilla-{level}'
+      implementation: generic-worker
+      os: windows
+      worker-type: b-win2022

@@ -22,7 +22,9 @@ def test_add_zip_type(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="general")
 
     # Click on the available zip
-    web_page.find_element(By.XPATH, "//td/a[@href='/pub/firefox/releases/0.9rc/Firefox-win32-0.9rc.zip']").click()
+    web_page.find_element(
+        By.XPATH, "//td/a[@href='/pub/firefox/releases/0.9rc/Firefox-win32-0.9rc.zip']"
+    ).click()
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
     with driver.context(driver.CONTEXT_CHROME):
