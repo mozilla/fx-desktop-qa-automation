@@ -41,4 +41,4 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
     GenericPage(driver, url=URL_TO_SAVE).open()
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
-        assert not nav.get_element("edit-bookmark-panel").is_displayed()
+        nav.element_not_visible("edit-bookmark-panel")
