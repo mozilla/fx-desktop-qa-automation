@@ -14,11 +14,11 @@ def delete_files_regex_string():
 
 @pytest.mark.headed
 def test_pdf_data_can_be_cleared(
-        driver: Firefox,
-        fillable_pdf_url: str,
-        downloads_folder: str,
-        sys_platform,
-        delete_files
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    sys_platform,
+    delete_files,
 ):
     """
     C1017495 :Check if data can be cleared

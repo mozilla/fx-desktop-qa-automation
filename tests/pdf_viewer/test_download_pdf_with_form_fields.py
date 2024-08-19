@@ -1,58 +1,53 @@
 import os
-import time
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import GenericPdf
+from modules.page_object_generics import GenericPdf
 
 
 @pytest.mark.headed
 @pytest.mark.unstable
-def test_download_pdf(
-    driver: Firefox,
-    fillable_pdf_url: str,
-    downloads_folder: str,
-    sys_platform,
-    delete_files,
+def test_download_pdf_with_form_fields(
+    driver: Firefox, fillable_pdf_url: str, downloads_folder: str, sys_platform
 ):
     """
-    C1756769: Verify that the user can Download a PDF
+    C1020326 Download pdf with form fields
     """
     from pynput.keyboard import Controller, Key
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
+    pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
     keyboard = Controller()
 
-    # Click the download button
-    download_button = pdf.get_element("download-button")
-    download_button.click()
+    # Fill in the name field and click on download button
+    pdf_page.get_element("first-name-field").send_keys("Mark")
+    pdf_page.get_element("download-button").click()
 
-    # Allow time for the download dialog m to appear and pressing enter to download
-    time.sleep(2)
+    # Allow time for the download dialog to appear and press enter to download
+    sleep(2)
 
     if sys_platform == "Linux":
         keyboard.press(Key.alt)
         keyboard.press(Key.tab)
         keyboard.release(Key.tab)
         keyboard.release(Key.alt)
-        time.sleep(1)
+        sleep(1)
         keyboard.press(Key.alt)
         keyboard.press(Key.tab)
         keyboard.release(Key.tab)
         keyboard.release(Key.alt)
-        time.sleep(1)
+        sleep(1)
         keyboard.press(Key.tab)
         keyboard.release(Key.tab)
-        time.sleep(1)
+        sleep(1)
         keyboard.press(Key.tab)
         keyboard.release(Key.tab)
-
     keyboard.press(Key.enter)
     keyboard.release(Key.enter)
 
     # Allow time for the download to complete
-    time.sleep(2)
+    sleep(2)
 
     # Set the expected download path and the expected PDF name
     file_name = "i-9.pdf"
@@ -63,7 +58,6 @@ def test_download_pdf(
         saved_pdf_location
     ), f"The file was not downloaded to {saved_pdf_location}."
 
-    print(
-        f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
-    )
-    driver.quit()
+    # Open the saved pdf and check if the edited field is displayed
+    driver.get("file://" + os.path.realpath(saved_pdf_location))
+    assert pdf_page.get_element("edited-name-field").is_displayed()
