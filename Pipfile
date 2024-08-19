@@ -19,6 +19,9 @@ pillow = "<10.5"
 pyfxa = "0.7.0"
 ruff = "0.5.2"
 pytest-rerunfailures = "14.0"
+slack-sdk = "*"
+google-cloud-storage = "*"
+google-auth = "*"
 
 [dev-packages]
 werkzeug = "==3.0.3"

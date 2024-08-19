@@ -272,5 +272,23 @@
         "selectorData": "image[id='star-button'][starred='true']",
         "strategy": "css",
         "groups": []
+    },
+
+    "download-panel-item": {
+        "selectorData": "downloadTarget",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "edit-bookmark-panel": {
+        "selectorData": "editBMPanel_namePicker",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "remove-bookmark-button": {
+        "selectorData": "editBookmarkPanelRemoveButton",
+        "strategy": "id",
+        "groups": []
     }
 }
