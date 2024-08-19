@@ -1,8 +1,10 @@
 from time import sleep
 import os
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.page_object_generics import GenericPdf
 
 
@@ -12,6 +14,7 @@ def delete_files_regex_string():
 
 
 @pytest.mark.headed
+@pytest.mark.unstable
 def test_download_pdf_with_form_fields(
         driver: Firefox,
         fillable_pdf_url: str,
@@ -61,8 +64,10 @@ def test_download_pdf_with_form_fields(
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Verify if the file exists
-    assert os.path.exists(saved_pdf_location), f"The file was not downloaded to {saved_pdf_location}."
+    assert os.path.exists(
+        saved_pdf_location
+    ), f"The file was not downloaded to {saved_pdf_location}."
 
     # Open the saved pdf and check if the edited field is displayed
-    driver.get('file://' + os.path.realpath(saved_pdf_location))
+    driver.get("file://" + os.path.realpath(saved_pdf_location))
     assert pdf_page.get_element("edited-name-field").is_displayed()

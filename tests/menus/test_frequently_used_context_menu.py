@@ -8,7 +8,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Devtools, Navigation
 from modules.page_object import ExamplePage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
