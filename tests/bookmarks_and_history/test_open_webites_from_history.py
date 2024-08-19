@@ -28,7 +28,7 @@ def test_open_websites_from_history(driver: Firefox):
     panel_ui.open_history_menu()
 
     with driver.context(driver.CONTEXT_CHROME):
-        history_items = panel_ui.get_elements("recent-history-info")
+        history_items = panel_ui.get_all_history()
         if len(history_items) == 0:
             assert False, "There is no history."
 
