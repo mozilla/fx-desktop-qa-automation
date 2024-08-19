@@ -1,7 +1,8 @@
 import pytest
-
 from selenium.webdriver import Firefox
-from modules.browser_object import PanelUi, Navigation, ContextMenu
+
+from modules.browser_object import ContextMenu, Navigation, PanelUi
+
 
 @pytest.fixture()
 def use_profile():

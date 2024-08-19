@@ -1,11 +1,9 @@
 from typing import List
 
 from pypom import Region
-from typing import List
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.remote.webelement import WebElement
 
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
