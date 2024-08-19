@@ -2,10 +2,9 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ReaderView
+from modules.components.dropdown import Dropdown
 from modules.page_object import GenericPage
 from modules.util import Utilities
-
-from modules.components.dropdown import Dropdown
 
 size_controllers = ["minus", "plus"]
 themes = [

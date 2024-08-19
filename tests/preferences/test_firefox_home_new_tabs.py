@@ -1,9 +1,9 @@
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
+from modules.components.dropdown import Dropdown
 from modules.page_object import AboutNewtab, AboutPrefs
 
-from modules.components.dropdown import Dropdown
 
 def test_firefox_home_new_tab(driver: Firefox):
     """

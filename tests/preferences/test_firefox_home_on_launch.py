@@ -2,10 +2,9 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
+from modules.components.dropdown import Dropdown
 from modules.page_object import AboutNewtab, AboutPrefs
 
-
-from modules.components.dropdown import Dropdown
 
 @pytest.fixture()
 def set_prefs():

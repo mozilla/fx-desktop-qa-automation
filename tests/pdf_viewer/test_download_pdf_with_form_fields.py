@@ -3,6 +3,7 @@ from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.page_object_generics import GenericPdf
 
 
@@ -14,11 +15,11 @@ def delete_files_regex_string():
 @pytest.mark.headed
 @pytest.mark.unstable
 def test_download_pdf_with_form_fields(
-        driver: Firefox,
-        fillable_pdf_url: str,
-        downloads_folder: str,
-        sys_platform,
-        delete_files,
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    sys_platform,
+    delete_files,
 ):
     """
     C1020326 Download pdf with form fields
@@ -69,4 +70,3 @@ def test_download_pdf_with_form_fields(
     # Open the saved pdf and check if the edited field is displayed
     driver.get("file://" + os.path.realpath(saved_pdf_location))
     pdf_page.element_visible("edited-name-field")
-    

@@ -1,8 +1,8 @@
 from pypom import Region
-from modules.util import PomUtils
-
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+from modules.util import PomUtils
 
 
 class Dropdown(Region):
@@ -47,9 +47,7 @@ class Dropdown(Region):
             return False
         elif len(matching_menuitems) == 1:
             if double_click:
-                self.page.double_click(
-                    reference=matching_menuitems[0]
-                )
+                self.page.double_click(reference=matching_menuitems[0])
             else:
                 matching_menuitems[0].click()
             if wait_for_selection:

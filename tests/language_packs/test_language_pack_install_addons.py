@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages
 from modules.components.dropdown import Dropdown
+from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages
 
 LANGUAGES = [
     (

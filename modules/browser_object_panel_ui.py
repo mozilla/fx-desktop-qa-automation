@@ -5,9 +5,9 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, PomUtils
-from modules.components.dropdown import Dropdown
 
 
 class PanelUi(BasePage):
@@ -175,9 +175,7 @@ class PanelUi(BasePage):
 
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 dropdown_root = self.get_element("clear-history-dropdown")
-                dropdown = Dropdown(
-                    page=self, root=dropdown_root, require_shadow=False
-                )
+                dropdown = Dropdown(page=self, root=dropdown_root, require_shadow=False)
                 dropdown.select_option(option)
 
     def get_all_history(self) -> List[WebElement]:

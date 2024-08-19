@@ -4,11 +4,10 @@ from typing import List
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
-
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
-from modules.page_base import BasePage
 from modules.components.dropdown import Dropdown
+from modules.page_base import BasePage
 
 
 class AboutPrefs(BasePage):
@@ -27,10 +26,11 @@ class AboutPrefs(BasePage):
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
 
-
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
-        return Dropdown(self, self.driver, root=self.get_element("search-engine-dropdown-root"))
+        return Dropdown(
+            self, self.driver, root=self.get_element("search-engine-dropdown-root")
+        )
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
