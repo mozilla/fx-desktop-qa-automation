@@ -35,5 +35,11 @@
         "selectorData": "downloadAlwaysOpenSimilarFilesMenuItem",
         "strategy": "class",
         "groups": []
+    },
+
+    "context-menu-delete-page": {
+        "selectorData": "placesContext_delete_history",
+        "strategy": "id",
+        "groups": []
     }
 }
