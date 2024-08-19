@@ -29,5 +29,11 @@
         "selectorData": "context-savepage",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-always-open-similar-files": {
+        "selectorData": "downloadAlwaysOpenSimilarFilesMenuItem",
+        "strategy": "class",
+        "groups": []
     }
 }
