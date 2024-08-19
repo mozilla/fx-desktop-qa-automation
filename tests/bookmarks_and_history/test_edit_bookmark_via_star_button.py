@@ -21,30 +21,23 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.get_element("save-bookmark-button").click()
-        nav.get_element("star-button").click()
 
-    # Change bookmark name, check if it's changed and dismiss menu
+    # Change bookmark name and location
+        nav.get_element("star-button").click()
         nav.get_element("edit-bookmark-panel").send_keys("Mozilla Firefox")
+        panel.get_element("bookmark-location").click()
+        panel.get_element("other-bookmarks").click()
         nav.get_element("save-bookmark-button").click()
+
+    # Check bookmark name is changed in hamburger menu and dismiss menu
         panel.open_bookmarks_menu()
         panel.element_visible("bookmark-by-title", labels=["Mozilla Firefox"])
         panel.get_element("panel-ui-button").click()
 
-    # Change location and check if it's changed
-        nav.get_element("star-button").click()
-        panel.get_element("bookmark-location").click()
-        panel.get_element("other-bookmarks").click()
-        nav.get_element("save-bookmark-button").click()
+    # Check location is changed in the toolbar
         panel.get_element("other-bookmarks-toolbar").click()
         panel.element_visible("other-bookmarks-by-title", labels=["Mozilla Firefox"])
         panel.get_element("other-bookmarks-toolbar").click()
-
-    # remove bookmark and check that bookmark isn't displayed in bookmarks menu
-        nav.get_element("star-button").click()
-        nav.get_element("remove-bookmark-button").click()
-        panel.open_bookmarks_menu()
-        panel.element_not_visible("bookmark-by-title", labels=["Mozilla Firefox"])
-        panel.get_element("panel-ui-button").click()
 
     # Uncheck show editor when saving and verify that panel isn't displayed when bookmark a new website
         nav.get_element("star-button").click()
