@@ -315,3 +315,15 @@ class AboutPrefs(BasePage):
         Gets the webelement for the list of history items that appear in about:preferences
         """
         return self.get_element("history_menulist")
+
+    def import_bookmarks(self, browser_name: str) -> BasePage:
+        """
+        Press the import browser data button
+        """
+        self.click_on("import-browser-data")
+        self.click_on("browser-profile-selector")
+        with open("migrate_menu.html", "w") as fh:
+            fh.write(
+                self.get_element("browser-profile-selector").get_attribute("outerHTML")
+            )
+        return self
