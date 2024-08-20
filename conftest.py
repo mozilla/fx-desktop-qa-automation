@@ -242,8 +242,11 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
+    suite_id: str,
+    test_case: str,
     env_prep,
     tmp_path,
+    request,
 ):
     """
     Return the webdriver object.
@@ -311,6 +314,29 @@ def driver(
     finally:
         if "driver" in locals() or "driver" in globals():
             driver.quit()
+
+    if request.node.rep_call.passed:
+        plan_id = os.environ.get("MILESTONE_ID")
+        if plan_id:
+            platform_info = platform.uname()
+            logging.info(f"Get runs from plan {plan_id}")
+            logging.info(f"Filter runs that have suite {suite_id}")
+            logging.info(f"Filter results to match {platform_info}")
+            if platform_info.system == "Darwin":
+                logging.info(f" ...and macos version: {platform.mac_ver()}")
+            logging.info(f"Find test that matches {test_case}")
+            logging.info("If test exists, set to passed")
+            logging.info("If test does not exist, create and set to passed")
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    # Execute all other hooks to obtain the report object
+    outcome = yield
+    rep = outcome.get_result()
+
+    # Store the test result in the item
+    setattr(item, "rep_" + rep.when, rep)
 
 
 @pytest.fixture()
