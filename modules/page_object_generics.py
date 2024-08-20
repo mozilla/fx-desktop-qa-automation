@@ -1,4 +1,5 @@
 from time import sleep
+
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -58,11 +59,12 @@ class GenericPdf(BasePage):
         self.get_element("toolbar-add-image-confirm").click()
         sleep(3)
         from pynput.keyboard import Controller, Key
+
         keyboard = Controller()
         if sys_platform == "Darwin" or sys_platform == "Linux":
             keyboard.type("/")
             sleep(1)
-            keyboard.type(image_path.lstrip('/'))
+            keyboard.type(image_path.lstrip("/"))
         else:
             keyboard.type(Key.f4)
             sleep(1)

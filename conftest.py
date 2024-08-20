@@ -405,6 +405,7 @@ def faker_seed():
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
 
+
 @pytest.fixture()
 def absolute_path():
     absolute_path = os.getcwd()

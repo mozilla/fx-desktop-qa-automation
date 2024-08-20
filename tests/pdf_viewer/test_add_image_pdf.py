@@ -1,11 +1,13 @@
 import os
+
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import GenericPdf
 from modules.browser_object import ContextMenu
+from modules.page_object import GenericPdf
 
 PDF_URL = "https://web.archive.org/web/20060818161558/http://archive.dovebid.com/brochure/bro1514.pdf"
+
 
 @pytest.mark.headed
 def test_add_image_pdf(driver: Firefox, sys_platform, absolute_path: str):
