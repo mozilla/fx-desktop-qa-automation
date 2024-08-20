@@ -92,7 +92,7 @@ def pytest_exception_interact(node, call, report):
                     screenshot_content(driver, opt_ci, test_name)
             else:
                 logging.error("Error occurred during collection.")
-        except Exception as e:
+        except Exception:
             logging.error("Something went wrong with the exception catching.")
 
 
@@ -404,3 +404,8 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+
+@pytest.fixture()
+def absolute_path():
+    absolute_path = os.getcwd()
+    return absolute_path

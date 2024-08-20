@@ -35,5 +35,11 @@
         "selectorData": "downloadAlwaysOpenSimilarFilesMenuItem",
         "strategy": "class",
         "groups": []
+    },
+
+    "pdfjs-delete": {
+        "selectorData": "context-pdfjs-delete",
+        "strategy": "id",
+        "groups": []
     }
 }
