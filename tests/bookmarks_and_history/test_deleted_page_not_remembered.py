@@ -24,7 +24,7 @@ def test_deleted_page_not_remembered(driver: Firefox):
     firefox_privacy_notice = history_items[-1]
     panel_ui.context_click(firefox_privacy_notice)
 
-    context_menu.click_context_item("context-menu-delete-page")
+    context_menu.click_and_hide_menu("context-menu-delete-page")
     nav.type_in_awesome_bar("Firefox Privacy Notice")
 
     with driver.context(driver.CONTEXT_CHROME):

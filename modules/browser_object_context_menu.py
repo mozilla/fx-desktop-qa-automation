@@ -19,7 +19,5 @@ class ContextMenu(BasePage):
         Clicks the context item.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            item = self.fetch(reference, labels=labels)
-            item.click()
-            self.hide_popup_by_child_node(item)
+            self.fetch(reference, labels=labels).click()
             return self
