@@ -92,7 +92,7 @@ def pytest_exception_interact(node, call, report):
                     screenshot_content(driver, opt_ci, test_name)
             else:
                 logging.error("Error occurred during collection.")
-        except Exception as e:
+        except Exception:
             logging.error("Something went wrong with the exception catching.")
 
 
