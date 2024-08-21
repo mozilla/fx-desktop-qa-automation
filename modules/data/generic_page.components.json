@@ -65,6 +65,19 @@
         "groups": []
     },
 
+    "clear-history-button-box": {
+        "selectorData": "dialog",
+        "strategy": "tag",
+        "groups": []
+    },
+
+    "clear-history-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "clear-history-button-box",
+        "groups": []
+    },
+
     "sample-doc-download": {
         "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
         "strategy": "css",

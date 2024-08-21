@@ -28,10 +28,13 @@ tasks:
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
-        ./collect_executables.sh;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        pipenv run pytest --fx-executable $(cat ./fx_location) tests/downloads/test_add_mime_type_doc.py;
+        ./collect_executables.sh;
+        ./firefox/firefox --version;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .;
+        mv ./ci_pyproject_headed.toml ./pyproject.toml;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
     notify:
       recipients:
         - type: slack-channel
@@ -44,7 +47,7 @@ tasks:
               "type": "header",
               "text": {
                 "type": "plain_text",
-                "text": "firefox-desktop :firefox: ${task.metadata.name}\n "
+                "text": "firefox-desktop :firefox: ${task.metadata.name} Linux\n "
               }
             },
             {

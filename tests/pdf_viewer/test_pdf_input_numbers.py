@@ -1,19 +1,19 @@
-import os
 import time
 
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
 
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r".*i-9.pdf"
+    return r"i-9.*\.pdf"
 
 
 @pytest.mark.headed
-def test_download_pdf(
+def test_pdf_input_numbers(
     driver: Firefox,
     fillable_pdf_url: str,
     downloads_folder: str,
@@ -21,18 +21,28 @@ def test_download_pdf(
     delete_files,
 ):
     """
-    C1756769: Verify that the user can Download a PDF
+    C1017528: Input data in numeric fields
     """
+
     from pynput.keyboard import Controller, Key
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
+    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
+    pdf.open()
     keyboard = Controller()
+    numeric_field = pdf.get_element("zipcode-field")
 
-    # Click the download button
+    # Test value to input in the field
+    test_value = "12345"
+
+    # Clear the field and enter the test value
+    numeric_field.send_keys(test_value + Keys.TAB)
+
+    # Verify the value is still present
+    pdf.element_attribute_contains("zipcode-field", "value", test_value)
+
     download_button = pdf.get_element("download-button")
     download_button.click()
 
-    # Allow time for the download dialog m to appear and pressing enter to download
     time.sleep(2)
 
     if sys_platform == "Linux":
@@ -54,20 +64,3 @@ def test_download_pdf(
 
     keyboard.press(Key.enter)
     keyboard.release(Key.enter)
-
-    # Allow time for the download to complete
-    time.sleep(2)
-
-    # Set the expected download path and the expected PDF name
-    file_name = "i-9.pdf"
-    saved_pdf_location = os.path.join(downloads_folder, file_name)
-
-    # Verify if the file exists
-    assert os.path.exists(
-        saved_pdf_location
-    ), f"The file was not downloaded to {saved_pdf_location}."
-
-    print(
-        f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
-    )
-    driver.quit()

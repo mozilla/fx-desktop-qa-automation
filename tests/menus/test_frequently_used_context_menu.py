@@ -8,7 +8,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Devtools, Navigation
 from modules.page_object import ExamplePage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
@@ -20,16 +20,22 @@ def test_save_page_as(driver: Firefox):
     C2637623.1: save page as
     """
     try:
-        from pynput.keyboard import Key
+        from pynput.keyboard import Controller, Key
     except ModuleNotFoundError:
         pytest.skip("Could not load pynput")
+
+    controller = Controller()
+
+    def key_press_release(key: Key):
+        controller.press(key)
+        controller.release(key)
+
     # create objects
     context_menu = ContextMenu(driver)
     driver.get("https://example.com")
     example_page = ExamplePage(driver)
     nav = Navigation(driver)
     util = Utilities()
-    ba = BrowserActions(driver)
 
     # right click something that is not a hyperlink
     title_header = example_page.get_element("title-header")
@@ -45,22 +51,22 @@ def test_save_page_as(driver: Firefox):
     # perform key presses to save the file
     this_platform = platform.system()
     if this_platform == "Linux":
-        ba.controller.press(Key.alt)
-        ba.controller.press(Key.tab)
-        ba.controller.release(Key.tab)
-        ba.controller.release(Key.alt)
+        controller.press(Key.alt)
+        controller.press(Key.tab)
+        controller.release(Key.tab)
+        controller.release(Key.alt)
 
-        ba.controller.press(Key.alt)
-        ba.controller.press(Key.tab)
-        ba.controller.release(Key.tab)
-        ba.controller.release(Key.alt)
+        controller.press(Key.alt)
+        controller.press(Key.tab)
+        controller.release(Key.tab)
+        controller.release(Key.alt)
 
-        ba.key_press_release(Key.tab)
+        key_press_release(Key.tab)
 
-        ba.key_press_release(Key.tab)
+        key_press_release(Key.tab)
 
     # Press and release the Enter key
-    ba.key_press_release(Key.enter)
+    key_press_release(Key.enter)
 
     # Wait for the animation to complete
     nav.wait_for_download_animation_finish(downloads_button)

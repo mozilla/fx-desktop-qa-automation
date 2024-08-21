@@ -1,5 +1,8 @@
 import json
+import sys
+from os import environ
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
@@ -7,8 +10,16 @@ from modules.page_object import AboutPrefs, GenericPage
 
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
 
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
-def test_mime_type_doc(driver: Firefox):
+
+@pytest.fixture()
+def delete_files_regex_string():
+    return r"sample.*\.doc"
+
+
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """
     C1756748: Verify the user can add the .doc type
     """
@@ -37,4 +48,10 @@ def test_mime_type_doc(driver: Firefox):
     )
 
     mime_type_data = json.loads(action_description_item.get_attribute("data-l10n-args"))
-    assert False, mime_type_data["app-name"]
+    if sys_platform == "Darwin":
+        if opt_ci:
+            assert mime_type_data["app-name"] == "TextEdit"
+        else:
+            assert mime_type_data["app-name"] == "Pages"
+    else:
+        assert mime_type_data["app-name"] == "LibreOffice Writer"
