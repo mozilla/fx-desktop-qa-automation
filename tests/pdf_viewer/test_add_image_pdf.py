@@ -12,7 +12,7 @@ PDF_URL = "https://web.archive.org/web/20060818161558/http://archive.dovebid.com
 @pytest.mark.headed
 def test_add_image_pdf(driver: Firefox, sys_platform, absolute_path: str):
     """
-    C2228202: Verify that the user is able to add an image to a PDF file
+    C2228202: Verify that the user is able to add an image to a PDF file.
     """
     pdf_viewer = GenericPdf(driver, pdf_url=PDF_URL).open()
     context_menu = ContextMenu(driver)
