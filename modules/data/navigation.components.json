@@ -274,6 +274,24 @@
         "groups": []
     },
 
+    "download-panel-item": {
+        "selectorData": "downloadTarget",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "edit-bookmark-panel": {
+        "selectorData": "editBMPanel_namePicker",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "remove-bookmark-button": {
+        "selectorData": "editBookmarkPanelRemoveButton",
+        "strategy": "id",
+        "groups": []
+    },
+
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",

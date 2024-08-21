@@ -31,6 +31,12 @@
         "groups": []
     },
 
+    "context-menu-always-open-similar-files": {
+        "selectorData": "downloadAlwaysOpenSimilarFilesMenuItem",
+        "strategy": "class",
+        "groups": []
+    },
+
     "context-menu-add-bookmark": {
         "selectorData": "placesContext_new:bookmark",
         "strategy": "id",

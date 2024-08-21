@@ -33,4 +33,4 @@ def test_add_new_other_bookmark(driver: Firefox):
 
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
-        assert nav.get_element("bookmark-robots") is not None
+        nav.element_visible("bookmark-robots")
