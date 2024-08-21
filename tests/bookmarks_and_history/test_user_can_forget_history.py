@@ -1,6 +1,6 @@
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi, TabBar
+from modules.browser_object import ForgetPanel, Navigation, PanelUi, TabBar
 from modules.page_object import CustomizeFirefox, GenericPage
 
 links = [
@@ -18,11 +18,12 @@ def test_user_can_forget_history(driver: Firefox):
     tabs = TabBar(driver).open()
     panel_ui = PanelUi(driver)
     nav = Navigation(driver)
+    forget_panel = ForgetPanel(driver)
     gen_page = GenericPage(driver, url="https://www.google.com/")
     customize_firefox = CustomizeFirefox(driver)
+
     tabs_to_open = 4
 
-    # open some tabs
     for i in range(tabs_to_open):
         driver.get(links[i])
         tabs.new_tab_by_button()
@@ -39,3 +40,12 @@ def test_user_can_forget_history(driver: Firefox):
 
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("forget-button").click()
+        assert (
+            forget_panel.get_element("forget-five-minutes").get_attribute("selected")
+            == "true"
+        )
+
+    forget_panel.forget_history("forget-five-minutes")
+
+    tabs.switch_to_new_tab()
+    panel_ui.element_does_not_exist("recent-history-info")
