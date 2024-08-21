@@ -1,0 +1,8 @@
+{
+    "context": "chrome",
+    "forget": {
+        "selectorData": "wrapper-panic-button",
+        "strategy": "id",
+        "groups": []
+    }
+}

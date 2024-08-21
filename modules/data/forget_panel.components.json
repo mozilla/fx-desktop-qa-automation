@@ -1,0 +1,26 @@
+{
+    "context": "chrome",
+    "forget-five-minutes": {
+        "selectorData": "PanelUI-panic-5min",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "forget-two-hours": {
+        "selectorData": "PanelUI-panic-2hr",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "forget-one-day": {
+        "selectorData": "PanelUI-panic-day",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "forget-confirm-button": {
+        "selectorData": "PanelUI-panic-view-button",
+        "strategy": "id",
+        "groups": []
+    }
+}
