@@ -378,9 +378,16 @@ def delete_files(sys_platform, delete_files_regex_string):
                 downloads_folder = os.path.join(
                     "C:", "Users", "runneradmin", "Downloads"
                 )
+            else:
+                home_folder = os.path.join(
+                    os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH")
+                )
+                downloads_folder = os.path.join(home_folder, "Downloads")
         else:
             home_folder = os.environ.get("HOME")
             downloads_folder = os.path.join(home_folder, "Downloads")
+            logging.info(os.path.exists(downloads_folder))
+
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
             if delete_files_regex.match(file):
