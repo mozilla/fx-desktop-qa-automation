@@ -18,6 +18,7 @@ def delete_files_regex_string():
 
 
 @pytest.mark.headed
+@pytest.mark.unstable
 def test_pdf_download(
     driver: Firefox,
     fillable_pdf_url: str,
