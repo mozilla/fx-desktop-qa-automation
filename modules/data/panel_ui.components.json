@@ -221,5 +221,29 @@
         "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
         "strategy": "css",
         "groups": []
+    },
+
+    "bookmark-tags": {
+        "selectorData": "editBMPanel_tagsField",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "extend-bookmark-tags": {
+        "selectorData": "editBMPanel_tagsSelectorExpander",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "work-tag": {
+        "selectorData": "label[value='Work']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "todo-tag": {
+        "selectorData": "label[value='To do']",
+        "strategy": "css",
+        "groups": []
     }
 }
