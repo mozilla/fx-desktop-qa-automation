@@ -292,6 +292,12 @@
         "groups": []
     },
 
+    "forget-button": {
+        "selectorData": "panic-button",
+        "strategy": "id",
+        "groups": []
+    },
+
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
