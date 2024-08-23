@@ -211,16 +211,16 @@ class Navigation(BasePage):
             ba.switch_to_iframe_context(iframe)
             # fill name
             if bookmark_data.name is not None:
-                self.perform_key_combo(bookmark_data.name)
-            self.perform_key_combo(Keys.TAB)
+                self.actions.send_keys(bookmark_data.name).perform()
+            self.actions.send_keys(Keys.TAB).perform()
             # fill url
-            self.perform_key_combo(bookmark_data.url + Keys.TAB)
+            self.actions.send_keys(bookmark_data.url + Keys.TAB).perform()
             # fill tags
             if bookmark_data.tags is not None:
-                self.perform_key_combo(bookmark_data.tags)
-            self.perform_key_combo(Keys.TAB)
+                self.actions.send_keys(bookmark_data.tags).perform()
+            self.actions.send_keys(Keys.TAB).perform()
             # fill keywords
             if bookmark_data.keyword is not None:
-                self.perform_key_combo(bookmark_data.keyword)
-            self.perform_key_combo(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER)
+                self.actions.send_keys(bookmark_data.keyword).perform()
+            self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
             ba.switch_to_content_context()
