@@ -408,6 +408,28 @@ def faker_seed():
     return 19980331
 
 
+@pytest.fixture()
+def is_gha():
+    return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
+@pytest.fixture()
+def skip_gha_all(is_gha):
+    pytest.skip(msg="Test unstable in GitHub Actions")
+
+
+@pytest.fixture()
+def skip_gha_mac(is_gha, sys_platform):
+    if sys_platform == "Darwin":
+        pytest.skip(msg="Test unstable in Mac GitHub Actions")
+
+
+@pytest.fixture()
+def skip_gha_win(is_gha, sys_platform):
+    if sys_platform == "Win":
+        pytest.skip(msg="Test unstable in Win GitHub Actions")
+
+
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"

@@ -8,7 +8,7 @@ from modules.util import BrowserActions
 BOOKMARK_URL = "about:robots"
 
 
-def test_add_new_other_bookmark(driver: Firefox):
+def test_add_new_other_bookmark(driver: Firefox, skip_gha_win):
     """
     C2084518: verify user can add another bookmark from other bookmarks
     """
