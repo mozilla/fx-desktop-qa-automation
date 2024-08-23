@@ -139,7 +139,9 @@
     "downloads-button": {
         "selectorData": "downloads-button",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "search-results-container": {
@@ -275,8 +277,8 @@
     },
 
     "download-panel-item": {
-        "selectorData": "downloadTarget",
-        "strategy": "class",
+        "selectorData": "vbox[class='downloadContainer']",
+        "strategy": "css",
         "groups": []
     },
 
