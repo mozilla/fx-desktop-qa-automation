@@ -6,7 +6,7 @@
 echo "" > results.txt
 for i in $(seq 1 "$2"); do
     echo -n "Test run number ${i}..."
-    if pytest --run-headless -n 5 "$1" >> err_log.txt 2>&1; then
+    if pytest -n 5 "$1" >> err_log.txt 2>&1; then
         echo "pass"
         echo "$i: pass" >> results.txt
     else
