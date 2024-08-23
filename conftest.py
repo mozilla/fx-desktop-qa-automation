@@ -408,11 +408,6 @@ def faker_seed():
     return 19980331
 
 
-@pytest.fixture()
-def is_gha():
-    return os.environ.get("GITHUB_ACTIONS") == "true"
-
-
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"

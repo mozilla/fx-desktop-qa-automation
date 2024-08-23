@@ -1,3 +1,5 @@
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -9,12 +11,14 @@ from modules.util import BrowserActions
 BOOKMARK_URL = "about:robots"
 
 
-def test_add_new_other_bookmark(driver: Firefox, is_gha: bool, sys_platform: str):
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+
+
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+def test_add_new_other_bookmark(driver: Firefox):
     """
     C2084518: verify user can add another bookmark from other bookmarks
     """
-    if is_gha and sys_platform == "Win":
-        pytest.skip(msg="Test unstable on Win GHA")
     nav = Navigation(driver)
     ba = BrowserActions(driver)
     GenericPage(driver, url=BOOKMARK_URL).open()
