@@ -6,9 +6,9 @@ from modules.page_object_generics import GenericPage
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
-ENABLE_ADD_TAG = '''
+ENABLE_ADD_TAG = """
             PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);
-        '''
+        """
 
 
 def test_edit_bookmark_from_bookmark_menu(driver: Firefox):

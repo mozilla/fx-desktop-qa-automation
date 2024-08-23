@@ -6,7 +6,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
+from modules.util import BrowserActions
 
 
 class Navigation(BasePage):
@@ -191,3 +193,34 @@ class Navigation(BasePage):
         with self.driver.context(self.context_id):
             self.get_element("shield-icon").click()
             return self
+
+    def bookmark_page_other(self) -> BasePage:
+        with self.driver.context(self.context_id):
+            self.get_element("star-button").click()
+            dropdown = self.get_element("bookmarks-type-dropdown")
+            dropdown.click()
+            self.get_element("bookmarks-type-dropdown-other").click()
+            dropdown.click()
+            self.get_element("save-bookmark-button").click()
+
+    def add_bookmark_advanced(
+        self, bookmark_data: Bookmark, ba: BrowserActions
+    ) -> BasePage:
+        with self.driver.context(self.context_id):
+            iframe = self.get_element("bookmark-iframe")
+            ba.switch_to_iframe_context(iframe)
+            # fill name
+            if bookmark_data.name is not None:
+                self.actions.send_keys(bookmark_data.name).perform()
+            self.actions.send_keys(Keys.TAB).perform()
+            # fill url
+            self.actions.send_keys(bookmark_data.url + Keys.TAB).perform()
+            # fill tags
+            if bookmark_data.tags is not None:
+                self.actions.send_keys(bookmark_data.tags).perform()
+            self.actions.send_keys(Keys.TAB).perform()
+            # fill keywords
+            if bookmark_data.keyword is not None:
+                self.actions.send_keys(bookmark_data.keyword).perform()
+            self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
+            ba.switch_to_content_context()

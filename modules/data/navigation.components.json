@@ -298,5 +298,78 @@
         "selectorData": "panic-button",
         "strategy": "id",
         "groups": []
+    },
+
+    "bookmarks-type-dropdown": {
+        "selectorData": "editBMPanel_folderMenuList",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmarks-type-dropdown-other": {
+        "selectorData": "editBMPanel_unfiledRootItem",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks": {
+        "selectorData": "OtherBookmarks",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks-popup": {
+        "selectorData": "OtherBookmarksPopup",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "new-bookmark-name-field": {
+        "selectorData": "editBMPanel_namePicker",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "new-bookmark-url-field": {
+        "selectorData": "editBMPanel_locationField",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "new-bookmark-tags-field": {
+        "selectorData": "editBMPanel_tagsField",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "new-bookmark-keyword-field": {
+        "selectorData": "editBMPanel_keywordField",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmark-dialog": {
+        "selectorData": "bookmarkpropertiesdialog",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmark-accept-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "bookmark-dialog",
+        "groups": []
+    },
+
+    "bookmark-iframe": {
+        "selectorData": "browser[class='dialogFrame']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "bookmark-robots": {
+        "selectorData": "menuitem[label='Robots 2']",
+        "strategy": "css",
+        "groups": []
     }
 }
