@@ -23,7 +23,9 @@ def test_history_menu_in_different_places(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         hm_back_button = panel_ui.get_element("history-back-button")
         hm_history_title = panel_ui.get_element("history_title")
-        hm_recently_closed_tabs = panel_ui.get_element("recently_closed_tabs")
+        hm_recently_closed_tabs = panel_ui.get_element(
+            "panel-ui-history-recently-closed"
+        )
         hm_recently_closed_windows = panel_ui.get_element("recently_closed_windows")
         hm_search_history = panel_ui.get_element("search_history")
         hm_clear_recent_history = panel_ui.get_element("clear-recent-history")
