@@ -221,5 +221,47 @@
         "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
         "strategy": "css",
         "groups": []
+    },
+
+    "history-back-button": {
+        "selectorData": "toolbarbutton.subviewbutton-back > image.toolbarbutton-icon",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "history_title": {
+        "selectorData": "//*[@id='PanelUI-history']//*[text()='History']",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "recently_closed_tabs": {
+        "selectorData": "appMenuRecentlyClosedTabs",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "recently_closed_windows": {
+        "selectorData": "appMenuRecentlyClosedWindows",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "search_history": {
+        "selectorData": "appMenuSearchHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "recent_history": {
+        "selectorData": "panelMenu_recentHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "manage_history": {
+        "selectorData": "PanelUI-historyMore",
+        "strategy": "id",
+        "groups": []
     }
 }
