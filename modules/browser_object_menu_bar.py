@@ -8,7 +8,7 @@ class MenuBar(BasePage):
 
     URL_TEMPLATE = ""
 
-    def activate_menu_bar(self):
+    def activate_menu_bar(self) -> BasePage:
         """Enables the Menu Bar at the top of the window"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("toolbar-blank-space")
