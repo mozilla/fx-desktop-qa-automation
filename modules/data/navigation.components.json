@@ -290,5 +290,11 @@
         "selectorData": "editBookmarkPanelRemoveButton",
         "strategy": "id",
         "groups": []
+    },
+
+    "forget-button": {
+        "selectorData": "panic-button",
+        "strategy": "id",
+        "groups": []
     }
 }

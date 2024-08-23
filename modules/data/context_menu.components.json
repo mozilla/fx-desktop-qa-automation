@@ -35,5 +35,17 @@
         "selectorData": "downloadAlwaysOpenSimilarFilesMenuItem",
         "strategy": "class",
         "groups": []
+    },
+
+    "customize-firefox-add-toolbar": {
+        "selectorData": "customize-context-addToToolbar",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "context-menu-delete-page": {
+        "selectorData": "placesContext_delete_history",
+        "strategy": "id",
+        "groups": []
     }
 }
