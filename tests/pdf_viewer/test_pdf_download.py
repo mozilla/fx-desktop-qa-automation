@@ -31,7 +31,8 @@ def test_pdf_download(
     """
     from pynput.keyboard import Controller, Key
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
+    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
+    pdf.open()
     keyboard = Controller()
 
     # Click the download button
@@ -67,6 +68,7 @@ def test_pdf_download(
     # Set the expected download path and the expected PDF name
     file_name = "i-9.pdf"
     saved_pdf_location = os.path.join(downloads_folder, file_name)
+    pdf.expect(lambda _: os.path.exists(saved_pdf_location))
 
     # Verify if the file exists
     assert os.path.exists(
