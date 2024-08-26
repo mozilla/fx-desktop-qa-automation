@@ -1,3 +1,5 @@
+import logging
+
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -29,3 +31,22 @@ class Toolbar(BasePage):
             self.driver.implicitly_wait(original_timeout)
 
         return self
+
+    def confirm_bookmark_exists(self, match_string: str) -> BasePage:
+        """
+        For a given string, return self if it exists in the label of a bookmark, else assert False.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            bookmarks = self.get_elements("bookmark-in-bar")
+            logging.info(f"Found {len(bookmarks)} bookmarks.")
+            for el in bookmarks:
+                logging.info(el.get_attribute("label"))
+
+            matches_short_string = any(
+                [match_string in el.get_attribute("label") for el in bookmarks]
+            )
+            matches_long_string = any(
+                [el.get_attribute("label") in match_string for el in bookmarks]
+            )
+            assert matches_short_string or matches_long_string
+            return self

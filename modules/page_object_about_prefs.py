@@ -1,4 +1,5 @@
 import re
+from time import sleep
 from typing import List
 
 from selenium.webdriver.common.keys import Keys
@@ -321,9 +322,14 @@ class AboutPrefs(BasePage):
         Press the import browser data button
         """
         self.click_on("import-browser-data")
-        self.click_on("browser-profile-selector")
-        with open("migrate_menu.html", "w") as fh:
-            fh.write(
-                self.get_element("browser-profile-selector").get_attribute("outerHTML")
-            )
+        profile_selector = self.get_element("browser-profile-selector")
+        while browser_name.lower() not in profile_selector.text.lower():
+            self.click_on(profile_selector)
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.actions.send_keys(Keys.DOWN).perform()
+                self.actions.send_keys(Keys.ENTER).perform()
+            sleep(1)
+        self.click_on("migration-import-button")
+        self.click_on("migration-done-button")
+
         return self
