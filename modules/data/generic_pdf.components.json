@@ -123,9 +123,22 @@
         "groups": []
     },
 
+    "first-checkbox": {
+        "selectorData": "input[name='CB_1']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "state-dropdown-field": {
+        "selectorData": "select[name='State']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "edited-name-field": {
         "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
         "groups": []
     }
+
 }

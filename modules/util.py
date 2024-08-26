@@ -383,6 +383,23 @@ return props;
     def remove_all_non_numbers(self, item: str) -> str:
         return re.sub(r"[^\d-]", "", item)
 
+    def get_all_attributes(self, driver: Firefox, item: WebElement) -> str:
+        attributes = driver.execute_script(
+            """
+            let items = {};
+            for (let attr of arguments[0].attributes) {
+                items[attr.name] = attr.value;
+            }
+            return items;
+        """,
+            item,
+        )
+
+        ret_val = ""
+        for attribute, value in attributes.items():
+            ret_val += f"{attribute}: {value}\n"
+        return ret_val
+
 
 class BrowserActions:
     """

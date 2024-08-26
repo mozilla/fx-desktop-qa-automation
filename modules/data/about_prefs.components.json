@@ -463,21 +463,15 @@
         "groups": []
     },
 
-    "manage-cookies-site": {
-        "selectorData": "richlistitem[host='{name}']",
+    "mime-type-item": {
+        "selectorData": "richlistitem[type='{item}']",
         "strategy": "css",
         "groups": []
     },
 
-    "remove-selected-button": {
-        "selectorData": "removeSelected",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "remove-all-button": {
-        "selectorData": "removeAll",
-        "strategy": "id",
+    "mime-type-item-description": {
+        "selectorData": "label[data-l10n-id='applications-use-app-default-label']",
+        "strategy": "css",
         "groups": []
     },
 
