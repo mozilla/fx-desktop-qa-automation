@@ -15,7 +15,7 @@ NEWS_ARTICLE_TITLE = "Level 1, 2 evacuations issued for fire burning in Chelan"
 @pytest.fixture()
 def edge_bookmarks(sys_platform, home_folder):
     source = os.path.join("data", "Edge_Bookmarks")
-    if sys_platform == "Win":
+    if sys_platform.lower().startswith("win"):
         target = os.path.join(
             home_folder,
             "AppData",
