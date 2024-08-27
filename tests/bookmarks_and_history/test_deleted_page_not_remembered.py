@@ -1,14 +1,13 @@
 import pytest
-import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation, PanelUi
 
 
-
 @pytest.fixture()
 def test_case():
     return "216273"
+
 
 @pytest.fixture()
 def use_profile():

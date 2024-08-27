@@ -1,4 +1,3 @@
-import pytest
 import json
 import sys
 from os import environ
@@ -13,6 +12,7 @@ from modules.page_object import AboutPrefs, GenericPage
 @pytest.fixture()
 def test_case():
     return "1756748"
+
 
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
 

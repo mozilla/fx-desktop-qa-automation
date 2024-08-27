@@ -1,4 +1,3 @@
-import pytest
 import random
 
 import pytest
@@ -7,10 +6,10 @@ from selenium.webdriver import Firefox
 from modules.browser_object import PanelUi
 
 
-
 @pytest.fixture()
 def test_case():
     return "118807"
+
 
 @pytest.fixture()
 def use_profile():

@@ -1,4 +1,3 @@
-import pytest
 import time
 
 import pytest
@@ -8,10 +7,10 @@ from selenium.webdriver.common.by import By
 from modules.page_object_generics import GenericPdf
 
 
-
 @pytest.fixture()
 def test_case():
     return "1017495"
+
 
 @pytest.fixture()
 def delete_files_regex_string():

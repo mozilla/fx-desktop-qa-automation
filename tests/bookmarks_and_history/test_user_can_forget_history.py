@@ -9,6 +9,7 @@ from modules.page_object import CustomizeFirefox, GenericPage
 def test_case():
     return "174072"
 
+
 links = [
     "about:about",
     "about:addons",

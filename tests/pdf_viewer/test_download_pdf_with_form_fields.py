@@ -11,6 +11,7 @@ from modules.page_object_generics import GenericPdf
 def test_case():
     return "1020326"
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return r"i-9.*\.pdf"

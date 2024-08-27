@@ -1,5 +1,4 @@
 import pytest
-import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
@@ -7,10 +6,10 @@ from modules.page_object import GenericPage
 from modules.util import BrowserActions
 
 
-
 @pytest.fixture()
 def test_case():
     return "172045"
+
 
 @pytest.fixture()
 def use_profile():

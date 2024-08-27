@@ -10,6 +10,7 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "2084490"
 
+
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
 ENABLE_ADD_TAG = """

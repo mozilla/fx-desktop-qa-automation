@@ -10,6 +10,7 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "118805"
 
+
 FACEBOOK_URL = "https://www.facebook.com/"
 AMAZON_URL = "https://www.amazon.com/"
 YOUTUBE_URL = "https://www.youtube.com/"

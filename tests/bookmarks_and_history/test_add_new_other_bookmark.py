@@ -1,4 +1,3 @@
-import pytest
 import sys
 from os import environ
 
@@ -14,6 +13,7 @@ from modules.util import BrowserActions
 @pytest.fixture()
 def test_case():
     return "2084518"
+
 
 BOOKMARK_URL = "about:robots"
 

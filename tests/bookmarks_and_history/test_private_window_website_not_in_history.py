@@ -9,6 +9,7 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "118806"
 
+
 YOUTUBE_URL = "https://www.youtube.com/"
 
 
