@@ -82,9 +82,9 @@ def test_download_pdf_from_context_menu(
     about_telemetry = AboutTelemetry(driver).open()
     about_telemetry.get_element("events-tab").click()
 
-    # Verify that the pdf entry is displayed
+    # Verify that Telemetry is recorded
     pdf_telemetry_data = ["downloads", "added", "fileExtension", "pdf"]
     last_rows = driver.find_elements(By.CSS_SELECTOR, '#events-section table tr:last-child td')
-    # Extract the text from the last cell without the first column and store it in a list
+    # Extract the text from the last cell without the first column and store it
     cell_texts = [cell.text.strip() for cell in last_rows[1:]]
     assert pdf_telemetry_data == cell_texts
