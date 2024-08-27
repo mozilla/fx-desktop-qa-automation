@@ -83,6 +83,39 @@
         "groups": []
     },
 
+    "import-browser-data": {
+        "selectorData": "button[id='data-migration']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "migration-popup": {
+        "selectorData": "migration-wizard",
+        "strategy": "tag",
+        "groups": []
+    },
+
+    "browser-profile-selector": {
+        "selectorData": "browser-profile-selector",
+        "strategy": "id",
+        "shadowParent": "migration-popup",
+        "groups": []
+    },
+
+    "migration-import-button": {
+        "selectorData": "button.primary.migration-import-button",
+        "strategy": "css",
+        "shadowParent": "migration-popup",
+        "groups": []
+    },
+
+    "migration-done-button": {
+        "selectorData": "button.primary.done-button",
+        "strategy": "css",
+        "shadowParent": "migration-popup",
+        "groups": []
+    },
+
     "cc-saved-options": {
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",

@@ -1,0 +1,65 @@
+{
+   "checksum": "1ccc289d74b98362a2f853f18572bccc",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13368734130144964",
+            "date_last_used": "0",
+            "guid": "ddd81cfd-a22a-45c6-ae75-8fec0ab53747",
+            "id": "7",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Level 1, 2 evacuations issued for fire burning in Chelan",
+            "show_icon": false,
+            "source": "user_add",
+            "type": "url",
+            "url": "https://www.msn.com/en-us/news/us/level-1-2-evacuations-issued-for-fire-burning-in-chelan/ar-AA1pbtKa?ocid=msedgdhp&pc=U531&cvid=7508a6fc247e4ccb85fb02a53b367d2a&ei=22"
+         }, {
+            "date_added": "13368734162908729",
+            "date_last_used": "0",
+            "guid": "07f2e12c-564f-4f5d-8d1b-ab35a87ec98e",
+            "id": "8",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Get Firefox for desktop — Mozilla (US)",
+            "show_icon": false,
+            "source": "user_add",
+            "type": "url",
+            "url": "https://www.mozilla.org/en-US/firefox/new/"
+         } ],
+         "date_added": "13368664238827473",
+         "date_last_used": "0",
+         "date_modified": "13368734162908729",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Favorites Bar",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13368664238827474",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other Favorites",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13368664238827495",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile Favorites",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}

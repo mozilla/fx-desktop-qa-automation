@@ -45,6 +45,7 @@ jobs:
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
+          pipenv run python -c "import sys; print(sys.platform)"
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE

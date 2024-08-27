@@ -66,5 +66,17 @@
         "selectorData": "PanelUI-historyMore",
         "strategy": "id",
         "groups": []
+    },
+
+    "bookmarks-bar": {
+        "selectorData": "scrollbox#PlacesToolbarItems",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "bookmark-in-bar": {
+        "selectorData": "toolbarbutton.bookmark-item",
+        "strategy": "css",
+        "groups": []
     }
 }
