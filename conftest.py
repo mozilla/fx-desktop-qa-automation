@@ -4,6 +4,7 @@ import os
 import platform
 import re
 from shutil import unpack_archive
+from subprocess import check_output
 from typing import Callable, List, Tuple, Union
 
 import pytest
@@ -231,6 +232,11 @@ def use_profile():
     to use ./profiles/<string> as the profile for a given test
     """
     yield False
+
+
+@pytest.fixture(autouse=True)
+def version(fx_executable: str):
+    return check_output([fx_executable, "--version"]).strip().decode()
 
 
 @pytest.fixture(autouse=True)
