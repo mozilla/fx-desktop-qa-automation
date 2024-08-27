@@ -282,6 +282,7 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
+    version: str,
     suite_id: str,
     test_case: str,
     env_prep,
@@ -317,6 +318,9 @@ def driver(
 
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
+
+    version: str
+        The result of calling the Fx executable with `--version`.
 
     env_prep: None
         Fixture that does other environment work, like set logging levels.
@@ -359,6 +363,7 @@ def driver(
         plan_id = os.environ.get("MILESTONE_ID")
         if plan_id:
             platform_info = platform.uname()
+            logging.info(version)
             logging.info(f"Get runs from plan {plan_id}")
             logging.info(f"Filter runs that have suite {suite_id}")
             logging.info(f"Filter results to match {platform_info}")
@@ -428,11 +433,6 @@ def delete_files(sys_platform, delete_files_regex_string):
     _delete_files()
     yield True
     _delete_files()
-
-
-@pytest.fixture()
-def version(driver: Firefox):
-    return driver.capabilities["browserVersion"]
 
 
 @pytest.fixture(scope="session", autouse=True)
