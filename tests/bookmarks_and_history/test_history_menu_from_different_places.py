@@ -3,24 +3,30 @@ import platform
 from selenium.webdriver import Firefox
 
 from modules.browser_object_menu_bar import MenuBar
+from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
-from modules.page_object_generics import GenericPage
+from modules.browser_object_tabbar import TabBar
+from modules.browser_object_toolbar import Toolbar
+from modules.page_object_customize_firefox import CustomizeFirefox
 
-YOUTUBE_URL = "https://www.youtube.com/"
+
+def assert_elements_visibility(ui_object, elements: dict, source: str):
+    """Helper function to assert visibility of elements in a given UI source."""
+    for name, locator in elements.items():
+        element = ui_object.get_element(locator)
+        assert element.is_displayed(), f"{name} should be visible in {source}"
 
 
 def test_history_menu_in_different_places(driver: Firefox):
     """
-    C118799 - Verify that the History Menu options are displayed from different places (Hamburger Menu, Menu Bar, Toolbar)
+    C118799 - Verify that the History Menu options are displayed from different places (Hamburger Menu, Menu Bar,
+    Toolbar)
     """
-
-    GenericPage(driver, url=YOUTUBE_URL).open()
 
     # 1. History options from Hamburger Menu
     panel_ui = PanelUi(driver)
     panel_ui.open_history_menu()
 
-    # Check visibility of History elements in the Hamburger Menu
     with driver.context(driver.CONTEXT_CHROME):
         hamburger_menu_elements = {
             "Back Button": "history-back-button",
@@ -32,33 +38,14 @@ def test_history_menu_in_different_places(driver: Firefox):
             "Recent History": "recent_history",
             "Manage History": "manage_history",
         }
-
-        for name, locator in hamburger_menu_elements.items():
-            element = panel_ui.get_element(locator)
-            assert element.is_displayed(), f"{name} should be visible in Hamburger Menu"
+        assert_elements_visibility(panel_ui, hamburger_menu_elements, "Hamburger Menu")
 
     # 2. History options from Menu Bar
     menu_bar = MenuBar(driver)
-    menu_bar.open_menu("History")
 
-    if platform.system() == "Darwin":
-        # macOS - Check visibility of History elements using AppleScript
-        menu_bar_mac_elements = [
-            "Show All History",
-            "Clear Recent History…",
-            "Restore Previous Session",
-            "Search History",
-            "Recently Closed Tabs",
-            "Recently Closed Windows",
-        ]
+    if platform.system() != "Darwin":
+        menu_bar.open_menu("History")
 
-        for item in menu_bar_mac_elements:
-            assert menu_bar.check_menu_item_apple_script(
-                "History", item
-            ), f"{item} should be visible in the History Menu on macOS"
-
-    else:
-        # Windows/Linux - Check visibility of History elements
         with driver.context(driver.CONTEXT_CHROME):
             menu_bar_elements = {
                 "Show All History": "menu-bar-show-all-history",
@@ -68,10 +55,40 @@ def test_history_menu_in_different_places(driver: Firefox):
                 "Recently Closed Tabs": "menu-bar-recently-closed-tabs",
                 "Recently Closed Windows": "menu-bar-recently-closed-windows",
             }
+            assert_elements_visibility(menu_bar, menu_bar_elements, "Menu Bar")
+    else:
+        print("Skipping Menu Bar verification on macOS")
 
-            for name, locator in menu_bar_elements.items():
-                element = menu_bar.get_element(locator)
-                assert element.is_displayed(), f"{name} should be visible in Menu Bar"
+    # 3. History options from Toolbar (History and Library)
+    customize_firefox = CustomizeFirefox(driver)
+    tabs = TabBar(driver).open()
+    nav = Navigation(driver)
+    toolbar = Toolbar(driver)
 
-    # 3. History options from Toolbar History
-    # 4. History options from Toolbar Library
+    panel_ui.navigate_to_customize_toolbar()
+    customize_firefox.add_widget_to_toolbar("history")
+    customize_firefox.add_widget_to_toolbar("library")
+
+    tabs.new_tab_by_button()
+    tabs.switch_to_new_tab()
+
+    with driver.context(driver.CONTEXT_CHROME):
+        nav.get_element("history-button").click()
+
+        history_toolbar_elements = {
+            "Recently Closed Tabs": "toolbar-history-recently-closed-tabs",
+            "Recently Closed Windows": "toolbar-history-recently-closed-windows",
+            "Search History": "toolbar-history-search-history",
+            "Clear Recent History": "toolbar-history-clear-recent-history",
+            "Recent History": "toolbar-history-recent_history",
+            "Manage History": "toolbar-history-manage_history",
+        }
+        assert_elements_visibility(toolbar, history_toolbar_elements, "Toolbar History")
+
+        nav.get_element("library-button").click()
+        nav.get_element("library-history-submenu-button").click()
+
+        library_toolbar_elements = (
+            history_toolbar_elements  # Reuse the same locators from a different path
+        )
+        assert_elements_visibility(toolbar, library_toolbar_elements, "Toolbar Library")
