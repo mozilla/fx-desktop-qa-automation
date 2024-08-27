@@ -3,6 +3,7 @@ from time import sleep
 
 import pytest
 from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver.common.by import By
 
 from modules.page_object import AboutTelemetry, GenericPdf
 
@@ -38,7 +39,7 @@ def test_download_pdf_from_context_menu(
     current_os = platform.system()
     if current_os == "Windows":
         iterations = 1
-    elif current_os == "Darwin":  # macOS is recognized as "Darwin"
+    elif current_os == "Darwin":
         iterations = 3
     else:
         iterations = 1
@@ -49,9 +50,12 @@ def test_download_pdf_from_context_menu(
         keyboard.release(Key.down)
         sleep(0.5)
 
-    with driver.context(driver.CONTEXT_CHROME):
-        driver.switch_to.window(driver.window_handles[-1])
+    # Press Enter to confirm the "Save As" action
+    keyboard.press(Key.enter)
+    keyboard.release(Key.enter)
 
+    # Allow time for the save dialog to appear and press enter
+    sleep(2)
     if sys_platform == "Linux":
         keyboard.press(Key.alt)
         keyboard.press(Key.tab)
@@ -72,9 +76,8 @@ def test_download_pdf_from_context_menu(
     keyboard.release(Key.enter)
 
     # Allow time for the download to complete
-    sleep(2)
+    sleep(4)
 
+    # Open about:telemetry and go to events tab
     about_telemetry = AboutTelemetry(driver).open()
-    sleep(5)
-
     about_telemetry.get_element("events-tab").click()
