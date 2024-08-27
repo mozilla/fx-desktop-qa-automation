@@ -47,7 +47,7 @@ tasks:
               "type": "header",
               "text": {
                 "type": "plain_text",
-                "text": "firefox-desktop :firefox: ${task.metadata.name}\n "
+                "text": "firefox-desktop :firefox: ${task.metadata.name} Linux\n "
               }
             },
             {

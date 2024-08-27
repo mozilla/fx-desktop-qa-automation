@@ -133,6 +133,12 @@
         "groups": []
     },
 
+    "recent-history-info": {
+        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']",
+        "strategy": "css",
+        "groups":[]
+    },
+
     "clear-recent-history": {
         "selectorData" :"appMenuClearRecentHistory",
         "strategy": "id",
@@ -167,6 +173,77 @@
         "selectorData": "panelMenuBookmarkThisPage",
         "strategy": "id",
         "groups": []
-    }
+    },
 
+    "iframe": {
+        "selectorData": "dialogFrame",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "clear-history-dropdown": {
+        "selectorData": "sanitizeDurationPopup",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "all-history-warning": {
+        "selectorData": "sanitizeEverythingWarningBox",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmark-location": {
+        "selectorData": "editBMPanel_folderMenuList",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks": {
+        "selectorData": "editBMPanel_unfiledRootItem",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "show-editor-when-saving-checkbox": {
+        "selectorData": "editBookmarkPanel_showForNewBookmarks",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks-toolbar": {
+        "selectorData": "OtherBookmarks",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "other-bookmarks-by-title": {
+        "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "bookmark-tags": {
+        "selectorData": "editBMPanel_tagsField",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "extend-bookmark-tags": {
+        "selectorData": "editBMPanel_tagsSelectorExpander",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "work-tag": {
+        "selectorData": "label[value='Work']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "todo-tag": {
+        "selectorData": "label[value='To do']",
+        "strategy": "css",
+        "groups": []
+    }
 }

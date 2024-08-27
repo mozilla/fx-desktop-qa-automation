@@ -189,3 +189,6 @@ tests/test_scratch.py
 
 # Credentials
 credentials.json
+
+# Do not ignore
+!tests/downloads
