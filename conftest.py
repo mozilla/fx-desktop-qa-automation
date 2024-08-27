@@ -273,6 +273,11 @@ def version(fx_executable: str):
     return check_output([fx_executable, "--version"]).strip().decode()
 
 
+@pytest.fixture()
+def test_case():
+    return None
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
