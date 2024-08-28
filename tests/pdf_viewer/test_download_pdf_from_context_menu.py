@@ -34,8 +34,16 @@ def test_download_pdf_from_context_menu(
     # Right-click on the body of the file and select Save page as
     action.context_click(body).perform()
 
+    # Set the range based on the operating system
+    if sys_platform == "Windows":
+        iterations = 3
+    elif sys_platform == "Darwin":
+        iterations = 3
+    else:
+        iterations = 3
+
     # Simulate pressing the down arrow to select the "Save As" option
-    for _ in range(3):
+    for _ in range(iterations):
         keyboard.press(Key.down)
         keyboard.release(Key.down)
         sleep(0.5)
