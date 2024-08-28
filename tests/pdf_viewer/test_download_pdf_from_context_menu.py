@@ -1,4 +1,3 @@
-import platform
 from time import sleep
 
 import pytest
@@ -36,10 +35,9 @@ def test_download_pdf_from_context_menu(
     action.context_click(body).perform()
 
     # Set the range based on the operating system
-    current_os = platform.system()
-    if current_os == "Windows":
+    if sys_platform == "Windows":
         iterations = 3
-    elif current_os == "Darwin":
+    elif sys_platform == "Darwin":
         iterations = 3
     else:
         iterations = 3
