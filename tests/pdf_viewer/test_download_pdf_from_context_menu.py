@@ -38,11 +38,11 @@ def test_download_pdf_from_context_menu(
     # Set the range based on the operating system
     current_os = platform.system()
     if current_os == "Windows":
-        iterations = 1
+        iterations = 5
     elif current_os == "Darwin":
         iterations = 3
     else:
-        iterations = 1
+        iterations = 4
 
     # Simulate pressing the down arrow to select the "Save As" option
     for _ in range(iterations):
