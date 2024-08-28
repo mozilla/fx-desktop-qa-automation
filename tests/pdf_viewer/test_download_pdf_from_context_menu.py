@@ -1,9 +1,10 @@
 from time import sleep
 
 import pytest
-from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
+from modules.browser_object import ContextMenu
 from modules.page_object import AboutTelemetry, GenericPdf
 
 
@@ -26,34 +27,19 @@ def test_download_pdf_from_context_menu(
 
     from pynput.keyboard import Controller, Key
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
+    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
+    pdf.open()
     keyboard = Controller()
-    action = ActionChains(driver)
     body = pdf.get_element("pdf-body")
 
     # Right-click on the body of the file and select Save page as
-    action.context_click(body).perform()
-
-    # Set the range based on the operating system
-    if sys_platform == "Windows":
-        iterations = 3
-    elif sys_platform == "Darwin":
-        iterations = 3
-    else:
-        iterations = 3
-
-    # Simulate pressing the down arrow to select the "Save As" option
-    for _ in range(iterations):
-        keyboard.press(Key.down)
-        keyboard.release(Key.down)
-        sleep(0.5)
-
-    # Press Enter to confirm the "Save As" action
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
+    pdf.context_click(body)
+    context_menu = ContextMenu(driver)
+    context_menu.click_context_item("context-menu-save-page-as")
 
     # Allow time for the save dialog to appear and press enter
     sleep(2)
+    context_menu.hide_popup_by_child_node("context-menu-save-page-as")
     if sys_platform == "Linux":
         keyboard.press(Key.alt)
         keyboard.press(Key.tab)
@@ -82,7 +68,9 @@ def test_download_pdf_from_context_menu(
 
     # Verify that Telemetry is recorded
     pdf_telemetry_data = ["downloads", "added", "fileExtension", "pdf"]
-    last_rows = driver.find_elements(By.CSS_SELECTOR, '#events-section table tr:last-child td')
+    last_rows = driver.find_elements(
+        By.CSS_SELECTOR, "#events-section table tr:last-child td"
+    )
     # Extract the text from the last cell without the first column and store it
     cell_texts = [cell.text.strip() for cell in last_rows[1:]]
     assert pdf_telemetry_data == cell_texts
