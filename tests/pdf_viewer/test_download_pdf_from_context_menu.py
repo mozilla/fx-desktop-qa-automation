@@ -38,7 +38,7 @@ def test_download_pdf_from_context_menu(
     # Set the range based on the operating system
     current_os = platform.system()
     if current_os == "Windows":
-        iterations = 5
+        iterations = 4
     elif current_os == "Darwin":
         iterations = 3
     else:
