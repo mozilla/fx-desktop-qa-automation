@@ -7,6 +7,12 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutNewtab
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "1533798"
+
+
 ALLOWED_RGB_BEFORE_VALUES_CARD = set(["rgba(0, 0, 0, 0)"])
 ALLOWED_RGB_AFTER_VALUES_CARD = set(
     ["color(srgb 0.878824 0.878824 0.885882)", "color(srgb 0.334902 0.331765 0.36)"]

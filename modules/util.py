@@ -383,6 +383,23 @@ return props;
     def remove_all_non_numbers(self, item: str) -> str:
         return re.sub(r"[^\d-]", "", item)
 
+    def get_all_attributes(self, driver: Firefox, item: WebElement) -> str:
+        attributes = driver.execute_script(
+            """
+            let items = {};
+            for (let attr of arguments[0].attributes) {
+                items[attr.name] = attr.value;
+            }
+            return items;
+        """,
+            item,
+        )
+
+        ret_val = ""
+        for attribute, value in attributes.items():
+            ret_val += f"{attribute}: {value}\n"
+        return ret_val
+
 
 class BrowserActions:
     """
@@ -537,7 +554,6 @@ class PomUtils:
             if len(shadow_children) and any(shadow_children):
                 logging.info("Returning script-returned shadow elements")
                 shadow_elements = [s for s in shadow_children if s is not None]
-                logging.info(shadow_elements)
                 return shadow_elements
 
         try:
@@ -628,6 +644,14 @@ class PomUtils:
                 logging.info("Returning match...")
                 return matches[0]
             elif len(matches):
+                # If we match multiple, chances are the selector is too vague
+                # Except when we get multiple of the exact same thing?
+                first_el = matches[0].get_attribute("outerHTML")
+                if all([el.get_attribute("outerHTML") == first_el for el in matches]):
+                    return matches[0]
+                for el in matches:
+                    logging.info("match:")
+                    logging.info(el.get_attribute("outerHTML"))
                 raise WebDriverException(
                     "More than one element matched within a Shadow DOM"
                 )

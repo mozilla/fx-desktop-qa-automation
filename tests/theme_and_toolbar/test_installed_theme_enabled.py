@@ -6,6 +6,12 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AmoThemes
 
+
+@pytest.fixture()
+def test_case():
+    return "118174"
+
+
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 

@@ -6,6 +6,12 @@ from modules.browser_object_navigation import Navigation
 from modules.page_object_autofill_test_basic import AddressFill
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "122574"
+
+
 countries = ["CA", "US"]
 
 

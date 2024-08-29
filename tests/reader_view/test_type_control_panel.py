@@ -5,6 +5,12 @@ from modules.browser_object import ReaderView
 from modules.page_object import GenericPage
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "130919"
+
+
 size_controllers = ["minus", "plus"]
 themes = [
     ("light", "rgb(255, 255, 255)"),

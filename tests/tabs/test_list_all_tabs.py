@@ -1,9 +1,16 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134655"
+
 
 ROBOT_TAB = 16
 

@@ -1,6 +1,13 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
+
+
+@pytest.fixture()
+def test_case():
+    return "446391"
+
 
 NOTRACKERS_URL = "http://example.com/"
 

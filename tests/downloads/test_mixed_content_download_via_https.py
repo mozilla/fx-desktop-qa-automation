@@ -1,11 +1,18 @@
 import re
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_object import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "1756722"
+
 
 MIXED_CONTENT_DOWNLOAD_URL = "https://b-mcb-download.glitch.me/"
 

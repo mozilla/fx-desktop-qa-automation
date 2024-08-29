@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, TrackerPanel
 from modules.page_object import GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "446392"
+
+
 urls = [
     "https://www.bbc.com/",
     "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection",

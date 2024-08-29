@@ -5,6 +5,12 @@ from modules.browser_object import AutofillPopup, CreditCardPopup, Navigation
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "122401"
+
+
 indices = ["1", "2"]
 
 

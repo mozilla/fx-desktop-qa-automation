@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ReaderView
 from modules.page_object import GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "130908"
+
+
 WIKI_URL = (
     "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
 )

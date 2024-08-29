@@ -1,8 +1,15 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
+
+
+@pytest.fixture()
+def test_case():
+    return "1365268"
+
 
 # Set constant
 FX_SEARCH_CODE = "client=firefox-b-1-d"

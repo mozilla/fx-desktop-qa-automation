@@ -1,6 +1,12 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar, TabContextMenu
+
+
+@pytest.fixture()
+def test_case():
+    return "134722"
 
 
 def test_pin_tab(driver: Firefox):

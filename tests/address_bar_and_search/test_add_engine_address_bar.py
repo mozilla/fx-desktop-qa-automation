@@ -5,6 +5,12 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object import Navigation
 
+
+@pytest.fixture()
+def test_case():
+    return "1365478"
+
+
 sites = [("YouTube", "com"), ("Ecosia", "org")]
 
 

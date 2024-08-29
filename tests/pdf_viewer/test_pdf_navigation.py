@@ -1,8 +1,15 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
 from modules.util import Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "3927"
+
 
 PDF_URL = "https://web.archive.org/web/20060818161558/http://archive.dovebid.com/brochure/bro1514.pdf"
 

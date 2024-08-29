@@ -7,6 +7,16 @@ from selenium.webdriver import Firefox
 from modules.page_object import GenericPdf
 
 
+@pytest.fixture()
+def test_case():
+    return "1756769"
+
+
+@pytest.fixture()
+def delete_files_regex_string():
+    return r".*i-9.pdf"
+
+
 @pytest.mark.headed
 def test_download_pdf(
     driver: Firefox,

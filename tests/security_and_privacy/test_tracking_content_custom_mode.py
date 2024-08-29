@@ -7,6 +7,12 @@ from modules.browser_object_navigation import Navigation
 from modules.browser_object_tracker_panel import TrackerPanel
 from modules.page_object_about_prefs import AboutPrefs
 
+
+@pytest.fixture()
+def test_case():
+    return "446405"
+
+
 Tracker_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 
 

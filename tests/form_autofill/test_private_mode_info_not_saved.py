@@ -7,6 +7,11 @@ from modules.util import BrowserActions, Utilities
 
 
 @pytest.fixture()
+def test_case():
+    return "122587"
+
+
+@pytest.fixture()
 def set_prefs():
     """Set prefs"""
     return [

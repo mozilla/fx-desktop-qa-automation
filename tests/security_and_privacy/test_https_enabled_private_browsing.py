@@ -2,6 +2,12 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.wait import WebDriverWait
 
+
+@pytest.fixture()
+def test_case():
+    return "1362731"
+
+
 HTTP_URL = "http://example.com"
 
 

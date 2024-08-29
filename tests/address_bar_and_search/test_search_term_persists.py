@@ -4,6 +4,11 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, TabBar
 
 
+@pytest.fixture()
+def test_case():
+    return "2153943"
+
+
 # Set search region
 @pytest.fixture()
 def add_prefs():

@@ -6,6 +6,11 @@ from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
 
 
+@pytest.fixture()
+def test_case():
+    return "1365269"
+
+
 # Set search region
 @pytest.fixture()
 def overwrite_prefs():

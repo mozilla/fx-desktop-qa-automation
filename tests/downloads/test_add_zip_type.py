@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -5,6 +6,12 @@ from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs
 from modules.page_object_generics import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "1756743"
+
 
 ZIP_URL = "https://ftp.mozilla.org/pub/firefox/releases/0.9rc/"
 

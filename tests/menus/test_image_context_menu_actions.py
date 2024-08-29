@@ -8,6 +8,12 @@ from modules.browser_object import ImageContextMenu, Navigation, TabBar
 from modules.page_object import GenericPage
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "2637622"
+
+
 LINK_IMAGE_URL = (
     "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
 )

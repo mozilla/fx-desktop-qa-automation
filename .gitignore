@@ -192,3 +192,4 @@ credentials.json
 
 # dont ignore
 !images/goomy.png
+!tests/downloads

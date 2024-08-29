@@ -1,9 +1,16 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "2084550"
+
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 

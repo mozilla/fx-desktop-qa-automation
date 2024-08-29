@@ -6,6 +6,12 @@ from selenium.webdriver.common.by import By
 
 from modules.browser_object import TabBar
 
+
+@pytest.fixture()
+def test_case():
+    return "134719"
+
+
 GHA = environ.get("GITHUB_ACTIONS") == "true"
 
 

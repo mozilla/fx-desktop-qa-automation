@@ -8,6 +8,11 @@ from modules.page_object import GenericPdf
 
 
 @pytest.fixture()
+def test_case():
+    return "936503"
+
+
+@pytest.fixture()
 def add_prefs():
     return []
 

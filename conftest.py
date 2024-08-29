@@ -4,6 +4,7 @@ import os
 import platform
 import re
 from shutil import unpack_archive
+from subprocess import check_output
 from typing import Callable, List, Tuple, Union
 
 import pytest
@@ -268,6 +269,16 @@ def use_profile():
 
 
 @pytest.fixture(autouse=True)
+def version(fx_executable: str):
+    return check_output([fx_executable, "--version"]).strip().decode()
+
+
+@pytest.fixture()
+def test_case():
+    return None
+
+
+@pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
     opt_headless: bool,
@@ -276,8 +287,12 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
+    version: str,
+    suite_id: str,
+    test_case: str,
     env_prep,
     tmp_path,
+    request,
 ):
     """
     Return the webdriver object.
@@ -308,6 +323,9 @@ def driver(
 
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
+
+    version: str
+        The result of calling the Fx executable with `--version`.
 
     env_prep: None
         Fixture that does other environment work, like set logging levels.
@@ -346,6 +364,30 @@ def driver(
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 
+    if request.node.rep_call.passed:
+        plan_id = os.environ.get("MILESTONE_ID")
+        if plan_id:
+            platform_info = platform.uname()
+            logging.info(version)
+            logging.info(f"Get runs from plan {plan_id}")
+            logging.info(f"Filter runs that have suite {suite_id}")
+            logging.info(f"Filter results to match {platform_info}")
+            if platform_info.system == "Darwin":
+                logging.info(f" ...and macos version: {platform.mac_ver()}")
+            logging.info(f"Find test that matches {test_case}")
+            logging.info("If test exists, set to passed")
+            logging.info("If test does not exist, create and set to passed")
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    # Execute all other hooks to obtain the report object
+    outcome = yield
+    rep = outcome.get_result()
+
+    # Store the test result in the item
+    setattr(item, "rep_" + rep.when, rep)
+
 
 @pytest.fixture()
 def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
@@ -369,18 +411,25 @@ def delete_files_regex_string():
 
 
 @pytest.fixture()
-def delete_files(sys_platform, delete_files_regex_string):
+def home_folder(sys_platform):
+    """Return the home folder location"""
+    if sys_platform.startswith("Win"):
+        home_folder = os.path.join(
+            os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH")
+        )
+    else:
+        home_folder = os.environ.get("HOME")
+    return home_folder
+
+
+@pytest.fixture()
+def delete_files(sys_platform, delete_files_regex_string, home_folder):
     """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
 
     def _delete_files():
-        if sys_platform.startswith("Win"):
-            if os.environ.get("GITHUB_ACTIONS") == "true":
-                downloads_folder = os.path.join(
-                    "C:", "Users", "runneradmin", "Downloads"
-                )
-        else:
-            home_folder = os.environ.get("HOME")
-            downloads_folder = os.path.join(home_folder, "Downloads")
+        downloads_folder = os.path.join(home_folder, "Downloads")
+        logging.info(os.path.exists(downloads_folder))
+
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
             if delete_files_regex.match(file):
@@ -389,11 +438,6 @@ def delete_files(sys_platform, delete_files_regex_string):
     _delete_files()
     yield True
     _delete_files()
-
-
-@pytest.fixture()
-def version(driver: Firefox):
-    return driver.capabilities["browserVersion"]
 
 
 @pytest.fixture(scope="session", autouse=True)

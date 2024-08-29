@@ -6,6 +6,12 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object_navigation import Navigation
 
+
+@pytest.fixture()
+def test_case():
+    return "192739"
+
+
 TLS_URL = "https://tls-v1-2.badssl.com:1012/"
 
 

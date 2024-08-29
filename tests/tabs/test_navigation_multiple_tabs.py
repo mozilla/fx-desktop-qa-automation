@@ -7,11 +7,18 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
 
+
+@pytest.fixture()
+def test_case():
+    return "134647"
+
+
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_navigation_multiple_tabs(driver: Firefox):
+    """C134647 - Verify that Multiple Tabs can be closed via the context menu"""
     # open 20 tabs
     tabs = TabBar(driver).open()
     num_tabs = 20

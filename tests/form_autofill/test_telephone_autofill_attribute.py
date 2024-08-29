@@ -8,6 +8,12 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AddressFill
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "122361"
+
+
 countries = ["CA", "US"]
 
 
