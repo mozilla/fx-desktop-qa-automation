@@ -33,5 +33,4 @@ def test_deleted_page_not_remembered(driver: Firefox):
     nav.type_in_awesome_bar("Firefox Privacy Notice")
 
     with driver.context(driver.CONTEXT_CHROME):
-        all_suggested_results = nav.get_elements("results-dropdown")
-        assert len(all_suggested_results) == 1
+        nav.expect(lambda _: len(nav.get_elements("results-dropdown")) == 1)
