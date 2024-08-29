@@ -1,4 +1,6 @@
 import logging
+import platform
+from os import environ
 
 import pytest
 from selenium.webdriver import Firefox
@@ -6,6 +8,11 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu, Navigation, PanelUi
 
 X_PADDING = 50
+if (
+    platform.system().lower().startswith("win")
+    and environ.get("GITHUB_ACTIONS") == "true"
+):
+    X_PADDING += 25
 
 
 @pytest.fixture()
