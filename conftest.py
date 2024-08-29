@@ -364,7 +364,7 @@ def driver(
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 
-    if request.node.rep_call.passed:
+    if os.environ.get("MILESTONE_ID") and request.node.rep_call.passed:
         plan_id = os.environ.get("MILESTONE_ID")
         if plan_id:
             platform_info = platform.uname()
