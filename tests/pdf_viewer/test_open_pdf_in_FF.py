@@ -1,7 +1,5 @@
-import logging
 import os
 from shutil import copyfile
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -21,7 +19,6 @@ def temp_pdf(tmp_path):
     return loc
 
 
-@pytest.mark.unstable
 def test_open_pdf_in_fx(driver: Firefox, temp_pdf):
     """
     C936503: PDF files can be successfully opened in Firefox
