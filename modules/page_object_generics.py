@@ -63,12 +63,13 @@ class GenericPdf(BasePage):
         keyboard = Controller()
         if sys_platform == "Darwin" or sys_platform == "Linux":
             keyboard.type("/")
-            sleep(2)
+            sleep(3)
             keyboard.type(image_path.lstrip("/"))
         else:
             keyboard.type(Key.f4)
-            sleep(1)
+            sleep(3)
             keyboard.type(image_path)
+        sleep(1)
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
         sleep(2)
