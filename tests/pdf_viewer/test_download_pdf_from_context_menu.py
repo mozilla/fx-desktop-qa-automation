@@ -71,13 +71,13 @@ def test_download_pdf_from_context_menu(
 
     if sys_platform == "Windows":
         # Use the second-to-last row on Windows
-        css_selector = driver.find_elements(
+        pdf_telemetry_row = driver.find_elements(
             By.CSS_SELECTOR, "#events-section table tr:nth-last-child(2) td")
     else:
         # Use the last row on other OSes
-        css_selector = driver.find_elements(
+        pdf_telemetry_row = driver.find_elements(
             By.CSS_SELECTOR, "#events-section table tr:last-child td")
 
     # Extract the text from the last cell without the first column and store it
-    cell_texts = [cell.text.strip() for cell in css_selector[1:]]
+    cell_texts = [cell.text.strip() for cell in pdf_telemetry_row[1:]]
     assert pdf_telemetry_data == cell_texts
