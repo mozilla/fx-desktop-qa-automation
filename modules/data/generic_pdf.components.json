@@ -139,6 +139,12 @@
         "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
         "groups": []
+    },
+
+    "pdf-body": {
+        "selectorData": "viewer",
+        "strategy": "id",
+        "groups": []
     }
 
 }
