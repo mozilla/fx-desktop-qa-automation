@@ -1,9 +1,16 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import FindToolbar
 from modules.util import BrowserActions
+
+
+@pytest.fixture()
+def test_case():
+    return "127249"
+
 
 # The number of colors that can be different between two images
 # before we call them different color schemes

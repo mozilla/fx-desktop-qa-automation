@@ -9,6 +9,12 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "1365026"
+
+
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 

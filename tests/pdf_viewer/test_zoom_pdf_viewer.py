@@ -3,6 +3,12 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
 
+
+@pytest.fixture()
+def test_case():
+    return "3928"
+
+
 controls = ["out", "in"]
 
 

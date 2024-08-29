@@ -1,7 +1,14 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_generics import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "118806"
+
 
 YOUTUBE_URL = "https://www.youtube.com/"
 

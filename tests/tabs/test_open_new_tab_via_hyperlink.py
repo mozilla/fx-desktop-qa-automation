@@ -1,9 +1,15 @@
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import TabBar
 from modules.page_object import ExamplePage
+
+
+@pytest.fixture()
+def test_case():
+    return "134444"
 
 
 def test_open_new_via_hyperlink(driver: Firefox):

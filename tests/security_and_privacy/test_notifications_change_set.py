@@ -6,6 +6,12 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutPrefs, GenericPage
 from modules.util import BrowserActions, Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "159150"
+
+
 NOTIFICATIONS_SITE = "https://www.bennish.net/web-notifications.html"
 associated_labels = [
     ("notifications-allow-button", "Allow", "granted"),

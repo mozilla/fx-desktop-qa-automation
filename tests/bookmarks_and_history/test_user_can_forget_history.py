@@ -1,7 +1,14 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ForgetPanel, Navigation, PanelUi, TabBar
 from modules.page_object import CustomizeFirefox, GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "174072"
+
 
 links = [
     "about:about",

@@ -1,8 +1,15 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import FindToolbar
 from modules.page_base import BasePage
 from modules.page_object import GenericPdf
+
+
+@pytest.fixture()
+def test_case():
+    return "127271"
+
 
 WORD_SEGMENT = "authori"
 MATCH_TWO_COTEXT = "representative must complete"

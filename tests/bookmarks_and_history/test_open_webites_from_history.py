@@ -7,6 +7,11 @@ from modules.browser_object import PanelUi
 
 
 @pytest.fixture()
+def test_case():
+    return "118807"
+
+
+@pytest.fixture()
 def use_profile():
     return "theme_change"
 

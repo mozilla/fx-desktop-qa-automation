@@ -9,6 +9,12 @@ from modules.classes.bookmark import Bookmark
 from modules.page_object import GenericPage
 from modules.util import BrowserActions
 
+
+@pytest.fixture()
+def test_case():
+    return "2084518"
+
+
 BOOKMARK_URL = "about:robots"
 
 

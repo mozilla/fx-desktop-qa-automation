@@ -8,6 +8,11 @@ from selenium.webdriver.common.by import By
 from modules.page_object import AboutPrefs
 
 
+@pytest.fixture()
+def test_case():
+    return "143604"
+
+
 # make sure Firefox remembers history
 @pytest.fixture()
 def add_prefs():

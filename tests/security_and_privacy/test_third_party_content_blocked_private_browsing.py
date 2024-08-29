@@ -1,7 +1,14 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi, TrackerPanel
 from modules.page_object import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "446323"
+
 
 ALLOWED_TRACKING_URLS = set(
     [

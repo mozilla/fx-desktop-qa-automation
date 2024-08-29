@@ -1,5 +1,6 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
@@ -10,7 +11,13 @@ from modules.page_object_form_autofill_textarea import TextAreaFormAutofill
 from modules.util import Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "2264626"
+
+
 def test_login_form_copy_paste(driver: Firefox):
+    """C2264626 - Verify that copy and paste actions are displayed in the context menu and work as expected"""
     # instantiate objects
     login_fill = LoginAutofill(driver).open()
     context_menu = SearchBarContextMenu(driver)

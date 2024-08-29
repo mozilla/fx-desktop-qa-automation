@@ -6,6 +6,12 @@ from modules.components.dropdown import Dropdown
 from modules.page_object import GenericPage
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "130919"
+
+
 size_controllers = ["minus", "plus"]
 themes = [
     ("light", "rgb(255, 255, 255)"),

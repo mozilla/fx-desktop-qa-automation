@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import LoginAutofill
 
+
+@pytest.fixture()
+def test_case():
+    return "101670"
+
+
 SAMPLE_USER = "bob_c"
 SAMPLE_PASS = "123456"
 
