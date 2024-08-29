@@ -9,6 +9,11 @@ from modules.page_object import AboutTelemetry, GenericPdf
 
 
 @pytest.fixture()
+def test_case():
+    return "1756790"
+
+
+@pytest.fixture()
 def delete_files_regex_string():
     return r".*i-9.pdf"
 
@@ -72,11 +77,13 @@ def test_download_pdf_from_context_menu(
     if sys_platform == "Windows":
         # Use the second-to-last row on Windows
         pdf_telemetry_row = driver.find_elements(
-            By.CSS_SELECTOR, "#events-section table tr:nth-last-child(2) td")
+            By.CSS_SELECTOR, "#events-section table tr:nth-last-child(2) td"
+        )
     else:
         # Use the last row on other OSes
         pdf_telemetry_row = driver.find_elements(
-            By.CSS_SELECTOR, "#events-section table tr:last-child td")
+            By.CSS_SELECTOR, "#events-section table tr:last-child td"
+        )
 
     # Extract the text from the last cell without the first column and store it
     cell_texts = [cell.text.strip() for cell in pdf_telemetry_row[1:]]
