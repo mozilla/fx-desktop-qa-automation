@@ -278,6 +278,11 @@ def test_case():
     return None
 
 
+@pytest.fixture()
+def hard_quit():
+    return False
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
@@ -290,6 +295,7 @@ def driver(
     version: str,
     suite_id: str,
     test_case: str,
+    hard_quit: bool,
     env_prep,
     tmp_path,
     request,
@@ -361,6 +367,8 @@ def driver(
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
+        if hard_quit:
+            return
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 

@@ -17,7 +17,11 @@ def delete_files_regex_string():
     return r"i-9.*\.pdf"
 
 
-@pytest.mark.headed
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 def test_pdf_input_numbers(
     driver: Firefox,
     fillable_pdf_url: str,
@@ -29,11 +33,8 @@ def test_pdf_input_numbers(
     C1017528: Input data in numeric fields
     """
 
-    from pynput.keyboard import Controller, Key
-
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     pdf.open()
-    keyboard = Controller()
     numeric_field = pdf.get_element("zipcode-field")
 
     # Test value to input in the field
@@ -47,25 +48,3 @@ def test_pdf_input_numbers(
 
     download_button = pdf.get_element("download-button")
     download_button.click()
-
-    time.sleep(2)
-
-    if sys_platform == "Linux":
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        time.sleep(1)
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        time.sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        time.sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
