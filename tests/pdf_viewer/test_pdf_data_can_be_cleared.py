@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
 
@@ -32,11 +31,8 @@ def test_pdf_data_can_be_cleared(
     C1017495 :Check if data can be cleared
     """
 
-    from pynput.keyboard import Controller, Key
-
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     pdf.open()
-    keyboard = Controller()
 
     # Step 1: Click and type inside the text field for the name section
 
