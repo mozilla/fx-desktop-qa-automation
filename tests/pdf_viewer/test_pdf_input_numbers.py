@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -45,6 +43,3 @@ def test_pdf_input_numbers(
 
     # Verify the value is still present
     pdf.element_attribute_contains("zipcode-field", "value", test_value)
-
-    download_button = pdf.get_element("download-button")
-    download_button.click()

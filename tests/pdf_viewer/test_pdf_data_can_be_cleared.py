@@ -1,14 +1,8 @@
-import logging
-import time
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import Navigation
 from modules.page_object import GenericPdf
 
 
@@ -84,8 +78,3 @@ def test_pdf_data_can_be_cleared(
         pdf.get_element("first-name-field").get_attribute("value") == ""
     ), "Text field did not reset."
     assert not checkbox.is_selected(), "Checkbox did not reset."
-
-    # Save the doc so that the test can end
-    nav = Navigation(driver)
-    download_button = pdf.get_element("download-button")
-    download_button.click()
