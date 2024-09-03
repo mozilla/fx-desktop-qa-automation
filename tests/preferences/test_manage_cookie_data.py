@@ -36,8 +36,11 @@ def test_manage_cookie_data(driver: Firefox):
 
     # Visit some sites to get a few cookies added to saved data
     driver.get("https://www.google.com")
+    sleep(1)
     driver.get("https://www.jetbrains.com")
+    sleep(1)
     driver.get("https://www.wikipedia.com")
+    sleep(1)
 
     # Navigate to the manage data dialog of about:preferences#privacy
     open_manage_cookies_data_dialog()
