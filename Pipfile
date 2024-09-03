@@ -22,7 +22,7 @@ pytest-rerunfailures = "14.0"
 slack-sdk = "3.31.0"
 google-cloud-storage = "2.18.0"
 google-auth = "2.32.0"
-psutil = "*"
+psutil = "<6.1"
 
 [dev-packages]
 werkzeug = "==3.0.3"
