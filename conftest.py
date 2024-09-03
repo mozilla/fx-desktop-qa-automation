@@ -436,7 +436,6 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 
     def _delete_files():
         downloads_folder = os.path.join(home_folder, "Downloads")
-        logging.info(os.path.exists(downloads_folder))
 
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
@@ -456,3 +455,17 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+
+
+def pytest_sessionfinish(session, exitstatus):
+    if not hasattr(session.config, "workerinput"):
+        import psutil
+
+        reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+        for proc in psutil.process_iter(["name", "pid", "status"]):
+            if (
+                proc.create_time() > reporter._sessionstarttime
+                and proc.name().startswith("firefox")
+            ):
+                logging.info(f"found remaining process: {proc.pid}")
+                proc.kill()
