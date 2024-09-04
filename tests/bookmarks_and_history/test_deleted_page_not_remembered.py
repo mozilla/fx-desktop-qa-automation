@@ -25,7 +25,7 @@ def use_profile():
     return "theme_change"
 
 
-def test_deleted_page_not_remembered(driver: Firefox):
+def test_deleted_page_not_remembered(driver: Firefox, sys_platform):
     """
     C216273: Verify that the deleted page from the Hamburger History submenu is not remembered or autofilled in the URL bar
     """
@@ -41,9 +41,12 @@ def test_deleted_page_not_remembered(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         x_offset = firefox_privacy_notice.size.get("width") + X_PADDING
         logging.info(x_offset)
-        panel_ui.actions.move_to_element_with_offset(
-            firefox_privacy_notice, x_offset, 0
-        ).click().perform()
+        if sys_platform == "Linux":
+            panel_ui.click_on(firefox_privacy_notice)
+        else:
+            panel_ui.actions.move_to_element_with_offset(
+                firefox_privacy_notice, x_offset, 0
+            ).click().perform()
 
     context_menu.click_and_hide_menu("context-menu-delete-page")
     nav.type_in_awesome_bar("Firefox Privacy Notice")
