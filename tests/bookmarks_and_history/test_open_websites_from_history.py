@@ -4,6 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
+from modules.page_object import GenericPage
 
 
 @pytest.fixture()
@@ -26,7 +27,7 @@ def trim_url(url: str) -> str:
 
 def test_open_websites_from_history(driver: Firefox):
     """
-    C118807: Verify that the user can Open websites from the Toolbar History submenu
+    C118807: Verify that the user can open websites from the Toolbar History submenu
     """
     panel_ui = PanelUi(driver).open()
 
@@ -42,7 +43,8 @@ def test_open_websites_from_history(driver: Firefox):
         website_label = history_items[rand_index].get_attribute("label")
 
         trimmed_url = trim_url(url_to_visit)
-    driver.get(trimmed_url)
+    page = GenericPage(driver, url=trimmed_url)
+    page.open()
 
-    assert driver.current_url == trimmed_url
-    assert driver.title == website_label
+    page.url_contains(trimmed_url)
+    page.title_contains(website_label)

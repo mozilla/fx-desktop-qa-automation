@@ -13,7 +13,7 @@ def test_case():
 YOUTUBE_URL = "https://www.youtube.com/"
 
 
-def test_opened_website_in_private_window_not_capture_in_history_list(driver: Firefox):
+def test_opened_website_in_private_window_not_captured_in_history_list(driver: Firefox):
     """
     C118806 - Verify that opened websites in a New Private Window will not be displayed in the Hamburger submenu history
     """

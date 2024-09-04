@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -96,14 +97,17 @@ def test_copy_link(driver: Firefox):
     example = ExamplePage(driver).open()
 
     # right click the hyperlink
+    sleep(1)
     example.context_click("more-information")
 
     # click on the open in new window option
+    sleep(1)
     hyperlink_context.click_and_hide_menu("context-menu-copy-link")
 
     # open a new tab
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
+    sleep(1)
     driver.switch_to.window(driver.window_handles[1])
 
     # # context click and paste

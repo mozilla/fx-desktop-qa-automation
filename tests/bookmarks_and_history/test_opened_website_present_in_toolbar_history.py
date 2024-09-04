@@ -17,7 +17,7 @@ YOUTUBE_URL = "https://www.youtube.com/"
 WEBSITES = [FACEBOOK_URL, AMAZON_URL, YOUTUBE_URL]
 
 
-def test_the_most_recently_website_is_present_in_history_menu(driver: Firefox):
+def test_the_most_recent_website_is_present_in_history_menu(driver: Firefox):
     """
     C118800 - Verify that the most recently opened website is displayed in the Toolbar History submenu on top of the
     list
