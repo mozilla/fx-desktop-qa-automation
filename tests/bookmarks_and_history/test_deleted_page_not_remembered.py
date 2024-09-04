@@ -41,7 +41,7 @@ def test_deleted_page_not_remembered(driver: Firefox, sys_platform):
     with driver.context(driver.CONTEXT_CHROME):
         x_offset = firefox_privacy_notice.size.get("width") + X_PADDING
         logging.info(x_offset)
-        if sys_platform == "Linux":
+        if sys_platform.lower() == "linux":
             panel_ui.click_on(firefox_privacy_notice)
         else:
             panel_ui.actions.move_to_element_with_offset(
