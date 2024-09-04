@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import TabBar, ContextMenu
+from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import ExamplePage
 
 
@@ -28,4 +28,4 @@ def test_open_new_via_hyperlink(driver: Firefox):
     # Get the title of the new tab
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
-    example.url_contains("https://www.iana.org/domains/example")
+    example.url_contains("https://www.iana.org/help/example-domains")
