@@ -13,6 +13,12 @@
         "groups": []
     },
 
+    "context-menu-open-link-in-tab": {
+        "selectorData": "context-openlinkintab",
+        "strategy": "id",
+        "groups": []
+    },
+
     "context-menu-inspect": {
         "selectorData": "context-inspect",
         "strategy": "id",
