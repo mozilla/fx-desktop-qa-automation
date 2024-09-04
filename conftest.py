@@ -463,9 +463,13 @@ def pytest_sessionfinish(session, exitstatus):
 
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         for proc in psutil.process_iter(["name", "pid", "status"]):
-            if (
-                proc.create_time() > reporter._sessionstarttime
-                and proc.name().startswith("firefox")
-            ):
-                logging.info(f"found remaining process: {proc.pid}")
-                proc.kill()
+            try:
+                if (
+                    proc.create_time() > reporter._sessionstarttime
+                    and proc.name().startswith("firefox")
+                ):
+                    logging.info(f"found remaining process: {proc.pid}")
+                    proc.kill()
+            except (ProcessLookupError, psutil.NoSuchProcess):
+                logging.warning("Failed to kill process.")
+                pass

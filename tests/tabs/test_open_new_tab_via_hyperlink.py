@@ -1,9 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import ContextMenu, TabBar
+from modules.browser_object import ContextMenu
 from modules.page_object import ExamplePage
 
 
@@ -16,7 +14,6 @@ def test_open_new_via_hyperlink(driver: Firefox):
     """
     C134444 - A hyperlink can be opened in a new tab
     """
-    browser = TabBar(driver)
     example = ExamplePage(driver).open()
 
     # Use context menu option to open link in new tab
