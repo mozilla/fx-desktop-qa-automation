@@ -1,10 +1,17 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import FindToolbar
 from modules.util import BrowserActions
+
+
+@pytest.fixture()
+def test_case():
+    return "127239"
+
 
 TARGET_LINK = "about:telemetry"
 # The number of colors that can be different between two images

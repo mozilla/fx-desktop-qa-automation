@@ -1,5 +1,6 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -7,6 +8,12 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.browser_object import Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_error_page import ErrorPage
+
+
+@pytest.fixture()
+def test_case():
+    return "1901393"
+
 
 CHECK_SITE = "http://cnn"
 SHORT_SITE = CHECK_SITE.split("/")[-1]

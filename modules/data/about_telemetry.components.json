@@ -9,5 +9,11 @@
     "selectorData": "//li[@class='tabs-menu-item rawdata ']//a[@id='rawdata-tab']",
     "strategy": "xpath",
     "groups": []
+  },
+
+  "events-tab": {
+    "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='events-section']",
+    "strategy": "css",
+    "groups": []
   }
 }

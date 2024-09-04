@@ -7,6 +7,11 @@ from modules.util import BrowserActions
 
 
 @pytest.fixture()
+def test_case():
+    return "172045"
+
+
+@pytest.fixture()
 def use_profile():
     return "theme_change"
 

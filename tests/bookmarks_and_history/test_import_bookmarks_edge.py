@@ -40,7 +40,8 @@ def edge_bookmarks(sys_platform, home_folder):
 
 
 @pytest.mark.skipif(
-    sys.platform == "Linux", reason="Only testing Edge on Win and MacOS"
+    sys.platform.lower().startswith("linux"),
+    reason="Only testing Edge on Win and MacOS",
 )
 @pytest.mark.skipif(
     os.environ.get("GITHUB_ACTIONS") == "true"

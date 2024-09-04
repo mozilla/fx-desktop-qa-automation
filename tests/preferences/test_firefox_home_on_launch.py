@@ -7,6 +7,11 @@ from modules.page_object import AboutNewtab, AboutPrefs
 
 
 @pytest.fixture()
+def test_case():
+    return "143543"
+
+
+@pytest.fixture()
 def set_prefs():
     """Set prefs"""
     return [

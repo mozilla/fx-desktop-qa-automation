@@ -10,6 +10,12 @@ from modules.browser_object import ContextMenu, Devtools, Navigation
 from modules.page_object import ExamplePage
 from modules.util import Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "2637623"
+
+
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 

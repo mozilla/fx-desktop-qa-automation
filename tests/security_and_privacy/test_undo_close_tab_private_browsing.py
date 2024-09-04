@@ -6,6 +6,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, PanelUi, TabBar
 from modules.page_object import GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "120118"
+
+
 VISIT_URL = "about:about"
 
 

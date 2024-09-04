@@ -1,4 +1,5 @@
 [tool.pytest.ini_options]
+generate_report_on_test = false
 addopts = "-vs --html=report.html"
 log_cli = true
 log_cli_level = "info"

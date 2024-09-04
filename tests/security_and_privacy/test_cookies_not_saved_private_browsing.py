@@ -6,6 +6,11 @@ from modules.page_object import AboutPrefs, GoogleSearch
 from modules.util import BrowserActions
 
 
+@pytest.fixture()
+def test_case():
+    return "101677"
+
+
 @pytest.mark.unstable
 def test_cookies_not_saved_private_browsing(driver: Firefox):
     """

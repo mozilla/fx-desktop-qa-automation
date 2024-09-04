@@ -235,20 +235,14 @@
         "groups": []
     },
 
-    "bookmark-tags": {
-        "selectorData": "editBMPanel_tagsField",
+    "recently_closed_tabs": {
+        "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
         "groups": []
     },
 
     "recently_closed_windows": {
         "selectorData": "appMenuRecentlyClosedWindows",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "extend-bookmark-tags": {
-        "selectorData": "editBMPanel_tagsSelectorExpander",
         "strategy": "id",
         "groups": []
     },
@@ -267,6 +261,18 @@
 
     "manage_history": {
         "selectorData": "PanelUI-historyMore",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmark-tags": {
+        "selectorData": "editBMPanel_tagsField",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "extend-bookmark-tags": {
+        "selectorData": "editBMPanel_tagsSelectorExpander",
         "strategy": "id",
         "groups": []
     },

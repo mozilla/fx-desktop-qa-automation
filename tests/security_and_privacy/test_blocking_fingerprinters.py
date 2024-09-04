@@ -6,6 +6,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_about_prefs import AboutPrefs
 
+
+@pytest.fixture()
+def test_case():
+    return "446404"
+
+
 FINGERPRINTERS_URL = (
     "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
 )

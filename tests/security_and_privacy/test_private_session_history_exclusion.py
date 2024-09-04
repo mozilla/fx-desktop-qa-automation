@@ -3,6 +3,12 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_panel_ui import PanelUi
 
+
+@pytest.fixture()
+def test_case():
+    return "101663"
+
+
 YOUTUBE_URL = "https://www.youtube.com/"
 FACEBOOK_URL = "https://www.facebook.com/"
 AMAZON_URL = "https://www.amazon.com/"

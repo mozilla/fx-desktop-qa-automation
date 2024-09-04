@@ -67,13 +67,12 @@ def test_history_menu_in_different_places(driver: Firefox):
 
     panel_ui.navigate_to_customize_toolbar()
     customize_firefox.add_widget_to_toolbar("history")
-    customize_firefox.add_widget_to_toolbar("library")
 
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
     with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("history-button").click()
+        nav.click_on("history-button")
 
         history_toolbar_elements = {
             "Recently Closed Tabs": "toolbar-history-recently-closed-tabs",
@@ -85,8 +84,14 @@ def test_history_menu_in_different_places(driver: Firefox):
         }
         assert_elements_visibility(toolbar, history_toolbar_elements, "Toolbar History")
 
-        nav.get_element("library-button").click()
-        nav.get_element("library-history-submenu-button").click()
+        panel_ui.open_panel_menu()
+        panel_ui.navigate_to_customize_toolbar()
+        customize_firefox.add_widget_to_toolbar("library")
+
+        tabs.switch_to_new_tab()
+
+        nav.click_on("library-button")
+        nav.click_on("library-history-submenu-button")
 
         library_toolbar_elements = (
             history_toolbar_elements  # Reuse the same locators from a different path

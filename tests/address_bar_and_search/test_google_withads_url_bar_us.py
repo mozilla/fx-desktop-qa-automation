@@ -11,6 +11,11 @@ from modules.util import Utilities
 
 
 @pytest.fixture()
+def test_case():
+    return "1365070"
+
+
+@pytest.fixture()
 def add_prefs():
     return [("cookiebanners.service.mode", 1)]
 

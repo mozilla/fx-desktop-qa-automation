@@ -12,6 +12,12 @@ from modules.page_object import AboutPrefs
 from modules.page_object_autofill_credit_card import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "122390"
+
+
 tabs = [i for i in range(4)]
 
 

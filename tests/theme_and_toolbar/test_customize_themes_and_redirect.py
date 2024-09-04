@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutAddons
 
+
+@pytest.fixture()
+def test_case():
+    return "118173"
+
+
 themes = {
     "firefox-compact-dark_mozilla_org-heading": "rgb(43, 42, 51)",
     "firefox-compact-light_mozilla_org-heading": "rgb(249, 249, 251)",

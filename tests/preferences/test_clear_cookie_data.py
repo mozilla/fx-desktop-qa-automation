@@ -1,7 +1,13 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
+
+
+@pytest.fixture()
+def test_case():
+    return "143627"
 
 
 def test_clear_cookie_data(driver: Firefox):

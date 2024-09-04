@@ -8,6 +8,11 @@ from modules.page_object_about_prefs import AboutPrefs
 
 
 @pytest.fixture()
+def test_case():
+    return "143572"
+
+
+@pytest.fixture()
 def set_prefs():
     """Set prefs"""
     return [("app.update.disabledForTesting", False)]

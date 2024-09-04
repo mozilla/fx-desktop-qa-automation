@@ -10,6 +10,11 @@ from modules.page_object_about_prefs import AboutPrefs
 from modules.util import BrowserActions
 
 
+@pytest.fixture()
+def test_case():
+    return "1618400"
+
+
 @pytest.mark.slow
 def test_preferences_all_toggles_enabled(driver: Firefox):
     """

@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ReaderView
 from modules.page_object import GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "2637622"
+
+
 themes = [
     ("light", "rgb(255, 255, 255)"),
     ("dark", "rgb(28, 27, 34)"),

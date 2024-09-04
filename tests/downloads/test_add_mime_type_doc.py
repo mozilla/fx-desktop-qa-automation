@@ -8,6 +8,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import AboutPrefs, GenericPage
 
+
+@pytest.fixture()
+def test_case():
+    return "1756748"
+
+
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")

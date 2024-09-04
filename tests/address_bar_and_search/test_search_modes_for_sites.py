@@ -4,6 +4,12 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 
+
+@pytest.fixture()
+def test_case():
+    return "2234690"
+
+
 sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
 
 

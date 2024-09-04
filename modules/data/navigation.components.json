@@ -306,14 +306,20 @@
         "groups": []
     },
 
-    "bookmarks-type-dropdown": {
-        "selectorData": "editBMPanel_folderMenuList",
+    "library-button": {
+        "selectorData": "library-button",
         "strategy": "id",
         "groups": []
     },
 
-    "library-button": {
-        "selectorData": "library-button",
+    "library-history-submenu-button": {
+        "selectorData": "appMenu-library-history-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmarks-type-dropdown": {
+        "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
         "groups": []
     },
@@ -323,12 +329,6 @@
         "strategy": "id",
         "groups": []
     },
-
-    "library-history-submenu-button": {
-        "selectorData": "appMenu-library-history-button",
-        "strategy": "id",
-        "groups": []
-     },
 
     "other-bookmarks": {
         "selectorData": "OtherBookmarks",
