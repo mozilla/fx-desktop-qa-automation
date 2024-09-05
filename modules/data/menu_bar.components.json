@@ -1,0 +1,57 @@
+{
+    "context": "chrome",
+    "toolbar-blank-space": {
+        "selectorData": "toolbar-context-menu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-checkbox": {
+        "selectorData": "toggle_toolbar-menubar",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "history-menu-button": {
+        "selectorData": "history-menu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-show-all-history": {
+        "selectorData": "menu_showAllHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-clear-recent-history": {
+        "selectorData": "sanitizeItem",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-restore-previous-session": {
+        "selectorData": "historyRestoreLastSession",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-search-history": {
+        "selectorData": "menu_searchHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-recently-closed-tabs": {
+        "selectorData": "historyUndoMenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-bar-recently-closed-windows": {
+        "selectorData": "historyUndoWindowMenu",
+        "strategy": "id",
+        "groups": []
+    }
+
+}
