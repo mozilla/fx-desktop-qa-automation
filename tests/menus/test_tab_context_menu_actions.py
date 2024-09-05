@@ -3,7 +3,7 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, TabContextMenu
+from modules.browser_object import ContextMenu, TabBar
 
 
 @pytest.fixture()
@@ -24,7 +24,7 @@ def test_duplicate_tab(driver: Firefox):
     C2637624.1: duplicate tab
     """
     tabs = TabBar(driver).open()
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4
 
@@ -50,7 +50,7 @@ def test_close_multiple_tabs_to_right(driver: Firefox):
     C2637624.3.1: close multiple tabs actions (close all the right)
     """
     tabs = TabBar(driver).open()
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4
 
