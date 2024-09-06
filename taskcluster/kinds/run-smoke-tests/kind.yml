@@ -25,6 +25,7 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
+        echo "windows test"
         mkdir -p artifacts;
         pip install 'pipenv==2023.11.15';
         pip install 'ruff>=0.4.8,<0.5';
