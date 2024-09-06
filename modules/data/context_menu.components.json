@@ -178,5 +178,78 @@
         "selectorData": "contentAreaContextMenu",
         "strategy": "id",
         "groups": []
+    },
+
+   "downloads-panel": {
+        "selectorData": "downloadsPanel",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "menu-root": {
+        "selectorData": "downloadsContextMenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "open-in-system-viewer": {
+        "selectorData": "downloadUseSystemDefaultMenuItem",
+        "strategy": "class",
+        "groups": [
+        ]
+    },
+
+    "always-open-in-system-viewer": {
+        "selectorData": "downloadAlwaysUseSystemDefaultMenuItem",
+        "strategy": "class",
+        "groups": [
+        ]
+    },
+
+    "show-in-file-browser": {
+        "selectorData": "downloadShowMenuItem",
+        "strategy": "class",
+        "groups": [
+        ]
+    },
+
+    "go-to-download-page": {
+        "selectorData": "downloadOpenReferrerMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "copy-download-link": {
+        "selectorData": "downloadCopyLocationMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "delete": {
+        "selectorData": "downloadDeleteFileMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "remove-from-history": {
+        "selectorData": "downloadRemoveFromHistoryMenuItem",
+        "strategy": "class",
+        "groups": [
+            "downloadOption"
+        ]
+    },
+
+    "clear-downloads": {
+        "selectorData": "menuitem[data-l10n-id='downloads-cmd-clear-downloads']",
+        "strategy": "css",
+        "groups": [
+            "downloadOption"
+        ]
     }
 }

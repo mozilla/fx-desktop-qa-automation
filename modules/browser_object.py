@@ -1,4 +1,3 @@
-from modules.browser_object_about_downloads_context_menu import *
 from modules.browser_object_about_prefs_cc_popup import *
 from modules.browser_object_autofill_popup import *
 from modules.browser_object_context_menu import *
