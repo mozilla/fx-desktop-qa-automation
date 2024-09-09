@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi, TabBar, TabContextMenu, Toolbar
+from modules.browser_object import ContextMenu, PanelUi, TabBar, Toolbar
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -42,7 +42,7 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     # Check context menu messages (tabs)
     tab_bar = TabBar(driver)
     tab_bar.context_click(tab_bar.get_tab(1))
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
     tab_context_menu.element_attribute_contains(
         "context-menu-duplicate-tab", "label", DUPLICATE_TAB_PT
     )

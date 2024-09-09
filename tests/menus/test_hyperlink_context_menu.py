@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import HyperlinkContextMenu, TabBar
+from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import ExamplePage
 
 
@@ -14,7 +14,7 @@ def test_open_link_in_new_window(driver: Firefox):
     """
     C2637621.2: open link in new window
     """
-    hyperlink_context = HyperlinkContextMenu(driver)
+    hyperlink_context = ContextMenu(driver)
     tabs = TabBar(driver)
     example = ExamplePage(driver)
     example.open()
