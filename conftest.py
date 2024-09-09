@@ -15,11 +15,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from modules import testrail_integration as tri
-
-FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
-TESTRAIL_FX_DESK_PRJ = "17"
-TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
 
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
@@ -275,54 +270,17 @@ def use_profile():
 
 @pytest.fixture(autouse=True)
 def version(fx_executable: str):
-    version = check_output([fx_executable, "--version"]).strip().decode()
-    return version
+    return check_output([fx_executable, "--version"]).strip().decode()
 
 
 @pytest.fixture()
-def machine_config():
-    uname = platform.uname()
-    if uname.system == "Darwin":
-        mac_major = platform.mac_ver()[0].split(".")[0]
-        return f"MacOS {mac_major} {uname.machine.lower()}"
-    else:
-        os_major = uname.version.split(".")[0]
-        return f"{uname.system} {os.major} {uname.machine.lower()}"
-
-
-@pytest.fixture
 def test_case():
     return None
 
 
-def pytest_sessionfinish(session):
-    if not hasattr(session.config, "workerinput"):
-        import psutil
-
-        reporter = session.config.pluginmanager.get_plugin("terminalreporter")
-        for proc in psutil.process_iter(["name", "pid", "status"]):
-            try:
-                if (
-                    proc.create_time() > reporter._sessionstarttime
-                    and proc.name().startswith("firefox")
-                ):
-                    logging.info(f"found remaining process: {proc.pid}")
-                    proc.kill()
-            except (ProcessLookupError, psutil.NoSuchProcess):
-                logging.warning("Failed to kill process.")
-                pass
-
-    # TESTRAIL - WILL FACTOR OUT
-    if not os.environ.get("TESTRAIL_REPORT"):
-        logging.info(
-            "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
-        )
-        return None
-    report = session.config._json_report.report
-    tr_session = tri.testrail_init()
-    (changelist, passes) = tri.collect_changes(tr_session, report)
-    tri.execute_changes(tr_session, changelist)
-    tri.mark_passes(tr_session, passes)
+@pytest.fixture()
+def hard_quit():
+    return False
 
 
 @pytest.fixture(autouse=True)
@@ -334,14 +292,13 @@ def driver(
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
+    version: str,
     suite_id: str,
     test_case: str,
-    machine_config: str,
+    hard_quit: bool,
     env_prep,
     tmp_path,
     request,
-    version,
-    json_metadata,
 ):
     """
     Return the webdriver object.
@@ -406,21 +363,20 @@ def driver(
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        json_metadata["fx_version"] = version
-        json_metadata["machine_config"] = machine_config
-        json_metadata["suite_id"] = suite_id
-        json_metadata["test_case"] = test_case
         yield driver
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
+        if hard_quit:
+            return
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 
-    if request.node.rep_call.passed:
+    if os.environ.get("MILESTONE_ID") and request.node.rep_call.passed:
         plan_id = os.environ.get("MILESTONE_ID")
         if plan_id:
             platform_info = platform.uname()
+            logging.info(version)
             logging.info(f"Get runs from plan {plan_id}")
             logging.info(f"Filter runs that have suite {suite_id}")
             logging.info(f"Filter results to match {platform_info}")
@@ -463,24 +419,23 @@ def delete_files_regex_string():
 
 
 @pytest.fixture()
-def delete_files(sys_platform, delete_files_regex_string):
+def home_folder(sys_platform):
+    """Return the home folder location"""
+    if sys_platform.startswith("Win"):
+        home_folder = os.path.join(
+            os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH")
+        )
+    else:
+        home_folder = os.environ.get("HOME")
+    return home_folder
+
+
+@pytest.fixture()
+def delete_files(sys_platform, delete_files_regex_string, home_folder):
     """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
 
     def _delete_files():
-        if sys_platform.startswith("Win"):
-            if os.environ.get("GITHUB_ACTIONS") == "true":
-                downloads_folder = os.path.join(
-                    "C:", "Users", "runneradmin", "Downloads"
-                )
-            else:
-                home_folder = os.path.join(
-                    os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH")
-                )
-                downloads_folder = os.path.join(home_folder, "Downloads")
-        else:
-            home_folder = os.environ.get("HOME")
-            downloads_folder = os.path.join(home_folder, "Downloads")
-            logging.info(os.path.exists(downloads_folder))
+        downloads_folder = os.path.join(home_folder, "Downloads")
 
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
@@ -500,3 +455,21 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+
+
+def pytest_sessionfinish(session, exitstatus):
+    if not hasattr(session.config, "workerinput"):
+        import psutil
+
+        reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+        for proc in psutil.process_iter(["name", "pid", "status"]):
+            try:
+                if (
+                    proc.create_time() > reporter._sessionstarttime
+                    and proc.name().startswith("firefox")
+                ):
+                    logging.info(f"found remaining process: {proc.pid}")
+                    proc.kill()
+            except (ProcessLookupError, psutil.NoSuchProcess):
+                logging.warning("Failed to kill process.")
+                pass
