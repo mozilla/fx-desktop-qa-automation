@@ -3,7 +3,8 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AboutDownloadsContextMenu, PanelUi, Toolbar
+from modules.browser_object import PanelUi, Toolbar
+from modules.browser_object_context_menu import AboutDownloadsContextMenu
 from modules.page_object import AboutDownloads, GenericPage
 
 
