@@ -35,7 +35,7 @@ def test_update_cc_no_dupe_name(driver: Firefox, field: str):
 
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup_obj.press_doorhanger_button("save")
+    autofill_popup_obj.click_doorhanger_button("save")
     credit_card_fill_obj.press_autofill_panel(autofill_popup_obj)
 
     # updating the name of the cc holder
@@ -86,7 +86,7 @@ def test_update_cc_number_new_profile(driver: Firefox):
 
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup_obj.press_doorhanger_button("save")
+    autofill_popup_obj.click_doorhanger_button("save")
     credit_card_fill_obj.press_autofill_panel(autofill_popup_obj)
 
     # updating the card number of the cc holder

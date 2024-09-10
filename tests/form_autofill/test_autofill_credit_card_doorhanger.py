@@ -32,8 +32,8 @@ def test_autofill_credit_card_doorhanger(driver: Firefox):
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
 
     # press the arrow
-    autofill_popup_obj.press_doorhanger_button("dropdown")
-    autofill_popup_obj.press_doorhanger_button("dropdown-never-save-cards")
+    autofill_popup_obj.click_doorhanger_button("dropdown")
+    autofill_popup_obj.click_doorhanger_button("dropdown-never-save-cards")
 
     # ensure that the checked attribute is off
     about_prefs_obj.open()

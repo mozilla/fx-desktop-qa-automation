@@ -41,7 +41,7 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     credit_card_fill_obj.open()
     credit_card_sample_data_original = util.fake_credit_card_data()
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data_original)
-    autofill_popup_obj.press_doorhanger_button("save")
+    autofill_popup_obj.click_doorhanger_button("save")
 
     # navigate to about:prefs and select the saved payment methods
     about_prefs_obj.open()

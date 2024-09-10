@@ -26,6 +26,6 @@ def test_autofill_four_fields(driver: Firefox):
 
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup_obj.press_doorhanger_button("save")
+    autofill_popup_obj.click_doorhanger_button("save")
 
     credit_card_fill_obj.verify_four_fields(autofill_popup_obj, credit_card_sample_data)
