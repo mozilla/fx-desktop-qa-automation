@@ -71,7 +71,11 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
         fake_app = False
         if not os.path.exists(target):
             logging.info("Faking bookmarks...")
-            os.makedirs(os.path.dirname(target), exist_ok=True)
+            folder = os.path.dirname(target)
+            os.makedirs(folder, exist_ok=True)
+            for fakefile in ["History", "Cookies"]:
+                with open(os.path.join(folder, fakefile), "w") as fh:
+                    fh.write("")
             fake_bookmarks = True
         else:
             logging.info("Bookmarks folder exists...")
@@ -100,6 +104,10 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
     if os.path.exists(target):
         os.remove(target)
     if fake_bookmarks:
+        for fakefile in ["History", "Cookies"]:
+            fake_fullpath = os.path.join(folder, fakefile)
+            if os.path.exists(fake_fullpath):
+                os.remove(fake_fullpath)
         os.removedirs(os.path.dirname(target))
     elif os.path.exists(tmp_path / "Bookmarks"):
         os.rename(tmp_path / "Bookmarks", target)
