@@ -20,6 +20,11 @@ def test_case():
 
 
 @pytest.fixture()
+def add_prefs():
+    return [("browser.migrate.chrome.get_permissions.enabled", True)]
+
+
+@pytest.fixture()
 def chrome_bookmarks(sys_platform, home_folder, tmp_path):
     """Move test Bookmarks file to correct location, fake Chrome instead of installing"""
     source = os.path.join("data", "Chrome_Bookmarks")
