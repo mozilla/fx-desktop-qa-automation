@@ -92,7 +92,7 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
         if fake_app:
             os.removedirs(app)
 
-    except FileNotFoundError:
+    except (FileNotFoundError, NotADirectoryError):
         return None
 
 
