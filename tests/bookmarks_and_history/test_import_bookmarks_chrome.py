@@ -53,13 +53,13 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
             "Bookmarks",
         )
         app = os.path.join(
-            "Applications", "Google Chrome.app", "Contents", "MacOS", "Google Chrome"
+            "/Applications", "Google Chrome.app", "Contents", "MacOS", "Google Chrome"
         )
     elif sys_platform == "Linux":
         target = os.path.join(
             home_folder, ".config", "google-chrome", "Default", "Bookmarks"
         )
-        app = os.path.join("opt", "google", "chrome", "google-chrome")
+        app = os.path.join("/opt", "google", "chrome", "google-chrome")
 
     try:
         fake_bookmarks = False
