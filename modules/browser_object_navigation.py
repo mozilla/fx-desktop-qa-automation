@@ -232,3 +232,11 @@ class Navigation(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("star-button").click()
             self.get_element("save-bookmark-button").click()
+
+    def add_bookmark_via_menu(self) -> BasePage:
+        """
+        Bookmark a site via bookmarks menu and click save on the bookmark panel
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("bookmark-current-tab").click()
+            self.get_element("save-bookmark-button").click()
