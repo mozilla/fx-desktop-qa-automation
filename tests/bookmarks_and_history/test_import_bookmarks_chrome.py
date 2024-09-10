@@ -1,31 +1,66 @@
+import os
+from shutil import copyfile
 from time import sleep
-from selenium.webdriver import (Firefox, Chrome, ActionChains)
-from selenium.webdriver.common.keys import Keys
-from modules.page_object import AboutPrefs
 
 import pytest
+from selenium.webdriver import ActionChains, Chrome, Firefox
+from selenium.webdriver.common.keys import Keys
 
-TEST_SITE = "https://www.example.com"
+from modules.browser_object import PanelUi
+from modules.page_object import AboutPrefs
+
+TEST_PAGE_TITLE = "Home - Oregon State Parks"
+
 
 @pytest.fixture()
 def test_case():
     return "2084639"
 
+
 @pytest.fixture()
-def chrome_bookmarks():
-    def _chrome_bookmarks():
-        chrome = Chrome()
-        chrome.get(TEST_SITE)
-        actions = ActionChains(chrome)
-        actions.key_down(Keys.COMMAND).send_keys('d').key_up(Keys.COMMAND).perform()
-        sleep(2)
-    return _chrome_bookmarks
+def chrome_bookmarks(sys_platform, home_folder):
+    source = os.path.join("data", "Chrome_Bookmarks")
+    if sys_platform.lower().startswith("win"):
+        target = os.path.join(
+            home_folder,
+            "AppData",
+            "Local",
+            "Google",
+            "Chrome",
+            "User Data",
+            "Default",
+            "Bookmarks",
+        )
+    elif sys_platform == "Darwin":
+        target = os.path.join(
+            home_folder,
+            "Library",
+            "Application Support",
+            "Google",
+            "Chrome",
+            "Default",
+            "Bookmarks",
+        )
+    elif sys_platform == "Linux":
+        target = os.path.join(
+            home_folder, ".config", "google-chrome", "Default", "Bookmarks"
+        )
+    try:
+        if not os.path.exists(target):
+            os.makedirs(os.path.split(target)[0])
+        copyfile(source, target)
+        return target
+    except FileNotFoundError:
+        return None
+
 
 def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
-    chrome_bookmarks()
+    if not chrome_bookmarks:
+        pytest.skip("Google Chrome not installed or directory could not be created")
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
     about_prefs.import_bookmarks("Chrome")
-    toolbar = Toolbar(driver)
-    toolbar.confirm_bookmark_exists(TEST_SITE)
+    # Check bookmarks in PanelUI I guess?
+    panel_ui = PanelUi(driver)
+    panel_ui.item_exists_in_bookmarks(TEST_PAGE_TITLE)

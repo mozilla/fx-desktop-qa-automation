@@ -183,5 +183,12 @@ class PanelUi(BasePage):
         Gets all history items
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            history_items = self.get_elements("recent-history-info")
+            history_items = self.get_elements("bookmark-item")
             return history_items
+
+    def item_exists_in_bookmarks(self, title: str) -> BasePage:
+        """For given string, assert one of the Bookmarks contains it"""
+        self.open_bookmarks_menu()
+        bookmarks = self.get_all_history()
+        with self.driver.context(self.context_id):
+            assert any([title in el.get_attribute("label") for el in bookmarks])
