@@ -104,3 +104,5 @@ class AutofillPopup(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("doorhanger-update-button").click()
         return self
+
+    # test comment
