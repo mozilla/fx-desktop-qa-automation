@@ -30,7 +30,7 @@ def test_enable_disable_autofill(driver: Firefox, country_code: str):
     # create fake data, fill it in and press submit and save on the doorhanger
     autofill_sample_data = util.fake_autofill_data(country_code)
     af.save_information_basic(autofill_sample_data)
-    afp.press_doorhanger_save()
+    afp.press_doorhanger_button("save")
     about_prefs = AboutPrefs(driver, category="privacy").open()
     about_prefs.get_element("save-and-fill-addresses").click()
 
