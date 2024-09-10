@@ -224,3 +224,11 @@ class Navigation(BasePage):
                 self.actions.send_keys(bookmark_data.keyword).perform()
             self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
             ba.switch_to_content_context()
+
+    def add_bookmark_via_star(self) -> BasePage:
+        """
+        Bookmark a site via star button and click save on the bookmark panel
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("star-button").click()
+            self.get_element("save-bookmark-button").click()
