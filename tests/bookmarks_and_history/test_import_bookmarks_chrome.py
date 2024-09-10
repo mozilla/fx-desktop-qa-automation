@@ -18,7 +18,7 @@ def test_case():
 
 
 @pytest.fixture()
-def chrome_bookmarks(sys_platform, home_folder):
+def chrome_bookmarks(sys_platform, home_folder, tmp_path):
     source = os.path.join("data", "Chrome_Bookmarks")
     if sys_platform.lower().startswith("win"):
         target = os.path.join(
@@ -31,6 +31,9 @@ def chrome_bookmarks(sys_platform, home_folder):
             "Default",
             "Bookmarks",
         )
+        app = os.path.join(
+            home_folder, "AppData", "Local", "Google", "Chrome", "Application"
+        )
     elif sys_platform == "Darwin":
         target = os.path.join(
             home_folder,
@@ -41,15 +44,33 @@ def chrome_bookmarks(sys_platform, home_folder):
             "Default",
             "Bookmarks",
         )
+        app = os.path.join("Applications", "Google Chrome.app")
     elif sys_platform == "Linux":
         target = os.path.join(
             home_folder, ".config", "google-chrome", "Default", "Bookmarks"
         )
+        app = os.path.join("opt", "google", "chrome")
     try:
+        fake_bookmarks = False
+        fake_app = False
         if not os.path.exists(target):
-            os.makedirs(os.path.split(target)[0])
+            fake_bookmarks = True
+            os.makedirs(os.path.dirname(target))
+        else:
+            os.rename(target, tmp_path / "Bookmarks")
+        if not os.path.exists(app):
+            fake_app = True
+            os.makedirs(app)
         copyfile(source, target)
-        return target
+        yield target
+        os.remove(target)
+        if fake_bookmarks:
+            os.removedirs(os.path.dirname(target))
+        else:
+            os.rename(tmp_path / "Bookmarks", target)
+        if fake_app:
+            os.removedirs(app)
+
     except FileNotFoundError:
         return None
 

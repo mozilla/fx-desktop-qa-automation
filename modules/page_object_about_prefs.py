@@ -321,14 +321,23 @@ class AboutPrefs(BasePage):
         """
         Press the import browser data button
         """
+        MAX_TRIES = 30
+
         self.click_on("import-browser-data")
         profile_selector = self.get_element("browser-profile-selector")
-        while browser_name.lower() not in profile_selector.text.lower():
+
+        tries = 0
+        while (
+            browser_name.lower() not in profile_selector.text.lower()
+            and tries < MAX_TRIES
+        ):
             self.click_on(profile_selector)
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 self.actions.send_keys(Keys.DOWN).perform()
                 self.actions.send_keys(Keys.ENTER).perform()
             sleep(1)
+            tries += 1
+        assert (tries < MAX_TRIES, "Browser not found in import list")
         self.click_on("migration-import-button")
         self.click_on("migration-done-button")
 
