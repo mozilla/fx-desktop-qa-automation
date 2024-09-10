@@ -34,7 +34,7 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
             "Bookmarks",
         )
         app = os.path.join(
-            "C:",
+            os.path.splitdrive(home_folder)[0],
             "Program Files",
             "Google",
             "Chrome",
