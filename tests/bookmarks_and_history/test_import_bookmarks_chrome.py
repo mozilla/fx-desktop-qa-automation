@@ -1,3 +1,4 @@
+import logging
 import os
 import stat
 from shutil import copyfile
@@ -64,21 +65,26 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
         fake_bookmarks = False
         fake_app = False
         if not os.path.exists(target):
+            logging.info("Faking bookmarks...")
             fake_bookmarks = True
             os.makedirs(os.path.dirname(target), exist_ok=True)
         else:
+            logging.info("Bookmarks folder exists...")
             os.rename(target, tmp_path / "Bookmarks")
         copyfile(source, target)
 
         if not os.path.exists(app):
             # Fake the Chrome app
             fake_app = True
+            logging.info("Faking Chrome...")
             os.makedirs(os.path.dirname(app), exist_ok=True)
             with open(app, "w") as fh:
                 fh.write("")
+            logging.info("Fake Chrome built.")
             if "win" not in sys_platform.lower():
                 # Linux and maybe Mac need the file to be executable
                 os.chmod(app, stat.IRWXU)
+                logging.info("Fake Chrome chmodded.")
 
         yield target
 
