@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -26,7 +28,7 @@ def test_clear_cookie_data(driver: Firefox):
         ba.switch_to_iframe_context(clear_data_popup)
 
     # Visit a site to get a cookie added to saved data
-    driver.get("https://www.mozilla.org")
+    driver.get("https://www.trimet.org")
 
     # Navigate to the clear data dialog of about:preferences#privacy
     open_clear_cookies_data_dialog()
