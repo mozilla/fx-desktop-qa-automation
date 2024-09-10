@@ -337,7 +337,7 @@ class AboutPrefs(BasePage):
                 self.actions.send_keys(Keys.ENTER).perform()
             sleep(1)
             tries += 1
-        assert (tries < MAX_TRIES, "Browser not found in import list")
+        assert tries < MAX_TRIES, "Browser not found in import list"
         self.click_on("migration-import-button")
         self.click_on("migration-done-button")
 
