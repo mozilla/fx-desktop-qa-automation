@@ -66,8 +66,8 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
         fake_app = False
         if not os.path.exists(target):
             logging.info("Faking bookmarks...")
-            fake_bookmarks = True
             os.makedirs(os.path.dirname(target), exist_ok=True)
+            fake_bookmarks = True
         else:
             logging.info("Bookmarks folder exists...")
             os.rename(target, tmp_path / "Bookmarks")
@@ -75,9 +75,9 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
 
         if not os.path.exists(app):
             # Fake the Chrome app
-            fake_app = True
             logging.info("Faking Chrome...")
             os.makedirs(os.path.dirname(app), exist_ok=True)
+            fake_app = True
             with open(app, "w") as fh:
                 fh.write("")
             logging.info("Fake Chrome built.")
@@ -88,17 +88,18 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
 
         yield target
 
-        # Teardown: We don't actually want to destroy the Chrome setup of local users
-        os.remove(target)
-        if fake_bookmarks:
-            os.removedirs(os.path.dirname(target))
-        else:
-            os.rename(tmp_path / "Bookmarks", target)
-        if fake_app:
-            os.removedirs(app)
+    except (FileNotFoundError, NotADirectoryError, PermissionError):
+        yield None
 
-    except (FileNotFoundError, NotADirectoryError):
-        return None
+    # Teardown: We don't actually want to destroy the Chrome setup of local users
+    if os.path.exists(target):
+        os.remove(target)
+    if fake_bookmarks:
+        os.removedirs(os.path.dirname(target))
+    elif os.path.exists(tmp_path / "Bookmarks"):
+        os.rename(tmp_path / "Bookmarks", target)
+    if fake_app:
+        os.removedirs(app)
 
 
 def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
