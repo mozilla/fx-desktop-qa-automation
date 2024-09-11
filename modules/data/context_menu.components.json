@@ -7,24 +7,6 @@
         "groups": []
     },
 
-    "context-menu-open-link-in-new-private-window": {
-        "selectorData": "context-openlinkprivate",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "context-menu-open-link-in-tab": {
-        "selectorData": "context-openlinkintab",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "context-menu-inspect": {
-        "selectorData": "context-inspect",
-        "strategy": "id",
-        "groups": []
-    },
-
     "context-menu-take-screenshot": {
         "selectorData": "context-take-screenshot",
         "strategy": "id",
@@ -73,12 +55,6 @@
         "groups": []
     },
 
-    "context-menu-reopen-tab": {
-        "selectorData": "context_undoCloseTab",
-        "strategy": "id",
-        "groups": []
-    },
-
     "context-menu-duplicate-tab": {
         "selectorData": "context_duplicateTab",
         "strategy": "id",
@@ -121,14 +97,20 @@
         "groups": []
     },
 
-    "context-menu-open-in-new-window": {
+    "context-menu-open-link-in-tab": {
+        "selectorData": "context-openlinkintab",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-open-link-in-new-window": {
         "selectorData": "context-openlink",
         "strategy": "id",
         "groups": []
     },
 
-    "context-menu-copy-link": {
-        "selectorData": "context-copylink",
+    "context-menu-open-link-in-new-private-window": {
+        "selectorData": "context-openlinkprivate",
         "strategy": "id",
         "groups": []
     },
@@ -139,8 +121,32 @@
         "groups": []
     },
 
-    "context-menu-open-in-private-window": {
-        "selectorData": "context-openlinkprivate",
+    "context-menu-copy-link": {
+        "selectorData": "context-copylink",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-inspect": {
+        "selectorData": "context-inspect",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-open-image-in-new-tab": {
+        "selectorData": "context-viewimage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-save-image-as": {
+        "selectorData": "context-saveimage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-copy-image-link": {
+        "selectorData": "context-copyimage",
         "strategy": "id",
         "groups": []
     },
@@ -155,101 +161,5 @@
         "selectorData": "context-paste",
         "strategy": "id",
         "groups": []
-    },
-    "context-menu-open-image-in-new-tab": {
-        "selectorData": "context-viewimage",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "context-menu-copy-image-link": {
-        "selectorData": "context-copyimage",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "context-menu-save-image-as": {
-        "selectorData": "context-saveimage",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "content-context": {
-        "selectorData": "contentAreaContextMenu",
-        "strategy": "id",
-        "groups": []
-    },
-
-   "downloads-panel": {
-        "selectorData": "downloadsPanel",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "menu-root": {
-        "selectorData": "downloadsContextMenu",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "open-in-system-viewer": {
-        "selectorData": "downloadUseSystemDefaultMenuItem",
-        "strategy": "class",
-        "groups": [
-        ]
-    },
-
-    "always-open-in-system-viewer": {
-        "selectorData": "downloadAlwaysUseSystemDefaultMenuItem",
-        "strategy": "class",
-        "groups": [
-        ]
-    },
-
-    "show-in-file-browser": {
-        "selectorData": "downloadShowMenuItem",
-        "strategy": "class",
-        "groups": [
-        ]
-    },
-
-    "go-to-download-page": {
-        "selectorData": "downloadOpenReferrerMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-
-    "copy-download-link": {
-        "selectorData": "downloadCopyLocationMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-
-    "delete": {
-        "selectorData": "downloadDeleteFileMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-
-    "remove-from-history": {
-        "selectorData": "downloadRemoveFromHistoryMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-
-    "clear-downloads": {
-        "selectorData": "menuitem[data-l10n-id='downloads-cmd-clear-downloads']",
-        "strategy": "css",
-        "groups": [
-            "downloadOption"
-        ]
     }
 }
