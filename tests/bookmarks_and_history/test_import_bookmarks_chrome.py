@@ -79,8 +79,8 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
                 with open(os.path.join(folder, fakefile), "w") as fh:
                     fh.write("")
             logging.info("Faking local state...")
-            parent_folder = os.path.dirname(folder)
-            local_state_target = os.path.join(parent_folder, "Local State")
+            ls_folder = os.path.dirname(os.path.dirname(folder))
+            local_state_target = os.path.join(ls_folder, "Local State")
             copyfile(local_state_source, local_state_target)
 
             fake_bookmarks = True
