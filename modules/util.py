@@ -646,8 +646,10 @@ class PomUtils:
             elif len(matches):
                 # If we match multiple, chances are the selector is too vague
                 # Except when we get multiple of the exact same thing?
-                first_el = matches[0].get_attribute("outerHTML")
-                if all([el.get_attribute("outerHTML") == first_el for el in matches]):
+                first_el_classes = matches[0].get_attribute("class")
+                if all(
+                    [el.get_attribute("class") == first_el_classes for el in matches]
+                ):
                     return matches[0]
                 for el in matches:
                     logging.info("match:")
