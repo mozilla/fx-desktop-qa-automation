@@ -647,7 +647,9 @@ class PomUtils:
                 # If we match multiple, chances are the selector is too vague
                 # Except when we get multiple of the exact same thing?
                 # Prefer interactable elements, then just choose one
-                actables = [el for el in matches if el.is_visible() and el.is_enabled()]
+                actables = [
+                    el for el in matches if el.is_displayed() and el.is_enabled()
+                ]
                 if len(actables) == 1:
                     return actables[0]
                 elif len(actables) > 1:
