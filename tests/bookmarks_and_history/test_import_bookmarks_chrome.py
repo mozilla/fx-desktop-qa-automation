@@ -28,6 +28,7 @@ def add_prefs():
 def chrome_bookmarks(sys_platform, home_folder, tmp_path):
     """Move test Bookmarks file to correct location, fake Chrome instead of installing"""
     source = os.path.join("data", "Chrome_Bookmarks")
+    local_state_source = os.path.join("data", "Chrome_Local_State")
     if sys_platform.lower().startswith("win"):
         target = os.path.join(
             home_folder,
@@ -77,6 +78,11 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
             for fakefile in ["History", "Cookies"]:
                 with open(os.path.join(folder, fakefile), "w") as fh:
                     fh.write("")
+            logging.info("Faking local state...")
+            parent_folder = os.path.dirname(folder)
+            local_state_target = os.path.join(parent_folder, "Local State")
+            copyfile(local_state_source, local_state_target)
+
             fake_bookmarks = True
         else:
             logging.info("Bookmarks folder exists...")
@@ -84,19 +90,19 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
         copyfile(source, target)
         logging.info("Bookmarks copied!")
 
-        if not os.path.exists(app):
-            # Fake the Chrome app
-            logging.info("Faking Chrome...")
-            os.makedirs(os.path.dirname(app), exist_ok=True)
-            logging.info("Directory structure made!")
-            fake_app = True
-            with open(app, "w") as fh:
-                fh.write("")
-            logging.info("Fake Chrome built.")
-            if "win" not in sys_platform.lower():
-                # Linux and maybe Mac need the file to be executable
-                os.chmod(app, stat.IRWXU)
-                logging.info("Fake Chrome chmodded.")
+        # if not os.path.exists(app):
+        #     # Fake the Chrome app
+        #     logging.info("Faking Chrome...")
+        #     os.makedirs(os.path.dirname(app), exist_ok=True)
+        #     logging.info("Directory structure made!")
+        #     fake_app = True
+        #     with open(app, "w") as fh:
+        #         fh.write("")
+        #     logging.info("Fake Chrome built.")
+        #     if "win" not in sys_platform.lower():
+        #         # Linux and maybe Mac need the file to be executable
+        #         os.chmod(app, stat.IRWXU)
+        #         logging.info("Fake Chrome chmodded.")
 
         yield target
 
@@ -114,13 +120,14 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
             fake_fullpath = os.path.join(folder, fakefile)
             if os.path.exists(fake_fullpath):
                 os.remove(fake_fullpath)
+        os.remove(local_state_target)
         os.removedirs(os.path.dirname(target))
     elif os.path.exists(tmp_path / "Bookmarks"):
         os.rename(tmp_path / "Bookmarks", target)
-    if fake_app:
-        if os.path.exists(app):
-            os.remove(app)
-            os.removedirs(os.dirname(app))
+    # if fake_app:
+    #     if os.path.exists(app):
+    #         os.remove(app)
+    #         os.removedirs(os.dirname(app))
 
 
 def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
