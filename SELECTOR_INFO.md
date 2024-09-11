@@ -204,3 +204,73 @@ Description: Context menu option "Paste"
 Location: Any text field cntext ment
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: downloads-panel
+Selector Data: "downloadsPanel"
+Description: Downloads panel identifier
+Location: Downloads toolbar button
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: menu-root
+Selector Data: "downloadsContextMenu"
+Description: Downloads context menu root
+Location: Context click an item in downloads list
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: open-in-system-viewer
+Selector Data: "downloadUseSystemDefaultMenuItem"
+Description: Downloads context menu option
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: always-open-in-system-viewer
+Selector Data: "downloadAlwaysUseSystemDefaultMenuItem"
+Description: Downloads context menu option "Always Open Similar Files"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: show-in-file-browser
+Selector Data: "downloadShowMenuItem"
+Description: Downloads context menu option "Show in Finder"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: go-to-download-page
+Selector Data: "downloadOpenReferrerMenuItem"
+Description: Downloads context menu option "Go to Download Page"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: copy-download-link
+Selector Data: "downloadCopyLocationMenuItem"
+Description: Downloads context menu option "Copy Download Link"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: delete
+Selector Data: downloadDeleteFileMenuItem
+Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: remove-from-history
+Selector Data: "downloadRemoveFromHistoryMenuItem"
+Description: Downloads context menu option "Remove From History"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: clear-downloads
+Selector Data: "menuitem[data-l10n-id='downloads-cmd-clear-downloads']"
+Description: Downloads context menu option "Clear Preview Panel"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
