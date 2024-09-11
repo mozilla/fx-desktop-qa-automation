@@ -390,5 +390,11 @@
         "strategy": "css",
         "groups": []
 
+    },
+
+    "search-with-engine-once": {
+        "selectorData": "urlbar-engine-one-off-item-engine-{.*}",
+        "strategy": "id",
+        "groups": []
     }
 }

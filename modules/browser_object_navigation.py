@@ -224,3 +224,13 @@ class Navigation(BasePage):
                 self.actions.send_keys(bookmark_data.keyword).perform()
             self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
             ba.switch_to_content_context()
+
+    def change_search_engine_once(self, engine: str):
+        """
+        Clicks the specified search engine button after "This time, search with"
+        to search with the chosen search engine
+        """
+        # list of engines with corresponding indices for the search-with-engine-once button
+        engines = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay", "Wikipedia"]
+        self.get_element("search-with-engine-once", labels=str(engines.index(engine))).click()
+        return self
