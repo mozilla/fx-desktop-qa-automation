@@ -648,7 +648,11 @@ class PomUtils:
                 # Except when we get multiple of the exact same thing?
                 # Prefer interactable elements, then just choose one
                 actables = [
-                    el for el in matches if el.is_displayed() and el.is_enabled()
+                    el
+                    for el in matches
+                    if el.is_displayed()
+                    and el.is_enabled()
+                    and not el.get_attribute("hidden")
                 ]
                 if len(actables) == 1:
                     return actables[0]
