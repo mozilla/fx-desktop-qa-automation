@@ -655,6 +655,7 @@ class PomUtils:
                     and not el.get_attribute("hidden")
                 ]
                 if len(actables) == 1:
+                    logging.info("Only one interactable element...")
                     return actables[0]
                 elif len(actables) > 1:
                     matches = actables
