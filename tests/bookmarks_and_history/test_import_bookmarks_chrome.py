@@ -115,7 +115,9 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
     elif os.path.exists(tmp_path / "Bookmarks"):
         os.rename(tmp_path / "Bookmarks", target)
     if fake_app:
-        os.removedirs(app)
+        if os.path.exists(app):
+            os.remove(app)
+            os.removedirs(os.dirname(app))
 
 
 def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
