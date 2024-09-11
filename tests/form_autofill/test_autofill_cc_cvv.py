@@ -33,9 +33,10 @@ def test_autofill_cc_cvv(driver: Firefox):
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
     cvv = credit_card_sample_data.cvv
-    autofill_popup.press_doorhanger_save()
+    autofill_popup.click_doorhanger_button("save")
 
     # navigate to prefs
+
     about_prefs_obj.open()
     iframe = about_prefs_obj.press_button_get_popup_dialog_iframe(
         "Saved payment methods"

@@ -24,7 +24,7 @@
         "groups": []
     },
 
-    "doorhanger-dropdown-button-never-save-cards": {
+    "doorhanger-dropdown-never-save-cards-button": {
         "selectorData": "menuitem[label='Never save cards']",
         "strategy": "css",
         "groups": []
@@ -36,21 +36,46 @@
         "groups": []
     },
 
-    "clear-address": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
-        "strategy":"css",
-        "groups": []
-    },
-
     "select-form-option": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
         "strategy":"css",
         "groups": []
     },
 
-    "clear-creditcard": {
+    "clear-form-option": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
         "strategy":"css",
          "groups": []
+    },
+
+    "autofill-cc-panel": {
+        "selectorData": "autocomplete-richlistbox",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "update-card-info-popup-button": {
+        "selectorData": "button[label='Update existing card']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "autofill-profile-option": {
+        "selectorData": "autocomplete-richlistitem",
+        "strategy": "class",
+        "groups": []
+    },
+
+     "cc-saved-options": {
+        "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cc-popup-button": {
+        "selectorData": "button[data-l10n-id='{name}']",
+        "strategy": "css",
+        "groups": []
     }
 }
+
