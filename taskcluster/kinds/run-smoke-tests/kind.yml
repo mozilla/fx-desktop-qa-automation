@@ -33,8 +33,10 @@ tasks:
         ./collect_executables.sh;
         ./firefox/firefox --version;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+        export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
+        if [[ ${?} != 0 && ${FAILURE} != 0 ]] then; exit 1; fi
     notify:
       recipients:
         - type: slack-channel
