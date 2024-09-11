@@ -97,7 +97,10 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
 
         yield target
 
-    except (FileNotFoundError, NotADirectoryError, PermissionError):
+    except (FileNotFoundError, NotADirectoryError):
+        yield None
+    except PermissionError:
+        logging.warning("Permission Denied")
         yield None
 
     # Teardown: We don't actually want to destroy the Chrome setup of local users
