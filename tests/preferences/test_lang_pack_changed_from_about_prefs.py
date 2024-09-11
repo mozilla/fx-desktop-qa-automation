@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, PanelUi, TabBar, Toolbar
+from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -52,11 +53,11 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     screen_cap = GenericPage(driver, url=SCREEN_CAP_URL)
     screen_cap.open()
     screen_cap.find_element("id", "start").click()
-    toolbar = Toolbar(driver)
-    toolbar.element_visible("popup-notification")
-    toolbar.element_attribute_contains(
+    nav = Navigation(driver)
+    nav.element_visible("popup-notification")
+    nav.element_attribute_contains(
         "popup-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
     )
-    toolbar.element_attribute_contains(
+    nav.element_attribute_contains(
         "popup-notification", "endlabel", SCREEN_CAP_LABEL_BACK_PT
     )
