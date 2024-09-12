@@ -342,6 +342,8 @@ class AboutPrefs(BasePage):
         for _ in range(3):
             self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(" ").perform()
-        sleep(2)
+        self.wait.until(
+            lambda _: "Complete" in self.get_element("migration-progress-header").text
+        )
         self.actions.send_keys(" ").perform()
         return self
