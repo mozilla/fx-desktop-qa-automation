@@ -326,27 +326,19 @@ class AboutPrefs(BasePage):
         MAX_TRIES = 30
 
         self.click_on("import-browser-data")
-        profile_selector = self.get_element("browser-profile-selector")
-        sleep(2)
-
         tries = 0
         while (
-            browser_name.lower() not in profile_selector.text.lower()
-            and tries < MAX_TRIES
+            browser_name.lower()
+            not in self.get_element("browser-profile-selector").text.lower()
         ):
-            self.click_on(profile_selector)
-            if tries == 0 and browser_name == "Chrome":
-                self.driver.save_screenshot(
-                    os.path.join("artifacts", "profile_import.png")
-                )
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                for _ in range(tries):
-                    self.actions.send_keys(Keys.DOWN).perform()
-                self.actions.send_keys(Keys.ENTER).perform()
+            self.actions.send_keys(" ").perform()
+            for _ in range(tries + 1):
+                self.actions.send_keys(Keys.DOWN).perform()
+            self.actions.send_keys(" ").perform()
             sleep(1)
-            tries += 1
-        assert tries < MAX_TRIES, "Browser not found in import list"
-        self.click_on("migration-import-button")
-        self.click_on("migration-done-button")
-
+        for _ in range(3):
+            self.actions.send_keys(Keys.TAB).perform()
+        self.actions.send_keys(" ").perform()
+        sleep(2)
+        self.actions.send_keys(" ").perform()
         return self
