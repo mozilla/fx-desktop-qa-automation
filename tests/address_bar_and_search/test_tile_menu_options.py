@@ -4,7 +4,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutNewtab
+from modules.page_object import NewTab
 from modules.util import Utilities
 
 
@@ -52,7 +52,7 @@ def test_default_tile_hover_states(driver: Firefox):
     C1533798.1: Ensure that hover states work correctly
     """
     # instantiate objects
-    newtab = AboutNewtab(driver).open()
+    newtab = NewTab(driver).open()
 
     top_card = newtab.get_element("sponsored-site-card")
 
@@ -89,7 +89,7 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
     C1533798.2: Ensure that a website has the appropriate context menu actions in the tile.
     """
     # initialize objects
-    newtab = AboutNewtab(driver).open()
+    newtab = NewTab(driver).open()
     sleep(3)  # allow page to load, waiting for image isn't enough
     util = Utilities()
 
@@ -109,7 +109,7 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
     )
     three_dot_menu.click()
 
-    # get all of the context menu actions
+    # get all context menu actions
     context_menu_list = newtab.get_element("sponsored-site-context-menu-list")
     child_options = newtab.get_all_children(context_menu_list)
     logging.info(f"There are {len(child_options)} context options")

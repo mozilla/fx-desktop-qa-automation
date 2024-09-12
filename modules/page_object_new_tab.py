@@ -24,7 +24,7 @@ class L10nAboutNewtab:
             ]
 
 
-class AboutNewtab(BasePage):
+class NewTab(BasePage):
     """
     Class that describes the POM of the about:newtab page.
 

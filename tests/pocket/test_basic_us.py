@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
-from modules.page_object import AboutNewtab
+from modules.page_object import NewTab
 
 
 @pytest.fixture()
@@ -37,6 +37,6 @@ def test_localized_pocket_layout_US(driver: Firefox, screenshot):
     """
     C408037: Test about:blank Pocket layout (US)
     """
-    about_newtab = AboutNewtab(driver).open()
+    about_newtab = NewTab(driver).open()
     about_newtab.set_language_code("enUS")
     about_newtab.check_layout()

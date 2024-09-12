@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
 from modules.components.dropdown import Dropdown
-from modules.page_object import AboutNewtab, AboutPrefs
+from modules.page_object import AboutPrefs, NewTab
 
 
 @pytest.fixture()
@@ -26,7 +26,7 @@ def test_firefox_home_on_launch(driver: Firefox, sys_platform: str):
     """
     # instantiate objs
     tabs = TabBar(driver)
-    new_tab = AboutNewtab(driver)
+    new_tab = NewTab(driver)
     about_prefs = AboutPrefs(driver, category="home").open()
     panel_ui = PanelUi(driver)
 

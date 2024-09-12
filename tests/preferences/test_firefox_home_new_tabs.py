@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
 from modules.components.dropdown import Dropdown
-from modules.page_object import AboutNewtab, AboutPrefs
+from modules.page_object import AboutPrefs, NewTab
 
 
 @pytest.fixture()
@@ -18,7 +18,7 @@ def test_firefox_home_new_tab(driver: Firefox):
     # instantiate objs
     about_prefs = AboutPrefs(driver, category="home").open()
     tabs = TabBar(driver)
-    about_new_tab = AboutNewtab(driver)
+    about_new_tab = NewTab(driver)
 
     # click the dropdown
     drop_down = about_prefs.get_element("home-new-tabs-dropdown")
