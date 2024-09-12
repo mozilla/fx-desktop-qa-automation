@@ -642,6 +642,7 @@ class PomUtils:
         if not multiple:
             if len(matches) == 1:
                 logging.info("Returning match...")
+                logging.info(matches[0].get_attribute("outerHTML"))
                 return matches[0]
             elif len(matches):
                 logging.info("Refining matches...")
