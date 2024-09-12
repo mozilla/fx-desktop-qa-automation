@@ -139,4 +139,5 @@ def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
     about_prefs.import_bookmarks("Chrome")
     # Check bookmarks in PanelUI I guess?
     panel_ui = PanelUi(driver)
+    sleep(3)
     panel_ui.item_exists_in_bookmarks(TEST_PAGE_TITLE)
