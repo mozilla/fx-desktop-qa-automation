@@ -71,38 +71,38 @@ def chrome_bookmarks(sys_platform, home_folder, tmp_path):
         fake_bookmarks = False
         fake_app = False
         if not os.path.exists(target):
-            logging.info("Faking bookmarks...")
+            logging.warning("Faking bookmarks...")
             folder = os.path.dirname(target)
             os.makedirs(folder, exist_ok=True)
-            logging.info("Directory made!")
+            logging.warning("Directory made!")
             for fakefile in ["History", "Cookies"]:
                 with open(os.path.join(folder, fakefile), "w") as fh:
                     fh.write("")
-            logging.info("Faking local state...")
+            logging.warning("Faking local state...")
             ls_folder = os.path.dirname(os.path.dirname(folder))
             local_state_target = os.path.join(ls_folder, "Local State")
             copyfile(local_state_source, local_state_target)
 
             fake_bookmarks = True
         else:
-            logging.info("Bookmarks folder exists...")
+            logging.warning("Bookmarks folder exists...")
             os.rename(target, tmp_path / "Bookmarks")
         copyfile(source, target)
-        logging.info("Bookmarks copied!")
+        logging.warning("Bookmarks copied!")
 
         # if not os.path.exists(app):
         #     # Fake the Chrome app
-        #     logging.info("Faking Chrome...")
+        #     logging.warning("Faking Chrome...")
         #     os.makedirs(os.path.dirname(app), exist_ok=True)
-        #     logging.info("Directory structure made!")
+        #     logging.warning("Directory structure made!")
         #     fake_app = True
         #     with open(app, "w") as fh:
         #         fh.write("")
-        #     logging.info("Fake Chrome built.")
+        #     logging.warning("Fake Chrome built.")
         #     if "win" not in sys_platform.lower():
         #         # Linux and maybe Mac need the file to be executable
         #         os.chmod(app, stat.IRWXU)
-        #         logging.info("Fake Chrome chmodded.")
+        #         logging.warning("Fake Chrome chmodded.")
 
         yield target
 
