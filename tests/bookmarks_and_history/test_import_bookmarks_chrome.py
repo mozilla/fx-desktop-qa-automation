@@ -35,7 +35,7 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
     local_state_source = os.path.join("data", "Chrome_Local_State")
     if sys_platform.lower().startswith("win"):
         user_data_root = os.path.join(home_folder, "AppData", "Local")
-        chrome_root = os.path.join(user_data_root, "Google", "Chrome")
+        chrome_root = os.path.join(user_data_root, "Google", "Chrome", "User Data")
     elif sys_platform == "Darwin":
         user_data_root = os.path.join(home_folder, "Library", "Application Support")
         chrome_root = os.path.join(user_data_root, "Google", "Chrome")
