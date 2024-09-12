@@ -341,7 +341,8 @@ class AboutPrefs(BasePage):
             tries += 1
         self.click_on("migration-import-button")
         self.wait.until(
-            lambda _: "Complete" in self.get_element("migration-progress-header").text
+            lambda _: self.get_element("migration-progress-header").text
+            in ["Data Imported Successfully", "Data Import Complete"]
         )
         self.actions.send_keys(" ").perform()
         return self
