@@ -1,3 +1,4 @@
+import os
 import re
 from time import sleep
 from typing import List
@@ -333,6 +334,10 @@ class AboutPrefs(BasePage):
             and tries < MAX_TRIES
         ):
             self.actions.send_keys_to_element(profile_selector, Keys.ENTER).perform()
+            if tries == 0 and browser_name == "Chrome":
+                self.driver.save_screenshot(
+                    os.path.join("artifacts", "profile_import.png")
+                )
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 for _ in range(tries):
                     self.actions.send_keys(Keys.DOWN).perform()
