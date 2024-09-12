@@ -72,6 +72,12 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
         copyfile(bookmarks_source, bookmarks_target)
         logging.warning("Bookmarks copied!")
 
+        if not (
+            os.path.exists(bookmarks_target) and os.path.exists(local_state_target)
+        ):
+            logging.error("Did not create something")
+            yield None
+
         yield bookmarks_target
 
     except (FileNotFoundError, NotADirectoryError, PermissionError) as e:
