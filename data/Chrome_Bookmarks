@@ -2,16 +2,6 @@
    "checksum": "bb7d4d222092b52d1beb676aecca1574",
    "roots": {
       "bookmark_bar": {
-         "children": [  ],
-         "date_added": "13370458243463228",
-         "date_last_used": "0",
-         "date_modified": "0",
-         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
-         "id": "1",
-         "name": "Bookmarks Bar",
-         "type": "folder"
-      },
-      "other": {
          "children": [ {
             "date_added": "13370458358016953",
             "date_last_used": "0",
@@ -24,6 +14,16 @@
             "type": "url",
             "url": "https://stateparks.oregon.gov/"
          } ],
+         "date_added": "13370458243463228",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Bookmarks Bar",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
          "date_added": "13370458243463229",
          "date_last_used": "0",
          "date_modified": "13370458358016953",

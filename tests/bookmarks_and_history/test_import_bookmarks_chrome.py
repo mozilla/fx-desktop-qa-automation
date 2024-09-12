@@ -8,7 +8,7 @@ import pytest
 from selenium.webdriver import ActionChains, Chrome, Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import PanelUi
+from modules.browser_object import Toolbar
 from modules.page_object import AboutPrefs
 
 TEST_PAGE_TITLE = "Home - Oregon State Parks"
@@ -99,7 +99,5 @@ def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
     about_prefs.import_bookmarks("Chrome")
-    # Check bookmarks in PanelUI I guess?
-    panel_ui = PanelUi(driver)
-    sleep(3)
-    panel_ui.item_exists_in_bookmarks(TEST_PAGE_TITLE)
+    toolbar = Toolbar(driver)
+    toolbar.confirm_bookmark_exists(TEST_PAGE_TITLE)
