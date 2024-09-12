@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
-from modules.page_object_about_prefs import AboutPrefs
+from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

@@ -505,5 +505,59 @@
         "selectorData": "richlistitem[type='{item}']",
         "strategy": "css",
         "groups": []
+    },
+
+    "sidebar-options": {
+        "selectorData": "button.category[name='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "theme-card": {
+        "selectorData": "div.card[aria-labelledby='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "enable-theme": {
+        "selectorData": "theme-enable-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "back-button": {
+        "selectorData": "back-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "enabled-theme-title": {
+        "selectorData": ".theme-enabled-section .addon-name",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "find-more-themes-button": {
+        "selectorData": "button[data-l10n-id='find-more-themes']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "install-theme-button": {
+        "selectorData": "button[data-l10n-id='install-theme-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "languages-addon-list": {
+        "selectorData": "locale-enabled-section",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "languages-addon-list-card": {
+        "selectorData": "addon-card",
+        "strategy": "tag",
+        "groups": []
     }
 }
