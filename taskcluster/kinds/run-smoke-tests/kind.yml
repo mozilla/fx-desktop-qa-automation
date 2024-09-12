@@ -32,7 +32,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 "*test_import_bookmarks_chrome.py"
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/bookmarks_and_history/test_import_bookmarks_chrome.py
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
     notify:
