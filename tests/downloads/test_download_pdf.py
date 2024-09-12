@@ -37,28 +37,9 @@ def test_download_pdf(
     download_button = pdf.get_element("download-button")
     download_button.click()
 
-    # Allow time for the download dialog m to appear and pressing enter to download
+    # Allow time for the download dialog to appear and pressing handle the prompt
     time.sleep(2)
-
-    if sys_platform == "Linux":
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        time.sleep(1)
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        time.sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        time.sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
+    pdf.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
     time.sleep(2)

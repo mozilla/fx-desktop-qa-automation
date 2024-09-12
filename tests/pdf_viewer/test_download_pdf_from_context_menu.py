@@ -42,30 +42,13 @@ def test_download_pdf_from_context_menu(
     context_menu = ContextMenu(driver)
     context_menu.click_context_item("context-menu-save-page-as")
 
-    # Allow time for the save dialog to appear and press enter
+    # Allow time for the save dialog to appear and handle prompt
     sleep(2)
     context_menu.hide_popup_by_child_node("context-menu-save-page-as")
-    if sys_platform == "Linux":
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        sleep(1)
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
+    pdf.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
-    sleep(4)
+    sleep(2)
 
     # Open about:telemetry and go to events tab
     about_telemetry = AboutTelemetry(driver).open()

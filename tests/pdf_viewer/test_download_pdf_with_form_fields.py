@@ -38,27 +38,9 @@ def test_download_pdf_with_form_fields(
     pdf_page.get_element("first-name-field").send_keys("Mark")
     pdf_page.get_element("download-button").click()
 
-    # Allow time for the download dialog to appear and press enter to download
+    # Allow time for the download dialog to appear and handle the prompt
     sleep(2)
-
-    if sys_platform == "Linux":
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        sleep(1)
-        keyboard.press(Key.alt)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        keyboard.release(Key.alt)
-        sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-        sleep(1)
-        keyboard.press(Key.tab)
-        keyboard.release(Key.tab)
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
+    pdf_page.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
     sleep(2)

@@ -3,10 +3,12 @@ import logging
 import os
 import platform
 import re
+import time
 from copy import deepcopy
 from pathlib import Path
 from typing import List, Union
 
+from pynput.keyboard import Controller, Key
 from pypom import Page
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -648,6 +650,33 @@ class BasePage(Page):
                     self.hide_popup_by_class(class_name, True)
             else:
                 raise NoSuchWindowException
+
+    def handle_os_download_confirmation(self, keyboard: Controller, sys_platform: str):
+        """
+        This function handles the keyboard shortcuts. If on Linux, it simulates switching
+        to OK. On other platforms, it directly presses enter.
+        """
+        if sys_platform == "Linux":
+            # Perform the series of ALT+TAB key presses on Linux
+            keyboard.press(Key.alt)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+            keyboard.release(Key.alt)
+            time.sleep(1)
+            keyboard.press(Key.alt)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+            keyboard.release(Key.alt)
+            time.sleep(1)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+            time.sleep(1)
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
+
+        # Press enter to confirm the download on all platforms
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
 
     def hide_popup_by_child_node(
         self, reference: Union[str, tuple, WebElement], labels=[], retry=False
