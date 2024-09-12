@@ -327,13 +327,14 @@ class AboutPrefs(BasePage):
 
         self.click_on("import-browser-data")
         profile_selector = self.get_element("browser-profile-selector")
+        sleep(2)
 
         tries = 0
         while (
             browser_name.lower() not in profile_selector.text.lower()
             and tries < MAX_TRIES
         ):
-            self.actions.send_keys_to_element(profile_selector, Keys.ENTER).perform()
+            self.click_on(profile_selector)
             if tries == 0 and browser_name == "Chrome":
                 self.driver.save_screenshot(
                     os.path.join("artifacts", "profile_import.png")
