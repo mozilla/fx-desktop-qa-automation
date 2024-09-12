@@ -330,12 +330,14 @@ class AboutPrefs(BasePage):
         while (
             browser_name.lower()
             not in self.get_element("browser-profile-selector").text.lower()
+            and tries < 16
         ):
             self.actions.send_keys(" ").perform()
             for _ in range(tries + 1):
                 self.actions.send_keys(Keys.DOWN).perform()
             self.actions.send_keys(" ").perform()
             sleep(1)
+            tries += 1
         for _ in range(3):
             self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(" ").perform()
