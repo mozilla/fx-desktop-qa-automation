@@ -339,9 +339,7 @@ class AboutPrefs(BasePage):
             self.actions.send_keys(" ").perform()
             sleep(1)
             tries += 1
-        for _ in range(3):
-            self.actions.send_keys(Keys.TAB).perform()
-        self.actions.send_keys(" ").perform()
+        self.click_on("migration-import-button")
         self.wait.until(
             lambda _: "Complete" in self.get_element("migration-progress-header").text
         )
