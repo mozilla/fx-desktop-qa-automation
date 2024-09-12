@@ -2,6 +2,7 @@ import re
 from time import sleep
 from typing import List
 
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -339,6 +340,13 @@ class AboutPrefs(BasePage):
             tries += 1
         assert tries < MAX_TRIES, "Browser not found in import list"
         self.click_on("migration-import-button")
-        self.click_on("migration-done-button")
+        done_buttons = self.get_elements("migration-done-button")
+        for button in done_buttons:
+            try:
+                button.click()
+            except ElementNotInteractableException:
+                pass
+
+        # self.click_on("migration-done-button")
 
         return self
