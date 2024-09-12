@@ -498,6 +498,7 @@ class BasePage(Page):
         """Click on an element, no matter the context, return the page"""
         with self.driver.context(self.context_id):
             self.fetch(reference, labels).click()
+            logging.info(f"{reference} clicked")
         return self
 
     def multi_click(

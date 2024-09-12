@@ -332,7 +332,7 @@ class AboutPrefs(BasePage):
             browser_name.lower() not in profile_selector.text.lower()
             and tries < MAX_TRIES
         ):
-            self.click_on(profile_selector)
+            self.actions.send_keys_to_element(profile_selector, Keys.ENTER).perform()
             with self.driver.context(self.driver.CONTEXT_CHROME):
                 for _ in range(tries):
                     self.actions.send_keys(Keys.DOWN).perform()
@@ -341,13 +341,6 @@ class AboutPrefs(BasePage):
             tries += 1
         assert tries < MAX_TRIES, "Browser not found in import list"
         self.click_on("migration-import-button")
-        done_buttons = self.get_elements("migration-done-button")
-        for button in done_buttons:
-            try:
-                button.click()
-            except ElementNotInteractableException:
-                pass
-
-        # self.click_on("migration-done-button")
+        self.click_on("migration-done-button")
 
         return self
