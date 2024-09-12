@@ -323,17 +323,17 @@ class AboutPrefs(BasePage):
         """
         Press the import browser data button
         """
-        MAX_TRIES = 30
+        MAX_TRIES = 16
 
         self.click_on("import-browser-data")
         tries = 0
         while (
             browser_name.lower()
             not in self.get_element("browser-profile-selector").text.lower()
-            and tries < 16
+            and tries < MAX_TRIES
         ):
             self.actions.send_keys(" ").perform()
-            for _ in range(tries + 1):
+            for _ in range(tries):
                 self.actions.send_keys(Keys.DOWN).perform()
             self.actions.send_keys(" ").perform()
             sleep(1)
