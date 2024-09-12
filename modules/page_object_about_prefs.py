@@ -326,6 +326,7 @@ class AboutPrefs(BasePage):
         MAX_TRIES = 16
 
         self.click_on("import-browser-data")
+        sleep(2)
         tries = 0
         while (
             browser_name.lower()
