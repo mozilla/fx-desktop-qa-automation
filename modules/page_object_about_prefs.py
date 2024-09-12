@@ -334,7 +334,8 @@ class AboutPrefs(BasePage):
         ):
             self.click_on(profile_selector)
             with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.actions.send_keys(Keys.DOWN).perform()
+                for _ in range(tries):
+                    self.actions.send_keys(Keys.DOWN).perform()
                 self.actions.send_keys(Keys.ENTER).perform()
             sleep(1)
             tries += 1
