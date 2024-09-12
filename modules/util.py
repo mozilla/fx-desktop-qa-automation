@@ -644,6 +644,7 @@ class PomUtils:
                 logging.info("Returning match...")
                 return matches[0]
             elif len(matches):
+                logging.info("Refining matches...")
                 # If we match multiple, chances are the selector is too vague
                 # Except when we get multiple of the exact same thing?
                 # Prefer interactable elements, then just choose one
@@ -658,6 +659,7 @@ class PomUtils:
                     logging.info("Only one interactable element...")
                     return actables[0]
                 elif len(actables) > 1:
+                    logging.info("Multiple interactable elements...")
                     matches = actables
 
                 first_el_classes = matches[0].get_attribute("class")
