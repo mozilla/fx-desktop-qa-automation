@@ -25,7 +25,6 @@ def test_save_page_as(driver: Firefox):
     """
     C2637623.1: save page as
     """
-    pytest.fail()
     try:
         from pynput.keyboard import Controller, Key
     except ModuleNotFoundError:
