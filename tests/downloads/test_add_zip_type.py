@@ -4,8 +4,8 @@ from selenium.webdriver.common.by import By
 
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
-from modules.page_object_about_prefs import AboutPrefs
 from modules.page_object_generics import GenericPage
+from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()
