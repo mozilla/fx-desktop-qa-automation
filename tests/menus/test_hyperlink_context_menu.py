@@ -23,7 +23,7 @@ def test_open_link_in_new_window(driver: Firefox):
     example.context_click("more-information")
 
     # click on the open in new window option
-    hyperlink_context.click_and_hide_menu("context-menu-open-in-new-window")
+    hyperlink_context.click_and_hide_menu("context-menu-open-link-in-new-window")
 
     # verify there are two instances (two windows)
     tabs.wait_for_num_tabs(2)

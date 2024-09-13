@@ -321,15 +321,32 @@ class AboutPrefs(BasePage):
         """
         Press the import browser data button
         """
-        self.click_on("import-browser-data")
-        profile_selector = self.get_element("browser-profile-selector")
-        while browser_name.lower() not in profile_selector.text.lower():
-            self.click_on(profile_selector)
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                self.actions.send_keys(Keys.DOWN).perform()
-                self.actions.send_keys(Keys.ENTER).perform()
-            sleep(1)
-        self.click_on("migration-import-button")
-        self.click_on("migration-done-button")
+        MAX_TRIES = 16
 
+        self.click_on("import-browser-data")
+        sleep(2)
+        tries = 0
+
+        # Keep cycling through the options until you get it
+        # Using keys for most of this because clicking elements is flaky for some reason
+        while (
+            browser_name.lower()
+            not in self.get_element("browser-profile-selector").text.lower()
+            and tries < MAX_TRIES
+        ):
+            self.actions.send_keys(" ").perform()
+            for _ in range(tries):
+                self.actions.send_keys(Keys.DOWN).perform()
+            self.actions.send_keys(" ").perform()
+            sleep(1)
+            tries += 1
+
+        self.click_on("migration-import-button")
+
+        # There are two messages that indicate a successful migration
+        self.wait.until(
+            lambda _: self.get_element("migration-progress-header").text
+            in ["Data Imported Successfully", "Data Import Complete"]
+        )
+        self.actions.send_keys(" ").perform()
         return self

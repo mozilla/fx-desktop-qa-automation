@@ -133,7 +133,7 @@
         "groups": []
     },
 
-    "recent-history-info": {
+    "bookmark-item": {
         "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']",
         "strategy": "css",
         "groups":[]

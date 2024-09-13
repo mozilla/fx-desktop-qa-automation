@@ -31,7 +31,7 @@ def test_reopen_tab_through_context_menu(driver: Firefox):
     driver.switch_to.window(driver.window_handles[0])
 
     tabs.context_click(remaining_tab)
-    tab_context_menu.click_and_hide_menu("context-menu-reopen-tab")
+    tab_context_menu.click_and_hide_menu("context-menu-reopen-closed-tab")
 
     reopened_tab = tabs.get_tab(tabs_to_open + 1)
     assert tabs.get_tab_title(reopened_tab).startswith("Gort")
