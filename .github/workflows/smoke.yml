@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} is running smoke tests
 on:
   pull_request:
     branches-ignore:
-      ben/fix-tc-errors
+      - 'ben/fix-tc-errors'
 
 jobs:
   Smoke-Windows:
