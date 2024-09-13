@@ -24,9 +24,7 @@ def test_bookmark_via_bookmark_menu(driver: Firefox):
     # Bookmark the given website via bookmarks menu
     driver.get(URL_TO_BOOKMARK)
     panel.open_bookmarks_menu()
-    with driver.context(driver.CONTEXT_CHROME):
-        panel.get_element("bookmark-current-tab").click()
-        nav.get_element("save-bookmark-button").click()
+    nav.add_bookmark_via_menu()
 
     # Verify that the bookmark is displayed in bookmarks menu
     panel.open_bookmarks_menu()

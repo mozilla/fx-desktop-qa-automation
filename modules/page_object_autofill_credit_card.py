@@ -1,6 +1,5 @@
 from typing import List
 
-from modules.browser_object import CreditCardPopup
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object_autofill import Autofill
@@ -41,14 +40,14 @@ class CreditCardFill(Autofill):
 
         self.click_form_button("submit")
 
-    def verify_all_fields(self, ccp: CreditCardPopup):
+    def verify_all_fields(self, ccp: AutofillPopup):
         """Given a CreditCardPopup object, verify all fields"""
         for field in self.fields:
             self.double_click("form-field", labels=[field])
             ccp.verify_popup()
 
     def verify_four_fields(
-        self, ccp: CreditCardPopup, credit_card_sample_data: CreditCardBase
+        self, ccp: AutofillPopup, credit_card_sample_data: CreditCardBase
     ) -> Autofill:
         """
         Verifies that after clicking the autofill panel the information is filled correctly.
@@ -92,7 +91,7 @@ class CreditCardFill(Autofill):
         """
         credit_card_sample_data = util.fake_credit_card_data()
         self.fill_credit_card_info(credit_card_sample_data)
-        autofill_popup_obj.press_doorhanger_save()
+        autofill_popup_obj.click_doorhanger_button("save")
         return credit_card_sample_data
 
     def update_field(
@@ -117,9 +116,9 @@ class CreditCardFill(Autofill):
         """
         ba = BrowserActions(self.driver)
         self.fill_input_element(ba, field, field_data)
-        autofill_popup_obj.press_doorhanger_save()
+        autofill_popup_obj.click_doorhanger_button("save")
 
-    def press_autofill_panel(self, credit_card_popoup_obj: CreditCardPopup):
+    def press_autofill_panel(self, credit_card_popoup_obj: AutofillPopup):
         """
         Presses the autofill panel that pops up after you double click an input field
         """
@@ -129,7 +128,6 @@ class CreditCardFill(Autofill):
 
     def update_credit_card_information(
         self,
-        credit_card_popoup_obj: CreditCardPopup,
         autofill_popup_obj: AutofillPopup,
         field_name: str,
         field_data: str,
@@ -138,15 +136,13 @@ class CreditCardFill(Autofill):
         """
         Updates the credit card based on field that is to be changed by first autofilling everything then updating the field of choice then pressing submit and handling the popup.
         """
-        self.press_autofill_panel(credit_card_popoup_obj)
+        self.press_autofill_panel(autofill_popup_obj)
         self.update_field(field_name, field_data, autofill_popup_obj)
         self.click_form_button("submit")
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
             if not save_card:
-                credit_card_popoup_obj.get_element(
-                    "update-card-info-popup-button"
-                ).click()
+                autofill_popup_obj.get_element("update-card-info-popup-button").click()
             else:
                 autofill_popup_obj.get_element("doorhanger-save-button").click()
 
@@ -171,7 +167,6 @@ class CreditCardFill(Autofill):
 
     def verify_updated_information(
         self,
-        credit_card_popoup_obj: CreditCardPopup,
         autofill_popup_obj: AutofillPopup,
         credit_card_sample_data: CreditCardBase,
         field_name: str,
@@ -201,12 +196,10 @@ class CreditCardFill(Autofill):
         """
 
         # updating the profile accordingly
-        self.update_credit_card_information(
-            credit_card_popoup_obj, autofill_popup_obj, field_name, new_data
-        )
+        self.update_credit_card_information(autofill_popup_obj, field_name, new_data)
 
         # verifiyng the correct data
-        self.verify_four_fields(credit_card_popoup_obj, credit_card_sample_data)
+        self.verify_four_fields(autofill_popup_obj, credit_card_sample_data)
         return self
 
     def update_cc_name(
@@ -214,7 +207,6 @@ class CreditCardFill(Autofill):
         util: Utilities,
         credit_card_sample_data: CreditCardBase,
         autofill_popup_obj: AutofillPopup,
-        credit_card_popoup_obj: CreditCardPopup,
     ) -> Autofill:
         """
         Generates a new name, updates the credit card information in the form.
@@ -223,7 +215,6 @@ class CreditCardFill(Autofill):
         credit_card_sample_data.name = new_cc_name
 
         self.verify_updated_information(
-            credit_card_popoup_obj,
             autofill_popup_obj,
             credit_card_sample_data,
             "cc-name",
@@ -236,7 +227,6 @@ class CreditCardFill(Autofill):
         util: Utilities,
         credit_card_sample_data: CreditCardBase,
         autofill_popup_obj: AutofillPopup,
-        credit_card_popoup_obj: CreditCardPopup,
     ) -> Autofill:
         """
         Generates a new expiry month, updates the credit card information in the form.
@@ -245,7 +235,6 @@ class CreditCardFill(Autofill):
         credit_card_sample_data.expiration_month = new_cc_exp_month
 
         self.verify_updated_information(
-            credit_card_popoup_obj,
             autofill_popup_obj,
             credit_card_sample_data,
             "cc-exp-month",
@@ -258,7 +247,6 @@ class CreditCardFill(Autofill):
         util: Utilities,
         credit_card_sample_data: CreditCardBase,
         autofill_popup_obj: AutofillPopup,
-        credit_card_popoup_obj: CreditCardPopup,
     ) -> Autofill:
         """
         Generates a new expiry year, updates the credit card information in the form.
@@ -267,7 +255,6 @@ class CreditCardFill(Autofill):
         credit_card_sample_data.expiration_year = new_cc_exp_year
 
         self.verify_updated_information(
-            credit_card_popoup_obj,
             autofill_popup_obj,
             credit_card_sample_data,
             "cc-exp-year",

@@ -30,7 +30,7 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
     # Create fake data, fill in the form, and press submit and save on the doorhanger
     autofill_sample_data = util.fake_autofill_data(country_code)
     address_form_fields.save_information_basic(autofill_sample_data)
-    autofill_popup_panel.press_doorhanger_save()
+    autofill_popup_panel.click_doorhanger_button("save")
 
     # Double-click on the name field to trigger the autocomplete dropdown
     address_form_fields.double_click("form-field", labels=["street-address"])
