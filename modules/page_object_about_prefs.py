@@ -328,6 +328,9 @@ class AboutPrefs(BasePage):
         self.click_on("import-browser-data")
         sleep(2)
         tries = 0
+
+        # Keep cycling through the options until you get it
+        # Using keys for most of this because clicking elements is flaky for some reason
         while (
             browser_name.lower()
             not in self.get_element("browser-profile-selector").text.lower()
@@ -339,7 +342,10 @@ class AboutPrefs(BasePage):
             self.actions.send_keys(" ").perform()
             sleep(1)
             tries += 1
+
         self.click_on("migration-import-button")
+
+        # There are two messages that indicate a successful migration
         self.wait.until(
             lambda _: self.get_element("migration-progress-header").text
             in ["Data Imported Successfully", "Data Import Complete"]

@@ -33,6 +33,8 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
     """Move test Bookmarks file to correct location, fake Chrome instead of installing"""
     bookmarks_source = os.path.join("data", "Chrome_Bookmarks")
     local_state_source = os.path.join("data", "Chrome_Local_State")
+
+    # Get locations for GChrome profile data
     if sys_platform.lower().startswith("win"):
         user_data_root = os.path.join(home_folder, "AppData", "Local")
         chrome_root = os.path.join(user_data_root, "Google", "Chrome", "User Data")
@@ -71,12 +73,6 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
             os.rename(bookmarks_target, tmp_path / "Bookmarks")
         copyfile(bookmarks_source, bookmarks_target)
         logging.warning("Bookmarks copied!")
-
-        if not (
-            os.path.exists(bookmarks_target) and os.path.exists(local_state_target)
-        ):
-            logging.error("Did not create something")
-            yield None
 
         yield bookmarks_target
 
