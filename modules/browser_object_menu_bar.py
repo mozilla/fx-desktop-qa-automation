@@ -1,5 +1,3 @@
-from selenium.webdriver import ActionChains
-
 from modules.page_base import BasePage
 
 

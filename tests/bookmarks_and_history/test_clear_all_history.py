@@ -31,4 +31,4 @@ def test_clear_all_history(driver: Firefox):
     ba.switch_to_content_context()
 
     panel_ui.open_history_menu()
-    panel_ui.element_does_not_exist("recent-history-info")
+    panel_ui.element_does_not_exist("bookmark-item")

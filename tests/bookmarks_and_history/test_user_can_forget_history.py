@@ -55,4 +55,4 @@ def test_user_can_forget_history(driver: Firefox):
     forget_panel.forget_history("forget-five-minutes")
 
     tabs.switch_to_new_tab()
-    panel_ui.element_does_not_exist("recent-history-info")
+    panel_ui.element_does_not_exist("bookmark-item")

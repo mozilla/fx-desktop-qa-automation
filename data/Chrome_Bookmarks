@@ -1,0 +1,47 @@
+{
+   "checksum": "bb7d4d222092b52d1beb676aecca1574",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13370458358016953",
+            "date_last_used": "0",
+            "guid": "6ba5d035-b837-440a-860e-0abc312b4b29",
+            "id": "5",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Home - Oregon State Parks",
+            "type": "url",
+            "url": "https://stateparks.oregon.gov/"
+         } ],
+         "date_added": "13370458243463228",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Bookmarks Bar",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13370458243463229",
+         "date_last_used": "0",
+         "date_modified": "13370458358016953",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other Bookmarks",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13370458243463230",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile Bookmarks",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}
