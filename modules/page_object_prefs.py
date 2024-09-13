@@ -406,19 +406,10 @@ class AboutAddons(BasePage):
             else:
                 return background_color
 
-    def enabled_theme_matches(self, expected_theme: str) -> bool:
-        """
-        Check the enabled theme name against any string.
-        """
-
-        enabled_theme = self.get_element("enabled-theme-title").get_attribute(
-            "innerText"
+        # There are two messages that indicate a successful migration
+        self.wait.until(
+            lambda _: self.get_element("migration-progress-header").text
+            in ["Data Imported Successfully", "Data Import Complete"]
         )
-        return enabled_theme == expected_theme
-
-    def check_theme_has_changed(self, original_theme: str) -> BasePage:
-        """
-        Ensure that the theme has changed.
-        """
-        assert not self.enabled_theme_matches(original_theme)
+        self.actions.send_keys(" ").perform()
         return self
