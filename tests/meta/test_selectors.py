@@ -1,4 +1,5 @@
 import logging
+import pytest
 
 from selenium.webdriver import Firefox
 
@@ -6,6 +7,7 @@ from modules.browser_object import PanelUi
 
 
 def test_a_selector(driver: Firefox, version: str):
+    pytest.fail()
     logging.info(f"Fx version {version}")
     panel = PanelUi(driver).open()
     panel.open_panel_menu()
