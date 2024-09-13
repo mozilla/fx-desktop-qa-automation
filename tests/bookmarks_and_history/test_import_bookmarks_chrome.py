@@ -1,12 +1,9 @@
 import logging
 import os
-import stat
 from shutil import copyfile
-from time import sleep
 
 import pytest
-from selenium.webdriver import ActionChains, Chrome, Firefox
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import Firefox
 
 from modules.browser_object import Toolbar
 from modules.page_object import AboutPrefs

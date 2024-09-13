@@ -29,7 +29,7 @@ def test_download_pdf_with_form_fields(
     """
     C1020326 Download pdf with form fields
     """
-    from pynput.keyboard import Controller, Key
+    from pynput.keyboard import Controller
 
     pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
     keyboard = Controller()

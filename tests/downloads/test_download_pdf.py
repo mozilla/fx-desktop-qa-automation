@@ -28,7 +28,7 @@ def test_download_pdf(
     """
     C1756769: Verify that the user can Download a PDF
     """
-    from pynput.keyboard import Controller, Key
+    from pynput.keyboard import Controller
 
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
     keyboard = Controller()

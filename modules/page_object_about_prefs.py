@@ -1,9 +1,7 @@
-import os
 import re
 from time import sleep
 from typing import List
 
-from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
