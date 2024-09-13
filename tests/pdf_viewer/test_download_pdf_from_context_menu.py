@@ -30,7 +30,7 @@ def test_download_pdf_from_context_menu(
     C1756790: Verify that Telemetry is Recorded when Saving a PDF from the Context menu
     """
 
-    from pynput.keyboard import Controller, Key
+    from pynput.keyboard import Controller
 
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     pdf.open()

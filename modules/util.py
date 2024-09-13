@@ -642,12 +642,31 @@ class PomUtils:
         if not multiple:
             if len(matches) == 1:
                 logging.info("Returning match...")
+                logging.info(matches[0].get_attribute("outerHTML"))
                 return matches[0]
             elif len(matches):
+                logging.info("Refining matches...")
                 # If we match multiple, chances are the selector is too vague
                 # Except when we get multiple of the exact same thing?
-                first_el = matches[0].get_attribute("outerHTML")
-                if all([el.get_attribute("outerHTML") == first_el for el in matches]):
+                # Prefer interactable elements, then just choose one
+                actables = [
+                    el
+                    for el in matches
+                    if el.is_displayed()
+                    and el.is_enabled()
+                    and not el.get_attribute("hidden")
+                ]
+                if len(actables) == 1:
+                    logging.info("Only one interactable element...")
+                    return actables[0]
+                elif len(actables) > 1:
+                    logging.info("Multiple interactable elements...")
+                    matches = actables
+
+                first_el_classes = matches[0].get_attribute("class")
+                if all(
+                    [el.get_attribute("class") == first_el_classes for el in matches]
+                ):
                     return matches[0]
                 for el in matches:
                     logging.info("match:")

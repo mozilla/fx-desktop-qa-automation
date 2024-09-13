@@ -34,7 +34,7 @@ def test_pdf_download(
     """
     C3932: PDF files can be successfully downloaded via pdf.js
     """
-    from pynput.keyboard import Controller, Key
+    from pynput.keyboard import Controller
 
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     pdf.open()
