@@ -58,6 +58,7 @@ def safari_prep():
         assert False, "Failed to add safari bookmark"
 
 
+@pytest.mark.headed
 @pytest.mark.skipif(sys.platform.lower() != "darwin", reason="Only testing on Mac")
 def test_safari_bookmarks_imported(driver: Firefox, safari_prep):
     about_prefs = AboutPrefs(driver, category="General")
