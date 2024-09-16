@@ -109,6 +109,20 @@
         "groups": []
     },
 
+    "migration-safari-import-confirm": {
+        "selectorData": "button#safari-request-permissions",
+        "strategy": "css",
+        "shadowParent": "migration-popup",
+        "groups": []
+    },
+
+    "migration-safari-password-skip": {
+        "selectorData": "button#safari-password-import-skip",
+        "strategy": "css",
+        "shadowParent": "migration-popup",
+        "groups": []
+    },
+
     "migration-progress-header": {
         "selectorData": "h1#progress-header",
         "strategy": "css",

@@ -1,3 +1,4 @@
+import logging
 import re
 from time import sleep
 from typing import List
@@ -317,7 +318,7 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("history_menulist")
 
-    def import_bookmarks(self, browser_name: str) -> BasePage:
+    def import_bookmarks(self, browser_name: str, safari=False) -> BasePage:
         """
         Press the import browser data button
         """
@@ -342,6 +343,12 @@ class AboutPrefs(BasePage):
             tries += 1
 
         self.click_on("migration-import-button")
+
+        if safari:
+            # self.actions.send_keys(Keys.ENTER).perform()
+            # self.click_on("migration-safari-import-confirm")
+            self.click_on("migration-safari-password-skip")
+            sleep(2)
 
         # There are two messages that indicate a successful migration
         self.wait.until(
