@@ -4,8 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
-from modules.page_object_about_config import AboutConfig
-from modules.page_object_about_telemetry import AboutTelemetry
+from modules.page_object_about_pages import AboutConfig, AboutTelemetry
 from modules.util import Utilities
 
 
