@@ -191,5 +191,5 @@ tests/test_scratch.py
 credentials.json
 
 # dont ignore
-!images/goomy.png
+!data/goomy.png
 !tests/downloads
