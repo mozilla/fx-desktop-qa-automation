@@ -37,12 +37,9 @@ def test_the_website_opened_in_new_tab_is_present_in_history_menu(driver: Firefo
     page.open()
     page.url_contains("youtube")
 
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     panel_ui.open_history_menu()
 
     # Verify YouTube is present in the history menu and is on top of the list as the most recent website visited
-    with driver.context(driver.CONTEXT_CHROME):
-        recent_history_elements = panel_ui.get_elements("recent-history-content")
-        assert (
-            recent_history_elements[0].get_attribute("value") == "YouTube"
-        ), "YouTube is not the first item in the recent history."
+    panel_ui.element_attribute_contains("recent-history-content", "value", "YouTube")
