@@ -1,10 +1,12 @@
-from modules.classes.autofill_base import AutofillAddressBase
+from typing import List
+
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
-from typing import List
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class Autofill(BasePage):
@@ -34,7 +36,7 @@ class Autofill(BasePage):
 
     def click_form_button(self, field_name):
         """Clicks submit on the form"""
-        self.click_on("submit-button", labels=[field_name])
+        self.get_element("submit-button", labels=[field_name]).click()
 
 
 class CreditCardFill(Autofill):
@@ -78,7 +80,7 @@ class CreditCardFill(Autofill):
             ccp.verify_popup()
 
     def verify_four_fields(
-            self, ccp: AutofillPopup, credit_card_sample_data: CreditCardBase
+        self, ccp: AutofillPopup, credit_card_sample_data: CreditCardBase
     ) -> Autofill:
         """
         Verifies that after clicking the autofill panel the information is filled correctly.
@@ -94,7 +96,7 @@ class CreditCardFill(Autofill):
         """
         self.double_click("form-field", labels=["cc-name"])
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            ccp.click_on("autofill-profile-option")
+            ccp.get_element("autofill-profile-option").click()
 
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
         for i in range(len(info_list)):
@@ -103,7 +105,7 @@ class CreditCardFill(Autofill):
         return self
 
     def fake_and_fill(
-            self, util: Utilities, autofill_popup_obj: AutofillPopup
+        self, util: Utilities, autofill_popup_obj: AutofillPopup
     ) -> CreditCardBase:
         """
         Fills a credit card form with randomly generated data and interacts with the autofill popup.
@@ -124,7 +126,7 @@ class CreditCardFill(Autofill):
         return credit_card_sample_data
 
     def update_field(
-            self, field: str, field_data: str, autofill_popup_obj: AutofillPopup
+        self, field: str, field_data: str, autofill_popup_obj: AutofillPopup
     ):
         """
         Updates a field in the form with given data.
@@ -153,14 +155,14 @@ class CreditCardFill(Autofill):
         """
         self.double_click("form-field", labels=["cc-name"])
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            credit_card_popoup_obj.click_on("autofill-profile-option")
+            credit_card_popoup_obj.get_element("autofill-profile-option").click()
 
     def update_credit_card_information(
-            self,
-            autofill_popup_obj: AutofillPopup,
-            field_name: str,
-            field_data: str,
-            save_card=False,
+        self,
+        autofill_popup_obj: AutofillPopup,
+        field_name: str,
+        field_data: str,
+        save_card=False,
     ):
         """
         Updates the credit card based on field that is to be changed by first autofilling everything then updating
@@ -172,12 +174,12 @@ class CreditCardFill(Autofill):
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
             if not save_card:
-                autofill_popup_obj.click_on("update-card-info-popup-button")
+                autofill_popup_obj.get_element("update-card-info-popup-button").click()
             else:
-                autofill_popup_obj.click_on("doorhanger-save-button")
+                autofill_popup_obj.get_element("doorhanger-save-button").click()
 
     def extract_credit_card_obj_into_list(
-            self, credit_card_sample_data: CreditCardBase
+        self, credit_card_sample_data: CreditCardBase
     ) -> List[str]:
         """
         Extracts the credit card information from the object and returns it as a list.
@@ -196,11 +198,11 @@ class CreditCardFill(Autofill):
         return ret_val
 
     def verify_updated_information(
-            self,
-            autofill_popup_obj: AutofillPopup,
-            credit_card_sample_data: CreditCardBase,
-            field_name: str,
-            new_data: str,
+        self,
+        autofill_popup_obj: AutofillPopup,
+        credit_card_sample_data: CreditCardBase,
+        field_name: str,
+        new_data: str,
     ) -> Autofill:
         """
         Verifies that there is only 1 profile in the popup panel, updates the credit card information and verifies all
@@ -230,10 +232,10 @@ class CreditCardFill(Autofill):
         return self
 
     def update_cc_name(
-            self,
-            util: Utilities,
-            credit_card_sample_data: CreditCardBase,
-            autofill_popup_obj: AutofillPopup,
+        self,
+        util: Utilities,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup_obj: AutofillPopup,
     ) -> Autofill:
         """
         Generates a new name, updates the credit card information in the form.
@@ -250,10 +252,10 @@ class CreditCardFill(Autofill):
         return self
 
     def update_cc_exp_month(
-            self,
-            util: Utilities,
-            credit_card_sample_data: CreditCardBase,
-            autofill_popup_obj: AutofillPopup,
+        self,
+        util: Utilities,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup_obj: AutofillPopup,
     ) -> Autofill:
         """
         Generates a new expiry month, updates the credit card information in the form.
@@ -270,10 +272,10 @@ class CreditCardFill(Autofill):
         return self
 
     def update_cc_exp_year(
-            self,
-            util: Utilities,
-            credit_card_sample_data: CreditCardBase,
-            autofill_popup_obj: AutofillPopup,
+        self,
+        util: Utilities,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup_obj: AutofillPopup,
     ) -> Autofill:
         """
         Generates a new expiry year, updates the credit card information in the form.
@@ -321,7 +323,7 @@ class LoginAutofill(Autofill):
         def submit(self) -> None:
             if self.submit_button is None:
                 self.submit_button = self.parent.get_element("submit-button-login")
-            self.submit_button.click_on()
+            self.submit_button.get_element()
 
 
 class AddressFill(Autofill):
