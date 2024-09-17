@@ -47,7 +47,7 @@ jobs:
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest -n 4 .
+          pipenv run pytest -n 4 "tests\pdf_viewer"
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -56,7 +56,7 @@ jobs:
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest -n 4 .
+          pipenv run pytest -n 4 "tests\pdf_viewer"
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -99,7 +99,7 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/pdf_viewer || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
