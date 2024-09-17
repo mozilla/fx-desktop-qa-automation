@@ -1,6 +1,10 @@
 import pytest
+import shutil
+import os
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
@@ -12,11 +16,13 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "1756743"
 
+ZIP_URL = "https://github.com/microsoft/api-guidelines"
 
-ZIP_URL = "https://ftp.mozilla.org/pub/firefox/releases/0.9rc/"
+@pytest.fixture()
+def delete_files_regex_string():
+    return r"api-guidelines-vNext"
 
-
-def test_add_zip_type(driver: Firefox):
+def test_add_zip_type(driver: Firefox, home_folder, delete_files):
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
     """
@@ -28,7 +34,11 @@ def test_add_zip_type(driver: Firefox):
 
     # Click on the available zip
     web_page.find_element(
-        By.XPATH, "//td/a[@href='/pub/firefox/releases/0.9rc/Firefox-win32-0.9rc.zip']"
+        By.XPATH, '//*[@id=":R55ab:"]'
+    ).click()
+    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.Overlay__StyledOverlay-sc-51280t-0 > div:nth-child(2)')))
+    web_page.find_element(
+        By.CSS_SELECTOR, 'li.Item__LiBox-sc-yeql7o-0:nth-child(2)'
     ).click()
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
@@ -39,3 +49,7 @@ def test_add_zip_type(driver: Firefox):
     # Open about:preferences and check that zip mime type is present in the application list
     about_prefs.open()
     about_prefs.element_exists("mime-type", labels=["application/zip"])
+
+    # Remove the directory created
+    dir_created = os.path.join(home_folder, "Downloads", "api-guidelines-vNext")
+    shutil.rmtree(dir_created)

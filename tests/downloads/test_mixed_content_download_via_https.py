@@ -15,7 +15,7 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"download"
+    return r"\bdownload\b"
 
 MIXED_CONTENT_DOWNLOAD_URL = "https://b-mcb-download.glitch.me/"
 
