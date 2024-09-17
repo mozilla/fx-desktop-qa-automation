@@ -1,8 +1,5 @@
 from modules.page_object_about_pages import *
 from modules.page_object_addons_mozilla_org import *
-from modules.page_object_autofill_credit_card import *
-from modules.page_object_autofill_login import *
-from modules.page_object_autofill_test_basic import *
 from modules.page_object_customize_firefox import *
 from modules.page_object_example_page import *
 from modules.page_object_fxa_home import *
@@ -10,3 +7,4 @@ from modules.page_object_generics import *
 from modules.page_object_google_search import *
 from modules.page_object_newtab import *
 from modules.page_object_prefs import *
+from modules.page_object_autofill import *

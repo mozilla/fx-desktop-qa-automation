@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup, Navigation
-from modules.page_object_autofill_credit_card import CreditCardFill
+from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
 
 

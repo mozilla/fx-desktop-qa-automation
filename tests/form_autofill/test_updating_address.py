@@ -3,7 +3,8 @@ from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs, AddressFill
+from modules.page_object import AboutPrefs
+from modules.page_object_autofill import AddressFill
 from modules.util import BrowserActions, Utilities
 
 
@@ -37,7 +38,7 @@ def test_update_address(driver: Firefox, country_code: str):
     autofill_popup_panel.click_autofill_form_option()
 
     # Add a middle name inside the Name field
-    address_form_fields.click("form-field", labels=["name"])
+    address_form_fields.click_on("form-field", labels=["name"])
     address_form_fields.send_keys_to_element("form-field", "name", " Doe" + Keys.ENTER)
 
     # Save the updated address

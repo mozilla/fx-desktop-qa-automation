@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
-from modules.page_object_autofill_credit_card import CreditCardFill
+from modules.page_object_autofill import CreditCardFill
 from modules.util import BrowserActions, Utilities
 
 
