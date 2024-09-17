@@ -22,7 +22,7 @@ ZIP_URL = "https://github.com/microsoft/api-guidelines"
 def delete_files_regex_string():
     return r"api-guidelines-vNext"
 
-def test_add_zip_type(driver: Firefox, home_folder, delete_files):
+def test_add_zip_type(driver: Firefox, sys_platform, home_folder, delete_files):
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
     """
@@ -50,6 +50,7 @@ def test_add_zip_type(driver: Firefox, home_folder, delete_files):
     about_prefs.open()
     about_prefs.element_exists("mime-type", labels=["application/zip"])
 
-    # Remove the directory created
-    dir_created = os.path.join(home_folder, "Downloads", "api-guidelines-vNext")
-    shutil.rmtree(dir_created)
+    # Remove the directory created as MacOS automatically unzips
+    if sys_platform == "Darwin":
+        dir_created = os.path.join(home_folder, "Downloads", "api-guidelines-vNext")
+        shutil.rmtree(dir_created)
