@@ -66,8 +66,7 @@ class GenericPdf(BasePage):
             sleep(3)
             keyboard.type(image_path.lstrip("/"))
         else:
-            keyboard.tap(Key.f4)
-            sleep(3)
+            sleep(2)
             keyboard.type(image_path)
         sleep(1)
         keyboard.press(Key.enter)
