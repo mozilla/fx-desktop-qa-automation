@@ -23,13 +23,12 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
     nav = Navigation(driver)
     panel = PanelUi(driver)
 
-    # Bookmark the given website and open the edit bookmark panel
+    # Bookmark the given website via star button
     GenericPage(driver, url=URL_TO_EDIT).open()
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("star-button").click()
-        nav.get_element("save-bookmark-button").click()
+    nav.add_bookmark_via_star()
 
-        # Change bookmark name and location
+    # Open the edit bookmark panel and change bookmark name and location
+    with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("star-button").click()
         nav.get_element("edit-bookmark-panel").send_keys("Mozilla Firefox")
         panel.get_element("bookmark-location").click()

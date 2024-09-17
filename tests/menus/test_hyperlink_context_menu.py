@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import HyperlinkContextMenu, TabBar
+from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import ExamplePage
 
 
@@ -14,7 +14,7 @@ def test_open_link_in_new_window(driver: Firefox):
     """
     C2637621.2: open link in new window
     """
-    hyperlink_context = HyperlinkContextMenu(driver)
+    hyperlink_context = ContextMenu(driver)
     tabs = TabBar(driver)
     example = ExamplePage(driver)
     example.open()
@@ -23,7 +23,7 @@ def test_open_link_in_new_window(driver: Firefox):
     example.context_click("more-information")
 
     # click on the open in new window option
-    hyperlink_context.click_and_hide_menu("context-menu-open-in-new-window")
+    hyperlink_context.click_and_hide_menu("context-menu-open-link-in-new-window")
 
     # verify there are two instances (two windows)
     tabs.wait_for_num_tabs(2)

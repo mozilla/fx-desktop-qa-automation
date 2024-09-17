@@ -109,8 +109,15 @@
         "groups": []
     },
 
+    "migration-progress-header": {
+        "selectorData": "h1#progress-header",
+        "strategy": "css",
+        "shadowParent": "migration-popup",
+        "groups": []
+    },
+
     "migration-done-button": {
-        "selectorData": "button.primary.done-button",
+        "selectorData": "[data-l10n-id='migration-done-button-label']",
         "strategy": "css",
         "shadowParent": "migration-popup",
         "groups": []

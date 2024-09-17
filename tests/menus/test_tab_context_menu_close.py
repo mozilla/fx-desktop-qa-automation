@@ -1,13 +1,13 @@
 import logging
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import (
-    HyperlinkContextMenu,
+    ContextMenu,
     Navigation,
     TabBar,
-    TabContextMenu,
 )
 from modules.page_object import ExamplePage
 
@@ -30,7 +30,7 @@ def test_close_multiple_tabs_to_left(driver: Firefox):
     C2264627.3.2: close multiple tabs actions (close all the left)
     """
     tabs = TabBar(driver).open()
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4
 
@@ -60,7 +60,7 @@ def test_close_multiple_tabs_other_tabs(driver: Firefox):
     C2264627.3.3: close multiple tabs actions (close all the left)
     """
     tabs = TabBar(driver)
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4
 
@@ -91,19 +91,22 @@ def test_copy_link(driver: Firefox):
     C2264627.4: Copy the link and verify it was copied
     """
     nav = Navigation(driver)
-    hyperlink_context = HyperlinkContextMenu(driver)
+    hyperlink_context = ContextMenu(driver)
     tabs = TabBar(driver)
     example = ExamplePage(driver).open()
 
     # right click the hyperlink
+    sleep(1)
     example.context_click("more-information")
 
     # click on the open in new window option
+    sleep(1)
     hyperlink_context.click_and_hide_menu("context-menu-copy-link")
 
     # open a new tab
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
+    sleep(1)
     driver.switch_to.window(driver.window_handles[1])
 
     # # context click and paste

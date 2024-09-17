@@ -5,7 +5,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tracker_panel import TrackerPanel
-from modules.page_object_about_prefs import AboutPrefs
+from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

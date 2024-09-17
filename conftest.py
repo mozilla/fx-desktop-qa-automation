@@ -278,6 +278,11 @@ def test_case():
     return None
 
 
+@pytest.fixture()
+def hard_quit():
+    return False
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
@@ -290,6 +295,7 @@ def driver(
     version: str,
     suite_id: str,
     test_case: str,
+    hard_quit: bool,
     env_prep,
     tmp_path,
     request,
@@ -361,10 +367,12 @@ def driver(
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
+        if hard_quit:
+            return
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 
-    if request.node.rep_call.passed:
+    if os.environ.get("MILESTONE_ID") and request.node.rep_call.passed:
         plan_id = os.environ.get("MILESTONE_ID")
         if plan_id:
             platform_info = platform.uname()
@@ -428,7 +436,6 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 
     def _delete_files():
         downloads_folder = os.path.join(home_folder, "Downloads")
-        logging.info(os.path.exists(downloads_folder))
 
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
@@ -450,7 +457,19 @@ def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
 
 
-@pytest.fixture()
-def absolute_path():
-    absolute_path = os.getcwd()
-    return absolute_path
+def pytest_sessionfinish(session, exitstatus):
+    if not hasattr(session.config, "workerinput"):
+        import psutil
+
+        reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+        for proc in psutil.process_iter(["name", "pid", "status"]):
+            try:
+                if (
+                    proc.create_time() > reporter._sessionstarttime
+                    and proc.name().startswith("firefox")
+                ):
+                    logging.info(f"found remaining process: {proc.pid}")
+                    proc.kill()
+            except (ProcessLookupError, psutil.NoSuchProcess):
+                logging.warning("Failed to kill process.")
+                pass

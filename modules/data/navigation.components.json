@@ -300,6 +300,24 @@
         "groups": []
     },
 
+    "history-button": {
+        "selectorData": "history-panelmenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "library-button": {
+        "selectorData": "library-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "library-history-submenu-button": {
+        "selectorData": "appMenu-library-history-button",
+        "strategy": "id",
+        "groups": []
+    },
+
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
@@ -370,6 +388,12 @@
     "bookmark-robots": {
         "selectorData": "menuitem[label='Robots 2']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "bookmark-current-tab": {
+        "selectorData": "panelMenuBookmarkThisPage",
+        "strategy": "id",
         "groups": []
     }
 }
