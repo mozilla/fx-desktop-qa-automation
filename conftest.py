@@ -277,7 +277,9 @@ def use_profile():
 @pytest.fixture(autouse=True)
 def version(fx_executable: str):
     version = check_output([fx_executable, "--version"]).strip().decode()
-    return version
+    # return version
+    # TODO: Revert to actual version
+    return "Mozilla Firefox 128.0b3"  # safe version to test integration
 
 
 @pytest.fixture()

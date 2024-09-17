@@ -1,6 +1,12 @@
+import logging
+import os
+import re
+
 from modules import testrail as tr
 from modules.testrail import TestRail
 
+FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
+TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
 
@@ -78,6 +84,7 @@ def collect_changes(testrail_session: TestRail, report):
         report.get("tests")[0].get("metadata").get("fx_version")
     )
     (major, minor, build) = [version_match[n] for n in range(1, 4)]
+    config = report.get("tests")[0].get("metadata").get("config")
 
     major_milestone = testrail_session.matching_milestone(
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
@@ -114,11 +121,15 @@ def collect_changes(testrail_session: TestRail, report):
         new_plan = False
 
     entry_changes = {"config": config}
-    test_results = {"project_id": testrail_project_id, "results": []}
+    test_results = {"project_id": TESTRAIL_FX_DESK_PRJ, "results": []}
     for test in report.get("tests"):
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
         suite_id = int(suite_id_str.replace("S", ""))
         test_case = test.get("metadata").get("test_case")
+        try:
+            int(test_case)
+        except ValueError:
+            continue
         config = test.get("metadata").get("machine_config")
         outcome = test.get("outcome")
 
@@ -195,4 +206,4 @@ def collect_changes(testrail_session: TestRail, report):
                     )
                 else:
                     logging.info(f"Leave run {run_id} alone re: {test_case}")
-    return (entry_changes, test_passes)
+    return (entry_changes, test_results)
