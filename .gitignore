@@ -1,5 +1,6 @@
 
 /venv/
+.report.json
 .DS_Store
 test*.txt
 fx_location
