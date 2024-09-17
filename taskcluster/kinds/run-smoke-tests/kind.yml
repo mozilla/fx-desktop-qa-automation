@@ -35,7 +35,7 @@ tasks:
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/pdf_viewer
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/pdf_viewer
+        pipenv run pytest --fx-executable ./firefox/firefox tests/pdf_viewer
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
