@@ -274,3 +274,52 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector name: input-field
+Selector Data: input[autocomplete='{name}']
+Description: Input field
+Location: Input field in the autofill demo page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector name: username-field
+Selector Data: input[placeholder='username']
+Description: Username field
+Location: Username field in the autofill demo page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector name: submit-form
+Selector Data: input[value='Log In']
+Description: Login button in the submit form
+Location: Login button in the autofill demo page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector name: save-login-popup
+Selector Data: notification-popup
+Description: Save login doorhanger
+Location: Save login doorhanger under the URL bar
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector name: username-login-field
+Selector Data: /html/body/div[1]/form[2]/input[1]
+Description: Username login field
+Location: Username field in the login demo page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector name: password-login-field
+Selector Data: /html/body/div[1]/form[2]/input[2]
+Description: Password login field
+Location: Password field in the login demo page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector name: submit-button-login
+Selector Data: /html/body/div[1]/form[2]/input[3]
+Description: Login submit button
+Location: Submit button in the login demo page 
+Path to .json: modules/data/login_autofill.components.json
+```
