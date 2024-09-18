@@ -52,6 +52,21 @@ Description: Text entry field when editing a str value of a config
 Location: Line item config in about:config page
 Path to .json: modules/data/about_config.components.json
 ```
+#### about_downloads
+```
+Selector Name: no-downloads-label
+Selector Data: "downloadsListEmptyDescription"
+Description: Label that exists when no downloads are present
+Location: about:downloads page
+Path to .json: modules/data/about_downloads.components.json
+```
+```
+Selector Name: download-target
+Selector Data: "downloadTarget"
+Description: Download item element
+Location: In the about:downloads page when a download exists
+Path to .json: modules/data/about_downloads.components.json
+```
 #### about_downloads_context_menu
 ```
 Selector Name: downloads-panel
@@ -123,6 +138,7 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+#### about_glean
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
