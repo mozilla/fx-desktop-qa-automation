@@ -23,7 +23,6 @@ def test_delete_other_bookmarks(driver: Firefox):
     """
     nav = Navigation(driver)
     GenericPage(driver, url=BOOKMARK_URL).open()
-    keyboard = Controller()
 
     # create the first bookmark for other
     nav.bookmark_page_other()
