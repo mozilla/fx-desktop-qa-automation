@@ -275,6 +275,20 @@ Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
 ```
+Selector Name: sidebar-options
+Selector Data: "button.category[name='{name}']"
+Description: Selects an option in about:addons (sidebar)
+Location: Left side of about:addons page
+Path to .json: modules/data/about_addons.components.json
+```
+```
+Selector Name: theme-card
+Selector Data: "div.card[aria-labelledby='{name}']"
+Description: Takes the name of the intended theme to use
+Location: Theme cards on about:addons page
+Path to .json: modules/data/about_addons.components.json
+```
+```
 Selector name: awesome-bar
 Selector Data: urlbar-input
 Description: Awesome bar / URL bar
