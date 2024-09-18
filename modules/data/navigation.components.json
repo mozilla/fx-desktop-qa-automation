@@ -371,5 +371,11 @@
         "selectorData": "menuitem[label='Robots 2']",
         "strategy": "css",
         "groups": []
+    },
+
+    "bookmark-about-robots": {
+        "selectorData": "menuitem[label='Gort! Klaatu barada nikto!']",
+        "strategy": "css",
+        "groups": []
     }
 }
