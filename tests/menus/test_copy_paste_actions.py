@@ -6,8 +6,7 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import GoogleSearch
-from modules.page_object_autofill_login import LoginAutofill
-from modules.page_object_form_autofill_textarea import TextAreaFormAutofill
+from modules.page_object_autofill import LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
 
 

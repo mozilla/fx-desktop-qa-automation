@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.browser_object_navigation import Navigation
-from modules.page_object_autofill_test_basic import AddressFill
+from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
 
@@ -37,6 +37,6 @@ def test_clear_form(driver: Firefox, country_code: str):
     # Open dropdown and select first option and clear autofill form
     new_address_autofill.double_click("form-field", labels=["name"])
     address_autofill_popup.click_autofill_form_option()
-    new_address_autofill.click("form-field", labels=["name"])
+    new_address_autofill.click_on("form-field", labels=["name"])
     # Verify that the form autofill suggestions are displayed.
     address_autofill_popup.verify_element_displayed("select-form-option")
