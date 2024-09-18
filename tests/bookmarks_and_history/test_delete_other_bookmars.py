@@ -22,9 +22,7 @@ def test_delete_other_bookmarks(driver: Firefox):
         C2084524: Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
     """
     nav = Navigation(driver)
-    # browser_actions = BrowserActions(driver)
     GenericPage(driver, url=BOOKMARK_URL).open()
-    # context_menu = ContextMenu(driver)
     keyboard = Controller()
 
     # create the first bookmark for other
@@ -32,15 +30,7 @@ def test_delete_other_bookmarks(driver: Firefox):
 
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
-        nav.context_click("bookmark-about-robots")
-        keyboard.press(Key.down)
-        keyboard.release(Key.down)
-        keyboard.press(Key.down)
-        keyboard.release(Key.down)
-        keyboard.press(Key.down)
-        keyboard.release(Key.down)
-        keyboard.press(Key.down)
-        keyboard.release(Key.down)
+        nav.element_visible("bookmark-about-robots")
 
     # get other bookmarks
     # with driver.context(driver.CONTEXT_CHROME):
