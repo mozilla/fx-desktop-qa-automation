@@ -274,3 +274,444 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector name: awesome-bar
+Selector Data: urlbar-input
+Description: Awesome bar / URL bar
+Location: Any clickable area on the awesome bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: results-dropdown
+Selector Data: urlbar-results
+Description: URL bar search results
+Location: Any search result item from the URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: tab-to-search-text-span
+Selector Data: urlbarView-dynamic-onboardTabToSearch-text-container
+Description: Tab to search text span
+Location: URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-mode-span
+Selector Data: urlbar-search-mode-indicator-title
+Description: Search mode span
+Location: URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: overflow-item
+Selector Data: [class='urlbarView-title urlbarView-overflowable']
+Description: The title of every search result from the URL bar search results
+Location: Any search result title item from the URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-one-off-settings-button
+Selector Data: urlbar-anon-search-settings
+Description: Search settings button
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: quick-actions-refresh-button
+Selector Data: urlbarView-row-3-label-0
+Description: Quick action refresh button
+Location: URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: refresh-intervention-card
+Selector Data: div[tip-type='intervention_refresh']
+Description: 
+Location:
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: fx-refresh-text
+Selector Data: span[data-l10n-id='intervention-refresh-profile']
+Description: Refresh Firefox button text
+Location: URL bar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: fx-refresh-button
+Selector Data: span[role='button'][data-l10n-id='intervention-refresh-profile-confirm']
+Description: Refresh Firefox button
+Location: URL bar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: fx-refresh-menu
+Selector Data: span[data-l10n-id='urlbar-result-menu-button'][title='Open menu']
+Description: Trending menu search results
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: fx-refresh-menu-get-help-item
+Selector Data: menuitem[data-l10n-id='urlbar-result-menu-tip-get-help']
+Description: Trending search results menu item
+Location: Menu items for the trending results in the URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: fx-refresh-menu-get-help-item-get-help
+Selector Data: urlbarView-result-menuitem
+Description: Trending search results menu item
+Location: Menu items for the trending results in the URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-engine-suggestion-row
+Selector Data: div[class='urlbarView-row'][type='search_engine']
+Description: Search suggestions from the URL bar search results
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-one-off-browser-button
+Selector Data: urlbar-engine-one-off-item-{source}
+Description: search one off buttons
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: panel-ui-button
+Selector Data: PanelUI-button
+Description: Panel UI button / hamburger menu
+Location: Far right in the toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: navigation-background-component
+Selector Data: nav-bar
+Description: Navigation bar
+Location: Any area on the navigation bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: context-menu-paste-and-go
+Selector Data: paste-and-go
+Description: Any search bar context menu option "paste-and-go" 
+Location: Any search bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: private-browsing-icon
+Selector Data: private-browsing-indicator-icon
+Description: Private browsing icon
+Location: Private browsing mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: add-extra-search-engine
+Selector Data: [id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']
+Description: Add extra search engine in the url bar
+Location: URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-one-off-engine-button
+Selector Data: [id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']
+Description: Search one off engine button
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: downloads-button
+Selector Data: downloads-button
+Description: Toolbar download button
+Location: Toolbar after downloading a file
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-results-container
+Selector Data: urlbar-results
+Description: URL bar search results
+Location: Any search result item from the URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: addon-suggestion
+Selector Data: div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable
+Description: Addon suggestion in the URL bar search results
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-suggestion-list
+Selector Data: div.urlbarView-row[type='search_engine'] span.urlbarView-title
+Description: Search suggestion list
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: sponsored-suggestion
+Selector Data: urlbarView-row-body-description
+Description: Sponsored search results
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: firefox-suggest
+Selector Data: div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner
+Description: Firefox suggestion search results
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-result-autofill-adaptive-element
+Selector Data: .//*[@type='autofill_adaptive']
+Description: Search result autofill adaptive element
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-result
+Selector Data: //div[@data-text-ad]//a
+Description: ad search results
+Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: shield-icon
+Selector Data: tracking-protection-icon-container
+Description: Shield icon
+Location: URL bar / Awseome bar after visiting a website
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: cryptominers
+Selector Data: .protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked
+Description: Cryptominer trackers
+Location: Shield icon
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: no-trackers-detected
+Selector Data: protections-popup-no-trackers-found-description
+Description: No trackers detected
+Location: Click on the shield icon
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: lock-icon
+Selector Data: identity-icon
+Description: Site information panel (Lock icon)
+Location: URL bar / Awseome bar after visiting a website
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: connection-secure-button
+Selector Data: identity-popup-security-button
+Description: Connection secure button
+Location: In the site information panel (lock icon)
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: more-information-button
+Selector Data: identity-popup-more-info
+Description: More information button in the connection security panel
+Location: In the connection security insde the site information panel (lock icon)
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-result-url
+Selector Data: .urlbarView-title.urlbarView-overflowable[is-url='']
+Description: Search results url
+Location: URL bar / Awesome bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: search-result-action-term
+Selector Data: .urlbarView-action
+Description: Search results entries
+Location: URL bar / Awesome bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: refresh-button
+Selector Data: reload-button
+Description: Reload current page
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: known-fingerprints
+Selector Data: .protections-popup-category.subviewbutton.subviewbutton-iconic.blocked.subviewbutton-nav
+Description: Known fingerprints
+Location: Shield icon
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: fingerprints-blocked-subpanel
+Selector Data: protections-popup-fingerprintersView
+Description: Fingerprints subpanel
+Location: Inside the shield incon in fingerprints subpanel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: star-button
+Selector Data: star-button-box
+Description: Star button to bookmark a page
+Location: URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: save-bookmark-button
+Selector Data: editBookmarkPanelDoneButton
+Description: Save bookmark
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: blue-star-button
+Selector Data: image[id='star-button'][starred='true']
+Description: Bookmarked page
+Location: URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: download-panel-item
+Selector Data: vbox[class='downloadContainer']
+Description: Downloaded item in the download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: edit-bookmark-panel
+Selector Data: editBMPanel_namePicker
+Description: Edit bookmark panel
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: remove-bookmark-button
+Selector Data: editBookmarkPanelRemoveButton
+Description: Remove bookmark button
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: forget-button
+Selector Data: panic-button
+Description: Forget button
+Location: Toolbar after adding it from customize
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: history-button
+Selector Data: history-panelmenu
+Description: History button
+Location: Toolbar after adding it from customize
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: library-button
+Selector Data: library-button
+Description: Library button
+Location: Toolbar after adding it from customize
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: library-history-submenu-button
+Selector Data: appMenu-library-history-button
+Description: Library history submenu button
+Location: Inside the library button in the toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmarks-type-dropdown
+Selector Data: editBMPanel_folderMenuList
+Description: Bookmark location
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmarks-type-dropdown-other
+Selector Data: editBMPanel_unfiledRootItem
+Description: Bookmark location - Other bookmarks
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: other-bookmarks
+Selector Data: OtherBookmarks
+Description: Other bookmarks option
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: other-bookmarks-popup
+Selector Data: OtherBookmarksPopup
+Description: Other bookmarks submenu
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: new-bookmark-name-field
+Selector Data: editBMPanel_namePicker
+Description: New bookmark name field
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: new-bookmark-url-field
+Selector Data: editBMPanel_locationField
+Description: New bookmark url field
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: new-bookmark-tags-field
+Selector Data: editBMPanel_tagsField
+Description: New bookmark tags field
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: new-bookmark-keyword-field
+Selector Data: editBMPanel_keywordField
+Description: New bookmark keyword field
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmark-dialog
+Selector Data: ookmarkpropertiesdialog
+Description: Bookmark dialog
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmark-accept-button
+Selector Data: button[dlgtype='accept']
+Description: Bookmark accept button
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmark-iframe
+Selector Data: browser[class='dialogFrame']
+Description: Add bookmark advanced
+Location: Add bookmark from bookmarks sidebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmark-robots
+Selector Data: menuitem[label='Robots 2']
+Description: A bookmark named robots
+Location: A bookmark in other bookmarks
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmark-current-tab
+Selector Data: panelMenuBookmarkThisPage
+Description: Bookmark current tab button
+Location: Menu button / hamburger menu
+Path to .json: modules/data/navigation.components.json
+```
