@@ -139,6 +139,27 @@ Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
 #### about_glean
+```
+Selector Name: ping-id-input
+Selector Data: "tag-pings"
+Description: Text entry field to set a memorable tag for the ping
+Location: Line 1 of the about:glean page's 'About testing' process
+Path to .json: modules/data/about_glean.components.json
+```
+```
+Selector Name: ping-submit-button
+Selector Data: "controls-submit"
+Description: 'Apply settings and submit ping' button
+Location: Line 4 of the about:glean page's 'About testing' process
+Path to .json: modules/data/about_glean.components.json
+```
+```
+Selector Name: ping-submit-label
+Selector Data: "label[for='controls-submit']"
+Description: Text updated dynamically to reflect change in ping ID
+Location: Line 4 of the about:glean page's 'About testing' process
+Path to .json: modules/data/about_glean.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
