@@ -8,13 +8,7 @@ Description: (of the selector, including purpose/functionality)
 Location: (of the selector in content page or Fx UI)
 Path to .json: (ie, modules/data/google_search.components.json
 ```
-```
-Selector Name: search-bar-textarea
-Selector Data: "textarea[aria-label='Search']"
-Description: Text entry area of the search field
-Location: google.com content page
-Path to .json: modules/data/google_search.components.json
-```
+#### context_menu
 ```
 Selector Name: context-menu-search-selected-text
 Selector Data: "context-searchselect"
@@ -274,6 +268,7 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+#### about_addons
 ```
 Selector Name: sidebar-options
 Selector Data: "button.category[name='{name}']"
@@ -287,6 +282,44 @@ Selector Data: "div.card[aria-labelledby='{name}']"
 Description: Takes the name of the intended theme to use
 Location: Theme cards on about:addons page
 Path to .json: modules/data/about_addons.components.json
+```
+#### about_config
+```
+Selector Name: warning-button
+Selector Data: "warningButton"
+Description: The button to acceot the risks of accessing about:config
+Location: about:config page
+Path to .json: modules/data/about_config.components.json
+```
+```
+Selector Name: about-config-search-input
+Selector Data: "about-config-search"
+Description: The search input field used to find configs
+Location: about:config page
+Path to .json: modules/data/about_config.components.json
+```
+```
+Selector Name: cell-edit
+Selector Data: "cell-edit"
+Description: The button to toggle the true/false value of a config
+Location: Line item config in about:config page
+Path to .json: modules/data/about_config.components.json
+```
+```
+Selector Name: form-edit
+Selector Data: "//input[@aria-label='cookiebanners.service.mode']"
+Description: Text entry field when editing a str value of a config
+Location: Line item config in about:config page
+Path to .json: modules/data/about_config.components.json
+```
+
+#### google_search
+```
+Selector Name: search-bar-textarea
+Selector Data: "textarea[aria-label='Search']"
+Description: Text entry area of the search field
+Location: google.com content page
+Path to .json: modules/data/google_search.components.json
 ```
 ```
 Selector name: awesome-bar
