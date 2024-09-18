@@ -2,9 +2,6 @@ import pytest
 import shutil
 import os
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
@@ -22,7 +19,22 @@ ZIP_URL = "https://github.com/microsoft/api-guidelines"
 def delete_files_regex_string():
     return r"api-guidelines-vNext"
 
-def test_add_zip_type(driver: Firefox, sys_platform, home_folder, delete_files):
+@pytest.fixture()
+def temp_selectors():
+    return {
+        'github-code-button': {
+            'selectorData': ':R55ab:',
+            'strategy': 'id',
+            'groups': []
+        },
+        'github-download-button': {
+            'selectorData': 'a[href="/microsoft/api-guidelines/archive/refs/heads/vNext.zip"]',
+            'strategy': 'css',
+            'groups': []
+        }
+    }
+
+def test_add_zip_type(driver: Firefox, sys_platform, home_folder, delete_files, temp_selectors):
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
     """
@@ -32,14 +44,11 @@ def test_add_zip_type(driver: Firefox, sys_platform, home_folder, delete_files):
     context_menu = ContextMenu(driver)
     about_prefs = AboutPrefs(driver, category="general")
 
+    web_page.elements |= temp_selectors
+
     # Click on the available zip
-    web_page.find_element(
-        By.XPATH, '//*[@id=":R55ab:"]'
-    ).click()
-    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.Overlay__StyledOverlay-sc-51280t-0 > div:nth-child(2)')))
-    web_page.find_element(
-        By.CSS_SELECTOR, 'li.Item__LiBox-sc-yeql7o-0:nth-child(2)'
-    ).click()
+    web_page.click_on('github-code-button')
+    web_page.click_on('github-download-button')
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
     with driver.context(driver.CONTEXT_CHROME):
