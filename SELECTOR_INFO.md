@@ -358,9 +358,8 @@ Description: Text entry area of the search field
 Location: google.com content page
 Path to .json: modules/data/google_search.components.json
 ```
-#### navigation
-```
 #### login_autofill
+```
 Selector name: input-field
 Selector Data: input[autocomplete='{name}']
 Description: Input field
