@@ -3,8 +3,9 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi, Toolbar
+from modules.browser_object import PanelUi
 from modules.browser_object_context_menu import AboutDownloadsContextMenu
+from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutDownloads, GenericPage
 
 
@@ -50,7 +51,7 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
         logging.warning("About:Downloads is not registering as empty")
 
     opm_forms = GenericPage(driver, url=TEST_URL)
-    toolbar = Toolbar(driver)
+    nav = Navigation(driver)
     opm_forms.open()
 
     # Get all links to pdfs on the page
@@ -68,7 +69,7 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
         logging.info(f"Downloading target {target}:")
         logging.info(link.text)
         link.click()
-        toolbar.wait_for_item_to_download(target.split("/")[-1])
+        nav.wait_for_item_to_download(target.split("/")[-1])
 
     # Check that everything looks good in About:Downloads
     about_downloads = AboutDownloads(driver)

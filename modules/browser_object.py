@@ -7,5 +7,4 @@ from modules.browser_object_navigation import *
 from modules.browser_object_panel_ui import *
 from modules.browser_object_reader_view import *
 from modules.browser_object_tabbar import *
-from modules.browser_object_toolbar import *
 from modules.browser_object_tracker_panel import *

@@ -6,7 +6,6 @@ from modules.browser_object_menu_bar import MenuBar
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
-from modules.browser_object_toolbar import Toolbar
 from modules.page_object_customize_firefox import CustomizeFirefox
 
 
@@ -63,7 +62,6 @@ def test_history_menu_in_different_places(driver: Firefox):
     customize_firefox = CustomizeFirefox(driver)
     tabs = TabBar(driver).open()
     nav = Navigation(driver)
-    toolbar = Toolbar(driver)
 
     panel_ui.navigate_to_customize_toolbar()
     customize_firefox.add_widget_to_toolbar("history")
@@ -82,7 +80,7 @@ def test_history_menu_in_different_places(driver: Firefox):
             "Recent History": "toolbar-history-recent_history",
             "Manage History": "toolbar-history-manage_history",
         }
-        assert_elements_visibility(toolbar, history_toolbar_elements, "Toolbar History")
+        assert_elements_visibility(nav, history_toolbar_elements, "Toolbar History")
 
         panel_ui.open_panel_menu()
         panel_ui.navigate_to_customize_toolbar()
@@ -96,4 +94,4 @@ def test_history_menu_in_different_places(driver: Firefox):
         library_toolbar_elements = (
             history_toolbar_elements  # Reuse the same locators from a different path
         )
-        assert_elements_visibility(toolbar, library_toolbar_elements, "Toolbar Library")
+        assert_elements_visibility(nav, library_toolbar_elements, "Toolbar Library")

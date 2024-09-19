@@ -5,7 +5,7 @@ from shutil import copyfile
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Toolbar
+from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutPrefs
 
 NEWS_ARTICLE_TITLE = "Level 1, 2 evacuations issued for fire burning in Chelan"
@@ -52,5 +52,5 @@ def test_edge_bookmarks_imported(driver: Firefox, edge_bookmarks):
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
     about_prefs.import_bookmarks("Edge")
-    toolbar = Toolbar(driver)
-    toolbar.confirm_bookmark_exists(NEWS_ARTICLE_TITLE)
+    nav = Navigation(driver)
+    nav.confirm_bookmark_exists(NEWS_ARTICLE_TITLE)
