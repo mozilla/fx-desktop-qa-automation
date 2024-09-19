@@ -1,6 +1,6 @@
 ### Selector Information
 This document describes the many DOM selectors used throughout the project, in the format:
-
+#### template
 ```
 Selector Name: (declaration)
 Selector Data: (The DOM item)
@@ -8,13 +8,159 @@ Description: (of the selector, including purpose/functionality)
 Location: (of the selector in content page or Fx UI)
 Path to .json: (ie, modules/data/google_search.components.json
 ```
+#### about_addons
 ```
-Selector Name: search-bar-textarea
-Selector Data: "textarea[aria-label='Search']"
-Description: Text entry area of the search field
-Location: google.com content page
-Path to .json: modules/data/google_search.components.json
+Selector Name: sidebar-options
+Selector Data: "button.category[name='{name}']"
+Description: Selects an option in about:addons (sidebar)
+Location: Left side of about:addons page
+Path to .json: modules/data/about_addons.components.json
 ```
+```
+Selector Name: theme-card
+Selector Data: "div.card[aria-labelledby='{name}']"
+Description: Takes the name of the intended theme to use
+Location: Theme cards on about:addons page
+Path to .json: modules/data/about_addons.components.json
+```
+#### about_config
+```
+Selector Name: warning-button
+Selector Data: "warningButton"
+Description: The button to acceot the risks of accessing about:config
+Location: about:config page
+Path to .json: modules/data/about_config.components.json
+```
+```
+Selector Name: about-config-search-input
+Selector Data: "about-config-search"
+Description: The search input field used to find configs
+Location: about:config page
+Path to .json: modules/data/about_config.components.json
+```
+```
+Selector Name: cell-edit
+Selector Data: "cell-edit"
+Description: The button to toggle the true/false value of a config
+Location: Line item config in about:config page
+Path to .json: modules/data/about_config.components.json
+```
+```
+Selector Name: form-edit
+Selector Data: "//input[@aria-label='cookiebanners.service.mode']"
+Description: Text entry field when editing a str value of a config
+Location: Line item config in about:config page
+Path to .json: modules/data/about_config.components.json
+```
+#### about_downloads
+```
+Selector Name: no-downloads-label
+Selector Data: "downloadsListEmptyDescription"
+Description: Label that exists when no downloads are present
+Location: about:downloads page
+Path to .json: modules/data/about_downloads.components.json
+```
+```
+Selector Name: download-target
+Selector Data: "downloadTarget"
+Description: Download item element
+Location: In the about:downloads page when a download exists
+Path to .json: modules/data/about_downloads.components.json
+```
+#### about_downloads_context_menu
+```
+Selector Name: downloads-panel
+Selector Data: "downloadsPanel"
+Description: Downloads panel identifier
+Location: Downloads toolbar button
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: menu-root
+Selector Data: "downloadsContextMenu"
+Description: Downloads context menu root
+Location: Context click an item in downloads list
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: open-in-system-viewer
+Selector Data: "downloadUseSystemDefaultMenuItem"
+Description: Downloads context menu option
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: always-open-in-system-viewer
+Selector Data: "downloadAlwaysUseSystemDefaultMenuItem"
+Description: Downloads context menu option "Always Open Similar Files"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: show-in-file-browser
+Selector Data: "downloadShowMenuItem"
+Description: Downloads context menu option "Show in Finder"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: go-to-download-page
+Selector Data: "downloadOpenReferrerMenuItem"
+Description: Downloads context menu option "Go to Download Page"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: copy-download-link
+Selector Data: "downloadCopyLocationMenuItem"
+Description: Downloads context menu option "Copy Download Link"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: delete
+Selector Data: downloadDeleteFileMenuItem
+Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: remove-from-history
+Selector Data: "downloadRemoveFromHistoryMenuItem"
+Description: Downloads context menu option "Remove From History"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: clear-downloads
+Selector Data: "menuitem[data-l10n-id='downloads-cmd-clear-downloads']"
+Description: Downloads context menu option "Clear Preview Panel"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+#### about_glean
+```
+Selector Name: ping-id-input
+Selector Data: "tag-pings"
+Description: Text entry field to set a memorable tag for the ping
+Location: Line 1 of the about:glean page's 'About testing' process
+Path to .json: modules/data/about_glean.components.json
+```
+```
+Selector Name: ping-submit-button
+Selector Data: "controls-submit"
+Description: 'Apply settings and submit ping' button
+Location: Line 4 of the about:glean page's 'About testing' process
+Path to .json: modules/data/about_glean.components.json
+```
+```
+Selector Name: ping-submit-label
+Selector Data: "label[for='controls-submit']"
+Description: Text updated dynamically to reflect change in ping ID
+Location: Line 4 of the about:glean page's 'About testing' process
+Path to .json: modules/data/about_glean.components.json
+```
+#### context_menu
 ```
 Selector Name: context-menu-search-selected-text
 Selector Data: "context-searchselect"
@@ -204,76 +350,15 @@ Description: Context menu option "Paste"
 Location: Any text field cntext ment
 Path to .json: modules/data/context_menu.components.json
 ```
+#### google_search
 ```
-Selector Name: downloads-panel
-Selector Data: "downloadsPanel"
-Description: Downloads panel identifier
-Location: Downloads toolbar button
-Path to .json: modules/data/about_downloads_context_menu.components.json
+Selector Name: search-bar-textarea
+Selector Data: "textarea[aria-label='Search']"
+Description: Text entry area of the search field
+Location: google.com content page
+Path to .json: modules/data/google_search.components.json
 ```
-```
-Selector Name: menu-root
-Selector Data: "downloadsContextMenu"
-Description: Downloads context menu root
-Location: Context click an item in downloads list
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: open-in-system-viewer
-Selector Data: "downloadUseSystemDefaultMenuItem"
-Description: Downloads context menu option
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: always-open-in-system-viewer
-Selector Data: "downloadAlwaysUseSystemDefaultMenuItem"
-Description: Downloads context menu option "Always Open Similar Files"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: show-in-file-browser
-Selector Data: "downloadShowMenuItem"
-Description: Downloads context menu option "Show in Finder"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: go-to-download-page
-Selector Data: "downloadOpenReferrerMenuItem"
-Description: Downloads context menu option "Go to Download Page"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: copy-download-link
-Selector Data: "downloadCopyLocationMenuItem"
-Description: Downloads context menu option "Copy Download Link"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: delete
-Selector Data: downloadDeleteFileMenuItem
-Description: Downloads context menu option "Delete"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: remove-from-history
-Selector Data: "downloadRemoveFromHistoryMenuItem"
-Description: Downloads context menu option "Remove From History"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: clear-downloads
-Selector Data: "menuitem[data-l10n-id='downloads-cmd-clear-downloads']"
-Description: Downloads context menu option "Clear Preview Panel"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
+#### navigation
 ```
 Selector name: awesome-bar
 Selector Data: urlbar-input
