@@ -13,9 +13,11 @@ from modules.page_object import GenericPage
 def test_case():
     return "1756722"
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return r"\bdownload\b"
+
 
 MIXED_CONTENT_DOWNLOAD_URL = "https://b-mcb-download.glitch.me/"
 
