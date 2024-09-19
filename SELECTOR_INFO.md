@@ -350,6 +350,28 @@ Description: Context menu option "Paste"
 Location: Any text field cntext ment
 Path to .json: modules/data/context_menu.components.json
 ```
+#### customize_firefox
+```
+Selector Name: forget
+Selector Data: "wrapper-panic-button"
+Description: The forget option button from the customizing options
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: history
+Selector Data: "wrapper-history-panelmenu"
+Description: The history button from the customizing options
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: library
+Selector Data: "wrapper-library-button"
+Description: The Library button from the customizing options
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
 #### google_search
 ```
 Selector Name: search-bar-textarea
@@ -849,27 +871,6 @@ Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: Menu button / hamburger menu
 Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: forget
-Selector Data: "wrapper-panic-button"
-Description: The forget option button from the customizing options
-Location: Customize firefox options in Context Chrome
-Path to .json: modules/data/customize_firefox.components.json
-```
-```
-Selector Name: history
-Selector Data: "wrapper-history-panelmenu"
-Description: The history button from the customizing options
-Location: Customize firefox options in Context Chrome
-Path to .json: modules/data/customize_firefox.components.json
-```
-```
-Selector Name: library
-Selector Data: "wrapper-library-button"
-Description: The Library button from the customizing options
-Location: Customize firefox options in Context Chrome
-Path to .json: modules/data/customize_firefox.components.json
 ```
 ```
 Selector Name: devtools-horizontal-splitter
