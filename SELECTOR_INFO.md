@@ -160,6 +160,76 @@ Description: Text updated dynamically to reflect change in ping ID
 Location: Line 4 of the about:glean page's 'About testing' process
 Path to .json: modules/data/about_glean.components.json
 ```
+#### autofill_popup
+Selector name: autofill-panel
+Selector Data: PopupAutoComplete
+Description: A dropdown panel displaying autofill suggestions for input fields (addresses, credit cards,login forms)
+Location: Inside any autofill-eligible form field, triggered by user interaction such as a click or focus event
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-save-button
+Selector Data: button[label='Save'].popup-notification-primary-button
+Description: The "Save" button 
+Location: Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-dropdown-button
+Selector Data: button[aria-label='More actions']
+Description: The down arrow next to the "Not now" button 
+Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-dropdown-never-save-cards-button
+Selector Data: menuitem[label='Never save cards']
+Description: The hidden button in save credit card doorhanger.
+Location: Inside the autofill save credit card doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-update-button
+Selector Data: button[label='Update']
+Description: The "Update" button 
+Location: Inside the autofill save addreses doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: select-form-option
+Selector Data: .autocomplete-richlistbox .autocomplete-richlistitem
+Description: An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: clear-form-option
+Selector Data: .autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']
+Description: The "Clear Autofill Form" option in the dropdown that appears when interacting with an autofill-enabled input field
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: update-card-info-popup-button
+Selector Data: button[label='Update existing card']
+Description: The "Update existing card" button 
+Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: cc-saved-options
+Selector Data: option[data-l10n-id='credit-card-label-number-name-expiration-2']
+Description: The actually "Add card" modal, containing 4 fields
+Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: cc-popup-button
+Selector Data: button[data-l10n-id='{name}']
+Description: "Add" button 
+Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -371,6 +441,114 @@ Selector Data: "wrapper-library-button"
 Description: The Library button from the customizing options
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
+```
+#### devtools
+```
+Selector Name: devtools-horizontal-splitter
+Selector Data: "devtools-horizontal-splitter"
+Description: The horizontal splitter that is used in the devtools
+Location: On the devtools menu
+Path to .json: modules/data/devtools.components.json
+```
+```
+Selector Name: devtools-browser
+Selector Data: "browser[aria-label='Developer Tools']"
+Description: The devtools section of Firefox
+Location: In the options of Firefox for opening the devtools
+Path to .json: modules/data/devtools.components.json
+```
+#### error_page
+```
+Selector Name: error-title
+Selector Data: ".title-text[data-l10n-id='dnsNotFound-title']"
+Description: The error title name from the error page
+Location: In the error page
+Path to .json: modules/data/error_page.components.json
+```
+```
+Selector Name: error-short-description
+Selector Data: "errorShortDesc"
+Description: The error short description from the error page
+Location: In the error page
+Path to .json: modules/data/error_page.components.json
+```
+```
+Selector Name: error-suggestion-link
+Selector Data: "#errorShortDesc a[data-l10n-name='website']"
+Description: The link with the error suggestion
+Location: In the error page
+Path to .json: modules/data/error_page.components.json
+```
+```
+Selector Name: error-long-description-items
+Selector Data: "#errorLongDesc li"
+Description: The error long description from the error page
+Location: In the error page
+Path to .json: modules/data/error_page.components.json
+```
+```
+Selector Name: try-again-button
+Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
+Description: The Try Again button from the error page
+Location: In the error page
+Path to .json: modules/data/error_page.components.json
+```
+#### find_toolbar
+```
+Selector Name: find-toolbar-input
+Selector Data: "findbar-textbox"
+Description: The find toolbar input area
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: find-toolbar-close-button
+Selector Data: "findbar-closebutton"
+Description: The find toolbar close button
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: next-match-button
+Selector Data: "toolbarbutton[data-l10n-id='findbar-next']"
+Description: The find toolbar next match button
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: previous-match-button
+Selector Data: "toolbarbutton[data-l10n-id='findbar-previous']"
+Description: The find toolbar previous match button
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: matches-label
+Selector Data: "label.found-matches"
+Description: The find toolbar all matches button
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: find-status-label
+Selector Data: "findbar-find-status"
+Description: The find toolbar find status button
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: reached-top-label
+Selector Data: "description[data-l10n-id='findbar-wrapped-to-bottom']"
+Description: The find toolbar status for reaching the top
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
+```
+```
+Selector Name: reached-bottom-label
+Selector Data: "description[data-l10n-id='findbar-wrapped-to-top']"
+Description: The find toolbar status for reaching the bottom
+Location: In the find toolbar
+Path to .json: modules/data/find_toolbar.components.json
 ```
 #### google_search
 ```
@@ -871,236 +1049,4 @@ Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: Menu button / hamburger menu
 Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: devtools-horizontal-splitter
-Selector Data: "devtools-horizontal-splitter"
-Description: The horizontal splitter that is used in the devtools
-Location: On the devtools menu
-Path to .json: modules/data/devtools.components.json
-```
-```
-Selector Name: devtools-browser
-Selector Data: "browser[aria-label='Developer Tools']"
-Description: The devtools section of Firefox
-Location: In the options of Firefox for opening the devtools
-Path to .json: modules/data/devtools.components.json
-```
-```
-Selector Name: error-title
-Selector Data: ".title-text[data-l10n-id='dnsNotFound-title']"
-Description: The error title name from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-short-description
-Selector Data: "errorShortDesc"
-Description: The error short description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-suggestion-link
-Selector Data: "#errorShortDesc a[data-l10n-name='website']"
-Description: The link with the error suggestion
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-long-description-items
-Selector Data: "#errorLongDesc li"
-Description: The error long description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: try-again-button
-Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
-Description: The Try Again button from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: find-toolbar-input
-Selector Data: "findbar-textbox"
-Description: The find toolbar input area
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: find-toolbar-close-button
-Selector Data: "findbar-closebutton"
-Description: The find toolbar close button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: next-match-button
-Selector Data: "toolbarbutton[data-l10n-id='findbar-next']"
-Description: The find toolbar next match button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: previous-match-button
-Selector Data: "toolbarbutton[data-l10n-id='findbar-previous']"
-Description: The find toolbar previous match button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: matches-label
-Selector Data: "label.found-matches"
-Description: The find toolbar all matches button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: find-status-label
-Selector Data: "findbar-find-status"
-Description: The find toolbar find status button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: reached-top-label
-Selector Data: "description[data-l10n-id='findbar-wrapped-to-bottom']"
-Description: The find toolbar status for reaching the top
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: reached-bottom-label
-Selector Data: "description[data-l10n-id='findbar-wrapped-to-top']"
-Description: The find toolbar status for reaching the bottom
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-
-```
-Selector Name: forget
-Selector Data: "wrapper-panic-button"
-Description: The forget option button from the customizing options
-Location: Customize firefox options in Context Chrome
-Path to .json: modules/data/customize_firefox.components.json
-```
-```
-Selector Name: history
-Selector Data: "wrapper-history-panelmenu"
-Description: The history button from the customizing options
-Location: Customize firefox options in Context Chrome
-Path to .json: modules/data/customize_firefox.components.json
-```
-```
-Selector Name: library
-Selector Data: "wrapper-library-button"
-Description: The Library button from the customizing options
-Location: Customize firefox options in Context Chrome
-Path to .json: modules/data/customize_firefox.components.json
-```
-```
-Selector Name: devtools-horizontal-splitter
-Selector Data: "devtools-horizontal-splitter"
-Description: The horizontal splitter that is used in the devtools
-Location: On the devtools menu
-Path to .json: modules/data/devtools.components.json
-```
-```
-Selector Name: devtools-browser
-Selector Data: "browser[aria-label='Developer Tools']"
-Description: The devtools section of Firefox
-Location: In the options of Firefox for opening the devtools
-Path to .json: modules/data/devtools.components.json
-```
-```
-Selector Name: error-title
-Selector Data: ".title-text[data-l10n-id='dnsNotFound-title']"
-Description: The error title name from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-short-description
-Selector Data: "errorShortDesc"
-Description: The error short description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-suggestion-link
-Selector Data: "#errorShortDesc a[data-l10n-name='website']"
-Description: The link with the error suggestion
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-long-description-items
-Selector Data: "#errorLongDesc li"
-Description: The error long description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: try-again-button
-Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
-Description: The Try Again button from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: find-toolbar-input
-Selector Data: "findbar-textbox"
-Description: The find toolbar input area
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: find-toolbar-close-button
-Selector Data: "findbar-closebutton"
-Description: The find toolbar close button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: next-match-button
-Selector Data: "toolbarbutton[data-l10n-id='findbar-next']"
-Description: The find toolbar next match button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: previous-match-button
-Selector Data: "toolbarbutton[data-l10n-id='findbar-previous']"
-Description: The find toolbar previous match button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: matches-label
-Selector Data: "label.found-matches"
-Description: The find toolbar all matches button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: find-status-label
-Selector Data: "findbar-find-status"
-Description: The find toolbar find status button
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: reached-top-label
-Selector Data: "description[data-l10n-id='findbar-wrapped-to-bottom']"
-Description: The find toolbar status for reaching the top
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
-```
-```
-Selector Name: reached-bottom-label
-Selector Data: "description[data-l10n-id='findbar-wrapped-to-top']"
-Description: The find toolbar status for reaching the bottom
-Location: In the find toolbar
-Path to .json: modules/data/find_toolbar.components.json
 ```
