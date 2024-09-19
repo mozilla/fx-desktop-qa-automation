@@ -1,20 +1,14 @@
 {
     "context": "chrome",
-    "doorhanger-save-button": {
-        "selectorData": "button[label='Save'].popup-notification-primary-button",
-        "strategy": "css",
-        "groups": []
-    },
-
     "autofill-panel": {
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
         "groups": []
     },
 
-    "autofill-item": {
-        "selectorData": "autocomplete-richlistitem",
-        "strategy": "class",
+    "doorhanger-save-button": {
+        "selectorData": "button[label='Save'].popup-notification-primary-button",
+        "strategy": "css",
         "groups": []
     },
 
@@ -48,21 +42,9 @@
          "groups": []
     },
 
-    "autofill-cc-panel": {
-        "selectorData": "autocomplete-richlistbox",
-        "strategy": "class",
-        "groups": []
-    },
-
     "update-card-info-popup-button": {
         "selectorData": "button[label='Update existing card']",
         "strategy": "css",
-        "groups": []
-    },
-
-    "autofill-profile-option": {
-        "selectorData": "autocomplete-richlistitem",
-        "strategy": "class",
         "groups": []
     },
 
