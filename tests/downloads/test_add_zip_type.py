@@ -1,6 +1,7 @@
-import pytest
-import shutil
 import os
+import shutil
+
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_context_menu import ContextMenu
@@ -13,28 +14,34 @@ from modules.page_object_prefs import AboutPrefs
 def test_case():
     return "1756743"
 
+
 ZIP_URL = "https://github.com/microsoft/api-guidelines"
+
 
 @pytest.fixture()
 def delete_files_regex_string():
     return r"api-guidelines-vNext"
 
+
 @pytest.fixture()
 def temp_selectors():
     return {
-        'github-code-button': {
-            'selectorData': ':R55ab:',
-            'strategy': 'id',
-            'groups': []
+        "github-code-button": {
+            "selectorData": ":R55ab:",
+            "strategy": "id",
+            "groups": [],
         },
-        'github-download-button': {
-            'selectorData': 'a[href="/microsoft/api-guidelines/archive/refs/heads/vNext.zip"]',
-            'strategy': 'css',
-            'groups': []
-        }
+        "github-download-button": {
+            "selectorData": 'a[href="/microsoft/api-guidelines/archive/refs/heads/vNext.zip"]',
+            "strategy": "css",
+            "groups": [],
+        },
     }
 
-def test_add_zip_type(driver: Firefox, sys_platform, home_folder, delete_files, temp_selectors):
+
+def test_add_zip_type(
+    driver: Firefox, sys_platform, home_folder, delete_files, temp_selectors
+):
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
     """
@@ -47,8 +54,8 @@ def test_add_zip_type(driver: Firefox, sys_platform, home_folder, delete_files, 
     web_page.elements |= temp_selectors
 
     # Click on the available zip
-    web_page.click_on('github-code-button')
-    web_page.click_on('github-download-button')
+    web_page.click_on("github-code-button")
+    web_page.click_on("github-download-button")
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
     with driver.context(driver.CONTEXT_CHROME):

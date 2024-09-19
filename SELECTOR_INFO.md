@@ -715,3 +715,75 @@ Description: Bookmark current tab button
 Location: Menu button / hamburger menu
 Path to .json: modules/data/navigation.components.json
 ```
+```
+### autofill_popup
+Selector name: autofill-panel
+Selector Data: PopupAutoComplete
+Description: A dropdown panel displaying autofill suggestions for input fields (addresses, credit cards,login forms)
+Location: Inside any autofill-eligible form field, triggered by user interaction such as a click or focus event
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-save-button
+Selector Data: button[label='Save'].popup-notification-primary-button
+Description: The "Save" button 
+Location: Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-dropdown-button
+Selector Data: button[aria-label='More actions']
+Description: The down arrow next to the "Not now" button 
+Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-dropdown-never-save-cards-button
+Selector Data: menuitem[label='Never save cards']
+Description: The hidden button in save credit card doorhanger.
+Location: Inside the autofill save credit card doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: doorhanger-update-button
+Selector Data: button[label='Update']
+Description: The "Update" button 
+Location: Inside the autofill save addreses doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: select-form-option
+Selector Data: .autocomplete-richlistbox .autocomplete-richlistitem
+Description: An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: clear-form-option
+Selector Data: .autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']
+Description: The "Clear Autofill Form" option in the dropdown that appears when interacting with an autofill-enabled input field
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: update-card-info-popup-button
+Selector Data: button[label='Update existing card']
+Description: The "Update existing card" button 
+Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: cc-saved-options
+Selector Data: option[data-l10n-id='credit-card-label-number-name-expiration-2']
+Description: The actually "Add card" modal, containing 4 fields
+Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector name: cc-popup-button
+Selector Data: button[data-l10n-id='{name}']
+Description: "Add" button 
+Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
