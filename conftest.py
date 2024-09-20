@@ -325,7 +325,7 @@ def pytest_sessionfinish(session):
     tr_session = tri.testrail_init()
     (changelist, passes) = tri.collect_changes(tr_session, report)
     tri.execute_changes(tr_session, changelist)
-    tri.mark_passes(tr_session, passes)
+    tri.mark_results(tr_session, passes)
 
 
 @pytest.fixture(autouse=True)

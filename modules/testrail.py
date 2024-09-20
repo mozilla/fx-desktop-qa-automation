@@ -128,15 +128,17 @@ class TestRail:
     def create_test_run_on_plan_entry(
         self, plan_id, entry_id, config_ids, description=None, case_ids=None
     ):
+        logging.info(f"run on plan entry configs {config_ids}")
         payload = {
             "config_ids": config_ids,
             "description": description,
-            "include_all": bool(case_ids),
+            "include_all": not bool(case_ids),
         }
         if case_ids:
             payload["case_ids"] = case_ids
+        logging.info(f"create run on entry payload:\n{payload}")
         return self.client.send_post(
-            f"add_run_to_plan_entry" / {plan_id} / {entry_id}, payload
+            f"add_run_to_plan_entry/{plan_id}/{entry_id}", payload
         )
 
     def matching_milestone(self, testrail_project_id, milestone_name):
@@ -146,7 +148,6 @@ class TestRail:
         )  # returns reverse chronological order
         logging.info(f"Found {len(milestones)} milestones")
         for milestone in milestones:  # check last 10 api responses
-            logging.info(f"{milestone_name} - {milestone['name']}")
             if milestone_name == milestone["name"]:
                 logging.info(milestone)
                 return milestone
@@ -207,18 +208,31 @@ class TestRail:
         return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
 
     def matching_configs(self, testrail_project_id, config_group_id, config_name):
-        configs = self.client.send_get(f"/get_configs/{testrail_project_id}").get(
-            "configs"
-        )
-        configs_in_group = [c for c in configs if c.get("group_id") == config_group_id]
-        return [c for c in configs_in_group if c.get("name") == config_name]
+        configs = self.client.send_get(f"/get_configs/{testrail_project_id}")
+        matching_group = next(c for c in configs if c.get("id") == config_group_id)
+        logging.info(f"matching group|| {matching_group}")
+        cfgs = [
+            c for c in matching_group.get("configs") if c.get("name") == config_name
+        ]
+        logging.info(f"cfgs {cfgs}")
+        return cfgs
 
     def add_config(self, config_group_id, name):
         return self.client.send_post(f"/add_config/{config_group_id}", {"name": name})
 
-    def update_test_cases_to_passed(
-        self, testrail_project_id, testrail_run_id, testrail_suite_id, test_case_ids=[]
+    def get_test_results(self, run_id):
+        results_rs_json = self.client.send_get(f"/get_tests/{run_id}")
+        return results_rs_json.get("tests")
+
+    def update_test_cases(
+        self,
+        testrail_project_id,
+        testrail_run_id,
+        testrail_suite_id,
+        test_case_ids=[],
+        status="passed",
     ):
+        status_key = {"passed": 1, "failed": 5, "skipped": 3}
         if not test_case_ids:
             test_case_ids = [
                 test_case.get("id")
@@ -228,7 +242,7 @@ class TestRail:
             ]
         data = {
             "results": [
-                {"case_id": test_case_id, "status_id": 1}
+                {"case_id": test_case_id, "status_id": status_key.get(status)}
                 for test_case_id in test_case_ids
             ]
         }

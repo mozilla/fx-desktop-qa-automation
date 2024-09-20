@@ -29,6 +29,8 @@ def execute_changes(testrail_session: TestRail, changelist):
     # Check if config exists, if not create it
     config_matches = None
     tried = False
+    logging.info("Change dump---")
+    logging.info(changelist)
     while not config_matches:
         config_matches = testrail_session.matching_configs(
             TESTRAIL_FX_DESK_PRJ, CONFIG_GROUP_ID, changelist.get("config")
@@ -38,15 +40,17 @@ def execute_changes(testrail_session: TestRail, changelist):
         if not config_matches:
             testrail_session.add_config(CONFIG_GROUP_ID, changelist.get("config"))
         tried = True
-    if len(config_matches) == 1:
+    if len(config_matches) >= 1:
         config_id = config_matches[0].get("id")
     else:
         raise ValueError(
             f"Should only have one matching TR config: {changelist.get('config')}"
         )
-    for suite_id in changelist:
-        change = changelist[suite_id]
+    for suite_id in changelist.get("changes"):
+        change = changelist["changes"][suite_id]
+        logging.info(f"  - PLANNED CHANGE: {change}")
         plan_id = change.get("plan_id")
+        suite_description = change.get("name")
 
         if change.get("change_type") == "create":
             entry = testrail_session.create_new_plan_entry(
@@ -62,21 +66,37 @@ def execute_changes(testrail_session: TestRail, changelist):
             testrail_session.create_test_run_on_plan_entry(
                 plan_id,
                 entry.get("id"),
-                [change.get("config")],
+                [config_id],
                 description=f"Auto test plan entry: {suite_description}",
-                case_ids=[change.get("cases_to_add_to_run")],
+                case_ids=change.get("case_ids"),
             )
 
 
-def mark_passes(testrail_session: TestRail, test_results):
-    for run_id in test_results["results"]:
-        suite_id = test_results["results"][run_id][0].get("suite_id")
-        test_cases = [
-            result.get("test_case") for result in test_results["results"][run_id]
-        ]
-        testrail_session.update_test_cases_to_passed(
-            test_results.get("project_id"), run_id, suite_id, test_cases
-        )
+def mark_results(testrail_session: TestRail, test_results):
+    logging.info(f"mark results: object\n{test_results}")
+    existing_results = {}
+    for category in ["passed", "failed", "skipped"]:
+        for run_id in test_results[category]:
+            if not existing_results.get(run_id):
+                existing_results[run_id] = testrail_session.get_test_results(run_id)
+            current_results = {
+                result.get("test_case"): result.get("status_id")
+                for result in existing_results[run_id]
+            }
+            suite_id = test_results[category][run_id][0].get("suite_id")
+            all_test_cases = [
+                result.get("test_case") for result in test_results[category][run_id]
+            ]
+
+            # Don't set passed tests to another status.
+            test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
+            testrail_session.update_test_cases(
+                test_results.get("project_id"),
+                testrail_run_id=run_id,
+                testrail_suite_id=suite_id,
+                test_case_ids=test_cases,
+                status=category,
+            )
 
 
 def collect_changes(testrail_session: TestRail, report):
@@ -84,7 +104,8 @@ def collect_changes(testrail_session: TestRail, report):
         report.get("tests")[0].get("metadata").get("fx_version")
     )
     (major, minor, build) = [version_match[n] for n in range(1, 4)]
-    config = report.get("tests")[0].get("metadata").get("config")
+    logging.info(f"major {major} minor {minor} build {build}")
+    config = report.get("tests")[0].get("metadata").get("machine_config")
 
     major_milestone = testrail_session.matching_milestone(
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
@@ -101,6 +122,7 @@ def collect_changes(testrail_session: TestRail, report):
         .replace("{minor}", minor)
         .replace("{build}", build)
     )
+    logging.info(f"Plan title: {plan_title}")
     milestone_id = channel_milestone.get("id")
     expected_plan = testrail_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
@@ -120,17 +142,24 @@ def collect_changes(testrail_session: TestRail, report):
     else:
         new_plan = False
 
-    entry_changes = {"config": config}
-    test_results = {"project_id": TESTRAIL_FX_DESK_PRJ, "results": []}
+    entry_changes = {"config": config, "changes": {}}
+    test_results = {
+        "project_id": TESTRAIL_FX_DESK_PRJ,
+        "passed": {},
+        "failed": {},
+        "skipped": {},
+    }
+    create_suite = False
     for test in report.get("tests"):
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
         suite_id = int(suite_id_str.replace("S", ""))
         test_case = test.get("metadata").get("test_case")
+        logging.info(f"METADATA: {test.get('metadata')}")
         try:
             int(test_case)
         except ValueError:
             continue
-        config = test.get("metadata").get("machine_config")
+        # config = test.get("metadata").get("machine_config")
         outcome = test.get("outcome")
 
         suite_entries = [
@@ -138,51 +167,62 @@ def collect_changes(testrail_session: TestRail, report):
             for entry in expected_plan.get("entries")
             if entry.get("suite_id") == suite_id
         ]
-        if not suite_entries:
+        if not suite_entries and not create_suite:
             # If no entry, create entry for suite and platform
             plan_id = expected_plan.get("id")
             logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
-            entry_changes[suite_id] = {
+            entry_changes["changes"][suite_id] = {
                 "plan_id": plan_id,
                 "change_type": "create",
                 "name": suite_description,
                 "case_ids": [int(test_case)],
             }
+            create_suite = True
 
             # expected_plan["entries"].append(
             # )
+        elif not suite_entries and create_suite:
+            entry_changes["changes"][suite_id]["case_ids"].append(int(test_case))
         else:
             for entry in suite_entries:
                 logging.info(
                     f"For entry {entry['name']}, update if case_ids does not contain {test_case}"
                 )
                 logging.info(f"If runs list is empty, add placeholder.")
+                logging.info(f"FULL CHANGELIST ## {entry_changes}")
+                logging.info(f"FULL SUITE ENTRY~~ {entry}")
+                if not entry_changes.get("changes").get(suite_id):
+                    logging.info("Door 1")
+                    entry_changes["changes"][suite_id] = {"entry": entry}
                 if not entry.get("runs"):
-                    if not entry_changes.get(suite_id):
-                        entry_changes[suite_id] = {"entry": entry}
-                    if not entry_changes[suite_id].get("change_type"):
-                        entry_changes[suite_id]["change_type"] = "update_add_runs"
-                    if entry_changes[suite_id].get("cases_to_add_to_run"):
-                        entry_changes[suite_id]["cases_to_add_to_run"].append(
+                    if not entry_changes["changes"][suite_id].get("change_type"):
+                        logging.info("Door 2")
+                        entry_changes["changes"][suite_id]["change_type"] = (
+                            "update_add_runs"
+                        )
+                    if entry_changes["changes"][suite_id].get("case_ids"):
+                        logging.info("Door 3")
+                        entry_changes["changes"][suite_id]["case_ids"].append(
                             int(test_case)
                         )
                     else:
-                        entry_changes[suite_id]["cases_to_add_to_run"] = [
+                        logging.info("Won a goat")
+                        entry_changes["changes"][suite_id]["case_ids"] = [
                             int(test_case)
                         ]
-                    continue
 
                 # If you're here, you have runs in your entry
                 config_runs = [
                     run for run in entry.get("runs") if run.get("config") == config
                 ]
+                logging.info(f"config runs {config_runs}")
                 if not config_runs:
-                    if entry_changes[suite_id].get("cases_to_add_to_run"):
-                        entry_changes[suite_id]["cases_to_add_to_run"].append(
+                    if entry_changes["changes"][suite_id].get("case_ids"):
+                        entry_changes["changes"][suite_id]["case_ids"].append(
                             int(test_case)
                         )
                     else:
-                        entry_changes[suite_id]["cases_to_add_to_run"] = [
+                        entry_changes["changes"][suite_id]["case_ids"] = [
                             int(test_case)
                         ]
                 elif len(config_runs) > 1:
@@ -197,13 +237,18 @@ def collect_changes(testrail_session: TestRail, report):
                     logging.info(f"Run {run.get('id')} is already completed.")
                     continue
                 run_id = run.get("id")
-                if outcome in ["passed", "xpass"]:
-                    logging.info(f"Update run {run_id}")
-                    if not test_results["results"].get(run_id):
-                        test_results["results"][run_id] = []
-                    test_results["results"][run_id].append(
-                        {"suite_id": suite_id, "test_case": test_case}
-                    )
-                else:
-                    logging.info(f"Leave run {run_id} alone re: {test_case}")
+                passkey = {
+                    "passed": ["passed", "xpassed", "warnings"],
+                    "failed": ["failed", "xfailed", "error"],
+                    "skipped": ["skipped", "deselected"],
+                }
+                category = next(
+                    status for status in passkey if outcome in passkey.get(status)
+                )
+                logging.info(f"Update run {run_id} - {test_case} - {category}")
+                if not test_results[category].get(run_id):
+                    test_results[category][run_id] = []
+                test_results[category][run_id].append(
+                    {"suite_id": suite_id, "test_case": test_case}
+                )
     return (entry_changes, test_results)
