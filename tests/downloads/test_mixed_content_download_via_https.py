@@ -14,10 +14,15 @@ def test_case():
     return "1756722"
 
 
+@pytest.fixture()
+def delete_files_regex_string():
+    return r"\bdownload\b"
+
+
 MIXED_CONTENT_DOWNLOAD_URL = "https://b-mcb-download.glitch.me/"
 
 
-def test_mixed_content_download_via_https(driver: Firefox):
+def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
     """

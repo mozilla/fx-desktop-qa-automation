@@ -5,7 +5,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AddressFill
+from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
 

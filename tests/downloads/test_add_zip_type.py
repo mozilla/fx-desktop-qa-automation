@@ -1,6 +1,8 @@
+import os
+import shutil
+
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
@@ -13,10 +15,33 @@ def test_case():
     return "1756743"
 
 
-ZIP_URL = "https://ftp.mozilla.org/pub/firefox/releases/0.9rc/"
+ZIP_URL = "https://github.com/microsoft/api-guidelines"
 
 
-def test_add_zip_type(driver: Firefox):
+@pytest.fixture()
+def delete_files_regex_string():
+    return r"api-guidelines-vNext"
+
+
+@pytest.fixture()
+def temp_selectors():
+    return {
+        "github-code-button": {
+            "selectorData": ":R55ab:",
+            "strategy": "id",
+            "groups": [],
+        },
+        "github-download-button": {
+            "selectorData": 'a[href="/microsoft/api-guidelines/archive/refs/heads/vNext.zip"]',
+            "strategy": "css",
+            "groups": [],
+        },
+    }
+
+
+def test_add_zip_type(
+    driver: Firefox, sys_platform, home_folder, delete_files, temp_selectors
+):
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
     """
@@ -26,10 +51,11 @@ def test_add_zip_type(driver: Firefox):
     context_menu = ContextMenu(driver)
     about_prefs = AboutPrefs(driver, category="general")
 
+    web_page.elements |= temp_selectors
+
     # Click on the available zip
-    web_page.find_element(
-        By.XPATH, "//td/a[@href='/pub/firefox/releases/0.9rc/Firefox-win32-0.9rc.zip']"
-    ).click()
+    web_page.click_on("github-code-button")
+    web_page.click_on("github-download-button")
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
     with driver.context(driver.CONTEXT_CHROME):
@@ -39,3 +65,8 @@ def test_add_zip_type(driver: Firefox):
     # Open about:preferences and check that zip mime type is present in the application list
     about_prefs.open()
     about_prefs.element_exists("mime-type", labels=["application/zip"])
+
+    # Remove the directory created as MacOS automatically unzips
+    if sys_platform == "Darwin":
+        dir_created = os.path.join(home_folder, "Downloads", "api-guidelines-vNext")
+        shutil.rmtree(dir_created)
