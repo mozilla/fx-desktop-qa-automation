@@ -96,7 +96,7 @@ class CreditCardFill(Autofill):
         """
         self.double_click("form-field", labels=["cc-name"])
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            ccp.get_element("autofill-profile-option").click()
+            ccp.get_element("select-form-option").click()
 
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
         for i in range(len(info_list)):
@@ -155,7 +155,7 @@ class CreditCardFill(Autofill):
         """
         self.double_click("form-field", labels=["cc-name"])
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            credit_card_popoup_obj.get_element("autofill-profile-option").click()
+            credit_card_popoup_obj.get_element("select-form-option").click()
 
     def update_credit_card_information(
         self,
