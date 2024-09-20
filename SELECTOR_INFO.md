@@ -160,6 +160,157 @@ Description: Text updated dynamically to reflect change in ping ID
 Location: Line 4 of the about:glean page's 'About testing' process
 Path to .json: modules/data/about_glean.components.json
 ```
+#### address_fill
+```
+Selector Name: form-field
+Selector Data: "input[autocomplete='{name}']"
+Description: Input field 
+Location: Input field in the autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: submit-button
+Selector Data: "input[type='{name}']"
+Description: "Submit" button
+Location: At the bottom of the autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+#### amo_languages
+```
+Selector Name: language-addons-title
+Selector Data: "Card-header-text"
+Description: Search results header
+Location: Language addon search results header inside addons.mozilla.org/en-US/firefox/language-tools/
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: language-addons-row
+Selector Data: "tr[class='{name}']"
+Description: The title row where the language is mentioned
+Location: The row displaying the language addon’s name and details in the search results section of addons.mozilla.org/en-US/firefox/language-tools/
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: language-addons-row-link
+Selector Data: "a"
+Description: The link with the desired language
+Location: The clickable link within the search result section on the addons.mozilla.org/en-US/firefox/language-tools/ page, which directs users to the addon’s detailed page
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: language-addons-subpage-add-to-firefox
+Selector Data: "div[class='AMInstallButton AMInstallButton--noDownloadLink']"
+Description: "Add to Firefox" button 
+Location: The large blue button on the detailed addon page after being redirected from the search results on addons.mozilla.org/en-US/firefox/language-tools/
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: language-install-popup-add
+Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
+Description: Installation language add-on popup
+Location: Hangs from the Extensions button in toolbar once the "Add button" was clicked
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: language-addons-subpage-header
+Selector Data: "AddonTitle"
+Description: Tittle of the page
+Location: The page title that displays the specific language addon name on the detailed addon page after being redirected from the search results on addons.mozilla.org/en-US/firefox/language-tools/
+Path to .json: modules/data/amo_languages.components.json
+```
+#### amo_themes
+```
+Selector Name: recommended-addon
+Selector Data: ".RecommendedAddons .SearchResult-result"
+Description: Theme section results
+Location: Recommended themes section inside addons.mozilla.org/en-US/firefox/themes/
+Path to .json: modules/data/amo_themes.components.json
+```
+```
+Selector Name: theme-title
+Selector Data: "AddonTitle"
+Description: Tittle of the page
+Location: The page title that displays the specific theme addon name on the detailed addon page after being redirected from the recommended themes section on addons.mozilla.org/en-US/firefox/themes/
+Path to .json: modules/data/amo_themes.components.json
+```
+```
+Selector Name: install-button
+Selector Data: "AMInstallButton-button"
+Description: "Install Theme" button 
+Location: The large blue button on the detailed addon page after being redirected from the recommended themes section on addons.mozilla.org/en-US/firefox/themes/
+Path to .json: modules/data/amo_themes.components.json
+```
+#### autofill_popup
+```
+Selector Name: autofill-panel
+Selector Data: "PopupAutoComplete"
+Description: A dropdown panel displaying autofill suggestions for input fields (addresses, credit cards,login forms)
+Location: Inside any autofill-eligible form field, triggered by user interaction such as a click or focus event
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-save-button
+Selector Data: "button[label='Save'].popup-notification-primary-button"
+Description: The "Save" button 
+Location: Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-dropdown-button
+Selector Data: "button[aria-label='More actions']"
+Description: The down arrow next to the "Not now" button 
+Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-dropdown-never-save-cards-button
+Selector Data: "menuitem[label='Never save cards']"
+Description: The hidden button in save credit card doorhanger.
+Location: Inside the autofill save credit card doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-update-button
+Selector Data: "button[label='Update']"
+Description: The "Update" button 
+Location: Inside the autofill save addreses doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: select-form-option
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem"
+Description: An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: clear-form-option
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']"
+Description: The "Clear Autofill Form" option in the dropdown that appears when interacting with an autofill-enabled input field
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: update-card-info-popup-button
+Selector Data: "button[label='Update existing card']"
+Description: The "Update existing card" button 
+Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: cc-saved-options
+Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
+Description: The actually "Add card" modal, containing 4 fields
+Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: cc-popup-button
+Selector Data: "button[data-l10n-id='{name}']"
+Description: "Add" button 
+Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -349,6 +500,43 @@ Selector Data: "context-paste"
 Description: Context menu option "Paste"
 Location: Any text field cntext ment
 Path to .json: modules/data/context_menu.components.json
+```
+#### credit_card_fill
+```
+Selector Name: form-field
+Selector Data: "input[autocomplete='{name}']"
+Description: Input field 
+Location: Input field in the autofill credit card demo page - https://mozilla.github.io/form-fill-examples/basic_cc.html
+Path to .json: modules/data/credit_card_fill.components.json
+```
+```
+Selector Name: submit-button
+Selector Data: "input[type='{name}']"
+Description: "Submit" button
+Location: "Submit" button at the bottom of the autofill credit card demo page - https://mozilla.github.io/form-fill-examples/basic_cc.html
+Path to .json: modules/data/credit_card_fill.components.json
+```
+#### example_page
+```
+Selector Name: title-header
+Selector Data: "h1"
+Description: "Example Domain" title
+Location: The title of example.com page 
+Path to .json: modules/data/exemple_page.components.json
+```
+```
+Selector Name: take-screenshot-box
+Selector Data: "screenshotsPagePanel"
+Description:  Page context menu option "Take Screenshot"
+Location: Any non-linked content space inside example.com page  
+Path to .json: modules/data/exemple_page.components.json
+```
+```
+Selector Name: more-information
+Selector Data: "More information..."
+Description: More information..." link 
+Location: The hyperlink positioned in the middle of example.com page  
+Path to .json: modules/data/exemple_page.components.json
 ```
 #### google_search
 ```
@@ -850,75 +1038,13 @@ Description: Bookmark current tab button
 Location: Menu button / hamburger menu
 Path to .json: modules/data/navigation.components.json
 ```
+#### text_area_form_autofill
 ```
-### autofill_popup
-Selector name: autofill-panel
-Selector Data: PopupAutoComplete
-Description: A dropdown panel displaying autofill suggestions for input fields (addresses, credit cards,login forms)
-Location: Inside any autofill-eligible form field, triggered by user interaction such as a click or focus event
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: doorhanger-save-button
-Selector Data: button[label='Save'].popup-notification-primary-button
-Description: The "Save" button 
-Location: Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar
-Path to .json: modules/data/autofill_popup.components.json
+Selector Name: street-address-textarea
+Selector Data: "street-address"
+Description: Input field 
+Location: Input field in the autofill textarea select demo page
+Path to .json: modules/data/text_area_form_autofill.components.json
 ```
 ```
-Selector name: doorhanger-dropdown-button
-Selector Data: button[aria-label='More actions']
-Description: The down arrow next to the "Not now" button 
-Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: doorhanger-dropdown-never-save-cards-button
-Selector Data: menuitem[label='Never save cards']
-Description: The hidden button in save credit card doorhanger.
-Location: Inside the autofill save credit card doorhanger, accessible by clicking the down arrow next to the "Not now" button
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: doorhanger-update-button
-Selector Data: button[label='Update']
-Description: The "Update" button 
-Location: Inside the autofill save addreses doorhanger that is triggered in navigation bar
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: select-form-option
-Selector Data: .autocomplete-richlistbox .autocomplete-richlistitem
-Description: An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number
-Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: clear-form-option
-Selector Data: .autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']
-Description: The "Clear Autofill Form" option in the dropdown that appears when interacting with an autofill-enabled input field
-Location: Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled.
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: update-card-info-popup-button
-Selector Data: button[label='Update existing card']
-Description: The "Update existing card" button 
-Location: Inside the autofill save credit card doorhanger that is triggered in navigation bar
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: cc-saved-options
-Selector Data: option[data-l10n-id='credit-card-label-number-name-expiration-2']
-Description: The actually "Add card" modal, containing 4 fields
-Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector name: cc-popup-button
-Selector Data: button[data-l10n-id='{name}']
-Description: "Add" button 
-Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
+
