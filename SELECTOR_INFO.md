@@ -1168,6 +1168,329 @@ Description: Bookmark current tab button
 Location: Menu button / hamburger menu
 Path to .json: modules/data/navigation.components.json
 ```
+#### panel_ui
+```
+Selector name: panel-ui-button
+Selector Data: PanelUI-menu-button
+Description: Menu button / Hambuger menu
+Location: Toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: sync-user-button
+Selector Data: toolbarbutton[id='fxa-toolbar-menu-button']
+Description: Account button
+Location: Toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: fxa-manage-account-button
+Selector Data: fxa-manage-account-button
+Description: Sign in to sync button
+Location: Account panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: sync-fxa
+Selector Data: appMenu-fxa-status2
+Description: Sync and save data
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: fxa-sign-in
+Selector Data: #appMenu-fxa-status2 toolbarbutton
+Description: Sign in button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: fxa-sync-label
+Selector Data: syncnow-label
+Description: Sync now
+Location: Firefox menu after singing in
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: new-private-window-option
+Selector Data: appMenu-new-private-window-button2
+Description: New private window buttin
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: more-tools
+Selector Data: appMenu-more-button2
+Description: More tools button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: customize-toolbar
+Selector Data: overflowMenu-customize-button
+Description: Customize toolbar
+Location: More tools inside Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: manage-themes
+Selector Data: customization-lwtheme-link
+Description: Manage themes
+Location: On the hamburger menu > More Tools > Customize Toolbar > Manage Themes
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: zoom-reduce
+Selector Data: appMenu-zoomReduce-button2
+Description: Zoom reduce button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: zoom-enlarge
+Selector Data: appMenu-zoomEnlarge-button2
+Description: Zoom enlarge button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: zoom-reset
+Selector Data: appMenu-zoomReset-button2
+Description: Zoom reset button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: find-in-page
+Selector Data: appMenu-find-button2
+Description: Find in page button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-new-window
+Selector Data: appMenu-new-window-button2
+Description: New window button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-history
+Selector Data: appMenu-history-button
+Description: History button
+Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-history-recently-closed
+Selector Data: appMenuRecentlyClosedTabs
+Description: Recently closed tabs
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-history-recently-closed-reopen-tabs
+Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']
+Description: Recently closed reopen tabs
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-new-private-window
+Selector Data: appMenu-new-private-window-button2
+Description: New private window
+Location: Hamburger menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: recent-history-content
+Selector Data: #appMenu_historyMenu .toolbarbutton-text
+Description: Recent history content
+Location: Hamburger menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-item
+Selector Data: toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']
+Description: Bookmark item
+Location: On the hamburger menu > Bookmarks
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: clear-recent-history
+Selector Data: appMenuClearRecentHistory
+Description: Clear recent history
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-history-recent-history-container
+Selector Data: appMenu_historyMenu
+Description: Recent history
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-history-recent-history-item
+Selector Data: toolbarbutton
+Description: Recent history item
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-bookmarks
+Selector Data: appMenu-bookmarks-button
+Description: Bookmark button
+Location: On the hamburger menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-by-title
+Selector Data: toolbarbutton.bookmark-item[label*='{title}']
+Description: Bookmark item
+Location: On the hamburger menu > Bookmarks
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-current-tab
+Selector Data: panelMenuBookmarkThisPage
+Description: Bookmark current tab button
+Location: On the hamburger menu > Bookmarks
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: iframe
+Selector Data: dialogFrame
+Description: iframe
+Location: iframe
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: clear-history-dropdown
+Selector Data: sanitizeDurationPopup
+Description: Clear browsing data and cookies by duration
+Location: On the hamburger menu > History > Clear recent history
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: all-history-warning
+Selector Data: sanitizeEverythingWarningBox
+Description: Sanitize everything warning box
+Location: On the hamburger menu > History > Clear recent history > Select everything from when
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-location
+Selector Data: editBMPanel_folderMenuList
+Description: Bookmark location
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: other-bookmarks
+Selector Data: editBMPanel_unfiledRootItem
+Description: Other bookmarks
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: show-editor-when-saving-checkbox
+Selector Data: editBookmarkPanel_showForNewBookmarks
+Description: Show editor when saving checkbox
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: other-bookmarks-toolbar
+Selector Data: OtherBookmarks
+Description: Other bookmarks toolbar
+Location: Toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: other-bookmarks-by-title
+Selector Data: menuitem.menuitem-iconic[label*='{title}']
+Description: Bookmark item
+Location: Toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: history-back-button
+Selector Data: toolbarbutton.subviewbutton-back > image.toolbarbutton-icon
+Description: History back button
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: history_title
+Selector Data: //*[@id='PanelUI-history']//*[text()='History']
+Description: History title
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: recently_closed_tabs
+Selector Data: appMenuRecentlyClosedTabs
+Description: Recently closed tabs button
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: recently_closed_windows
+Selector Data: appMenuRecentlyClosedWindows
+Description: Recently closed windows
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: search_history
+Selector Data: appMenuSearchHistory
+Description: Search history button
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: recent_history
+Selector Data: panelMenu_recentHistory
+Description: Recent history
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: manage_history
+Selector Data: PanelUI-historyMore
+Description: Manage history button
+Location: On the hamburger menu > History
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-tags
+Selector Data: editBMPanel_tagsField
+Description: Bookmark tage
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: extend-bookmark-tags
+Selector Data: editBMPanel_tagsSelectorExpander
+Description: Extend bookmark tags
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: work-tag
+Selector Data: label[value='Work']
+Description: Bookmark tag
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: todo-tag
+Selector Data: label[value='To do']
+Description: Bookmark tag
+Location: Bookmark panel
+Path to .json: modules/data/panel_ui.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
