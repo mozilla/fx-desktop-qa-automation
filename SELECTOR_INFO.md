@@ -415,6 +415,27 @@ Description: The "Add card" modal, containing 4 fields
 Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: panel-popup-button
+Selector Data: "button[data-l10n-id='{name}']"
+Description: Element for a button by label
+Location: about:preferences#privacy popup dialog for adding a new address profile
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: browser-popup
+Selector Data: "dialogFrame"
+Description: The webelement for the iframe that commonly appears
+Location: about:preferences#privacy popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses
+Selector Data: "addresses"
+Description: The element that contains the saved addresses
+Location: about:preferences#privacy Saved Addresses popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field

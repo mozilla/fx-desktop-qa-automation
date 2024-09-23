@@ -112,18 +112,6 @@
         ]
     },
 
-    "browser-popup-1": {
-        "selectorData": "dialogFrame",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "browser-popup-2": {
-        "selectorData": "browser[contextmenu='contentAreaContextMenu']",
-        "strategy": "css",
-        "groups": []
-    },
-
     "saved-addresses": {
         "selectorData": "addresses",
         "strategy": "id",
