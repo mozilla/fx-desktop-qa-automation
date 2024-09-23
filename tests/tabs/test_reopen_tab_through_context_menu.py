@@ -1,12 +1,18 @@
+import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, TabContextMenu
+from modules.browser_object import ContextMenu, TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134648"
 
 
 def test_reopen_tab_through_context_menu(driver: Firefox):
     """C134648: Reopen tab through context menu"""
     tabs = TabBar(driver).open()
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4
 
@@ -25,7 +31,7 @@ def test_reopen_tab_through_context_menu(driver: Firefox):
     driver.switch_to.window(driver.window_handles[0])
 
     tabs.context_click(remaining_tab)
-    tab_context_menu.click_and_hide_menu("context-menu-reopen-tab")
+    tab_context_menu.click_and_hide_menu("context-menu-reopen-closed-tab")
 
     reopened_tab = tabs.get_tab(tabs_to_open + 1)
     assert tabs.get_tab_title(reopened_tab).startswith("Gort")

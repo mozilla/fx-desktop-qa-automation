@@ -7,6 +7,11 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutProfiles
 
 
+@pytest.fixture()
+def test_case():
+    return "130792"
+
+
 @pytest.mark.unstable
 def test_set_default_profile(driver: Firefox):
     """

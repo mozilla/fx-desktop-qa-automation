@@ -1,6 +1,12 @@
+import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, TabContextMenu
+from modules.browser_object import ContextMenu, TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134722"
 
 
 def test_pin_tab(driver: Firefox):
@@ -8,7 +14,7 @@ def test_pin_tab(driver: Firefox):
     C134722, ensures that tabs can be pinned
     """
     tabs = TabBar(driver).open()
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
 
     num_tabs = 5
 

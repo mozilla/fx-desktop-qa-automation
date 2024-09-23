@@ -3,9 +3,14 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AboutPrefsCcPopup, Navigation
+from modules.browser_object import AutofillPopup, Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122389"
 
 
 @pytest.mark.unstable
@@ -26,7 +31,7 @@ def test_create_new_cc_profile(driver: Firefox):
 
     # save CC data by using the fake data
     credit_card_sample_data = util.fake_credit_card_data()
-    about_prefs_cc_popup = AboutPrefsCcPopup(driver, iframe)
+    about_prefs_cc_popup = AutofillPopup(driver)
 
     # add a new CC profile
     about_prefs_cc_popup.get_element(

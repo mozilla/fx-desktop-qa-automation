@@ -1,6 +1,12 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134646"
 
 
 def test_active_tab(driver: Firefox):

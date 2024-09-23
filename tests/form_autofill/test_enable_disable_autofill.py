@@ -3,8 +3,15 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs, AddressFill
+from modules.page_object import AboutPrefs
+from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122347"
+
 
 countries = ["CA", "US"]
 
@@ -24,7 +31,7 @@ def test_enable_disable_autofill(driver: Firefox, country_code: str):
     # create fake data, fill it in and press submit and save on the doorhanger
     autofill_sample_data = util.fake_autofill_data(country_code)
     af.save_information_basic(autofill_sample_data)
-    afp.press_doorhanger_save()
+    afp.click_doorhanger_button("save")
     about_prefs = AboutPrefs(driver, category="privacy").open()
     about_prefs.get_element("save-and-fill-addresses").click()
 

@@ -5,6 +5,12 @@ from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
+
+@pytest.fixture()
+def test_case():
+    return "122348"
+
+
 countries = ["CA", "US"]
 
 

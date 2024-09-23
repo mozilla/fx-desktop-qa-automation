@@ -1,8 +1,15 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi, TabBar, TabContextMenu, Toolbar
+from modules.browser_object import ContextMenu, PanelUi, TabBar
+from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutPrefs, GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "1771617"
+
 
 MORE_TOOLS_PT = "Mais ferramentas"
 DUPLICATE_TAB_PT = "Duplicar aba"
@@ -36,7 +43,7 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     # Check context menu messages (tabs)
     tab_bar = TabBar(driver)
     tab_bar.context_click(tab_bar.get_tab(1))
-    tab_context_menu = TabContextMenu(driver)
+    tab_context_menu = ContextMenu(driver)
     tab_context_menu.element_attribute_contains(
         "context-menu-duplicate-tab", "label", DUPLICATE_TAB_PT
     )
@@ -46,11 +53,11 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     screen_cap = GenericPage(driver, url=SCREEN_CAP_URL)
     screen_cap.open()
     screen_cap.find_element("id", "start").click()
-    toolbar = Toolbar(driver)
-    toolbar.element_visible("popup-notification")
-    toolbar.element_attribute_contains(
+    nav = Navigation(driver)
+    nav.element_visible("popup-notification")
+    nav.element_attribute_contains(
         "popup-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
     )
-    toolbar.element_attribute_contains(
+    nav.element_attribute_contains(
         "popup-notification", "endlabel", SCREEN_CAP_LABEL_BACK_PT
     )

@@ -1,19 +1,25 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import Navigation, SearchBarContextMenu
+from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import GoogleSearch
-from modules.page_object_autofill_login import LoginAutofill
-from modules.page_object_form_autofill_textarea import TextAreaFormAutofill
+from modules.page_object_autofill import LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
 
 
+@pytest.fixture()
+def test_case():
+    return "2264626"
+
+
 def test_login_form_copy_paste(driver: Firefox):
+    """C2264626 - Verify that copy and paste actions are displayed in the context menu and work as expected"""
     # instantiate objects
     login_fill = LoginAutofill(driver).open()
-    context_menu = SearchBarContextMenu(driver)
+    context_menu = ContextMenu(driver)
     util = Utilities()
     random_text = util.generate_random_text("sentence")
 
@@ -42,7 +48,7 @@ def test_text_area_copy_paste(driver: Firefox):
     # initialize objects
     text_area_fill = TextAreaFormAutofill(driver).open()
     util = Utilities()
-    context_menu = SearchBarContextMenu(driver)
+    context_menu = ContextMenu(driver)
     text_area = text_area_fill.get_element("street-address-textarea")
 
     # send the text
@@ -68,7 +74,7 @@ def test_text_area_copy_paste(driver: Firefox):
 
 def test_search_field_copy_paste(driver: Firefox):
     Navigation(driver).open()
-    context_menu = SearchBarContextMenu(driver)
+    context_menu = ContextMenu(driver)
     google_search = GoogleSearch(driver).open()
     util = Utilities()
 

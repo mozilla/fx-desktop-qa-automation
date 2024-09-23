@@ -300,6 +300,24 @@
         "groups": []
     },
 
+    "history-button": {
+        "selectorData": "history-panelmenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "library-button": {
+        "selectorData": "library-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "library-history-submenu-button": {
+        "selectorData": "appMenu-library-history-button",
+        "strategy": "id",
+        "groups": []
+    },
+
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
@@ -370,6 +388,66 @@
     "bookmark-robots": {
         "selectorData": "menuitem[label='Robots 2']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "bookmark-current-tab": {
+        "selectorData": "panelMenuBookmarkThisPage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "downloads-item-by-file": {
+        "selectorData": ".downloadMainArea image[src*='{filename}']",
+        "strategy": "css",
+        "groups": []
+    },
+
+     "bookmark-in-bar": {
+        "selectorData": "toolbarbutton.bookmark-item",
+        "strategy": "css",
+        "groups": []
+    },
+
+     "popup-notification": {
+        "selectorData": "popupnotification",
+        "strategy": "tag",
+        "groups": []
+    },
+
+    "toolbar-history-recently-closed-tabs": {
+        "selectorData": "appMenuRecentlyClosedTabs",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-history-recently-closed-windows": {
+        "selectorData": "appMenuRecentlyClosedWindows",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-history-search-history": {
+        "selectorData": "appMenuSearchHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "toolbar-history-clear-recent-history": {
+        "selectorData": "appMenuClearRecentHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "toolbar-history-recent_history": {
+        "selectorData": "panelMenu_recentHistory",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-history-manage_history": {
+        "selectorData": "PanelUI-historyMore",
+        "strategy": "id",
         "groups": []
     },
 

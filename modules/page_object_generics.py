@@ -1,3 +1,5 @@
+from time import sleep
+
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -50,4 +52,26 @@ class GenericPdf(BasePage):
     def open_toolbar_menu(self) -> BasePage:
         self.get_element("toolbar-toggle").click()
         self.element_visible("toolbar-container")
+        return self
+
+    def add_image(self, image_path: str, sys_platform: str) -> BasePage:
+        self.get_element("toolbar-add-image").click()
+        self.get_element("toolbar-add-image-confirm").click()
+        sleep(3)
+        from pynput.keyboard import Controller, Key
+
+        keyboard = Controller()
+        if sys_platform == "Darwin" or sys_platform == "Linux":
+            keyboard.type("/")
+            sleep(3)
+            keyboard.type(image_path.lstrip("/"))
+        else:
+            sleep(2)
+            keyboard.type(image_path)
+        sleep(1)
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
+        sleep(2)
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
         return self

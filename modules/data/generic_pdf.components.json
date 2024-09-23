@@ -2,9 +2,7 @@
     "text-layer": {
         "selectorData": "textLayer",
         "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
+        "groups": []
     },
 
     "highlighted-text": {
@@ -138,6 +136,30 @@
     "edited-name-field": {
         "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "toolbar-add-image": {
+        "selectorData": "editorStamp",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbar-add-image-confirm": {
+        "selectorData": "editorStampAddImage",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "added-goomy-image": {
+        "selectorData": "canvas[aria-label='goomy.png']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "pdf-body": {
+        "selectorData": "viewer",
+        "strategy": "id",
         "groups": []
     }
 

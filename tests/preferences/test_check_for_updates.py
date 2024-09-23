@@ -4,7 +4,12 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
-from modules.page_object_about_prefs import AboutPrefs
+from modules.page_object_prefs import AboutPrefs
+
+
+@pytest.fixture()
+def test_case():
+    return "143572"
 
 
 @pytest.fixture()

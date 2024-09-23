@@ -4,5 +4,17 @@
         "selectorData": "wrapper-panic-button",
         "strategy": "id",
         "groups": []
-    }
+    },
+
+    "history": {
+        "selectorData": "wrapper-history-panelmenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "library": {
+         "selectorData": "wrapper-library-button",
+         "strategy": "id",
+         "groups": []
+     }
 }

@@ -8,6 +8,11 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutConfig, AboutPrefs
 
 
+@pytest.fixture()
+def test_case():
+    return "1365245"
+
+
 # NOTE: Need to fix, failing in 130+ Firefox due to legacy search bar being deprecated
 @pytest.mark.unstable
 def test_default_search_provider_change(driver: Firefox):

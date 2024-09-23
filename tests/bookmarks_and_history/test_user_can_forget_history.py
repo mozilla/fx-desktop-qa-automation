@@ -1,7 +1,14 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ForgetPanel, Navigation, PanelUi, TabBar
 from modules.page_object import CustomizeFirefox, GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "174072"
+
 
 links = [
     "about:about",
@@ -48,4 +55,4 @@ def test_user_can_forget_history(driver: Firefox):
     forget_panel.forget_history("forget-five-minutes")
 
     tabs.switch_to_new_tab()
-    panel_ui.element_does_not_exist("recent-history-info")
+    panel_ui.element_does_not_exist("bookmark-item")

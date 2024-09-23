@@ -9,11 +9,5 @@
         "selectorData": "input[type='{name}']",
         "strategy": "css",
         "groups": []
-    },
-
-    "form-button": {
-        "selectorData": "button[type='{name}']",
-        "strategy": "css",
-        "groups": []
     }
 }

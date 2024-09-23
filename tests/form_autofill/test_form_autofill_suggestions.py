@@ -1,9 +1,15 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, CreditCardPopup, Navigation
-from modules.page_object_autofill_credit_card import CreditCardFill
+from modules.browser_object import AutofillPopup, Navigation
+from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122401"
+
 
 indices = ["1", "2"]
 
@@ -21,7 +27,6 @@ def test_form_autofill_suggestions(driver: Firefox, index: str):
     nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
-    credit_card_popoup_obj = CreditCardPopup(driver)
 
     # create fake data, two profiles
     sample_data_1 = credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
@@ -36,5 +41,5 @@ def test_form_autofill_suggestions(driver: Firefox, index: str):
     # verify information based, verify based on second object if we are verifying first option (this is the newer option) and
     # vice versa
     credit_card_fill_obj.verify_four_fields(
-        credit_card_popoup_obj, sample_data_2 if index == "1" else sample_data_1
+        autofill_popup_obj, sample_data_2 if index == "1" else sample_data_1
     )

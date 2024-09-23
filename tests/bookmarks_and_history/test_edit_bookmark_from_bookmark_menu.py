@@ -1,8 +1,15 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_generics import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "2084490"
+
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
@@ -22,10 +29,9 @@ def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
     # Bookmark the given website via bookmarks menu
     GenericPage(driver, url=URL_TO_BOOKMARK).open()
     panel.open_bookmarks_menu()
-    with driver.context(driver.CONTEXT_CHROME):
-        panel.get_element("bookmark-current-tab").click()
-        nav.get_element("save-bookmark-button").click()
+    nav.add_bookmark_via_menu()
 
+    with driver.context(driver.CONTEXT_CHROME):
         # enable add a tag to a bookmark in the bookmark panel
         driver.execute_script(ENABLE_ADD_TAG)
 

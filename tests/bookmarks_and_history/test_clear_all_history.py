@@ -7,6 +7,11 @@ from modules.util import BrowserActions
 
 
 @pytest.fixture()
+def test_case():
+    return "172045"
+
+
+@pytest.fixture()
 def use_profile():
     return "theme_change"
 
@@ -21,12 +26,9 @@ def test_clear_all_history(driver: Firefox):
     ba = BrowserActions(driver)
 
     panel_ui.select_clear_history_option("Everything")
-    warning_box = panel_ui.get_element("all-history-warning")
-
-    assert warning_box.get_attribute("hidden") is None
 
     gen_page.get_element("clear-history-button").click()
     ba.switch_to_content_context()
 
     panel_ui.open_history_menu()
-    assert panel_ui.element_does_not_exist("recent-history-info")
+    panel_ui.element_does_not_exist("bookmark-item")

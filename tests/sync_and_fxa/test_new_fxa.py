@@ -6,6 +6,11 @@ from modules.page_object import FxaHome, GenericPage
 
 
 @pytest.fixture()
+def test_case():
+    return "131094"
+
+
+@pytest.fixture()
 def fxa_env():
     return "stage"
 

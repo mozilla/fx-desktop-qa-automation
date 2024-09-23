@@ -1,8 +1,15 @@
 import logging
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "134648"
+
 
 links = [
     "about:about",
@@ -18,6 +25,7 @@ link_set = set(links)
 
 
 def test_recently_closed_tabs(driver: Firefox):
+    """C134648 - Verify that the recently closed tab can be reopened from the context menu"""
     # open 6 tabs
     tabs = TabBar(driver).open()
     panel = PanelUi(driver)

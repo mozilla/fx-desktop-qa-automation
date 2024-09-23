@@ -1,11 +1,18 @@
 from time import sleep
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutPrefs, GenericPdf
+
+
+@pytest.fixture()
+def test_case():
+    return "936502"
+
 
 CONTENT_DISPOSITION_ATTACHMENT_URL = (
     "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf"

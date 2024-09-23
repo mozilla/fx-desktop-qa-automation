@@ -183,5 +183,5 @@ class PanelUi(BasePage):
         Gets all history items
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            history_items = self.get_elements("recent-history-info")
+            history_items = self.get_elements("bookmark-item")
             return history_items

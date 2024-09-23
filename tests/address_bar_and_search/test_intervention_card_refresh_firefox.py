@@ -3,6 +3,12 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 
+
+@pytest.fixture()
+def test_case():
+    return "1365204"
+
+
 ALLOWED_RGB_BEFORE_VALUES = set(
     ["rgba(207, 207, 216, 0.33)", "color(srgb 0 0 0 / 0.13)", "rgba(0, 0, 0, 0.33)"]
 )

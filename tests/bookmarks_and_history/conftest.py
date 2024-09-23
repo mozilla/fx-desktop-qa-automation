@@ -7,6 +7,13 @@ def suite_id():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_prefs():
+    return []
+
+
+@pytest.fixture()
+def set_prefs(add_prefs):
     """Set prefs"""
-    return [("browser.toolbars.bookmarks.visibility", "Always")]
+    prefs = [("browser.toolbars.bookmarks.visibility", "Always")]
+    prefs.extend(add_prefs)
+    return prefs

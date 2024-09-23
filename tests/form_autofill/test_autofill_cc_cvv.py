@@ -6,9 +6,14 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.browser_object_navigation import Navigation
-from modules.page_object_about_prefs import AboutPrefs
-from modules.page_object_autofill_credit_card import CreditCardFill
+from modules.page_object_autofill import CreditCardFill
+from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions, Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122399"
 
 
 @pytest.mark.unstable
@@ -28,9 +33,10 @@ def test_autofill_cc_cvv(driver: Firefox):
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
     cvv = credit_card_sample_data.cvv
-    autofill_popup.press_doorhanger_save()
+    autofill_popup.click_doorhanger_button("save")
 
     # navigate to prefs
+
     about_prefs_obj.open()
     iframe = about_prefs_obj.press_button_get_popup_dialog_iframe(
         "Saved payment methods"

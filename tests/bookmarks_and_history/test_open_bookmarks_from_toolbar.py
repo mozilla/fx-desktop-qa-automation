@@ -1,9 +1,16 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
+
+
+@pytest.fixture()
+def test_case():
+    return "2084550"
+
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
@@ -18,13 +25,12 @@ def test_open_bookmarks_from_toolbar(driver: Firefox):
     newtab = TabBar(driver)
     page = GenericPage(driver, url=URL_TO_BOOKMARK)
 
-    # Bookmark the given website
+    # Bookmark the given website via star button
     driver.get(URL_TO_BOOKMARK)
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("star-button").click()
-        nav.get_element("save-bookmark-button").click()
+    nav.add_bookmark_via_star()
 
-        # Open new tab and click on the bookmark from the Bookmarks Toolbar
+    # Open new tab and click on the bookmark from the Bookmarks Toolbar
+    with driver.context(driver.CONTEXT_CHROME):
         newtab.new_tab_by_button()
         panel.get_element("bookmark-by-title", labels=["Internet for people"]).click()
 

@@ -2,8 +2,14 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup
-from modules.page_object import AboutPrefs, AddressFill
+from modules.page_object import AboutPrefs
+from modules.page_object_autofill import AddressFill
 from modules.util import BrowserActions, Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122587"
 
 
 @pytest.fixture()

@@ -6,8 +6,13 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
-from modules.page_object_about_prefs import AboutPrefs
+from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
+
+
+@pytest.fixture()
+def test_case():
+    return "1618400"
 
 
 @pytest.mark.slow

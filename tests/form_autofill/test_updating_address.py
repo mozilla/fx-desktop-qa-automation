@@ -3,8 +3,15 @@ from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs, AddressFill
+from modules.page_object import AboutPrefs
+from modules.page_object_autofill import AddressFill
 from modules.util import BrowserActions, Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "122354"
+
 
 countries = ["CA", "US"]
 
@@ -24,18 +31,18 @@ def test_update_address(driver: Firefox, country_code: str):
     # Create fake data, fill in the form, and press submit and save on the doorhanger
     autofill_sample_data = util.fake_autofill_data(country_code)
     address_form_fields.save_information_basic(autofill_sample_data)
-    autofill_popup_panel.press_doorhanger_save()
+    autofill_popup_panel.click_doorhanger_button("save")
 
     # Double-click on the name field to trigger the autocomplete dropdown
     address_form_fields.double_click("form-field", labels=["name"])
-    autofill_popup_panel.click_address()
+    autofill_popup_panel.click_autofill_form_option()
 
     # Add a middle name inside the Name field
-    address_form_fields.click("form-field", labels=["name"])
+    address_form_fields.click_on("form-field", labels=["name"])
     address_form_fields.send_keys_to_element("form-field", "name", " Doe" + Keys.ENTER)
 
     # Save the updated address
-    autofill_popup_panel.press_doorhanger_update()
+    autofill_popup_panel.click_doorhanger_button("update")
 
     # Navigate to settings
     about_prefs = AboutPrefs(driver, category="privacy").open()

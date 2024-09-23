@@ -4,9 +4,15 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ImageContextMenu, Navigation, TabBar
+from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import GenericPage
 from modules.util import Utilities
+
+
+@pytest.fixture()
+def test_case():
+    return "2637622"
+
 
 LINK_IMAGE_URL = (
     "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
@@ -21,7 +27,7 @@ def test_open_image_in_new_tab(driver: Firefox):
     """
     # create objs
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
-    image_context_menu = ImageContextMenu(driver)
+    image_context_menu = ContextMenu(driver)
     tabs = TabBar(driver)
 
     # wait for page to load
@@ -59,7 +65,7 @@ def test_save_image_as(driver: Firefox):
         controller.release(key)
 
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
-    image_context_menu = ImageContextMenu(driver)
+    image_context_menu = ContextMenu(driver)
     nav = Navigation(driver)
     util = Utilities()
 
@@ -115,7 +121,7 @@ def test_copy_image_link(driver: Firefox):
     # create objs
     nav = Navigation(driver).open()
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
-    image_context_menu = ImageContextMenu(driver)
+    image_context_menu = ContextMenu(driver)
     tabs = TabBar(driver)
 
     # wait for page to load
