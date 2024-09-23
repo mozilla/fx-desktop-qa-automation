@@ -366,9 +366,9 @@ class AboutPrefs(BasePage):
         """Clicks the popup panel button for the specified field"""
         if self.iframe:
             with self.driver.switch_to.frame(self.iframe):
-                self.get_element("cc-popup-button", labels=[field]).click()
+                self.get_element("panel-popup-button", labels=[field]).click()
         else:
-            self.get_element("cc-popup-button", labels=[field]).click()
+            self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
 

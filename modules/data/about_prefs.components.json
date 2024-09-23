@@ -98,6 +98,12 @@
         ]
     },
 
+    "cc-popup-button": {
+        "selectorData": "button[data-l10n-id='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "panel-popup-button": {
         "selectorData": "button[data-l10n-id='{name}']",
         "strategy": "css",
