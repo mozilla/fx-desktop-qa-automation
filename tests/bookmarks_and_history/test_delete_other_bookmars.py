@@ -6,8 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import GenericPage
-from modules.util import BrowserActions
-from pynput.keyboard import Controller, Key
+
 
 BOOKMARK_URL = "about:robots"
 BOOKMARK_URL_2 = "about:cache"
@@ -29,6 +28,7 @@ def test_delete_other_bookmarks(driver: Firefox):
 
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
+        nav.context_click("bookmark-about-robots")
         nav.element_visible("bookmark-about-robots")
 
     # get other bookmarks
