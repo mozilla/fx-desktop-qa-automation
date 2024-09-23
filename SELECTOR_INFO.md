@@ -1491,6 +1491,12 @@ Description: Bookmark tag
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
+```
+Selector name: password-button
+Selector Data: "appMenu-passwords-button"
+Description: Password button
+Location: Hamburger Menu
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
