@@ -1,6 +1,12 @@
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
+
+
+@pytest.fixture()
+def test_case():
+    return "2241082"
 
 
 def test_about_login_navigation_from_password_hamburger_menu(driver: Firefox):
