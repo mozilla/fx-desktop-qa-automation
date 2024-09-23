@@ -141,6 +141,10 @@ class TestRail:
             f"add_run_to_plan_entry/{plan_id}/{entry_id}", payload
         )
 
+    def update_run_in_entry(self, run_id, **kwargs):
+        payload = {k: v for k, v in kwargs.items() if v}
+        return self.client.send_post(f"update_run_in_plan_entry/{run_id}", payload)
+
     def matching_milestone(self, testrail_project_id, milestone_name):
         num_of_milestones_to_check = 10  # check last 10 milestones
         milestones = self._get_milestones(
@@ -219,6 +223,9 @@ class TestRail:
 
     def add_config(self, config_group_id, name):
         return self.client.send_post(f"/add_config/{config_group_id}", {"name": name})
+
+    def get_run(self, run_id):
+        return self.client.send_get(f"/get_run/{run_id}")
 
     def get_test_results(self, run_id):
         results_rs_json = self.client.send_get(f"/get_tests/{run_id}")

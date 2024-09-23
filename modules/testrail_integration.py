@@ -24,61 +24,6 @@ def testrail_init() -> TestRail:
     return tr_session
 
 
-def execute_changes(testrail_session: TestRail, changelist):
-    """Doc"""
-    # Check if config exists, if not create it
-    config_matches = None
-    tried = False
-    logging.info("Change dump---")
-    logging.info(changelist)
-    while not config_matches:
-        config_matches = testrail_session.matching_configs(
-            TESTRAIL_FX_DESK_PRJ, CONFIG_GROUP_ID, changelist.get("config")
-        )
-        if tried:
-            break
-        if not config_matches:
-            testrail_session.add_config(CONFIG_GROUP_ID, changelist.get("config"))
-        tried = True
-    if len(config_matches) >= 1:
-        config_id = config_matches[0].get("id")
-    else:
-        raise ValueError(
-            f"Should only have one matching TR config: {changelist.get('config')}"
-        )
-
-    # We're gonna have to add entries
-    entries_to_add = {}
-    for suite_id in changelist.get("changes"):
-        change = changelist["changes"][suite_id]
-        logging.info(f"  - PLANNED CHANGE: {change}")
-        plan_id = change.get("plan_id")
-        suite_description = change.get("name")
-
-        if change.get("change_type") == "create":
-            entry = testrail_session.create_new_plan_entry(
-                plan_id=plan_id,
-                suite_id=suite_id,
-                name=suite_description,
-                description="Automation-generated test plan entry",
-                case_ids=change.get("case_ids"),
-            )
-            entries_to_add[suite_id] = entry
-        else:
-            entry = change.get("entry")
-        if change.get("change_type") in ["create", "update_add_runs"]:
-            run_obj = testrail_session.create_test_run_on_plan_entry(
-                plan_id,
-                entry.get("id"),
-                [config_id],
-                description=f"Auto test plan entry: {suite_description}",
-                case_ids=change.get("case_ids"),
-            )
-    for suite_id, entry in entries_to_add.items():
-        changelist["changes"][suite_id]["entry"] = entry
-    return changelist
-
-
 def mark_results(testrail_session: TestRail, test_results):
     logging.info(f"mark results: object\n{test_results}")
     existing_results = {}
@@ -107,6 +52,9 @@ def mark_results(testrail_session: TestRail, test_results):
 
 
 def collect_changes(testrail_session: TestRail, report):
+    """doc"""
+
+    # Find milestone to attach to
     version_match = FX_VERSION_RE.match(
         report.get("tests")[0].get("metadata").get("fx_version")
     )
@@ -123,6 +71,8 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
+
+    # Find plan to attach runs to, create if doesn't exist
     plan_title = (
         TESTRAIL_RUN_FMT.replace("{channel}", channel)
         .replace("{major}", major)
@@ -149,6 +99,26 @@ def collect_changes(testrail_session: TestRail, report):
     else:
         new_plan = False
 
+    # Find or add correct config for session
+
+    config_matches = None
+    tried = False
+    while not config_matches:
+        config_matches = testrail_session.matching_configs(
+            TESTRAIL_FX_DESK_PRJ, CONFIG_GROUP_ID, config
+        )
+        if tried:
+            break
+        if not config_matches:
+            testrail_session.add_config(CONFIG_GROUP_ID, config)
+        tried = True
+    if len(config_matches) >= 1:
+        config_id = config_matches[0].get("id")
+    else:
+        raise ValueError(f"Should only have one matching TR config: {config}")
+
+    # Find or add suite-based runs on the plan
+    # Store test results for later
     entry_changes = {"config": config, "changes": {}}
     test_results = {
         "project_id": TESTRAIL_FX_DESK_PRJ,
@@ -157,6 +127,9 @@ def collect_changes(testrail_session: TestRail, report):
         "skipped": {},
     }
     create_suite = False
+
+    last_suite_id = None
+    results_by_suite = {}
     for test in report.get("tests"):
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
         suite_id = int(suite_id_str.replace("S", ""))
@@ -165,81 +138,84 @@ def collect_changes(testrail_session: TestRail, report):
         try:
             int(test_case)
         except ValueError:
+            logging.info("No test case number, not reporting...")
             continue
-        # config = test.get("metadata").get("machine_config")
+
         outcome = test.get("outcome")
+        if not results_by_suite.get(suite_id):
+            results_by_suite[suite_id] = {}
+        results_by_suite[suite_id][test_case] = outcome
+        if suite_id != last_suite_id:
+            # When we get the last test_case in a suite, add entry, run, results
+            if last_suite_id:
+                cases_in_suite = list(results_by_suite[suite_id].keys())
+                suite_entries = [
+                    entry
+                    for entry in expected_plan.get("entries")
+                    if entry.get("suite_id") == suite_id
+                ]
 
-        suite_entries = [
-            entry
-            for entry in expected_plan.get("entries")
-            if entry.get("suite_id") == suite_id
-        ]
-        if not suite_entries and not create_suite:
-            # If no entry, create entry for suite and platform
-            plan_id = expected_plan.get("id")
-            logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
-            entry_changes["changes"][suite_id] = {
-                "plan_id": plan_id,
-                "change_type": "create",
-                "name": suite_description,
-                "case_ids": [int(test_case)],
-            }
-            create_suite = True
+                # Add a missing entry to a plan
+                if not suite_entries:
+                    # If no entry, create entry for suite
+                    plan_id = expected_plan.get("id")
+                    logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
+                    entry = testrail_session.create_new_plan_entry(
+                        plan_id=plan_id,
+                        suite_id=suite_id,
+                        name=suite_description,
+                        description="Automation-generated test plan entry",
+                        case_ids=change.get("case_ids"),
+                    )
 
-            # expected_plan["entries"].append(
-            # )
-        elif not suite_entries and create_suite:
-            entry_changes["changes"][suite_id]["case_ids"].append(int(test_case))
-        else:
-            for entry in suite_entries:
+                    expected_plan = testrail_session.matching_plan_in_milestone(
+                        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+                    )
+                    suite_entries = [
+                        entry
+                        for entry in expected_plan.get("entries")
+                        if entry.get("suite_id") == suite_id
+                    ]
+
+                if len(suite_entries) != 1:
+                    logging.info("Suite entries are broken somehow")
+
+                # There should only be one entry per suite per plan
+                # Check that this entry has a run with the correct config
+                # And if not, make that run
+                entry = suite_entries[0]
                 logging.info(
                     f"For entry {entry['name']}, update if case_ids does not contain {test_case}"
                 )
-                logging.info(f"If runs list is empty, add placeholder.")
-                logging.info(f"FULL CHANGELIST ## {entry_changes}")
-                logging.info(f"FULL SUITE ENTRY~~ {entry}")
-                if not entry_changes.get("changes").get(suite_id):
-                    logging.info("Door 1")
-                    entry_changes["changes"][suite_id] = {"entry": entry}
-                if not entry.get("runs"):
-                    if not entry_changes["changes"][suite_id].get("change_type"):
-                        logging.info("Door 2")
-                        entry_changes["changes"][suite_id]["change_type"] = (
-                            "update_add_runs"
-                        )
-                    if entry_changes["changes"][suite_id].get("case_ids"):
-                        logging.info("Door 3")
-                        entry_changes["changes"][suite_id]["case_ids"].append(
-                            int(test_case)
-                        )
-                    else:
-                        logging.info("Won a goat")
-                        entry_changes["changes"][suite_id]["case_ids"] = [
-                            int(test_case)
-                        ]
-
-                # If you're here, you have runs in your entry
                 config_runs = [
                     run for run in entry.get("runs") if run.get("config") == config
                 ]
+
                 logging.info(f"config runs {config_runs}")
                 if not config_runs:
-                    if entry_changes["changes"][suite_id].get("case_ids"):
-                        entry_changes["changes"][suite_id]["case_ids"].append(
-                            int(test_case)
-                        )
-                    else:
-                        entry_changes["changes"][suite_id]["case_ids"] = [
-                            int(test_case)
-                        ]
-                elif len(config_runs) > 1:
-                    # Throw an error; we should only have one run per config per entry in plan
-                    pass
+                    run = testrail_session.create_test_run_on_plan_entry(
+                        plan_id,
+                        entry.get("id"),
+                        [config_id],
+                        description=f"Auto test plan entry: {suite_description}",
+                        case_ids=cases_in_suite,
+                    )
+                    suite_entries = [
+                        entry
+                        for entry in expected_plan.get("entries")
+                        if entry.get("suite_id") == suite_id
+                    ]
+                    entry = suite_entries[0]
                 else:
-                    # Config run has one match, check if all cases exist
-                    pass
+                    run = testrail_session.get_run(config_runs[0].get("id"))
 
-                run = config_runs[0]
+                # If the run is missing cases, add them
+                expected_case_ids = list(set(run.get("case_ids") + cases_in_suite))
+                if len(expected_case_ids) > len(run.get("case_ids")):
+                    run = testrail_session.update_run_in_entry(
+                        run.get("id"), case_ids=expected_case_ids
+                    )
+
                 if run.get("is_completed"):
                     logging.info(f"Run {run.get('id')} is already completed.")
                     continue
@@ -258,4 +234,8 @@ def collect_changes(testrail_session: TestRail, report):
                 test_results[category][run_id].append(
                     {"suite_id": suite_id, "test_case": test_case}
                 )
+                pass  # check if entry exists
+            else:
+                last_suite_id = suite_id
+
     return test_results
