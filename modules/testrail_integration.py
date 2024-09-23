@@ -46,6 +46,9 @@ def execute_changes(testrail_session: TestRail, changelist):
         raise ValueError(
             f"Should only have one matching TR config: {changelist.get('config')}"
         )
+
+    # We're gonna have to add entries
+    entries_to_add = {}
     for suite_id in changelist.get("changes"):
         change = changelist["changes"][suite_id]
         logging.info(f"  - PLANNED CHANGE: {change}")
@@ -60,16 +63,20 @@ def execute_changes(testrail_session: TestRail, changelist):
                 description="Automation-generated test plan entry",
                 case_ids=change.get("case_ids"),
             )
+            entries_to_add[suite_id] = entry
         else:
             entry = change.get("entry")
         if change.get("change_type") in ["create", "update_add_runs"]:
-            testrail_session.create_test_run_on_plan_entry(
+            run_obj = testrail_session.create_test_run_on_plan_entry(
                 plan_id,
                 entry.get("id"),
                 [config_id],
                 description=f"Auto test plan entry: {suite_description}",
                 case_ids=change.get("case_ids"),
             )
+    for suite_id, entry in entries_to_add.items():
+        changelist["changes"][suite_id]["entry"] = entry
+    return changelist
 
 
 def mark_results(testrail_session: TestRail, test_results):
@@ -251,4 +258,4 @@ def collect_changes(testrail_session: TestRail, report):
                 test_results[category][run_id].append(
                     {"suite_id": suite_id, "test_case": test_case}
                 )
-    return (entry_changes, test_results)
+    return test_results

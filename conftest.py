@@ -323,8 +323,7 @@ def pytest_sessionfinish(session):
         return None
     report = session.config._json_report.report
     tr_session = tri.testrail_init()
-    (changelist, passes) = tri.collect_changes(tr_session, report)
-    tri.execute_changes(tr_session, changelist)
+    passes = tri.collect_changes(tr_session, report)
     tri.mark_results(tr_session, passes)
 
 
