@@ -323,6 +323,98 @@ Description: The Firefox logo
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```
+#### about_prefs
+```
+Selector Name: search-engine-dropdown-root
+Selector Data: defaultEngine
+Description: The element containing the search engine options list (is a shadow root)
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-engine-dropmarker
+Selector Data: "dropmarker"
+Description: Button that opens the search engine options list
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: find-in-settings
+Selector Data: "searchInput"
+Description: Find in Settings input field (is a shadow root)
+Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: find-in-settings-input
+Selector Data: "input[placeholder='Find in Settings']"
+Description: Find in Settings input field
+Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: h2-enhanced-tracking-protection
+Selector Data: h2[data-l10n-id='content-blocking-enhanced-tracking-protection']"
+Description: Enhance Tracking Protection sub-header
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: save-and-fill-addresses
+Selector Data: "checkbox[label='Save and fill addresses']"
+Description: Label for Autofill > Save and fill addresses option
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: save-and-fill-payment-methods
+Selector Data: "checkbox[label='Save and fill payment methods']"
+Description: Label for Autofill > Save and fill payment methods option
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: prefs-button
+Selector Data: "button[label^='{name}']"
+Description: Checkbox for a option by label
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: import-browser-data
+Selector Data: "button[id='data-migration']"
+Description: Import Browser Data > Import Data button
+Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: migration-popup
+Selector Data: "button[id='data-migration']"
+Description: Import Browser Data popup (is a shadow root)
+Location: about:preferences#general as result of Import Data button click
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: migration-import-button
+Selector Data: "button.primary.migration-import-button"
+Description: Import data popup Import button
+Location: about:preferences#general as result of Import Data button click
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: migration-progress-header
+Selector Data: "h1#progress-header"
+Description: Import data popup progress
+Location: about:preferences#general as result of Import Data button click
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cc-saved-options
+Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
+Description: The "Add card" modal, containing 4 fields
+Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/about_prefs.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
@@ -463,7 +555,7 @@ Path to .json: modules/data/autofill_popup.components.json
 ```
 Selector Name: cc-saved-options
 Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
-Description: The actually "Add card" modal, containing 4 fields
+Description: The actual "Add card" modal, containing 4 fields
 Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
 Path to .json: modules/data/autofill_popup.components.json
 ```

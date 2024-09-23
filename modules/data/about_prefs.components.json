@@ -18,32 +18,6 @@
         ]
     },
 
-    "dropdown-by-label": {
-        "selectorData": ".//label[contains(., '{label}')]/following-sibling::hbox/menulist",
-        "strategy": "xpath",
-        "groups": [
-            "generic",
-            "dropdownRoot"
-        ]
-    },
-
-    "dropdown-by-current-value": {
-        "selectorData": "menulist[label='{value}']",
-        "strategy": "css",
-        "groups": [
-            "generic",
-            "dropdownRoot"
-        ]
-    },
-
-    "active-menu-item": {
-        "selectorData": "menuitem[_moz-menuactive='true']",
-        "strategy": "css",
-        "groups": [
-            "refresh"
-        ]
-    },
-
     "find-in-settings": {
         "selectorData": "searchInput",
         "strategy": "id",
@@ -111,13 +85,6 @@
 
     "migration-progress-header": {
         "selectorData": "h1#progress-header",
-        "strategy": "css",
-        "shadowParent": "migration-popup",
-        "groups": []
-    },
-
-    "migration-done-button": {
-        "selectorData": "[data-l10n-id='migration-done-button-label']",
         "strategy": "css",
         "shadowParent": "migration-popup",
         "groups": []

@@ -81,21 +81,3 @@ class AutofillPopup(BasePage):
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             return element.get_attribute("ac-value")
-
-    # Interaction with about:preferences modals
-    def get_all_saved_cc_profiles(self) -> List[WebElement]:
-        """Gets the saved credit card profiles in the cc panel"""
-        if self.iframe:
-            with self.driver.switch_to.frame(self.iframe):
-                return self.get_element("cc-saved-options", multiple=True)
-        else:
-            return self.get_element("cc-saved-options", multiple=True)
-
-    def click_popup_panel_button(self, field: str) -> BasePage:
-        """Clicks the popup panel button for the specified field"""
-        if self.iframe:
-            with self.driver.switch_to.frame(self.iframe):
-                self.get_element("cc-popup-button", labels=[field]).click()
-        else:
-            self.get_element("cc-popup-button", labels=[field]).click()
-        return self
