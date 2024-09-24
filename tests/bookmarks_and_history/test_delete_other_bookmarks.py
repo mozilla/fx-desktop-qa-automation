@@ -16,6 +16,9 @@ BOOKMARK_URL_2 = "about:cache"
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
+@pytest.fixture()
+def test_case():
+    return "2084524"
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_delete_other_bookmarks(driver: Firefox):
