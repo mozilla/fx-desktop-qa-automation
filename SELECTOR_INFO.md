@@ -814,6 +814,71 @@ Description: PDF content type options list
 Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
+#### about_profiles
+```
+Selector Name: profile-container
+Selector Data: "profiles"
+Description: Element containing list of all profiles
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-default-header
+Selector Data: "ph3[data-l10n-id='profiles-in-use-profile']"
+Description: Element containing the default in use profile
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-profile-name
+Selector Data: "h2[data-l10n-id='profiles-name']"
+Description: Element containing the profile name
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-button
+Selector Data: "button[data-l10n-id='{name}']"
+Description: Element containing the option buttons for the profile
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-table-row-value
+Selector Data: "td"
+Description: Element containing the profile table row values
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-table-row
+Selector Data: "tr"
+Description: Element containing the profile table row
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+#### about_telemetry
+```
+Selector Name: category-raw
+Selector Data: "category-raw"
+Description: Raw JSON option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: rawdata-tab
+Selector Data: "//li[@class='tabs-menu-item rawdata ']//a[@id='rawdata-tab']"
+Description: Raw Data tab
+Location: about:telemetry > data:application page
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: events-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='events-section']"
+Description: Events option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
