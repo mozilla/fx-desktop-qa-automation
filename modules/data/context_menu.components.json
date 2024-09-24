@@ -167,5 +167,11 @@
         "selectorData": "context-paste",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-manage-passwords": {
+        "selectorData": "manage-saved-logins",
+        "strategy": "id",
+        "groups": []
     }
 }

@@ -13,6 +13,7 @@ from modules.page_object import AboutPrefs
 def test_case():
     return "1756752"
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return r"pdf-example-bookmarks.pdf"

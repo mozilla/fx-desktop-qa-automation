@@ -20,6 +20,11 @@ def set_prefs():
 
 
 @pytest.fixture()
+def add_prefs():
+    return []
+
+
+@pytest.fixture()
 def origins():
     return [
         "facebook.com",
