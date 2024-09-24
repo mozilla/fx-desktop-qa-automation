@@ -66,6 +66,12 @@
         "strategy": "class",
         "shadowParent": "form-actions-row",
         "groups": []
-    }
+    },
 
+    "login-sort":
+    {
+        "selectorData": "login-sort",
+        "strategy": "id",
+        "groups": []
+    }
 }
