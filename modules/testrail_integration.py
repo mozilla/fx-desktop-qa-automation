@@ -24,6 +24,25 @@ def testrail_init() -> TestRail:
     return tr_session
 
 
+def merge_results(*result_sets) -> dict:
+    # Merge sets of results
+    output = {}
+    for results in result_sets:
+        logging.info(f"merging {results} into {output}")
+        for key in results:
+            if not output.get(key):
+                output[key] = results[key]
+                continue
+            if key in ["passed", "failed", "skipped"]:
+                for run_id in results.get(key):
+                    if not output.get(key).get(run_id):
+                        output[key][run_id] = results[key][run_id]
+                        continue
+                    output[key][run_id] += results[key][run_id]
+    logging.info(f"MERGED: {output}")
+    return output
+
+
 def mark_results(testrail_session: TestRail, test_results):
     logging.info(f"mark results: object\n{test_results}")
     existing_results = {}
@@ -42,6 +61,8 @@ def mark_results(testrail_session: TestRail, test_results):
 
             # Don't set passed tests to another status.
             test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
+            logging.info(f"==={category}===")
+            logging.info(test_cases)
             testrail_session.update_test_cases(
                 test_results.get("project_id"),
                 testrail_run_id=run_id,
@@ -49,6 +70,120 @@ def mark_results(testrail_session: TestRail, test_results):
                 test_case_ids=test_cases,
                 status=category,
             )
+
+
+def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info: dict):
+    suite_id = suite_info.get("id")
+    suite_description = suite_info.get("description")
+    milestone_id = suite_info.get("milestone_id")
+    config = suite_info.get("config")
+    config_id = suite_info.get("config_id")
+    cases_in_suite = suite_info.get("cases")
+    results = suite_info.get("results")
+    plan_title = expected_plan.get("name")
+
+    logging.info("ORGANIZING")
+    logging.info(f"suite: {suite_id} {suite_description} \nplan {plan_title}")
+    logging.info(f"config {config_id} {config}")
+    logging.info(f"cases: {cases_in_suite}")
+    logging.info(results)
+    suite_entries = [
+        entry
+        for entry in expected_plan.get("entries")
+        if entry.get("suite_id") == suite_id
+    ]
+
+    # Add a missing entry to a plan
+    if not suite_entries:
+        # If no entry, create entry for suite
+        for case_id in cases_in_suite:
+            logging.info("checking on case {case_id}")
+            case = testrail_session.get_test_case(case_id)
+            logging.info(f"Test case {case_id} exists in suite {case.get('suite_id')}.")
+
+        plan_id = expected_plan.get("id")
+        logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
+        logging.info(f"cases: {cases_in_suite}")
+        entry = testrail_session.create_new_plan_entry(
+            plan_id=plan_id,
+            suite_id=suite_id,
+            name=suite_description,
+            description="Automation-generated test plan entry",
+            case_ids=cases_in_suite,
+        )
+
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+
+    if len(suite_entries) != 1:
+        logging.info("Suite entries are broken somehow")
+
+    # There should only be one entry per suite per plan
+    # Check that this entry has a run with the correct config
+    # And if not, make that run
+    entry = suite_entries[0]
+    config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
+    logging.info(f"config runs {config_runs}")
+    if not config_runs:
+        expected_plan = testrail_session.create_test_run_on_plan_entry(
+            plan_id,
+            entry.get("id"),
+            [config_id],
+            description=f"Auto test plan entry: {suite_description}",
+            case_ids=cases_in_suite,
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+        entry = suite_entries[0]
+        logging.info(f"new entry: {entry}")
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+    run = testrail_session.get_run(config_runs[0].get("id"))
+
+    # If the run is missing cases, add them
+    run_cases = run.get("case_ids")
+    if run_cases:
+        expected_case_ids = list(set(run_cases + cases_in_suite))
+        if len(expected_case_ids) > len(run.get("case_ids")):
+            run = testrail_session.update_run_in_entry(
+                run.get("id"), case_ids=expected_case_ids
+            )
+
+    if run.get("is_completed"):
+        logging.info(f"Run {run.get('id')} is already completed.")
+        return {}
+    run_id = run.get("id")
+    passkey = {
+        "passed": ["passed", "xpassed", "warnings"],
+        "failed": ["failed", "xfailed", "error"],
+        "skipped": ["skipped", "deselected"],
+    }
+    test_results = {
+        "project_id": TESTRAIL_FX_DESK_PRJ,
+        "passed": {},
+        "failed": {},
+        "skipped": {},
+    }
+
+    for test_case, outcome in results.items():
+        category = next(status for status in passkey if outcome in passkey.get(status))
+        logging.info(f"Update run {run_id} - {test_case} - {category}")
+        if not test_results[category].get(run_id):
+            test_results[category][run_id] = []
+        test_results[category][run_id].append(
+            {"suite_id": suite_id, "test_case": test_case}
+        )
+
+    return test_results
 
 
 def collect_changes(testrail_session: TestRail, report):
@@ -119,18 +254,15 @@ def collect_changes(testrail_session: TestRail, report):
 
     # Find or add suite-based runs on the plan
     # Store test results for later
-    entry_changes = {"config": config, "changes": {}}
-    test_results = {
-        "project_id": TESTRAIL_FX_DESK_PRJ,
-        "passed": {},
-        "failed": {},
-        "skipped": {},
-    }
-    create_suite = False
 
     last_suite_id = None
+    last_description = None
     results_by_suite = {}
-    for test in report.get("tests"):
+    full_test_results = {}
+    tests = sorted(
+        report.get("tests"), key=lambda item: item.get("metadata").get("suite_id")
+    )
+    for test in tests:
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
         suite_id = int(suite_id_str.replace("S", ""))
         test_case = test.get("metadata").get("test_case")
@@ -148,94 +280,39 @@ def collect_changes(testrail_session: TestRail, report):
         if suite_id != last_suite_id:
             # When we get the last test_case in a suite, add entry, run, results
             if last_suite_id:
-                cases_in_suite = list(results_by_suite[suite_id].keys())
-                suite_entries = [
-                    entry
-                    for entry in expected_plan.get("entries")
-                    if entry.get("suite_id") == suite_id
-                ]
-
-                # Add a missing entry to a plan
-                if not suite_entries:
-                    # If no entry, create entry for suite
-                    plan_id = expected_plan.get("id")
-                    logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
-                    entry = testrail_session.create_new_plan_entry(
-                        plan_id=plan_id,
-                        suite_id=suite_id,
-                        name=suite_description,
-                        description="Automation-generated test plan entry",
-                        case_ids=change.get("case_ids"),
-                    )
-
-                    expected_plan = testrail_session.matching_plan_in_milestone(
-                        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
-                    )
-                    suite_entries = [
-                        entry
-                        for entry in expected_plan.get("entries")
-                        if entry.get("suite_id") == suite_id
-                    ]
-
-                if len(suite_entries) != 1:
-                    logging.info("Suite entries are broken somehow")
-
-                # There should only be one entry per suite per plan
-                # Check that this entry has a run with the correct config
-                # And if not, make that run
-                entry = suite_entries[0]
-                logging.info(
-                    f"For entry {entry['name']}, update if case_ids does not contain {test_case}"
-                )
-                config_runs = [
-                    run for run in entry.get("runs") if run.get("config") == config
-                ]
-
-                logging.info(f"config runs {config_runs}")
-                if not config_runs:
-                    run = testrail_session.create_test_run_on_plan_entry(
-                        plan_id,
-                        entry.get("id"),
-                        [config_id],
-                        description=f"Auto test plan entry: {suite_description}",
-                        case_ids=cases_in_suite,
-                    )
-                    suite_entries = [
-                        entry
-                        for entry in expected_plan.get("entries")
-                        if entry.get("suite_id") == suite_id
-                    ]
-                    entry = suite_entries[0]
-                else:
-                    run = testrail_session.get_run(config_runs[0].get("id"))
-
-                # If the run is missing cases, add them
-                expected_case_ids = list(set(run.get("case_ids") + cases_in_suite))
-                if len(expected_case_ids) > len(run.get("case_ids")):
-                    run = testrail_session.update_run_in_entry(
-                        run.get("id"), case_ids=expected_case_ids
-                    )
-
-                if run.get("is_completed"):
-                    logging.info(f"Run {run.get('id')} is already completed.")
-                    continue
-                run_id = run.get("id")
-                passkey = {
-                    "passed": ["passed", "xpassed", "warnings"],
-                    "failed": ["failed", "xfailed", "error"],
-                    "skipped": ["skipped", "deselected"],
+                logging.info("n-1 run")
+                cases_in_suite = list(results_by_suite[last_suite_id].keys())
+                suite_info = {
+                    "id": last_suite_id,
+                    "description": last_description,
+                    "milestone_id": milestone_id,
+                    "config": config,
+                    "config_id": config_id,
+                    "cases": cases_in_suite,
+                    "results": results_by_suite[last_suite_id],
                 }
-                category = next(
-                    status for status in passkey if outcome in passkey.get(status)
-                )
-                logging.info(f"Update run {run_id} - {test_case} - {category}")
-                if not test_results[category].get(run_id):
-                    test_results[category][run_id] = []
-                test_results[category][run_id].append(
-                    {"suite_id": suite_id, "test_case": test_case}
-                )
-                pass  # check if entry exists
-            else:
-                last_suite_id = suite_id
 
-    return test_results
+                full_test_results = merge_results(
+                    full_test_results,
+                    organize_entries(testrail_session, expected_plan, suite_info),
+                )
+
+        last_suite_id = suite_id
+        last_description = suite_description
+
+    cases_in_suite = list(results_by_suite[last_suite_id].keys())
+    suite_info = {
+        "id": last_suite_id,
+        "description": last_description,
+        "milestone_id": milestone_id,
+        "config": config,
+        "config_id": config_id,
+        "cases": cases_in_suite,
+        "results": results_by_suite[last_suite_id],
+    }
+
+    logging.info(f"n run {last_suite_id}, {last_description}")
+    full_test_results = merge_results(
+        full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
+    )
+    return full_test_results

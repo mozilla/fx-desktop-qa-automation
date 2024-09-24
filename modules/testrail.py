@@ -115,6 +115,9 @@ class TestRail:
 
     # Public Methods
 
+    def get_test_case(self, case_id):
+        return self.client.send_get(f"get_case/{case_id}")
+
     def create_test_run(
         self, testrail_project_id, testrail_milestone_id, name_run, testrail_suite_id
     ):
