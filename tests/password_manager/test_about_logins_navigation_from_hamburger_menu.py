@@ -9,9 +9,9 @@ def test_case():
     return "2241082"
 
 
-def test_about_login_navigation_from_password_hamburger_menu(driver: Firefox):
+def test_about_logins_navigation_from_password_hamburger_menu(driver: Firefox):
     """
-    C2241082 - Verify that clicking the Password option in Hamburger Menu opens about:login page in a new tab
+    C2241082 - Verify that clicking the Password option in Hamburger Menu opens about:logins page in a new tab
     """
 
     panel_ui = PanelUi(driver)
