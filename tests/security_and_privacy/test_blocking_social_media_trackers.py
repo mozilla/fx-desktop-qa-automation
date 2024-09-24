@@ -37,7 +37,7 @@ def test_blocking_social_media_trackers(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy").open()
 
     about_prefs.get_element("cookies-checkbox")
-    about_prefs.get_element("cookies-second-menu-item").click()
+    about_prefs.get_element("cookies-isolate-social-media-option").click()
 
     driver.get(SOCIAL_MEDIA_TRACKERS_URL)
     nav.open_tracker_panel()

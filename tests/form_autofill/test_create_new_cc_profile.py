@@ -3,7 +3,7 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, Navigation
+from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
@@ -31,11 +31,11 @@ def test_create_new_cc_profile(driver: Firefox):
 
     # save CC data by using the fake data
     credit_card_sample_data = util.fake_credit_card_data()
-    about_prefs_cc_popup = AutofillPopup(driver)
+    about_prefs_cc_popup = AboutPrefs(driver)
 
     # add a new CC profile
     about_prefs_cc_popup.get_element(
-        "cc-popup-button", labels=["autofill-manage-add-button"]
+        "panel-popup-button", labels=["autofill-manage-add-button"]
     ).click()
 
     about_prefs.fill_cc_panel_information(credit_card_sample_data)
