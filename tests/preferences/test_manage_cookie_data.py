@@ -54,7 +54,7 @@ def test_manage_cookie_data(driver: Firefox):
     assert selected == "true"
 
     # Click the "Remove Selected" button.
-    about_prefs.get_element("remove-selected-button").click()
+    about_prefs.get_element("remove-selected-cookie-button").click()
 
     # The selected item is removed from the list.
     about_prefs.element_does_not_exist("manage-cookies-site", labels=[COOKIE_SITE])
