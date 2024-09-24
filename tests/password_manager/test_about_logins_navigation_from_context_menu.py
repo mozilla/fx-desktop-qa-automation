@@ -16,8 +16,8 @@ URL_TEST_PAGE = "https://bsky.app/"
 
 def test_about_logins_navigation_from_login_form_context_menu(driver: Firefox):
     """
-    C2241087 - Verify that clicking the Username field and then the Manage Passwords option opens about:logins page in
-    a new tab
+    C2241087 - Verify that right-clicking the Username field in a login form and then the Manage Passwords option
+    from context menu opens about:logins page in a new tab
     """
 
     context_menu = ContextMenu(driver)
