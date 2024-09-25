@@ -1,6 +1,3 @@
-import logging
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC

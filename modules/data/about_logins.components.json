@@ -84,16 +84,6 @@
         "groups": []
     },
 
-    "login-list-item-selected":
-    {
-        "selectorData": "list-item selected",
-        "strategy": "class",
-        "shadowParent": "login-list",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-
     "login-list-item": {
         "selectorData": "list-item",
         "strategy": "class",
