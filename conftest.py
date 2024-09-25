@@ -427,19 +427,6 @@ def driver(
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 
-    if request.node.rep_call.passed:
-        plan_id = os.environ.get("MILESTONE_ID")
-        if plan_id:
-            platform_info = platform.uname()
-            logging.info(f"Get runs from plan {plan_id}")
-            logging.info(f"Filter runs that have suite {suite_id}")
-            logging.info(f"Filter results to match {platform_info}")
-            if platform_info.system == "Darwin":
-                logging.info(f" ...and macos version: {platform.mac_ver()}")
-            logging.info(f"Find test that matches {test_case}")
-            logging.info("If test exists, set to passed")
-            logging.info("If test does not exist, create and set to passed")
-
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):

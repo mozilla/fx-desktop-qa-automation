@@ -175,6 +175,10 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     }
 
     for test_case, outcome in results.items():
+        logging.info(f"{test_case}: {outcome}")
+        if outcome == "rerun":
+            logging.info("Rerun result...skipping...")
+            continue
         category = next(status for status in passkey if outcome in passkey.get(status))
         logging.info(f"Update run {run_id} - {test_case} - {category}")
         if not test_results[category].get(run_id):
@@ -267,12 +271,16 @@ def collect_changes(testrail_session: TestRail, report):
     tests = sorted(tests, key=lambda item: item.get("metadata").get("suite_id"))
     for test in tests:
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
-        suite_id = int(suite_id_str.replace("S", ""))
+        try:
+            suite_id = int(suite_id_str.replace("S", ""))
+        except (ValueError, TypeError):
+            logging.info("No suite number, not reporting...")
+            continue
         test_case = test.get("metadata").get("test_case")
         logging.info(f"METADATA: {test.get('metadata')}")
         try:
             int(test_case)
-        except ValueError:
+        except (ValueError, TypeError):
             logging.info("No test case number, not reporting...")
             continue
 
