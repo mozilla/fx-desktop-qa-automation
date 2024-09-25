@@ -287,5 +287,11 @@
         "selectorData": "label[value='To do']",
         "strategy": "css",
         "groups": []
+    },
+
+    "password-button": {
+        "selectorData": "appMenu-passwords-button",
+        "strategy": "id",
+        "groups": []
     }
- }
+}

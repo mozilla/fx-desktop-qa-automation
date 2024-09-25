@@ -185,3 +185,12 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             history_items = self.get_elements("bookmark-item")
             return history_items
+
+    def redirect_to_about_logins_page(self) -> BasePage:
+        """
+        Opens the about:logins page by clicking the Password option in Hamburger Menu"
+        """
+        self.open_panel_menu()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("password-button").click()
+        return self

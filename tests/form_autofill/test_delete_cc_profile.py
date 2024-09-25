@@ -42,7 +42,7 @@ def test_delete_cc_profile(driver: Firefox):
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # verify there are 2 profiles at first
-    about_prefs_cc_popup = AutofillPopup(driver)
+    about_prefs_cc_popup = AboutPrefs(driver)
     cc_profiles = about_prefs_cc_popup.get_all_saved_cc_profiles()
     assert len(cc_profiles) == 2
 
