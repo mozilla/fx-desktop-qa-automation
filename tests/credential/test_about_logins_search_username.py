@@ -43,5 +43,3 @@ def test_about_logins_search_username(driver_and_saved_logins):
     for e in results_after:
         actual_logins[e.get_attribute("username") + "@" + e.get_attribute("title")] = ""
     about_logins.check_logins_present(actual_logins, logins)
-
-    

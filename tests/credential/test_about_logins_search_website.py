@@ -40,4 +40,3 @@ def test_about_logins_search_website(origins, driver_and_saved_logins):
         actual_logins[e.get_attribute("username") + "@" + e.get_attribute("title")] = ""
     about_logins.check_logins_present(actual_logins, logins)
     assert about_logins.get_element("login-count").get_attribute("innerHTML") == "6 passwords"
-

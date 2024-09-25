@@ -38,7 +38,7 @@ def driver_and_saved_logins(driver: Firefox, faker: Faker, origins):
     Yields a Tuple of the WebDriver object under test and a five-element list of the
     unique usernames added. (Five, because the last element was reused.)
 
-    logins = {"website": ("username", "password")}
+    logins = {"username@website": "password"}
     """
     faker.add_provider(internet)
     faker.add_provider(misc)
