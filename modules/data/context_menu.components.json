@@ -169,7 +169,7 @@
         "groups": []
     },
 
-    "context-manage-passwords": {
+    "context-menu-manage-passwords": {
         "selectorData": "manage-saved-logins",
         "strategy": "id",
         "groups": []

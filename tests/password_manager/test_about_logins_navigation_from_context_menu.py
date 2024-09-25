@@ -23,7 +23,7 @@ def test_about_logins_navigation_from_login_form_context_menu(driver: Firefox):
     # Access the manage passwords in context menu from the username field in the demo login form
     username_field = login.get_element("username-field")
     login.context_click(username_field)
-    context_menu.click_context_item("context-manage-passwords")
+    context_menu.click_context_item("context-menu-manage-passwords")
 
     # Verify that the about:logins page is opened in a new tab
     tabs.wait_for_num_tabs(2)
