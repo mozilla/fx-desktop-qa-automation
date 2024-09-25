@@ -15,6 +15,8 @@ Copyright Gurock Software GmbH. See license.md for details.
 import base64
 import json
 import logging
+import os
+from time import sleep
 
 import requests
 
@@ -149,12 +151,11 @@ class TestRail:
         return self.client.send_post(f"update_run_in_plan_entry/{run_id}", payload)
 
     def matching_milestone(self, testrail_project_id, milestone_name):
-        num_of_milestones_to_check = 10  # check last 10 milestones
         milestones = self._get_milestones(
             testrail_project_id
         )  # returns reverse chronological order
         logging.info(f"Found {len(milestones)} milestones")
-        for milestone in milestones:  # check last 10 api responses
+        for milestone in milestones:
             if milestone_name == milestone["name"]:
                 logging.info(milestone)
                 return milestone
@@ -293,10 +294,10 @@ class TestRail:
         for attempt in range(max_retries):
             try:
                 return api_call(*args)
-            except Exception as e:
+            except Exception:
                 if attempt == max_retries - 1:
                     raise  # Reraise the last exception
-                time.sleep(delay)
+                sleep(delay)
 
 
 def get_release_version():

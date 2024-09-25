@@ -224,7 +224,6 @@ def collect_changes(testrail_session: TestRail, report):
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
     )
     if expected_plan is None:
-        new_plan = True
         logging.info(f"Create plan '{plan_title}' in milestone {milestone_id}")
         expected_plan = testrail_session.create_new_plan(
             TESTRAIL_FX_DESK_PRJ,
@@ -235,8 +234,6 @@ def collect_changes(testrail_session: TestRail, report):
     elif expected_plan.get("is_completed"):
         logging.info(f"Plan found ({expected_plan.get('id')}) but is completed.")
         return None
-    else:
-        new_plan = False
 
     # Find or add correct config for session
 

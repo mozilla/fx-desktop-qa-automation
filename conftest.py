@@ -290,7 +290,7 @@ def machine_config():
         return f"MacOS {mac_major} {uname.machine.lower()}"
     else:
         os_major = uname.version.split(".")[0]
-        return f"{uname.system} {os.major} {uname.machine.lower()}"
+        return f"{uname.system} {os_major} {uname.machine.lower()}"
 
 
 @pytest.fixture
@@ -451,6 +451,18 @@ def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
 
 
 @pytest.fixture()
+def home_folder(sys_platform):
+    """Return the home folder location"""
+    if sys_platform.startswith("Win"):
+        home_folder = os.path.join(
+            os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH")
+        )
+    else:
+        home_folder = os.environ.get("HOME")
+    return home_folder
+
+
+@pytest.fixture()
 def delete_files_regex_string():
     """
     Tell the delete_files fixture re.match() what files to delete.
@@ -460,25 +472,12 @@ def delete_files_regex_string():
 
 
 @pytest.fixture()
-def delete_files(sys_platform, delete_files_regex_string):
+def delete_files(sys_platform, delete_files_regex_string, home_folder):
     """Remove the files after the test finishes, should work for Mac/Linux/MinGW"""
 
-    def _delete_files():
-        if sys_platform.startswith("Win"):
-            if os.environ.get("GITHUB_ACTIONS") == "true":
-                downloads_folder = os.path.join(
-                    "C:", "Users", "runneradmin", "Downloads"
-                )
-            else:
-                home_folder = os.path.join(
-                    os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH")
-                )
-                downloads_folder = os.path.join(home_folder, "Downloads")
-        else:
-            home_folder = os.environ.get("HOME")
-            downloads_folder = os.path.join(home_folder, "Downloads")
-            logging.info(os.path.exists(downloads_folder))
+    downloads_folder = os.path.join(home_folder, "Downloads")
 
+    def _delete_files():
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
             if delete_files_regex.match(file):
