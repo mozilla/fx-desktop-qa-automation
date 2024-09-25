@@ -449,5 +449,11 @@
         "selectorData": "PanelUI-historyMore",
         "strategy": "id",
         "groups": []
+    },
+
+    "bookmark-about-robots": {
+        "selectorData": "menuitem[label='Gort! Klaatu barada nikto!']",
+        "strategy": "css",
+        "groups": []
     }
 }
