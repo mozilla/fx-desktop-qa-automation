@@ -259,9 +259,12 @@ def collect_changes(testrail_session: TestRail, report):
     last_description = None
     results_by_suite = {}
     full_test_results = {}
-    tests = sorted(
-        report.get("tests"), key=lambda item: item.get("metadata").get("suite_id")
-    )
+    tests = [
+        test
+        for test in report.get("tests")
+        if "metadata" in test and "suite_id" in test.get("metadata")
+    ]
+    tests = sorted(tests, key=lambda item: item.get("metadata").get("suite_id"))
     for test in tests:
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
         suite_id = int(suite_id_str.replace("S", ""))

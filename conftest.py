@@ -327,6 +327,11 @@ def pytest_sessionfinish(session):
     tri.mark_results(tr_session, passes)
 
 
+@pytest.fixture()
+def hard_quit():
+    return False
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
@@ -344,6 +349,7 @@ def driver(
     request,
     version,
     json_metadata,
+    hard_quit,
 ):
     """
     Return the webdriver object.
@@ -416,6 +422,8 @@ def driver(
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
     finally:
+        if hard_quit:
+            return
         if "driver" in locals() or "driver" in globals():
             driver.quit()
 

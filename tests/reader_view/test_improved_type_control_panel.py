@@ -17,6 +17,8 @@ themes = [
     ("light", "rgb(255, 255, 255)"),
     ("dark", "rgb(28, 27, 34)"),
     ("sepia", "rgb(244, 236, 216)"),
+    ("contrast", "rgb(0, 0, 0)"),
+    ("gray", "rgb(215, 215, 219)"),
 ]
 fonts = ["sans-serif", "serif", "monospace"]
 alignments = [("left", "start"), ("right", "right"), ("center", "center")]

@@ -9,21 +9,22 @@ from modules.classes.bookmark import Bookmark
 from modules.page_object import GenericPage
 from modules.util import BrowserActions
 
-
 BOOKMARK_URL = "about:robots"
 BOOKMARK_URL_2 = "about:cache"
 
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
+
 @pytest.fixture()
 def test_case():
     return "2084524"
 
+
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_delete_other_bookmarks(driver: Firefox):
     """
-        C2084524: Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
+    C2084524: Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
     """
     nav = Navigation(driver)
     GenericPage(driver, url=BOOKMARK_URL).open()
@@ -51,4 +52,3 @@ def test_delete_other_bookmarks(driver: Firefox):
         nav.context_click("bookmark-about-robots")
         context_menu.click_and_hide_menu("context-menu-delete-page")
         nav.element_not_visible("bookmark-about-robots")
-
