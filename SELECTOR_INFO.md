@@ -160,6 +160,21 @@ Description: Text updated dynamically to reflect change in ping ID
 Location: Line 4 of the about:glean page's 'About testing' process
 Path to .json: modules/data/about_glean.components.json
 ```
+#### about_logins
+```
+Selector Name: login-count
+Selector Data: "count"
+Description: The number of passwords saved/is diplayed
+Location: Top left of the about:logins page, under the add button
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: login-list-item
+Selector Data: "list-item"
+Description: All the saved login items, includes a hidden placeholder
+Location: Left side of the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
