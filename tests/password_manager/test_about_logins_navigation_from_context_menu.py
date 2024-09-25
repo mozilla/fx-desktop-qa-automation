@@ -18,10 +18,10 @@ def test_about_logins_navigation_from_login_form_context_menu(driver: Firefox):
 
     context_menu = ContextMenu(driver)
     tabs = TabBar(driver)
-    test_login = LoginAutofill(driver).open()
+    login = LoginAutofill(driver).open()
 
-    username_field = test_login.get_element("username-field")
-    test_login.context_click(username_field)
+    username_field = login.get_element("username-field")
+    login.context_click(username_field)
     context_menu.click_context_item("context-manage-passwords")
     tabs.wait_for_num_tabs(2)
     tabs.title_contains("Passwords")
