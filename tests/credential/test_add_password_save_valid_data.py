@@ -1,8 +1,9 @@
+import logging
 from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_object import AboutLogins
 
@@ -31,8 +32,17 @@ def test_add_password_save_valid_data(driver: Firefox):
         }
     )
 
+    # Check password added in the listbox
+    about_logins.get_element("login-list-item")
+    logins = about_logins.get_elements("login-list-item")
+    mozilla_login = next(login for login in logins if login.get_attribute("title") == "mozilla.org")
+    assert mozilla_login
+
     # Check the "Sort by:" dropdown from the top part of the Login list becomes active
-    AboutLogins(driver).open()
-    about_logins.get_element("login-sort").click()
+    login_sort = about_logins.get_element("login-sort")
+    about_logins.expect(EC.element_to_be_clickable(login_sort))
 
     # The <number> password from the right side of the "Sort by:" dropdown is updated
+    pass_count = about_logins.get_element("password-count")
+    pass_count_text = pass_count.text
+    assert "1 password" in pass_count_text

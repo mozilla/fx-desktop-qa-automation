@@ -72,6 +72,35 @@
     {
         "selectorData": "login-sort",
         "strategy": "id",
+        "shadowParent": "login-list",
         "groups": []
+    },
+
+    "password-count":
+    {
+        "selectorData": "count",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": []
+    },
+
+    "login-list-item-selected":
+    {
+        "selectorData": "list-item selected",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "login-list-item": {
+        "selectorData": "list-item",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": [
+            "doNotCache"
+        ]
     }
+
 }
