@@ -66,6 +66,15 @@
         "strategy": "class",
         "shadowParent": "form-actions-row",
         "groups": []
+    },
+
+    "login-list-item": {
+        "selectorData": "list-item",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": [
+            "doNotCache"
+        ]
     }
 
 }

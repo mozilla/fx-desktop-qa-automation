@@ -29,3 +29,9 @@ def test_add_password_non_ascii_chars(driver: Firefox):
         }
     )
 
+    # Check password added in the listbox
+    about_logins.get_element("login-list-item")
+    logins = about_logins.get_elements("login-list-item")
+    mozilla_login = next(login for login in logins if login.get_attribute("title") == "mozilla.org")
+    assert mozilla_login
+
