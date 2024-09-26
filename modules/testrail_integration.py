@@ -206,7 +206,7 @@ def collect_changes(testrail_session: TestRail, report):
         os_name = "Linux"
         for word in config.split(" "):
             if word.startswith("x"):
-                arch += f" {word}"
+                arch = word
         release = subprocess.check_output(["lsb_release", "-d"]).decode()
         release = release.split("\t")[-1].strip()
         release = ".".join(release.split(".")[:-1])
