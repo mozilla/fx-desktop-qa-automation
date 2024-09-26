@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import subprocess
 
 from modules import testrail as tr
 from modules.testrail import TestRail
@@ -200,6 +201,14 @@ def collect_changes(testrail_session: TestRail, report):
     (major, minor, build) = [version_match[n] for n in range(1, 4)]
     logging.info(f"major {major} minor {minor} build {build}")
     config = report.get("tests")[0].get("metadata").get("machine_config")
+
+    if "linux" in config.lower():
+        saved_info = "Linux"
+        for word in config.split(" "):
+            if word.startswith("x"):
+                saved_info += f" {word}"
+        release = subprocess.check_output(["lsb_release", "-d"])
+        config = f"{saved_info} {release}"
 
     major_milestone = testrail_session.matching_milestone(
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
