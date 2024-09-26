@@ -203,13 +203,14 @@ def collect_changes(testrail_session: TestRail, report):
     config = report.get("tests")[0].get("metadata").get("machine_config")
 
     if "linux" in config.lower():
-        saved_info = "Linux"
+        os_name = "Linux"
         for word in config.split(" "):
             if word.startswith("x"):
-                saved_info += f" {word}"
+                arch += f" {word}"
         release = subprocess.check_output(["lsb_release", "-d"]).decode()
         release = release.split("\t")[-1].strip()
-        config = f"{saved_info} {release}"
+        release = ".".join(release.split(".")[:-1])
+        config = f"{os_name} {release} {arch}"
 
     major_milestone = testrail_session.matching_milestone(
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
