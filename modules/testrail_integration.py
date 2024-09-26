@@ -95,6 +95,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     ]
 
     # Add a missing entry to a plan
+    plan_id = expected_plan.get("id")
     if not suite_entries:
         # If no entry, create entry for suite
         for case_id in cases_in_suite:
@@ -102,7 +103,6 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             case = testrail_session.get_test_case(case_id)
             logging.info(f"Test case {case_id} exists in suite {case.get('suite_id')}.")
 
-        plan_id = expected_plan.get("id")
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
         logging.info(f"cases: {cases_in_suite}")
         entry = testrail_session.create_new_plan_entry(
@@ -255,10 +255,13 @@ def collect_changes(testrail_session: TestRail, report):
         if tried:
             break
         if not config_matches:
+            logging.info("Creating config...")
             testrail_session.add_config(CONFIG_GROUP_ID, config)
         tried = True
     if len(config_matches) >= 1:
+        # TODO: change above to == 1
         config_id = config_matches[0].get("id")
+        logging.info(f"config id: {config_id}")
     else:
         raise ValueError(f"Should only have one matching TR config: {config}")
 
