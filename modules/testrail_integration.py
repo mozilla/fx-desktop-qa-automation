@@ -208,7 +208,7 @@ def collect_changes(testrail_session: TestRail, report):
             if word.startswith("x"):
                 saved_info += f" {word}"
         release = subprocess.check_output(["lsb_release", "-d"]).decode()
-        release = release.split("\t").strip()
+        release = release.split("\t")[-1].strip()
         config = f"{saved_info} {release}"
 
     major_milestone = testrail_session.matching_milestone(
