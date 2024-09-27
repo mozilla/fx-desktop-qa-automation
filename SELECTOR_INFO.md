@@ -1220,6 +1220,13 @@ Description: Context menu option "Paste"
 Location: Any text field cntext menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-manage-passwords
+Selector Data: selectorData": "manage-saved-logins
+Description: Manage Passwords button
+Location: Any login form field context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
