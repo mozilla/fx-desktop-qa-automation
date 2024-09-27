@@ -13,6 +13,7 @@ from modules.page_object import AboutPrefs, GenericPdf
 def test_case():
     return "936502"
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return r"pdf-example-bookmarks.pdf"
@@ -23,7 +24,9 @@ CONTENT_DISPOSITION_ATTACHMENT_URL = (
 )
 
 
-def test_download_panel_triggered_on_content_disposition_attachment(driver: Firefox, delete_files):
+def test_download_panel_triggered_on_content_disposition_attachment(
+    driver: Firefox, delete_files
+):
     """
     C936502: Ensure that the Always ask option in Firefox Applications settings
     triggers the download panel for PDFs with Content-Disposition: attachment.
