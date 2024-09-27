@@ -502,7 +502,7 @@ Location: Any text field cntext ment
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
-Selector Name: context-manage-passwords
+Selector Name: context-menu-manage-passwords
 Selector Data: selectorData": "manage-saved-logins
 Description: Manage Passwords button
 Location: Any login form field context menu
