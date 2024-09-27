@@ -5,12 +5,6 @@
         "groups": []
     },
 
-    "loaded-image": {
-        "selectorData": "div.img-wrapper > picture.loaded",
-        "strategy": "css",
-        "groups": []
-    },
-
     "card-by-index": {
         "selectorData": "article-ds-card",
         "strategy": "css",
@@ -59,14 +53,6 @@
         "groups": []
     },
 
-    "article-description": {
-        "selectorData": "div[class='meta']",
-        "strategy": "css",
-        "groups": [
-            "articleTile"
-        ]
-    },
-
     "story-sponsored-footer": {
         "selectorData": "article.ds-card > div > div > p.story-sponsored-label",
         "strategy": "css",
@@ -89,14 +75,6 @@
         "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
         "strategy": "xpath",
         "groups": []
-    },
-
-    "sponsored-site-context-menu": {
-        "selectorData": "context-menu",
-        "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
     },
 
     "sponsored-site-context-menu-list": {
