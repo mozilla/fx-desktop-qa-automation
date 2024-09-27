@@ -52,8 +52,9 @@ def mark_results(testrail_session: TestRail, test_results):
             logging.info(f"MARK RESULTS: run {run_id}")
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)
+            logging.info(f"🔑 existing results {existing_results[run_id]}")
             current_results = {
-                result.get("test_case"): result.get("status_id")
+                result.get("case_id"): result.get("status_id")
                 for result in existing_results[run_id]
             }
             suite_id = test_results[category][run_id][0].get("suite_id")
@@ -62,6 +63,7 @@ def mark_results(testrail_session: TestRail, test_results):
             ]
 
             # Don't set passed tests to another status.
+            logging.info(f"🎈 current results {current_results}")
             test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
             logging.info(f"==={category}===")
             logging.info(test_cases)
