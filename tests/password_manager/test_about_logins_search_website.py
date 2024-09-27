@@ -12,7 +12,7 @@ from modules.util import BrowserActions
 def test_case():
     return "2241117"
 
-@pytest.mark.unstable
+
 def test_about_logins_search_website(origins, driver_and_saved_logins):
     """
     C2241117: Check that the search function filters passwords correctly using websites
