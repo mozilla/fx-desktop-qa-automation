@@ -224,6 +224,27 @@ Description: New login page's Save button
 Location: The about:login's new login page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: website-address
+Selector Data: ".origin-input"
+Description: The website address row
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: username-field
+Selector Data: ".detail-row input[name='username']"
+Description: The Username field
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: password-field
+Selector Data: ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']"
+Description: The Password field
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -1220,6 +1241,13 @@ Description: Context menu option "Paste"
 Location: Any text field cntext menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-suggest-strong-password
+Selector Data: "fill-login-generated-password"
+Description: Context menu option from Password field
+Location: Login page - Password field context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -1443,6 +1471,13 @@ Selector Name: submit-button-login
 Selector Data: /html/body/div[1]/form[2]/input[3]
 Description: Login submit button
 Location: Submit button in the login demo page 
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: generated-securely-password
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']"
+Description: Use a Securely Generated Password option
+Location: The dropdown under the password field in a login page
 Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
@@ -1885,6 +1920,20 @@ Selector Name: bookmark-current-tab
 Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: Menu button / hamburger menu
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-key
+Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
+Description: The key icon
+Location: In the Navigation bar, next to the url input field
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-update-doorhanger
+Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
+Description: The password update doorhanger
+Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

@@ -66,6 +66,27 @@
         "strategy": "class",
         "shadowParent": "form-actions-row",
         "groups": []
+    },
+
+    "website-address": {
+        "selectorData": ".origin-input",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "username-field": {
+        "selectorData": ".detail-row input[name='username']",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "password-field": {
+        "selectorData": ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
     }
 
 }
