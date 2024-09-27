@@ -1,9 +1,6 @@
-from typing import List, Tuple
-
 import pytest
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver import Firefox
 
+from selenium.webdriver.common.keys import Keys
 from modules.page_object import AboutLogins
 from modules.util import BrowserActions
 
