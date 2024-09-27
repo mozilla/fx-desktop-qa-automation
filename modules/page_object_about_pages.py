@@ -7,6 +7,7 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
@@ -156,6 +157,24 @@ class AboutLogins(BasePage):
             self.get_element("save-changes-button").click()
             logging.info("Pressed.")
         return self
+
+    def check_logins_present(
+        self, actual_logins: dict, expected_logins: dict, check_password=False
+    ):
+        """
+        Checks that all logins expected are present in the list of elements
+        ----
+        logins: {"username@website": "password"}
+            Example:
+            username: hello, website: mozilla.social, password: pwpwpwpw
+            logins = {"hello@mozilla.social": "pwpwpwpw}
+        """
+        # Check that all created logins are here
+        if not check_password:
+            for login in expected_logins.keys():
+                assert login in actual_logins
+        else:
+            assert expected_logins == actual_logins
 
 
 class AboutPrivatebrowsing(BasePage):
