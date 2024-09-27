@@ -24,6 +24,7 @@ class AboutPrefs(BasePage):
     """
 
     URL_TEMPLATE = "about:preferences#{category}"
+    iframe = None
 
     # number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
@@ -351,6 +352,23 @@ class AboutPrefs(BasePage):
             in ["Data Imported Successfully", "Data Import Complete"]
         )
         self.actions.send_keys(" ").perform()
+        return self
+
+    def get_all_saved_cc_profiles(self) -> List[WebElement]:
+        """Gets the saved credit card profiles in the cc panel"""
+        if self.iframe:
+            with self.driver.switch_to.frame(self.iframe):
+                return self.get_element("cc-saved-options", multiple=True)
+        else:
+            return self.get_element("cc-saved-options", multiple=True)
+
+    def click_popup_panel_button(self, field: str) -> BasePage:
+        """Clicks the popup panel button for the specified field"""
+        if self.iframe:
+            with self.driver.switch_to.frame(self.iframe):
+                self.get_element("panel-popup-button", labels=[field]).click()
+        else:
+            self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
 

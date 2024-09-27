@@ -64,7 +64,7 @@ def test_add_zip_type(
 
     # Open about:preferences and check that zip mime type is present in the application list
     about_prefs.open()
-    about_prefs.element_exists("mime-type", labels=["application/zip"])
+    about_prefs.element_exists("mime-type-item", labels=["application/zip"])
 
     # Remove the directory created as MacOS automatically unzips
     if sys_platform == "Darwin":

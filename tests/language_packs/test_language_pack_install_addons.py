@@ -67,7 +67,7 @@ def test_language_pack_install_from_addons(
     dropdown.select_option(drop_down_name, double_click=True, wait_for_selection=False)
 
     about_prefs.custom_wait(timeout=15).until(
-        lambda _: about_prefs.get_element("html-root").get_attribute("lang")
+        lambda _: about_prefs.get_element("prefs-html-root").get_attribute("lang")
         == shortform
     )
     assert (

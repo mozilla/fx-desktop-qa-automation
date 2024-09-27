@@ -32,11 +32,13 @@ def origins():
 
 
 @pytest.fixture()
-def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
+def driver_and_saved_logins(driver: Firefox, faker: Faker, origins):
     """
     Adds 6 fake logins to the session's about:logins. The final two usernames are the same.
     Yields a Tuple of the WebDriver object under test and a five-element list of the
     unique usernames added. (Five, because the last element was reused.)
+
+    logins = {"username@website": "password"}
     """
     faker.add_provider(internet)
     faker.add_provider(misc)
@@ -56,6 +58,7 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
         )
 
     usernames = []
+    logins = {}
     for i in range(5):
         candidate_username = ""
         while candidate_username == "" or candidate_username[:5] in [
@@ -63,9 +66,13 @@ def driver_and_saved_usernames(driver: Firefox, faker: Faker, origins):
         ]:
             candidate_username = faker.user_name()
         usernames.append(candidate_username)
-        add_login(origins[i], candidate_username, faker.password(length=15))
+        password = faker.password(length=15)
+        add_login(origins[i], candidate_username, password)
+        logins[candidate_username + "@" + origins[i]] = password
 
     # Add a cred with a matching username for a different origin
-    add_login(origins[-1], candidate_username, faker.password(length=15))
+    password = faker.password(length=15)
+    add_login(origins[-1], candidate_username, password)
+    logins[candidate_username + "@" + origins[-1]] = password
 
-    yield (driver, usernames)
+    yield (driver, usernames, logins)

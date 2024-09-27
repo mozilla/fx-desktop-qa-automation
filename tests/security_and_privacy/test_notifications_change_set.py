@@ -29,7 +29,7 @@ def test_notifications_allow(
     driver: Firefox, button_data: str, button_text: str, permission: str
 ):
     """
-    C159150: verifies that changing different settings allows for notifcations to be blocked
+    C159150: verifies that changing different settings allows for notifications to be blocked
     """
     # instantiate objects
     ba = BrowserActions(driver)

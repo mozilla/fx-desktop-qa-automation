@@ -52,12 +52,6 @@
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",
         "groups": []
-    },
-
-    "cc-popup-button": {
-        "selectorData": "button[data-l10n-id='{name}']",
-        "strategy": "css",
-        "groups": []
     }
 }
 
