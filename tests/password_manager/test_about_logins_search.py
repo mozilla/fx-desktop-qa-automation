@@ -1,7 +1,4 @@
-from typing import List, Tuple
-
 import pytest
-from selenium.webdriver import Firefox
 
 from modules.page_object import AboutLogins
 from modules.util import BrowserActions
