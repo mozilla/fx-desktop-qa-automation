@@ -49,6 +49,7 @@ def mark_results(testrail_session: TestRail, test_results):
     existing_results = {}
     for category in ["passed", "failed", "skipped"]:
         for run_id in test_results[category]:
+            logging.info(f"MARK RESULTS: run {run_id}")
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)
             current_results = {
@@ -80,6 +81,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     config = suite_info.get("config")
     config_id = suite_info.get("config_id")
     cases_in_suite = suite_info.get("cases")
+    cases_in_suite = [int(n) for n in cases_in_suite]
     results = suite_info.get("results")
     plan_title = expected_plan.get("name")
 
@@ -151,13 +153,23 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     run = testrail_session.get_run(config_runs[0].get("id"))
 
     # If the run is missing cases, add them
-    run_cases = run.get("case_ids")
+    run_cases = [
+        t.get("case_id") for t in testrail_session.get_test_results(run.get("id"))
+    ]
     if run_cases:
         expected_case_ids = list(set(run_cases + cases_in_suite))
-        if len(expected_case_ids) > len(run.get("case_ids")):
-            run = testrail_session.update_run_in_entry(
-                run.get("id"), case_ids=expected_case_ids
+        logging.info(f"⚔️  received cases {run_cases}")
+        logging.info(f"🪠 expected cases {expected_case_ids}")
+        if len(expected_case_ids) > len(run_cases):
+            new_entry = testrail_session.update_run_in_entry(
+                run.get("id"), case_ids=expected_case_ids, include_all=False
             )
+            run = testrail_session.get_run(config_runs[0].get("id"))
+            run_cases = [
+                t.get("case_id")
+                for t in testrail_session.get_test_results(run.get("id"))
+            ]
+            logging.info(f"🧨 updated cases {run_cases}")
 
     if run.get("is_completed"):
         logging.info(f"Run {run.get('id')} is already completed.")
@@ -304,6 +316,7 @@ def collect_changes(testrail_session: TestRail, report):
             if last_suite_id:
                 logging.info("n-1 run")
                 cases_in_suite = list(results_by_suite[last_suite_id].keys())
+                cases_in_suite = [int(n) for n in cases_in_suite]
                 suite_info = {
                     "id": last_suite_id,
                     "description": last_description,

@@ -75,8 +75,10 @@ class APIClient:
                 files["attachment"].close()
             else:
                 headers["Content-Type"] = "application/json"
-                payload = bytes(json.dumps(data), "utf-8")
-                response = requests.post(url, headers=headers, data=payload)
+                response = requests.post(url, headers=headers, json=data)
+                logging.info(f"📫  {url}")
+                logging.info(response.reason)
+                logging.info(response.request.body)
         else:
             headers["Content-Type"] = "application/json"
             response = requests.get(url, headers=headers)
@@ -147,8 +149,8 @@ class TestRail:
         )
 
     def update_run_in_entry(self, run_id, **kwargs):
-        payload = {k: v for k, v in kwargs.items() if v}
-        return self.client.send_post(f"update_run_in_plan_entry/{run_id}", payload)
+        logging.info(f"update run in entry payload {kwargs}")
+        return self.client.send_post(f"update_run_in_plan_entry/{run_id}", kwargs)
 
     def matching_milestone(self, testrail_project_id, milestone_name):
         milestones = self._get_milestones(
