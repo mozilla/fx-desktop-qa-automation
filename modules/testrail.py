@@ -76,9 +76,6 @@ class APIClient:
             else:
                 headers["Content-Type"] = "application/json"
                 response = requests.post(url, headers=headers, json=data)
-                logging.info(f"📫  {url}")
-                logging.info(response.reason)
-                logging.info(response.request.body)
         else:
             headers["Content-Type"] = "application/json"
             response = requests.get(url, headers=headers)
@@ -121,16 +118,6 @@ class TestRail:
 
     def get_test_case(self, case_id):
         return self.client.send_get(f"get_case/{case_id}")
-
-    def create_test_run(
-        self, testrail_project_id, testrail_milestone_id, name_run, testrail_suite_id
-    ):
-        data = {
-            "name": name_run,
-            "milestone_id": testrail_milestone_id,
-            "suite_id": testrail_suite_id,
-        }
-        return self.client.send_post(f"add_run/{testrail_project_id}", data)
 
     def create_test_run_on_plan_entry(
         self, plan_id, entry_id, config_ids, description=None, case_ids=None
@@ -300,50 +287,3 @@ class TestRail:
                 if attempt == max_retries - 1:
                     raise  # Reraise the last exception
                 sleep(delay)
-
-
-def get_release_version():
-    # Get the current script's directory (absolute path)
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Initialize root_dir as script_dir initially
-    root_dir = script_dir
-
-    # Loop to traverse up until you find the version.txt or reach the filesystem root
-    while root_dir != os.path.dirname(
-        root_dir
-    ):  # Check if root_dir has reached the filesystem root
-        version_file_path = os.path.join(root_dir, "version.txt")
-        if os.path.isfile(version_file_path):
-            break
-        root_dir = os.path.dirname(root_dir)  # Move one directory up
-
-    # Check if version.txt was found
-    if not os.path.isfile(version_file_path):
-        raise FileNotFoundError(
-            "version.txt not found in any of the parent directories."
-        )
-
-    # Read the version from the file
-    with open(version_file_path, "r") as file:
-        version = file.readline().strip()
-
-    return version
-
-
-def get_release_type(version):
-    release_map = {"a": "Alpha", "b": "Beta"}
-    # use generator expression to check each char for key else default to 'RC'
-    product_type = next(
-        (release_map[char] for char in version if char in release_map), "RC"
-    )
-    return product_type
-
-
-def load_testrail_credentials(json_file_path):
-    try:
-        with open(json_file_path, "r") as file:
-            credentials = json.load(file)
-        return credentials
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Failed to load TestRail credentials: {e}")

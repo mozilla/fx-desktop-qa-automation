@@ -6,16 +6,17 @@ import subprocess
 from modules import testrail as tr
 from modules.testrail import TestRail
 
-FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
+FX_PRERC_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)[ab](\d\d?)")
+FX_RC_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)")
+FX_RELEASE_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)\.(\d\d?)")
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
 
 
 def testrail_init() -> TestRail:
-    # Do TestRail init
+    """Connect to a TestRail API session"""
     local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
-    logging.info(f"local = {local}")
     tr_session = tr.TestRail(
         os.environ.get("TESTRAIL_BASE_URL"),
         os.environ.get("TESTRAIL_USERNAME"),
@@ -26,10 +27,9 @@ def testrail_init() -> TestRail:
 
 
 def merge_results(*result_sets) -> dict:
-    # Merge sets of results
+    """Merge dictionaries of test results"""
     output = {}
     for results in result_sets:
-        logging.info(f"merging {results} into {output}")
         for key in results:
             if not output.get(key):
                 output[key] = results[key]
@@ -40,19 +40,17 @@ def merge_results(*result_sets) -> dict:
                         output[key][run_id] = results[key][run_id]
                         continue
                     output[key][run_id] += results[key][run_id]
-    logging.info(f"MERGED: {output}")
     return output
 
 
 def mark_results(testrail_session: TestRail, test_results):
+    """For each type of result, and per run, mark tests to status in batches"""
     logging.info(f"mark results: object\n{test_results}")
     existing_results = {}
     for category in ["passed", "failed", "skipped"]:
         for run_id in test_results[category]:
-            logging.info(f"MARK RESULTS: run {run_id}")
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)
-            logging.info(f"🔑 existing results {existing_results[run_id]}")
             current_results = {
                 result.get("case_id"): result.get("status_id")
                 for result in existing_results[run_id]
@@ -63,10 +61,10 @@ def mark_results(testrail_session: TestRail, test_results):
             ]
 
             # Don't set passed tests to another status.
-            logging.info(f"🎈 current results {current_results}")
             test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
-            logging.info(f"==={category}===")
-            logging.info(test_cases)
+            logging.info(
+                f"Setting the following test cases in run {run_id} to {category}: {test_cases}"
+            )
             testrail_session.update_test_cases(
                 test_results.get("project_id"),
                 testrail_run_id=run_id,
@@ -77,21 +75,28 @@ def mark_results(testrail_session: TestRail, test_results):
 
 
 def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info: dict):
+    """
+    When we get to the level of entries on a TestRail plan, we need to make sure:
+     * the entry exists or is created
+     * a run matching the current config / platform exists or is created
+     * the test cases we care about are on that run or are added
+     * test results are batched by run and result type (passed, skipped, failed)
+    """
+    # Suite and milestone info
     suite_id = suite_info.get("id")
     suite_description = suite_info.get("description")
     milestone_id = suite_info.get("milestone_id")
+
+    # Config
     config = suite_info.get("config")
     config_id = suite_info.get("config_id")
+
+    # Cases and results
     cases_in_suite = suite_info.get("cases")
     cases_in_suite = [int(n) for n in cases_in_suite]
     results = suite_info.get("results")
     plan_title = expected_plan.get("name")
 
-    logging.info("ORGANIZING")
-    logging.info(f"suite: {suite_id} {suite_description} \nplan {plan_title}")
-    logging.info(f"config {config_id} {config}")
-    logging.info(f"cases: {cases_in_suite}")
-    logging.info(results)
     suite_entries = [
         entry
         for entry in expected_plan.get("entries")
@@ -103,9 +108,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     if not suite_entries:
         # If no entry, create entry for suite
         for case_id in cases_in_suite:
-            logging.info("checking on case {case_id}")
             case = testrail_session.get_test_case(case_id)
-            logging.info(f"Test case {case_id} exists in suite {case.get('suite_id')}.")
 
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
         logging.info(f"cases: {cases_in_suite}")
@@ -160,8 +163,6 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     ]
     if run_cases:
         expected_case_ids = list(set(run_cases + cases_in_suite))
-        logging.info(f"⚔️  received cases {run_cases}")
-        logging.info(f"🪠 expected cases {expected_case_ids}")
         if len(expected_case_ids) > len(run_cases):
             new_entry = testrail_session.update_run_in_entry(
                 run.get("id"), case_ids=expected_case_ids, include_all=False
@@ -171,12 +172,13 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
                 t.get("case_id")
                 for t in testrail_session.get_test_results(run.get("id"))
             ]
-            logging.info(f"🧨 updated cases {run_cases}")
 
     if run.get("is_completed"):
         logging.info(f"Run {run.get('id')} is already completed.")
         return {}
     run_id = run.get("id")
+
+    # Gather the test results by category of result
     passkey = {
         "passed": ["passed", "xpassed", "warnings"],
         "failed": ["failed", "xfailed", "error"],
@@ -195,7 +197,6 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             logging.info("Rerun result...skipping...")
             continue
         category = next(status for status in passkey if outcome in passkey.get(status))
-        logging.info(f"Update run {run_id} - {test_case} - {category}")
         if not test_results[category].get(run_id):
             test_results[category][run_id] = []
         test_results[category][run_id].append(
@@ -206,14 +207,46 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
 
 
 def collect_changes(testrail_session: TestRail, report):
-    """doc"""
+    """
+    Determine what structure needs to be built so that we can report TestRail results.
+     * Construct config and plan name
+     * Find the right milestone to report to
+     * Find the right submilestone
+     * Find the right plan to report to, or create it
+     * Find the right config to attach to the run, or create it
+     * Use organize_entries to create the rest of the structure and gather results
+     * Use mark_results to update the test runs
+    """
 
     # Find milestone to attach to
-    version_match = FX_VERSION_RE.match(
-        report.get("tests")[0].get("metadata").get("fx_version")
-    )
-    (major, minor, build) = [version_match[n] for n in range(1, 4)]
-    logging.info(f"major {major} minor {minor} build {build}")
+    channel = os.environ.get("STARFOX_CHANNEL")
+    if not channel:
+        channel = "Beta"
+    if channel == "Release":
+        raise ValueError("Release reporting currently not supported")
+
+    version_str = report.get("tests")[0].get("metadata").get("fx_version")
+    version_match = FX_PRERC_VERSION_RE.match(version_str)
+    if version_match:
+        logging.info(version_match)
+        (major, minor, build) = [version_match[n] for n in range(1, 4)]
+        logging.info(f"major {major} minor {minor} build {build}")
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{minor}", minor)
+            .replace("{build}", build)
+        )
+    else:
+        # Version doesn't look like a normal beta, someone updated to the RC
+        version_match = FX_RC_VERSION_RE.match(version_str)
+        (major, minor) = [version_match[n] for n in range(1, 3)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{minor}", minor)
+            .replace("b{build}", "rc")
+        )
     config = report.get("tests")[0].get("metadata").get("machine_config")
 
     if "linux" in config.lower():
@@ -229,20 +262,12 @@ def collect_changes(testrail_session: TestRail, report):
     major_milestone = testrail_session.matching_milestone(
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
     )
-    channel = os.environ.get("STARFOX_CHANNEL")
-    if not channel:
-        channel = "Beta"
+    logging.info(f"{channel} {major}")
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
 
     # Find plan to attach runs to, create if doesn't exist
-    plan_title = (
-        TESTRAIL_RUN_FMT.replace("{channel}", channel)
-        .replace("{major}", major)
-        .replace("{minor}", minor)
-        .replace("{build}", build)
-    )
     logging.info(f"Plan title: {plan_title}")
     milestone_id = channel_milestone.get("id")
     expected_plan = testrail_session.matching_plan_in_milestone(
@@ -294,6 +319,8 @@ def collect_changes(testrail_session: TestRail, report):
         if "metadata" in test and "suite_id" in test.get("metadata")
     ]
     tests = sorted(tests, key=lambda item: item.get("metadata").get("suite_id"))
+
+    # Iterate through the tests; when we finish a line of same-suite tests, gather them
     for test in tests:
         (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
         try:
@@ -302,7 +329,6 @@ def collect_changes(testrail_session: TestRail, report):
             logging.info("No suite number, not reporting...")
             continue
         test_case = test.get("metadata").get("test_case")
-        logging.info(f"METADATA: {test.get('metadata')}")
         try:
             int(test_case)
         except (ValueError, TypeError):
@@ -337,6 +363,7 @@ def collect_changes(testrail_session: TestRail, report):
         last_suite_id = suite_id
         last_description = suite_description
 
+    # We do need to run this again because we will always have one last suite.
     cases_in_suite = list(results_by_suite[last_suite_id].keys())
     suite_info = {
         "id": last_suite_id,

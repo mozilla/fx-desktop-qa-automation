@@ -276,14 +276,14 @@ def use_profile():
 
 @pytest.fixture(autouse=True)
 def version(fx_executable: str):
+    """Return the Firefox version string"""
     version = check_output([fx_executable, "--version"]).strip().decode()
-    # return version
-    # TODO: Revert to actual version
-    return "Mozilla Firefox 128.0b3"  # safe version to test integration
+    return version
 
 
 @pytest.fixture()
 def machine_config():
+    """Return the os type, version, and architecture for the machine"""
     uname = platform.uname()
     if uname.system == "Darwin":
         mac_major = platform.mac_ver()[0].split(".")[0]
@@ -315,7 +315,7 @@ def pytest_sessionfinish(session):
                 logging.warning("Failed to kill process.")
                 pass
 
-    # TESTRAIL - WILL FACTOR OUT
+    # TestRail reporting
     if not os.environ.get("TESTRAIL_REPORT"):
         logging.info(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
