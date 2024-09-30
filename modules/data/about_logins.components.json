@@ -79,6 +79,28 @@
         "groups": []
     },
 
+    "website-address": {
+        "selectorData": ".origin-input",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "about-logins-page-username-field": {
+        "selectorData": ".detail-row input[name='username']",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "about-logins-page-password-field": {
+        "selectorData": ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+     },
+
+
     "login-sort":
     {
         "selectorData": "login-sort",
