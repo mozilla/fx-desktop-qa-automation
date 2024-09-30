@@ -1,6 +1,6 @@
 import pytest
-
 from selenium.webdriver.common.keys import Keys
+
 from modules.page_object import AboutLogins
 from modules.util import BrowserActions
 
@@ -26,7 +26,10 @@ def test_about_logins_search_username(driver_and_saved_logins):
     results = about_logins.get_elements("login-list-item")
     results = [result for result in results if result.is_displayed()]
     assert len(results) == 2
-    assert about_logins.get_element("login-count").get_attribute("innerHTML") == "2 of 6 passwords"
+    assert (
+        about_logins.get_element("login-count").get_attribute("innerHTML")
+        == "2 of 6 passwords"
+    )
     for item in results:
         assert item.get_attribute("username") == usernames[-1]
         assert item.get_attribute("title") in ("bsky.app", "mozilla.social")
@@ -35,7 +38,10 @@ def test_about_logins_search_username(driver_and_saved_logins):
     about_logins.perform_key_combo(Keys.BACKSPACE * 20)
     results_after = about_logins.get_elements("login-list-item")
     results_after = [result for result in results_after if result.is_displayed()]
-    assert about_logins.get_element("login-count").get_attribute("innerHTML") == "6 passwords"
+    assert (
+        about_logins.get_element("login-count").get_attribute("innerHTML")
+        == "6 passwords"
+    )
     actual_logins = {}
     for e in results_after:
         actual_logins[e.get_attribute("username") + "@" + e.get_attribute("title")] = ""
