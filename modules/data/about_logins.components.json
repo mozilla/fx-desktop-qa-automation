@@ -9,6 +9,15 @@
         ]
     },
 
+    "login-count":
+    {
+        "selectorData": "count",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": [
+            "doNotCache"]
+    },
+
     "create-login-button":
     {
         "selectorData": "create-login-button",
@@ -35,7 +44,9 @@
         "selectorData": "filter",
         "strategy": "class",
         "shadowParent": "login-filter",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "login-item":
@@ -87,6 +98,15 @@
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
+     },
+
+    "login-list-item": {
+        "selectorData": "list-item",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": [
+            "doNotCache"
+        ]
     }
 
 }

@@ -173,5 +173,11 @@
         "selectorData": "fill-login-generated-password",
         "strategy": "id",
         "groups": []
+     },
+
+    "context-menu-manage-passwords": {
+        "selectorData": "manage-saved-logins",
+        "strategy": "id",
+        "groups": []
     }
 }
