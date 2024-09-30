@@ -175,6 +175,7 @@ Description: All the saved login items, includes a hidden placeholder
 Location: Left side of the about:logins page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
 Selector Name: login-list
 Selector Data: "login-list"
 Description: The list box containing the list of saved logins (is a shadow parent)
@@ -238,14 +239,14 @@ Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
-Selector Name: username-field
+Selector Name: about-logins-page-username-field
 Selector Data: ".detail-row input[name='username']"
 Description: The Username field
 Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
-Selector Name: password-field
+Selector Name: about-logins-page-password-field
 Selector Data: ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']"
 Description: The Password field
 Location: The about:login's main login page

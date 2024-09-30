@@ -86,14 +86,14 @@
         "groups": []
     },
 
-    "username-field": {
+    "about-logins-page-username-field": {
         "selectorData": ".detail-row input[name='username']",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
 
-    "password-field": {
+    "about-logins-page-password-field": {
         "selectorData": ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']",
         "strategy": "css",
         "shadowParent": "login-item",
