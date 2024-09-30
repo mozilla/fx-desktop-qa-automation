@@ -100,6 +100,23 @@
         "groups": []
      },
 
+
+    "login-sort":
+    {
+        "selectorData": "login-sort",
+        "strategy": "id",
+        "shadowParent": "login-list",
+        "groups": []
+    },
+
+    "password-count":
+    {
+        "selectorData": "count",
+        "strategy": "class",
+        "shadowParent": "login-list",
+        "groups": []
+    },
+
     "login-list-item": {
         "selectorData": "list-item",
         "strategy": "class",
@@ -108,5 +125,4 @@
             "doNotCache"
         ]
     }
-
 }

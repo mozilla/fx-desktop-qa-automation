@@ -40,7 +40,7 @@ def test_download_pdf_from_context_menu(
     # Right-click on the body of the file and select Save page as
     pdf.context_click(body)
     context_menu = ContextMenu(driver)
-    context_menu.click_context_item("context-menu-save-page-as")
+    context_menu.click_and_hide_menu("context-menu-save-page-as")
 
     # Allow time for the save dialog to appear and handle prompt
     sleep(2)

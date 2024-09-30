@@ -73,7 +73,7 @@ def test_close_multiple_tabs_other_tabs(driver: Firefox):
     # grab second tab and close all other tabs using the context menu
     second_tab = tabs.get_tab(2)
     tabs.context_click(second_tab)
-    tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs")
+    tab_context_menu.click_context_item("context-menu-close-multiple-tabs")
 
     tabs.context_click(second_tab)
     tab_context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-other-tabs")
