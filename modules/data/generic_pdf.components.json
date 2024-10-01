@@ -26,13 +26,13 @@
     },
 
     "zoom-out": {
-        "selectorData": "zoomOut",
+        "selectorData": "zoomOutButton",
         "strategy": "id",
         "groups": []
     },
 
     "zoom-in": {
-        "selectorData": "zoomIn",
+        "selectorData": "zoomInButton",
         "strategy": "id",
         "groups": []
     },
@@ -68,7 +68,7 @@
     },
 
     "page-one-item": {
-        "selectorData": "/html/body/div[1]/div[2]/div[8]/div[2]/div[1]/div[2]/span[2]",
+        "selectorData": "/html/body/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/span[13]",
         "strategy": "xpath",
         "groups": []
     },
