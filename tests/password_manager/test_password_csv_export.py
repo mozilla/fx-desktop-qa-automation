@@ -51,10 +51,12 @@ def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_p
     elif sys_platform == "Linux":
         passwords_csv = os.path.join(home_folder, "passwords.csv")
         downloads_folder = home_folder
+    
+    time.sleep(1)
     assert os.path.exists(passwords_csv), f"The file was not downloaded to {passwords_csv}."
 
     # Delete the password.csv created
     for file in os.listdir(downloads_folder):
         delete_files_regex = re.compile(r"\bpasswords.csv\b")
         if delete_files_regex.match(file):
-            os.remove(os.path.join(downloads_folder, file))
+            os.remove(passwords_csv)
