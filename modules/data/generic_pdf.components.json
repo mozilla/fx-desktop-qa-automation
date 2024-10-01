@@ -38,7 +38,7 @@
     },
 
     "download-button": {
-        "selectorData": "download",
+        "selectorData": "downloadButton",
         "strategy": "id",
         "groups": []
     },
