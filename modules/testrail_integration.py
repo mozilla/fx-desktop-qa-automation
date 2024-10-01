@@ -107,9 +107,6 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     plan_id = expected_plan.get("id")
     if not suite_entries:
         # If no entry, create entry for suite
-        for case_id in cases_in_suite:
-            case = testrail_session.get_test_case(case_id)
-
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
         logging.info(f"cases: {cases_in_suite}")
         entry = testrail_session.create_new_plan_entry(
@@ -164,7 +161,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     if run_cases:
         expected_case_ids = list(set(run_cases + cases_in_suite))
         if len(expected_case_ids) > len(run_cases):
-            new_entry = testrail_session.update_run_in_entry(
+            testrail_session.update_run_in_entry(
                 run.get("id"), case_ids=expected_case_ids, include_all=False
             )
             run = testrail_session.get_run(config_runs[0].get("id"))
