@@ -175,6 +175,738 @@ Description: All the saved login items, includes a hidden placeholder
 Location: Left side of the about:logins page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: login-list
+Selector Data: "login-list"
+Description: The list box containing the list of saved logins (is a shadow parent)
+Location: The about:login's page's sidebar
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: create-login-button
+Selector Data: "create-login-button"
+Description: The add password (+) button
+Location: The about:login's page's sidebar
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: login-filter
+Selector Data: "login-filter"
+Description: The Search passwords text input field (is a shadow parent)
+Location: The about:login's page's sidebar
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: login-filter-input
+Selector Data: "filter"
+Description: The Search passwords text input field
+Location: The about:login's page's sidebar
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: login-item
+Selector Data: "login-item"
+Description: Individual saved login item (is a shadow parent)
+Location: The about:login's page's sidebar
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: login-item-type
+Selector Data: "{name}"
+Description: Individual saved login item
+Location: The about:login's page's sidebar
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: form-actions-row
+Selector Data: "form-actions-row"
+Description: New login page's Cancel and Save button container (is a shadow parent)
+Location: The about:login's new login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: save-changes-button
+Selector Data: "save-changes-button"
+Description: New login page's Save button
+Location: The about:login's new login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: website-address
+Selector Data: ".origin-input"
+Description: The website address row
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: about-logins-page-username-field
+Selector Data: ".detail-row input[name='username']"
+Description: The Username field
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: about-logins-page-password-field
+Selector Data: ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']"
+Description: The Password field
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+#### about_newtab
+```
+Selector Name: incontent-search-input
+Selector Data: "fake-editable"
+Description: The in page search input field
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: card-by-index
+Selector Data: "article-ds-card"
+Description: Tile/card by index
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: loaded-image-by-index
+Selector Data: "article.ds-card:nth-child({index}) > div.img-wrapper > picture.loaded"
+Description: Tile image by index
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: sponsored-site-card
+Selector Data: "top-site-outer"
+Description: Space containing sponsored site card
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: top-site-image-by-index
+Selector Data: ".top-sites-list li:nth-of-type({index}) .top-site-icon.rich-icon"
+Description: Sponsored site card image by index
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: sponsored-site-card-menu-button
+Selector Data: "button[class='context-menu-button icon']"
+Description: Sponsored site card open menu button (…)
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: top-sites-list
+Selector Data: "top-sites-list"
+Description: Element containing all of the Top site cards
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: recommended-by-pocket-list
+Selector Data: "ds-card-grid-include-descriptions"
+Description: Element containing all of the recommended site cards
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: story-sponsored-footer
+Selector Data: "article.ds-card > div > div > p.story-sponsored-label"
+Description: Element containing all of the Sponsored site cards
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: popular-topics-list
+Selector Data: ".ds-navigation > ul"
+Description: Element containing all of the Popular Topics cards
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: recent-activity-section
+Selector Data: "discovery-stream"
+Description: recent Activity section header
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: recent-activity-list
+Selector Data: "//div[following-sibling::div[@class='section-top-bar']]"
+Description: Element containing all of the Recent Activity cards
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: sponsored-site-context-menu-list
+Selector Data: "ul[class=\"context-menu-list\"]"
+Description: A Sponsored tile context menu options list
+Location: The about:newtab page via Sponsored tile Open Menu button (…)
+Path to .json: modules/data/about_newtab.components.json
+```
+```
+Selector Name: body-logo
+Selector Data: "logo"
+Description: The Firefox logo
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+#### about_prefs
+```
+Selector Name: search-engine-dropdown-root
+Selector Data: defaultEngine
+Description: The element containing the search engine options list (is a shadow root)
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-engine-dropmarker
+Selector Data: "dropmarker"
+Description: Button that opens the search engine options list
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: find-in-settings
+Selector Data: "searchInput"
+Description: Find in Settings input field (is a shadow root)
+Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: find-in-settings-input
+Selector Data: "input[placeholder='Find in Settings']"
+Description: Find in Settings input field
+Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: h2-enhanced-tracking-protection
+Selector Data: h2[data-l10n-id='content-blocking-enhanced-tracking-protection']"
+Description: Enhance Tracking Protection sub-header
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: save-and-fill-addresses
+Selector Data: "checkbox[label='Save and fill addresses']"
+Description: Label for Autofill > Save and fill addresses option
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: save-and-fill-payment-methods
+Selector Data: "checkbox[label='Save and fill payment methods']"
+Description: Label for Autofill > Save and fill payment methods option
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: prefs-button
+Selector Data: "button[label^='{name}']"
+Description: Checkbox for a option by label
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: import-browser-data
+Selector Data: "button[id='data-migration']"
+Description: Import Browser Data > Import Data button
+Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: migration-popup
+Selector Data: "button[id='data-migration']"
+Description: Import Browser Data popup (is a shadow root)
+Location: about:preferences#general as result of Import Data button click
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: migration-import-button
+Selector Data: "button.primary.migration-import-button"
+Description: Import data popup Import button
+Location: about:preferences#general as result of Import Data button click
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: migration-progress-header
+Selector Data: "h1#progress-header"
+Description: Import data popup progress
+Location: about:preferences#general as result of Import Data button click
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cc-saved-options
+Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
+Description: The "Add card" modal, containing 4 fields
+Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: panel-popup-button
+Selector Data: "button[data-l10n-id='{name}']"
+Description: Element for a button by label
+Location: about:preferences#privacy popup dialog for adding a new address profile
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: browser-popup
+Selector Data: "dialogFrame"
+Description: The webelement for the iframe that commonly appears
+Location: about:preferences#privacy popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses
+Selector Data: "addresses"
+Description: The element that contains the saved addresses
+Location: about:preferences#privacy Saved Addresses popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses-values
+Selector Data: "#addresses option"
+Description: The element that contains the saved address values
+Location: about:preferences#privacy Saved Addresses popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: panel-popup-stack
+Selector Data: "dialogStack"
+Description: The element that contains the credit card profile values
+Location: about:preferences#privacy Saved payment methods popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-suggestions
+Selector Data: "checkbox[data-l10n-id='search-show-suggestions-option']"
+Description: The Show search suggestions check-box
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: firefox-suggest-nonsponsored
+Selector Data: "firefoxSuggestNonsponsored"
+Description: The Suggestions from Firefox check-box
+Location: about:preferences#search > Address Bar - Firefox Suggest
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: firefox-suggest-sponsored
+Selector Data: "firefoxSuggestSponsored"
+Description: The Suggestions from sponsors check-box
+Location: about:preferences#search > Address Bar - Firefox Suggest
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: prefs-html-root
+Selector Data: "preferences-root"
+Description: The html root element of about:prefs pages
+Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: home-new-tabs-dropdown
+Selector Data: "newTabMode"
+Description: The expander for "New tabs" menu
+Location: about:preferences#home
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: home-new-window-dropdown
+Selector Data: "homeMode"
+Description: The expander for "Homepage and new windows" menu
+Location: about:preferences#home
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: home-new-tabs-dropdown-option-default
+Selector Data: "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]"
+Description: The default option for New tabs menu
+Location: about:preferences#home
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: custom-radio
+Selector Data: "customRadio"
+Description: In Enhanced Tracking Protection, the Custom radio button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-checkbox
+Selector Data: "contentBlockingBlockCookiesCheckbox"
+Description: In Enhanced Tracking Protection, the check-box for Cookies
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-isolate-social-media-option
+Selector Data: "isolateCookiesSocialMedia"
+Description: In Enhanced Tracking Protection, the option for Cookies…, and isolate other…
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: tracking-in-all-windows
+Selector Data: "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']"
+Description: In Enhanced Tracking Protection, the option for Tracking content, In all windows
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: tracking-checkbox
+Selector Data: "contentBlockingTrackingProtectionCheckbox"
+Description: In Enhanced Tracking Protection, the check-box for Tracking content
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cryptominers-checkbox
+Selector Data: "contentBlockingCryptominersCheckbox"
+Description: In Enhanced Tracking Protection, the check-box for Cryptominers
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: known-fingerprints-checkbox
+Selector Data: "contentBlockingFingerprintingCheckbox"
+Description: In Enhanced Tracking Protection, the check-box for Known fingerprinters
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: suspected-fingerprints-checkbox
+Selector Data: "contentBlockingFingerprintingProtectionCheckbox"
+Description: In Enhanced Tracking Protection, the check-box for Suspected fingerprinters
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-shadow-root
+Selector Data: "dialog[buttons='accept,cancel']"
+Description: The Manage Cookies and Site Data dialog root (is a shadow root)
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-manage-data
+Selector Data: "siteDataSettings"
+Description: In Cookies and Site data, the Manage Data… button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-manage-data-sitelist
+Selector Data: "sitesList"
+Description: The list of stored cookies in Manage Cookies and Site Data dialog
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: manage-cookies-site
+Selector Data: "richlistitem[host='{name}']"
+Description: Cookie item in Manage Cookies and Site Data dialog
+Location: about:preferences#privacy Cookies and Site Data subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-selected-cookie-button
+Selector Data: "removeSelected"
+Description: In Manage Cookie and Site Data dialog when a cookie item is selected
+Location: about:preferences#privacy Cookies and Site Data subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-all-button
+Selector Data: "removeAll"
+Description: In Manage Cookie and Site Data dialog
+Location: about:preferences#privacy Cookies and Site Data subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: notifications-allow-button
+Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
+Description: Notification popup Allow button
+Location:
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: notifications-block-button
+Selector Data: "button[class='popup-notification-secondary-button footer-button']"
+Description: Notification popup Block button
+Location:
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: notifications-block-button
+Selector Data: "button[class='popup-notification-secondary-button footer-button']"
+Description: Notification popup Block button
+Location:
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: clear-data-dialog-options
+Selector Data: "hbox.checkbox-label-box"
+Description: The element containing the clear data dialog options
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: clear-data-accept-button
+Selector Data: "[class='button-text'][value='Clear']"
+Description: The clear data dialog Clear button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: manage-data-save-changes-button
+Selector Data: "[class='button-text'][value='Save Changes']"
+Description: The manage data dialog Save Changes button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: permissions-notifications-button
+Selector Data: "notificationSettingsButton"
+Description: Permissions > Notifications > Settings… button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: permissions-notifications-popup-websites
+Selector Data: "permissionsBox"
+Description: Notifications Permissions site list
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: permissions-notifications-popup-websites-item
+Selector Data: "richlistitem[origin='{name}']"
+Description: Notifications Permissions site by name
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: permissions-notifications-popup-websites-item-status
+Selector Data: "website-status"
+Description: Notifications Permissions site status
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: update_available_button
+Selector Data: "updateButton"
+Description: Firefox Updates > Update available button
+Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: up_to_date_button
+Selector Data: "checkForUpdatesButton3"
+Description: Firefox Updates > Check for updates button
+Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-privacy-label
+Selector Data: "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']"
+Description: Message in Cookies and Site data when History is not remembered
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: cookies-delete-on-close
+Selector Data: "deleteOnClose"
+Description: Check box for Delete cookies and site data when Firefox is closed
+Location: about:preferences#privacy Cookies and Site Data subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: logins-ask-to-save-password
+Selector Data: "savePasswords"
+Description: Check box for Ask to save passwords
+Location: about:preferences#privacy Passwords subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: logins-exceptions
+Selector Data: "passwordExceptions"
+Description: Manage Exceptions… button
+Location: about:preferences#privacy Passwords subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: history-privacy-label
+Selector Data: "description[data-l10n-id='history-dontremember-description']"
+Description: Message History is not remembered
+Location: about:preferences#privacy History subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-dropdown
+Selector Data: "primaryBrowserLocale"
+Description: Language local menu list
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-set-alternative-button
+Selector Data: "[data-l10n-id='manage-browser-languages-button']"
+Description: Set Alternatives… button
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-settings-dialog
+Selector Data: "BrowserLanguagesDialog"
+Description: The Language Set Alternatives dialog
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-settings-select
+Selector Data: "[data-l10n-id='browser-languages-select-language']"
+Description: In the Language Set Alternatives dialog, the Select a language to add button
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-settings-search
+Selector Data: "menuitem[value='search']"
+Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-option-by-code
+Selector Data: "menuitem[value='{}']"
+Description: In the Language Set Alternatives dialog, Select a language by language code
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-added-list
+Selector Data: "selectedLocales"
+Description: In the Language Set Alternatives dialog, List of added languages
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-settings-add-button
+Selector Data: "button[data-l10n-id='languages-customize-add']"
+Description: In the Language Set Alternatives dialog, Add button
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: language-settings-ok
+Selector Data: "button[dlgtype='accept']"
+Description: In the Language Set Alternatives dialog, OK button
+Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: history_menulist
+Selector Data: "historyMode"
+Description: Menu for "Firefox will" option
+Location: about:preferences#privacy History subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: mime-type-item
+Selector Data: "richlistitem[type='{item}']"
+Description: Content type option by item
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: mime-type-item-description
+Selector Data: "label[data-l10n-id='applications-use-app-default-label']"
+Description: Content type option default label
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: pdf-content-type
+Selector Data: "//*[local-name()='hbox' and @class='typeContainer']//*[local-name()='label' and @class='typeDescription' and text()='Portable Document Format (PDF)']",
+Description: PDF content type option
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: pdf-actions-menu
+Selector Data: "richlistitem[type='application/pdf'] menulist.actionsMenu"
+Description: PDF content type options list
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+#### about_profiles
+```
+Selector Name: profile-container
+Selector Data: "profiles"
+Description: Element containing list of all profiles
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-default-header
+Selector Data: "ph3[data-l10n-id='profiles-in-use-profile']"
+Description: Element containing the default in use profile
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-profile-name
+Selector Data: "h2[data-l10n-id='profiles-name']"
+Description: Element containing the profile name
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-button
+Selector Data: "button[data-l10n-id='{name}']"
+Description: Element containing the option buttons for the profile
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-table-row-value
+Selector Data: "td"
+Description: Element containing the profile table row values
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+```
+Selector Name: profile-container-item-table-row
+Selector Data: "tr"
+Description: Element containing the profile table row
+Location: about:profiles
+Path to .json: modules/data/about_profiles.components.json
+```
+#### about_telemetry
+```
+Selector Name: category-raw
+Selector Data: "category-raw"
+Description: Raw JSON option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: rawdata-tab
+Selector Data: "//li[@class='tabs-menu-item rawdata ']//a[@id='rawdata-tab']"
+Description: Raw Data tab
+Location: about:telemetry > data:application page
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: events-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='events-section']"
+Description: Events option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
@@ -513,7 +1245,21 @@ Path to .json: modules/data/context_menu.components.json
 Selector Name: context-menu-paste
 Selector Data: "context-paste"
 Description: Context menu option "Paste"
-Location: Any text field cntext ment
+Location: Any text field cntext menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-suggest-strong-password
+Selector Data: "fill-login-generated-password"
+Description: Context menu option from Password field
+Location: Login page - Password field context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-manage-passwords
+Selector Data: selectorData": "manage-saved-logins
+Description: Manage Passwords button
+Location: Any login form field context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -739,6 +1485,13 @@ Selector name: submit-button-login
 Selector Data: /html/body/div[1]/form[2]/input[3]
 Description: Login submit button
 Location: Submit button in the login demo page 
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: generated-securely-password
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']"
+Description: Use a Securely Generated Password option
+Location: The dropdown under the password field in a login page
 Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
@@ -1181,6 +1934,20 @@ Selector name: bookmark-current-tab
 Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: Menu button / hamburger menu
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-key
+Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
+Description: The key icon
+Location: In the Navigation bar, next to the url input field
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-update-doorhanger
+Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
+Description: The password update doorhanger
+Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
