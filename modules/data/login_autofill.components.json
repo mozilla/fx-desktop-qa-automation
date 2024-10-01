@@ -47,5 +47,11 @@
         "selectorData": "/html/body/div[1]/form[2]/input[3]",
         "strategy": "xpath",
         "groups": []
+    },
+
+     "generated-securely-password": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
+        "strategy": "css",
+        "groups": []
     }
 }
