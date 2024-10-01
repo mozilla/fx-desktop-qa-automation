@@ -162,6 +162,19 @@ Path to .json: modules/data/about_glean.components.json
 ```
 #### about_logins
 ```
+Selector Name: login-count
+Selector Data: "count"
+Description: The number of passwords saved/is diplayed
+Location: Top left of the about:logins page, under the add button
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: login-list-item
+Selector Data: "list-item"
+Description: All the saved login items, includes a hidden placeholder
+Location: Left side of the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
 Selector Name: login-list
 Selector Data: "login-list"
 Description: The list box containing the list of saved logins (is a shadow parent)
@@ -172,13 +185,6 @@ Path to .json: modules/data/about_logins.components.json
 Selector Name: create-login-button
 Selector Data: "create-login-button"
 Description: The add password (+) button
-Location: The about:login's page's sidebar
-Path to .json: modules/data/about_logins.components.json
-```
-```
-Selector Name: login-filter
-Selector Data: "login-filter"
-Description: The Search passwords text input field
 Location: The about:login's page's sidebar
 Path to .json: modules/data/about_logins.components.json
 ```
@@ -1218,6 +1224,13 @@ Selector Name: context-menu-paste
 Selector Data: "context-paste"
 Description: Context menu option "Paste"
 Location: Any text field cntext menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-manage-passwords
+Selector Data: selectorData": "manage-saved-logins
+Description: Manage Passwords button
+Location: Any login form field context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
