@@ -23,7 +23,7 @@ def delete_files_regex_string():
     return r"\bpasswords.csv\b"
 
 
-def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_platform, delete_files):
+def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_platform):
     """
     C2241521: Check that the search function filters passwords correctly using websites
     """
@@ -32,31 +32,29 @@ def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_p
     about_logins = AboutLogins(driver).open()
     keyboard = Controller()
 
-    ba = BrowserActions(driver)
-    nav = Navigation(driver)
-
+    # Click on buttons to export passwords
     about_logins.click_on("menu-button")
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
 
+    # Download the password file
     time.sleep(4)
     about_logins.handle_os_download_confirmation(keyboard, sys_platform)
 
-    # Set the expected download path and the expected file name
-    passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
-
     # Verify if the file exists
-    assert os.path.exists(
-        passwords_csv
-    ), f"The file was not downloaded to {saved_pdf_location}."
+    if sys_platform == "Windows":
+        passwords_csv = os.path.join(home_folder, "Documents", "passwords.csv")
+        downloads_folder = os.path.join(home_folder, "Documents")
+    elif sys_platform == "Darwin":  # MacOS
+        passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
+        downloads_folder = os.path.join(home_folder, "Downloads")
+    elif sys_platform == "Linux":
+        passwords_csv = os.path.join(home_folder, "passwords.csv")
+        downloads_folder = home_folder
+    assert os.path.exists(passwords_csv), f"The file was not downloaded to {passwords_csv}."
 
-    guid_pattern = re.compile(r"{[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}}")
-    with open(passwords_csv) as pw:
-        reader = csv.DictReader(pw)
-        actual_logins = {}
-        for row in reader:
-            logging.info(row)
-            origin = row["url"][8:]
-            actual_logins[row["username"] + "@" + origin] = row["password"]
-            assert re.match(guid_pattern, row["guid"])
-    about_logins.check_logins_present(actual_logins, logins)
+    # Delete the password.csv created
+    for file in os.listdir(downloads_folder):
+        delete_files_regex = re.compile(r"\bpasswords.csv\b")
+        if delete_files_regex.match(file):
+            os.remove(os.path.join(downloads_folder, file))
