@@ -1,18 +1,10 @@
-import csv
-import logging
 import time
 import os
 import re
-
 import pytest
-from selenium.webdriver import Firefox
 
 from modules.page_object import AboutLogins
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from pynput.keyboard import Controller, Key
-from modules.util import BrowserActions
-from modules.browser_object import Navigation
+from pynput.keyboard import Controller
 
 @pytest.fixture()
 def test_case():
@@ -41,7 +33,7 @@ def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_p
     time.sleep(4)
     about_logins.handle_os_download_confirmation(keyboard, sys_platform)
 
-    # Verify if the file exists
+    # Verify that the file exists
     if sys_platform == "Windows":
         passwords_csv = os.path.join(home_folder, "Documents", "passwords.csv")
         downloads_folder = os.path.join(home_folder, "Documents")
@@ -51,7 +43,6 @@ def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_p
     elif sys_platform == "Linux":
         passwords_csv = os.path.join(home_folder, "passwords.csv")
         downloads_folder = home_folder
-    
     time.sleep(1)
     assert os.path.exists(passwords_csv), f"The file was not downloaded to {passwords_csv}."
 
