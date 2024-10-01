@@ -44,7 +44,7 @@ def test_type_control_panel_font(driver: Firefox, font: str):
 
     prep_test(web_page, reader_view)
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
 
     reader_view.wait.until(
         lambda _: "sans-serif" in body.value_of_css_property("font-family")
@@ -70,7 +70,7 @@ def test_type_control_panel_size(driver: Firefox, type: str):
 
     prep_test(web_page, reader_view)
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     font_before = int(
         util.remove_all_non_numbers(body.value_of_css_property("--font-size"))
     )
@@ -126,7 +126,7 @@ def test_type_control_panel_content_width(driver: Firefox, width: str):
 
     reader_view.change_slider_element_shadow_parent("toolbar-content-width")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     before_content_width = int(
         util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
     )
@@ -167,7 +167,7 @@ def test_type_control_panel_line_spacing(driver: Firefox, line_height: str):
 
     reader_view.change_slider_element_shadow_parent("toolbar-line-spacing")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     before_block_size = int(
         util.remove_all_non_numbers(body.value_of_css_property("block-size"))
     )

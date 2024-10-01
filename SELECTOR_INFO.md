@@ -1458,6 +1458,99 @@ Description: The Forget Panel's Confirm button
 Location: In the Panel from the "Forget" toolbar button
 Path to .json: modules/data/forget_panel.components.json
 ```
+#### fxa_home
+```
+Selector Name: login-email-input
+Selector Data: "input[type='email']"
+Description: The FxAccount login email input field
+Location: In the FxA login page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: submit-button
+Selector Data: "button[type='submit']"
+Description: The FxAccount login Submit button
+Location: In the FxA login page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signup-password-input
+Selector Data: "[data-testid='new-password-input-field']"
+Description: The FxAccount password input field
+Location: In the FxA signup page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signup-password-repeat-input
+Selector Data: "[data-testid='verify-password-input-field']"
+Description: The FxAccount repeat password input field
+Location: In the FxA signup page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: age-input
+Selector Data: "[data-testid='age-input-field']"
+Description: The FxAccount age input field
+Location: In the FxA signup page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: card-header
+Selector Data: "card-header"
+Description: The FxAccount confirmation code card header
+Location: In the FxA signup page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signup-otp-input
+Selector Data: "[data-testid='confirm-signup-code-input-field']"
+Description: The FxAccount One Time Password entry field
+Location: In the FxA signup page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: login-password-input
+Selector Data: "input[type='password']"
+Description: The FxAccount password input field
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: sign-in-button
+Selector Data: "use-logged-in"
+Description: The FxAccount Signin button
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: otp-input
+Selector Data: "input[inputmode='numeric']"
+Description: The FxAccount One Time Password entry field
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: connected-heading
+Selector Data: "fxa-connected-heading"
+Description: The FxAccount account connected heading
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: continue-browsing-link
+Selector Data: "cad-not-now"
+Description: The continue browsing link
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+#### generic_page
+```
+Selector Name: page-body
+Selector Data: "body"
+Description: An html pages body tag
+Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
 #### google_search
 ```
 Selector Name: search-bar-textarea

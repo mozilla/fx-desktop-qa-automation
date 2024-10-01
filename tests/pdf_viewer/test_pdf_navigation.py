@@ -142,7 +142,7 @@ def test_toolbar_options_cursor(driver: Firefox, temp_pdf):
     # open PDF and get body element
     pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
     pdf_viewer.open_toolbar_menu()
-    body = pdf_viewer.get_element("body")
+    body = pdf_viewer.get_element("pdf-body")
 
     # open the menu and get the current cursor
     pdf_viewer.get_element("toolbar-hand-tool").click()
@@ -168,7 +168,7 @@ def test_toolbar_options_rotate(driver: Firefox, temp_pdf):
     """
     # open the PDF
     pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
-    body = pdf_viewer.get_element("body")
+    body = pdf_viewer.get_element("pdf-body")
     util = Utilities()
 
     # get the original perspective origin

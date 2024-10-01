@@ -1,5 +1,5 @@
 {
-    "body": {
+    "page-body": {
         "selectorData": "body",
         "strategy": "tag",
         "groups": []
