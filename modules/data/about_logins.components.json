@@ -86,6 +86,36 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "menu-button":
+    {
+        "selectorData": "menu-button",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "export-passwords-button":
+    {
+        "selectorData": "button.menuitem-button:nth-child(3)",
+        "strategy": "css",
+        "shadowParent": "menu-button",
+        "groups": []
+    },
+
+    "confirmation-dialog":
+    {
+        "selectorData": "confirmation-dialog",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "continue-export-button":
+    {
+        "selectorData": ".confirm-button.primary.danger-button",
+        "strategy": "css",
+        "shadowParent": "confirmation-dialog",
+        "groups": []
     }
 
 }
