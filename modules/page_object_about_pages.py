@@ -157,8 +157,10 @@ class AboutLogins(BasePage):
             self.get_element("save-changes-button").click()
             logging.info("Pressed.")
         return self
-    
-    def check_logins_present(self, actual_logins: dict, expected_logins: dict, check_password=False):
+
+    def check_logins_present(
+        self, actual_logins: dict, expected_logins: dict, check_password=False
+    ):
         """
         Checks that all logins expected are present in the list of elements
         ----
