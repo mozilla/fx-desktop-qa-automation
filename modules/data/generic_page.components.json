@@ -17,12 +17,6 @@
         "groups": []
     },
 
-    "show-notifications-button": {
-        "selectorData": "button[onclick='notify.show()']",
-        "strategy": "css",
-        "groups": []
-    },
-
     "mediawiki-image": {
         "selectorData": "mw-mmv-image",
         "strategy": "class",
@@ -56,12 +50,6 @@
     "simulated-tracker-dnt-status": {
         "selectorData": "dnt-on",
         "strategy": "id",
-        "groups": []
-    },
-
-    "pdf-link": {
-        "selectorData": "a[href$='.pdf']",
-        "strategy": "css",
         "groups": []
     },
 

@@ -1516,6 +1516,13 @@ Location: In the FxA signin page flow
 Path to .json: modules/data/fxa_home.components.json
 ```
 ```
+Selector Name: signin-otp-input
+Selector Data: "[data-testid='signin-token-code-input-field']"
+Description: The FxAccount One Time Password entry field
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
 Selector Name: sign-in-button
 Selector Data: "use-logged-in"
 Description: The FxAccount Signin button
@@ -1549,6 +1556,83 @@ Selector Name: page-body
 Selector Data: "body"
 Description: An html pages body tag
 Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: container-div
+Selector Data: "container"
+Description: An html pages container class
+Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: authorize-notifications-button
+Selector Data: "button[onclick='notify.authorize()']"
+Description: The notification popup Allow button
+Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: mediawiki-image
+Selector Data: "mw-mmv-image"
+Description: The wikipedia page icon
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-search-bar
+Selector Data: "cdx-text-input__input"
+Description: The wikipedia search field
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-search-button
+Selector Data: "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']"
+Description: The wikipedia search button
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-tracker-block-status
+Selector Data: "blacklisted-blocked"
+Description: The tracker blocked status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-tracker-load-status
+Selector Data: "whitelisted-loaded"
+Description: The tracker allowed status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-tracker-dnt-status
+Selector Data: "dnt-on"
+Description: The Do Not Track status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: clear-history-button-box
+Selector Data: "dialog"
+Description: The Clear History dialog (is a shadow root)
+Location: Clear History dialog
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: clear-history-button
+Selector Data: "button[dlgtype='accept']"
+Description: The Clear button
+Location: Clear History dialog
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: sample-doc-download
+Selector Data: "a[href='https://filesamples.com/samples/document/doc/sample2.doc']"
+Description: Sample download file URL
+Location:
 Path to .json: modules/data/generic_page.components.json
 ```
 #### google_search
