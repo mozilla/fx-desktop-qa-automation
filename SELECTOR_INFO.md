@@ -1429,6 +1429,35 @@ Description: The find toolbar status for reaching the bottom
 Location: In the find toolbar
 Path to .json: modules/data/find_toolbar.components.json
 ```
+#### forget_panel
+```
+Selector Name: forget-five-minutes
+Selector Data: "PanelUI-panic-5min"
+Description: The Forget Panel's option for 5 minutes
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+```
+Selector Name: forget-two-hours
+Selector Data: "PanelUI-panic-2hr"
+Description: The Forget Panel's option for 2 hours
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+```
+Selector Name: forget-one-day
+Selector Data: "PanelUI-panic-day"
+Description: The Forget Panel's option for 1 day
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+```
+Selector Name: forget-confirm-button
+Selector Data: "PanelUI-panic-view-button"
+Description: The Forget Panel's Confirm button
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
 #### google_search
 ```
 Selector Name: search-bar-textarea
