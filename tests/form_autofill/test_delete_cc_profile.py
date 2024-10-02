@@ -13,7 +13,7 @@ def test_case():
     return "122391"
 
 
-@pytest.mark.xfail
+@pytest.mark.unstable
 def test_delete_cc_profile(driver: Firefox):
     """
     C122391, Ensuring that deleting cc profiles will make it so CC does not show up in the grid
