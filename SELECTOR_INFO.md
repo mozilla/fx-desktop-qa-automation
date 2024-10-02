@@ -2804,3 +2804,116 @@ Description: Input field
 Location: Input field in the autofill textarea select demo page
 Path to .json: modules/data/text_area_form_autofill.components.json
 ```
+#### tracker_panel
+```
+Selector Name: tracker-title
+Selector Data: "protections-popup-mainView-panel-header-span"
+Description: Title of the content tracker panel
+Location: Content tracker panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracker-cross-site-tracking
+Selector Data: "protections-popup-category-cookies"
+Description: The Protections popup Cross_site Tracking Cookies option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracker-tracking-content
+Selector Data: "protections-popup-category-trackers"
+Description: The Protection popup Tracking Content option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-social-media
+Selector Data: "protections-popup-category-socialblock"
+Description: The Protection popup Social Media Tackers option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-finger-prints
+Selector Data: "protections-popup-category-fingerprinters"
+Description: The Protection popup Fingerprinters option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-crypto-miners
+Selector Data: "protections-popup-category-cryptominers"
+Description: The Protection popup Cryptominers option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-cross-site-tracking-items
+Selector Data: "vbox[class='protections-popup-cookiesView-list-section']"
+Description: A list of cookies blocked
+Location: The Cross-site tracking cookies blocked panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-cross-site-tracking-items
+Selector Data: "vbox[class='protections-popup-cookiesView-list-section']"
+Description: A list of cookies blocked
+Location: The Cross-site tracking cookies blocked panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-cross-site-tracking-item
+Selector Data: "protections-popup-list-host-label"
+Description: An item in the cookies blocked list
+Location: The Cross-site tracking cookies blocked panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-allowed-content-item
+Selector Data: "protections-popup-list-host-label"
+Description: An item in the cookies allowed list
+Location: The Not blocking tracking content panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-item-container
+Selector Data: "protections-popup-category-list"
+Description: Container of the Protections popup options
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: shield-icon
+Selector Data: "tracking-protection-icon-container"
+Description: Toolbar Shield icon
+Location: The browser URL bar
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: no-trackers-message
+Selector Data: "protections-popup-no-trackers-found-description"
+Description: No Trackers known… message
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-subview
+Selector Data: "protections-popup-trackersView"
+Description: The Cross-site tracking cookies blocked panel
+Location:
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: social-media-tracker-content
+Selector Data: "protections-popup-category-socialblock"
+Description: The Social media trackers panel
+Location:
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: social-media-subview
+Selector Data: "protections-popup-socialblockView"
+Description: List of cookies blocked
+Location: The Social media trackers panel
+Path to .json: modules/data/tracker_panel.components.json
+```
