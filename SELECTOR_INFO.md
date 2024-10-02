@@ -2484,6 +2484,204 @@ Selector name: password-button
 Selector Data: "appMenu-passwords-button"
 Description: Password button
 Location: Hamburger Menu
+Path to .json: modules/data/panel_ui.components.json
+```
+#### reader_view
+```
+Selector name: reader-view-button
+Selector Data: "reader-mode-button"
+Description: Toggle Reader View button
+Location: In the URL bar when visiting a page that supports the feature.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-toolbar
+Selector Data: "div[class='toolbar reader-toolbar']"
+Description: The Reader View toolbar
+Location: In page, when in Reader View mode.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-font-selector
+Selector Data: "font-type-selector"
+Description: The Font options dropdown
+Location: In the Reader View Toolbar Text options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-toolbar-panel-serif
+Selector Data: "serif-button"
+Description: The Serif text option
+Location: In the Reader View Toolbar Text options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-type
+Selector Data: "button.dropdown-toggle.toolbar-button[class$='style-button']"
+Description: The Text and Layout button
+Location: In the Reader View Toolbar
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-size-minus
+Selector Data: "minus-button"
+Description: The decrease font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-textsize-minus
+Selector Data: "text-size-minus-button"
+Description: The decrease font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-size-plus
+Selector Data: "plus-button"
+Description: The decrease font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-textsize-plus
+Selector Data: "text-size-plus-button"
+Description: The increase font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-width-minus
+Selector Data: "content-width-minus-button"
+Description: The content width slide left option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-textsize-plus
+Selector Data: "content-width-plus-button"
+Description: The content width slide right option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-line-height-plus
+Selector Data: "line-height-plus-button"
+Description: The line spacing slide right option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-line-height-minus
+Selector Data: "line-height-minus-button"
+Description: The line spacing slide left option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme
+Selector Data: "button[class='dropdown-toggle toolbar-button colors-button']"
+Description: The Theme button
+Location: In the Reader View Toolbar
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-light
+Selector Data: "light-button"
+Description: The Light theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-dark
+Selector Data: "dark-button"
+Description: The Dark theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-sepia
+Selector Data: "sepia-button"
+Description: The Sepia theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-contrast
+Selector Data: "contrast-button"
+Description: The Contrast theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-gray
+Selector Data: "gray-button"
+Description: The Gray theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-advanced
+Selector Data: "about-reader-advanced-layout-header"
+Description: The Advanced option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-text-align-left
+Selector Data: "left-align-button"
+Description: The align text left option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-text-align-center
+Selector Data: "center-align-button"
+Description: The align text center option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-text-align-right
+Selector Data: "right-align-button"
+Description: The align text right option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-content-width
+Selector Data: "moz-slider[data-l10n-id='about-reader-content-width-label']"
+Description: The content width slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-line-spacing
+Selector Data: "moz-slider[data-l10n-id='about-reader-line-spacing-label']"
+Description: The line spacing slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-character-spacing
+Selector Data: "moz-slider[data-l10n-id='about-reader-character-spacing-label']"
+Description: The character spacing slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-word-spacing
+Selector Data: "moz-slider[data-l10n-id='about-reader-word-spacing-label']"
+Description: The word spacing slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: slider
+Selector Data: "inputSlider"
+Description: The generic slider button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
 ```
 #### text_area_form_autofill
 ```
@@ -2492,5 +2690,4 @@ Selector Data: "street-address"
 Description: Input field 
 Location: Input field in the autofill textarea select demo page
 Path to .json: modules/data/text_area_form_autofill.components.json
-```
 ```
