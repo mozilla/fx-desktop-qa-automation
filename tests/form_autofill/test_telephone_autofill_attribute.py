@@ -34,7 +34,8 @@ def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
     autofill_popup_obj.click_doorhanger_button("save")
 
     # double click telephone attribute
-    address_fill_obj.double_click("form-field", labels=["tel"])
+    address_fill_obj.click_on("form-field", labels=["tel"])
+    address_fill_obj.click_on("form-field", labels=["tel"])
     logging.info(f"The generated phone number: {autofill_sample_data.telephone}")
     first_item = autofill_popup_obj.get_nth_element("1")
 
