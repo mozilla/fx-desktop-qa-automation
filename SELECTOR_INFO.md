@@ -2683,6 +2683,119 @@ Description: The generic slider button
 Location: In the Reader View Toolbar Text and Layout options dialog.
 Path to .json: modules/data/reader_view.components.json
 ```
+#### tab_bar
+```
+Selector name: tab-by-title
+Selector Data: "tab[label='{title}']"
+Description: Finds a tab given the title text
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-by-index
+Selector Data: "tab[linkedpanel$='-{index}']"
+Description: Finds a tab given the index (tab position)
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: newtab-button
+Selector Data: "tabs-newtab-button"
+Description: The new tab (+) button
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-icon-overlay
+Selector Data: "tab-icon-overlay"
+Description: A tab's icon overlay
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-sound-label
+Selector Data: "tab-icon-sound-{status}-label"
+Description: A tab's sound status
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-title
+Selector Data: "tab-text"
+Description: Gets the text of a Tab (it's title)
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: list-all-tabs-button
+Selector Data: "alltabs-button"
+Description: Opens the list tabs
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-menu
+Selector Data: "allTabsMenu-allTabsView"
+Description: The list of open tabs
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-menu-scrollbar
+Selector Data: "#alltabs-popup scrollbox"
+Description: The scrollbar of open tabs list
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-entry
+Selector Data: "all-tabs-item"
+Description: An entry in the open tabs list
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-entry-selected
+Selector Data: "toolbaritem.all-tabs-item[selected='true']"
+Description: A selected tab entry in the open tabs list
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-scrollbox
+Selector Data: "tabbrowser-arrowscrollbox" (is a shadowRoot)
+Description: The tabs scrollbox
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-scrollbox-left-button
+Selector Data: "scrollbutton-up"
+Description: The tab bar scroll left button
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-scrollbox-right-button
+Selector Data: "scrollbutton-down"
+Description: The tab bar scroll right button
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-icon
+Selector Data: "tab-icon-image"
+Description: A tab's favicon image
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-x-icon
+Selector Data: "image[class='tab-close-button close-icon']"
+Description: A tab's Close (X) button
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
