@@ -192,6 +192,7 @@ def test_toolbar_options_rotate(driver: Firefox, temp_pdf):
     assert new_perspective_origin < original_perspective_origin
 
     # rotate counter clockwise
+    pdf_viewer.open_toolbar_menu()
     pdf_viewer.get_element("toolbar-rotate-ccw").click()
 
     # get back to original position and ensure perspective orgin is returned to original position
