@@ -33,7 +33,8 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
     autofill_popup_panel.click_doorhanger_button("save")
 
     # Double-click on the name field to trigger the autocomplete dropdown
-    address_form_fields.double_click("form-field", labels=["street-address"])
+    address_form_fields.click_on("form-field", labels=["street-address"])
+    address_form_fields.click_on("form-field", labels=["street-address"])
 
     # Get the first element from the autocomplete dropdown
     first_item = autofill_popup_panel.get_nth_element(1)
