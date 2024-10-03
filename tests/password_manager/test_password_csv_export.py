@@ -43,6 +43,8 @@ def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform)
         logging.warning("dl:")
         for file in os.listdir(os.path.join(home_folder, "Downloads")):
             logging.warning(file)
+        for file in os.listdir(os.path.join(home_folder, "Desktop")):
+            logging.warning(file)
     else:
         passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
         downloads_folder = os.path.join(home_folder, "Documents")

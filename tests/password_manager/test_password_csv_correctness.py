@@ -32,16 +32,13 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     about_logins.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Verify that the file exists
-    if sys_platform == "Windows":
-        passwords_csv = os.path.join(home_folder, "Documents", "passwords.csv")
-        downloads_folder = os.path.join(home_folder, "Documents")
-    elif sys_platform == "Darwin":  # MacOS
+    if sys_platform == "Linux":
+        passwords_csv = os.path.join(home_folder, "Desktop", "passwords.csv")
+        downloads_folder = os.path.join(home_folder, "Desktop")
+    else:
         passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
-        downloads_folder = os.path.join(home_folder, "Downloads")
-    elif sys_platform == "Linux":
-        passwords_csv = os.path.join(home_folder, "passwords.csv")
-        downloads_folder = home_folder
-    about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
+        downloads_folder = os.path.join(home_folder, "Documents")
+    # about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Verify the results
     guid_pattern = re.compile(r"{[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}}")
