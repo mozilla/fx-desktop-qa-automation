@@ -11,14 +11,10 @@ from pynput.keyboard import Controller
 def test_case():
     return "2241522"
 
-@pytest.fixture()
-def delete_files_regex_string():
-    return r"\bpasswords.csv\b"
 
-
-def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_platform):
+def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_platform):
     """
-    C2241521: Check that the search function filters passwords correctly using websites
+    C2241521: Check that password.csv displays the correct information
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
@@ -44,8 +40,7 @@ def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_p
     elif sys_platform == "Linux":
         passwords_csv = os.path.join(home_folder, "passwords.csv")
         downloads_folder = home_folder
-    time.sleep(1)
-    assert os.path.exists(passwords_csv), f"The file was not downloaded to {passwords_csv}."
+    about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Verify the results
     guid_pattern = re.compile(r"{[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}}")

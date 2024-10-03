@@ -10,14 +10,10 @@ from pynput.keyboard import Controller
 def test_case():
     return "2241521"
 
-@pytest.fixture()
-def delete_files_regex_string():
-    return r"\bpasswords.csv\b"
 
-
-def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_platform):
+def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform):
     """
-    C2241521: Check that the search function filters passwords correctly using websites
+    C2241521: Check that password.csv can be downloaded from about:logins
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
@@ -43,8 +39,7 @@ def test_about_logins_search_website(driver_and_saved_logins, home_folder, sys_p
     elif sys_platform == "Linux":
         passwords_csv = os.path.join(home_folder, "passwords.csv")
         downloads_folder = home_folder
-    time.sleep(1)
-    assert os.path.exists(passwords_csv), f"The file was not downloaded to {passwords_csv}."
+    about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Delete the password.csv created
     for file in os.listdir(downloads_folder):
