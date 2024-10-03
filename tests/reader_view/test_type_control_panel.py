@@ -38,7 +38,7 @@ def test_type_control_panel_font(driver: Firefox):
     reader_view.open_reader_view_searchbar()
     reader_view.click_toolbar_option("toolbar-type")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
 
     reader_view.wait.until(
         lambda _: "sans-serif" in body.value_of_css_property("font-family")
@@ -64,7 +64,7 @@ def test_type_control_panel_size(driver: Firefox, type: str):
     reader_view.open_reader_view_searchbar()
     reader_view.click_toolbar_option("toolbar-type")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     font_before = int(
         util.remove_all_non_numbers(body.value_of_css_property("--font-size"))
     )
@@ -99,7 +99,7 @@ def test_type_control_panel_width(driver: Firefox, type: str):
     reader_view.open_reader_view_searchbar()
     reader_view.click_toolbar_option("toolbar-type")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     width_before = int(
         util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
     )
@@ -139,7 +139,7 @@ def test_type_control_panel_line_height(driver: Firefox, type: str):
     reader_view.open_reader_view_searchbar()
     reader_view.click_toolbar_option("toolbar-type")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     height_before = int(
         util.remove_all_non_numbers(body.value_of_css_property("height"))
     )
@@ -173,7 +173,7 @@ def test_type_control_panel_themes(driver: Firefox, theme: str, intended_color: 
     reader_view.open_reader_view_searchbar()
     reader_view.click_toolbar_option("toolbar-type")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     reader_view.get_element(f"toolbar-theme-{theme}").click()
 
     reader_view.wait.until(

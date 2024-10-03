@@ -1,13 +1,5 @@
 {
     "context": "chrome",
-    "tab-bar-root": {
-        "selectorData": "tabbrowser-arrowscrollbox",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-
     "tab-by-title": {
         "selectorData": "tab[label='{title}']",
         "strategy": "css",

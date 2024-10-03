@@ -1429,6 +1429,212 @@ Description: The find toolbar status for reaching the bottom
 Location: In the find toolbar
 Path to .json: modules/data/find_toolbar.components.json
 ```
+#### forget_panel
+```
+Selector Name: forget-five-minutes
+Selector Data: "PanelUI-panic-5min"
+Description: The Forget Panel's option for 5 minutes
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+```
+Selector Name: forget-two-hours
+Selector Data: "PanelUI-panic-2hr"
+Description: The Forget Panel's option for 2 hours
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+```
+Selector Name: forget-one-day
+Selector Data: "PanelUI-panic-day"
+Description: The Forget Panel's option for 1 day
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+```
+Selector Name: forget-confirm-button
+Selector Data: "PanelUI-panic-view-button"
+Description: The Forget Panel's Confirm button
+Location: In the Panel from the "Forget" toolbar button
+Path to .json: modules/data/forget_panel.components.json
+```
+#### fxa_home
+```
+Selector Name: login-email-input
+Selector Data: "input[type='email']"
+Description: The FxAccount login email input field
+Location: In the FxA login page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: submit-button
+Selector Data: "button[type='submit']"
+Description: The FxAccount login Submit button
+Location: In the FxA login page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signup-password-input
+Selector Data: "[data-testid='new-password-input-field']"
+Description: The FxAccount password input field
+Location: In the FxA signup page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signup-password-repeat-input
+Selector Data: "[data-testid='verify-password-input-field']"
+Description: The FxAccount repeat password input field
+Location: In the FxA signup page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: age-input
+Selector Data: "[data-testid='age-input-field']"
+Description: The FxAccount age input field
+Location: In the FxA signup page
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: card-header
+Selector Data: "card-header"
+Description: The FxAccount confirmation code card header
+Location: In the FxA signup page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signup-otp-input
+Selector Data: "[data-testid='confirm-signup-code-input-field']"
+Description: The FxAccount One Time Password entry field
+Location: In the FxA signup page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: login-password-input
+Selector Data: "input[type='password']"
+Description: The FxAccount password input field
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signin-otp-input
+Selector Data: "[data-testid='signin-token-code-input-field']"
+Description: The FxAccount One Time Password entry field
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: sign-in-button
+Selector Data: "use-logged-in"
+Description: The FxAccount Signin button
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: otp-input
+Selector Data: "input[inputmode='numeric']"
+Description: The FxAccount One Time Password entry field
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: connected-heading
+Selector Data: "fxa-connected-heading"
+Description: The FxAccount account connected heading
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: continue-browsing-link
+Selector Data: "cad-not-now"
+Description: The continue browsing link
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+#### generic_page
+```
+Selector Name: page-body
+Selector Data: "body"
+Description: An html pages body tag
+Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: container-div
+Selector Data: "container"
+Description: An html pages container class
+Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: authorize-notifications-button
+Selector Data: "button[onclick='notify.authorize()']"
+Description: The notification popup Allow button
+Location: Generic html page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: mediawiki-image
+Selector Data: "mw-mmv-image"
+Description: The wikipedia page icon
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-search-bar
+Selector Data: "cdx-text-input__input"
+Description: The wikipedia search field
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-search-button
+Selector Data: "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']"
+Description: The wikipedia search button
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-tracker-block-status
+Selector Data: "blacklisted-blocked"
+Description: The tracker blocked status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-tracker-load-status
+Selector Data: "whitelisted-loaded"
+Description: The tracker allowed status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-tracker-dnt-status
+Selector Data: "dnt-on"
+Description: The Do Not Track status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: clear-history-button-box
+Selector Data: "dialog"
+Description: The Clear History dialog (is a shadow root)
+Location: Clear History dialog
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: clear-history-button
+Selector Data: "button[dlgtype='accept']"
+Description: The Clear button
+Location: Clear History dialog
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: sample-doc-download
+Selector Data: "a[href='https://filesamples.com/samples/document/doc/sample2.doc']"
+Description: Sample download file URL
+Location:
+Path to .json: modules/data/generic_page.components.json
+```
 #### google_search
 ```
 Selector Name: search-bar-textarea
@@ -2278,6 +2484,317 @@ Selector name: password-button
 Selector Data: "appMenu-passwords-button"
 Description: Password button
 Location: Hamburger Menu
+Path to .json: modules/data/panel_ui.components.json
+```
+#### reader_view
+```
+Selector name: reader-view-button
+Selector Data: "reader-mode-button"
+Description: Toggle Reader View button
+Location: In the URL bar when visiting a page that supports the feature.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-toolbar
+Selector Data: "div[class='toolbar reader-toolbar']"
+Description: The Reader View toolbar
+Location: In page, when in Reader View mode.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-font-selector
+Selector Data: "font-type-selector"
+Description: The Font options dropdown
+Location: In the Reader View Toolbar Text options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-toolbar-panel-serif
+Selector Data: "serif-button"
+Description: The Serif text option
+Location: In the Reader View Toolbar Text options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-type
+Selector Data: "button.dropdown-toggle.toolbar-button[class$='style-button']"
+Description: The Text and Layout button
+Location: In the Reader View Toolbar
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-size-minus
+Selector Data: "minus-button"
+Description: The decrease font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-textsize-minus
+Selector Data: "text-size-minus-button"
+Description: The decrease font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-size-plus
+Selector Data: "plus-button"
+Description: The decrease font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-textsize-plus
+Selector Data: "text-size-plus-button"
+Description: The increase font size button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-width-minus
+Selector Data: "content-width-minus-button"
+Description: The content width slide left option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-textsize-plus
+Selector Data: "content-width-plus-button"
+Description: The content width slide right option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-line-height-plus
+Selector Data: "line-height-plus-button"
+Description: The line spacing slide right option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-line-height-minus
+Selector Data: "line-height-minus-button"
+Description: The line spacing slide left option
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme
+Selector Data: "button[class='dropdown-toggle toolbar-button colors-button']"
+Description: The Theme button
+Location: In the Reader View Toolbar
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-light
+Selector Data: "light-button"
+Description: The Light theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-dark
+Selector Data: "dark-button"
+Description: The Dark theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-sepia
+Selector Data: "sepia-button"
+Description: The Sepia theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-contrast
+Selector Data: "contrast-button"
+Description: The Contrast theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-theme-gray
+Selector Data: "gray-button"
+Description: The Gray theme button
+Location: In the Reader View Toolbar Theme options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-advanced
+Selector Data: "about-reader-advanced-layout-header"
+Description: The Advanced option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-text-align-left
+Selector Data: "left-align-button"
+Description: The align text left option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-text-align-center
+Selector Data: "center-align-button"
+Description: The align text center option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-text-align-right
+Selector Data: "right-align-button"
+Description: The align text right option dropdown
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-content-width
+Selector Data: "moz-slider[data-l10n-id='about-reader-content-width-label']"
+Description: The content width slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-line-spacing
+Selector Data: "moz-slider[data-l10n-id='about-reader-line-spacing-label']"
+Description: The line spacing slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-character-spacing
+Selector Data: "moz-slider[data-l10n-id='about-reader-character-spacing-label']"
+Description: The character spacing slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: toolbar-word-spacing
+Selector Data: "moz-slider[data-l10n-id='about-reader-word-spacing-label']"
+Description: The word spacing slider
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: slider
+Selector Data: "inputSlider"
+Description: The generic slider button
+Location: In the Reader View Toolbar Text and Layout options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+#### tab_bar
+```
+Selector name: tab-by-title
+Selector Data: "tab[label='{title}']"
+Description: Finds a tab given the title text
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-by-index
+Selector Data: "tab[linkedpanel$='-{index}']"
+Description: Finds a tab given the index (tab position)
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: newtab-button
+Selector Data: "tabs-newtab-button"
+Description: The new tab (+) button
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-icon-overlay
+Selector Data: "tab-icon-overlay"
+Description: A tab's icon overlay
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-sound-label
+Selector Data: "tab-icon-sound-{status}-label"
+Description: A tab's sound status
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-title
+Selector Data: "tab-text"
+Description: Gets the text of a Tab (it's title)
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: list-all-tabs-button
+Selector Data: "alltabs-button"
+Description: Opens the list tabs
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-menu
+Selector Data: "allTabsMenu-allTabsView"
+Description: The list of open tabs
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-menu-scrollbar
+Selector Data: "#alltabs-popup scrollbox"
+Description: The scrollbar of open tabs list
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-entry
+Selector Data: "all-tabs-item"
+Description: An entry in the open tabs list
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: all-tabs-entry-selected
+Selector Data: "toolbaritem.all-tabs-item[selected='true']"
+Description: A selected tab entry in the open tabs list
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-scrollbox
+Selector Data: "tabbrowser-arrowscrollbox" (is a shadowRoot)
+Description: The tabs scrollbox
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-scrollbox-left-button
+Selector Data: "scrollbutton-up"
+Description: The tab bar scroll left button
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-scrollbox-right-button
+Selector Data: "scrollbutton-down"
+Description: The tab bar scroll right button
+Location: In the tabbed browser when tab overflow has occurred.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-icon
+Selector Data: "tab-icon-image"
+Description: A tab's favicon image
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector name: tab-x-icon
+Selector Data: "image[class='tab-close-button close-icon']"
+Description: A tab's Close (X) button
+Location: In the tabbed browser.
+Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill
 ```
@@ -2287,4 +2804,116 @@ Description: Input field
 Location: Input field in the autofill textarea select demo page
 Path to .json: modules/data/text_area_form_autofill.components.json
 ```
+#### tracker_panel
+```
+Selector Name: tracker-title
+Selector Data: "protections-popup-mainView-panel-header-span"
+Description: Title of the content tracker panel
+Location: Content tracker panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracker-cross-site-tracking
+Selector Data: "protections-popup-category-cookies"
+Description: The Protections popup Cross_site Tracking Cookies option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracker-tracking-content
+Selector Data: "protections-popup-category-trackers"
+Description: The Protection popup Tracking Content option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-social-media
+Selector Data: "protections-popup-category-socialblock"
+Description: The Protection popup Social Media Tackers option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-finger-prints
+Selector Data: "protections-popup-category-fingerprinters"
+Description: The Protection popup Fingerprinters option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-crypto-miners
+Selector Data: "protections-popup-category-cryptominers"
+Description: The Protection popup Cryptominers option
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-cross-site-tracking-items
+Selector Data: "vbox[class='protections-popup-cookiesView-list-section']"
+Description: A list of cookies blocked
+Location: The Cross-site tracking cookies blocked panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-cross-site-tracking-items
+Selector Data: "vbox[class='protections-popup-cookiesView-list-section']"
+Description: A list of cookies blocked
+Location: The Cross-site tracking cookies blocked panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-cross-site-tracking-item
+Selector Data: "protections-popup-list-host-label"
+Description: An item in the cookies blocked list
+Location: The Cross-site tracking cookies blocked panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-allowed-content-item
+Selector Data: "protections-popup-list-host-label"
+Description: An item in the cookies allowed list
+Location: The Not blocking tracking content panel
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-item-container
+Selector Data: "protections-popup-category-list"
+Description: Container of the Protections popup options
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: shield-icon
+Selector Data: "tracking-protection-icon-container"
+Description: Toolbar Shield icon
+Location: The browser URL bar
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: no-trackers-message
+Selector Data: "protections-popup-no-trackers-found-description"
+Description: No Trackers known… message
+Location: The Protections panel from the shield icon
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: tracking-subview
+Selector Data: "protections-popup-trackersView"
+Description: The Cross-site tracking cookies blocked panel
+Location:
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: social-media-tracker-content
+Selector Data: "protections-popup-category-socialblock"
+Description: The Social media trackers panel
+Location:
+Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: social-media-subview
+Selector Data: "protections-popup-socialblockView"
+Description: List of cookies blocked
+Location: The Social media trackers panel
+Path to .json: modules/data/tracker_panel.components.json
 ```

@@ -60,12 +60,6 @@
         "groups": []
     },
 
-    "tracking-item-container-label": {
-        "selectorData": "protections-popup-cookies-category-label",
-        "strategy": "id",
-        "groups": []
-    },
-
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",

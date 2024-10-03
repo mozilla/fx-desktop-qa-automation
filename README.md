@@ -71,7 +71,7 @@ Launch the build manually one time to navigate through any system permission dia
 - --html=report.html (creates an html report file, report.html, in top project directory)
 
 - On Failure:
-  - rerun failed tests: `pytest -lf` 
+  - rerun failed tests: `pytest --lf`
   - rerun the test suite as above - run: `pytest`
   - or just the failed test; i.e.: `pytest test_amazon.py`
 
