@@ -11,6 +11,7 @@ def test_case():
     return "2241521"
 
 
+@pytest.mark.headed
 def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform):
     """
     C2241521: Check that password.csv can be downloaded from about:logins
