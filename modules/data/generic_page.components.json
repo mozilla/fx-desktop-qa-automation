@@ -1,5 +1,5 @@
 {
-    "body": {
+    "page-body": {
         "selectorData": "body",
         "strategy": "tag",
         "groups": []
@@ -13,12 +13,6 @@
 
     "authorize-notifications-button": {
         "selectorData": "button[onclick='notify.authorize()']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "show-notifications-button": {
-        "selectorData": "button[onclick='notify.show()']",
         "strategy": "css",
         "groups": []
     },
@@ -56,12 +50,6 @@
     "simulated-tracker-dnt-status": {
         "selectorData": "dnt-on",
         "strategy": "id",
-        "groups": []
-    },
-
-    "pdf-link": {
-        "selectorData": "a[href$='.pdf']",
-        "strategy": "css",
         "groups": []
     },
 

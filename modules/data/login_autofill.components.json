@@ -34,19 +34,25 @@
     "username-login-field": {
         "selectorData": "/html/body/div[1]/form[2]/input[1]",
         "strategy": "xpath",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "password-login-field": {
         "selectorData": "/html/body/div[1]/form[2]/input[2]",
         "strategy": "xpath",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "submit-button-login": {
         "selectorData": "/html/body/div[1]/form[2]/input[3]",
         "strategy": "xpath",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
      "generated-securely-password": {

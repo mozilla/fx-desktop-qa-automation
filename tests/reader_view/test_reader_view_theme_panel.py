@@ -35,7 +35,7 @@ def test_reader_view_theme_panel(driver: Firefox, theme: str, intended_color: st
     reader_view.open_reader_view_searchbar()
     reader_view.click_toolbar_option("toolbar-theme")
 
-    body = web_page.get_element("body")
+    body = web_page.get_element("page-body")
     reader_view.get_element(f"toolbar-theme-{theme}").click()
 
     reader_view.wait.until(

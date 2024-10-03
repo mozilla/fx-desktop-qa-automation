@@ -323,7 +323,7 @@ class LoginAutofill(Autofill):
         def submit(self) -> None:
             if self.submit_button is None:
                 self.submit_button = self.parent.get_element("submit-button-login")
-            self.submit_button.get_element()
+            self.submit_button.click()
 
 
 class AddressFill(Autofill):
