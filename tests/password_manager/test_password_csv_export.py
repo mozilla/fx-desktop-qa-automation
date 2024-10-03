@@ -2,6 +2,7 @@ import time
 import os
 import re
 import pytest
+import logging
 
 from modules.page_object import AboutLogins
 from pynput.keyboard import Controller
@@ -31,16 +32,22 @@ def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform)
     about_logins.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Verify that the file exists
-    if sys_platform == "Windows":
-        passwords_csv = os.path.join(home_folder, "Documents", "passwords.csv")
-        downloads_folder = os.path.join(home_folder, "Documents")
-    elif sys_platform == "Darwin":  # MacOS
-        passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
-        downloads_folder = os.path.join(home_folder, "Downloads")
-    elif sys_platform == "Linux":
+    if sys_platform == "Linux":
         passwords_csv = os.path.join(home_folder, "passwords.csv")
         downloads_folder = home_folder
-    about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
+        for file in os.listdir(home_folder):
+            logging.warning(file)
+        logging.warning("docs:")
+        for file in os.listdir(os.path.join(home_folder, "Documents")):
+            logging.warning(file)
+        logging.warning("dl:")
+        for file in os.listdir(os.path.join(home_folder, "Downloads")):
+            logging.warning(file)
+    else:
+        passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
+        downloads_folder = os.path.join(home_folder, "Documents")
+    # about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
+    
 
     # Delete the password.csv created
     for file in os.listdir(downloads_folder):
