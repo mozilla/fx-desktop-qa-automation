@@ -19,7 +19,7 @@ def test_zoom_pdf_viewer_toolbar(driver: Firefox, fillable_pdf_url: str, control
     """
     pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
 
-    body = pdf_page.get_element("body")
+    body = pdf_page.get_element("pdf-body")
     before_scale_factor = float(body.value_of_css_property("--scale-factor"))
 
     if control == "out":
@@ -43,7 +43,7 @@ def test_zoom_pdf_viewer_keys(driver: Firefox, fillable_pdf_url: str, control: s
     """
     pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
 
-    body = pdf_page.get_element("body")
+    body = pdf_page.get_element("pdf-body")
     before_scale_factor = float(body.value_of_css_property("--scale-factor"))
 
     if control == "out":

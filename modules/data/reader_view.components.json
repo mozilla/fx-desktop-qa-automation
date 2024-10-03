@@ -11,9 +11,9 @@
         "groups": []
     },
 
-    "reader-toolbar-panel": {
-        "selectorData": "dropdown-popup",
-        "strategy": "class",
+    "toolbar-font-selector": {
+        "selectorData": "font-type-selector",
+        "strategy": "id",
         "groups": []
     },
 
@@ -83,6 +83,12 @@
         "groups": []
     },
 
+    "toolbar-theme": {
+        "selectorData": "button[class='dropdown-toggle toolbar-button colors-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "toolbar-theme-light": {
         "selectorData": "light-button",
         "strategy": "class",
@@ -113,8 +119,8 @@
         "groups": []
     },
 
-    "toolbar-font-selector": {
-        "selectorData": "font-type-selector",
+    "toolbar-advanced": {
+        "selectorData": "about-reader-advanced-layout-header",
         "strategy": "id",
         "groups": []
     },
@@ -134,12 +140,6 @@
     "toolbar-text-align-right": {
         "selectorData": "right-align-button",
         "strategy": "class",
-        "groups": []
-    },
-
-    "toolbar-advanced": {
-        "selectorData": "about-reader-advanced-layout-header",
-        "strategy": "id",
         "groups": []
     },
 
@@ -170,12 +170,6 @@
     "slider": {
         "selectorData": "inputSlider",
         "strategy": "id",
-        "groups": []
-    },
-
-    "toolbar-theme": {
-        "selectorData": "button[class='dropdown-toggle toolbar-button colors-button']",
-        "strategy": "css",
         "groups": []
     }
 }
