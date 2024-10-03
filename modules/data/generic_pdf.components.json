@@ -19,7 +19,7 @@
         "groups": []
     },
 
-    "body": {
+    "pdf-body": {
         "selectorData": "viewer",
         "strategy": "id",
         "groups": []
@@ -154,12 +154,6 @@
     "added-goomy-image": {
         "selectorData": "canvas[aria-label='goomy.png']",
         "strategy": "css",
-        "groups": []
-    },
-
-    "pdf-body": {
-        "selectorData": "viewer",
-        "strategy": "id",
         "groups": []
     }
 
