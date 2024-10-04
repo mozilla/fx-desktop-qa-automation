@@ -842,6 +842,13 @@ Description: PDF content type options list
 Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: exceptions-item
+Selector Data: "//*[@id='permissionsBox']//*[@origin]"
+Description: Website list
+Location: about:preferences#privacy in Exceptions - Saved Passwords modal
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1014,6 +1021,13 @@ Selector Name: doorhanger-dropdown-never-save-cards-button
 Selector Data: "menuitem[label='Never save cards']"
 Description: The hidden button in save credit card doorhanger.
 Location: Inside the autofill save credit card doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-never-save-login-button
+Selector Data: "menuitem[label='Never save']"
+Description: The hidden button in save login doorhanger.
+Location: Inside the autofill save login doorhanger, accessible by clicking the down arrow next to the "Not now" button
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```

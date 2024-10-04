@@ -252,6 +252,16 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
+    def get_password_exceptions_popup_iframe(self) -> WebElement:
+        """
+        Returns the iframe object for the Password Exceptions dialog panel in the popup.
+        """
+        # Click on the "Password Exceptions" button
+        self.get_element("logins-exceptions").click()
+        # Get the iframe element for the popup
+        iframe = self.get_element("browser-popup")
+        return iframe
+
     def get_clear_cookie_data_value(self) -> int:
         """
         With the 'Clear browsing data and cookies' popup open,
