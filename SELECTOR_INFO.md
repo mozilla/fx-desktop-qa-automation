@@ -252,6 +252,20 @@ Description: The Password field
 Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: login-sort
+Selector Data: "login-sort"
+Description: Sort login
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: password-count
+Selector Data: "count"
+Description: Password count
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
