@@ -850,35 +850,35 @@ Location: about:preferences#privacy Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: current-pw
+Selector Name: current-password
 Selector Data: "message"
 Description: Input for current primary password
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: enter-new-pw
+Selector Name: enter-new-password
 Selector Data: "pw1"
 Description: Input for new primary password
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: reenter-new-pw
+Selector Name: reenter-new-password
 Selector Data: "pw2"
 Description: Input for new primary password again
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: submit-pw
+Selector Name: submit-password
 Selector Data: "button[label^='OK']
 Description: Ok button to submit the new primary password
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-pw-box
+Selector Name: primary-password-box
 Selector Data: "changemp"
 Description: Shadow parent of the OK and cancel button
 Location: about:preferences#privacy Primary Password popup

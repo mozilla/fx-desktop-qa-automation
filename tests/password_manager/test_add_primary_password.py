@@ -1,7 +1,8 @@
 import pytest
-import time
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.support import expected_conditions as EC
+
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
@@ -11,7 +12,7 @@ def test_case():
     return "2245178"
 
 
-def test_add_primary_pw(driver: Firefox):
+def test_add_primary_password(driver: Firefox):
     """
     C2245178: Verify that a primary password can be added in about:preferences#privacy
     """
@@ -25,16 +26,16 @@ def test_add_primary_pw(driver: Firefox):
     ba.switch_to_iframe_context(primary_pw_popup)
 
     # Current password field is empty and cannot be changed
-    is_disabled = about_prefs.get_element("current-pw").get_attribute("disabled")
+    is_disabled = about_prefs.get_element("current-password").get_attribute("disabled")
     assert is_disabled
 
     # Primary password can be changed
-    about_prefs.get_element("enter-new-pw").send_keys("securePassword1")
-    about_prefs.get_element("reenter-new-pw").send_keys("securePassword1")
-    about_prefs.click_on("submit-pw")
+    about_prefs.get_element("enter-new-password").send_keys("securePassword1")
+    about_prefs.get_element("reenter-new-password").send_keys("securePassword1")
+    about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    time.sleep(2)
     with driver.context(driver.CONTEXT_CHROME):
+        about_prefs.wait_for_num_tabs(2)
         driver.switch_to.window(driver.window_handles[-1])
         assert driver.title == "Password Change Succeeded"
