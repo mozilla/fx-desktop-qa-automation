@@ -26,13 +26,13 @@ def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform,
     about_logins.click_on("menu-button")
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
-    screenshot(driver, opt_ci)
+    screenshot("right_after")
 
     # Download the password file
     time.sleep(4)
-    screenshot(driver, opt_ci)
+    screenshot("waited")
     about_logins.handle_os_download_confirmation(keyboard, sys_platform)
-    screenshot(driver, opt_ci)
+    screenshot("downloaded")
 
     # Verify that the file exists
     if sys_platform == "Linux":
