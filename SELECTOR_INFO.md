@@ -1058,6 +1058,13 @@ Description: "Add" button
 Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: password-update-doorhanger
+Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
+Description: The password update doorhanger
+Location: In the Navigation bar, next to the url input field, after the key icon was pressed
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -1257,9 +1264,16 @@ Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-manage-passwords
-Selector Data: selectorData": "manage-saved-logins
+Selector Data: selectorData": "manage-saved-logins"
 Description: Manage Passwords button
 Location: Any login form field context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-reveal-password
+Selector Data: selectorData": "context-reveal-password"
+Description: Context menu option from Password field
+Location: Login page - Password field context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -2147,13 +2161,6 @@ Selector Name: password-notification-key
 Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
 Description: The key icon
 Location: In the Navigation bar, next to the url input field
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: password-update-doorhanger
-Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
-Description: The password update doorhanger
-Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

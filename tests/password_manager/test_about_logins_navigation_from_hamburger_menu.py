@@ -17,7 +17,10 @@ def test_about_logins_navigation_from_password_hamburger_menu(driver: Firefox):
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
 
+    # Access Passwords inside the Hamburger Menu
     panel_ui.open_panel_menu()
     panel_ui.redirect_to_about_logins_page()
+
+    # Verify that the about:logins page is opened in a new tab
     tabs.wait_for_num_tabs(2)
     tabs.title_contains("Passwords")

@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TabBar
+from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import LoginAutofill
 
@@ -27,6 +27,7 @@ def test_save_login_via_doorhanger(driver: Firefox):
     autofill_popup_panel = AutofillPopup(driver)
     tabs = TabBar(driver)
     nav = Navigation(driver)
+    context_menu = ContextMenu(driver)
 
     # Creating an instance of the LoginForm within the LoginAutofill page object
     login_form = LoginAutofill.LoginForm(login_autofill)
@@ -48,7 +49,11 @@ def test_save_login_via_doorhanger(driver: Firefox):
     username_element = login_autofill.get_element("username-login-field")
     assert username_element.get_attribute("value") == "testUser"
 
+    # Select Reveal password from password field context menu for headed run purpose only
+    password_field = login_autofill.get_element("password-login-field")
+    login_autofill.context_click(password_field)
+    context_menu.click_context_item("context-menu-reveal-password")
+
     # Verify the password field is filled with a value that match the length of the saved password
     password_element = login_autofill.get_element("password-login-field")
-    masked_password_value = password_element.get_attribute("value")
-    assert len(masked_password_value) == 12
+    assert password_element.get_attribute("value") == "testPassword"
