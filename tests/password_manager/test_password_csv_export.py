@@ -6,7 +6,6 @@ import logging
 
 from modules.page_object import AboutLogins
 from pynput.keyboard import Controller
-from conftest import screenshot_content
 
 @pytest.fixture()
 def test_case():
@@ -14,7 +13,7 @@ def test_case():
 
 
 @pytest.mark.headed
-def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform, opt_ci):
+def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform, opt_ci, screenshot):
     """
     C2241521: Check that password.csv can be downloaded from about:logins
     """
@@ -27,13 +26,13 @@ def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform,
     about_logins.click_on("menu-button")
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
-    screenshot_content(driver, opt_ci, "csv_export")
+    screenshot(driver, opt_ci)
 
     # Download the password file
     time.sleep(4)
-    screenshot_content(driver, opt_ci, "csv_export")
+    screenshot(driver, opt_ci)
     about_logins.handle_os_download_confirmation(keyboard, sys_platform)
-    screenshot_content(driver, opt_ci, "csv_export")
+    screenshot(driver, opt_ci)
 
     # Verify that the file exists
     if sys_platform == "Linux":
