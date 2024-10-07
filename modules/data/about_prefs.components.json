@@ -443,5 +443,42 @@
         "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
         "strategy": "css",
         "groups": []
+    }, 
+
+    "use-primary-password": {
+        "selectorData": "useMasterPassword",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "current-pw": {
+        "selectorData": "message",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "enter-new-pw": {
+        "selectorData": "pw1",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "reenter-new-pw": {
+        "selectorData": "pw2",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "submit-pw": {
+        "selectorData": "button[label^='OK']",
+        "strategy": "css",
+        "shadowParent": "primary-pw-box",
+        "groups": []
+    },
+
+    "primary-pw-box": {
+        "selectorData": "changemp",
+        "strategy": "id",
+        "groups": []
     }
 }
