@@ -52,8 +52,7 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     assert username_element.get_attribute("value") == ""
 
     password_element = login_autofill.get_element("password-login-field")
-    masked_password_value = password_element.get_attribute("value")
-    assert len(masked_password_value) == 0
+    assert password_element.get_attribute("value") == ""
 
     # Navigate to about:preferences#privacy and open Exceptions - Saved Passwords modal
     about_prefs = AboutPrefs(driver, category="privacy").open()
