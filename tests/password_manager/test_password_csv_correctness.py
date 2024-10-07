@@ -1,11 +1,11 @@
 import os
-import re
-import csv
 import time
+
 import pytest
+from pynput.keyboard import Controller, Key
 
 from modules.page_object import AboutLogins
-from pynput.keyboard import Controller
+
 
 @pytest.fixture()
 def test_case():
@@ -29,7 +29,7 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
 
     # Download the password file
     time.sleep(4)
-    about_logins.handle_os_download_confirmation(keyboard, sys_platform)
+    keyboard.tap(Key.enter)
 
     # Verify that the file exists
     if sys_platform == "Linux":

@@ -1,11 +1,13 @@
-import time
+import logging
 import os
 import re
+import time
+
 import pytest
-import logging
+from pynput.keyboard import Controller, Key
 
 from modules.page_object import AboutLogins
-from pynput.keyboard import Controller
+
 
 @pytest.fixture()
 def test_case():
@@ -13,7 +15,9 @@ def test_case():
 
 
 @pytest.mark.headed
-def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform, opt_ci, screenshot):
+def test_password_csv_export(
+    driver_and_saved_logins, home_folder, sys_platform, opt_ci, screenshot
+):
     """
     C2241521: Check that password.csv can be downloaded from about:logins
     """
@@ -31,7 +35,8 @@ def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform,
     # Download the password file
     time.sleep(4)
     screenshot("waited")
-    about_logins.handle_os_download_confirmation(keyboard, sys_platform)
+    keyboard.tap(Key.enter)
+    # about_logins.handle_os_download_confirmation(keyboard, sys_platform)
     screenshot("downloaded")
 
     # Verify that the file exists
@@ -52,7 +57,6 @@ def test_password_csv_export(driver_and_saved_logins, home_folder, sys_platform,
         passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
         downloads_folder = os.path.join(home_folder, "Documents")
     # about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
-    
 
     # Delete the password.csv created
     for file in os.listdir(downloads_folder):
