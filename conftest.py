@@ -23,12 +23,6 @@ TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
 
 
-@pytest.fixture
-def json_metadata():
-    # Initialize an empty dictionary to store metadata
-    return {}
-
-
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     """
     Screenshots the current browser, saves with appropriate test name and date for reference
