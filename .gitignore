@@ -1,5 +1,6 @@
 
 /venv/
+.report.json
 .DS_Store
 test*.txt
 fx_location
@@ -190,6 +191,6 @@ tests/test_scratch.py
 # Credentials
 credentials.json
 
-# dont ignore
+# Do not ignore
 !data/goomy.png
 !tests/downloads

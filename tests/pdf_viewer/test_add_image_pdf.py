@@ -9,6 +9,11 @@ from modules.page_object import GenericPdf
 
 
 @pytest.fixture()
+def test_case():
+    return "2228202"
+
+
+@pytest.fixture()
 def temp_pdf(tmp_path):
     loc = tmp_path / "boeing_brochure.pdf"
     copyfile("data/boeing_brochure.pdf", loc)
