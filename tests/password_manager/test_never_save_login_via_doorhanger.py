@@ -45,11 +45,13 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     # Verify the username and password fields have empty values
     login_autofill.open()
 
+    # Verify the username field is empty
     username_element = login_autofill.get_element("username-login-field")
-    assert username_element.get_attribute("value") == ""
+    login_autofill.wait.until(lambda _: username_element.get_attribute("value") == "")
 
+    # Verify the password field is empty
     password_element = login_autofill.get_element("password-login-field")
-    assert password_element.get_attribute("value") == ""
+    login_autofill.wait.until(lambda _: password_element.get_attribute("value") == "")
 
     # Navigate to about:preferences#privacy and open Exceptions - Saved Passwords modal
     about_prefs = AboutPrefs(driver, category="privacy").open()
