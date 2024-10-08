@@ -440,3 +440,13 @@ class AboutAddons(BasePage):
         """
         assert not self.enabled_theme_matches(original_theme)
         return self
+
+    def set_primary_password(self, password):
+        # Set the primary password in both fields
+        self.get_element("primary-password-checkbox").click()
+        primary_password_input = self.driver.switch_to.active_element
+        primary_password_input.send_keys(password)
+        primary_password_input.send_keys(Keys.TAB)
+        confirm_password_input = self.driver.switch_to.active_element
+        confirm_password_input.send_keys(password)
+        confirm_password_input.send_keys(Keys.ENTER)

@@ -124,5 +124,11 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "show-password-checkbox": {
+        "selectorData": "login-item-password-reveal-checkbox",
+        "strategy": "id",
+        "groups": []
     }
 }
