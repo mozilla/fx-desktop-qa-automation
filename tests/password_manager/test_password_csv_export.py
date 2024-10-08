@@ -56,7 +56,7 @@ def test_password_csv_export(
     else:
         passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
         downloads_folder = os.path.join(home_folder, "Documents")
-    # about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
+    about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Delete the password.csv created
     for file in os.listdir(downloads_folder):
