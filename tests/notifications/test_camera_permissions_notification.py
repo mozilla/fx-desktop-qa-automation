@@ -1,6 +1,7 @@
 import pytest
 
 from selenium.webdriver import Firefox
+from modules.browser_object import Navigation
 from modules.page_object_generics import GenericPage
 
 
@@ -26,6 +27,7 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
     """
     # Instatiate Objects
+    nav = Navigation(driver)
     web_page = GenericPage(driver, url=TEST_URL).open()
     web_page.elements |= temp_selectors
 
@@ -33,9 +35,7 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     web_page.click_on("camera-only")
 
     # Verify that the notification is displayed
-    with driver.context(driver.CONTEXT_CHROME):
-        popup_notification = web_page.get_element("popup-notification")
-        assert popup_notification.get_attribute("label") == "Allow "
-        assert popup_notification.get_attribute("name") == "mozilla.github.io"
-        assert popup_notification.get_attribute("endlabel") == " to use your camera?"
+    nav.element_attribute_contains("popup-notification", "label", "Allow ")
+    nav.element_attribute_contains("popup-notification", "name", "mozilla.github.io")
+    nav.element_attribute_contains("popup-notification", "endlabel", " to use your camera?")
     

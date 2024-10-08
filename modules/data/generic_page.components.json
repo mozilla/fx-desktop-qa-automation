@@ -70,12 +70,6 @@
         "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
         "strategy": "css",
         "groups": []
-    },
-
-    "popup-notification": {
-        "selectorData": "popupnotification",
-        "strategy": "tag",
-        "groups": []
-        
     }
+    
 }

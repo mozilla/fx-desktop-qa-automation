@@ -1691,13 +1691,6 @@ Description: Sample download file URL
 Location:
 Path to .json: modules/data/generic_page.components.json
 ```
-```
-Selector Name: popup-notification
-Selector Data: "popupnotification"
-Description: The popup notification
-Location:
-Path to .json: modules/data/generic_page.components.json
-```
 #### google_search
 ```
 Selector Name: search-bar-textarea
