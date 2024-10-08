@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, TabBar
+from modules.browser_object import ContextMenu, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import LoginAutofill
 
@@ -25,7 +25,6 @@ def test_update_login_via_doorhanger(driver: Firefox):
 
     login_autofill = LoginAutofill(driver).open()
     autofill_popup_panel = AutofillPopup(driver)
-    tabs = TabBar(driver)
     nav = Navigation(driver)
     context_menu = ContextMenu(driver)
 
@@ -37,8 +36,6 @@ def test_update_login_via_doorhanger(driver: Firefox):
     login_form.fill_password("testPassword")
     login_form.submit()
     autofill_popup_panel.click_doorhanger_button("save")
-
-    tabs.switch_to_new_tab()
 
     # Create new objects to prevent stale web elements
     new_login_autofill = LoginAutofill(driver).open()
@@ -56,9 +53,7 @@ def test_update_login_via_doorhanger(driver: Firefox):
     autofill_popup_panel.click_doorhanger_button("update")
     nav.element_not_visible("password-notification-key")
 
-    # Open the login form in a new tab
-    tabs.switch_to_new_tab()
-    login_autofill.open()
+    new_login_autofill.open()
 
     # Select Reveal password from password field context menu for headed run purpose only
     password_field = login_autofill.get_element("password-login-field")
