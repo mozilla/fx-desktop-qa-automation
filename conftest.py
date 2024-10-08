@@ -445,7 +445,7 @@ def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
     """
 
     def screenshot_wrapper(filename: str) -> str:
-        return _screenshot_whole_screen(filename, driver, opt_ci)
+        return _screenshot(filename, driver, opt_ci)
 
     return screenshot_wrapper
 
