@@ -43,9 +43,12 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
 
     # Verify the username field has the saved value
     username_element = login_autofill.get_element("username-login-field")
-    assert username_element.get_attribute("value") == "username"
+    login_autofill.wait.until(
+        lambda _: username_element.get_attribute("value") == "username"
+    )
 
     # Verify the password field is filled with a value that match the length of the saved password
     password_element = login_autofill.get_element("password-login-field")
-    masked_password_value = password_element.get_attribute("value")
-    assert len(masked_password_value) == 8
+    login_autofill.wait.until(
+        lambda _: len(password_element.get_attribute("value")) == 8
+    )
