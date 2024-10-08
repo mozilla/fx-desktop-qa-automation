@@ -43,7 +43,9 @@ def test_update_login_via_doorhanger(driver: Firefox):
 
     # Verify the initial password value
     password_element = login_autofill.get_element("password-login-field")
-    assert password_element.get_attribute("value") == "testPassword"
+    login_autofill.wait.until(
+        lambda _: password_element.get_attribute("value") == "testPassword"
+    )
 
     # Add several characters inside the password field in demo page, update the login credentials via the doorhanger
     # and see the doorhanger is dismissed
@@ -62,4 +64,6 @@ def test_update_login_via_doorhanger(driver: Firefox):
 
     # Verify the password matches updated password value
     password_element = login_autofill.get_element("password-login-field")
-    assert password_element.get_attribute("value") == "testPasswordUpdate"
+    login_autofill.wait.until(
+        lambda _: password_element.get_attribute("value") == "testPasswordUpdate"
+    )

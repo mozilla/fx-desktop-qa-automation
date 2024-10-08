@@ -44,7 +44,9 @@ def test_save_login_via_doorhanger(driver: Firefox):
     login_autofill.open()
 
     username_element = login_autofill.get_element("username-login-field")
-    assert username_element.get_attribute("value") == "testUser"
+    login_autofill.wait.until(
+        lambda _: username_element.get_attribute("value") == "testUser"
+    )
 
     # Select Reveal password from password field context menu for headed run purpose only
     password_field = login_autofill.get_element("password-login-field")
@@ -53,4 +55,6 @@ def test_save_login_via_doorhanger(driver: Firefox):
 
     # Verify the password matches the password value
     password_element = login_autofill.get_element("password-login-field")
-    assert password_element.get_attribute("value") == "testPassword"
+    login_autofill.wait.until(
+        lambda _: password_element.get_attribute("value") == "testPassword"
+    )
