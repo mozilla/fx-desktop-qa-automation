@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, Navigation, TabBar
+from modules.browser_object import AutofillPopup, Navigation
 from modules.page_object import AboutPrefs, LoginAutofill
 from modules.util import BrowserActions
 
@@ -27,7 +27,6 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
 
     login_autofill = LoginAutofill(driver).open()
     autofill_popup_panel = AutofillPopup(driver)
-    tabs = TabBar(driver)
     nav = Navigation(driver)
     ba = BrowserActions(driver)
 
@@ -43,11 +42,9 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     autofill_popup_panel.click_doorhanger_button("never-save-login")
     nav.element_not_visible("password-notification-key")
 
-    # Open demo page in a new tab
-    tabs.switch_to_new_tab()
+    # Verify the username and password fields have empty values
     login_autofill.open()
 
-    # Verify the username and password filed have empty values
     username_element = login_autofill.get_element("username-login-field")
     assert username_element.get_attribute("value") == ""
 
