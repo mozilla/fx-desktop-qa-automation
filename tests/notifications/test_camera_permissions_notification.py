@@ -1,15 +1,17 @@
-import pytest
+import logging
+import subprocess
 
+import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import Navigation
 from modules.page_object_generics import GenericPage
 
-import subprocess
-import logging
 
 @pytest.fixture()
 def test_case():
     return "122536"
+
 
 @pytest.fixture()
 def temp_selectors():
@@ -20,6 +22,13 @@ def temp_selectors():
             "groups": [],
         }
     }
+
+
+@pytest.fixture()
+def set_prefs():
+    """Set prefs"""
+    return [("media.navigator.streams.fake", True)]
+
 
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
@@ -35,13 +44,24 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors, sys_pl
 
     if sys_platform == "Windows":
         try:
-            result = subprocess.run(['wmic', 'path', 'Win32_PnPEntity', 'where', 'Caption like "%camera%"', 'get', 'Caption'],
-                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = subprocess.run(
+                [
+                    "wmic",
+                    "path",
+                    "Win32_PnPEntity",
+                    "where",
+                    'Caption like "%camera%"',
+                    "get",
+                    "Caption",
+                ],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
             output = result.stdout.decode()
             if "No Instance(s) Available" in output or not output.strip():
-                    logging.warning("No cameras detected.")
+                logging.warning("No cameras detected.")
             else:
-                    logging.warning("Camera(s) detected:")
+                logging.warning("Camera(s) detected:")
         except Exception as e:
             logging.warning(f"Error checking camera: {e}")
 
@@ -51,5 +71,6 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors, sys_pl
     # Verify that the notification is displayed
     nav.element_attribute_contains("popup-notification", "label", "Allow ")
     nav.element_attribute_contains("popup-notification", "name", "mozilla.github.io")
-    nav.element_attribute_contains("popup-notification", "endlabel", " to use your camera?")
-    
+    nav.element_attribute_contains(
+        "popup-notification", "endlabel", " to use your camera?"
+    )
