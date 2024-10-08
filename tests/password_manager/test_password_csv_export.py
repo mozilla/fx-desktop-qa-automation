@@ -42,10 +42,9 @@ def test_password_csv_export(
     # Verify that the file exists
     if sys_platform == "Linux":
         downloads_folder = os.getcwd()
-        passwords_csv = os.path.join(downloads_folder, "passwords.csv")
     else:
         downloads_folder = os.path.join(home_folder, "Downloads")
-        passwords_csv = os.path.join(downloads_folder, "passwords.csv")
+    passwords_csv = os.path.join(downloads_folder, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Delete the password.csv created

@@ -34,11 +34,10 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
 
     # Verify that the file exists
     if sys_platform == "Linux":
-        passwords_csv = os.path.join(home_folder, "Desktop", "passwords.csv")
-        downloads_folder = os.path.join(home_folder, "Desktop")
+        downloads_folder = os.getcwd()
     else:
-        passwords_csv = os.path.join(home_folder, "Downloads", "passwords.csv")
-        downloads_folder = os.path.join(home_folder, "Documents")
+        downloads_folder = os.path.join(home_folder, "Downloads")
+    passwords_csv = os.path.join(downloads_folder, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Verify the results
