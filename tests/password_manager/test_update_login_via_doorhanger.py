@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TabBar
+from modules.browser_object import ContextMenu, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import LoginAutofill
 
@@ -19,14 +19,14 @@ def set_prefs():
 
 def test_update_login_via_doorhanger(driver: Firefox):
     """
-     C2243013 - Verify that Firefox successfully updates login credentials via the update password doorhanger and
+    C2243013 - Verify that Firefox successfully updates login credentials via the update password doorhanger and
     autofill them on subsequent access
     """
 
     login_autofill = LoginAutofill(driver).open()
     autofill_popup_panel = AutofillPopup(driver)
-    tabs = TabBar(driver)
     nav = Navigation(driver)
+    context_menu = ContextMenu(driver)
 
     # Creating an instance of the LoginForm within the LoginAutofill page object
     login_form = LoginAutofill.LoginForm(login_autofill)
@@ -37,16 +37,15 @@ def test_update_login_via_doorhanger(driver: Firefox):
     login_form.submit()
     autofill_popup_panel.click_doorhanger_button("save")
 
-    tabs.switch_to_new_tab()
-
-    # # Create new objects to prevent stale web elements
+    # Create new objects to prevent stale web elements
     new_login_autofill = LoginAutofill(driver).open()
     new_login_form = new_login_autofill.LoginForm(new_login_autofill)
 
-    # Verify the initial length ot the password
+    # Verify the initial password value
     password_element = login_autofill.get_element("password-login-field")
-    masked_password_value = password_element.get_attribute("value")
-    assert len(masked_password_value) == 12
+    login_autofill.wait.until(
+        lambda _: password_element.get_attribute("value") == "testPassword"
+    )
 
     # Add several characters inside the password field in demo page, update the login credentials via the doorhanger
     # and see the doorhanger is dismissed
@@ -56,10 +55,15 @@ def test_update_login_via_doorhanger(driver: Firefox):
     autofill_popup_panel.click_doorhanger_button("update")
     nav.element_not_visible("password-notification-key")
 
-    # Open the login form in a new tab and verify the password matches the length of the updated password
-    tabs.switch_to_new_tab()
-    login_autofill.open()
+    new_login_autofill.open()
 
+    # Select Reveal password from password field context menu for headed run purpose only
+    password_field = login_autofill.get_element("password-login-field")
+    login_autofill.context_click(password_field)
+    context_menu.click_context_item("context-menu-reveal-password")
+
+    # Verify the password matches updated password value
     password_element = login_autofill.get_element("password-login-field")
-    masked_password_value = password_element.get_attribute("value")
-    assert len(masked_password_value) == 18
+    login_autofill.wait.until(
+        lambda _: password_element.get_attribute("value") == "testPasswordUpdate"
+    )
