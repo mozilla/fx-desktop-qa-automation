@@ -52,6 +52,12 @@
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",
         "groups": []
+     },
+
+    "password-update-doorhanger": {
+        "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
+        "strategy": "xpath",
+        "groups": []
     }
 }
 
