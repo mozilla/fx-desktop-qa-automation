@@ -600,6 +600,9 @@ class PomUtils:
                 tag = f'class="{selector[1]}"'
             elif selector[0] == By.TAG_NAME:
                 tag = selector[1]
+            elif selector[0] == By.CSS_SELECTOR:
+                if self.css_selector_matches_element(node, selector):
+                    return node
             logging.info(f"Looking for {tag}")
             logging.info(f"Shadow element code: {node_html}")
             if tag in node_html:

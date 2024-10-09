@@ -252,6 +252,20 @@ Description: The Password field
 Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: login-sort
+Selector Data: "login-sort"
+Description: Sort login
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: password-count
+Selector Data: "count"
+Description: Password count
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -849,6 +863,48 @@ Description: Website list
 Location: about:preferences#privacy in Exceptions - Saved Passwords modal
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: use-primary-password
+Selector Data: "useMasterPassword"
+Description: Checkbox for using primary password
+Location: about:preferences#privacy Passwords subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-password
+Selector Data: "message"
+Description: Input for current primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: enter-new-password
+Selector Data: "pw1"
+Description: Input for new primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: reenter-new-password
+Selector Data: "pw2"
+Description: Input for new primary password again
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: submit-password
+Selector Data: "button[label^='OK']
+Description: Ok button to submit the new primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: primary-password-box
+Selector Data: "changemp"
+Description: Shadow parent of the OK and cancel button
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1072,6 +1128,13 @@ Description: "Add" button
 Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: password-update-doorhanger
+Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
+Description: The password update doorhanger
+Location: In the Navigation bar, next to the url input field, after the key icon was pressed
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -1271,9 +1334,16 @@ Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-manage-passwords
-Selector Data: selectorData": "manage-saved-logins
+Selector Data: selectorData": "manage-saved-logins"
 Description: Manage Passwords button
 Location: Any login form field context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-reveal-password
+Selector Data: selectorData": "context-reveal-password"
+Description: Context menu option from Password field
+Location: Login page - Password field context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -2161,13 +2231,6 @@ Selector Name: password-notification-key
 Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
 Description: The key icon
 Location: In the Navigation bar, next to the url input field
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: password-update-doorhanger
-Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
-Description: The password update doorhanger
-Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

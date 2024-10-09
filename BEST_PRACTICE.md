@@ -27,9 +27,17 @@ this will be done by _requesting_ the `driver` fixture like this:
 import pytest
 from selenium.webdriver import Firefox
 
+
+@pytest.fixture()
+def test_case():
+    return "7654321"
+
+
 def test_new_tab_opens_expected_page(driver: Firefox):
     # test goes here
 ```
+
+Also include, as in example above, the test case fixture that returns the associated TestRail test case ID number
 
 There exist other fixtures that alter the session with setup before tests can
 proceed. You will also likely want to import other Selenium modules, or our support

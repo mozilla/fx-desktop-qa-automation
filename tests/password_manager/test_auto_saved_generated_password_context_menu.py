@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, TabBar
+from modules.browser_object import AutofillPopup, ContextMenu, Navigation, TabBar
 from modules.page_object import AboutLogins, LoginAutofill
 
 
@@ -26,6 +26,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     login_autofill = LoginAutofill(driver).open()
     nav = Navigation(driver)
     about_logins = AboutLogins(driver)
+    autofill_popup_panel = AutofillPopup(driver)
 
     # Select "Suggest Strong Password..." from password field context menu
     password_field = login_autofill.get_element("password-login-field")
@@ -38,7 +39,9 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
         login_autofill.get_element("generated-securely-password").click()
         nav.element_visible("password-notification-key")
         nav.click_on("password-notification-key")
-        update_doorhanger = nav.get_element("password-update-doorhanger")
+        update_doorhanger = autofill_popup_panel.get_element(
+            "password-update-doorhanger"
+        )
         assert update_doorhanger.text == "Update password for mozilla.github.io?"
 
     # Navigate to about:logins page

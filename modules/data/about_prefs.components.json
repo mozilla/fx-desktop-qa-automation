@@ -449,5 +449,42 @@
         "selectorData": "//*[@id='permissionsBox']//*[@origin]",
         "strategy": "xpath",
         "groups": []
+    }, 
+
+    "use-primary-password": {
+        "selectorData": "useMasterPassword",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "current-password": {
+        "selectorData": "message",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "enter-new-password": {
+        "selectorData": "pw1",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "reenter-new-password": {
+        "selectorData": "pw2",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "submit-password": {
+        "selectorData": "button[label^='OK']",
+        "strategy": "css",
+        "shadowParent": "primary-password-box",
+        "groups": []
+    },
+
+    "primary-password-box": {
+        "selectorData": "changemp",
+        "strategy": "id",
+        "groups": []
     }
 }
