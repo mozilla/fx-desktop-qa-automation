@@ -1,6 +1,3 @@
-import logging
-import subprocess
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -33,7 +30,7 @@ def set_prefs():
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 
-def test_camera_permissions_notification(driver: Firefox, temp_selectors, sys_platform):
+def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     """
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
     """
@@ -41,29 +38,6 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors, sys_pl
     nav = Navigation(driver)
     web_page = GenericPage(driver, url=TEST_URL).open()
     web_page.elements |= temp_selectors
-
-    if sys_platform == "Windows":
-        try:
-            result = subprocess.run(
-                [
-                    "wmic",
-                    "path",
-                    "Win32_PnPEntity",
-                    "where",
-                    'Caption like "%camera%"',
-                    "get",
-                    "Caption",
-                ],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            output = result.stdout.decode()
-            if "No Instance(s) Available" in output or not output.strip():
-                logging.warning("No cameras detected.")
-            else:
-                logging.warning("Camera(s) detected:")
-        except Exception as e:
-            logging.warning(f"Error checking camera: {e}")
 
     # Trigger the popup notification asking for camera permissions
     web_page.click_on("camera-only")
