@@ -11,11 +11,6 @@ def test_case():
     return "2245178"
 
 
-@pytest.fixture()
-def hard_quit():
-    return True
-
-
 def test_add_primary_password(driver: Firefox):
     """
     C2245178: Verify that a primary password can be added in about:preferences#privacy
@@ -30,8 +25,7 @@ def test_add_primary_password(driver: Firefox):
     ba.switch_to_iframe_context(primary_pw_popup)
 
     # Current password field is empty and cannot be changed
-    is_disabled = about_prefs.get_element("current-password").get_attribute("disabled")
-    assert is_disabled
+    about_prefs.element_attribute_contains("current-password", "disabled", "true")
 
     # Primary password can be changed
     about_prefs.get_element("enter-new-password").send_keys("securePassword1")
