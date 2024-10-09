@@ -8,6 +8,7 @@ from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
 PERMISSION_GRANTED_MSG = "Permission to display: granted"
+MESSAGE_ONE_SHOWN = "Notification #1 showed"
 
 
 @pytest.fixture()
@@ -24,13 +25,13 @@ def test_case():
 def temp_selectors():
     return {
         "authorize-button": {
-            "selectorData": "button[onclick='notify.authorize()']",
-            "strategy": "css",
+            "selectorData": "/html/body/div/p[4]/button[1]",
+            "strategy": "xpath",
             "groups": [],
         },
         "show-button": {
-            "selectorData": "button[onclick='notify.show()']",
-            "strategy": "css",
+            "selectorData": "/html/body/div/p[4]/button[2]",
+            "strategy": "xpath",
             "groups": [],
         },
         "console": {"selectorData": "console", "strategy": "id", "groups": []},
@@ -53,6 +54,8 @@ def test_notifications_displayed(
     nav.click_on("popup-notification-primary-button")
     bennish_test_page.element_has_text("console", PERMISSION_GRANTED_MSG)
     bennish_test_page.click_on("show-button")
+    bennish_test_page.element_has_text("console", MESSAGE_ONE_SHOWN)
 
-    sleep(3)
-    logging.info(bennish_test_page.get_localstorage_item("newestNotificationTitle"))
+    logging.info(driver.execute_script("return window.localStorage;"))
+    logging.info(driver.execute_script("return window.notifications;"))
+    # logging.info(bennish_test_page.get_localstorage_item("newestNotificationTitle"))

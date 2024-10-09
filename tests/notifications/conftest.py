@@ -1,19 +1,18 @@
 import pytest
 
 NOTIFICATION_LISTENER_SCRIPT = """
-    const OldNotify = window.Notification;
-    const newNotify = (title, opt) => {
-        window.localStorage.setItem("newestNotificationTitle", title);
-        return new OldNotify(title, opt);
-    };
-    newNotify.requestPermission = OldNotify.requestPermission.bind(OldNotify);
-    Object.defineProperty(newNotify, 'permission', {
-        get: () => {
-            return OldNotify.permission;
+    window.notifications = [];
+
+    Notification.requestPermission().then(function(permission) {
+        if (permission === "granted") {
+            const OriginalNotification = window.Notification;
+            window.Notification = function(title, options) {
+                // Store notifications in an array
+                window.notifications.push({title: title, body: options.body});
+                return new OriginalNotification(title, options);
+            };
         }
     });
-
-    window.Notification = newNotify;
 """
 
 
