@@ -1,6 +1,3 @@
-import logging
-import subprocess
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -33,7 +30,7 @@ def set_prefs():
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 
-def test_camera_permissions_notification(driver: Firefox, temp_selectors, sys_platform):
+def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     """
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
     """
