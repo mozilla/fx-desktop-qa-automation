@@ -121,8 +121,26 @@
         "selectorData": "list-item",
         "strategy": "class",
         "shadowParent": "login-list",
-        "groups": [
-            "doNotCache"
-        ]
+        "groups": ["doNotCache"]
+    },
+
+    "remove-login-button-main-page": {
+        "selectorData": "delete-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "remove-login-confirmation-dialog": {
+        "selectorData": "confirmation-dialog",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "remove-login-button-confirmation-dialog": {
+        "selectorData": "confirm-button",
+        "strategy": "class",
+        "shadowParent": "remove-login-confirmation-dialog",
+        "groups": []
     }
 }
