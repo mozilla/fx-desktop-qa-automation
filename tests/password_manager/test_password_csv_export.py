@@ -15,7 +15,7 @@ def test_case():
 
 @pytest.mark.headed
 def test_password_csv_export(
-    driver_and_saved_logins, home_folder, sys_platform, opt_ci, screenshot
+    driver_and_saved_logins, home_folder, sys_platform, opt_ci
 ):
     """
     C2241521: Check that password.csv can be downloaded from about:logins
@@ -29,14 +29,10 @@ def test_password_csv_export(
     about_logins.click_on("menu-button")
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
-    screenshot("right_after")
 
     # Download the password file
     time.sleep(4)
-    screenshot("waited")
     keyboard.tap(Key.enter)
-    # about_logins.handle_os_download_confirmation(keyboard, sys_platform)
-    screenshot("downloaded")
 
     # Verify that the file exists
     if sys_platform == "Linux":
