@@ -699,6 +699,11 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
+    def get_localstorage_item(self, key: str):
+        return self.driver.execute_script(
+            f"return window.localStorage.getItem({key});"
+        )
+
     @property
     def loaded(self):
         """

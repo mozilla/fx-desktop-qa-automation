@@ -1,4 +1,5 @@
 from time import sleep
+import logging
 
 import pytest
 from selenium.webdriver import Firefox
@@ -8,6 +9,11 @@ from modules.page_object import GenericPage
 
 PERMISSION_GRANTED_MSG = "Permission to display: granted"
 
+@pytest.fixture()
+def set_prefs():
+    return [
+        ("dom.webnotifications.enabled", True)
+    ]
 
 @pytest.fixture()
 def test_case():
@@ -31,7 +37,7 @@ def temp_selectors():
     }
 
 
-def test_notifications_displayed(driver: Firefox, temp_selectors):
+def test_notifications_displayed(driver: Firefox, temp_selectors, start_notification_listener):
     bennish_test_page = GenericPage(
         driver, url="https://www.bennish.net/web-notifications.html"
     )
@@ -39,8 +45,13 @@ def test_notifications_displayed(driver: Firefox, temp_selectors):
     bennish_test_page.elements |= temp_selectors
     nav = Navigation(driver)
 
+    start_notification_listener()
+
     bennish_test_page.click_on("authorize-button")
     nav.click_on("popup-notification-primary-button")
     bennish_test_page.element_has_text("console", PERMISSION_GRANTED_MSG)
     bennish_test_page.click_on("show-button")
+
     sleep(3)
+    logging.info(bennish_test_page.get_localstorage_item("newestNotificationTitle"))
+
