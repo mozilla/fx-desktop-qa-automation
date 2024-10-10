@@ -22,9 +22,7 @@ required way. Further information is found in class and method docstrings.
 """
 
 import base64
-import json
 import logging
-import os
 from time import sleep
 
 import requests

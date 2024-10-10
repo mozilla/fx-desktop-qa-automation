@@ -443,6 +443,12 @@
         "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
         "strategy": "css",
         "groups": []
+    },
+
+    "exceptions-item": {
+        "selectorData": "//*[@id='permissionsBox']//*[@origin]",
+        "strategy": "xpath",
+        "groups": []
     }, 
 
     "use-primary-password": {
