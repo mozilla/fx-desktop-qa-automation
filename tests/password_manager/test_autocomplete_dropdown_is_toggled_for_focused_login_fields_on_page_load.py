@@ -1,15 +1,10 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
-from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 from modules.page_object_generics import GenericPage
-from selenium.webdriver.support import expected_conditions as EC
 
 
 @pytest.fixture()
