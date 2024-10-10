@@ -29,12 +29,12 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     about_logins = AboutLogins(driver)
     login_autofill = LoginAutofill(driver)
 
-    # Go to sites that have login field focus on page load
+    # Go to a site that have login field focus on page load
     GenericPage(driver, url=FACEBOOK_URL).open()
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
-    # Save 2 set of credentials for the visited sites
+    # Save 2 set of credentials for the visited site
     about_logins.open()
     about_logins.click_add_login_button()
     about_logins.create_new_login(
