@@ -62,7 +62,7 @@
     },
 
     "facebook-credentials": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
         "strategy": "css",
         "groups": []
     }
