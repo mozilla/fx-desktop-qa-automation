@@ -461,11 +461,5 @@
         "selectorData": "box#notification-popup-box image#password-notification-icon.notification-anchor-icon",
         "strategy": "css",
         "groups": []
-    },
-
-    "password-update-doorhanger": {
-        "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
-        "strategy": "xpath",
-        "groups": []
     }
 }

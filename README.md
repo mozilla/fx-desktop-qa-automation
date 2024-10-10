@@ -105,3 +105,16 @@ like to have documentation on.
     - Indent: 4
     - Continuation indent: 8
     - Keep indents on empty lines unchecked
+
+### Project Contribution
+If you are outside of Mozilla and would like to contribute to this project:
+- Read all the documentation including this README, BEST_PRACTICES and CODE_OF_CONDUCT.
+- Find an open and unassigned test case bug in the bug tree at https://bugzilla.mozilla.org/show_bug.cgi?id=1892813
+  - Ask to be allowed to take the bug to work on it.
+  - A Mozilla DTE will either assign you the bug or suggest another test case bug for you to work on.
+  - They will give you, as a comment in the bug, the test steps, from our test case repository, TestRail.
+- Fork the repo and create your test case based on the test steps given.
+- Submit your PR to this repo.
+- A Mozilla DTE will review your PR
+  - Address any review comments
+- Once approved your test code will be landed in this repo.

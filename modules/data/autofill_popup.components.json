@@ -24,6 +24,12 @@
         "groups": []
     },
 
+    "doorhanger-never-save-login-button": {
+        "selectorData": "menuitem[label='Never save']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "doorhanger-update-button": {
         "selectorData": "button[label='Update']",
         "strategy": "css",
@@ -51,6 +57,12 @@
      "cc-saved-options": {
         "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
         "strategy": "css",
+        "groups": []
+     },
+
+    "password-update-doorhanger": {
+        "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
+        "strategy": "xpath",
         "groups": []
     }
 }

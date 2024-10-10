@@ -856,6 +856,55 @@ Description: PDF content type options list
 Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: exceptions-item
+Selector Data: "//*[@id='permissionsBox']//*[@origin]"
+Description: Website list
+Location: about:preferences#privacy in Exceptions - Saved Passwords modal
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: use-primary-password
+Selector Data: "useMasterPassword"
+Description: Checkbox for using primary password
+Location: about:preferences#privacy Passwords subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-password
+Selector Data: "message"
+Description: Input for current primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: enter-new-password
+Selector Data: "pw1"
+Description: Input for new primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: reenter-new-password
+Selector Data: "pw2"
+Description: Input for new primary password again
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: submit-password
+Selector Data: "button[label^='OK']
+Description: Ok button to submit the new primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: primary-password-box
+Selector Data: "changemp"
+Description: Shadow parent of the OK and cancel button
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1031,6 +1080,13 @@ Location: Inside the autofill save credit card doorhanger, accessible by clickin
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: doorhanger-never-save-login-button
+Selector Data: "menuitem[label='Never save']"
+Description: The hidden button in save login doorhanger.
+Location: Inside the autofill save login doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-update-button
 Selector Data: "button[label='Update']"
 Description: The "Update" button 
@@ -1061,7 +1117,7 @@ Path to .json: modules/data/autofill_popup.components.json
 ```
 Selector Name: cc-saved-options
 Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
-Description: The actual "Add card" modal, containing 4 fields
+Description: The actually "Add card" modal, containing 4 fields
 Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
 Path to .json: modules/data/autofill_popup.components.json
 ```
@@ -1070,6 +1126,13 @@ Selector Name: cc-popup-button
 Selector Data: "button[data-l10n-id='{name}']"
 Description: "Add" button 
 Location: Inside the "Saved payment methods" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: password-update-doorhanger
+Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
+Description: The password update doorhanger
+Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/autofill_popup.components.json
 ```
 #### context_menu
@@ -1271,16 +1334,23 @@ Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-manage-passwords
-Selector Data: selectorData": "manage-saved-logins
+Selector Data: selectorData": "manage-saved-logins"
 Description: Manage Passwords button
 Location: Any login form field context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-reveal-password
+Selector Data: selectorData": "context-reveal-password"
+Description: Context menu option from Password field
+Location: Login page - Password field context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
 ```
 Selector Name: form-field
 Selector Data: "input[autocomplete='{name}']"
-Description: Input field
+Description: Input field 
 Location: Input field in the autofill credit card demo page - https://mozilla.github.io/form-fill-examples/basic_cc.html
 Path to .json: modules/data/credit_card_fill.components.json
 ```
@@ -1290,6 +1360,28 @@ Selector Data: "input[type='{name}']"
 Description: "Submit" button
 Location: "Submit" button at the bottom of the autofill credit card demo page - https://mozilla.github.io/form-fill-examples/basic_cc.html
 Path to .json: modules/data/credit_card_fill.components.json
+```
+#### example_page
+```
+Selector Name: title-header
+Selector Data: "h1"
+Description: "Example Domain" title
+Location: The title of example.com page 
+Path to .json: modules/data/exemple_page.components.json
+```
+```
+Selector Name: take-screenshot-box
+Selector Data: "screenshotsPagePanel"
+Description:  Page context menu option "Take Screenshot"
+Location: Any non-linked content space inside example.com page  
+Path to .json: modules/data/exemple_page.components.json
+```
+```
+Selector Name: more-information
+Selector Data: "More information..."
+Description: More information..." link 
+Location: The hyperlink positioned in the middle of example.com page  
+Path to .json: modules/data/exemple_page.components.json
 ```
 #### customize_firefox
 ```
@@ -1363,28 +1455,6 @@ Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
 Description: The Try Again button from the error page
 Location: In the error page
 Path to .json: modules/data/error_page.components.json
-```
-#### example_page
-```
-Selector Name: title-header
-Selector Data: "h1"
-Description: "Example Domain" title
-Location: The title of example.com page
-Path to .json: modules/data/exemple_page.components.json
-```
-```
-Selector Name: take-screenshot-box
-Selector Data: "screenshotsPagePanel"
-Description:  Page context menu option "Take Screenshot"
-Location: Any non-linked content space inside example.com page
-Path to .json: modules/data/exemple_page.components.json
-```
-```
-Selector Name: more-information
-Selector Data: "More information..."
-Description: More information..." link
-Location: The hyperlink positioned in the middle of example.com page
-Path to .json: modules/data/exemple_page.components.json
 ```
 #### find_toolbar
 ```
@@ -1659,49 +1729,49 @@ Path to .json: modules/data/google_search.components.json
 ```
 #### login_autofill
 ```
-Selector Name: input-field
+Selector name: input-field
 Selector Data: input[autocomplete='{name}']
 Description: Input field
 Location: Input field in the autofill demo page
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
-Selector Name: username-field
+Selector name: username-field
 Selector Data: input[placeholder='username']
 Description: Username field
 Location: Username field in the autofill demo page
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
-Selector Name: submit-form
+Selector name: submit-form
 Selector Data: input[value='Log In']
 Description: Login button in the submit form
 Location: Login button in the autofill demo page
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
-Selector Name: save-login-popup
+Selector name: save-login-popup
 Selector Data: notification-popup
 Description: Save login doorhanger
 Location: Save login doorhanger under the URL bar
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
-Selector Name: username-login-field
+Selector name: username-login-field
 Selector Data: /html/body/div[1]/form[2]/input[1]
 Description: Username login field
 Location: Username field in the login demo page
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
-Selector Name: password-login-field
+Selector name: password-login-field
 Selector Data: /html/body/div[1]/form[2]/input[2]
 Description: Password login field
 Location: Password field in the login demo page
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
-Selector Name: submit-button-login
+Selector name: submit-button-login
 Selector Data: /html/body/div[1]/form[2]/input[3]
 Description: Login submit button
 Location: Submit button in the login demo page 
@@ -1723,441 +1793,441 @@ Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
 ```
-Selector Name: awesome-bar
+Selector name: awesome-bar
 Selector Data: urlbar-input
 Description: Awesome bar / URL bar
 Location: Any clickable area on the awesome bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: results-dropdown
+Selector name: results-dropdown
 Selector Data: urlbar-results
 Description: URL bar search results
 Location: Any search result item from the URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: tab-to-search-text-span
+Selector name: tab-to-search-text-span
 Selector Data: urlbarView-dynamic-onboardTabToSearch-text-container
 Description: Tab to search text span
 Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-mode-span
+Selector name: search-mode-span
 Selector Data: urlbar-search-mode-indicator-title
 Description: Search mode span
 Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: overflow-item
+Selector name: overflow-item
 Selector Data: [class='urlbarView-title urlbarView-overflowable']
 Description: The title of every search result from the URL bar search results
 Location: Any search result title item from the URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-one-off-settings-button
+Selector name: search-one-off-settings-button
 Selector Data: urlbar-anon-search-settings
 Description: Search settings button
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: quick-actions-refresh-button
+Selector name: quick-actions-refresh-button
 Selector Data: urlbarView-row-3-label-0
 Description: Quick action refresh button
 Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: refresh-intervention-card
+Selector name: refresh-intervention-card
 Selector Data: div[tip-type='intervention_refresh']
 Description: 
 Location:
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: fx-refresh-text
+Selector name: fx-refresh-text
 Selector Data: span[data-l10n-id='intervention-refresh-profile']
 Description: Refresh Firefox button text
 Location: URL bar results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: fx-refresh-button
+Selector name: fx-refresh-button
 Selector Data: span[role='button'][data-l10n-id='intervention-refresh-profile-confirm']
 Description: Refresh Firefox button
 Location: URL bar results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: fx-refresh-menu
+Selector name: fx-refresh-menu
 Selector Data: span[data-l10n-id='urlbar-result-menu-button'][title='Open menu']
 Description: Trending menu search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: fx-refresh-menu-get-help-item
+Selector name: fx-refresh-menu-get-help-item
 Selector Data: menuitem[data-l10n-id='urlbar-result-menu-tip-get-help']
 Description: Trending search results menu item
 Location: Menu items for the trending results in the URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: fx-refresh-menu-get-help-item-get-help
+Selector name: fx-refresh-menu-get-help-item-get-help
 Selector Data: urlbarView-result-menuitem
 Description: Trending search results menu item
 Location: Menu items for the trending results in the URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-engine-suggestion-row
+Selector name: search-engine-suggestion-row
 Selector Data: div[class='urlbarView-row'][type='search_engine']
 Description: Search suggestions from the URL bar search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-one-off-browser-button
+Selector name: search-one-off-browser-button
 Selector Data: urlbar-engine-one-off-item-{source}
 Description: search one off buttons
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: panel-ui-button
+Selector name: panel-ui-button
 Selector Data: PanelUI-button
 Description: Panel UI button / hamburger menu
 Location: Far right in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: navigation-background-component
+Selector name: navigation-background-component
 Selector Data: nav-bar
 Description: Navigation bar
 Location: Any area on the navigation bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: context-menu-paste-and-go
+Selector name: context-menu-paste-and-go
 Selector Data: paste-and-go
 Description: Any search bar context menu option "paste-and-go" 
 Location: Any search bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: private-browsing-icon
+Selector name: private-browsing-icon
 Selector Data: private-browsing-indicator-icon
 Description: Private browsing icon
 Location: Private browsing mode
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: add-extra-search-engine
+Selector name: add-extra-search-engine
 Selector Data: [id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']
 Description: Add extra search engine in the url bar
 Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-one-off-engine-button
+Selector name: search-one-off-engine-button
 Selector Data: [id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']
 Description: Search one off engine button
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: downloads-button
+Selector name: downloads-button
 Selector Data: downloads-button
 Description: Toolbar download button
 Location: Toolbar after downloading a file
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-results-container
+Selector name: search-results-container
 Selector Data: urlbar-results
 Description: URL bar search results
 Location: Any search result item from the URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: addon-suggestion
+Selector name: addon-suggestion
 Selector Data: div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable
 Description: Addon suggestion in the URL bar search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-suggestion-list
+Selector name: search-suggestion-list
 Selector Data: div.urlbarView-row[type='search_engine'] span.urlbarView-title
 Description: Search suggestion list
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: sponsored-suggestion
+Selector name: sponsored-suggestion
 Selector Data: urlbarView-row-body-description
 Description: Sponsored search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: firefox-suggest
+Selector name: firefox-suggest
 Selector Data: div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner
 Description: Firefox suggestion search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-result-autofill-adaptive-element
+Selector name: search-result-autofill-adaptive-element
 Selector Data: .//*[@type='autofill_adaptive']
 Description: Search result autofill adaptive element
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-result
+Selector name: search-result
 Selector Data: //div[@data-text-ad]//a
 Description: ad search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: shield-icon
+Selector name: shield-icon
 Selector Data: tracking-protection-icon-container
 Description: Shield icon
 Location: URL bar / Awseome bar after visiting a website
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: cryptominers
+Selector name: cryptominers
 Selector Data: .protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked
 Description: Cryptominer trackers
 Location: Shield icon
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: no-trackers-detected
+Selector name: no-trackers-detected
 Selector Data: protections-popup-no-trackers-found-description
 Description: No trackers detected
 Location: Click on the shield icon
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: lock-icon
+Selector name: lock-icon
 Selector Data: identity-icon
 Description: Site information panel (Lock icon)
 Location: URL bar / Awseome bar after visiting a website
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: connection-secure-button
+Selector name: connection-secure-button
 Selector Data: identity-popup-security-button
 Description: Connection secure button
 Location: In the site information panel (lock icon)
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: more-information-button
+Selector name: more-information-button
 Selector Data: identity-popup-more-info
 Description: More information button in the connection security panel
 Location: In the connection security insde the site information panel (lock icon)
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-result-url
+Selector name: search-result-url
 Selector Data: .urlbarView-title.urlbarView-overflowable[is-url='']
 Description: Search results url
 Location: URL bar / Awesome bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: search-result-action-term
+Selector name: search-result-action-term
 Selector Data: .urlbarView-action
 Description: Search results entries
 Location: URL bar / Awesome bar search results
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: refresh-button
+Selector name: refresh-button
 Selector Data: reload-button
 Description: Reload current page
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: known-fingerprints
+Selector name: known-fingerprints
 Selector Data: .protections-popup-category.subviewbutton.subviewbutton-iconic.blocked.subviewbutton-nav
 Description: Known fingerprints
 Location: Shield icon
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: fingerprints-blocked-subpanel
+Selector name: fingerprints-blocked-subpanel
 Selector Data: protections-popup-fingerprintersView
 Description: Fingerprints subpanel
 Location: Inside the shield incon in fingerprints subpanel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: star-button
+Selector name: star-button
 Selector Data: star-button-box
 Description: Star button to bookmark a page
 Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: save-bookmark-button
+Selector name: save-bookmark-button
 Selector Data: editBookmarkPanelDoneButton
 Description: Save bookmark
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: blue-star-button
+Selector name: blue-star-button
 Selector Data: image[id='star-button'][starred='true']
 Description: Bookmarked page
 Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: download-panel-item
+Selector name: download-panel-item
 Selector Data: vbox[class='downloadContainer']
 Description: Downloaded item in the download panel
 Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: edit-bookmark-panel
+Selector name: edit-bookmark-panel
 Selector Data: editBMPanel_namePicker
 Description: Edit bookmark panel
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: remove-bookmark-button
+Selector name: remove-bookmark-button
 Selector Data: editBookmarkPanelRemoveButton
 Description: Remove bookmark button
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: forget-button
+Selector name: forget-button
 Selector Data: panic-button
 Description: Forget button
 Location: Toolbar after adding it from customize
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: history-button
+Selector name: history-button
 Selector Data: history-panelmenu
 Description: History button
 Location: Toolbar after adding it from customize
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: library-button
+Selector name: library-button
 Selector Data: library-button
 Description: Library button
 Location: Toolbar after adding it from customize
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: library-history-submenu-button
+Selector name: library-history-submenu-button
 Selector Data: appMenu-library-history-button
 Description: Library history submenu button
 Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmarks-type-dropdown
+Selector name: bookmarks-type-dropdown
 Selector Data: editBMPanel_folderMenuList
 Description: Bookmark location
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmarks-type-dropdown-other
+Selector name: bookmarks-type-dropdown-other
 Selector Data: editBMPanel_unfiledRootItem
 Description: Bookmark location - Other bookmarks
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: other-bookmarks
+Selector name: other-bookmarks
 Selector Data: OtherBookmarks
 Description: Other bookmarks option
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: other-bookmarks-popup
+Selector name: other-bookmarks-popup
 Selector Data: OtherBookmarksPopup
 Description: Other bookmarks submenu
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: new-bookmark-name-field
+Selector name: new-bookmark-name-field
 Selector Data: editBMPanel_namePicker
 Description: New bookmark name field
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: new-bookmark-url-field
+Selector name: new-bookmark-url-field
 Selector Data: editBMPanel_locationField
 Description: New bookmark url field
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: new-bookmark-tags-field
+Selector name: new-bookmark-tags-field
 Selector Data: editBMPanel_tagsField
 Description: New bookmark tags field
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: new-bookmark-keyword-field
+Selector name: new-bookmark-keyword-field
 Selector Data: editBMPanel_keywordField
 Description: New bookmark keyword field
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmark-dialog
+Selector name: bookmark-dialog
 Selector Data: ookmarkpropertiesdialog
 Description: Bookmark dialog
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmark-accept-button
+Selector name: bookmark-accept-button
 Selector Data: button[dlgtype='accept']
 Description: Bookmark accept button
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmark-iframe
+Selector name: bookmark-iframe
 Selector Data: browser[class='dialogFrame']
 Description: Add bookmark advanced
 Location: Add bookmark from bookmarks sidebar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmark-robots
+Selector name: bookmark-robots
 Selector Data: menuitem[label='Robots 2']
 Description: A bookmark named robots
 Location: A bookmark in other bookmarks
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: bookmark-current-tab
+Selector name: bookmark-current-tab
 Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: Menu button / hamburger menu
@@ -2170,331 +2240,324 @@ Description: The key icon
 Location: In the Navigation bar, next to the url input field
 Path to .json: modules/data/navigation.components.json
 ```
-```
-Selector Name: password-update-doorhanger
-Selector Data: "//*[contains(@class, 'popup-notification-description') and @popupid='password']"
-Description: The password update doorhanger
-Location: In the Navigation bar, next to the url input field, after the key icon was pressed
-Path to .json: modules/data/navigation.components.json
-```
 #### panel_ui
 ```
-Selector Name: panel-ui-button
+Selector name: panel-ui-button
 Selector Data: PanelUI-menu-button
 Description: Menu button / Hambuger menu
 Location: Toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: sync-user-button
+Selector name: sync-user-button
 Selector Data: toolbarbutton[id='fxa-toolbar-menu-button']
 Description: Account button
 Location: Toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: fxa-manage-account-button
+Selector name: fxa-manage-account-button
 Selector Data: fxa-manage-account-button
 Description: Sign in to sync button
 Location: Account panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: sync-fxa
+Selector name: sync-fxa
 Selector Data: appMenu-fxa-status2
 Description: Sync and save data
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: fxa-sign-in
+Selector name: fxa-sign-in
 Selector Data: #appMenu-fxa-status2 toolbarbutton
 Description: Sign in button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: fxa-sync-label
+Selector name: fxa-sync-label
 Selector Data: syncnow-label
 Description: Sync now
 Location: Firefox menu after singing in
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: new-private-window-option
+Selector name: new-private-window-option
 Selector Data: appMenu-new-private-window-button2
 Description: New private window buttin
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: more-tools
+Selector name: more-tools
 Selector Data: appMenu-more-button2
 Description: More tools button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: customize-toolbar
+Selector name: customize-toolbar
 Selector Data: overflowMenu-customize-button
 Description: Customize toolbar
 Location: More tools inside Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: manage-themes
+Selector name: manage-themes
 Selector Data: customization-lwtheme-link
 Description: Manage themes
 Location: On the hamburger menu > More Tools > Customize Toolbar > Manage Themes
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: zoom-reduce
+Selector name: zoom-reduce
 Selector Data: appMenu-zoomReduce-button2
 Description: Zoom reduce button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: zoom-enlarge
+Selector name: zoom-enlarge
 Selector Data: appMenu-zoomEnlarge-button2
 Description: Zoom enlarge button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: zoom-reset
+Selector name: zoom-reset
 Selector Data: appMenu-zoomReset-button2
 Description: Zoom reset button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: find-in-page
+Selector name: find-in-page
 Selector Data: appMenu-find-button2
 Description: Find in page button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-new-window
+Selector name: panel-ui-new-window
 Selector Data: appMenu-new-window-button2
 Description: New window button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-history
+Selector name: panel-ui-history
 Selector Data: appMenu-history-button
 Description: History button
 Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-history-recently-closed
+Selector name: panel-ui-history-recently-closed
 Selector Data: appMenuRecentlyClosedTabs
 Description: Recently closed tabs
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-history-recently-closed-reopen-tabs
+Selector name: panel-ui-history-recently-closed-reopen-tabs
 Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']
 Description: Recently closed reopen tabs
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-new-private-window
+Selector name: panel-ui-new-private-window
 Selector Data: appMenu-new-private-window-button2
 Description: New private window
 Location: Hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: recent-history-content
+Selector name: recent-history-content
 Selector Data: #appMenu_historyMenu .toolbarbutton-text
 Description: Recent history content
 Location: Hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: bookmark-item
+Selector name: bookmark-item
 Selector Data: toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']
 Description: Bookmark item
 Location: On the hamburger menu > Bookmarks
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: clear-recent-history
+Selector name: clear-recent-history
 Selector Data: appMenuClearRecentHistory
 Description: Clear recent history
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-history-recent-history-container
+Selector name: panel-ui-history-recent-history-container
 Selector Data: appMenu_historyMenu
 Description: Recent history
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-history-recent-history-item
+Selector name: panel-ui-history-recent-history-item
 Selector Data: toolbarbutton
 Description: Recent history item
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: panel-ui-bookmarks
+Selector name: panel-ui-bookmarks
 Selector Data: appMenu-bookmarks-button
 Description: Bookmark button
 Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: bookmark-by-title
+Selector name: bookmark-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
 Description: Bookmark item
 Location: On the hamburger menu > Bookmarks
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: bookmark-current-tab
+Selector name: bookmark-current-tab
 Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: On the hamburger menu > Bookmarks
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: iframe
+Selector name: iframe
 Selector Data: dialogFrame
 Description: iframe
 Location: iframe
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: clear-history-dropdown
+Selector name: clear-history-dropdown
 Selector Data: sanitizeDurationPopup
 Description: Clear browsing data and cookies by duration
 Location: On the hamburger menu > History > Clear recent history
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: all-history-warning
+Selector name: all-history-warning
 Selector Data: sanitizeEverythingWarningBox
 Description: Sanitize everything warning box
 Location: On the hamburger menu > History > Clear recent history > Select everything from when
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: bookmark-location
+Selector name: bookmark-location
 Selector Data: editBMPanel_folderMenuList
 Description: Bookmark location
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: other-bookmarks
+Selector name: other-bookmarks
 Selector Data: editBMPanel_unfiledRootItem
 Description: Other bookmarks
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: show-editor-when-saving-checkbox
+Selector name: show-editor-when-saving-checkbox
 Selector Data: editBookmarkPanel_showForNewBookmarks
 Description: Show editor when saving checkbox
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: other-bookmarks-toolbar
+Selector name: other-bookmarks-toolbar
 Selector Data: OtherBookmarks
 Description: Other bookmarks toolbar
 Location: Toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: other-bookmarks-by-title
+Selector name: other-bookmarks-by-title
 Selector Data: menuitem.menuitem-iconic[label*='{title}']
 Description: Bookmark item
 Location: Toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: history-back-button
+Selector name: history-back-button
 Selector Data: toolbarbutton.subviewbutton-back > image.toolbarbutton-icon
 Description: History back button
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: history_title
+Selector name: history_title
 Selector Data: //*[@id='PanelUI-history']//*[text()='History']
 Description: History title
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: recently_closed_tabs
+Selector name: recently_closed_tabs
 Selector Data: appMenuRecentlyClosedTabs
 Description: Recently closed tabs button
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: recently_closed_windows
+Selector name: recently_closed_windows
 Selector Data: appMenuRecentlyClosedWindows
 Description: Recently closed windows
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: search_history
+Selector name: search_history
 Selector Data: appMenuSearchHistory
 Description: Search history button
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: recent_history
+Selector name: recent_history
 Selector Data: panelMenu_recentHistory
 Description: Recent history
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: manage_history
+Selector name: manage_history
 Selector Data: PanelUI-historyMore
 Description: Manage history button
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: bookmark-tags
+Selector name: bookmark-tags
 Selector Data: editBMPanel_tagsField
 Description: Bookmark tage
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: extend-bookmark-tags
+Selector name: extend-bookmark-tags
 Selector Data: editBMPanel_tagsSelectorExpander
 Description: Extend bookmark tags
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: work-tag
+Selector name: work-tag
 Selector Data: label[value='Work']
 Description: Bookmark tag
 Location: Bookmark panel
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector Name: todo-tag
+Selector name: todo-tag
 Selector Data: label[value='To do']
 Description: Bookmark tag
 Location: Bookmark panel
@@ -2817,6 +2880,7 @@ Description: A tab's Close (X) button
 Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```
+
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
