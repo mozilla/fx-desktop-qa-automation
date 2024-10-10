@@ -421,6 +421,12 @@
         "groups": []
     },
 
+    "popup-notification-secondary-button": {
+        "selectorData": "popup-notification-secondary-button",
+        "strategy": "class",
+        "groups": []
+    },
+
     "toolbar-history-recently-closed-tabs": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
