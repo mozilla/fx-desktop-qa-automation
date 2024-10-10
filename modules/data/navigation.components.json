@@ -415,7 +415,7 @@
         "groups": []
     },
 
-    "popup-notification-block": {
+    "popup-notification-secondary-button": {
         "selectorData": "popup-notification-secondary-button",
         "strategy": "class",
         "groups": []
