@@ -1,4 +1,5 @@
 import logging
+from shutil import copyfile, copytree
 from time import sleep
 
 import pytest
@@ -7,8 +8,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
-PERMISSION_GRANTED_MSG = "Permission to display: granted"
-MESSAGE_ONE_SHOWN = "Notification #1 showed"
+TEST_PHRASE = "Aloha"
 
 
 @pytest.fixture()
@@ -22,40 +22,49 @@ def test_case():
 
 
 @pytest.fixture()
+def temp_page(tmp_path):
+    loc = tmp_path / "notification_test.html"
+    copyfile("data/notification_test.html", loc)
+    return loc
+
+
+@pytest.fixture()
 def temp_selectors():
     return {
-        "authorize-button": {
-            "selectorData": "/html/body/div/p[4]/button[1]",
-            "strategy": "xpath",
+        "notification-text-input": {
+            "selectorData": "notification-text",
+            "strategy": "id",
             "groups": [],
         },
-        "show-button": {
-            "selectorData": "/html/body/div/p[4]/button[2]",
-            "strategy": "xpath",
+        "send-notification-button": {
+            "selectorData": "send-notification-button",
+            "strategy": "id",
             "groups": [],
         },
-        "console": {"selectorData": "console", "strategy": "id", "groups": []},
+        "notification-log": {"selectorData": "log", "strategy": "id", "groups": []},
     }
 
 
-def test_notifications_displayed(
-    driver: Firefox, temp_selectors, start_notification_listener
-):
-    bennish_test_page = GenericPage(
-        driver, url="https://www.bennish.net/web-notifications.html"
-    )
-    bennish_test_page.open()
-    bennish_test_page.elements |= temp_selectors
-    nav = Navigation(driver)
+def test_notifications_displayed(driver: Firefox, temp_page, temp_selectors):
+    """
+    This test does not (and SHOULD not) test that the OS displays web notifications
+    correctly. The only thing being examined is that the notification is sent.
+    This is done by having our own test page where we know logging only happens
+    after the send operation (should fail with an error before logging if failure)."""
+    test_page = GenericPage(driver, url=f"file://{temp_page}")
+    test_page.open()
+    test_page.elements |= temp_selectors
 
-    start_notification_listener()
+    test_page.fill("notification-text-input", TEST_PHRASE, press_enter=False)
 
-    bennish_test_page.click_on("authorize-button")
-    nav.click_on("popup-notification-primary-button")
-    bennish_test_page.element_has_text("console", PERMISSION_GRANTED_MSG)
-    bennish_test_page.click_on("show-button")
-    bennish_test_page.element_has_text("console", MESSAGE_ONE_SHOWN)
+    test_page.click_on("send-notification-button")
 
-    logging.info(driver.execute_script("return window.localStorage;"))
-    logging.info(driver.execute_script("return window.notifications;"))
-    # logging.info(bennish_test_page.get_localstorage_item("newestNotificationTitle"))
+    # All requests are logged with a message that contains the word 'permission'
+    test_page.element_has_text("notification-log", "permission")
+
+    # Grant permission if we need to
+    if "requesting" in test_page.get_element("notification-log").text:
+        nav = Navigation(driver)
+        nav.click_on("popup-notification-primary-button")
+
+    test_page.element_has_text("notification-log", TEST_PHRASE)
