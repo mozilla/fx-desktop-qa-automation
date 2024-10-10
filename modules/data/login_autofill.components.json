@@ -59,5 +59,11 @@
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
         "strategy": "css",
         "groups": []
+    },
+
+    "facebook-credentials": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
+        "strategy": "css",
+        "groups": []
     }
 }
