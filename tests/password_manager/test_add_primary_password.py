@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_object import AboutPrefs
@@ -41,4 +42,10 @@ def test_add_primary_password(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         about_prefs.wait_for_num_tabs(2)
         driver.switch_to.window(driver.window_handles[-1])
-        assert driver.title == "Password Change Succeeded"
+        passed = False
+        try:
+            assert driver.title == "Password Change Succeeded"
+            passed = True
+        finally:
+            about_prefs.actions.send_keys(Keys.ENTER).perform()
+        assert passed, "Password change success popup never appeared"
