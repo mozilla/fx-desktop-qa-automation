@@ -14,16 +14,13 @@ def test_case():
 def temp_selectors():
     return {
         "start-capture": {
-            "selectorData": 'start',
+            "selectorData": "start",
             "strategy": "id",
             "groups": [],
-        }, 
-        "not-allowed": {
-            "selectorData": "error",
-            "strategy": "class",
-            "groups": []
-        }
+        },
+        "not-allowed": {"selectorData": "error", "strategy": "class", "groups": []},
     }
+
 
 TEST_URL = "https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html"
 
@@ -46,6 +43,6 @@ def test_deny_screen_capture(driver: Firefox, temp_selectors):
 
     # Check that the website cannot access the screen
     web_page.element_has_text(
-        "not-allowed", "Error: NotAllowedError: The request is not allowed by the user agent or the platform in the current context."
-        )
-    
+        "not-allowed",
+        "Error: NotAllowedError: The request is not allowed by the user agent or the platform in the current context.",
+    )

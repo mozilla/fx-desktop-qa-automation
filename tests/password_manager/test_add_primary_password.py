@@ -11,6 +11,11 @@ def test_case():
     return "2245178"
 
 
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 def test_add_primary_password(driver: Firefox):
     """
     C2245178: Verify that a primary password can be added in about:preferences#privacy
