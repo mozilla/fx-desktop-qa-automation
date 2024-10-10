@@ -7,7 +7,7 @@ from modules.page_object_generics import GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "122534"
+    return "122613"
 
 
 @pytest.fixture()
@@ -23,9 +23,9 @@ def temp_selectors():
 TEST_URL = "https://browserleaks.com/geo"
 
 
-def test_deny_screen_capture(driver: Firefox, temp_selectors):
+def test_deny_geolocation(driver: Firefox, temp_selectors):
     """
-    C122534 - Verify that denying screen capture permissions prevents website from accessing the screen
+    C122613 - Verify that denying geolocation permissions prevents website from accessing the location
     """
     # Instatiate Objects
     nav = Navigation(driver)
