@@ -266,6 +266,27 @@ Description: Password count
 Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: remove-login-button-main-page
+Selector Data: "delete-button"
+Description: Remove button
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: remove-login-confirmation-dialog
+Selector Data: "confirmation-dialog"
+Description: Remove login confirmation dialog
+Location: The confirmation dialog trigered by Remove button in about:login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: remove-login-button-confirmation-dialog
+Selector Data: "confirm-button"
+Description: Remove button
+Location: The Remove button inside the confirmation dialog
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
