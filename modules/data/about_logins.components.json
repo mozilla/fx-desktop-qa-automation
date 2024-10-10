@@ -121,8 +121,56 @@
         "selectorData": "list-item",
         "strategy": "class",
         "shadowParent": "login-list",
-        "groups": [
-            "doNotCache"
-        ]
+        "groups": ["doNotCache"]
+    },
+
+    "menu-button":
+    {
+        "selectorData": "menu-button",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "export-passwords-button":
+    {
+        "selectorData": "button.menuitem-button:nth-child(3)",
+        "strategy": "css",
+        "shadowParent": "menu-button",
+        "groups": []
+    },
+
+    "confirmation-dialog":
+    {
+        "selectorData": "confirmation-dialog",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "continue-export-button":
+    {
+        "selectorData": ".confirm-button.primary.danger-button",
+        "strategy": "css",
+        "shadowParent": "confirmation-dialog",
+        "groups": []
+    },
+  
+  "remove-login-button-main-page": {
+        "selectorData": "delete-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "remove-login-confirmation-dialog": {
+        "selectorData": "confirmation-dialog",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "remove-login-button-confirmation-dialog": {
+        "selectorData": "confirm-button",
+        "strategy": "class",
+        "shadowParent": "remove-login-confirmation-dialog",
+        "groups": []
     }
 }
