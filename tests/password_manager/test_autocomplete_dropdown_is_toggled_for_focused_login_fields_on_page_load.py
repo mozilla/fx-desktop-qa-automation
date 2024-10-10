@@ -56,4 +56,5 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     # Autocomplete dropdown is toggled for focused login fields on page load
     tabs.click_tab_by_index(1)
     with driver.context(driver.CONTEXT_CHROME):
-        assert login_autofill.get_element("facebook-credentials").is_displayed()
+        username_element = login_autofill.get_element("facebook-credentials")
+        assert username_element.get_attribute("ac-value") == "username1"
