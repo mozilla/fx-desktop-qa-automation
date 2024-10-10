@@ -53,6 +53,3 @@ def test_add_primary_password(driver: Firefox):
         alert = about_prefs.wait.until(lambda d: get_alert(d))
         assert alert.text == "Primary Password successfully changed."
         alert.accept()
-        # about_prefs.wait_for_num_tabs(2)
-        # about_prefs.driver.switch_to.window(driver.window_handles[-1])
-        # assert driver.title == "Password Change Succeeded"
