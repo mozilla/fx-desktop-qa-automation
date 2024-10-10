@@ -1805,6 +1805,13 @@ Description: Use a Securely Generated Password option
 Location: The dropdown under the password field in a login page
 Path to .json: modules/data/login_autofill.components.json
 ```
+```
+Selector Name: facebook-credentials
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem"
+Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Location: Facebook page load
+Path to .json: modules/data/login_autofill.components.json
+```
 #### navigation
 ```
 Selector name: awesome-bar
