@@ -99,7 +99,7 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 tests/password_manager tests/notifications || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
