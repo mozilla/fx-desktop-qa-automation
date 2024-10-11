@@ -467,5 +467,17 @@
         "selectorData": "box#notification-popup-box image#password-notification-icon.notification-anchor-icon",
         "strategy": "css",
         "groups": []
+    },
+
+    "popup-notification-add": {
+        "selectorData": "popup-notification-primary-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "": {
+        "selectorData": "appMenu-addon-installed-notification",
+        "strategy": "id",
+        "groups": []
     }
 }
