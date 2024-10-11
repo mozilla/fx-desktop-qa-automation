@@ -2255,6 +2255,27 @@ Location: Menu button / hamburger menu
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: popup-notification
+Selector Data: popupnotification
+Description: Browser popup body, e.g. permission to use camera
+Location: Appears from "chrome area" top of window
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: popup-notification-primary-button
+Selector Data: popup-notification-primary-button
+Description: Browser popup body default option button, e.g. Allow or OK
+Location: Popup Notification
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: popup-notification-secondary-button
+Selector Data: popup-notification-secondary-button
+Description: Browser popup body other option button, e.g. Block or Cancel
+Location: Popup Notification
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: password-notification-key
 Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
 Description: The key icon

@@ -1,6 +1,6 @@
 import pytest
+from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
@@ -9,6 +9,11 @@ from modules.util import BrowserActions
 @pytest.fixture()
 def test_case():
     return "2245178"
+
+
+@pytest.fixture()
+def hard_quit():
+    return True
 
 
 def test_add_primary_password(driver: Firefox):
@@ -33,7 +38,14 @@ def test_add_primary_password(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
+    def get_alert(d: Firefox):
+        try:
+            alert = d.switch_to.alert
+        except NoAlertPresentException:
+            return False
+        return alert
+
     with driver.context(driver.CONTEXT_CHROME):
-        about_prefs.wait_for_num_tabs(2)
-        driver.switch_to.window(driver.window_handles[-1])
-        assert driver.title == "Password Change Succeeded"
+        alert = about_prefs.wait.until(lambda d: get_alert(d))
+        assert alert.text == "Primary Password successfully changed."
+        alert.accept()
