@@ -21,7 +21,9 @@ def set_prefs():
 FACEBOOK_URL = "https://www.facebook.com/"
 
 
-def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(driver: Firefox):
+def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
+    driver: Firefox,
+):
     """
     C2240907 - Verify that autocomplete dropdown is toggled for focused login fields on page load
     """
