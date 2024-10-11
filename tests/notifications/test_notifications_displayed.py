@@ -1,6 +1,4 @@
-import logging
-from shutil import copyfile, copytree
-from time import sleep
+from shutil import copyfile
 
 import pytest
 from selenium.webdriver import Firefox

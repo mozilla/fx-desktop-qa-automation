@@ -209,9 +209,9 @@
     },
 
     "lock-icon": {
-    "selectorData": "identity-icon",
-    "strategy": "id",
-    "groups": []
+        "selectorData": "identity-icon",
+        "strategy": "id",
+        "groups": []
     },
 
     "connection-secure-button": {
