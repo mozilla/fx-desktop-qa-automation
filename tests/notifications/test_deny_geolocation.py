@@ -12,13 +12,8 @@ def test_case():
 
 @pytest.fixture()
 def temp_selectors():
-    return {
-        "not-allowed": {
-            "selectorData": "geo-warn",
-            "strategy": "id",
-            "groups": []
-        }
-    }
+    return {"not-allowed": {"selectorData": "geo-warn", "strategy": "id", "groups": []}}
+
 
 TEST_URL = "https://browserleaks.com/geo"
 
@@ -38,4 +33,6 @@ def test_deny_geolocation(driver: Firefox, temp_selectors):
 
     # Check that the website cannot access the geolocation
     web_page.element_visible("not-allowed")
-    assert "PERMISSION_DENIED – User denied Geolocation" in web_page.get_element("not-allowed").get_attribute("innerHTML")
+    assert "PERMISSION_DENIED – User denied Geolocation" in web_page.get_element(
+        "not-allowed"
+    ).get_attribute("innerHTML")
