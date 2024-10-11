@@ -209,9 +209,9 @@
     },
 
     "lock-icon": {
-    "selectorData": "identity-icon",
-    "strategy": "id",
-    "groups": []
+        "selectorData": "identity-icon",
+        "strategy": "id",
+        "groups": []
     },
 
     "connection-secure-button": {
@@ -412,6 +412,12 @@
      "popup-notification": {
         "selectorData": "popupnotification",
         "strategy": "tag",
+        "groups": []
+    },
+
+    "popup-notification-primary-button": {
+        "selectorData": "popup-notification-primary-button",
+        "strategy": "class",
         "groups": []
     },
 

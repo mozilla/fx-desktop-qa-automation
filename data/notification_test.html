@@ -1,0 +1,118 @@
+<!doctype html>
+
+<!--
+    Original file written by Brian Grinstead, see https://github.com/bgrins/devtools-demos/blob/main/misc/notifications.html
+    Modified by Ben Chatterton for automated testing use
+    MIT License applies to this file as follows:
+
+    Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<html lang="en" dir="ltr"><head><meta charset="UTF-8"><link rel='stylesheet' href='shared/styles.css' /><script src="shared/script.js"></script></head><body class="header">
+
+<h1>Notifications API</h1>
+<p>For the Push API, see the <a href="../worker/push.html">Push API / Service workers test page</a>.</p>
+
+<form class="pretty-form">
+<fieldset>
+  <legend>Create notification</legend>
+  <div>
+    <label>Text <input id='notification-text' value='Notification from browser'></input></label>
+  </div>
+
+  <div>
+    <label>After clicking, open link in:</label>
+    <label><input name="target" type="radio" checked="true" value="_blank" />New window</label>
+    <label><input name="target" type="radio" value="_self" />This tab</label>
+  </div>
+
+  <div>
+    <button id='send-notification-button' type='button' onclick='sendNotification()'>Send Notification</button>
+    <button id='close-notification-button' type='button' onclick='closeNotification()'>Close existing notification</button>
+  </div>
+</fieldset>
+</form>
+
+<hr />
+
+<div id="log"></div>
+
+<script>
+var notification;
+
+function getNotificationLinkTarget() {
+  var checked = document.querySelector("[name=target]:checked");
+  var target = checked && checked.value;
+  return target || "_blank";
+}
+
+function notify() {
+  writeLog('notification.onclick: window.open mozilla.org');
+  window.open('http://www.mozilla.org', getNotificationLinkTarget());
+}
+
+function getNotificationText() {
+  return document.querySelector("#notification-text").value;
+}
+function popNotification() {
+  notification = new Notification(getNotificationText());
+  notification.onclick = notify;
+  writeLog(getNotificationText());
+}
+
+function sendNotification() {
+  // Let's check if the browser supports notifications
+  writeLog('Notification.permission: '+ Notification.permission);
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted"  ) {
+    // If it's okay let's create a notification
+    popNotification();
+  }
+
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+    writeLog('requesting Notification Permission');
+    Notification.requestPermission(function (permission) {
+      // If the user accepts, let's create a notification
+      writeLog('Notification.permission: '+ Notification.permission);
+      if (permission === "granted") {
+        popNotification();
+      }
+    });
+  }
+}
+
+function closeNotification() {
+  if (notification) {
+    notification.close();
+  }
+}
+
+function writeLog(txt){
+  document.getElementById("log").innerHTML += txt + '<br>';
+}
+
+</script>
+
+</body></html>
