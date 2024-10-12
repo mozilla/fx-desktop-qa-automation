@@ -13,7 +13,7 @@ def test_case():
 def temp_selectors():
     return {
         "edit-button": {
-            "selectorData": "edit-buttlogin-item-typeon",
+            "selectorData": "edit-button",
             "strategy": "tag",
             "groups": [],
         },
