@@ -123,6 +123,11 @@
         "shadowParent": "login-list",
         "groups": ["doNotCache"]
     },
+    "login-items": {
+        "selectorData": "login-item",
+        "strategy": "tag",
+        "groups": ["doNotCache"]
+    },
 
     "menu-button":
     {

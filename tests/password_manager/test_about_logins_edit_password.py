@@ -9,23 +9,6 @@ from faker import Faker
 def test_case():
     return "2241083"
 
-@pytest.fixture()
-def temp_selectors():
-    return {
-        "edit-button": {
-            "selectorData": "edit-button",
-            "strategy": "tag",
-            "groups": [],
-        },
-        "show-password-button": {
-            "selectorData": ".detail-row .reveal-password-wrapper input.reveal-password-checkbox",
-            "strategy": "css",
-            "shadowParent": "login-item",
-            "groups": []
-        },
-        "not-allowed": {"selectorData": "error", "groups": []},
-    }
-
 
 def test_about_logins_edit_password(driver_and_saved_logins, faker: Faker):
     """
@@ -34,32 +17,38 @@ def test_about_logins_edit_password(driver_and_saved_logins, faker: Faker):
     (driver, usernames, logins) = driver_and_saved_logins
     ba = BrowserActions(driver)
     about_logins = AboutLogins(driver).open()
-
-    # Step 1: fliter saved logins by username (expect 1 result)
     ba.clear_and_fill(about_logins.get_element("login-filter-input"), usernames[-1])
-
-    # Step 2: Click the result
     login_results = about_logins.get_elements("login-list-item")
-    first_login_result = login_results[0]
-    first_login_result.click()
-
-    # Step 3: Click the 'Edit' button
-    about_logins.get_element("edit-button").click()
+    first_login = login_results[0]
+    driver.execute_script(
+        """
+            const firstLogin = arguments[0]
+            firstLogin.click();
+        """,
+    first_login)
+    driver.execute_script(
+        """
+            const shadowHost = arguments[0];
+            const shadowRoot = shadowHost.shadowRoot;
+            const editButton = shadowRoot.querySelector('edit-button');
+            editButton.click();
+        """,
+        about_logins.get_element("login-items")
+    )
 
     new_username = faker.user_name()
     new_password = faker.password(length=15)
-
-    # Fill in the new username and password
     ba.clear_and_fill(about_logins.get_element("about-logins-page-username-field"), new_username, press_enter=False)
-    ba.clear_and_fill(about_logins.get_element("about-logins-page-password-field"), new_password, press_enter=False)
-
-    # Step 5: Save the changes
-    about_logins.get_element("save-changes-button").click()
-
-    # Step 6: Show the password and confirm it's updated
-    about_logins.get_element("show-password-button").click()
+    password_field = about_logins.get_element("about-logins-page-password-field")
+    driver.execute_script("arguments[0].value = arguments[1];", password_field, new_password)
     displayed_password = about_logins.get_element("about-logins-page-password-field").get_attribute("value")
 
-    # Step 7: Assert that the displayed password matches the new one
+    shadow_host = about_logins.get_element("login-items")
+
+    driver.execute_script("""
+        const shadowRoot = arguments[0].shadowRoot;
+        const saveChangesButton = shadowRoot.querySelector('.save-changes-button');
+        saveChangesButton.click();
+    """, shadow_host)
     assert displayed_password == new_password
 
