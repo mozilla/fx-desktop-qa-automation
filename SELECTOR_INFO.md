@@ -287,6 +287,27 @@ Description: Remove button
 Location: The Remove button inside the confirmation dialog
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: show-password-checkbox
+Selector Data: "input.reveal-password-checkbox"
+Description: Show password eye icon
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: primary-password-prompt
+Selector Data: "commonDialogWindow"
+Description: Primary password prompt
+Location: Alert on the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: primary-password-dialog-input-field
+Selector Data: "password1Textbox"
+Description: Input field inside Primary password prompt
+Location: Alert on the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -924,6 +945,13 @@ Selector Name: primary-password-box
 Selector Data: "changemp"
 Description: Shadow parent of the OK and cancel button
 Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: set-primary-password-prompt-message
+Selector Data: "commonDialogWindow"
+Description: Prompt message after setting primary password
+Location: about:preferences#privacy Primary Password
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
