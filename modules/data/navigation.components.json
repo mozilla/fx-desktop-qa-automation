@@ -475,7 +475,7 @@
         "groups": []
     },
 
-    "": {
+    "popup-notification-panel": {
         "selectorData": "appMenu-addon-installed-notification",
         "strategy": "id",
         "groups": []

@@ -37,8 +37,12 @@ def test_webextension_completed_installation_successfully_displayed(driver: Fire
     test_page.click_on("add-to-firefox")
 
     # Click the Add button
-    # nav.get_element("popup-notification-add").click()
     nav.element_clickable("popup-notification-add")
     nav.click_on("popup-notification-add")
 
     # The WebExtension completed installation panel is successfully displayed
+    nav.element_attribute_contains("popup-notification-panel", "buttonlabel", "Okay")
+    nav.element_attribute_contains("popup-notification-panel", "name", "Popup Blocker (strict)")
+    nav.element_attribute_contains(
+        "popup-notification-panel", "endlabel", " was added."
+    )
