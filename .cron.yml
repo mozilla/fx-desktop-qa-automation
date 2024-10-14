@@ -1,0 +1,8 @@
+---
+
+jobs:
+  - name: new-beta-qa
+    job:
+      type: decision-task
+    when:
+      - {hour: 14, minute: 47}

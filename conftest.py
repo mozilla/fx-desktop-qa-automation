@@ -21,6 +21,7 @@ from modules import testrail_integration as tri
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
+TESTRAIL_CREDENTIALS_FILE = ".testrail_credentials.json"
 
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
@@ -303,6 +304,7 @@ def pytest_sessionfinish(session):
         import psutil
 
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+        # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
             try:
                 if (
@@ -316,6 +318,14 @@ def pytest_sessionfinish(session):
                 pass
 
     # TestRail reporting
+    if os.path.exists(TESTRAIL_CREDENTIALS_FILE):
+        with open(TESTRAIL_CREDENTIALS_FILE) as fh:
+            secrets = json.load(fh).get("testrailCredentials")
+        os.environ["TESTRAIL_BASE_URL"] = secrets.get("host")
+        os.environ["TESTRAIL_USERNAME"] = secrets.get("username")
+        os.environ["TESTRAIL_API_KEY"] = secrets.get("password")
+        os.remove(TESTRAIL_CREDENTIALS_FILE)
+
     if not os.environ.get("TESTRAIL_REPORT"):
         logging.info(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
