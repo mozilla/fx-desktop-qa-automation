@@ -2296,6 +2296,20 @@ Description: The key icon
 Location: In the Navigation bar, next to the url input field
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: popup-notification-add
+Selector Data: popup-notification-primary-button
+Description: Popup notification add button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: popup-notification-panel
+Selector Data: appMenu-addon-installed-notification
+Description: Popup notification panel
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
