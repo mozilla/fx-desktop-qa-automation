@@ -20,35 +20,22 @@ def test_about_logins_edit_password(driver_and_saved_logins, faker: Faker):
     ba.clear_and_fill(about_logins.get_element("login-filter-input"), usernames[-1])
     login_results = about_logins.get_elements("login-list-item")
     first_login = login_results[0]
-    driver.execute_script(
-        """
-            const firstLogin = arguments[0]
-            firstLogin.click();
-        """,
-    first_login)
-    driver.execute_script(
-        """
-            const shadowHost = arguments[0];
-            const shadowRoot = shadowHost.shadowRoot;
-            const editButton = shadowRoot.querySelector('edit-button');
-            editButton.click();
-        """,
-        about_logins.get_element("login-items")
-    )
+    about_logins.click_shadow_element(first_login)
+    
+    shadow_host = about_logins.get_element("login-items")
+    shadow_content = about_logins.utils.get_shadow_content(shadow_host)
+
+    edit_button = shadow_content[0].find_element("css selector", "edit-button")
+    edit_button.click()
+
 
     new_username = faker.user_name()
     new_password = faker.password(length=15)
     ba.clear_and_fill(about_logins.get_element("about-logins-page-username-field"), new_username, press_enter=False)
     password_field = about_logins.get_element("about-logins-page-password-field")
     driver.execute_script("arguments[0].value = arguments[1];", password_field, new_password)
-    displayed_password = about_logins.get_element("about-logins-page-password-field").get_attribute("value")
+    about_logins.wait.until(lambda _: about_logins.get_element("about-logins-page-password-field").get_attribute("value") == new_password)
 
-    shadow_host = about_logins.get_element("login-items")
-
-    driver.execute_script("""
-        const shadowRoot = arguments[0].shadowRoot;
-        const saveChangesButton = shadowRoot.querySelector('.save-changes-button');
-        saveChangesButton.click();
-    """, shadow_host)
-    assert displayed_password == new_password
+    save_button = shadow_content[0].find_element("css selector", ".save-changes-button")
+    save_button.click()
 

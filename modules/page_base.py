@@ -503,6 +503,14 @@ class BasePage(Page):
             logging.info(f"{reference} clicked")
         return self
 
+    def click_shadow_element(self, shadow_host: WebElement) -> Page:
+        """
+        Click a shadow DOM element that cannot be interacted with
+        using Selenium's native methods
+        """
+        self.driver.execute_script('return arguments[0].click()', shadow_host)
+        return self
+
     def multi_click(
         self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
