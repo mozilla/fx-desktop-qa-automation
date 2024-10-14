@@ -1,4 +1,5 @@
 import pytest
+from selenium.common import NoAlertPresentException
 from selenium.webdriver import Firefox, Keys
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -10,6 +11,14 @@ from modules.util import BrowserActions
 @pytest.fixture()
 def test_case():
     return "2245199"
+
+
+def get_alert(d: Firefox):
+    try:
+        alert = d.switch_to.alert
+    except NoAlertPresentException:
+        return False
+    return alert
 
 
 def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
@@ -45,13 +54,8 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     about_prefs.click_on("submit-password")
 
     # Dismiss the success message after setting the primary password
-    with driver.context(driver.CONTEXT_CHROME):
-        about_prefs.wait_for_num_tabs(2)
-        driver.switch_to.window(driver.window_handles[-1])
-        primary_password_message_dialog = about_prefs.get_element(
-            "set-primary-password-prompt-message"
-        )
-        primary_password_message_dialog.send_keys(Keys.ENTER)
+    alert = about_prefs.wait.until(lambda d: get_alert(d))
+    alert.accept()
 
     # Open about:logins page and create a login entry
     tabs.switch_to_new_tab()
@@ -99,5 +103,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     assert driver.current_url.startswith("about:logins")
 
     # Verify that the saved login is visible and accessible in the login list
-    mozilla_login = about_logins.get_element("login-list-item")
-    assert mozilla_login.get_attribute("title") == "mozilla.org"
+    about_logins.wait.until(
+        lambda _: about_logins.get_element("login-list-item").get_attribute("title")
+        == "mozilla.org"
+    )

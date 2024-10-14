@@ -947,13 +947,6 @@ Description: Shadow parent of the OK and cancel button
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
-```
-Selector Name: set-primary-password-prompt-message
-Selector Data: "commonDialogWindow"
-Description: Prompt message after setting primary password
-Location: about:preferences#privacy Primary Password
-Path to .json: modules/data/about_prefs.components.json
-```
 #### about_profiles
 ```
 Selector Name: profile-container

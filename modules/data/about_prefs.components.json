@@ -486,11 +486,5 @@
         "selectorData": "changemp",
         "strategy": "id",
         "groups": []
-    },
-
-    "set-primary-password-prompt-message": {
-        "selectorData": "commonDialogWindow",
-        "strategy": "id",
-        "groups": []
     }
 }
