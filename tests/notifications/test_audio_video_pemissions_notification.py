@@ -7,7 +7,7 @@ from modules.page_object_generics import GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "122556"
+    return "122542"
 
 
 @pytest.fixture()
@@ -32,7 +32,7 @@ TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
     """
-    C122539 - Verify that Microphone only permission prompt is successfully displayed when the website asks for microphone permissions
+    C122542 - Verify that the Microphone and Camera permissions prompt is successfully displayed when the website asks for their permissions
     """
     # Instatiate Objects
     nav = Navigation(driver)
