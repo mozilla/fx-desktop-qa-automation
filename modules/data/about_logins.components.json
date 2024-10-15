@@ -15,7 +15,8 @@
         "strategy": "class",
         "shadowParent": "login-list",
         "groups": [
-            "doNotCache"]
+            "doNotCache"
+        ]
     },
 
     "create-login-button":
@@ -191,5 +192,5 @@
        "selectorData": "password1Textbox",
        "strategy": "id",
        "groups": []
-       }
-    }
+   }
+}
