@@ -61,7 +61,7 @@
         "groups": []
     },
 
-    "facebook-credentials": {
+    "bsky-credentials": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
         "strategy": "css",
         "groups": []
