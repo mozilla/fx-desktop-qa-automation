@@ -5,6 +5,9 @@ transforms:
 task-defaults:
   label: "Test New Beta Version"
   description: "Checks for new betas, tests them, reports to TestRail and Slack"
+  attributes:
+    beta-qa: true
+  run-on-tasks-for: []
   worker-type: t-linux-wayland
   worker:
     max-run-time: 1800
