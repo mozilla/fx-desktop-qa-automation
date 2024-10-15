@@ -1,10 +1,4 @@
 {
-    "text-layer": {
-        "selectorData": "textLayer",
-        "strategy": "class",
-        "groups": []
-    },
-
     "highlighted-text": {
         "selectorData": ".textLayer .highlight.selected.appended",
         "strategy": "css",

@@ -209,9 +209,9 @@
     },
 
     "lock-icon": {
-    "selectorData": "identity-icon",
-    "strategy": "id",
-    "groups": []
+        "selectorData": "identity-icon",
+        "strategy": "id",
+        "groups": []
     },
 
     "connection-secure-button": {
@@ -415,7 +415,13 @@
         "groups": []
     },
 
-    "popup-notification-block": {
+    "popup-notification-primary-button": {
+        "selectorData": "popup-notification-primary-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "popup-notification-secondary-button": {
         "selectorData": "popup-notification-secondary-button",
         "strategy": "class",
         "groups": []
@@ -466,6 +472,18 @@
     "password-notification-key": {
         "selectorData": "box#notification-popup-box image#password-notification-icon.notification-anchor-icon",
         "strategy": "css",
+        "groups": []
+    },
+
+    "popup-notification-add": {
+        "selectorData": "popup-notification-primary-button",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "popup-notification-panel": {
+        "selectorData": "appMenu-addon-installed-notification",
+        "strategy": "id",
         "groups": []
     }
 }

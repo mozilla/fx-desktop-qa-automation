@@ -154,7 +154,7 @@
         "groups": []
     },
   
-  "remove-login-button-main-page": {
+    "remove-login-button-main-page": {
         "selectorData": "delete-button",
         "strategy": "css",
         "shadowParent": "login-item",
@@ -175,23 +175,22 @@
     },
 
     "show-password-checkbox": {
-        "selectorData": "reveal-password-checkbox",
-        "strategy": "class",
-        "shadowParent": "login-item",
-        "groups": []
-    },
 
-    "primary-password-dialog-input-field": {
-        "selectorData": "password1Textbox",
-        "strategy": "id",
-        "groups": [
-        ]
-    },
+       "selectorData": "input.reveal-password-checkbox",
+       "strategy": "css",
+       "shadowParent": "login-item",
+       "groups": []
+   },
 
-     "primary-password-prompt": {
+    "primary-password-prompt": {
        "selectorData": "commonDialogWindow",
        "strategy": "id",
        "groups": ["doNotCache"]
-     }
+   },
 
-}
+    "primary-password-dialog-input-field": {
+       "selectorData": "password1Textbox",
+       "strategy": "id",
+       "groups": []
+       }
+    }
