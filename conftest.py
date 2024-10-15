@@ -340,7 +340,7 @@ def pytest_sessionfinish(session):
     version = plan_title.split(" ")[-1]
     prefix = config[:3].lower()
     with open(f"{prefix}-latest-reported-version", "w") as fh:
-        fh.write(version)
+        fh.write(version.split(" ")[-1])
 
 
 @pytest.fixture()
