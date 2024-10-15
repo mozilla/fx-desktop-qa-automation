@@ -15,7 +15,8 @@
         "strategy": "class",
         "shadowParent": "login-list",
         "groups": [
-            "doNotCache"]
+            "doNotCache"
+        ]
     },
 
     "create-login-button":
@@ -193,3 +194,4 @@
        "groups": []
        }
     }
+}

@@ -1,11 +1,14 @@
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import Navigation
 from modules.page_object_generics import GenericPage
+
 
 @pytest.fixture()
 def test_case():
     return "122532"
+
 
 @pytest.fixture()
 def temp_selectors():
@@ -18,7 +21,9 @@ def temp_selectors():
         "not-allowed": {"selectorData": "error", "strategy": "class", "groups": []},
     }
 
+
 TEST_URL = "https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html"
+
 
 def test_screen_share_permission_prompt(driver: Firefox, temp_selectors):
     """
