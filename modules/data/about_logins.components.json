@@ -175,7 +175,6 @@
     },
 
     "show-password-checkbox": {
-
        "selectorData": "input.reveal-password-checkbox",
        "strategy": "css",
        "shadowParent": "login-item",
