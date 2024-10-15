@@ -1740,6 +1740,13 @@ Description: Sample download file URL
 Location:
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: bsky-signin-button
+Selector Data: "//button[@aria-label='Sign in']"
+Description: bsky website sign in button
+Location: Bsky website
+Path to .json: modules/data/generic_page.components.json
+```
 #### google_search
 ```
 Selector Name: search-bar-textarea
