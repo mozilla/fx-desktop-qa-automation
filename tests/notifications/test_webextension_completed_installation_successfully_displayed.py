@@ -16,7 +16,7 @@ def temp_selectors():
         "add-to-firefox": {
             "selectorData": "AMInstallButton-button",
             "strategy": "class",
-            "groups": []
+            "groups": [],
         }
     }
 
@@ -24,7 +24,9 @@ def temp_selectors():
 TEST_URL = "https://addons.mozilla.org/en-US/firefox/addon/popup-blocker/"
 
 
-def test_webextension_completed_installation_successfully_displayed(driver: Firefox, temp_selectors):
+def test_webextension_completed_installation_successfully_displayed(
+    driver: Firefox, temp_selectors
+):
     """
     C122933 - Verify that WebExtension completed installation is successfully displayed
     """
@@ -42,7 +44,9 @@ def test_webextension_completed_installation_successfully_displayed(driver: Fire
 
     # The WebExtension completed installation panel is successfully displayed
     nav.element_attribute_contains("popup-notification-panel", "buttonlabel", "Okay")
-    nav.element_attribute_contains("popup-notification-panel", "name", "Popup Blocker (strict)")
+    nav.element_attribute_contains(
+        "popup-notification-panel", "name", "Popup Blocker (strict)"
+    )
     nav.element_attribute_contains(
         "popup-notification-panel", "endlabel", " was added."
     )
