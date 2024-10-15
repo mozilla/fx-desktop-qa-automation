@@ -15,7 +15,9 @@ def test_case():
 TEST_URL = "https://www.w3schools.com/html/html5_geolocation.asp"
 
 
-def test_deny_geolocation(driver: Firefox):
+def test_geolocation_prompt_is_triggered_on_request_location_on_website(
+    driver: Firefox,
+):
     """
     C122611 - Verify that geolocation prompt is present when accessing a website that requests location
     """
