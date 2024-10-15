@@ -172,5 +172,26 @@
         "strategy": "class",
         "shadowParent": "remove-login-confirmation-dialog",
         "groups": []
-    }
+    },
+
+    "show-password-checkbox": {
+        "selectorData": "reveal-password-checkbox",
+        "strategy": "class",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "primary-password-dialog-input-field": {
+        "selectorData": "password1Textbox",
+        "strategy": "id",
+        "groups": [
+        ]
+    },
+
+     "primary-password-prompt": {
+       "selectorData": "commonDialogWindow",
+       "strategy": "id",
+       "groups": ["doNotCache"]
+     }
+
 }
