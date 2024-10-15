@@ -287,6 +287,27 @@ Description: Remove button
 Location: The Remove button inside the confirmation dialog
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: show-password-checkbox
+Selector Data: "input.reveal-password-checkbox"
+Description: Show password eye icon
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: primary-password-prompt
+Selector Data: "commonDialogWindow"
+Description: Primary password prompt
+Location: Alert on the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: primary-password-dialog-input-field
+Selector Data: "password1Textbox"
+Description: Input field inside Primary password prompt
+Location: Alert on the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -1740,6 +1761,182 @@ Description: Sample download file URL
 Location:
 Path to .json: modules/data/generic_page.components.json
 ```
+#### generic_pdf
+```
+Selector Name: highlighted-text
+Selector Data: ".textLayer .highlight.selected.appended"
+Description: attribute of text element
+Location: any element that supports the attribute (usually text)
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: html-body
+Selector Data: "html"
+Description: The html tag of the pdf
+Location: In the body of the pdf document
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: pdf-body
+Selector Data: "viewer"
+Description: The body of the pdf
+Location: The pdf document
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: zoom-out
+Selector Data: "zoomOutButton"
+Description: The zoom out button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: zoom-in
+Selector Data: "zoomInButton"
+Description: The zoom out button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: download-button
+Selector Data: "downloadButton"
+Description: The save button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: zipcode-field
+Selector Data: "input[name='ZIP Code']"
+Description: The zip code input field
+Location: The test pdf page content
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: scroll-next
+Selector Data: "next"
+Description: The Next Page button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: scroll-prev
+Selector Data: "previous"
+Description: The Previous Page button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: pdf-page
+Selector Data: "div[data-page-number='{number}']"
+Description: The Page number input field (takes a page number)
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: page-one-item
+Selector Data: "/html/body/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/span[13]"
+Description: The Page number of the first page
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: page-input
+Selector Data: "pageNumber"
+Description: The Page field
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-toggle
+Selector Data: "secondaryToolbarToggle"
+Description: The Tools menu button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-container
+Selector Data: "secondaryToolbarButtonContainer"
+Description: The Tools menu
+Location: The pdf viewer tools menu
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-hand-tool
+Selector Data: "cursorHandTool"
+Description: The Tools menu's hand grabber curser
+Location: The pdf viewer tools menu
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-select-tool
+Selector Data: "cursorSelectTool"
+Description: The Tools menu's select curser
+Location: The pdf viewer tools menu
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-rotate-cw
+Selector Data: "pageRotateCw"
+Description: The rotate clockwise button
+Location: The pdf viewer tools menu
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-rotate-ccw
+Selector Data: "pageRotateCcw"
+Description: The rotate counter clockwise button
+Location: The pdf viewer tools menu
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: first-name-field
+Selector Data: "input[name='First Name Given Name']"
+Description: The first name text imput field
+Location: The test pdf page content
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: first-checkbox
+Selector Data: "input[name='CB_1']"
+Description: The check box for option 1.
+Location: The test pdf page content
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: state-dropdown-field
+Selector Data: "select[name='State']"
+Description: The State selection menu
+Location: The test pdf page content
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: edited-name-field
+Selector Data: "input[name='First Name Given Name'][value='Mark']"
+Description: The First name field with 'Mark' in it
+Location: The test pdf page content
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-add-image
+Selector Data: "editorStamp"
+Description: The Add or edit images button
+Location: The pdf viewer toolbar
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: toolbar-add-image-confirm
+Selector Data: "editorStampAddImage"
+Description: The Add image option
+Location: The pdf viewer toolbar when Add or edit is opened
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: added-goomy-image
+Selector Data: "canvas[aria-label='goomy.png']"
+Description: The Added test image label
+Location: The test pdf page content
+Path to .json: modules/data/generic_pdf.components.json
+```
 #### google_search
 ```
 Selector Name: search-bar-textarea
@@ -2273,6 +2470,20 @@ Selector Name: password-notification-key
 Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
 Description: The key icon
 Location: In the Navigation bar, next to the url input field
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: popup-notification-add
+Selector Data: popup-notification-primary-button
+Description: Popup notification add button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: popup-notification-panel
+Selector Data: appMenu-addon-installed-notification
+Description: Popup notification panel
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
