@@ -287,6 +287,27 @@ Description: Remove button
 Location: The Remove button inside the confirmation dialog
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: show-password-checkbox
+Selector Data: "input.reveal-password-checkbox"
+Description: Show password eye icon
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: primary-password-prompt
+Selector Data: "commonDialogWindow"
+Description: Primary password prompt
+Location: Alert on the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: primary-password-dialog-input-field
+Selector Data: "password1Textbox"
+Description: Input field inside Primary password prompt
+Location: Alert on the about:logins page
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -2287,6 +2308,20 @@ Selector Name: password-notification-key
 Selector Data: "box#notification-popup-box image#password-notification-icon.notification-anchor-icon"
 Description: The key icon
 Location: In the Navigation bar, next to the url input field
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: popup-notification-add
+Selector Data: popup-notification-primary-button
+Description: Popup notification add button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: popup-notification-panel
+Selector Data: appMenu-addon-installed-notification
+Description: Popup notification panel
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
