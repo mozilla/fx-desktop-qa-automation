@@ -2310,6 +2310,13 @@ Description: Popup notification panel
 Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: geolocation-notification-container
+Selector Data: "popupnotification#geolocation-notification"
+Description: Geolocation prompt container
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
