@@ -40,7 +40,7 @@ tasks:
         exit $((${?} | ${FAILURE}))
     worker:
       env:
-        TESTRAIL_REPORT: 1
+        TESTRAIL_REPORT: "true"
     notify:
       recipients:
         - type: slack-channel
