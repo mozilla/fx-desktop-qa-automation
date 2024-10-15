@@ -192,6 +192,5 @@
        "selectorData": "password1Textbox",
        "strategy": "id",
        "groups": []
-       }
-    }
+   }
 }
