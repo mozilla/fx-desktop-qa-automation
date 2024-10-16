@@ -6,4 +6,4 @@ jobs:
       type: decision-task
       target-tasks-method: new_beta_qa
     when:
-      - {hour: 14, minute: 47}
+      - {hour: 17, minute: 47}
