@@ -361,10 +361,7 @@ class BasePage(Page):
 
     def element_does_not_exist(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
-        original_timeout = self.driver.timeouts.implicit_wait
-        self.driver.implicitly_wait(0)
         self.instawait.until_not(lambda _: self.get_elements(name, labels=labels))
-        self.driver.implicitly_wait(original_timeout)
         return self
 
     def element_visible(self, name: str, labels=[]) -> Page:
