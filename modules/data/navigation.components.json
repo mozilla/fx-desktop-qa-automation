@@ -485,5 +485,11 @@
         "selectorData": "appMenu-addon-installed-notification",
         "strategy": "id",
         "groups": []
+    },
+
+    "geolocation-notification-container": {
+    "selectorData": "popupnotification#geolocation-notification",
+    "strategy": "css",
+    "groups": []
     }
 }

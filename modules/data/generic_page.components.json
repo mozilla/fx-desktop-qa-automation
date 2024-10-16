@@ -70,6 +70,12 @@
         "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
         "strategy": "css",
         "groups": []
+    },
+
+    "bsky-signin-button": {
+        "selectorData": "//button[@aria-label='Sign in']",
+        "strategy": "xpath",
+        "groups": []
     }
     
 }
