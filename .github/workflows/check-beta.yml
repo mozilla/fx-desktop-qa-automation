@@ -1,8 +1,6 @@
 name: Check and run smoke tests on new Beta version
 
 on:
-  workflow_dispatch:
-  push:
   schedule:
     - cron: "47 */3 * * *" # Runs this workflow every 3 hours
 env:
