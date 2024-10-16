@@ -1,4 +1,4 @@
-name: Check and run smoke tests on new Beta version
+name: Check new beta version
 
 on:
   schedule:
