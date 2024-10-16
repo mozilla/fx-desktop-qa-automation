@@ -30,7 +30,7 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
 
     # Change username and the password
     about_logins.get_element("about-logins-page-username-field").send_keys("Testuser")
-    about_logins.get_element("about-logins-page-password-field").send_keys("123")
+    about_logins.get_element("about-logins-page-password-hidden").send_keys("123")
 
     # Click the "Save" button
     about_logins.get_element("save-edited-login").click()
@@ -43,5 +43,5 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     about_logins.get_element("show-password-checkbox").click()
 
     # Verify the newly entered password is correctly displayed
-    username_element = about_logins.get_element("about-logins-page-password-field")
+    username_element = about_logins.get_element("about-logins-page-password-revealed")
     assert username_element.get_attribute("value") == "password123"
