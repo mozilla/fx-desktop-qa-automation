@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.common import NoAlertPresentException
 from selenium.webdriver import Firefox
@@ -80,5 +78,9 @@ def test_password_can_be_shown(driver: Firefox):
 
     # Verify that the password is unmasked by checking that the type is now text.
     driver.switch_to.window(driver.window_handles[0])
-    password_field = about_logins.get_element("about-logins-page-password-field")
-    about_logins.element_attribute_contains("about-logins-page-password-field", "type", "text")
+    about_logins.wait.until(
+        lambda _: about_logins.get_element(
+            "about-logins-page-password-field"
+        ).get_attribute("type")
+        == "text"
+    )

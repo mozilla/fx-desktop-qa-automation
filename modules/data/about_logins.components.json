@@ -94,7 +94,7 @@
     },
 
     "about-logins-page-password-field": {
-        "selectorData": ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']",
+        "selectorData": ".detail-row .reveal-password-wrapper input[name='password']",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
