@@ -414,9 +414,9 @@ class BasePage(Page):
     ) -> Page:
         """Expect helper: wait until element attribute contains certain value"""
         self.expect(
-            EC.text_to_be_present_in_element_attribute(
-                self.get_selector(name, labels=labels), attr_name, str(attr_value)
-            )
+            lambda _: self.get_element(name, labels=labels)
+            and str(attr_value)
+            in self.get_element(name, labels=labels).get_attribute(attr_name)
         )
         return self
 
