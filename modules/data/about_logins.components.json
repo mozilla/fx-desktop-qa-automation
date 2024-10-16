@@ -192,5 +192,20 @@
        "selectorData": "password1Textbox",
        "strategy": "id",
        "groups": []
-   }
+   },
+
+    "edit-login": {
+        "selectorData": "edit-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "save-edited-login":
+    {
+        "selectorData": "save-changes-button",
+        "strategy": "class",
+        "shadowParent": "login-item",
+        "groups": []
+    }
 }
