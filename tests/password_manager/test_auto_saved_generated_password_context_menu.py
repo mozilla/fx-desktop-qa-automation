@@ -49,13 +49,16 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     about_logins.open()
 
     # Verify the website address saves the correct value
-    website_address_element = about_logins.get_element("website-address")
-    assert website_address_element.get_attribute("href") == "https://mozilla.github.io/"
+    about_logins.element_attribute_contains(
+        "website-address", "href", "https://mozilla.github.io/"
+    )
 
     # Verify the username field has no value
-    username_element = about_logins.get_element("about-logins-page-username-field")
-    assert username_element.get_attribute("placeholder") == "(no username)"
+    about_logins.element_attribute_contains(
+        "about-logins-page-username-field", "placeholder", "(no username)"
+    )
 
     # Verify the password field is filled with a value
-    password_element = about_logins.get_element("about-logins-page-password-field")
-    assert password_element.get_attribute("tabindex") == "-1"
+    about_logins.element_attribute_contains(
+        "about-logins-page-password-hidden", "tabindex", "-1"
+    )

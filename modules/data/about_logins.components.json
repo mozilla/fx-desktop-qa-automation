@@ -93,12 +93,19 @@
         "groups": []
     },
 
-    "about-logins-page-password-field": {
+    "about-logins-page-password-hidden": {
+        "selectorData": ".detail-row .reveal-password-wrapper .password-display",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+
+    "about-logins-page-password-revealed": {
         "selectorData": ".detail-row .reveal-password-wrapper input[name='password']",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
-     },
+    },
 
 
     "login-sort":

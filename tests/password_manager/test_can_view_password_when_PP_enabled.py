@@ -78,9 +78,6 @@ def test_password_can_be_shown(driver: Firefox):
 
     # Verify that the password is unmasked by checking that the type is now text.
     driver.switch_to.window(driver.window_handles[0])
-    about_logins.wait.until(
-        lambda _: about_logins.get_element(
-            "about-logins-page-password-field"
-        ).get_attribute("type")
-        == "text"
+    about_logins.element_attribute_contains(
+        "about-logins-page-password-revealed", "type", "text"
     )
