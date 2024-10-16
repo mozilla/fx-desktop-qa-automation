@@ -246,9 +246,16 @@ Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
-Selector Name: about-logins-page-password-field
-Selector Data: ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']"
-Description: The Password field
+Selector Name: about-logins-page-password-hidden
+Selector Data: ".detail-row .reveal-password-wrapper .password-display"
+Description: The Password field, when the password is hidden
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: about-logins-page-password-revealed
+Selector Data: ".detail-row .reveal-password-wrapper input[name='password']"
+Description: The Password field, when the password is revealed
 Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
@@ -1761,6 +1768,13 @@ Description: Sample download file URL
 Location:
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: bsky-signin-button
+Selector Data: "//button[@aria-label='Sign in']"
+Description: bsky website sign in button
+Location: Bsky website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
@@ -2000,6 +2014,13 @@ Selector Name: generated-securely-password
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']"
 Description: Use a Securely Generated Password option
 Location: The dropdown under the password field in a login page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: bsky-credentials
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
+Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
@@ -2484,6 +2505,13 @@ Selector Name: popup-notification-panel
 Selector Data: appMenu-addon-installed-notification
 Description: Popup notification panel
 Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: geolocation-notification-container
+Selector Data: "popupnotification#geolocation-notification"
+Description: Geolocation prompt container
+Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
