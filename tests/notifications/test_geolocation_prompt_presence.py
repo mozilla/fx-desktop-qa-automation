@@ -15,7 +15,7 @@ def test_case():
 TEST_URL = "https://www.w3schools.com/html/html5_geolocation.asp"
 
 
-def test_geolocation_prompt_is_triggered_on_request_location_on_website(
+def test_geolocation_prompt_is_triggered_on_request_location_on_a_website(
     driver: Firefox,
 ):
     """
@@ -42,6 +42,4 @@ def test_geolocation_prompt_is_triggered_on_request_location_on_website(
     ).click()
 
     # Verify that the geolocation prompt is present
-    assert nav.wait.until(
-        lambda _: nav.element_visible("geolocation-notification-container")
-    ), "Geolocation prompt did not appear within the expected time"
+    nav.wait.until(lambda _: nav.element_visible("geolocation-notification-container"))
