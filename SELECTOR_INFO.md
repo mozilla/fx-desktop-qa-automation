@@ -246,9 +246,16 @@ Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
-Selector Name: about-logins-page-password-field
-Selector Data: ".detail-row .reveal-password-wrapper input.password-display, .detail-row .reveal-password-wrapper input[name='password']"
-Description: The Password field
+Selector Name: about-logins-page-password-hidden
+Selector Data: ".detail-row .reveal-password-wrapper .password-display"
+Description: The Password field, when the password is hidden
+Location: The about:login's main login page
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: about-logins-page-password-revealed
+Selector Data: ".detail-row .reveal-password-wrapper input[name='password']"
+Description: The Password field, when the password is revealed
 Location: The about:login's main login page
 Path to .json: modules/data/about_logins.components.json
 ```
