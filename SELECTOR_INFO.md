@@ -1761,6 +1761,13 @@ Description: Sample download file URL
 Location:
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: bsky-signin-button
+Selector Data: "//button[@aria-label='Sign in']"
+Description: bsky website sign in button
+Location: Bsky website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
@@ -2000,6 +2007,13 @@ Selector Name: generated-securely-password
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']"
 Description: Use a Securely Generated Password option
 Location: The dropdown under the password field in a login page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: bsky-credentials
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
+Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
