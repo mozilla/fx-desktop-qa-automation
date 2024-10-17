@@ -315,6 +315,20 @@ Description: Input field inside Primary password prompt
 Location: Alert on the about:logins page
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: edit-login
+Selector Data: edit-button
+Description: About logins edit button
+Location: The about:login's main login page after adding a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: save-edited-login
+Selector Data: save-changes-button
+Description: Save edited login
+Location: The about:login's main login page after editing a login
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
