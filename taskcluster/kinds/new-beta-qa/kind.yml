@@ -28,7 +28,7 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        if ! python3 discover_new_beta.py linux; then exit 1; fi
+        if [[ $(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq '.FIREFOX_DEVEDITION') == "\"$(cat lin-latest-reported-version)\"" ]]; then exit 100; fi
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
@@ -40,6 +40,8 @@ tasks:
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox
+        git add lin-latest-reported-version
+        git commit -m "update latest reported version"
         exit $((${?} | ${FAILURE}))
     worker:
       env:
