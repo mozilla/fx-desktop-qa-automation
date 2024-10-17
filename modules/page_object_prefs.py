@@ -330,7 +330,7 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("history_menulist")
 
-    def import_bookmarks(self, browser_name: str) -> BasePage:
+    def import_browser_data(self, browser_name: str) -> BasePage:
         """
         Press the import browser data button
         """

@@ -97,6 +97,6 @@ def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
-    about_prefs.import_bookmarks("Chrome")
+    about_prefs.import_browser_data("Chrome")
     toolbar = Navigation(driver)
     toolbar.confirm_bookmark_exists(TEST_PAGE_TITLE)

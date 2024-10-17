@@ -51,6 +51,6 @@ def test_edge_bookmarks_imported(driver: Firefox, edge_bookmarks):
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
-    about_prefs.import_bookmarks("Edge")
+    about_prefs.import_browser_data("Edge")
     nav = Navigation(driver)
     nav.confirm_bookmark_exists(NEWS_ARTICLE_TITLE)

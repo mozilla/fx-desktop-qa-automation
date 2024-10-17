@@ -97,7 +97,7 @@ def test_chrome_passwords_imported(chrome_passwords, driver: Firefox):
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
-    about_prefs.import_bookmarks("Chrome")
+    about_prefs.import_browser_data("Chrome")
 
     # Instantiate login object
     about_logins = AboutLogins(driver).open()
