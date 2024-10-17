@@ -18,11 +18,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules import testrail_integration as tri
+from modules.taskcluster import get_tc_secret
 
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
-TESTRAIL_CREDENTIALS_FILE = ".testrail_credentials.json"
 
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
@@ -319,19 +319,24 @@ def pytest_sessionfinish(session):
                 pass
 
     # TestRail reporting
-    if os.path.exists(TESTRAIL_CREDENTIALS_FILE):
-        with open(TESTRAIL_CREDENTIALS_FILE) as fh:
-            secrets = json.load(fh).get("testrailCredentials")
-        os.environ["TESTRAIL_BASE_URL"] = secrets.get("host")
-        os.environ["TESTRAIL_USERNAME"] = secrets.get("username")
-        os.environ["TESTRAIL_API_KEY"] = secrets.get("password")
-        os.remove(TESTRAIL_CREDENTIALS_FILE)
-
     if not os.environ.get("TESTRAIL_REPORT"):
         logging.info(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
         return None
+
+    testrail_credentials = get_tc_secret()
+    if testrail_credentials:
+        creds = testrail_credentials.get("testrailCredentials")
+        os.environ["TESTRAIL_USERNAME"] = creds.get("username")
+        os.environ["TESTRAIL_API_KEY"] = creds.get("password")
+        os.environ["TESTRAIL_BASE_URL"] = creds.get("host")
+    elif not os.environ.get("TESTRAIL_USERNAME"):
+        logging.error(
+            "Attempted to report to TestRail, but could not find credentials."
+        )
+        raise OSError("Could not find TestRail credentials")
+
     report = session.config._json_report.report
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)

@@ -12,6 +12,8 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
+    env:
+      TESTRAIL_REPORT: "true"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -44,9 +46,6 @@ tasks:
         git add lin-latest-reported-version
         git commit -m "update latest reported version"
         exit $((${?} | ${FAILURE}))
-    worker:
-      env:
-        TESTRAIL_REPORT: "true"
     notify:
       recipients:
         - type: slack-channel
