@@ -7,4 +7,10 @@ jobs:
       treeherder-symbol: smoke-test-dte
       target-tasks-method: new_beta_qa
     when:
-      - {minute: 21}
+      - {hour: 0, minute: 21}
+      - {hour: 3, minute: 21}
+      - {hour: 6, minute: 21}
+      - {hour: 9, minute: 21}
+      - {hour: 12, minute: 21}
+      - {hour: 15, minute: 21}
+      - {hour: 18, minute: 21}
