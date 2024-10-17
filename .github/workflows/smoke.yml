@@ -4,9 +4,15 @@ name: Mac and Windows Smoke
 run-name: ${{ github.actor }} is running smoke tests
 on:
   pull_request:
+  workflow_call:
+    inputs:
+      job_to_run: 
+        required: true
+        type: string
 
 jobs:
   Smoke-Windows:
+    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -71,12 +77,13 @@ jobs:
           }
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
-        if: always()
+        if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
+    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -110,7 +117,7 @@ jobs:
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
-        if: always()
+        if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac
@@ -121,7 +128,7 @@ jobs:
     needs:
       - Smoke-Windows
       - Smoke-MacOS
-    if: always()
+    if: ${{ always() && github.event_name == 'pull_request' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
