@@ -15,6 +15,7 @@ task-defaults:
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
+    - secrets:get:project/mobile/ci/testrail
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
 
@@ -25,10 +26,6 @@ tasks:
     run-on-tasks-for: []
     run:
       using: run-task
-      secrets:
-        - name: project/mobile/ci/testrail
-          path: .testrail_credentials.json
-          json: true
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
