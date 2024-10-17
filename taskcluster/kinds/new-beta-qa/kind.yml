@@ -12,12 +12,6 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
-  run:
-    secrets:
-      - name: project/mobile/ci/testrail
-        key: testrailCredentials
-        path: .testrail_credentials.json
-        json: true
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -31,6 +25,10 @@ tasks:
     run-on-tasks-for: []
     run:
       using: run-task
+      secrets:
+        - name: project/mobile/ci/testrail
+          path: .testrail_credentials.json
+          json: true
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
