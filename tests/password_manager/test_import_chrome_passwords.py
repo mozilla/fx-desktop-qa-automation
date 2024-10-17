@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 import os
 from shutil import copyfile
 
@@ -99,11 +98,9 @@ def test_chrome_passwords_imported(chrome_passwords, driver: Firefox):
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
     about_prefs.import_bookmarks("Chrome")
-    sleep(5)
 
     # Instantiate login object
     about_logins = AboutLogins(driver).open()
-    sleep(5)
 
     # Check password imported from chrome is added in the listbox
     about_logins.get_element("login-list-item")
