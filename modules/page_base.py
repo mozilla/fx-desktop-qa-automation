@@ -356,57 +356,47 @@ class BasePage(Page):
 
     def element_exists(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
-        self.expect(
-            EC.presence_of_element_located(self.get_selector(name, labels=labels))
-        )
+        self.expect(lambda _: self.get_element(name, labels=labels))
         return self
 
     def element_does_not_exist(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element exists or timeout"""
-        original_timeout = self.driver.timeouts.implicit_wait
-        self.driver.implicitly_wait(0)
-        with self.driver.context(self.context_id):
-            self.instawait.until_not(
-                EC.presence_of_all_elements_located(
-                    self.get_selector(name, labels=labels)
-                )
-            )
-        self.driver.implicitly_wait(original_timeout)
+        self.instawait.until_not(lambda _: self.get_elements(name, labels=labels))
         return self
 
     def element_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is visible or timeout"""
         self.expect(
-            EC.visibility_of_element_located(self.get_selector(name, labels=labels))
-        )
-        return self
-
-    def element_clickable(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element is clickable or timeout"""
-        self.expect(EC.element_to_be_clickable(self.get_selector(name, labels=labels)))
-        return self
-
-    def element_selected(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element is selected or timeout"""
-        self.expect(
-            EC.element_located_to_be_selected(self.get_selector(name, labels=labels))
-        )
-        return self
-
-    def element_has_text(self, name: str, text: str, labels=[]) -> Page:
-        """Expect helper: wait until element has given text"""
-        self.expect(
-            EC.text_to_be_present_in_element(
-                self.get_selector(name, labels=labels), text
-            )
+            lambda _: self.get_element(name, labels=labels)
+            and self.get_element(name, labels=labels).is_displayed()
         )
         return self
 
     def element_not_visible(self, name: str, labels=[]) -> Page:
         """Expect helper: wait until element is not visible or timeout"""
-        self.expect_not(
-            EC.visibility_of_element_located(self.get_selector(name, labels=labels))
+        self.expect(
+            lambda _: self.get_elements(name, labels=labels) == []
+            or not self.get_element(name, labels=labels).is_displayed()
         )
+        return self
+
+    def element_clickable(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is clickable or timeout"""
+        self.element_visible(name, labels=labels)
+        self.expect(lambda _: self.get_element(name, labels=labels).is_enabled())
+        return self
+
+    def element_selected(self, name: str, labels=[]) -> Page:
+        """Expect helper: wait until element is selected or timeout"""
+        self.expect(
+            lambda _: self.get_element(name, labels=labels)
+            and self.get_element(name, labels=labels).is_selected()
+        )
+        return self
+
+    def element_has_text(self, name: str, text: str, labels=[]) -> Page:
+        """Expect helper: wait until element has given text"""
+        self.expect(lambda _: text in self.get_element(name, labels=labels).text)
         return self
 
     def element_attribute_contains(
