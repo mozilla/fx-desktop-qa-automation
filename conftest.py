@@ -17,6 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules import testrail_integration as tri
+from modules.taskcluster import get_tc_secret
 
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
@@ -303,6 +304,7 @@ def pytest_sessionfinish(session):
         import psutil
 
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+        # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
             try:
                 if (
@@ -321,10 +323,29 @@ def pytest_sessionfinish(session):
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
         return None
+
+    testrail_credentials = get_tc_secret()
+    if testrail_credentials:
+        creds = testrail_credentials.get("testrailCredentials")
+        os.environ["TESTRAIL_USERNAME"] = creds.get("username")
+        os.environ["TESTRAIL_API_KEY"] = creds.get("password")
+        os.environ["TESTRAIL_BASE_URL"] = creds.get("host")
+    elif not os.environ.get("TESTRAIL_USERNAME"):
+        logging.error(
+            "Attempted to report to TestRail, but could not find credentials."
+        )
+        raise OSError("Could not find TestRail credentials")
+
     report = session.config._json_report.report
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)
     tri.mark_results(tr_session, passes)
+    with open(".tmp_testrail_info") as fh:
+        (plan_title, config) = fh.read().split("|")
+    version = plan_title.split(" ")[-1]
+    prefix = config[:3].lower()
+    with open(f"{prefix}-latest-reported-version", "w") as fh:
+        fh.write(version.split(" ")[-1])
 
 
 @pytest.fixture()

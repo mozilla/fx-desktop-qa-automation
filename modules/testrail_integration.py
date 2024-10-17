@@ -256,6 +256,9 @@ def collect_changes(testrail_session: TestRail, report):
         release = ".".join(release.split(".")[:-1])
         config = f"{os_name} {release} {arch}"
 
+    with open(".tmp_testrail_info", "w") as fh:
+        fh.write(f"{plan_title}|{config}")
+
     major_milestone = testrail_session.matching_milestone(
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
     )
