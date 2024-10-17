@@ -4,6 +4,7 @@ jobs:
   - name: new-beta-qa
     job:
       type: decision-task
+      treeherder-symbol: smoke-test-dte
       target-tasks-method: new_beta_qa
     when:
       - {minute: 21}
