@@ -22,6 +22,8 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+        run:
+          echo "Running report for most recent Beta on Windows"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
@@ -100,6 +102,8 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+        run:
+          echo "Running report for most recent Beta on MacOS"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
