@@ -15,6 +15,13 @@ jobs:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
     steps:
+      - name: Set Environment
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
+        env:
+          TESTRAIL_REPORT: 'true'
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
@@ -86,6 +93,13 @@ jobs:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
     steps:
+      - name: Set Environment
+        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        env:
+          TESTRAIL_REPORT: 'true'
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
