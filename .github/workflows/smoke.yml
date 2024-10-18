@@ -67,8 +67,8 @@ jobs:
           exit $env:TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
-        uses: actions/checkout@4
         run: |
+          git remote set-head origin --auto
           git add win-latest-reported-version
           git commit -m "update windows reported version"
       - name: Run Smoke Tests in Win (Headed)
@@ -133,8 +133,8 @@ jobs:
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
-        uses: actions/checkout@4
         run: |
+          git remote set-head origin --auto
           git add mac-latest-reported-version
           git commit -m "update macos reported version"
       - name: Run Smoke Tests in MacOS (Headed)
