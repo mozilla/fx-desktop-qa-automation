@@ -4,6 +4,8 @@ from selenium.webdriver import Firefox
 from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 
+TEST_PAGE_URL = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
+
 
 @pytest.fixture()
 def test_case():
@@ -27,7 +29,7 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://mozilla.github.io/",
+            "origin": TEST_PAGE_URL,
             "username": "username",
             "password": "password",
         }
