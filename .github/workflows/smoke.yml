@@ -64,9 +64,13 @@ jobs:
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
+          exit $env:TEST_EXIT_CODE
+      - name: Commit Changed Tracker Files
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
+        uses: actions/checkout@4
+        run: |
           git add win-latest-reported-version
           git commit -m "update windows reported version"
-          exit $env:TEST_EXIT_CODE
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
         run: |
@@ -126,9 +130,13 @@ jobs:
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
-          git add mac-latest-reported-version
-          git commit -m "update latest reported version mac"
           exit $TEST_EXIT_CODE
+      - name: Commit Changed Tracker Files
+        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        uses: actions/checkout@4
+        run: |
+          git add mac-latest-reported-version
+          git commit -m "update macos reported version"
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         run: |
