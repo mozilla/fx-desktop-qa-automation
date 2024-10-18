@@ -1,6 +1,8 @@
 
 /venv/
 .report.json
+.tmp*
+.testrail_credential*
 .DS_Store
 test*.txt
 fx_location

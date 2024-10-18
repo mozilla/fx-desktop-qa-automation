@@ -1,0 +1,108 @@
+transforms:
+  - fx_desktop_qa_automation_taskgraph.transforms.new_beta_qa:transforms
+  - taskgraph.transforms.notify:transforms
+
+task-defaults:
+  label: "Test New Beta Version"
+  description: "Checks for new betas, tests them, reports to TestRail and Slack"
+  worker-type: t-linux-wayland
+  worker:
+    max-run-time: 1800
+    artifacts:
+      - name: public/results
+        path: checkouts/vcs/artifacts
+        type: directory
+    env:
+      TESTRAIL_REPORT: "true"
+  routes:
+    - notify.slack-channel.C07AHPJ525V.on-resolved
+  scopes:
+    - secrets:get:project/mobile/ci/testrail
+    - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
+    - notify:slack-channel:C07AHPJ525V
+
+tasks:
+  linux:
+    attributes:
+      beta-qa: true
+    run-on-tasks-for: []
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        export PATH=$HOME/.local/bin:$PWD:$PATH
+        if [[ $(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq '.FIREFOX_DEVEDITION') == "\"$(cat lin-latest-reported-version)\"" ]]; then exit 100; fi;
+        mkdir -p artifacts;
+        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'ruff>=0.4.8,<0.5';
+        mv ./ci_pyproject.toml ./pyproject.toml;
+        pipenv install;
+        ./collect_executables.sh;
+        ./firefox/firefox --version;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4
+        export FAILURE=${?}
+        mv ./ci_pyproject_headed.toml ./pyproject.toml;
+        pipenv run pytest --fx-executable ./firefox/firefox
+        git add lin-latest-reported-version
+        git commit -m "update latest reported version"
+        exit $((${?} | ${FAILURE}))
+    notify:
+      recipients:
+        - type: slack-channel
+          channel-id: C07AHPJ525V
+          status-type: on-defined
+      content:
+        slack:
+          blocks: [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "firefox-desktop :firefox: ${task.metadata.name} Linux\n "
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Owner*: ${task.metadata.owner}"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Commit*: <${task.metadata.source}>"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":testops-notify: created by Desktop QA Test Engineering"
+                }
+              ]
+            }
+          ]
+          text: "Cron {task[name]} with id $taskId has finished!"
