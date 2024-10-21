@@ -14,6 +14,7 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
+    environment: TestRail Reporting
     steps:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
@@ -96,6 +97,7 @@ jobs:
   Smoke-MacOS:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
+    environment: TestRail Reporting
     steps:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
