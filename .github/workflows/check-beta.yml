@@ -41,6 +41,7 @@ jobs:
     needs: Check-Beta-Version
     if: needs.Check-Beta-Version.outputs.win_tested == 'false'
     uses: ./.github/workflows/smoke.yml
+    environment: TestRail Reporting
     with:
       job_to_run: Smoke-Windows
 
@@ -48,6 +49,6 @@ jobs:
     needs: Check-Beta-Version
     if: needs.Check-Beta-Version.outputs.mac_tested == 'false'
     uses: ./.github/workflows/smoke.yml
+    environment: TestRail Reporting
     with:
       job_to_run: Smoke-MacOS
-    
