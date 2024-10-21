@@ -1,12 +1,10 @@
 import pytest
-import pynput
+import time
+from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutLogins, GenericPage
 from modules.browser_object import AutofillPopup
-
-import logging
-import time
 
 
 @pytest.fixture()
@@ -38,12 +36,14 @@ def temp_selectors():
 FACEBOOK_URL = "https://www.facebook.com/"
 
 
+@pytest.mark.headed
 def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     """
     C2240907 - Verify that autocomplete dropdown is toggled for focused login fields on page load
     """
     # Instantiate objects
     about_logins = AboutLogins(driver)
+    keyboard = Controller()
 
     # Save 3 sets of credentials for facebook
     about_logins.open()
@@ -87,14 +87,30 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     footer = autofill_popup.get_nth_element("4")
     assert autofill_popup.get_primary_value(footer) == "Manage Passwords"
 
-    # Verify the all 3 crediential are correct when autofilling
+    # Check that "about:logins" is opened when clicking "Manage Password" in the Context Menu
+    web_page.context_click("username-field")
+    keyboard.press(Key.down)
+    keyboard.press(Key.down)
+    keyboard.press(Key.enter)
+    web_page.switch_to_new_tab()
+    web_page.url_contains("about:logins")
+    
+    def use_credential_n(n: int):
+        """
+        Uses the n-th saved password within the context menu
+        """
+        web_page.context_click("username-field")
+        keyboard.press(Key.down)
+        keyboard.press(Key.enter)
+        time.sleep(0.1)
+        for _ in range(n-1):
+            keyboard.press(Key.down)
+        keyboard.press(Key.enter)
+
+    # Verify the all 3 credientials are correct when autofilling
+    driver.switch_to.window(driver.window_handles[0])
     for i in range(1, 4):
-        with driver.context(driver.CONTEXT_CHROME):
-            autofill_popup.get_nth_element(str(i)).click() 
+        use_credential_n(i)
         web_page.element_attribute_contains("username-field", "value", f"username{i}")
         web_page.element_attribute_contains("password-field", "value", f"password{i}")
-        web_page.get_element("username-field").clear()
-        web_page.get_element("username-field").click()
-
-    web_page.context_click("username-field")
-    time.sleep(5)
+        
