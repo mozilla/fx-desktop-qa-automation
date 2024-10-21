@@ -4,6 +4,7 @@ task-priority: low
 
 taskgraph:
   cached-task-prefix: "mozilla.v2.fx-desktop-qa-automation"
+  register: fx_desktop_qa_automation_taskgraph:register
   repositories:
     fx_desktop_qa_automation:
       name: "fx-desktop-qa-automation"
