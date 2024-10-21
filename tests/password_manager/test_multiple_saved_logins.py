@@ -1,5 +1,5 @@
-import pytest
 import time
+import pytest
 from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
@@ -92,6 +92,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     keyboard.press(Key.down)
     keyboard.press(Key.down)
     keyboard.press(Key.enter)
+    web_page.wait_for_num_tabs(2)
     web_page.switch_to_new_tab()
     web_page.url_contains("about:logins")
     
