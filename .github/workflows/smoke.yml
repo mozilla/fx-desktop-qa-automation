@@ -14,7 +14,10 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
-    environment: TestRail Reporting
+    env:
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
     steps:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
@@ -66,6 +69,8 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run: |
+          git config --global user.email ${{ github.actor }}"@users.noreply.github.com"
+          git config --global user.name ${{ github.actor }}
           git remote set-head origin --auto
           git add win-latest-reported-version
           git commit -m "update windows reported version"
@@ -97,7 +102,10 @@ jobs:
   Smoke-MacOS:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
-    environment: TestRail Reporting
+    env:
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
     steps:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
@@ -130,6 +138,8 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run: |
+          git config --global user.email ${{ github.actor }}"@users.noreply.github.com"
+          git config --global user.name ${{ github.actor }}
           git remote set-head origin --auto
           git add mac-latest-reported-version
           git commit -m "update macos reported version"
