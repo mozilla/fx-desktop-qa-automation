@@ -18,6 +18,7 @@ jobs:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run:
+          touch .env
           echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" | Out-File -FilePath .env -Append;
           echo "TESTRAIL_API_KEY=${{ secrets.TESTRAIL_API_KEY }}" | Out-File -FilePath .env -Append;
           echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" | Out-File -FilePath .env -Append;
@@ -105,6 +106,7 @@ jobs:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run:
+          touch .env
           echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> .env
           echo "TESTRAIL_API_KEY=${{ secrets.TESTRAIL_API_KEY }}" >> .env
           echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" >> .env
