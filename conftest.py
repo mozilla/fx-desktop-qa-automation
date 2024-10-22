@@ -409,6 +409,8 @@ def driver(
         Fixture that does other environment work, like set logging levels.
     """
     try:
+        if os.environ.get("TESTRAIL_REPORT"):
+            logging.warning(f"TESTRAIL_BASE_URL: {os.environ.get('TESTRAIL_BASE_URL')}")
         options = Options()
         if opt_headless:
             options.add_argument("--headless")

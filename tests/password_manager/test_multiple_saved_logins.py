@@ -1,10 +1,11 @@
 import time
+
 import pytest
 from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutLogins, GenericPage
 from modules.browser_object import AutofillPopup
+from modules.page_object import AboutLogins, GenericPage
 
 
 @pytest.fixture()
@@ -21,17 +22,10 @@ def set_prefs():
 @pytest.fixture()
 def temp_selectors():
     return {
-        "username-field": {
-            "selectorData": "email", 
-            "strategy": "id", 
-            "groups": []
-        },
-        "password-field":{
-            "selectorData": "pass",
-            "strategy": "id",
-            "groups": []
-        }
+        "username-field": {"selectorData": "email", "strategy": "id", "groups": []},
+        "password-field": {"selectorData": "pass", "strategy": "id", "groups": []},
     }
+
 
 FACEBOOK_URL = "https://www.facebook.com/"
 
@@ -95,7 +89,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     web_page.wait_for_num_tabs(2)
     web_page.switch_to_new_tab()
     web_page.url_contains("about:logins")
-    
+
     def use_credential_n(n: int):
         """
         Uses the n-th saved password within the context menu
@@ -104,7 +98,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         keyboard.tap(Key.down)
         keyboard.tap(Key.enter)
         time.sleep(0.1)
-        for _ in range(n-1):
+        for _ in range(n - 1):
             keyboard.tap(Key.down)
         keyboard.tap(Key.enter)
 
@@ -114,4 +108,3 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         use_credential_n(i)
         web_page.element_attribute_contains("username-field", "value", f"username{i}")
         web_page.element_attribute_contains("password-field", "value", f"password{i}")
-        
