@@ -9,7 +9,7 @@ from modules.browser_object import AutofillPopup
 
 @pytest.fixture()
 def test_case():
-    return "2240907"
+    return "2240897"
 
 
 @pytest.fixture()
@@ -39,7 +39,7 @@ FACEBOOK_URL = "https://www.facebook.com/"
 @pytest.mark.headed
 def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     """
-    C2240907 - Verify that autocomplete dropdown is toggled for focused login fields on page load
+    C2240897 - Verify that the fill functionality works when there are multiple saved credentials
     """
     # Instantiate objects
     about_logins = AboutLogins(driver)
