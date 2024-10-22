@@ -427,6 +427,12 @@
         "groups": []
     },
 
+    "checkbox-remember-this-decision": {
+        "selectorData": "label.checkbox-label[flex='1']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "toolbar-history-recently-closed-tabs": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
@@ -491,5 +497,11 @@
     "selectorData": "popupnotification#geolocation-notification",
     "strategy": "css",
     "groups": []
+    },
+
+    "permissions-location-icon": {
+        "selectorData": "permissions-granted-icon",
+        "strategy": "id",
+        "groups": []
     }
 }
