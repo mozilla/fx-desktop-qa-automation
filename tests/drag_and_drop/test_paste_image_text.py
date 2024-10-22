@@ -1,65 +1,53 @@
 import pytest
+import time
 from selenium.webdriver import Firefox
 from pynput.keyboard import Controller, Key
 
-from modules.page_object import AboutLogins, GenericPage
+from modules.page_object import Navigation, GenericPage
 
 
 @pytest.fixture()
 def test_case():
-    return "2241522"
+    return "464474"
+
+
+@pytest.fixture()
+def temp_selectors():
+    return {
+        "paste-image-data": {
+            "selectorData": "#testlist > li:nth-child(11) > a:nth-child(1)",
+            "strategy": "css",
+            "groups": [],
+        },
+        "paste-html-data": {
+            "selectorData": "#testlist > li:nth-child(12) > a:nth-child(1)",
+            "strategy": "css",
+            "groups": [],
+        },
+        "drop-area": {
+            "selectorData": "#droparea",
+            "strategy": "css",
+            "groups": []
+        }
+    }
 
 
 DEMO_URL = "https://mystor.github.io/dragndrop/#"
 COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
 @pytest.mark.headed
-def test_paste_image_text(driver: Firefox):
+def test_paste_image_text(driver: Firefox, temp_selectors):
     """
-    C2241521: Check that password.csv displays the correct information
+    C464474: Verify that pasting images and text from html works
     """
     # Initializing objects
-    generic_page = GenericPage(driver, url=DEMO_URL)
-    about_logins = AboutLogins(driver).open()
+    nav = Navigation(driver)
+    web_page = GenericPage(driver, url=DEMO_URL).open()
+    web_page.elements |= temp_selectors
     keyboard = Controller()
 
-    # Click on buttons to export passwords
-    about_logins.click_on("menu-button")
-    about_logins.click_on("export-passwords-button")
-    about_logins.click_on("continue-export-button")
-
-    # Download the password file
-    time.sleep(4)
-    keyboard.tap(Key.enter)
-
-    # Verify that the file exists
-    if sys_platform == "Linux":
-        downloads_folder = os.getcwd()
-    else:
-        downloads_folder = os.path.join(home_folder, "Downloads")
-    passwords_csv = os.path.join(downloads_folder, "passwords.csv")
-    about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
-
-    # Verify the results
-    guid_pattern = re.compile(
-        r"{[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}}"
-    )
-    time_pattern = re.compile(r"[0-9]{10}")
-    with open(passwords_csv) as pw:
-        reader = csv.DictReader(pw)
-        actual_logins = {}
-        for row in reader:
-            actual_logins[row["username"] + "@" + row["url"][8:]] = row["password"]
-            assert re.match(guid_pattern, row["guid"])
-            assert re.match(time_pattern, row["timeCreated"])
-            assert re.match(time_pattern, row["timeLastUsed"])
-            assert re.match(time_pattern, row["timeCreated"])
-        assert "httpRealm" in row.keys()
-        assert "formActionOrigin" in row.keys()
-    about_logins.check_logins_present(actual_logins, logins)
-
-    # Delete the password.csv created
-    for file in os.listdir(downloads_folder):
-        delete_files_regex = re.compile(r"\bpasswords.csv\b")
-        if delete_files_regex.match(file):
-            os.remove(passwords_csv)
+    # Click button to start the test of pasting image data
+    web_page.click_on("paste-image-data")
+    driver.switch_to.new_window("tab")
+    nav.search(COPY_URL)
+    time.sleep(10)
