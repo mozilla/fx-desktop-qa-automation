@@ -22,7 +22,7 @@ jobs:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run:
-          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
+          echo "TESTRAIL_REPORT='true'" | Out-File -FilePath $env:GITHUB_ENV -Append;
           echo "Running report for most recent Beta on Windows"
       - name: Checkout repository
         uses: actions/checkout@v4
