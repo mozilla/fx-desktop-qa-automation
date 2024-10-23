@@ -27,7 +27,7 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-        run:
+        run: |
           $env_contents = @"
           TESTRAIL_BASE_URL="$env:TESTRAIL_BASE_URL"
           TESTRAIL_API_KEY="$env:TESTRAIL_API_KEY"
