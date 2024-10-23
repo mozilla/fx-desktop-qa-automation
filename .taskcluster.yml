@@ -12,7 +12,6 @@ policy:
 tasks:
     - $let:
           trustDomain: "mozilla"
-          level: "1"
           ownerEmail:
               $switch:
                   'tasks_for == "github-push"': '${event.pusher.email}'
@@ -80,9 +79,14 @@ tasks:
                   $if: 'head_ref[:11] == "refs/heads/"'
                   then: {$eval: 'head_ref[11:]'}
                   else: ${head_ref}
+              level:
+                  $if: 'tasks_for in ["github-push", "cron", "action"] && repoUrl == "https://github.com/mozilla/fx-desktop-qa-automation"'
+                  then: 3
+                  else: 1
           in:
               $if: >
-                  tasks_for in ["action", "cron", "github-push"]
+                  tasks_for in ["action", "cron"]
+                  || (tasks_for == "github-push" && head_branch == "refs/heads/main")
                   || (isPullRequest && pullRequestAction in ["opened", "reopened", "synchronize"])
               then:
                   taskId: {$if: 'tasks_for != "action"', then: '${ownTaskId}'}
