@@ -29,10 +29,14 @@ TEST_URL = "https://browserleaks.com/geo"
 def wait_for_geolocation_data(web_page, timeout=20):
     """Wait until both latitude and longitude data are available."""
     web_page.custom_wait(timeout=timeout).until(
-        lambda _: all([
-            web_page.find_element(By.ID, "latitude").get_attribute("data-raw") is not None,
-            web_page.find_element(By.ID, "longitude").get_attribute("data-raw") is not None
-        ])
+        lambda _: all(
+            [
+                web_page.find_element(By.ID, "latitude").get_attribute("data-raw")
+                is not None,
+                web_page.find_element(By.ID, "longitude").get_attribute("data-raw")
+                is not None,
+            ]
+        )
     )
 
 
@@ -81,20 +85,26 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
 
     # Check that the location is not shared, a warning message is displayed
     warning_element = web_page.find_element(By.ID, "geo-warn")
-    assert "PERMISSION_DENIED – User denied Geolocation" in warning_element.get_attribute("innerHTML")
+    assert (
+        "PERMISSION_DENIED – User denied Geolocation"
+        in warning_element.get_attribute("innerHTML")
+    )
 
     # Block the location sharing while choose the option Remember this decision
-    nav.refresh_page()
+    tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
     nav.element_clickable("checkbox-remember-this-decision")
     nav.click_on("checkbox-remember-this-decision")
     nav.handle_geolocation_prompt(button_type="secondary")
 
     # Check that the location is not shared, a warning message is displayed
     warning_element = web_page.find_element(By.ID, "geo-warn")
-    assert "PERMISSION_DENIED – User denied Geolocation" in warning_element.get_attribute("innerHTML")
+    assert (
+        "PERMISSION_DENIED – User denied Geolocation"
+        in warning_element.get_attribute("innerHTML")
+    )
 
     # Assert that the permission icon is displayed in address bar when in a new tab
-    tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
+    tabs.open_web_page_in_new_tab(web_page, num_tabs=3)
     with driver.context(driver.CONTEXT_CHROME):
         permission_icon = nav.get_element("permissions-location-icon")
         assert permission_icon.is_displayed()
