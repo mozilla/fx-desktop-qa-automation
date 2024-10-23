@@ -1,6 +1,6 @@
 import logging
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -291,4 +291,16 @@ class Navigation(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("refresh-button").click()
         self.wait_for_page_to_load()
+        return self
+
+    def handle_cookie_banner(self) -> BasePage:
+        """
+        Address the cookie banner manually if it appears, as the cookie banner dismissal preference is not effective in this context.
+        """
+        try:
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+            self.find_element(By.ID, "accept-choices").click()
+        except NoSuchElementException:
+            # If the cookie banner is not found, continue with the test
+            pass
         return self
