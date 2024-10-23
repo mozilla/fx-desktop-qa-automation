@@ -427,7 +427,7 @@
         "groups": []
     },
 
-     "checkbox-remember-this-decision": {
+    "checkbox-remember-this-decision": {
         "selectorData": "label.checkbox-label[flex='1']",
         "strategy": "css",
         "groups": []
@@ -494,14 +494,14 @@
     },
 
     "geolocation-notification-container": {
-    "selectorData": "popupnotification#geolocation-notification",
-    "strategy": "css",
-    "groups": []
+        "selectorData": "popupnotification#geolocation-notification",
+        "strategy": "css",
+        "groups": []
     },
 
-     "permissions-location-icon": {
-         "selectorData": "permissions-granted-icon",
-         "strategy": "id",
-         "groups": []
-     }
+    "permissions-location-icon": {
+        "selectorData": "permissions-granted-icon",
+        "strategy": "id",
+        "groups": []
+    }
 }
