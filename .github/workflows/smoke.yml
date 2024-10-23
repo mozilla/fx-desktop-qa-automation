@@ -14,6 +14,10 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
+    env:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,9 +29,9 @@ jobs:
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run:
           touch .env;
-          echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" | Out-File -FilePath .env -Append;
-          echo "TESTRAIL_API_KEY=${{ secrets.TESTRAIL_API_KEY }}" | Out-File -FilePath .env -Append;
-          echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" | Out-File -FilePath .env -Append;
+          echo "TESTRAIL_BASE_URL=$env:TESTRAIL_BASE_URL" | Out-File -FilePath .env -Append;
+          echo "TESTRAIL_API_KEY=$env:TESTRAIL_API_KEY" | Out-File -FilePath .env -Append;
+          echo "TESTRAIL_USERNAME=$env:TESTRAIL_USERNAME" | Out-File -FilePath .env -Append;
           echo "TESTRAIL_REPORT='true'" | Out-File -FilePath .env -Append;
           echo "Running report for most recent Beta on Windows";
           cat .env
@@ -103,6 +107,10 @@ jobs:
   Smoke-MacOS:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
+    env:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -114,9 +122,9 @@ jobs:
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run:
           touch .env;
-          echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> .env;
-          echo "TESTRAIL_API_KEY=${{ secrets.TESTRAIL_API_KEY }}" >> .env;
-          echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" >> .env;
+          echo "TESTRAIL_USERNAME=$TESTRAIL_USERNAME" >> .env;
+          echo "TESTRAIL_API_KEY=$TESTRAIL_API_KEY" >> .env;
+          echo "TESTRAIL_BASE_URL=$TESTRAIL_BASE_URL" >> .env;
           echo "TESTRAIL_REPORT='true'" >> .env;
           echo "Running report for most recent Beta on MacOS";
           cat .env
