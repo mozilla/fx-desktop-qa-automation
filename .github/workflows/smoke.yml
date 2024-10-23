@@ -28,14 +28,15 @@ jobs:
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run:
-          touch .env;
-          echo "TESTRAIL_BASE_URL=$env:TESTRAIL_BASE_URL" | Out-File -FilePath .env -Append;
-          echo "TESTRAIL_API_KEY=$env:TESTRAIL_API_KEY" | Out-File -FilePath .env -Append;
-          echo "TESTRAIL_USERNAME=$env:TESTRAIL_USERNAME" | Out-File -FilePath .env -Append;
-          echo "TESTRAIL_REPORT='true'" | Out-File -FilePath .env -Append;
-          echo "Running report for most recent Beta on Windows";
-          echo $env:TESTRAIL_USERNAME
-          cat .env
+          $env_contents = @"
+          TESTRAIL_BASE_URL="$env:TESTRAIL_BASE_URL"
+          TESTRAIL_API_KEY="$env:TESTRAIL_API_KEY"
+          TESTRAIL_USERNAME="$env:TESTRAIL_USERNAME"
+          TESTRAIL_REPORT='true'
+          "@
+          New-item -Name .env -Value $env_contents -ItemType File -Force
+          Write-Host "Running report for most recent Beta on Windows"
+          Write-Host "$env:TESTRAIL_USERNAME"
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
