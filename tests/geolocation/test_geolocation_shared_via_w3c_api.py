@@ -1,4 +1,5 @@
 import pytest
+from selenium.common import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -26,13 +27,17 @@ def set_prefs():
 TEST_URL = "https://www.w3schools.com/html/html5_geolocation.asp"
 
 
-def handle_geolocation_prompt(nav, button_type="primary"):
+def handle_cookie_banner(driver, web_page):
     """
-    Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
+    Address the cookie banner manually if appears, as the cookie banner dismissal preference is not effective in this
+    context
     """
-    button_selector = f"popup-notification-{button_type}-button"
-    nav.element_clickable(button_selector)
-    nav.click_on(button_selector)
+    try:
+        driver.switch_to.window(driver.window_handles[-1])
+        web_page.find_element(By.ID, "accept-choices").click()
+    except NoSuchElementException:
+        # If the cookie banner is not found, continue with the test
+        pass
 
 
 def click_geolocation_button_trigger(web_page):
@@ -71,11 +76,11 @@ def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox):
 
     # Wait for the page to fully load and manually address the cookie banner if appears
     nav.wait_for_page_to_load()
-    nav.handle_cookie_banner()
+    handle_cookie_banner(driver, web_page)
 
     # Click the 'Try It' button and Allow the location sharing
     click_geolocation_button_trigger(web_page)
-    handle_geolocation_prompt(nav, button_type="primary")
+    nav.handle_geolocation_prompt(button_type="primary")
 
     # Assert that the location marker is displayed
     assert is_location_marker_displayed(web_page)
@@ -87,7 +92,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox):
     click_geolocation_button_trigger(web_page)
     nav.element_clickable("checkbox-remember-this-decision")
     nav.click_on("checkbox-remember-this-decision")
-    handle_geolocation_prompt(nav, button_type="primary")
+    nav.handle_geolocation_prompt(button_type="primary")
 
     # Assert that the location marker is displayed again
     assert is_location_marker_displayed(web_page)
@@ -111,11 +116,11 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
 
     # Wait for the page to fully load and manually address the cookie banner if appears
     nav.wait_for_page_to_load()
-    nav.handle_cookie_banner()
+    handle_cookie_banner(driver, web_page)
 
     # Click the 'Try It' button and Block the location sharing
     click_geolocation_button_trigger(web_page)
-    handle_geolocation_prompt(nav, button_type="secondary")
+    nav.handle_geolocation_prompt(button_type="secondary")
 
     # Assert that the location marker is not displayed
     assert not is_location_marker_displayed(web_page)
@@ -125,7 +130,7 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
     click_geolocation_button_trigger(web_page)
     nav.element_clickable("checkbox-remember-this-decision")
     nav.click_on("checkbox-remember-this-decision")
-    handle_geolocation_prompt(nav, button_type="secondary")
+    nav.handle_geolocation_prompt(button_type="secondary")
 
     # Assert that the location marker is not displayed
     assert not is_location_marker_displayed(web_page)
