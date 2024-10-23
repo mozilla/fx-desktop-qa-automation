@@ -2,7 +2,7 @@ name: Check new beta version
 
 on:
   schedule:
-    - cron: "28 */1 * * *" # Runs this workflow every 3 hours
+    - cron: "54 */1 * * *" # Runs this workflow every 3 hours
 env:
   LATEST: ""
 

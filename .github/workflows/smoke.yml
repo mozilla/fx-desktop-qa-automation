@@ -30,6 +30,7 @@ jobs:
           echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" | Out-File -FilePath .env -Append;
           echo "TESTRAIL_REPORT='true'" | Out-File -FilePath .env -Append;
           echo "Running report for most recent Beta on Windows"
+          cat .env
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -118,6 +119,7 @@ jobs:
           echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" >> .env
           echo "TESTRAIL_REPORT='true'" >> .env
           echo "Running report for most recent Beta on MacOS"
+          cat .env
       - name: Install dependencies
         id: setup
         run: |
