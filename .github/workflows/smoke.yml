@@ -60,17 +60,11 @@ jobs:
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
-          echo "$TESTRAIL_API_KEY"
-          echo "$TESTRAIL_BASE_URL"
-          echo "$TESTRAIL_USERNAME"
           pipenv run python -c "import sys; print(sys.platform)"
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
-          echo "$TESTRAIL_API_KEY"
-          echo "$TESTRAIL_BASE_URL"
-          echo "$TESTRAIL_USERNAME"
           exit $env:TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
@@ -137,15 +131,9 @@ jobs:
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         run: |
-          echo "$TESTRAIL_API_KEY"
-          echo "$TESTRAIL_BASE_URL"
-          echo "$TESTRAIL_USERNAME"
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
-          echo "$TESTRAIL_API_KEY"
-          echo "$TESTRAIL_BASE_URL"
-          echo "$TESTRAIL_USERNAME"
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
