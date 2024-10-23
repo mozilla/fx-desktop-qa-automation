@@ -282,3 +282,13 @@ class TabBar(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("tab-x-icon", parent_element=tab).click()
         return self
+
+    def open_web_page_in_new_tab(self, web_page: BasePage, num_tabs: int) -> BasePage:
+        """
+        Opens a new tab, switches the driver context to the new tab, and opens the given webpage
+        """
+        self.new_tab_by_button()
+        self.wait_for_num_tabs(num_tabs)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        web_page.open()
+        return self
