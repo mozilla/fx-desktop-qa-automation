@@ -14,10 +14,6 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
-    env:
-      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,7 +22,11 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}    
+        env:
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run:
           touch .env;
           echo "TESTRAIL_BASE_URL=$env:TESTRAIL_BASE_URL" | Out-File -FilePath .env -Append;
@@ -108,10 +108,6 @@ jobs:
   Smoke-MacOS:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
-    env:
-      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -121,6 +117,10 @@ jobs:
           python-version: "3.11"
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        env:
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run:
           touch .env;
           echo "TESTRAIL_USERNAME=$TESTRAIL_USERNAME" >> .env;
