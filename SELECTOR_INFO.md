@@ -2528,6 +2528,20 @@ Description: Geolocation prompt container
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: checkbox-remember-this-decision
+Selector Data: "label.checkbox-label[flex='1']"
+Description: Remember this decision checkbox
+Location: Geolocation prompt container in Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permissions-location-icon
+Selector Data: "permissions-granted-icon"
+Description: Location icon
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
