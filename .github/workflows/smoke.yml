@@ -34,6 +34,7 @@ jobs:
           echo "TESTRAIL_USERNAME=$env:TESTRAIL_USERNAME" | Out-File -FilePath .env -Append;
           echo "TESTRAIL_REPORT='true'" | Out-File -FilePath .env -Append;
           echo "Running report for most recent Beta on Windows";
+          echo $env:TESTRAIL_USERNAME
           cat .env
       - name: Install dependencies
         run: |
@@ -126,6 +127,7 @@ jobs:
           echo "TESTRAIL_API_KEY=$TESTRAIL_API_KEY" >> .env;
           echo "TESTRAIL_BASE_URL=$TESTRAIL_BASE_URL" >> .env;
           echo "TESTRAIL_REPORT='true'" >> .env;
+          echo $TESTRAIL_USERNAME
           echo "Running report for most recent Beta on MacOS";
           cat .env
       - name: Install dependencies
