@@ -324,12 +324,11 @@ def pytest_sessionfinish(session):
         )
         return None
 
-    testrail_credentials = get_tc_secret()
+    creds = get_tc_secret()
     if testrail_credentials:
-        creds = testrail_credentials.get("testrailCredentials")
-        os.environ["TESTRAIL_USERNAME"] = creds.get("username")
-        os.environ["TESTRAIL_API_KEY"] = creds.get("password")
-        os.environ["TESTRAIL_BASE_URL"] = creds.get("host")
+        os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+        os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+        os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
     elif not os.environ.get("TESTRAIL_USERNAME"):
         logging.error(
             "Attempted to report to TestRail, but could not find credentials."
