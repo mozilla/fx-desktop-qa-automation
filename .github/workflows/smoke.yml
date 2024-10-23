@@ -36,7 +36,7 @@ jobs:
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
-          Write-Host $env:TESTRAIL_USERNAME
+          Write-Host "$env:TESTRAIL_USERNAME"
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
