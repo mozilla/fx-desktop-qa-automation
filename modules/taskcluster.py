@@ -1,7 +1,6 @@
 import functools
 import logging
 import os
-import logging
 
 import requests
 from requests.packages.urllib3.util.retry import Retry
