@@ -43,6 +43,7 @@ jobs:
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-Windows
+    secrets: inherit
 
   Run-Mac-Smoke: 
     needs: Check-Beta-Version
@@ -50,3 +51,5 @@ jobs:
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-MacOS
+    secrets: inherit
+    
