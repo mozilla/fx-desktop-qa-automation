@@ -19,7 +19,7 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
-    steps:
+    steps:        
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
@@ -30,9 +30,6 @@ jobs:
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}    
         run: |
           $env_contents = @"
-          TESTRAIL_BASE_URL="$env:TESTRAIL_BASE_URL"
-          TESTRAIL_API_KEY="$env:TESTRAIL_API_KEY"
-          TESTRAIL_USERNAME="$env:TESTRAIL_USERNAME"
           TESTRAIL_REPORT='true'
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
@@ -67,6 +64,10 @@ jobs:
         shell: pwsh
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
+        env:
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
@@ -84,6 +85,10 @@ jobs:
           git commit -m "update windows reported version"
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
+        env:
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
@@ -120,20 +125,11 @@ jobs:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run:
-          touch .env;
-          echo "TESTRAIL_USERNAME=$TESTRAIL_USERNAME" >> .env;
-          echo "TESTRAIL_API_KEY=$TESTRAIL_API_KEY" >> .env;
-          echo "TESTRAIL_BASE_URL=$TESTRAIL_BASE_URL" >> .env;
-          echo "TESTRAIL_REPORT='true'" >> .env;
-          echo "$TESTRAIL_USERNAME";
+          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
-          cat .env
       - name: Install dependencies
         id: setup        
-        env:
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
-          echo "$TESTRAIL_USERNAME"
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
@@ -143,6 +139,10 @@ jobs:
           bash ./collect_executables.sh;
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
+        env:
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
@@ -158,6 +158,10 @@ jobs:
           git commit -m "update macos reported version"
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
+        env:
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox . || TEST_EXIT_CODE=$?
