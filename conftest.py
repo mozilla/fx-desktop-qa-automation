@@ -325,7 +325,7 @@ def pytest_sessionfinish(session):
         return None
 
     creds = get_tc_secret()
-    if testrail_credentials:
+    if creds:
         os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
         os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
         os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
