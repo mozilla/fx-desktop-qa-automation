@@ -128,7 +128,7 @@ jobs:
           echo "TESTRAIL_API_KEY=$TESTRAIL_API_KEY" >> .env;
           echo "TESTRAIL_BASE_URL=$TESTRAIL_BASE_URL" >> .env;
           echo "TESTRAIL_REPORT='true'" >> .env;
-          echo "$TESTRAIL_USERNAME"
+          echo "$TESTRAIL_USERNAME";
           echo "Running report for most recent Beta on MacOS";
           cat .env
       - name: Install dependencies
