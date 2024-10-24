@@ -2872,6 +2872,21 @@ Description: Password button
 Location: Hamburger Menu
 Path to .json: modules/data/panel_ui.components.json
 ```
+```
+Selector name: print-option
+Selector Data: "appMenu-print-button2"
+Description: Panel UI Print... option
+Location: Hamburger Menu
+Path to .json: modules/data/panel_ui.components.json
+```
+#### print_preview
+```
+Selector name: print-preview-browser
+Selector Data: "print-preview stack browser[class='printPreviewBrowser']"
+Description: Print Preview Window
+Location: Print Preview
+Path to .json: modules/data/print_preview.components.json
+```
 #### reader_view
 ```
 Selector name: reader-view-button
