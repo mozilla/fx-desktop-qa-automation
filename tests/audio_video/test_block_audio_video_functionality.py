@@ -1,10 +1,11 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_tabbar import TabBar
+from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
+
 
 @pytest.fixture()
 def test_case():
@@ -21,7 +22,7 @@ def test_allow_audio_video_functionality(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
-    tabs = TabBar(driver)
+    nav = Navigation(driver)
 
     # Open privacy and click on the "Settings" button from Autoplay
     about_prefs.open()
@@ -39,7 +40,8 @@ def test_allow_audio_video_functionality(driver: Firefox):
     about_prefs.get_element("spacer").click()
     about_prefs.get_element("autoplay-save-changes").click()
 
-    # Open test website and check the site is loaded and the featured video starts playing with sound
+    # Open test website and check the site is loaded and the featured video is not playing
     GenericPage(driver, url=TEST_URL).open()
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+    with (driver.context(driver.CONTEXT_CHROME)):
+        nav.get_element("autoplay-permission").click()
+        nav.element_attribute_contains("permission-popup-menulist", "label", "Block Audio and Video")

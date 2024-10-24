@@ -968,6 +968,13 @@ Description: Shadow parent of the OK and cancel button
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: block-audio-video
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']
+Description: Block audio video option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -2525,6 +2532,20 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: geolocation-notification-container
 Selector Data: "popupnotification#geolocation-notification"
 Description: Geolocation prompt container
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permission-popup-menulist
+Selector Data: permission-popup-menulist
+Description: Autoplay permission option selected
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: autoplay-permission
+Selector Data: blocked-permissions-container
+Description: Autoplay permission
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```

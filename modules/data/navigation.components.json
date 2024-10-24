@@ -491,5 +491,17 @@
     "selectorData": "popupnotification#geolocation-notification",
     "strategy": "css",
     "groups": []
+    },
+
+    "autoplay-permission": {
+        "selectorData": "blocked-permissions-container",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permission-popup-menulist": {
+        "selectorData": "permission-popup-menulist",
+        "strategy": "id",
+        "groups": []
     }
 }
