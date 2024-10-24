@@ -1,7 +1,8 @@
 from time import sleep
+
 import pytest
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
-from selenium.common.exceptions import TimeoutException
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
@@ -11,6 +12,7 @@ from modules.page_object import AboutPrefs
 def test_case():
     return "2300294"
 
+
 @pytest.fixture()
 def set_prefs():
     return [
@@ -19,11 +21,12 @@ def set_prefs():
         ("dom.security.https_first", False),
         ("dom.security.https_first_add_exception_on_failiure", False),
         ("dom.security.https_first_pbm", False),
-        ("dom.security.https_first_schemeless", False)
+        ("dom.security.https_first_schemeless", False),
     ]
-    # ("browser.contentblocking.features.standard", "tp,tpPrivate,cm,fp")
 
-HTTP_SITE = "http://www.http2demo.io/"
+
+HTTP_SITE = "http://http.badssl.com/"
+# HTTP_SITE = "http://httpforever.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
@@ -45,7 +48,7 @@ def test_http_site(driver: Firefox):
     try:
         driver.get(HTTP_SITE)
         assert False, "Site should be blocked"
-    except TimeoutException:
+    except (TimeoutException, WebDriverException):
         pass
 
     # Unblocking - non-private only

@@ -400,6 +400,7 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "selected", "true")
         return self
 
+
 class AboutAddons(BasePage):
     """
     The POM for the about:addons page
