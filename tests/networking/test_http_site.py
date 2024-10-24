@@ -14,10 +14,12 @@ def test_case():
 @pytest.fixture()
 def set_prefs():
     return [
-        ("browser.safebrowsing.blockedURIs.enabled", False),
-        ("browser.safebrowsing.downloads.enabled", False),
-        ("browser.safebrowsing.malware.enabled", False),
-        ("browser.safebrowsing.phishing.enabled", False)
+        ("dom.security.https_only_mode_ever_enabled", True),
+        ("dom.security.https_only_mode_ever_enabled_pbm", True),
+        ("dom.security.https_first", False),
+        ("dom.security.https_first_add_exception_on_failiure", False),
+        ("dom.security.https_first_pbm", False),
+        ("dom.security.https_first_schemeless", False)
     ]
     # ("browser.contentblocking.features.standard", "tp,tpPrivate,cm,fp")
 
