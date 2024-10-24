@@ -494,9 +494,9 @@
     },
 
     "geolocation-notification-container": {
-    "selectorData": "popupnotification#geolocation-notification",
-    "strategy": "css",
-    "groups": []
+        "selectorData": "popupnotification#geolocation-notification",
+        "strategy": "css",
+        "groups": []
     },
 
     "permissions-location-icon": {
