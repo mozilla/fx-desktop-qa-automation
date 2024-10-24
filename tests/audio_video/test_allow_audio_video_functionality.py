@@ -12,7 +12,7 @@ from modules.util import BrowserActions
 
 @pytest.fixture()
 def test_case():
-    return "143627"
+    return "330155"
 
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
