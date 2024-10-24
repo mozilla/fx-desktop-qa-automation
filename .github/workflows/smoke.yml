@@ -10,25 +10,34 @@ on:
         required: true
         type: string
 
+env:
+  TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+  TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+  TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+
 jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
     steps:
-      - name: Set Environment
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
-        run:
-          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
-          echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" >> "$GITHUB_ENV";
-          echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> "$GITHUB_ENV";
-          echo "TESTRAIL_API_KEY=${{ secrets.TESTRAIL_API_KEY }}" >> "$GITHUB_ENV";
-          echo "Running report for most recent Beta on Windows"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Set Environment
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}    
+        run: |
+          $env_contents = @"
+          TESTRAIL_BASE_URL="$env:TESTRAIL_BASE_URL"
+          TESTRAIL_API_KEY="$env:TESTRAIL_API_KEY"
+          TESTRAIL_USERNAME="$env:TESTRAIL_USERNAME"
+          TESTRAIL_REPORT='true'
+          "@
+          New-item -Name .env -Value $env_contents -ItemType File -Force
+          Write-Host "Running report for most recent Beta on Windows"
+          Write-Host "$env:TESTRAIL_USERNAME"
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -68,6 +77,8 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run: |
+          git config --global user.email ${{ github.actor }}"@users.noreply.github.com"
+          git config --global user.name ${{ github.actor }}
           git remote set-head origin --auto
           git add win-latest-reported-version
           git commit -m "update windows reported version"
@@ -100,20 +111,23 @@ jobs:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
     steps:
-      - name: Set Environment
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
-        run:
-          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
-          echo "TESTRAIL_BASE_URL=${{ secrets.TESTRAIL_BASE_URL }}" >> "$GITHUB_ENV";
-          echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> "$GITHUB_ENV";
-          echo "TESTRAIL_API_KEY=${{ secrets.TESTRAIL_API_KEY }}" >> "$GITHUB_ENV";
-          echo "Running report for most recent Beta on MacOS"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Set Environment
+        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        run:
+          touch .env;
+          echo "TESTRAIL_USERNAME=$TESTRAIL_USERNAME" >> .env;
+          echo "TESTRAIL_API_KEY=$TESTRAIL_API_KEY" >> .env;
+          echo "TESTRAIL_BASE_URL=$TESTRAIL_BASE_URL" >> .env;
+          echo "TESTRAIL_REPORT='true'" >> .env;
+          echo $TESTRAIL_USERNAME
+          echo "Running report for most recent Beta on MacOS";
+          cat .env
       - name: Install dependencies
         id: setup
         run: |
@@ -134,6 +148,8 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run: |
+          git config --global user.email ${{ github.actor }}"@users.noreply.github.com"
+          git config --global user.name ${{ github.actor }}
           git remote set-head origin --auto
           git add mac-latest-reported-version
           git commit -m "update macos reported version"

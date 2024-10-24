@@ -427,6 +427,12 @@
         "groups": []
     },
 
+    "checkbox-remember-this-decision": {
+        "selectorData": "label.checkbox-label[flex='1']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "toolbar-history-recently-closed-tabs": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
@@ -488,9 +494,9 @@
     },
 
     "geolocation-notification-container": {
-    "selectorData": "popupnotification#geolocation-notification",
-    "strategy": "css",
-    "groups": []
+        "selectorData": "popupnotification#geolocation-notification",
+        "strategy": "css",
+        "groups": []
     },
 
     "autoplay-permission": {
@@ -501,6 +507,13 @@
 
     "permission-popup-menulist": {
         "selectorData": "permission-popup-menulist",
+        "selectorData": "popupnotification#geolocation-notification",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permissions-location-icon": {
+        "selectorData": "permissions-granted-icon",
         "strategy": "id",
         "groups": []
     }
