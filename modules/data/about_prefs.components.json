@@ -486,5 +486,23 @@
         "selectorData": "changemp",
         "strategy": "id",
         "groups": []
+    },
+
+    "autoplay-settings-button": {
+        "selectorData": "autoplaySettingsButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "autoplay-settings": {
+        "selectorData": "#setAutoplayPref > menulist[label='Block Audio']",
+        "strategy": "css",
+        "groups" : []
+    },
+
+    "block-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']",
+        "strategy": "css",
+        "groups" : []
     }
 }
