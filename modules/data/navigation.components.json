@@ -499,6 +499,19 @@
         "groups": []
     },
 
+    "autoplay-permission": {
+        "selectorData": "blocked-permissions-container",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permission-popup-menulist": {
+        "selectorData": "permission-popup-menulist",
+        "selectorData": "popupnotification#geolocation-notification",
+        "strategy": "css",
+        "groups": []
+    },
+
     "permissions-location-icon": {
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
