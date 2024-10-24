@@ -1,0 +1,9 @@
+{
+    "context": "chrome",
+    "print-preview-browser": {
+        "selectorData": "print-preview stack browser[class='printPreviewBrowser']",
+        "strategy": "css",
+        "groups": ["requiredForPage"]
+    }
+
+}

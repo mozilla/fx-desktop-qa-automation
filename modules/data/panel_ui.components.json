@@ -293,5 +293,11 @@
         "selectorData": "appMenu-passwords-button",
         "strategy": "id",
         "groups": []
+    },
+
+    "print-option": {
+        "selectorData": "appMenu-print-button2",
+        "strategy": "id",
+        "groups": []
     }
 }
