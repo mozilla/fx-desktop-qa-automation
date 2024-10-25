@@ -13,12 +13,14 @@ TEST_PAGE = "https://en.wikipedia.org"
 
 
 def test_print_preview_menu(driver: Firefox):
+    """C965139 - Check for print preview modal (PanelUI)"""
     driver.get(TEST_PAGE)
     print_preview = PrintPreview(driver)
     print_preview.open()
 
 
 def test_print_preview_keys(driver: Firefox):
+    """C965139 - Check for print preview modal (Key Combo)"""
     driver.get(TEST_PAGE)
     print_preview = PrintPreview(driver)
     print_preview.open_with_key_combo()
