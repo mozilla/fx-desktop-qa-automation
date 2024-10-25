@@ -4,7 +4,7 @@ import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutPrefs
 
 
@@ -52,5 +52,18 @@ def test_http_site(driver: Firefox):
         pass
 
     # Unblocking - non-private only
+    prefs.open()
+    prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE)
+    driver.refresh()
+    driver.get(HTTP_SITE)
+    nav.element_attribute_contains("lock-icon", "tooltiptext", CONNECTION_NOT_SECURE)
 
     # Private browsing - blocked
+    hamburger = PanelUi(driver)
+    hamburger.open_private_window()
+    nav.switch_to_new_window()
+    try:
+        driver.get(HTTP_SITE)
+        assert False, "Site should be blocked"
+    except (TimeoutException, WebDriverException):
+        pass
