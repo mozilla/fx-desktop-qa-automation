@@ -78,11 +78,12 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run: |
-          git config --global user.email ${{ github.actor }}"@users.noreply.github.com"
-          git config --global user.name ${{ github.actor }}
-          git remote set-head origin --auto
-          git add win-latest-reported-version
-          git commit -m "update windows reported version"
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com;
+          git config --global user.name ${{ github.actor }};
+          git remote set-head origin --auto;
+          git add win-latest-reported-version;
+          git commit -m "update windows reported version";
+          git push
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
@@ -151,11 +152,12 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run: |
-          git config --global user.email ${{ github.actor }}"@users.noreply.github.com"
-          git config --global user.name ${{ github.actor }}
-          git remote set-head origin --auto
-          git add mac-latest-reported-version
-          git commit -m "update macos reported version"
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com;
+          git config --global user.name ${{ github.actor }};
+          git remote set-head origin --auto;
+          git add mac-latest-reported-version;
+          git commit -m "update macos reported version";
+          git push
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:

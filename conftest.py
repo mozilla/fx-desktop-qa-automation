@@ -336,6 +336,14 @@ def pytest_sessionfinish(session):
         raise OSError("Could not find TestRail credentials")
 
     report = session.config._json_report.report
+    if report is None:
+        try:
+            with open(".report.json") as fh:
+                report = json.load(fh)
+        except OSError:
+            raise OSError(
+                "Report object was blank and .report.json was not found. Cannot report."
+            )
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)
     tri.mark_results(tr_session, passes)
