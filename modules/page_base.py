@@ -533,21 +533,49 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.actions.context_click(el).perform()
         return self
+    
+    def paste_to_element(
+        self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """ Paste the copied item into the element"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.scroll_to_element(el)
+            self.actions.click(el).perform()
+            if sys_platform == "Darwin":
+                self.actions.key_down(Keys.COMMAND)
+                self.actions.send_keys("v")
+                self.actions.key_up(Keys.COMMAND)
+            else:
+                self.actions.key_down(Keys.CONTROL)
+                self.actions.send_keys("v")
+                self.actions.key_up(Keys.CONTROL)
+            self.actions.perform()
+        return self
 
-    def copy_image(
+    def copy_image_from_element(
         self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """ Copy from the given element using right click (pynput)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
-            self.driver.execute_script("arguments[0].scrollIntoView();", el)
+            self.scroll_to_element(el)
             self.actions.context_click(el).perform()
             keyboard.tap(Key.down)
-            time.sleep(1)
             keyboard.tap(Key.down)
-            time.sleep(1)
             keyboard.tap(Key.down)
-            time.sleep(1)
+            keyboard.tap(Key.enter)
+        return self
+    
+    def copy_selection(
+        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """ Copy from the current selection using right click (pynput)"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.scroll_to_element(el)
+            self.actions.context_click(el).perform()
+            keyboard.tap(Key.down)
             keyboard.tap(Key.enter)
         return self
 
@@ -579,7 +607,7 @@ class BasePage(Page):
         """
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
-            self.actions.scroll_to_element(el).perform()
+            self.driver.execute_script("arguments[0].scrollIntoView();", el)
         return self
 
     def get_all_children(

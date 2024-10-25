@@ -1,6 +1,5 @@
-import time
 import pytest
-from pynput.keyboard import Controller, Key
+from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import Navigation, GenericPage
@@ -13,7 +12,7 @@ def test_case():
 @pytest.fixture()
 def set_prefs():
     """Set prefs"""
-    return []
+    return [("clipboard.imageAsFile.enabled", False)]
 
 
 @pytest.fixture()
@@ -34,8 +33,23 @@ def temp_selectors():
             "strategy": "css",
             "groups": []
         },
+        "matching": {
+            "selectorData": "matching",
+            "strategy": "id",
+            "groups": []
+        },
         "image-to-copy": {
-            "selectorData": '//*[@id="post-42178"]/section/p[6]/img',
+            "selectorData": '/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img',
+            "strategy": "xpath",
+            "groups": []
+        },
+        "paragraph1": {
+            "selectorData": '/html/body/div[3]/div/div/section[2]/div/main/article/section/p[1]',
+            "strategy": "xpath",
+            "groups": []
+        },
+        "paragraph2": {
+            "selectorData": '/html/body/div[3]/div/div/section[2]/div/main/article/section/p[2]',
             "strategy": "xpath",
             "groups": []
         }
@@ -46,7 +60,8 @@ DEMO_URL = "https://mystor.github.io/dragndrop/#"
 COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
 @pytest.mark.headed
-def test_paste_image_text(driver: Firefox, temp_selectors):
+@pytest.mark.xfail # a pref needs to be set only on windows, it was reported on bugzilla: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
+def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     C464474: Verify that pasting images and text from html works
     """
@@ -56,13 +71,32 @@ def test_paste_image_text(driver: Firefox, temp_selectors):
     web_page.elements |= temp_selectors
     keyboard = Controller()
 
-    # Click button to start the test of pasting image data
+    # Test pasting image data
     web_page.click_on("paste-image-data")
 
     # Copy an image from another website
     driver.switch_to.new_window("tab")
     nav.search(COPY_URL)
-    time.sleep(3)
-    web_page.copy_image(keyboard, "image-to-copy")
+    web_page.element_exists("image-to-copy")
+    web_page.copy_image_from_element(keyboard, "image-to-copy")
 
-    time.sleep(15)
+    # Paste it in the test area
+    driver.switch_to.window(driver.window_handles[0])
+    web_page.paste_to_element(sys_platform, "drop-area")
+    web_page.element_attribute_contains("matching", "outerHTML", "green")
+
+    # Test pasting text data
+    web_page.click_on("paste-html-data")
+
+    # Copy some text from another website
+    driver.switch_to.window(driver.window_handles[1])
+    web_page.scroll_to_element("paragraph1")
+    start_element = web_page.get_element("paragraph1")
+    end_element = web_page.get_element("paragraph2")
+    web_page.actions.click_and_hold(start_element).move_to_element(end_element).release().perform()
+    web_page.copy_selection(keyboard, "paragraph1")
+
+    # Paste it in the test area
+    driver.switch_to.window(driver.window_handles[0])
+    web_page.paste_to_element(sys_platform, "drop-area")
+    web_page.element_attribute_contains("matching", "outerHTML", "green")
