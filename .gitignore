@@ -1,5 +1,6 @@
 
 /venv/
+.env
 .report.json
 .tmp*
 .testrail_credential*
