@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
@@ -26,7 +24,6 @@ def set_prefs():
 
 
 HTTP_SITE = "http://http.badssl.com/"
-# HTTP_SITE = "http://httpforever.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
