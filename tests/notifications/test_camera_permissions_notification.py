@@ -48,4 +48,4 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your camera?"
     )
-    nav.click_on("popup-notification-secondary-button")
+    nav.click_on("popup-notification-primary-button")

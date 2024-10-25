@@ -51,4 +51,4 @@ def test_camera_and_microphone_permissions_notification(
     nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your camera and microphone?"
     )
-    nav.click_on("popup-notification-secondary-button")
+    nav.click_on("popup-notification-primary-button")
