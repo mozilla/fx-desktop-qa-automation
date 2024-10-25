@@ -968,6 +968,27 @@ Description: Shadow parent of the OK and cancel button
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: httpsonly-radio-enabled
+Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled']"
+Description: Radio Button to turn Https Only Mode to enabled for all pages
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-pbm
+Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled-pbm']"
+Description: Radio Button to turn Https Only Mode to enabled for private browsing
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-disabled
+Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
+Description: Radio Button to turn Https Only Mode to disabled for all pages
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container

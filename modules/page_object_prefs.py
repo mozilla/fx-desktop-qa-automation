@@ -30,6 +30,16 @@ class AboutPrefs(BasePage):
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
 
+    class HttpsOnlyStatus:
+        """Fake enum: return a string based on a constant name"""
+
+        def __init__(self):
+            self.HTTPS_ONLY_ALL = "httpsonly-radio-enabled"
+            self.HTTPS_ONLY_PRIVATE = "httpsonly-radio-enabled-pbm"
+            self.HTTPS_ONLY_DISABLED = "httpsonly-radio-disabled"
+
+    HTTPS_ONLY_STATUS = HttpsOnlyStatus()
+
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(
@@ -379,6 +389,15 @@ class AboutPrefs(BasePage):
                 self.get_element("panel-popup-button", labels=[field]).click()
         else:
             self.get_element("panel-popup-button", labels=[field]).click()
+        return self
+
+    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
+        """
+        Click the HTTPS Only option given
+        """
+        self.find_in_settings("HTTPS")
+        self.click_on(option_id)
+        self.element_attribute_contains(option_id, "selected", "true")
         return self
 
 
