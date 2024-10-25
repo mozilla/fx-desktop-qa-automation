@@ -711,3 +711,29 @@ class BasePage(Page):
             pass
         self.set_content_context()
         return _loaded
+
+    def get_css_zoom(self, driver: Firefox):
+        """
+        Checks the CSS zoom and transform scale to determine the current zoom level.
+        """
+        # Retrieve the CSS zoom property on the body element
+        css_zoom = driver.execute_script("return window.getComputedStyle(document.body).zoom")
+        if css_zoom:
+            return float(css_zoom)
+
+        # If zoom property is not explicitly set, check the transform scale
+        css_transform_scale = driver.execute_script("""
+            const transform = window.getComputedStyle(document.body).transform;
+            if (transform && transform !== 'none') {
+                return transform;
+            } else {
+                return null;
+        """)
+
+        # Parse the transform matrix to extract the scale factor (e.g., matrix(a, b, c, d, e, f))
+        if css_transform_scale:
+            scale_factor = float(css_transform_scale.split('(')[1].split(',')[0])
+            return scale_factor
+
+        # Default return if neither zoom nor transform is set
+        return 1.0
