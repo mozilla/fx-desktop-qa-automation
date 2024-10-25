@@ -534,6 +534,23 @@ class BasePage(Page):
             self.actions.context_click(el).perform()
         return self
 
+    def copy_image(
+        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """ Copy from the given element using right click (pynput)"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.driver.execute_script("arguments[0].scrollIntoView();", el)
+            self.actions.context_click(el).perform()
+            keyboard.tap(Key.down)
+            time.sleep(1)
+            keyboard.tap(Key.down)
+            time.sleep(1)
+            keyboard.tap(Key.down)
+            time.sleep(1)
+            keyboard.tap(Key.enter)
+        return self
+
     def click_and_hide_menu(
         self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
@@ -553,6 +570,16 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.actions.move_to_element(el).perform()
+        return self
+
+    def scroll_to_element(self, reference: Union[str, tuple, WebElement], labels=[]):
+        """
+        Scroll towards the specified element which may be out of frame.
+        Parameters: element (str): The element to hover over.
+        """
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.actions.scroll_to_element(el).perform()
         return self
 
     def get_all_children(

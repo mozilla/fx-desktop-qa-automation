@@ -1,7 +1,7 @@
-import pytest
 import time
-from selenium.webdriver import Firefox
+import pytest
 from pynput.keyboard import Controller, Key
+from selenium.webdriver import Firefox
 
 from modules.page_object import Navigation, GenericPage
 
@@ -9,6 +9,11 @@ from modules.page_object import Navigation, GenericPage
 @pytest.fixture()
 def test_case():
     return "464474"
+
+@pytest.fixture()
+def set_prefs():
+    """Set prefs"""
+    return []
 
 
 @pytest.fixture()
@@ -27,6 +32,11 @@ def temp_selectors():
         "drop-area": {
             "selectorData": "#droparea",
             "strategy": "css",
+            "groups": []
+        },
+        "image-to-copy": {
+            "selectorData": '//*[@id="post-42178"]/section/p[6]/img',
+            "strategy": "xpath",
             "groups": []
         }
     }
@@ -48,6 +58,11 @@ def test_paste_image_text(driver: Firefox, temp_selectors):
 
     # Click button to start the test of pasting image data
     web_page.click_on("paste-image-data")
+
+    # Copy an image from another website
     driver.switch_to.new_window("tab")
     nav.search(COPY_URL)
-    time.sleep(10)
+    time.sleep(3)
+    web_page.copy_image(keyboard, "image-to-copy")
+
+    time.sleep(15)
