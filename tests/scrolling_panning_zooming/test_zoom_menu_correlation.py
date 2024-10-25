@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
-from modules.browser_object_panel_ui import PanelUi
+from modules.browser_object import PanelUi
+from modules.page_object_generics import GenericPage
 from time import sleep
 
 
@@ -15,7 +16,7 @@ TEST_PAGE = "https://en.wikipedia.org"
 def test_zoom_menu_correlation(driver: Firefox):
     # Open a webpage to test zoom level
 
-    driver.get(TEST_PAGE)
+    page = GenericPage(driver, url=TEST_PAGE)
     sleep(1)
 
     # Open the Firefox Menu panel and prepare to interact with zoom controls
@@ -29,7 +30,7 @@ def test_zoom_menu_correlation(driver: Firefox):
         sleep(2)
 
         # Verify that the CSS zoom level reflects the 90% zoom out
-        css_zoom = get_css_zoom(driver)
+        css_zoom = page.get_css_zoom()
         assert css_zoom == 0.9, f"Expected CSS zoom == 0.9, but got {css_zoom}"
 
         # Step 2: Reset zoom to 100%
