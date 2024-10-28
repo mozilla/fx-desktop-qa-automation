@@ -327,7 +327,7 @@ def pytest_sessionfinish(session):
     report = session.config._json_report.report
     if report is None:
         logging.warning(
-            "This thread does not have a report in its config object. Not reporting to TestRail."
+            "Not reporting to TestRail. This thread does not have a report in its config object."
         )
         return None
 
