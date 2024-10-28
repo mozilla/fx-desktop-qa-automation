@@ -31,6 +31,7 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
+        echo TC_PROX=$TASKCLUSTER_PROXY_URL
         if [[ $(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq '.FIREFOX_DEVEDITION') == "\"$(cat lin-latest-reported-version)\"" ]]; then exit 100; fi;
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
@@ -43,6 +44,8 @@ tasks:
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox
+        git config --global user.email ben.chatterton@mozilla.com
+        git config --global user.name "DTE Automation"
         git add lin-latest-reported-version
         git commit -m "update latest reported version"
         exit $((${?} | ${FAILURE}))
