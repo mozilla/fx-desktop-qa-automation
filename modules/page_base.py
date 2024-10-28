@@ -717,7 +717,9 @@ class BasePage(Page):
         Checks the CSS zoom and transform scale to determine the current zoom level.
         """
         # Retrieve the CSS zoom property on the body element
-        css_zoom = self.driver.execute_script("return window.getComputedStyle(document.body).zoom")
+        css_zoom = self.driver.execute_script(
+            "return window.getComputedStyle(document.body).zoom"
+        )
         if css_zoom:
             return float(css_zoom)
 
