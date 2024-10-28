@@ -2,12 +2,13 @@ import pytest
 from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
-from modules.page_object import Navigation, GenericPage
+from modules.page_object import GenericPage, Navigation
 
 
 @pytest.fixture()
 def test_case():
     return "464474"
+
 
 @pytest.fixture()
 def set_prefs():
@@ -28,39 +29,32 @@ def temp_selectors():
             "strategy": "css",
             "groups": [],
         },
-        "drop-area": {
-            "selectorData": "#droparea",
-            "strategy": "css",
-            "groups": []
-        },
-        "matching": {
-            "selectorData": "matching",
-            "strategy": "id",
-            "groups": []
-        },
+        "drop-area": {"selectorData": "#droparea", "strategy": "css", "groups": []},
+        "matching": {"selectorData": "matching", "strategy": "id", "groups": []},
         "image-to-copy": {
-            "selectorData": '/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img',
+            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img",
             "strategy": "xpath",
-            "groups": []
+            "groups": [],
         },
         "paragraph1": {
-            "selectorData": '/html/body/div[3]/div/div/section[2]/div/main/article/section/p[1]',
+            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[1]",
             "strategy": "xpath",
-            "groups": []
+            "groups": [],
         },
         "paragraph2": {
-            "selectorData": '/html/body/div[3]/div/div/section[2]/div/main/article/section/p[2]',
+            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[2]",
             "strategy": "xpath",
-            "groups": []
-        }
+            "groups": [],
+        },
     }
 
 
 DEMO_URL = "https://mystor.github.io/dragndrop/#"
 COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
+
 @pytest.mark.headed
-@pytest.mark.xfail # a pref needs to be set only on windows, it was reported on bugzilla: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
+@pytest.mark.xfail  # a pref needs to be set only on windows, it was reported on bugzilla: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
 def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     C464474: Verify that pasting images and text from html works
@@ -93,7 +87,9 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     web_page.scroll_to_element("paragraph1")
     start_element = web_page.get_element("paragraph1")
     end_element = web_page.get_element("paragraph2")
-    web_page.actions.click_and_hold(start_element).move_to_element(end_element).release().perform()
+    web_page.actions.click_and_hold(start_element).move_to_element(
+        end_element
+    ).release().perform()
     web_page.copy_selection(keyboard, "paragraph1")
 
     # Paste it in the test area

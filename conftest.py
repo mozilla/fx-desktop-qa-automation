@@ -319,9 +319,13 @@ def pytest_sessionfinish(session):
 
     # TestRail reporting
     if not os.environ.get("TESTRAIL_REPORT"):
-        logging.info(
+        logging.warning(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
+        return None
+
+    if not hasattr(session.config, "_json_report"):
+        logging.warning("No json_report in config, will try again with other workers.")
         return None
 
     report = session.config._json_report.report

@@ -535,11 +535,11 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.actions.context_click(el).perform()
         return self
-    
+
     def paste_to_element(
         self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
-        """ Paste the copied item into the element"""
+        """Paste the copied item into the element"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
@@ -553,7 +553,7 @@ class BasePage(Page):
     def copy_image_from_element(
         self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
-        """ Copy from the given element using right click (pynput)"""
+        """Copy from the given element using right click (pynput)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
@@ -563,11 +563,11 @@ class BasePage(Page):
             keyboard.tap(Key.down)
             keyboard.tap(Key.enter)
         return self
-    
+
     def copy_selection(
         self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
-        """ Copy from the current selection using right click (pynput)"""
+        """Copy from the current selection using right click (pynput)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
