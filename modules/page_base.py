@@ -541,16 +541,11 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
-            self.actions.click(el).perform()
-            if sys_platform == "Darwin":
-                self.actions.key_down(Keys.COMMAND)
-                self.actions.send_keys("v")
-                self.actions.key_up(Keys.COMMAND)
-            else:
-                self.actions.key_down(Keys.CONTROL)
-                self.actions.send_keys("v")
-                self.actions.key_up(Keys.CONTROL)
-            self.actions.perform()
+            self.click_on(el)
+            mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+            self.actions.key_down(mod_key)
+            self.actions.send_keys("v")
+            self.actions.key_up(mod_key).perform()
         return self
 
     def copy_image_from_element(
@@ -560,7 +555,7 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
-            self.actions.context_click(el).perform()
+            self.context_click(el)
             keyboard.tap(Key.down)
             keyboard.tap(Key.down)
             keyboard.tap(Key.down)
@@ -574,7 +569,7 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
-            self.actions.context_click(el).perform()
+            self.context_click(el)
             keyboard.tap(Key.down)
             keyboard.tap(Key.enter)
         return self
