@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -49,4 +51,6 @@ def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
     nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your microphone?"
     )
+
+    sleep(1.5)
     nav.click_on("popup-notification-secondary-button")

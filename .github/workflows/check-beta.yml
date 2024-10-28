@@ -2,7 +2,7 @@ name: Check new beta version
 
 on:
   schedule:
-    - cron: "47 */3 * * *" # Runs this workflow every 3 hours
+    - cron: "16 */1 * * *" # Runs this workflow every 3 hours
 env:
   LATEST: ""
 
@@ -43,6 +43,7 @@ jobs:
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-Windows
+    secrets: inherit
 
   Run-Mac-Smoke: 
     needs: Check-Beta-Version
@@ -50,4 +51,5 @@ jobs:
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-MacOS
+    secrets: inherit
     

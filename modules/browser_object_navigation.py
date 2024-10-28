@@ -283,3 +283,20 @@ class Navigation(BasePage):
             )
             assert matches_short_string or matches_long_string
             return self
+
+    def refresh_page(self) -> BasePage:
+        """
+        Refreshes the current page by clicking the refresh button in the browser.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("refresh-button").click()
+        self.wait_for_page_to_load()
+        return self
+
+    def handle_geolocation_prompt(self, button_type="primary"):
+        """
+        Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
+        """
+        button_selector = f"popup-notification-{button_type}-button"
+        self.element_clickable(button_selector)
+        self.click_on(button_selector)
