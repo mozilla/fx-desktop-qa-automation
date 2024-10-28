@@ -33,7 +33,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4
+        TESTRAIL_REPORT=1 pipenv run pytest --fx-executable ./firefox/firefox -n 4
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox
