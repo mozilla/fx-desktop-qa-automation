@@ -488,6 +488,44 @@
         "groups": []
     },
 
+    "autoplay-settings-button": {
+        "selectorData": "autoplaySettingsButton",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "autoplay-settings": {
+        "selectorData": "#setAutoplayPref > menulist[label='Block Audio']",
+        "strategy": "css",
+        "groups" : []
+    },
+
+    "allow-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+        "strategy": "css",
+        "groups" : []
+    },
+
+    "permission-dialog": {
+        "selectorData": "[data-l10n-id='permission-dialog']",
+        "strategy": "css",
+        "groups" : []
+    },
+
+    "autoplay-save-changes": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "permission-dialog" ,
+        "groups" : []
+    },
+
+    "spacer": {
+        "selectorData": "button-spacer",
+        "strategy": "class",
+        "shadowParent": "permission-dialog" ,
+        "groups" : []
+    },
+
     "httpsonly-radio-enabled": {
         "selectorData": "radio[data-l10n-id='httpsonly-radio-enabled']",
         "strategy": "css",

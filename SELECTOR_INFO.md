@@ -969,6 +969,48 @@ Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: autoplay-settings-button
+Selector Data: autoplaySettingsButton
+Description: Autoplay settings button
+Location: about:preferences#privacy -> Permissions
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: autoplay-settings
+Selector Data: #setAutoplayPref > menulist[label='Block Audio']
+Description: Default autpplay settings for all websites button
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: allow-audio-video
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']
+Description: Allow audio video option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: permission-dialog
+Selector Data: [data-l10n-id='permission-dialog']
+Description: Permission dialog
+Location: about:preferences#privacy -> Permissions
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: autoplay-save-changes
+Selector Data: button[dlgtype='accept']
+Description: Autoplay save changes
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: spacer
+Selector Data: button-spacer"
+Description: Spacer to dismiss autoplay options menu
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: httpsonly-radio-enabled
 Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled']"
 Description: Radio Button to turn Https Only Mode to enabled for all pages
@@ -2549,20 +2591,6 @@ Description: Geolocation prompt container
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
-```
-Selector Name: checkbox-remember-this-decision
-Selector Data: "label.checkbox-label[flex='1']"
-Description: Remember this decision checkbox
-Location: Geolocation prompt container in Address bar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: permissions-location-icon
-Selector Data: "permissions-granted-icon"
-Description: Location icon
-Location: Address bar
-Path to .json: modules/data/navigation.components.json
-```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -2892,21 +2920,6 @@ Selector Data: "appMenu-passwords-button"
 Description: Password button
 Location: Hamburger Menu
 Path to .json: modules/data/panel_ui.components.json
-```
-```
-Selector name: print-option
-Selector Data: "appMenu-print-button2"
-Description: Panel UI Print... option
-Location: Hamburger Menu
-Path to .json: modules/data/panel_ui.components.json
-```
-#### print_preview
-```
-Selector name: print-preview-browser
-Selector Data: "print-preview stack browser[class='printPreviewBrowser']"
-Description: Print Preview Window
-Location: Print Preview
-Path to .json: modules/data/print_preview.components.json
 ```
 #### reader_view
 ```
