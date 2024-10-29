@@ -20,8 +20,7 @@ task-defaults:
     - secrets:get:project/mozilla/fx-desktop-qa-automation/level-3/testrail
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
-  features:
-    taskclusterProxy: true
+  taskcluster-proxy: true
 
 tasks:
   linux:
