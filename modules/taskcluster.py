@@ -12,9 +12,7 @@ def get_tc_secret():
 
     Returns False when not running on tc
     """
-    tc_home = os.environ.get(
-        "TASKCLUSTER_ROOT_URL", os.environ.get("TASKCLUSTER_PROXY_URL")
-    )
+    tc_home = os.environ.get("TASKCLUSTER_PROXY_URL", "http://taskcluster")
     if not tc_home:
         logging.warning("tc_root and tc_prox not in env")
         return False
