@@ -329,6 +329,14 @@ Description: Save edited login
 Location: The about:login's main login page after editing a login
 Path to .json: modules/data/about_logins.components.json
 ```
+#### about_networking
+```
+Selector Name: networking-sidebar-category
+Selector Data: "div.category[id='category-{name}']"
+Description: The tab category in the sidebar
+Location: Sidebar of about:networking page
+Path to .json: modules/data/about_networking.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -1029,6 +1037,20 @@ Selector Name: httpsonly-radio-disabled
 Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
 Description: Radio Button to turn Https Only Mode to disabled for all pages
 Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-status
+Selector Data: "dohStatus"
+Description: Status of DoH
+Location: Inside the first frame of the DoH section in about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-resolver
+Selector Data: "dohResolver"
+Description: The name of the DoH provider
+Location: Inside the first frame of the DoH section in about:preferences#general
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
