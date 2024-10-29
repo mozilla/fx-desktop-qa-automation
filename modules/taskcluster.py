@@ -29,4 +29,5 @@ def get_tc_secret():
     res.raise_for_status()
     logging.warning("secret is got")
 
+    logging.warning(f"first part of response:{res.text[:10]}")
     return res.json()["secret"]
