@@ -42,6 +42,6 @@ def test_allow_audio_video_functionality(driver: Firefox):
 
     # Open test website and check the site is loaded and the featured video is not playing
     GenericPage(driver, url=TEST_URL).open()
-    with (driver.context(driver.CONTEXT_CHROME)):
+    with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("autoplay-permission").click()
         assert nav.get_element("permission-popup-menulist").is_displayed()
