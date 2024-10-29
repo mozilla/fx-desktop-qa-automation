@@ -505,16 +505,16 @@
         "groups": []
     },
 
-    "permission-popup-menulist": {
-        "selectorData": "permission-popup-menulist",
-        "selectorData": "popupnotification#geolocation-notification",
-        "strategy": "css",
-        "groups": []
-    },
 
     "permissions-location-icon": {
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
+        "groups": []
+    },
+
+    "permission-popup-menulist": {
+        "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
+        "strategy": "css",
         "groups": []
     }
 }

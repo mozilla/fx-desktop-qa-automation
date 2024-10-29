@@ -44,4 +44,4 @@ def test_allow_audio_video_functionality(driver: Firefox):
     GenericPage(driver, url=TEST_URL).open()
     with (driver.context(driver.CONTEXT_CHROME)):
         nav.get_element("autoplay-permission").click()
-        nav.element_attribute_contains("permission-popup-menulist", "label", "Block Audio and Video")
+        assert nav.get_element("permission-popup-menulist").is_displayed()

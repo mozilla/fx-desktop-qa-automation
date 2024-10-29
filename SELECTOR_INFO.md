@@ -2537,7 +2537,7 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: permission-popup-menulist
-Selector Data: permission-popup-menulist
+Selector Data: #permission-popup-menulist[label='Block Audio and Video']
 Description: Autoplay permission option selected
 Location: Autoplay doorhanger
 Path to .json: modules/data/navigation.components.json
