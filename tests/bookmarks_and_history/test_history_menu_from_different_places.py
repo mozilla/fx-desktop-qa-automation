@@ -86,6 +86,7 @@ def test_history_menu_in_different_places(driver: Firefox):
         panel_ui.navigate_to_customize_toolbar()
         customize_firefox.add_widget_to_toolbar("library")
 
+        tabs.new_tab_by_button()
         tabs.switch_to_new_tab()
 
         nav.click_on("library-button")
