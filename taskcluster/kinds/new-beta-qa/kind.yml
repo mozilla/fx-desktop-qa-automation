@@ -7,6 +7,7 @@ task-defaults:
   description: "Checks for new betas, tests them, reports to TestRail and Slack"
   worker-type: t-linux-wayland
   worker:
+    taskcluster-proxy: true
     max-run-time: 1800
     artifacts:
       - name: public/results
@@ -20,7 +21,6 @@ task-defaults:
     - secrets:get:project/mozilla/fx-desktop-qa-automation/level-3/testrail
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
-  taskcluster-proxy: true
 
 tasks:
   linux:

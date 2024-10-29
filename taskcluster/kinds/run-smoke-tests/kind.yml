@@ -7,6 +7,7 @@ task-defaults:
   description: "Runs Smoke Tests and Notifies Slack"
   worker-type: t-linux-wayland
   worker:
+    taskcluster-proxy: true
     max-run-time: 1800
     artifacts:
       - name: public/results
@@ -17,7 +18,6 @@ task-defaults:
   scopes:
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
-  taskcluster-proxy: true
 
 tasks:
   linux:
