@@ -21,7 +21,7 @@ def get_tc_secret():
     http_adapter = requests.adapters.HTTPAdapter(max_retries=retry)
     session.mount("https://", http_adapter)
     session.mount("http://", http_adapter)
-    secrets_url = f"{tc_proxy}/secrets/v1/secret/project%2Fmobile%2Fci%2Ftestrail"
+    secrets_url = f"{tc_proxy}/secrets/v1/secret/project%2Fmozilla%2Ffx-desktop-qa-automation%2Flevel-3%2Ftestrail"
 
     res = session.get(secrets_url, timeout=30)
     res.raise_for_status()

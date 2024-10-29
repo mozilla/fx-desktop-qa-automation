@@ -524,5 +524,29 @@
         "strategy": "class",
         "shadowParent": "permission-dialog" ,
         "groups" : []
+    },
+
+    "allow-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+        "strategy": "css",
+        "groups" : []
+    },
+
+    "httpsonly-radio-enabled": {
+        "selectorData": "radio[data-l10n-id='httpsonly-radio-enabled']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "httpsonly-radio-enabled-pbm": {
+        "selectorData": "radio[data-l10n-id='httpsonly-radio-enabled-pbm']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "httpsonly-radio-disabled": {
+        "selectorData": "radio[data-l10n-id='httpsonly-radio-disabled']",
+        "strategy": "css",
+        "groups": []
     }
 }

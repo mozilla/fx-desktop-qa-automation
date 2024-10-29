@@ -11,7 +11,7 @@ from modules.util import BrowserActions, PomUtils
 
 
 class PanelUi(BasePage):
-    """Page Object Model for nav panel UI menu (hamburger menu, application menu)"""
+    """Browser Object Model for nav panel UI menu (hamburger menu, application menu)"""
 
     URL_TEMPLATE = "about:blank"
 
@@ -57,9 +57,7 @@ class PanelUi(BasePage):
         labels: *list[str]
             Labels to pass to get_element()
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            panel_option = self.get_element(name, labels=labels)
-            panel_option.click()
+        self.click_on(name, labels=labels)
         return self
 
     def navigate_to_about_addons(self):

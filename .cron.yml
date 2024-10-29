@@ -14,4 +14,4 @@ jobs:
       - {hour: 12, minute: 15}
       - {hour: 15, minute: 15}
       - {hour: 18, minute: 15}
-      - {hour: 18, minute: 30}
+      - {hour: 21, minute: 15}

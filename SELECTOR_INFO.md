@@ -975,6 +975,69 @@ Description: Block audio video option
 Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: autoplay-settings-button
+Selector Data: autoplaySettingsButton
+Description: Autoplay settings button
+Location: about:preferences#privacy -> Permissions
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: autoplay-settings
+Selector Data: #setAutoplayPref > menulist[label='Block Audio']
+Description: Default autpplay settings for all websites button
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: allow-audio-video
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']
+Description: Allow audio video option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: permission-dialog
+Selector Data: [data-l10n-id='permission-dialog']
+Description: Permission dialog
+Location: about:preferences#privacy -> Permissions
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: autoplay-save-changes
+Selector Data: button[dlgtype='accept']
+Description: Autoplay save changes
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: spacer
+Selector Data: button-spacer"
+Description: Spacer to dismiss autoplay options menu
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled
+Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled']"
+Description: Radio Button to turn Https Only Mode to enabled for all pages
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-pbm
+Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled-pbm']"
+Description: Radio Button to turn Https Only Mode to enabled for private browsing
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-disabled
+Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
+Description: Radio Button to turn Https Only Mode to disabled for all pages
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container

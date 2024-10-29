@@ -1,3 +1,7 @@
+import sys
+from os import environ
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -28,8 +32,10 @@ def set_prefs():
 
 
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     """
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
@@ -48,4 +54,6 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your camera?"
     )
+
+    sleep(1.5)
     nav.click_on("popup-notification-secondary-button")

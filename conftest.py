@@ -319,24 +319,33 @@ def pytest_sessionfinish(session):
 
     # TestRail reporting
     if not os.environ.get("TESTRAIL_REPORT"):
-        logging.info(
+        logging.warning(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
         return None
 
-    testrail_credentials = get_tc_secret()
-    if testrail_credentials:
-        creds = testrail_credentials.get("testrailCredentials")
-        os.environ["TESTRAIL_USERNAME"] = creds.get("username")
-        os.environ["TESTRAIL_API_KEY"] = creds.get("password")
-        os.environ["TESTRAIL_BASE_URL"] = creds.get("host")
+    if not hasattr(session.config, "_json_report"):
+        logging.warning("No json_report in config, will try again with other workers.")
+        return None
+
+    report = session.config._json_report.report
+    if report is None:
+        logging.warning(
+            "Not reporting to TestRail. This thread does not have a report in its config object."
+        )
+        return None
+
+    creds = get_tc_secret()
+    if creds:
+        os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+        os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+        os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
     elif not os.environ.get("TESTRAIL_USERNAME"):
         logging.error(
             "Attempted to report to TestRail, but could not find credentials."
         )
         raise OSError("Could not find TestRail credentials")
 
-    report = session.config._json_report.report
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)
     tri.mark_results(tr_session, passes)
@@ -409,13 +418,6 @@ def driver(
         Fixture that does other environment work, like set logging levels.
     """
     try:
-        logging.warning(",".join(os.environ.keys()))
-        logging.warning(
-            f"TESTRAIL_BASE_URL: {os.environ.get('TESTRAIL_BASE_URL', 'empty')}"
-        )
-        logging.warning(
-            f"TESTRAIL_REPORT: {os.environ.get('TESTRAIL_REPORT', 'empty')}"
-        )
         options = Options()
         if opt_headless:
             options.add_argument("--headless")

@@ -139,11 +139,13 @@ class BasePage(Page):
             self.wait.until_not(condition)
         return self
 
-    def perform_key_combo(self, *keys) -> "Page":
+    def perform_key_combo(self, *keys) -> Page:
         """
         Use ActionChains to perform key combos. Modifier keys should come first in the function call.
         Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
         """
+        while Keys.CONTROL in keys and self.sys_platform == "Darwin":
+            keys[keys.index(Keys.CONTROL)] == Keys.COMMAND
         for k in keys[:-1]:
             self.actions.key_down(k)
 
@@ -534,6 +536,46 @@ class BasePage(Page):
             self.actions.context_click(el).perform()
         return self
 
+    def paste_to_element(
+        self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Paste the copied item into the element"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.scroll_to_element(el)
+            self.click_on(el)
+            mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+            self.actions.key_down(mod_key)
+            self.actions.send_keys("v")
+            self.actions.key_up(mod_key).perform()
+        return self
+
+    def copy_image_from_element(
+        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Copy from the given element using right click (pynput)"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.scroll_to_element(el)
+            self.context_click(el)
+            keyboard.tap(Key.down)
+            keyboard.tap(Key.down)
+            keyboard.tap(Key.down)
+            keyboard.tap(Key.enter)
+        return self
+
+    def copy_selection(
+        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Copy from the current selection using right click (pynput)"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.scroll_to_element(el)
+            self.context_click(el)
+            keyboard.tap(Key.down)
+            keyboard.tap(Key.enter)
+        return self
+
     def click_and_hide_menu(
         self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
@@ -553,6 +595,16 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.actions.move_to_element(el).perform()
+        return self
+
+    def scroll_to_element(self, reference: Union[str, tuple, WebElement], labels=[]):
+        """
+        Scroll towards the specified element which may be out of frame.
+        Parameters: element (str): The element to hover over.
+        """
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.driver.execute_script("arguments[0].scrollIntoView();", el)
         return self
 
     def get_all_children(
