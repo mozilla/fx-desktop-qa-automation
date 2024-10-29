@@ -12,11 +12,7 @@ def get_tc_secret(secret_name="testrail"):
 
     Returns False when not running on tc
     """
-    # tc_home = os.environ.get("TASKCLUSTER_PROXY_URL", "http://taskcluster")
-    tc_home = "http://taskcluster"
-    if not tc_home:
-        logging.warning("tc_root and tc_prox not in env")
-        return False
+    tc_home = os.environ.get("TASKCLUSTER_PROXY_URL", "http://taskcluster")
     session = requests.Session()
     retry = Retry(total=5, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
     http_adapter = requests.adapters.HTTPAdapter(max_retries=retry)
