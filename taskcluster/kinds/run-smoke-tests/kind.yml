@@ -16,7 +16,6 @@ task-defaults:
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
-    - secrets:get:project/mozilla/fx-desktop-qa-automation/level-1/testrail
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
 
@@ -35,7 +34,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        TESTRAIL_REPORT=1 pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/password_manager
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox

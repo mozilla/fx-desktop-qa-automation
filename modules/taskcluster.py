@@ -18,8 +18,7 @@ def get_tc_secret(secret_name="testrail"):
     http_adapter = requests.adapters.HTTPAdapter(max_retries=retry)
     session.mount("https://", http_adapter)
     session.mount("http://", http_adapter)
-    # TODO: change back to level 3
-    secrets_url = f"{tc_home}/secrets/v1/secret/project/mozilla/fx-desktop-qa-automation/level-1/{secret_name}"
+    secrets_url = f"{tc_home}/secrets/v1/secret/project/mozilla/fx-desktop-qa-automation/level-3/{secret_name}"
 
     res = session.get(secrets_url, timeout=30)
     res.raise_for_status()
