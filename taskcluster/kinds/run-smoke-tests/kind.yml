@@ -17,6 +17,8 @@ task-defaults:
   scopes:
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
+  features:
+    taskclusterProxy: true
 
 tasks:
   linux:
