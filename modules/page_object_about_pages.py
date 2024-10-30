@@ -198,3 +198,18 @@ class AboutTelemetry(BasePage):
     """
 
     URL_TEMPLATE = "about:telemetry"
+
+
+class AboutNetworking(BasePage):
+    """
+    POM for about:networking page
+    """
+
+    URL_TEMPLATE = "about:networking"
+
+    def select_network_category(self, option: str):
+        """
+        Clicks the corresponding sidebar tab in the about:networking page.
+        """
+        # Use dynamic ID based on the option name
+        self.get_element("networking-sidebar-category", labels=[option]).click()

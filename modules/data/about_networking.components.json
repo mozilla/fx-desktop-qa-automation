@@ -1,0 +1,7 @@
+{
+    "networking-sidebar-category": {
+        "selectorData": "div.category[id='category-{name}']",
+        "strategy": "css",
+        "groups": []
+    }
+}
