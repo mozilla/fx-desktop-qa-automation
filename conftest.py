@@ -522,6 +522,10 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 @pytest.fixture()
 def use_secrets():
     """Function factory: grab a named secret from a secrets file"""
+    if os.environ.get("TASKCLUSTER_ROOT_URL"):
+        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret("test-accts-key").get(
+            "SVC_ACCT_DECRYPT"
+        )
 
     def _use_secrets(filename: str, secret_name: str) -> dict:
         secrets = crypto.decrypt(filename)
