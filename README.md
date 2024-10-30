@@ -147,3 +147,7 @@ and all of the secrets exist as follows:
 To decrypt in a test, request the `use_secrets` function factory fixture. Then, in a test, call e.g.
 `login = use_secrets("examples", "account_two")` and Jane's Example service account will be in a dict
 called `login`.
+
+**DO NOT PUSH UNENCRYPTED SECRETS.**
+
+**DO NOT ADD SECRETS UNNECESSARILY.**
