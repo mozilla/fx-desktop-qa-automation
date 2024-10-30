@@ -5,6 +5,8 @@ on:
     - cron: "16 */1 * * *" # Runs this workflow every 3 hours
 env:
   LATEST: ""
+permissions:
+  contents: 'write'
 
 jobs:
   Check-Beta-Version: 
