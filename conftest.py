@@ -529,9 +529,13 @@ def fillable_pdf_url():
 
 @pytest.fixture()
 def close_file_manager(sys_platform):
+    """Closes the file manager window"""
     yield
     if sys_platform == "Windows":
-        run(["taskkill", "/FI", "WINDOWTITLE eq File Explorer"], check=True)
+        powershell_command = '''
+        Get-Process | Where-Object { $_.MainWindowTitle -eq 'File Explorer' } | ForEach-Object { $_.CloseMainWindow() }
+        '''
+        run(["powershell", "-Command", powershell_command], check=True)
     elif sys_platform == "Darwin":
         applescript = '''
         tell application "Finder"
