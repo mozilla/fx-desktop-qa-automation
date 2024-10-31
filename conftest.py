@@ -531,7 +531,7 @@ def fillable_pdf_url():
 def close_file_manager(sys_platform):
     yield
     if sys_platform == "Windows":
-        run(["taskkill", "/IM", "WINDOWTITLE eq File Explorer"], check=True)
+        run(["taskkill", "/FI", "WINDOWTITLE eq File Explorer"], check=True)
     elif sys_platform == "Darwin":
         applescript = '''
         tell application "Finder"
