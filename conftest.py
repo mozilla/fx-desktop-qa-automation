@@ -523,7 +523,7 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
     if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret("test-accts-key").get(
+        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret("test-accts-key", level=1).get(
             "SVC_ACCT_DECRYPT"
         )
 

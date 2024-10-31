@@ -19,6 +19,7 @@ task-defaults:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
     - secrets:get:project/mozilla/fx-desktop-qa-automation/level-3/*
+    - secrets:get:project/mozilla/fx-desktop-qa-automation/level-1/*
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
 
