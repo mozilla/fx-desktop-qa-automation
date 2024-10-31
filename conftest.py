@@ -529,7 +529,7 @@ def fillable_pdf_url():
 
 
 @pytest.fixture()
-def close_file_manager(sys_platform, close_file_manager_window_name):
+def close_file_manager(sys_platform):
     """Closes the file manager window"""
     yield
     if sys_platform == "Windows":
@@ -542,12 +542,3 @@ def close_file_manager(sys_platform, close_file_manager_window_name):
         end tell
         '''
         run(["osascript", "-e", applescript], check=True)
-    elif sys_platform == "Linux":
-        window_id = check_output(["xdotool", "search", "--name", close_file_manager_window_name]).strip().decode('utf-8')
-        run(["xdotool", "windowclose", window_id], check=True)
-
-
-@pytest.fixture()
-def close_file_manager_window_name():
-    """ Tells close_file_manager linux the window name to close"""
-    return ""
