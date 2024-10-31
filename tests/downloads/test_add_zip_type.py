@@ -22,6 +22,10 @@ ZIP_URL = "https://github.com/microsoft/api-guidelines"
 def delete_files_regex_string():
     return r"api-guidelines-vNext"
 
+@pytest.fixture()
+def close_file_manager_window_name():
+    return "api-guidelines-vNext.zip"
+
 
 @pytest.fixture()
 def temp_selectors():

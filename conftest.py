@@ -527,8 +527,9 @@ def faker_seed():
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
 
+
 @pytest.fixture()
-def close_file_manager(sys_platform):
+def close_file_manager(sys_platform, close_file_manager_window_name):
     """Closes the file manager window"""
     yield
     if sys_platform == "Windows":
@@ -542,5 +543,11 @@ def close_file_manager(sys_platform):
         '''
         run(["osascript", "-e", applescript], check=True)
     elif sys_platform == "Linux":
-        for manager in ["nautilus", "dolphin", "thunar", "pcmanfm"]:
-            run(["pkill", manager], check=False)
+        window_id = check_output(["xdotool", "search", "--name", close_file_manager_window_name]).strip().decode('utf-8')
+        run(["xdotool", "windowclose", window_id], check=True)
+
+
+@pytest.fixture()
+def close_file_manager_window_name():
+    """ Tells close_file_manager linux the window name to close"""
+    return ""
