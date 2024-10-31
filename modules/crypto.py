@@ -56,7 +56,6 @@ def decrypt(filename: str) -> dict:
     if not os.path.exists(filename):
         raise OSError(f"File {filename} does not exist.")
 
-    decrypter = Fernet(get_key())
     with open(filename) as fh:
         token = json.load(fh)
 
