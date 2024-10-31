@@ -532,10 +532,8 @@ def close_file_manager(sys_platform):
     """Closes the file manager window"""
     yield
     if sys_platform == "Windows":
-        powershell_command = '''
-        Get-Process | Where-Object { $_.MainWindowTitle -eq 'File Explorer' } | ForEach-Object { $_.CloseMainWindow() }
-        '''
-        run(["powershell", "-Command", powershell_command], check=True)
+        run(["taskkill", "/F", "/IM", "explorer.exe"], check=True)
+        run(["start", "explorer.exe"], shell=True)
     elif sys_platform == "Darwin":
         applescript = '''
         tell application "Finder"
