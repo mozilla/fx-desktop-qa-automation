@@ -278,7 +278,7 @@ def use_profile():
     yield False
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True, scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
     version = check_output([fx_executable, "--version"]).strip().decode()
