@@ -15,7 +15,7 @@ def test_case():
 TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
 
 
-def test_allow_audio_video_functionality(driver: Firefox):
+def test_block_audio_video_functionality(driver: Firefox):
     """
     C330156: 'Block Audio and Video' functionality
     """
