@@ -282,6 +282,31 @@ def version(fx_executable: str):
     return version
 
 
+@pytest.fixture(autouse=True)
+def reportable(version):
+    if not os.environ.get("TESTRAIL_REPORT"):
+        return False
+    if not os.environ.get("TESTRAIL_USERNAME"):
+        return False
+
+    tr_session = tri.testrail_init()
+    first_half, second_half = version.split(".")
+    channel = "Beta" if "b" in second_half else "Release"
+    if "Nightly" in first_half:
+        channel = "Nightly"
+
+    major_version = " ".join(first_half.split(" ")[1:])
+    major_number = major_version.split(" ")[-1]
+    major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
+    channel_milestone = tr_session.matching_submilestone(
+        major_milestone=f"{channel} {major_number}"
+    )
+    this_plan = tr_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ,
+        channel_milestone.get("id"),
+    )
+
+
 @pytest.fixture()
 def machine_config():
     """Return the os type, version, and architecture for the machine"""
