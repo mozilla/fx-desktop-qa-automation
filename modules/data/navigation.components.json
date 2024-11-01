@@ -503,5 +503,35 @@
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
         "groups": []
+    },
+
+    "autoplay-permission": {
+        "selectorData": "blocked-permissions-container",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "permission-popup-menulist-block-audio": {
+        "selectorData": "#permission-popup-menulist[label='Block Audio']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "allow-audio-video-menuitem": {
+        "selectorData": "menuitem[label='Allow Audio and Video']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permission-popup-menulist": {
+            "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
+            "strategy": "css",
+            "groups": []
+    },
+
+    "permission-popup-text": {
+            "selectorData": "permission-popup",
+            "strategy": "id",
+            "groups": []
     }
 }
