@@ -511,7 +511,7 @@
         "groups": []
     },
 
-    "permission-popup-menulist-block-audio": {
+    "permission-popup-audio-blocked": {
         "selectorData": "#permission-popup-menulist[label='Block Audio']",
         "strategy": "css",
         "groups": []
@@ -531,6 +531,12 @@
 
     "permission-popup-text": {
             "selectorData": "permission-popup",
+            "strategy": "id",
+            "groups": []
+    },
+
+    "customizableui-special-spring": {
+            "selectorData": "customizableui-special-spring1",
             "strategy": "id",
             "groups": []
     }
