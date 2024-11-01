@@ -22,6 +22,8 @@ from modules.taskcluster import get_tc_secret
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
+
+# Number of suites that exist in the repo, that shouldn't report to TR. Currently meta and pocket.
 SUITE_COVERAGE_TOLERANCE = 2
 
 
