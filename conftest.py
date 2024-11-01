@@ -209,7 +209,7 @@ def opt_window_size(request):
     return request.config.getoption("--window-size")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def sys_platform():
     return platform.system()
 
@@ -288,6 +288,9 @@ def version(fx_executable: str):
 @pytest.fixture(autouse=True, scope="session")
 def reportable(version, sys_platform):
     """Return true if we should report to TestRail"""
+
+    if not os.environ.get("TESTRAIL_REPORT"):
+        return False
 
     # Find the correct test plan
     tr_session = tri.testrail_init()
