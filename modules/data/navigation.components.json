@@ -512,7 +512,7 @@
         "groups": []
     },
 
-    "permission-popup-menulist": {
+    "permission-popup-audio-video-blocked": {
         "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
         "strategy": "css",
         "groups": []

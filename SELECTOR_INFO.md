@@ -2599,7 +2599,7 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: permission-popup-menulist
+Selector Name: ppermission-popup-audio-video-blocked
 Selector Data: #permission-popup-menulist[label='Block Audio and Video']
 Description: Autoplay permission option selected
 Location: Autoplay doorhanger
