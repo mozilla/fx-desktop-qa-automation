@@ -22,6 +22,7 @@ from modules.taskcluster import get_tc_secret
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
+SUITE_COVERAGE_TOLERANCE = 2
 
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
@@ -282,13 +283,11 @@ def version(fx_executable: str):
     return version
 
 
-@pytest.fixture(autouse=True)
-def reportable(version):
-    if not os.environ.get("TESTRAIL_REPORT"):
-        return False
-    if not os.environ.get("TESTRAIL_USERNAME"):
-        return False
+@pytest.fixture(autouse=True, scope="session")
+def reportable(version, sys_platform):
+    """Return true if we should report to TestRail"""
 
+    # Find the correct test plan
     tr_session = tri.testrail_init()
     first_half, second_half = version.split(".")
     channel = "Beta" if "b" in second_half else "Release"
@@ -298,13 +297,38 @@ def reportable(version):
     major_version = " ".join(first_half.split(" ")[1:])
     major_number = major_version.split(" ")[-1]
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
+    if not major_milestone:
+        logging.warning("Reporting: Could not find matching milestone.")
+        return False
+
     channel_milestone = tr_session.matching_submilestone(
-        major_milestone=f"{channel} {major_number}"
+        major_milestone, f"{channel} {major_number}"
     )
+    if not channel_milestone:
+        logging.warning(
+            f"Reporting: Could not find matching submilestone for {channel} {major_number}"
+        )
+        return False
+
     this_plan = tr_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ,
         channel_milestone.get("id"),
     )
+    if not this_plan:
+        return True
+
+    platform = "MacOS" if sys_platform == "Darwin" else sys_platform
+
+    plan_entries = this_plan.get("entries")
+    covered_suites = 0
+    for entry in plan_entries:
+        for run in entry.get("runs"):
+            if platform in run.get("config"):
+                covered_suites += 1
+
+    num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
+
+    return covered_suites > (num_suites - SUITE_COVERAGE_TOLERANCE)
 
 
 @pytest.fixture()
@@ -322,6 +346,20 @@ def machine_config():
 @pytest.fixture
 def test_case():
     return None
+
+
+def pytest_sessionstart(session):
+    if not os.environ.get("TESTRAIL_REPORT"):
+        return True
+
+    reportable = session.config.hook.pytest_fixture_setup(
+        fixturename="reportable", request=session
+    )
+
+    if not reportable:
+        pytest.exit(
+            "TestRail report run requested, but session is not reportable (likely already run). Exiting."
+        )
 
 
 def pytest_sessionfinish(session):
