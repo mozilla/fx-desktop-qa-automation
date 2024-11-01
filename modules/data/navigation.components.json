@@ -499,9 +499,22 @@
         "groups": []
     },
 
+    "autoplay-permission": {
+        "selectorData": "blocked-permissions-container",
+        "strategy": "id",
+        "groups": []
+    },
+
+
     "permissions-location-icon": {
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
+        "groups": []
+    },
+
+    "permission-popup-audio-video-blocked": {
+        "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
+        "strategy": "css",
         "groups": []
     }
 }

@@ -500,8 +500,8 @@
         "groups" : []
     },
 
-    "allow-audio-video": {
-        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+    "block-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']",
         "strategy": "css",
         "groups" : []
     },
@@ -523,6 +523,12 @@
         "selectorData": "button-spacer",
         "strategy": "class",
         "shadowParent": "permission-dialog" ,
+        "groups" : []
+    },
+
+    "allow-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+        "strategy": "css",
         "groups" : []
     },
 
