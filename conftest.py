@@ -228,7 +228,7 @@ def downloads_folder(sys_platform):
         return f"/home/{user}/Downloads"
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
