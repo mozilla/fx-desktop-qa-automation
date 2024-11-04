@@ -118,3 +118,36 @@ If you are outside of Mozilla and would like to contribute to this project:
 - A Mozilla DTE will review your PR
   - Address any review comments
 - Once approved your test code will be landed in this repo.
+
+### Test Account Secrets Management
+To protect our test logins to various services, we encrypt them with a key. This key is available from repo
+maintainers if you ask. Please be careful with it. This key must exist in the environment as SVC_ACCT_DECRYPT
+in order for encryption and decryption to work. To encrypt secrets, use the create_secrets.py script and
+enter the secrets as JSON. Each type of account (e.g. GMail, Netflix) should have one file associated with it,
+and all of the secrets exist as follows:
+
+`data/secrets/examples` (after decryption):
+
+```json
+{
+  "account_one": {
+    "username": "bobs_account",
+    "password": "MosteSecurePasseworde",
+    "otp_url": "otpauth://totp/Mozilla:foxy@mozilla.com?secret=AAAAAAAAAAAAAAAA&issuer=Mozilla"
+  },
+
+  "account_two": {
+    "username": "janesAccount",
+    "password": "N0N33d4Apassword",
+    "recovery_email": "everyone@example.com"
+  }
+}
+```
+
+To decrypt in a test, request the `use_secrets` function factory fixture. Then, in a test, call e.g.
+`login = use_secrets("examples", "account_two")` and Jane's Example service account will be in a dict
+called `login`.
+
+**DO NOT PUSH UNENCRYPTED SECRETS.**
+
+**DO NOT ADD SECRETS UNNECESSARILY.**

@@ -16,6 +16,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 
@@ -516,6 +517,21 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
     _delete_files()
     yield True
     _delete_files()
+
+
+@pytest.fixture()
+def use_secrets(opt_ci):
+    """Function factory: grab a named secret from a secrets file"""
+    if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
+        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret("test-accts-key", level=1).get(
+            "SVC_ACCT_DECRYPT"
+        )
+
+    def _use_secrets(filename: str, secret_name: str) -> dict:
+        secrets = crypto.decrypt(filename)
+        return secrets.get(secret_name)
+
+    return _use_secrets
 
 
 @pytest.fixture(scope="session", autouse=True)
