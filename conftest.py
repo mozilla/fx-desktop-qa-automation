@@ -210,7 +210,7 @@ def opt_window_size(request):
     return request.config.getoption("--window-size")
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(autouse=True, scope="session")
 def sys_platform():
     return platform.system()
 
@@ -358,9 +358,7 @@ def pytest_sessionstart(session):
     if not os.environ.get("TESTRAIL_REPORT"):
         return True
 
-    reportable = session.config.hook.pytest_fixture_setup(
-        fixturename="reportable", request=session
-    )
+    reportable = session.config.cache.get("reportable", None)
 
     if not reportable:
         pytest.exit(
