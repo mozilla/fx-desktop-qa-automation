@@ -1,9 +1,59 @@
 {
     "context": "chrome",
     "print-preview-browser": {
-        "selectorData": "print-preview stack browser[class='printPreviewBrowser']",
+        "selectorData": "browser[class='printPreviewBrowser']",
         "strategy": "css",
         "groups": ["requiredForPage"]
+    },
+
+    "print-preview-loading": {
+        "selectorData": "print-pending-label",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "print-settings-browser": {
+        "selectorData": "browser.printSettingsBrowser",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "footer-button-group": {
+        "selectorData": "moz-button-group#button-container",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "printer-picker": {
+        "selectorData": "printer-picker",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "selected-printer-label": {
+        "selectorData": "select#printer-picker label",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "print-to-pdf-option": {
+        "selectorData": "option[data-l10n-id='printui-destination-pdf-label']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "cancel-button": {
+        "selectorData": "cancel-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "footer-button-group"
+    },
+
+    "print-button": {
+        "selectorData": "print-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "footer-button-group"
     }
 
 }
