@@ -591,9 +591,10 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
     if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret("test-accts-key", level=1).get(
-            "SVC_ACCT_DECRYPT"
-        )
+        level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
+        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
+            "test-accts-key", level=level
+        ).get("SVC_ACCT_DECRYPT")
 
     def _use_secrets(filename: str, secret_name: str) -> dict:
         secrets = crypto.decrypt(filename)
@@ -620,9 +621,9 @@ def close_file_manager(sys_platform):
         run(["taskkill", "/F", "/IM", "explorer.exe"], check=True)
         run(["start", "explorer.exe"], shell=True)
     elif sys_platform == "Darwin":
-        applescript = '''
+        applescript = """
         tell application "Finder"
             close every Finder window
         end tell
-        '''
+        """
         run(["osascript", "-e", applescript], check=True)

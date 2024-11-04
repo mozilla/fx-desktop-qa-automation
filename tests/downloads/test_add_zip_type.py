@@ -40,7 +40,12 @@ def temp_selectors():
 
 
 def test_add_zip_type(
-    driver: Firefox, sys_platform, home_folder, delete_files, temp_selectors, close_file_manager
+    driver: Firefox,
+    sys_platform,
+    home_folder,
+    delete_files,
+    temp_selectors,
+    close_file_manager,
 ):
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
