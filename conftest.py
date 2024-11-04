@@ -4,7 +4,7 @@ import os
 import platform
 import re
 from shutil import unpack_archive
-from subprocess import check_output
+from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
 import pytest
@@ -526,3 +526,19 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+
+
+@pytest.fixture()
+def close_file_manager(sys_platform):
+    """Closes the file manager window"""
+    yield
+    if sys_platform == "Windows":
+        run(["taskkill", "/F", "/IM", "explorer.exe"], check=True)
+        run(["start", "explorer.exe"], shell=True)
+    elif sys_platform == "Darwin":
+        applescript = '''
+        tell application "Finder"
+            close every Finder window
+        end tell
+        '''
+        run(["osascript", "-e", applescript], check=True)
