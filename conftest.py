@@ -407,6 +407,7 @@ def pytest_sessionfinish(session):
         logging.warning(
             "Not reporting to TestRail. This report is malformed, missing metadata."
         )
+        logging.warning(str(report.get("tests")))
         return None
 
     creds = get_tc_secret()
