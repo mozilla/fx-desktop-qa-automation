@@ -3,9 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
-from modules.util import BrowserActions
-
 from modules.page_object_prefs import AboutPrefs
+from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -15,7 +14,10 @@ def test_case():
 
 @pytest.fixture()
 def add_prefs():
-    return [("media.autoplay.default", 1), ("media.autoplay.enabled.user-gestures-needed", True)]
+    return [
+        ("media.autoplay.default", 1),
+        ("media.autoplay.enabled.user-gestures-needed", True),
+    ]
 
 
 TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
