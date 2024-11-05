@@ -21,7 +21,7 @@ def add_prefs():
 TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
 
 
-def test_users_actions_saved_after_restart(driver: Firefox):
+def test_users_actions_saved_on_reload(driver: Firefox):
     """
     C330168: Verify that the users actions are saved after restart
     """
@@ -42,10 +42,10 @@ def test_users_actions_saved_after_restart(driver: Firefox):
     driver.get(driver.current_url)
     nav.element_visible("permission-popup-audio-video-allowed")
 
-    # The Crossed off Play icon is no longer displayed
+    # Check the Crossed off Play icon is no longer displayed
     nav.element_not_visible("autoplay-icon-blocked")
 
-    # The website is added to the exceptions list in about:preferences#privacy
+    # Check the website is added to the exceptions list in about:preferences#privacy
     about_prefs.open()
     about_prefs.get_element("autoplay-settings-button").click()
 
@@ -66,4 +66,11 @@ def test_users_actions_saved_after_restart(driver: Firefox):
     # Refresh test page and check the site information panel shows "Block Audio and Video"
     driver.get(driver.current_url)
     nav.element_visible("permission-popup-audio-video-blocked")
+    nav.element_visible("autoplay-icon-blocked")
+
+    # Revisit test page and check Site information panel shows "Block Audio and Video"
+    GenericPage(driver, url=TEST_URL).open()
+    nav.element_visible("permission-popup-audio-video-blocked")
+
+    # Check the Crossed off Play icon is displayed
     nav.element_visible("autoplay-icon-blocked")

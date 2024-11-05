@@ -542,12 +542,6 @@
         "groups": []
     },
 
-    "permission-popup-audio-video-blocked": {
-            "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
-            "strategy": "css",
-            "groups": []
-    },
-
     "autoplay-icon-blocked": {
             "selectorData": "blocked-permissions-container",
             "strategy": "id",
