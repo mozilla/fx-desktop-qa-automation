@@ -9,7 +9,8 @@ on:
       job_to_run: 
         required: true
         type: string
-
+permissions:
+  contents: 'write'
 env:
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -19,9 +20,17 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
-    steps:        
+    steps: 
+      - name: Create app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}           
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+            token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -80,7 +89,6 @@ jobs:
         run: |
           git config --global user.email ${{ github.actor }}@users.noreply.github.com;
           git config --global user.name ${{ github.actor }};
-          git remote set-head origin --auto;
           git add win-latest-reported-version;
           git commit -m "update windows reported version";
           git push
@@ -117,8 +125,16 @@ jobs:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
     steps:
+      - name: Create app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}           
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+            token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -154,7 +170,6 @@ jobs:
         run: |
           git config --global user.email ${{ github.actor }}@users.noreply.github.com;
           git config --global user.name ${{ github.actor }};
-          git remote set-head origin --auto;
           git add mac-latest-reported-version;
           git commit -m "update macos reported version";
           git push

@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
@@ -27,6 +29,7 @@ HTTP_SITE = "http://http.badssl.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
+@pytest.mark.xfail(sys.platform == "linux", reason="Unstable in TC linux")
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 

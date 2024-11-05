@@ -329,6 +329,14 @@ Description: Save edited login
 Location: The about:login's main login page after editing a login
 Path to .json: modules/data/about_logins.components.json
 ```
+#### about_networking
+```
+Selector Name: networking-sidebar-category
+Selector Data: "div.category[id='category-{name}']"
+Description: The tab category in the sidebar
+Location: Sidebar of about:networking page
+Path to .json: modules/data/about_networking.components.json
+```
 #### about_newtab
 ```
 Selector Name: incontent-search-input
@@ -969,6 +977,13 @@ Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: block-audio-video
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']
+Description: Block audio video option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: autoplay-settings-button
 Selector Data: autoplaySettingsButton
 Description: Autoplay settings button
@@ -1029,6 +1044,20 @@ Selector Name: httpsonly-radio-disabled
 Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
 Description: Radio Button to turn Https Only Mode to disabled for all pages
 Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-status
+Selector Data: "dohStatus"
+Description: Status of DoH
+Location: Inside the first frame of the DoH section in about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-resolver
+Selector Data: "dohResolver"
+Description: The name of the DoH provider
+Location: Inside the first frame of the DoH section in about:preferences#general
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -2595,6 +2624,30 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: geolocation-notification-container
 Selector Data: "popupnotification#geolocation-notification"
 Description: Geolocation prompt container
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: ppermission-popup-audio-video-blocked
+Selector Data: #permission-popup-menulist[label='Block Audio and Video']
+Description: Autoplay permission option selected
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: autoplay-permission
+Selector Data: blocked-permissions-container
+Description: Autoplay permission
+Selector Name: checkbox-remember-this-decision
+Selector Data: "label.checkbox-label[flex='1']"
+Description: Remember this decision checkbox
+Location: Geolocation prompt container in Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permissions-location-icon
+Selector Data: "permissions-granted-icon"
+Description: Location icon
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```

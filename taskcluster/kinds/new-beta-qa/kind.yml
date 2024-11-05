@@ -7,6 +7,7 @@ task-defaults:
   description: "Checks for new betas, tests them, reports to TestRail and Slack"
   worker-type: t-linux-wayland
   worker:
+    taskcluster-proxy: true
     max-run-time: 1800
     artifacts:
       - name: public/results
@@ -43,6 +44,8 @@ tasks:
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox
+        git config --global user.email ben.chatterton@mozilla.com
+        git config --global user.name "DTE Automation"
         git add lin-latest-reported-version
         git commit -m "update latest reported version"
         exit $((${?} | ${FAILURE}))

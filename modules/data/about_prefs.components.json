@@ -506,6 +506,12 @@
         "groups" : []
     },
 
+    "block-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']",
+        "strategy": "css",
+        "groups" : []
+    },
+
     "permission-dialog": {
         "selectorData": "[data-l10n-id='permission-dialog']",
         "strategy": "css",
@@ -526,6 +532,12 @@
         "groups" : []
     },
 
+    "allow-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+        "strategy": "css",
+        "groups" : []
+    },
+
     "httpsonly-radio-enabled": {
         "selectorData": "radio[data-l10n-id='httpsonly-radio-enabled']",
         "strategy": "css",
@@ -541,6 +553,18 @@
     "httpsonly-radio-disabled": {
         "selectorData": "radio[data-l10n-id='httpsonly-radio-disabled']",
         "strategy": "css",
+        "groups": []
+    },
+
+    "doh-status": {
+        "selectorData": "dohStatus",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "doh-resolver": {
+        "selectorData": "dohResolver",
+        "strategy": "id",
         "groups": []
     },
 
