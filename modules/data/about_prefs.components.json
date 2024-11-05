@@ -544,7 +544,7 @@
         "groups": []
     },
 
-    "mlb-allow-audio-video": {
+    "mlb-allow-audio-video-settings": {
         "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
         "strategy": "css",
         "groups": []

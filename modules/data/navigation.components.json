@@ -505,12 +505,6 @@
         "groups": []
     },
 
-    "autoplay-permission": {
-        "selectorData": "blocked-permissions-container",
-        "strategy": "id",
-        "groups": []
-    },
-
     "permission-popup-audio-blocked": {
         "selectorData": "#permission-popup-menulist[label='Block Audio']",
         "strategy": "css",
@@ -529,12 +523,6 @@
             "groups": []
     },
 
-    "customizableui-special-spring": {
-            "selectorData": "customizableui-special-spring1",
-            "strategy": "id",
-            "groups": []
-    },
-
     "block-audio-video-menuitem": {
         "selectorData": "menuitem[label='Block Audio and Video']",
         "strategy": "css",
@@ -547,9 +535,9 @@
             "groups": []
     },
 
-    "blocked-permission-icon-autoplay-media-icon": {
-            "selectorData": ".blocked-permission-icon.autoplay-media-icon",
-            "strategy": "css",
+    "autoplay-icon-blocked": {
+            "selectorData": "blocked-permissions-container",
+            "strategy": "id",
             "groups": []
     }
 }

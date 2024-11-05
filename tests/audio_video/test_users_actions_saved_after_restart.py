@@ -43,7 +43,7 @@ def test_users_actions_saved_after_restart(driver: Firefox):
     nav.element_visible("permission-popup-audio-video-allowed")
 
     # The Crossed off Play icon is no longer displayed
-    nav.element_not_visible("blocked-permission-icon-autoplay-media-icon")
+    nav.element_not_visible("autoplay-icon-blocked")
 
     # The website is added to the exceptions list in about:preferences#privacy
     about_prefs.open()
@@ -53,7 +53,7 @@ def test_users_actions_saved_after_restart(driver: Firefox):
     iframe = about_prefs.get_iframe()
     ba.switch_to_iframe_context(iframe)
 
-    about_prefs.element_visible("mlb-allow-audio-video")
+    about_prefs.element_visible("mlb-allow-audio-video-settings")
 
     # Open Test page
     GenericPage(driver, url=TEST_URL).open()
@@ -65,5 +65,5 @@ def test_users_actions_saved_after_restart(driver: Firefox):
 
     # Refresh test page and check the site information panel shows "Block Audio and Video"
     driver.get(driver.current_url)
-    nav.element_visible("permission-popup-audio-video-allowed")
-    nav.element_visible("blocked-permission-icon-autoplay-media-icon")
+    nav.element_visible("permission-popup-audio-video-blocked")
+    nav.element_visible("autoplay-icon-blocked")
