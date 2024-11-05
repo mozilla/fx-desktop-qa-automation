@@ -279,14 +279,14 @@ def use_profile():
     yield False
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
     version = check_output([fx_executable, "--version"]).strip().decode()
     return version
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(scope="session")
 def reportable(version, sys_platform):
     """Return true if we should report to TestRail"""
 
@@ -328,8 +328,8 @@ def reportable(version, sys_platform):
     plan_entries = this_plan.get("entries")
     covered_suites = 0
     for entry in plan_entries:
-        for run in entry.get("runs"):
-            if platform in run.get("config"):
+        for run_ in entry.get("runs"):
+            if platform in run_.get("config"):
                 covered_suites += 1
 
     num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
@@ -354,18 +354,16 @@ def test_case():
     return None
 
 
-def pytest_sessionstart(session):
-    if not os.environ.get("TESTRAIL_REPORT"):
-        return True
+@pytest.fixture(scope="session")
+def setup_reportable(reportable, request):
+    # Set the result of the `reportable` fixture on the config object
+    request.config.is_reportable = reportable
 
-    reportable = session.config.hook.pytest_fixture_setup(
-        fixturename="reportable", request=session
-    )
 
-    if not reportable:
-        pytest.exit(
-            "TestRail report run requested, but session is not reportable (likely already run). Exiting."
-        )
+def pytest_configure(config):
+    # Check the `is_reportable` attribute on the config object
+    if not getattr(config, "is_reportable", True):
+        pytest.exit("Test run is not reportable. Exiting.")
 
 
 def pytest_sessionfinish(session):
