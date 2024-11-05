@@ -2,10 +2,11 @@ import os
 from time import sleep
 
 import pytest
-from pynput.keyboard import Controller, Key
+from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPdf
 
 
 @pytest.fixture()
@@ -39,6 +40,7 @@ def test_print_to_pdf(
 
     keyboard = Controller()
     panel_ui = PanelUi(driver)
+    pdf = GenericPdf(driver)
 
     driver.get(TEST_PAGE)
 
@@ -48,19 +50,18 @@ def test_print_to_pdf(
         panel_ui.select_panel_setting("print-option")
 
     # Allow time for the Save As dialog to appear
-    sleep(2)
+    sleep(5)
 
     # Type a file name in the native dialog and save the PDF
     keyboard.type("wikipedia.pdf")
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
+    pdf.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Set the expected download path and the expected PDF name
     expected_file_name = "wikipedia.pdf"
     saved_pdf_location = os.path.join(downloads_folder, expected_file_name)
 
     # Allow time for the file to be saved
-    sleep(2)
+    sleep(3)
 
     # Verify if the PDF file was saved in the downloads folder
     assert os.path.exists(
