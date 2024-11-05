@@ -328,8 +328,8 @@ def reportable(version, sys_platform):
     plan_entries = this_plan.get("entries")
     covered_suites = 0
     for entry in plan_entries:
-        for run in entry.get("runs"):
-            if platform in run.get("config"):
+        for run_ in entry.get("runs"):
+            if platform in run_.get("config"):
                 covered_suites += 1
 
     num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
