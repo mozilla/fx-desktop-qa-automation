@@ -39,15 +39,12 @@ class GoogleSheets(GenericPage):
     """
 
     def open_insert_menu(self) -> GenericPage:
+        """Open the insert menu"""
         self.click_on("insert-button")
-        return self
-    
-    def insert_default_table(self) -> GenericPage:
-        self.open_insert_menu()
-        self.click_on("insert-table")
         return self
 
     def select_num_rows(self, n: int) -> GenericPage:
+        """Select n rows starting from the current position"""
         self.actions.key_down(Keys.SHIFT)
         self.actions.send_keys(Keys.SPACE)
         for _ in range(n-1):
@@ -56,9 +53,9 @@ class GoogleSheets(GenericPage):
         return self
 
     def cycle_to_next_sheet(self, sys_platform) -> GenericPage:
+        """Cycle to the sheet on the right (loops to the first if the end is reached)"""
         mod_key = Keys.ALT if sys_platform == "Darwin" else "\u2325" # Option Key
         self.actions.key_down(mod_key)
         self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(mod_key).perform()
         return self
-
