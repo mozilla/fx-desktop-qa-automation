@@ -275,7 +275,17 @@ def collect_changes(testrail_session: TestRail, report):
     if channel == "Release":
         raise ValueError("Release reporting currently not supported")
 
-    version_str = report.get("tests")[0].get("metadata").get("fx_version")
+    metadata = None
+    for test in report.get("tests"):
+        if test.get("metadata"):
+            metadata = test.get("metadata")
+            break
+
+    if not metadata:
+        logging.error("No metadata collected. Exiting without report.")
+        return False
+
+    version_str = metadata.get("fx_version")
     version_match = FX_PRERC_VERSION_RE.match(version_str)
     if version_match:
         logging.info(version_match)
@@ -297,7 +307,7 @@ def collect_changes(testrail_session: TestRail, report):
             .replace("{minor}", minor)
             .replace("b{build}", "rc")
         )
-    config = report.get("tests")[0].get("metadata").get("machine_config")
+    config = metadata.get("machine_config")
 
     if "linux" in config.lower():
         os_name = "Linux"

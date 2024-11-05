@@ -345,14 +345,6 @@ def pytest_sessionfinish(session):
         )
         return None
 
-    metadata = report.get("tests")[0].get("metadata")
-    if metadata is None or metadata.get("fx_version") is None:
-        logging.warning(
-            "Not reporting to TestRail. This report is malformed, missing metadata."
-        )
-        logging.warning(str(report.get("tests")))
-        return None
-
     creds = get_tc_secret()
     if creds:
         os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
