@@ -210,7 +210,7 @@ def opt_window_size(request):
     return request.config.getoption("--window-size")
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(scope="session")
 def sys_platform():
     return platform.system()
 
@@ -279,14 +279,14 @@ def use_profile():
     yield False
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
     version = check_output([fx_executable, "--version"]).strip().decode()
     return version
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(scope="session")
 def reportable(version, sys_platform):
     """Return true if we should report to TestRail"""
 
@@ -354,16 +354,16 @@ def test_case():
     return None
 
 
-def pytest_sessionstart(session):
-    if not os.environ.get("TESTRAIL_REPORT"):
-        return True
+@pytest.fixture(scope="session")
+def setup_reportable(reportable, request):
+    # Set the result of the `reportable` fixture on the config object
+    request.config.is_reportable = reportable
 
-    reportable = session.config.cache.get("reportable", None)
 
-    if not reportable:
-        pytest.exit(
-            "TestRail report run requested, but session is not reportable (likely already run). Exiting."
-        )
+def pytest_configure(config):
+    # Check the `is_reportable` attribute on the config object
+    if not getattr(config, "is_reportable", True):
+        pytest.exit("Test run is not reportable. Exiting.")
 
 
 def pytest_sessionfinish(session):
