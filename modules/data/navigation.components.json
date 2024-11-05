@@ -523,21 +523,33 @@
         "groups": []
     },
 
-    "permission-popup-menulist": {
-            "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
+    "permission-popup-audio-video-allowed": {
+            "selectorData": "#permission-popup-menulist[label='Allow Audio and Video']",
             "strategy": "css",
-            "groups": []
-    },
-
-    "permission-popup-text": {
-            "selectorData": "permission-popup",
-            "strategy": "id",
             "groups": []
     },
 
     "customizableui-special-spring": {
             "selectorData": "customizableui-special-spring1",
             "strategy": "id",
+            "groups": []
+    },
+
+    "block-audio-video-menuitem": {
+        "selectorData": "menuitem[label='Block Audio and Video']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permission-popup-audio-video-blocked": {
+            "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
+            "strategy": "css",
+            "groups": []
+    },
+
+    "blocked-permission-icon-autoplay-media-icon": {
+            "selectorData": ".blocked-permission-icon.autoplay-media-icon",
+            "strategy": "css",
             "groups": []
     }
 }
