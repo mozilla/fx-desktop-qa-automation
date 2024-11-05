@@ -254,7 +254,7 @@ def collect_changes(testrail_session: TestRail, report):
             .replace("{minor}", minor)
             .replace("b{build}", "rc")
         )
-    config = report.get("tests")[0].get("metadata").get("machine_config")
+    config = metadata.get("machine_config")
 
     if "linux" in config.lower():
         os_name = "Linux"
