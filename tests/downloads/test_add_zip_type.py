@@ -27,7 +27,7 @@ def delete_files_regex_string():
 def temp_selectors():
     return {
         "github-code-button": {
-            "selectorData": ":R55ab:",
+            "selectorData": ":Rkl9d:",
             "strategy": "id",
             "groups": [],
         },
