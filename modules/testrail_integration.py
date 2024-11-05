@@ -226,7 +226,7 @@ def collect_changes(testrail_session: TestRail, report):
     for test in report.get("tests"):
         if test.get("metadata"):
             metadata = test.get("metadata")
-        break
+            break
 
     if not metadata:
         logging.error("No metadata collected. Exiting without report.")
