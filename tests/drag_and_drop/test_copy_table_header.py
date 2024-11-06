@@ -14,6 +14,7 @@ def test_case():
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=0#gid=0"
 
 
+@pytest.mark.headed
 def test_copy_table_header(driver: Firefox, sys_platform):
     """
     C936860: Verify that copying and pasting header from tables work

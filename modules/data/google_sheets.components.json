@@ -21,6 +21,12 @@
         "selectorData": "goog-color-menu-button-indicator",
         "strategy": "class",
         "groups": []
-    }
+    },
+
+    "grid-table-container": { 
+        "selectorData": "grid-table-container",
+        "strategy": "class",
+        "groups": []
+}
 
 }

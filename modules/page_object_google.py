@@ -54,6 +54,7 @@ class GoogleSheets(GenericPage):
 
     def cycle_to_next_sheet(self, sys_platform) -> GenericPage:
         """Cycle to the sheet on the right (loops to the first if the end is reached)"""
+        self.click_on("grid-table-container")
         mod_key = Keys.ALT if sys_platform == "Darwin" else "\u2325" # Option Key
         self.actions.key_down(mod_key)
         self.actions.send_keys(Keys.ARROW_DOWN)
