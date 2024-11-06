@@ -39,11 +39,12 @@ tasks:
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         ./collect_executables.sh;
-        ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4
+        export $FX_EXECUTABLE=./firefox/firefox;
+        $FX_EXECUTABLE --version;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable ./firefox/firefox
+        pipenv run pytest --fx-executable $FX_EXECUTABLE
         git config --global user.email ben.chatterton@mozilla.com
         git config --global user.name "DTE Automation"
         git add lin-latest-reported-version
