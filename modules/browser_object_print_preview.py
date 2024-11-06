@@ -39,16 +39,19 @@ class PrintPreview(BasePage):
         sleep(3)
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
-            self.element_not_visible("print-preview-loading")
-            with open("printersettings.html", "w") as fh:
-                fh.write(self.driver.page_source)
-            self.custom_wait(timeout=20).until(
-                EC.visibility_of_element_located(self.get_selector("printer-picker"))
+            self.expect(
+                lambda _: self.driver.execute_script(
+                    'return document.readyState === "complete";'
+                )
             )
         return self
 
     def select_print_to_pdf(self) -> BasePage:
         """Select Print to PDF"""
+        from pynput import Controller, Key
+
+        keyboard = Controller()
+
         self.switch_to_preview_window()
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_on("printer-picker")
