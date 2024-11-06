@@ -516,5 +516,35 @@
         "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
         "strategy": "css",
         "groups": []
+    },
+
+    "permission-popup-audio-blocked": {
+        "selectorData": "#permission-popup-menulist[label='Block Audio']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "allow-audio-video-menuitem": {
+        "selectorData": "menuitem[label='Allow Audio and Video']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "permission-popup-audio-video-allowed": {
+            "selectorData": "#permission-popup-menulist[label='Allow Audio and Video']",
+            "strategy": "css",
+            "groups": []
+    },
+
+    "block-audio-video-menuitem": {
+        "selectorData": "menuitem[label='Block Audio and Video']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "autoplay-icon-blocked": {
+            "selectorData": "blocked-permissions-container",
+            "strategy": "id",
+            "groups": []
     }
 }
