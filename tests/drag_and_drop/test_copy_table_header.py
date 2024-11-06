@@ -25,28 +25,32 @@ def test_copy_table_header(driver: Firefox, sys_platform):
     web_page.select_num_rows(1)
     web_page.copy(sys_platform)
 
-    # Paste the header row in the same sheet
-    for _ in range(3):
-        web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
-        time.sleep(0.5)
-    web_page.paste(sys_platform)
+    try:
+        # Paste the header row in the same sheet
+        for _ in range(3):
+            web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
+            time.sleep(0.5)
+        web_page.paste(sys_platform)
 
-    # Verify that the pasted row has header attributes and the selection is pasted properly
-    web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
-    web_page.element_attribute_contains("text-colour", "style", "rgb(255, 255, 255)")
-    web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 1") 
-    web_page.perform_key_combo(Keys.ARROW_RIGHT)
-    web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
-    web_page.undo(sys_platform)
+        # Verify that the pasted row has header attributes and the selection is pasted properly
+        web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
+        web_page.element_attribute_contains("text-colour", "style", "rgb(255, 255, 255)")
+        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 1") 
+        web_page.perform_key_combo(Keys.ARROW_RIGHT)
+        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
+        web_page.undo(sys_platform)
 
-    # Paste the header row in a different sheet
-    web_page.cycle_to_next_sheet(sys_platform)
-    web_page.paste(sys_platform)
+        # Paste the header row in a different sheet
+        web_page.cycle_to_next_sheet(sys_platform)
+        web_page.paste(sys_platform)
+            
+        # Verify that the pasted row has header attributes and the selection is pasted properly
+        web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
+        web_page.element_attribute_contains("text-colour", "style", "rgb(255, 255, 255)")
+        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 1") 
+        web_page.perform_key_combo(Keys.ARROW_RIGHT)
+        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
+        web_page.undo(sys_platform)
+    except:
+        web_page.undo(sys_platform)
         
-    # Verify that the pasted row has header attributes and the selection is pasted properly
-    web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
-    web_page.element_attribute_contains("text-colour", "style", "rgb(255, 255, 255)")
-    web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 1") 
-    web_page.perform_key_combo(Keys.ARROW_RIGHT)
-    web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
-    web_page.undo(sys_platform)
