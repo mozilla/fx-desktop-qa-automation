@@ -44,7 +44,7 @@ def test_copy_table_header(driver: Firefox, sys_platform):
 
         # Paste the header row in a different sheet
         nav.search(SHEET2_URL)
-        time.sleep(1)
+        time.sleep(2)
         web_page.paste(sys_platform)
             
         # Verify that the pasted row has header attributes and the selection is pasted properly
