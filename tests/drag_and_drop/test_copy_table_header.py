@@ -25,7 +25,8 @@ def test_copy_table_header(driver: Firefox, sys_platform):
     web_page.copy(sys_platform)
 
     # Paste the header row in the same sheet
-    web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN, Keys.ARROW_RIGHT, Keys.DOWN, Keys.ARROW_RIGHT, Keys.DOWN)
+    for _ in range(3):
+        web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
     web_page.paste(sys_platform)
 
     # Verify that the pasted row has header attributes and the selection is pasted properly
