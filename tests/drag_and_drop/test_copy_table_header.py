@@ -51,6 +51,5 @@ def test_copy_table_header(driver: Firefox, sys_platform):
         web_page.perform_key_combo(Keys.ARROW_RIGHT)
         web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
         web_page.undo(sys_platform)
-    except:
+    finally:
         web_page.undo(sys_platform)
-        
