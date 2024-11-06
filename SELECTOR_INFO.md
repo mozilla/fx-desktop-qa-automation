@@ -1060,6 +1060,13 @@ Description: The name of the DoH provider
 Location: Inside the first frame of the DoH section in about:preferences#general
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: mlb-allow-audio-video-settings
+Selector Data: richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']
+Description: mlb website autoplay settings
+Location: about:preferences#privacy - Autoplay settings
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -2670,6 +2677,41 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: permissions-location-icon
 Selector Data: "permissions-granted-icon"
 Description: Location icon
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permission-popup-audio-blocked
+Selector Data: #permission-popup-menulist[label='Block Audio']
+Description: Autoplay permission option selected - Block Audio
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: allow-audio-video-menuitem
+Selector Data: menuitem[label='Allow Audio and Video']
+Description: Allow audio and video menuitem
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permission-popup-audio-video-allowed
+Selector Data: #permission-popup-menulist[label='Allow Audio and Video']
+Description: Autoplay permission option selected - Allow Audio and Video
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: block-audio-video-menuitem
+Selector Data: menuitem[label='Block Audio and Video']
+Description: Block audio and video menuitem
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: autoplay-icon-blocked
+Selector Data: blocked-permissions-container
+Description: Autoplay icon - blocked
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
