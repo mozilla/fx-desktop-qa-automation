@@ -542,6 +542,7 @@ class BasePage(Page):
         self.actions.key_down(mod_key)
         self.actions.send_keys("c")
         self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
         return self
     
     def paste(self, sys_platform) -> Page:
@@ -550,6 +551,7 @@ class BasePage(Page):
         self.actions.key_down(mod_key)
         self.actions.send_keys("v")
         self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
         return self
     
     def undo(self, sys_platform) -> Page:
@@ -558,6 +560,7 @@ class BasePage(Page):
         self.actions.key_down(mod_key)
         self.actions.send_keys("z")
         self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
         return self
         
     def paste_to_element(
