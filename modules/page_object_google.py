@@ -53,7 +53,8 @@ class GoogleSheets(GenericPage):
         return self
 
     def cycle_to_next_sheet(self, sys_platform) -> GenericPage:
-        """Cycle to the sheet on the right (loops to the first if the end is reached)"""
+        """Cycle to the sheet on the right (loops to the first if the end is reached)
+        only works on mac currently"""
         self.click_on("grid-table-container")
         mod_key = Keys.ALT if sys_platform == "Darwin" else "\u2325" # Option Key
         self.actions.key_down(mod_key)
