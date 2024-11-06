@@ -54,10 +54,7 @@ class PrintPreview(BasePage):
 
         self.switch_to_preview_window()
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.click_on("printer-picker")
-            self.click_on("print-to-pdf-option")
-            self.expect(
-                lambda _: "Save to PDF"
-                in self.get_element("selected-printer-label").text
+            self.actions.send_keys_to_element(
+                self.get_element("print-settings-browser"), Keys.TAB
             )
         return self
