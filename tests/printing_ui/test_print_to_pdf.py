@@ -52,6 +52,7 @@ def test_print_to_pdf(
 
     sleep(5)
     logging.warning(str(os.listdir(downloads_folder)))
+    logging.warning(str(os.listdir(".")))
     print_preview.expect(
         lambda _: os.path.exists(os.path.join(downloads_folder, "Example Domain.pdf"))
     )
