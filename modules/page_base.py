@@ -535,7 +535,34 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.actions.context_click(el).perform()
         return self
-
+    
+    def copy(self, sys_platform) -> Page:
+        """Copy the selected item"""
+        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.send_keys("c")
+        self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
+        return self
+    
+    def paste(self, sys_platform) -> Page:
+        """Paste the copied item"""
+        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.send_keys("v")
+        self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
+        return self
+    
+    def undo(self, sys_platform) -> Page:
+        """Undo last action"""
+        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.send_keys("z")
+        self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
+        return self
+        
     def paste_to_element(
         self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
@@ -543,10 +570,9 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
-            self.click_on(el)
             mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
             self.actions.key_down(mod_key)
-            self.actions.send_keys("v")
+            self.actions.send_keys_to_element(el, "v")
             self.actions.key_up(mod_key).perform()
         return self
 

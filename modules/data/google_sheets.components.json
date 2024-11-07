@@ -1,0 +1,32 @@
+{
+    "insert-button": {
+        "selectorData": "docs-insert-menu",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "table-options": {
+        "selectorData": "waffle-namedtable-gridpill-table-view-buttons-container",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "formula-box-input": { 
+        "selectorData": "t-formula-bar-input",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "text-colour": {
+        "selectorData": "goog-color-menu-button-indicator",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "grid-table-container": { 
+        "selectorData": "grid-table-container",
+        "strategy": "class",
+        "groups": []
+}
+
+}

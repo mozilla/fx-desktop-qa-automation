@@ -2072,6 +2072,35 @@ Description: Text entry area of the search field
 Location: google.com content page
 Path to .json: modules/data/google_search.components.json
 ```
+#### google_sheets
+```
+Selector Name: insert-button
+Selector Data: docs-insert-menu
+Description: Insert button in the top menu bar
+Location: Google sheets menu bar
+Path to .json: modules/data/google_sheets.components.json
+```
+```
+Selector Name: table-options
+Selector Data: waffle-namedtable-gridpill-table-view-buttons-container
+Description: Table options menu
+Location: Above the header of tables in google sheets
+Path to .json: modules/data/google_sheets.components.json
+```
+```
+Selector Name: formula-box-input
+Selector Data: t-formula-bar-input
+Description: Input box/Formula bar
+Location: Top part of google sheets
+Path to .json: modules/data/google_sheets.components.json
+```
+```
+Selector Name: text-colour
+Selector Data: goog-color-menu-button-indicator
+Description: Text colour button component
+Location: Text colour button in the top part of google sheets
+Path to .json: modules/data/google_sheets.components.json
+```
 #### login_autofill
 ```
 Selector name: input-field
