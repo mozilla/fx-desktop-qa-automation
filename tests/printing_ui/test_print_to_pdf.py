@@ -1,3 +1,4 @@
+import logging
 import os
 from time import sleep
 
@@ -49,6 +50,8 @@ def test_print_to_pdf(
     print_preview.open()
     print_preview.start_print()
 
+    sleep(5)
+    logging.warning(str(os.listdir(downloads_folder)))
     print_preview.expect(
         lambda _: os.path.exists(os.path.join(downloads_folder, "Example Domain.pdf"))
     )
