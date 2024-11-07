@@ -18,9 +18,12 @@ def delete_files_regex_string():
     return r".*wikipedia.pdf"
 
 
-# @pytest.fixture()
-# def set_prefs():
-#    return [("print.always_print_silent", True)]
+@pytest.fixture()
+def set_prefs():
+    return [
+        ("print_printer", "Mozilla Save to PDF"),
+        ("print.save_print_settings", False)
+    ]
 
 
 TEST_PAGE = "https://example.com"
@@ -45,5 +48,5 @@ def test_print_to_pdf(
     # Select Print option from Hamburger Menu in order to trigger the silent printing
     print_preview = PrintPreview(driver)
     print_preview.open()
-    print_preview.select_print_to_pdf()
+    print_preview.start_print()
     sleep(10)

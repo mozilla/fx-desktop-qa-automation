@@ -46,6 +46,16 @@ class PrintPreview(BasePage):
             )
         return self
 
+    def start_print(self, secondary_confirm=True) -> BasePage:
+        """Press Enter in Print"""
+        self.switch_to_preview_window()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.send_keys_to_element(self.get_element("print-settings-browser"), Keys.TAB + Keys.ENTER).perform()
+            self.
+            self.switch_to_new_window()
+            self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
     def select_print_to_pdf(self) -> BasePage:
         """Select Print to PDF"""
         from pynput import Controller, Key
