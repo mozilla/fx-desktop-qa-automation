@@ -45,10 +45,6 @@ tasks:
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable $FX_EXECUTABLE
-        git config --global user.email ben.chatterton@mozilla.com
-        git config --global user.name "DTE Automation"
-        git add lin-latest-reported-version
-        git commit -m "update latest reported version"
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
