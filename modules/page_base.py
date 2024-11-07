@@ -10,6 +10,7 @@ from typing import List, Union
 
 from pynput.keyboard import Controller, Key
 from pypom import Page
+from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
     NoSuchElementException,
     NoSuchWindowException,
@@ -753,6 +754,17 @@ class BasePage(Page):
 
     def get_localstorage_item(self, key: str):
         return self.driver.execute_script(f"return window.localStorage.getItem({key});")
+
+    def _get_alert(self):
+        try:
+            alert = self.driver.switch_to.alert
+        except NoAlertPresentException:
+            return False
+        return alert
+
+    def get_alert(self):
+        alert = self.wait.until(lambda _: self._get_alert())
+        return alert
 
     @property
     def loaded(self):

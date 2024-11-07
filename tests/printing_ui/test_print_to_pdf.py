@@ -2,10 +2,11 @@ import os
 from time import sleep
 
 import pytest
-from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import PanelUi, PrintPreview
+from modules.browser_object import PrintPreview
+from modules.page_object import AboutPrefs
 
 
 @pytest.fixture()
@@ -15,14 +16,16 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r".*wikipedia.pdf"
+    return r".*Example Domain.pdf"
 
 
 @pytest.fixture()
 def set_prefs():
     return [
         ("print_printer", "Mozilla Save to PDF"),
-        ("print.save_print_settings", False)
+        ("print.save_print_settings", False),
+        ("print.print_to_file", True),
+        ("print.print_to_filename", "example.pdf"),
     ]
 
 
@@ -40,13 +43,13 @@ def test_print_to_pdf(
     C965142 - Verify that the user can print a webpage to PDF
     """
 
-    # keyboard = Controller()
-    # panel_ui = PanelUi(driver)
-
     driver.get(TEST_PAGE)
 
     # Select Print option from Hamburger Menu in order to trigger the silent printing
     print_preview = PrintPreview(driver)
     print_preview.open()
     print_preview.start_print()
-    sleep(10)
+
+    print_preview.expect(
+        lambda _: os.path.exists(os.path.join(downloads_folder, "Example Domain.pdf"))
+    )
