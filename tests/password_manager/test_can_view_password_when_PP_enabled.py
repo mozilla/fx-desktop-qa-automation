@@ -49,15 +49,8 @@ def test_password_can_be_shown(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    def get_alert(d: Firefox):
-        try:
-            alert = d.switch_to.alert
-        except NoAlertPresentException:
-            return False
-        return alert
-
     with driver.context(driver.CONTEXT_CHROME):
-        alert = about_prefs.wait.until(lambda d: get_alert(d))
+        alert = about_prefs.get_alert()
         alert.accept()
 
     about_logins = AboutLogins(driver).open()
