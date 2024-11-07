@@ -39,7 +39,7 @@ tasks:
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         ./collect_executables.sh;
-        export $FX_EXECUTABLE=./firefox/firefox;
+        export FX_EXECUTABLE=./firefox/firefox;
         $FX_EXECUTABLE --version;
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4
         export FAILURE=${?}
