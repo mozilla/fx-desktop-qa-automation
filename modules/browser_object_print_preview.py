@@ -64,7 +64,7 @@ class PrintPreview(BasePage):
             self.actions.send_keys_to_element(
                 self.get_element("print-settings-browser"), Keys.TAB + Keys.ENTER
             ).perform()
-            sleep(1)
+            sleep(2)
             keyboard = Controller()
             keyboard.tap(Key.enter)
         return self

@@ -25,7 +25,6 @@ def set_prefs():
         ("print_printer", "Mozilla Save to PDF"),
         ("print.save_print_settings", False),
         ("print.print_to_file", True),
-        ("print.print_to_filename", "example.pdf"),
     ]
 
 
