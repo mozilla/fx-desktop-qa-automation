@@ -1,4 +1,5 @@
 import time
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -36,23 +37,35 @@ def test_copy_table_header(driver: Firefox, sys_platform):
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
-        web_page.element_attribute_contains("text-colour", "style", "rgb(255, 255, 255)")
-        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 1") 
+        web_page.element_attribute_contains(
+            "text-colour", "style", "rgb(255, 255, 255)"
+        )
+        web_page.element_attribute_contains(
+            "formula-box-input", "innerHTML", "Column 1"
+        )
         web_page.perform_key_combo(Keys.ARROW_RIGHT)
-        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
+        web_page.element_attribute_contains(
+            "formula-box-input", "innerHTML", "Column 2"
+        )
         web_page.undo(sys_platform)
 
         # Paste the header row in a different sheet
         nav.search(SHEET2_URL)
         time.sleep(2)
         web_page.paste(sys_platform)
-            
+
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
-        web_page.element_attribute_contains("text-colour", "style", "rgb(255, 255, 255)")
-        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 1") 
+        web_page.element_attribute_contains(
+            "text-colour", "style", "rgb(255, 255, 255)"
+        )
+        web_page.element_attribute_contains(
+            "formula-box-input", "innerHTML", "Column 1"
+        )
         web_page.perform_key_combo(Keys.ARROW_RIGHT)
-        web_page.element_attribute_contains("formula-box-input", "innerHTML", "Column 2")
+        web_page.element_attribute_contains(
+            "formula-box-input", "innerHTML", "Column 2"
+        )
         web_page.undo(sys_platform)
     finally:
         web_page.undo(sys_platform)

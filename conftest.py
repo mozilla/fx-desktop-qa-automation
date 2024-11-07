@@ -304,9 +304,22 @@ def test_case():
 
 
 def pytest_configure(config):
-    # Check the `is_reportable` attribute on the config object
-    if os.environ.get("TESTRAIL_REPORT") and not tri.reportable():
-        pytest.exit("Test run is not reportable. Exiting.")
+    # Check if run is "reportable": if it is on a never-reported Fx version
+    if os.environ.get("TESTRAIL_REPORT"):
+        if os.environ.get("TASKCLUSTER_CLIENT_ID"):
+            creds = get_tc_secret()
+            if creds:
+                os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+                os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+                os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
+            elif not os.environ.get("TESTRAIL_USERNAME"):
+                logging.error(
+                    "Attempted to log into TestRail, but could not find credentials."
+                )
+                raise OSError("Could not find TestRail credentials")
+
+        if not tri.reportable():
+            pytest.exit("Test run is not reportable. Exiting.")
 
 
 def pytest_sessionfinish(session):
@@ -531,7 +544,7 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 @pytest.fixture()
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
-    if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
+    if os.environ.get("TASKCLUSTER_CLIENT_ID") and opt_ci:
         level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
         os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
             "test-accts-key", level=level

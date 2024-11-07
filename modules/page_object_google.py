@@ -47,7 +47,7 @@ class GoogleSheets(GenericPage):
         """Select n rows starting from the current position"""
         self.actions.key_down(Keys.SHIFT)
         self.actions.send_keys(Keys.SPACE)
-        for _ in range(n-1):
+        for _ in range(n - 1):
             self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.SHIFT).perform()
         return self
@@ -56,7 +56,7 @@ class GoogleSheets(GenericPage):
         """Cycle to the sheet on the right (loops to the first if the end is reached)
         only works on mac currently"""
         self.click_on("grid-table-container")
-        mod_key = Keys.ALT if sys_platform == "Darwin" else "\u2325" # Option Key
+        mod_key = Keys.ALT if sys_platform == "Darwin" else "\u2325"  # Option Key
         self.actions.key_down(mod_key)
         self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(mod_key).perform()
