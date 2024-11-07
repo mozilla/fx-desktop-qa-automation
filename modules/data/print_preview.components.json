@@ -16,44 +16,5 @@
         "selectorData": "browser.printSettingsBrowser",
         "strategy": "css",
         "groups": []
-    },
-
-    "footer-button-group": {
-        "selectorData": "moz-button-group#button-container",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "printer-picker": {
-        "selectorData": "printer-picker",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "selected-printer-label": {
-        "selectorData": "select#printer-picker label",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "print-to-pdf-option": {
-        "selectorData": "option[data-l10n-id='printui-destination-pdf-label']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "cancel-button": {
-        "selectorData": "cancel-button",
-        "strategy": "id",
-        "groups": [],
-        "shadowParent": "footer-button-group"
-    },
-
-    "print-button": {
-        "selectorData": "print-button",
-        "strategy": "id",
-        "groups": [],
-        "shadowParent": "footer-button-group"
     }
-
 }

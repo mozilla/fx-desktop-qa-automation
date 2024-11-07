@@ -977,6 +977,13 @@ Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: block-audio-video
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']
+Description: Block audio video option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: autoplay-settings-button
 Selector Data: autoplaySettingsButton
 Description: Autoplay settings button
@@ -1051,6 +1058,13 @@ Selector Name: doh-resolver
 Selector Data: "dohResolver"
 Description: The name of the DoH provider
 Location: Inside the first frame of the DoH section in about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: mlb-allow-audio-video-settings
+Selector Data: richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']
+Description: mlb website autoplay settings
+Location: about:preferences#privacy - Autoplay settings
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -2613,6 +2627,65 @@ Description: Geolocation prompt container
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: ppermission-popup-audio-video-blocked
+Selector Data: #permission-popup-menulist[label='Block Audio and Video']
+Description: Autoplay permission option selected
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: autoplay-permission
+Selector Data: blocked-permissions-container
+Description: Autoplay permission
+Selector Name: checkbox-remember-this-decision
+Selector Data: "label.checkbox-label[flex='1']"
+Description: Remember this decision checkbox
+Location: Geolocation prompt container in Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permissions-location-icon
+Selector Data: "permissions-granted-icon"
+Description: Location icon
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permission-popup-audio-blocked
+Selector Data: #permission-popup-menulist[label='Block Audio']
+Description: Autoplay permission option selected - Block Audio
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: allow-audio-video-menuitem
+Selector Data: menuitem[label='Allow Audio and Video']
+Description: Allow audio and video menuitem
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: permission-popup-audio-video-allowed
+Selector Data: #permission-popup-menulist[label='Allow Audio and Video']
+Description: Autoplay permission option selected - Allow Audio and Video
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: block-audio-video-menuitem
+Selector Data: menuitem[label='Block Audio and Video']
+Description: Block audio and video menuitem
+Location: Autoplay doorhanger
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: autoplay-icon-blocked
+Selector Data: blocked-permissions-container
+Description: Autoplay icon - blocked
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -2942,6 +3015,28 @@ Selector Data: "appMenu-passwords-button"
 Description: Password button
 Location: Hamburger Menu
 Path to .json: modules/data/panel_ui.components.json
+```
+#### print_preview
+```
+Selector name: print-preview-browser
+Selector Data: "browser[class='printPreviewBrowser']"
+Description: Print Preview, whole window
+Location: Overlaid over the content when previewing a print job
+Path to .json: modules/data/print_preview.components.json
+```
+```
+Selector name: print-preview-loading
+Selector Data: "print-pending-label"
+Description: Header indicating that the print preview window is rendering
+Location: Inside print preview window
+Path to .json: modules/data/print_preview.components.json
+```
+```
+Selector name: print-settings-browser
+Selector Data: "browser.printSettingsBrowser"
+Description: Print Settings bar in Print Preview
+Location: Right sidebar in Print Preview
+Path to .json: modules/data/print_preview.components.json
 ```
 #### reader_view
 ```
