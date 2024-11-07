@@ -145,7 +145,7 @@ class BasePage(Page):
         Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
         """
         while Keys.CONTROL in keys and self.sys_platform == "Darwin":
-            keys[keys.index(Keys.CONTROL)] == Keys.COMMAND
+            keys[keys.index(Keys.CONTROL)] = Keys.COMMAND
         for k in keys[:-1]:
             self.actions.key_down(k)
 

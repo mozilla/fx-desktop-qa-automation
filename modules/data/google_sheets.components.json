@@ -12,8 +12,8 @@
     },
 
     "formula-box-input": { 
-        "selectorData": "t-formula-bar-input",
-        "strategy": "id",
+        "selectorData": "cell-input",
+        "strategy": "class",
         "groups": []
     },
 
