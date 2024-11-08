@@ -14,7 +14,6 @@
     "formula-box-input": { 
         "selectorData": "cell-input",
         "strategy": "class",
-        "groups": []
     },
 
     "text-colour": {
@@ -23,7 +22,7 @@
         "groups": []
     },
 
-    "grid-table-container": { 
+    "grid-table-container": {
         "selectorData": "grid-table-container",
         "strategy": "class",
         "groups": []

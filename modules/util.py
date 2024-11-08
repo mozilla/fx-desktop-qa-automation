@@ -277,26 +277,26 @@ class Utilities:
             with driver.context(driver.CONTEXT_CHROME):
                 css_properties = driver.execute_script(
                     """
-var s = window.getComputedStyle(arguments[0]);
-var props = {};
-for (var i = 0; i < s.length; i++) {
-    props[s[i]] = s.getPropertyValue(s[i]);
-}
-return props;
-            """,
+                    var s = window.getComputedStyle(arguments[0]);
+                    var props = {};
+                    for (var i = 0; i < s.length; i++) {
+                        props[s[i]] = s.getPropertyValue(s[i]);
+                    }
+                    return props;
+                """,
                     element,
                 )
 
         else:
             css_properties = driver.execute_script(
                 """
-var s = window.getComputedStyle(arguments[0]);
-var props = {};
-for (var i = 0; i < s.length; i++) {
-    props[s[i]] = s.getPropertyValue(s[i]);
-}
-return props;
-    """,
+                    var s = window.getComputedStyle(arguments[0]);
+                    var props = {};
+                    for (var i = 0; i < s.length; i++) {
+                        props[s[i]] = s.getPropertyValue(s[i]);
+                    }
+                    return props;
+                """,
                 element,
             )
 
