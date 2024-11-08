@@ -54,5 +54,5 @@ def test_print_to_pdf(
         os.path.dirname(downloads_folder), "Documents", "Example Domain.pdf"
     )
     if sys_platform == "Linux":
-        docs_location = os.path.join(downloads_folder, "Example Domain.pdf")
+        docs_location = "Example Domain.pdf"
     print_preview.expect(lambda _: os.path.exists(docs_location))
