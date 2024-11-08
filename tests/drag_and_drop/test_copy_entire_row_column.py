@@ -8,7 +8,7 @@ from modules.page_object import GoogleSheets, Navigation
 
 @pytest.fixture()
 def test_case():
-    return "936860"
+    return "936861"
 
 
 SHEET1_URL = "https://docs.google.com/spreadsheets/d/1kXW-a-ElKBykGTRO9vrwajYj_AHt9P-h8p3niLdXu40/edit?gid=0#gid=0"
@@ -17,12 +17,12 @@ SHEET2_URL = "https://docs.google.com/spreadsheets/d/1kXW-a-ElKBykGTRO9vrwajYj_A
 
 def test_copy_entire_row_column(driver: Firefox, sys_platform):
     """
-    C936860: Verify that copying and pasting header from tables work
+    C936861: Verify that copying and pasting entire rows and columns work
     """
     # Initializing objects
     web_page = GoogleSheets(driver, url=SHEET1_URL).open()
     nav = Navigation(driver)
-    import logging, time
+    
     try:
         # Copy a row
         web_page.select_num_rows(1)
@@ -63,7 +63,7 @@ def test_copy_entire_row_column(driver: Firefox, sys_platform):
             web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
         web_page.paste(sys_platform)
 
-        # # Verify that the column is pasted properly
+        # Verify that the column is pasted properly
         for i in range(1, 4):
             web_page.element_attribute_contains("formula-box-input", "innerHTML", str(i))
             web_page.perform_key_combo(Keys.DOWN)
