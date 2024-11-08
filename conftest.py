@@ -306,7 +306,9 @@ def test_case():
 def pytest_configure(config):
     # Check if run is "reportable": if it is on a never-reported Fx version
     if os.environ.get("TESTRAIL_REPORT"):
+        logging.warning("Checking to see if session would be reportable...")
         if os.environ.get("TASKCLUSTER_ROOT_URL") and os.environ.get("FX_EXECUTABLE"):
+            logging.warning("Getting TC credentials...")
             creds = get_tc_secret()
             if creds:
                 os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")

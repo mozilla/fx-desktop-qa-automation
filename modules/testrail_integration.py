@@ -82,6 +82,9 @@ def reportable():
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
     if not this_plan:
+        logging.warning(
+            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+        )
         return True
 
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
@@ -95,6 +98,7 @@ def reportable():
 
     num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
 
+    logging.warning("Partial report exists, session may be reportable.")
     return covered_suites > (num_suites - SUITE_COVERAGE_TOLERANCE)
 
 
