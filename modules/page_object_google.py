@@ -51,13 +51,24 @@ class GoogleSheets(GenericPage):
             self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.SHIFT).perform()
         return self
-
-    def cycle_to_next_sheet(self, sys_platform) -> GenericPage:
-        """Cycle to the sheet on the right (loops to the first if the end is reached)
-        only works on mac currently"""
-        self.click_on("grid-table-container")
-        mod_key = Keys.ALT if sys_platform == "Darwin" else "\u2325"  # Option Key
-        self.actions.key_down(mod_key)
-        self.actions.send_keys(Keys.ARROW_DOWN)
-        self.actions.key_up(mod_key).perform()
+    
+    def select_num_columns(self, n: int) -> GenericPage:
+        """Select n columns starting from the current position"""
+        self.actions.key_down(Keys.CONTROL)
+        self.actions.send_keys(Keys.SPACE)
+        for _ in range(n-1):
+            self.actions.send_keys(Keys.ARROW_DOWN)
+        self.actions.key_up(Keys.CONTROL).perform()
+        return self
+    
+    def go_to_top_left_cell(self, sys_platform) -> GenericPage:
+        """Select cell A1 (top left)"""
+        if sys_platform == "Darwin":
+            self.actions.key_down(Keys.COMMAND)
+            self.actions.send_keys(Keys.LEFT)
+            self.actions.send_keys(Keys.UP)
+            self.actions.send_keys(Keys.UP)
+        else:
+            self.actions.key_down(Keys.CONTROL)
+            self.actions.send_keys(Keys.HOME)
         return self
