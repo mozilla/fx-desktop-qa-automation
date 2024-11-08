@@ -1,4 +1,6 @@
+import logging
 import os
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -53,4 +55,6 @@ def test_print_to_pdf(
     )
     if sys_platform == "Linux":
         docs_location = os.path.join(downloads_folder, "Example Domain.pdf")
+    sleep(6)
+    logging.warning(os.listdir(docs_location))
     print_preview.expect(lambda _: os.path.exists())
