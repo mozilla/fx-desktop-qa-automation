@@ -26,5 +26,4 @@ def get_tc_secret(secret_name="testrail", level=3):
     res.raise_for_status()
     logging.warning("secret is got")
 
-    logging.warning(res.text)
     return res.json()["secret"]
