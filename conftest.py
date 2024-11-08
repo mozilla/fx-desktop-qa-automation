@@ -306,7 +306,7 @@ def test_case():
 def pytest_configure(config):
     # Check if run is "reportable": if it is on a never-reported Fx version
     if os.environ.get("TESTRAIL_REPORT"):
-        if os.environ.get("TASKCLUSTER_CLIENT_ID"):
+        if os.environ.get("TASKCLUSTER_ROOT_URL") and os.environ.get("FX_EXECUTABLE"):
             creds = get_tc_secret()
             if creds:
                 os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
@@ -544,7 +544,7 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 @pytest.fixture()
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
-    if os.environ.get("TASKCLUSTER_CLIENT_ID") and opt_ci:
+    if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
         level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
         os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
             "test-accts-key", level=level
