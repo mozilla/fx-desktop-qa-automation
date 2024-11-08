@@ -38,14 +38,7 @@ def test_add_primary_password(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    def get_alert(d: Firefox):
-        try:
-            alert = d.switch_to.alert
-        except NoAlertPresentException:
-            return False
-        return alert
-
     with driver.context(driver.CONTEXT_CHROME):
-        alert = about_prefs.wait.until(lambda d: get_alert(d))
+        alert = about_prefs.get_alert()
         assert alert.text == "Primary Password successfully changed."
         alert.accept()

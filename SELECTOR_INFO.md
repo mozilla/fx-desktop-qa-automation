@@ -3045,6 +3045,28 @@ Description: Password button
 Location: Hamburger Menu
 Path to .json: modules/data/panel_ui.components.json
 ```
+#### print_preview
+```
+Selector name: print-preview-browser
+Selector Data: "browser[class='printPreviewBrowser']"
+Description: Print Preview, whole window
+Location: Overlaid over the content when previewing a print job
+Path to .json: modules/data/print_preview.components.json
+```
+```
+Selector name: print-preview-loading
+Selector Data: "print-pending-label"
+Description: Header indicating that the print preview window is rendering
+Location: Inside print preview window
+Path to .json: modules/data/print_preview.components.json
+```
+```
+Selector name: print-settings-browser
+Selector Data: "browser.printSettingsBrowser"
+Description: Print Settings bar in Print Preview
+Location: Right sidebar in Print Preview
+Path to .json: modules/data/print_preview.components.json
+```
 #### reader_view
 ```
 Selector name: reader-view-button
