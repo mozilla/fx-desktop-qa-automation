@@ -11,9 +11,13 @@ def test_case():
 
 
 @pytest.fixture()
-def set_prefs():
+def set_prefs(sys_platform):
     """Set prefs"""
-    return [("clipboard.imageAsFile.enabled", False)]
+    return (
+        [("clipboard.imageAsFile.enabled", False)]
+        if sys_platform.startswith("Win")
+        else []
+    )
 
 
 @pytest.fixture()
@@ -54,7 +58,6 @@ COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
 
 @pytest.mark.headed
-@pytest.mark.xfail  # a pref needs to be set only on windows, it was reported on bugzilla: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
 def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     C464474: Verify that pasting images and text from html works
