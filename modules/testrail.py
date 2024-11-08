@@ -231,7 +231,7 @@ class TestRail:
         return the plan object that matches"""
         plans = self._get_plans_in_milestone(testrail_project_id, milestone_id)
         for plan in plans:
-            if plan_name == plan["name"]:
+            if plan_name in plan["name"]:
                 return self._get_full_plan(plan.get("id"))
         return None
 
@@ -328,7 +328,7 @@ class TestRail:
         matching_group = next(c for c in configs if c.get("id") == config_group_id)
         logging.info(f"matching group|| {matching_group}")
         cfgs = [
-            c for c in matching_group.get("configs") if c.get("name") == config_name
+            c for c in matching_group.get("configs") if config_name in c.get("name")
         ]
         return cfgs
 

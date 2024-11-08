@@ -4,7 +4,7 @@ import os
 import platform
 import re
 from shutil import unpack_archive
-from subprocess import check_output
+from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
 import pytest
@@ -16,12 +16,16 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
+
+# Number of suites that exist in the repo, that shouldn't report to TR. Currently meta and pocket.
+SUITE_COVERAGE_TOLERANCE = 2
 
 
 def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
@@ -206,7 +210,7 @@ def opt_window_size(request):
     return request.config.getoption("--window-size")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def sys_platform():
     return platform.system()
 
@@ -225,7 +229,7 @@ def downloads_folder(sys_platform):
         return f"/home/{user}/Downloads"
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
@@ -275,7 +279,7 @@ def use_profile():
     yield False
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
     version = check_output([fx_executable, "--version"]).strip().decode()
@@ -297,6 +301,25 @@ def machine_config():
 @pytest.fixture
 def test_case():
     return None
+
+
+def pytest_configure(config):
+    # Check if run is "reportable": if it is on a never-reported Fx version
+    if os.environ.get("TESTRAIL_REPORT"):
+        if os.environ.get("TASKCLUSTER_CLIENT_ID"):
+            creds = get_tc_secret()
+            if creds:
+                os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+                os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+                os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
+            elif not os.environ.get("TESTRAIL_USERNAME"):
+                logging.error(
+                    "Attempted to log into TestRail, but could not find credentials."
+                )
+                raise OSError("Could not find TestRail credentials")
+
+        if not tri.reportable():
+            pytest.exit("Test run is not reportable. Exiting.")
 
 
 def pytest_sessionfinish(session):
@@ -329,7 +352,7 @@ def pytest_sessionfinish(session):
         return None
 
     report = session.config._json_report.report
-    if report is None:
+    if report is None or report.get("tests") is None:
         logging.warning(
             "Not reporting to TestRail. This thread does not have a report in its config object."
         )
@@ -518,6 +541,22 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
     _delete_files()
 
 
+@pytest.fixture()
+def use_secrets(opt_ci):
+    """Function factory: grab a named secret from a secrets file"""
+    if os.environ.get("TASKCLUSTER_CLIENT_ID") and opt_ci:
+        level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
+        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
+            "test-accts-key", level=level
+        ).get("SVC_ACCT_DECRYPT")
+
+    def _use_secrets(filename: str, secret_name: str) -> dict:
+        secrets = crypto.decrypt(filename)
+        return secrets.get(secret_name)
+
+    return _use_secrets
+
+
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
     return 19980331
@@ -526,3 +565,19 @@ def faker_seed():
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
     return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+
+
+@pytest.fixture()
+def close_file_manager(sys_platform):
+    """Closes the file manager window"""
+    yield
+    if sys_platform == "Windows":
+        run(["taskkill", "/F", "/IM", "explorer.exe"], check=True)
+        run(["start", "explorer.exe"], shell=True)
+    elif sys_platform == "Darwin":
+        applescript = """
+        tell application "Finder"
+            close every Finder window
+        end tell
+        """
+        run(["osascript", "-e", applescript], check=True)

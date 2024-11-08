@@ -506,6 +506,12 @@
         "groups" : []
     },
 
+    "block-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']",
+        "strategy": "css",
+        "groups" : []
+    },
+
     "permission-dialog": {
         "selectorData": "[data-l10n-id='permission-dialog']",
         "strategy": "css",
@@ -523,6 +529,12 @@
         "selectorData": "button-spacer",
         "strategy": "class",
         "shadowParent": "permission-dialog" ,
+        "groups" : []
+    },
+
+    "allow-audio-video": {
+        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+        "strategy": "css",
         "groups" : []
     },
 
@@ -553,6 +565,12 @@
     "doh-resolver": {
         "selectorData": "dohResolver",
         "strategy": "id",
+        "groups": []
+    },
+
+    "mlb-allow-audio-video-settings": {
+        "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
+        "strategy": "css",
         "groups": []
     }
 }
