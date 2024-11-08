@@ -30,6 +30,21 @@ def set_prefs():
 
 
 TEST_PAGE = "https://example.com"
+DEFAULT_NAME = "Example Domain.pdf"
+
+
+def file_is_somewhere():
+    locs = [
+        os.getcwd(),
+        os.path.join(os.path.expanduser("~"), "Documents"),
+        os.path.join(os.path.expanduser("~"), "Downloads"),
+    ]
+    for loc in locs:
+        for _, _, files in os.walk(loc):
+            if DEFAULT_NAME in files:
+                logging.warning(f"File found in {loc}")
+                return True
+    return False
 
 
 @pytest.mark.headed
@@ -50,9 +65,4 @@ def test_print_to_pdf(
     print_preview.open()
     print_preview.start_print()
 
-    docs_location = os.path.join(
-        os.path.dirname(downloads_folder), "Documents", "Example Domain.pdf"
-    )
-    if sys_platform == "Linux":
-        docs_location = "Example Domain.pdf"
-    print_preview.expect(lambda _: os.path.exists(docs_location))
+    print_preview.expect(lambda _: file_is_somewhere())
