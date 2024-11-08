@@ -80,7 +80,8 @@ jobs:
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
-          Start-Process -FilePath "C:\Program Files\Custom Firefox\firefox.exe" -ArgumentList "--version" -Wait -NoNewWindow
+          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest -n 4 .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -102,6 +103,7 @@ jobs:
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run pytest .
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
@@ -161,9 +163,10 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 . || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
@@ -180,9 +183,10 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable=/Volumes/Firefox/Firefox.app/Contents/MacOS/firefox . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" . || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts

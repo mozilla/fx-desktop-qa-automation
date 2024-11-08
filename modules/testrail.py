@@ -231,7 +231,7 @@ class TestRail:
         return the plan object that matches"""
         plans = self._get_plans_in_milestone(testrail_project_id, milestone_id)
         for plan in plans:
-            if plan_name == plan["name"]:
+            if plan_name in plan["name"]:
                 return self._get_full_plan(plan.get("id"))
         return None
 

@@ -47,7 +47,7 @@ class GoogleSheets(GenericPage):
         """Select n rows starting from the current position"""
         self.actions.key_down(Keys.SHIFT)
         self.actions.send_keys(Keys.SPACE)
-        for _ in range(n-1):
+        for _ in range(n - 1):
             self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.SHIFT).perform()
         return self

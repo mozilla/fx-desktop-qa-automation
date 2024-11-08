@@ -10,8 +10,92 @@ FX_PRERC_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)[ab](\d\d?)")
 FX_RC_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)\.(\d\d?)")
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
+PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
+SUITE_COVERAGE_TOLERANCE = 2
+
+
+def get_plan_title(version_str: str, channel: str) -> str:
+    """Given a version string, get the plan_title"""
+
+    version_match = FX_PRERC_VERSION_RE.match(version_str)
+    if version_match:
+        logging.info(version_match)
+        (major, minor, build) = [version_match[n] for n in range(1, 4)]
+        logging.info(f"major {major} minor {minor} build {build}")
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{minor}", minor)
+            .replace("{build}", build)
+        )
+    else:
+        # Version doesn't look like a normal beta, someone updated to the RC
+        version_match = FX_RC_VERSION_RE.match(version_str)
+        (major, minor) = [version_match[n] for n in range(1, 3)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{minor}", minor)
+            .replace("b{build}", "rc")
+        )
+    return plan_title
+
+
+def reportable():
+    """Return true if we should report to TestRail"""
+    import platform
+
+    sys_platform = platform.system()
+    version = subprocess.check_output(
+        [os.environ.get("FX_EXECUTABLE"), "--version"]
+    ).decode()
+    if not os.environ.get("TESTRAIL_REPORT"):
+        return False
+
+    # Find the correct test plan
+    tr_session = testrail_init()
+    first_half, second_half = version.split(".")
+    channel = "Beta" if "b" in second_half else "Release"
+    if "Nightly" in first_half:
+        channel = "Nightly"
+
+    major_version = " ".join(first_half.split(" ")[1:])
+    major_number = major_version.split(" ")[-1]
+    major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
+    if not major_milestone:
+        logging.warning("Reporting: Could not find matching milestone.")
+        return False
+
+    channel_milestone = tr_session.matching_submilestone(
+        major_milestone, f"{channel} {major_number}"
+    )
+    if not channel_milestone:
+        logging.warning(
+            f"Reporting: Could not find matching submilestone for {channel} {major_number}"
+        )
+        return False
+
+    plan_title = get_plan_title(version, channel)
+    this_plan = tr_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
+    )
+    if not this_plan:
+        return True
+
+    platform = "MacOS" if sys_platform == "Darwin" else sys_platform
+
+    plan_entries = this_plan.get("entries")
+    covered_suites = 0
+    for entry in plan_entries:
+        for run_ in entry.get("runs"):
+            if platform in run_.get("config"):
+                covered_suites += 1
+
+    num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
+
+    return covered_suites > (num_suites - SUITE_COVERAGE_TOLERANCE)
 
 
 def testrail_init() -> TestRail:
@@ -233,27 +317,10 @@ def collect_changes(testrail_session: TestRail, report):
         return False
 
     version_str = metadata.get("fx_version")
-    version_match = FX_PRERC_VERSION_RE.match(version_str)
-    if version_match:
-        logging.info(version_match)
-        (major, minor, build) = [version_match[n] for n in range(1, 4)]
-        logging.info(f"major {major} minor {minor} build {build}")
-        plan_title = (
-            TESTRAIL_RUN_FMT.replace("{channel}", channel)
-            .replace("{major}", major)
-            .replace("{minor}", minor)
-            .replace("{build}", build)
-        )
-    else:
-        # Version doesn't look like a normal beta, someone updated to the RC
-        version_match = FX_RC_VERSION_RE.match(version_str)
-        (major, minor) = [version_match[n] for n in range(1, 3)]
-        plan_title = (
-            TESTRAIL_RUN_FMT.replace("{channel}", channel)
-            .replace("{major}", major)
-            .replace("{minor}", minor)
-            .replace("b{build}", "rc")
-        )
+    plan_title = get_plan_title(version_str, channel)
+    logging.info(plan_title)
+    plan_match = PLAN_NAME_RE.match(plan_title)
+    (_, major) = [plan_match[n] for n in range(1, 3)]
     config = metadata.get("machine_config")
 
     if "linux" in config.lower():
