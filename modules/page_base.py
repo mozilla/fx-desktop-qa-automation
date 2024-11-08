@@ -535,7 +535,7 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.actions.context_click(el).perform()
         return self
-    
+
     def copy(self, sys_platform) -> Page:
         """Copy the selected item"""
         mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
@@ -544,7 +544,7 @@ class BasePage(Page):
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
-    
+
     def paste(self, sys_platform) -> Page:
         """Paste the copied item"""
         mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
@@ -553,7 +553,7 @@ class BasePage(Page):
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
-    
+
     def undo(self, sys_platform) -> Page:
         """Undo last action"""
         mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
@@ -562,7 +562,7 @@ class BasePage(Page):
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
-        
+
     def paste_to_element(
         self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
