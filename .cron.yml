@@ -19,4 +19,3 @@ jobs:
       - {hour: 18, minute: 15}
       - {hour: 20, minute: 15}
       - {hour: 22, minute: 15}
-      - {hour: 23, minute: 45}

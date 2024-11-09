@@ -98,7 +98,9 @@ def reportable():
 
     num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
 
-    logging.warning("Partial report exists, session may be reportable.")
+    logging.warning(
+        f"Partial report exists ({covered_suites}/{num_suites} suites), session may be reportable."
+    )
     return covered_suites > (num_suites - SUITE_COVERAGE_TOLERANCE)
 
 
