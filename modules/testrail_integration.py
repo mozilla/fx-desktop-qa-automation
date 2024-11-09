@@ -96,7 +96,9 @@ def reportable():
             if platform in run_.get("config"):
                 covered_suites += 1
 
-    num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
+    num_suites = len(
+        [d for d in os.listdir("tests") if os.path.isdir(os.path.join("tests", d))]
+    )
 
     logging.warning(
         f"Partial report exists ({covered_suites}/{num_suites} suites), session may be reportable."
