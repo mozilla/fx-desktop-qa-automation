@@ -49,18 +49,20 @@ def reportable():
     """Return true if we should report to TestRail"""
     import platform
 
-    sys_platform = platform.system()
-    version = subprocess.check_output(
-        [os.environ.get("FX_EXECUTABLE"), "--version"]
-    ).decode()
     if not os.environ.get("TESTRAIL_REPORT"):
+        logging.warning("TESTRAIL_REPORT not set, session not reportable.")
         return False
 
     # If we ask for reporting, we can force a report
     if os.environ.get("REPORTABLE"):
+        logging.warning("REPORTABLE=true; we will report this session.")
         return True
 
     # Find the correct test plan
+    sys_platform = platform.system()
+    version = subprocess.check_output(
+        [os.environ.get("FX_EXECUTABLE"), "--version"]
+    ).decode()
     tr_session = testrail_init()
     first_half, second_half = version.split(".")
     channel = "Beta" if "b" in second_half else "Release"
@@ -102,9 +104,13 @@ def reportable():
             if platform in run_.get("config"):
                 covered_suites += 1
 
-    num_suites = len(
-        [d for d in os.listdir("tests") if os.path.isdir(os.path.join("tests", d))]
-    )
+    num_suites = 0
+    for test_dir_name in os.listdir("tests"):
+        test_dir = os.path.join("tests", test_dir_name)
+        if os.path.isdir(test_dir) and not os.path.exists(
+            os.path.join(test_dir, "skip_reporting")
+        ):
+            num_suites += 1
 
     logging.warning(
         f"Partial report exists ({covered_suites}/{num_suites} suites), session may be reportable."
