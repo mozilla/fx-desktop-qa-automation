@@ -14,7 +14,7 @@ def test_case():
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
 
-def test_open_bookmarks_from_toolbar(driver: Firefox):
+def test_delete_bookmarks_from_toolbar(driver: Firefox):
     """
     C2084559: Verify that the user can delete items from "Bookmarks Toolbar"
     """
