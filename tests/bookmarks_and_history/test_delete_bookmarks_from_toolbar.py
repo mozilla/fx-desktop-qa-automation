@@ -39,4 +39,4 @@ def test_delete_bookmarks_from_toolbar(driver: Firefox):
         keyboard.tap(Key.enter)
 
         # Verify bookmark is deleted
-        panel.element_does_not_exist("bookmark-by-title", labels=["Internet for people"])
+        panel.element_not_visible("bookmark-by-title", labels=["Internet for people"])
