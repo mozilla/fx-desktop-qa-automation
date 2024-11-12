@@ -100,6 +100,7 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          REPORTABLE: true
         run: |
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
@@ -184,6 +185,7 @@ jobs:
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
+          REPORTABLE: true
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" . || TEST_EXIT_CODE=$?

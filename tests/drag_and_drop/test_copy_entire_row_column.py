@@ -1,4 +1,5 @@
 import time
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -22,7 +23,7 @@ def test_copy_entire_row_column(driver: Firefox, sys_platform):
     # Initializing objects
     web_page = GoogleSheets(driver, url=SHEET1_URL).open()
     nav = Navigation(driver)
-    
+
     try:
         # Copy a row
         web_page.select_num_rows(1)
@@ -35,9 +36,11 @@ def test_copy_entire_row_column(driver: Firefox, sys_platform):
 
         # Verify that the row is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains("formula-box-input", "innerHTML", str(i))
+            web_page.element_attribute_contains(
+                "formula-box-input", "innerHTML", str(i)
+            )
             web_page.perform_key_combo(Keys.RIGHT)
-            
+
         web_page.undo(sys_platform)
 
         # Paste the row in a different sheet
@@ -47,7 +50,9 @@ def test_copy_entire_row_column(driver: Firefox, sys_platform):
 
         # Verify that the row is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains("formula-box-input", "innerHTML", str(i))
+            web_page.element_attribute_contains(
+                "formula-box-input", "innerHTML", str(i)
+            )
             web_page.perform_key_combo(Keys.RIGHT)
 
         web_page.undo(sys_platform)
@@ -65,9 +70,11 @@ def test_copy_entire_row_column(driver: Firefox, sys_platform):
 
         # Verify that the column is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains("formula-box-input", "innerHTML", str(i))
+            web_page.element_attribute_contains(
+                "formula-box-input", "innerHTML", str(i)
+            )
             web_page.perform_key_combo(Keys.DOWN)
-            
+
         web_page.undo(sys_platform)
 
         # Paste the column in a different sheet
@@ -77,9 +84,10 @@ def test_copy_entire_row_column(driver: Firefox, sys_platform):
 
         # Verify that the column is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains("formula-box-input", "innerHTML", str(i))
+            web_page.element_attribute_contains(
+                "formula-box-input", "innerHTML", str(i)
+            )
             web_page.perform_key_combo(Keys.DOWN)
 
     finally:
         web_page.undo(sys_platform)
-    

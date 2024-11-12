@@ -51,16 +51,16 @@ class GoogleSheets(GenericPage):
             self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.SHIFT).perform()
         return self
-    
+
     def select_num_columns(self, n: int) -> GenericPage:
         """Select n columns starting from the current position"""
         self.actions.key_down(Keys.CONTROL)
         self.actions.send_keys(Keys.SPACE)
-        for _ in range(n-1):
+        for _ in range(n - 1):
             self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.CONTROL).perform()
         return self
-    
+
     def go_to_top_left_cell(self, sys_platform) -> GenericPage:
         """Select cell A1 (top left)"""
         if sys_platform == "Darwin":

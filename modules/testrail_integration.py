@@ -13,7 +13,9 @@ TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-SUITE_COVERAGE_TOLERANCE = 2
+
+# Number of suites that exist in the repo but are not reported in TR for reasons.
+SUITE_COVERAGE_TOLERANCE = 3
 
 
 def get_plan_title(version_str: str, channel: str) -> str:
@@ -54,6 +56,10 @@ def reportable():
     if not os.environ.get("TESTRAIL_REPORT"):
         return False
 
+    # If we ask for reporting, we can force a report
+    if os.environ.get("REPORTABLE"):
+        return True
+
     # Find the correct test plan
     tr_session = testrail_init()
     first_half, second_half = version.split(".")
@@ -82,6 +88,9 @@ def reportable():
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
     if not this_plan:
+        logging.warning(
+            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+        )
         return True
 
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
@@ -93,9 +102,14 @@ def reportable():
             if platform in run_.get("config"):
                 covered_suites += 1
 
-    num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
+    num_suites = len(
+        [d for d in os.listdir("tests") if os.path.isdir(os.path.join("tests", d))]
+    )
 
-    return covered_suites > (num_suites - SUITE_COVERAGE_TOLERANCE)
+    logging.warning(
+        f"Partial report exists ({covered_suites}/{num_suites} suites), session may be reportable."
+    )
+    return covered_suites < (num_suites - SUITE_COVERAGE_TOLERANCE)
 
 
 def testrail_init() -> TestRail:
