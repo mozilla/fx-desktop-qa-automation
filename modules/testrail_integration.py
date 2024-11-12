@@ -15,7 +15,7 @@ CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
 
 # Number of suites that exist in the repo but are not reported in TR for reasons.
-SUITE_COVERAGE_TOLERANCE = 5
+SUITE_COVERAGE_TOLERANCE = 3
 
 
 def get_plan_title(version_str: str, channel: str) -> str:
@@ -55,6 +55,10 @@ def reportable():
     ).decode()
     if not os.environ.get("TESTRAIL_REPORT"):
         return False
+
+    # If we ask for reporting, we can force a report
+    if os.environ.get("REPORTABLE"):
+        return True
 
     # Find the correct test plan
     tr_session = testrail_init()
