@@ -241,6 +241,16 @@ class Navigation(BasePage):
             self.get_element("bookmark-current-tab").click()
             self.get_element("save-bookmark-button").click()
 
+    def toggle_bookmarks_toolbar_with_key_combo(self) -> BasePage:
+        """Use Cmd/Ctrl + B to open the Print Preview, wait for load"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            if self.sys_platform() == "Darwin":
+                mod_key = Keys.COMMAND
+            else:
+                mod_key = Keys.CONTROL
+            self.perform_key_combo(mod_key, Keys.SHIFT, "b")
+        return self
+
     def wait_for_item_to_download(self, filename: str) -> BasePage:
         """
         Check the downloads tool in the toolbar to wait for a given file to download
