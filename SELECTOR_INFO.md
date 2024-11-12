@@ -1508,6 +1508,20 @@ Description: Context menu option from Password field
 Location: Login page - Password field context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-toolbar-open-new-private-window
+Selector Data: selectorData": "placesContext_open:newprivatewindow"
+Description: Context menu option from a Toolbar bookmark
+Location: Toolbar - any bookmark context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-toolbar-open-new-window
+Selector Data: selectorData": "placesContext_open:newwindow"
+Description: Context menu option from a Toolbar bookmark
+Location: Toolbar - any bookmark context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
