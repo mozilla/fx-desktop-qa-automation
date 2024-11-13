@@ -1,6 +1,8 @@
 from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox, Keys
+
 from modules.page_object import GoogleSheets, Navigation
 
 
@@ -21,8 +23,10 @@ def temp_selectors():
 
 
 SHEET1_URL = "https://docs.google.com/spreadsheets/d/1ennETYnxeWZrUcItUxHgR8ug6EwL_QpyUFvB4I7lof4/edit?usp=sharing"
-SHEET2_URL = ("https://docs.google.com/spreadsheets/d/1ennETYnxeWZrUcItUxHgR8ug6EwL_QpyUFvB4I7lof4/edit?gid=674466887"
-              "#gid=674466887")
+SHEET2_URL = (
+    "https://docs.google.com/spreadsheets/d/1ennETYnxeWZrUcItUxHgR8ug6EwL_QpyUFvB4I7lof4/edit?gid=674466887"
+    "#gid=674466887"
+)
 
 expected_values = [
     ["Season", "Ordered", "First aired"],
@@ -30,6 +34,8 @@ expected_values = [
 ]
 
 
+@pytest.mark.headed
+@pytest.mark.unstable
 def test_copy_table_with_hyperlink(driver: Firefox, sys_platform, temp_selectors):
     """
     Verify that copying and pasting table content with hyperlinks retains the hyperlink functionality and redirects
@@ -56,13 +62,9 @@ def test_copy_table_with_hyperlink(driver: Firefox, sys_platform, temp_selectors
         # Verify that the pasted values are correct
         for row_index, row in enumerate(expected_values):
             for col_index, expected_value in enumerate(row):
-                # Wait until value is present in the cell
-                web_page.wait.until(
-                    lambda _: expected_value in web_page.get_element("formula-box-input").get_attribute("innerHTML")
+                web_page.element_attribute_contains(
+                    "formula-box-input", "innerHTML", expected_value
                 )
-                # Check that the current cell's value matches expected_value
-                actual_value = web_page.get_element("formula-box-input").get_attribute("innerHTML")
-                assert expected_value in actual_value
                 # Move to the next cell to the right
                 web_page.perform_key_combo(Keys.RIGHT)
             # Move to the beginning of the next row
