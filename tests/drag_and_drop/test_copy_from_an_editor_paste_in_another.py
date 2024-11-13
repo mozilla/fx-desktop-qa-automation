@@ -37,13 +37,8 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
     try:
         for row_index, row in enumerate(expected_values):
             for col_index, expected_value in enumerate(row):
-                # Wait until value is present in the cell
-                web_page.wait.until(
-                    lambda _: expected_value in web_page.get_element("formula-box-input").get_attribute("innerHTML")
-                )
                 # Check that the current cell's value matches expected_value
-                actual_value = web_page.get_element("formula-box-input").get_attribute("innerHTML")
-                assert expected_value in actual_value
+                web_page.element_attribute_contains("formula-box-input", "innerHTML", expected_value)
                 # Move to the next cell to the right
                 web_page.perform_key_combo(Keys.RIGHT)
             # Move to the beginning of the next row
