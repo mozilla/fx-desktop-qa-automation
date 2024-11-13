@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
+
 from modules.page_object_google import GoogleSheets
 
 
@@ -17,6 +18,7 @@ expected_values = [
 ]
 
 
+@pytest.mark.headed
 def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
     """
     C936864: Pressing “Ctrl” key to select and copy multiple rows/columns of a table from an online editor then pasting
@@ -27,18 +29,20 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
 
     # Copy several rows/columns
     web_page.select_num_rows(3)
-    web_page.copy(sys_platform)
+    web_page.copy()
 
     # Paste table in the second online editor
     GoogleSheets(driver, url=SHEET2_URL).open()
-    web_page.paste(sys_platform)
+    web_page.paste()
 
     # Verify that the previous selection copied is pasted in the new place
     try:
         for row_index, row in enumerate(expected_values):
             for col_index, expected_value in enumerate(row):
                 # Check that the current cell's value matches expected_value
-                web_page.element_attribute_contains("formula-box-input", "innerHTML", expected_value)
+                web_page.element_attribute_contains(
+                    "formula-box-input", "innerHTML", expected_value
+                )
                 # Move to the next cell to the right
                 web_page.perform_key_combo(Keys.RIGHT)
             # Move to the beginning of the next row
@@ -47,4 +51,4 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
             web_page.perform_key_combo(Keys.DOWN)
     finally:
         # Undo the paste operation
-        web_page.undo(sys_platform)
+        web_page.undo()
