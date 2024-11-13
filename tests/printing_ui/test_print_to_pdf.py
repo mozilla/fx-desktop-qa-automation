@@ -1,13 +1,10 @@
 import logging
 import os
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import PrintPreview
-from modules.page_object import AboutPrefs
 
 
 @pytest.fixture()
