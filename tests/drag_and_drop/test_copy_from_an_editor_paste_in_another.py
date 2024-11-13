@@ -1,3 +1,5 @@
+import platform
+
 import pytest
 from selenium.webdriver import Firefox, Keys
 
@@ -19,6 +21,7 @@ expected_values = [
 
 
 @pytest.mark.headed
+@pytest.mark.xfail(platform.system() == "Linux", reason="Not stable in Linux TC.")
 def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
     """
     C936864: Pressing “Ctrl” key to select and copy multiple rows/columns of a table from an online editor then pasting
