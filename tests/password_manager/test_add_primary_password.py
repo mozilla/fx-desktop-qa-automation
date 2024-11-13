@@ -1,5 +1,4 @@
 import pytest
-from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs

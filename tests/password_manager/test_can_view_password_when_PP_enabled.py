@@ -1,5 +1,4 @@
 import pytest
-from selenium.common import NoAlertPresentException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
