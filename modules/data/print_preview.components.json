@@ -1,9 +1,20 @@
 {
     "context": "chrome",
     "print-preview-browser": {
-        "selectorData": "print-preview stack browser[class='printPreviewBrowser']",
+        "selectorData": "browser[class='printPreviewBrowser']",
         "strategy": "css",
         "groups": ["requiredForPage"]
-    }
+    },
 
+    "print-preview-loading": {
+        "selectorData": "print-pending-label",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "print-settings-browser": {
+        "selectorData": "browser.printSettingsBrowser",
+        "strategy": "css",
+        "groups": []
+    }
 }

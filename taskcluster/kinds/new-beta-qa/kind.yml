@@ -44,6 +44,7 @@ tasks:
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
+        export REPORTABLE=1
         pipenv run pytest --fx-executable $FX_EXECUTABLE
         exit $((${?} | ${FAILURE}))
     notify:

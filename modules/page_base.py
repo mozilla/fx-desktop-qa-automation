@@ -10,6 +10,7 @@ from typing import List, Union
 
 from pynput.keyboard import Controller, Key
 from pypom import Page
+from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
     NoSuchElementException,
     NoSuchWindowException,
@@ -145,7 +146,7 @@ class BasePage(Page):
         Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
         """
         while Keys.CONTROL in keys and self.sys_platform == "Darwin":
-            keys[keys.index(Keys.CONTROL)] == Keys.COMMAND
+            keys[keys.index(Keys.CONTROL)] = Keys.COMMAND
         for k in keys[:-1]:
             self.actions.key_down(k)
 
@@ -535,34 +536,34 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.actions.context_click(el).perform()
         return self
-    
-    def copy(self, sys_platform) -> Page:
+
+    def copy(self) -> Page:
         """Copy the selected item"""
-        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
         self.actions.key_down(mod_key)
         self.actions.send_keys("c")
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
-    
-    def paste(self, sys_platform) -> Page:
+
+    def paste(self) -> Page:
         """Paste the copied item"""
-        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
         self.actions.key_down(mod_key)
         self.actions.send_keys("v")
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
-    
-    def undo(self, sys_platform) -> Page:
+
+    def undo(self) -> Page:
         """Undo last action"""
-        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
         self.actions.key_down(mod_key)
         self.actions.send_keys("z")
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
-        
+
     def paste_to_element(
         self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
@@ -684,6 +685,16 @@ class BasePage(Page):
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             return self.switch_to_new_tab()
 
+    def switch_to_frame(self, frame: str, labels=[]) -> Page:
+        """Switch to inline document frame"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.expect(
+                EC.frame_to_be_available_and_switch_to_it(
+                    self.get_selector(frame, labels=labels)
+                )
+            )
+        return self
+
     def hide_popup(self, context_menu: str, chrome=True) -> Page:
         """
         Given the ID of the context menu, it will dismiss the menu.
@@ -769,6 +780,17 @@ class BasePage(Page):
 
     def get_localstorage_item(self, key: str):
         return self.driver.execute_script(f"return window.localStorage.getItem({key});")
+
+    def _get_alert(self):
+        try:
+            alert = self.driver.switch_to.alert
+        except NoAlertPresentException:
+            return False
+        return alert
+
+    def get_alert(self):
+        alert = self.wait.until(lambda _: self._get_alert())
+        return alert
 
     @property
     def loaded(self):

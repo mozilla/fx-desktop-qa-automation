@@ -13,7 +13,6 @@ TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-SUITE_COVERAGE_TOLERANCE = 2
 
 
 def get_plan_title(version_str: str, channel: str) -> str:
@@ -47,14 +46,20 @@ def reportable():
     """Return true if we should report to TestRail"""
     import platform
 
+    if not os.environ.get("TESTRAIL_REPORT"):
+        logging.warning("TESTRAIL_REPORT not set, session not reportable.")
+        return False
+
+    # If we ask for reporting, we can force a report
+    if os.environ.get("REPORTABLE"):
+        logging.warning("REPORTABLE=true; we will report this session.")
+        return True
+
+    # Find the correct test plan
     sys_platform = platform.system()
     version = subprocess.check_output(
         [os.environ.get("FX_EXECUTABLE"), "--version"]
     ).decode()
-    if not os.environ.get("TESTRAIL_REPORT"):
-        return False
-
-    # Find the correct test plan
     tr_session = testrail_init()
     first_half, second_half = version.split(".")
     channel = "Beta" if "b" in second_half else "Release"
@@ -82,6 +87,9 @@ def reportable():
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
     if not this_plan:
+        logging.warning(
+            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+        )
         return True
 
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
@@ -93,9 +101,16 @@ def reportable():
             if platform in run_.get("config"):
                 covered_suites += 1
 
-    num_suites = len([d for d in os.listdir("tests") if os.path.isdir(d)])
+    num_suites = 0
+    for test_dir_name in os.listdir("tests"):
+        test_dir = os.path.join("tests", test_dir_name)
+        if os.path.isdir(test_dir) and not os.path.exists(
+            os.path.join(test_dir, "skip_reporting")
+        ):
+            num_suites += 1
 
-    return covered_suites > (num_suites - SUITE_COVERAGE_TOLERANCE)
+    logging.warning("Potentially matching run found, may be reportable.")
+    return covered_suites < num_suites
 
 
 def testrail_init() -> TestRail:

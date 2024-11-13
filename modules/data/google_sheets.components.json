@@ -12,8 +12,8 @@
     },
 
     "formula-box-input": { 
-        "selectorData": "t-formula-bar-input",
-        "strategy": "id",
+        "selectorData": "cell-input",
+        "strategy": "class",
         "groups": []
     },
 
@@ -23,10 +23,10 @@
         "groups": []
     },
 
-    "grid-table-container": { 
+    "grid-table-container": {
         "selectorData": "grid-table-container",
         "strategy": "class",
         "groups": []
-}
+    }
 
 }

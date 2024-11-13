@@ -185,5 +185,17 @@
         "selectorData": "context-reveal-password",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-toolbar-open-in-new-private-window": {
+        "selectorData": "placesContext_open:newprivatewindow",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "context-menu-toolbar-open-in-new-window": {
+        "selectorData": "placesContext_open:newwindow",
+        "strategy": "id",
+        "groups": []
     }
 }
