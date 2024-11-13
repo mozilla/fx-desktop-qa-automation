@@ -28,6 +28,7 @@ SHEET_SETS = {
 }
 
 
+@pytest.mark.headed
 def test_copy_table_header(driver: Firefox, sys_platform):
     """
     C936860: Verify that copying and pasting header from tables work
