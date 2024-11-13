@@ -30,7 +30,6 @@ SHEET_SETS = {
 
 
 @pytest.mark.headed
-@pytest.mark.xfail(platform.system() == "Linux", reason="Unstable in TC linux")
 def test_copy_table_header(driver: Firefox):
     """
     C936860: Verify that copying and pasting header from tables work
@@ -42,13 +41,13 @@ def test_copy_table_header(driver: Firefox):
 
     # Copy the header row
     web_page.select_num_rows(1)
-    web_page.copy(platform.system())
+    web_page.copy()
 
     try:
         # Paste the header row in the same sheet
         for _ in range(3):
             web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
-        web_page.paste(platform.system())
+        web_page.paste()
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
@@ -62,12 +61,12 @@ def test_copy_table_header(driver: Firefox):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo(platform.system())
+        web_page.undo()
 
         # Paste the header row in a different sheet
         nav.search(sheet2_url)
         time.sleep(2)
-        web_page.paste(platform.system())
+        web_page.paste()
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
@@ -81,7 +80,7 @@ def test_copy_table_header(driver: Firefox):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo(platform.system())
+        web_page.undo()
     finally:
-        web_page.undo(platform.system())
+        web_page.undo()
     time.sleep(2)

@@ -35,7 +35,7 @@ expected_values = [
 
 
 @pytest.mark.headed
-def test_copy_table_with_hyperlink(driver: Firefox, sys_platform, temp_selectors):
+def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
     """
     Verify that copying and pasting table content with hyperlinks retains the hyperlink functionality and redirects
     to the correct page.
@@ -48,11 +48,11 @@ def test_copy_table_with_hyperlink(driver: Firefox, sys_platform, temp_selectors
     try:
         # Copy the table
         web_page.select_num_rows(2)
-        web_page.copy(sys_platform)
+        web_page.copy()
 
         nav.search(SHEET2_URL)
         sleep(2)
-        web_page.paste(sys_platform)
+        web_page.paste()
         sleep(2)
 
         # Move to the starting cell (A1)
@@ -90,4 +90,4 @@ def test_copy_table_with_hyperlink(driver: Firefox, sys_platform, temp_selectors
 
     finally:
         # Undo the paste operation
-        web_page.undo(sys_platform)
+        web_page.undo()
