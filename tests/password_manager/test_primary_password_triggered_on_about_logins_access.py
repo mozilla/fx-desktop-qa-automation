@@ -1,5 +1,4 @@
 import pytest
-from selenium.common import NoAlertPresentException
 from selenium.webdriver import Firefox, Keys
 from selenium.webdriver.support import expected_conditions as EC
 

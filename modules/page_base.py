@@ -537,27 +537,27 @@ class BasePage(Page):
             self.actions.context_click(el).perform()
         return self
 
-    def copy(self, sys_platform) -> Page:
+    def copy(self) -> Page:
         """Copy the selected item"""
-        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
         self.actions.key_down(mod_key)
         self.actions.send_keys("c")
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
 
-    def paste(self, sys_platform) -> Page:
+    def paste(self) -> Page:
         """Paste the copied item"""
-        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
         self.actions.key_down(mod_key)
         self.actions.send_keys("v")
         self.actions.key_up(mod_key).perform()
         time.sleep(0.5)
         return self
 
-    def undo(self, sys_platform) -> Page:
+    def undo(self) -> Page:
         """Undo last action"""
-        mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
         self.actions.key_down(mod_key)
         self.actions.send_keys("z")
         self.actions.key_up(mod_key).perform()
