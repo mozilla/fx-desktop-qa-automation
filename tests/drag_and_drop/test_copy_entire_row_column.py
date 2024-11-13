@@ -76,6 +76,7 @@ def test_copy_entire_row_column(driver: Firefox):
             web_page.perform_key_combo(Keys.DOWN)
 
         web_page.undo()
+        time.sleep(2)
 
         # Paste the column in a different sheet
         nav.search(SHEET2_URL)
@@ -91,3 +92,4 @@ def test_copy_entire_row_column(driver: Firefox):
 
     finally:
         web_page.undo()
+        time.sleep(2)

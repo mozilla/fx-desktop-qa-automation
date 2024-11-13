@@ -91,3 +91,4 @@ def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
     finally:
         # Undo the paste operation
         web_page.undo()
+        sleep(2)

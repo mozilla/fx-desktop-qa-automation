@@ -62,6 +62,7 @@ def test_copy_table_header(driver: Firefox):
             "formula-box-input", "innerHTML", "Column 2"
         )
         web_page.undo()
+        time.sleep(2)
 
         # Paste the header row in a different sheet
         nav.search(sheet2_url)
@@ -81,6 +82,7 @@ def test_copy_table_header(driver: Firefox):
             "formula-box-input", "innerHTML", "Column 2"
         )
         web_page.undo()
+        time.sleep(2)
     finally:
         web_page.undo()
-    time.sleep(2)
+        time.sleep(2)
