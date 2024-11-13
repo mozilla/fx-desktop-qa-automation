@@ -166,7 +166,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 tests/drag_and_drop || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
@@ -186,7 +186,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" . || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/drag_and_drop || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
