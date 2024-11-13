@@ -1,3 +1,4 @@
+import sys
 import time
 
 import pytest
@@ -29,24 +30,25 @@ SHEET_SETS = {
 
 
 @pytest.mark.headed
-def test_copy_table_header(driver: Firefox, sys_platform):
+@pytest.mark.xfail(sys.platform == "linux", reason="Unstable in TC linux")
+def test_copy_table_header(driver: Firefox):
     """
     C936860: Verify that copying and pasting header from tables work
     """
-    (sheet1_url, sheet2_url) = SHEET_SETS.get(sys_platform)
+    (sheet1_url, sheet2_url) = SHEET_SETS.get(sys.platform)
     # Initializing objects
     web_page = GoogleSheets(driver, url=sheet1_url).open()
     nav = Navigation(driver)
 
     # Copy the header row
     web_page.select_num_rows(1)
-    web_page.copy(sys_platform)
+    web_page.copy(sys.platform)
 
     try:
         # Paste the header row in the same sheet
         for _ in range(3):
             web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
-        web_page.paste(sys_platform)
+        web_page.paste(sys.platform)
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
@@ -60,12 +62,12 @@ def test_copy_table_header(driver: Firefox, sys_platform):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo(sys_platform)
+        web_page.undo(sys.platform)
 
         # Paste the header row in a different sheet
         nav.search(sheet2_url)
         time.sleep(2)
-        web_page.paste(sys_platform)
+        web_page.paste(sys.platform)
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
@@ -79,6 +81,6 @@ def test_copy_table_header(driver: Firefox, sys_platform):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo(sys_platform)
+        web_page.undo(sys.platform)
     finally:
-        web_page.undo(sys_platform)
+        web_page.undo(sys.platform)

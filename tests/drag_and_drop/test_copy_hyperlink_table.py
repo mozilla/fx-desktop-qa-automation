@@ -35,7 +35,6 @@ expected_values = [
 
 
 @pytest.mark.headed
-@pytest.mark.unstable
 def test_copy_table_with_hyperlink(driver: Firefox, sys_platform, temp_selectors):
     """
     Verify that copying and pasting table content with hyperlinks retains the hyperlink functionality and redirects
