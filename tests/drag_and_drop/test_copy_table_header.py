@@ -12,16 +12,29 @@ def test_case():
     return "936860"
 
 
-SHEET1_URL = "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=0#gid=0"
-SHEET2_URL = "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=1556347227#gid=1556347227"
+SHEET_SETS = {
+    "Darwin": (
+        "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=1469667334#gid=1469667334",
+        "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=1776043530#gid=1776043530",
+    ),
+    "Windows": (
+        "https://docs.google.com/spreadsheets/d/1cxDppB_yNeMoUSaOqK-Hq6OS08kbOSeLck6Kypyb4zg/edit?gid=1469667334#gid=1469667334",
+        "https://docs.google.com/spreadsheets/d/1cxDppB_yNeMoUSaOqK-Hq6OS08kbOSeLck6Kypyb4zg/edit?gid=1776043530#gid=1776043530",
+    ),
+    "Linux": (
+        "https://docs.google.com/spreadsheets/d/1CuxT_RgsLonZSGXXhCgc4648mGtXUW1iii0qPwMxn3Q/edit?gid=1469667334#gid=1469667334",
+        "https://docs.google.com/spreadsheets/d/1CuxT_RgsLonZSGXXhCgc4648mGtXUW1iii0qPwMxn3Q/edit?gid=1776043530#gid=1776043530",
+    ),
+}
 
 
 def test_copy_table_header(driver: Firefox, sys_platform):
     """
     C936860: Verify that copying and pasting header from tables work
     """
+    (sheet1_url, sheet2_url) = SHEET_SETS.get(sys_platform)
     # Initializing objects
-    web_page = GoogleSheets(driver, url=SHEET1_URL).open()
+    web_page = GoogleSheets(driver, url=sheet1_url).open()
     nav = Navigation(driver)
 
     # Copy the header row
@@ -49,7 +62,7 @@ def test_copy_table_header(driver: Firefox, sys_platform):
         web_page.undo(sys_platform)
 
         # Paste the header row in a different sheet
-        nav.search(SHEET2_URL)
+        nav.search(sheet2_url)
         time.sleep(2)
         web_page.paste(sys_platform)
 
