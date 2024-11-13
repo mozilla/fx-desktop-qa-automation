@@ -30,7 +30,7 @@ SHEET_SETS = {
 
 
 @pytest.mark.headed
-@pytest.mark.xfail(platform.system == "Linux", reason="Unstable in TC linux")
+@pytest.mark.xfail(platform.system() == "Linux", reason="Unstable in TC linux")
 def test_copy_table_header(driver: Firefox):
     """
     C936860: Verify that copying and pasting header from tables work
