@@ -294,6 +294,12 @@
         "groups": []
     },
 
+    "bookmarks-toolbar": {
+        "selectorData": "PersonalToolbar",
+        "strategy": "id",
+        "groups": []
+    },
+
     "forget-button": {
         "selectorData": "panic-button",
         "strategy": "id",
