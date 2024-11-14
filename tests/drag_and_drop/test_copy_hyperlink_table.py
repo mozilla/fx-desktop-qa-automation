@@ -89,6 +89,9 @@ def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
         driver.switch_to.window(driver.window_handles[0])
 
     finally:
-        # Undo the paste operation
+        # Undo the paste operation; ESC key is pressed twice to exit cell focus and clear the hover state on the link
+        web_page.perform_key_combo(Keys.ESCAPE)
+        web_page.perform_key_combo(Keys.ESCAPE)
+        web_page.perform_key_combo(Keys.UP)
         web_page.undo()
         sleep(2)
