@@ -1,3 +1,4 @@
+import platform
 import time
 
 import pytest
@@ -12,27 +13,41 @@ def test_case():
     return "936860"
 
 
-SHEET1_URL = "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=0#gid=0"
-SHEET2_URL = "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=1556347227#gid=1556347227"
+SHEET_SETS = {
+    "Darwin": (
+        "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=1469667334#gid=1469667334",
+        "https://docs.google.com/spreadsheets/d/1ra7K1TAlns-X0mG93XWXC-P3lIEtLYuvXTGOVL8IqU8/edit?gid=1776043530#gid=1776043530",
+    ),
+    "Windows": (
+        "https://docs.google.com/spreadsheets/d/1cxDppB_yNeMoUSaOqK-Hq6OS08kbOSeLck6Kypyb4zg/edit?gid=1469667334#gid=1469667334",
+        "https://docs.google.com/spreadsheets/d/1cxDppB_yNeMoUSaOqK-Hq6OS08kbOSeLck6Kypyb4zg/edit?gid=1776043530#gid=1776043530",
+    ),
+    "Linux": (
+        "https://docs.google.com/spreadsheets/d/1CuxT_RgsLonZSGXXhCgc4648mGtXUW1iii0qPwMxn3Q/edit?gid=1469667334#gid=1469667334",
+        "https://docs.google.com/spreadsheets/d/1CuxT_RgsLonZSGXXhCgc4648mGtXUW1iii0qPwMxn3Q/edit?gid=1776043530#gid=1776043530",
+    ),
+}
 
 
-def test_copy_table_header(driver: Firefox, sys_platform):
+@pytest.mark.headed
+def test_copy_table_header(driver: Firefox):
     """
     C936860: Verify that copying and pasting header from tables work
     """
+    (sheet1_url, sheet2_url) = SHEET_SETS.get(platform.system())
     # Initializing objects
-    web_page = GoogleSheets(driver, url=SHEET1_URL).open()
+    web_page = GoogleSheets(driver, url=sheet1_url).open()
     nav = Navigation(driver)
 
     # Copy the header row
     web_page.select_num_rows(1)
-    web_page.copy(sys_platform)
+    web_page.copy()
 
     try:
         # Paste the header row in the same sheet
         for _ in range(3):
             web_page.perform_key_combo(Keys.ARROW_RIGHT, Keys.DOWN)
-        web_page.paste(sys_platform)
+        web_page.paste()
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
@@ -46,12 +61,13 @@ def test_copy_table_header(driver: Firefox, sys_platform):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo(sys_platform)
+        web_page.undo()
+        time.sleep(2)
 
         # Paste the header row in a different sheet
-        nav.search(SHEET2_URL)
+        nav.search(sheet2_url)
         time.sleep(2)
-        web_page.paste(sys_platform)
+        web_page.paste()
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
@@ -65,6 +81,8 @@ def test_copy_table_header(driver: Firefox, sys_platform):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo(sys_platform)
+        web_page.undo()
+        time.sleep(2)
     finally:
-        web_page.undo(sys_platform)
+        web_page.undo()
+        time.sleep(2)

@@ -2489,6 +2489,13 @@ Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: bookmarks-toolbar
+Selector Data: PersonalToolbar
+Description: Bookmarks Toolbar
+Location: Below the Navigation bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: download-panel-item
 Selector Data: vbox[class='downloadContainer']
 Description: Downloaded item in the download panel
