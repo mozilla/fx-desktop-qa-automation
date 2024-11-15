@@ -572,5 +572,30 @@
         "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
         "strategy": "css",
         "groups": []
+    },
+
+    "zoom-text-only": {
+        "selectorData": "zoomText",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "zoom-level": {
+        "selectorData": "defaultZoom",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "zoom-level-menu": {
+        "selectorData": "in-menulist",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "zoom-level-choice": {
+        "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value']",
+        "strategy": "css",
+        "groups": []
     }
+
 }
