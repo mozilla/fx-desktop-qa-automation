@@ -10,7 +10,7 @@ from modules.page_object_generics import GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "65064"
+    return "165064"
 
 TEST_PAGE = "https://www.example.com"
 
