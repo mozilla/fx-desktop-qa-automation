@@ -27,6 +27,12 @@
         "selectorData": "grid-table-container",
         "strategy": "class",
         "groups": []
+    },
+
+    "selection-border": {
+        "selectorData": "selection-border",
+        "strategy": "class",
+        "groups": []
     }
 
 }
