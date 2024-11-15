@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -39,5 +41,6 @@ def test_open_bookmark_in_new_window_via_toolbar_context_menu(driver: Firefox):
 
     # Verify that the test page is opened in a new normal window
     driver.switch_to.window(driver.window_handles[-1])
-    nav.element_not_visible("private-browsing-icon")
+    assert not nav.is_private()
+
     page.url_contains("mozilla")
