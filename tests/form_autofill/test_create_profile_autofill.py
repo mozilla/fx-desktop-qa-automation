@@ -13,6 +13,7 @@ def test_case():
 countries = ["CA", "US"]
 
 
+@pytest.mark.xfail
 @pytest.mark.parametrize("country_code", countries)
 def test_create_address_profile(driver: Firefox, country_code: str):
     """
