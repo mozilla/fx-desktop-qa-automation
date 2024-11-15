@@ -35,7 +35,7 @@ def test_open_bookmark_in_new_window_via_toolbar_context_menu(driver: Firefox):
             "bookmark-by-title", labels=["Internet for people"]
         )
         context_menu.context_click(bookmarked_page)
-        context_menu.get_element("context-menu-toolbar-open-in-new-window").click()
+        context_menu.click_and_hide_menu("context-menu-toolbar-open-in-new-window")
 
     # Verify that the test page is opened in a new normal window
     driver.switch_to.window(driver.window_handles[-1])

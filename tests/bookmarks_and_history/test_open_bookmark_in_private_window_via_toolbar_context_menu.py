@@ -36,9 +36,9 @@ def test_open_bookmark_in_new_private_window_via_toolbar_context_menu(driver: Fi
             "bookmark-by-title", labels=["Internet for people"]
         )
         context_menu.context_click(bookmarked_page)
-        context_menu.get_element(
+        context_menu.click_and_hide_menu(
             "context-menu-toolbar-open-in-new-private-window"
-        ).click()
+        )
 
     # Verify that the test page is opened in a new private window
     driver.switch_to.window(driver.window_handles[-1])
