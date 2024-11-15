@@ -18,7 +18,7 @@ def test_google_search_code(driver: Firefox):
     Only tests the Awesome bar portion of the test for Incident smoke
     """
 
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
 
     # Check code generated from the Awesome bar search
     fx_code = "client=firefox-b-1-d"

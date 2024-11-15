@@ -19,7 +19,7 @@ GHA = environ.get("GITHUB_ACTIONS") == "true"
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     driver.get(video_url)
     play_button = driver.find_element(By.CSS_SELECTOR, ".ytp-play-button")
     play_button.click()

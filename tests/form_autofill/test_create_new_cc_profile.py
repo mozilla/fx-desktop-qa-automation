@@ -3,7 +3,6 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
@@ -13,15 +12,12 @@ def test_case():
     return "122389"
 
 
-@pytest.mark.xfail
 def test_create_new_cc_profile(driver: Firefox):
     """
     C122389, tests you can create and save a new Credit Card profile
     """
     # instantiate objects
-    nav = Navigation(driver)
     util = Utilities()
-    nav.open()
     browser_action_obj = BrowserActions(driver)
 
     # go to about:preferences#privacy and open Saved Payment Methods

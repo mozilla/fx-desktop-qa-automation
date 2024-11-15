@@ -22,7 +22,7 @@ def test_user_can_forget_history(driver: Firefox):
     """
     C174072: Verify that the user can Forget all the history from the last 5 minutes
     """
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     panel_ui = PanelUi(driver)
     nav = Navigation(driver)
     forget_panel = ForgetPanel(driver)

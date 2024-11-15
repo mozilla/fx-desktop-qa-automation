@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
@@ -14,18 +13,15 @@ def test_case():
 countries = ["CA", "US"]
 
 
-@pytest.mark.xfail
 @pytest.mark.parametrize("country_code", countries)
 def test_create_address_profile(driver: Firefox, country_code: str):
     """
     C122348, creating an address profile
     """
-    nav = Navigation(driver)
     about_prefs_obj = AboutPrefs(driver, category="privacy")
     util = Utilities()
     browser_action_obj = BrowserActions(driver)
 
-    nav.open()
     about_prefs_obj.open()
 
     # create sample data

@@ -25,7 +25,7 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     triggers the adaptive history autofill.
     """
 
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     tabs = TabBar(driver)
 
     nav.search("https://www.nationalgeographic.com/science/")

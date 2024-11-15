@@ -14,7 +14,7 @@ def test_open_new_tab_plus(driver: Firefox):
     """
     C134453 - A new tab can be opened from the dedicated button ("+")
     """
-    browser = TabBar(driver).open()
+    browser = TabBar(driver)
     driver.get("about:robots")
     browser.set_chrome_context()
     browser.new_tab_by_button()

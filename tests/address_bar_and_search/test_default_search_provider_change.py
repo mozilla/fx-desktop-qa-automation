@@ -22,7 +22,7 @@ def test_default_search_provider_change(driver: Firefox):
     """
 
     # Create objects
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     about_config = AboutConfig(driver)
     search_term = "what is life?"
 

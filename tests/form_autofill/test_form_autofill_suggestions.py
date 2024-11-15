@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, Navigation
+from modules.browser_object import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
 
@@ -14,17 +14,14 @@ def test_case():
 indices = ["1", "2"]
 
 
-@pytest.mark.xfail
 @pytest.mark.parametrize("index", indices)
 def test_form_autofill_suggestions(driver: Firefox, index: str):
     """
     C122401, checks that the corresponding autofill suggestion autofills the fields correctly
     """
     # instantiate objects
-    nav = Navigation(driver)
     util = Utilities()
 
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
 

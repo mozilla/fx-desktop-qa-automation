@@ -30,7 +30,7 @@ def test_google_withads_url_bar_us(driver: Firefox):
     """
 
     # instantiate objects
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     util = Utilities()
 
     nav.search("iphone")

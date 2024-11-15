@@ -6,7 +6,6 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import CreditCardFill
@@ -22,14 +21,12 @@ tabs = [i for i in range(4)]
 
 
 @pytest.mark.parametrize("num_tabs", tabs)
-@pytest.mark.unstable
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     """
     C122390, ensures that editing a credit card profile in the about:prefs
     has the correct behaviour
     """
     # instantiate objects
-    nav = Navigation(driver)
     about_prefs_obj = AboutPrefs(driver, category="privacy")
     util = Utilities()
     browser_action_obj = BrowserActions(driver)
@@ -37,7 +34,6 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     autofill_popup_obj = AutofillPopup(driver)
 
     # fill in cc information
-    nav.open()
     credit_card_fill_obj.open()
     credit_card_sample_data_original = util.fake_credit_card_data()
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data_original)
