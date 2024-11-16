@@ -116,6 +116,11 @@ class BasePage(Page):
             else self.driver.CONTEXT_CHROME
         )
 
+    def is_private(self):
+        """Determine if current browsing context is private"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            return "Private Browsing" in self.driver.title
+
     def custom_wait(self, **kwargs) -> WebDriverWait:
         """
         Create a custom WebDriverWait object, refer to Selenium docs
@@ -671,8 +676,7 @@ class BasePage(Page):
 
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
-        handles = self.driver.window_handles
-        self.driver.switch_to.window(handles[-1])
+        self.driver.switch_to.window(self.driver.window_handles[-1])
         return self
 
     def wait_for_num_windows(self, num: int) -> Page:
