@@ -3153,13 +3153,6 @@ Location: In the Reader View Toolbar Text and Layout options dialog.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```
-Selector name: toolbar-size-plus
-Selector Data: "plus-button"
-Description: The decrease font size button
-Location: In the Reader View Toolbar Text and Layout options dialog.
-Path to .json: modules/data/reader_view.components.json
-```
-```
 Selector name: toolbar-textsize-plus
 Selector Data: "text-size-plus-button"
 Description: The increase font size button

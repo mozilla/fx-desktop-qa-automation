@@ -23,6 +23,7 @@
         "groups": []
     },
 
+
     "reader-toolbar-panel-sans-serif": {
         "selectorData": "sans-serif-button",
         "strategy": "class",
@@ -41,19 +42,13 @@
         "groups": []
     },
 
-    "toolbar-textsize-minus": {
+    "toolbar-text-size-minus": {
         "selectorData": "text-size-minus-button",
         "strategy": "class",
         "groups": []
     },
 
-    "toolbar-size-plus": {
-        "selectorData": "plus-button",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "toolbar-textsize-plus": {
+    "toolbar-text-size-plus": {
         "selectorData": "text-size-plus-button",
         "strategy": "class",
         "groups": []
@@ -65,9 +60,9 @@
         "groups": []
     },
 
-    "toolbar-width-plus": {
-        "selectorData": "content-width-plus-button",
-        "strategy": "class",
+    "toolbar-content-width-slider": {
+        "selectorData": "content-width-slider",
+        "strategy": "id",
         "groups": []
     },
 

@@ -838,7 +838,7 @@ class BasePage(Page):
 
         # Parse the transform matrix to extract the scale factor (e.g., matrix(a, b, c, d, e, f))
         if css_transform_scale:
-            scale_factor = float(css_transform_scale.split('(')[1].split(',')[0])
+            scale_factor = float(css_transform_scale.split("(")[1].split(",")[0])
             return scale_factor
 
         # Default return if neither zoom nor transform is set

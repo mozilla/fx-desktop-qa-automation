@@ -103,9 +103,9 @@ class ReaderView(BasePage):
         Sends the Right and Left keys to the slider to move the selected point.
         """
         if increase:
-            slider.send_keys(Keys.RIGHT)
+            slider.send_keys(Keys.ARROW_RIGHT)
         else:
-            slider.send_keys(Keys.LEFT)
+            slider.send_keys(Keys.ARROW_LEFT)
         return self
 
     def change_slider_element_shadow_parent(self, slider_parent: str) -> BasePage:
