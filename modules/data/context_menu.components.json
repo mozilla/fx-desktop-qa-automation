@@ -197,5 +197,11 @@
         "selectorData": "placesContext_open:newwindow",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-toolbar-open-all-bookmarks": {
+        "selectorData": "placesContext_openBookmarkContainer:tabs",
+        "strategy": "id",
+        "groups": []
     }
 }

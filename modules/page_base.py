@@ -116,6 +116,11 @@ class BasePage(Page):
             else self.driver.CONTEXT_CHROME
         )
 
+    def is_private(self):
+        """Determine if current browsing context is private"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            return "Private Browsing" in self.driver.title
+
     def custom_wait(self, **kwargs) -> WebDriverWait:
         """
         Create a custom WebDriverWait object, refer to Selenium docs
@@ -671,8 +676,7 @@ class BasePage(Page):
 
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
-        handles = self.driver.window_handles
-        self.driver.switch_to.window(handles[-1])
+        self.driver.switch_to.window(self.driver.window_handles[-1])
         return self
 
     def wait_for_num_windows(self, num: int) -> Page:
@@ -811,3 +815,31 @@ class BasePage(Page):
             pass
         self.set_content_context()
         return _loaded
+
+    def get_css_zoom(self):
+        """
+        Checks the CSS zoom and transform scale to determine the current zoom level.
+        """
+        # Retrieve the CSS zoom property on the body element
+        css_zoom = self.driver.execute_script(
+            "return window.getComputedStyle(document.body).zoom"
+        )
+        if css_zoom:
+            return float(css_zoom)
+
+        # If zoom property is not explicitly set, check the transform scale
+        css_transform_scale = self.driver.execute_script("""
+            const transform = window.getComputedStyle(document.body).transform;
+            if (transform && transform !== 'none') {
+                return transform;
+            } else {
+                return null;
+        """)
+
+        # Parse the transform matrix to extract the scale factor (e.g., matrix(a, b, c, d, e, f))
+        if css_transform_scale:
+            scale_factor = float(css_transform_scale.split('(')[1].split(',')[0])
+            return scale_factor
+
+        # Default return if neither zoom nor transform is set
+        return 1.0

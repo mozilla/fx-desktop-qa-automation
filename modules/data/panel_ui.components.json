@@ -299,5 +299,11 @@
         "selectorData": "appMenu-print-button2",
         "strategy": "id",
         "groups": []
+    },
+
+    "bookmarks-toolbar": {
+        "selectorData": "PlacesToolbar",
+        "strategy": "id",
+        "groups": []
     }
 }
