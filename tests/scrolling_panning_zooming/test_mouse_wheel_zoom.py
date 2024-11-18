@@ -15,7 +15,9 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "466431"
 
+
 TEST_PAGE = "https://www.example.com"
+
 
 # Skip this test if running on macOS
 @pytest.mark.skipif(platform.system() == "Darwin", reason="Test skipped on macOS due to incompatible zoom controls")
@@ -71,13 +73,8 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # Check that the zoom button no longer exists
     with driver.context(driver.CONTEXT_CHROME):
-        zoom_button_missing = nav.element_does_not_exist("toolbar-zoom-level")
-        logging.info(f"Zoom button existence after reset: {'Not Found' if zoom_button_missing else 'Found'}")
+        nav.element_does_not_exist("toolbar-zoom-level")
 
-        # Assert that the zoom button is no longer present
-        assert zoom_button_missing, (
-            "Expected the zoom button to be missing after zoom reset, but it was found."
-        )
 
     # Assert that the X-coordinate after reset is back to the initial value
     assert reset_position == initial_position, (
