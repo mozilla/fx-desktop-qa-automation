@@ -1,11 +1,11 @@
-import pytest
-from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver import ActionChains
-import time
 import logging
 import platform
+import time
+
+import pytest
+from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
@@ -20,7 +20,10 @@ TEST_PAGE = "https://www.example.com"
 
 
 # Skip this test if running on macOS
-@pytest.mark.skipif(platform.system() == "Darwin", reason="Test skipped on macOS due to incompatible zoom controls")
+@pytest.mark.skipif(
+    platform.system() == "Darwin",
+    reason="Test skipped on macOS due to incompatible zoom controls",
+)
 def test_mouse_wheel_zoom(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
@@ -35,16 +38,18 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # Locate the main <div> element on the page
     div = driver.find_element(By.TAG_NAME, "div")
-    initial_position = div.location['x']  # Get the initial X position of the div
+    initial_position = div.location["x"]  # Get the initial X position of the div
     logging.info(f"Initial X position of div: {initial_position}")
 
     # Initialize ActionChains for zooming with Ctrl + Mouse Wheel
     actions = ActionChains(driver)
 
     # **Step 1**: Zoom in using Ctrl + Mouse Wheel Scroll Up
-    actions.key_down(Keys.CONTROL).scroll_by_amount(0, -100).key_up(Keys.CONTROL).perform()
+    actions.key_down(Keys.CONTROL).scroll_by_amount(0, -100).key_up(
+        Keys.CONTROL
+    ).perform()
     time.sleep(1)  # Allow time for the zoom effect to take place
-    zoomed_in_position = driver.find_element(By.TAG_NAME, "div").location['x']
+    zoomed_in_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-in: {zoomed_in_position}")
 
     # Switch to chrome context to check zoom level in the toolbar
@@ -54,9 +59,9 @@ def test_mouse_wheel_zoom(driver: Firefox):
         logging.info(f"Zoom level after zoom-in: {zoom_level}")
 
         # Assert that the zoom level label is "110%" after zooming in
-        assert zoom_level == "110%", (
-            f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
-        )
+        assert (
+            zoom_level == "110%"
+        ), f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
 
     # Assert that the X-coordinate increases after zooming in
     assert zoomed_in_position < initial_position, (
@@ -66,25 +71,26 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # **Step 2**: Reset zoom to 100% using the keyboard shortcut (Ctrl + 0)
     with driver.context(driver.CONTEXT_CHROME):
-        actions.key_down(Keys.CONTROL).send_keys('0').key_up(Keys.CONTROL).perform()
+        actions.key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
     time.sleep(1)  # Allow time for reset effect to take place
-    reset_position = driver.find_element(By.TAG_NAME, "div").location['x']
+    reset_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-reset: {reset_position}")
 
     # Check that the zoom button no longer exists
     with driver.context(driver.CONTEXT_CHROME):
-        nav.element_does_not_exist("toolbar-zoom-level")
-
+        nav.element_not_visible("toolbar-zoom-level")
 
     # Assert that the X-coordinate after reset is back to the initial value
-    assert reset_position == initial_position, (
-        f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
-    )
+    assert (
+        reset_position == initial_position
+    ), f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
 
     # **Step 3**: Zoom out using Ctrl + Mouse Wheel Scroll Down
-    actions.key_down(Keys.CONTROL).scroll_by_amount(0, 100).key_up(Keys.CONTROL).perform()
+    actions.key_down(Keys.CONTROL).scroll_by_amount(0, 100).key_up(
+        Keys.CONTROL
+    ).perform()
     time.sleep(1)  # Allow time for the zoom effect to take place
-    zoomed_out_position = driver.find_element(By.TAG_NAME, "div").location['x']
+    zoomed_out_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-out: {zoomed_out_position}")
 
     # Switch to chrome context to check zoom level in the toolbar
@@ -93,9 +99,9 @@ def test_mouse_wheel_zoom(driver: Firefox):
         logging.info(f"Zoom level after zoom-out: {zoom_level}")
 
         # Assert that the zoom level label is "90%" after zooming out
-        assert zoom_level == "90%", (
-            f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
-        )
+        assert (
+            zoom_level == "90%"
+        ), f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
 
     # Assert that the X-coordinate decreases after zooming out
     assert zoomed_out_position > initial_position, (

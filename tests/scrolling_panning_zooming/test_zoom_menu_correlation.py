@@ -1,18 +1,22 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import logging
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import PanelUi
 from modules.page_object_generics import GenericPage
+
 
 @pytest.fixture()
 def test_case():
     return "165064"
 
+
 TEST_PAGE = "https://www.example.com"
+
 
 def test_zoom_level_div_position(driver: Firefox):
     """
@@ -27,7 +31,7 @@ def test_zoom_level_div_position(driver: Firefox):
 
     # Locate the main <div> element on the page
     div = driver.find_element(By.TAG_NAME, "div")
-    initial_position = div.location['x']  # Get the initial X position of the div
+    initial_position = div.location["x"]  # Get the initial X position of the div
     logging.info(f"Initial X position of div: {initial_position}")
 
     # Open the Firefox Menu panel
@@ -36,7 +40,7 @@ def test_zoom_level_div_position(driver: Firefox):
 
     # **Step 1**: Zoom in using the "zoom-enlarge" control
     panel.click_on("zoom-enlarge")
-    zoomed_in_position = driver.find_element(By.TAG_NAME, "div").location['x']
+    zoomed_in_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-in: {zoomed_in_position}")
 
     # Switch to chrome context to check zoom level in the toolbar
@@ -46,9 +50,9 @@ def test_zoom_level_div_position(driver: Firefox):
         logging.info(f"Zoom level after zoom-in: {zoom_level}")
 
         # Assert that the zoom level label is "110%" after zooming in
-        assert zoom_level == "110%", (
-            f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
-        )
+        assert (
+            zoom_level == "110%"
+        ), f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
 
     # Assert that the X-coordinate increases after zooming in
     assert zoomed_in_position < initial_position, (
@@ -58,17 +62,17 @@ def test_zoom_level_div_position(driver: Firefox):
 
     # **Step 2**: Reset zoom to 100% using the "zoom-reset" control
     panel.click_on("zoom-reset")
-    reset_position = driver.find_element(By.TAG_NAME, "div").location['x']
+    reset_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-reset: {reset_position}")
 
     # Assert that the X-coordinate after reset is back to the initial value
-    assert reset_position == initial_position, (
-        f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
-    )
+    assert (
+        reset_position == initial_position
+    ), f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
 
     # **Step 3**: Zoom out using the "zoom-reduce" control
     panel.click_on("zoom-reduce")
-    zoomed_out_position = driver.find_element(By.TAG_NAME, "div").location['x']
+    zoomed_out_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-out: {zoomed_out_position}")
 
     # Switch to chrome context to check zoom level in the toolbar
@@ -77,9 +81,9 @@ def test_zoom_level_div_position(driver: Firefox):
         logging.info(f"Zoom level after zoom-out: {zoom_level}")
 
         # Assert that the zoom level label is "90%" after zooming out
-        assert zoom_level == "90%", (
-            f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
-        )
+        assert (
+            zoom_level == "90%"
+        ), f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
 
     # Assert that the X-coordinate decreases after zooming out
     assert zoomed_out_position > initial_position, (
