@@ -552,5 +552,11 @@
             "selectorData": "blocked-permissions-container",
             "strategy": "id",
             "groups": []
+    },
+
+     "toolbar-zoom-level": {
+        "selectorData": "urlbar-zoom-button",
+        "strategy": "id",
+        "groups": []
     }
 }
