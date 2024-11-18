@@ -1,4 +1,5 @@
 import platform
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox, Keys
@@ -31,8 +32,11 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
     web_page = GoogleSheets(driver, url=SHEET1_URL).open()
 
     # Copy several rows/columns
+    sleep(2)
     web_page.select_num_rows(3)
+    sleep(2)
     web_page.copy()
+    sleep(1)
 
     # Paste table in the second online editor
     GoogleSheets(driver, url=SHEET2_URL).open()
