@@ -12,7 +12,6 @@ def test_case():
     return "122404"
 
 
-@pytest.mark.xfail
 def test_autofill_four_fields(driver: Firefox):
     """
     C122404, tests that the form fields are filled corrected after saving a profile.

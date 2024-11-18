@@ -1,5 +1,6 @@
 {
     "context": "chrome",
+    "do-not-cache": true,
     "autofill-panel": {
         "selectorData": "PopupAutoComplete",
         "strategy": "id",
@@ -38,6 +39,12 @@
 
     "select-form-option": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
+        "strategy":"css",
+        "groups": []
+    },
+
+    "select-form-option-by-value": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']",
         "strategy":"css",
         "groups": []
     },
