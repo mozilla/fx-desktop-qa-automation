@@ -26,7 +26,7 @@ def test_copy_entire_row_column(driver: Firefox):
 
     try:
         # Copy a row
-        web_page.select_num_rows(1)
+        web_page.select_num_rows(2)
         web_page.copy()
 
         # Paste the row in the same sheet

@@ -25,22 +25,29 @@ def test_copy_entire_row_column(driver: Firefox):
     nav = Navigation(driver)
 
     try:
-        # Copy the table with border
+
+        counter_before = 0
+        for el in web_page.get_elements("range-border"):
+            if "opacity: 1" in el.get_attribute("style"):
+                counter_before += 1
+        logging.warning(counter_before)
+
         web_page.select_entire_table()
         web_page.copy()
 
-        counter = 0
-        for el in web_page.get_elements("range-border"):
-            if "opacity: 1" in el.get_attribute("style"):
-                counter += 1
-        logging.warning(counter)
 
+        # Copy the table with border
 
         # Paste the row in the same sheet
         for _ in range(3):
             web_page.actions.send_keys(Keys.ARROW_RIGHT, Keys.DOWN).perform()
         web_page.paste()
-        time.sleep(3)
+        web_page.actions.send_keys(Keys.ARROW_RIGHT)
+
+        for _ in range(3):
+            web_page.actions.send_keys(Keys.ARROW_RIGHT, Keys.DOWN).perform()
+        web_page.paste()
+        time.sleep(6)
         counter = 0
         for el in web_page.get_elements("range-border"):
             if "opacity: 1" in el.get_attribute("style"):
@@ -61,10 +68,21 @@ def test_copy_entire_row_column(driver: Firefox):
         #         counter += 1
         # logging.warning(counter)
 
-        # # Paste the row in a different sheet
-        # nav.search(SHEET2_URL)
-        # time.sleep(2)
-        # web_page.paste()
+        # Paste the row in a different sheet
+        nav.search(SHEET2_URL)
+        time.sleep(2)
+        counter_before = 0
+        for el in web_page.get_elements("range-border"):
+            if "opacity: 1" in el.get_attribute("style"):
+                counter_before += 1
+        logging.warning(counter_before)
+        web_page.paste()
+
+        counter = 0
+        for el in web_page.get_elements("range-border"):
+            if "opacity: 1" in el.get_attribute("style"):
+                counter += 1
+        logging.warning(counter)
 
         # # Verify that the row is pasted properly
         # for i in range(3):

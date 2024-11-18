@@ -30,11 +30,11 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
     """
     # Initializing objects
     web_page = GoogleSheets(driver, url=SHEET1_URL).open()
+    import logging
 
     # Copy several rows/columns
     sleep(2)
     web_page.select_num_rows(3)
-    sleep(2)
     web_page.copy()
     sleep(1)
 
@@ -51,11 +51,10 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
                     "formula-box-input", "innerHTML", expected_value
                 )
                 # Move to the next cell to the right
-                web_page.perform_key_combo(Keys.RIGHT)
-            # Move to the beginning of the next row
-            web_page.perform_key_combo(Keys.HOME)
-            # Move down to the next row
-            web_page.perform_key_combo(Keys.DOWN)
-    finally:
+                web_page.perform_key_combo(Keys.TAB)
+        web_page.perform_key_combo(Keys.BACK_SPACE)
+    except:
         # Undo the paste operation
         web_page.undo()
+    finally:
+        sleep(2)
