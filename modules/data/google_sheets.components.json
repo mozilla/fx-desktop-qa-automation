@@ -29,8 +29,8 @@
         "groups": []
     },
 
-    "selection-border": {
-        "selectorData": "selection-border",
+    "range-border": {
+        "selectorData": "range-border",
         "strategy": "class",
         "groups": []
     }

@@ -56,8 +56,19 @@ class GoogleSheets(GenericPage):
         """Select n columns starting from the current position"""
         self.actions.key_down(Keys.CONTROL)
         self.actions.send_keys(Keys.SPACE)
+        self.actions.key_up(Keys.CONTROL).perform()
+        self.actions.key_down(Keys.SHIFT)
         for _ in range(n - 1):
-            self.actions.send_keys(Keys.ARROW_DOWN)
+            self.actions.send_keys(Keys.RIGHT)
+        self.actions.key_up(Keys.SHIFT).perform()
+        return self
+    
+    def select_entire_table(self) -> GenericPage:
+        """Select the entire table starting from the current position"""
+        self.actions.key_down(Keys.CONTROL)
+        self.actions.key_down(Keys.SHIFT)
+        self.actions.send_keys(Keys.SPACE)
+        self.actions.key_up(Keys.SHIFT)
         self.actions.key_up(Keys.CONTROL).perform()
         return self
 
