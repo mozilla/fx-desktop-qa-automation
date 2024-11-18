@@ -5,12 +5,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 import time
 import logging
+import platform
 
 from modules.browser_object_navigation import Navigation
-
-
 from modules.page_object_generics import GenericPage
-from tests.find_toolbar.test_find_in_pdf import element_parent_has_text
 
 
 @pytest.fixture()
@@ -19,10 +17,12 @@ def test_case():
 
 TEST_PAGE = "https://www.example.com"
 
+# Skip this test if running on macOS
+@pytest.mark.skipif(platform.system() == "Darwin", reason="Test skipped on macOS due to incompatible zoom controls")
 def test_mouse_wheel_zoom(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
-    changes appropriately when zooming in and out using the Firefox menu controls.
+    changes appropriately when zooming in and out mouse wheel menu controls.
     Additionally, it checks that the zoom level indicator updates correctly.
     """
 
