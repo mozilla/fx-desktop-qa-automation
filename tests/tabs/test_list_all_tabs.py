@@ -19,7 +19,7 @@ def test_list_all_tabs(driver: Firefox, screenshot):
     """
     C134655, check that the List All Tabs button and menu act as expected.
     """
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     driver.get("about:blank")
     for _ in range(17):
         tabs.new_tab_by_button()

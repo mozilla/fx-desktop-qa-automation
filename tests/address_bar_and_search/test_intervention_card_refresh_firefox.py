@@ -23,7 +23,7 @@ def test_intervention_card_refresh(driver: Firefox):
     C1365204.1: regular firefox, check the intervention card
     """
     # instantiate objects and type in search bar
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     nav.set_awesome_bar()
     nav.type_in_awesome_bar("refresh firefox")
 

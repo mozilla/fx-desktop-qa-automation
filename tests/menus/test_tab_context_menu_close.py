@@ -29,7 +29,7 @@ def test_close_multiple_tabs_to_left(driver: Firefox):
     """
     C2264627.3.2: close multiple tabs actions (close all the left)
     """
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4
