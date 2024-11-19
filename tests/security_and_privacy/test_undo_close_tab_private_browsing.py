@@ -57,8 +57,7 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
         tabs.reopen_closed_tab_by_keys(sys_platform)
         tabs.wait_for_num_tabs(2)
         tabs.switch_to_new_tab()
-        logging.info(f"The observed title in the chrome context is {driver.title}")
-        tabs.title_contains("Private Browsing")
+        assert nav.is_private()
 
     logging.info(f"The observed title in the content context is {driver.title}")
-    generic_page.title_contains("About About")
+    generic_page.url_contains("about:about")

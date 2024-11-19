@@ -1522,6 +1522,13 @@ Description: Context menu option from a Toolbar bookmark
 Location: Toolbar - any bookmark context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-toolbar-open-all-bookmarks
+Selector Data: placesContext_openBookmarkContainer:tabs
+Description: Open all bookmarks from the context menu option from a Toolbar bookmark
+Location: Context menu - Toolbar
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -2289,6 +2296,13 @@ Path to .json: modules/data/navigation.components.json
 Selector name: panel-ui-button
 Selector Data: PanelUI-button
 Description: Panel UI button / hamburger menu
+Location: Far right in the toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: toolbar-zoom-level
+Selector Data: urlbar-zoom-button
+Description: Zoom level indicator 
 Location: Far right in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
@@ -3064,6 +3078,13 @@ Selector name: password-button
 Selector Data: "appMenu-passwords-button"
 Description: Password button
 Location: Hamburger Menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-toolbar
+Selector Data: "PlacesToolbar"
+Description: Bookmarks toolbar
+Location: Bookmarks toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
 #### print_preview
