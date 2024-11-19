@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import CreditCardFill
@@ -18,10 +17,8 @@ def test_delete_cc_profile(driver: Firefox):
     C122391, Ensuring that deleting cc profiles will make it so CC does not show up in the grid
     """
     # instantiate objects
-    nav = Navigation(driver)
     util = Utilities()
 
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
     browser_action_obj = BrowserActions(driver)

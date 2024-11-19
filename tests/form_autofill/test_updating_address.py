@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import AddressFill
@@ -22,7 +21,6 @@ def test_update_address(driver: Firefox, country_code: str):
     C122354 - This test verifies that after updating and saving the autofill name field, the updated value appears in the Saved Addresses section.
     """
     # Instantiate objects and open the navigation page
-    Navigation(driver).open()
     address_form_fields = AddressFill(driver).open()
     autofill_popup_panel = AutofillPopup(driver)
     util = Utilities()

@@ -24,7 +24,7 @@ def test_google_search_counts_us(driver: Firefox):
     C1365026, Test Google Search counts - urlbar US
     """
     # instantiate objects
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     nav.search("festival")
     sleep(5)
     u = Utilities()

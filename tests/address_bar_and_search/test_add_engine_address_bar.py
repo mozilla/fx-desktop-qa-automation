@@ -21,7 +21,7 @@ def test_add_search_engine_from_address_bar(driver: Firefox, site: str, domain: 
     C1365478: Test that an open search engine can be added from the address bar.
     """
     open_site_engine = site.lower()
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
 
     # Construct the full URL
     full_url = f"https://www.{open_site_engine}.{domain}"

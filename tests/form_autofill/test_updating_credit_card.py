@@ -4,7 +4,6 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import CreditCardFill
@@ -24,10 +23,8 @@ def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     """
     C122406, ensures that updating the credit card saves the correct information with no dupe profile for the name and expiry dates
     """
-    nav = Navigation(driver)
     util = Utilities()
 
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
     browser_action_obj = BrowserActions(driver)
@@ -74,10 +71,8 @@ def test_update_cc_number_new_profile(driver: Firefox):
     """
     C122406, continuation ensures that updating the credit card number saves a new card instead of updating the new one
     """
-    nav = Navigation(driver)
     util = Utilities()
 
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
     browser_action_obj = BrowserActions(driver)

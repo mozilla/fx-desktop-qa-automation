@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.browser_object_navigation import Navigation
 from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
 
@@ -17,7 +16,6 @@ def test_clear_form_credit_card(driver: Firefox):
     C122581, Test clear form credit card
     """
     # instantiate objects
-    Navigation(driver).open()
     credit_card_autofill = CreditCardFill(driver).open()
     autofill_popup = AutofillPopup(driver)
     util = Utilities()

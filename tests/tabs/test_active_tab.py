@@ -13,7 +13,7 @@ def test_active_tab(driver: Firefox):
     """
     C134646, ensures that the selected tab is highlighted
     """
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     num_tabs = 5
 
     # opening 5 tabs

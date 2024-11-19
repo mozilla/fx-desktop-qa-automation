@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import CreditCardFill
@@ -18,10 +17,8 @@ def test_enable_disable_form_autofill_cc(driver: Firefox):
     C122388, tests that after saving cc information and toggling the autofill credit
     cards box the dropdown does not appear.
     """
-    nav = Navigation(driver)
     util = Utilities()
 
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
 

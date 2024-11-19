@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.browser_object_navigation import Navigation
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
@@ -18,13 +17,11 @@ def test_autofill_credit_card_doorhanger(driver: Firefox):
     C122392, ensures that pressing not now > never save cards toggles off the setting
     """
     # instantiate objects
-    nav = Navigation(driver)
     about_prefs_obj = AboutPrefs(driver, category="privacy")
     autofill_popup_obj = AutofillPopup(driver)
     util = Utilities()
 
     # navigate to page
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
 
     # fill data
