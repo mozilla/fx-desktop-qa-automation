@@ -3,8 +3,7 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+
 from modules.browser_object import PanelUi
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage

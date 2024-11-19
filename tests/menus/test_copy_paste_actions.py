@@ -4,7 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import ContextMenu, Navigation
+from modules.browser_object import ContextMenu
 from modules.page_object import GoogleSearch
 from modules.page_object_autofill import LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
@@ -73,7 +73,6 @@ def test_text_area_copy_paste(driver: Firefox):
 
 
 def test_search_field_copy_paste(driver: Firefox):
-    Navigation(driver).open()
     context_menu = ContextMenu(driver)
     google_search = GoogleSearch(driver).open()
     util = Utilities()

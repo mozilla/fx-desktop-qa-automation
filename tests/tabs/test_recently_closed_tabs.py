@@ -27,7 +27,7 @@ link_set = set(links)
 def test_recently_closed_tabs(driver: Firefox):
     """C134648 - Verify that the recently closed tab can be reopened from the context menu"""
     # open 6 tabs
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     panel = PanelUi(driver)
     num_tabs = 6
 

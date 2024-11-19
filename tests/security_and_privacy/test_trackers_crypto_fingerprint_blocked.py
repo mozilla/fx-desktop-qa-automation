@@ -22,7 +22,7 @@ def test_cross_site_trackrs_crypto_fingerprinter_blocked(driver: Firefox):
     # instantiate objs
     tracker_page = GenericPage(driver, url=TRACKER_URL)
     tracker_panel = TrackerPanel(driver)
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
 
     # hard wait for fingerprinter blocker
     sleep(4)

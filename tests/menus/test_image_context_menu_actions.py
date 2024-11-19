@@ -119,7 +119,7 @@ def test_copy_image_link(driver: Firefox):
     C2637622.3: copy an image link and verify its correct
     """
     # create objs
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ContextMenu(driver)
     tabs = TabBar(driver)
