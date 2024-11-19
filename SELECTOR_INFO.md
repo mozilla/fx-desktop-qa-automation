@@ -3174,20 +3174,6 @@ Location: In the Reader View Toolbar Text and Layout options dialog.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```
-Selector name: toolbar-line-height-plus
-Selector Data: "line-height-plus-button"
-Description: The line spacing slide right option
-Location: In the Reader View Toolbar Text and Layout options dialog.
-Path to .json: modules/data/reader_view.components.json
-```
-```
-Selector name: toolbar-line-height-minus
-Selector Data: "line-height-minus-button"
-Description: The line spacing slide left option
-Location: In the Reader View Toolbar Text and Layout options dialog.
-Path to .json: modules/data/reader_view.components.json
-```
-```
 Selector name: toolbar-theme
 Selector Data: "button[class='dropdown-toggle toolbar-button colors-button']"
 Description: The Theme button

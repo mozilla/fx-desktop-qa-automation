@@ -60,24 +60,6 @@
         "groups": []
     },
 
-    "toolbar-content-width-slider": {
-        "selectorData": "content-width-slider",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "toolbar-line-height-minus": {
-        "selectorData": "line-height-minus-button",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "toolbar-line-height-plus": {
-        "selectorData": "line-height-plus-button",
-        "strategy": "class",
-        "groups": []
-    },
-
     "toolbar-theme": {
         "selectorData": "button[class='dropdown-toggle toolbar-button colors-button']",
         "strategy": "css",

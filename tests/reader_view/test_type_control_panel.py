@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 from modules.browser_object import ReaderView
@@ -95,83 +96,82 @@ def test_type_control_panel_size(driver: Firefox, type: str):
         )
 
 
-# @pytest.mark.unstable
-# @pytest.mark.parametrize("type", size_controllers)
-# def test_type_control_panel_width(driver: Firefox, type: str):
-#     """
-#     C130919: Ensure the functionality of the type control panels works
-#     """
-#     web_page = GenericPage(driver, url=READER_VIEW_URL)
-#     reader_view = ReaderView(driver)
-#     util = Utilities()
-#     actions = ActionChains(driver)
-#
-#     web_page.open()
-#     reader_view.open_reader_view_searchbar()
-#     reader_view.click_toolbar_option("toolbar-type")
-#
-#     body = web_page.get_element("page-body")
-#     width_before = int(
-#         util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
-#     )
-#
-#     width_slider = reader_view.get_element("toolbar-content-width-slider")
-#
-#     if type == "minus":
-#         actions.click_and_hold(width_slider).move_by_offset(-50, 0).release().perform()
-#         reader_view.wait.until(
-#             lambda _: int(
-#                 util.remove_all_non_numbers(
-#                     body.value_of_css_property("--content-width")
-#                 )
-#             )
-#             < width_before
-#         )
-#     else:
-#         actions.click_and_hold(width_slider).move_by_offset(100, 0).release().perform()
-#         reader_view.wait.until(
-#             lambda _: int(
-#                 util.remove_all_non_numbers(
-#                     body.value_of_css_property("--content-width")
-#                 )
-#             )
-#             > width_before
-#         )
+@pytest.mark.parametrize("type", size_controllers)
+def test_type_control_panel_width(driver: Firefox, type: str):
+    """
+    C130919: Ensure the functionality of the type control panels works
+    """
+    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    reader_view = ReaderView(driver)
+    util = Utilities()
+    actions = ActionChains(driver)
+
+    web_page.open()
+    reader_view.open_reader_view_searchbar()
+    reader_view.click_toolbar_option("toolbar-type")
+
+    body = web_page.get_element("page-body")
+    width_before = int(
+        util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
+    )
+
+    if type == "minus":
+        actions.send_keys(Keys.TAB * 5).send_keys(Keys.ARROW_LEFT).perform()
+        reader_view.wait.until(
+            lambda _: int(
+                util.remove_all_non_numbers(
+                    body.value_of_css_property("--content-width")
+                )
+            )
+            < width_before
+        )
+    else:
+        actions.send_keys(Keys.TAB * 5).send_keys(Keys.ARROW_RIGHT).perform()
+        reader_view.wait.until(
+            lambda _: int(
+                util.remove_all_non_numbers(
+                    body.value_of_css_property("--content-width")
+                )
+            )
+            > width_before
+        )
 
 
-# @pytest.mark.unstable
-# @pytest.mark.parametrize("type", size_controllers)
-# def test_type_control_panel_line_height(driver: Firefox, type: str):
-#     """
-#     C130919: Ensure the functionality of the type control panels works
-#     """
-#     web_page = GenericPage(driver, url=READER_VIEW_URL)
-#     reader_view = ReaderView(driver)
-#     util = Utilities()
-#
-#     web_page.open()
-#     reader_view.open_reader_view_searchbar()
-#     reader_view.click_toolbar_option("toolbar-type")
-#
-#     body = web_page.get_element("page-body")
-#     height_before = int(
-#         util.remove_all_non_numbers(body.value_of_css_property("height"))
-#     )
-#     reader_view.get_element(f"toolbar-line-height-{type}").click()
-#     if type == "minus":
-#         reader_view.wait.until(
-#             lambda _: int(
-#                 util.remove_all_non_numbers(body.value_of_css_property("height"))
-#             )
-#             < height_before
-#         )
-#     else:
-#         reader_view.wait.until(
-#             lambda _: int(
-#                 util.remove_all_non_numbers(body.value_of_css_property("height"))
-#             )
-#             > height_before
-#         )
+@pytest.mark.parametrize("type", size_controllers)
+def test_type_control_panel_line_height(driver: Firefox, type: str):
+    """
+    C130919: Ensure the functionality of the type control panels works
+    """
+    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    reader_view = ReaderView(driver)
+    util = Utilities()
+    actions = ActionChains(driver)
+
+    web_page.open()
+    reader_view.open_reader_view_searchbar()
+    reader_view.click_toolbar_option("toolbar-type")
+
+    body = web_page.get_element("page-body")
+    height_before = int(
+        util.remove_all_non_numbers(body.value_of_css_property("height"))
+    )
+
+    if type == "minus":
+        actions.send_keys(Keys.TAB * 6).send_keys(Keys.ARROW_LEFT).perform()
+        reader_view.wait.until(
+            lambda _: int(
+                util.remove_all_non_numbers(body.value_of_css_property("height"))
+            )
+            < height_before
+        )
+    else:
+        actions.send_keys(Keys.TAB * 6).send_keys(Keys.ARROW_RIGHT).perform()
+        reader_view.wait.until(
+            lambda _: int(
+                util.remove_all_non_numbers(body.value_of_css_property("height"))
+            )
+            > height_before
+        )
 
 
 @pytest.mark.parametrize("theme, intended_color", themes)
