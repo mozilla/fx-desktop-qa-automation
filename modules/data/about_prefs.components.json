@@ -584,18 +584,6 @@
         "selectorData": "defaultZoom",
         "strategy": "id",
         "groups": []
-    },
-
-    "zoom-level-menu": {
-        "selectorData": "in-menulist",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "zoom-level-choice": {
-        "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value']",
-        "strategy": "css",
-        "groups": []
     }
 
 }
