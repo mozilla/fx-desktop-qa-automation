@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
@@ -62,8 +64,8 @@ def test_type_control_panel_font(driver: Firefox):
     )
 
 
-@pytest.mark.parametrize("type", size_controllers)
-def test_type_control_panel_size(driver: Firefox, type: str):
+@pytest.mark.parametrize("size", size_controllers)
+def test_type_control_panel_size(driver: Firefox, size: str):
     """
     C130919: Ensure the functionality of the type control panels works
     """
@@ -79,15 +81,17 @@ def test_type_control_panel_size(driver: Firefox, type: str):
     font_before = int(
         util.remove_all_non_numbers(body.value_of_css_property("--font-size"))
     )
-    reader_view.get_element(f"toolbar-text-size-{type}").click()
-    if type == "minus":
+
+    if size == "minus":
+        reader_view.get_element(f"toolbar-text-size-minus").click()
         reader_view.wait.until(
             lambda _: int(
                 util.remove_all_non_numbers(body.value_of_css_property("--font-size"))
             )
             < font_before
         )
-    else:
+    elif size == "plus":
+        reader_view.get_element(f"toolbar-text-size-plus").click()
         reader_view.wait.until(
             lambda _: int(
                 util.remove_all_non_numbers(body.value_of_css_property("--font-size"))
@@ -96,8 +100,8 @@ def test_type_control_panel_size(driver: Firefox, type: str):
         )
 
 
-@pytest.mark.parametrize("type", size_controllers)
-def test_type_control_panel_width(driver: Firefox, type: str):
+@pytest.mark.parametrize("size", size_controllers)
+def test_type_control_panel_width(driver: Firefox, size: str):
     """
     C130919: Ensure the functionality of the type control panels works
     """
@@ -115,7 +119,7 @@ def test_type_control_panel_width(driver: Firefox, type: str):
         util.remove_all_non_numbers(body.value_of_css_property("--content-width"))
     )
 
-    if type == "minus":
+    if size == "minus":
         actions.send_keys(Keys.TAB * 5).send_keys(Keys.ARROW_LEFT).perform()
         reader_view.wait.until(
             lambda _: int(
@@ -137,8 +141,8 @@ def test_type_control_panel_width(driver: Firefox, type: str):
         )
 
 
-@pytest.mark.parametrize("type", size_controllers)
-def test_type_control_panel_line_height(driver: Firefox, type: str):
+@pytest.mark.parametrize("size", size_controllers)
+def test_type_control_panel_line_height(driver: Firefox, size: str):
     """
     C130919: Ensure the functionality of the type control panels works
     """
@@ -156,7 +160,7 @@ def test_type_control_panel_line_height(driver: Firefox, type: str):
         util.remove_all_non_numbers(body.value_of_css_property("height"))
     )
 
-    if type == "minus":
+    if size == "minus":
         actions.send_keys(Keys.TAB * 6).send_keys(Keys.ARROW_LEFT).perform()
         reader_view.wait.until(
             lambda _: int(
