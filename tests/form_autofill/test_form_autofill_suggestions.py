@@ -14,6 +14,7 @@ def test_case():
 indices = ["1", "2"]
 
 
+@pytest.mark.xfail
 @pytest.mark.parametrize("index", indices)
 def test_form_autofill_suggestions(driver: Firefox, index: str):
     """

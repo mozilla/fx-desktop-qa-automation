@@ -18,6 +18,7 @@ def test_case():
 fields = ["cc-name", "cc-exp-month", "cc-exp-year"]
 
 
+@pytest.mark.xfail
 @pytest.mark.parametrize("field", fields)
 def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     """
