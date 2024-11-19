@@ -1,5 +1,3 @@
-import logging
-from time import sleep
 from typing import List
 
 from selenium.webdriver.support import expected_conditions as EC
@@ -102,10 +100,6 @@ class CreditCardFill(Autofill):
         ccp.click_on("select-form-option-by-value", labels=[info_list[0]])
 
         for i in range(len(info_list)):
-            logging.warning(f"expected: {info_list[i]}")
-            logging.warning(
-                f"    got : {self.get_element('form-field', labels=[self.fields[i]]).get_attribute('value')}"
-            )
             self.element_attribute_contains(
                 "form-field", "value", info_list[i], labels=[self.fields[i]]
             )
@@ -154,7 +148,7 @@ class CreditCardFill(Autofill):
         """
         ba = BrowserActions(self.driver)
         self.fill_input_element(ba, field, field_data)
-        autofill_popup_obj.click_doorhanger_button("save")
+        self.click_form_button("submit")
 
     def press_autofill_panel(self, credit_card_popoup_obj: AutofillPopup):
         """
