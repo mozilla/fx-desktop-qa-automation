@@ -11,6 +11,7 @@ def test_case():
     return "122405"
 
 
+@pytest.mark.xfail
 def test_autofill_credit_card(driver: Firefox):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel

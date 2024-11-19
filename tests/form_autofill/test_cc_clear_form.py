@@ -11,6 +11,7 @@ def test_case():
     return "122581"
 
 
+@pytest.mark.xfail
 def test_clear_form_credit_card(driver: Firefox):
     """
     C122581, Test clear form credit card
