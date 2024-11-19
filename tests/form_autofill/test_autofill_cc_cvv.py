@@ -5,7 +5,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.browser_object_navigation import Navigation
 from modules.page_object_autofill import CreditCardFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions, Utilities
@@ -22,7 +21,6 @@ def test_autofill_cc_cvv(driver: Firefox):
     C122399, Test form autofill CC CVV number
     """
     # instantiate objects
-    Navigation(driver).open()
     credit_card_autofill = CreditCardFill(driver).open()
     autofill_popup = AutofillPopup(driver)
     util = Utilities()

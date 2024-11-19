@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.browser_object_navigation import Navigation
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
@@ -21,7 +20,6 @@ def test_clear_form(driver: Firefox, country_code: str):
     C122574, test clear autofill form
     """
     # instantiate objects
-    Navigation(driver).open()
     address_autofill = AddressFill(driver).open()
     address_autofill_popup = AutofillPopup(driver)
     util = Utilities()

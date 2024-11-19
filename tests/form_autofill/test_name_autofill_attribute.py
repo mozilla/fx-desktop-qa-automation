@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
@@ -22,7 +21,6 @@ def test_name_attribute_selection(driver: Firefox, country_code: str):
     item in the dropdown ensures that the actual value matches the expected value.
     """
     # Instantiate objects and open the navigation page
-    Navigation(driver).open()
     address_form_fields = AddressFill(driver).open()
     autofill_popup_panel = AutofillPopup(driver)
     util = Utilities()

@@ -20,7 +20,7 @@ WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("w
 def test_navigation_multiple_tabs(driver: Firefox):
     """C134647 - Verify that Multiple Tabs can be closed via the context menu"""
     # open 20 tabs
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     num_tabs = 20
 
     for _ in range(num_tabs):

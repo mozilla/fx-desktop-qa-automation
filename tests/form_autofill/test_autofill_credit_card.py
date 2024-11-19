@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
@@ -17,10 +16,8 @@ def test_autofill_credit_card(driver: Firefox):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel
     """
-    nav = Navigation(driver)
     util = Utilities()
 
-    nav.open()
     credit_card_fill_obj = CreditCardFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
 

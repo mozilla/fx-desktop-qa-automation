@@ -11,7 +11,7 @@ def test_case():
 
 def test_reopen_tab_through_context_menu(driver: Firefox):
     """C134648: Reopen tab through context menu"""
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
 
     tabs_to_open = 4

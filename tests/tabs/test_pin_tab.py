@@ -13,7 +13,7 @@ def test_pin_tab(driver: Firefox):
     """
     C134722, ensures that tabs can be pinned
     """
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
 
     num_tabs = 5

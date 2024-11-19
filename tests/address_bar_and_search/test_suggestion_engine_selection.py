@@ -21,7 +21,7 @@ def test_search_suggestion_for_engine_selection(driver: Firefox, site: str):
     engine, the search is performed using the selected engine.
     """
 
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     nav.type_in_awesome_bar("@")
     nav.element_has_text("results-dropdown", f"Search with {site}")
 

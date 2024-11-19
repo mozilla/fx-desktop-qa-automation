@@ -36,7 +36,7 @@ def test_open_addons(driver: Firefox, theme_name: str):
     """
     C118173, continuation ensures that all the themes are set correctly
     """
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
     abt_addons.activate_theme(nav, theme_name, themes[theme_name])
@@ -47,7 +47,7 @@ def test_alpenglow_theme(driver: Firefox):
     C118173, specifically for alpenglow theme because color can be two values for dark or light mode
     """
 
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
     current_bg = abt_addons.activate_theme(
