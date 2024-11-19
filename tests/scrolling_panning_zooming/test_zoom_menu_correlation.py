@@ -5,8 +5,8 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
 from modules.browser_object import PanelUi
+from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 
 
@@ -28,6 +28,7 @@ def test_zoom_level_div_position(driver: Firefox):
     # Initialize the page and open the target URL
     page = GenericPage(driver, url=TEST_PAGE)
     page.open()
+    nav = Navigation(driver)
 
     # Locate the main <div> element on the page
     div = driver.find_element(By.TAG_NAME, "div")
@@ -45,8 +46,8 @@ def test_zoom_level_div_position(driver: Firefox):
 
     # Switch to chrome context to check zoom level in the toolbar
     with driver.context(driver.CONTEXT_CHROME):
-        zoom_button = driver.find_element(By.ID, "urlbar-zoom-button")
-        zoom_level = zoom_button.get_attribute("label")
+        zoom_button = nav.get_element("toolbar-zoom-level")
+        zoom_level = nav.get_element("toolbar-zoom-level").get_attribute("label")
         logging.info(f"Zoom level after zoom-in: {zoom_level}")
 
         # Assert that the zoom level label is "110%" after zooming in
