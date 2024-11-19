@@ -23,7 +23,7 @@ def test_detected_blocked_trackers_found(driver: Firefox, url: str):
     """
     generic_page = GenericPage(driver, url=url)
     tracker_panel = TrackerPanel(driver)
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
 
     generic_page.open()
     tracker_panel.wait_for_blocked_tracking_icon(nav, generic_page)

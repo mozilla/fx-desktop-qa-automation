@@ -2300,6 +2300,13 @@ Location: Far right in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: toolbar-zoom-level
+Selector Data: urlbar-zoom-button
+Description: Zoom level indicator 
+Location: Far right in the toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: navigation-background-component
 Selector Data: nav-bar
 Description: Navigation bar

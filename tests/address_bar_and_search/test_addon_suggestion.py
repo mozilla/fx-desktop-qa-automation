@@ -34,7 +34,7 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
         "read aloud": "read-aloud",
     }
 
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     sleep(20)
     nav.set_awesome_bar()
     sleep(20)

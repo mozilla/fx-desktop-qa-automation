@@ -60,7 +60,7 @@ def test_history_menu_in_different_places(driver: Firefox):
 
     # 3. History options from Toolbar (History and Library)
     customize_firefox = CustomizeFirefox(driver)
-    tabs = TabBar(driver).open()
+    tabs = TabBar(driver)
     nav = Navigation(driver)
 
     panel_ui.navigate_to_customize_toolbar()

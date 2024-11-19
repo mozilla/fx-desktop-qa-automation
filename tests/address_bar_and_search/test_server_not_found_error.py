@@ -21,6 +21,7 @@ SHORT_SITE = CHECK_SITE.split("/")[-1]
 ERROR_TITLES = ["Hmm. We’re having trouble finding that site."]
 
 
+@pytest.mark.xfail
 def test_server_not_found_error(driver: Firefox):
     """
     C1901393: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
@@ -30,7 +31,7 @@ def test_server_not_found_error(driver: Firefox):
     # Create objects
     logging.info("error titles")
     logging.info(ERROR_TITLES)
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
 

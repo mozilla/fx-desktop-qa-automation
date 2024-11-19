@@ -3,7 +3,6 @@ import time
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -24,7 +23,6 @@ def test_check_for_updates(driver: Firefox):
     The Button changes text to "Restart to update" if an update is available
     """
 
-    Navigation(driver).open()
     about_prefs = AboutPrefs(driver, category="general").open()
     time.sleep(2)
 
