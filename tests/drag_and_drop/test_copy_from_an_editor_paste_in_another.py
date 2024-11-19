@@ -52,9 +52,11 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
                 # Move to the next cell to the right
                 web_page.perform_key_combo(Keys.TAB)
         web_page.perform_key_combo(Keys.BACK_SPACE)
-    except:
+
+    except Exception as e:
         # Undo the paste operation
         web_page.undo()
+        
     finally:
         sleep(2)
         
