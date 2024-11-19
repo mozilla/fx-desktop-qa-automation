@@ -195,7 +195,7 @@ class AboutPrefs(BasePage):
                 self.actions.send_keys(Keys.TAB)
                 continue
             self.actions.send_keys(fields[field] + Keys.TAB).perform()
-        if self.sys_platform() != "Windows":
+        if self.sys_platform() == "Darwin":
             self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(Keys.ENTER).perform()
         return self
