@@ -1,4 +1,3 @@
-from time import sleep
 from typing import List
 
 from selenium.webdriver.support import expected_conditions as EC

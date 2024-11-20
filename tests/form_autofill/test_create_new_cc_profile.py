@@ -1,4 +1,5 @@
 import json
+import platform
 
 import pytest
 from selenium.webdriver import Firefox
@@ -10,9 +11,6 @@ from modules.util import BrowserActions, Utilities
 @pytest.fixture()
 def test_case():
     return "122389"
-
-
-import platform
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")

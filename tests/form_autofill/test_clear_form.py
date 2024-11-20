@@ -1,3 +1,5 @@
+import platform
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,9 +14,6 @@ def test_case():
 
 
 countries = ["CA", "US"]
-
-
-import platform
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")

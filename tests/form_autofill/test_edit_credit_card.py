@@ -1,5 +1,6 @@
 import json
 import logging
+import platform
 
 import pytest
 from selenium.webdriver import Firefox
@@ -18,9 +19,6 @@ def test_case():
 
 
 tabs = [i for i in range(4)]
-
-
-import platform
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
