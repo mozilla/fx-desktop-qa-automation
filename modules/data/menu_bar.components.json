@@ -61,7 +61,7 @@
     },
 
      "menu-bar-zoom": {
-        "selectorData": "menu-view-full-zoom",
+        "selectorData": "viewFullZoomMenu",
         "strategy": "id",
         "groups": []
     },

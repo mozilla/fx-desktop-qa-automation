@@ -1,6 +1,7 @@
 import logging
 import platform
 import pytest
+import time
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -14,6 +15,10 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "165060"
 
+@pytest.fixture()
+def set_prefs():
+    return [("browser.uiCustomization.state", '{"placements":{"widget-overflow-fixed-list":[],"nav-bar":["back-button","forward-button","stop-reload-button","home-button","urlbar-container"],"toolbar-menubar":["menubar-items"],"TabsToolbar":["tabbrowser-tabs","new-tab-button","alltabs-button"]},"seen":["developer-button"],"dirtyAreaCache":["toolbar-menubar","nav-bar","TabsToolbar"],"currentVersion":17,"newElementCount":0}'),
+("browser.startup.homepage_override.mstone", "ignore")]
 
 TEST_PAGE = "https://www.example.com"
 
@@ -21,8 +26,9 @@ TEST_PAGE = "https://www.example.com"
 def test_zoom_from_menu_bar(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
-    changes appropriately when zooming in using the Firefox menu bar controls.
-    Additionally, it checks that the zoom level indicator updates correctly.
+    changes appropriately when zooming in, resetting zoom, and zooming out
+    using the Firefox menu bar controls. Additionally, it checks that the zoom
+    level indicator updates correctly.
     """
 
     # Initialize the page and open the target URL
@@ -40,10 +46,10 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
     # Skip for macOS if platform is Darwin
     if platform.system() != "Darwin":
-        # Open View > Zoom > Zoom In
+        # **Step 1**: Open View > Zoom > Zoom In
         menu_bar.open_menu("View")
         menu_bar.click_on("menu-bar-zoom")
-        menu_bar.click_on("menu-bar-zoom-enlarge")
+        menu_bar.click_and_hide_menu("menu-bar-zoom-enlarge")
 
         # Wait for zoom to apply and get the new position of the <div>
         zoomed_in_position = driver.find_element(By.TAG_NAME, "div").location["x"]
@@ -64,4 +70,54 @@ def test_zoom_from_menu_bar(driver: Firefox):
         assert zoomed_in_position < initial_position, (
             f"Expected X position after zoom-in to be greater than {initial_position}, "
             f"but got {zoomed_in_position}"
+        )
+
+        # **Step 2**: Reset Zoom to 100%
+        menu_bar.activate_menu_bar()
+        menu_bar.open_menu("View")
+        menu_bar.click_on("menu-bar-zoom")
+        menu_bar.click_on("menu-bar-zoom-reset")
+
+        # Wait for zoom reset to apply and get the reset position of the <div>
+        reset_position = driver.find_element(By.TAG_NAME, "div").location["x"]
+        logging.info(f"X position of div after zoom-reset: {reset_position}")
+
+        # Check that the zoom button no longer exists
+        with driver.context(driver.CONTEXT_CHROME):
+            nav.element_not_visible("toolbar-zoom-level")
+
+        # Assert that the X-coordinate after reset is back to the initial value
+        assert (
+                reset_position == initial_position
+        ), f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
+
+        # Assert that the X-coordinate after reset is back to the initial value
+        assert reset_position == initial_position, (
+            f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
+        )
+
+        # **Step 3**: Zoom Out
+        menu_bar.open_menu("View")
+        menu_bar.click_on("menu-bar-zoom")
+        menu_bar.click_on("menu-bar-zoom-reduce")
+
+        # Wait for zoom out to apply and get the new position of the <div>
+        zoomed_out_position = driver.find_element(By.TAG_NAME, "div").location["x"]
+        logging.info(f"X position of div after zoom-out: {zoomed_out_position}")
+
+        # Switch to chrome context to check zoom level in the toolbar
+        with driver.context(driver.CONTEXT_CHROME):
+            zoom_button = nav.get_element("toolbar-zoom-level")
+            zoom_level = zoom_button.get_attribute("label")
+            logging.info(f"Zoom level after zoom-out: {zoom_level}")
+
+            # Assert that the zoom level label is "90%" after zooming out
+            assert (
+                zoom_level == "90%"
+            ), f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
+
+        # Assert that the X-coordinate decreases after zooming out
+        assert zoomed_out_position > reset_position, (
+            f"Expected X position after zoom-out to be less than {reset_position}, "
+            f"but got {zoomed_out_position}"
         )
