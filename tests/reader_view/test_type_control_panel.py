@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
@@ -50,13 +48,9 @@ def test_font_type(driver: Firefox):
     )
     reader_view.get_element("toolbar-font-selector").click()
 
-    # Locate the dropdown element
+    # Locate and select the "serif" option
     dropdown = driver.find_element(By.ID, "font-type-selector")
-
-    # Create a Select object
     select = Select(dropdown)
-
-    # Select the option by value
     select.select_by_value("serif")
     reader_view.wait.until(
         lambda _: "sans-serif" not in body.value_of_css_property("font-family")
