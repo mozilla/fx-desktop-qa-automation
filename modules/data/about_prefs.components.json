@@ -532,12 +532,6 @@
         "groups" : []
     },
 
-    "allow-audio-video": {
-        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
-        "strategy": "css",
-        "groups" : []
-    },
-
     "httpsonly-radio-enabled": {
         "selectorData": "radio[data-l10n-id='httpsonly-radio-enabled']",
         "strategy": "css",

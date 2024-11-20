@@ -2,10 +2,9 @@ import time
 import pytest
 
 from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
 from pynput.keyboard import Key, Controller
 
-from modules.page_object import AboutPrefs, GenericPage
+from modules.page_object import GenericPage, AboutPrefs, AboutConfig
 from modules.browser_object import PanelUi, Navigation
 
 
@@ -39,6 +38,7 @@ def temp_selectors():
         }
     }
 
+
 WEBSITE_1 = "https://www.google.com/"
 WEBSITE_2 = "https://start.duckduckgo.com/"
 
@@ -56,7 +56,12 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     keyboard = Controller()
 
     # Save the original positions of elements for comparison
-    original_positions = save_original_positions(driver, nav, web_page)
+    driver.switch_to.new_window("tab")
+    nav.search(WEBSITE_2)
+    web_page.wait.until(
+        lambda _: web_page.title_contains("DuckDuckGo")
+    )
+    original_positions = save_original_positions(driver, web_page)
 
     # Set the pref to zoom text only
     driver.switch_to.new_window("tab")
@@ -72,39 +77,55 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     # Verify results
     zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
 
+
 @pytest.mark.headed
 def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
     """
-    C545733.2: Verify that the zoom text only option and default zoom level works after restart
+    C545733.2: Verify that the zoom text only option works after restart
     """
+    # Set the pref to zoom text only (simulate after restart)
+    about_config = AboutConfig(driver)
+    about_config.toggle_true_false_config("browser.zoom.full")
+
     # Initializing objects
     web_page = GenericPage(driver, url=WEBSITE_1).open()    
     web_page.elements |= temp_selectors
     nav = Navigation(driver)
+    keyboard = Controller()
 
-    # Save the original positions of elements for comparison
-    original_positions = save_original_positions(driver, nav, web_page)
+    # Save the original positions of elements for comparison    
+    driver.switch_to.new_window("tab")
+    nav.search(WEBSITE_2)
+    web_page.wait.until(
+        lambda _: web_page.title_contains("DuckDuckGo")
+    )
+    original_positions = save_original_positions(driver, web_page)
 
-    # Set the pref to zoom text only
+    # Set default zoom level
+    driver.switch_to.new_window("tab")
+    about_prefs = AboutPrefs(driver, category="General").open()
+    about_prefs.click_on("zoom-level")
+    keyboard.press(Key.down)
+    keyboard.press(Key.enter)
+    time.sleep(10)
 
     # Verify results
     zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
 
 
-
-def save_original_positions(driver, nav, web_page):
+def save_original_positions(driver, web_page):
     """
     Saves the original positions of elements to be tested to verify the effects of zooming
     """
+    driver.switch_to.window(driver.window_handles[0])
     original_website1_image_position = web_page.get_element("google-logo").location["x"]
     original_website1_text_position = web_page.get_element("google-search-button").location["x"]
-    driver.switch_to.new_window("tab")
-    nav.search(WEBSITE_2)
-    time.sleep(3)
+    driver.switch_to.window(driver.window_handles[1])
     original_website2_image_position = web_page.get_element("duckduckgo-logo").location["x"]
     original_website2_text_position = web_page.get_element("duckduckgo-tagline").location["x"]
     return (original_website1_image_position, original_website1_text_position, 
             original_website2_image_position, original_website2_text_position)
+
 
 def zoom_text_only_functionality_test(driver, nav, web_page, original_positions):
     """
