@@ -30,7 +30,7 @@ def test_search_term_persists(driver: Firefox):
     """
 
     # Create objects
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     tab = TabBar(driver)
 
     # Perform a search using the URL bar.

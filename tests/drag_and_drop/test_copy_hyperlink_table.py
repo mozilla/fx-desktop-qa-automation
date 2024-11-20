@@ -53,7 +53,6 @@ def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
         nav.search(SHEET2_URL)
         sleep(2)
         web_page.paste()
-        sleep(2)
 
         # Move to the starting cell (A1)
         web_page.perform_key_combo(Keys.HOME)
@@ -87,11 +86,16 @@ def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
         # Close the new tab and switch the focus to prevent the "Leave Page" warning from Google page
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
+        sleep(1)
+
+        # Delete the pasted table
+        web_page.perform_key_combo(Keys.ESCAPE)
+        web_page.perform_key_combo(Keys.ESCAPE)
+        web_page.select_entire_table()
+        web_page.perform_key_combo(Keys.BACK_SPACE)
+
+    except Exception as e:
+        web_page.undo()
 
     finally:
-        # Undo the paste operation; ESC key is pressed twice to exit cell focus and clear the hover state on the link
-        web_page.perform_key_combo(Keys.ESCAPE)
-        web_page.perform_key_combo(Keys.ESCAPE)
-        web_page.perform_key_combo(Keys.UP)
-        web_page.undo()
         sleep(2)

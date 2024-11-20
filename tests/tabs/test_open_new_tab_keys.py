@@ -14,7 +14,7 @@ def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):
     """
     C134442 - A new tab can be opened via keyboard combinations
     """
-    browser = TabBar(driver).open()
+    browser = TabBar(driver)
     driver.get("about:robots")
     browser.set_chrome_context()
     browser.new_tab_by_keys(sys_platform)

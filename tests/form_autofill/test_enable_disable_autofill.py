@@ -23,7 +23,7 @@ def test_enable_disable_autofill(driver: Firefox, country_code: str):
     the autofill popups do not appear.
     """
     # instantiate objects
-    Navigation(driver).open()
+    Navigation(driver)
     af = AddressFill(driver).open()
     afp = AutofillPopup(driver)
     util = Utilities()

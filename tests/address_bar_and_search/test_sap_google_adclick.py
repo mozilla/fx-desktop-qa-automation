@@ -19,7 +19,7 @@ def test_sap_google_adclick(driver: Firefox):
     C1365108, Test SAP Google adclick - URL bar - US
     """
     # instantiate objects
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     about_config = AboutConfig(driver)
     u = Utilities()
 

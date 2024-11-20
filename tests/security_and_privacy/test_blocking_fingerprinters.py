@@ -23,7 +23,7 @@ def test_blocking_fingerprinter(driver: Firefox):
     C446404: Blocking Fingerprinters
     """
     # instantiate objects
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     about_prefs = AboutPrefs(driver, category="privacy").open()
 
     # Select custom option and keep just known fingerprinters checked

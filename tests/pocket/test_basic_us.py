@@ -26,7 +26,7 @@ def test_new_tab_about_blank(driver: Firefox):
     """
     C408037: Test about:blank Pocket layout (US). First step only.
     """
-    tab_bar = TabBar(driver).open()
+    tab_bar = TabBar(driver)
     tab_bar.new_tab_by_button()
     assert driver.current_url == "about:blank"
 
