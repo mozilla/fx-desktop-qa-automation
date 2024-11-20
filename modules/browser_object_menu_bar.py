@@ -18,3 +18,14 @@ class MenuBar(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_on(f"{menu_name.lower()}-menu-button")
         return self
+
+    def select_submenu(self, submenu_name: str) -> BasePage:
+        """
+        Selects an item from an open submenu.
+        Args:
+            submenu_id (str): The ID of the submenu item to select.
+        """
+
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_on(submenu_name)
+        return self
