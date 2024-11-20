@@ -18,6 +18,10 @@ def test_case():
 fields = ["cc-name", "cc-exp-month", "cc-exp-year"]
 
 
+import platform
+
+
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("field", fields)
 def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     """

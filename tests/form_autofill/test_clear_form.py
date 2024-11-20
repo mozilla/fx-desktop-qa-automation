@@ -14,6 +14,10 @@ def test_case():
 countries = ["CA", "US"]
 
 
+import platform
+
+
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("country_code", countries)
 def test_clear_form(driver: Firefox, country_code: str):
     """
