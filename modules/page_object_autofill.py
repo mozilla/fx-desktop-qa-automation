@@ -98,14 +98,12 @@ class CreditCardFill(Autofill):
         self.double_click("form-field", labels=["cc-name"])
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
         # Click on popup form value with name only
-        if self.sys_platform() == "Linux":
-            sleep(3)
-            logging.warning(
-                str(
-                    [
-                        e.get_attribute("ac-value")
-                        for e in self.get_elements("select-form-option")
-                    ]
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            ccp.custom_wait(timeout=30, poll_frequency=0.5).until(
+                EC.element_to_be_clickable(
+                    ccp.get_selector(
+                        "select-form-option-by-value", labels=[info_list[0]]
+                    )
                 )
             )
         ccp.click_on("select-form-option-by-value", labels=[info_list[0]])
