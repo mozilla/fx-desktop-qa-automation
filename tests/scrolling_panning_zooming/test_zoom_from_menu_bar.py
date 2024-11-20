@@ -1,11 +1,10 @@
 import logging
 import platform
 import pytest
-import time
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from modules.browser_object import PanelUi
+
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_menu_bar import MenuBar
 from modules.page_object_generics import GenericPage
@@ -15,14 +14,11 @@ from modules.page_object_generics import GenericPage
 def test_case():
     return "165060"
 
-@pytest.fixture()
-def set_prefs():
-    return [("browser.uiCustomization.state", '{"placements":{"widget-overflow-fixed-list":[],"nav-bar":["back-button","forward-button","stop-reload-button","home-button","urlbar-container"],"toolbar-menubar":["menubar-items"],"TabsToolbar":["tabbrowser-tabs","new-tab-button","alltabs-button"]},"seen":["developer-button"],"dirtyAreaCache":["toolbar-menubar","nav-bar","TabsToolbar"],"currentVersion":17,"newElementCount":0}'),
-("browser.startup.homepage_override.mstone", "ignore")]
 
 TEST_PAGE = "https://www.example.com"
 
 
+@pytest.mark.skipif(platform.system() == "Darwin", reason="Cannot access menubar in MacOS")
 def test_zoom_from_menu_bar(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
@@ -63,7 +59,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
             # Assert that the zoom level label is "110%" after zooming in
             assert (
-                zoom_level == "110%"
+                    zoom_level == "110%"
             ), f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
 
         # Assert that the X-coordinate increases after zooming in
@@ -113,7 +109,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
             # Assert that the zoom level label is "90%" after zooming out
             assert (
-                zoom_level == "90%"
+                    zoom_level == "90%"
             ), f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
 
         # Assert that the X-coordinate decreases after zooming out
