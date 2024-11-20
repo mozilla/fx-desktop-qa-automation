@@ -1,3 +1,4 @@
+from time import sleep
 from typing import List
 
 from selenium.webdriver.support import expected_conditions as EC
@@ -97,6 +98,16 @@ class CreditCardFill(Autofill):
         self.double_click("form-field", labels=["cc-name"])
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
         # Click on popup form value with name only
+        if self.sys_platform() == "Linux":
+            sleep(3)
+            logging.warning(
+                str(
+                    [
+                        e.get_attribute("ac-value")
+                        for e in self.get_elements("select-form-option")
+                    ]
+                )
+            )
         ccp.click_on("select-form-option-by-value", labels=[info_list[0]])
 
         for i in range(len(info_list)):
