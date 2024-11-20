@@ -22,7 +22,6 @@ def test_address_attribute_selection(driver: Firefox, country_code: str):
     item in the dropdown ensures that the actual value matches the expected value.
     """
     # Instantiate objects and open the navigation page
-    Navigation(driver).open()
     address_form_fields = AddressFill(driver).open()
     autofill_popup_panel = AutofillPopup(driver)
     util = Utilities()

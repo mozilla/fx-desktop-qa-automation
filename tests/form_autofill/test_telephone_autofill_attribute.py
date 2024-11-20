@@ -3,7 +3,6 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
@@ -23,7 +22,6 @@ def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
     C122361, ensures that telephone numbers are autofilled
     """
     # instantiate objects
-    Navigation(driver).open()
     address_fill_obj = AddressFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
     util = Utilities()

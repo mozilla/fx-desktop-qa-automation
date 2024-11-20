@@ -14,7 +14,7 @@ def test_toggle_bookmark_toolbar(driver: Firefox):
     C2084637: Verify that the user can Hide or Show the Bookmarks Toolbar using Keyboard shortcuts
     """
     # Instantiate the browser object
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
 
     # By default, the Bookmarks Toolbar is hidden. The element attribute indicates
     # whether the bookmarks toolbar is either, collapsed = 'true' is hidden,

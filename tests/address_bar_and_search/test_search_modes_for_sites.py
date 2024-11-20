@@ -17,7 +17,7 @@ sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
 @pytest.mark.parametrize("site", sites)
 def test_search_modes_for_sites(driver: Firefox, site: str):
     """C2234690: Test that search modes can be activated. May also cover C1365213 eventually"""
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     nav.search("soccer", mode=site)
     nav.expect_in_content(EC.url_contains(site.lower()))
     nav.clear_awesome_bar()
