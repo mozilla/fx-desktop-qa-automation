@@ -40,9 +40,9 @@ def test_copy_entire_row_column(driver: Firefox):
             web_page.element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
-            web_page.perform_key_combo(Keys.RIGHT)
+            web_page.perform_key_combo(Keys.TAB)
 
-        web_page.undo()
+        web_page.perform_key_combo(Keys.BACKSPACE)
 
         # Paste the row in a different sheet
         nav.search(SHEET2_URL)
@@ -54,9 +54,9 @@ def test_copy_entire_row_column(driver: Firefox):
             web_page.element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
-            web_page.perform_key_combo(Keys.RIGHT)
+            web_page.perform_key_combo(Keys.TAB)
 
-        web_page.undo()
+        web_page.perform_key_combo(Keys.BACKSPACE)
 
         # Copy a column
         nav.search(SHEET1_URL)
@@ -74,9 +74,9 @@ def test_copy_entire_row_column(driver: Firefox):
             web_page.element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
-            web_page.perform_key_combo(Keys.DOWN)
+            web_page.perform_key_combo(Keys.TAB)
 
-        web_page.undo()
+        web_page.perform_key_combo(Keys.BACKSPACE)
         time.sleep(2)
 
         # Paste the column in a different sheet
@@ -89,8 +89,13 @@ def test_copy_entire_row_column(driver: Firefox):
             web_page.element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
-            web_page.perform_key_combo(Keys.DOWN)
+            web_page.perform_key_combo(Keys.TAB)
+
+        web_page.perform_key_combo(Keys.BACKSPACE)
+
+    except Exception as e:
+        web_page.undo()
 
     finally:
-        web_page.undo()
         time.sleep(2)
+        
