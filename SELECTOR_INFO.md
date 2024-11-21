@@ -1242,6 +1242,13 @@ Location: Inside the autofill save credit card doorhanger, accessible by clickin
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: doorhanger-more-actions-button
+Selector Data: "[data-l10n-id='popup-notification-more-actions-button']"
+Description: Arrow on the "Not now" button
+Location: Autofill save login doorhanger
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-never-save-login-button
 Selector Data: "menuitem[label='Never save']"
 Description: The hidden button in save login doorhanger.
@@ -1259,6 +1266,13 @@ Path to .json: modules/data/autofill_popup.components.json
 Selector Name: select-form-option
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem"
 Description: An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: select-form-option-by-value
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']"
+Description: An individual entry within the autofill dropdown, with a label for the "ac-value" attr, usually a cardholder name.
 Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
 Path to .json: modules/data/autofill_popup.components.json
 ```

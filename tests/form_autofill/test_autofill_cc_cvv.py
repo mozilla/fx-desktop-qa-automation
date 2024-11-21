@@ -1,5 +1,6 @@
 import json
 import logging
+import platform
 
 import pytest
 from selenium.webdriver import Firefox
@@ -15,7 +16,7 @@ def test_case():
     return "122399"
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number
