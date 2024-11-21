@@ -400,6 +400,27 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "selected", "true")
         return self
 
+    def set_default_zoom(self, zoom_percentage: int) -> BasePage:
+        """
+        Sets the Default Zoom level in about:preferences.
+        """
+
+        # Navigate to the zoom settings section
+        self.find_in_settings("Default zoom")
+
+        # Locate the dropdown or input field for Default Zoom
+        zoom_dropdown = self.get_element("default-zoom-dropdown")
+
+        # Open the dropdown menu
+        zoom_dropdown.click()
+
+        # Select the desired zoom percentage
+        zoom_option = self.get_element("default-zoom-dropdown-value",
+                                       labels=[f"{zoom_percentage}%"])
+        zoom_option.click()
+
+        return self
+
 
 class AboutAddons(BasePage):
     """

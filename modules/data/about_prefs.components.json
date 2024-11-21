@@ -572,5 +572,17 @@
         "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
         "strategy": "css",
         "groups": []
+    },
+
+    "default-zoom-dropdown": {
+        "selectorData": "defaultZoom",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "default-zoom-dropdown-value": {
+        "selectorData": "preferences-default-zoom-value",
+        "strategy": "id",
+        "groups": []
     }
 }
