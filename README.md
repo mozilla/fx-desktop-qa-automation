@@ -88,6 +88,8 @@ created. If we make new ones, replace `modules` with the name of any other folde
 like to have documentation on.
 
 ### IDE Pycharm Configuration
+Note: you may need to install Rust for PyCharm to work properly.
+
 #### Configuration to run tests from the IDE interactive interface
 - Open Run/Debug Configurations**:
     - Click on the **Current File** in the toolbar and select **Edit Configurations**, or
@@ -106,6 +108,25 @@ like to have documentation on.
     - Continuation indent: 8
     - Keep indents on empty lines unchecked
 
+### TestRail Reporting
+
+Timer-based TestRail reporting is enabled for MacOS, Windows, and Linux OSes in appropriate testing
+environments. In order to "manually" report to TestRail--that is, report on a run from the command line,
+you need to do the following:
+
+- Have a TestRail API key
+- Set the following environment variables:
+- - `TESTRAIL_REPORT`: `true` (or other true value)
+- - `TESTRAIL_BASE_URL`: <location of TestRail instance>
+- - `TESTRAIL_USERNAME`: what it sounds like
+- - `TESTRAIL_API_KEY`: what it sounds like
+- - `FX_EXECUTABLE`: actual location of the Firefox build under test
+
+You should then be able to call `pytest --fx_executable $FX_EXECUTABLE` and have the results reported.
+You may find that if you are re-running all previously executed test runs that you receive an error of
+"Session is not reportable." If you wish to overwrite a previously reported session, add
+`REPORTABLE=true` to your environment.
+
 ### Project Contribution
 If you are outside of Mozilla and would like to contribute to this project:
 - Read all the documentation including this README, BEST_PRACTICES and CODE_OF_CONDUCT.
@@ -119,7 +140,7 @@ If you are outside of Mozilla and would like to contribute to this project:
   - Address any review comments
 - Once approved your test code will be landed in this repo.
 
-### Test Account Secrets Management
+### Test Account Secrets Management (not fully implemented)
 To protect our test logins to various services, we encrypt them with a key. This key is available from repo
 maintainers if you ask. Please be careful with it. This key must exist in the environment as SVC_ACCT_DECRYPT
 in order for encryption and decryption to work. To encrypt secrets, use the create_secrets.py script and

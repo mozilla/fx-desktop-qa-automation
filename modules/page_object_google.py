@@ -62,7 +62,7 @@ class GoogleSheets(GenericPage):
             self.actions.send_keys(Keys.RIGHT)
         self.actions.key_up(Keys.SHIFT).perform()
         return self
-    
+
     def select_entire_table(self) -> GenericPage:
         """Select the entire table starting from the current position"""
         mod_key = Keys.COMMAND if self.sys_platform else Keys.CONTROL
@@ -84,4 +84,3 @@ class GoogleSheets(GenericPage):
             self.actions.key_down(Keys.CONTROL)
             self.actions.send_keys(Keys.HOME)
         return self
-    
