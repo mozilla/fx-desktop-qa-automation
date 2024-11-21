@@ -49,7 +49,7 @@ def test_open_image_in_new_tab(driver: Firefox):
 
 @pytest.mark.headed
 @pytest.mark.unstable
-def test_save_image_as(driver: Firefox):
+def test_save_image_as(driver: Firefox, sys_platform):
     """
     C2637622.2: save image as
     """
@@ -84,22 +84,23 @@ def test_save_image_as(driver: Firefox):
 
     # wait some time before interacting with the system dialog
     sleep(3)
+    wiki_image_page.handle_os_download_confirmation(controller, sys_platform)
 
-    this_platform = platform.system()
-    if this_platform == "Linux":
-        controller.press(Key.alt)
-        controller.press(Key.tab)
-        controller.release(Key.tab)
-        controller.release(Key.alt)
+    # this_platform = platform.system()
+    # if this_platform == "Linux":
+    #     controller.press(Key.alt)
+    #     controller.press(Key.tab)
+    #     controller.release(Key.tab)
+    #     controller.release(Key.alt)
 
-        controller.press(Key.alt)
-        controller.press(Key.tab)
-        controller.release(Key.tab)
-        controller.release(Key.alt)
+    #     controller.press(Key.alt)
+    #     controller.press(Key.tab)
+    #     controller.release(Key.tab)
+    #     controller.release(Key.alt)
 
-        key_press_release(Key.tab)
+    #     key_press_release(Key.tab)
 
-        key_press_release(Key.tab)
+    #     key_press_release(Key.tab)
 
     # Press and release the Enter key
     key_press_release(Key.enter)
