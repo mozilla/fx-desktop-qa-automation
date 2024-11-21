@@ -56,7 +56,6 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
     except Exception as e:
         # Undo the paste operation
         web_page.undo()
-        
+
     finally:
         sleep(2)
-        

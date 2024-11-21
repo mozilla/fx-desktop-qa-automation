@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -39,6 +41,7 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     login_form.fill_password("testPassword")
     login_form.submit()
 
+    autofill_popup_panel.click_doorhanger_button("more-actions")
     autofill_popup_panel.click_doorhanger_button("never-save-login")
     nav.element_not_visible("password-notification-key")
 

@@ -88,8 +88,10 @@ class AboutPrefs(BasePage):
 
         self.actions.send_keys(country)
 
-        for _ in range(self.TABS_TO_COUNTRY):
+        added_tabs = 6
+        for _ in range(self.TABS_TO_COUNTRY + added_tabs):
             self.perform_key_combo(Keys.SHIFT, Keys.TAB)
+            sleep(0.3)
 
         return self
 
@@ -193,7 +195,8 @@ class AboutPrefs(BasePage):
                 self.actions.send_keys(Keys.TAB)
                 continue
             self.actions.send_keys(fields[field] + Keys.TAB).perform()
-        self.actions.send_keys(Keys.TAB).perform()
+        if self.sys_platform() != "Windows":
+            self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(Keys.ENTER).perform()
         return self
 
