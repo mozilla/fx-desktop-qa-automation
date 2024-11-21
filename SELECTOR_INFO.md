@@ -1067,6 +1067,20 @@ Description: mlb website autoplay settings
 Location: about:preferences#privacy - Autoplay settings
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: default-zoom-dropdown
+Selector Data: defaultZoom
+Description: The default zoom dropdown.
+Location: about:preferences - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: default-zoom-dropdown-value
+Selector Data: preferences-default-zoom-value
+Description: The dropdown menu for default zoom selection
+Location: about:preferences - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
