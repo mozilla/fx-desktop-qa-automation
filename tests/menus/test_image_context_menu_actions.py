@@ -1,4 +1,3 @@
-import platform
 from time import sleep
 
 import pytest
@@ -65,7 +64,6 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
 
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ContextMenu(driver)
-    nav = Navigation(driver)
     util = Utilities()
 
     # Wait for page to load
