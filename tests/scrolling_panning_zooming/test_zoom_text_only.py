@@ -2,7 +2,6 @@ import time
 import pytest
 
 from selenium.webdriver import Firefox
-from pynput.keyboard import Key, Controller
 
 from modules.page_object import GenericPage, AboutPrefs, AboutConfig
 from modules.browser_object import PanelUi, Navigation
@@ -16,14 +15,14 @@ def test_case():
 @pytest.fixture()
 def temp_selectors():
     return {
-        "google-logo": {
-            "selectorData": "img[alt='Google']",
-            "strategy": "css",
+        "yahoo-logo": {
+            "selectorData": "sfp-placeholder",
+            "strategy": "id",
             "groups": []
         }, 
-        "google-search-button": {
-            "selectorData": "/html/body/div[1]/div[3]/form/div[1]/div[1]/div[4]/center/input[1]",
-            "strategy": "xpath",
+        "yahoo-login-button": {
+            "selectorData": "hd_nav_item",
+            "strategy": "class",
             "groups": []
         },
         "duckduckgo-logo": {
@@ -39,11 +38,10 @@ def temp_selectors():
     }
 
 
-WEBSITE_1 = "https://www.google.com/"
+WEBSITE_1 = "https://search.yahoo.com/"
 WEBSITE_2 = "https://start.duckduckgo.com/"
 
 
-@pytest.mark.headed
 def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     """
     C545733.1: Verify that ticking the zoom text only box would only affect the scale of text.
@@ -53,7 +51,6 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     web_page = GenericPage(driver, url=WEBSITE_1).open()    
     web_page.elements |= temp_selectors
     nav = Navigation(driver)
-    keyboard = Controller()
 
     # Save the original positions of elements for comparison
     driver.switch_to.new_window("tab")
@@ -69,16 +66,12 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     about_prefs.click_on("zoom-text-only")
 
     # Set zoom level to 110%
-    about_prefs.click_on("zoom-level")
-    keyboard.press(Key.down)
-    keyboard.press(Key.enter)
-    time.sleep(10)
+    about_prefs.set_default_zoom_level(110)
 
     # Verify results
     zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
 
 
-@pytest.mark.headed
 def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
     """
     C545733.2: Verify that the zoom text only option works after restart
@@ -91,7 +84,6 @@ def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
     web_page = GenericPage(driver, url=WEBSITE_1).open()    
     web_page.elements |= temp_selectors
     nav = Navigation(driver)
-    keyboard = Controller()
 
     # Save the original positions of elements for comparison    
     driver.switch_to.new_window("tab")
@@ -104,10 +96,7 @@ def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
     # Set default zoom level
     driver.switch_to.new_window("tab")
     about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.click_on("zoom-level")
-    keyboard.press(Key.down)
-    keyboard.press(Key.enter)
-    time.sleep(10)
+    about_prefs.set_default_zoom_level(110)
 
     # Verify results
     zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
@@ -118,8 +107,8 @@ def save_original_positions(driver, web_page):
     Saves the original positions of elements to be tested to verify the effects of zooming
     """
     driver.switch_to.window(driver.window_handles[0])
-    original_website1_image_position = web_page.get_element("google-logo").location["x"]
-    original_website1_text_position = web_page.get_element("google-search-button").location["x"]
+    original_website1_image_position = web_page.get_element("yahoo-logo").location["x"]
+    original_website1_text_position = web_page.get_element("yahoo-login-button").location["x"]
     driver.switch_to.window(driver.window_handles[1])
     original_website2_image_position = web_page.get_element("duckduckgo-logo").location["x"]
     original_website2_text_position = web_page.get_element("duckduckgo-tagline").location["x"]
@@ -135,8 +124,8 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
             original_website2_image_position, original_website2_text_position) = original_positions
     # Verify only text is enlarged
     driver.switch_to.window(driver.window_handles[0])
-    new_image_position = web_page.get_element("google-logo").location["x"]
-    new_text_position = web_page.get_element("google-search-button").location["x"]
+    new_image_position = web_page.get_element("yahoo-logo").location["x"]
+    new_text_position = web_page.get_element("yahoo-login-button").location["x"]
     assert new_image_position == original_website1_image_position
     assert new_text_position < original_website1_text_position
     
@@ -148,8 +137,8 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
     time.sleep(1)
 
     # Verify that only text is zoomed out
-    assert web_page.get_element("google-logo").location["x"] == original_website1_image_position
-    assert web_page.get_element("google-search-button").location["x"] > original_website1_text_position
+    assert web_page.get_element("yahoo-logo").location["x"] == original_website1_image_position
+    assert web_page.get_element("yahoo-login-button").location["x"] > original_website1_text_position
 
     # Verify that zoom level badge is correct
     with driver.context(driver.CONTEXT_CHROME):

@@ -400,6 +400,15 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "selected", "true")
         return self
 
+    def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
+        """
+        Sets the Default Zoom level in about:preferences.
+        """
+        self.click_on("default-zoom-dropdown")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
+        self.click_on("default-zoom-dropdown")
+        return self
 
 class AboutAddons(BasePage):
     """
