@@ -1,4 +1,3 @@
-import time
 import pytest
 
 from selenium.webdriver import Firefox
@@ -134,15 +133,14 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
     panel.open_panel_menu()
     panel.click_on("zoom-reduce")
     panel.click_on("zoom-reduce")
-    time.sleep(1)
+
+    # Verify that zoom level badge is correct
+    with driver.context(driver.CONTEXT_CHROME):
+        nav.element_attribute_contains("toolbar-zoom-level", "label", "90%")
 
     # Verify that only text is zoomed out
     assert web_page.get_element("yahoo-logo").location["x"] == original_website1_image_position
     assert web_page.get_element("yahoo-login-button").location["x"] > original_website1_text_position
-
-    # Verify that zoom level badge is correct
-    with driver.context(driver.CONTEXT_CHROME):
-        assert nav.get_element("toolbar-zoom-level").get_attribute("label") == "90%"
 
     # Verify that zoom level is default level for a different website and only text is enlarged
     driver.switch_to.window(driver.window_handles[1])
