@@ -1076,7 +1076,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: default-zoom-dropdown-value
-Selector Data: preferences-default-zoom-value
+Selector Data: menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']
 Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json

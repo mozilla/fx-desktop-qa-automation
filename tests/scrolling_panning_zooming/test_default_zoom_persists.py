@@ -20,7 +20,7 @@ def test_default_zoom_across_tabs(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="general").open()
 
     # Step 2: Set the default zoom level to 150%
-    about_prefs.set_default_zoom(150)
+    about_prefs.set_default_zoom_level(150)
 
     # Step 3: Open three tabs of the same website
     tabs = TabBar(driver)

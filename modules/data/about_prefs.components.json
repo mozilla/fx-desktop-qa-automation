@@ -581,8 +581,9 @@
     },
 
     "default-zoom-dropdown-value": {
-        "selectorData": "preferences-default-zoom-value",
-        "strategy": "id",
+        "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
+        "strategy": "css",
         "groups": []
     }
+    
 }
