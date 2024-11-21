@@ -3541,3 +3541,38 @@ Description: List of cookies blocked
 Location: The Social media trackers panel
 Path to .json: modules/data/tracker_panel.components.json
 ```
+```
+Selector Name: view-menu-button
+Selector Data: "view-menu"
+Description: View option from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom
+Selector Data: "viewFullZoomMenu"
+Description: Zoom option from Menu Bar /View
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom-enlarge
+Selector Data: "menu_zoomEnlarge"
+Description: Zoom in from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom-reduce
+Selector Data: "menu_zoomReduce"
+Description: View option from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom-reset
+Selector Data: "menu_zoomReset"
+Description: Reset Zoom option from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
