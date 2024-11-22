@@ -121,6 +121,7 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
     """
     (original_website1_image_position, original_website1_text_position, 
             original_website2_image_position, original_website2_text_position) = original_positions
+    
     # Verify only text is enlarged
     driver.switch_to.window(driver.window_handles[0])
     new_image_position = web_page.get_element("yahoo-logo").location["x"]
