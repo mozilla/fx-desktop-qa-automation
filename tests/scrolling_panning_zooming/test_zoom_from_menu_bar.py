@@ -1,12 +1,12 @@
 import logging
 import platform
-import pytest
 
+import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object_navigation import Navigation
 from modules.browser_object_menu_bar import MenuBar
+from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 
 
@@ -18,8 +18,9 @@ def test_case():
 TEST_PAGE = "https://www.example.com"
 
 
-@pytest.mark.skipif(platform.system() == "Darwin", reason="Cannot access menubar in MacOS")
-
+@pytest.mark.skipif(
+    platform.system() == "Darwin", reason="Cannot access menubar in MacOS"
+)
 def test_zoom_from_menu_bar(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
@@ -59,7 +60,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
         # Assert that the zoom level label is "110%" after zooming in
         assert (
-                zoom_level == "110%"
+            zoom_level == "110%"
         ), f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
 
     # Assert that the X-coordinate increases after zooming in
@@ -84,13 +85,13 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
     # Assert that the X-coordinate after reset is back to the initial value
     assert (
-            reset_position == initial_position
+        reset_position == initial_position
     ), f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
 
     # Assert that the X-coordinate after reset is back to the initial value
-    assert reset_position == initial_position, (
-        f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
-    )
+    assert (
+        reset_position == initial_position
+    ), f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
 
     # **Step 3**: Zoom Out
     menu_bar.open_menu("View")
@@ -109,7 +110,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
         # Assert that the zoom level label is "90%" after zooming out
         assert (
-                zoom_level == "90%"
+            zoom_level == "90%"
         ), f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
 
     # Assert that the X-coordinate decreases after zooming out
