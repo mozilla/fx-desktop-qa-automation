@@ -18,9 +18,8 @@ def test_case():
 
 def test_default_zoom_across_tabs(driver: Firefox):
     """
-    This test verifies the following:
-    1. The initial X-coordinate of a <div> element on the test page before setting zoom to 150%.
-    2. After setting the zoom level to 150%, verifies that the X-coordinate changes and is consistent across tabs.
+    Verify that the default zoom persists on different tabs by setting the zoom level
+    to 150% and that the X-coordinate changes and is consistent across tabs.
     """
 
     # Step 1: Open the test page and record the initial position of the <div>
