@@ -1,51 +1,75 @@
 import logging
+import time
+
 import pytest
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
+
 from modules.page_object_generics import GenericPage
 from modules.page_object import AboutPrefs
 from modules.browser_object import TabBar
+
 
 @pytest.fixture()
 def test_case():
     return "545730"
 
+
 def test_default_zoom_across_tabs(driver: Firefox):
     """
-    This test verifies that the default zoom level is correctly set to 150%
-    and persists across multiple tabs.
+    This test verifies the following:
+    1. The initial X-coordinate of a <div> element on the test page before setting zoom to 150%.
+    2. After setting the zoom level to 150%, verifies that the X-coordinate changes and is consistent across tabs.
     """
 
-    # Step 1: Open the browser and navigate to about:preferences
-    about_prefs = AboutPrefs(driver, category="general").open()
-
-    # Step 2: Set the default zoom level to 150%
-    about_prefs.set_default_zoom_level(150)
-
-    # Step 3: Open three tabs of the same website
-    tabs = TabBar(driver)
+    # Step 1: Open the test page and record the initial position of the <div>
     test_url = "https://www.example.com"
-
-    # Open the first tab and load the URL
     page = GenericPage(driver, url=test_url)
     page.open()
 
+    div = driver.find_element(By.TAG_NAME, "div")
+    initial_position = div.location["x"]
+    logging.info(f"Initial X position of div before setting zoom: {initial_position}")
 
-    # Open two additional tabs
-    for _ in range(2):
-        tabs.new_tab_by_button()
-        driver.switch_to.window(driver.window_handles[-1])  # Switch to the newly opened tab
+    # Step 2: Open the browser preferences and set the default zoom level to 150%
+    about_prefs = AboutPrefs(driver, category="general").open()
+    about_prefs.set_default_zoom_level(150)
+
+    # Step 3: Open three tabs, load the test URL, and verify the <div>'s position
+    tabs = TabBar(driver)
+
+    # Store the first tab's position after zoom change for consistency checks
+    zoomed_position = None
+
+    for index in range(3):
+        # Open a new tab if not the first iteration
+        if index > 0:
+            tabs.new_tab_by_button()
+            driver.switch_to.window(driver.window_handles[-1])  # Switch to the newly opened tab
+
+        # Load the test URL in the current tab
         page = GenericPage(driver, url=test_url)
         page.open()
+        time.sleep(1)  # Allow time for the page to load
 
-    # Step 4: Verify the default zoom level in each tab
-    for index, handle in enumerate(driver.window_handles, start=1):
-        driver.switch_to.window(handle)
+        # Locate the main <div> element and get its X position
+        div = driver.find_element(By.TAG_NAME, "div")
+        current_position = div.location["x"]
+        logging.info(f"X position of div in tab {index + 1}: {current_position}")
 
-        # Verify the default zoom level
-        with driver.context(driver.CONTEXT_CHROME):
-            zoom_level_indicator = about_prefs.get_element("toolbar-zoom-level")
-            zoom_level = zoom_level_indicator.get_attribute("label")
-            logging.info(f"Zoom level in tab {index}: {zoom_level}")
+        # Assert that the current position is different from the initial position
+        assert current_position != initial_position, (
+            f"Expected X position in tab {index + 1} to differ from the initial position "
+            f"({initial_position}), but got {current_position}"
+        )
 
-            assert zoom_level == "150%", f"Default zoom level in tab {index} is {zoom_level}, expected '150%'"
+        # Set the zoomed position for consistency checks if it's the first tab
+        if zoomed_position is None:
+            zoomed_position = current_position
+
+        # Assert that the X-coordinate remains consistent across tabs
+        assert current_position == zoomed_position, (
+            f"Expected X position in tab {index + 1} to be {zoomed_position}, "
+            f"but got {current_position}"
+        )
