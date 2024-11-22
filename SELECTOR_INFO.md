@@ -1071,7 +1071,7 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: zoom-text-only
 Selector Data: zoomText
 Description: The zoom text only checkbox
-Location: about:preferences Zoom section
+Location: about:preferences Zoom - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
