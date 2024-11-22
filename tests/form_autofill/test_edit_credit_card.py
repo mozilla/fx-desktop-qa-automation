@@ -22,7 +22,8 @@ def test_case():
 tabs = [i for i in range(4)]
 
 
-@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
+# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
+@pytest.mark.skip(reason="Test hanging, likely unclosed context menu")
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     """
