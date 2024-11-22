@@ -70,6 +70,11 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     # Verify results
     zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
 
+    # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
+    about_prefs = AboutPrefs(driver, category="General").open()
+    about_prefs.set_default_zoom_level(100)
+    about_prefs.click_on("zoom-text-only")
+
 
 def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
     """
@@ -99,6 +104,11 @@ def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
 
     # Verify results
     zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
+
+    # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
+    about_prefs = AboutPrefs(driver, category="General").open()
+    about_prefs.set_default_zoom_level(100)
+    about_prefs.click_on("zoom-text-only")
 
 
 def save_original_positions(driver, web_page):

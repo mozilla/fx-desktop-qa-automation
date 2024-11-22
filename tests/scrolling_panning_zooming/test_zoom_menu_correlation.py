@@ -90,3 +90,6 @@ def test_zoom_level_div_position(driver: Firefox):
         f"Expected X position after zoom-out to be less than {initial_position}, "
         f"but got {zoomed_out_position}"
     )
+
+    # Revert zoom settings to 100%
+    panel.click_on("zoom-reset")
