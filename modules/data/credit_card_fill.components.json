@@ -1,4 +1,5 @@
 {
+    "do-not-cache": true,
     "form-field": {
         "selectorData": "input[autocomplete='{name}']",
         "strategy": "css",

@@ -97,4 +97,3 @@ def test_copy_entire_row_column(driver: Firefox):
 
     finally:
         time.sleep(2)
-        
