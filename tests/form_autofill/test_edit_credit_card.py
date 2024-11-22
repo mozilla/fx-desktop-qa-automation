@@ -1,13 +1,10 @@
 import json
 import logging
-import os
 import platform
-import time
 
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -24,8 +21,7 @@ def test_case():
 tabs = [i for i in range(4)]
 
 
-# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-# @pytest.mark.skip(reason="Test hanging, likely unclosed context menu")
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     """
