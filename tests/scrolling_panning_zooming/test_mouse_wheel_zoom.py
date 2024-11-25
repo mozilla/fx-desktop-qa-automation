@@ -108,3 +108,8 @@ def test_mouse_wheel_zoom(driver: Firefox):
         f"Expected X position after zoom-out to be less than {initial_position}, "
         f"but got {zoomed_out_position}"
     )
+
+    # Reset the zoom level back to 100%
+    with driver.context(driver.CONTEXT_CHROME):
+        actions.key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
+    time.sleep(1)  # Allow time for reset effect to take place

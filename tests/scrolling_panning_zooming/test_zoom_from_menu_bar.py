@@ -119,3 +119,9 @@ def test_zoom_from_menu_bar(driver: Firefox):
         f"Expected X position after zoom-out to be less than {reset_position}, "
         f"but got {zoomed_out_position}"
     )
+
+    # Reset the zoom level back to 100%
+    menu_bar.activate_menu_bar()
+    menu_bar.open_menu("View")
+    menu_bar.click_on("menu-bar-zoom")
+    menu_bar.click_and_hide_menu("menu-bar-zoom-reset")

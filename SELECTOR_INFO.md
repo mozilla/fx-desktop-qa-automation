@@ -1068,6 +1068,13 @@ Location: about:preferences#privacy - Autoplay settings
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: zoom-text-only
+Selector Data: zoomText
+Description: The zoom text only checkbox
+Location: about:preferences Zoom - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: default-zoom-dropdown
 Selector Data: defaultZoom
 Description: The default zoom dropdown.
