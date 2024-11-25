@@ -43,6 +43,7 @@ class AboutConfig(BasePage):
         self.set_content_context()
         self.driver.get("about:config")
         self.expect(EC.title_contains("Advanced Preferences"))
+        self.click_on("warning-button")
         self.search_pref(term)
         self.toggle_true_false()
         return self
