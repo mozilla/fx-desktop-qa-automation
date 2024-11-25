@@ -538,12 +538,6 @@
         "groups" : []
     },
 
-    "allow-audio-video": {
-        "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
-        "strategy": "css",
-        "groups" : []
-    },
-
     "httpsonly-radio-enabled": {
         "selectorData": "radio[data-l10n-id='httpsonly-radio-enabled']",
         "strategy": "css",
@@ -576,6 +570,24 @@
 
     "mlb-allow-audio-video-settings": {
         "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "zoom-text-only": {
+        "selectorData": "zoomText",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "default-zoom-dropdown": {
+        "selectorData": "defaultZoom",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "default-zoom-dropdown-value": {
+        "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
         "strategy": "css",
         "groups": []
     }
