@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 import platform
 
 import pytest
@@ -22,8 +21,7 @@ def test_case():
 tabs = [i for i in range(4)]
 
 
-# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-@pytest.mark.skip(reason="Test hanging, likely unclosed context menu")
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     """
@@ -135,3 +133,7 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
         credit_card_sample_data_original.name = credit_card_sample_data_new.name
 
     about_prefs_obj.verify_cc_json(cc_info_json, credit_card_sample_data_original)
+
+    # close the pop-up
+    browser_action_obj.switch_to_content_context()
+    about_prefs_obj.click_on("dialog-close-button")

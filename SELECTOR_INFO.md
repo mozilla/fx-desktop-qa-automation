@@ -543,6 +543,13 @@ Location: about:preferences#privacy popup dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: dialog-close-button
+Selector Data: "dialogClose"
+Description: The close button of the popup dialog
+Location: top right corner of about:preferences popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: saved-addresses
 Selector Data: "addresses"
 Description: The element that contains the saved addresses
