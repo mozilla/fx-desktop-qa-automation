@@ -16,7 +16,6 @@ SHEET1_URL = "https://docs.google.com/spreadsheets/d/1kXW-a-ElKBykGTRO9vrwajYj_A
 SHEET2_URL = "https://docs.google.com/spreadsheets/d/1kXW-a-ElKBykGTRO9vrwajYj_AHt9P-h8p3niLdXu40/edit?gid=1387427752#gid=1387427752"
 
 
-@pytest.mark.unstable
 def test_copy_entire_row_column(driver: Firefox):
     """
     C936861: Verify that copying and pasting entire rows and columns work

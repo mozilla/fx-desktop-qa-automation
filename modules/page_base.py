@@ -594,6 +594,7 @@ class BasePage(Page):
             keyboard.tap(Key.down)
             keyboard.tap(Key.down)
             keyboard.tap(Key.enter)
+            time.sleep(0.5)
         return self
 
     def copy_selection(
@@ -606,6 +607,7 @@ class BasePage(Page):
             self.context_click(el)
             keyboard.tap(Key.down)
             keyboard.tap(Key.enter)
+            time.sleep(0.5)
         return self
 
     def click_and_hide_menu(
