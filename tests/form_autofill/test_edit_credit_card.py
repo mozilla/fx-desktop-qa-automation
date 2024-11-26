@@ -21,8 +21,7 @@ def test_case():
 tabs = [i for i in range(4)]
 
 
-# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-@pytest.mark.unstable
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     """
@@ -33,7 +32,7 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     about_prefs_obj = AboutPrefs(driver, category="privacy")
     util = Utilities()
     browser_action_obj = BrowserActions(driver)
-    credit_card_fill_obj = CreditCardFill(driver).open()
+    credit_card_fill_obj = CreditCardFill(driver)
     autofill_popup_obj = AutofillPopup(driver)
 
     # fill in cc information
