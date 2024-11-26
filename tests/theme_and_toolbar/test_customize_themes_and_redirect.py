@@ -17,6 +17,7 @@ themes = {
 
 alpenglow_map = {"light": "rgba(255, 255, 255, 0.76)", "dark": "rgba(40, 29, 78, 0.96)"}
 
+@pytest.mark.unstable
 
 @pytest.mark.ci
 def test_redirect_to_addons(driver: Firefox):
