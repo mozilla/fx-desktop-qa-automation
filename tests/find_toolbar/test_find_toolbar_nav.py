@@ -27,25 +27,26 @@ def test_find_toolbar_navigation(driver: Firefox):
     """
     driver.get("about:about")
     ba = BrowserActions(driver)
+    import time
 
     find_toolbar = FindToolbar(driver).open()
     find_toolbar.find("pro")
     match_status = find_toolbar.get_match_args()
-    assert match_status["total"] == 4
+    assert match_status["total"] == 7
 
     # Sometimes we get a match that isn't the first
     # (This also tests that the number is correct)
     find_toolbar.rewind_to_first_match()
 
     # Ensure that first match is highlighted, others are not
-    processes_selector = (By.CSS_SELECTOR, "a[href='about:processes']")
-    protections_selector = (By.CSS_SELECTOR, "a[href='about:protections']")
+    first_match = (By.CSS_SELECTOR, "a[href='about:deleteprofile']")
+    fourth_match = (By.CSS_SELECTOR, "a[href='about:processes']")
 
-    processes_colors = ba.get_all_colors_in_element(processes_selector)
-    protections_colors = ba.get_all_colors_in_element(protections_selector)
+    first_match_colors = ba.get_all_colors_in_element(first_match)
+    fourth_match_colors = ba.get_all_colors_in_element(fourth_match)
 
-    assert len(processes_colors) > len(protections_colors)
-    assert not compare(len(processes_colors), len(protections_colors))
+    assert len(first_match_colors) > len(fourth_match_colors)
+    assert not compare(len(first_match_colors), len(fourth_match_colors))
 
     # Navigate with keyboard and button
     with find_toolbar.driver.context(find_toolbar.driver.CONTEXT_CHROME):
@@ -55,17 +56,18 @@ def test_find_toolbar_navigation(driver: Firefox):
     find_toolbar.next_match()
 
     # Now the highlight should be on the other match
-    processes_selector = (By.CSS_SELECTOR, "a[href='about:processes']")
-    protections_selector = (By.CSS_SELECTOR, "a[href='about:protections']")
+    first_match = (By.CSS_SELECTOR, "a[href='about:deleteprofile']")
+    fourth_match = (By.CSS_SELECTOR, "a[href='about:processes']")
 
-    processes_colors = ba.get_all_colors_in_element(processes_selector)
-    protections_colors = ba.get_all_colors_in_element(protections_selector)
+    first_match_colors = ba.get_all_colors_in_element(first_match)
+    fourth_match_colors = ba.get_all_colors_in_element(fourth_match)
 
-    assert len(processes_colors) < len(protections_colors)
-    assert not compare(len(processes_colors), len(protections_colors))
+    assert len(first_match_colors) < len(fourth_match_colors)
+    assert not compare(len(first_match_colors), len(fourth_match_colors))
 
     # Check what happens when you go past the last match
-    find_toolbar.next_match()
+    for _ in range(4):
+        find_toolbar.next_match()
     find_toolbar.element_visible("reached-bottom-label")
 
     # ...And hit Previous on the first match
