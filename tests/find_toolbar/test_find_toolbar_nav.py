@@ -27,9 +27,9 @@ def test_find_toolbar_navigation(driver: Firefox):
     """
     driver.get("about:about")
     ba = BrowserActions(driver)
-    import time
 
-    find_toolbar = FindToolbar(driver).open()
+    find_toolbar = FindToolbar(driver)
+    find_toolbar.open()
     find_toolbar.find("pro")
     match_status = find_toolbar.get_match_args()
     assert match_status["total"] == 7
