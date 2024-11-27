@@ -1,4 +1,3 @@
-import platform
 from time import sleep
 
 import pytest
@@ -12,6 +11,10 @@ from modules.util import Utilities
 @pytest.fixture()
 def test_case():
     return "2637622"
+
+@pytest.fixture()
+def delete_files_regex_string():
+    return rf"{SAVED_FILENAME}"
 
 
 LINK_IMAGE_URL = (
@@ -48,70 +51,39 @@ def test_open_image_in_new_tab(driver: Firefox):
 
 
 @pytest.mark.headed
-@pytest.mark.unstable
-def test_save_image_as(driver: Firefox):
+def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     """
     C2637622.2: save image as
     """
     try:
-        from pynput.keyboard import Controller, Key
+        from pynput.keyboard import Controller
     except ModuleNotFoundError:
         pytest.skip("Could not load pynput")
 
     controller = Controller()
 
-    def key_press_release(key: Key):
-        controller.press(key)
-        controller.release(key)
-
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ContextMenu(driver)
-    nav = Navigation(driver)
     util = Utilities()
 
-    # wait for page to load
+    # Wait for page to load
     wiki_image_page.wait_for_page_to_load()
 
-    # get the image and context click it
+    # Get the image and context click it
     image_logo = wiki_image_page.get_element("mediawiki-image")
     wiki_image_page.context_click(image_logo)
 
-    # save it
+    # Save the image
     image_context_menu.click_and_hide_menu("context-menu-save-image-as")
 
-    # create the pynput controller
-    downloads_button = nav.get_download_button()
-
     # wait some time before interacting with the system dialog
-    sleep(3)
+    sleep(2)
+    wiki_image_page.handle_os_download_confirmation(controller, sys_platform)
 
-    this_platform = platform.system()
-    if this_platform == "Linux":
-        controller.press(Key.alt)
-        controller.press(Key.tab)
-        controller.release(Key.tab)
-        controller.release(Key.alt)
-
-        controller.press(Key.alt)
-        controller.press(Key.tab)
-        controller.release(Key.tab)
-        controller.release(Key.alt)
-
-        key_press_release(Key.tab)
-
-        key_press_release(Key.tab)
-
-    # Press and release the Enter key
-    key_press_release(Key.enter)
-
-    # Wait for the animation to complete
-    nav.wait_for_download_animation_finish(downloads_button)
-
+    # Verify that the file exists
+    sleep(2)
     saved_image_location = util.get_saved_file_path(SAVED_FILENAME)
-
     util.check_file_path_validility(saved_image_location)
-
-    util.remove_file(saved_image_location)
 
 
 def test_copy_image_link(driver: Firefox):

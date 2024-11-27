@@ -36,7 +36,7 @@ class Autofill(BasePage):
 
     def click_form_button(self, field_name):
         """Clicks submit on the form"""
-        self.get_element("submit-button", labels=[field_name]).click()
+        self.click_on("submit-button", labels=[field_name])
 
 
 class CreditCardFill(Autofill):
@@ -95,13 +95,23 @@ class CreditCardFill(Autofill):
             The object that contains all the relevant information about the credit card autofill
         """
         self.double_click("form-field", labels=["cc-name"])
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            ccp.get_element("select-form-option").click()
-
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
+        # Click on popup form value with name only
+        if self.sys_platform() == "Linux":
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                ccp.custom_wait(timeout=30, poll_frequency=0.5).until(
+                    EC.element_to_be_clickable(
+                        ccp.get_selector(
+                            "select-form-option-by-value", labels=[info_list[0]]
+                        )
+                    )
+                )
+        ccp.click_on("select-form-option-by-value", labels=[info_list[0]])
+
         for i in range(len(info_list)):
-            input_field = self.get_element("form-field", labels=[self.fields[i]])
-            assert info_list[i] == input_field.get_attribute("value")
+            self.element_attribute_contains(
+                "form-field", "value", info_list[i], labels=[self.fields[i]]
+            )
         return self
 
     def fake_and_fill(
@@ -147,7 +157,7 @@ class CreditCardFill(Autofill):
         """
         ba = BrowserActions(self.driver)
         self.fill_input_element(ba, field, field_data)
-        autofill_popup_obj.click_doorhanger_button("save")
+        self.click_form_button("submit")
 
     def press_autofill_panel(self, credit_card_popoup_obj: AutofillPopup):
         """
@@ -172,11 +182,10 @@ class CreditCardFill(Autofill):
         self.update_field(field_name, field_data, autofill_popup_obj)
         self.click_form_button("submit")
 
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            if not save_card:
-                autofill_popup_obj.get_element("update-card-info-popup-button").click()
-            else:
-                autofill_popup_obj.get_element("doorhanger-save-button").click()
+        if not save_card:
+            autofill_popup_obj.click_on("update-card-info-popup-button")
+        else:
+            autofill_popup_obj.click_on("doorhanger-save-button")
 
     def extract_credit_card_obj_into_list(
         self, credit_card_sample_data: CreditCardBase

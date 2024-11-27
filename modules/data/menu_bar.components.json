@@ -52,6 +52,42 @@
         "selectorData": "historyUndoWindowMenu",
         "strategy": "id",
         "groups": []
+    },
+
+     "view-menu-button": {
+        "selectorData": "view-menu",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "menu-bar-zoom": {
+        "selectorData": "viewFullZoomMenu",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "menu-bar-zoom-enlarge": {
+        "selectorData": "menu_zoomEnlarge",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "menu-bar-zoom-reduce": {
+        "selectorData": "menu_zoomReduce",
+        "strategy": "id",
+        "groups": []
+    },
+
+     "menu-bar-zoom-reset": {
+        "selectorData": "menu_zoomReset",
+        "strategy": "id",
+        "groups": []
+    },
+
+      "menu-bar-zoom-text-only": {
+        "selectorData": "toggle_zoom",
+        "strategy": "id",
+        "groups": []
     }
 
 }

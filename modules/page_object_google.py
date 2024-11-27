@@ -47,7 +47,7 @@ class GoogleSheets(GenericPage):
         """Select n rows starting from the current position"""
         self.actions.key_down(Keys.SHIFT)
         self.actions.send_keys(Keys.SPACE)
-        for _ in range(n):
+        for _ in range(n - 1):
             self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.SHIFT).perform()
         return self
@@ -56,14 +56,26 @@ class GoogleSheets(GenericPage):
         """Select n columns starting from the current position"""
         self.actions.key_down(Keys.CONTROL)
         self.actions.send_keys(Keys.SPACE)
-        for _ in range(n - 1):
-            self.actions.send_keys(Keys.ARROW_DOWN)
         self.actions.key_up(Keys.CONTROL).perform()
+        self.actions.key_down(Keys.SHIFT)
+        for _ in range(n - 1):
+            self.actions.send_keys(Keys.RIGHT)
+        self.actions.key_up(Keys.SHIFT).perform()
         return self
 
-    def go_to_top_left_cell(self, sys_platform) -> GenericPage:
+    def select_entire_table(self) -> GenericPage:
+        """Select the entire table starting from the current position"""
+        mod_key = Keys.COMMAND if self.sys_platform else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.key_down(Keys.SHIFT)
+        self.actions.send_keys(Keys.SPACE)
+        self.actions.key_up(Keys.SHIFT)
+        self.actions.key_up(mod_key).perform()
+        return self
+
+    def go_to_top_left_cell(self) -> GenericPage:
         """Select cell A1 (top left)"""
-        if sys_platform == "Darwin":
+        if self.sys_platform == "Darwin":
             self.actions.key_down(Keys.COMMAND)
             self.actions.send_keys(Keys.LEFT)
             self.actions.send_keys(Keys.UP)

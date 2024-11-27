@@ -543,6 +543,13 @@ Location: about:preferences#privacy popup dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: dialog-close-button
+Selector Data: "dialogClose"
+Description: The close button of the popup dialog
+Location: top right corner of about:preferences popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: saved-addresses
 Selector Data: "addresses"
 Description: The element that contains the saved addresses
@@ -1067,6 +1074,27 @@ Description: mlb website autoplay settings
 Location: about:preferences#privacy - Autoplay settings
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: zoom-text-only
+Selector Data: zoomText
+Description: The zoom text only checkbox
+Location: about:preferences Zoom - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: default-zoom-dropdown
+Selector Data: defaultZoom
+Description: The default zoom dropdown.
+Location: about:preferences - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: default-zoom-dropdown-value
+Selector Data: menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']
+Description: The dropdown menu for default zoom selection
+Location: about:preferences - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1242,6 +1270,13 @@ Location: Inside the autofill save credit card doorhanger, accessible by clickin
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: doorhanger-more-actions-button
+Selector Data: "[data-l10n-id='popup-notification-more-actions-button']"
+Description: Arrow on the "Not now" button
+Location: Autofill save login doorhanger
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-never-save-login-button
 Selector Data: "menuitem[label='Never save']"
 Description: The hidden button in save login doorhanger.
@@ -1259,6 +1294,13 @@ Path to .json: modules/data/autofill_popup.components.json
 Selector Name: select-form-option
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem"
 Description: An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: select-form-option-by-value
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']"
+Description: An individual entry within the autofill dropdown, with a label for the "ac-value" attr, usually a cardholder name.
 Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
 Path to .json: modules/data/autofill_popup.components.json
 ```
@@ -3540,4 +3582,39 @@ Selector Data: "protections-popup-socialblockView"
 Description: List of cookies blocked
 Location: The Social media trackers panel
 Path to .json: modules/data/tracker_panel.components.json
+```
+```
+Selector Name: view-menu-button
+Selector Data: "view-menu"
+Description: View option from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom
+Selector Data: "viewFullZoomMenu"
+Description: Zoom option from Menu Bar /View
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom-enlarge
+Selector Data: "menu_zoomEnlarge"
+Description: Zoom in from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom-reduce
+Selector Data: "menu_zoomReduce"
+Description: View option from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-zoom-reset
+Selector Data: "menu_zoomReset"
+Description: Reset Zoom option from Menu Bar
+Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
 ```

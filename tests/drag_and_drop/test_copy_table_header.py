@@ -81,8 +81,7 @@ def test_copy_table_header(driver: Firefox):
         web_page.element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
-        web_page.undo()
-        time.sleep(2)
+
     finally:
         web_page.undo()
         time.sleep(2)
