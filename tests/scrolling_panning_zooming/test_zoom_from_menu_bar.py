@@ -71,8 +71,6 @@ def test_zoom_from_menu_bar(driver: Firefox):
     )
 
     # **Step 2**: Reset Zoom to 100%
-    menu_bar.activate_menu_bar()
-    menu_bar.open_menu("View")
     menu_bar.click_on("menu-bar-zoom")
     menu_bar.click_and_hide_menu("menu-bar-zoom-reset")
 
@@ -95,7 +93,6 @@ def test_zoom_from_menu_bar(driver: Firefox):
     ), f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
 
     # **Step 3**: Zoom Out
-    menu_bar.open_menu("View")
     menu_bar.click_on("menu-bar-zoom")
     menu_bar.click_and_hide_menu("menu-bar-zoom-reduce")
 
@@ -121,7 +118,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
     )
 
     # Reset the zoom level back to 100%
-    menu_bar.activate_menu_bar()
-    menu_bar.open_menu("View")
     menu_bar.click_on("menu-bar-zoom")
     menu_bar.click_and_hide_menu("menu-bar-zoom-reset")
+    menu_bar.click_and_hide_menu("view-menu-button")
+    
