@@ -413,6 +413,7 @@ class AboutPrefs(BasePage):
         self.click_on("default-zoom-dropdown")
         return self
 
+
 class AboutAddons(BasePage):
     """
     The POM for the about:addons page

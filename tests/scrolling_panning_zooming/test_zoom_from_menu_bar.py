@@ -17,6 +17,7 @@ def test_case():
 
 TEST_PAGE = "https://www.example.com"
 
+@pytest.mark.unstable
 
 @pytest.mark.skipif(
     platform.system() == "Darwin", reason="Cannot access menubar in MacOS"
