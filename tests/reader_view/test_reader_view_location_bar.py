@@ -27,7 +27,6 @@ def test_reader_view_open_close_using_searchbar(driver: Firefox):
     reader_view.close_reader_view_searchbar()
 
 
-@pytest.mark.unstable
 def test_reader_view_open_close_using_keys(driver: Firefox):
     """
     C130908.2: Ensure that the reader view is opened and closed using keys

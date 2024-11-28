@@ -1,10 +1,7 @@
-import pytest
-
 from modules.page_object import AboutLogins
 from modules.util import BrowserActions
 
 
-@pytest.mark.unstable
 def test_about_logins_search_functionality(driver_and_saved_logins):
     """Basic test of about:logins search, case number tbd"""
     (driver, usernames, logins) = driver_and_saved_logins
