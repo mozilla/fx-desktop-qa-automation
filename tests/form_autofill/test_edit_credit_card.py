@@ -18,12 +18,17 @@ def test_case():
     return "122390"
 
 
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 tabs = [i for i in range(4)]
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("num_tabs", tabs)
-def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
+def test_edit_credit_card_profile(driver: Firefox, num_tabs: int):
     """
     C122390, ensures that editing a credit card profile in the about:prefs
     has the correct behaviour
