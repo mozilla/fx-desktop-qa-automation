@@ -9,6 +9,9 @@ on:
       job_to_run: 
         required: true
         type: string
+      beta-version:
+        required: true
+        type: string
 permissions:
   contents: 'write'
 env:
@@ -37,10 +40,11 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}    
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
+          BETA_VERSION=${{ inputs.beta-version }}
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
@@ -147,6 +151,7 @@ jobs:
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
+          echo "BETA_VERSION=${{ inputs.beta-version }}" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
         id: setup        
