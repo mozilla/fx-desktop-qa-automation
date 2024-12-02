@@ -18,6 +18,11 @@ def test_case():
     return "122390"
 
 
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 tabs = [i for i in range(4)]
 
 
@@ -137,3 +142,4 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     # close the pop-up
     browser_action_obj.switch_to_content_context()
     about_prefs_obj.click_on("dialog-close-button")
+    driver.quit()
