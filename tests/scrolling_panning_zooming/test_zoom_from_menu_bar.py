@@ -17,8 +17,8 @@ def test_case():
 
 TEST_PAGE = "https://www.example.com"
 
-@pytest.mark.unstable
 
+@pytest.mark.unstable
 @pytest.mark.skipif(
     platform.system() == "Darwin", reason="Cannot access menubar in MacOS"
 )
@@ -121,4 +121,3 @@ def test_zoom_from_menu_bar(driver: Firefox):
     menu_bar.click_on("menu-bar-zoom")
     menu_bar.click_and_hide_menu("menu-bar-zoom-reset")
     menu_bar.click_and_hide_menu("view-menu-button")
-    

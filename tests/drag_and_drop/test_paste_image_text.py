@@ -56,7 +56,9 @@ COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
 
 @pytest.mark.headed
-@pytest.mark.xfail(platform.system() == "Windows", reason="A pref needs to be set only on windows.")  
+@pytest.mark.xfail(
+    platform.system() == "Windows", reason="A pref needs to be set only on windows."
+)
 # Ref to Windows bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
 def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
