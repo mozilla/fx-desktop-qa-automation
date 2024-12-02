@@ -2,13 +2,12 @@ import logging
 import time
 
 import pytest
-
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.page_object_generics import GenericPage
-from modules.page_object import AboutPrefs
 from modules.browser_object import TabBar
+from modules.page_object import AboutPrefs
+from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -45,7 +44,9 @@ def test_default_zoom_across_tabs(driver: Firefox):
         # Open a new tab if not the first iteration
         if index > 0:
             tabs.new_tab_by_button()
-            driver.switch_to.window(driver.window_handles[-1])  # Switch to the newly opened tab
+            driver.switch_to.window(
+                driver.window_handles[-1]
+            )  # Switch to the newly opened tab
 
         # Load the test URL in the current tab
         page = GenericPage(driver, url=test_url)

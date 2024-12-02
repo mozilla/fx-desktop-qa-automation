@@ -22,6 +22,7 @@ TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.audio
 def test_allow_audio_video_functionality(driver: Firefox):
     """
     C330155 : 'Allow Audio and Video' functionality
