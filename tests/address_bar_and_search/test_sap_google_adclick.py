@@ -14,7 +14,9 @@ def test_case():
     return "1365108"
 
 
-@pytest.mark.xfail(platform.system() == "Linux", reason="Telemetry testing unstable in Linux")
+@pytest.mark.xfail(
+    platform.system() == "Linux", reason="Telemetry testing unstable in Linux"
+)
 def test_sap_google_adclick(driver: Firefox):
     """
     C1365108, Test SAP Google adclick - URL bar - US
