@@ -9,7 +9,7 @@ from modules.page_object import GenericPdf
 
 @pytest.fixture()
 def test_case():
-    return "3932"
+    return "3931"
 
 
 @pytest.fixture()
@@ -32,7 +32,7 @@ def test_pdf_download(
     delete_files,
 ):
     """
-    C3932: PDF files can be successfully downloaded via pdf.js
+    C3931: PDF files can be successfully downloaded via pdf.js
     """
     from pynput.keyboard import Controller
 

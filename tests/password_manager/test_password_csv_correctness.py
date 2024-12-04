@@ -17,7 +17,7 @@ def test_case():
 @pytest.mark.headed
 def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_platform):
     """
-    C2241521: Check that password.csv displays the correct information
+    C2241522: Check that password.csv displays the correct information
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
