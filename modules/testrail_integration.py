@@ -428,6 +428,11 @@ def collect_changes(testrail_session: TestRail, report):
             continue
 
         outcome = test.get("outcome")
+        # Tests reported as rerun are a problem -- we need to know pass/fail
+        if outcome == "rerun":
+            outcome = test.get("call").get("outcome")
+        logging.info(f"TC: {test_case}: {outcome}")
+
         if not results_by_suite.get(suite_id):
             results_by_suite[suite_id] = {}
         results_by_suite[suite_id][test_case] = outcome
