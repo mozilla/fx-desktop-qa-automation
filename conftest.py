@@ -376,10 +376,10 @@ def pytest_sessionfinish(session):
     tri.mark_results(tr_session, passes)
     with open(".tmp_testrail_info") as fh:
         (plan_title, config) = fh.read().split("|")
-    version = plan_title.split(" ")[-1]
+    version = os.environ.get("BETA_VERSION")
     prefix = config[:3].lower()
     with open(f"{prefix}-latest-reported-version", "w") as fh:
-        fh.write(version.split(" ")[-1])
+        fh.write(version)
 
 
 @pytest.fixture()

@@ -32,7 +32,8 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        if [[ $(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq '.FIREFOX_DEVEDITION') == "\"$(cat lin-latest-reported-version)\"" ]]; then exit 100; fi;
+        export BETA_VERSION=$(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq -r '.FIREFOX_DEVEDITION')
+        if [[ $BETA_VERSION == "$(cat lin-latest-reported-version)" ]]; then exit 100; fi;
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
