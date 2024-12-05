@@ -18,6 +18,9 @@ def test_case():
 
 @pytest.fixture()
 def edge_bookmarks(sys_platform, home_folder):
+    """
+    C2084641: Verify that the user can Import Bookmarks from Microsoft Edge
+    """
     source = os.path.join("data", "Edge_Bookmarks")
     if sys_platform.lower().startswith("win"):
         target = os.path.join(
