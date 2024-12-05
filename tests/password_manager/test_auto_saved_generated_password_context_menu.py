@@ -18,7 +18,7 @@ def set_prefs():
 
 def test_auto_saved_generated_password_context_menu(driver: Firefox):
     """
-    C2241087 - Securely Generated Password is auto-saved when generated from password field context menu
+    C2248176 - Securely Generated Password is auto-saved when generated from password field context menu
     """
 
     context_menu = ContextMenu(driver)
