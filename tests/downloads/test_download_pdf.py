@@ -42,7 +42,7 @@ def test_download_pdf(
     pdf.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
-    time.sleep(2)
+    time.sleep(3)
 
     # Set the expected download path and the expected PDF name
     file_name = "i-9.pdf"
