@@ -23,7 +23,6 @@ def delete_files_regex_string():
 
 
 @pytest.mark.headed
-@pytest.mark.unstable
 def test_pdf_download(
     driver: Firefox,
     fillable_pdf_url: str,
@@ -49,7 +48,7 @@ def test_pdf_download(
     pdf.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
-    time.sleep(2)
+    time.sleep(3)
 
     # Set the expected download path and the expected PDF name
     file_name = "i-9.pdf"

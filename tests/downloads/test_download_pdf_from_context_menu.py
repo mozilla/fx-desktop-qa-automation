@@ -48,7 +48,7 @@ def test_download_pdf_from_context_menu(
     pdf.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
-    sleep(2)
+    sleep(3)
 
     # Open about:telemetry and go to events tab
     about_telemetry = AboutTelemetry(driver).open()
