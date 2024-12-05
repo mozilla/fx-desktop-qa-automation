@@ -2,7 +2,6 @@ import logging
 from time import sleep
 
 import pytest
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
@@ -15,15 +14,14 @@ def test_case():
     return "1618400"
 
 
-@pytest.mark.slow
 def test_preferences_all_toggles_enabled(driver: Firefox):
     """
     C1618400: Preferences - All toggles buttons Enabled
     """
     # instantiate objects
     nav = Navigation(driver)
-    driver.implicitly_wait(25)
-    about_prefs = AboutPrefs(driver, category="search").open()
+    about_prefs = AboutPrefs(driver, category="search")
+    about_prefs.open()
     u = BrowserActions(driver)
 
     # Check if toggles are enabled
@@ -39,25 +37,24 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
         sponsors_checkbox.is_selected()
     ), f"Checkbox with selector '{sponsors_checkbox}' is not checked"
 
-    # Check if sponsored suggestion is displayed. Using long sleeps otherwise sponsored suggestions won't be displayed
-    sleep(20)
-    u.search("iphone", with_enter=False)
-    with driver.context(driver.CONTEXT_CHROME):
-        try:
-            nav.get_element("sponsored-suggestion")
-        except (NoSuchElementException, TimeoutException):
-            u.search("iphone", with_enter=False)
-            sleep(20)
-        logging.info(
-            "Label text:"
-            + nav.get_element("sponsored-suggestion").get_attribute("innerText")
-        )
-        assert any(
-            [
-                el.get_attribute("innerText") == "Sponsored"
-                for el in nav.get_elements("sponsored-suggestion")
-            ]
-        )
+    # Check if sponsored suggestion is displayed. Keep checking until the sponsered suggestions are displayed
+    found = False
+    retries = 0
+    while not found and retries < 20:
+        u.search("iphone", with_enter=False)
+        with driver.context(driver.CONTEXT_CHROME):
+            found = any(
+                [
+                    el.get_attribute("innerText") == "Sponsored"
+                    for el in nav.get_elements("sponsored-suggestion")
+                ]
+            )
+            logging.info(
+                "Label text:"
+                + nav.get_element("sponsored-suggestion").get_attribute("innerText")
+            )
+        sleep(1)
+        retries += 1
 
     # Check if a non-sponsored suggestion is displayed
     u.search("wiki", with_enter=False)
