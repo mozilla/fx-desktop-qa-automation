@@ -477,3 +477,28 @@ def collect_changes(testrail_session: TestRail, report):
         full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
     )
     return full_test_results
+
+def update_all_test_cases(testrail_session, field_to_update, field_content):
+    """
+    Sets the field of every test case to the new content
+    """
+    print(f"updating all test cases to have {field_content} in {field_to_update}")
+    test_suites = [d for d in os.listdir("./tests/")]
+    for test_suite in test_suites:
+        for test in os.listdir(f"./tests/{test_suite}"):
+            if test[0:4] != "test":
+                continue
+            # Find tests and parse test case number
+            file_name = f"tests/{test_suite}/{test}"
+            with open(file_name) as f:
+                for line in f:
+                    if line.startswith("def test_case():"):
+                        break
+                line = f.readline().strip()
+                ind = line.find('"')+1
+                test_case = line[ind:-1]
+                if test_case in ("", "N/A"): continue
+                # Update the test case
+                print(f"updating {test_case}: {file_name}")
+                testrail_session.update_case_field(test_case, field_to_update, field_content)
+    
