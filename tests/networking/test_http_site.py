@@ -1,5 +1,3 @@
-import sys
-
 import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
@@ -29,7 +27,6 @@ HTTP_SITE = "http://http.badssl.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
-@pytest.mark.xfail(sys.platform == "linux", reason="Unstable in TC linux")
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 
@@ -37,25 +34,26 @@ def test_http_site(driver: Firefox):
     prefs = AboutPrefs(driver, category="privacy")
     prefs.open()
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_DISABLED)
+    driver.switch_to.new_window("tab")
     driver.get(HTTP_SITE)
     nav = Navigation(driver)
     nav.element_attribute_contains("lock-icon", "tooltiptext", CONNECTION_NOT_SECURE)
 
     # Blocking
-    prefs.open()
+    driver.switch_to.window(driver.window_handles[0])
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_ALL)
-    driver.refresh()
+    driver.switch_to.window(driver.window_handles[1])
     try:
-        driver.get(HTTP_SITE)
+        driver.refresh()
         assert False, "Site should be blocked"
     except (TimeoutException, WebDriverException):
         pass
 
     # Unblocking - non-private only
-    prefs.open()
+    driver.switch_to.window(driver.window_handles[0])
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE)
+    driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
-    driver.get(HTTP_SITE)
     nav.element_attribute_contains("lock-icon", "tooltiptext", CONNECTION_NOT_SECURE)
 
     # Private browsing - blocked
