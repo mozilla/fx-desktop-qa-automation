@@ -344,11 +344,11 @@ class TestRail:
         """Given a run id, return all test objects in that run"""
         results_rs_json = self.client.send_get(f"/get_tests/{run_id}")
         return results_rs_json.get("tests")
-    
+
     def get_custom_fields(self):
         """Gets all fields of cases"""
         return self.client.send_get("get_case_fields/")
-    
+
     def update_case_field(self, case_id, field_id, content):
         """Set the provided field with the new content"""
         data = {field_id: content}

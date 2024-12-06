@@ -478,6 +478,7 @@ def collect_changes(testrail_session: TestRail, report):
     )
     return full_test_results
 
+
 def update_all_test_cases(testrail_session, field_to_update, field_content):
     """
     Sets the field of every test case to the new content
@@ -495,10 +496,12 @@ def update_all_test_cases(testrail_session, field_to_update, field_content):
                     if line.startswith("def test_case():"):
                         break
                 line = f.readline().strip()
-                ind = line.find('"')+1
+                ind = line.find('"') + 1
                 test_case = line[ind:-1]
-                if test_case in ("", "N/A"): continue
+                if test_case in ("", "N/A"):
+                    continue
                 # Update the test case
                 print(f"updating {test_case}: {file_name}")
-                testrail_session.update_case_field(test_case, field_to_update, field_content)
-    
+                testrail_session.update_case_field(
+                    test_case, field_to_update, field_content
+                )
