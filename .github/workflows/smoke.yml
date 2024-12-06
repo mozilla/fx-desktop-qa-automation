@@ -93,6 +93,7 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run: |
+          git pull
           git config --global user.email ${{ github.actor }}@users.noreply.github.com;
           git config --global user.name ${{ github.actor }};
           git add win-latest-reported-version;
@@ -182,6 +183,7 @@ jobs:
       - name: Commit Changed Tracker Files
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run: |
+          git pull
           git config --global user.email ${{ github.actor }}@users.noreply.github.com;
           git config --global user.name ${{ github.actor }};
           git add mac-latest-reported-version;
