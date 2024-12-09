@@ -34,7 +34,7 @@ def test_no_password_doorhanger_private_browsing(driver: Firefox):
 
     # open the form, fill the user and password
     login_auto_fill.open()
-    login_form = LoginAutofill.LoginForm(login_auto_fill)
+    login_form = login_auto_fill.LoginForm(login_auto_fill)
     login_form.fill_username(SAMPLE_USER)
     login_form.fill_password(SAMPLE_PASS)
     login_form.submit()
