@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 
 d = {}
 count = 0
@@ -16,7 +16,7 @@ for test_suite in test_suites:
                 if line.startswith("def test_case():"):
                     break
             line = f.readline().strip()
-            ind = line.find('"')+1
+            ind = line.find('"') + 1
             test_case = line[ind:-1]
         if d.get(test_case):
             count += 1
@@ -25,7 +25,8 @@ for test_suite in test_suites:
 
 if count > 2:
     logging.warning("""|\---/|""")
-    logging.warning("""| o_o | Someone copied and pasted a test without changing test_case()!!!!""")
+    logging.warning(
+        """| o_o | Someone copied and pasted a test without changing test_case()!!!!"""
+    )
     logging.warning(""" \_^_/""")
     exit(1)
-

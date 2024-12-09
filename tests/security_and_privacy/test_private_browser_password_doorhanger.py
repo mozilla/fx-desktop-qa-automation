@@ -19,7 +19,6 @@ def add_prefs():
     return [("signon.rememberSignons", True)]
 
 
-@pytest.mark.unstable
 def test_no_password_doorhanger_private_browsing(driver: Firefox):
     """
     C101670: Ensure no save password doorhanger shows up and settings are correct
