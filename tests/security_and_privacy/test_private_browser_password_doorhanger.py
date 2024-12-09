@@ -25,8 +25,10 @@ def test_no_password_doorhanger_private_browsing(driver: Firefox):
     """
     # instantiate objects
     login_auto_fill = LoginAutofill(driver)
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
     nav = Navigation(driver)
+
+    # open private window
     panel_ui.open_private_window()
     nav.switch_to_new_window()
 
@@ -39,5 +41,9 @@ def test_no_password_doorhanger_private_browsing(driver: Firefox):
 
     # ensure that the panel is not open
     with driver.context(driver.CONTEXT_CHROME):
-        save_pass_panel = login_auto_fill.get_element("save-login-popup")
-        assert save_pass_panel.get_attribute("panelopen") is None
+        login_auto_fill.wait.until(
+            lambda d: login_auto_fill.get_element("save-login-popup").get_attribute(
+                "panelopen"
+            )
+            is None
+        )
