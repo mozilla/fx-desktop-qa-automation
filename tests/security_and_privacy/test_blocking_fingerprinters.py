@@ -24,7 +24,8 @@ def test_blocking_fingerprinter(driver: Firefox):
     """
     # instantiate objects
     nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs.open()
 
     # Select custom option and keep just known fingerprinters checked
     about_prefs.get_element("custom-radio").click()
@@ -32,13 +33,12 @@ def test_blocking_fingerprinter(driver: Firefox):
     about_prefs.get_element("tracking-checkbox").click()
     about_prefs.get_element("cryptominers-checkbox").click()
     about_prefs.get_element("suspected-fingerprints-checkbox").click()
-    sleep(2)
 
     # Access url and click on the shield icon and verify that known fingerprinters are blocked
     driver.get(FINGERPRINTERS_URL)
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("shield-icon").click()
-        assert nav.get_element("known-fingerprints").is_displayed()
+        nav.wait.until(lambda _: nav.get_element("known-fingerprints").is_displayed())
         # Click on fingerprinters and check if subpanel is correctly displayed
         nav.get_element("known-fingerprints").click()
-        assert nav.get_element("fingerprints-blocked-subpanel").is_displayed()
+        nav.wait.until(lambda _: nav.get_element("fingerprints-blocked-subpanel").is_displayed())
