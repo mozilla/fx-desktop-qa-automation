@@ -30,7 +30,6 @@ def add_prefs():
     ]
 
 
-@pytest.mark.unstable
 def test_cross_site_tracking_cookies_blocked(driver: Firefox):
     """
     C446402: Ensures the cross tracking cookies are displayed in the tracker panel
