@@ -16,10 +16,10 @@ def test_case():
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
 
-@pytest.mark.xfail(
-    platform.system() == "Darwin" and environ.get("GITHUB_ACTIONS") == "true",
-    reason="Test failing in Mac GHA",
-)
+# @pytest.mark.xfail(
+#     platform.system() == "Darwin" and environ.get("GITHUB_ACTIONS") == "true",
+#     reason="Test failing in Mac GHA",
+# )
 def test_open_bookmark_in_new_window_via_toolbar_context_menu(driver: Firefox):
     """
     C2084552: Verify that a bookmarked page can be open in a New Window from Toolbar context menu.
