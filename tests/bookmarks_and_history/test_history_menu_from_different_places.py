@@ -1,5 +1,6 @@
 import platform
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_menu_bar import MenuBar
@@ -7,6 +8,11 @@ from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_customize_firefox import CustomizeFirefox
+
+
+@pytest.fixture()
+def test_case():
+    return "118799"
 
 
 def assert_elements_visibility(ui_object, elements: dict, source: str):

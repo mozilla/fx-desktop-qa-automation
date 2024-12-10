@@ -27,9 +27,16 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     C1756722: Verify that the user can download mixed content via HTTPS
     """
 
-    web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL).open()
-    web_page.wait_for_page_to_load()
-    web_page.find_element(By.XPATH, "//button[@onclick='runtestSec()']").click()
+    web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
+
+    # Wait up to 30 seconds for test website to wake up and load the content
+    web_page.open()
+    with driver.context(driver.CONTEXT_CHROME):
+        WebDriverWait(driver, 30).until(EC.title_contains("Hello!"))
+
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.XPATH, "//button[@onclick='runtestSec()']"))
+    ).click()
 
     with driver.context(driver.CONTEXT_CHROME):
         download_name = WebDriverWait(driver, 10).until(

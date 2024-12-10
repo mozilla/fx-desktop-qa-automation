@@ -13,7 +13,7 @@ def test_case():
     return "122401"
 
 
-indices = ["1", "2"]
+indices = range(2)
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
@@ -29,17 +29,16 @@ def test_form_autofill_suggestions(driver: Firefox, index: str):
     autofill_popup_obj = AutofillPopup(driver)
 
     # create fake data, two profiles
-    sample_data_1 = credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
-    sample_data_2 = credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
+    sample_data = [
+        credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj) for _ in range(2)
+    ]
 
     # press the corresponding option (according to the parameter)
-    credit_card_fill_obj.double_click("form-field", labels=["cc-name"])
-    with driver.context(driver.CONTEXT_CHROME):
-        panel_option = autofill_popup_obj.get_nth_element(index)
-        panel_option.click()
+    credit_card_fill_obj.click_on("form-field", labels=["cc-name"])
 
     # verify information based, verify based on second object if we are verifying first option (this is the newer option) and
     # vice versa
+    check_index = 1 - index
     credit_card_fill_obj.verify_four_fields(
-        autofill_popup_obj, sample_data_2 if index == "1" else sample_data_1
+        autofill_popup_obj, sample_data[check_index]
     )

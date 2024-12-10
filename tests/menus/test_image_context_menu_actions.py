@@ -12,6 +12,7 @@ from modules.util import Utilities
 def test_case():
     return "2637622"
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return rf"{SAVED_FILENAME}"

@@ -23,21 +23,27 @@ def test_no_password_doorhanger_private_browsing(driver: Firefox):
     """
     C101670: Ensure no save password doorhanger shows up and settings are correct
     """
-    # instantiate objects
+    # Instantiate objects
     login_auto_fill = LoginAutofill(driver)
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
     nav = Navigation(driver)
+
+    # Open Private Window
     panel_ui.open_private_window()
     nav.switch_to_new_window()
 
-    # open the form, fill the user and password
+    # Open the form, fill the user and password
     login_auto_fill.open()
     login_form = LoginAutofill.LoginForm(login_auto_fill)
     login_form.fill_username(SAMPLE_USER)
     login_form.fill_password(SAMPLE_PASS)
     login_form.submit()
 
-    # ensure that the panel is not open
+    # Ensure that the panel is not open
     with driver.context(driver.CONTEXT_CHROME):
-        save_pass_panel = login_auto_fill.get_element("save-login-popup")
-        assert save_pass_panel.get_attribute("panelopen") is None
+        login_auto_fill.wait.until(
+            lambda d: login_auto_fill.get_element("save-login-popup").get_attribute(
+                "panelopen"
+            )
+            is None
+        )

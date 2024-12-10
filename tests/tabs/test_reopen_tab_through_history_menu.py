@@ -8,7 +8,7 @@ from modules.browser_object import PanelUi, TabBar
 
 @pytest.fixture()
 def test_case():
-    return "134648"
+    return "134650"
 
 
 links = [
@@ -24,8 +24,8 @@ links = [
 link_set = set(links)
 
 
-def test_recently_closed_tabs(driver: Firefox):
-    """C134648 - Verify that the recently closed tab can be reopened from the context menu"""
+def test_reopn_tab_through_history_menu(driver: Firefox):
+    """C134650 - Verify that the recently closed tab can be reopened from the history menu"""
     # open 6 tabs
     tabs = TabBar(driver)
     panel = PanelUi(driver)

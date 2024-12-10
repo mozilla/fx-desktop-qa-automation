@@ -17,7 +17,6 @@ FINGERPRINTERS_URL = (
 )
 
 
-@pytest.mark.unstable
 def test_blocking_fingerprinter(driver: Firefox):
     """
     C446404: Blocking Fingerprinters
@@ -36,9 +35,9 @@ def test_blocking_fingerprinter(driver: Firefox):
 
     # Access url and click on the shield icon and verify that known fingerprinters are blocked
     driver.get(FINGERPRINTERS_URL)
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("shield-icon").click()
-        nav.wait.until(lambda _: nav.get_element("known-fingerprints").is_displayed())
-        # Click on fingerprinters and check if subpanel is correctly displayed
-        nav.get_element("known-fingerprints").click()
-        nav.wait.until(lambda _: nav.get_element("fingerprints-blocked-subpanel").is_displayed())
+    nav.click_on("shield-icon")
+    nav.element_visible("known-fingerprints")
+
+    # Click on fingerprinters and check if subpanel is correctly displayed
+    nav.click_on("known-fingerprints")
+    nav.element_visible("fingerprints-blocked-subpanel")
