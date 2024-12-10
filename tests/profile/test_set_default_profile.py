@@ -64,15 +64,11 @@ def test_set_default_profile(driver: Firefox, opt_ci):
         logging.warning("Could not find a currently active default profile.")
         assert False
 
-    # Select a non default profile randomly
-    profile_indices = [i for i in range(len(profiles)) if i != cur_default]
-    profile_index = random.choice(profile_indices)
-
     # Set it as the default and verify the rows
-    logging.info(f"Preparing to set profile {profile_index} to the default.")
+    logging.info(f"Preparing to set profile user2 to the default.")
     about_profiles.get_element(
         "profile-container-item-button",
-        parent_element=profiles[profile_index],
+        parent_element=profiles[-1],
         labels=["profiles-set-as-default"],
     ).click()
 
@@ -82,13 +78,13 @@ def test_set_default_profile(driver: Firefox, opt_ci):
     table_rows = about_profiles.get_element(
         "profile-container-item-table-row",
         multiple=True,
-        parent_element=profiles[profile_index],
+        parent_element=profiles[-1],
     )
     about_profiles.wait.until(
         lambda _: about_profiles.get_element("profile-container-item-table-row-value", parent_element=table_rows[0])
         .get_attribute("innerHTML") == "yes"
         )
-    logging.info(f"Verified that profile {profile_index} was set to the default.")
+    logging.info(f"Verified that profile user2 was set to the default.")
 
     # Set the previous default back to default
     logging.info(f"Preparing to set profile {cur_default} to the default.")
@@ -99,6 +95,15 @@ def test_set_default_profile(driver: Firefox, opt_ci):
         labels=["profiles-set-as-default"],
     ).click()
 
-    # Remove the created profiles
-    if opt_ci:
-        pass
+    # Remove the created profiles if its not in CI
+    if not opt_ci:
+        about_profiles.get_element(
+            "profile-container-item-button",
+            parent_element=profiles[-1],
+            labels=["profiles-remove"]
+        ).click()
+        about_profiles.get_element(
+            "profile-container-item-button",
+            parent_element=profiles[-2],
+            labels=["profiles-remove"],
+        ).click()
