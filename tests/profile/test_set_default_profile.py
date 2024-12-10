@@ -1,5 +1,6 @@
 import logging
-import random
+import time
+from pynput.keyboard import Controller, Key
 
 import pytest
 from selenium.webdriver import Firefox
@@ -12,25 +13,34 @@ def test_case():
     return "130792"
 
 
-@pytest.mark.unstable
-def test_set_default_profile(driver: Firefox):
+@pytest.mark.headed
+def test_set_default_profile(driver: Firefox, opt_ci):
     """
     C130792, set the default profile through the firefox browser
     """
-    about_profiles = AboutProfiles(driver).open()
+    about_profiles = AboutProfiles(driver)
+    keyboard = Controller()
 
-    # get the profiles container, extract all relevant children under it.
+    # Create two profiles as CI does not have profiles
+    about_profiles.open()
+    for i in range(2):
+        about_profiles.click_on("create-new-profile")
+        time.sleep(1)
+        keyboard.tap(Key.enter)
+        keyboard.type(f"user{i}")
+        keyboard.tap(Key.enter)
+
+    # Get the profiles container, extract all relevant children under it.
     profiles = about_profiles.get_all_children("profile-container")
 
-    # verify that some profile is the default
-    profile_header_in_use = about_profiles.get_element(
-        "profile-container-item-default-header"
-    )
-    assert profile_header_in_use is not None
+    # Verify that some profile is the default
+    about_profiles.wait.until(
+        lambda _: about_profiles.get_element("profile-container-item-default-header") is not None
+        )
 
     cur_default = -1
 
-    # find index that is the current default
+    # Find index that is the current default
     for i in range(len(profiles)):
         logging.info(f"Currently searching row {i} for the default profile")
         cur_profile = profiles[i]
@@ -40,7 +50,7 @@ def test_set_default_profile(driver: Firefox):
             parent_element=cur_profile,
         )
         first_row = table_rows[0]
-        # find the current default profile
+        # Find the current default profile
         default_profile_information = about_profiles.get_element(
             "profile-container-item-table-row-value", parent_element=first_row
         )
@@ -49,38 +59,34 @@ def test_set_default_profile(driver: Firefox):
             cur_default = i
             break
 
-    # no default profile could be found
+    # No default profile could be found
     if cur_default == -1:
-        logging.warn("Could not find a currently active default profile.")
+        logging.warning("Could not find a currently active default profile.")
         assert False
 
-    # select a non default profile randomly
-    profile_indices = [i for i in range(len(profiles)) if i != cur_default]
-    profile_index = random.choice(profile_indices)
-
-    # set it as the default and verify the rows
-    logging.info(f"Preparing to set profile {profile_index} to the default.")
+    # Set it as the default and verify the rows
+    logging.info(f"Preparing to set profile user2 to the default.")
     about_profiles.get_element(
         "profile-container-item-button",
-        parent_element=profiles[profile_index],
+        parent_element=profiles[-1],
         labels=["profiles-set-as-default"],
     ).click()
 
-    # refetch data to ensure no stale elements
+    # Refetch data to ensure no stale elements
     profiles = about_profiles.get_all_children("profile-container")
 
     table_rows = about_profiles.get_element(
         "profile-container-item-table-row",
         multiple=True,
-        parent_element=profiles[profile_index],
+        parent_element=profiles[-1],
     )
-    default_profile_information = about_profiles.get_element(
-        "profile-container-item-table-row-value", parent_element=table_rows[0]
-    )
-    assert default_profile_information.get_attribute("innerHTML") == "yes"
-    logging.info(f"Verified that profile {profile_index} was set to the default.")
+    about_profiles.wait.until(
+        lambda _: about_profiles.get_element("profile-container-item-table-row-value", parent_element=table_rows[0])
+        .get_attribute("innerHTML") == "yes"
+        )
+    logging.info(f"Verified that profile user2 was set to the default.")
 
-    # set the previous default back to default
+    # Set the previous default back to default
     logging.info(f"Preparing to set profile {cur_default} to the default.")
     original_default = profiles[cur_default]
     about_profiles.get_element(
@@ -88,3 +94,16 @@ def test_set_default_profile(driver: Firefox):
         parent_element=original_default,
         labels=["profiles-set-as-default"],
     ).click()
+
+    # Remove the created profiles if its not in CI
+    if not opt_ci:
+        about_profiles.get_element(
+            "profile-container-item-button",
+            parent_element=profiles[-1],
+            labels=["profiles-remove"]
+        ).click()
+        about_profiles.get_element(
+            "profile-container-item-button",
+            parent_element=profiles[-2],
+            labels=["profiles-remove"],
+        ).click()
