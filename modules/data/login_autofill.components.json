@@ -32,7 +32,7 @@
     },
 
     "username-login-field": {
-        "selectorData": "/html/body/div[1]/form[2]/input[1]",
+        "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='username']",
         "strategy": "xpath",
         "groups": [
             "doNotCache"
@@ -40,7 +40,7 @@
     },
 
     "password-login-field": {
-        "selectorData": "/html/body/div[1]/form[2]/input[2]",
+        "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='current-password']",
         "strategy": "xpath",
         "groups": [
             "doNotCache"
