@@ -12,7 +12,6 @@ def test_case():
     return "130792"
 
 
-@pytest.mark.unstable
 def test_set_default_profile(driver: Firefox):
     """
     C130792, set the default profile through the firefox browser
@@ -23,10 +22,9 @@ def test_set_default_profile(driver: Firefox):
     profiles = about_profiles.get_all_children("profile-container")
 
     # verify that some profile is the default
-    profile_header_in_use = about_profiles.get_element(
-        "profile-container-item-default-header"
-    )
-    assert profile_header_in_use is not None
+    about_profiles.wait.until(
+        lambda _: about_profiles.get_element("profile-container-item-default-header") is not None
+        )
 
     cur_default = -1
 
@@ -51,7 +49,7 @@ def test_set_default_profile(driver: Firefox):
 
     # no default profile could be found
     if cur_default == -1:
-        logging.warn("Could not find a currently active default profile.")
+        logging.warning("Could not find a currently active default profile.")
         assert False
 
     # select a non default profile randomly
@@ -74,10 +72,10 @@ def test_set_default_profile(driver: Firefox):
         multiple=True,
         parent_element=profiles[profile_index],
     )
-    default_profile_information = about_profiles.get_element(
-        "profile-container-item-table-row-value", parent_element=table_rows[0]
-    )
-    assert default_profile_information.get_attribute("innerHTML") == "yes"
+    about_profiles.wait.until(
+        lambda _: about_profiles.get_element("profile-container-item-table-row-value", parent_element=table_rows[0])
+        .get_attribute("innerHTML") == "yes"
+        )
     logging.info(f"Verified that profile {profile_index} was set to the default.")
 
     # set the previous default back to default
