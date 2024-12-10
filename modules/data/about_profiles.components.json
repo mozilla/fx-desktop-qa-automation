@@ -41,6 +41,12 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "create-new-profile": {
+        "selectorData": "create-button",
+        "strategy": "id",
+        "groups": []
     }
 
 }
