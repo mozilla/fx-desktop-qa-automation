@@ -17,7 +17,7 @@ def test_case():
 
 
 # @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-def test_autofill_cc_cvv(driver: Firefox, extend_timeout):
+def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
     """
     C122399, Test form autofill CC CVV number
     """
@@ -31,8 +31,10 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout):
     # create fake data, fill it in and press submit and save on the doorhanger
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
+    screenshot("cc_cvv_1")
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
+    screenshot("cc_cvv_2")
 
     # navigate to prefs
 
@@ -40,6 +42,7 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout):
     iframe = about_prefs_obj.press_button_get_popup_dialog_iframe(
         "Saved payment methods"
     )
+    screenshot("cc_cvv_3")
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # Select the saved cc
