@@ -14,7 +14,7 @@ def test_case():
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-def test_autofill_four_fields(driver: Firefox):
+def test_autofill_four_fields(driver: Firefox, extend_timeout):
     """
     C122404, tests that the form fields are filled corrected after saving a profile.
     """

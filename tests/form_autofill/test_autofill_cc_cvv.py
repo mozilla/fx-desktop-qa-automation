@@ -17,7 +17,7 @@ def test_case():
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-def test_autofill_cc_cvv(driver: Firefox):
+def test_autofill_cc_cvv(driver: Firefox, extend_timeout):
     """
     C122399, Test form autofill CC CVV number
     """

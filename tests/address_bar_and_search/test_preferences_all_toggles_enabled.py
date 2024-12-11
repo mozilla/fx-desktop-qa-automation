@@ -14,7 +14,7 @@ def test_case():
     return "1618400"
 
 
-def test_preferences_all_toggles_enabled(driver: Firefox):
+def test_preferences_all_toggles_enabled(driver: Firefox, sys_platform):
     """
     C1618400: Preferences - All toggles buttons Enabled
     """
@@ -54,6 +54,8 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
                 + nav.get_element("sponsored-suggestion").get_attribute("innerText")
             )
         sleep(1)
+        if sys_platform == "Linux":
+            sleep(1)
         retries += 1
 
     # Check if a non-sponsored suggestion is displayed

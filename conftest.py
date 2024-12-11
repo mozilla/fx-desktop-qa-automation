@@ -583,3 +583,12 @@ def close_file_manager(sys_platform):
         end tell
         """
         run(["osascript", "-e", applescript], check=True)
+
+
+@pytest.fixture()
+def extend_timeout(driver):
+    """Increases the implicit wait timeout for a given test"""
+    original_timeout = driver.timeouts.implicit_wait
+    driver.implicitly_wait(original_timeout * 1.5)
+    yield
+    driver.implicitly_wait(original_timeout)
