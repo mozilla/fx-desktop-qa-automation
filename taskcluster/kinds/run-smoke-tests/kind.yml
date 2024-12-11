@@ -33,7 +33,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/address_bar_and_search tests/form_autofill
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/form_autofill
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox tests/address_bar_and_search tests/form_autofill

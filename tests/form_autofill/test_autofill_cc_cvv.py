@@ -16,7 +16,7 @@ def test_case():
     return "122399"
 
 
-@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
+# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 def test_autofill_cc_cvv(driver: Firefox, extend_timeout):
     """
     C122399, Test form autofill CC CVV number
