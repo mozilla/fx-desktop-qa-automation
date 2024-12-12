@@ -34,7 +34,7 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
     screenshot("cc_cvv_1")
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
-    sleep(2)
+    autofill_popup.element_visible("doorhanger-confirmation")
     screenshot("cc_cvv_2")
 
     # navigate to prefs

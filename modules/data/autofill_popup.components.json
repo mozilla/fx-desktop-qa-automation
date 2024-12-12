@@ -19,6 +19,12 @@
         "groups": []
     },
 
+    "doorhanger-confirmation": {
+        "selectorData": "[data-l10n-id='confirmation-hint-credit-card-created']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "doorhanger-dropdown-never-save-cards-button": {
         "selectorData": "menuitem[label='Never save cards']",
         "strategy": "css",
