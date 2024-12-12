@@ -43,8 +43,8 @@
         ]
     },
 
-    "create-new-profile": {
-        "selectorData": "create-button",
+    "restart-button": {
+        "selectorData": "restart-button",
         "strategy": "id",
         "groups": []
     }

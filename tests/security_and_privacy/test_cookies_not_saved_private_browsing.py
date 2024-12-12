@@ -1,4 +1,5 @@
 import pytest
+import time
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
@@ -11,14 +12,14 @@ def test_case():
     return "101677"
 
 
-@pytest.mark.unstable
 def test_cookies_not_saved_private_browsing(driver: Firefox):
     """
     C101677: ensure that cookies are not saved after using private browsing
     """
     # instantiate objs
     about_prefs = AboutPrefs(driver, category="privacy")
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     nav = Navigation(driver)
     google_search = GoogleSearch(driver)
     ba = BrowserActions(driver)
@@ -34,9 +35,9 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     google_search.wait_for_page_to_load()
 
     # close the page and switch to first tab
-    driver.close()
     driver.switch_to.window(driver.window_handles[0])
     about_prefs.open()
+    time.sleep(3)
 
     # get the cookies
     about_prefs.get_element("cookies-manage-data").click()

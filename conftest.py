@@ -3,7 +3,9 @@ import logging
 import os
 import platform
 import re
-from shutil import unpack_archive
+import tempfile
+import zipfile
+from shutil import unpack_archive, rmtree
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
@@ -405,6 +407,7 @@ def driver(
     version,
     json_metadata,
     hard_quit,
+    create_profiles
 ):
     """
     Return the webdriver object.
@@ -583,3 +586,16 @@ def close_file_manager(sys_platform):
         end tell
         """
         run(["osascript", "-e", applescript], check=True)
+
+
+@pytest.fixture()
+def create_profiles(profile_paths, opt_ci, sys_platform):
+    return 
+
+
+@pytest.fixture()
+def profile_paths():
+    """
+    returns a list of profile zips, eg. ["profiles/theme_change.zip"]
+    """
+    return []
