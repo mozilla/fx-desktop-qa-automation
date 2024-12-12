@@ -74,7 +74,7 @@ class CreditCardFill(Autofill):
                 self.fill_input_element(ba, field, value)
                 if system() == "Linux":
                     self.driver.save_screenshot(
-                        f"artifacts/{datetime.now().strptime('%Y%m%d-%H_%M_%S')}.png"
+                        f"artifacts/{datetime.now().strftime('%Y%m%d-%H_%M_%S')}.png"
                     )
 
         self.click_form_button("submit")
