@@ -46,8 +46,7 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
         n += 1
     credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
-    cvv = credit_card_sample_data.cvv
-    autofill_popup.click_doorhanger_button("save")
+    autofill_popup.click_on("doorhanger-save-button")
     sleep(3)
     screenshot("cc_cvv_2")
 
@@ -74,5 +73,6 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
 
     # Verify that CVV number is not saved under CC profile
     element = about_prefs_obj.get_element("cc-saved-options", multiple=True)
+    cvv = credit_card_sample_data.cvv
     cvv_not_displayed = not any(cvv in element.text for element in element)
     assert cvv_not_displayed, "CVV is displayed."
