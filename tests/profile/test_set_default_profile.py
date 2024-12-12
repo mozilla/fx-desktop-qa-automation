@@ -74,7 +74,6 @@ def test_set_default_profile(driver: Firefox, opt_ci):
     """
     C130792: Set the default profile through the firefox browser
     """
-    import time
     about_profiles = AboutProfiles(driver)
 
     # Get the profiles container, extract all relevant children under it.

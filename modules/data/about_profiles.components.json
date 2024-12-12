@@ -41,12 +41,6 @@
         "groups": [
             "doNotCache"
         ]
-    },
-
-    "restart-button": {
-        "selectorData": "restart-button",
-        "strategy": "id",
-        "groups": []
     }
 
 }
