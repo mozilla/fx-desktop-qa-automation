@@ -1,6 +1,6 @@
 import json
 import logging
-import platform
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -34,6 +34,7 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
     screenshot("cc_cvv_1")
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
+    sleep(2)
     screenshot("cc_cvv_2")
 
     # navigate to prefs

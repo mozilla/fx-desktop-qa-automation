@@ -33,7 +33,6 @@ class Autofill(BasePage):
         term: str
             The string to be sent to the input field
         """
-        form_field_element = self.get_element("form-field", labels=[field_name])
         self.fill("form-field", term, press_enter=False, labels=[field_name])
 
     def click_form_button(self, field_name):
