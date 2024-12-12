@@ -320,14 +320,18 @@ class LoginAutofill(Autofill):
             self.submit_button = None
 
         def fill_username(self, username: str) -> None:
-            if self.username_field is None:
-                self.username_field = self.parent.get_element("username-login-field")
-            self.username_field.send_keys(username)
+            """Fill the username field after ensuring it's clickable."""
+            self.parent.element_clickable("username-login-field")
+            self.parent.fill(
+                "username-login-field", username, clear_first=True, press_enter=False
+            )
 
         def fill_password(self, password: str) -> None:
-            if self.password_field is None:
-                self.password_field = self.parent.get_element("password-login-field")
-            self.password_field.send_keys(password)
+            """Fill the password field after ensuring it's clickable."""
+            self.parent.element_clickable("password-login-field")
+            self.parent.fill(
+                "password-login-field", password, clear_first=True, press_enter=False
+            )
 
         def submit(self) -> None:
             if self.submit_button is None:
