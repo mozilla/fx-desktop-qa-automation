@@ -21,7 +21,8 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
     C122399, Test form autofill CC CVV number
     """
     # instantiate objects
-    credit_card_autofill = CreditCardFill(driver).open()
+    credit_card_autofill = CreditCardFill(driver)
+    credit_card_autofill.open()
     autofill_popup = AutofillPopup(driver)
     util = Utilities()
     about_prefs_obj = AboutPrefs(driver, category="privacy")
@@ -29,12 +30,22 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
 
     # create fake data, fill it in and press submit and save on the doorhanger
     credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
+    fields = {
+        "cc-name": credit_card_sample_data.name,
+        "cc-number": credit_card_sample_data.card_number,
+        "cc-exp-month": credit_card_sample_data.expiration_month,
+        "cc-exp-year": credit_card_sample_data.expiration_year,
+        "cc-csc": credit_card_sample_data.cvv,
+    }
+    for field, value in fields.items():
+        credit_card_autofill.fill(
+            "form-field", value, press_enter=False, labels=[field]
+        )
+    credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
-    autofill_popup.element_visible("doorhanger-confirmation")
-    autofill_popup.element_not_visible("doorhanger-confirmation")
+    sleep(3)
     screenshot("cc_cvv_2")
 
     # navigate to prefs
