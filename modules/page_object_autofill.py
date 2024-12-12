@@ -73,10 +73,6 @@ class CreditCardFill(Autofill):
             if value is not None:
                 self.fill_input_element(ba, field, value)
                 sleep(1)
-                if system() == "Linux":
-                    self.driver.save_screenshot(
-                        f"artifacts/{datetime.now().strftime('%Y%m%d-%H_%M_%S')}.png"
-                    )
 
         self.click_form_button("submit")
         sleep(1)
