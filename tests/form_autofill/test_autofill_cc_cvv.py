@@ -5,9 +5,8 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import CreditCardFill
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import BrowserActions, Utilities
 
 
@@ -35,6 +34,7 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
     autofill_popup.element_visible("doorhanger-confirmation")
+    autofill_popup.element_not_visible("doorhanger-confirmation")
     screenshot("cc_cvv_2")
 
     # navigate to prefs
