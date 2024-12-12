@@ -37,10 +37,13 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
         "cc-exp-year": credit_card_sample_data.expiration_year,
         "cc-csc": credit_card_sample_data.cvv,
     }
+    n = 1
     for field, value in fields.items():
         credit_card_autofill.fill(
             "form-field", value, press_enter=False, labels=[field]
         )
+        screenshot(f"cc_cvv_0{n}")
+        n += 1
     credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
     cvv = credit_card_sample_data.cvv
