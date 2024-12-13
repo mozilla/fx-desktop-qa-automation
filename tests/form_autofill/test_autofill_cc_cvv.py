@@ -48,16 +48,7 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
         n += 1
     credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
-    sleep(0.75)
-    with open("./artifacts/cc-cvv-chrome-pre-click.html", "w") as fh:
-        nav.element_visible("awesome-bar")
-        with driver.context(driver.CONTEXT_CHROME):
-            fh.write(driver.page_source)
-    autofill_popup.click_on("doorhanger-save-button")
-    with open("./artifacts/cc-cvv-chrome-pos-click.html", "w") as fh:
-        with driver.context(driver.CONTEXT_CHROME):
-            fh.write(driver.page_source)
-    sleep(3)
+    autofill_popup.click_and_hide_menu("doorhanger-save-button")
     screenshot("cc_cvv_2")
 
     # navigate to prefs
