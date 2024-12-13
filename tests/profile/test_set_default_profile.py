@@ -42,11 +42,13 @@ def create_profiles(profile_paths, opt_ci, sys_platform):
     }
     num_profiles = 0
     profile_file = os.path.join(profile_loc[sys_platform], "profiles.ini")
-    file_size = os.stat(profile_file).st_size
 
-    if not opt_ci:
+    try:
+        file_size = os.stat(profile_file).st_size
         with open(profile_file, "r") as p:
             num_profiles += sum(1 for line in p if line.startswith("[Profile"))
+    except Exception:
+        file_size = 0
 
     with open(profile_file, "a") as p:
         for i in range(len(tmpdir)):
@@ -65,9 +67,12 @@ def create_profiles(profile_paths, opt_ci, sys_platform):
         logging.info(f"temp dir {dir} is deleted")
 
     # Clean up profiles.ini
-    with open(profile_file, "a") as p:
-        p.truncate(file_size)
-        logging.info(f"removing added profiles from profiles.ini")
+    if file_size:
+        with open(profile_file, "a") as p:
+            p.truncate(file_size)
+            logging.info(f"removing added profiles from profiles.ini")
+    else:
+        os.remove(profile_file)
 
 
 def test_set_default_profile(driver: Firefox, opt_ci):
