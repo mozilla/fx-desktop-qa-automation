@@ -50,6 +50,7 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
     screenshot("cc_cvv_1")
     sleep(0.75)
     with open("./artifacts/cc-cvv-chrome-pre-click.html", "w") as fh:
+        nav.element_visible("awesome-bar")
         with driver.context(driver.CONTEXT_CHROME):
             fh.write(driver.page_source)
     autofill_popup.click_on("doorhanger-save-button")
