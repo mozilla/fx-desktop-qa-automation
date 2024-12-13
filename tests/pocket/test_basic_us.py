@@ -22,6 +22,7 @@ def add_prefs():
     ]
 
 
+@pytest.mark.skip(reason="Pocket tests no longer belong to DTE.")
 def test_new_tab_about_blank(driver: Firefox):
     """
     C408037: Test about:blank Pocket layout (US). First step only.
@@ -32,7 +33,7 @@ def test_new_tab_about_blank(driver: Firefox):
 
 
 # LOW PRIORITY
-@pytest.mark.unstable
+@pytest.mark.skip(reason="Pocket tests no longer belong to DTE.")
 def test_localized_pocket_layout_US(driver: Firefox, screenshot):
     """
     C408037: Test about:blank Pocket layout (US)
