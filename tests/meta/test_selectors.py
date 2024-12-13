@@ -6,7 +6,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import PanelUi
 
 
-@pytest.mark.unstable
+@pytest.mark.skip(reason="This is a metatest.")
 def test_a_selector(driver: Firefox, version: str):
     logging.info(f"Fx version {version}")
     panel = PanelUi(driver)

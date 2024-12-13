@@ -26,7 +26,7 @@ def fxa_test_account():
 
 
 # Attempts to deflake this have not been entirely successful
-@pytest.mark.unstable
+@pytest.mark.skip("Revisit when PyFxA is updated")
 def test_sync_existing_fxa(
     driver: Firefox,
     fxa_test_account: Tuple[str, str],
