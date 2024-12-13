@@ -16,7 +16,7 @@ def test_case():
 
 
 # @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
+def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screenshot):
     """
     C122399, Test form autofill CC CVV number
     """
@@ -46,7 +46,16 @@ def test_autofill_cc_cvv(driver: Firefox, extend_timeout, screenshot):
         n += 1
     credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
+    sleep(0.75)
+    if sys_platform == "Linux":
+        with open("./artifacts/cc-cvv-chrome-pre-click.html", "w") as fh:
+            with driver.context(driver.CONTEXT_CHROME):
+                fh.write(driver.page_source)
     autofill_popup.click_on("doorhanger-save-button")
+    if sys_platform == "Linux":
+        with open("./artifacts/cc-cvv-chrome-pos-click.html", "w") as fh:
+            with driver.context(driver.CONTEXT_CHROME):
+                fh.write(driver.page_source)
     sleep(3)
     screenshot("cc_cvv_2")
 
