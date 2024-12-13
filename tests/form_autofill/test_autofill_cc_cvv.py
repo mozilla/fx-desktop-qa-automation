@@ -5,7 +5,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, Navigation
+from modules.browser_object import AutofillPopup, Navigation, TabBar
 from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import BrowserActions, Utilities
 
@@ -24,6 +24,7 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
     credit_card_autofill = CreditCardFill(driver)
     credit_card_autofill.open()
     nav = Navigation(driver)
+    tabs = TabBar(driver)
     nav.element_visible("awesome-bar")
     autofill_popup = AutofillPopup(driver)
     util = Utilities()
@@ -53,6 +54,8 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
 
     # navigate to prefs
 
+    tabs.new_tab_by_button()
+    about_prefs_obj.switch_to_new_tab()
     about_prefs_obj.open()
     iframe = about_prefs_obj.press_button_get_popup_dialog_iframe(
         "Saved payment methods"
