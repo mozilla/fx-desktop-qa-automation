@@ -5,7 +5,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup
+from modules.browser_object import AutofillPopup, Navigation
 from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import BrowserActions, Utilities
 
@@ -23,6 +23,8 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
     # instantiate objects
     credit_card_autofill = CreditCardFill(driver)
     credit_card_autofill.open()
+    nav = Navigation(driver)
+    nav.element_visible("awesome-bar")
     autofill_popup = AutofillPopup(driver)
     util = Utilities()
     about_prefs_obj = AboutPrefs(driver, category="privacy")
@@ -47,15 +49,13 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
     credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
     sleep(0.75)
-    if sys_platform == "Linux":
-        with open("./artifacts/cc-cvv-chrome-pre-click.html", "w") as fh:
-            with driver.context(driver.CONTEXT_CHROME):
-                fh.write(driver.page_source)
+    with open("cc-cvv-chrome-pre-click.html", "w") as fh:
+        with driver.context(driver.CONTEXT_CHROME):
+            fh.write(driver.page_source)
     autofill_popup.click_on("doorhanger-save-button")
-    if sys_platform == "Linux":
-        with open("./artifacts/cc-cvv-chrome-pos-click.html", "w") as fh:
-            with driver.context(driver.CONTEXT_CHROME):
-                fh.write(driver.page_source)
+    with open("cc-cvv-chrome-pos-click.html", "w") as fh:
+        with driver.context(driver.CONTEXT_CHROME):
+            fh.write(driver.page_source)
     sleep(3)
     screenshot("cc_cvv_2")
 
