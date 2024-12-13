@@ -49,11 +49,11 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
     credit_card_autofill.click_on("submit-button", labels=["submit"])
     screenshot("cc_cvv_1")
     sleep(0.75)
-    with open("cc-cvv-chrome-pre-click.html", "w") as fh:
+    with open("./artifacts/cc-cvv-chrome-pre-click.html", "w") as fh:
         with driver.context(driver.CONTEXT_CHROME):
             fh.write(driver.page_source)
     autofill_popup.click_on("doorhanger-save-button")
-    with open("cc-cvv-chrome-pos-click.html", "w") as fh:
+    with open("./artifacts/cc-cvv-chrome-pos-click.html", "w") as fh:
         with driver.context(driver.CONTEXT_CHROME):
             fh.write(driver.page_source)
     sleep(3)
