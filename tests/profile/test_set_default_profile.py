@@ -36,7 +36,7 @@ def create_profiles(profile_paths, opt_ci, sys_platform):
 
     # Add the extracted profiles to profile.ini
     profile_loc = {
-        "Windows": os.path.join(os.getenv("",'APPDATA'), "Mozilla", "Firefox"),
+        "Windows": os.path.join(os.getenv("APPDATA", ""), "Mozilla", "Firefox"),
         "Darwin": os.path.expanduser(r"~/Library/Application Support/Firefox"),
         "Linux": os.path.expanduser(r"~/.mozilla/firefox")
     }
