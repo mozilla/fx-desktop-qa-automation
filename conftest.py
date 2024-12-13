@@ -3,9 +3,7 @@ import logging
 import os
 import platform
 import re
-import tempfile
-import zipfile
-from shutil import unpack_archive, rmtree
+from shutil import unpack_archive
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
@@ -589,13 +587,12 @@ def close_file_manager(sys_platform):
 
 
 @pytest.fixture()
-def create_profiles(profile_paths, opt_ci, sys_platform):
+def create_profiles():
+    """Creates profiles that will be recognised in about:profiles"""
     return 
 
 
 @pytest.fixture()
 def profile_paths():
-    """
-    returns a list of profile zips, eg. ["profiles/theme_change.zip"]
-    """
+    """returns a list of profile zips, eg. ["profiles/theme_change.zip"]"""
     return []

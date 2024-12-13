@@ -40,7 +40,7 @@ def test_pdf_download(
     keyboard = Controller()
 
     # Click the download button
-    pdf.get_element("download-button").click()
+    pdf.click_on("download-button")
 
     # Allow time for the download dialog m to appear and pressing enter to download
     time.sleep(2)

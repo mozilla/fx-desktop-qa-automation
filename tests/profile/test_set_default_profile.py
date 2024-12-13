@@ -21,7 +21,7 @@ def profile_paths():
 
 
 @pytest.fixture()
-def create_profiles(profile_paths, opt_ci, sys_platform):
+def create_profiles(profile_paths, sys_platform):
     """
     Creates profiles that will be recognised in about:profiles
     """
@@ -45,7 +45,7 @@ def create_profiles(profile_paths, opt_ci, sys_platform):
 
     try:
         file_size = os.stat(profile_file).st_size
-        with open(profile_file, "r") as p:
+        with open(profile_file) as p:
             num_profiles += sum(1 for line in p if line.startswith("[Profile"))
     except Exception:
         file_size = 0

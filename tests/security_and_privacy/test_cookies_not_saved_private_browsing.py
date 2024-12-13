@@ -1,5 +1,4 @@
 import pytest
-import time
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
