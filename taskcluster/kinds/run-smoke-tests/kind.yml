@@ -13,6 +13,8 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
+    env:
+      MOZ_ENABLE_WAYLAND: "0"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -24,8 +26,6 @@ tasks:
     run:
       using: run-task
       cwd: "{checkout}"
-      env:
-        MOZ_ENABLE_WAYLAND: 0
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
