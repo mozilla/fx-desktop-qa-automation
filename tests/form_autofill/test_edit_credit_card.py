@@ -1,5 +1,6 @@
 import json
 import logging
+import platform
 
 import pytest
 from selenium.webdriver import Firefox

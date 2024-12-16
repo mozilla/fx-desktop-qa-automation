@@ -405,6 +405,7 @@ def driver(
     version,
     json_metadata,
     hard_quit,
+    wayland,
 ):
     """
     Return the webdriver object.
@@ -446,6 +447,9 @@ def driver(
         options = Options()
         if opt_headless:
             options.add_argument("--headless")
+        if wayland:
+            options.add_argument("--enable-features=UseOzonePlatform")
+            options.add_argument("--ozone-platform=wayland")
         options.binary_location = fx_executable
         if use_profile:
             profile_path = tmp_path / use_profile
@@ -592,3 +596,8 @@ def extend_timeout(driver):
     driver.implicitly_wait(original_timeout * 1.5)
     yield
     driver.implicitly_wait(original_timeout)
+
+
+@pytest.fixture()
+def wayland():
+    return False

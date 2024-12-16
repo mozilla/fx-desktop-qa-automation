@@ -1,12 +1,13 @@
 import json
 import logging
-from time import sleep
+import platform
 
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, Navigation, TabBar
-from modules.page_object import AboutPrefs, CreditCardFill
+from modules.browser_object_autofill_popup import AutofillPopup
+from modules.page_object_autofill import CreditCardFill
+from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
 
@@ -15,18 +16,17 @@ def test_case():
     return "122399"
 
 
-# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-@pytest.mark.headed
-def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screenshot):
+@pytest.fixture()
+def wayland():
+    return True
+
+
+def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number
     """
     # instantiate objects
-    credit_card_autofill = CreditCardFill(driver)
-    credit_card_autofill.open()
-    nav = Navigation(driver)
-    tabs = TabBar(driver)
-    nav.element_visible("awesome-bar")
+    credit_card_autofill = CreditCardFill(driver).open()
     autofill_popup = AutofillPopup(driver)
     util = Utilities()
     about_prefs_obj = AboutPrefs(driver, category="privacy")
@@ -34,34 +34,16 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
 
     # create fake data, fill it in and press submit and save on the doorhanger
     credit_card_sample_data = util.fake_credit_card_data()
-    fields = {
-        "cc-name": credit_card_sample_data.name,
-        "cc-number": credit_card_sample_data.card_number,
-        "cc-exp-month": credit_card_sample_data.expiration_month,
-        "cc-exp-year": credit_card_sample_data.expiration_year,
-        "cc-csc": credit_card_sample_data.cvv,
-    }
-    n = 1
-    for field, value in fields.items():
-        credit_card_autofill.fill(
-            "form-field", value, press_enter=False, labels=[field]
-        )
-        screenshot(f"cc_cvv_0{n}")
-        n += 1
-    credit_card_autofill.click_on("submit-button", labels=["submit"])
-    screenshot("cc_cvv_1")
-    autofill_popup.click_and_hide_menu("doorhanger-save-button")
-    screenshot("cc_cvv_2")
+    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
+    cvv = credit_card_sample_data.cvv
+    autofill_popup.click_doorhanger_button("save")
 
     # navigate to prefs
 
-    tabs.new_tab_by_button()
-    about_prefs_obj.switch_to_new_tab()
     about_prefs_obj.open()
     iframe = about_prefs_obj.press_button_get_popup_dialog_iframe(
         "Saved payment methods"
     )
-    screenshot("cc_cvv_3")
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # Select the saved cc
@@ -78,6 +60,5 @@ def test_autofill_cc_cvv(driver: Firefox, sys_platform, extend_timeout, screensh
 
     # Verify that CVV number is not saved under CC profile
     element = about_prefs_obj.get_element("cc-saved-options", multiple=True)
-    cvv = credit_card_sample_data.cvv
     cvv_not_displayed = not any(cvv in element.text for element in element)
     assert cvv_not_displayed, "CVV is displayed."

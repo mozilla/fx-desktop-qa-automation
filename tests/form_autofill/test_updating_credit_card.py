@@ -21,7 +21,7 @@ fields = ["cc-name", "cc-exp-month", "cc-exp-year"]
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("field", fields)
-def test_update_cc_no_dupe_name(driver: Firefox, field: str, extend_timeout):
+def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     """
     C122406, ensures that updating the credit card saves the correct information with no dupe profile for the name and expiry dates
     """

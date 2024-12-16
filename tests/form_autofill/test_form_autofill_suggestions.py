@@ -18,7 +18,7 @@ indices = range(2)
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("index", indices)
-def test_form_autofill_suggestions(driver: Firefox, index: str, extend_timeout):
+def test_form_autofill_suggestions(driver: Firefox, index: str):
     """
     C122401, checks that the corresponding autofill suggestion autofills the fields correctly
     """

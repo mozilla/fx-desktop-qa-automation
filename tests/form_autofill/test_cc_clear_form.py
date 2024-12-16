@@ -14,7 +14,7 @@ def test_case():
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-def test_clear_form_credit_card(driver: Firefox, extend_timeout):
+def test_clear_form_credit_card(driver: Firefox):
     """
     C122581, Test clear form credit card
     """
