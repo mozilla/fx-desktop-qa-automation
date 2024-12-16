@@ -405,6 +405,7 @@ def driver(
     version,
     json_metadata,
     hard_quit,
+    create_profiles
 ):
     """
     Return the webdriver object.
@@ -583,3 +584,15 @@ def close_file_manager(sys_platform):
         end tell
         """
         run(["osascript", "-e", applescript], check=True)
+
+
+@pytest.fixture()
+def create_profiles():
+    """Creates profiles that will be recognised in about:profiles"""
+    return 
+
+
+@pytest.fixture()
+def profile_paths():
+    """returns a list of profile zips, eg. ["profiles/theme_change.zip"]"""
+    return []
