@@ -14,7 +14,7 @@ task-defaults:
         path: checkouts/vcs/artifacts
         type: directory
     env:
-      MOZ_ENABLE_WAYLAND: "0"
+      MOZ_ENABLE_WAYLAND: "1"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
