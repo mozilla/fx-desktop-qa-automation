@@ -1,5 +1,3 @@
-from datetime import datetime
-from platform import system
 from time import sleep
 from typing import List
 
