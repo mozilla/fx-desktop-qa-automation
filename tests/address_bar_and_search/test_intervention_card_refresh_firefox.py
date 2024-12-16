@@ -17,7 +17,6 @@ ALLOWED_RGB_AFTER_VALUES = set(
 )
 
 
-@pytest.mark.unstable
 def test_intervention_card_refresh(driver: Firefox):
     """
     C1365204.1: regular firefox, check the intervention card
