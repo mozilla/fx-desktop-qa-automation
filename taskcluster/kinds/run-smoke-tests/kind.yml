@@ -29,8 +29,8 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15';
-        pip3 install 'ruff>=0.4.8,<0.5';
+        pip3 install 'pipenv==2023.11.15' --break-system-packages;
+        pip3 install 'ruff>=0.4.8,<0.5' --break-system-packages;
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         ./collect_executables.sh;
