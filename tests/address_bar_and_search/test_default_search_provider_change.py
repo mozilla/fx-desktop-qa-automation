@@ -20,11 +20,11 @@ def test_default_search_provider_change(driver: Firefox):
     search_term = "what is life?"
 
     # Create objects
-    nav = Navigation(driver)
-    customize_firefox = CustomizeFirefox(driver)
     panel_ui = PanelUi(driver)
-    about_prefs = AboutPrefs(driver, category="search")
+    customize_firefox = CustomizeFirefox(driver)
+    nav = Navigation(driver)
     tabs = TabBar(driver)
+    about_prefs = AboutPrefs(driver, category="search")
 
     # Open the customize page and add the search bar to the toolbar
     panel_ui.open_panel_menu()
@@ -36,7 +36,7 @@ def test_default_search_provider_change(driver: Firefox):
     nav.type_in_search_bar(search_term)
     nav.click_on_change_search_settings_button()
 
-    # Check that the current URL
+    # Check the current URL is the search settings page
     driver.switch_to.window(driver.window_handles[2])
     assert driver.current_url == "about:preferences#search"
 
@@ -53,7 +53,7 @@ def test_default_search_provider_change(driver: Firefox):
     about_prefs.open()
     about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
 
-    # Open the search bar and type the search term and check if the search engine is the one set
+    # Open the search bar, type the search term and check if the search engine is the one set
     nav.type_in_search_bar(search_term)
     with driver.context(driver.CONTEXT_CHROME):
         search_engine_name_element = driver.find_element(
