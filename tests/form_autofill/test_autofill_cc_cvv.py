@@ -21,7 +21,6 @@ def wayland():
     return True
 
 
-@pytest.mark.headed
 def test_autofill_cc_cvv(driver: Firefox, opt_ci):
     """
     C122399, Test form autofill CC CVV number
