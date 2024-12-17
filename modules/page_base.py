@@ -740,7 +740,7 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
-    def handle_os_download_confirmation(self, keyboard: Controller, sys_platform: str):
+    def handle_os_download_confirmation(self, keyboard, sys_platform: str):
         """
         This function handles the keyboard shortcuts. If on Linux, it simulates switching
         to OK. On other platforms, it directly presses enter.
