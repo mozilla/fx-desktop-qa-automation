@@ -1,11 +1,9 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import Navigation
-from modules.page_object import AboutConfig, AboutPrefs
+from modules.browser_object import Navigation, PanelUi, TabBar
+from modules.page_object import AboutPrefs, CustomizeFirefox
 
 
 @pytest.fixture()
@@ -13,52 +11,49 @@ def test_case():
     return "1365245"
 
 
-# NOTE: Need to fix, failing in 130+ Firefox due to legacy search bar being deprecated
-@pytest.mark.unstable
 def test_default_search_provider_change(driver: Firefox):
     """
     C1365245 - This test makes sure that the default search
     provider can be changed and settings are applied
     """
 
-    # Create objects
-    nav = Navigation(driver)
-    about_config = AboutConfig(driver)
     search_term = "what is life?"
 
-    # enable search bar via about:config
-    pref = "browser.search.widget.inNavBar"
-    about_config.toggle_true_false_config(pref)
-    nav.clear_awesome_bar()
-    nav.set_content_context()
-    sleep(1)
+    # Create objects
+    nav = Navigation(driver)
+    customize_firefox = CustomizeFirefox(driver)
+    panel_ui = PanelUi(driver)
+    about_prefs = AboutPrefs(driver, category="search")
+    tabs = TabBar(driver)
 
-    # type some word->select 'Change search settings' when the search drop-down panel is opened.
+    # Open the customize page and add the search bar to the toolbar
+    panel_ui.open_panel_menu()
+    panel_ui.navigate_to_customize_toolbar()
+    customize_firefox.add_widget_to_toolbar("search-bar")
 
+    # Type the search term, click 'Change search settings'
+    tabs.new_tab_by_button()
     nav.type_in_search_bar(search_term)
     nav.click_on_change_search_settings_button()
 
-    # switch to the second tab
-    driver.switch_to.window(driver.window_handles[1])
-    sleep(1)
-
-    # check that the current URL is about:preferences#search
+    # Check that the current URL
+    driver.switch_to.window(driver.window_handles[2])
     assert driver.current_url == "about:preferences#search"
 
-    # open a site, open search settings again and check if it's opened in a different tab
+    # Open a site, open search settings again and check if it's opened in a different tab
     driver.get("https://9gag.com/")
     nav.type_in_search_bar(search_term)
     nav.click_on_change_search_settings_button()
     assert driver.current_url == "https://9gag.com/"
 
-    driver.switch_to.window(driver.window_handles[2])
+    driver.switch_to.window(driver.window_handles[3])
     assert driver.current_url == "about:preferences#search"
 
     # Set a different provider as a default search engine
-    about_prefs = AboutPrefs(driver, category="search").open()
+    about_prefs.open()
     about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
 
-    # Open the search bar and type in a keyword and check if it's with the right provider
+    # Open the search bar and type the search term and check if the search engine is the one set
     nav.type_in_search_bar(search_term)
     with driver.context(driver.CONTEXT_CHROME):
         search_engine_name_element = driver.find_element(
