@@ -30,4 +30,4 @@ workers:
       provisioner: '{trust-domain}-t'
       implementation: generic-worker
       os: linux
-      worker-type: 't-linux-2204-wayland'
+      worker-type: 't-linux-2404-wayland'

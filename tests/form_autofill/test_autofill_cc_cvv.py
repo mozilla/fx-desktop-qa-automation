@@ -37,11 +37,6 @@ def test_autofill_cc_cvv(driver: Firefox, opt_ci):
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
     cvv = credit_card_sample_data.cvv
-    sleep(2)
-    if opt_ci:
-        with driver.context(driver.CONTEXT_CHROME):
-            with open("artifacts/chrome_context_uri", "w") as fh:
-                fh.write(driver.execute_script("return document.documentURI"))
     autofill_popup.click_doorhanger_button("save")
 
     # navigate to prefs
