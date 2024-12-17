@@ -8,7 +8,6 @@ from copy import deepcopy
 from pathlib import Path
 from typing import List, Union
 
-from pynput.keyboard import Controller, Key
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -586,6 +585,8 @@ class BasePage(Page):
         self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Copy from the given element using right click (pynput)"""
+        from pynput.keyboard import Controller, Key
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
@@ -601,6 +602,8 @@ class BasePage(Page):
         self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Copy from the current selection using right click (pynput)"""
+        from pynput.keyboard import Controller, Key
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
