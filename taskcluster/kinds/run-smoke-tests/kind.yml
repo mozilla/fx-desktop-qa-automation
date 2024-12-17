@@ -13,8 +13,6 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
-    env:
-      MOZ_ENABLE_WAYLAND: "1"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -29,16 +27,16 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15' --break-system-packages;
-        pip3 install 'ruff>=0.4.8,<0.5' --break-system-packages;
+        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'ruff>=0.4.8,<0.5';
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/form_autofill
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 .
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable ./firefox/firefox tests/address_bar_and_search tests/form_autofill
+        pipenv run pytest --fx-executable ./firefox/firefox
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

@@ -16,11 +16,6 @@ def test_case():
     return "122399"
 
 
-@pytest.fixture()
-def wayland():
-    return True
-
-
 def test_autofill_cc_cvv(driver: Firefox, opt_ci):
     """
     C122399, Test form autofill CC CVV number

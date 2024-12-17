@@ -405,7 +405,7 @@ def driver(
     version,
     json_metadata,
     hard_quit,
-    wayland,
+    create_profiles,
 ):
     """
     Return the webdriver object.
@@ -447,9 +447,6 @@ def driver(
         options = Options()
         if opt_headless:
             options.add_argument("--headless")
-        if wayland:
-            options.add_argument("--enable-features=UseOzonePlatform")
-            options.add_argument("--ozone-platform=wayland")
         options.binary_location = fx_executable
         if use_profile:
             profile_path = tmp_path / use_profile
@@ -590,14 +587,12 @@ def close_file_manager(sys_platform):
 
 
 @pytest.fixture()
-def extend_timeout(driver):
-    """Increases the implicit wait timeout for a given test"""
-    original_timeout = driver.timeouts.implicit_wait
-    driver.implicitly_wait(original_timeout * 1.5)
-    yield
-    driver.implicitly_wait(original_timeout)
+def create_profiles():
+    """Creates profiles that will be recognised in about:profiles"""
+    return
 
 
 @pytest.fixture()
-def wayland():
-    return False
+def profile_paths():
+    """returns a list of profile zips, eg. ["profiles/theme_change.zip"]"""
+    return []
