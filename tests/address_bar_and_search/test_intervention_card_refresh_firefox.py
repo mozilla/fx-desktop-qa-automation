@@ -33,24 +33,36 @@ def test_intervention_card_refresh(driver: Firefox):
     )
     # ensure the color before hover
     nav.wait.until(
-        lambda _: nav.get_element("fx-refresh-button").value_of_css_property("background-color") in ALLOWED_RGB_BEFORE_VALUES
+        lambda _: nav.get_element("fx-refresh-button").value_of_css_property(
+            "background-color"
+        )
+        in ALLOWED_RGB_BEFORE_VALUES
     )
     nav.hover(nav.get_element("fx-refresh-button"))
     # ensure there is a hover state
     nav.wait.until(
-        lambda _: nav.get_element("fx-refresh-button").value_of_css_property("background-color") in ALLOWED_RGB_AFTER_VALUES
+        lambda _: nav.get_element("fx-refresh-button").value_of_css_property(
+            "background-color"
+        )
+        in ALLOWED_RGB_AFTER_VALUES
     )
 
     # repeated from before but with the 3 dots menu button
     nav.wait.until(
-        lambda _: nav.get_element("fx-refresh-menu").value_of_css_property("background-color") in ALLOWED_RGB_BEFORE_VALUES
+        lambda _: nav.get_element("fx-refresh-menu").value_of_css_property(
+            "background-color"
+        )
+        in ALLOWED_RGB_BEFORE_VALUES
     )
     nav.wait.until(
         lambda _: nav.get_element("fx-refresh-menu").get_attribute("open") is None
     )
     nav.hover(nav.get_element("fx-refresh-menu"))
     nav.wait.until(
-        lambda _: nav.get_element("fx-refresh-menu").value_of_css_property("background-color") in ALLOWED_RGB_AFTER_VALUES
+        lambda _: nav.get_element("fx-refresh-menu").value_of_css_property(
+            "background-color"
+        )
+        in ALLOWED_RGB_AFTER_VALUES
     )
 
     # ensure the popup appears
@@ -64,6 +76,4 @@ def test_intervention_card_refresh(driver: Firefox):
 
     # get the number of options (search results)
     search_results_container = nav.get_element("search-results-container")
-    nav.wait.until(
-        lambda _: len(nav.get_all_children(search_results_container)) == 2
-    )
+    nav.wait.until(lambda _: len(nav.get_all_children(search_results_container)) == 2)

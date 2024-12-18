@@ -405,7 +405,7 @@ def driver(
     version,
     json_metadata,
     hard_quit,
-    create_profiles
+    create_profiles,
 ):
     """
     Return the webdriver object.
@@ -589,7 +589,7 @@ def close_file_manager(sys_platform):
 @pytest.fixture()
 def create_profiles():
     """Creates profiles that will be recognised in about:profiles"""
-    return 
+    return
 
 
 @pytest.fixture()
