@@ -2799,6 +2799,13 @@ Description: Autoplay icon - blocked
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: search-settings
+Selector Data: urlbar-anon-search-settings
+Description: Search settings button in awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
