@@ -560,5 +560,12 @@
          "groups": [
             "doNotCache"
         ]
+    },
+
+    "search-settings": {
+        "selectorData": "urlbar-anon-search-settings",
+        "strategy": "id",
+         "groups": []
     }
+    
 }
