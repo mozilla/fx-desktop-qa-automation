@@ -23,10 +23,13 @@ def test_clear_all_history(driver: Firefox):
     panel_ui = PanelUi(driver).open()
     gen_page = GenericPage(driver)
     panel_ui.open_history_menu()
+    ba = BrowserActions(driver)
 
     panel_ui.select_clear_history_option("Everything")
 
     gen_page.get_element("clear-history-button").click()
+    ba.switch_to_content_context()
 
     panel_ui.open_history_menu()
     panel_ui.element_does_not_exist("bookmark-item")
+    
