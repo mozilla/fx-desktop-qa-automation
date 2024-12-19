@@ -53,7 +53,7 @@ class Dropdown(Region):
                 matching_menuitems[0].click()
             if wait_for_selection:
                 self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
-            self.root.send_keys(Keys.ESCAPE)
+            # self.root.send_keys(Keys.ESCAPE)
             return self
         else:
             raise ValueError("More than one menu item matched search string")
