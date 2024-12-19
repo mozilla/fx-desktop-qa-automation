@@ -114,8 +114,8 @@ class Navigation(BasePage):
 
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
-        self.set_chrome_context()
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
         return self
 
     def search_bar_search(self, term: str) -> BasePage:
