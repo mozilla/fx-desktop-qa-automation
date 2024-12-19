@@ -11,7 +11,7 @@ def test_case():
     return "1365245"
 
 
-def test_default_search_provider_change(driver: Firefox):
+def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
     """
     C1365245 - This test makes sure that the default search
     provider can be changed and settings are applied
