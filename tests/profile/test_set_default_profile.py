@@ -2,7 +2,7 @@ import logging
 import os
 import tempfile
 from shutil import rmtree
-from zipfile import ZipFile 
+from zipfile import ZipFile
 
 import pytest
 from selenium.webdriver import Firefox
@@ -29,16 +29,18 @@ def create_profiles(profile_paths, sys_platform):
     tmpdir = []
     for i in range(len(profile_paths)):
         tmpdirname = tempfile.mkdtemp()
-        with ZipFile(profile_paths[i], 'r') as zip_ref:
+        with ZipFile(profile_paths[i], "r") as zip_ref:
             zip_ref.extractall(tmpdirname)
-            logging.info(f"{profile_paths[i]} contents are extracted to temp dir {tmpdirname}")
+            logging.info(
+                f"{profile_paths[i]} contents are extracted to temp dir {tmpdirname}"
+            )
             tmpdir.append(tmpdirname)
 
     # Add the extracted profiles to profile.ini
     profile_loc = {
         "Windows": os.path.join(os.getenv("APPDATA", ""), "Mozilla", "Firefox"),
         "Darwin": os.path.expanduser(r"~/Library/Application Support/Firefox"),
-        "Linux": os.path.expanduser(r"~/.mozilla/firefox")
+        "Linux": os.path.expanduser(r"~/.mozilla/firefox"),
     }
     num_profiles = 0
     profile_file = os.path.join(profile_loc[sys_platform], "profiles.ini")
@@ -121,9 +123,11 @@ def test_set_default_profile(driver: Firefox, opt_ci):
         parent_element=profiles[-1],
     )
     about_profiles.wait.until(
-        lambda _: about_profiles.get_element("profile-container-item-table-row-value", parent_element=table_rows[0])
-        .get_attribute("innerHTML") == "yes"
-        )
+        lambda _: about_profiles.get_element(
+            "profile-container-item-table-row-value", parent_element=table_rows[0]
+        ).get_attribute("innerHTML")
+        == "yes"
+    )
     logging.info(f"Verified that test profile was set to the default.")
 
     # Set the previous default back to default

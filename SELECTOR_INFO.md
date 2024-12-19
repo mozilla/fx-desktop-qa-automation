@@ -1630,6 +1630,13 @@ Description: The Library button from the customizing options
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
+```
+Selector Name: search-bar
+Selector Data: "wrapper-search-container"
+Description: The search bar button from the customizing options
+Location: Customize firefox page
+Path to .json: modules/data/customize_firefox.components.json
+```
 #### devtools
 ```
 Selector Name: devtools-horizontal-splitter

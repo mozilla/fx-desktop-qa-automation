@@ -183,7 +183,7 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
         resized_image = image.resize(new_size)
         resized_image.save(fullpath, optimize=True, quality=50)
     elif platform.system() == "Linux":
-        return None
+        check_output(["gnome-screenshot", f"--file={fullpath}"])
     else:
         screenshot = ImageGrab.grab()
         screenshot.save(fullpath)
@@ -405,7 +405,7 @@ def driver(
     version,
     json_metadata,
     hard_quit,
-    create_profiles
+    create_profiles,
 ):
     """
     Return the webdriver object.
@@ -589,7 +589,7 @@ def close_file_manager(sys_platform):
 @pytest.fixture()
 def create_profiles():
     """Creates profiles that will be recognised in about:profiles"""
-    return 
+    return
 
 
 @pytest.fixture()

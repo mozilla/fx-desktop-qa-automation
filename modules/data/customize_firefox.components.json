@@ -16,5 +16,11 @@
          "selectorData": "wrapper-library-button",
          "strategy": "id",
          "groups": []
-     }
+     },
+
+    "search-bar": {
+        "selectorData": "wrapper-search-container",
+        "strategy": "id",
+        "groups": []
+    }
 }

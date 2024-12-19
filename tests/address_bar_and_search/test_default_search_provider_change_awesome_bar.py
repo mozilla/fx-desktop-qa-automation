@@ -6,12 +6,12 @@ from modules.page_object import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "1365245"
+    return "2860208"
 
 
-def test_default_search_provider_change(driver: Firefox):
+def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
-    C1365245 - This test makes sure that the default search provider can be changed and settings are applied
+    C2860208 - This test makes sure that the default search provider can be changed and settings are applied
     """
     # Create objects
     nav = Navigation(driver)
@@ -30,9 +30,11 @@ def test_default_search_provider_change(driver: Firefox):
         )
 
     # Open a site, open search settings again and check if it's opened in a different tab
+    nav.set_content_context()
     driver.get("https://9gag.com/")
     nav.type_in_awesome_bar(search_term)
     nav.open_awesome_bar_settings()
+    nav.set_content_context()
 
     driver.switch_to.window(driver.window_handles[1])
     nav.expect_in_content(
