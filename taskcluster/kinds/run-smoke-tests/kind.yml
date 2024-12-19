@@ -26,8 +26,6 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        killall -q -u "$(whoami)" gnome-keyring-daemon
-        echo -n "" | gnome-keyring-daemon --daemonize --login
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
@@ -35,7 +33,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/form_autofill/test_a*
+        GNOME_KEYRING_CONTROL=firefox pipenv run pytest --fx-executable ./firefox/firefox -n 4 tests/form_autofill/test_a*
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run pytest --fx-executable ./firefox/firefox tests/preferences
