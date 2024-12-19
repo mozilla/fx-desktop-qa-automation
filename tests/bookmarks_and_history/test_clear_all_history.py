@@ -32,3 +32,4 @@ def test_clear_all_history(driver: Firefox):
 
     panel_ui.open_history_menu()
     panel_ui.element_does_not_exist("bookmark-item")
+    

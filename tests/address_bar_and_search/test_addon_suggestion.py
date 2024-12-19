@@ -12,7 +12,6 @@ def test_case():
     return "2234714"
 
 
-@pytest.mark.slow
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
     C2234714: Test that add-on suggestions match the URL bar input.
@@ -35,18 +34,19 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
     }
 
     nav = Navigation(driver)
-    sleep(20)
     nav.set_awesome_bar()
     sleep(20)
-    nav.awesome_bar.click()
 
-    for input_text, addon_name in input_to_addon_name.items():
-        nav.awesome_bar.send_keys(input_text)
-        nav.element_visible("addon-suggestion")
-        nav.get_element("addon-suggestion").click()
+    with driver.context(driver.CONTEXT_CHROME):
+        nav.awesome_bar.click()
 
-        # Construct the expected URL
-        expected_url = f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
-        nav.expect_in_content(EC.url_contains(expected_url))
+        for input_text, addon_name in input_to_addon_name.items():
+            nav.awesome_bar.send_keys(input_text)
+            nav.element_visible("addon-suggestion")
+            nav.get_element("addon-suggestion").click()
 
-        nav.awesome_bar.clear()
+            # Construct the expected URL
+            expected_url = f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
+            nav.expect_in_content(EC.url_contains(expected_url))
+
+            nav.awesome_bar.clear()

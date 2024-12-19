@@ -39,10 +39,11 @@ def test_websites_visited_in_private_browser_not_displayed_in_awesome_bar(
 
     for url in WEBSITES:
         nav.type_in_awesome_bar(url)
-        url_element = nav.get_element("search-result-url")
-        action_element = nav.get_element("search-result-action-term")
+        with driver.context(driver.CONTEXT_CHROME):
+            url_element = nav.get_element("search-result-url")
+            action_element = nav.get_element("search-result-action-term")
 
-        # Check that the URLS are displayed in search results with the term "Visit"
-        assert (url_element.text, action_element.text) == (url, "Visit")
+            # Check that the URLS are displayed in search results with the term "Visit"
+            assert (url_element.text, action_element.text) == (url, "Visit")
 
         nav.clear_awesome_bar()

@@ -28,15 +28,16 @@ def test_add_search_engine_from_address_bar(driver: Firefox, site: str, domain: 
     nav.search(full_url)
     nav.custom_wait(timeout=20).until(EC.url_contains(full_url))
 
-    # Add the search engine
-    nav.click_in_awesome_bar()
-    nav.element_clickable("add-extra-search-engine", labels=[site])
-    nav.click_on("add-extra-search-engine", labels=[site])
+    with driver.context(driver.CONTEXT_CHROME):
+        # Add the search engine
+        nav.click_in_awesome_bar()
+        nav.element_clickable("add-extra-search-engine", labels=[site])
+        nav.click_on("add-extra-search-engine", labels=[site])
 
-    # Select the new search engine
-    nav.element_clickable("search-one-off-engine-button", labels=[site])
-    nav.click_on("search-one-off-engine-button", labels=[site])
+        # Select the new search engine
+        nav.element_clickable("search-one-off-engine-button", labels=[site])
+        nav.click_on("search-one-off-engine-button", labels=[site])
 
-    # Search for a term to verify the added search engine is working
-    nav.search("cobra")
-    nav.expect_in_content(EC.url_contains(open_site_engine))
+        # Search for a term to verify the added search engine is working
+        nav.search("cobra")
+        nav.expect_in_content(EC.url_contains(open_site_engine))

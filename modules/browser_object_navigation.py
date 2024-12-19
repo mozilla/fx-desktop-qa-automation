@@ -30,8 +30,8 @@ class Navigation(BasePage):
 
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
-        self.set_chrome_context()
-        self.awesome_bar = self.get_element("awesome-bar")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.awesome_bar = self.get_element("awesome-bar")
         return self
 
     def get_awesome_bar(self) -> WebElement:
@@ -44,21 +44,23 @@ class Navigation(BasePage):
         Get the text directly from the awesome bar.
         This is different from 'driver.current_url' which pulls from href
         """
-        self.set_chrome_context()
-        awesome_bar = self.get_element("awesome-bar").get_attribute("value")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            awesome_bar = self.get_element("awesome-bar").get_attribute("value")
         return awesome_bar
 
     def clear_awesome_bar(self) -> BasePage:
         """Clear the Awesome Bar. Prefer this over get_element("awesome-bar").clear()"""
-        self.set_awesome_bar()
-        self.awesome_bar.clear()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.set_awesome_bar()
+            self.awesome_bar.clear()
         return self
 
     def type_in_awesome_bar(self, term: str) -> BasePage:
         """Enter text into the Awesome Bar. You probably want self.search()"""
-        self.set_awesome_bar()
-        self.awesome_bar.click()
-        self.awesome_bar.send_keys(term)
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.set_awesome_bar()
+            self.awesome_bar.click()
+            self.awesome_bar.send_keys(term)
         return self
 
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
@@ -112,8 +114,8 @@ class Navigation(BasePage):
 
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
-        self.set_chrome_context()
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
         return self
 
     def search_bar_search(self, term: str) -> BasePage:

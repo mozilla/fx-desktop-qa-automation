@@ -24,6 +24,7 @@ def test_search_suggestion_for_engine_selection(driver: Firefox, site: str):
     nav.type_in_awesome_bar("@")
     nav.element_has_text("results-dropdown", f"Search with {site}")
 
+    nav.set_chrome_context()
     suggestion_list_items = nav.get_elements("search-suggestion-list")
 
     # Filter elements to find the one that matches the desired site
