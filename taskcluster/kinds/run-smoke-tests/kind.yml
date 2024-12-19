@@ -26,10 +26,8 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        eval $(echo -n "" | gnome-keyring-daemon --unlock --components=pkcs11,secrets,ssh)
-        export GNOME_KEYRING_CONTROL
-        export GNOME_KEYRING_PID
-        export DBUS_SESSION_BUS_ADDRESS
+        killall -q -u "$(whoami)" gnome-keyring-daemon
+        echo -n "" | gnome-keyring-daemon --daemonize --login
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
