@@ -4,6 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
 
+
 @pytest.fixture()
 def test_case():
     return "2860208"
@@ -25,9 +26,7 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     nav.open_awesome_bar_settings()
 
     # Check that the current URL is about:preferences#search
-    nav.expect_in_content(
-        lambda _: driver.current_url == "about:preferences#search"
-        )
+    nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
 
     # Open a site, open search settings again and check if it's opened in a different tab
     nav.set_content_context()
@@ -37,9 +36,7 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     nav.set_content_context()
 
     driver.switch_to.window(driver.window_handles[1])
-    nav.expect_in_content(
-        lambda _: driver.current_url == "about:preferences#search"
-        )
+    nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
     driver.switch_to.window(driver.window_handles[0])
     assert driver.current_url == "https://9gag.com/"
 
@@ -49,7 +46,5 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
 
     # Open the search bar and type in a keyword and check if it's with the right provider
     nav.search(search_term)
-    nav.expect_in_content(
-        lambda _: driver.current_url == "about:preferences#search"
-        )
+    nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
     driver.quit()
