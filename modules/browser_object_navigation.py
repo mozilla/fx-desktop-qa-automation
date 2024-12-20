@@ -152,7 +152,7 @@ class Navigation(BasePage):
         """Open search settings from the awesome bar"""
         self.click_on("search-settings")
         return self
-    
+
     def click_on_change_search_settings_button(self) -> BasePage:
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")

@@ -1,6 +1,3 @@
-import platform
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -16,10 +13,6 @@ def test_case():
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
 
-# @pytest.mark.xfail(
-#     platform.system() == "Darwin" and environ.get("GITHUB_ACTIONS") == "true",
-#     reason="Test failing in Mac GHA",
-# )
 def test_open_bookmark_in_new_private_window_via_toolbar_context_menu(driver: Firefox):
     """
     C2084553: Verify that a bookmarked page can be open in a New Private Window from Toolbar context menu.
