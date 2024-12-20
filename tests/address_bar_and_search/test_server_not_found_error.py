@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,7 +19,6 @@ SHORT_SITE = CHECK_SITE.split("/")[-1]
 ERROR_TITLES = ["Hmm. We’re having trouble finding that site."]
 
 
-@pytest.mark.xfail
 def test_server_not_found_error(driver: Firefox):
     """
     C1901393: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
@@ -29,8 +26,6 @@ def test_server_not_found_error(driver: Firefox):
     """
 
     # Create objects
-    logging.info("error titles")
-    logging.info(ERROR_TITLES)
     nav = Navigation(driver)
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
@@ -68,8 +63,9 @@ def test_server_not_found_error(driver: Firefox):
             item.text == expected_texts[i]
         ), f"Expected error long description item text not found. Actual: {item.text}"
 
-    try_again_button = error_page.get_try_again_button()
-    assert try_again_button.is_displayed(), "The 'Try Again' button is not displayed"
+    WebDriverWait(driver, 30).until(
+        lambda d: error_page.get_try_again_button().is_displayed()
+    )
 
     # Verify that the suggested link redirects to the correct page
     error_page.get_error_suggestion_link().click()
