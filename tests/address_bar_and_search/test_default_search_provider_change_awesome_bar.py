@@ -29,11 +29,9 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
 
     # Open a site, open search settings again and check if it's opened in a different tab
-    nav.set_content_context()
     driver.get("https://9gag.com/")
     nav.type_in_awesome_bar(search_term)
     nav.open_awesome_bar_settings()
-    nav.set_content_context()
 
     driver.switch_to.window(driver.window_handles[1])
     nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")

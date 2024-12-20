@@ -29,7 +29,6 @@ def test_search_code_google_us(driver: Firefox):
 
     def search_code_assert():
         # Function to check the search code of a Google search in US region
-        nav.set_content_context()
         search_url = driver.current_url
         assert FX_SEARCH_CODE in search_url
         nav.clear_awesome_bar()
