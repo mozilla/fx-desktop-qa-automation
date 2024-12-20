@@ -12,4 +12,5 @@ def set_prefs():
     return [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
+        ("signon.rememberSignons", False),
     ]
