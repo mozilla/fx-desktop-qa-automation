@@ -55,17 +55,17 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     driver.switch_to.window(driver.window_handles[-1])
     nav.type_in_awesome_bar("nat")
 
-    # tabs.set_chrome_context()
-    # autofill_adaptive_element = nav.get_element(
-    #         "search-result-autofill-adaptive-element"
-    #     )
+    tabs.set_chrome_context()
+    autofill_adaptive_element = nav.get_element(
+            "search-result-autofill-adaptive-element"
+        )
 
-    # # Assertion to verify that the 'autofill_adaptive' type is found
-    # assert (
-    #     autofill_adaptive_element.get_attribute("type") == "autofill_adaptive"
-    # ), f"Expected element type to be 'autofill_adaptive' but found '{autofill_adaptive_element.get_attribute('type')}'"
+    # Assertion to verify that the 'autofill_adaptive' type is found
+    assert (
+        autofill_adaptive_element.get_attribute("type") == "autofill_adaptive"
+    ), f"Expected element type to be 'autofill_adaptive' but found '{autofill_adaptive_element.get_attribute('type')}'"
 
-    # # Assertion to check the autofilled URL is the expected one
-    # assert (
-    #     "nationalgeographic.com/science" in autofill_adaptive_element.text
-    # ), "URL 'https://www.nationalgeographic.com/science' not found in autofill suggestions."
+    # Assertion to check the autofilled URL is the expected one
+    assert (
+        "nationalgeographic.com/science" in autofill_adaptive_element.text
+    ), "URL 'https://www.nationalgeographic.com/science' not found in autofill suggestions."
