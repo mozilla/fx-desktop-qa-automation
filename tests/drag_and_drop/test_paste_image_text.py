@@ -1,5 +1,3 @@
-import platform
-
 import pytest
 from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
@@ -56,10 +54,8 @@ COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
 
 @pytest.mark.headed
-@pytest.mark.xfail(
-    platform.system() == "Windows", reason="A pref needs to be set only on windows."
-)
 # Ref to Windows bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
+# which may or may not be relevant
 def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     C464474: Verify that pasting images and text from html works

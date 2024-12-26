@@ -43,12 +43,11 @@ def test_add_adaptive_history_autofill(driver: Firefox):
 
     # Type the first 3 characters of the visited URL in the address bar and select the suggested URL
     nav.type_in_awesome_bar("nat")
-    nav.get_element("firefox-suggest").click()
+    with driver.context(driver.CONTEXT_CHROME):
+        nav.get_element("firefox-suggest").click()
     nav.expect_in_content(
         EC.url_contains("https://www.nationalgeographic.com/science/")
     )
-
-    tabs.set_content_context()
 
     # Open a new tab, type the first 3 characters of the visited URL
     tabs.new_tab_by_button()
@@ -56,9 +55,10 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     driver.switch_to.window(driver.window_handles[-1])
     nav.type_in_awesome_bar("nat")
 
+    tabs.set_chrome_context()
     autofill_adaptive_element = nav.get_element(
-        "search-result-autofill-adaptive-element"
-    )
+            "search-result-autofill-adaptive-element"
+        )
 
     # Assertion to verify that the 'autofill_adaptive' type is found
     assert (

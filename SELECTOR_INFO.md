@@ -1630,6 +1630,13 @@ Description: The Library button from the customizing options
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
+```
+Selector Name: search-bar
+Selector Data: "wrapper-search-container"
+Description: The search bar button from the customizing options
+Location: Customize firefox page
+Path to .json: modules/data/customize_firefox.components.json
+```
 #### devtools
 ```
 Selector Name: devtools-horizontal-splitter
@@ -2789,6 +2796,13 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: autoplay-icon-blocked
 Selector Data: blocked-permissions-container
 Description: Autoplay icon - blocked
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-settings
+Selector Data: urlbar-anon-search-settings
+Description: Search settings button in awesome bar
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```

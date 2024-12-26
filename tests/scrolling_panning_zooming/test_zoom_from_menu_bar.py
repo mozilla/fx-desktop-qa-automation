@@ -18,10 +18,6 @@ def test_case():
 TEST_PAGE = "https://www.example.com"
 
 
-@pytest.mark.unstable
-@pytest.mark.skipif(
-    platform.system() == "Darwin", reason="Cannot access menubar in MacOS"
-)
 def test_zoom_from_menu_bar(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position

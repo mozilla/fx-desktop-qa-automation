@@ -17,7 +17,6 @@ ALLOWED_RGB_AFTER_VALUES = set(
 )
 
 
-@pytest.mark.unstable
 def test_intervention_card_refresh(driver: Firefox):
     """
     C1365204.1: regular firefox, check the intervention card
@@ -27,42 +26,56 @@ def test_intervention_card_refresh(driver: Firefox):
     nav.set_awesome_bar()
     nav.type_in_awesome_bar("refresh firefox")
 
-    # get relevant items
-    refresh_text = nav.get_element("fx-refresh-text")
-    refresh_button = nav.get_element("fx-refresh-button")
-    help_menu_button = nav.get_element("fx-refresh-menu")
 
-    # ensure the text is correct
-    assert (
-        refresh_text.get_attribute("innerHTML")
-        == "Restore default settings and remove old add-ons for optimal performance."
-    )
+    with driver.context(driver.CONTEXT_CHROME):
+        # ensure the text is correct
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-text").get_attribute("innerHTML")
+            == "Restore default settings and remove old add-ons for optimal performance."
+        )
+        # ensure the color before hover
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-button").value_of_css_property(
+                "background-color"
+            )
+            in ALLOWED_RGB_BEFORE_VALUES
+        )
+        nav.hover(nav.get_element("fx-refresh-button"))
+        # ensure there is a hover state
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-button").value_of_css_property(
+                "background-color"
+            )
+            in ALLOWED_RGB_AFTER_VALUES
+        )
 
-    # ensure the color before hover
-    button_background = refresh_button.value_of_css_property("background-color")
-    assert button_background in ALLOWED_RGB_BEFORE_VALUES
-    nav.hover(refresh_button)
+        # repeated from before but with the 3 dots menu button
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-menu").value_of_css_property(
+                "background-color"
+            )
+            in ALLOWED_RGB_BEFORE_VALUES
+        )
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-menu").get_attribute("open") is None
+        )
+        nav.hover(nav.get_element("fx-refresh-menu"))
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-menu").value_of_css_property(
+                "background-color"
+            )
+            in ALLOWED_RGB_AFTER_VALUES
+        )
 
-    # ensure there is a hover state
-    new_button_background = refresh_button.value_of_css_property("background-color")
-    assert new_button_background in ALLOWED_RGB_AFTER_VALUES
-    # repeated from before but with the 3 dots menu button
-    help_menu_background = help_menu_button.value_of_css_property("background-color")
-    assert help_menu_background in ALLOWED_RGB_BEFORE_VALUES
-    assert help_menu_button.get_attribute("open") is None
-    nav.hover(help_menu_button)
+            # ensure the popup appears
+        nav.click_on("fx-refresh-menu")
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-menu").get_attribute("open") == "true"
+        )
+        nav.wait.until(
+            lambda _: nav.get_element("fx-refresh-menu-get-help-item-get-help") is not None
+        )
 
-    new_help_menu_background = help_menu_button.value_of_css_property(
-        "background-color"
-    )
-    assert new_help_menu_background in ALLOWED_RGB_AFTER_VALUES
-
-    # ensure the popup appears
-    help_menu_button.click()
-    assert help_menu_button.get_attribute("open") == "true"
-    assert nav.get_element("fx-refresh-menu-get-help-item-get-help") is not None
-
-    # get the number of options (search results)
-    search_results_container = nav.get_element("search-results-container")
-    search_results = nav.get_all_children(search_results_container)
-    assert len(search_results) == 2
+        # get the number of options (search results)
+        search_results_container = nav.get_element("search-results-container")
+        nav.wait.until(lambda _: len(nav.get_all_children(search_results_container)) == 2)

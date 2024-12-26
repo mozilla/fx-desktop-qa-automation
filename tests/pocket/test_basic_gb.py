@@ -18,7 +18,7 @@ def add_prefs():
 
 
 # LOW PRIORITY
-@pytest.mark.unstable
+@pytest.mark.skip(reason="Pocket tests no longer belong to DTE.")
 @pytest.mark.locale_gb
 def test_localized_pocket_layout_GB(driver: Firefox):
     """

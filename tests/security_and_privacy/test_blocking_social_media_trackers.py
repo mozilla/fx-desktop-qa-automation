@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -11,8 +13,7 @@ def test_case():
     return "446406"
 
 
-SOCIAL_MEDIA_TRACKERS_URL = "https://panopticlick.eff.org/"
-# SOCIAL_MEDIA_TRACKERS_URL = "https://www.facebook.com/"  # alternative site
+SOCIAL_MEDIA_TRACKERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/social_tracking_protection.html"
 
 
 @pytest.fixture()
@@ -38,13 +39,14 @@ def test_blocking_social_media_trackers(driver: Firefox):
 
     about_prefs.get_element("cookies-checkbox")
     about_prefs.get_element("cookies-isolate-social-media-option").click()
+    sleep(3)
 
     driver.get(SOCIAL_MEDIA_TRACKERS_URL)
     nav.open_tracker_panel()
 
     driver.set_context(driver.CONTEXT_CHROME)
 
-    tracker_panel.get_element("social-media-tracker-content").click()
+    tracker_panel.element_clickable("social-media-tracker-content")
     social_media_subview_title = tracker_panel.get_element("social-media-subview")
     assert (
         social_media_subview_title.get_attribute("title")
