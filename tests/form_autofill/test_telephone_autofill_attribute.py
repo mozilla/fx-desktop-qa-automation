@@ -16,6 +16,7 @@ def test_case():
 countries = ["CA", "US"]
 
 
+@pytest.mark.ci
 @pytest.mark.parametrize("country_code", countries)
 def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
     """
