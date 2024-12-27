@@ -72,7 +72,7 @@ def create_profiles(profile_paths, sys_platform):
     if file_size:
         with open(profile_file, "a") as p:
             p.truncate(file_size)
-            logging.info(f"removing added profiles from profiles.ini")
+            logging.info("removing added profiles from profiles.ini")
     else:
         os.remove(profile_file)
 
@@ -107,7 +107,7 @@ def test_set_default_profile(driver: Firefox, opt_ci):
             break
 
     # Set test profile as the default and verify the rows
-    logging.info(f"Preparing to set test profile to the default.")
+    logging.info("Preparing to set test profile to the default.")
     about_profiles.get_element(
         "profile-container-item-button",
         parent_element=profiles[-1],
@@ -128,7 +128,7 @@ def test_set_default_profile(driver: Firefox, opt_ci):
         ).get_attribute("innerHTML")
         == "yes"
     )
-    logging.info(f"Verified that test profile was set to the default.")
+    logging.info("Verified that test profile was set to the default.")
 
     # Set the previous default back to default
     if not opt_ci:
