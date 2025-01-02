@@ -52,6 +52,7 @@ if ! python run_commit_tests.py; then
 fi
 
 python choose_ci_set.py > runlist
+git add runlist
 
 # Lint and format with ruff
 ruff check --select I --fix
