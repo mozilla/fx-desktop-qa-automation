@@ -4,6 +4,7 @@ import sys
 from subprocess import CalledProcessError, check_output
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CI_MARK = "@pytest.mark.ci"
 
 
 def snakify(pascal: str) -> str:
@@ -99,6 +100,10 @@ if __name__ == "__main__":
         path: "".join([line for line in open(path)]) for path in all_tests
     }
 
+    ci_paths = [
+        path for path, content in test_paths_and_contents.items() if CI_MARK in content
+    ]
+
     changed_suite_conftests = [
         f for f in committed_files if re_obj.get("suite_conftest_re").match(f)
     ]
@@ -136,6 +141,6 @@ if __name__ == "__main__":
                     run_list.append(test_name)
 
     if not run_list:
-        print("-m ci")
+        print(" ".join(ci_paths))
     else:
         print(" ".join(run_list))
