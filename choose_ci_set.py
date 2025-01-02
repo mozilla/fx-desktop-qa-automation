@@ -101,7 +101,9 @@ if __name__ == "__main__":
     }
 
     ci_paths = [
-        path for path, content in test_paths_and_contents.items() if CI_MARK in content
+        localify(path)
+        for path, content in test_paths_and_contents.items()
+        if CI_MARK in content
     ]
 
     changed_suite_conftests = [
