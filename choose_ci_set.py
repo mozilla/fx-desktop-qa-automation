@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     run_list = []
     committed_files = (
-        check_output(["git", "--no-pager", "diff", "--name-only", "main..."])
+        check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
         .decode()
         .splitlines()
     )
