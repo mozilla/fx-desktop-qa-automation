@@ -148,7 +148,9 @@ if __name__ == "__main__":
                 ):
                     run_list.append(test_name)
 
+    run_list.extend(changed_models)
+
     if not run_list:
-        print(" ".join(ci_paths).replace("\\", "/"))
+        print(" ".join(ci_paths))
     else:
-        print(" ".join(run_list).replace("\\", "/"))
+        print(" ".join(run_list))
