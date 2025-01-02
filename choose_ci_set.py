@@ -59,7 +59,7 @@ def get_tests_by_model(
 
 
 if __name__ == "__main__":
-    if os.environ.get("TESTRAIL_API_KEY"):
+    if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
         print(".")
         sys.exit(0)
