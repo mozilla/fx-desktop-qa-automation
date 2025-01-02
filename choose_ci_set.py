@@ -136,6 +136,6 @@ if __name__ == "__main__":
                     run_list.append(test_name)
 
     if not run_list:
-        print('-m "ci"')
+        print("-m ci")
     else:
         print(" ".join(run_list))
