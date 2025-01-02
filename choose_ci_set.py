@@ -80,7 +80,7 @@ if __name__ == "__main__":
         re_obj[short_name] = re.compile(re_obj.get(k))
 
     run_list = []
-    check_output(["git", "fetch", "--depth=1", "origin", "main"])
+    check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
     committed_files = (
         check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
         .decode()
