@@ -102,7 +102,7 @@ if __name__ == "__main__":
             this_file = os.path.join(root, f)
             if re_obj.get("test_re").search(this_file) and "__pycache" not in this_file:
                 all_tests.append(os.path.join(this_file))
-                with open(this_file) as fh:
+                with open(this_file, encoding="utf-8") as fh:
                     lines = fh.readlines()
                     test_paths_and_contents[this_file] = "".join(lines)
 
