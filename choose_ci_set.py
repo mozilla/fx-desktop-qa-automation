@@ -96,15 +96,15 @@ if __name__ == "__main__":
         sys.exit(0)
 
     all_tests = []
+    test_paths_and_contents = {}
     for root, _, files in os.walk(os.path.join(SCRIPT_DIR, "tests")):
         for f in files:
             this_file = os.path.join(root, f)
             if re_obj.get("test_re").search(this_file) and "__pycache" not in this_file:
                 all_tests.append(os.path.join(this_file))
-
-    test_paths_and_contents = {
-        path: "".join([line for line in open(path)]) for path in all_tests
-    }
+                with open(this_file) as fh:
+                    lines = fh.readlines()
+                    test_paths_and_contents[this_file] = "".join(lines)
 
     ci_paths = [
         localify(path)
