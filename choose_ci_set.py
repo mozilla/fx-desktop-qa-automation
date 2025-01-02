@@ -59,6 +59,11 @@ def get_tests_by_model(
 
 
 if __name__ == "__main__":
+    if os.environ.get("TESTRAIL_API_KEY"):
+        # Run all tests if this is a scheduled beta
+        print(".")
+        sys.exit(0)
+
     slash = "/" if "/" in SCRIPT_DIR else "\\"
 
     re_obj = {
@@ -76,7 +81,7 @@ if __name__ == "__main__":
 
     run_list = []
     committed_files = (
-        check_output(["git", "--no-pager", "diff", "--name-only", "--cached"])
+        check_output(["git", "--no-pager", "diff", "--name-only", "main..."])
         .decode()
         .splitlines()
     )

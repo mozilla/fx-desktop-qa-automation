@@ -51,21 +51,18 @@ if ! python run_commit_tests.py; then
     exit 1
 fi
 
-python choose_ci_set.py > runlist
-git add runlist
-
 # Lint and format with ruff
 ruff check --select I --fix
 ruff format
 git add -u
 
 # if ruff fix doesn't work, we need to fail
-if ! ruff check --select I --fix; then
+if ! ruff check -q --select I --fix; then
     echo "Linting failed!"
     exit 1
 fi
 
-if ! ruff format; then
+if ! ruff format -q; then
     echo "Formatting failed!"
     exit 1
 fi

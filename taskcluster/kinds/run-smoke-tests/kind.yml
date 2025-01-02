@@ -33,10 +33,10 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat runlist)
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(python choose_ci_set.py)
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable ./firefox/firefox $(cat runlist)
+        pipenv run pytest --fx-executable ./firefox/firefox $(python choose_ci_set.py)
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

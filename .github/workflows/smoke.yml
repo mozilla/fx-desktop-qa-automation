@@ -47,7 +47,6 @@ jobs:
           BETA_VERSION=${{ inputs.beta-version }}
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
-          New-item -Name runlist -Value "" -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
           Write-Host "$env:TESTRAIL_USERNAME"
       - name: Install dependencies
@@ -87,7 +86,7 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest -n 4 $(cat runlist)
+          pipenv run pytest -n 4 $(python choose_ci_set.py)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -111,7 +110,7 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run pytest $(cat runlist)
+          pipenv run pytest $(python choose_ci_set.py)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -156,7 +155,6 @@ jobs:
       - name: Set Environment
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run:
-          echo "" > runlist
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "BETA_VERSION=${{ inputs.beta-version }}" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
@@ -179,7 +177,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat runlist) || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(python choose_ci_set.py) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
@@ -201,7 +199,7 @@ jobs:
           REPORTABLE: true
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat runlist) || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(python choose_ci_set.py) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
