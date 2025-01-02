@@ -151,4 +151,4 @@ if __name__ == "__main__":
     if not run_list:
         print(" ".join(ci_paths))
     else:
-        print(" ".join(run_list))
+        print(" ".join(run_list).replace("\\", "/"))
