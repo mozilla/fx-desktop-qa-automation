@@ -86,7 +86,8 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          python choose_ci_set.py
+          git fetch --quiet --depth=1 origin main
+          git --no-paget diff --name-only origin/main
           pipenv run pytest -n 4 $(python choose_ci_set.py)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
