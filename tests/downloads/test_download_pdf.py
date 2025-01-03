@@ -2,6 +2,7 @@ import os
 import time
 
 import pytest
+from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
@@ -28,8 +29,6 @@ def test_download_pdf(
     """
     C1756769: Verify that the user can Download a PDF
     """
-    from pynput.keyboard import Controller
-
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
     keyboard = Controller()
 
@@ -56,4 +55,3 @@ def test_download_pdf(
     print(
         f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
     )
-    driver.quit()
