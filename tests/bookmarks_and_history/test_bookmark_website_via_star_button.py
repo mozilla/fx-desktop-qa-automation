@@ -13,6 +13,7 @@ def test_case():
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
 
+@pytest.mark.ci
 def test_bookmark_website_via_star(driver: Firefox):
     """
     C2084539: Verify that the Websites can be bookmarked via star-shaped button

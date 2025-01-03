@@ -14,6 +14,7 @@ def test_case():
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 
 
+@pytest.mark.ci
 @pytest.mark.headed
 def test_delete_bookmarks_from_toolbar(driver: Firefox):
     """

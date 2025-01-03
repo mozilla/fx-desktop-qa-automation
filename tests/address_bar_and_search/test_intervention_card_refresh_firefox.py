@@ -26,7 +26,6 @@ def test_intervention_card_refresh(driver: Firefox):
     nav.set_awesome_bar()
     nav.type_in_awesome_bar("refresh firefox")
 
-
     with driver.context(driver.CONTEXT_CHROME):
         # ensure the text is correct
         nav.wait.until(
@@ -67,15 +66,18 @@ def test_intervention_card_refresh(driver: Firefox):
             in ALLOWED_RGB_AFTER_VALUES
         )
 
-            # ensure the popup appears
+        # ensure the popup appears
         nav.click_on("fx-refresh-menu")
         nav.wait.until(
             lambda _: nav.get_element("fx-refresh-menu").get_attribute("open") == "true"
         )
         nav.wait.until(
-            lambda _: nav.get_element("fx-refresh-menu-get-help-item-get-help") is not None
+            lambda _: nav.get_element("fx-refresh-menu-get-help-item-get-help")
+            is not None
         )
 
         # get the number of options (search results)
         search_results_container = nav.get_element("search-results-container")
-        nav.wait.until(lambda _: len(nav.get_all_children(search_results_container)) == 2)
+        nav.wait.until(
+            lambda _: len(nav.get_all_children(search_results_container)) == 2
+        )

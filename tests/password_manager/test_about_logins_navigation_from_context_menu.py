@@ -10,6 +10,7 @@ def test_case():
     return "2241087"
 
 
+@pytest.mark.ci
 def test_about_logins_navigation_from_login_form_context_menu(driver: Firefox):
     """
     C2241087 - Verify that right-clicking the Username field in a login form and then the Manage Passwords option

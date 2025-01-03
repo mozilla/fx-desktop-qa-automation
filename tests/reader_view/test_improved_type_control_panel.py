@@ -36,6 +36,7 @@ def prep_test(web_page: GenericPage, reader_view: ReaderView) -> None:
     reader_view.click_toolbar_option("toolbar-type")
 
 
+@pytest.mark.ci
 @pytest.mark.parametrize("font", fonts)
 def test_type_control_panel_font(driver: Firefox, font: str):
     """

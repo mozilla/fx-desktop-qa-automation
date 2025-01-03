@@ -46,7 +46,9 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
             nav.get_element("addon-suggestion").click()
 
             # Construct the expected URL
-            expected_url = f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
+            expected_url = (
+                f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
+            )
             nav.expect_in_content(EC.url_contains(expected_url))
 
             nav.awesome_bar.clear()

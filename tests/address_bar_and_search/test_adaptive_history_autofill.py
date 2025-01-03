@@ -57,8 +57,8 @@ def test_add_adaptive_history_autofill(driver: Firefox):
 
     tabs.set_chrome_context()
     autofill_adaptive_element = nav.get_element(
-            "search-result-autofill-adaptive-element"
-        )
+        "search-result-autofill-adaptive-element"
+    )
 
     # Assertion to verify that the 'autofill_adaptive' type is found
     assert (

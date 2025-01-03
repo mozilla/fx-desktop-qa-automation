@@ -92,7 +92,7 @@ def test_copy_entire_row_column(driver: Firefox):
 
         web_page.perform_key_combo(Keys.BACKSPACE)
 
-    except Exception as e:
+    except Exception:
         web_page.undo()
 
     finally:

@@ -9,6 +9,7 @@ def test_case():
     return "134646"
 
 
+@pytest.mark.ci
 def test_active_tab(driver: Firefox):
     """
     C134646, ensures that the selected tab is highlighted

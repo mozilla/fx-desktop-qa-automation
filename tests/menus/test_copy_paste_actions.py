@@ -15,6 +15,7 @@ def test_case():
     return "2264626"
 
 
+@pytest.mark.ci
 def test_login_form_copy_paste(driver: Firefox):
     """C2264626 - Verify that copy and paste actions are displayed in the context menu and work as expected"""
     # instantiate objects

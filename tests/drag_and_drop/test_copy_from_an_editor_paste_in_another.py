@@ -1,4 +1,3 @@
-import platform
 from time import sleep
 
 import pytest
@@ -52,7 +51,7 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
                 web_page.perform_key_combo(Keys.TAB)
         web_page.perform_key_combo(Keys.BACK_SPACE)
 
-    except Exception as e:
+    except Exception:
         # Undo the paste operation
         web_page.undo()
 
