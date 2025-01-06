@@ -94,7 +94,7 @@ def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
         web_page.select_entire_table()
         web_page.perform_key_combo(Keys.BACK_SPACE)
 
-    except Exception as e:
+    except Exception:
         web_page.undo()
 
     finally:

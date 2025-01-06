@@ -23,6 +23,7 @@ def compare(a: int, b: int) -> bool:
     return abs(a - b) < TOLERANCE
 
 
+@pytest.mark.ci
 def test_find_toolbar_search(driver: Firefox):
     """
     C127239: Perform a search (using the Find Toolbar)
