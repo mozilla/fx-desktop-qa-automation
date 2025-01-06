@@ -6,7 +6,7 @@ on:
   pull_request:
   workflow_call:
     inputs:
-      job_to_run: 
+      job_to_run:
         required: true
         type: string
       beta-version:
@@ -24,17 +24,17 @@ jobs:
   Smoke-Windows:
     if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
-    steps: 
+    steps:
       - name: Create app token
         uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ secrets.BOT_CLIENT_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}           
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-            token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -86,7 +86,7 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest -n 4 tests/address_bar_and_search tests/form_autofill
+          pipenv run pytest -n 4 $(python choose_ci_set.py)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -110,7 +110,7 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run pytest tests/address_bar_and_search tests/preferences
+          pipenv run pytest $(python choose_ci_set.py)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -139,11 +139,11 @@ jobs:
         id: app-token
         with:
           app-id: ${{ secrets.BOT_CLIENT_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}           
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-            token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -177,7 +177,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 tests/address_bar_and_search tests/form_autofill || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(python choose_ci_set.py) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
@@ -199,7 +199,7 @@ jobs:
           REPORTABLE: true
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/preferences || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(python choose_ci_set.py) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts

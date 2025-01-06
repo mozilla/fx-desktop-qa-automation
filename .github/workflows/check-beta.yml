@@ -9,7 +9,7 @@ permissions:
   contents: 'write'
 
 jobs:
-  Check-Beta-Version: 
+  Check-Beta-Version:
     runs-on: ubuntu-latest
     outputs:
       win_tested: ${{ steps.check_latest.outputs.win }}
@@ -39,7 +39,7 @@ jobs:
           echo "beta-version=$LATEST" >> "$GITHUB_OUTPUT"
 
   # Run the beta if the newest version has not been tested
-  Run-Win-Smoke: 
+  Run-Win-Smoke:
     needs: Check-Beta-Version
     if: needs.Check-Beta-Version.outputs.win_tested == 'false'
     uses: ./.github/workflows/smoke.yml
@@ -48,7 +48,7 @@ jobs:
       beta-version: ${{ needs.Check-Beta-Version.outputs.beta-version }}
     secrets: inherit
 
-  Run-Mac-Smoke: 
+  Run-Mac-Smoke:
     needs: Check-Beta-Version
     if: needs.Check-Beta-Version.outputs.mac_tested == 'false'
     uses: ./.github/workflows/smoke.yml
@@ -56,4 +56,3 @@ jobs:
       job_to_run: Smoke-MacOS
       beta-version: ${{ needs.Check-Beta-Version.outputs.beta-version }}
     secrets: inherit
-    

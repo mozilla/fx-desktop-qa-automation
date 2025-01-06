@@ -20,6 +20,7 @@ def hard_quit():
     return True
 
 
+@pytest.mark.ci
 def test_pdf_data_can_be_cleared(
     driver: Firefox,
     fillable_pdf_url: str,

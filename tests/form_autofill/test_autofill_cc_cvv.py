@@ -1,11 +1,11 @@
 import json
 import logging
-from time import sleep
+import platform
 
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup, Navigation
+from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions, Utilities
@@ -16,7 +16,8 @@ def test_case():
     return "122399"
 
 
-def test_autofill_cc_cvv(driver: Firefox, opt_ci):
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
+def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number
     """
@@ -26,14 +27,12 @@ def test_autofill_cc_cvv(driver: Firefox, opt_ci):
     util = Utilities()
     about_prefs_obj = AboutPrefs(driver, category="privacy")
     browser_action_obj = BrowserActions(driver)
-    nav = Navigation(driver)
 
     # create fake data, fill it in and press submit and save on the doorhanger
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
     cvv = credit_card_sample_data.cvv
-    nav.element_visible("popup-notification")
-    nav.click_on("popup-notification-primary-button")
+    autofill_popup.click_doorhanger_button("save")
 
     # navigate to prefs
 

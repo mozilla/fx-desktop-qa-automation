@@ -1,4 +1,3 @@
-from time import sleep
 from typing import List
 
 from selenium.webdriver.support import expected_conditions as EC
@@ -32,7 +31,8 @@ class Autofill(BasePage):
         term: str
             The string to be sent to the input field
         """
-        self.fill("form-field", term, press_enter=False, labels=[field_name])
+        form_field_element = self.get_element("form-field", labels=[field_name])
+        ba.clear_and_fill(form_field_element, term, press_enter=False)
 
     def click_form_button(self, field_name):
         """Clicks submit on the form"""
@@ -70,10 +70,8 @@ class CreditCardFill(Autofill):
         for field, value in fields.items():
             if value is not None:
                 self.fill_input_element(ba, field, value)
-                sleep(1)
 
         self.click_form_button("submit")
-        sleep(1)
 
     def verify_all_fields(self, ccp: AutofillPopup):
         """Given a CreditCardPopup object, verify all fields"""

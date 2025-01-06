@@ -43,6 +43,7 @@ def temp_selectors():
     }
 
 
+@pytest.mark.ci
 def test_notifications_displayed(driver: Firefox, temp_page, temp_selectors):
     """
     This test does not (and SHOULD not) test that the OS displays web notifications
