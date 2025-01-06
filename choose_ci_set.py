@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
-        print("")
+        print(".")
         sys.exit(0)
 
     all_tests = []
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     if changed_suite_conftests:
         run_list = [
-            os.path.join(".", *suite.split(slash)[-3:-1])
+            os.path.join(*suite.split(slash)[-3:-1])
             for suite in changed_suite_conftests
         ]
 
@@ -148,7 +148,14 @@ if __name__ == "__main__":
                 ):
                     run_list.append(test_name)
 
-    run_list.extend(changed_models)
+    if changed_tests:
+        for changed_test in changed_tests:
+            found = False
+            for file in run_list:
+                if file in changed_test:
+                    found = True
+            if not found:
+                run_list.append(changed_test)
 
     if not run_list:
         print("\n".join(ci_paths))
