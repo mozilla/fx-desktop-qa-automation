@@ -88,6 +88,7 @@ jobs:
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           git fetch --quiet --depth=1 origin main
           git --no-pager diff --name-only origin/main
+          echo "======="
           pipenv run pytest -n 4 $(python choose_ci_set.py)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -179,6 +180,9 @@ jobs:
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
+          git fetch --quiet --depth=1 origin main
+          git --no-pager diff --name-only origin/main
+          echo "====="
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(python choose_ci_set.py) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
