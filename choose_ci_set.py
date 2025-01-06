@@ -84,6 +84,7 @@ if __name__ == "__main__":
     committed_files = (
         check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
         .decode()
+        .replace("/", slash)
         .splitlines()
     )
 
