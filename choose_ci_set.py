@@ -5,6 +5,7 @@ from subprocess import CalledProcessError, check_output
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CI_MARK = "@pytest.mark.ci"
+HEADED_MARK = "@pytest.mark.headed"
 
 
 def snakify(pascal: str) -> str:
@@ -107,11 +108,13 @@ if __name__ == "__main__":
                     lines = fh.readlines()
                     test_paths_and_contents[this_file] = "".join(lines)
 
-    ci_paths = [
-        localify(path)
-        for path, content in test_paths_and_contents.items()
-        if CI_MARK in content
-    ]
+    ci_paths = []
+    ci_headed_paths = []
+    for path, content in test_paths_and_contents.items():
+        if CI_MARK in content:
+            ci_paths.append(localify(path))
+            if HEADED_MARK in content:
+                ci_headed_paths.append(localify(path))
 
     changed_suite_conftests = [
         f for f in committed_files if re_obj.get("suite_conftest_re").match(f)
@@ -161,4 +164,5 @@ if __name__ == "__main__":
     if not run_list:
         print("\n".join(ci_paths))
     else:
+        run_list.extend(ci_headed_paths)
         print("\n".join(run_list))
