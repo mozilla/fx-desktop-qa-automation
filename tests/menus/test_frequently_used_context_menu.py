@@ -79,7 +79,7 @@ def test_save_page_as(driver: Firefox):
 
     # verify and delete downloaded file
     saved_image_location = util.get_saved_file_path("Example Domain.html")
-    util.check_file_path_validility(saved_image_location)
+    util.check_file_path_validity(saved_image_location)
     util.remove_file(saved_image_location)
 
 

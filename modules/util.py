@@ -43,7 +43,7 @@ class Utilities:
             logging.warning("There was an error.")
             logging.warning(error)
 
-    def check_file_path_validility(self, path: str):
+    def check_file_path_validity(self, path: str):
         """
         Ensures that the path actually exists on the computer
         """
