@@ -1,3 +1,4 @@
+import os
 from time import sleep
 
 import pytest
@@ -63,7 +64,8 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
 
     controller = Controller()
 
-    wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
+    wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL)
+    wiki_image_page.open()
     image_context_menu = ContextMenu(driver)
     util = Utilities()
 
@@ -84,7 +86,7 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     # Verify that the file exists
     sleep(2)
     saved_image_location = util.get_saved_file_path(SAVED_FILENAME)
-    util.check_file_path_validility(saved_image_location)
+    wiki_image_page.expect(lambda _: os.path.exists(saved_image_location))
 
 
 def test_copy_image_link(driver: Firefox):

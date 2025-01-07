@@ -22,7 +22,7 @@ class AmoThemes(BasePage):
         # TODO: Add toolbar browser object
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.driver.find_element(By.CSS_SELECTOR, "button[label='Add']").click()
-            self.driver.find_element(By.CSS_SELECTOR, "button[label='Okay']").click()
+            self.driver.find_element(By.CSS_SELECTOR, "button[label='OK']").click()
         return self
 
 
