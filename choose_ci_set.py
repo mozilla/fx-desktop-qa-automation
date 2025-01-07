@@ -116,6 +116,9 @@ if __name__ == "__main__":
             if HEADED_MARK in content:
                 ci_headed_paths.append(localify(path))
 
+    # Dedupe just in case
+    ci_paths = list(set(ci_paths))
+
     changed_suite_conftests = [
         f for f in committed_files if re_obj.get("suite_conftest_re").match(f)
     ]
@@ -164,5 +167,8 @@ if __name__ == "__main__":
     if not run_list:
         print("\n".join(ci_paths))
     else:
+        run_list = list(set(run_list))
+        # Dedupe just in case
+
         run_list.extend(ci_headed_paths)
         print("\n".join(run_list))
