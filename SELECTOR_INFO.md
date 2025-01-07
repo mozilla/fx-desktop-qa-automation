@@ -160,6 +160,13 @@ Description: Text updated dynamically to reflect change in ping ID
 Location: Line 4 of the about:glean page's 'About testing' process
 Path to .json: modules/data/about_glean.components.json
 ```
+```
+Selector Name: manual-testing
+Selector Data: "category-manual-testing"
+Description: The category of manual testing
+Location: Side bar of the about:glean page
+Path to .json: modules/data/about_glean.components.json
+```
 #### about_logins
 ```
 Selector Name: login-count
