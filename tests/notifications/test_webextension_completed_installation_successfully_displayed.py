@@ -33,7 +33,7 @@ def test_webextension_completed_installation_successfully_displayed(
     # Instantiate object
     nav = Navigation(driver)
     test_page = GenericPage(driver, url=TEST_URL).open()
-    test_page.elements |= temp_selectors
+    test_page.elements = temp_selectors
 
     # Click add to Firefox
     test_page.click_on("add-to-firefox")
