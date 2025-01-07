@@ -1,6 +1,6 @@
+import os
 import platform
 import sys
-from os import environ
 from time import sleep
 
 import pytest
@@ -16,7 +16,7 @@ def test_case():
     return "2637623"
 
 
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+WIN_GHA = os.environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
@@ -79,7 +79,7 @@ def test_save_page_as(driver: Firefox):
 
     # verify and delete downloaded file
     saved_image_location = util.get_saved_file_path("Example Domain.html")
-    util.check_file_path_validity(saved_image_location)
+    example_page.expect(lambda _: os.path.exists(saved_image_location))
     util.remove_file(saved_image_location)
 
 
