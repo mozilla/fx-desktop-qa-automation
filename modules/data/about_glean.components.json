@@ -19,5 +19,11 @@
         "selectorData": "label[for='controls-submit']",
         "strategy": "css",
         "groups": []
+    },
+
+    "manual-testing":{
+        "selectorData": "category-manual-testing",
+        "strategy": "id",
+        "groups": []
     }
 }

@@ -70,12 +70,13 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     # Set ping name
     ping = u.random_string(8)
     PING_ID = ping
-    about_glean = AboutGlean(driver).open()
+    about_glean = AboutGlean(driver)
+    about_glean.open()
     about_glean.change_ping_id(ping)
 
     # Search 1 (Google)
     page = GenericPage(driver, url="")
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
     nav.search("trombone")
     page.title_contains("Search")
     page.expect(
@@ -83,11 +84,13 @@ def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     )
 
     # Change default search engine
-    about_prefs = AboutPrefs(driver, category="search").open()
+    about_prefs = AboutPrefs(driver, category="search")
+    about_prefs.open()
     about_prefs.search_engine_dropdown().select_option("Bing")
 
     # Search 2 (Bing)
-    nav = Navigation(driver).open()
+    nav = Navigation(driver)
+    nav.open()
     nav.search("trumpet")
     page.url_contains("bing.com")
     page.expect(EC.visibility_of_element_located((By.ID, "b_context")))
