@@ -30,7 +30,7 @@
     },
 
     "toolbar-type": {
-        "selectorData": "button.dropdown-toggle.toolbar-button[class$='style-button']",
+        "selectorData": "button.dropdown-toggle.toolbar-button.text-layout-button",
         "strategy": "css",
         "groups": []
     },
