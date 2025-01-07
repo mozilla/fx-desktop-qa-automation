@@ -33,7 +33,7 @@ def test_webextension_completed_installation_successfully_displayed(
     # Instantiate object
     nav = Navigation(driver)
     test_page = GenericPage(driver, url=TEST_URL).open()
-    test_page.elements |= temp_selectors
+    test_page.elements = temp_selectors
 
     # Click add to Firefox
     test_page.click_on("add-to-firefox")
@@ -43,7 +43,7 @@ def test_webextension_completed_installation_successfully_displayed(
     nav.click_on("popup-notification-add")
 
     # The WebExtension completed installation panel is successfully displayed
-    nav.element_attribute_contains("popup-notification-panel", "buttonlabel", "Okay")
+    nav.element_attribute_contains("popup-notification-primary-button", "label", "OK")
     nav.element_attribute_contains(
         "popup-notification-panel", "name", "Popup Blocker (strict)"
     )
