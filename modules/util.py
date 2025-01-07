@@ -43,16 +43,6 @@ class Utilities:
             logging.warning("There was an error.")
             logging.warning(error)
 
-    def check_file_path_validility(self, path: str):
-        """
-        Ensures that the path actually exists on the computer
-        """
-        if os.path.exists(path):
-            logging.info("The file was saved.")
-        else:
-            logging.warning("The file was not saved.")
-            assert False
-
     def get_saved_file_path(self, file_name: str) -> str:
         """
         Gets the saved location of a downloaded file depending on the OS.
