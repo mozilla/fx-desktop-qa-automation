@@ -60,7 +60,11 @@ def get_tests_by_model(
 
 
 if __name__ == "__main__":
-    if os.getenv("TESTRAIL_REPORT") or os.getenv("env:TESTRAIL_REPORT"):
+    if os.path.exists(".env"):
+        if "TESTRAIL_REPORT=t" in open(".env"):
+            os.environ["TESTRAIL_REPORT"] = "true"
+
+    if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
         print(".")
         sys.exit(0)
