@@ -1,5 +1,4 @@
 import requests
-from logging import warning
 from bs4 import BeautifulSoup
 
 beta_url = "https://ftp.mozilla.org/pub/firefox/releases/"

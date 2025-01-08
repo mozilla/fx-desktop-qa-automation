@@ -8,7 +8,6 @@ from platform import uname
 from sys import argv, exit
 from time import sleep
 from bs4 import BeautifulSoup
-from logging import warning
 
 import requests
 
@@ -98,7 +97,6 @@ else:
         prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
         with open(f"{prefix}-latest-reported-version") as fh:
             latest_beta_ver = fh.read()
-    warning(latest_beta_ver)
 
     language = environ.get("FX_LOCALE")
     if not language:
