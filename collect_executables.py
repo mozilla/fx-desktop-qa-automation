@@ -8,7 +8,6 @@ from platform import uname
 from sys import argv, exit
 from time import sleep
 from bs4 import BeautifulSoup
-from logging import warning
 
 import requests
 
@@ -94,7 +93,11 @@ else:
         channel = f"-{channel.lower()}"
     
     latest_beta_ver = environ.get("LATEST")
-    latest_beta_ver = "135.0b2"
+    if not latest_beta_ver:
+        prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
+        with open(f"{prefix}-latest-reported-version") as fh:
+            latest_beta_ver = fh.read()
+
     language = environ.get("FX_LOCALE")
     if not language:
         language = "en-US"
@@ -116,8 +119,7 @@ else:
             continue
         # Get the executable name
         if line_text[-1] == get_fx_executable_extension():
-            executable_name = line.getText()
+            executable_name = line.getText().replace(" ", "%20")
     
     fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
-    warning(fx_download_executable_url)
     print(fx_download_executable_url)
