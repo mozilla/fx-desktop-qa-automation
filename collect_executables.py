@@ -83,34 +83,19 @@ else:
     #     channel = "-beta"
     # elif channel:
     #     channel = f"-{\channel.lower()}"
-    # language = environ.get("FX_LOCALE")
+    
     # if not language:
     #     language = "en-US"
 
     # fx_download_url = f"https://download.mozilla.org/?product=firefox{channel}-latest-ssl&os={get_fx_platform()}&lang={language}"
     # print(fx_download_url)
-    url = "https://ftp.mozilla.org/pub/firefox/releases/"
+    
+    # latest_beta_ver = environ.get("LATEST")
+    language = environ.get("FX_LOCALE")
+    if not language:
+        language = "en-US"
+    latest_beta_ver = "135.0b1"
 
-    # Fetch the page
-    response = requests.get(url)
-    response.raise_for_status()  # Ensure request was successful
-
-    # Parse the HTML content
-    soup = BeautifulSoup(response.text, 'html.parser')
-
-    # Extract the text of each line
-    latest_beta_num = -1
-    latest_beta_ver = ""
-    for line in soup.find_all('a'):
-        line_text = line.getText().split(".")
-        if len(line_text) < 2 or not line_text[0]:
-            continue
-        beta_num = int(line_text[0])
-        if beta_num > latest_beta_num:
-            latest_beta_num = beta_num
-            latest_beta_ver = line.getText()[:-1]
-            print(line)
-
-
-    print(latest_beta_num)
-    print(latest_beta_ver)
+    
+    fx_download_url = f"https://ftp.mozilla.org/pub/firefox/releases/{latest_beta_ver}/{get_fx_platform()}/{language}/"
+    print(fx_download_url)
