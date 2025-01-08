@@ -34,7 +34,7 @@ def get_fx_executable_extension():
     if u.system == "Darwin":
         return "dmg"
     if u.system == "Linux":
-        return "tar.xz"
+        return "xz"
     if u.system == "Windows":
         return "exe"
 
