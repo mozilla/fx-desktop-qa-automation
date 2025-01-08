@@ -8,6 +8,7 @@ from platform import uname
 from sys import argv, exit
 from time import sleep
 from bs4 import BeautifulSoup
+from logging import warning
 
 import requests
 
@@ -118,4 +119,5 @@ else:
             executable_name = line.getText()
     
     fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
+    warning(fx_download_executable_url)
     print(fx_download_executable_url)
