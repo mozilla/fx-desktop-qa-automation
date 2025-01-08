@@ -1,5 +1,5 @@
 import requests
-from os import environ
+from logging import warning
 from bs4 import BeautifulSoup
 
 beta_url = "https://ftp.mozilla.org/pub/firefox/releases/"
@@ -24,5 +24,5 @@ for line in soup.find_all('a'):
     if beta_num >= latest_beta_num:
         latest_beta_num = beta_num
         latest_beta_ver = line.getText()[:-1]
-
+warning(latest_beta_ver)
 print(latest_beta_ver)
