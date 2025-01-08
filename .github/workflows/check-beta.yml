@@ -18,7 +18,8 @@ jobs:
     steps:
       - name: Obtain the latest beta version number
         run:
-          echo "LATEST=$(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq -r '.FIREFOX_DEVEDITION')" >> "$GITHUB_ENV"
+          pip install beautifulsoup4
+          echo "LATEST=$(python3 ./get_beta_version.py)" >> "$GITHUB_ENV"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Check if the latest version was tested
