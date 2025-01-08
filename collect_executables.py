@@ -7,6 +7,7 @@ from os import environ
 from platform import uname
 from sys import argv, exit
 from time import sleep
+from bs4 import BeautifulSoup
 
 import requests
 
@@ -75,16 +76,41 @@ if "-g" in argv:
     print(gecko_download_url)
 
 else:
-    channel = environ.get("FX_CHANNEL")
-    # if channel doesn't exist use beta, if blank leave blank (for Release)
-    # ...otherwise prepend hyphen
-    if channel is None:
-        channel = "-beta"
-    elif channel:
-        channel = f"-{channel.lower()}"
-    language = environ.get("FX_LOCALE")
-    if not language:
-        language = "en-US"
+    # channel = environ.get("FX_CHANNEL")
+    # # if channel doesn't exist use beta, if blank leave blank (for Release)
+    # # ...otherwise prepend hyphen
+    # if channel is None:
+    #     channel = "-beta"
+    # elif channel:
+    #     channel = f"-{\channel.lower()}"
+    # language = environ.get("FX_LOCALE")
+    # if not language:
+    #     language = "en-US"
 
-    fx_download_url = f"https://download.mozilla.org/?product=firefox{channel}-latest-ssl&os={get_fx_platform()}&lang={language}"
-    print(fx_download_url)
+    # fx_download_url = f"https://download.mozilla.org/?product=firefox{channel}-latest-ssl&os={get_fx_platform()}&lang={language}"
+    # print(fx_download_url)
+    url = "https://ftp.mozilla.org/pub/firefox/releases/"
+
+    # Fetch the page
+    response = requests.get(url)
+    response.raise_for_status()  # Ensure request was successful
+
+    # Parse the HTML content
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Extract the text of each line
+    latest_beta_num = -1
+    latest_beta_ver = ""
+    for line in soup.find_all('a'):
+        line_text = line.getText().split(".")
+        if len(line_text) < 2 or not line_text[0]:
+            continue
+        beta_num = int(line_text[0])
+        if beta_num > latest_beta_num:
+            latest_beta_num = beta_num
+            latest_beta_ver = line.getText()[:-1]
+            print(line)
+
+
+    print(latest_beta_num)
+    print(latest_beta_ver)
