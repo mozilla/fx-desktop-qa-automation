@@ -26,7 +26,7 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Obtain the latest beta version number
         run:
-          pip install beautifulsoup4
+          pip3 install beautifulsoup4
           echo "LATEST=$(python3 ./get_beta_version.py)" >> "$GITHUB_ENV"
       - name: Check if the latest version was tested
         id: check_latest
