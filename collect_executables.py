@@ -96,7 +96,7 @@ else:
     if not latest_beta_ver:
         prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
         with open(f"{prefix}-latest-reported-version") as fh:
-            latest_beta_ver = fh.read()
+            latest_beta_ver = fh.read().strip()
 
     language = environ.get("FX_LOCALE")
     if not language:
