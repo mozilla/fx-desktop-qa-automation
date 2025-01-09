@@ -63,6 +63,6 @@ def test_http_site(driver: Firefox):
     nav.switch_to_new_window()
     try:
         driver.get(HTTP_SITE)
-        assert False, "Site should be blocked"
+        assert "badssl" not in driver.current_url, "Site should not be displayed"
     except (TimeoutException, WebDriverException):
         pass
