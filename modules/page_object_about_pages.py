@@ -108,6 +108,7 @@ class AboutGlean(BasePage):
         Change the Glean ping id to the given string.
         """
         ba = BrowserActions(self.driver)
+        self.click_on("manual-testing")
         ping_input = self.get_element("ping-id-input")
         ba.clear_and_fill(ping_input, ping_id)
         self.wait.until(

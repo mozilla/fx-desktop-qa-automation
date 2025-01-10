@@ -7,6 +7,7 @@ from os import environ
 from platform import uname
 from sys import argv, exit
 from time import sleep
+from bs4 import BeautifulSoup
 
 import requests
 
@@ -16,18 +17,26 @@ GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/lates
 def get_fx_platform():
     u = uname()
     if u.system == "Darwin":
-        return "osx"
+        return "mac"
     if u.system == "Linux":
         if "64" in u.machine:
-            return "linux64"
-        return "linux"
+            return "linux-x86_64"
+        return "linux-i686"
     if u.system == "Windows":
         if u.machine == "AMD64" and not environ.get("GITHUB_ACTIONS"):
             return "win64-aarch64"
         if "64" in u.machine:
             return "win64"
-        return "win"
+        return "win32"
 
+def get_fx_executable_extension():
+    u = uname()
+    if u.system == "Darwin":
+        return "dmg"
+    if u.system == "Linux":
+        return "xz"
+    if u.system == "Windows":
+        return "exe"
 
 def get_gd_platform():
     u = uname()
@@ -82,9 +91,35 @@ else:
         channel = "-beta"
     elif channel:
         channel = f"-{channel.lower()}"
+    
+    latest_beta_ver = environ.get("LATEST")
+    if not latest_beta_ver:
+        prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
+        with open(f"{prefix}-latest-reported-version") as fh:
+            latest_beta_ver = fh.read().strip()
+
     language = environ.get("FX_LOCALE")
     if not language:
         language = "en-US"
+    
+    fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/releases/{latest_beta_ver}/{get_fx_platform()}/{language}/"
 
-    fx_download_url = f"https://download.mozilla.org/?product=firefox{channel}-latest-ssl&os={get_fx_platform()}&lang={language}"
-    print(fx_download_url)
+    # Fetch the page
+    response = requests.get(fx_download_dir_url)
+    response.raise_for_status()
+
+    # Parse the HTML content
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    executable_name = ""
+    # Extract the text of each line
+    for line in soup.find_all('a'):
+        line_text = line.getText().split(".")
+        if not line_text[0]:
+            continue
+        # Get the executable name
+        if line_text[-1] == get_fx_executable_extension():
+            executable_name = line.getText().replace(" ", "%20")
+    
+    fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
+    print(fx_download_executable_url)
