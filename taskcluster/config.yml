@@ -27,7 +27,7 @@ workers:
       os: linux
       worker-type: '{alias}-gcp'
     t-linux-wayland:
-      provisioner: 'gecko-t'
+      provisioner: '{trust-domain}-t'
       implementation: generic-worker
       os: linux
       worker-type: 't-linux-2204-wayland-relsre'
