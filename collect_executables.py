@@ -91,8 +91,8 @@ else:
         channel = "-beta"
     elif channel:
         channel = f"-{channel.lower()}"
-    
-    latest_beta_ver = environ.get("LATEST")
+
+    latest_beta_ver = environ.get("BETA_VERSION")
     if not latest_beta_ver:
         prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
         with open(f"{prefix}-latest-reported-version") as fh:
@@ -101,7 +101,7 @@ else:
     language = environ.get("FX_LOCALE")
     if not language:
         language = "en-US"
-    
+
     fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/releases/{latest_beta_ver}/{get_fx_platform()}/{language}/"
 
     # Fetch the page
@@ -109,17 +109,17 @@ else:
     response.raise_for_status()
 
     # Parse the HTML content
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, "html.parser")
 
     executable_name = ""
     # Extract the text of each line
-    for line in soup.find_all('a'):
+    for line in soup.find_all("a"):
         line_text = line.getText().split(".")
         if not line_text[0]:
             continue
         # Get the executable name
         if line_text[-1] == get_fx_executable_extension():
             executable_name = line.getText().replace(" ", "%20")
-    
+
     fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
     print(fx_download_executable_url)
