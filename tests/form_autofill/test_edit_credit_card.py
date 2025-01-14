@@ -30,7 +30,7 @@ tabs = [i for i in range(4)]
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     """
-    C122390, ensures that editing a credit card profile in the about:prefs
+    C122390 - ensures that editing a credit card profile in the about:prefs
     has the correct behaviour
     """
     # instantiate objects
