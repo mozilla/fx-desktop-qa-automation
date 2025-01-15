@@ -7,9 +7,9 @@ from os import environ
 from platform import uname
 from sys import argv, exit
 from time import sleep
-from bs4 import BeautifulSoup
 
 import requests
+from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 
@@ -29,6 +29,7 @@ def get_fx_platform():
             return "win64"
         return "win32"
 
+
 def get_fx_executable_extension():
     u = uname()
     if u.system == "Darwin":
@@ -37,6 +38,7 @@ def get_fx_executable_extension():
         return "xz"
     if u.system == "Windows":
         return "exe"
+
 
 def get_gd_platform():
     u = uname()
