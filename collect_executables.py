@@ -106,7 +106,7 @@ else:
 
     status = 200
     build = 0
-    while status < 400:
+    while status < 400 and build < 20:
         build += 1
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
