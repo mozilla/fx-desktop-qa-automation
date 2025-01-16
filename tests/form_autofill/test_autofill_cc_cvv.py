@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import platform
 from subprocess import check_output
 
@@ -29,15 +30,16 @@ def test_autofill_cc_cvv(driver: Firefox):
     browser_action_obj = BrowserActions(driver)
 
     # create fake data, fill it in and press submit and save on the doorhanger
-    if platform.system() == "Linux":
-        logging.warning(check_output(["ps", "-e"]).decode())
+    if platform.system() == "Linux" and not os.path.exists("artifacts/before_pids"):
+        with open("artifacts/before_pids", "w") as fh:
+            fh.write(check_output(["ps", "-e"]).decode())
     credit_card_sample_data = util.fake_credit_card_data()
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
-    if platform.system() == "Linux":
-        logging.warning("after save")
-        logging.warning(check_output(["ps", "-e"]).decode())
+    if platform.system() == "Linux" and not os.path.exists("artifacts/after_pids"):
+        with open("artifacts/after_pids", "w") as fh:
+            fh.write(check_output(["ps", "-e"]).decode())
 
     # navigate to prefs
 
