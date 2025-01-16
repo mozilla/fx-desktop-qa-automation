@@ -43,6 +43,7 @@ def test_autofill_cc_cvv(driver: Firefox):
             keyboard.type("M0z1ll4!")
             keyboard.tap(Key.tab)
             keyboard.type("M0z1ll4!")
+            keyboard.tap(Key.enter)
 
     # navigate to prefs
 
