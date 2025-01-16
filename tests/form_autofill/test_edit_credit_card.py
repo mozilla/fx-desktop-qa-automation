@@ -1,5 +1,6 @@
 import json
 import logging
+import platform
 
 import pytest
 from selenium.webdriver import Firefox
@@ -25,8 +26,7 @@ def hard_quit():
 tabs = [i for i in range(4)]
 
 
-# @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-@pytest.mark.unstable
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("num_tabs", tabs)
 def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     """
@@ -99,10 +99,10 @@ def test_edit_credit_card_profile(driver: Firefox, num_tabs: int, hard_quit):
     # ensure that the information is updated using a trick with the dialog templates
     browser_action_obj.switch_to_content_context()
     dialog_stack = about_prefs_obj.get_element("panel-popup-stack")
-    while True:
-        dialog_stack_elements = dialog_stack.find_elements(By.ID, "dialogTemplate")
-        if len(dialog_stack_elements) < 3:
-            break
+    about_prefs_obj.custom_wait(timeout=15).until_not(
+        lambda _: len(dialog_stack.find_elements(By.ID, "dialogTemplate")) >= 3,
+        message="Timeout waiting for the number of dialogTemplate elements to drop below 3",
+    )
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # fetch the edited profile, ensure that the attribute containing the data is new
