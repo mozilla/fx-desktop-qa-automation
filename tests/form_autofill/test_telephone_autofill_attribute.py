@@ -13,16 +13,14 @@ def test_case():
     return "122361"
 
 
-countries = ["CA", "US"]
-
-
 @pytest.mark.ci
-@pytest.mark.parametrize("country_code", countries)
-def test_telephone_attribute_autofill(driver: Firefox, country_code: str):
+def test_telephone_attribute_autofill(driver: Firefox):
     """
     C122361, ensures that telephone numbers are autofilled
     """
     # instantiate objects
+    # removed CA support to make test cycle faster
+    country_code = "US"
     address_fill_obj = AddressFill(driver).open()
     autofill_popup_obj = AutofillPopup(driver)
     util = Utilities()

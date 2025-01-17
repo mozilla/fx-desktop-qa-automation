@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-from subprocess import CalledProcessError, check_output
+from subprocess import check_output
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CI_MARK = "@pytest.mark.ci"
@@ -114,12 +114,9 @@ if __name__ == "__main__":
                     test_paths_and_contents[this_file] = "".join(lines)
 
     ci_paths = []
-    ci_headed_paths = []
     for path, content in test_paths_and_contents.items():
         if CI_MARK in content:
             ci_paths.append(localify(path))
-            if HEADED_MARK in content:
-                ci_headed_paths.append(localify(path))
 
     # Dedupe just in case
     ci_paths = list(set(ci_paths))
@@ -172,8 +169,8 @@ if __name__ == "__main__":
     if not run_list:
         print("\n".join(ci_paths))
     else:
-        run_list = list(set(run_list))
-        # Dedupe just in case
+        run_list.extend(ci_paths)
 
-        run_list.extend(ci_headed_paths)
+        # Dedupe just in case
+        run_list = list(set(run_list))
         print("\n".join(run_list))
