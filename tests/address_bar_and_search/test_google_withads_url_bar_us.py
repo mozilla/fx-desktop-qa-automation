@@ -23,6 +23,7 @@ def add_prefs():
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
+@pytest.mark.unstable
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_google_withads_url_bar_us(driver: Firefox):
     """
