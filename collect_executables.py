@@ -94,7 +94,7 @@ else:
     elif channel:
         channel = f"-{channel.lower()}"
 
-    latest_beta_ver = environ.get("LATEST")
+    latest_beta_ver = environ.get("BETA_VERSION")
     if not latest_beta_ver:
         prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
         with open(f"{prefix}-latest-reported-version") as fh:
@@ -104,14 +104,24 @@ else:
     if not language:
         language = "en-US"
 
-    fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/releases/{latest_beta_ver}/{get_fx_platform()}/{language}/"
+    status = 200
+    build = 0
+    while status < 400 and build < 20:
+        build += 1
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
-    # Fetch the page
-    response = requests.get(fx_download_dir_url)
-    response.raise_for_status()
+        # Fetch the page
+        response = requests.get(fx_download_dir_url)
+        status = response.status_code
+        if status < 300:
+            response_text = response.text
+
+    # Correct build is the last one that didn't 404
+    build -= 1
+    fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
     # Parse the HTML content
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(response_text, "html.parser")
 
     executable_name = ""
     # Extract the text of each line
