@@ -33,6 +33,8 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
+        killall -q -u "$(whoami)" gnome-keyring-daemon;
+        echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export'
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(python3 choose_ci_set.py)
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;

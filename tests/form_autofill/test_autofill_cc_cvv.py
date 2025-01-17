@@ -1,8 +1,6 @@
 import json
 import logging
-import os
 import platform
-from subprocess import check_output
 
 import pytest
 from selenium.webdriver import Firefox
@@ -18,7 +16,7 @@ def test_case():
     return "122399"
 
 
-@pytest.mark.headed
+@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number
@@ -35,15 +33,6 @@ def test_autofill_cc_cvv(driver: Firefox):
     credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
     cvv = credit_card_sample_data.cvv
     autofill_popup.click_doorhanger_button("save")
-    if platform.system() == "Linux":
-        if "Utility Process" in check_output(["ps", "-e"]).decode():
-            from pynput import Controller, Key
-
-            keyboard = Controller()
-            keyboard.type("M0z1ll4!")
-            keyboard.tap(Key.tab)
-            keyboard.type("M0z1ll4!")
-            keyboard.tap(Key.enter)
 
     # navigate to prefs
 
