@@ -35,10 +35,8 @@ def test_doh_enforces_secure_dns_resolution(driver: Firefox):
 
     # Confirm the default DoH settings
     prefs.open()
-    prefs.wait.until(lambda _: prefs.get_element("doh-status").text == "Status: Active")
-    prefs.wait.until(
-        lambda _: prefs.get_element("doh-resolver").text == "Provider: Cloudflare"
-    )
+    prefs.element_has_text("doh-status", "Status: Active")
+    prefs.element_has_text("doh-resolver", "Provider: Cloudflare")
 
     # Open the test site and subsequently the networking#dns page
     driver.get(TEST_URL)
