@@ -35,22 +35,27 @@ def test_doh_enforces_secure_dns_resolution(driver: Firefox):
 
     # Confirm the default DoH settings
     prefs.open()
-    prefs.element_has_text("doh-status", "Status: Active")
-    prefs.element_has_text("doh-resolver", "Provider: Cloudflare")
+    prefs.wait.until(lambda _: prefs.get_element("doh-status").text == "Status: Active")
+    prefs.wait.until(
+        lambda _: prefs.get_element("doh-resolver").text == "Provider: Cloudflare"
+    )
 
     # Open the test site and subsequently the networking#dns page
     driver.get(TEST_URL)
 
     tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()
+
     networking.open()
     networking.select_network_category("dns")
 
-    # Check that the test site is resolved using TRR (true)
-    rows = driver.find_elements(
-        By.CSS_SELECTOR, "#dns_content tr"
-    )  # Fetch all rows in the DNS table
+    # Wait for rows in the DNS table to load
+    rows = networking.wait.until(
+        lambda _: driver.find_elements(By.CSS_SELECTOR, "#dns_content tr")
+    )
 
+    # Locate the TRR status for www.wikipedia.org
     for row in rows:
         cells = row.find_elements(By.TAG_NAME, "td")
         if cells[0].text == "www.wikipedia.org":
