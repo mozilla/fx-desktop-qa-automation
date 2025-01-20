@@ -1,7 +1,6 @@
 import logging
 
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -21,6 +20,14 @@ class Navigation(BasePage):
         "Tabs": "%",
         "History": "^",
         "Actions": ">",
+    }
+    VALID_SEARCH_MODES = {
+        "Google",
+        "eBay",
+        "Amazon.com",
+        "Bing",
+        "DuckDuckGo",
+        "Wikipedia (en)",
     }
 
     def expect_in_content(self, condition) -> BasePage:
@@ -171,11 +178,43 @@ class Navigation(BasePage):
         self.awesome_bar.click()
         return self
 
-    def context_click_in_awesome_bar(self) -> BasePage:
-        self.set_awesome_bar()
-        actions = ActionChains(self.driver)
-        actions.context_click(self.awesome_bar).perform()
+    def click_search_mode_switcher(self) -> BasePage:
+        """
+        click search mode switcher
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_mode_switcher = self.get_element("search_mode_switcher")
+            self.search_mode_switcher.click()
         return self
+
+    def set_search_mode(self, search_mode: str) -> BasePage:
+        """
+        set new search location if search_mode in VALID_SEARCH_MODES
+
+        Parameter:
+            search_mode (str): search mode to be selected
+
+        Raises:
+            StopIteration: if a valid search mode is not found in the list of valid elements.
+        """
+        # check if search_mode is valid, otherwise raise error.
+        if search_mode not in self.VALID_SEARCH_MODES:
+            raise ValueError("search location is not valid.")
+        # switch to chrome context
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            # get list of all valid search modes and filter by label
+            try:
+                element = next(
+                    filter(
+                        lambda el: el.get_attribute("label") == search_mode,
+                        self.get_elements(f"search_modes"),
+                    )
+                )
+                element.click()
+            except StopIteration:
+                logging.warning("search option not part of the valid search modes")
+            finally:
+                return self
 
     def get_download_button(self) -> WebElement:
         """
@@ -324,14 +363,3 @@ class Navigation(BasePage):
         button_selector = f"popup-notification-{button_type}-button"
         self.element_clickable(button_selector)
         self.click_on(button_selector)
-
-    def open_searchmode_switcher_settings(self):
-        """Open search settings from searchmode switcher in awesome bar"""
-        self.click_on("searchmode-switcher")
-        self.click_on("searchmode-switcher-settings")
-        return self
-
-    def select_element_in_nav(self, element: str) -> BasePage:
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element(element).click()
-            return self
