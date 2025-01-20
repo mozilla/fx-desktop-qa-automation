@@ -21,6 +21,14 @@ class Navigation(BasePage):
         "History": "^",
         "Actions": ">",
     }
+    VALID_SEARCH_MODES = {
+        "Google",
+        "eBay",
+        "Amazon.com",
+        "Bing",
+        "DuckDuckGo",
+        "Wikipedia (en)",
+    }
 
     def expect_in_content(self, condition) -> BasePage:
         """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
@@ -169,6 +177,44 @@ class Navigation(BasePage):
         self.set_awesome_bar()
         self.awesome_bar.click()
         return self
+
+    def click_search_mode_switcher(self) -> BasePage:
+        """
+        click search mode switcher
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.search_mode_switcher = self.get_element("search_mode_switcher")
+            self.search_mode_switcher.click()
+        return self
+
+    def set_search_mode(self, search_mode: str) -> BasePage:
+        """
+        set new search location if search_mode in VALID_SEARCH_MODES
+
+        Parameter:
+            search_mode (str): search mode to be selected
+
+        Raises:
+            StopIteration: if a valid search mode is not found in the list of valid elements.
+        """
+        # check if search_mode is valid, otherwise raise error.
+        if search_mode not in self.VALID_SEARCH_MODES:
+            raise ValueError("search location is not valid.")
+        # switch to chrome context
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            # get list of all valid search modes and filter by label
+            try:
+                element = next(
+                    filter(
+                        lambda el: el.get_attribute("label") == search_mode,
+                        self.get_elements(f"search_modes"),
+                    )
+                )
+                element.click()
+            except StopIteration:
+                logging.warning("search option not part of the valid search modes")
+            finally:
+                return self
 
     def get_download_button(self) -> WebElement:
         """
