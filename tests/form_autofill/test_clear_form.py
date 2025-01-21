@@ -1,5 +1,3 @@
-import platform
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -16,7 +14,6 @@ def test_case():
 countries = ["CA", "US"]
 
 
-@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("country_code", countries)
 def test_clear_form(driver: Firefox, country_code: str):
     """
