@@ -329,7 +329,7 @@
         "groups": []
     },
     "search_modes": {
-        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic']",
+        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic'][label*='{0}']",
         "strategy": "css",
         "groups": []
     },

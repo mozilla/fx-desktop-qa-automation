@@ -203,18 +203,8 @@ class Navigation(BasePage):
         # switch to chrome context
         with self.driver.context(self.driver.CONTEXT_CHROME):
             # get list of all valid search modes and filter by label
-            try:
-                element = next(
-                    filter(
-                        lambda el: el.get_attribute("label") == search_mode,
-                        self.get_elements(f"search_modes"),
-                    )
-                )
-                element.click()
-            except StopIteration:
-                logging.warning("search option not part of the valid search modes")
-            finally:
-                return self
+            self.get_element("search_modes", labels=[search_mode]).click()
+            return self
 
     def get_download_button(self) -> WebElement:
         """
