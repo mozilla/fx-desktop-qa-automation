@@ -59,6 +59,27 @@ def get_tests_by_model(
     return matching_tests
 
 
+def dedupe(run_list: list, slash: str) -> list:
+    """For a run list, remove entries that are covered by more general entries."""
+    suites = []
+    run_list = list(set(run_list))
+    for entry in run_list:
+        pieces = entry.split(slash)
+        if len(pieces) < 4:
+            suites.append(pieces[-1])
+
+    removes = []
+    for entry in run_list:
+        pieces = entry.split(slash)
+        if len(pieces) > 3 and pieces[2] in suites:
+            removes.append(run_list.index(entry))
+
+    for remove in removes:
+        del run_list[remove]
+
+    return run_list
+
+
 if __name__ == "__main__":
     if os.path.exists(".env"):
         with open(".env") as fh:
@@ -134,7 +155,7 @@ if __name__ == "__main__":
 
     if changed_suite_conftests:
         run_list = [
-            os.path.join(*suite.split(slash)[-3:-1])
+            "." + slash + os.path.join(*suite.split(slash)[-3:-1])
             for suite in changed_suite_conftests
         ]
 
@@ -161,6 +182,12 @@ if __name__ == "__main__":
         for changed_test in changed_tests:
             found = False
             for file in run_list:
+                # Don't add if already exists in suite changes
+                pieces = file.split(slash)
+                if len(pieces) == 3 and pieces[-1] in changed_test:
+                    found = True
+
+                # Don't add if already in list
                 if file in changed_test:
                     found = True
             if not found:
@@ -172,5 +199,5 @@ if __name__ == "__main__":
         run_list.extend(ci_paths)
 
         # Dedupe just in case
-        run_list = list(set(run_list))
+        run_list = dedupe(run_list, slash)
         print("\n".join(run_list))
