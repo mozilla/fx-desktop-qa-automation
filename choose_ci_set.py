@@ -94,8 +94,8 @@ if __name__ == "__main__":
     slash = "/" if "/" in SCRIPT_DIR else "\\"
 
     re_obj = {
-        "test_re_string": r"tests/.*/test_.*\.py",
-        "suite_conftest_re_string": r"tests/.*/conftest\.py",
+        "test_re_string": r".*/.*/test_.*\.py",
+        "suite_conftest_re_string": r".*/.*/conftest\.py",
         "selectors_json_re_string": r"modules/data/.*\.components\.json",
         "object_model_re_string": r"modules/.*.object.*\.py",
         "class_re_string": r"\s*class (\w+):",
