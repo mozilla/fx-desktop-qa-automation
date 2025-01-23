@@ -42,11 +42,14 @@ tasks:
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
         $FX_EXECUTABLE --version;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4
+        # auth into keyring
+        killall -q -u "$(whoami)" gnome-keyring-daemon;
+        echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export'
+        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         export REPORTABLE=1
-        pipenv run pytest --fx-executable $FX_EXECUTABLE
+        pipenv run pytest --fx-executable $FX_EXECUTABLE tests
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
