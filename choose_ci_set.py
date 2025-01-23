@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
-        print(".")
+        print("tests")
         sys.exit(0)
 
     slash = "/" if "/" in SCRIPT_DIR else "\\"
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
-        print(".")
+        print("tests")
         sys.exit(0)
 
     all_tests = []
