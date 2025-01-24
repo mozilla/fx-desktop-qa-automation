@@ -39,7 +39,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
-        if [[ "$(python3 -c 'from modules import testrail_integration as tri; print(tri.tc_reportable())')" == 'False' ]]; then exit 100; fi;
+        python3 -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 100;
         $FX_EXECUTABLE --version;
         # auth into keyring
         killall -q -u "$(whoami)" gnome-keyring-daemon;
