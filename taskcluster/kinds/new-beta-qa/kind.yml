@@ -43,6 +43,7 @@ tasks:
         $FX_EXECUTABLE --version;
         # auth into keyring
         killall -q -u "$(whoami)" gnome-keyring-daemon;
+        echo $(echo -n '' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export /');
         eval $(echo -n '' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export /');
         echo $?;
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
