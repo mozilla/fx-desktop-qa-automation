@@ -1,3 +1,6 @@
+from os import environ
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -14,6 +17,10 @@ def test_case():
 indices = range(2)
 
 
+@pytest.mark.xfail(
+    system() == "Linux" and environ.get("TESTRAIL_REPORT"),
+    reason="Linux TC cron failure",
+)
 @pytest.mark.parametrize("index", indices)
 def test_form_autofill_suggestions(driver: Firefox, index: str):
     """

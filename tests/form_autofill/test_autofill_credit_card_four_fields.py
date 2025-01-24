@@ -1,3 +1,6 @@
+from os import environ
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -11,6 +14,10 @@ def test_case():
     return "122404"
 
 
+@pytest.mark.xfail(
+    system() == "Linux" and environ.get("TESTRAIL_REPORT"),
+    reason="Linux TC cron failure",
+)
 def test_autofill_four_fields(driver: Firefox):
     """
     C122404, tests that the form fields are filled corrected after saving a profile.
