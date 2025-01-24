@@ -39,7 +39,7 @@ tasks:
         pipenv install;
         # auth into keyring
         killall -q -u "$(whoami)" gnome-keyring-daemon;
-        eval $(echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export ')
+        eval $(echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export /')
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
         if [[ "$(python3 -c 'from modules import testrail_integration as tri; print(tri.reportable())')" == "False" ]]; then exit 100; fi;
