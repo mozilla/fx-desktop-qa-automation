@@ -27,7 +27,8 @@ def kill_gnome_keyring():
     try:
         username = subprocess.check_output(["whoami"]).decode()
         subprocess.check_output(
-            ["killall", "-q", "-u", username, "gnome-keyring-daemon"]
+            ["killall", "-q", "-u", username, "gnome-keyring-daemon"],
+            stderr=subprocess.DEVNULL,
         )
     except subprocess.CalledProcessError:
         logging.warning("Tried to kill gnome-keyring-daemon, but failed.")
