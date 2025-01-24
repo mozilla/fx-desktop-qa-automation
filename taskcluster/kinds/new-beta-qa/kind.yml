@@ -41,9 +41,6 @@ tasks:
         export FX_EXECUTABLE=./firefox/firefox;
         python3 -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 100;
         $FX_EXECUTABLE --version;
-        # auth into keyring
-        . keyring-unlock.sh;
-        echo $?;
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
         export FAILURE=${?};
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
