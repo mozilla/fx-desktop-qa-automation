@@ -3,8 +3,7 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    """Dummy suite id"""
-    return "0"
+    return ("2054", "Form Autofill")
 
 
 @pytest.fixture()
