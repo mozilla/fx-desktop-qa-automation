@@ -32,8 +32,6 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        export BETA_VERSION=$(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq -r '.FIREFOX_DEVEDITION')
-        if [[ $BETA_VERSION == "$(cat lin-latest-reported-version)" ]]; then exit 100; fi;
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
@@ -44,12 +42,16 @@ tasks:
         eval $(echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export ')
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
+        if [[ "$(python3 -c 'from modules import testrail_integration as tri; print(tri.reportable())')" == "False" ]]; then exit 100; fi;
         $FX_EXECUTABLE --version;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests
-        export FAILURE=${?}
+        # auth into keyring
+        killall -q -u "$(whoami)" gnome-keyring-daemon;
+        echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export';
+        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
+        export FAILURE=${?};
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        export REPORTABLE=1
-        pipenv run pytest --fx-executable $FX_EXECUTABLE tests
+        export REPORTABLE=1;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

@@ -35,7 +35,7 @@ tasks:
         ./firefox/firefox --version;
         # auth into keyring
         killall -q -u "$(whoami)" gnome-keyring-daemon;
-        eval $(echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export ')
+        echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export';
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(python3 choose_ci_set.py)
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
