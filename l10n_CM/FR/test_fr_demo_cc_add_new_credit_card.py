@@ -9,8 +9,9 @@ from modules.util import BrowserActions, Utilities
 
 
 @pytest.fixture()
+# This needs to be updated when FR is added to TestRail, it's pointing to US test
 def test_case():
-    return "122389"
+    return "2886595"
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")

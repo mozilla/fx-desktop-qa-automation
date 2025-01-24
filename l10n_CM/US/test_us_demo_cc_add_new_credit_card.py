@@ -10,7 +10,7 @@ from modules.util import BrowserActions, Utilities
 
 @pytest.fixture()
 def test_case():
-    return "122389"
+    return "2886595"
 
 
 @pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
