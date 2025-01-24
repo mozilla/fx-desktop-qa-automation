@@ -88,14 +88,14 @@ if __name__ == "__main__":
 
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
-        print(".")
+        print("tests")
         sys.exit(0)
 
     slash = "/" if "/" in SCRIPT_DIR else "\\"
 
     re_obj = {
-        "test_re_string": r"tests/.*/test_.*\.py",
-        "suite_conftest_re_string": r"tests/.*/conftest\.py",
+        "test_re_string": r".*/.*/test_.*\.py",
+        "suite_conftest_re_string": r".*/.*/conftest\.py",
         "selectors_json_re_string": r"modules/data/.*\.components\.json",
         "object_model_re_string": r"modules/.*.object.*\.py",
         "class_re_string": r"\s*class (\w+):",
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
-        print(".")
+        print("tests")
         sys.exit(0)
 
     all_tests = []
