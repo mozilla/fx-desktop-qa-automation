@@ -19,7 +19,7 @@ fields = ["cc-name", "cc-exp-month", "cc-exp-year"]
 
 
 @pytest.mark.parametrize("field", fields)
-def test_update_cc_no_dupe_name(driver: Firefox, field: str):
+def test_update_cc_no_dupe_name(driver: Firefox, field: str, kill_gnome_keyring):
     """
     C122406, ensures that updating the credit card saves the correct information with no dupe profile for the name and expiry dates
     """

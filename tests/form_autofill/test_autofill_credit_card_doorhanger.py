@@ -12,7 +12,7 @@ def test_case():
     return "122392"
 
 
-def test_autofill_credit_card_doorhanger(driver: Firefox):
+def test_autofill_credit_card_doorhanger(driver: Firefox, kill_gnome_keyring):
     """
     C122392, ensures that pressing not now > never save cards toggles off the setting
     """

@@ -11,7 +11,7 @@ def test_case():
     return "122581"
 
 
-def test_clear_form_credit_card(driver: Firefox):
+def test_clear_form_credit_card(driver: Firefox, kill_gnome_keyring):
     """
     C122581, Test clear form credit card
     """

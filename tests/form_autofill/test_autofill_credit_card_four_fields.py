@@ -11,7 +11,7 @@ def test_case():
     return "122404"
 
 
-def test_autofill_four_fields(driver: Firefox):
+def test_autofill_four_fields(driver: Firefox, kill_gnome_keyring):
     """
     C122404, tests that the form fields are filled corrected after saving a profile.
     """

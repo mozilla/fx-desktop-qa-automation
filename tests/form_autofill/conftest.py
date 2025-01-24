@@ -1,3 +1,7 @@
+import logging
+import platform
+import subprocess
+
 import pytest
 
 
@@ -13,3 +17,17 @@ def set_prefs():
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
     ]
+
+
+@pytest.fixture()
+def kill_gnome_keyring():
+    """Kill the gnome keyring daemon long enough to finish a test"""
+    if platform.system != "Linux":
+        return False
+    try:
+        username = subprocess.check_output(["whoami"]).decode()
+        subprocess.check_output(
+            ["killall", "-q", "-u", username, "gnome-keyring-daemon"]
+        )
+    except subprocess.CalledProcessError:
+        logging.warning("Tried to kill gnome-keyring-daemon, but failed.")

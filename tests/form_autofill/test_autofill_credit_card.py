@@ -11,7 +11,7 @@ def test_case():
     return "122405"
 
 
-def test_autofill_credit_card(driver: Firefox):
+def test_autofill_credit_card(driver: Firefox, kill_gnome_keyring):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel
     """
