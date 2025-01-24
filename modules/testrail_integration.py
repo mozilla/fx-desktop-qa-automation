@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 
+from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
 
@@ -40,6 +41,18 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("b{build}", "rc")
         )
     return plan_title
+
+
+def tc_reportable():
+    """For CI: return True if run is reportable, but get TC creds first"""
+    creds = tc.get_tc_secret()
+    if creds:
+        os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+        os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+        os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
+    else:
+        return False
+    return reportable()
 
 
 def reportable():

@@ -42,11 +42,11 @@ tasks:
         eval $(echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export /')
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
-        if [[ "$(python3 -c 'from modules import testrail_integration as tri; print(tri.reportable())')" == "False" ]]; then exit 100; fi;
+        if [[ "$(python3 -c 'from modules import testrail_integration as tri; print(tri.tc_reportable())')" == 'False' ]]; then exit 100; fi;
         $FX_EXECUTABLE --version;
         # auth into keyring
         killall -q -u "$(whoami)" gnome-keyring-daemon;
-        echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export';
+        echo -n 'M0z1ll4!' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export ';
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
         export FAILURE=${?};
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
