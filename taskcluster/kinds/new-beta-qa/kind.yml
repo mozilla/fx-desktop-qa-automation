@@ -42,9 +42,7 @@ tasks:
         python3 -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 100;
         $FX_EXECUTABLE --version;
         # auth into keyring
-        killall -q -u "$(whoami)" gnome-keyring-daemon;
-        echo $(echo -n '' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export /');
-        eval $(echo -n '' | gnome-keyring-daemon --daemonize --login | sed -e 's/^/export /');
+        . keyring-unlock.sh;
         echo $?;
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
         export FAILURE=${?};
