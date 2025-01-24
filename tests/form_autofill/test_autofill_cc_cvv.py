@@ -1,7 +1,5 @@
 import json
 import logging
-from os import environ
-from platform import system
 
 import pytest
 from selenium.webdriver import Firefox
@@ -17,10 +15,6 @@ def test_case():
     return "122399"
 
 
-@pytest.mark.xfail(
-    system() == "Linux" and environ.get("TESTRAIL_REPORT"),
-    reason="Linux TC cron failure",
-)
 def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number

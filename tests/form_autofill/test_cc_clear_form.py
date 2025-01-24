@@ -1,6 +1,3 @@
-from os import environ
-from platform import system
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -14,10 +11,6 @@ def test_case():
     return "122581"
 
 
-@pytest.mark.xfail(
-    system() == "Linux" and environ.get("TESTRAIL_REPORT"),
-    reason="Linux TC cron failure",
-)
 def test_clear_form_credit_card(driver: Firefox):
     """
     C122581, Test clear form credit card
