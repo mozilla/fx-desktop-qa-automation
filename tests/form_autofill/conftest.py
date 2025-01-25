@@ -30,5 +30,11 @@ def kill_gnome_keyring():
             ["killall", "-q", "-u", username, "gnome-keyring-daemon"],
             stderr=subprocess.DEVNULL,
         )
+        pf = subprocess.Popen(["printf", '"m"'], stdout=subprocess.PIPE)
+        subprocess.Popen(
+            ["gnome-keyring-daemon", "--daemonize", "--unlock"],
+            stdin=pf.stdout,
+            stderr=subprocess.DEVNULL,
+        )
     except subprocess.CalledProcessError:
         logging.warning("Tried to kill gnome-keyring-daemon, but failed.")
