@@ -12,7 +12,7 @@ def test_case():
     return "122388"
 
 
-def test_enable_disable_form_autofill_cc(driver: Firefox, kill_gnome_keyring):
+def test_enable_disable_form_autofill_cc(driver: Firefox):
     """
     C122388, tests that after saving cc information and toggling the autofill credit
     cards box the dropdown does not appear.

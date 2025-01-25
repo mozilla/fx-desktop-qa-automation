@@ -15,7 +15,7 @@ def test_case():
     return "122399"
 
 
-def test_autofill_cc_cvv(driver: Firefox, kill_gnome_keyring):
+def test_autofill_cc_cvv(driver: Firefox):
     """
     C122399, Test form autofill CC CVV number
     """

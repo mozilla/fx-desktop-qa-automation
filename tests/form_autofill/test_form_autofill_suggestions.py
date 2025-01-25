@@ -15,7 +15,7 @@ indices = range(2)
 
 
 @pytest.mark.parametrize("index", indices)
-def test_form_autofill_suggestions(driver: Firefox, index: str, kill_gnome_keyring):
+def test_form_autofill_suggestions(driver: Firefox, index: str):
     """
     C122401, checks that the corresponding autofill suggestion autofills the fields correctly
     """

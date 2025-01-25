@@ -16,7 +16,7 @@ countries = ["CA", "US"]
 
 
 @pytest.mark.parametrize("country_code", countries)
-def test_update_address(driver: Firefox, country_code: str, kill_gnome_keyring):
+def test_update_address(driver: Firefox, country_code: str):
     """
     C122354 - This test verifies that after updating and saving the autofill name field, the updated value appears in the Saved Addresses section.
     """
