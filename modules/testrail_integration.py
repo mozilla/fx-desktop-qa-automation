@@ -2,6 +2,7 @@ import logging
 import os
 import re
 import subprocess
+import sys
 
 from modules import taskcluster as tc
 from modules import testrail as tr
@@ -51,8 +52,12 @@ def tc_reportable():
         os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
         os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
     else:
-        return False
-    return reportable()
+        sys.exit(100)
+
+    if reportable():
+        sys.exit(0)
+    else:
+        sys.exit(100)
 
 
 def reportable():
