@@ -1,5 +1,4 @@
 import json
-import platform
 
 import pytest
 from selenium.webdriver import Firefox
@@ -14,7 +13,6 @@ def test_case():
     return "2886595"
 
 
-@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 def test_create_new_cc_profile(driver: Firefox):
     """
     C122389, tests you can create and save a new Credit Card profile
