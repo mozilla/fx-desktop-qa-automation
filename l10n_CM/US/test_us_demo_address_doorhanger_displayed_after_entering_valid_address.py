@@ -11,11 +11,10 @@ def test_case():
     return "2886581"
 
 
-country = ["US"]
+country_code = "US"
 
 
-@pytest.mark.parametrize("country_code", country)
-def test_us_demo_address_doorhanger_displayed_after_entering_valid_address(driver: Firefox, country_code: str):
+def test_us_demo_address_doorhanger_displayed_after_entering_valid_address(driver: Firefox):
     """
     C2886581, Verify the Capture Doorhanger is displayed after entering valid Address data
     """
