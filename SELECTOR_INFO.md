@@ -1346,6 +1346,13 @@ Description: The password update doorhanger
 Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: address-save-doorhanger
+Selector Data: "address-save-update-notification-content"
+Description: Save address doorhanger
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
