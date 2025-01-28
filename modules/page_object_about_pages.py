@@ -32,7 +32,7 @@ class AboutConfig(BasePage):
         return self
 
     def toggle_true_false(self) -> BasePage:
-        toggle_tf_button = self.find_element(By.CLASS_NAME, "cell-edit")
+        toggle_tf_button = self.find_element(By.CLASS_NAME, "value-edit-button")
         toggle_tf_button.click()
         return self
 
@@ -52,9 +52,9 @@ class AboutConfig(BasePage):
         self.set_content_context()
         self.driver.get("about:config")
         self.search_pref(term)
-        pref_edit_button = self.get_element("cell-edit")
+        pref_edit_button = self.get_element("value-edit-button")
         pref_edit_button.click()
-        pref_edit = self.get_element("form-edit")
+        pref_edit = self.get_element("value-edit-field")
         pref_edit.send_keys(value)
         pref_edit_button.click()
         return self

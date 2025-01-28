@@ -3,8 +3,10 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutPrefs
+from modules.page_object import AboutConfig, AboutPrefs
 from modules.util import BrowserActions, Utilities
+
+regions = ["US", "CA", "DE", "FR"]
 
 
 @pytest.fixture()
@@ -12,7 +14,8 @@ def test_case():
     return "2886595"
 
 
-def test_create_new_cc_profile(driver: Firefox):
+@pytest.mark.parametrize("region", regions)
+def test_create_new_cc_profile(driver: Firefox, region: str):
     """
     C2886595 - tests you can create and save a new Credit Card profile
     """
@@ -22,6 +25,10 @@ def test_create_new_cc_profile(driver: Firefox):
     browser_action_obj = BrowserActions(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
     about_prefs_cc_popup = AboutPrefs(driver)
+    about_config = AboutConfig(driver)
+
+    # Change pref value of region
+    about_config.change_pref_value("browser.search.region", region)
 
     # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs.open()
