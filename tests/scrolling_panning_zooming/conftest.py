@@ -9,6 +9,4 @@ def suite_id():
 @pytest.fixture()
 def set_prefs():
     """Set prefs"""
-    return [
-        ("browser.aboutConfig.showWarning", False),
-    ]
+    return []

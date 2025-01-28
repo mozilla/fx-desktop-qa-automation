@@ -77,6 +77,12 @@
         "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
         "strategy": "xpath",
         "groups": []
+    },
+
+    "address-save-doorhanger": {
+        "selectorData": "address-save-update-notification-content",
+        "strategy": "class",
+        "groups": []
     }
 }
 

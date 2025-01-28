@@ -24,7 +24,7 @@ def test_sap_google_adclick(driver: Firefox):
     u = Utilities()
 
     # change pref value in order to not display accept cookies banner
-    about_config.change_config_value("cookiebanners.service.mode", 1)
+    about_config.change_pref_value("cookiebanners.service.mode", 1)
 
     # search and click on an ad
     nav.search("iphone")
