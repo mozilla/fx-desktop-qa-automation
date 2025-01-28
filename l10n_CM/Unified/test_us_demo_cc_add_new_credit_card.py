@@ -28,7 +28,7 @@ def test_create_new_cc_profile(driver: Firefox, region: str):
     about_config = AboutConfig(driver)
 
     # Change pref value of region
-    about_config.change_pref_value("browser.search.region", region)
+    about_config.change_config_value("browser.search.region", region)
 
     # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs.open()
