@@ -200,4 +200,5 @@ if __name__ == "__main__":
 
         # Dedupe just in case
         run_list = dedupe(run_list, slash)
+        run_list = [entry for entry in run_list if os.path.exists(entry)]
         print("\n".join(run_list))

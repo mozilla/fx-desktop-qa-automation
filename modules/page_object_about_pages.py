@@ -26,35 +26,35 @@ class AboutConfig(BasePage):
     URL_TEMPLATE = "about:config"
 
     def search_pref(self, term: str) -> BasePage:
+        self.set_content_context()
+        self.driver.get("about:config")
+        self.expect(EC.title_contains("Advanced Preferences"))
         searchbar = self.get_element("about-config-search-input")
         searchbar.clear()
         searchbar.send_keys(term + Keys.ENTER)
         return self
 
-    def toggle_true_false(self) -> BasePage:
-        toggle_tf_button = self.find_element(By.CLASS_NAME, "cell-edit")
-        toggle_tf_button.click()
-        return self
-
     def toggle_true_false_config(self, term: str) -> BasePage:
         """
         Main method to toggle a true false pref in about:config
+        Note: To use this in a test, use set_pref - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py
         """
-        self.set_content_context()
-        self.driver.get("about:config")
-        self.expect(EC.title_contains("Advanced Preferences"))
-        self.click_on("warning-button")
         self.search_pref(term)
-        self.toggle_true_false()
+        toggle_tf_button = self.get_element("value-edit-button")
+        toggle_tf_button.click()
         return self
 
-    def change_pref_value(self, term: str, value) -> BasePage:
-        self.set_content_context()
-        self.driver.get("about:config")
+    def change_config_value(self, term: str, value) -> BasePage:
+        """
+        Main method to change a config's value in about:config
+        Note: To use this in a test, use set_pref - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py
+        """
         self.search_pref(term)
-        pref_edit_button = self.get_element("cell-edit")
+        pref_edit_button = self.get_element("value-edit-button")
         pref_edit_button.click()
-        pref_edit = self.get_element("form-edit")
+        pref_edit = self.get_element("value-edit-field")
         pref_edit.send_keys(value)
         pref_edit_button.click()
         return self

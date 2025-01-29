@@ -39,15 +39,15 @@ Location: about:config page
 Path to .json: modules/data/about_config.components.json
 ```
 ```
-Selector Name: cell-edit
+Selector Name: value-edit-button
 Selector Data: "cell-edit"
-Description: The button to toggle the true/false value of a config
+Description: The button to toggle access to the value edit field
 Location: Line item config in about:config page
 Path to .json: modules/data/about_config.components.json
 ```
 ```
-Selector Name: form-edit
-Selector Data: "//input[@aria-label='cookiebanners.service.mode']"
+Selector Name: value-edit-field
+Selector Data: "#form-edit > input:nth-child(1)"
 Description: Text entry field when editing a str value of a config
 Location: Line item config in about:config page
 Path to .json: modules/data/about_config.components.json
