@@ -29,6 +29,8 @@ def test_us_demo_address_email_phone_captured_in_doorhanger_and_stored(driver: F
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed containing: Email and phone
+    address_autofill_popup.wait.until(lambda _: address_autofill_popup.element_visible("address-save-doorhanger"))
+
 
     # Click the "Save" button
     address_autofill_popup.click_doorhanger_button("save")
