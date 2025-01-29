@@ -17,7 +17,7 @@ def test_case():
 @pytest.mark.parametrize("region", regions)
 def test_cc_check_door_hanger_is_displayed(driver: Firefox, region: str):
     """
-    C122393, ensures that the door hanger is displayed after filling credit card info
+    C2889441 - Ensures that the door hanger is displayed after filling credit card info
     """
 
     # Instantiate objects

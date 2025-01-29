@@ -19,7 +19,7 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
     driver: Firefox, region: str, locale: str
 ):
     """
-    C2886581, Verify the Capture Doorhanger is displayed after entering valid Address data
+    C2886581 - Verify the Capture Doorhanger is displayed after entering valid Address data
     """
 
     # Instantiate objects
