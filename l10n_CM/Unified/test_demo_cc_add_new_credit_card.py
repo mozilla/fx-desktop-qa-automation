@@ -17,7 +17,7 @@ def test_case():
 @pytest.mark.parametrize("region", regions)
 def test_create_new_cc_profile(driver: Firefox, region: str):
     """
-    C2886595 - tests you can create and save a new Credit Card profile
+    C2886595 - Tests you can create and save a new Credit Card profile
     """
 
     # Instantiate objects
