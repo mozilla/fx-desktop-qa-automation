@@ -17,8 +17,8 @@ params = [("US", "US"), ("CA", "CA")]
 
 
 @pytest.mark.parametrize("region, locale", params)
-def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str, locale: str,
-                                                                  ):
+def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str, locale: str,
+                                                               ):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
@@ -70,5 +70,5 @@ def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefo
     )
     assert (
         found_email_phone
-    ), "Email or phone were not found in any of the address entries."
+    ), "Email or phone were not found in any of the address entries!"
 
