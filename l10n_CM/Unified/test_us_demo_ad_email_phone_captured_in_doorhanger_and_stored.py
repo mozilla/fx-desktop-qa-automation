@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.page_object_about_pages import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities
@@ -12,24 +13,41 @@ def test_case():
     return "2886581"
 
 
-country_code = "US"
+params = [("US", "US"), ("CA", "CA")]
 
 
-def test_us_demo_address_email_phone_captured_in_doorhanger_and_stored(driver: Firefox):
+@pytest.mark.parametrize("region, locale", params)
+def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str, locale: str):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
     # instantiate objects
-    address_autofill = AddressFill(driver).open()
+    address_autofill = AddressFill(driver)
     address_autofill_popup = AutofillPopup(driver)
     util = Utilities()
+    about_config = AboutConfig(driver)
+
+    # Change pref value of region
+    about_config.change_config_value("browser.search.region", region)
 
     # create fake data and fill it in
-    address_autofill_data = util.fake_autofill_data(country_code)
+    address_autofill.open()
+    address_autofill_data = util.fake_autofill_data(locale)
     address_autofill.save_information_basic(address_autofill_data)
 
-    # The "Save address?" doorhanger is displayed containing: Email and phone
+    # The "Save address?" doorhanger is displayed
     address_autofill_popup.wait.until(lambda _: address_autofill_popup.element_visible("address-save-doorhanger"))
+
+    # click on edit
+    # address_autofill_popup.click_on("address-save-doorhanger-edit")
+
+    # containing email field
+    expected_email = address_autofill_data.street_address
+    with driver.context(driver.CONTEXT_CHROME):
+        email_field = address_autofill_popup.get_element("address-doorhanger-email-field")
+    address_autofill_popup.wait.until(lambda _: email_field.text == expected_email)
+
+    # containing phone field
 
 
     # Click the "Save" button

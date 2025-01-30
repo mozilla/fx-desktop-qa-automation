@@ -83,6 +83,18 @@
         "selectorData": "address-save-update-notification-content",
         "strategy": "class",
         "groups": []
+    },
+
+    "address-save-doorhanger-edit": {
+        "selectorData": "//button[@id='address-capture-menu-button']",
+        "strategy": "xpath",
+        "groups": []
+    },
+
+    "address-doorhanger-email-field": {
+        "selectorData": "address-save-update-row-container",
+        "strategy": "class",
+        "groups": []
     }
 }
 
