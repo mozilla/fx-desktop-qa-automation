@@ -85,15 +85,15 @@
         "groups": []
     },
 
-    "address-save-doorhanger-edit": {
-        "selectorData": "//button[@id='address-capture-menu-button']",
-        "strategy": "xpath",
+    "address-doorhanger-email": {
+        "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span",
+        "strategy": "css",
         "groups": []
     },
 
-    "address-doorhanger-email-field": {
-        "selectorData": "address-save-update-row-container",
-        "strategy": "class",
+    "address-doorhanger-phone": {
+        "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span",
+        "strategy": "css",
         "groups": []
     }
 }

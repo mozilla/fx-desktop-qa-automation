@@ -5,7 +5,7 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_about_pages import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities
+from modules.util import Utilities, BrowserActions
 
 
 @pytest.fixture()
@@ -17,7 +17,8 @@ params = [("US", "US"), ("CA", "CA")]
 
 
 @pytest.mark.parametrize("region, locale", params)
-def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str, locale: str):
+def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str, locale: str,
+                                                                  ):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
@@ -26,6 +27,7 @@ def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefo
     address_autofill_popup = AutofillPopup(driver)
     util = Utilities()
     about_config = AboutConfig(driver)
+    browser_action_obj = BrowserActions(driver)
 
     # Change pref value of region
     about_config.change_config_value("browser.search.region", region)
@@ -38,24 +40,35 @@ def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefo
     # The "Save address?" doorhanger is displayed
     address_autofill_popup.wait.until(lambda _: address_autofill_popup.element_visible("address-save-doorhanger"))
 
-    # click on edit
-    # address_autofill_popup.click_on("address-save-doorhanger-edit")
-
     # containing email field
-    expected_email = address_autofill_data.street_address
+    expected_email = address_autofill_data.email
     with driver.context(driver.CONTEXT_CHROME):
-        email_field = address_autofill_popup.get_element("address-doorhanger-email-field")
-    address_autofill_popup.wait.until(lambda _: email_field.text == expected_email)
+        email = address_autofill_popup.get_element("address-doorhanger-email")
+        assert email.text == expected_email
 
     # containing phone field
-
+    expected_phone = address_autofill_data.telephone
+    with driver.context(driver.CONTEXT_CHROME):
+        phone = address_autofill_popup.get_element("address-doorhanger-phone")
+        actual_phone = phone.text
+        assert actual_phone.lstrip('+') == expected_phone
 
     # Click the "Save" button
     address_autofill_popup.click_doorhanger_button("save")
 
-    # Navigate to about:preferences#privacy => "Autofill" section and click the "Saved addresses" button
+    # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs = AboutPrefs(driver, category="privacy").open()
-    about_prefs.get_element("save-and-fill-addresses").click()
+    iframe = about_prefs.get_save_addresses_popup_iframe()
+    browser_action_obj.switch_to_iframe_context(iframe)
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: Email and phone
+    elements = about_prefs.get_elements("saved-addresses-values")
+    expected_values = [expected_phone, expected_email]
+    found_email_phone = any(
+        any(value in element.text for value in expected_values)
+        for element in elements
+    )
+    assert (
+        found_email_phone
+    ), "Email or phone were not found in any of the address entries."
 
