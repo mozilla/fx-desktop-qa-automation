@@ -13,11 +13,11 @@ def test_case():
     return "2886581"
 
 
-params = [("US", "US"), ("CA", "CA")]
+regions = ["US", "CA"]
 
 
-@pytest.mark.parametrize("region, locale", params)
-def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str, locale: str,
+@pytest.mark.parametrize("region", regions)
+def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str
                                                                ):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
@@ -34,7 +34,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
 
     # create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(locale)
+    address_autofill_data = util.fake_autofill_data(region)
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed
