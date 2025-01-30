@@ -65,7 +65,7 @@ def test_us_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefo
     elements = about_prefs.get_elements("saved-addresses-values")
     expected_values = [expected_phone, expected_email]
     found_email_phone = any(
-        any(value in element.text for value in expected_values)
+        all(value in element.text for value in expected_values)
         for element in elements
     )
     assert (
