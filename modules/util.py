@@ -124,33 +124,39 @@ class Utilities:
 
     def create_localized_faker(self, country_code: str):
         """
-        Given a country code, try to find the associated English locale. Returns the faker object
-        and whether or not the country code was valid.
+        Given a country code, creates a Faker instance with the appropriate locale.
+        Ensures valid Faker locale names are used.
 
-        ...
-        Attributes
-        ----------
-        country_code : str
-            The two letter country code.
-
-
-        Returns
+        Returns:
         -------
-        Tuple[Faker, bool]
-            A tuple where the first element is the faker object, second is a boolean indicated whether or not
-            the locale is valid.
+        Optional[Tuple[Faker, bool]] -> (faker_instance, is_valid_locale) or None if invalid.
         """
-        locale = f"en_{country_code.upper()}"
+        locale_map = {
+            "US": "en_US",
+            "CA": "en_CA",
+            "DE": "de_DE",
+            "FR": "fr_FR",
+        }
+
+        # Check if locale exists, otherwise return None
+        locale = locale_map.get(country_code.upper())
+
+        if not locale:
+            logging.error(
+                f"Invalid country code `{country_code}`. No faker instance created."
+            )
+            return None  # No fallback
+
         try:
             faker = Faker(locale)
             faker.add_provider(internet)
             faker.add_provider(misc)
-            return (faker, True)
+            return faker, True
         except AttributeError:
-            faker = Faker(locale)
-            faker.add_provider(internet)
-            faker.add_provider(misc)
-            return (faker, False)
+            logging.error(
+                f"Invalid locale `{locale}`. Faker instance could not be created."
+            )
+            return None
 
     def generate_localized_phone_US_CA(self, fake: Faker) -> str:
         """
@@ -178,14 +184,7 @@ class Utilities:
 
     def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
         """
-        Given a country code, tries to initialize the locale of the faker and generates fake data
-        then returns the new AutofillAddressBase object with the fake data.
-
-        ...
-        Attributes
-        ----------
-        country_code : str
-            The two letter country code, defaults to CA if it is not valid.
+        Generates fake autofill data for a given country code.
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
@@ -199,7 +198,12 @@ class Utilities:
         postal_code = fake.postcode()
         country = "CA" if not valid_code else country_code
         email = fake.email()
-        telephone = self.generate_localized_phone_US_CA(fake)
+
+        # Use `generate_localized_phone_US_CA` only for US & CA, otherwise use default Faker phone number.
+        if country in ["US", "CA"]:
+            telephone = self.generate_localized_phone_US_CA(fake)
+        else:
+            telephone = fake.phone_number()
 
         fake_data = AutofillAddressBase(
             name=name,

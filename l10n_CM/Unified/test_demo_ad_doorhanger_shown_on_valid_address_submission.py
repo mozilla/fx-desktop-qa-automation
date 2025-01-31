@@ -6,7 +6,7 @@ from modules.page_object import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
-params = [("US", "US"), ("CA", "CA")]
+regions = ["US", "CA", "DE", "FR"]
 
 
 @pytest.fixture()
@@ -14,9 +14,9 @@ def test_case():
     return "2886581"
 
 
-@pytest.mark.parametrize("region, locale", params)
+@pytest.mark.parametrize("region", regions)
 def test_address_doorhanger_displayed_after_entering_valid_address(
-    driver: Firefox, region: str, locale: str
+    driver: Firefox, region: str
 ):
     """
     C2886581 - Verify the Capture Doorhanger is displayed after entering valid Address data
@@ -33,7 +33,7 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
 
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(locale)
+    address_autofill_data = util.fake_autofill_data(region)
     address_autofill.save_information_basic(address_autofill_data)
 
     # Check "Save Address?" doorhanger appears in the Address bar
