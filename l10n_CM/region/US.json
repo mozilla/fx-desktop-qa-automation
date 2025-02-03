@@ -1,0 +1,8 @@
+{
+    "region": "US",
+    "tests": [
+        "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
+        "test_demo_cc_add_new_credit_card.py",
+        "test_demo_ad_doorhanger_shown_on_valid_address_submission.py"
+    ]
+}

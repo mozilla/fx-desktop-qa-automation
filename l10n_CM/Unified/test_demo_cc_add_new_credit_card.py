@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 from selenium.webdriver import Firefox
@@ -6,15 +7,12 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutConfig, AboutPrefs
 from modules.util import BrowserActions, Utilities
 
-regions = ["US", "CA", "DE", "FR"]
-
 
 @pytest.fixture()
 def test_case():
     return "2886595"
 
 
-@pytest.mark.parametrize("region", regions)
 def test_create_new_cc_profile(driver: Firefox, region: str):
     """
     C2886595 - Tests you can create and save a new Credit Card profile
