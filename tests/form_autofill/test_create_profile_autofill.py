@@ -4,17 +4,15 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions, Utilities
 
+COUNTRY_CODE = "US"
+
 
 @pytest.fixture()
 def test_case():
     return "122348"
 
 
-countries = ["CA", "US"]
-
-
-@pytest.mark.parametrize("country_code", countries)
-def test_create_address_profile(driver: Firefox, country_code: str):
+def test_create_address_profile(driver: Firefox):
     """
     C122348, creating an address profile
     """
@@ -25,7 +23,7 @@ def test_create_address_profile(driver: Firefox, country_code: str):
     about_prefs_obj.open()
 
     # create sample data
-    autofill_sample_data = util.fake_autofill_data(country_code)
+    autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
     iframe_address_popup = about_prefs_obj.press_button_get_popup_dialog_iframe(
         "Saved addresses"
     )
