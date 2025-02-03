@@ -37,6 +37,4 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
     address_autofill.save_information_basic(address_autofill_data)
 
     # Check "Save Address?" doorhanger appears in the Address bar
-    address_autofill_popup.wait.until(
-        lambda _: address_autofill_popup.element_visible("address-save-doorhanger")
-    )
+    address_autofill_popup.element_visible("address-save-doorhanger")

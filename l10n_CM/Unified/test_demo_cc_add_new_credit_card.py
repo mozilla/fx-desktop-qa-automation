@@ -39,9 +39,6 @@ def test_create_new_cc_profile(driver: Firefox, region: str):
     credit_card_sample_data = util.fake_credit_card_data()
 
     # Add a new CC profile
-    about_prefs_cc_popup.element_clickable(
-        "panel-popup-button", labels=["autofill-manage-add-button"]
-    )
     about_prefs_cc_popup.click_on(
         "panel-popup-button", labels=["autofill-manage-add-button"]
     )
