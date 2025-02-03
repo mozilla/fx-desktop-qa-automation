@@ -5,7 +5,7 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_about_pages import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities, BrowserActions
+from modules.util import BrowserActions, Utilities
 
 
 @pytest.fixture()
@@ -17,8 +17,9 @@ regions = ["US", "CA"]
 
 
 @pytest.mark.parametrize("region", regions)
-def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str
-                                                               ):
+def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
+    driver: Firefox, region: str
+):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
@@ -38,7 +39,9 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed
-    address_autofill_popup.wait.until(lambda _: address_autofill_popup.element_visible("address-save-doorhanger"))
+    address_autofill_popup.wait.until(
+        lambda _: address_autofill_popup.element_visible("address-save-doorhanger")
+    )
 
     # containing email field
     expected_email = address_autofill_data.email
@@ -51,7 +54,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     with driver.context(driver.CONTEXT_CHROME):
         phone = address_autofill_popup.get_element("address-doorhanger-phone")
         actual_phone = phone.text
-        assert actual_phone.lstrip('+') == expected_phone
+        assert actual_phone.lstrip("+") == expected_phone
 
     # Click the "Save" button
     address_autofill_popup.click_doorhanger_button("save")
@@ -65,10 +68,8 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     elements = about_prefs.get_elements("saved-addresses-values")
     expected_values = [expected_phone, expected_email]
     found_email_phone = any(
-        all(value in element.text for value in expected_values)
-        for element in elements
+        all(value in element.text for value in expected_values) for element in elements
     )
     assert (
         found_email_phone
     ), "Email or phone were not found in any of the address entries!"
-
