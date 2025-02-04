@@ -566,6 +566,18 @@
         "selectorData": "urlbar-anon-search-settings",
         "strategy": "id",
          "groups": []
+    },
+
+    "searchmode-switcher": {
+        "selectorData": "urlbar-searchmode-switcher",
+        "strategy": "id",
+         "groups": []
+    },
+
+    "searchmode-switcher-settings": {
+        "selectorData": "searchmode-switcher-popup-search-settings-button",
+        "strategy": "id",
+         "groups": []
     }
     
 }

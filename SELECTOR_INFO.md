@@ -2820,6 +2820,20 @@ Description: Search settings button in awesome bar
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: searchmode-switcher
+Selector Data: urlbar-searchmode-switcher
+Description: searchmode switcher toolbar button
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-switcher-settings
+Selector Data: searchmode-switcher-popup-search-settings-button
+Description: Search settings button in the searchmode switcher dropdown
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

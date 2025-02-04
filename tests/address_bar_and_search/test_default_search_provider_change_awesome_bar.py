@@ -10,6 +10,14 @@ def test_case():
     return "2860208"
 
 
+@pytest.fixture()
+def set_prefs():
+    """Set prefs"""
+    return [
+        ("browser.urlbar.scotchBonnet.enableOverride", True),
+    ]
+
+
 @pytest.mark.ci
 def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
@@ -24,7 +32,7 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
 
     # Type some word->select 'Change search settings' when the search drop-down panel is opened.
     nav.type_in_awesome_bar(search_term)
-    nav.open_awesome_bar_settings()
+    nav.open_searchmode_switcher_settings()
 
     # Check that the current URL is about:preferences#search
     nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
@@ -32,7 +40,7 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     # Open a site, open search settings again and check if it's opened in a different tab
     driver.get("https://9gag.com/")
     nav.type_in_awesome_bar(search_term)
-    nav.open_awesome_bar_settings()
+    nav.open_searchmode_switcher_settings()
 
     driver.switch_to.window(driver.window_handles[1])
     nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
@@ -44,6 +52,6 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
 
     # Open the search bar and type in a keyword and check if it's with the right provider
-    nav.search(search_term)
+    nav.type_in_awesome_bar(search_term)
     nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
     driver.quit()
