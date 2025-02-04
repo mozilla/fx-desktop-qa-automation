@@ -11,7 +11,9 @@ from modules.testrail import TestRail
 FX_PRERC_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)[ab](\d\d?)(.*)")
 FX_RC_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)(.*)")
 FX_RELEASE_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)\.(\d\d?)(.*)")
-TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{beta}-build{build}"
+TESTRAIL_RUN_FMT = (
+    "[{channel} {major}] Automated testing {major}.{minor}b{beta}-build{build}"
+)
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
@@ -76,9 +78,11 @@ def reportable():
 
     # Find the correct test plan
     sys_platform = platform.system()
-    version = subprocess.check_output(
-        [sys.executable, "./../collect_executables.py", "-n"]
-        ).strip().decode()
+    version = (
+        subprocess.check_output([sys.executable, "./../collect_executables.py", "-n"])
+        .strip()
+        .decode()
+    )
     logging.warning(f"Got version from collect_executable.py! {version}")
     tr_session = testrail_init()
     first_half, second_half = version.split(".")

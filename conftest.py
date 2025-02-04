@@ -284,7 +284,11 @@ def use_profile():
 def version(fx_executable: str, opt_ci):
     """Return the Firefox version string"""
     if opt_ci:
-         version = check_output([sys.executable, "./collect_executables.py", "-n"]).strip().decode()
+        version = (
+            check_output([sys.executable, "./collect_executables.py", "-n"])
+            .strip()
+            .decode()
+        )
     else:
         version = check_output([fx_executable, "--version"]).strip().decode()
     return version
