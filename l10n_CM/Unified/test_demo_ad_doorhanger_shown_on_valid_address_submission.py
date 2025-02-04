@@ -6,15 +6,12 @@ from modules.page_object import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
-regions = ["US", "CA", "DE", "FR"]
-
 
 @pytest.fixture()
 def test_case():
     return "2886581"
 
 
-@pytest.mark.parametrize("region", regions)
 def test_address_doorhanger_displayed_after_entering_valid_address(
     driver: Firefox, region: str
 ):
