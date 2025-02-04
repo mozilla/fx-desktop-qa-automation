@@ -1,5 +1,5 @@
 """Get the link to download Fx or Geckodriver, for any supported platform.
-Use -g to get geckodriver, otherwise you will get Fx.
+Use -g to get geckodriver, otherwise you will get Fx. Use -n to just get the Fx version number.
 Set env var FX_CHANNEL to get non-beta, blank string for Release.
 Set env var FX_LOCALE to get a different locale build."""
 
@@ -12,6 +12,8 @@ import requests
 from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
+BACKSTOP = "135.0b9"
+NUMBER_ONLY = False
 
 
 def get_fx_platform():
@@ -86,6 +88,8 @@ if "-g" in argv:
     print(gecko_download_url)
 
 else:
+    if "-n" in argv:
+        NUMBER_ONLY = True
     channel = environ.get("FX_CHANNEL")
     # if channel doesn't exist use beta, if blank leave blank (for Release)
     # ...otherwise prepend hyphen
@@ -94,21 +98,50 @@ else:
     elif channel:
         channel = f"-{channel.lower()}"
 
-    latest_beta_ver = environ.get("BETA_VERSION")
-    if not latest_beta_ver:
-        prefix = "mac" if get_gd_platform()[:3] in ("mac", "lin") else "win"
-        with open(f"{prefix}-latest-reported-version") as fh:
-            latest_beta_ver = fh.read().strip()
-
     language = environ.get("FX_LOCALE")
     if not language:
         language = "en-US"
+
+    candidate_exists = True
+    this_beta = BACKSTOP
+    while candidate_exists:
+        (major, minor_beta) = this_beta.split(".")
+        (minor, beta) = minor_beta.split("b")
+        major = int(major)
+        minor = int(minor)
+        beta = int(beta)
+
+        next_major = f"{major+1}.{minor}b1"
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/{get_fx_platform()}/{language}/"
+        rs = requests.get(fx_download_dir_url)
+        if rs.status_code < 300:
+            latest_beta_ver = next_major
+            this_beta = next_major
+            continue
+
+        next_minor = f"{major}.{minor+1}b1"
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/build1/{get_fx_platform()}/{language}/"
+        rs = requests.get(fx_download_dir_url)
+        if rs.status_code < 300:
+            latest_beta_ver = next_minor
+            this_beta = next_minor
+            continue
+
+        next_beta = f"{major}.{minor}b{beta+1}"
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/build1/{get_fx_platform()}/{language}/"
+        rs = requests.get(fx_download_dir_url)
+        if rs.status_code < 300:
+            latest_beta_ver = next_beta
+            this_beta = next_beta
+            continue
+
+        candidate_exists = False
 
     status = 200
     build = 0
     while status < 400 and build < 20:
         build += 1
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/"
 
         # Fetch the page
         response = requests.get(fx_download_dir_url)
@@ -134,4 +167,9 @@ else:
             executable_name = line.getText().replace(" ", "%20")
 
     fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
-    print(fx_download_executable_url)
+    if NUMBER_ONLY:
+        number_cand = fx_download_dir_url.split("/")[6]
+        number = number_cand.split("-")[0]
+        print(number)
+    else:
+        print(fx_download_executable_url)
