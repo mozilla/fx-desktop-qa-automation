@@ -64,7 +64,7 @@
     },
 
     "fx-refresh-button": {
-        "selectorData": "span[role='button'][data-l10n-id='intervention-refresh-profile-confirm']",
+        "selectorData": "span[role='button'][id='urlbarView-row-123-button-0']",
         "strategy": "css",
         "groups": []
     },
