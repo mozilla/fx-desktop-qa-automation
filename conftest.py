@@ -201,7 +201,7 @@ def opt_implicit_timeout(request):
     return request.config.getoption("--implicit-timeout")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def opt_ci(request):
     return request.config.getoption("--ci")
 
