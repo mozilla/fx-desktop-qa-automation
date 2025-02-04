@@ -146,12 +146,14 @@ else:
         # Fetch the page
         response = requests.get(fx_download_dir_url)
         status = response.status_code
-        if status < 300:
-            response_text = response.text
 
     # Correct build is the last one that didn't 404
     build -= 1
     fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+    response = requests.get(fx_download_dir_url)
+    status = response.status_code
+    if status < 300:
+        response_text = response.text
 
     # Parse the HTML content
     soup = BeautifulSoup(response_text, "html.parser")
