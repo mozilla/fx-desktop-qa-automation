@@ -11,27 +11,14 @@ permissions:
 jobs:
   Check-Beta-Version:
     runs-on: ubuntu-latest
-    outputs:
-      win_tested: ${{ steps.check_latest.outputs.win }}
-      mac_tested: ${{ steps.check_latest.outputs.mac }}
-      beta-version: ${{ steps.check_latest.outputs.beta-version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            collect_executables.py
-          sparse-checkout-cone-mode: false
       - name: Check if the run is reportable
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
           python3 -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
-
-  # Run the beta if the newest version has not been tested
-  Run-Smoke-Tests:
-    needs: Check-Beta-Version
-    uses: ./.github/workflows/smoke.yml
-    with:
-      job_to_run: [Smoke-Windows, Smoke-MacOS]
-    secrets: inherit
+      - name: Run smoke tests
+        uses: ./.github/workflows/smoke.yml
+        secrets: inherit
