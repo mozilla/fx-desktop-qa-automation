@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 import sys
@@ -19,8 +20,8 @@ def get_region_tests(test_region: str) -> list[str]:
 
 
 if __name__ == "__main__":
-    regions = sys.argv[1:]
     valid_region = {"US", "CA", "DE", "FR"}
+    regions = sys.argv[1:] if len(sys.argv[1:]) > 0 else valid_region
     for region in regions:
         if region not in valid_region:
             raise ValueError("Invalid Region.")
@@ -29,4 +30,5 @@ if __name__ == "__main__":
             os.environ["STARFOX_REGION"] = region
             subprocess.run(["pytest", *tests], check=True, text=True)
         except subprocess.CalledProcessError as e:
-            print(f"test run failed with {e} error")
+            print(e)
+            logging.warn(f"Test run failed. {e}")
