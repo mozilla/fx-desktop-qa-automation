@@ -27,7 +27,8 @@ HTTP_SITE = "http://http.badssl.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
-# Scotch Bonnet -- mark for ci when updated
+@pytest.mark.ci
+@pytest.mark.skip("Scotch Bonnet")
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 
