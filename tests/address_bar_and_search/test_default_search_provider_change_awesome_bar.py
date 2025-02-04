@@ -10,7 +10,8 @@ def test_case():
     return "2860208"
 
 
-@pytest.mark.ci
+# Scotch Bonnet -- uncomment after update
+# @pytest.mark.ci
 def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
     C2860208 - This test makes sure that the default search provider can be changed and settings are applied
