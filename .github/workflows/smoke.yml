@@ -5,13 +5,6 @@ run-name: ${{ github.actor }} is running smoke tests
 on:
   pull_request:
   workflow_call:
-    inputs:
-      job_to_run:
-        required: true
-        type: string
-      beta-version:
-        required: true
-        type: string
 permissions:
   contents: 'write'
 env:
@@ -22,7 +15,6 @@ env:
 
 jobs:
   Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -44,7 +36,6 @@ jobs:
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
-          BETA_VERSION=${{ inputs.beta-version }}
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
@@ -87,7 +78,7 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          pipenv run pytest -n 4 $(cat selected_tests)
+          pipenv run pytest -n 4 $(echo selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -112,7 +103,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run python choose_ci_set.py
-          pipenv run pytest -n 4 $(cat selected_tests)
+          pipenv run pytest -n 4 $(echo selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -133,7 +124,6 @@ jobs:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -158,7 +148,6 @@ jobs:
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
-          echo "BETA_VERSION=${{ inputs.beta-version }}" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
         id: setup        
