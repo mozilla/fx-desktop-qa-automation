@@ -111,7 +111,7 @@ else:
         minor = int(minor)
         beta = int(beta)
 
-        next_major = f"{major+1}.{minor}b1"
+        next_major = f"{major+1}.0b1"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:
