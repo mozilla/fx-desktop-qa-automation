@@ -103,6 +103,17 @@ class BasePage(Page):
         if self._xul_source_snippet not in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CHROME)
 
+    @staticmethod
+    def chrome_context(driver):
+        def inner_wrapper(func):
+            def wrapper(*args, **kwargs):
+                with driver.context(driver.CONTEXT_CHROME):
+                    func(*args, **kwargs)
+
+            return wrapper
+
+        return inner_wrapper
+
     def set_content_context(self):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
         if self._xul_source_snippet in self.driver.page_source:

@@ -20,6 +20,7 @@ class FindToolbar(BasePage):
             self.wait_for_page_to_load()
         return self
 
+    @BasePage.chrome_context(self.driver)
     def open_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + F to open the Find Toolbar, wait for load"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
