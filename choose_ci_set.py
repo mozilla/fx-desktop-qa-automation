@@ -72,10 +72,22 @@ def get_tests_by_model(
     return matching_tests
 
 
-def dedupe(run_list: list) -> list:
+def dedupe(run_list: list, slash: str) -> list:
     """For a run list, remove entries that are covered by more general entries."""
     run_list = list(set(run_list))
+    dotslashes = []
     removes = []
+
+    for i, entry in enumerate(run_list):
+        if (
+            not entry.startswith(".")
+            and not entry.startswith("\\")
+            and not entry.startswith("/")
+        ):
+            dotslashes.append(i)
+
+    for dotslash in dotslashes:
+        run_list[dotslash] = f".{slash}{run_list[dotslash]}"
 
     for i, entry_a in enumerate(run_list):
         for j, entry_b in enumerate(run_list):
@@ -211,7 +223,7 @@ if __name__ == "__main__":
         run_list.extend(ci_paths)
 
         # Dedupe just in case
-        run_list = dedupe(run_list)
+        run_list = dedupe(run_list, slash)
         run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
