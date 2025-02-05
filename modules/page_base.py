@@ -5,6 +5,7 @@ import platform
 import re
 import time
 from copy import deepcopy
+from functools import wraps
 from pathlib import Path
 from typing import List, Union
 
@@ -104,15 +105,26 @@ class BasePage(Page):
             self.driver.set_context(self.driver.CONTEXT_CHROME)
 
     @staticmethod
-    def chrome_context(driver):
-        def inner_wrapper(func):
-            def wrapper(*args, **kwargs):
-                with driver.context(driver.CONTEXT_CHROME):
-                    func(*args, **kwargs)
+    def chrome_context(func):
+        """Decorator to switch to CONTEXT_CHROME"""
 
-            return wrapper
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                return func(self, *args, **kwargs)
 
-        return inner_wrapper
+        return wrapper
+
+    @staticmethod
+    def content_context(func):
+        """Decorator to switch to CONTEXT_CONTENT"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                return func(self, *args, **kwargs)
+
+        return wrapper
 
     def set_content_context(self):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
