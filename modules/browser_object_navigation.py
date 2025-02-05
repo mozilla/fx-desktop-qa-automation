@@ -1,6 +1,7 @@
 import logging
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -168,6 +169,12 @@ class Navigation(BasePage):
     def click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         self.awesome_bar.click()
+        return self
+
+    def context_click_in_awesome_bar(self) -> BasePage:
+        self.set_awesome_bar()
+        actions = ActionChains(self.driver)
+        actions.context_click(self.awesome_bar).perform()
         return self
 
     def get_download_button(self) -> WebElement:
