@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
@@ -39,6 +40,7 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     # Open a new tab
     driver.get("about:newtab")
 
-    # Verify that the search provider has been changed to the selected search engine.  "Search with <search provider> or enter address" is present in url bar
-    nav.element_has_text("awesome-bar", "Search with DuckDuckGo or enter address")
-    driver.quit()
+    # Verify that the search provider has been changed to the selected search engine
+    nav.element_attribute_contains(
+        "awesome-bar", "placeholder", "Search with DuckDuckGo or enter address"
+    )
