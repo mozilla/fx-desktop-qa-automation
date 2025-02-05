@@ -76,6 +76,11 @@ def dedupe(run_list: list, slash: str) -> list:
     """For a run list, remove entries that are covered by more general entries."""
     suites = []
     run_list = list(set(run_list))
+    run_list = [
+        f".{slash}{entry}"
+        for entry in run_list
+        if not (entry.startswith(".") or entry.startswith(slash))
+    ]
     for entry in run_list:
         pieces = entry.split(slash)
         if len(pieces) < 4:
