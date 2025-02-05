@@ -172,6 +172,6 @@ else:
     if NUMBER_ONLY:
         number_cand = fx_download_dir_url.split("/")[6]
         number = number_cand.split("-")[0]
-        print(number)
+        print(f"{number}-build{build}")
     else:
         print(fx_download_executable_url)

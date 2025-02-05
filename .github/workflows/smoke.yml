@@ -5,13 +5,6 @@ run-name: ${{ github.actor }} is running smoke tests
 on:
   pull_request:
   workflow_call:
-    inputs:
-      job_to_run:
-        required: true
-        type: string
-      beta-version:
-        required: true
-        type: string
 permissions:
   contents: 'write'
 env:
@@ -22,7 +15,6 @@ env:
 
 jobs:
   Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request'}}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -40,11 +32,10 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
+        if: ${{ github.event_name == 'workflow_call' }}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
-          BETA_VERSION=${{ inputs.beta-version }}
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
@@ -78,10 +69,6 @@ jobs:
         shell: pwsh
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
-        env:
-          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
@@ -91,21 +78,9 @@ jobs:
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
-      - name: Commit Changed Tracker Files
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
-        run: |
-          git pull
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com;
-          git config --global user.name ${{ github.actor }};
-          git add win-latest-reported-version;
-          git commit -m "update windows reported version";
-          git push
       - name: Run Smoke Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
-          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           REPORTABLE: true
         run: |
           rm ./pyproject.toml;
@@ -133,7 +108,6 @@ jobs:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request'}}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -155,10 +129,9 @@ jobs:
           python check_test_cases.py
           exit $?
       - name: Set Environment
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        if: ${{ github.event_name == 'workflow_call' }}
         run:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
-          echo "BETA_VERSION=${{ inputs.beta-version }}" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
         id: setup        
@@ -173,9 +146,6 @@ jobs:
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
-          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
@@ -184,7 +154,7 @@ jobs:
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Commit Changed Tracker Files
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        if: ${{ github.event_name == 'workflow_call' }}
         run: |
           git pull
           git config --global user.email ${{ github.actor }}@users.noreply.github.com;
@@ -195,9 +165,6 @@ jobs:
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
-          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
