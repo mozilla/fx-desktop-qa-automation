@@ -13,6 +13,7 @@ def test_case():
 sites = [("YouTube", "com"), ("Ecosia", "org")]
 
 
+@pytest.mark.skip("Scotch Bonnet")
 @pytest.mark.parametrize("site, domain", sites)
 def test_add_search_engine_from_address_bar(driver: Firefox, site: str, domain: str):
     """

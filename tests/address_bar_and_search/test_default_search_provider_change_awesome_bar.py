@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
@@ -18,33 +19,21 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
     # Create objects
     nav = Navigation(driver)
-    search_term = "what is life?"
+    about_prefs = AboutPrefs(driver)
 
     # Make sure we start at about:newtab
     driver.get("about:newtab")
 
-    # Type some word->select 'Change search settings' when the search drop-down panel is opened.
-    nav.type_in_awesome_bar(search_term)
-    nav.open_awesome_bar_settings()
-
-    # Check that the current URL is about:preferences#search
-    nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
-
-    # Open a site, open search settings again and check if it's opened in a different tab
-    driver.get("https://9gag.com/")
-    nav.type_in_awesome_bar(search_term)
-    nav.open_awesome_bar_settings()
-
-    driver.switch_to.window(driver.window_handles[1])
-    nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
-    driver.switch_to.window(driver.window_handles[0])
-    assert driver.current_url == "https://9gag.com/"
+    # Click the USB and click the 'Search Settings' button.
+    nav.open_searchmode_switcher_settings()
 
     # Set a different provider as a default search engine
-    about_prefs = AboutPrefs(driver, category="search").open()
     about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
 
-    # Open the search bar and type in a keyword and check if it's with the right provider
-    nav.search(search_term)
-    nav.expect_in_content(lambda _: driver.current_url == "about:preferences#search")
-    driver.quit()
+    # Open a new tab
+    driver.get("about:newtab")
+
+    # Verify that the search provider has been changed to the selected search engine
+    nav.element_attribute_contains(
+        "awesome-bar", "placeholder", "Search with DuckDuckGo or enter address"
+    )

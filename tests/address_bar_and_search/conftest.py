@@ -36,6 +36,7 @@ def set_prefs(add_prefs: dict, overwrite_prefs):
         ("browser.topsites.useRemoteSetting", True),
         ("browser.topsites.contile.enabled", True),
         ("browser.search.region", "US"),
+        ("browser.urlbar.scotchBonnet.enableOverride", True),
     ]
     prefs.extend(add_prefs)
     for overwrite_pref in overwrite_prefs:
