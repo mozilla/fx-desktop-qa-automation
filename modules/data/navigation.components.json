@@ -578,6 +578,11 @@
         "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
          "groups": []
+    },
+
+    "awesome-bar-text": {
+        "selectorData": "#urlbar-input > div",
+        "strategy": "css",
+        "groups": []
     }
-    
 }
