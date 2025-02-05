@@ -11,14 +11,6 @@ def test_case():
     return "2860208"
 
 
-@pytest.fixture()
-def set_prefs():
-    """Set prefs"""
-    return [
-        ("browser.urlbar.scotchBonnet.enableOverride", True),
-    ]
-
-
 @pytest.mark.ci
 def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
