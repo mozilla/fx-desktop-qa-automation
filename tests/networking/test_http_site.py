@@ -28,7 +28,6 @@ CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
 @pytest.mark.ci
-@pytest.mark.skip("Scotch Bonnet")
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 
