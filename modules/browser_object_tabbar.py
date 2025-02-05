@@ -19,10 +19,10 @@ class TabBar(BasePage):
         """Fake enum: just return a string based on a constant name"""
 
         def __init__(self):
-            self.PLAYING = "soundplaying"
+            self.PLAYING = "playing"
             self.MUTED = "muted"
             self.AUTOPLAY_BLOCKED = "blocked"
-            self.PIP = "pictureinpicture"
+            self.PIP = "pip"
 
     MEDIA_STATUS = MediaStatus()
 
@@ -137,7 +137,11 @@ class TabBar(BasePage):
     ) -> BasePage:
         """Check to see if the tab has an expected MediaStatus"""
         tab = self.get_tab(identifier)
-        self.wait.until(lambda _: tab.get_attribute(status) is not None)
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.move_to_element(tab).perform()
+            self.expect(
+                EC.visibility_of(self.get_element("tab-sound-label", labels=[status]))
+            )
         return self
 
     def expect_title_contains(self, text: str) -> BasePage:

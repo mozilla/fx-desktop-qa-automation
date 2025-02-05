@@ -5,7 +5,6 @@
 .tmp*
 .testrail_credential*
 .DS_Store
-selected_tests
 test*.txt
 fx_location
 test*txt

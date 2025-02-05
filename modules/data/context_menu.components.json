@@ -49,12 +49,6 @@
         "groups": []
     },
 
-    "context-menu-add-search-engine": {
-        "selectorData": "context-menu-add-engine",
-        "strategy": "class",
-        "groups": []
-    },
-
     "context-menu-pin-tab": {
         "selectorData": "context_pinTab",
         "strategy": "id",

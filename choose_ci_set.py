@@ -74,29 +74,19 @@ def get_tests_by_model(
 
 def dedupe(run_list: list, slash: str) -> list:
     """For a run list, remove entries that are covered by more general entries."""
+    suites = []
     run_list = list(set(run_list))
-    dotslashes = []
+    for entry in run_list:
+        pieces = entry.split(slash)
+        if len(pieces) < 4:
+            suites.append(pieces[-1])
+
     removes = []
+    for entry in run_list:
+        pieces = entry.split(slash)
+        if len(pieces) > 3 and pieces[2] in suites:
+            removes.append(run_list.index(entry))
 
-    for i, entry in enumerate(run_list):
-        if (
-            not entry.startswith(".")
-            and not entry.startswith("\\")
-            and not entry.startswith("/")
-        ):
-            dotslashes.append(i)
-
-    for dotslash in dotslashes:
-        run_list[dotslash] = f".{slash}{run_list[dotslash]}"
-
-    for i, entry_a in enumerate(run_list):
-        for j, entry_b in enumerate(run_list):
-            if i == j:
-                continue
-            if entry_a in entry_b:
-                removes.append(j)
-
-    removes.sort(reverse=True)
     for remove in removes:
         del run_list[remove]
 

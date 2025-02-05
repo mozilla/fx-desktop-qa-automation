@@ -4,7 +4,6 @@
         "selectorData": "tab[label='{title}']",
         "strategy": "css",
         "groups": [
-            "doNotCache",
             "tabSelector"
         ]
     },
@@ -13,7 +12,6 @@
         "selectorData": "tab[linkedpanel$='-{index}']",
         "strategy": "css",
         "groups": [
-            "doNotCache",
             "tabSelector"
         ]
     },
@@ -28,6 +26,12 @@
 
     "tab-icon-overlay": {
         "selectorData": "tab-icon-overlay",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "tab-sound-label": {
+        "selectorData": "tab-icon-sound-{status}-label",
         "strategy": "class",
         "groups": []
     },

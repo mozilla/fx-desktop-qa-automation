@@ -123,14 +123,15 @@
         "groups": []
     },
 
-    "searchmode-switcher": {
-        "selectorData": "urlbar-searchmode-switcher",
-        "strategy": "id",
+
+    "add-extra-search-engine": {
+        "selectorData": "[id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']",
+        "strategy": "css",
         "groups": []
     },
 
-    "search-mode-switcher-option": {
-        "selectorData": "toolbarbutton[label*='{title}']",
+    "search-one-off-engine-button": {
+        "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
         "strategy": "css",
         "groups": []
     },
@@ -563,6 +564,12 @@
 
     "search-settings": {
         "selectorData": "urlbar-anon-search-settings",
+        "strategy": "id",
+         "groups": []
+    },
+
+    "searchmode-switcher": {
+        "selectorData": "urlbar-searchmode-switcher",
         "strategy": "id",
          "groups": []
     },
