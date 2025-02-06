@@ -19,6 +19,6 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pipenv install
           python3 -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
-      - name: Run smoke tests
-        uses: ./.github/workflows/smoke.yml
-        secrets: inherit
+  Run-Smoke-Tests:
+    uses: ./.github/workflows/smoke.yml
+    secrets: inherit
