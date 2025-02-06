@@ -18,6 +18,7 @@ def delete_files_regex_string():
     return r".*i-9.pdf"
 
 
+@pytest.mark.unstable(reason="bug 1946131")
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,
