@@ -24,7 +24,7 @@ links = [
 link_set = set(links)
 
 
-def test_reopn_tab_through_history_menu(driver: Firefox):
+def test_reopen_tab_through_history_menu(driver: Firefox):
     """C134650 - Verify that the recently closed tab can be reopened from the history menu"""
     # open 6 tabs
     tabs = TabBar(driver)
