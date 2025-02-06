@@ -32,12 +32,6 @@
         "groups": []
     },
 
-    "tab-sound-label": {
-        "selectorData": "tab-icon-sound-{status}-label",
-        "strategy": "class",
-        "groups": []
-    },
-
     "tab-title": {
         "selectorData": "tab-text",
         "strategy": "class",
