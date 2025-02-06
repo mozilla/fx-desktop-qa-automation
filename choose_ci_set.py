@@ -96,6 +96,7 @@ def dedupe(run_list: list, slash: str) -> list:
             if entry_a in entry_b:
                 removes.append(j)
 
+    removes.sort(reverse=True)
     for remove in removes:
         del run_list[remove]
 
