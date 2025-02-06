@@ -4,6 +4,7 @@
         "selectorData": "tab[label='{title}']",
         "strategy": "css",
         "groups": [
+            "doNotCache",
             "tabSelector"
         ]
     },
@@ -12,6 +13,7 @@
         "selectorData": "tab[linkedpanel$='-{index}']",
         "strategy": "css",
         "groups": [
+            "doNotCache",
             "tabSelector"
         ]
     },
