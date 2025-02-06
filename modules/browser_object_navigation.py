@@ -332,3 +332,9 @@ class Navigation(BasePage):
         button_selector = f"popup-notification-{button_type}-button"
         self.element_clickable(button_selector)
         self.click_on(button_selector)
+
+    def open_searchmode_switcher_settings(self):
+        """Open search settings from searchmode switcher in awesome bar"""
+        self.click_on("searchmode-switcher")
+        self.click_on("searchmode-switcher-settings")
+        return self

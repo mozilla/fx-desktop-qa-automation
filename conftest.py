@@ -3,6 +3,7 @@ import logging
 import os
 import platform
 import re
+import sys
 from shutil import unpack_archive
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
@@ -200,7 +201,7 @@ def opt_implicit_timeout(request):
     return request.config.getoption("--implicit-timeout")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def opt_ci(request):
     return request.config.getoption("--ci")
 
@@ -280,9 +281,16 @@ def use_profile():
 
 
 @pytest.fixture(scope="session")
-def version(fx_executable: str):
+def version(fx_executable: str, opt_ci):
     """Return the Firefox version string"""
-    version = check_output([fx_executable, "--version"]).strip().decode()
+    if opt_ci:
+        version = (
+            check_output([sys.executable, "./collect_executables.py", "-n"])
+            .strip()
+            .decode()
+        )
+    else:
+        version = check_output([fx_executable, "--version"]).strip().decode()
     return version
 
 

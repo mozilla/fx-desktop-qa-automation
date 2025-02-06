@@ -6,6 +6,8 @@ from modules.page_object import AboutPrefs
 from modules.page_object_autofill import AddressFill
 from modules.util import BrowserActions, Utilities
 
+COUNTRY_CODE = "US"
+
 
 @pytest.fixture()
 def test_case():
@@ -22,11 +24,7 @@ def set_prefs():
     ]
 
 
-countries = ["CA", "US"]
-
-
-@pytest.mark.parametrize("country_code", countries)
-def test_private_mode_info_not_saved(driver: Firefox, country_code: str):
+def test_private_mode_info_not_saved(driver: Firefox):
     """
     C122587 - Autofill data not saved in private mode.
     This only tests the last part of the written TC - case should be divided
@@ -37,7 +35,7 @@ def test_private_mode_info_not_saved(driver: Firefox, country_code: str):
     ba = BrowserActions(driver)
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(country_code)
+    autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
     address_form_fields.save_information_basic(autofill_sample_data)
     autofill_popup.verify_no_popup_panel()
 

@@ -3,9 +3,22 @@ import re
 import sys
 from subprocess import check_output
 
+import pytest
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CI_MARK = "@pytest.mark.ci"
 HEADED_MARK = "@pytest.mark.headed"
+OUTPUT_FILE = "selected_tests"
+
+
+class CollectionPlugin:
+    """Mini plugin to get test names"""
+
+    def __init__(self):
+        self.tests = []
+
+    def pytest_report_collectionfinish(self, items):
+        self.tests = [item.nodeid for item in items]
 
 
 def snakify(pascal: str) -> str:
@@ -88,8 +101,9 @@ if __name__ == "__main__":
 
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
-        print("tests")
-        sys.exit(0)
+        with open(OUTPUT_FILE, "w") as fh:
+            print("tests")
+            sys.exit(0)
 
     slash = "/" if "/" in SCRIPT_DIR else "\\"
 
@@ -120,7 +134,8 @@ if __name__ == "__main__":
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
-        print("tests")
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("tests")
         sys.exit(0)
 
     all_tests = []
@@ -134,10 +149,9 @@ if __name__ == "__main__":
                     lines = fh.readlines()
                     test_paths_and_contents[this_file] = "".join(lines)
 
-    ci_paths = []
-    for path, content in test_paths_and_contents.items():
-        if CI_MARK in content:
-            ci_paths.append(localify(path))
+    p = CollectionPlugin()
+    pytest.main(["--collect-only", "-m", "ci", "-s"], plugins=[p])
+    ci_paths = [f".{slash}{test}" for test in p.tests]
 
     # Dedupe just in case
     ci_paths = list(set(ci_paths))
@@ -194,11 +208,13 @@ if __name__ == "__main__":
                 run_list.append(changed_test)
 
     if not run_list:
-        print("\n".join(ci_paths))
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(ci_paths))
     else:
         run_list.extend(ci_paths)
 
         # Dedupe just in case
         run_list = dedupe(run_list, slash)
-        run_list = [entry for entry in run_list if os.path.exists(entry)]
-        print("\n".join(run_list))
+        run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(run_list))
