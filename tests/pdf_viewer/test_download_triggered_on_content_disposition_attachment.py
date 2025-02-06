@@ -30,6 +30,9 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     """
     C936502: Ensure that the Always ask option in Firefox Applications settings
     triggers the download panel for PDFs with Content-Disposition: attachment.
+
+    Arguments:
+        delete_files: fixture to remove the files after the test finishes
     """
 
     tabs = TabBar(driver)
@@ -39,9 +42,11 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     about_prefs.find_in_settings("appl")
     about_prefs.click_on("pdf-content-type")
     about_prefs.click_on("pdf-actions-menu")
+
     menu = about_prefs.get_element("pdf-actions-menu")
     menu.send_keys(Keys.DOWN)
     menu.send_keys(Keys.ENTER)
+
     about_prefs.wait.until(lambda _: menu.get_attribute("label") == "Always ask")
 
     nav.search(CONTENT_DISPOSITION_ATTACHMENT_URL)

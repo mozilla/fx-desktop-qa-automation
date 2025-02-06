@@ -1,5 +1,3 @@
-from shutil import copyfile
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -13,18 +11,14 @@ def test_case():
     return "3927"
 
 
-@pytest.fixture()
-def temp_pdf(tmp_path):
-    loc = tmp_path / "boeing_brochure.pdf"
-    copyfile("data/boeing_brochure.pdf", loc)
-    return loc
-
-
-def test_navigation_keys(driver: Firefox, temp_pdf):
+def test_navigation_keys(driver: Firefox, pdf_file_path):
     """
     C3927.1: ensure that you can navigate through a PDF using keys
+
+    Arguments:
+        pdf_file_path: pdf file directory path
     """
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
+    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
     body = pdf_viewer.get_element("html-body")
 
     # scroll down using arrow down key
@@ -82,12 +76,12 @@ def test_navigation_keys(driver: Firefox, temp_pdf):
     assert home_key_difference > left_key_difference
 
 
-def test_navigation_next_prev(driver: Firefox, temp_pdf):
+def test_navigation_next_prev(driver: Firefox, pdf_file_path):
     """
     C3927.2: ensure that you can navigate through a PDF using next and previous keys
     """
     # navigate to PDF
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
+    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
 
     # find position of page one element
     page_one_item = pdf_viewer.get_element("page-one-item")
@@ -105,12 +99,12 @@ def test_navigation_next_prev(driver: Firefox, temp_pdf):
     pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
 
 
-def test_navigation_page_numbers(driver: Firefox, temp_pdf):
+def test_navigation_page_numbers(driver: Firefox, pdf_file_path):
     """
     C3927.3: Ensure that you can navigate through a PDF using the numbers at the top
     """
     # navigate to PDF
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
+    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
 
     # get an element from page one
     page_one_item = pdf_viewer.get_element("page-one-item")
@@ -135,12 +129,12 @@ def test_navigation_page_numbers(driver: Firefox, temp_pdf):
     assert first_page_position == original_position
 
 
-def test_toolbar_options_cursor(driver: Firefox, temp_pdf):
+def test_toolbar_options_cursor(driver: Firefox, pdf_file_path):
     """
     C3927.4: Ensure the correct cursor is displayed
     """
     # open PDF and get body element
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
+    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
     pdf_viewer.open_toolbar_menu()
     body = pdf_viewer.get_element("pdf-body")
 
@@ -162,12 +156,12 @@ def test_toolbar_options_cursor(driver: Firefox, temp_pdf):
     assert cursor_style == "auto"
 
 
-def test_toolbar_options_rotate(driver: Firefox, temp_pdf):
+def test_toolbar_options_rotate(driver: Firefox, pdf_file_path):
     """
     C3927.5: Ensure the correct rotation is shown
     """
     # open the PDF
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{temp_pdf}").open()
+    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
     body = pdf_viewer.get_element("pdf-body")
     util = Utilities()
 
@@ -191,7 +185,7 @@ def test_toolbar_options_rotate(driver: Firefox, temp_pdf):
 
     assert new_perspective_origin < original_perspective_origin
 
-    # rotate counter clockwise
+    # rotate counterclockwise
     pdf_viewer.open_toolbar_menu()
     pdf_viewer.get_element("toolbar-rotate-ccw").click()
 

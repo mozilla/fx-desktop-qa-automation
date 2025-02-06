@@ -1,6 +1,8 @@
 from time import sleep
 
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
 
 from modules.page_base import BasePage
 
@@ -36,12 +38,14 @@ class GenericPdf(BasePage):
             self.perform_key_combo(Keys.COMMAND, "+")
         else:
             self.perform_key_combo(Keys.CONTROL, "+")
+        return self
 
     def zoom_out_keys(self) -> BasePage:
         if self.sys_platform() == "Darwin":
             self.perform_key_combo(Keys.COMMAND, "-")
         else:
             self.perform_key_combo(Keys.CONTROL, "-")
+        return self
 
     def jump_to_page(self, page_number: int) -> BasePage:
         page_input = self.get_element("page-input")
@@ -75,3 +79,29 @@ class GenericPdf(BasePage):
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
         return self
+
+    def fill_element(self, element: str, data: str) -> BasePage:
+        """fill in the field at element with data"""
+        self.get_element(element).send_keys(data)
+        return self
+
+    def click_download_button(self) -> BasePage:
+        """click on download button for the pdf"""
+        self.get_element("download-button").click()
+        self.wait_for_page_to_load()
+        return self
+
+    def select_and_return_checkbox(self, element: str) -> WebElement:
+        """select checkbox located at element"""
+        checkbox = self.get_element(element)
+        checkbox.click()
+        return checkbox
+
+    def select_and_return_dropdown_option(
+        self, element: str, selector: By, value: str
+    ) -> WebElement:
+        """click dropdown element and select dropdown option through selector"""
+        self.get_element(element).click()
+        dropdown_option = self.find_element(selector, value)
+        dropdown_option.click()
+        return dropdown_option

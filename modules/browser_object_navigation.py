@@ -1,6 +1,7 @@
 import logging
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -22,45 +23,51 @@ class Navigation(BasePage):
         "Actions": ">",
     }
 
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.search_bar = None
+        self.change_search_settings_button = None
+
+    @BasePage.content_context
     def expect_in_content(self, condition) -> BasePage:
         """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
-        with self.driver.context(self.driver.CONTEXT_CONTENT):
-            self.wait.until(condition)
+        self.wait.until(condition)
         return self
 
+    @BasePage.chrome_context
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.awesome_bar = self.get_element("awesome-bar")
+        self.awesome_bar = self.get_element("awesome-bar")
         return self
 
+    @BasePage.chrome_context
     def get_awesome_bar(self) -> WebElement:
         """Get the Awesome Bar. Prefer this over get_element."""
         self.set_awesome_bar()
         return self.awesome_bar
 
+    @BasePage.chrome_context
     def get_awesome_bar_text(self):
         """
         Get the text directly from the awesome bar.
         This is different from 'driver.current_url' which pulls from href
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            awesome_bar = self.get_element("awesome-bar").get_attribute("value")
+        awesome_bar = self.get_element("awesome-bar").get_attribute("value")
         return awesome_bar
 
+    @BasePage.chrome_context
     def clear_awesome_bar(self) -> BasePage:
         """Clear the Awesome Bar. Prefer this over get_element("awesome-bar").clear()"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.set_awesome_bar()
-            self.awesome_bar.clear()
+        self.set_awesome_bar()
+        self.awesome_bar.clear()
         return self
 
+    @BasePage.chrome_context
     def type_in_awesome_bar(self, term: str) -> BasePage:
         """Enter text into the Awesome Bar. You probably want self.search()"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.set_awesome_bar()
-            self.awesome_bar.click()
-            self.awesome_bar.send_keys(term)
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        self.awesome_bar.send_keys(term)
         return self
 
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
@@ -90,6 +97,7 @@ class Navigation(BasePage):
         )
         return self
 
+    @BasePage.chrome_context
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
@@ -103,21 +111,21 @@ class Navigation(BasePage):
         mode : str | None
             If set, the name or keystroke shortcut of the search mode
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            if mode:
-                self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
-                    term + Keys.ENTER
-                )
-            else:
-                self.type_in_awesome_bar(term + Keys.ENTER)
+        if mode:
+            self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
+                term + Keys.ENTER
+            )
+        else:
+            self.type_in_awesome_bar(term + Keys.ENTER)
         return self
 
+    @BasePage.chrome_context
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
         return self
 
+    @BasePage.chrome_context
     def search_bar_search(self, term: str) -> BasePage:
         """
         Search using the *Old* Search Bar. Returns self.
@@ -128,12 +136,12 @@ class Navigation(BasePage):
         term : str
             The search term
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-            self.search_bar.click()
-            self.search_bar.send_keys(term + Keys.ENTER)
+        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar.click()
+        self.search_bar.send_keys(term + Keys.ENTER)
         return self
 
+    @BasePage.chrome_context
     def type_in_search_bar(self, term: str) -> BasePage:
         """
         Type in the *Old* Search Bar. Returns self.
@@ -144,10 +152,9 @@ class Navigation(BasePage):
         term : str
             The search term
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-            self.search_bar.click()
-            self.search_bar.send_keys(term)
+        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar.click()
+        self.search_bar.send_keys(term)
         return self
 
     def open_awesome_bar_settings(self):
@@ -155,107 +162,114 @@ class Navigation(BasePage):
         self.click_on("search-settings")
         return self
 
+    @BasePage.chrome_context
     def click_on_change_search_settings_button(self) -> BasePage:
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-            self.search_bar.click()
-            self.change_search_settings_button = self.find_element(
-                By.ID, "searchbar-anon-search-settings"
-            )
-            self.change_search_settings_button.click()
+        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar.click()
+        self.change_search_settings_button = self.find_element(
+            By.ID, "searchbar-anon-search-settings"
+        )
+        self.change_search_settings_button.click()
         return self
 
+    @BasePage.chrome_context
     def click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         self.awesome_bar.click()
         return self
 
+    @BasePage.chrome_context
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement
         """
-        downloads_button = None
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            downloads_button = self.get_element("downloads-button")
-            return downloads_button
+        downloads_button = self.get_element("downloads-button")
+        return downloads_button
 
+    @BasePage.chrome_context
     def wait_for_download_animation_finish(
         self, downloads_button: WebElement
     ) -> BasePage:
         """
         Waits for the download button to finish playing the animation for downloading to local computer
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            try:
-                self.wait.until(
-                    lambda _: downloads_button.get_attribute("notification") == "finish"
-                )
-            except TimeoutException:
-                logging.warning("Animation did not finish or did not play.")
+        try:
+            self.wait.until(
+                lambda _: downloads_button.get_attribute("notification") == "finish"
+            )
+        except TimeoutException:
+            logging.warning("Animation did not finish or did not play.")
+        return self
 
+    @BasePage.chrome_context
     def open_tracker_panel(self) -> BasePage:
         """
         Clicks the shield icon and opens the panel associated with it
         """
-        with self.driver.context(self.context_id):
-            self.get_element("shield-icon").click()
-            return self
+        self.get_element("shield-icon").click()
+        return self
 
+    @BasePage.chrome_context
     def bookmark_page_other(self) -> BasePage:
-        with self.driver.context(self.context_id):
-            self.get_element("star-button").click()
-            dropdown = self.get_element("bookmarks-type-dropdown")
-            dropdown.click()
-            self.get_element("bookmarks-type-dropdown-other").click()
-            dropdown.click()
-            self.get_element("save-bookmark-button").click()
+        self.get_element("star-button").click()
+        dropdown = self.get_element("bookmarks-type-dropdown")
+        dropdown.click()
+        self.get_element("bookmarks-type-dropdown-other").click()
+        dropdown.click()
+        self.get_element("save-bookmark-button").click()
+        return self
 
+    @BasePage.chrome_context
     def add_bookmark_advanced(
         self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
-        with self.driver.context(self.context_id):
-            iframe = self.get_element("bookmark-iframe")
-            ba.switch_to_iframe_context(iframe)
-            # fill name
-            if bookmark_data.name is not None:
-                self.actions.send_keys(bookmark_data.name).perform()
-            self.actions.send_keys(Keys.TAB).perform()
-            # fill url
-            self.actions.send_keys(bookmark_data.url + Keys.TAB).perform()
-            # fill tags
-            if bookmark_data.tags is not None:
-                self.actions.send_keys(bookmark_data.tags).perform()
-            self.actions.send_keys(Keys.TAB).perform()
-            # fill keywords
-            if bookmark_data.keyword is not None:
-                self.actions.send_keys(bookmark_data.keyword).perform()
-            self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
-            ba.switch_to_content_context()
+        iframe = self.get_element("bookmark-iframe")
+        ba.switch_to_iframe_context(iframe)
+        # fill name
+        if bookmark_data.name is not None:
+            self.actions.send_keys(bookmark_data.name).perform()
+        self.actions.send_keys(Keys.TAB).perform()
+        # fill url
+        self.actions.send_keys(bookmark_data.url + Keys.TAB).perform()
+        # fill tags
+        if bookmark_data.tags is not None:
+            self.actions.send_keys(bookmark_data.tags).perform()
+        self.actions.send_keys(Keys.TAB).perform()
+        # fill keywords
+        if bookmark_data.keyword is not None:
+            self.actions.send_keys(bookmark_data.keyword).perform()
+        self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
+        ba.switch_to_content_context()
+        return self
 
+    @BasePage.chrome_context
     def add_bookmark_via_star(self) -> BasePage:
         """
         Bookmark a site via star button and click save on the bookmark panel
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("star-button").click()
-            self.get_element("save-bookmark-button").click()
+        self.get_element("star-button").click()
+        self.get_element("save-bookmark-button").click()
+        return self
 
+    @BasePage.chrome_context
     def add_bookmark_via_menu(self) -> BasePage:
         """
         Bookmark a site via bookmarks menu and click save on the bookmark panel
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("bookmark-current-tab").click()
-            self.get_element("save-bookmark-button").click()
 
+        self.get_element("bookmark-current-tab").click()
+        self.get_element("save-bookmark-button").click()
+        return self
+
+    @BasePage.chrome_context
     def toggle_bookmarks_toolbar_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + B to open the Print Preview, wait for load"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            if self.sys_platform() == "Darwin":
-                mod_key = Keys.COMMAND
-            else:
-                mod_key = Keys.CONTROL
-            self.perform_key_combo(mod_key, Keys.SHIFT, "b")
+
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.perform_key_combo(mod_key, Keys.SHIFT, "b")
         return self
 
     def wait_for_item_to_download(self, filename: str) -> BasePage:
@@ -279,34 +293,35 @@ class Navigation(BasePage):
                 )
         finally:
             self.driver.implicitly_wait(original_timeout)
-
         return self
 
+    @BasePage.chrome_context
     def confirm_bookmark_exists(self, match_string: str) -> BasePage:
         """
         For a given string, return self if it exists in the label of a bookmark, else assert False.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            bookmarks = self.get_elements("bookmark-in-bar")
-            logging.info(f"Found {len(bookmarks)} bookmarks.")
-            for el in bookmarks:
-                logging.info(el.get_attribute("label"))
 
-            matches_short_string = any(
-                [match_string in el.get_attribute("label") for el in bookmarks]
-            )
-            matches_long_string = any(
-                [el.get_attribute("label") in match_string for el in bookmarks]
-            )
-            assert matches_short_string or matches_long_string
-            return self
+        bookmarks = self.get_elements("bookmark-in-bar")
+        logging.info(f"Found {len(bookmarks)} bookmarks.")
+        for el in bookmarks:
+            logging.info(el.get_attribute("label"))
 
+        matches_short_string = any(
+            [match_string in el.get_attribute("label") for el in bookmarks]
+        )
+        matches_long_string = any(
+            [el.get_attribute("label") in match_string for el in bookmarks]
+        )
+        assert matches_short_string or matches_long_string
+        return self
+
+    @BasePage.chrome_context
     def refresh_page(self) -> BasePage:
         """
         Refreshes the current page by clicking the refresh button in the browser.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("refresh-button").click()
+
+        self.get_element("refresh-button").click()
         self.wait_for_page_to_load()
         return self
 

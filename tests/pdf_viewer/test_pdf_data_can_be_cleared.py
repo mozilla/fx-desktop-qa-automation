@@ -20,6 +20,9 @@ def hard_quit():
     return True
 
 
+TEST_NAME = "John Doe"
+
+
 @pytest.mark.ci
 def test_pdf_data_can_be_cleared(
     driver: Firefox,
@@ -30,6 +33,12 @@ def test_pdf_data_can_be_cleared(
 ):
     """
     C1017495 :Check if data can be cleared
+
+    Arguments:
+        sys_platform: Current System Platform Type
+        fillable_pdf_url: pdf file directory path
+        downloads_folder: downloads folder path
+        delete_files: fixture to remove the files after the test finishes
     """
 
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
@@ -37,26 +46,22 @@ def test_pdf_data_can_be_cleared(
 
     # Step 1: Click and type inside the text field for the name section
 
-    name_test_value = "John Doe"
-    pdf.fill("first-name-field", name_test_value)
-    pdf.element_attribute_contains("first-name-field", "value", name_test_value)
+    pdf.fill("first-name-field", TEST_NAME)
+    pdf.element_attribute_contains("first-name-field", "value", TEST_NAME)
 
     # Step 2: Click over any checkbox and assert the status is updated
 
-    checkbox = pdf.get_element("first-checkbox")
-    checkbox.click()
+    checkbox = pdf.select_and_return_checkbox("first-checkbox")
     pdf.element_selected("first-checkbox")
 
     # Step 3: Select an option from a dropdown and verify the selection
 
-    dropdown = pdf.get_element("state-dropdown-field")
-    dropdown.click()
-    option = driver.find_element(By.XPATH, "//option[@value='CA']")
-    option.click()
-    pdf.expect(lambda _: option.is_displayed())
+    dropdown_option = pdf.select_and_return_dropdown_option(
+        "state-dropdown-field", By.XPATH, "//option[@value='CA']"
+    )
+    pdf.expect(lambda _: dropdown_option.is_displayed())
 
     # Step 4: Delete the text added in step 1 and ensure the input field is empty
-    pdf.get_element("first-name-field").clear()
     pdf.get_element("first-name-field").clear()
     pdf.expect(lambda _: not pdf.get_element("first-name-field").get_attribute("value"))
 
@@ -65,9 +70,11 @@ def test_pdf_data_can_be_cleared(
     pdf.expect(lambda _: not checkbox.is_selected())
 
     # Step 6: Clear the state selection and ensure the field is empty
-    dropdown.click()
-    default_option = driver.find_element(By.XPATH, "//option[@value=' ']")
+    default_option = pdf.select_and_return_dropdown_option(
+        "state-dropdown-field", By.XPATH, "//option[@value=' ']"
+    )
     default_option.click()
+
     pdf.expect(lambda _: default_option.is_selected())
 
     # Assert that all fields are reset to their default state
@@ -75,3 +82,4 @@ def test_pdf_data_can_be_cleared(
         pdf.get_element("first-name-field").get_attribute("value") == ""
     ), "Text field did not reset."
     assert not checkbox.is_selected(), "Checkbox did not reset."
+    assert (default_option.is_selected(), "Dropdown did not cleared")
