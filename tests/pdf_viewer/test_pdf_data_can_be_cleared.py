@@ -74,7 +74,6 @@ def test_pdf_data_can_be_cleared(
         "state-dropdown-field", By.XPATH, "//option[@value=' ']"
     )
     default_option.click()
-
     pdf.expect(lambda _: default_option.is_selected())
 
     # Assert that all fields are reset to their default state
@@ -82,4 +81,3 @@ def test_pdf_data_can_be_cleared(
         pdf.get_element("first-name-field").get_attribute("value") == ""
     ), "Text field did not reset."
     assert not checkbox.is_selected(), "Checkbox did not reset."
-    assert (default_option.is_selected(), "Dropdown did not cleared")
