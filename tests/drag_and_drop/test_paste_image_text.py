@@ -16,6 +16,7 @@ def set_prefs():
     return [("clipboard.imageAsFile.enabled", False)]
 
 
+@pytest.mark.unstable(reason="Bug 1938373")
 @pytest.fixture()
 def temp_selectors():
     return {
