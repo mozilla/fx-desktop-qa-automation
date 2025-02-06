@@ -53,6 +53,7 @@ DEMO_URL = "https://mystor.github.io/dragndrop/#"
 COPY_URL = "https://1stwebdesigner.com/image-file-types/"
 
 
+@pytest.mark.unstable(reason="Bug 1938373")
 @pytest.mark.headed
 # Ref to Windows bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
 # which may or may not be relevant
