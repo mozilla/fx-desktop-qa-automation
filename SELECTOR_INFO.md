@@ -3420,13 +3420,6 @@ Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```
 ```
-Selector name: tab-sound-label
-Selector Data: "tab-icon-sound-{status}-label"
-Description: A tab's sound status
-Location: In the tabbed browser.
-Path to .json: modules/data/tab_bar.components.json
-```
-```
 Selector name: tab-title
 Selector Data: "tab-text"
 Description: Gets the text of a Tab (it's title)
