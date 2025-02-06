@@ -11,6 +11,11 @@ def test_case():
     return "1365478"
 
 
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 def test_add_search_engine_from_address_bar(driver: Firefox):
     """
     C1365478: Open Search Engines can be added using the address bar context click option.
