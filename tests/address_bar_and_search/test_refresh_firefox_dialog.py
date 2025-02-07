@@ -9,8 +9,7 @@ def test_case():
     return "2914620"
 
 
-@pytest.mark.skip("Scotch Bonnet")
-def test_intervention_card_refresh(driver: Firefox):
+def test_refresh_firefox_dialog(driver: Firefox):
     """
     C2914620: Refresh Firefox dialog
     """
