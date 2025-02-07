@@ -330,3 +330,8 @@ class Navigation(BasePage):
         self.click_on("searchmode-switcher")
         self.click_on("searchmode-switcher-settings")
         return self
+
+    def select_element_in_nav(self, element: str) -> BasePage:
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element(element).click()
+            return self
