@@ -88,8 +88,7 @@ def reportable():
     major_number, second_half = version.split(".")
     minor_num, build_num = second_half.split("-")
     channel = "Beta" if "b" in minor_num else "Release"
-    if "Nightly" in first_half:
-        channel = "Nightly"
+    # TODO: Logic for Nightly testing
 
     major_version = f"Firefox {major_number}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
