@@ -105,7 +105,7 @@ class BasePage(Page):
             self.driver.set_context(self.driver.CONTEXT_CHROME)
 
     @staticmethod
-    def chrome_context(func):
+    def context_chrome(func):
         """Decorator to switch to CONTEXT_CHROME"""
 
         @wraps(func)
@@ -116,7 +116,7 @@ class BasePage(Page):
         return wrapper
 
     @staticmethod
-    def content_context(func):
+    def context_content(func):
         """Decorator to switch to CONTEXT_CONTENT"""
 
         @wraps(func)

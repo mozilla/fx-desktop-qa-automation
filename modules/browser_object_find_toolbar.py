@@ -17,7 +17,7 @@ class FindToolbar(BasePage):
         self.panel_ui = PanelUi(self.driver)
         self.match_dict = {}
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def open(self) -> BasePage:
         """Use PanelUi to open the Find Toolbar, wait for element to load"""
         self.panel_ui.open_panel_menu()
@@ -25,7 +25,7 @@ class FindToolbar(BasePage):
         self.wait_for_page_to_load()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def open_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + F to open the Find Toolbar, wait for load"""
         if self.sys_platform() == "Darwin":
@@ -36,7 +36,7 @@ class FindToolbar(BasePage):
         self.wait_for_page_to_load()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def find(self, term: str) -> BasePage:
         """Use the Find Toolbar to search"""
         find_bar = self.get_element("find-toolbar-input")
@@ -47,7 +47,7 @@ class FindToolbar(BasePage):
             self.match_dict = self.get_match_args()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def get_match_args(self) -> dict:
         """Return the status of the find session"""
         self.expect(
@@ -61,7 +61,7 @@ class FindToolbar(BasePage):
         self.match_dict = json.loads(match_status_str)
         return self.match_dict
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def next_match(self) -> BasePage:
         """Click the Next Match button"""
         self.get_element("next-match-button").click()
@@ -71,7 +71,7 @@ class FindToolbar(BasePage):
             self.match_dict["current"] = 1
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def previous_match(self) -> BasePage:
         """Click the Previous Match button"""
         self.get_element("previous-match-button").click()
@@ -81,7 +81,7 @@ class FindToolbar(BasePage):
             self.match_dict["current"] = self.match_dict["total"]
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def rewind_to_first_match(self) -> BasePage:
         """Go back to match 1 of n"""
         print(self.match_dict)
@@ -90,7 +90,7 @@ class FindToolbar(BasePage):
             self.previous_match()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def navigate_matches_by_keys(self, backwards=False) -> BasePage:
         """Use F3 and Shift+F3 to navigate matches"""
         if backwards:
@@ -100,7 +100,7 @@ class FindToolbar(BasePage):
             self.actions.send_keys(Keys.F3).perform()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def navigate_matches_n_times(self, n: int):
         for _ in range(n):
             self.next_match()

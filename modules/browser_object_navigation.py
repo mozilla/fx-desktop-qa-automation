@@ -28,25 +28,25 @@ class Navigation(BasePage):
         self.search_bar = None
         self.change_search_settings_button = None
 
-    @BasePage.content_context
+    @BasePage.context_content
     def expect_in_content(self, condition) -> BasePage:
         """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
         self.wait.until(condition)
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
         self.awesome_bar = self.get_element("awesome-bar")
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def get_awesome_bar(self) -> WebElement:
         """Get the Awesome Bar. Prefer this over get_element."""
         self.set_awesome_bar()
         return self.awesome_bar
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def get_awesome_bar_text(self):
         """
         Get the text directly from the awesome bar.
@@ -55,14 +55,14 @@ class Navigation(BasePage):
         awesome_bar = self.get_element("awesome-bar").get_attribute("value")
         return awesome_bar
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def clear_awesome_bar(self) -> BasePage:
         """Clear the Awesome Bar. Prefer this over get_element("awesome-bar").clear()"""
         self.set_awesome_bar()
         self.awesome_bar.clear()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def type_in_awesome_bar(self, term: str) -> BasePage:
         """Enter text into the Awesome Bar. You probably want self.search()"""
         self.set_awesome_bar()
@@ -97,7 +97,7 @@ class Navigation(BasePage):
         )
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
@@ -119,13 +119,13 @@ class Navigation(BasePage):
             self.type_in_awesome_bar(term + Keys.ENTER)
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
         self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def search_bar_search(self, term: str) -> BasePage:
         """
         Search using the *Old* Search Bar. Returns self.
@@ -141,7 +141,7 @@ class Navigation(BasePage):
         self.search_bar.send_keys(term + Keys.ENTER)
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def type_in_search_bar(self, term: str) -> BasePage:
         """
         Type in the *Old* Search Bar. Returns self.
@@ -162,7 +162,7 @@ class Navigation(BasePage):
         self.click_on("search-settings")
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def click_on_change_search_settings_button(self) -> BasePage:
         self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
         self.search_bar.click()
@@ -172,13 +172,13 @@ class Navigation(BasePage):
         self.change_search_settings_button.click()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         self.awesome_bar.click()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement
@@ -186,7 +186,7 @@ class Navigation(BasePage):
         downloads_button = self.get_element("downloads-button")
         return downloads_button
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def wait_for_download_animation_finish(
         self, downloads_button: WebElement
     ) -> BasePage:
@@ -201,7 +201,7 @@ class Navigation(BasePage):
             logging.warning("Animation did not finish or did not play.")
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def open_tracker_panel(self) -> BasePage:
         """
         Clicks the shield icon and opens the panel associated with it
@@ -209,7 +209,7 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def bookmark_page_other(self) -> BasePage:
         self.get_element("star-button").click()
         dropdown = self.get_element("bookmarks-type-dropdown")
@@ -219,7 +219,7 @@ class Navigation(BasePage):
         self.get_element("save-bookmark-button").click()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def add_bookmark_advanced(
         self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
@@ -242,7 +242,7 @@ class Navigation(BasePage):
         ba.switch_to_content_context()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def add_bookmark_via_star(self) -> BasePage:
         """
         Bookmark a site via star button and click save on the bookmark panel
@@ -251,7 +251,7 @@ class Navigation(BasePage):
         self.get_element("save-bookmark-button").click()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def add_bookmark_via_menu(self) -> BasePage:
         """
         Bookmark a site via bookmarks menu and click save on the bookmark panel
@@ -261,7 +261,7 @@ class Navigation(BasePage):
         self.get_element("save-bookmark-button").click()
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def toggle_bookmarks_toolbar_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + B to open the Print Preview, wait for load"""
 
@@ -295,7 +295,7 @@ class Navigation(BasePage):
             self.driver.implicitly_wait(original_timeout)
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def confirm_bookmark_exists(self, match_string: str) -> BasePage:
         """
         For a given string, return self if it exists in the label of a bookmark, else assert False.
@@ -315,7 +315,7 @@ class Navigation(BasePage):
         assert matches_short_string or matches_long_string
         return self
 
-    @BasePage.chrome_context
+    @BasePage.context_chrome
     def refresh_page(self) -> BasePage:
         """
         Refreshes the current page by clicking the refresh button in the browser.
