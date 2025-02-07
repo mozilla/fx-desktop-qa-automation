@@ -13,10 +13,6 @@ def test_case():
     return "2886581"
 
 
-regions = ["US", "CA", "DE", "FR"]
-
-
-@pytest.mark.parametrize("region", regions)
 def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str
                                                                ):
     """
@@ -38,23 +34,16 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed
-    address_autofill_popup.wait.until(lambda _: address_autofill_popup.element_visible("address-save-doorhanger"))
+    address_autofill_popup.element_visible("address-save-doorhanger")
 
     # containing email field
     expected_email = address_autofill_data.email
-    with driver.context(driver.CONTEXT_CHROME):
-        email = address_autofill_popup.get_element("address-doorhanger-email")
-        assert email.text == expected_email
+    address_autofill_popup.element_has_text("address-doorhanger-email", expected_email)
 
     # containing phone field
     expected_phone = address_autofill_data.telephone
-    with driver.context(driver.CONTEXT_CHROME):
-        phone = address_autofill_popup.get_element("address-doorhanger-phone")
-        actual_phone = phone.text
-        # Normalize phone numbers: remove '+', spaces, dashes, and (0)
-        normalized_actual_phone = actual_phone.replace(" ", "").replace("-", "").replace("(0)", "").lstrip('+')
-        normalized_expected_phone = expected_phone.replace(" ", "").replace("-", "").replace("(0)", "").lstrip('+')
-        assert normalized_actual_phone == normalized_expected_phone
+    actual_phone = "address-doorhanger-phone"
+    address_autofill_popup.element_has_text(actual_phone.lstrip("+"), expected_phone)
 
     # Click the "Save" button
     address_autofill_popup.click_doorhanger_button("save")
