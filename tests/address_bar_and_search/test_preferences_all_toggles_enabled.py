@@ -53,7 +53,7 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
                 "Label text:"
                 + nav.get_element("sponsored-suggestion").get_attribute("innerText")
             )
-        sleep(2)
+        sleep(3)
         retries += 1
 
     # Check if a non-sponsored suggestion is displayed
