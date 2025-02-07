@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment
-g        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' }}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
