@@ -17,7 +17,7 @@ def set_prefs():
         ("dom.security.https_only_mode_ever_enabled", True),
         ("dom.security.https_only_mode_ever_enabled_pbm", True),
         ("dom.security.https_first", False),
-        ("dom.security.https_first_add_exception_on_failiure", False),
+        ("dom.security.https_first_add_exception_on_failure", False),
         ("dom.security.https_first_pbm", False),
         ("dom.security.https_first_schemeless", False),
     ]
