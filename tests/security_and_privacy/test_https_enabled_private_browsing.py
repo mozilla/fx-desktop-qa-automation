@@ -19,6 +19,7 @@ def add_prefs():
     ]
 
 
+@pytest.mark.skip("136.0b3 security changes")
 def test_https_first_mode_in_private_browsing(driver: Firefox):
     """
     C1362731 Check that https First Mode is properly enabled and working in Private Browsing
