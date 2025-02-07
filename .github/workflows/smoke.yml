@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment
-        if: ${{ github.event_name == 'workflow_call' }}
+g        if: ${{ github.event_name == 'schedule' }}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
@@ -128,7 +128,7 @@ jobs:
           exit $?
           echo "Triggered by event: ${{ github.event_name }}"
       - name: Set Environment
-        if: ${{ github.event_name == 'workflow_call' }}
+        if: ${{ github.event_name == 'schedule' }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
