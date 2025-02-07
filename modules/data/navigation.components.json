@@ -580,10 +580,21 @@
          "groups": []
     },
 
+    "searchmode-switcher": {
+        "selectorData": "urlbar-searchmode-switcher",
+        "strategy": "id"
+    },
+
+    "search-mode-switcher-option": {
+        "selectorData": "toolbarbutton[label*='{title}']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "searchmode-switcher-settings": {
         "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
          "groups": []
     }
-    
+
 }
