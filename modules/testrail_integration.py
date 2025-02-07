@@ -96,7 +96,9 @@ def reportable():
         TESTRAIL_FX_DESK_PRJ, f"Firefox {major_version}"
     )
     if not major_milestone:
-        logging.warning("Not reporting: Could not find matching milestone.")
+        logging.warning(
+            f"Not reporting: Could not find matching milestone: Firefox {major_version}"
+        )
         return False
 
     channel_milestone = tr_session.matching_submilestone(
