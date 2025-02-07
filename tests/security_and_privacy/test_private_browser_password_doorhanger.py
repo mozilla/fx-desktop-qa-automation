@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -19,6 +21,7 @@ def add_prefs():
     return [("signon.rememberSignons", True)]
 
 
+@pytest.mark.skipif(system == "Linux", reason="136.0b3 Linux security bustage")
 def test_no_password_doorhanger_private_browsing(driver: Firefox):
     """
     C101670: Ensure no save password doorhanger shows up and settings are correct
