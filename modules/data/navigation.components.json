@@ -566,6 +566,18 @@
         "selectorData": "urlbar-anon-search-settings",
         "strategy": "id",
          "groups": []
+    },
+
+    "refresh-button-awesome-bar": {
+        "selectorData": ".urlbarView-action-btn[data-action=refresh]",
+        "strategy": "css",
+         "groups": []
+    },
+
+    "refresh-firefox-dialog": {
+        "selectorData": "window-modal-dialog",
+        "strategy": "id",
+         "groups": []
     }
     
 }
