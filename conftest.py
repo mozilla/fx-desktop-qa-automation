@@ -382,12 +382,6 @@ def pytest_sessionfinish(session):
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)
     tri.mark_results(tr_session, passes)
-    with open(".tmp_testrail_info") as fh:
-        (plan_title, config) = fh.read().split("|")
-    version = os.environ.get("BETA_VERSION")
-    prefix = config[:3].lower()
-    with open(f"{prefix}-latest-reported-version", "w") as fh:
-        fh.write(version)
 
 
 @pytest.fixture()
