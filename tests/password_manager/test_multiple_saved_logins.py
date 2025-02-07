@@ -22,12 +22,12 @@ def set_prefs():
 @pytest.fixture()
 def temp_selectors():
     return {
-        "username-field": {"selectorData": "email", "strategy": "id", "groups": []},
-        "password-field": {"selectorData": "pass", "strategy": "id", "groups": []},
+        "username-field": {"selectorData": "user-name", "strategy": "id", "groups": []},
+        "password-field": {"selectorData": "password", "strategy": "id", "groups": []},
     }
 
 
-FACEBOOK_URL = "https://www.facebook.com/"
+SAUCEDEMO_URL = "https://www.saucedemo.com/"
 
 
 @pytest.mark.headed
@@ -44,7 +44,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://www.facebook.com",
+            "origin": "https://www.saucedemo.com/",
             "username": "username1",
             "password": "password1",
         }
@@ -53,7 +53,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://www.facebook.com",
+            "origin": "https://www.saucedemo.com/",
             "username": "username2",
             "password": "password2",
         }
@@ -62,18 +62,19 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://www.facebook.com",
+            "origin": "https://www.saucedemo.com/",
             "username": "username3",
             "password": "password3",
         }
     )
 
-    # Open Facebook.com
-    web_page = GenericPage(driver, url=FACEBOOK_URL).open()
+    # Open saucedemo.com
+    web_page = GenericPage(driver, url=SAUCEDEMO_URL).open()
     web_page.elements |= temp_selectors
     autofill_popup = AutofillPopup(driver)
 
     # Verify that all 3 credentials and "Manage Passwords" footer are in the pop-up
+    web_page.click_on("username-field")
     autofill_popup.verify_autofill_displayed()
     for i in range(1, 4):
         credential = autofill_popup.get_nth_element(str(i))
