@@ -1404,6 +1404,13 @@ Location: Any history item in the Hamburger history list
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-add-search-engine
+Selector Data: "context-menu-add-engine"
+Description: Awesomebar context click option "Add <search engine>"
+Location: Any history item in the Hamburger history list
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-pin-tab
 Selector Data: "context_pinTab"
 Description: Tab context click option "Pin Tab"
@@ -2391,20 +2398,6 @@ Location: Private browsing mode
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: add-extra-search-engine
-Selector Data: [id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']
-Description: Add extra search engine in the url bar
-Location: URL bar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: search-one-off-engine-button
-Selector Data: [id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']
-Description: Search one off engine button
-Location: URL bar search results
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: downloads-button
 Selector Data: downloads-button
 Description: Toolbar download button
@@ -2841,7 +2834,6 @@ Description: Contextual search button
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
-
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3424,13 +3416,6 @@ Path to .json: modules/data/tab_bar.components.json
 Selector name: tab-icon-overlay
 Selector Data: "tab-icon-overlay"
 Description: A tab's icon overlay
-Location: In the tabbed browser.
-Path to .json: modules/data/tab_bar.components.json
-```
-```
-Selector name: tab-sound-label
-Selector Data: "tab-icon-sound-{status}-label"
-Description: A tab's sound status
 Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```
