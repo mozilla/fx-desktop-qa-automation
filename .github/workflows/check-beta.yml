@@ -11,55 +11,14 @@ permissions:
 jobs:
   Check-Beta-Version:
     runs-on: ubuntu-latest
-    outputs:
-      win_tested: ${{ steps.check_latest.outputs.win }}
-      mac_tested: ${{ steps.check_latest.outputs.mac }}
-      beta-version: ${{ steps.check_latest.outputs.beta-version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            get_beta_version.py
-            win-latest-reported-version
-            mac-latest-reported-version
-          sparse-checkout-cone-mode: false
-      - name: Obtain the latest beta version number
+      - name: Check if the run is reportable
         run: |
-          pip3 install beautifulsoup4
-          echo "LATEST=$(python3 ./get_beta_version.py)" >> "$GITHUB_ENV"
-      - name: Check if the latest version was tested
-        id: check_latest
-        run: |
-          TESTED_WIN=$(cat ./win-latest-reported-version)
-          if [ "$LATEST" = "$TESTED_WIN" ]; then
-            echo "win=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "win=false" >> "$GITHUB_OUTPUT"
-          fi
-          TESTED_MAC=$(cat ./mac-latest-reported-version)
-          if [ "$LATEST" = "$TESTED_MAC" ]; then
-            echo "mac=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "mac=false" >> "$GITHUB_OUTPUT"
-          fi
-          echo "beta-version=$LATEST" >> "$GITHUB_OUTPUT"
-
-  # Run the beta if the newest version has not been tested
-  Run-Win-Smoke:
-    needs: Check-Beta-Version
-    if: needs.Check-Beta-Version.outputs.win_tested == 'false'
+          pip3 install 'pipenv==2023.11.15';
+          pipenv install
+          python3 -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
+  Run-Smoke-Tests:
     uses: ./.github/workflows/smoke.yml
-    with:
-      job_to_run: Smoke-Windows
-      beta-version: ${{ needs.Check-Beta-Version.outputs.beta-version }}
-    secrets: inherit
-
-  Run-Mac-Smoke:
-    needs: Check-Beta-Version
-    if: needs.Check-Beta-Version.outputs.mac_tested == 'false'
-    uses: ./.github/workflows/smoke.yml
-    with:
-      job_to_run: Smoke-MacOS
-      beta-version: ${{ needs.Check-Beta-Version.outputs.beta-version }}
     secrets: inherit

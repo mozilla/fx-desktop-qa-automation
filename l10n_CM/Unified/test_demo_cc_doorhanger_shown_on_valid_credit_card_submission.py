@@ -6,15 +6,12 @@ from modules.page_object import AboutConfig
 from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
 
-regions = ["US", "CA", "DE", "FR"]
-
 
 @pytest.fixture()
 def test_case():
     return "2889441"
 
 
-@pytest.mark.parametrize("region", regions)
 def test_cc_check_door_hanger_is_displayed(driver: Firefox, region: str):
     """
     C2889441 - Ensures that the door hanger is displayed after filling credit card info

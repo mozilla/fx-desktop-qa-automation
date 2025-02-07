@@ -64,7 +64,7 @@
     },
 
     "fx-refresh-button": {
-        "selectorData": "span[role='button'][id='urlbarView-row-123-button-0']",
+        "selectorData": "span[role='button'][data-l10n-id='intervention-refresh-profile-confirm']",
         "strategy": "css",
         "groups": []
     },
@@ -576,6 +576,12 @@
 
     "refresh-firefox-dialog": {
         "selectorData": "window-modal-dialog",
+        "strategy": "id",
+         "groups": []
+    },
+
+    "searchmode-switcher-settings": {
+        "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
          "groups": []
     }

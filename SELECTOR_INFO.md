@@ -1404,6 +1404,13 @@ Location: Any history item in the Hamburger history list
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-add-search-engine
+Selector Data: "context-menu-add-engine"
+Description: Awesomebar context click option "Add <search engine>"
+Location: Any history item in the Hamburger history list
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-pin-tab
 Selector Data: "context_pinTab"
 Description: Tab context click option "Pin Tab"
@@ -2391,20 +2398,6 @@ Location: Private browsing mode
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: add-extra-search-engine
-Selector Data: [id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']
-Description: Add extra search engine in the url bar
-Location: URL bar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: search-one-off-engine-button
-Selector Data: [id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']
-Description: Search one off engine button
-Location: URL bar search results
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: downloads-button
 Selector Data: downloads-button
 Description: Toolbar download button
@@ -2818,6 +2811,27 @@ Selector Name: search-settings
 Selector Data: urlbar-anon-search-settings
 Description: Search settings button in awesome bar
 Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-switcher
+Selector Data: urlbar-searchmode-switcher
+Description: searchmode switcher toolbar button
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-switcher-settings
+Selector Data: searchmode-switcher-popup-search-settings-button
+Description: Search settings button in the searchmode switcher dropdown
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-switcher-option
+Selector Data: toolbarbutton[label*='{title}']
+Description: Option by label in search mode list
+Location: Search mode of awesomebar
 Path to .json: modules/data/navigation.components.json
 ```
 ```

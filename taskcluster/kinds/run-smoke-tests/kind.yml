@@ -34,10 +34,12 @@ tasks:
         ./collect_executables.sh;
         ./firefox/firefox --version;
         . ./keyring-unlock.sh
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(python3 choose_ci_set.py)
+        pipenv run python3 choose_ci_set.py
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests)
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run pytest --fx-executable ./firefox/firefox $(python3 choose_ci_set.py)
+        pipenv run python3 choose_ci_set.py
+        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests)
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
