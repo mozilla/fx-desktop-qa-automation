@@ -85,16 +85,14 @@ def reportable():
     )
     logging.warning(f"Got version from collect_executable.py! {version}")
     tr_session = testrail_init()
-    first_half, second_half = version.split(".")
-    channel = "Beta" if "b" in second_half else "Release"
+    major_number, second_half = version.split(".")
+    minor_num, build_num = second_half.split("-")
+    channel = "Beta" if "b" in minor_num else "Release"
     if "Nightly" in first_half:
         channel = "Nightly"
 
-    major_version = " ".join(first_half.split(" ")[1:])
-    major_number = major_version.split(" ")[-1]
-    major_milestone = tr_session.matching_milestone(
-        TESTRAIL_FX_DESK_PRJ, f"Firefox {major_version}"
-    )
+    major_version = f"Firefox {major_number}"
+    major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
     if not major_milestone:
         logging.warning(
             f"Not reporting: Could not find matching milestone: Firefox {major_version}"
