@@ -2834,6 +2834,14 @@ Description: Search settings button in the searchmode switcher dropdown
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: contextual_search_button_awesome_bar
+Selector Data: "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']"
+Description: Contextual search button 
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+
 #### panel_ui
 ```
 Selector name: panel-ui-button
