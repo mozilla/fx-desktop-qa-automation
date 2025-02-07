@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 
@@ -17,7 +17,7 @@ search_modes = {
     "Amazon": "Am",
     "Bing": "Bi",
     "DuckDuckGo": "Du",
-    "eBay": "Eb"
+    "eBay": "Eb",
 }
 
 
