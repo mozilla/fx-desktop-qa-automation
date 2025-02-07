@@ -79,7 +79,7 @@ def reportable():
     # Find the correct test plan
     sys_platform = platform.system()
     version = (
-        subprocess.check_output([sys.executable, "./../collect_executables.py", "-n"])
+        subprocess.check_output([sys.executable, "./collect_executables.py", "-n"])
         .strip()
         .decode()
     )
