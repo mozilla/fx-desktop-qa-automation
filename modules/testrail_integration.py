@@ -8,9 +8,9 @@ from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
 
-FX_PRERC_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)[ab](\d\d?)(.*)")
-FX_RC_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)(.*)")
-FX_RELEASE_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)\.(\d\d?)(.*)")
+FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
     "[{channel} {major}] Automated testing {major}.{minor}b{beta}-build{build}"
 )
