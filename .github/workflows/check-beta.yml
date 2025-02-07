@@ -15,10 +15,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Check if the run is reportable
+        env: 
+          TESTRAIL_REPORT: true
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
           python3 -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
-      - name: Run smoke tests
-        uses: ./.github/workflows/smoke.yml
-        secrets: inherit
+  Run-Smoke-Tests:
+    needs: Check-Beta-Version
+    uses: ./.github/workflows/smoke.yml
+    secrets: inherit
