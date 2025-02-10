@@ -35,20 +35,14 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
 
     nav = Navigation(driver)
     nav.set_awesome_bar()
-    sleep(20)
+    sleep(2)
 
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.awesome_bar.click()
+    for input_text, addon_name in input_to_addon_name.items():
+        nav.type_in_awesome_bar(input_text)
+        nav.element_visible("addon-suggestion")
+        nav.select_element_in_nav("addon-suggestion")
 
-        for input_text, addon_name in input_to_addon_name.items():
-            nav.awesome_bar.send_keys(input_text)
-            nav.element_visible("addon-suggestion")
-            nav.get_element("addon-suggestion").click()
-
-            # Construct the expected URL
-            expected_url = (
-                f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
-            )
-            nav.expect_in_content(EC.url_contains(expected_url))
-
-            nav.awesome_bar.clear()
+        # Construct the expected URL
+        expected_url = f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
+        nav.expect_in_content(EC.url_contains(expected_url))
+        nav.clear_awesome_bar()

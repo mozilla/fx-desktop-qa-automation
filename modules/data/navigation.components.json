@@ -150,8 +150,8 @@
     },
 
     "addon-suggestion": {
-        "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
-        "strategy": "css",
+        "selectorData": "urlbarView-row-body",
+        "strategy": "class",
         "groups": []
     },
 
