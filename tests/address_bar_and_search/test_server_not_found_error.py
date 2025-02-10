@@ -35,8 +35,6 @@ def test_server_not_found_error(driver: Firefox, version: str):
 
     nav.search(CHECK_SITE)
 
-    nav.search(CHECK_SITE)
-
     # Verify the tab title
     WebDriverWait(driver, 30).until(
         lambda d: tabs.get_tab_title(tabs.get_tab(1)) == "Server Not Found"
