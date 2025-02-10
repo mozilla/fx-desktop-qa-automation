@@ -39,7 +39,7 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
-        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 100;
+        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./keyring-unlock.sh
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;

@@ -49,10 +49,6 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
                     for el in nav.get_elements("sponsored-suggestion")
                 ]
             )
-            logging.info(
-                "Label text:"
-                + nav.get_element("sponsored-suggestion").get_attribute("innerText")
-            )
         sleep(3)
         retries += 1
 
