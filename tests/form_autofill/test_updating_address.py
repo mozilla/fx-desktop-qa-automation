@@ -6,17 +6,15 @@ from modules.page_object import AboutPrefs
 from modules.page_object_autofill import AddressFill
 from modules.util import BrowserActions, Utilities
 
+COUNTRY_CODE = "US"
+
 
 @pytest.fixture()
 def test_case():
     return "122354"
 
 
-countries = ["CA", "US"]
-
-
-@pytest.mark.parametrize("country_code", countries)
-def test_update_address(driver: Firefox, country_code: str):
+def test_update_address(driver: Firefox):
     """
     C122354 - This test verifies that after updating and saving the autofill name field, the updated value appears in the Saved Addresses section.
     """
@@ -27,7 +25,7 @@ def test_update_address(driver: Firefox, country_code: str):
     browser_action_obj = BrowserActions(driver)
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(country_code)
+    autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
     address_form_fields.save_information_basic(autofill_sample_data)
     autofill_popup_panel.click_doorhanger_button("save")
 

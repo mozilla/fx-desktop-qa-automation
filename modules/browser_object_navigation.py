@@ -1,6 +1,7 @@
 import logging
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -170,6 +171,12 @@ class Navigation(BasePage):
         self.awesome_bar.click()
         return self
 
+    def context_click_in_awesome_bar(self) -> BasePage:
+        self.set_awesome_bar()
+        actions = ActionChains(self.driver)
+        actions.context_click(self.awesome_bar).perform()
+        return self
+
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement
@@ -317,3 +324,9 @@ class Navigation(BasePage):
         button_selector = f"popup-notification-{button_type}-button"
         self.element_clickable(button_selector)
         self.click_on(button_selector)
+
+    def open_searchmode_switcher_settings(self):
+        """Open search settings from searchmode switcher in awesome bar"""
+        self.click_on("searchmode-switcher")
+        self.click_on("searchmode-switcher-settings")
+        return self
