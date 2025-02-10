@@ -42,8 +42,11 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
 
     # containing phone field
     expected_phone = address_autofill_data.telephone
-    actual_phone = "address-doorhanger-phone"
-    address_autofill_popup.element_has_text(actual_phone.lstrip("+"), expected_phone)
+    with driver.context(driver.CONTEXT_CHROME):
+        actual_phone = address_autofill_popup.get_element("address-doorhanger-phone").text
+    normalize_expected = util.normalize_phone_number(expected_phone)
+    normalized_actual = util.normalize_phone_number(actual_phone)
+    assert normalized_actual == normalize_expected
 
     # Click the "Save" button
     address_autofill_popup.click_doorhanger_button("save")
@@ -63,4 +66,3 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     assert (
         found_email_phone
     ), "Email or phone were not found in any of the address entries!"
-
