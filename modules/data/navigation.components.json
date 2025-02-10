@@ -577,5 +577,16 @@
         "selectorData": "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']",
         "strategy": "css",
          "groups": []
-    }
-}
+    },
+
+        "refresh-button-awesome-bar": {
+        "selectorData": ".urlbarView-action-btn[data-action=refresh]",
+        "strategy": "css",
+         "groups": []
+    },
+
+    "refresh-firefox-dialog": {
+        "selectorData": "window-modal-dialog",
+        "strategy": "id",
+         "groups": []
+}   }

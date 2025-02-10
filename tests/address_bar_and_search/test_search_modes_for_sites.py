@@ -13,7 +13,7 @@ def test_case():
 
 # Dictionary mapping search engines to their expected input prefix
 search_modes = {
-    # "Google": "Go", No longer testing Google if this is the default search engine, due to Scotch Bonet changes
+    # "Google": "Go", No longer testing Google if this is the default search engine, due to Scotch Bonnet changes
     "Amazon": "Am",
     "Bing": "Bi",
     "DuckDuckGo": "Du",
