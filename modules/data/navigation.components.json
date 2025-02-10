@@ -478,6 +478,7 @@
     "searchmode-switcher-settings": {
         "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
+
         "groups": []
     },
     "contextual_search_button_awesome_bar": {

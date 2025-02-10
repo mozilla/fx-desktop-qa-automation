@@ -2,7 +2,7 @@ name: Check new beta version
 
 on:
   schedule:
-    - cron: "16 */1 * * *"
+    - cron: "49 */1 * * *"
 env:
   LATEST: ""
 permissions:
@@ -17,10 +17,13 @@ jobs:
       - name: Check if the run is reportable
         env: 
           TESTRAIL_REPORT: true
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
-          python3 -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
+          pipenv run python -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
   Run-Smoke-Tests:
     needs: Check-Beta-Version
     uses: ./.github/workflows/smoke.yml

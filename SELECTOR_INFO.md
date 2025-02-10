@@ -2840,6 +2840,20 @@ Description: Contextual search button
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: refresh-button-awesome-bar
+Selector Data: .urlbarView-action-btn[data-action=refresh]
+Description: Refresh button in the awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: refresh-firefox-dialog
+Selector Data: window-modal-dialog
+Description: Refresh Firefox dialog window
+Location: Dialog window
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
