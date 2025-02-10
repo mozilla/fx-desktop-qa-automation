@@ -8,9 +8,9 @@ from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
 
-FX_PRERC_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)[ab](\d\d?)(.*)")
-FX_RC_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)(.*)")
-FX_RELEASE_VERSION_RE = re.compile(r".*(\d+)\.(\d\d?)\.(\d\d?)(.*)")
+FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
     "[{channel} {major}] Automated testing {major}.{minor}b{beta}-build{build}"
 )
@@ -79,22 +79,23 @@ def reportable():
     # Find the correct test plan
     sys_platform = platform.system()
     version = (
-        subprocess.check_output([sys.executable, "./../collect_executables.py", "-n"])
+        subprocess.check_output([sys.executable, "./collect_executables.py", "-n"])
         .strip()
         .decode()
     )
     logging.warning(f"Got version from collect_executable.py! {version}")
     tr_session = testrail_init()
-    first_half, second_half = version.split(".")
-    channel = "Beta" if "b" in second_half else "Release"
-    if "Nightly" in first_half:
-        channel = "Nightly"
+    major_number, second_half = version.split(".")
+    minor_num, build_num = second_half.split("-")
+    channel = "Beta" if "b" in minor_num else "Release"
+    # TODO: Logic for Nightly testing
 
-    major_version = " ".join(first_half.split(" ")[1:])
-    major_number = major_version.split(" ")[-1]
+    major_version = f"Firefox {major_number}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
     if not major_milestone:
-        logging.warning("Not reporting: Could not find matching milestone.")
+        logging.warning(
+            f"Not reporting: Could not find matching milestone: Firefox {major_version}"
+        )
         return False
 
     channel_milestone = tr_session.matching_submilestone(

@@ -123,15 +123,14 @@
         "groups": []
     },
 
-
-    "add-extra-search-engine": {
-        "selectorData": "[id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']",
-        "strategy": "css",
+    "searchmode-switcher": {
+        "selectorData": "urlbar-searchmode-switcher",
+        "strategy": "id",
         "groups": []
     },
 
-    "search-one-off-engine-button": {
-        "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
+    "search-mode-switcher-option": {
+        "selectorData": "toolbarbutton[label*='{title}']",
         "strategy": "css",
         "groups": []
     },
@@ -568,14 +567,20 @@
          "groups": []
     },
 
-    "searchmode-switcher": {
-        "selectorData": "urlbar-searchmode-switcher",
+    "searchmode-switcher-settings": {
+        "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
          "groups": []
     },
 
-    "searchmode-switcher-settings": {
-        "selectorData": "searchmode-switcher-popup-search-settings-button",
+    "refresh-button-awesome-bar": {
+        "selectorData": ".urlbarView-action-btn[data-action=refresh]",
+        "strategy": "css",
+         "groups": []
+    },
+
+    "refresh-firefox-dialog": {
+        "selectorData": "window-modal-dialog",
         "strategy": "id",
          "groups": []
     }
