@@ -2828,6 +2828,12 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: search-mode-switcher-option
+Selector Data: toolbarbutton[label*='{title}']
+Description: Option by label in search mode list
+Location: Search mode of awesomebar
+```
+```
 Selector Name: contextual_search_button_awesome_bar
 Selector Data: "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']"
 Description: Contextual search button 
