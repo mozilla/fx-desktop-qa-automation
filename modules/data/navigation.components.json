@@ -8,6 +8,7 @@
             "awesomeBar"
         ]
     },
+
     "results-dropdown": {
         "selectorData": "urlbar-results",
         "strategy": "id",
@@ -15,21 +16,25 @@
             "doNotCache"
         ]
     },
+
     "tab-to-search-text-span": {
         "selectorData": "urlbarView-dynamic-onboardTabToSearch-text-container",
         "strategy": "class",
         "groups": []
     },
+
     "search-mode-span": {
         "selectorData": "urlbar-search-mode-indicator-title",
         "strategy": "id",
         "groups": []
     },
+
     "overflow-item": {
         "selectorData": "[class='urlbarView-title urlbarView-overflowable']",
         "strategy": "css",
         "groups": []
     },
+
     "search-one-off-settings-button": {
         "selectorData": "urlbar-anon-search-settings",
         "strategy": "id",
@@ -37,11 +42,13 @@
             "searchOneOffs"
         ]
     },
+
     "quick-actions-refresh-button": {
         "selectorData": "urlbarView-row-3-label-0",
         "strategy": "id",
         "groups": []
     },
+
     "refresh-intervention-card": {
         "selectorData": "div[tip-type='intervention_refresh']",
         "strategy": "css",
@@ -49,71 +56,85 @@
             "doNotCache"
         ]
     },
+
     "fx-refresh-text": {
         "selectorData": "span[data-l10n-id='intervention-refresh-profile']",
         "strategy": "css",
         "groups": []
     },
+
     "fx-refresh-button": {
         "selectorData": "span[role='button'][data-l10n-id='intervention-refresh-profile-confirm']",
         "strategy": "css",
         "groups": []
     },
+
     "fx-refresh-menu": {
         "selectorData": "span[data-l10n-id='urlbar-result-menu-button'][title='Open menu']",
         "strategy": "css",
         "groups": []
     },
+
     "fx-refresh-menu-get-help-item": {
         "selectorData": "menuitem[data-l10n-id='urlbar-result-menu-tip-get-help']",
         "strategy": "css",
         "groups": []
     },
+
     "fx-refresh-menu-get-help-item-get-help": {
         "selectorData": "urlbarView-result-menuitem",
         "strategy": "class",
         "groups": []
     },
+
     "search-engine-suggestion-row": {
         "selectorData": "div[class='urlbarView-row'][type='search_engine']",
         "strategy": "css",
         "groups": []
     },
+
     "search-one-off-browser-button": {
         "selectorData": "urlbar-engine-one-off-item-{source}",
         "strategy": "id",
         "groups": []
     },
+
     "panel-ui-button": {
         "selectorData": "PanelUI-button",
         "strategy": "id",
         "groups": []
     },
+
     "navigation-background-component": {
         "selectorData": "nav-bar",
         "strategy": "id",
         "groups": []
     },
+
     "context-menu-paste-and-go": {
         "selectorData": "paste-and-go",
         "strategy": "id",
         "groups": []
     },
+
     "private-browsing-icon": {
         "selectorData": "private-browsing-indicator-icon",
         "strategy": "class",
         "groups": []
     },
+
     "searchmode-switcher": {
         "selectorData": "urlbar-searchmode-switcher",
         "strategy": "id",
         "groups": []
     },
+
     "search-mode-switcher-option": {
         "selectorData": "toolbarbutton[label*='{title}']",
         "strategy": "css",
         "groups": []
     },
+
     "downloads-button": {
         "selectorData": "downloads-button",
         "strategy": "id",
@@ -121,16 +142,19 @@
             "doNotCache"
         ]
     },
+
     "search-results-container": {
         "selectorData": "urlbar-results",
         "strategy": "id",
         "groups": []
     },
+
     "addon-suggestion": {
         "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
         "strategy": "css",
         "groups": []
     },
+
     "search-suggestion-list": {
         "selectorData": "div.urlbarView-row[type='search_engine'] span.urlbarView-title",
         "strategy": "css",
@@ -138,26 +162,31 @@
             "doNotCache"
         ]
     },
+
     "sponsored-suggestion": {
         "selectorData": "urlbarView-row-body-description",
         "strategy": "class",
         "groups": []
     },
+
     "firefox-suggest": {
         "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
         "strategy": "css",
         "groups": []
     },
+
     "search-result-autofill-adaptive-element": {
         "selectorData": ".//*[@type='autofill_adaptive']",
         "strategy": "xpath",
         "groups": []
     },
+
     "search-result": {
         "selectorData": "//div[@data-text-ad]//a",
         "strategy": "xpath",
         "groups": []
     },
+
     "shield-icon": {
         "selectorData": "tracking-protection-icon-container",
         "strategy": "id",
@@ -165,41 +194,49 @@
             "doNotCache"
         ]
     },
+
     "cryptominers": {
         "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked",
         "strategy": "css",
         "groups": []
     },
+
     "no-trackers-detected": {
         "selectorData": "protections-popup-no-trackers-found-description",
         "strategy": "id",
         "groups": []
     },
+
     "lock-icon": {
         "selectorData": "identity-icon",
         "strategy": "id",
         "groups": []
     },
+
     "connection-secure-button": {
         "selectorData": "identity-popup-security-button",
         "strategy": "id",
         "groups": []
     },
+
     "more-information-button": {
         "selectorData": "identity-popup-more-info",
         "strategy": "id",
         "groups": []
     },
+
     "search-result-url": {
         "selectorData": ".urlbarView-title.urlbarView-overflowable[is-url='']",
         "strategy": "css",
         "groups": []
     },
+
     "search-result-action-term": {
         "selectorData": ".urlbarView-action",
         "strategy": "css",
         "groups": []
     },
+
     "refresh-button": {
         "selectorData": "reload-button",
         "strategy": "id",
@@ -207,262 +244,314 @@
             "doNotCache"
         ]
     },
+
     "known-fingerprints": {
         "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.blocked.subviewbutton-nav",
         "strategy": "css",
         "groups": []
     },
+
     "fingerprints-blocked-subpanel": {
         "selectorData": "protections-popup-fingerprintersView",
         "strategy": "id",
         "groups": []
     },
+
     "star-button": {
         "selectorData": "star-button-box",
         "strategy": "id",
         "groups": []
     },
+
     "save-bookmark-button": {
         "selectorData": "editBookmarkPanelDoneButton",
         "strategy": "id",
         "groups": []
     },
+
     "blue-star-button": {
         "selectorData": "image[id='star-button'][starred='true']",
         "strategy": "css",
         "groups": []
     },
+
     "download-panel-item": {
         "selectorData": "vbox[class='downloadContainer']",
         "strategy": "css",
         "groups": []
     },
+
     "edit-bookmark-panel": {
         "selectorData": "editBMPanel_namePicker",
         "strategy": "id",
         "groups": []
     },
+
     "remove-bookmark-button": {
         "selectorData": "editBookmarkPanelRemoveButton",
         "strategy": "id",
         "groups": []
     },
+
     "bookmarks-toolbar": {
         "selectorData": "PersonalToolbar",
         "strategy": "id",
         "groups": []
     },
+
     "forget-button": {
         "selectorData": "panic-button",
         "strategy": "id",
         "groups": []
     },
+
     "history-button": {
         "selectorData": "history-panelmenu",
         "strategy": "id",
         "groups": []
     },
+
     "library-button": {
         "selectorData": "library-button",
         "strategy": "id",
         "groups": []
     },
+
     "library-history-submenu-button": {
         "selectorData": "appMenu-library-history-button",
         "strategy": "id",
         "groups": []
     },
+
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
         "groups": []
     },
+
     "bookmarks-type-dropdown-other": {
         "selectorData": "editBMPanel_unfiledRootItem",
         "strategy": "id",
         "groups": []
     },
+
     "other-bookmarks": {
         "selectorData": "OtherBookmarks",
         "strategy": "id",
         "groups": []
     },
+
     "other-bookmarks-popup": {
         "selectorData": "OtherBookmarksPopup",
         "strategy": "id",
         "groups": []
     },
+
     "new-bookmark-name-field": {
         "selectorData": "editBMPanel_namePicker",
         "strategy": "id",
         "groups": []
     },
+
     "new-bookmark-url-field": {
         "selectorData": "editBMPanel_locationField",
         "strategy": "id",
         "groups": []
     },
+
     "new-bookmark-tags-field": {
         "selectorData": "editBMPanel_tagsField",
         "strategy": "id",
         "groups": []
     },
+
     "new-bookmark-keyword-field": {
         "selectorData": "editBMPanel_keywordField",
         "strategy": "id",
         "groups": []
     },
+
     "bookmark-dialog": {
         "selectorData": "bookmarkpropertiesdialog",
         "strategy": "id",
         "groups": []
     },
+
     "bookmark-accept-button": {
         "selectorData": "button[dlgtype='accept']",
         "strategy": "css",
         "shadowParent": "bookmark-dialog",
         "groups": []
     },
+
     "bookmark-iframe": {
         "selectorData": "browser[class='dialogFrame']",
         "strategy": "css",
         "groups": []
     },
+
     "bookmark-robots": {
         "selectorData": "menuitem[label='Robots 2']",
         "strategy": "css",
         "groups": []
     },
+
     "bookmark-current-tab": {
         "selectorData": "panelMenuBookmarkThisPage",
         "strategy": "id",
         "groups": []
     },
+
     "downloads-item-by-file": {
         "selectorData": ".downloadMainArea image[src*='{filename}']",
         "strategy": "css",
         "groups": []
     },
+
     "bookmark-in-bar": {
         "selectorData": "toolbarbutton.bookmark-item",
         "strategy": "css",
         "groups": []
     },
+
     "popup-notification": {
         "selectorData": "popupnotification",
         "strategy": "tag",
         "groups": []
     },
+
     "popup-notification-primary-button": {
         "selectorData": "popup-notification-primary-button",
         "strategy": "class",
         "groups": []
     },
+
     "popup-notification-secondary-button": {
         "selectorData": "popup-notification-secondary-button",
         "strategy": "class",
         "groups": []
     },
+
     "checkbox-remember-this-decision": {
         "selectorData": "label.checkbox-label[flex='1']",
         "strategy": "css",
         "groups": []
     },
+
     "toolbar-history-recently-closed-tabs": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
         "groups": []
     },
+
     "toolbar-history-recently-closed-windows": {
         "selectorData": "appMenuRecentlyClosedWindows",
         "strategy": "id",
         "groups": []
     },
+
     "toolbar-history-search-history": {
         "selectorData": "appMenuSearchHistory",
         "strategy": "id",
         "groups": []
     },
+
     "toolbar-history-clear-recent-history": {
         "selectorData": "appMenuClearRecentHistory",
         "strategy": "id",
         "groups": []
     },
+
     "toolbar-history-recent_history": {
         "selectorData": "panelMenu_recentHistory",
         "strategy": "id",
         "groups": []
     },
+
     "toolbar-history-manage_history": {
         "selectorData": "PanelUI-historyMore",
         "strategy": "id",
         "groups": []
     },
+
     "bookmark-about-robots": {
         "selectorData": "menuitem[label='Gort! Klaatu barada nikto!']",
         "strategy": "css",
         "groups": []
     },
+
     "password-notification-key": {
         "selectorData": "box#notification-popup-box image#password-notification-icon.notification-anchor-icon",
         "strategy": "css",
         "groups": []
     },
+
     "popup-notification-add": {
         "selectorData": "popup-notification-primary-button",
         "strategy": "class",
         "groups": []
     },
+
     "popup-notification-panel": {
         "selectorData": "appMenu-addon-installed-notification",
         "strategy": "id",
         "groups": []
     },
+
     "geolocation-notification-container": {
         "selectorData": "popupnotification#geolocation-notification",
         "strategy": "css",
         "groups": []
     },
+
     "autoplay-permission": {
         "selectorData": "blocked-permissions-container",
         "strategy": "id",
         "groups": []
     },
+
     "permissions-location-icon": {
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
         "groups": []
     },
+
     "permission-popup-audio-video-blocked": {
         "selectorData": "#permission-popup-menulist[label='Block Audio and Video']",
         "strategy": "css",
         "groups": []
     },
+
     "permission-popup-audio-blocked": {
         "selectorData": "#permission-popup-menulist[label='Block Audio']",
         "strategy": "css",
         "groups": []
     },
+
     "allow-audio-video-menuitem": {
         "selectorData": "menuitem[label='Allow Audio and Video']",
         "strategy": "css",
         "groups": []
     },
+
     "permission-popup-audio-video-allowed": {
         "selectorData": "#permission-popup-menulist[label='Allow Audio and Video']",
         "strategy": "css",
         "groups": []
     },
+
     "block-audio-video-menuitem": {
         "selectorData": "menuitem[label='Block Audio and Video']",
         "strategy": "css",
         "groups": []
     },
+
     "autoplay-icon-blocked": {
         "selectorData": "blocked-permissions-container",
         "strategy": "id",
         "groups": []
     },
+
     "toolbar-zoom-level": {
         "selectorData": "urlbar-zoom-button",
         "strategy": "id",
@@ -470,27 +559,32 @@
             "doNotCache"
         ]
     },
+
     "search-settings": {
         "selectorData": "urlbar-anon-search-settings",
         "strategy": "id",
         "groups": []
     },
+
     "searchmode-switcher-settings": {
         "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
 
         "groups": []
     },
+
     "contextual_search_button_awesome_bar": {
         "selectorData": "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']",
         "strategy": "css",
         "groups": []
     },
+
     "refresh-button-awesome-bar": {
         "selectorData": ".urlbarView-action-btn[data-action=refresh]",
         "strategy": "css",
         "groups": []
     },
+
     "refresh-firefox-dialog": {
         "selectorData": "window-modal-dialog",
         "strategy": "id",

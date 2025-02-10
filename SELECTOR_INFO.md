@@ -2832,6 +2832,7 @@ Selector Name: search-mode-switcher-option
 Selector Data: toolbarbutton[label*='{title}']
 Description: Option by label in search mode list
 Location: Search mode of awesomebar
+Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: contextual_search_button_awesome_bar
