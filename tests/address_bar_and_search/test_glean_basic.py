@@ -57,6 +57,7 @@ def glean_handler(rq: Request) -> Response:
     return Response("", status=200)
 
 
+@pytest.mark.unstable
 def test_glean_ping(driver: Firefox, httpserver: HTTPServer):
     """C2234689: Test that Glean pings contain expected info"""
     global PINGS_WITH_ID

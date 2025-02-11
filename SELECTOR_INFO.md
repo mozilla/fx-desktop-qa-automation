@@ -39,15 +39,15 @@ Location: about:config page
 Path to .json: modules/data/about_config.components.json
 ```
 ```
-Selector Name: cell-edit
+Selector Name: value-edit-button
 Selector Data: "cell-edit"
-Description: The button to toggle the true/false value of a config
+Description: The button to toggle access to the value edit field
 Location: Line item config in about:config page
 Path to .json: modules/data/about_config.components.json
 ```
 ```
-Selector Name: form-edit
-Selector Data: "//input[@aria-label='cookiebanners.service.mode']"
+Selector Name: value-edit-field
+Selector Data: "#form-edit > input:nth-child(1)"
 Description: Text entry field when editing a str value of a config
 Location: Line item config in about:config page
 Path to .json: modules/data/about_config.components.json
@@ -1346,6 +1346,13 @@ Description: The password update doorhanger
 Location: In the Navigation bar, next to the url input field, after the key icon was pressed
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: address-save-doorhanger
+Selector Data: "address-save-update-notification-content"
+Description: Save address doorhanger
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -1393,6 +1400,13 @@ Path to .json: modules/data/context_menu.components.json
 Selector Name: context-menu-delete-page
 Selector Data: "placesContext_delete_history"
 Description: Hamburger history submenu context click option "Delete Page"
+Location: Any history item in the Hamburger history list
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-add-search-engine
+Selector Data: "context-menu-add-engine"
+Description: Awesomebar context click option "Add <search engine>"
 Location: Any history item in the Hamburger history list
 Path to .json: modules/data/context_menu.components.json
 ```
@@ -2384,20 +2398,6 @@ Location: Private browsing mode
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: add-extra-search-engine
-Selector Data: [id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']
-Description: Add extra search engine in the url bar
-Location: URL bar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: search-one-off-engine-button
-Selector Data: [id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']
-Description: Search one off engine button
-Location: URL bar search results
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: downloads-button
 Selector Data: downloads-button
 Description: Toolbar download button
@@ -2811,6 +2811,48 @@ Selector Name: search-settings
 Selector Data: urlbar-anon-search-settings
 Description: Search settings button in awesome bar
 Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-switcher
+Selector Data: urlbar-searchmode-switcher
+Description: searchmode switcher toolbar button
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-switcher-settings
+Selector Data: searchmode-switcher-popup-search-settings-button
+Description: Search settings button in the searchmode switcher dropdown
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-switcher-option
+Selector Data: toolbarbutton[label*='{title}']
+Description: Option by label in search mode list
+Location: Search mode of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: contextual_search_button_awesome_bar
+Selector Data: "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']"
+Description: Contextual search button 
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: refresh-button-awesome-bar
+Selector Data: .urlbarView-action-btn[data-action=refresh]
+Description: Refresh button in the awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: refresh-firefox-dialog
+Selector Data: window-modal-dialog
+Description: Refresh Firefox dialog window
+Location: Dialog window
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
@@ -3395,13 +3437,6 @@ Path to .json: modules/data/tab_bar.components.json
 Selector name: tab-icon-overlay
 Selector Data: "tab-icon-overlay"
 Description: A tab's icon overlay
-Location: In the tabbed browser.
-Path to .json: modules/data/tab_bar.components.json
-```
-```
-Selector name: tab-sound-label
-Selector Data: "tab-icon-sound-{status}-label"
-Description: A tab's sound status
 Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```

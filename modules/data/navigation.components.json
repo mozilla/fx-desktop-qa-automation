@@ -123,15 +123,14 @@
         "groups": []
     },
 
-
-    "add-extra-search-engine": {
-        "selectorData": "[id*=urlbar-engine-one-off-item-engine--1][tooltiptext*='{0}']",
-        "strategy": "css",
+    "searchmode-switcher": {
+        "selectorData": "urlbar-searchmode-switcher",
+        "strategy": "id",
         "groups": []
     },
 
-    "search-one-off-engine-button": {
-        "selectorData": "[id*=urlbar-engine-one-off-item-engine][tooltiptext^='{0}']",
+    "search-mode-switcher-option": {
+        "selectorData": "toolbarbutton[label*='{title}']",
         "strategy": "css",
         "groups": []
     },
@@ -151,8 +150,8 @@
     },
 
     "addon-suggestion": {
-        "selectorData": "div.urlbarView-row[type='rust_amo'] span.urlbarView-title.urlbarView-overflowable",
-        "strategy": "css",
+        "selectorData": "urlbarView-row-body",
+        "strategy": "class",
         "groups": []
     },
 
@@ -419,13 +418,13 @@
         "groups": []
     },
 
-     "bookmark-in-bar": {
+    "bookmark-in-bar": {
         "selectorData": "toolbarbutton.bookmark-item",
         "strategy": "css",
         "groups": []
     },
 
-     "popup-notification": {
+    "popup-notification": {
         "selectorData": "popupnotification",
         "strategy": "tag",
         "groups": []
@@ -467,13 +466,13 @@
         "groups": []
     },
 
-     "toolbar-history-clear-recent-history": {
+    "toolbar-history-clear-recent-history": {
         "selectorData": "appMenuClearRecentHistory",
         "strategy": "id",
         "groups": []
     },
 
-     "toolbar-history-recent_history": {
+    "toolbar-history-recent_history": {
         "selectorData": "panelMenu_recentHistory",
         "strategy": "id",
         "groups": []
@@ -489,7 +488,7 @@
         "selectorData": "menuitem[label='Gort! Klaatu barada nikto!']",
         "strategy": "css",
         "groups": []
-     },
+    },
 
     "password-notification-key": {
         "selectorData": "box#notification-popup-box image#password-notification-icon.notification-anchor-icon",
@@ -521,7 +520,6 @@
         "groups": []
     },
 
-
     "permissions-location-icon": {
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
@@ -547,9 +545,9 @@
     },
 
     "permission-popup-audio-video-allowed": {
-            "selectorData": "#permission-popup-menulist[label='Allow Audio and Video']",
-            "strategy": "css",
-            "groups": []
+        "selectorData": "#permission-popup-menulist[label='Allow Audio and Video']",
+        "strategy": "css",
+        "groups": []
     },
 
     "block-audio-video-menuitem": {
@@ -559,15 +557,15 @@
     },
 
     "autoplay-icon-blocked": {
-            "selectorData": "blocked-permissions-container",
-            "strategy": "id",
-            "groups": []
+        "selectorData": "blocked-permissions-container",
+        "strategy": "id",
+        "groups": []
     },
 
     "toolbar-zoom-level": {
         "selectorData": "urlbar-zoom-button",
         "strategy": "id",
-         "groups": [
+        "groups": [
             "doNotCache"
         ]
     },
@@ -575,7 +573,31 @@
     "search-settings": {
         "selectorData": "urlbar-anon-search-settings",
         "strategy": "id",
-         "groups": []
+        "groups": []
+    },
+
+    "searchmode-switcher-settings": {
+        "selectorData": "searchmode-switcher-popup-search-settings-button",
+        "strategy": "id",
+
+        "groups": []
+    },
+
+    "contextual_search_button_awesome_bar": {
+        "selectorData": "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "refresh-button-awesome-bar": {
+        "selectorData": ".urlbarView-action-btn[data-action=refresh]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "refresh-firefox-dialog": {
+        "selectorData": "window-modal-dialog",
+        "strategy": "id",
+        "groups": []
     }
-    
 }

@@ -49,17 +49,14 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
                     for el in nav.get_elements("sponsored-suggestion")
                 ]
             )
-            logging.info(
-                "Label text:"
-                + nav.get_element("sponsored-suggestion").get_attribute("innerText")
-            )
-        sleep(1)
+        sleep(3)
         retries += 1
 
     # Check if a non-sponsored suggestion is displayed
     u.search("wiki", with_enter=False)
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("firefox-suggest")
+        nav.get_element("sponsored-suggestion")
         assert not any(
             [
                 el.get_attribute("innerText") == "Sponsored"

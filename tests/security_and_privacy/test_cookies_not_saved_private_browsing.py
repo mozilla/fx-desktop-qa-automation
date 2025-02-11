@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -11,6 +13,7 @@ def test_case():
     return "101677"
 
 
+@pytest.mark.skipif(system == "Linux", reason="136.0b3 Linux security bustage")
 def test_cookies_not_saved_private_browsing(driver: Firefox):
     """
     C101677: ensure that cookies are not saved after using private browsing

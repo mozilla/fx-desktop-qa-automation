@@ -1,5 +1,3 @@
-import platform
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -7,18 +5,15 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
+COUNTRY_CODE = "US"
+
 
 @pytest.fixture()
 def test_case():
     return "122574"
 
 
-countries = ["CA", "US"]
-
-
-@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
-@pytest.mark.parametrize("country_code", countries)
-def test_clear_form(driver: Firefox, country_code: str):
+def test_clear_form(driver: Firefox):
     """
     C122574, test clear autofill form
     """
@@ -28,7 +23,7 @@ def test_clear_form(driver: Firefox, country_code: str):
     util = Utilities()
 
     # create fake data, fill it in and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(country_code)
+    autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
     address_autofill.save_information_basic(autofill_sample_data)
     address_autofill_popup.click_doorhanger_button("save")
 

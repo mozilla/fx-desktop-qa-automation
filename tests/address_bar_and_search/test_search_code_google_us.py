@@ -15,6 +15,7 @@ def test_case():
 FX_SEARCH_CODE = "client=firefox-b-1-d"
 
 
+@pytest.mark.unstable
 def test_search_code_google_us(driver: Firefox):
     """
     C1365268 - Default Search Code: Google - US

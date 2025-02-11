@@ -13,15 +13,15 @@
         "groups": []
     },
 
-    "cell-edit": {
+    "value-edit-button": {
         "selectorData": "cell-edit",
         "strategy": "class",
         "groups": []
     },
 
-    "form-edit": {
-        "selectorData": "//input[@aria-label='cookiebanners.service.mode']",
-        "strategy": "xpath",
+    "value-edit-field": {
+        "selectorData": "#form-edit > input:nth-child(1)",
+        "strategy": "css",
         "groups": []
     },
 

@@ -400,7 +400,7 @@ class AboutPrefs(BasePage):
         """
         self.find_in_settings("HTTPS")
         self.click_on(option_id)
-        self.element_attribute_contains(option_id, "selected", "true")
+        self.element_attribute_contains(option_id, "checked", "")
         return self
 
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:

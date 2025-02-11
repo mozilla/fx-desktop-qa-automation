@@ -1,11 +1,24 @@
 import os
 import re
 import sys
-from subprocess import CalledProcessError, check_output
+from subprocess import check_output
+
+import pytest
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CI_MARK = "@pytest.mark.ci"
 HEADED_MARK = "@pytest.mark.headed"
+OUTPUT_FILE = "selected_tests"
+
+
+class CollectionPlugin:
+    """Mini plugin to get test names"""
+
+    def __init__(self):
+        self.tests = []
+
+    def pytest_report_collectionfinish(self, items):
+        self.tests = [item.nodeid for item in items]
 
 
 def snakify(pascal: str) -> str:
@@ -59,6 +72,37 @@ def get_tests_by_model(
     return matching_tests
 
 
+def dedupe(run_list: list, slash: str) -> list:
+    """For a run list, remove entries that are covered by more general entries."""
+    run_list = list(set(run_list))
+    dotslashes = []
+    removes = []
+
+    for i, entry in enumerate(run_list):
+        if (
+            not entry.startswith(".")
+            and not entry.startswith("\\")
+            and not entry.startswith("/")
+        ):
+            dotslashes.append(i)
+
+    for dotslash in dotslashes:
+        run_list[dotslash] = f".{slash}{run_list[dotslash]}"
+
+    for i, entry_a in enumerate(run_list):
+        for j, entry_b in enumerate(run_list):
+            if i == j:
+                continue
+            if entry_a in entry_b:
+                removes.append(j)
+
+    removes.sort(reverse=True)
+    for remove in removes:
+        del run_list[remove]
+
+    return run_list
+
+
 if __name__ == "__main__":
     if os.path.exists(".env"):
         with open(".env") as fh:
@@ -67,14 +111,15 @@ if __name__ == "__main__":
 
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
-        print(".")
-        sys.exit(0)
+        with open(OUTPUT_FILE, "w") as fh:
+            print("tests")
+            sys.exit(0)
 
     slash = "/" if "/" in SCRIPT_DIR else "\\"
 
     re_obj = {
-        "test_re_string": r"tests/.*/test_.*\.py",
-        "suite_conftest_re_string": r"tests/.*/conftest\.py",
+        "test_re_string": r".*/.*/test_.*\.py",
+        "suite_conftest_re_string": r".*/.*/conftest\.py",
         "selectors_json_re_string": r"modules/data/.*\.components\.json",
         "object_model_re_string": r"modules/.*.object.*\.py",
         "class_re_string": r"\s*class (\w+):",
@@ -99,7 +144,8 @@ if __name__ == "__main__":
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
-        print(".")
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("tests")
         sys.exit(0)
 
     all_tests = []
@@ -113,13 +159,9 @@ if __name__ == "__main__":
                     lines = fh.readlines()
                     test_paths_and_contents[this_file] = "".join(lines)
 
-    ci_paths = []
-    ci_headed_paths = []
-    for path, content in test_paths_and_contents.items():
-        if CI_MARK in content:
-            ci_paths.append(localify(path))
-            if HEADED_MARK in content:
-                ci_headed_paths.append(localify(path))
+    p = CollectionPlugin()
+    pytest.main(["--collect-only", "-m", "ci", "-s"], plugins=[p])
+    ci_paths = [f".{slash}{test}" for test in p.tests]
 
     # Dedupe just in case
     ci_paths = list(set(ci_paths))
@@ -137,7 +179,7 @@ if __name__ == "__main__":
 
     if changed_suite_conftests:
         run_list = [
-            os.path.join(*suite.split(slash)[-3:-1])
+            "." + slash + os.path.join(*suite.split(slash)[-3:-1])
             for suite in changed_suite_conftests
         ]
 
@@ -164,16 +206,25 @@ if __name__ == "__main__":
         for changed_test in changed_tests:
             found = False
             for file in run_list:
+                # Don't add if already exists in suite changes
+                pieces = file.split(slash)
+                if len(pieces) == 3 and pieces[-1] in changed_test:
+                    found = True
+
+                # Don't add if already in list
                 if file in changed_test:
                     found = True
             if not found:
                 run_list.append(changed_test)
 
     if not run_list:
-        print("\n".join(ci_paths))
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(ci_paths))
     else:
-        run_list = list(set(run_list))
-        # Dedupe just in case
+        run_list.extend(ci_paths)
 
-        run_list.extend(ci_headed_paths)
-        print("\n".join(run_list))
+        # Dedupe just in case
+        run_list = dedupe(run_list, slash)
+        run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(run_list))

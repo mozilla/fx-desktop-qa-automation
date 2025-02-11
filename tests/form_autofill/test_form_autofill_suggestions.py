@@ -1,5 +1,3 @@
-import platform
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -16,7 +14,6 @@ def test_case():
 indices = range(2)
 
 
-@pytest.mark.xfail(platform.system() == "Linux", reason="Autofill Linux instability")
 @pytest.mark.parametrize("index", indices)
 def test_form_autofill_suggestions(driver: Firefox, index: str):
     """

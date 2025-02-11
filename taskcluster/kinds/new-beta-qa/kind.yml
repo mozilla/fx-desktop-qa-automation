@@ -32,8 +32,6 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        export BETA_VERSION=$(curl https://product-details.mozilla.org/1.0/firefox_versions.json | jq -r '.FIREFOX_DEVEDITION')
-        if [[ $BETA_VERSION == "$(cat lin-latest-reported-version)" ]]; then exit 100; fi;
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
@@ -41,12 +39,14 @@ tasks:
         pipenv install;
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
+        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4
-        export FAILURE=${?}
+        . ./keyring-unlock.sh
+        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
+        export FAILURE=${?};
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        export REPORTABLE=1
-        pipenv run pytest --fx-executable $FX_EXECUTABLE
+        export REPORTABLE=1;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
