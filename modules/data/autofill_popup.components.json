@@ -95,6 +95,18 @@
         "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span",
         "strategy": "css",
         "groups": []
+    },
+
+    "address-doorhanger-name": {
+        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "address-doorhanger-org": {
+        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span",
+        "strategy": "css",
+        "groups": []
     }
 }
 
