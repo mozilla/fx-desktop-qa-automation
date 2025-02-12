@@ -7,7 +7,7 @@ from modules.browser_object import Navigation
 
 @pytest.fixture()
 def test_case():
-    return "2567890"
+    return "1365151"
 
 
 @pytest.mark.parametrize(

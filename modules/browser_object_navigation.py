@@ -184,7 +184,7 @@ class Navigation(BasePage):
         click search mode switcher
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.search_mode_switcher = self.get_element("search_mode_switcher")
+            self.search_mode_switcher = self.get_element("searchmode-switcher")
             self.search_mode_switcher.click()
         return self
 
@@ -204,7 +204,9 @@ class Navigation(BasePage):
         # switch to chrome context
         with self.driver.context(self.driver.CONTEXT_CHROME):
             # get list of all valid search modes and filter by label
-            self.get_element("search_modes", labels=[search_mode]).click()
+            self.get_element(
+                "search-mode-switcher-option", labels=[search_mode]
+            ).click()
             return self
 
     def context_click_in_awesome_bar(self) -> BasePage:
