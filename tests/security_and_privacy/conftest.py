@@ -14,6 +14,6 @@ def add_prefs():
 @pytest.fixture()
 def set_prefs(add_prefs: dict):
     """Set prefs"""
-    prefs = []
+    prefs = [("browser.urlbar.scotchBonnet.enableOverride", True)]
     prefs.extend(add_prefs)
     return prefs
