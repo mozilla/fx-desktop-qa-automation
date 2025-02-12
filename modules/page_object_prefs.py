@@ -394,7 +394,7 @@ class AboutPrefs(BasePage):
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
-    def select_https_only_setting(self, option_id: "HttpsOnlyStatus") -> BasePage:
+    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
         """
         Click the HTTPS Only option given
         """
