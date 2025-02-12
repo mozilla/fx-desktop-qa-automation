@@ -2,8 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutConfig, AboutPrefs
-from modules.page_object_autofill import CreditCardFill
+from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import BrowserActions, Utilities
 
 
@@ -12,7 +11,7 @@ def test_case():
     return "2886598"
 
 
-def test_dropdown_presence_credit_card(driver: Firefox, region: str):
+def test_dropdown_presence_credit_card(driver: Firefox):
     """
     C2886598 - Verify autofill dropdown is displayed only for the eligible fields after a credit card is saved
     """
@@ -21,13 +20,9 @@ def test_dropdown_presence_credit_card(driver: Firefox, region: str):
     util = Utilities()
     about_prefs = AboutPrefs(driver, category="privacy")
     about_prefs_cc_popup = AboutPrefs(driver)
-    about_config = AboutConfig(driver)
     browser_action_obj = BrowserActions(driver)
     credit_card_fill_obj = CreditCardFill(driver)
     autofill_popup_obj = AutofillPopup(driver)
-
-    # Change pref value of region
-    about_config.change_config_value("browser.search.region", region)
 
     # Save a credit card in about:preferences
     about_prefs.open()
