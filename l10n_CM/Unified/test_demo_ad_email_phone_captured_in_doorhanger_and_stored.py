@@ -22,11 +22,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     address_autofill = AddressFill(driver)
     address_autofill_popup = AutofillPopup(driver)
     util = Utilities()
-    about_config = AboutConfig(driver)
     browser_action_obj = BrowserActions(driver)
-
-    # Change pref value of region
-    about_config.change_config_value("browser.search.region", region)
 
     # create fake data and fill it in
     address_autofill.open()
