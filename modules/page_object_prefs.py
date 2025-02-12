@@ -399,8 +399,8 @@ class AboutPrefs(BasePage):
         Click the HTTPS Only option given
         """
         self.find_in_settings("HTTPS")
-        self.element_clickable(option_id)
-        self.click_on(option_id)
+        self.element_clickable(str(option_id))
+        self.click_on(str(option_id))
         self.element_attribute_contains(option_id, "checked", "")
         return self
 
