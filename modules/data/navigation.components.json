@@ -322,17 +322,6 @@
         "strategy": "id",
         "groups": []
     },
-    "search_mode_switcher": {
-        "selectorData": "urlbar-searchmode-switcher",
-        "strategy": "id",
-        "groups": []
-    },
-    "search_modes": {
-        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic'][label*='{0}']",
-        "strategy": "css",
-        "groups": []
-    },
-
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
@@ -579,7 +568,6 @@
     "searchmode-switcher-settings": {
         "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
-
         "groups": []
     },
 
