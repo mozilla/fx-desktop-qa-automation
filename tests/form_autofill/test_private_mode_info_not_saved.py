@@ -37,7 +37,7 @@ def test_private_mode_info_not_saved(driver: Firefox):
     # Create fake data, fill in the form, and press submit and save on the doorhanger
     autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
     address_form_fields.save_information_basic(autofill_sample_data)
-    autofill_popup.verify_no_popup_panel()
+    autofill_popup.ensure_autofill_dropdown_not_visible()
 
     about_prefs = AboutPrefs(driver, category="privacy").open()
 
