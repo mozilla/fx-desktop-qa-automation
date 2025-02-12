@@ -1,10 +1,8 @@
 import logging
 import os
-import time
 from time import sleep
 
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
@@ -50,6 +48,7 @@ def test_pdf_download(
         delete_files: fixture to remove the files after the test finishes
         file_name: pdf file name
     """
+    from pynput.keyboard import Controller
 
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     pdf.open()

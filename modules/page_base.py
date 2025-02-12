@@ -249,7 +249,7 @@ class BasePage(Page):
         match = braces.findall(selector[1])
         for i in range(len(labels)):
             logging.info(f"Replace {match[i]} with {labels[i]}")
-            selector[1] = selector[1].replace(match[i], labels[i])
+            selector[1] = selector[1].replace(match[i], labels[i], 1)
         logging.info("Returned selector.")
         return selector
 

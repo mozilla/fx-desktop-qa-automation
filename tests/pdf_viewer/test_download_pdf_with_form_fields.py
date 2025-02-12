@@ -2,7 +2,6 @@ import os
 from time import sleep
 
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object_generics import GenericPdf
@@ -28,6 +27,8 @@ def test_download_pdf_with_form_fields(
     delete_files,
     downloads_folder: str,
 ):
+    from pynput.keyboard import Controller
+
     """
     C1020326 Download pdf with form fields
 

@@ -28,13 +28,13 @@ def are_lists_different(a: int, b: int) -> bool:
 
 
 def test_find_toolbar_navigation(
-    driver: Firefox, find_toolbar: FindToolbar, ba: BrowserActions
+    driver: Firefox, find_toolbar: FindToolbar, browser_actions: BrowserActions
 ):
     """
     C127249: Navigate through found items
 
     Arguments:
-        ba: instantiation of BrowserActions BOM.
+        browser_actions: instantiation of BrowserActions BOM.
         find_toolbar: instantiation of FindToolbar BOM.
     """
     driver.get(TARGET_PAGE)
@@ -49,16 +49,16 @@ def test_find_toolbar_navigation(
     find_toolbar.rewind_to_first_match()
 
     # Ensure that first match is highlighted, others are not
-    first_match_colors = ba.get_all_colors_in_element(first_match)
-    fourth_match_colors = ba.get_all_colors_in_element(fourth_match)
+    first_match_colors = browser_actions.get_all_colors_in_element(first_match)
+    fourth_match_colors = browser_actions.get_all_colors_in_element(fourth_match)
 
     assert len(first_match_colors) > len(fourth_match_colors)
     assert are_lists_different(len(first_match_colors), len(fourth_match_colors))
 
     # Navigate with keyboard and button
     find_toolbar.navigate_matches_n_times(3)
-    first_match_colors = ba.get_all_colors_in_element(first_match)
-    fourth_match_colors = ba.get_all_colors_in_element(fourth_match)
+    first_match_colors = browser_actions.get_all_colors_in_element(first_match)
+    fourth_match_colors = browser_actions.get_all_colors_in_element(fourth_match)
 
     assert len(first_match_colors) < len(fourth_match_colors)
     assert are_lists_different(len(first_match_colors), len(fourth_match_colors))

@@ -23,6 +23,6 @@ def find_toolbar(driver: Firefox):
 
 
 @pytest.fixture()
-def ba(driver: Firefox):
-    browser_actions = BrowserActions(driver)
-    yield browser_actions
+def browser_actions(driver: Firefox):
+    ba = BrowserActions(driver)
+    yield ba

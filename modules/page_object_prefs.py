@@ -200,9 +200,7 @@ class AboutPrefs(BasePage):
         self.actions.send_keys(Keys.ENTER).perform()
         return self
 
-    def fill_cc_panel_information(
-        self, credit_card_fill_information: CreditCardBase
-    ) -> BasePage:
+    def fill_cc_panel_information(self, credit_card_fill_information: CreditCardBase):
         """
         Takes the sample cc object and fills it into the popup panel in the about:prefs section
         under saved payment methods.
@@ -237,7 +235,7 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def update_cc_field_panel(self, num_tabs: int, new_info: str) -> BasePage:
+    def update_cc_field_panel(self, num_tabs: int, new_info: str):
         """
         Updates a field in the credit card popup panel in about:prefs by pressing the number of tabs and sending the new information
         ...
@@ -411,6 +409,17 @@ class AboutPrefs(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
         self.click_on("default-zoom-dropdown")
+        return self
+
+    def select_content_and_action(self, content_type: str, action: str) -> BasePage:
+        """
+        From the applications list that handles how downloaded media is used,
+        select a content type and action
+        """
+        el = self.get_element("actions-menu", labels=[content_type])
+        el.click()
+        self.click_on("actions-menu-option", labels=[content_type, action])
+        self.wait.until(lambda _: el.get_attribute("label") == action)
         return self
 
 

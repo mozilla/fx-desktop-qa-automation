@@ -27,6 +27,7 @@ class Navigation(BasePage):
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.search_bar = None
+        self.awesome_bar = None
         self.change_search_settings_button = None
 
     @BasePage.context_content
@@ -185,7 +186,7 @@ class Navigation(BasePage):
         actions = ActionChains(self.driver)
         actions.context_click(self.awesome_bar).perform()
         return self
-     
+
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement

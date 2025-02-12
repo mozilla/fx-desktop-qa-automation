@@ -29,25 +29,25 @@ def are_lists_different(a: int, b: int) -> bool:
 
 @pytest.mark.ci
 def test_find_toolbar_search(
-    driver: Firefox, find_toolbar: FindToolbar, ba: BrowserActions
+    driver: Firefox, find_toolbar: FindToolbar, browser_actions: BrowserActions
 ):
     """
     C127239: Perform a search (using the Find Toolbar)
 
     Arguments:
-        ba: instantiation of BrowserActions BOM.
+        browser_actions: instantiation of BrowserActions BOM.
         find_toolbar: instantiation of FindToolbar BOM.
     """
     driver.get(TARGET_PAGE)
     # Check highlighting: get a reference for what colors are in the link before
-    ref_colors = ba.get_all_colors_in_element(selector)
+    ref_colors = browser_actions.get_all_colors_in_element(selector)
 
     # Search part of the target text
     find_toolbar.open()
     find_toolbar.find(TARGET_LINK[6:12])
 
     # Check highlighting: get the list of colors that are in the link after hit
-    target_colors = ba.get_all_colors_in_element(selector)
+    target_colors = browser_actions.get_all_colors_in_element(selector)
 
     # Should be more colors after we highlight part of the word
     logging.info(f"{len(target_colors)}, {len(ref_colors)}")
@@ -58,6 +58,6 @@ def test_find_toolbar_search(
     find_toolbar.find("about")
 
     # Confirm that our target is no longer highlighted by matching colors with reference
-    cleared_colors = ba.get_all_colors_in_element(selector)
+    cleared_colors = browser_actions.get_all_colors_in_element(selector)
 
     assert not are_lists_different(len(ref_colors), len(cleared_colors))

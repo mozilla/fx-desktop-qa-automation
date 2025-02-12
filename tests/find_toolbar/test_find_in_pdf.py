@@ -12,7 +12,7 @@ def test_case():
 
 
 WORD_SEGMENT = "authori"
-MATCH_TWO_CONTEXT = "representative must complete"
+MATCH_TWO_COMPLETION = "representative must complete"
 
 
 class element_parent_has_text:
@@ -51,4 +51,4 @@ def test_find_in_pdf_using_key_combos(
 
     find_toolbar.rewind_to_first_match()
     find_toolbar.navigate_matches_by_keys()
-    pdf.expect(element_parent_has_text(pdf, "highlighted-text", MATCH_TWO_CONTEXT))
+    pdf.expect(element_parent_has_text(pdf, "highlighted-text", MATCH_TWO_COMPLETION))
