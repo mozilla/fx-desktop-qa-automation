@@ -402,11 +402,12 @@ class AboutPrefs(BasePage):
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
-    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
+    def select_https_only_setting(self, option_id: "HttpsOnlyStatus") -> BasePage:
         """
         Click the HTTPS Only option given
         """
         self.find_in_settings("HTTPS")
+        self.element_clickable(option_id)
         self.click_on(option_id)
         self.element_attribute_contains(option_id, "checked", "")
         return self
