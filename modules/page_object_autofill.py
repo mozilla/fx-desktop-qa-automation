@@ -78,9 +78,9 @@ class CreditCardFill(Autofill):
         for field in self.fields:
             self.double_click("form-field", labels=[field])
             ccp.ensure_autofill_dropdown_visible()
-        # Ensure 'cc-csc' does NOT trigger the dropdown
+        # Ensure 'cc-csc' does NOT trigger the autofill dropdown
         self.double_click("form-field", labels=["cc-csc"])
-        ccp.ensure_autofill_dropdown_not_visible()  # Ensure popup does NOT appear
+        ccp.ensure_autofill_dropdown_not_visible()
 
     def verify_four_fields(
         self, ccp: AutofillPopup, credit_card_sample_data: CreditCardBase

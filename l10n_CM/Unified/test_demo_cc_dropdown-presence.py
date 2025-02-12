@@ -17,7 +17,7 @@ def test_dropdown_presence_credit_card(driver: Firefox, region: str):
     C2886598 - Verify autofill dropdown is displayed only for the eligible fields after a credit card is saved
     """
 
-    # Initialize
+    # Initialize objects
     util = Utilities()
     about_prefs = AboutPrefs(driver, category="privacy")
     about_prefs_cc_popup = AboutPrefs(driver)
