@@ -11,10 +11,13 @@ permissions:
 jobs:
   Check-Beta-Version:
     runs-on: ubuntu-latest
+    outputs:
+      reportable: ${{ steps.reportable.outputs.test }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Check if the run is reportable
+        id: reportable
         env: 
           TESTRAIL_REPORT: true
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -23,8 +26,9 @@ jobs:
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
-          pipenv run python -c 'from modules import testrail_integration as tri; import sys; sys.exit(0) if tri.reportable() else sys.exit(100)'
+          echo test=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable())') >> "$GITHUB_OUTPUT"
   Run-Smoke-Tests:
     needs: Check-Beta-Version
+    if: ${{ needs.Check-Beta-Version.outputs.reportable == 'True' }}
     uses: ./.github/workflows/smoke.yml
     secrets: inherit
