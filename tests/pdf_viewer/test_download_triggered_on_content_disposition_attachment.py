@@ -49,11 +49,6 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     nav.search(CONTENT_DISPOSITION_ATTACHMENT_URL)
     # wait till open option is available
     sleep(3)
-    # with driver.context(driver.CONTEXT_CHROME):
-    #     driver.switch_to.window(driver.window_handles[-1])
-    #     driver.find_element(By.ID, "handleInternally").click()
-    #     sleep(2)
-    #     driver.find_element(By.ID, "unknownContentTypeWindow").send_keys(Keys.ENTER)
 
     browser_actions.select_file_opening_option()
 
