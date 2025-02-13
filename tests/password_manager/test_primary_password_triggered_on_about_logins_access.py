@@ -91,7 +91,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
 
     # Verify that about:logins page is accessible after the primary password was entered
     driver.switch_to.window(driver.window_handles[0])
-    assert driver.current_url.startswith("about:logins")
+    about_logins.url_contains("about:logins")
 
     # Verify that the saved login is visible and accessible in the login list
     about_logins.wait.until(
