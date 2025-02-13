@@ -322,7 +322,6 @@
         "strategy": "id",
         "groups": []
     },
-
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
@@ -569,7 +568,6 @@
     "searchmode-switcher-settings": {
         "selectorData": "searchmode-switcher-popup-search-settings-button",
         "strategy": "id",
-
         "groups": []
     },
 
