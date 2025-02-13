@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_about_pages import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities, BrowserActions
