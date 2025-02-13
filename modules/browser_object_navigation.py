@@ -23,6 +23,14 @@ class Navigation(BasePage):
         "History": "^",
         "Actions": ">",
     }
+    VALID_SEARCH_MODES = {
+        "Google",
+        "eBay",
+        "Amazon.com",
+        "Bing",
+        "DuckDuckGo",
+        "Wikipedia (en)",
+    }
 
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
@@ -181,6 +189,35 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_search_mode_switcher(self) -> BasePage:
+        """
+        click search mode switcher
+        """
+        self.search_mode_switcher = self.get_element("searchmode-switcher")
+        self.search_mode_switcher.click()
+        return self
+
+    @BasePage.context_chrome
+    def set_search_mode(self, search_mode: str) -> BasePage:
+        """
+        set new search location if search_mode in VALID_SEARCH_MODES
+
+        Parameter:
+            search_mode (str): search mode to be selected
+
+        Raises:
+            StopIteration: if a valid search mode is not found in the list of valid elements.
+        """
+        # check if search_mode is valid, otherwise raise error.
+        if search_mode not in self.VALID_SEARCH_MODES:
+            raise ValueError("search location is not valid.")
+        # switch to chrome context
+        # get list of all valid search modes and filter by label
+        self.get_element(
+            "search-mode-switcher-option", labels=[search_mode]
+        ).click()
+        return self
+
     def context_click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         actions = ActionChains(self.driver)
@@ -345,4 +382,9 @@ class Navigation(BasePage):
         """Open search settings from searchmode switcher in awesome bar"""
         self.click_on("searchmode-switcher")
         self.click_on("searchmode-switcher-settings")
+        return self
+
+    @BasePage.context_chrome
+    def select_element_in_nav(self, element: str) -> BasePage:
+        self.get_element(element).click()
         return self

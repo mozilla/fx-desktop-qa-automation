@@ -23,18 +23,15 @@ class AutofillPopup(BasePage):
         """Confirms that an element exists in popup"""
         self.element_clickable(reference)
 
-    def verify_no_popup_panel(self):
-        """Verifies that the autofill popup does NOT appear"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            element = self.get_element("autofill-panel")
-            self.expect_not(EC.element_to_be_clickable(element))
+    def ensure_autofill_dropdown_not_visible(self):
+        """Verifies that the autofill dropdown does NOT appear"""
+        self.element_not_visible("select-form-option")
+        return self
 
-    def verify_popup(self):
-        """Verifies that the autofill popup is clickable"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.expect(
-                EC.element_to_be_clickable(self.get_element("select-form-option"))
-            )
+    def ensure_autofill_dropdown_visible(self):
+        """Verifies that the autofill dropdown appears"""
+        self.element_visible("select-form-option")
+        return self
 
     # Interaction with popup elements
     def click_doorhanger_button(self, button_type: str) -> BasePage:

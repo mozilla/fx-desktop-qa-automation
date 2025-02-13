@@ -1353,6 +1353,20 @@ Description: Save address doorhanger
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: address-doorhanger-name
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span"
+Description: Save address doorhanger name section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-org
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span"
+Description: Save address doorhanger organization section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -2832,6 +2846,13 @@ Selector Name: search-mode-switcher-option
 Selector Data: toolbarbutton[label*='{title}']
 Description: Option by label in search mode list
 Location: Search mode of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: contextual_search_button_awesome_bar
+Selector Data: "span.urlbarView-dynamic-actions-button-0.urlbarView-action-btn[data-action='matched-contextual-search']"
+Description: Contextual search button 
+Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
