@@ -41,6 +41,7 @@ WEBSITE_2 = "https://start.duckduckgo.com/"
 
 
 @pytest.mark.ci
+@pytest.mark.unstable
 def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     """
     C545733.1: Verify that ticking the zoom text only box would only affect the scale of text.
@@ -74,6 +75,7 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     about_prefs.click_on("zoom-text-only")
 
 
+@pytest.mark.unstable
 def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
     """
     C545733.2: Verify that the zoom text only option works after restart

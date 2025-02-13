@@ -5,7 +5,7 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_about_pages import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities, BrowserActions
+from modules.util import BrowserActions, Utilities
 
 
 @pytest.fixture()
@@ -13,7 +13,9 @@ def test_case():
     return "2888701"
 
 
-def test_demo_ad_name_org_captured_in_doorhanger_and_stored(driver: Firefox, region: str):
+def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
+    driver: Firefox, region: str
+):
     """
     C2888701 - Verify name/org fields are captured in the Capture Doorhanger and stored in about:preferences
     """
@@ -55,8 +57,7 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(driver: Firefox, reg
     elements = about_prefs.get_elements("saved-addresses-values")
     expected_values = [expected_name, expected_org]
     found_name_org = any(
-        all(value in element.text for value in expected_values)
-        for element in elements
+        all(value in element.text for value in expected_values) for element in elements
     )
     assert (
         found_name_org
