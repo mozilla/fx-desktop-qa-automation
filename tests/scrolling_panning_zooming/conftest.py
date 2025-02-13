@@ -7,8 +7,15 @@ def suite_id():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_prefs():
+    return []
+
+
+@pytest.fixture()
+def set_prefs(add_prefs: dict):
     """Set prefs"""
-    return [
+    prefs = [
         ("browser.aboutConfig.showWarning", False),
     ]
+    prefs.extend(add_prefs)
+    return prefs
