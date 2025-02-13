@@ -13,6 +13,16 @@ def test_case():
 @pytest.fixture()
 def temp_selectors():
     return {
+        "yahoo-reject-cookie": {
+            "selectorData": "button[name='reject']",
+            "strategy": "css",
+            "groups": [],
+        },
+        "yahoo-consent-page-scroll": {
+            "selectorData": "scroll-down-btn",
+            "strategy": "id",
+            "groups": [],
+        },
         "yahoo-logo": {
             "selectorData": "sfp-placeholder",
             "strategy": "id",
@@ -24,13 +34,13 @@ def temp_selectors():
             "groups": [],
         },
         "duckduckgo-logo": {
-            "selectorData": "minimal-homepage_logoHorizontal__Q_hjO",
-            "strategy": "class",
+            "selectorData": "img[alt='DuckDuckGo Logo']",
+            "strategy": "css",
             "groups": [],
         },
         "duckduckgo-tagline": {
-            "selectorData": "minimal-homepage_taglineText__owJPH",
-            "strategy": "class",
+            "selectorData": "//span[contains(@class, 'minimal')]",
+            "strategy": "xpath",
             "groups": [],
         },
     }
@@ -40,16 +50,48 @@ WEBSITE_1 = "https://search.yahoo.com/"
 WEBSITE_2 = "https://start.duckduckgo.com/"
 
 
+@pytest.fixture()
+def add_prefs():
+    """
+    Set the pref to zoom text only (simulate after restart)
+    """
+    return [("browser.zoom.full", False)]
+
+
+@pytest.fixture()
+def web_page(driver: Firefox, temp_selectors):
+    """
+    return instance of generic page with a given website
+    """
+    generic_page = GenericPage(driver, url=WEBSITE_1)
+    generic_page.elements |= temp_selectors
+    generic_page.open()
+    yield generic_page
+
+
+@pytest.fixture()
+def reject_consent_page(web_page: GenericPage):
+    """
+    reject consent page. scroll to rejection button if necessary.
+    """
+    if web_page.element_clickable("yahoo-consent-page-scroll"):
+        web_page.click_on("yahoo-consent-page-scroll")
+    web_page.wait.until(lambda _: web_page.element_clickable("yahoo-reject-cookie"))
+    web_page.click_on("yahoo-reject-cookie")
+
+
 @pytest.mark.ci
-@pytest.mark.unstable
-def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
+def test_zoom_text_only_from_settings(
+    driver: Firefox, web_page: GenericPage, reject_consent_page
+):
     """
     C545733.1: Verify that ticking the zoom text only box would only affect the scale of text.
     Verify setting the default zoom level applies the chosen zoom level to all websites.
+
+    Arguments:
+        web_page: instance of generic page.
     """
     # Initializing objects
-    web_page = GenericPage(driver, url=WEBSITE_1).open()
-    web_page.elements |= temp_selectors
     nav = Navigation(driver)
 
     # Save the original positions of elements for comparison
@@ -75,18 +117,16 @@ def test_zoom_text_only_from_settings(driver: Firefox, temp_selectors):
     about_prefs.click_on("zoom-text-only")
 
 
-@pytest.mark.unstable
-def test_zoom_text_only_after_restart(driver: Firefox, temp_selectors):
+def test_zoom_text_only_after_restart(
+    driver: Firefox, web_page: GenericPage, reject_consent_page
+):
     """
     C545733.2: Verify that the zoom text only option works after restart
-    """
-    # Set the pref to zoom text only (simulate after restart)
-    about_config = AboutConfig(driver)
-    about_config.toggle_true_false_config("browser.zoom.full")
 
+        Arguments:
+        web_page: instance of generic page.
+    """
     # Initializing objects
-    web_page = GenericPage(driver, url=WEBSITE_1).open()
-    web_page.elements |= temp_selectors
     nav = Navigation(driver)
 
     # Save the original positions of elements for comparison
