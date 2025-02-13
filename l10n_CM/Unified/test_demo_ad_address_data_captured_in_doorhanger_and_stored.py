@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_about_pages import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities, BrowserActions
@@ -22,11 +21,7 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(driver: Firefox,
     address_autofill = AddressFill(driver)
     address_autofill_popup = AutofillPopup(driver)
     util = Utilities()
-    about_config = AboutConfig(driver)
     browser_action_obj = BrowserActions(driver)
-
-    # Change pref value of region
-    about_config.change_config_value("browser.search.region", region)
 
     # create fake data and fill it in
     address_autofill.open()
@@ -44,13 +39,15 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(driver: Firefox,
     expected_city = address_autofill_data.address_level_2
     address_autofill_popup.element_has_text("address-doorhanger-city", expected_city)
 
-    # containing State/Province field
     expected_state = address_autofill_data.address_level_1
-    address_autofill_popup.element_has_text("address-doorhanger-state", expected_state)
+    if region not in ["FR", "DE"]:
+        state_abbreviation = util.get_state_province_abbreviation(expected_state)
+        address_autofill_popup.element_has_text("address-doorhanger-state", state_abbreviation)
 
-    # containing Zip code field
+    # Verify Zip Code field (Different selector for DE/FR)
     expected_zip = address_autofill_data.postal_code
-    address_autofill_popup.element_has_text("address-doorhanger-zip", expected_zip)
+    zip_selector = "address-doorhanger-zip-other" if region in ["FR", "DE"] else "address-doorhanger-zip"
+    address_autofill_popup.element_has_text(zip_selector, expected_zip)
 
     # containing Country field
     expected_country = address_autofill_data.country
@@ -64,13 +61,17 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(driver: Firefox,
     iframe = about_prefs.get_save_addresses_popup_iframe()
     browser_action_obj.switch_to_iframe_context(iframe)
 
-    # The address saved in step 2 is listed in the "Saved addresses" modal: Street, city, state, zip and country
+    # Verify saved addresses
     elements = about_prefs.get_elements("saved-addresses-values")
+
+    # Expected values for verification
     expected_values = [expected_street_add, expected_city, expected_zip, expected_country]
-    found_name_org = any(
+    if region not in ["FR", "DE"]:
+        expected_values.insert(2, expected_state)
+
+    # Check if all expected values exist in any saved address
+    found_address_data = any(
         all(value in element.text for value in expected_values)
         for element in elements
     )
-    assert (
-        found_name_org
-    ), "Street, city, state, zip or country were not found in any of the address entries!"
+    assert found_address_data, "Street, city, state (if applicable), zip, or country were not found in any of the address entries!"
