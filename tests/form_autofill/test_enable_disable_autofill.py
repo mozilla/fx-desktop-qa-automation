@@ -39,4 +39,4 @@ def test_enable_disable_autofill(driver: Firefox):
 
     # verifying the popup panel does not appear
     new_af.double_click("form-field", labels=["name"])
-    new_afp.verify_no_popup_panel()
+    new_afp.ensure_autofill_dropdown_not_visible()
