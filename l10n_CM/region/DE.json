@@ -6,6 +6,7 @@
         "test_demo_ad_doorhanger_shown_on_valid_address_submission.py",
         "test_demo_ad_email_phone_captured_in_doorhanger_and_stored.py",
         "test_demo_ad_name_org_captured_in_doorhanger_and_stored.py",
-        "test_demo_cc_dropdown-presence.py"
+        "test_demo_cc_dropdown-presence.py",
+        "test_demo_ad_address_data_captured_in_doorhanger_and_stored.py"
     ]
 }

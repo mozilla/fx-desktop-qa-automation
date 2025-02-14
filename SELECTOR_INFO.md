@@ -1381,6 +1381,48 @@ Description: Save address doorhanger organization section
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: address-doorhanger-street
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(3) span"
+Description: Save address doorhanger street address section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-city
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(1)"
+Description: Save address doorhanger city section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-state
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)"
+Description: Save address doorhanger state section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-zip
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(5)"
+Description: Save address doorhanger zip section for US and CA
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-zip-other
+Selector Data: "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
+Description: Save address doorhanger zip section for other regions
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-country
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span"
+Description: Save address doorhanger country section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
