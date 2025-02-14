@@ -1,8 +1,9 @@
 import pytest
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
-from modules.page_object import AboutConfig, AboutPrefs, GenericPage
+from modules.page_object import AboutPrefs, GenericPage
 
 
 @pytest.fixture()
@@ -74,10 +75,13 @@ def reject_consent_page(web_page: GenericPage):
     """
     reject consent page. scroll to rejection button if necessary.
     """
-    if web_page.element_clickable("yahoo-consent-page-scroll"):
-        web_page.click_on("yahoo-consent-page-scroll")
-    web_page.wait.until(lambda _: web_page.element_clickable("yahoo-reject-cookie"))
-    web_page.click_on("yahoo-reject-cookie")
+    try:
+        if web_page.element_clickable("yahoo-consent-page-scroll"):
+            web_page.click_on("yahoo-consent-page-scroll")
+        web_page.wait.until(lambda _: web_page.element_clickable("yahoo-reject-cookie"))
+        web_page.click_on("yahoo-reject-cookie")
+    except TimeoutException:
+        pass
 
 
 @pytest.mark.ci
