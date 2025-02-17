@@ -230,6 +230,10 @@ class Navigation(BasePage):
         downloads_button = self.get_element("downloads-button")
         return downloads_button
 
+    def click_download_button(self) -> BasePage:
+        self.get_download_button().click()
+        return self
+
     @BasePage.context_chrome
     def wait_for_download_animation_finish(
         self, downloads_button: WebElement

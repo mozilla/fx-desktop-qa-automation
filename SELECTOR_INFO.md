@@ -949,6 +949,20 @@ Location: about:preferences#privacy in Exceptions - Saved Passwords modal
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: actions-menu
+Selector Data: "richlistitem[type='{.*}'] menulist.actionsMenu"
+Description: Select Application list that handles how downloads are handled
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: actions-menu-option
+Selector Data: "richlistitem[type='{.*}'] menuitem[label='{.*}']"
+Description: Select download option from Application List
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: use-primary-password
 Selector Data: "useMasterPassword"
 Description: Checkbox for using primary password
@@ -1998,6 +2012,13 @@ Path to .json: modules/data/generic_page.components.json
 Selector Name: highlighted-text
 Selector Data: ".textLayer .highlight.selected.appended"
 Description: attribute of text element
+Location: any element that supports the attribute (usually text)
+Path to .json: modules/data/generic_pdf.components.json
+```
+```
+Selector Name: pdf-text-layer
+Selector Data: "textLayer"
+Description: first instance of a text span.
 Location: any element that supports the attribute (usually text)
 Path to .json: modules/data/generic_pdf.components.json
 ```

@@ -1,6 +1,4 @@
-from termios import VLNEXT
 from time import sleep
-from typing import Literal
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
