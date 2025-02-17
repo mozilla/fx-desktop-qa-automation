@@ -4,6 +4,8 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
 
+TEST_VALUE = "12345"
+
 
 @pytest.fixture()
 def test_case():
@@ -38,12 +40,9 @@ def test_pdf_input_numbers(
     """
 
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
-    pdf.open()
 
     # Clear the field and enter the test value
-    numeric_field = pdf.get_element("zipcode-field")
-    numeric_field.clear()
-    numeric_field.send_keys("12345" + Keys.TAB)
+    pdf.fill_element("zipcode-field", TEST_VALUE + Keys.TAB)
 
     # Verify the value is still present
-    pdf.element_attribute_contains("zipcode-field", "value", "12345")
+    pdf.element_attribute_contains("zipcode-field", "value", TEST_VALUE)
