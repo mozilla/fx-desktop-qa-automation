@@ -213,9 +213,7 @@ class Navigation(BasePage):
             raise ValueError("search location is not valid.")
         # switch to chrome context
         # get list of all valid search modes and filter by label
-        self.get_element(
-            "search-mode-switcher-option", labels=[search_mode]
-        ).click()
+        self.get_element("search-mode-switcher-option", labels=[search_mode]).click()
         return self
 
     def context_click_in_awesome_bar(self) -> BasePage:
@@ -224,6 +222,7 @@ class Navigation(BasePage):
         actions.context_click(self.awesome_bar).perform()
         return self
 
+    @BasePage.context_chrome
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement

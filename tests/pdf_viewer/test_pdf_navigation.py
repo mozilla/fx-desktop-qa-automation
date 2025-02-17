@@ -1,3 +1,5 @@
+from typing import Literal
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -5,120 +7,109 @@ from selenium.webdriver.common.keys import Keys
 from modules.page_object import GenericPdf
 from modules.util import Utilities
 
+DOWNWARD = {Keys.DOWN, Keys.RIGHT, Keys.END, "next"}
+
 
 @pytest.fixture()
 def test_case():
     return "3927"
 
 
-def test_navigation_keys(driver: Firefox, pdf_file_path):
+def move_pdf(pdf_viewer: GenericPdf, key: str | int) -> int:
+    """
+    Move pdf according to direction and key press.
+
+    Arguments:
+        pdf_viewer: Instance of generic pdf class
+        key: which key is pressed on the pdf body
+
+    Returns:
+        the distance the page moved.
+    """
+    page_one_item = pdf_viewer.get_element("page-one-item")
+    initial_location = page_one_item.location["y"]
+
+    if key in Keys.__dict__.values():
+        pdf_viewer.navigate_page_by_keys(key)
+    elif isinstance(key, int):
+        pdf_viewer.jump_to_page(key)
+    else:
+        pdf_viewer.navigate_page_by_scroll_key(key)
+
+    # wait for scrolling down
+    pdf_viewer.wait.until(
+        lambda _: page_one_item.location["y"] < initial_location
+        if key in DOWNWARD or isinstance(key, int)
+        else page_one_item.location["y"] > initial_location
+    )
+
+    # scroll down using right key
+    return abs(page_one_item.location["y"] - initial_location)
+
+
+def test_navigation_keys(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.1: ensure that you can navigate through a PDF using keys
 
     Arguments:
-        pdf_file_path: pdf file directory path
+        pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
-    body = pdf_viewer.get_element("html-body")
-
     # scroll down using arrow down key
-    page_one_item = pdf_viewer.get_element("page-one-item")
-    initial_location = page_one_item.location["y"]
-    body.send_keys(Keys.DOWN)
-
-    # wait for scrolling down
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
+    down_key_difference = move_pdf(pdf_viewer, Keys.DOWN)
 
     # scroll down using right key
-    down_key_difference = abs(page_one_item.location["y"] - initial_location)
-    initial_location = page_one_item.location["y"]
-    body.send_keys(Keys.RIGHT)
-
-    # wait for scrolling down, ensure that right key goes down more than down key
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
-    right_key_difference = abs(page_one_item.location["y"] - initial_location)
+    right_key_difference = move_pdf(pdf_viewer, Keys.RIGHT)
+    # assert right key moves more than down key
     assert right_key_difference > down_key_difference
 
     # scroll down using end key
-    initial_location = page_one_item.location["y"]
-    body.send_keys(Keys.END)
-
-    # wait for scrolling down, ensure that end key goes down more than right key
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
-    end_key_difference = abs(page_one_item.location["y"] - initial_location)
+    end_key_difference = move_pdf(pdf_viewer, Keys.END)
+    # assert end key moves more than right key
     assert end_key_difference > right_key_difference
 
-    # scroll up using up key
-    initial_location = page_one_item.location["y"]
-    body.send_keys(Keys.UP)
-
-    # wait for scrolling up
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
+    # scroll up using Up key
+    up_key_difference = move_pdf(pdf_viewer, Keys.UP)
 
     # scroll up using left key
-    up_key_difference = abs(page_one_item.location["y"] - initial_location)
-    initial_location = page_one_item.location["y"]
-    body.send_keys(Keys.LEFT)
-
-    # wait for scrolling up, ensure that left key goes up more than up key
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
-    left_key_difference = abs(page_one_item.location["y"] - initial_location)
+    left_key_difference = move_pdf(pdf_viewer, Keys.LEFT)
+    # assert left key moves more than up key
     assert left_key_difference > up_key_difference
 
     # scroll using home key
-    initial_location = page_one_item.location["y"]
-    body.send_keys(Keys.HOME)
-
-    # wait for scrolling up, ensure that home key goes up more than left key
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
-
-    home_key_difference = abs(page_one_item.location["y"] - initial_location)
+    home_key_difference = move_pdf(pdf_viewer, Keys.HOME)
+    # assert home key moves more than left key
     assert home_key_difference > left_key_difference
 
 
-def test_navigation_next_prev(driver: Firefox, pdf_file_path):
+def test_navigation_next_prev(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.2: ensure that you can navigate through a PDF using next and previous keys
+
+    Arguments:
+        pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
-    # navigate to PDF
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
-
-    # find position of page one element
-    page_one_item = pdf_viewer.get_element("page-one-item")
-    initial_location = page_one_item.location["y"]
-    pdf_viewer.get_element("scroll-next").click()
-
-    # ensure that navigating to new element means the position is lower than originally
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] < initial_location)
-
-    # go back to original page
-    initial_location = page_one_item.location["y"]
-    pdf_viewer.get_element("scroll-prev").click()
-
-    # ensure the new position is higher than the previous
-    pdf_viewer.wait.until(lambda _: page_one_item.location["y"] > initial_location)
+    # go to next page.
+    move_pdf(pdf_viewer, "next")
+    # go back to original page.
+    move_pdf(pdf_viewer, "prev")
 
 
-def test_navigation_page_numbers(driver: Firefox, pdf_file_path):
+def test_navigation_page_numbers(driver: Firefox, pdf_viewer: GenericPdf):
     """
-    C3927.3: Ensure that you can navigate through a PDF using the numbers at the top
-    """
-    # navigate to PDF
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
+    C3927.3: Ensure that you can navigate through a PDF using the numbers at the top.
 
+    Arguments:
+        pdf_viewer: instance of generic pdf with given pdf_file_path.
+    """
     # get an element from page one
     page_one_item = pdf_viewer.get_element("page-one-item")
     original_position = page_one_item.location["y"]
 
     # jump to the second page and measure the delta
-    pdf_viewer.jump_to_page(2)
-    second_page_position = page_one_item.location["y"]
-    one_page_delta = abs(original_position - second_page_position)
+    one_page_delta = move_pdf(pdf_viewer, 2)
 
     # jump to fourth page and measure the delta
-    pdf_viewer.jump_to_page(4)
-    fourth_page_position = page_one_item.location["y"]
-    two_page_delta = abs(fourth_page_position - second_page_position)
+    two_page_delta = move_pdf(pdf_viewer, 4)
 
     # ensure that the jump for two pages was twice of the one page jump
     assert (2 * one_page_delta) - 10 <= two_page_delta <= (2 * one_page_delta) + 10
@@ -129,17 +120,18 @@ def test_navigation_page_numbers(driver: Firefox, pdf_file_path):
     assert first_page_position == original_position
 
 
-def test_toolbar_options_cursor(driver: Firefox, pdf_file_path):
+def test_toolbar_options_cursor(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.4: Ensure the correct cursor is displayed
+
+    Arguments:
+        pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
     # open PDF and get body element
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
-    pdf_viewer.open_toolbar_menu()
     body = pdf_viewer.get_element("pdf-body")
 
     # open the menu and get the current cursor
-    pdf_viewer.get_element("toolbar-hand-tool").click()
+    pdf_viewer.select_toolbar_option("toolbar-hand-tool")
     cursor_style = driver.execute_script(
         "return window.getComputedStyle(arguments[0]).cursor;", body
     )
@@ -147,8 +139,7 @@ def test_toolbar_options_cursor(driver: Firefox, pdf_file_path):
     assert cursor_style == "grab"
 
     # repeat with a different cursor
-    pdf_viewer.open_toolbar_menu()
-    pdf_viewer.get_element("toolbar-select-tool").click()
+    pdf_viewer.select_toolbar_option("toolbar-select-tool")
     cursor_style = driver.execute_script(
         "return window.getComputedStyle(arguments[0]).cursor;", body
     )
@@ -156,43 +147,24 @@ def test_toolbar_options_cursor(driver: Firefox, pdf_file_path):
     assert cursor_style == "auto"
 
 
-def test_toolbar_options_rotate(driver: Firefox, pdf_file_path):
+def test_toolbar_options_rotate(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.5: Ensure the correct rotation is shown
+
+    Arguments:
+        pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
-    # open the PDF
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
-    body = pdf_viewer.get_element("pdf-body")
-    util = Utilities()
-
-    # get the original perspective origin
-    original_perspective_origin = body.value_of_css_property(
-        "perspective-origin"
-    ).split(" ")[1]
-    original_perspective_origin = int(
-        util.remove_all_non_numbers(original_perspective_origin)
-    )
-
+    for i in range(1, 4):
+        pdf_viewer.select_toolbar_option("toolbar-rotate-cw")
+        element = pdf_viewer.get_element("pdf-text-layer")
+        pdf_viewer.wait.until(
+            lambda _: int(element.get_attribute("data-main-rotation")) == i * 90
+        )
     # rotate clockwise
-    pdf_viewer.open_toolbar_menu()
-    pdf_viewer.get_element("toolbar-rotate-cw").click()
-
-    # when the PDF is horizontal, the perspective origin is lower than original
-    new_perspective_origin = body.value_of_css_property("perspective-origin").split(
-        " "
-    )[1]
-    new_perspective_origin = int(util.remove_all_non_numbers(new_perspective_origin))
-
-    assert new_perspective_origin < original_perspective_origin
 
     # rotate counterclockwise
-    pdf_viewer.open_toolbar_menu()
-    pdf_viewer.get_element("toolbar-rotate-ccw").click()
-
-    # get back to original position and ensure perspective orgin is returned to original position
-    new_perspective_origin = body.value_of_css_property("perspective-origin").split(
-        " "
-    )[1]
-    new_perspective_origin = int(util.remove_all_non_numbers(new_perspective_origin))
-
-    assert new_perspective_origin == original_perspective_origin
+    pdf_viewer.select_toolbar_option("toolbar-rotate-ccw")
+    element = pdf_viewer.get_element("pdf-text-layer")
+    pdf_viewer.wait.until(
+        lambda _: element.get_attribute("data-main-rotation") == "180"
+    )
