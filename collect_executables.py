@@ -111,7 +111,7 @@ else:
         minor = int(minor)
         beta = int(beta)
 
-        next_major = f"{major+1}.0b1"
+        next_major = f"{major + 1}.0b1"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:
@@ -119,7 +119,7 @@ else:
             this_beta = next_major
             continue
 
-        next_minor = f"{major}.{minor+1}b1"
+        next_minor = f"{major}.{minor + 1}b1"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:
@@ -127,7 +127,7 @@ else:
             this_beta = next_minor
             continue
 
-        next_beta = f"{major}.{minor}b{beta+1}"
+        next_beta = f"{major}.{minor}b{beta + 1}"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:

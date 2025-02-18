@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities, BrowserActions
+from modules.util import BrowserActions, Utilities
 
 
 @pytest.fixture()
@@ -12,8 +12,9 @@ def test_case():
     return "2886581"
 
 
-def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, region: str
-                                                               ):
+def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
+    driver: Firefox, region: str
+):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
@@ -38,7 +39,9 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     # containing phone field
     expected_phone = address_autofill_data.telephone
     with driver.context(driver.CONTEXT_CHROME):
-        actual_phone = address_autofill_popup.get_element("address-doorhanger-phone").text
+        actual_phone = address_autofill_popup.get_element(
+            "address-doorhanger-phone"
+        ).text
     normalize_expected = util.normalize_phone_number(expected_phone)
     normalized_actual = util.normalize_phone_number(actual_phone)
     assert normalized_actual == normalize_expected
@@ -55,9 +58,8 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(driver: Firefox, 
     elements = about_prefs.get_elements("saved-addresses-values")
     expected_values = [expected_phone, expected_email]
     found_email_phone = any(
-        all(value in element.text for value in expected_values)
-        for element in elements
+        all(value in element.text for value in expected_values) for element in elements
     )
-    assert (
-        found_email_phone
-    ), "Email or phone were not found in any of the address entries!"
+    assert found_email_phone, (
+        "Email or phone were not found in any of the address entries!"
+    )

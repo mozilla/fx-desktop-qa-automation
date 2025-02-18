@@ -89,4 +89,6 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     found_address_data = any(
         all(value in element.text for value in expected_values) for element in elements
     )
-    assert found_address_data, "Street, city, state (if applicable), zip, or country were not found in any of the address entries!"
+    assert found_address_data, (
+        "Street, city, state (if applicable), zip, or country were not found in any of the address entries!"
+    )

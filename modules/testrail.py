@@ -351,7 +351,9 @@ class TestRail:
         matching_group = next(c for c in configs if c.get("id") == config_group_id)
         logging.info(f"matching group|| {matching_group}")
         cfgs = [
-            c for c in matching_group.get("configs") if config_name in c.get("name")
+            c
+            for c in matching_group.get("configs")
+            if config_name == c.get("name").strip()
         ]
         return cfgs
 

@@ -49,12 +49,12 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
 
         # Verify that the desired download target element is present directly, no extra steps needed.
         download_value = download_name.get_attribute("value")
-        assert re.match(
-            r"download(\(\d+\))?$", download_value
-        ), f"The download name is incorrect: {download_value}"
+        assert re.match(r"download(\(\d+\))?$", download_value), (
+            f"The download name is incorrect: {download_value}"
+        )
 
         # Verify that the download progress has reached 100%, which indicates that the download is complete.
         download_status_value = download_status.get_attribute("value")
-        assert (
-            download_status_value == "100"
-        ), f"The download status is not '100': {download_status_value}"
+        assert download_status_value == "100", (
+            f"The download status is not '100': {download_status_value}"
+        )
