@@ -303,6 +303,23 @@ class CreditCardFill(Autofill):
         )
         return self
 
+    def verify_clear_form_all_fields(self, autofill_popup_obj: AutofillPopup):
+        """
+        Clears all fields in the form by triggering the clear action from each field in turn. After each clear
+        action, verifies that all fields are empty, regardless of which field initiated the clear.
+        """
+        for field in self.fields:
+            self.click_on("form-field", labels=[field])
+            autofill_popup_obj.click_autofill_form_option()
+            self.click_on("form-field", labels=[field])
+            autofill_popup_obj.click_clear_form_option()
+            # Verify that all fields are blank
+            for f in self.fields:
+                self.element_attribute_contains("form-field", "value", "", labels=[f])
+            # Verify that the 'cc-csc' field does not trigger an autofill dropdown
+            self.double_click("form-field", labels=["cc-csc"])
+            autofill_popup_obj.ensure_autofill_dropdown_not_visible()
+
 
 class LoginAutofill(Autofill):
     """
