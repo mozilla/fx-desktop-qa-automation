@@ -467,7 +467,6 @@ class Utilities:
         :param full_name: The full name of the state, province, or region.
         :return: The corresponding abbreviation or "Not Found" if not in the dictionary.
         """
-
         return self.state_province_abbr.get(full_name, "Not Found")
 
 

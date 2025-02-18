@@ -1354,6 +1354,20 @@ Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: address-doorhanger-email
+Selector Data: "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span"
+Description: Save address doorhanger email section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-phone
+Selector Data: "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span"
+Description: Save address doorhanger phone section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: address-doorhanger-name
 Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span"
 Description: Save address doorhanger name section
