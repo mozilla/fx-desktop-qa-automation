@@ -19,6 +19,11 @@ def delete_files_regex_string():
     return r"i-9.*\.pdf"
 
 
+@pytest.fixture()
+def file_name():
+    return PDF_FILE_NAME
+
+
 @pytest.mark.headed
 def test_download_pdf_with_form_fields(
     driver: Firefox,
