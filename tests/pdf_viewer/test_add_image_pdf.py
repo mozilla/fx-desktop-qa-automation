@@ -19,15 +19,14 @@ def test_case():
 
 
 @pytest.mark.headed
-def test_add_image_pdf(driver: Firefox, sys_platform, pdf_file_path: str):
+def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):
     """
     C2228202: Verify that the user is able to add an image to a PDF file.
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_file_path: pdf file directory path
+        pdf_viewer: instance of GenericPdf with correct path.
     """
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}").open()
     context_menu = ContextMenu(driver)
     image_path = Path("data") / IMAGE_FILE_NAME
     pdf_viewer.add_image(str(image_path.absolute()), sys_platform)

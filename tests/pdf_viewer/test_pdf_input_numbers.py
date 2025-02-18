@@ -22,9 +22,14 @@ def hard_quit():
     return True
 
 
+@pytest.fixture()
+def file_name():
+    return "i-9.pdf"
+
+
 def test_pdf_input_numbers(
     driver: Firefox,
-    fillable_pdf_url: str,
+    pdf_viewer: GenericPdf,
     downloads_folder: str,
     sys_platform,
     delete_files,
@@ -34,15 +39,13 @@ def test_pdf_input_numbers(
 
     Arguments:
         sys_platform: Current System Platform Type
-        fillable_pdf_url: pdf file directory path
+        pdf_viewer: instance of GenericPdf with correct path.
         downloads_folder: downloads folder path
         delete_files: fixture to remove the files after the test finishes
     """
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
-
     # Clear the field and enter the test value
-    pdf.fill_element("zipcode-field", TEST_VALUE + Keys.TAB)
+    pdf_viewer.fill_element("zipcode-field", TEST_VALUE + Keys.TAB)
 
     # Verify the value is still present
-    pdf.element_attribute_contains("zipcode-field", "value", TEST_VALUE)
+    pdf_viewer.element_attribute_contains("zipcode-field", "value", TEST_VALUE)

@@ -16,18 +16,13 @@ def file_name():
     return PDF_FILE_NAME
 
 
-def test_open_pdf_in_fx(driver: Firefox, pdf_file_path: str):
+def test_open_pdf_in_fx(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C936503: PDF files can be successfully opened in Firefox
 
     Arguments:
-        pdf_file_path: pdf file directory path
+        pdf_viewer: instance of GenericPdf with correct path.
     """
-
-    file_url = f"file://{pdf_file_path}"
-    pdf = GenericPdf(driver, pdf_url=file_url)
-    pdf.open()
-
     # Verify that the PDF viewer is loaded
-    pdf.url_contains("pdf")
-    pdf.title_contains(PDF_FILE_NAME)
+    pdf_viewer.url_contains("pdf")
+    pdf_viewer.title_contains(PDF_FILE_NAME)

@@ -22,7 +22,7 @@ def delete_files_regex_string():
 @pytest.mark.headed
 def test_download_pdf_with_form_fields(
     driver: Firefox,
-    fillable_pdf_url: str,
+    pdf_viewer: GenericPdf,
     sys_platform,
     delete_files,
     downloads_folder: str,
@@ -34,23 +34,21 @@ def test_download_pdf_with_form_fields(
 
     Arguments:
         sys_platform: Current System Platform Type
-        fillable_pdf_url: pdf file directory path
+        pdf_viewer: instance of GenericPdf with correct path.
         downloads_folder: downloads folder path
         delete_files: fixture to remove the files after the test finishes
     """
-
-    pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
     keyboard = Controller()
 
     # Fill in the name field and click on download button
-    pdf_page.fill_element("first-name-field", "Mark")
+    pdf_viewer.fill_element("first-name-field", "Mark")
     sleep(2)
 
-    pdf_page.click_download_button()
+    pdf_viewer.click_download_button()
 
     # Allow time for the download dialog to appear and handle the prompt
     sleep(2)
-    pdf_page.handle_os_download_confirmation(keyboard, sys_platform)
+    pdf_viewer.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
     sleep(3)
@@ -66,4 +64,4 @@ def test_download_pdf_with_form_fields(
     # Open the saved pdf and check if the edited field is displayed
     driver.get("file://" + os.path.realpath(saved_pdf_location))
 
-    pdf_page.element_visible("edited-name-field")
+    pdf_viewer.element_visible("edited-name-field")

@@ -14,11 +14,6 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
-    return []
-
-
-@pytest.fixture()
 def delete_files_regex_string():
     return r"i-9.*\.pdf"
 
@@ -31,7 +26,7 @@ def file_name():
 @pytest.mark.headed
 def test_pdf_download(
     driver: Firefox,
-    fillable_pdf_url: str,
+    pdf_viewer: GenericPdf,
     downloads_folder: str,
     sys_platform,
     delete_files,
@@ -43,28 +38,25 @@ def test_pdf_download(
 
     Arguments:
         sys_platform: Current System Platform Type
-        fillable_pdf_url: pdf file directory path
+        pdf_viewer: instance of GenericPdf with correct path.
         downloads_folder: downloads folder path
         delete_files: fixture to remove the files after the test finishes
         file_name: pdf file name
     """
     from pynput.keyboard import Controller
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
-    pdf.open()
-
     keyboard = Controller()
 
     # Click the download button
-    pdf.click_download_button()
+    pdf_viewer.click_download_button()
 
     # Allow time for the download dialog m to appear and pressing enter to download
     sleep(2)
-    pdf.handle_os_download_confirmation(keyboard, sys_platform)
+    pdf_viewer.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Set the expected download path and the expected PDF name
     saved_pdf_location = os.path.join(downloads_folder, file_name)
-    pdf.expect(lambda _: os.path.exists(saved_pdf_location))
+    pdf_viewer.expect(lambda _: os.path.exists(saved_pdf_location))
 
     # Verify if the file exists
     assert os.path.exists(

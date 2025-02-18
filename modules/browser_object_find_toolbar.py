@@ -84,9 +84,7 @@ class FindToolbar(BasePage):
     @BasePage.context_chrome
     def rewind_to_first_match(self) -> BasePage:
         """Go back to match 1 of n"""
-        print(self.match_dict)
         while self.match_dict["current"] != 1:
-            print(self.match_dict)
             self.previous_match()
         return self
 
