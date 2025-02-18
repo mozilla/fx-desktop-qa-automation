@@ -145,7 +145,9 @@ class TrackerPanel(BasePage):
             assert (
                 shield_icon.get_attribute("data-l10n-id")
                 == "tracking-protection-icon-active-container"
-            ), "The label detected did not correspond to the expected one: tracking-protection-icon-active-container"
+            ), (
+                "The label detected did not correspond to the expected one: tracking-protection-icon-active-container"
+            )
         return self
 
     def open_and_return_cross_site_trackers(self) -> List[WebElement]:

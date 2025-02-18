@@ -124,7 +124,7 @@ def reportable():
     covered_suites = 0
     for entry in plan_entries:
         for run_ in entry.get("runs"):
-            if platform in run_.get("config"):
+            if run_.get("config") and platform in run_.get("config"):
                 covered_suites += 1
 
     num_suites = 0
@@ -378,6 +378,10 @@ def collect_changes(testrail_session: TestRail, report):
         release = ".".join(release.split(".")[:-1])
         config = f"{os_name} {release} {arch}"
 
+    logging.warning(f"Reporting for config: {config}")
+    if not config.strip():
+        raise ValueError("Config cannot be blank.")
+
     with open(".tmp_testrail_info", "w") as fh:
         fh.write(f"{plan_title}|{config}")
 
@@ -421,8 +425,7 @@ def collect_changes(testrail_session: TestRail, report):
             logging.info("Creating config...")
             testrail_session.add_config(CONFIG_GROUP_ID, config)
         tried = True
-    if len(config_matches) >= 1:
-        # TODO: change above to == 1
+    if len(config_matches) == 1:
         config_id = config_matches[0].get("id")
         logging.info(f"config id: {config_id}")
     else:
