@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutConfig
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
@@ -13,21 +12,15 @@ def test_case():
 
 
 def test_address_doorhanger_displayed_after_entering_valid_address(
-    driver: Firefox, region: str
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    address_autofill_popup: AutofillPopup,
 ):
     """
     C2886581 - Verify the Capture Doorhanger is displayed after entering valid Address data
     """
-
-    # Instantiate objects
-    address_autofill = AddressFill(driver)
-    address_autofill_popup = AutofillPopup(driver)
-    util = Utilities()
-    about_config = AboutConfig(driver)
-
-    # Change pref value of region
-    about_config.change_config_value("browser.search.region", region)
-
     # Create fake data and fill it in
     address_autofill.open()
     address_autofill_data = util.fake_autofill_data(region)

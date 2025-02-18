@@ -3,8 +3,8 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutConfig, AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.page_object import AboutPrefs
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -12,25 +12,20 @@ def test_case():
     return "2886595"
 
 
-def test_create_new_cc_profile(driver: Firefox, region: str):
+def test_create_new_cc_profile(
+    driver: Firefox,
+    region: str,
+    util: Utilities,
+    about_prefs: AboutPrefs,
+    about_prefs_cc_popup: AboutPrefs,
+):
     """
     C2886595 - Tests you can create and save a new Credit Card profile
     """
 
-    # Instantiate objects
-    util = Utilities()
-    browser_action_obj = BrowserActions(driver)
-    about_prefs = AboutPrefs(driver, category="privacy")
-    about_prefs_cc_popup = AboutPrefs(driver)
-    about_config = AboutConfig(driver)
-
-    # Change pref value of region
-    about_config.change_config_value("browser.search.region", region)
-
     # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs.open()
-    iframe = about_prefs.get_saved_payments_popup_iframe()
-    browser_action_obj.switch_to_iframe_context(iframe)
+    about_prefs.switch_to_saved_payments_popup_iframe()
 
     # Save CC information using fake data
     credit_card_sample_data = util.fake_credit_card_data()

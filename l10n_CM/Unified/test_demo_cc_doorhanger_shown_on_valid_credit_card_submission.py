@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutConfig
 from modules.page_object_autofill import CreditCardFill
 from modules.util import Utilities
 
@@ -12,20 +11,16 @@ def test_case():
     return "2889441"
 
 
-def test_cc_check_door_hanger_is_displayed(driver: Firefox, region: str):
+def test_cc_check_door_hanger_is_displayed(
+    driver: Firefox,
+    region: str,
+    util: Utilities,
+    address_autofill_popup: AutofillPopup,
+    credit_card_fill_obj: CreditCardFill,
+):
     """
     C2889441 - Ensures that the door hanger is displayed after filling credit card info
     """
-
-    # Instantiate objects
-    autofill_popup_obj = AutofillPopup(driver)
-    credit_card_fill_obj = CreditCardFill(driver)
-    util = Utilities()
-    about_config = AboutConfig(driver)
-
-    # Change pref value of region
-    about_config.change_config_value("browser.search.region", region)
-
     # Navigate to page
     credit_card_fill_obj.open()
 
@@ -34,4 +29,4 @@ def test_cc_check_door_hanger_is_displayed(driver: Firefox, region: str):
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
 
     # Check if an element from the door hanger is visible
-    autofill_popup_obj.element_visible("doorhanger-save-button")
+    address_autofill_popup.element_visible("doorhanger-save-button")
