@@ -14,7 +14,7 @@ def test_case():
     return "2886597"
 
 
-def test_cc_data_captured_in_doorhanger_and_stored(driver: Firefox, region: str):
+def test_demo_cc_data_captured_in_doorhanger_and_stored(driver: Firefox, region: str):
     """
     C2889999 - Verify credit card data is captured in the Capture Doorhanger and stored in about:preferences
     """
