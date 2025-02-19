@@ -392,14 +392,14 @@ class AboutPrefs(BasePage):
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
-    def select_https_only_setting(self, option_id: "HttpsOnlyStatus") -> BasePage:
+    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
         """
         Click the HTTPS Only option given
         """
         self.find_in_settings("HTTPS")
-        self.element_clickable(option_id)
-        self.click_on(option_id)
-        self.element_attribute_contains(option_id, "checked", "")
+        self.element_clickable(str(option_id))
+        self.click_on(str(option_id))
+        self.element_attribute_contains(str(option_id), "checked", "")
         return self
 
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:

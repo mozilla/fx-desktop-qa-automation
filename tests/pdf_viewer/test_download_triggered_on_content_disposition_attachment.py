@@ -47,8 +47,8 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     nav.search(CONTENT_DISPOSITION_ATTACHMENT_URL)
     # wait till open option is available
     sleep(3)
-
     browser_actions.select_file_opening_option()
+
 
     tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()

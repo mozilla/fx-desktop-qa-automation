@@ -49,8 +49,7 @@ class AutofillPopup(BasePage):
 
     def click_clear_form_option(self) -> BasePage:
         """Clicks to clear the saved form option (address or credit card)"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("clear-form-option").click()
+        self.click_on("clear-form-option")
         return self
 
     # Interaction with autocomplete list elements

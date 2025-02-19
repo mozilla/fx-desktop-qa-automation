@@ -160,6 +160,21 @@ class TestRail:
         """Get a given Test Case"""
         return self.client.send_get(f"get_case/{case_id}")
 
+    def update_cases_in_suite(self, suite_id, case_ids, **kwargs):
+        """Given a suite and a list of test cases, update all listed
+        test cases according to keyword args"""
+        if not kwargs:
+            return None
+        return self.client.send_post(
+            f"update_cases/{suite_id}", {"case_ids": case_ids, **kwargs}
+        )
+
+    def update_test_case(self, case_id, **kwargs):
+        """Given a test case id, update according to keyword args"""
+        if not kwargs:
+            return None
+        return self.client.send_post(f"update_case/{case_id}", **kwargs)
+
     def create_test_run_on_plan_entry(
         self, plan_id, entry_id, config_ids, description=None, case_ids=None
     ):
@@ -233,6 +248,14 @@ class TestRail:
         for plan in plans:
             if plan_name in plan["name"]:
                 return self._get_full_plan(plan.get("id"))
+        return None
+
+    def matching_custom_field(self, name):
+        """Given a name, return the case_field object that matches (name or label)"""
+        custom_fields = self._get_case_fields()
+        for field in custom_fields:
+            if name in field.get("name") or name in field.get("label"):
+                return field
         return None
 
     def create_new_plan(
@@ -328,7 +351,9 @@ class TestRail:
         matching_group = next(c for c in configs if c.get("id") == config_group_id)
         logging.info(f"matching group|| {matching_group}")
         cfgs = [
-            c for c in matching_group.get("configs") if config_name in c.get("name")
+            c
+            for c in matching_group.get("configs")
+            if config_name == c.get("name").strip()
         ]
         return cfgs
 
@@ -447,6 +472,9 @@ class TestRail:
 
     def _get_full_plan(self, plan_id):
         return self.client.send_get(f"get_plan/{plan_id}")
+
+    def _get_case_fields(self):
+        return self.client.send_get("get_case_fields")
 
     def _retry_api_call(self, api_call, *args, max_retries=3, delay=5):
         """

@@ -1368,6 +1368,20 @@ Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: address-doorhanger-email
+Selector Data: "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span"
+Description: Save address doorhanger email section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-phone
+Selector Data: "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span"
+Description: Save address doorhanger phone section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: address-doorhanger-name
 Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span"
 Description: Save address doorhanger name section
@@ -1378,6 +1392,48 @@ Path to .json: modules/data/autofill_popup.components.json
 Selector Name: address-doorhanger-org
 Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span"
 Description: Save address doorhanger organization section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-street
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(3) span"
+Description: Save address doorhanger street address section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-city
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(1)"
+Description: Save address doorhanger city section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-state
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)"
+Description: Save address doorhanger state section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-zip
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(5)"
+Description: Save address doorhanger zip section for US and CA
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-zip-other
+Selector Data: "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
+Description: Save address doorhanger zip section for other regions
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-country
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span"
+Description: Save address doorhanger country section
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```

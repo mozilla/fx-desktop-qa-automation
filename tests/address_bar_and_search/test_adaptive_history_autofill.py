@@ -61,11 +61,11 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     )
 
     # Assertion to verify that the 'autofill_adaptive' type is found
-    assert (
-        autofill_adaptive_element.get_attribute("type") == "autofill_adaptive"
-    ), f"Expected element type to be 'autofill_adaptive' but found '{autofill_adaptive_element.get_attribute('type')}'"
+    assert autofill_adaptive_element.get_attribute("type") == "autofill_adaptive", (
+        f"Expected element type to be 'autofill_adaptive' but found '{autofill_adaptive_element.get_attribute('type')}'"
+    )
 
     # Assertion to check the autofilled URL is the expected one
-    assert (
-        "nationalgeographic.com/science" in autofill_adaptive_element.text
-    ), "URL 'https://www.nationalgeographic.com/science' not found in autofill suggestions."
+    assert "nationalgeographic.com/science" in autofill_adaptive_element.text, (
+        "URL 'https://www.nationalgeographic.com/science' not found in autofill suggestions."
+    )
