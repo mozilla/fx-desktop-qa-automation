@@ -37,3 +37,17 @@ def test_demo_ad_autofill_name_org(driver: Firefox, region: str):
 
     # Verify autofill data
     address_autofill.verify_autofill_data(address_autofill_data, region, util)
+
+    # Double inside Name field and select clear form autofill
+    address_autofill.double_click("form-field", labels=["name"])
+    address_autofill_popup.click_clear_form_option()
+
+    # Double inside Organization field and select a saved address entry from the dropdown
+    address_autofill.double_click("form-field", labels=["organization"])
+
+    # Click on the first element from the autocomplete dropdown
+    first_item = address_autofill_popup.get_nth_element(1)
+    address_autofill_popup.click_on(first_item)
+
+    # Verify autofill data
+    address_autofill.verify_autofill_data(address_autofill_data, region, util)

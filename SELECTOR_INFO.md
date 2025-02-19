@@ -1182,6 +1182,69 @@ Description: "Submit" button
 Location: At the bottom of the autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
 Path to .json: modules/data/address_fill.components.json
 ```
+```
+Selector Name: name-field
+Selector Data: "input[autocomplete=name]"
+Description: Name field
+Location: Name field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: org-field
+Selector Data: "input[autocomplete=organization]"
+Description: Organization field
+Location: Organization field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: street-field
+Selector Data: "input[autocomplete=street-address]"
+Description: Street field
+Location: Street field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: add-level2-field
+Selector Data: "input[autocomplete=address-level2]"
+Description: Address level 2 field
+Location: Address level 2 field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: add-level1-field
+Selector Data: "input[autocomplete=address-level1]"
+Description: Address level 1 field
+Location: Address level 1 field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: zip-field
+Selector Data: "input[autocomplete=postal-code]"
+Description: Zip field
+Location: Zip field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: country-field
+Selector Data: "input[autocomplete=country]"
+Description: Country field
+Location: Country field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: email-field
+Selector Data: "input[autocomplete=email]"
+Description: Email field
+Location: Email field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: phone-field
+Selector Data: "input[autocomplete=tel]"
+Description: Phone field
+Location: Phone field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
 #### amo_languages
 ```
 Selector Name: language-addons-title
