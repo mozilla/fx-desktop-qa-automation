@@ -52,9 +52,9 @@ def test_pdf_download(
     pdf.expect(lambda _: os.path.exists(saved_pdf_location))
 
     # Verify if the file exists
-    assert os.path.exists(
-        saved_pdf_location
-    ), f"The file was not downloaded to {saved_pdf_location}."
+    assert os.path.exists(saved_pdf_location), (
+        f"The file was not downloaded to {saved_pdf_location}."
+    )
 
     print(
         f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."

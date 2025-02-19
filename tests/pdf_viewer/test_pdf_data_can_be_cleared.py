@@ -71,7 +71,7 @@ def test_pdf_data_can_be_cleared(
     pdf.expect(lambda _: default_option.is_selected())
 
     # Assert that all fields are reset to their default state
-    assert (
-        pdf.get_element("first-name-field").get_attribute("value") == ""
-    ), "Text field did not reset."
+    assert pdf.get_element("first-name-field").get_attribute("value") == "", (
+        "Text field did not reset."
+    )
     assert not checkbox.is_selected(), "Checkbox did not reset."
