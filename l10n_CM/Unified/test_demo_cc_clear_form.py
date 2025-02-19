@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()

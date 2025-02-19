@@ -1,4 +1,3 @@
-import logging
 from time import sleep
 
 import pytest
@@ -29,13 +28,13 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
     if not show_suggestions_checkbox.is_selected():
         show_suggestions_checkbox.click()
     nonsponsored_checkbox = about_prefs.get_element("firefox-suggest-nonsponsored")
-    assert (
-        nonsponsored_checkbox.is_selected()
-    ), f"Checkbox with selector '{nonsponsored_checkbox}' is not checked"
+    assert nonsponsored_checkbox.is_selected(), (
+        f"Checkbox with selector '{nonsponsored_checkbox}' is not checked"
+    )
     sponsors_checkbox = about_prefs.get_element("firefox-suggest-sponsored")
-    assert (
-        sponsors_checkbox.is_selected()
-    ), f"Checkbox with selector '{sponsors_checkbox}' is not checked"
+    assert sponsors_checkbox.is_selected(), (
+        f"Checkbox with selector '{sponsors_checkbox}' is not checked"
+    )
 
     # Check if sponsored suggestion is displayed. Keep checking until the sponsered suggestions are displayed
     found = False

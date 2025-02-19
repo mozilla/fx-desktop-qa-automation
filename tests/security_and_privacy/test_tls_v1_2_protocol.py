@@ -32,9 +32,9 @@ def test_tls_v1_2_protocol(driver: Firefox):
     )
 
     expected_content = "tls-v1-2.\nbadssl.com"
-    assert (
-        tls_content.text == expected_content
-    ), f"Expected '{expected_content}' but found '{tls_content.text}' at {TLS_URL}"
+    assert tls_content.text == expected_content, (
+        f"Expected '{expected_content}' but found '{tls_content.text}' at {TLS_URL}"
+    )
 
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("lock-icon").click()
@@ -51,6 +51,6 @@ def test_tls_v1_2_protocol(driver: Firefox):
             "Connection Encrypted (TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, 256 bit keys, "
             "TLS 1.2)"
         )
-        assert (
-            technical_details.get_attribute("value") == expected_technical_details
-        ), f"Expected '{expected_technical_details}' but found '{technical_details.get_attribute('value')}'"
+        assert technical_details.get_attribute("value") == expected_technical_details, (
+            f"Expected '{expected_technical_details}' but found '{technical_details.get_attribute('value')}'"
+        )

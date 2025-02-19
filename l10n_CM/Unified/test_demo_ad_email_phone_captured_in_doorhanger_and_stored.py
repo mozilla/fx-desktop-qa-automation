@@ -1,12 +1,10 @@
-from typing import Dict
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -62,9 +60,9 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     )
     expected_values = [expected_phone, expected_email]
     found_email_phone = list(set(elements) & set(expected_values))
-    assert (
-        found_email_phone
-    ), "Email or phone were not found in any of the address entries!"
+    assert found_email_phone, (
+        "Email or phone were not found in any of the address entries!"
+    )
 
 
 def data_sanitizer(value: str):
