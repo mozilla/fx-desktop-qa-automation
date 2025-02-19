@@ -45,16 +45,16 @@ def test_cc_data_captured_in_doorhanger_and_stored(driver: Firefox, region: str)
 
     time.sleep(2)
 
-    # The credit card saved in step 2 is listed in the "Saved credit cards" modal
-    elements = about_prefs.get_elements("saved-credit-cards-values")
-    expected_values = [
-        credit_card_sample_data.card_number[-4:],  # Only last 4 digits should be stored
-        credit_card_sample_data.name,
-        f"{credit_card_sample_data.expiration_month}/{credit_card_sample_data.expiration_year[-2:]}"
-    ]
+    # get the text from the row and split by the comma, striping any leading or trailing whitespace on the way.
+    elements = [x.strip() for x in about_prefs.get_element("saved-credit-cards-values").text.split(',')]
 
-    found_credit_card = any(
-        all(value in element.text for value in expected_values)
-        for element in elements
-    )
-    assert found_credit_card, "Credit card details were not found in saved credit cards!"
+    # Validate stored values match expected values
+    assert elements[0].endswith(credit_card_sample_data.card_number[-4:]), \
+        f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{elements[0]}'"
+
+    assert elements[1] == credit_card_sample_data.name, \
+        f"Expected name '{credit_card_sample_data.name}' but got '{elements[1]}'"
+
+    expected_expiry = f"Expires on {int(credit_card_sample_data.expiration_month)}/20{credit_card_sample_data.expiration_year}"
+    assert elements[2] == expected_expiry, \
+        f"Expected expiration '{expected_expiry}' but got '{elements[2]}'"
