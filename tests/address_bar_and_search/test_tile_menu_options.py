@@ -138,6 +138,6 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
             set_in_use.remove(match)
             logging.info(f"Detected the context item: {match}")
 
-    assert len(set_in_use) == 0, (
-        "Did not find all of the required context menu actions."
-    )
+    assert (
+        len(set_in_use) == 0
+    ), "Did not find all of the required context menu actions."

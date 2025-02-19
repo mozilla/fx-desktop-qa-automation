@@ -39,6 +39,6 @@ def test_address_attribute_selection(driver: Firefox):
     # Get the primary value (street address) from the first item in the dropdown and assert that the actual value
     # matches the expected value
     expected_street_address = autofill_sample_data.street_address
-    assert expected_street_address == actual_value, (
-        f"Expected {expected_street_address}, but got {actual_value}"
-    )
+    assert (
+        expected_street_address == actual_value
+    ), f"Expected {expected_street_address}, but got {actual_value}"

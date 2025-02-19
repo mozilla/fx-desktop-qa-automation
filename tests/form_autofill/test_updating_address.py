@@ -48,17 +48,17 @@ def test_update_address(driver: Firefox):
 
     # Verify no dupe is saved
     element_list = about_prefs.get_elements("saved-addresses")
-    assert len(element_list) == 1, (
-        f"Expected 1 saved address, but found {len(element_list)}."
-    )
+    assert (
+        len(element_list) == 1
+    ), f"Expected 1 saved address, but found {len(element_list)}."
     print("Assertion passed: There is exactly 1 saved address.")
 
     # Assert that "Doe" is present in updated entry
     elements = about_prefs.get_elements("saved-addresses-values")
     found_updated_address = any("Doe" in element.text for element in elements)
-    assert found_updated_address, (
-        "The value 'Doe' was not found in any of the address entries."
-    )
+    assert (
+        found_updated_address
+    ), "The value 'Doe' was not found in any of the address entries."
 
     # Print the element that contains "Doe" for verification
     for element in elements:

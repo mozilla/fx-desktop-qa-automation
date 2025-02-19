@@ -39,6 +39,6 @@ def test_name_attribute_selection(driver: Firefox):
     # Get the primary value (street address) from the first item in the dropdown and assert that the actual value
     # matches the expected value
     expected_name = autofill_sample_data.name
-    assert expected_name == actual_value, (
-        f"Expected {expected_name}, but got {actual_value}"
-    )
+    assert (
+        expected_name == actual_value
+    ), f"Expected {expected_name}, but got {actual_value}"

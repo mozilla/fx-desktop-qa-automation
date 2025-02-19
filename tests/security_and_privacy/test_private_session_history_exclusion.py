@@ -42,6 +42,6 @@ def test_websites_visited_in_private_browser_not_displayed_in_history(driver: Fi
         empty_label = panel_ui.get_element("recent-history-content").get_attribute(
             "value"
         )
-        assert empty_label == "(Empty)", (
-            f"Expected history to be empty, but found '{empty_label}'"
-        )
+        assert (
+            empty_label == "(Empty)"
+        ), f"Expected history to be empty, but found '{empty_label}'"

@@ -18,6 +18,7 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     address_autofill: AddressFill,
     util: Utilities,
     address_autofill_popup: AutofillPopup,
+    about_prefs: AboutPrefs,
 ):
     """
     C2888701 - Verify name/org fields are captured in the Capture Doorhanger and stored in about:preferences
@@ -42,7 +43,7 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     address_autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs.open()
     about_prefs.switch_to_saved_addresses_popup_iframe()
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
@@ -51,6 +52,6 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     found_name_org = any(
         all(value in element.text for value in expected_values) for element in elements
     )
-    assert found_name_org, (
-        "Name or organization were not found in any of the address entries!"
-    )
+    assert (
+        found_name_org
+    ), "Name or organization were not found in any of the address entries!"
