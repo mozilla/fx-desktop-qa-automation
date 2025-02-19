@@ -60,6 +60,6 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     found_email_phone = any(
         all(value in element.text for value in expected_values) for element in elements
     )
-    assert (
-        found_email_phone
-    ), "Email or phone were not found in any of the address entries!"
+    assert found_email_phone, (
+        "Email or phone were not found in any of the address entries!"
+    )

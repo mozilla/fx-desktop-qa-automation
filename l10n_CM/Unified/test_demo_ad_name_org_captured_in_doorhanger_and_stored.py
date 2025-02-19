@@ -51,6 +51,6 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     found_name_org = any(
         all(value in element.text for value in expected_values) for element in elements
     )
-    assert (
-        found_name_org
-    ), "Name or organization were not found in any of the address entries!"
+    assert found_name_org, (
+        "Name or organization were not found in any of the address entries!"
+    )
