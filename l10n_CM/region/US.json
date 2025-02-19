@@ -7,6 +7,6 @@
         "test_demo_ad_name_org_captured_in_doorhanger_and_stored.py",
         "test_demo_cc_dropdown-presence.py",
         "test_demo_ad_address_data_captured_in_doorhanger_and_stored.py",
-        "test_verify_new_address_is_added.py"
+        "test_us_demo_addy_verify_new_address_added.py"
     ]
 }

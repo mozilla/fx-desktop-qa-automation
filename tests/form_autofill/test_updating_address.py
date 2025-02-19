@@ -43,7 +43,7 @@ def test_update_address(driver: Firefox):
 
     # Navigate to settings
     about_prefs = AboutPrefs(driver, category="privacy").open()
-    iframe = about_prefs.get_save_addresses_popup_iframe()
+    iframe = about_prefs.get_saved_addresses_popup_iframe()
     browser_action_obj.switch_to_iframe_context(iframe)
 
     # Verify no dupe is saved
