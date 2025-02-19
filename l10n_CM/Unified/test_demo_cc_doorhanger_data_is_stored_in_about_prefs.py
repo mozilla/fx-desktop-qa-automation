@@ -43,8 +43,6 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(driver: Firefox, region:
     iframe = about_prefs.get_save_credit_cards_popup_iframe()
     browser_action_obj.switch_to_iframe_context(iframe)
 
-    time.sleep(2)
-
     # get the text from the row and split by the comma, striping any leading or trailing whitespace on the way.
     elements = [x.strip() for x in about_prefs.get_element("saved-credit-cards-values").text.split(',')]
 
