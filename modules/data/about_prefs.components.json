@@ -130,6 +130,18 @@
         "groups": []
     },
 
+    "saved-credit-cards": {
+        "selectorData": "credit-cards",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "saved-credit-cards-values": {
+        "selectorData": "#credit-cards option",
+        "strategy": "css",
+        "groups": []
+    },
+
     "panel-popup-stack": {
         "selectorData": "dialogStack",
         "strategy": "id",

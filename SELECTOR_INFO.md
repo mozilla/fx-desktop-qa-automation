@@ -571,6 +571,20 @@ Location: about:preferences#privacy Saved Addresses popup dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: saved-credit-cards
+Selector Data: "credit-cards"
+Description: The element that contains the saved credit cards
+Location: about:preferences#privacy Saved Credit Cards popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-credit-cards-values
+Selector Data: "#credit-cards option"
+Description: The element that contains the saved credit cards values
+Location: about:preferences#privacy Saved Credit Cards popup dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: panel-popup-stack
 Selector Data: "dialogStack"
 Description: The element that contains the credit card profile values
