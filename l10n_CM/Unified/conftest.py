@@ -38,7 +38,7 @@ def address_autofill(driver):
 
 
 @pytest.fixture()
-def address_autofill_popup(driver):
+def autofill_popup(driver):
     yield AutofillPopup(driver)
 
 
@@ -48,12 +48,12 @@ def util():
 
 
 @pytest.fixture()
-def about_prefs(driver):
+def about_prefs_privacy(driver):
     yield AboutPrefs(driver, category="privacy")
 
 
 @pytest.fixture()
-def about_prefs_cc_popup(driver):
+def about_prefs(driver):
     yield AboutPrefs(driver)
 
 

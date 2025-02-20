@@ -27,7 +27,7 @@ def add_prefs(region: str):
 
 
 def test_verify_new_address_is_added(
-    driver: Firefox, region: str, about_prefs: AboutPrefs, util: Utilities
+    driver: Firefox, region: str, about_prefs_privacy: AboutPrefs, util: Utilities
 ):
     """
     C2886580: Verify that a new Address can be added
@@ -38,12 +38,12 @@ def test_verify_new_address_is_added(
     address_autofill_data = util.fake_autofill_data(region)
 
     # open saved addresses and add entry
-    about_prefs.open()
-    about_prefs.add_entry_to_saved_addresses(address_autofill_data)
+    about_prefs_privacy.open()
+    about_prefs_privacy.add_entry_to_saved_addresses(address_autofill_data)
 
     # verify that the address saved is the same.
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
-    elements = about_prefs.get_element("saved-addresses-values").text.split(",")
+    elements = about_prefs_privacy.get_element("saved-addresses-values").text.split(",")
     address_match = all(
         data_sanitizer(element, region, inverted_state_province_abbr)
         in address_autofill_data.__dict__.values()

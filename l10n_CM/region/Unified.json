@@ -8,6 +8,6 @@
     "test_demo_cc_clear_form.py",
     "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
     "test_demo_cc_dropdown-presence.py",
-    "test_us_demo_addy_verify_new_address_added.py"
+    "test_demo_addy_verify_new_address_added.py"
   ]
 }
