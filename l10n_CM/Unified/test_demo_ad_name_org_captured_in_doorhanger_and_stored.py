@@ -17,8 +17,8 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     region: str,
     address_autofill: AddressFill,
     util: Utilities,
-    address_autofill_popup: AutofillPopup,
-    about_prefs: AboutPrefs,
+    autofill_popup: AutofillPopup,
+    about_prefs_privacy: AboutPrefs,
 ):
     """
     C2888701 - Verify name/org fields are captured in the Capture Doorhanger and stored in about:preferences
@@ -29,25 +29,25 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed
-    address_autofill_popup.element_visible("address-save-doorhanger")
+    autofill_popup.element_visible("address-save-doorhanger")
 
     # containing name field
     expected_name = address_autofill_data.name
-    address_autofill_popup.element_has_text("address-doorhanger-name", expected_name)
+    autofill_popup.element_has_text("address-doorhanger-name", expected_name)
 
     # containing org field
     expected_org = address_autofill_data.organization
-    address_autofill_popup.element_has_text("address-doorhanger-org", expected_org)
+    autofill_popup.element_has_text("address-doorhanger-org", expected_org)
 
     # Click the "Save" button
-    address_autofill_popup.click_doorhanger_button("save")
+    autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs.open()
-    about_prefs.switch_to_saved_addresses_popup_iframe()
+    about_prefs_privacy.open()
+    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
-    elements = about_prefs.get_elements("saved-addresses-values")
+    elements = about_prefs_privacy.get_elements("saved-addresses-values")
     expected_values = [expected_name, expected_org]
     found_name_org = any(
         all(value in element.text for value in expected_values) for element in elements

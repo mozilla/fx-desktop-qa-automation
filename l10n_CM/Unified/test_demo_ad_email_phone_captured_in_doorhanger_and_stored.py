@@ -17,8 +17,8 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     region: str,
     address_autofill: AddressFill,
     util: Utilities,
-    address_autofill_popup: AutofillPopup,
-    about_prefs: AboutPrefs,
+    autofill_popup: AutofillPopup,
+    about_prefs_privacy: AboutPrefs,
 ):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
@@ -30,33 +30,31 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed
-    address_autofill_popup.element_visible("address-save-doorhanger")
+    autofill_popup.element_visible("address-save-doorhanger")
 
     # containing email field
     expected_email = address_autofill_data.email
-    address_autofill_popup.element_has_text("address-doorhanger-email", expected_email)
+    autofill_popup.element_has_text("address-doorhanger-email", expected_email)
 
     # containing phone field
     expected_phone = address_autofill_data.telephone
     with driver.context(driver.CONTEXT_CHROME):
-        actual_phone = address_autofill_popup.get_element(
-            "address-doorhanger-phone"
-        ).text
+        actual_phone = autofill_popup.get_element("address-doorhanger-phone").text
     normalize_expected = util.normalize_phone_number(expected_phone)
     normalized_actual = util.normalize_phone_number(actual_phone)
     assert normalized_actual == normalize_expected
 
     # Click the "Save" button
-    address_autofill_popup.click_doorhanger_button("save")
+    autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs.open()
-    about_prefs.switch_to_saved_addresses_popup_iframe()
+    about_prefs_privacy.open()
+    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: Email and phone
     elements = map(
         data_sanitizer,
-        about_prefs.get_element("saved-addresses-values").text.split(","),
+        about_prefs_privacy.get_element("saved-addresses-values").text.split(","),
     )
     expected_values = [expected_phone, expected_email]
     found_email_phone = list(set(elements) & set(expected_values))
