@@ -2,11 +2,11 @@ name: Check new beta version
 
 on:
   schedule:
-    - cron: "49 */1 * * *"
+    - cron: "12 */1 * * *"
 env:
   LATEST: ""
 permissions:
-  contents: 'write'
+  contents: "write"
 
 jobs:
   Check-Beta-Version:
@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Check if the run is reportable
         id: reportable
-        env: 
+        env:
           TESTRAIL_REPORT: true
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}

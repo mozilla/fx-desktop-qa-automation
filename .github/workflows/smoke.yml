@@ -5,7 +5,14 @@ run-name: ${{ github.actor }} is running smoke tests
 on:
   pull_request:
   workflow_call:
+    inputs:
+      channel:
+        description: "Channel to run tests against"
+        default: "beta"
+        required: false
+        type: string
 env:
+  FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
@@ -133,7 +140,7 @@ jobs:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
-        id: setup        
+        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
