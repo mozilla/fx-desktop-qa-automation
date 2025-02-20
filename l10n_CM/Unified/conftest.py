@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 import pytest
 
@@ -15,18 +16,18 @@ def region():
 
 @pytest.fixture()
 def add_prefs(region: str):
-    return [
+    return []
+
+
+@pytest.fixture()
+def set_prefs(add_prefs: List[tuple[str, str | bool]], region: str):
+    """Set prefs"""
+    prefs = [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
         ("browser.aboutConfig.showWarning", False),
         ("browser.search.region", region),
     ]
-
-
-@pytest.fixture()
-def set_prefs(add_prefs: dict, region: str):
-    """Set prefs"""
-    prefs = []
     prefs.extend(add_prefs)
     return prefs
 
