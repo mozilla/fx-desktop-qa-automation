@@ -39,10 +39,8 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
     panelui.select_panel_setting("new-private-window-option")
     panelui.wait_for_num_windows(2)
 
-    # Using this instead of switch_to_new_window, suspect it may be broken
-    original_window_idx = driver.window_handles.index(non_private_window)
-    private_window = driver.window_handles[1 - original_window_idx]
-    driver.switch_to.window(private_window)
+    nav = Navigation(driver)
+    nav.switch_to_new_private_window()
 
     about_downloads = AboutDownloads(driver)
     about_downloads.open()
@@ -51,7 +49,6 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
         logging.warning("About:Downloads is not registering as empty")
 
     opm_forms = GenericPage(driver, url=TEST_URL)
-    nav = Navigation(driver)
     opm_forms.open()
 
     # Get all links to pdfs on the page
