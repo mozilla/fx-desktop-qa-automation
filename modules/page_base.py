@@ -714,6 +714,14 @@ class BasePage(Page):
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             return self.switch_to_new_tab()
 
+    def switch_to_new_private_window(self) -> Page:
+        "Switch to new private window"
+        non_private_window = self.driver.current_window_handle
+        original_window_idx = self.driver.window_handles.index(non_private_window)
+        private_window = self.driver.window_handles[1 - original_window_idx]
+        self.driver.switch_to.window(private_window)
+        return self
+
     def switch_to_frame(self, frame: str, labels=[]) -> Page:
         """Switch to inline document frame"""
         with self.driver.context(self.driver.CONTEXT_CHROME):

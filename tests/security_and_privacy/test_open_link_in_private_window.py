@@ -25,7 +25,7 @@ def test_open_link_in_private_window(driver: Firefox):
     context_menu.click_and_hide_menu("context-menu-open-link-in-new-private-window")
 
     nav.wait_for_num_windows(2)
-    nav.switch_to_new_window()
+    nav.switch_to_new_private_window()
     sleep(1)
     with driver.context(driver.CONTEXT_CHROME):
         nav.title_contains("Private Browsing")

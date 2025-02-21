@@ -1,4 +1,9 @@
 {
+    "add-address": {
+        "selectorData": "add",
+        "strategy": "id",
+        "groups": []
+    },
     "search-engine-dropdown-root": {
         "selectorData": "defaultEngine",
         "strategy": "id",
@@ -126,6 +131,18 @@
 
     "saved-addresses-values": {
         "selectorData": "#addresses option",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "saved-credit-cards": {
+        "selectorData": "credit-cards",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "saved-credit-cards-values": {
+        "selectorData": "#credit-cards option",
         "strategy": "css",
         "groups": []
     },

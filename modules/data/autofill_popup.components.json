@@ -85,6 +85,12 @@
         "groups": []
     },
 
+     "cc-doorhanger-data": {
+        "selectorData": "popupnotificationcontent[class='credit-card-save-update-notification-content'] description",
+        "strategy": "css",
+        "groups": []
+    },
+
     "address-doorhanger-email": {
         "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span",
         "strategy": "css",
