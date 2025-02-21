@@ -1,6 +1,7 @@
 import logging
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -213,27 +214,6 @@ class Navigation(BasePage):
         actions = ActionChains(self.driver)
         actions.context_click(self.awesome_bar).perform()
         return self
-
-    def set_search_mode(self, search_mode: str) -> BasePage:
-        """
-        set new search location if search_mode in VALID_SEARCH_MODES
-
-        Parameter:
-            search_mode (str): search mode to be selected
-
-        Raises:
-            StopIteration: if a valid search mode is not found in the list of valid elements.
-        """
-        # check if search_mode is valid, otherwise raise error.
-        if search_mode not in self.VALID_SEARCH_MODES:
-            raise ValueError("search location is not valid.")
-        # switch to chrome context
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            # get list of all valid search modes and filter by label
-            self.get_element(
-                "search-mode-switcher-option", labels=[search_mode]
-            ).click()
-            return self
 
     def get_download_button(self) -> WebElement:
         """
