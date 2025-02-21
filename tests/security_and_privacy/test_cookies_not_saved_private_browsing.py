@@ -24,7 +24,7 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
 
     # Open new private window
     panel_ui.open_private_window()
-    nav.switch_to_new_window()
+    nav.switch_to_new_private_window()
 
     # Open the Google page and perform a search
     google_search.open()

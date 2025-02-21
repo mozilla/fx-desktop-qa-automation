@@ -36,7 +36,7 @@ def test_third_party_content_blocked_private_browsing_cross_site(driver: Firefox
 
     # open the new window
     panel_ui.open_private_window()
-    nav.switch_to_new_window()
+    nav.switch_to_new_private_window()
 
     # open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()

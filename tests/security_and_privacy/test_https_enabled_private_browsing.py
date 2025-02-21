@@ -26,15 +26,8 @@ def test_https_first_mode_in_private_browsing(driver: Firefox):
     hamburger = PanelUi(driver)
     hamburger.open_private_window()
 
-    # nav = Navigation(driver)
-    # nav.switch_to_new_window()
-
-    # Using this instead of switch_to_new_window, suspect that may be unstable
-    # on Linux CI machines. (slow to actually fully load the new Window)
-    non_private_window = driver.current_window_handle
-    original_window_idx = driver.window_handles.index(non_private_window)
-    private_window = driver.window_handles[1 - original_window_idx]
-    driver.switch_to.window(private_window)
+    nav = Navigation(driver)
+    nav.switch_to_new_private_window()
     driver.get(HTTP_SITE)
 
     # Wait for the URL to be redirected to HTTPS

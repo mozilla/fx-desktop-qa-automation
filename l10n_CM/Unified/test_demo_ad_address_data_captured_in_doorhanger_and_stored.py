@@ -23,7 +23,7 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     """
     C2888703 - Verify Address data are captured in the Capture Doorhanger and stored in about:preferences
     """
-    # create fake data and fill it in
+    # Create fake data and fill it in
     address_autofill.open()
     address_autofill_data = util.fake_autofill_data(region)
     address_autofill.save_information_basic(address_autofill_data)
@@ -31,11 +31,12 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     # The "Save address?" doorhanger is displayed
     autofill_popup.element_visible("address-save-doorhanger")
 
-    # containing Street Address field
+    # Containing Street Address field
     expected_street_add = address_autofill_data.street_address
+
     autofill_popup.element_has_text("address-doorhanger-street", expected_street_add)
 
-    # containing City field
+    # Containing City field
     expected_city = address_autofill_data.address_level_2
     autofill_popup.element_has_text("address-doorhanger-city", expected_city)
 
@@ -51,10 +52,12 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
         if region in ["FR", "DE"]
         else "address-doorhanger-zip"
     )
+
     autofill_popup.element_has_text(zip_selector, expected_zip)
 
-    # containing Country field
+    # Containing Country field
     expected_country = address_autofill_data.country
+
     autofill_popup.element_has_text("address-doorhanger-country", expected_country)
 
     # Click the "Save" button
