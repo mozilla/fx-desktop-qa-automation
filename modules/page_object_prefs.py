@@ -2,6 +2,7 @@ import re
 from time import sleep
 from typing import List
 
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -25,6 +26,10 @@ class AboutPrefs(BasePage):
 
     URL_TEMPLATE = "about:preferences#{category}"
     iframe = None
+
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.driver = driver
 
     # number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
@@ -237,6 +242,14 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
+    def switch_to_saved_payments_popup_iframe(self) -> BasePage:
+        """
+        Switch to saved payments popup frame.
+        """
+        saved_payments = self.get_saved_payments_popup_iframe()
+        self.driver.switch_to.frame(saved_payments)
+        return self
+
     def update_cc_field_panel(self, num_tabs: int, new_info: str) -> BasePage:
         """
         Updates a field in the credit card popup panel in about:prefs by pressing the number of tabs and sending the new information
@@ -256,14 +269,35 @@ class AboutPrefs(BasePage):
             self.actions.send_keys(Keys.TAB).perform()
 
         self.actions.send_keys(Keys.ENTER).perform()
+        return self
 
-    def get_save_addresses_popup_iframe(self) -> WebElement:
+    def get_saved_addresses_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
         """
         self.get_element("prefs-button", labels=["Saved addresses"]).click()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
+        """
+        switch to save addresses popup frame.
+        """
+        save_addresses = self.get_saved_addresses_popup_iframe()
+        self.driver.switch_to.frame(save_addresses)
+        return self
+
+    def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
+        """
+        open saved addresses and add a new entry.
+
+        Arguments:
+            address_data: fake address data specific to region specified.
+        """
+        self.switch_to_saved_addresses_popup_iframe()
+        self.get_element("add-address").click()
+        self.fill_autofill_panel_information(address_data)
+        return self
 
     def get_password_exceptions_popup_iframe(self) -> WebElement:
         """

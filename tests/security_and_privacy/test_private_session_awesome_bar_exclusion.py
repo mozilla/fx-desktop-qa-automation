@@ -30,7 +30,7 @@ def test_websites_visited_in_private_browser_not_displayed_in_awesome_bar(
     panel_ui = PanelUi(driver)
 
     panel_ui.open_private_window()
-    panel_ui.switch_to_new_window()
+    panel_ui.switch_to_new_private_window()
 
     for url in WEBSITES:
         driver.get(url)

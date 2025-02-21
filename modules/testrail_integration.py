@@ -63,7 +63,7 @@ def tc_reportable():
         sys.exit(100)
 
 
-def reportable():
+def reportable(platform_to_test=None):
     """Return true if we should report to TestRail"""
     import platform
 
@@ -118,6 +118,8 @@ def reportable():
         )
         return True
 
+    if platform_to_test:
+        sys_platform = platform_to_test
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
 
     plan_entries = this_plan.get("entries")

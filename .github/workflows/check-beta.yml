@@ -12,7 +12,8 @@ jobs:
   Check-Beta-Version:
     runs-on: ubuntu-latest
     outputs:
-      reportable: ${{ steps.reportable.outputs.test }}
+      win_reportable: ${{ steps.reportable.outputs.win }}
+      mac_reportable: ${{ steps.reportable.outputs.mac }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,9 +27,21 @@ jobs:
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
-          echo test=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable())') >> "$GITHUB_OUTPUT"
-  Run-Smoke-Tests:
+          echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
+          echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
+  Run-Win-Smoke: 
     needs: Check-Beta-Version
-    if: ${{ needs.Check-Beta-Version.outputs.reportable == 'True' }}
+    if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
     uses: ./.github/workflows/smoke.yml
+    with:
+      job_to_run: Smoke-Windows
     secrets: inherit
+
+  Run-Mac-Smoke: 
+    needs: Check-Beta-Version
+    if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
+    uses: ./.github/workflows/smoke.yml
+    with:
+      job_to_run: Smoke-MacOS
+    secrets: inherit
+            
