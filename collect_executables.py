@@ -111,7 +111,7 @@ else:
         minor = int(minor)
         beta = int(beta)
 
-        next_major = f"{major+1}.0b1"
+        next_major = f"{major + 1}.0b1"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:
@@ -119,7 +119,7 @@ else:
             this_beta = next_major
             continue
 
-        next_minor = f"{major}.{minor+1}b1"
+        next_minor = f"{major}.{minor + 1}b1"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:
@@ -127,7 +127,7 @@ else:
             this_beta = next_minor
             continue
 
-        next_beta = f"{major}.{minor}b{beta+1}"
+        next_beta = f"{major}.{minor}b{beta + 1}"
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/build1/"
         rs = requests.get(fx_download_dir_url)
         if rs.status_code < 300:
@@ -152,8 +152,17 @@ else:
     fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
     response = requests.get(fx_download_dir_url)
     status = response.status_code
-    if status < 300:
-        response_text = response.text
+    response_text = None
+    for _ in range(3):
+        if status < 300:
+            response_text = response.text
+        else:
+            sleep(3)
+            response = requests.get(fx_download_dir_url)
+            status = response.status_code
+
+    if response_text is None:
+        exit(f"Could not find build at {fx_download_dir_url}.")
 
     # Parse the HTML content
     soup = BeautifulSoup(response_text, "html.parser")

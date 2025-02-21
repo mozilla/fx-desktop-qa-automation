@@ -10,5 +10,59 @@
         "selectorData": "input[type='{name}']",
         "strategy": "css",
         "groups": []
+    },
+
+    "name-field": {
+        "selectorData": "input[autocomplete=name]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "org-field": {
+        "selectorData": "input[autocomplete=organization]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "street-field": {
+        "selectorData": "input[autocomplete=street-address]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "add-level2-field": {
+        "selectorData": "input[autocomplete=address-level2]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "add-level1-field": {
+        "selectorData": "input[autocomplete=address-level1]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "zip-field": {
+        "selectorData": "input[autocomplete=postal-code]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "country-field": {
+        "selectorData": "input[autocomplete=country]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "email-field": {
+        "selectorData": "input[autocomplete=email]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "phone-field": {
+        "selectorData": "input[autocomplete=tel]",
+        "strategy": "css",
+        "groups": []
     }
 }

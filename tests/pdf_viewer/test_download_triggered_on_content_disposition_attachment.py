@@ -53,9 +53,9 @@ def test_download_panel_triggered_on_content_disposition_attachment(
         driver.find_element(By.ID, "unknownContentTypeWindow").send_keys(Keys.ENTER)
 
     tabs.wait_for_num_tabs(2)
-    assert (
-        len(driver.window_handles) == 2
-    ), f"Expected 2 tabs, but found {len(driver.window_handles)}"
+    assert len(driver.window_handles) == 2, (
+        f"Expected 2 tabs, but found {len(driver.window_handles)}"
+    )
 
     tabs.switch_to_new_tab()
     GenericPdf(driver, pdf_url="").url_contains("file:")

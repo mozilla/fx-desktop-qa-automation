@@ -1196,6 +1196,69 @@ Description: "Submit" button
 Location: At the bottom of the autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
 Path to .json: modules/data/address_fill.components.json
 ```
+```
+Selector Name: name-field
+Selector Data: "input[autocomplete=name]"
+Description: Name field
+Location: Name field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: org-field
+Selector Data: "input[autocomplete=organization]"
+Description: Organization field
+Location: Organization field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: street-field
+Selector Data: "input[autocomplete=street-address]"
+Description: Street field
+Location: Street field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: add-level2-field
+Selector Data: "input[autocomplete=address-level2]"
+Description: Address level 2 field
+Location: Address level 2 field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: add-level1-field
+Selector Data: "input[autocomplete=address-level1]"
+Description: Address level 1 field
+Location: Address level 1 field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: zip-field
+Selector Data: "input[autocomplete=postal-code]"
+Description: Zip field
+Location: Zip field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: country-field
+Selector Data: "input[autocomplete=country]"
+Description: Country field
+Location: Country field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: email-field
+Selector Data: "input[autocomplete=email]"
+Description: Email field
+Location: Email field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
+```
+Selector Name: phone-field
+Selector Data: "input[autocomplete=tel]"
+Description: Phone field
+Location: Phone field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html
+Path to .json: modules/data/address_fill.components.json
+```
 #### amo_languages
 ```
 Selector Name: language-addons-title
@@ -1368,6 +1431,20 @@ Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: address-doorhanger-email
+Selector Data: "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span"
+Description: Save address doorhanger email section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-phone
+Selector Data: "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span"
+Description: Save address doorhanger phone section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: address-doorhanger-name
 Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span"
 Description: Save address doorhanger name section
@@ -1378,6 +1455,48 @@ Path to .json: modules/data/autofill_popup.components.json
 Selector Name: address-doorhanger-org
 Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span"
 Description: Save address doorhanger organization section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-street
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(3) span"
+Description: Save address doorhanger street address section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-city
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(1)"
+Description: Save address doorhanger city section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-state
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)"
+Description: Save address doorhanger state section
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-zip
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(5)"
+Description: Save address doorhanger zip section for US and CA
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-zip-other
+Selector Data: "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
+Description: Save address doorhanger zip section for other regions
+Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: address-doorhanger-country
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span"
+Description: Save address doorhanger country section
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```

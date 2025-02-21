@@ -303,6 +303,23 @@ class CreditCardFill(Autofill):
         )
         return self
 
+    def verify_clear_form_all_fields(self, autofill_popup_obj: AutofillPopup):
+        """
+        Clears all fields in the form by triggering the clear action from each field in turn. After each clear
+        action, verifies that all fields are empty, regardless of which field initiated the clear.
+        """
+        for field in self.fields:
+            self.click_on("form-field", labels=[field])
+            autofill_popup_obj.click_autofill_form_option()
+            self.click_on("form-field", labels=[field])
+            autofill_popup_obj.click_clear_form_option()
+            # Verify that all fields are blank
+            for f in self.fields:
+                self.element_attribute_contains("form-field", "value", "", labels=[f])
+            # Verify that the 'cc-csc' field does not trigger an autofill dropdown
+            self.double_click("form-field", labels=["cc-csc"])
+            autofill_popup_obj.ensure_autofill_dropdown_not_visible()
+
 
 class LoginAutofill(Autofill):
     """
@@ -396,6 +413,59 @@ class AddressFill(Autofill):
         new_value = current_value + keys
         elem.clear()
         elem.send_keys(new_value)
+
+    def verify_autofill_data(self, autofill_data: AutofillAddressBase, region: str, util: Utilities):
+        """
+        Verifies that the autofill data matches the expected values.
+
+        :param autofill_data: AutofillAddressBase object containing expected data.
+        :param region: The region code (e.g., "US", "DE", "FR").
+        :param util: Utilities instance to normalize values.
+        """
+        field_mapping = {
+            "Name": "name-field",
+            "Organization": "org-field",
+            "Street Address": "street-field",
+            "City": "add-level2-field",
+            "State": "add-level1-field",
+            "ZIP Code": "zip-field",
+            "Country": "country-field",
+            "Email": "email-field",
+            "Phone": "phone-field",
+        }
+
+        # Get actual values from web elements
+        actual_values = {
+            field: self.get_element(locator).get_attribute("value")
+            for field, locator in field_mapping.items()
+        }
+
+        # Get expected values from autofill data
+        expected_values = {
+            "Name": autofill_data.name,
+            "Organization": autofill_data.organization,
+            "Street Address": autofill_data.street_address,
+            "City": autofill_data.address_level_2,
+            "State": autofill_data.address_level_1,
+            "ZIP Code": autofill_data.postal_code,
+            "Country": autofill_data.country,
+            "Email": autofill_data.email,
+            "Phone": util.normalize_phone_number(autofill_data.telephone),
+        }
+
+        # Validate each field
+        for field, expected in expected_values.items():
+            actual = actual_values[field]
+
+            # Skip State verification for DE and FR
+            if field == "State" and region in ["DE", "FR"]:
+                continue
+
+            # Normalize phone numbers before comparison
+            if field == "Phone":
+                actual = util.normalize_phone_number(actual)
+
+            assert actual == expected, f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
 
 
 class TextAreaFormAutofill(Autofill):
