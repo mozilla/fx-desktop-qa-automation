@@ -265,14 +265,6 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def get_save_credit_cards_popup_iframe(self) -> WebElement:
-        """
-        Returns the iframe object for the credit card dialog panel in the popup
-        """
-        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
-        iframe = self.get_element("browser-popup")
-        return iframe
-
     def get_password_exceptions_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the Password Exceptions dialog panel in the popup.

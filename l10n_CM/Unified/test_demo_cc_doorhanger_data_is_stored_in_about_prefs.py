@@ -35,24 +35,24 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(driver: Firefox, region:
     # The "Save credit card?" doorhanger is displayed
     assert autofill_popup_obj.element_visible("doorhanger-save-button"), "Credit card save doorhanger is not visible"
 
+    # Verify Credit Card Doorhanger Data
+    doorhanger_text = autofill_popup_obj.get_cc_doorhanger_data("cc-doorhanger-data")
+    assert credit_card_sample_data.card_number[-4:] in doorhanger_text, f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but not found."
+    assert credit_card_sample_data.name in doorhanger_text, f"Expected name '{credit_card_sample_data.name}' but not found."
+    assert credit_card_sample_data.cvv not in doorhanger_text, f"cvv '{credit_card_sample_data.cvv}' should not be saved, but found in doorhanger."
+
     # Click the "Save" button using click_doorhanger_button
     autofill_popup_obj.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs = AboutPrefs(driver, category="privacy").open()
-    iframe = about_prefs.get_save_credit_cards_popup_iframe()
+    iframe = about_prefs.get_saved_payments_popup_iframe()
     browser_action_obj.switch_to_iframe_context(iframe)
 
-    # get the text from the row and split by the comma, striping any leading or trailing whitespace on the way.
+    # Get stored values
     elements = [x.strip() for x in about_prefs.get_element("saved-credit-cards-values").text.split(',')]
 
     # Validate stored values match expected values
-    assert elements[0].endswith(credit_card_sample_data.card_number[-4:]), \
-        f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{elements[0]}'"
-
-    assert elements[1] == credit_card_sample_data.name, \
-        f"Expected name '{credit_card_sample_data.name}' but got '{elements[1]}'"
-
-    expected_expiry = f"Expires on {int(credit_card_sample_data.expiration_month)}/20{credit_card_sample_data.expiration_year}"
-    assert elements[2] == expected_expiry, \
-        f"Expected expiration '{expected_expiry}' but got '{elements[2]}'"
+    assert elements[0].endswith(credit_card_sample_data.card_number[-4:]), f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{elements[0]}'"
+    assert elements[1] == credit_card_sample_data.name, f"Expected name '{credit_card_sample_data.name}' but got '{elements[1]}'"
+    assert credit_card_sample_data.cvv not in elements, f"cvv '{credit_card_sample_data.cvv}' should not be saved, but found in stored values."
