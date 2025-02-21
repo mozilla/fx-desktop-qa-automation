@@ -1,5 +1,3 @@
-from platform import system
-
 import pytest
 from selenium.webdriver import Firefox
 

@@ -1,4 +1,9 @@
 {
+    "add-address": {
+        "selectorData": "add",
+        "strategy": "id",
+        "groups": []
+    },
     "search-engine-dropdown-root": {
         "selectorData": "defaultEngine",
         "strategy": "id",
