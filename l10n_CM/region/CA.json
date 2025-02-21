@@ -10,6 +10,7 @@
         "test_demo_cc_dropdown-presence.py",
         "test_demo_cc_clear_form.py",
         "test_demo_cc_dropdown-presence.py",
-        "test_demo_ad_autofill_name_org.py"
+        "test_demo_ad_autofill_name_org.py",
+        "test_demo_ad_autofill_phone_email.py"
     ]
 }
