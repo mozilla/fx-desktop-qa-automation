@@ -414,7 +414,9 @@ class AddressFill(Autofill):
         elem.clear()
         elem.send_keys(new_value)
 
-    def verify_autofill_data(self, autofill_data: AutofillAddressBase, region: str, util: Utilities):
+    def verify_autofill_data(
+        self, autofill_data: AutofillAddressBase, region: str, util: Utilities
+    ):
         """
         Verifies that the autofill data matches the expected values.
 
@@ -465,7 +467,9 @@ class AddressFill(Autofill):
             if field == "Phone":
                 actual = util.normalize_phone_number(actual)
 
-            assert actual == expected, f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
+            assert actual == expected, (
+                f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
+            )
 
 
 class TextAreaFormAutofill(Autofill):

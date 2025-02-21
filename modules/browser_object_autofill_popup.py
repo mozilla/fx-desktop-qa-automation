@@ -58,7 +58,7 @@ class AutofillPopup(BasePage):
 
     def get_cc_doorhanger_data(self, selector: str) -> str:
         """
-            get text for the credit card doorhanger data.
+        get text for the credit card doorhanger data.
         """
         with self.driver.context(self.driver.CONTEXT_CHROME):
             return self.get_element(selector).text

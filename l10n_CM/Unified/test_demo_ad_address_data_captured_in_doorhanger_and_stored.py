@@ -12,11 +12,9 @@ def test_case():
     return "2888703"
 
 
-
 def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     driver: Firefox, region: str
 ):
-
     """
     C2888703 - Verify Address data are captured in the Capture Doorhanger and stored in about:preferences
     """
@@ -59,7 +57,7 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
         if region in ["FR", "DE"]
         else "address-doorhanger-zip"
     )
-    
+
     address_autofill_popup.element_has_text(zip_selector, expected_zip)
 
     # containing Country field
@@ -97,4 +95,3 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     assert found_address_data, (
         "Street, city, state (if applicable), zip, or country were not found in any of the address entries!"
     )
-
