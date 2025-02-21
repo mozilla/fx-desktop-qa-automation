@@ -326,12 +326,11 @@ class CreditCardFill(Autofill):
         Verifies that specified form fields have the expected highlight state
         """
         if expected_highlighted_fields is None:
-            expected_highlighted_fields = (
-                self.fields
-            )  # Uses the default fields defined in the class
+            expected_highlighted_fields = self.fields
 
         browser_action_obj = BrowserActions(self.driver)
 
+        # Check if a color is yellow-ish
         def is_yellow_highlight(rgb_tuple):
             if len(rgb_tuple) == 3:
                 r, g, b = rgb_tuple
@@ -339,15 +338,16 @@ class CreditCardFill(Autofill):
                 r, g, b, *_ = rgb_tuple
             else:
                 return False
+            # Uses a tolerance to detect a yellow highlight
             return r >= 250 and g >= 250 and 180 < b < 220
 
         all_fields = self.fields + ["cc-csc"]
 
         for field_name in all_fields:
-            # Bring the field into focus
+            # Bring the fields into focus
             self.click_on("form-field", labels=[field_name])
 
-            # Get color of the fields
+            # Get the color of the fields
             selector = self.get_selector("form-field", labels=[field_name])
             colors = browser_action_obj.get_all_colors_in_element(selector)
             logging.info(f"Colors found in {field_name}: {colors}")
