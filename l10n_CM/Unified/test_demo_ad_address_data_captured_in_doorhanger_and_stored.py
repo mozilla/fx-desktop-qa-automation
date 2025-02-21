@@ -34,9 +34,7 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     # Containing Street Address field
     expected_street_add = address_autofill_data.street_address
 
-    address_autofill_popup.element_has_text(
-        "address-doorhanger-street", expected_street_add
-    )
+    autofill_popup.element_has_text("address-doorhanger-street", expected_street_add)
 
     # Containing City field
     expected_city = address_autofill_data.address_level_2
@@ -55,14 +53,12 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
         else "address-doorhanger-zip"
     )
 
-    address_autofill_popup.element_has_text(zip_selector, expected_zip)
+    autofill_popup.element_has_text(zip_selector, expected_zip)
 
     # Containing Country field
     expected_country = address_autofill_data.country
 
-    address_autofill_popup.element_has_text(
-        "address-doorhanger-country", expected_country
-    )
+    autofill_popup.element_has_text("address-doorhanger-country", expected_country)
 
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
