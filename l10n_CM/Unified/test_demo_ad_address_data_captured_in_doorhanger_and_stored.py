@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -13,41 +13,36 @@ def test_case():
 
 
 def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
-    driver: Firefox, region: str
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
+    about_prefs_privacy: AboutPrefs,
 ):
     """
     C2888703 - Verify Address data are captured in the Capture Doorhanger and stored in about:preferences
     """
-    # instantiate objects
-    address_autofill = AddressFill(driver)
-    address_autofill_popup = AutofillPopup(driver)
-    util = Utilities()
-    browser_action_obj = BrowserActions(driver)
-
     # create fake data and fill it in
     address_autofill.open()
     address_autofill_data = util.fake_autofill_data(region)
     address_autofill.save_information_basic(address_autofill_data)
 
     # The "Save address?" doorhanger is displayed
-    address_autofill_popup.element_visible("address-save-doorhanger")
+    autofill_popup.element_visible("address-save-doorhanger")
 
     # containing Street Address field
     expected_street_add = address_autofill_data.street_address
-    address_autofill_popup.element_has_text(
-        "address-doorhanger-street", expected_street_add
-    )
+    autofill_popup.element_has_text("address-doorhanger-street", expected_street_add)
 
     # containing City field
     expected_city = address_autofill_data.address_level_2
-    address_autofill_popup.element_has_text("address-doorhanger-city", expected_city)
+    autofill_popup.element_has_text("address-doorhanger-city", expected_city)
 
     expected_state = address_autofill_data.address_level_1
     if region not in ["FR", "DE"]:
         state_abbreviation = util.get_state_province_abbreviation(expected_state)
-        address_autofill_popup.element_has_text(
-            "address-doorhanger-state", state_abbreviation
-        )
+        autofill_popup.element_has_text("address-doorhanger-state", state_abbreviation)
 
     # Verify Zip Code field (Different selector for DE/FR)
     expected_zip = address_autofill_data.postal_code
@@ -56,24 +51,21 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
         if region in ["FR", "DE"]
         else "address-doorhanger-zip"
     )
-    address_autofill_popup.element_has_text(zip_selector, expected_zip)
+    autofill_popup.element_has_text(zip_selector, expected_zip)
 
     # containing Country field
     expected_country = address_autofill_data.country
-    address_autofill_popup.element_has_text(
-        "address-doorhanger-country", expected_country
-    )
+    autofill_popup.element_has_text("address-doorhanger-country", expected_country)
 
     # Click the "Save" button
-    address_autofill_popup.click_doorhanger_button("save")
+    autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-    iframe = about_prefs.get_save_addresses_popup_iframe()
-    browser_action_obj.switch_to_iframe_context(iframe)
+    about_prefs_privacy.open()
+    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # Verify saved addresses
-    elements = about_prefs.get_elements("saved-addresses-values")
+    elements = about_prefs_privacy.get_elements("saved-addresses-values")
 
     # Expected values for verification
     expected_values = [

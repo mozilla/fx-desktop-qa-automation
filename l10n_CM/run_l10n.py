@@ -21,14 +21,21 @@ def get_region_tests(test_region: str) -> list[str]:
 
 if __name__ == "__main__":
     valid_region = {"US", "CA", "DE", "FR"}
-    regions = sys.argv[1:] if len(sys.argv[1:]) > 0 else valid_region
+    if len(sys.argv[1:]) == 0:
+        regions = ["Unified"] + list(valid_region)
+    else:
+        regions = sys.argv[1:]
     for region in regions:
-        if region not in valid_region:
+        if region not in valid_region and region != "Unified":
             raise ValueError("Invalid Region.")
         tests = get_region_tests(region)
         try:
-            os.environ["STARFOX_REGION"] = region
-            subprocess.run(["pytest", *tests], check=True, text=True)
+            if len(tests) > 0:
+                if region != "Unified":
+                    os.environ["STARFOX_REGION"] = region
+                subprocess.run(["pytest", *tests], check=True, text=True)
+            else:
+                logging.info(f"{region} has no tests.")
+                print(f"{region} has no tests.")
         except subprocess.CalledProcessError as e:
-            print(e)
             logging.warn(f"Test run failed. {e}")
