@@ -24,7 +24,7 @@ def get_plan_title(version_str: str, channel: str) -> str:
     """Given a version string, get the plan_title"""
 
     version_match = FX_PRERC_VERSION_RE.match(version_str)
-    if channel == "devedition":
+    if channel == "Devedition":
         logging.info(f"DevEdition: {version_str}")
         version_match = FX_DEVED_VERSION_RE.match(version_str)
         (major, minor, beta) = [version_match[n] for n in range(1, 4)]
@@ -75,7 +75,7 @@ def tc_reportable():
         sys.exit(100)
 
 
-def reportable():
+def reportable(platform_to_test=None):
     """Return true if we should report to TestRail"""
     import platform
 
@@ -99,11 +99,12 @@ def reportable():
     tr_session = testrail_init()
     major_number, second_half = version.split(".")
     minor_num, build_num = second_half.split("-")
-    channel = os.environ.get("FX_CHANNEL")
-    if (not channel) and ("b" in minor_num):
-        channel = "Beta"
-    else:
-        channel = "Release"
+    channel = os.environ.get("FX_CHANNEL").title()
+    if not channel:
+        if "b" in minor_num:
+            channel = "Beta"
+        else:
+            channel = "Release"
 
     major_version = f"Firefox {major_number}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
@@ -117,10 +118,15 @@ def reportable():
         major_milestone, f"{channel} {major_number}"
     )
     if not channel_milestone:
-        logging.warning(
-            f"Not reporting: Could not find matching submilestone for {channel} {major_number}"
-        )
-        return False
+        if channel == "Devedition":
+            channel_milestone = tr_session.matching_submilestone(
+                major_milestone, f"Beta {major_number}"
+            )
+        if not channel_milestone:
+            logging.warning(
+                f"Not reporting: Could not find matching submilestone for {channel} {major_number}"
+            )
+            return False
 
     plan_title = get_plan_title(version, channel)
     logging.warning(f"Plan title: {plan_title}")
@@ -133,6 +139,8 @@ def reportable():
         )
         return True
 
+    if platform_to_test:
+        sys_platform = platform_to_test
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
 
     plan_entries = this_plan.get("entries")
@@ -360,7 +368,7 @@ def collect_changes(testrail_session: TestRail, report):
     """
 
     # Find milestone to attach to
-    channel = os.environ.get("FX_CHANNEL")
+    channel = os.environ.get("FX_CHANNEL").title()
     if not channel:
         channel = "Beta"
     if channel == "Release":
@@ -407,6 +415,10 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
+    if (not channel_milestone) and channel == "Devedition":
+        channel_milestone = testrail_session.matching_submilestone(
+            major_milestone, f"Beta {major}"
+        )
 
     # Find plan to attach runs to, create if doesn't exist
     logging.info(f"Plan title: {plan_title}")

@@ -25,8 +25,9 @@ def test_https_first_mode_in_private_browsing(driver: Firefox):
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE)
     hamburger = PanelUi(driver)
     hamburger.open_private_window()
+
     nav = Navigation(driver)
-    nav.switch_to_new_window()
+    nav.switch_to_new_private_window()
     driver.get(HTTP_SITE)
 
     # Wait for the URL to be redirected to HTTPS

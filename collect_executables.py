@@ -115,7 +115,7 @@ else:
             next_candidate = f"https://archive.mozilla.org/pub/devedition/releases/{this_devedition}/"
 
             rs = requests.get(next_candidate)
-            if rs.status_code > 400:
+            if rs.status_code > 399:
                 break
 
             fx_download_dir_url = next_candidate
