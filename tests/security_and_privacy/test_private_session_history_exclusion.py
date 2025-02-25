@@ -29,7 +29,7 @@ def test_websites_visited_in_private_browser_not_displayed_in_history(driver: Fi
 
     panel_ui = PanelUi(driver).open()
     panel_ui.open_private_window()
-    panel_ui.switch_to_new_private_window()
+    panel_ui.switch_to_new_window()
 
     driver.get(YOUTUBE_URL)
     driver.get(FACEBOOK_URL)
