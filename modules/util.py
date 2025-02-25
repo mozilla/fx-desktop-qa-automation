@@ -32,6 +32,10 @@ class Utilities:
     Methods that may be useful, that have nothing to do with Selenium.
     """
 
+    # COUNTRY_CODES = {
+    #     "US": "1", "CA": "1", "FR": "33", "DE": "49", "UK": "44", "JP": "81"
+    # }
+
     def __init__(self):
         self.state_province_abbr = {
             # US States
@@ -468,6 +472,59 @@ class Utilities:
         :return: The corresponding abbreviation or "Not Found" if not in the dictionary.
         """
         return self.state_province_abbr.get(full_name, "Not Found")
+
+    def normalize_regional_phone_numbers(self, phone: str, region: str) -> str:
+        """
+        Normalizes a phone number by separating the country prefix and verifying the rest of the number as an integer.
+        This is used for localization (l10n) regional tests.
+        Parameters:
+        -----------
+        phone : str
+            The phone number to be normalized.
+        region : str
+            The region (country) code to determine the correct country prefix.
+        Returns:
+        --------
+        str
+            The normalized phone number in the format <country-code><number>.
+        """
+
+        # Country code mapping for different regions
+        country_codes = {
+            "US": "1",
+            "CA": "1",
+            "FR": "33",
+            "DE": "49",
+        }
+
+        # Remove phone number extensions (e.g., "x555" or "ext 555")
+        phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
+
+        # Remove all non-numeric characters
+        digits = re.sub(r"\D", "", phone)
+
+        # Determine country code
+        country_code = country_codes.get(region, "1")  # Default to "1" (US/CA) if region is unknown
+        local_number = digits
+
+        # Check if phone already contains a valid country code
+        for code in country_codes.values():
+            if digits.startswith(code):
+                country_code = code
+                local_number = digits[len(code):]  # Remove country code from local number
+                break
+
+        # Handle leading zero in local numbers (France & Germany)
+        if region in ["FR", "DE"] and local_number.startswith("0"):
+            local_number = local_number[1:]  # Remove the leading zero
+
+        # Validate local number length
+        if len(local_number) < 6:  # Too short to be valid
+            logging.warning(f"Invalid phone number format: {phone}")
+            return ""
+
+        # Return formatted phone number with correct country code
+        return f"{country_code}{local_number}"
 
 
 class BrowserActions:
