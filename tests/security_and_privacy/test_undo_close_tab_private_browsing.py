@@ -15,11 +15,6 @@ def test_case():
 VISIT_URL = "about:about"
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
     """
     C120118: ensure that you can close a tab in private browsing window
@@ -32,7 +27,7 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
 
     # open a new private window and open a new tab
     panel_ui.open_private_window()
-    tabs.switch_to_new_window()
+    tabs.switch_to_new_private_window()
 
     # open a new tab
     tabs.new_tab_by_button()

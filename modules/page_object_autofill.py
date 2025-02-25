@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from selenium.webdriver.support import expected_conditions as EC
@@ -320,6 +321,53 @@ class CreditCardFill(Autofill):
             self.double_click("form-field", labels=["cc-csc"])
             autofill_popup_obj.ensure_autofill_dropdown_not_visible()
 
+    def verify_field_yellow_highlights(self, expected_highlighted_fields=None):
+        """
+        Verifies that specified form fields have the expected highlight state
+        """
+        if expected_highlighted_fields is None:
+            expected_highlighted_fields = self.fields
+
+        browser_action_obj = BrowserActions(self.driver)
+
+        # Check if a color is yellow-ish
+        def is_yellow_highlight(rgb_tuple):
+            if len(rgb_tuple) == 3:
+                r, g, b = rgb_tuple
+            elif len(rgb_tuple) >= 4:
+                r, g, b, *_ = rgb_tuple
+            else:
+                return False
+            # Uses a tolerance to detect a yellow highlight
+            return r >= 250 and g >= 250 and 180 < b < 220
+
+        all_fields = self.fields + ["cc-csc"]
+
+        for field_name in all_fields:
+            # Bring the fields into focus
+            self.click_on("form-field", labels=[field_name])
+
+            # Get the color of the fields
+            selector = self.get_selector("form-field", labels=[field_name])
+            colors = browser_action_obj.get_all_colors_in_element(selector)
+            logging.info(f"Colors found in {field_name}: {colors}")
+
+            is_field_highlighted = any(is_yellow_highlight(color) for color in colors)
+            should_be_highlighted = field_name in expected_highlighted_fields
+
+            if should_be_highlighted:
+                assert is_field_highlighted, (
+                    f"Expected yellow highlight on {field_name}, but none found."
+                )
+                logging.info(f"Yellow highlight correctly found in {field_name}.")
+            else:
+                assert not is_field_highlighted, (
+                    f"Expected no yellow highlight on {field_name}, but found one."
+                )
+                logging.info(f"No yellow highlight found in {field_name}, as expected.")
+
+        return self
+
 
 class LoginAutofill(Autofill):
     """
@@ -414,7 +462,9 @@ class AddressFill(Autofill):
         elem.clear()
         elem.send_keys(new_value)
 
-    def verify_autofill_data(self, autofill_data: AutofillAddressBase, region: str, util: Utilities):
+    def verify_autofill_data(
+        self, autofill_data: AutofillAddressBase, region: str, util: Utilities
+    ):
         """
         Verifies that the autofill data matches the expected values.
 
@@ -465,7 +515,9 @@ class AddressFill(Autofill):
             if field == "Phone":
                 actual = util.normalize_phone_number(actual)
 
-            assert actual == expected, f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
+            assert actual == expected, (
+                f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
+            )
 
 
 class TextAreaFormAutofill(Autofill):

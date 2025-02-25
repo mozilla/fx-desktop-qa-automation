@@ -52,6 +52,17 @@ class AutofillPopup(BasePage):
         self.click_on("clear-form-option")
         return self
 
+    def get_doorhanger_cc_number(self) -> str:
+        """Retrieves the last 4 digits of the credit card from the doorhanger popup"""
+        return self.get_element("doorhanger-cc-number").text
+
+    def get_cc_doorhanger_data(self, selector: str) -> str:
+        """
+        get text for the credit card doorhanger data.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            return self.get_element(selector).text
+
     # Interaction with autocomplete list elements
     def get_nth_element(self, index: str) -> WebElement:
         """
