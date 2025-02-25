@@ -42,15 +42,11 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     if expected_phone:
         with driver.context(driver.CONTEXT_CHROME):
             actual_phone = autofill_popup.get_element("address-doorhanger-phone").text
-
         normalize_expected = util.normalize_regional_phone_numbers(expected_phone, region)
         normalized_actual = util.normalize_regional_phone_numbers(actual_phone, region)
-
         assert normalized_actual == normalize_expected, (
             f"Phone number mismatch for {region} | Expected: {normalize_expected}, Got: {normalized_actual}"
         )
-
-        print(f"DEBUG: {region} | Input: {normalized_actual} | Output: {normalize_expected}")  # Debugging print
 
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")

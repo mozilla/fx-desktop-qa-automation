@@ -32,10 +32,6 @@ class Utilities:
     Methods that may be useful, that have nothing to do with Selenium.
     """
 
-    # COUNTRY_CODES = {
-    #     "US": "1", "CA": "1", "FR": "33", "DE": "49", "UK": "44", "JP": "81"
-    # }
-
     def __init__(self):
         self.state_province_abbr = {
             # US States
@@ -497,10 +493,9 @@ class Utilities:
             "DE": "49",
         }
 
-        # Remove phone number extensions (e.g., "x555" or "ext 555")
+        # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
-
-        # Remove all non-numeric characters
+        # Sub out anything that is not a digit with the empty string to ensure the phone number is formatted with no spaces or special characters
         digits = re.sub(r"\D", "", phone)
 
         # Determine country code
@@ -511,12 +506,14 @@ class Utilities:
         for code in country_codes.values():
             if digits.startswith(code):
                 country_code = code
-                local_number = digits[len(code):]  # Remove country code from local number
+                # Remove country code from local number
+                local_number = digits[len(code):]
                 break
 
         # Handle leading zero in local numbers (France & Germany)
         if region in ["FR", "DE"] and local_number.startswith("0"):
-            local_number = local_number[1:]  # Remove the leading zero
+            # Remove the leading zero
+            local_number = local_number[1:]
 
         # Validate local number length
         if len(local_number) < 6:  # Too short to be valid
