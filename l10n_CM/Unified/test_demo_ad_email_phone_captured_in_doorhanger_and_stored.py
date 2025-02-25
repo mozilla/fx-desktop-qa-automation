@@ -38,7 +38,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
 
     # containing phone field
     expected_phone = address_autofill_data.telephone
-    # Skip verification if no phone number isn't provided
+    # Skip verification if phone number isn't provided
     if expected_phone:
         with driver.context(driver.CONTEXT_CHROME):
             actual_phone = autofill_popup.get_element("address-doorhanger-phone").text
