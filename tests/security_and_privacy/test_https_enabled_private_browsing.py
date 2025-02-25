@@ -27,7 +27,7 @@ def test_https_first_mode_in_private_browsing(driver: Firefox):
     hamburger.open_private_window()
 
     nav = Navigation(driver)
-    nav.switch_to_new_private_window()
+    nav.switch_to_new_window()
     driver.get(HTTP_SITE)
 
     # Wait for the URL to be redirected to HTTPS

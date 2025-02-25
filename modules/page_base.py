@@ -681,23 +681,16 @@ class BasePage(Page):
         self.driver.switch_to.window(self.driver.window_handles[-1])
         return self
 
+    def switch_to_new_window(self) -> Page:
+        """Switch to the most recently opened window. Can be a standard or private window"""
+        all_window_handles = self.driver.window_handles
+        self.driver.switch_to.window(all_window_handles[-1])
+        return self
+
     def wait_for_num_windows(self, num: int) -> Page:
         """Wait for the number of open tabs + windows to equal given int"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             return self.wait_for_num_tabs(num)
-
-    def switch_to_new_window(self) -> Page:
-        """Switch to newest window"""
-        with self.driver.context(self.driver.CONTEXT_CONTENT):
-            return self.switch_to_new_tab()
-
-    def switch_to_new_private_window(self) -> Page:
-        "Switch to new private window"
-        non_private_window = self.driver.current_window_handle
-        original_window_idx = self.driver.window_handles.index(non_private_window)
-        private_window = self.driver.window_handles[1 - original_window_idx]
-        self.driver.switch_to.window(private_window)
-        return self
 
     def switch_to_frame(self, frame: str, labels=[]) -> Page:
         """Switch to inline document frame"""

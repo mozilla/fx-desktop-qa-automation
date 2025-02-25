@@ -35,12 +35,12 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
 
     # We've deleted relevant downloads_file just to be safe
     non_private_window = driver.current_window_handle
-    panelui = PanelUi(driver).open_panel_menu()
+    panelui = PanelUi(driver)
+    panelui.open_panel_menu()
     panelui.select_panel_setting("new-private-window-option")
-    panelui.wait_for_num_windows(2)
 
     nav = Navigation(driver)
-    nav.switch_to_new_private_window()
+    nav.switch_to_new_window()
 
     about_downloads = AboutDownloads(driver)
     about_downloads.open()

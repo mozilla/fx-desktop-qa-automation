@@ -27,7 +27,7 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
 
     # open a new private window and open a new tab
     panel_ui.open_private_window()
-    tabs.switch_to_new_private_window()
+    tabs.switch_to_new_window()
 
     # open a new tab
     tabs.new_tab_by_button()
