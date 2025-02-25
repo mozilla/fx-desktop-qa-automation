@@ -11,24 +11,6 @@ def test_case():
     return "2888563"
 
 
-def autofill_and_verify(address_autofill, address_autofill_popup, field_label, address_autofill_data, region, util):
-    # Skip address-level1 (State) selection for DE and FR
-    if field_label == "address-level1" and region in ["DE", "FR"]:
-        return
-
-    # Double-click a field and choose first element from the autocomplete dropdown
-    address_autofill.double_click("form-field", labels=[field_label])
-    first_item = address_autofill_popup.get_nth_element(1)
-    address_autofill_popup.click_on(first_item)
-
-    # Verify autofill data
-    address_autofill.verify_autofill_data(address_autofill_data, region, util)
-
-    # Clear form autofill
-    address_autofill.double_click("form-field", labels=[field_label])
-    address_autofill_popup.click_clear_form_option()
-
-
 def test_demo_ad_autofill_address_fields(driver: Firefox, region: str):
     """
     C2888563 - Verify Autofill functionality when selecting an entry from the dropdown for address fields
@@ -57,5 +39,4 @@ def test_demo_ad_autofill_address_fields(driver: Firefox, region: str):
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        autofill_and_verify(address_autofill, address_autofill_popup, field, address_autofill_data, region, util)
-
+        util.autofill_and_verify(address_autofill, address_autofill_popup, field, address_autofill_data, region)
