@@ -38,8 +38,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
 
     # containing phone field
     expected_phone = address_autofill_data.telephone
-    with driver.context(driver.CONTEXT_CHROME):
-        actual_phone = autofill_popup.get_element("address-doorhanger-phone").text
+    actual_phone = autofill_popup.get_cc_doorhanger_data("address-doorhanger-phone")
     normalize_expected = util.normalize_phone_number(expected_phone)
     normalized_actual = util.normalize_phone_number(actual_phone)
     assert normalized_actual == normalize_expected

@@ -214,6 +214,8 @@ class Utilities:
             return None  # No fallback
 
         try:
+            # seed to get consistent data
+            Faker.seed(locale)
             faker = Faker(locale)
             faker.add_provider(internet)
             faker.add_provider(misc)
@@ -378,6 +380,7 @@ class Utilities:
 
     def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
         """
+
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
         to only the <country-code>xxxxxxxxxx format and return it.
 
