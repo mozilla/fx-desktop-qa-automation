@@ -8,14 +8,12 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888559"
+    return "2888564"
 
 
-def test_address_yellow_highlight_on_name_organization_fields(
-    driver: Firefox, region: str
-):
+def test_address_yellow_highlight_address_fields(driver: Firefox, region: str):
     """
-    C2888559 - Verify the yellow highlight appears on autofilled fields for name and organization.
+    C2888564 - Verify the yellow highlight appears on autofilled fields for the address fields.
     """
 
     # Instantiate objects
@@ -31,15 +29,28 @@ def test_address_yellow_highlight_on_name_organization_fields(
     # Click the "Save" button
     address_autofill_popup.click_doorhanger_button("save")
 
-    # Double click inside phone field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["name"])
+    # Double click inside street address field and select a saved address entry from the dropdown
+    address_autofill.double_click("form-field", labels=["street-address"])
 
     # Click on the first element from the autocomplete dropdown
     first_item = address_autofill_popup.get_nth_element(1)
     address_autofill_popup.click_on(first_item)
 
-    # Verify the name and organization fields are highlighted
+    # Verify the address fields are highlighted
     address_autofill.verify_field_yellow_highlights(
-        fields_to_test=["name", "organization"],
-        expected_highlighted_fields=["name", "organization"],
+        region=region,
+        fields_to_test=[
+            "street-address",
+            "address-level2",
+            "address-level1",
+            "postal-code",
+            "country",
+        ],
+        expected_highlighted_fields=[
+            "street-address",
+            "address-level2",
+            "address-level1",
+            "postal-code",
+            "country",
+        ],
     )
