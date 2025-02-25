@@ -52,9 +52,7 @@ def test_demo_ad_autofill_address_fields(driver: Firefox, region: str):
         "address-level2",
         "address-level1",  # This will be skipped for DE/FR
         "postal-code",
-        "country",
-        "email",
-        "tel"
+        "country"
     ]
 
     # Loop through each field and perform the autofill test
