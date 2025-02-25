@@ -39,18 +39,19 @@ class Autofill(BasePage):
         """Clicks submit on the form"""
         self.click_on("submit-button", labels=[field_name])
 
-    def verify_field_highlights_in_list(
+    def verify_field_highlight(
         self,
         fields_to_test: List[str],
         expected_highlighted_fields: Optional[List[str]] = None,
         extra_fields: Optional[List[str]] = None,
     ):
         """
-        A common method to check which fields have the "yellow highlight."
+        A common method to check which fields have the "yellow highlight". This is used in both CC and Address pages.
         - fields_to_test: The primary list of fields for this page (cc fields, address fields).
         - expected_highlighted_fields: Which ones are expected to be highlighted. Defaults to all in `fields_to_test`.
         - extra_fields: If some pages have extra fields to test (e.g. 'cc-csc'), pass them here.
         """
+
         if expected_highlighted_fields is None:
             # By default, everything in fields_to_test is expected to be highlighted
             expected_highlighted_fields = fields_to_test[:]
@@ -388,7 +389,7 @@ class CreditCardFill(Autofill):
         We also want to include the "cc-csc" field in the test, so we
         pass it via 'extra_fields'.
         """
-        return self.verify_field_highlights_in_list(
+        return self.verify_field_highlight(
             fields_to_test=self.fields,
             expected_highlighted_fields=expected_highlighted_fields,
             extra_fields=["cc-csc"],
@@ -563,7 +564,7 @@ class AddressFill(Autofill):
         if fields_to_test is None:
             fields_to_test = self.fields  # By default, test all address fields
 
-        return self.verify_field_highlights_in_list(
+        return self.verify_field_highlight(
             fields_to_test=fields_to_test,
             expected_highlighted_fields=expected_highlighted_fields,
         )
