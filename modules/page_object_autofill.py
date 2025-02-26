@@ -559,10 +559,14 @@ class AddressFill(Autofill):
             )
 
     def verify_field_yellow_highlights(
-        self, fields_to_test=None, expected_highlighted_fields=None
+        self, region=None, fields_to_test=None, expected_highlighted_fields=None
     ):
         if fields_to_test is None:
             fields_to_test = self.fields  # By default, test all address fields
+
+        # Skip 'address-level1' if region is DE or FR
+        if region in ["DE", "FR"] and "address-level1" in fields_to_test:
+            fields_to_test.remove("address-level1")
 
         return self.verify_field_highlight(
             fields_to_test=fields_to_test,
