@@ -14,7 +14,6 @@ def test_case():
 
 def test_create_new_cc_profile(
     driver: Firefox,
-    region: str,
     util: Utilities,
     about_prefs_privacy: AboutPrefs,
     about_prefs: AboutPrefs,

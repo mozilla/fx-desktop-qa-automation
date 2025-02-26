@@ -20,7 +20,6 @@ def region():
 @pytest.fixture()
 def add_prefs(region: str):
     return [
-        ("browser.search.region", region),
         ("extensions.formautofill.creditCards.supportedCountries", region),
         ("extensions.formautofill.addresses.supported", "on"),
     ]

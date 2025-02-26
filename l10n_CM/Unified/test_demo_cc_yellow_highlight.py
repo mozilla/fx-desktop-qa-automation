@@ -11,27 +11,23 @@ def test_case():
     return "2886601"
 
 
-def test_cc_yellow_highlight(driver: Firefox):
+def test_cc_yellow_highlight(
+    driver: Firefox,
+    util: Utilities,
+    about_prefs_privacy: AboutPrefs,
+    about_prefs: AboutPrefs,
+    credit_card_fill_obj: CreditCardFill,
+    autofill_popup: AutofillPopup,
+):
     """
     C2886601 - Verify the yellow highlight appears on autofilled fields and make sure csv field is not highlighted
     """
 
-    # Initialize objects
-    util = Utilities()
-    about_prefs = AboutPrefs(driver, category="privacy")
-    about_prefs_cc_popup = AboutPrefs(driver)
-    browser_action_obj = BrowserActions(driver)
-    credit_card_fill_obj = CreditCardFill(driver)
-    autofill_popup = AutofillPopup(driver)
-
     # Save a credit card in about:preferences
-    about_prefs.open()
-    iframe = about_prefs.get_saved_payments_popup_iframe()
-    browser_action_obj.switch_to_iframe_context(iframe)
+    about_prefs_privacy.open()
+    about_prefs_privacy.switch_to_saved_payments_popup_iframe()
     credit_card_sample_data = util.fake_credit_card_data()
-    about_prefs_cc_popup.click_on(
-        "panel-popup-button", labels=["autofill-manage-add-button"]
-    )
+    about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
     about_prefs.fill_cc_panel_information(credit_card_sample_data)
 
     # Open the credit card fill form and trigger the autofill option

@@ -5,7 +5,7 @@ import sys
 from json import load
 
 current_dir = os.path.dirname(__file__)
-valid_flags = {"--run-headless", "-n", "--reruns"}
+valid_flags = {"--run-headless", "-n", "--reruns", "-isolated"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
 
@@ -21,7 +21,7 @@ def run_tests(reg, flg, all_tests):
     """
     try:
         if len(all_tests) > 0:
-            logging.info(f"Test for {reg} Region.")
+            logging.info(f"Tests for {reg}.")
             os.environ["FX_REGION"] = reg
             subprocess.run(["pytest", *flg, *all_tests], check=True, text=True)
         else:
@@ -108,6 +108,11 @@ def run_unified(regions, unified_flags):
 if __name__ == "__main__":
     arguments = sys.argv[1:]
     flags = get_flags_and_sanitize(arguments)
+    if "-isolated" in flags:
+        tests = get_region_tests("Isolated")
+        flags.remove("-isolated")
+        logging.info(f"Running Region Independent Tests.")
+        run_tests("US", flags, tests)
     if len(arguments) == 0:
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)

@@ -502,7 +502,9 @@ class Utilities:
         digits = re.sub(r"\D", "", phone)
 
         # Determine country code
-        country_code = country_codes.get(region, "1")  # Default to "1" (US/CA) if region is unknown
+        country_code = country_codes.get(
+            region, "1"
+        )  # Default to "1" (US/CA) if region is unknown
         local_number = digits
 
         # Check if phone already contains a valid country code
@@ -510,7 +512,7 @@ class Utilities:
             if digits.startswith(code):
                 country_code = code
                 # Remove country code from local number
-                local_number = digits[len(code):]
+                local_number = digits[len(code) :]
                 break
 
         # Handle leading zero in local numbers (France & Germany)
