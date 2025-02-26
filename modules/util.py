@@ -6,6 +6,7 @@ import platform
 import re
 from os import remove
 from random import shuffle
+from time import sleep
 from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
@@ -562,12 +563,7 @@ class BrowserActions:
             self.driver.switch_to.window(self.driver.window_handles[-1])
             self.driver.find_element(By.ID, option).click()
             confirm_button = self.driver.find_element(By.ID, "unknownContentTypeWindow")
-            self.wait.until_not(
-                EC.element_attribute_to_include(
-                    (By.CSS_SELECTOR, ".dialog-button-box > button:nth-child(6)"),
-                    "disabled",
-                )
-            )
+            sleep(2)
             confirm_button.send_keys(Keys.ENTER)
 
     def get_all_colors_in_element(self, selector: tuple) -> set:

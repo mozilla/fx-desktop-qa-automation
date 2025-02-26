@@ -443,6 +443,7 @@ class BasePage(Page):
 
     def url_contains(self, url_part: str) -> Page:
         """Expect helper: wait until driver URL contains given text or timeout"""
+        self.context_id = self.driver.CONTEXT_CONTENT
         self.expect(EC.url_contains(url_part))
         return self
 
