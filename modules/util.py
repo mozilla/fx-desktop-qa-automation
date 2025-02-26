@@ -523,38 +523,6 @@ class Utilities:
         # Return formatted phone number with correct country code
         return f"{country_code}{local_number}"
 
-    def autofill_and_verify(self, address_autofill, address_autofill_popup, field_label, address_autofill_data, region):
-        """
-        Autofills a form field, verifies the data, and clears it if necessary.
-        Parameters:
-        ----------
-        address_autofill : AddressFill
-            The address autofill handler.
-        address_autofill_popup : AutofillPopup
-            The popup handler for autofill suggestions.
-        field_label : str
-            The label of the field being autofilled.
-        address_autofill_data : dict
-            The generated autofill data for verification.
-        region : str
-            The region code to handle localization.
-        """
-        # Skip address-level1 (State) selection for DE and FR
-        if field_label == "address-level1" and region in ["DE", "FR"]:
-            return
-
-        # Double-click a field and choose the first element from the autocomplete dropdown
-        address_autofill.double_click("form-field", labels=[field_label])
-        first_item = address_autofill_popup.get_nth_element(1)
-        address_autofill_popup.click_on(first_item)
-
-        # Verify autofill data
-        address_autofill.verify_autofill_data(address_autofill_data, region, self)
-
-        # Clear form autofill
-        address_autofill.double_click("form-field", labels=[field_label])
-        address_autofill_popup.click_clear_form_option()
-
 
 class BrowserActions:
     """

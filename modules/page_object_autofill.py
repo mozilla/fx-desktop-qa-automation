@@ -539,7 +539,7 @@ class AddressFill(Autofill):
             "ZIP Code": autofill_data.postal_code,
             "Country": autofill_data.country,
             "Email": autofill_data.email,
-            "Phone": util.normalize_phone_number(autofill_data.telephone),
+            "Phone": util.normalize_regional_phone_numbers(autofill_data.telephone, region),
         }
 
         # Validate each field
@@ -552,7 +552,7 @@ class AddressFill(Autofill):
 
             # Normalize phone numbers before comparison
             if field == "Phone":
-                actual = util.normalize_phone_number(actual)
+                actual = util.normalize_regional_phone_numbers(actual, region)
 
             assert actual == expected, (
                 f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
@@ -568,6 +568,38 @@ class AddressFill(Autofill):
             fields_to_test=fields_to_test,
             expected_highlighted_fields=expected_highlighted_fields,
         )
+
+    def autofill_and_verify(self, address_autofill, address_autofill_popup, field_label, address_autofill_data, region, util):
+        """
+        Autofills a form field, verifies the data, and clears it if necessary.
+        Parameters:
+        ----------
+        address_autofill : AddressFill
+            The address autofill handler.
+        address_autofill_popup : AutofillPopup
+            The popup handler for autofill suggestions.
+        field_label : str
+            The label of the field being autofilled.
+        address_autofill_data : dict
+            The generated autofill data for verification.
+        region : str
+            The region code to handle localization.
+        """
+        # Skip address-level1 (State) selection for DE and FR
+        if field_label == "address-level1" and region in ["DE", "FR"]:
+            return
+
+        # Double-click a field and choose the first element from the autocomplete dropdown
+        address_autofill.double_click("form-field", labels=[field_label])
+        first_item = address_autofill_popup.get_nth_element(1)
+        address_autofill_popup.click_on(first_item)
+
+        # Verify autofill data
+        address_autofill.verify_autofill_data(address_autofill_data, region, util)
+
+        # Clear form autofill
+        address_autofill.double_click("form-field", labels=[field_label])
+        address_autofill_popup.click_clear_form_option()
 
 
 class TextAreaFormAutofill(Autofill):

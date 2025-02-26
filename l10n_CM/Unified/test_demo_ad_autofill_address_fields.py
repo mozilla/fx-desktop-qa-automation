@@ -39,4 +39,6 @@ def test_demo_ad_autofill_address_fields(driver: Firefox, region: str):
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        util.autofill_and_verify(address_autofill, address_autofill_popup, field, address_autofill_data, region)
+        address_autofill.autofill_and_verify(address_autofill, address_autofill_popup, field,
+                                             address_autofill_data, region, util)
+
