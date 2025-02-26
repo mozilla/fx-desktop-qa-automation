@@ -11,14 +11,12 @@ def test_case():
     return "2888563"
 
 
-def test_demo_ad_autofill_address_fields(driver: Firefox, region: str):
+def test_demo_ad_autofill_address_fields(driver: Firefox, region: str, address_autofill: AddressFill, util: Utilities):
     """
     C2888563 - Verify Autofill functionality when selecting an entry from the dropdown for address fields
     """
     # Instantiate objects
-    address_autofill = AddressFill(driver)
     address_autofill_popup = AutofillPopup(driver)
-    util = Utilities()
 
     # Create fake data and fill it in
     address_autofill.open()
@@ -39,6 +37,6 @@ def test_demo_ad_autofill_address_fields(driver: Firefox, region: str):
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.autofill_and_verify(address_autofill, address_autofill_popup, field,
-                                             address_autofill_data, region, util)
+        address_autofill.autofill_and_verify(address_autofill_popup, field,
+                                             address_autofill_data, util)
 
