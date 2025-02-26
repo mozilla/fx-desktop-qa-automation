@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -13,6 +13,7 @@ def test_case():
 
 def test_cc_yellow_highlight(
     driver: Firefox,
+    region: str,
     util: Utilities,
     about_prefs_privacy: AboutPrefs,
     about_prefs: AboutPrefs,
@@ -26,7 +27,7 @@ def test_cc_yellow_highlight(
     # Save a credit card in about:preferences
     about_prefs_privacy.open()
     about_prefs_privacy.switch_to_saved_payments_popup_iframe()
-    credit_card_sample_data = util.fake_credit_card_data()
+    credit_card_sample_data = util.fake_credit_card_data(region)
     about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
     about_prefs.fill_cc_panel_information(credit_card_sample_data)
 

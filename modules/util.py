@@ -287,17 +287,17 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self) -> CreditCardBase:
+    def fake_credit_card_data(self, country_code: str) -> CreditCardBase:
         """
-        Generates fake information related to the CC scenarios.
+        Generates fake information related to the CC scenarios for a given country code.
 
 
         Returns
         -------
         CreditCardBase
-            The object that contains all of the fake data generated.
+            The object that contains all the fake data generated.
         """
-        fake = Faker()
+        fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()

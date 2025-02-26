@@ -1,12 +1,11 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
+from l10n_CM.Unified.conftest import region
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -16,6 +15,7 @@ def test_case():
 
 def test_demo_cc_data_captured_in_doorhanger_and_stored(
     driver: Firefox,
+    region: str,
     credit_card_fill_obj: CreditCardFill,
     autofill_popup: AutofillPopup,
     util: Utilities,
@@ -28,7 +28,7 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     credit_card_fill_obj.open()
 
     # Fill data
-    credit_card_sample_data = util.fake_credit_card_data()
+    credit_card_sample_data = util.fake_credit_card_data(region)
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
 
     # The "Save credit card?" doorhanger is displayed

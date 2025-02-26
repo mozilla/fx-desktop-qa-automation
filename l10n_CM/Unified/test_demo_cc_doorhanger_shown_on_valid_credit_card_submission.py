@@ -13,6 +13,7 @@ def test_case():
 
 def test_cc_check_door_hanger_is_displayed(
     driver: Firefox,
+    region: str,
     util: Utilities,
     autofill_popup: AutofillPopup,
     credit_card_fill_obj: CreditCardFill,
@@ -24,7 +25,7 @@ def test_cc_check_door_hanger_is_displayed(
     credit_card_fill_obj.open()
 
     # Fill data
-    credit_card_sample_data = util.fake_credit_card_data()
+    credit_card_sample_data = util.fake_credit_card_data(region)
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
 
     # Check if an element from the door hanger is visible

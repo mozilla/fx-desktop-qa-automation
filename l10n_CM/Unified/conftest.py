@@ -11,7 +11,7 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def region():
-    return os.environ.get("FX_REGION", "FR")
+    return os.environ.get("FX_REGION", "DE")
 
 
 @pytest.fixture()
