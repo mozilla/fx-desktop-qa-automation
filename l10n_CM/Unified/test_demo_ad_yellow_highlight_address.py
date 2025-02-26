@@ -11,15 +11,19 @@ def test_case():
     return "2888564"
 
 
-def test_address_yellow_highlight_address_fields(driver: Firefox, region: str):
+def test_address_yellow_highlight_address_fields(
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
+):
     """
     C2888564 - Verify the yellow highlight appears on autofilled fields for the address fields.
     """
 
     # Instantiate objects
-    address_autofill = AddressFill(driver)
     address_autofill_popup = AutofillPopup(driver)
-    util = Utilities()
 
     # Create fake data and fill it in
     address_autofill.open()
