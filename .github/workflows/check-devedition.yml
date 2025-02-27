@@ -1,19 +1,18 @@
-name: Check new beta version
+name: Check new devedition version
 
 on:
   schedule:
-    - cron: "12 */1 * * *"
+    - cron: "46 */12 * * *"
 env:
   LATEST: ""
 permissions:
   contents: "write"
 
 jobs:
-  Check-Beta-Version:
+  Check-DevEdition-Version:
     runs-on: ubuntu-latest
     outputs:
-      win_reportable: ${{ steps.reportable.outputs.win }}
-      mac_reportable: ${{ steps.reportable.outputs.mac }}
+      reportable: ${{ steps.reportable.outputs.test }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,6 +23,7 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          FX_CHANNEL: "devedition"
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
@@ -34,6 +34,7 @@ jobs:
     if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
     uses: ./.github/workflows/smoke.yml
     with:
+      channel: "devedition"
       job_to_run: Smoke-Windows
     secrets: inherit
 
@@ -42,5 +43,6 @@ jobs:
     if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
     uses: ./.github/workflows/smoke.yml
     with:
+      channel: "devedition"
       job_to_run: Smoke-MacOS
     secrets: inherit
