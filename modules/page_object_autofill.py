@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from selenium.webdriver.support import expected_conditions as EC
 
