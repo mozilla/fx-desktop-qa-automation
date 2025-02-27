@@ -23,9 +23,10 @@ def test_redirect_to_addons(driver: Firefox):
     """
     C118173, ensures that the user is redirected to about:addons through the ui panel
     """
-    panel = PanelUi(driver).open()
-    panel.open_panel_menu()
-    panel.navigate_to_about_addons()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
+    panel_ui.open_panel_menu()
+    panel_ui.navigate_to_about_addons()
     windows = driver.window_handles
     driver.switch_to.window(windows[2])
     assert driver.current_url == "about:addons"

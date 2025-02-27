@@ -57,7 +57,8 @@ def test_never_remember_browsing_history_from_panel(driver: Firefox):
     """
     C102381.2: Ensure that setting the browser to never remember history does not actually save any history
     """
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     tabs = TabBar(driver)
     # util = Utilities()
 

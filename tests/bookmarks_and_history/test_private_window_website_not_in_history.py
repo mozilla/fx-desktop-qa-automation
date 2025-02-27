@@ -19,8 +19,7 @@ def test_opened_website_in_private_window_not_captured_in_history_list(driver: F
     """
 
     panel_ui = PanelUi(driver)
-    panel_ui.open_private_window()
-    panel_ui.switch_to_new_window()
+    panel_ui.open_and_switch_to_new_window("private")
 
     GenericPage(driver, url=YOUTUBE_URL).open()
 

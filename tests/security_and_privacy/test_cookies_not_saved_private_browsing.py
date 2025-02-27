@@ -18,13 +18,11 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     # Instantiate objs
     about_prefs = AboutPrefs(driver, category="privacy")
     panel_ui = PanelUi(driver)
-    nav = Navigation(driver)
     google_search = GoogleSearch(driver)
     ba = BrowserActions(driver)
 
     # Open new private window
-    panel_ui.open_private_window()
-    nav.switch_to_new_window()
+    panel_ui.open_and_switch_to_new_window("private")
 
     # Open the Google page and perform a search
     google_search.open()

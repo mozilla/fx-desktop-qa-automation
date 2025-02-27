@@ -26,7 +26,8 @@ def test_the_most_recent_website_is_present_in_history_menu(driver: Firefox):
     for url in WEBSITES:
         GenericPage(driver, url=url).open()
 
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     panel_ui.open_history_menu()
 
     # Verify YouTube is present in the history menu and is on top of the list as the most recent website visited

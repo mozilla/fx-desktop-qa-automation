@@ -26,11 +26,9 @@ def test_no_password_doorhanger_private_browsing(driver: Firefox):
     # Instantiate objects
     login_auto_fill = LoginAutofill(driver)
     panel_ui = PanelUi(driver)
-    nav = Navigation(driver)
 
     # Open Private Window
-    panel_ui.open_private_window()
-    nav.switch_to_new_window()
+    panel_ui.open_and_switch_to_new_window("private")
 
     # Open the form, fill the user and password
     login_auto_fill.open()

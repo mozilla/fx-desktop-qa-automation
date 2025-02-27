@@ -20,18 +20,15 @@ def test_undo_close_tab_private_browsing(driver: Firefox, sys_platform: str):
     C120118: ensure that you can close a tab in private browsing window
     """
     # instantiate objs
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     nav = Navigation(driver)
     tabs = TabBar(driver)
     generic_page = GenericPage(driver, url="about:about")
 
     # open a new private window and open a new tab
-    panel_ui.open_private_window()
-    tabs.switch_to_new_window()
-
-    # open a new tab
-    tabs.new_tab_by_button()
-    tabs.switch_to_new_tab()
+    panel_ui.open_and_switch_to_new_window("private")
+    panel_ui.open_and_switch_to_new_window("tab")
 
     # navigate to the URL
     nav.search(VISIT_URL)
