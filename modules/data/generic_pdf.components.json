@@ -7,6 +7,12 @@
         ]
     },
 
+    "pdf-text-layer": {
+        "selectorData": "textLayer",
+        "strategy": "class",
+        "groups": []
+    },
+
     "html-body": {
         "selectorData": "html",
         "strategy": "tag",
