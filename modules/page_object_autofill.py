@@ -83,6 +83,27 @@ class CreditCardFill(Autofill):
         self.double_click("form-field", labels=["cc-csc"])
         ccp.ensure_autofill_dropdown_not_visible()
 
+    def autofill_and_clear_all_fields(self, autofill_popup: AutofillPopup, credit_card_data: CreditCardBase):
+        for field in self.fields:
+            # Click the first field, select the autofill value
+            self.click_on("form-field", labels=[field])  # Use single click
+            # Click on the first element from the autocomplete dropdown
+            autofill_popup.click_autofill_form_option()
+
+            # Validate all fields except cc-csc
+            self.verify_four_fields(
+                ccp=autofill_popup, credit_card_sample_data=credit_card_data
+            )
+            self.click_on("form-field", labels=[field])
+            autofill_popup.click_clear_form_option()
+
+    def clear_field_value(self, selector: str, labels: list):
+        """
+        Clears the value of the input field.
+        """
+        element = self.get_element(selector, labels=labels)
+        element.clear()  # Clears the field's value
+
     def verify_four_fields(
         self, ccp: AutofillPopup, credit_card_sample_data: CreditCardBase
     ) -> Autofill:
