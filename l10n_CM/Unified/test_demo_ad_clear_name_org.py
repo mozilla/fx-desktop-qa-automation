@@ -11,12 +11,18 @@ def test_case():
     return "2888560"
 
 
-def test_demo_ad_clear_name_org(driver: Firefox, region: str, address_autofill: AddressFill, util: Utilities):
+def test_demo_ad_clear_name_org(
+        driver: Firefox,
+        region: str,
+        address_autofill: AddressFill,
+        util: Utilities,
+        autofill_popup: AutofillPopup
+):
     """
     C2888560 - Verify clear functionality after selecting an entry from name/org fields
     """
     # Instantiate objects
-    address_autofill_popup = AutofillPopup(driver)
+    # address_autofill_popup = AutofillPopup(driver)
 
     # Create fake data and fill it in
     address_autofill.open()
@@ -24,15 +30,14 @@ def test_demo_ad_clear_name_org(driver: Firefox, region: str, address_autofill: 
     address_autofill.save_information_basic(address_autofill_data)
 
     # Click the "Save" button
-    address_autofill_popup.click_doorhanger_button("save")
+    autofill_popup.click_doorhanger_button("save")
 
-    # Double inside Name field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["name"])
+    # List of field labels to be autofilled and verified
+    fields_to_test = [
+        "name",
+        "organization"
+    ]
 
-    # Click on the first element from the autocomplete dropdown
-    first_item = address_autofill_popup.get_nth_element(1)
-    address_autofill_popup.click_on(first_item)
-
-    # Double inside Name field and select clear form autofill
-    address_autofill.double_click("form-field", labels=["name"])
-    address_autofill_popup.click_clear_form_option()
+    # Loop through each field and perform the autofill test
+    for field in fields_to_test:
+        address_autofill.clear_and_verify(autofill_popup, field, address_autofill_data)

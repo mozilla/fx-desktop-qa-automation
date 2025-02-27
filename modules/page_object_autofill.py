@@ -519,6 +519,64 @@ class AddressFill(Autofill):
                 f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
             )
 
+    def verify_all_fields_cleared(self):
+        """
+        Verifies that all autofill fields are empty.
+        """
+        field_mapping = {
+            "Name": "name-field",
+            "Organization": "org-field",
+            "Street Address": "street-field",
+            "City": "add-level2-field",
+            "State": "add-level1-field",
+            "ZIP Code": "zip-field",
+            "Country": "country-field",
+            "Email": "email-field",
+            "Phone": "phone-field",
+        }
+
+        # Get actual values from web elements
+        actual_values = {
+            field: self.get_element(locator).get_attribute("value")
+            for field, locator in field_mapping.items()
+        }
+
+        # Validate each field is empty
+        for field, value in actual_values.items():
+            assert not value, f"Field '{field}' is not empty: Found '{value}'"
+
+    def clear_and_verify(self, address_autofill_popup, field_label, address_autofill_data):
+        """
+        Autofills a form field, clears it, and verifies that it is empty.
+        Parameters:
+        ----------
+        address_autofill : AddressFill
+            The address autofill handler.
+        address_autofill_popup : AutofillPopup
+            The popup handler for autofill suggestions.
+        field_label : str
+            The label of the field being autofilled.
+        address_autofill_data : dict
+            The generated autofill data for verification.
+        region : str
+            The region code to handle localization.
+        """
+        # Skip address-level1 (State) selection for DE and FR
+        if field_label == "address-level1" and address_autofill_data.country in ["DE", "FR"]:
+            return
+
+        # Double-click a field and choose the first element from the autocomplete dropdown
+        self.double_click("form-field", labels=[field_label])
+        first_item = address_autofill_popup.get_nth_element(1)
+        address_autofill_popup.click_on(first_item)
+
+        # Clear form autofill
+        self.double_click("form-field", labels=[field_label])
+        address_autofill_popup.click_clear_form_option()
+
+        # Verify all fields are cleared
+        self.verify_all_fields_cleared()
+
 
 class TextAreaFormAutofill(Autofill):
     """
