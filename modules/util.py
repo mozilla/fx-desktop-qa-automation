@@ -287,7 +287,7 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self, country_code: str) -> CreditCardBase:
+    def fake_credit_card_data(self, country_code: str = "US") -> CreditCardBase:
         """
         Generates fake information related to the CC scenarios for a given country code.
 
