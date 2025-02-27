@@ -64,7 +64,7 @@ class AutofillPopup(BasePage):
             return self.get_element(selector).text
 
     # Interaction with autocomplete list elements
-    def get_nth_element(self, index: str) -> WebElement:
+    def get_nth_element(self, index: str | int) -> WebElement:
         """
         Get the nth element from the autocomplete list
         Parameters: index (str): The index of the element to retrieve (1-based)

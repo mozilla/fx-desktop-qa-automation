@@ -1,18 +1,18 @@
 {
   "tests": [
-        "test_demo_ad_address_data_captured_in_doorhanger_and_stored.py",
-        "test_demo_ad_autofill_name_org.py",
-        "test_demo_ad_autofill_phone_email.py",
-        "test_demo_ad_doorhanger_shown_on_valid_address_submission.py",
-        "test_demo_ad_email_phone_captured_in_doorhanger_and_stored.py",
-        "test_demo_ad_name_org_captured_in_doorhanger_and_stored.py",
-        "test_demo_ad_verify_new_address_added.py",
-        "test_demo_cc_add_new_credit_card.py",
-        "test_demo_cc_clear_form.py",
-        "test_demo_cc_doorhanger_data_is_stored_in_about_prefs.py",
-        "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
-        "test_demo_cc_dropdown-presence.py",
-        "test_demo_cc_yellow_highlight.py",
-        "test_demo_ad_yellow_highlight.py"
+    "test_demo_ad_address_data_captured_in_doorhanger_and_stored.py",
+    "test_demo_ad_autofill_name_org.py",
+    "test_demo_ad_autofill_phone_email.py",
+    "test_demo_ad_doorhanger_shown_on_valid_address_submission.py",
+    "test_demo_ad_email_phone_captured_in_doorhanger_and_stored.py",
+    "test_demo_ad_name_org_captured_in_doorhanger_and_stored.py",
+    "test_demo_ad_yellow_highlight.py",
+    "test_demo_cc_add_new_credit_card.py",
+    "test_demo_cc_clear_form.py",
+    "test_demo_cc_doorhanger_data_is_stored_in_about_prefs.py",
+    "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
+    "test_demo_cc_dropdown_presence.py",
+    "test_demo_ad_verify_new_address_added.py",
+    "test_demo_ad_yellow_highlight_phone_email.py"
   ]
 }

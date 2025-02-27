@@ -8,18 +8,18 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888559"
+    return "2888570"
 
 
-def test_address_yellow_highlight_on_name_organization_fields(
+def test_address_yellow_highlight_address_fields(
     driver: Firefox,
     region: str,
-    util: Utilities,
     address_autofill: AddressFill,
+    util: Utilities,
     autofill_popup: AutofillPopup,
 ):
     """
-    C2888559 - Verify the yellow highlight appears on autofilled fields for name and organization.
+    C2888570 - Verify the yellow highlight appears on autofilled fields for the email and phone fields.
     """
 
     # Create fake data and fill it in
@@ -30,15 +30,14 @@ def test_address_yellow_highlight_on_name_organization_fields(
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
 
-    # Double click inside phone field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["name"])
+    # Double click inside email field and select a saved address entry from the dropdown
+    address_autofill.double_click("form-field", labels=["email"])
 
     # Click on the first element from the autocomplete dropdown
     first_item = autofill_popup.get_nth_element(1)
     autofill_popup.click_on(first_item)
 
-    # Verify the name and organization fields are highlighted
+    # Verify the email and phone fields are highlighted
     address_autofill.verify_field_yellow_highlights(
-        fields_to_test=["name", "organization"],
-        expected_highlighted_fields=["name", "organization"],
+        fields_to_test=["email", "tel"], expected_highlighted_fields=["email", "tel"]
     )
