@@ -29,7 +29,8 @@ def test_third_party_content_blocked_private_browsing_cross_site(driver: Firefox
     C446323.1: Ensure that third party content is blocked correctly
     """
     # Instantiate objects
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     nav = Navigation(driver)
     tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE)
@@ -69,7 +70,8 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
     C446323.2: Ensure that some third party content is allowed
     """
     # Instantiate objects
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     nav = Navigation(driver)
     tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE)
@@ -106,7 +108,8 @@ def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox)
     C446323.3: Ensure that the statuses of some third party content are loaded properly
     """
     # Instantiate objects
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     nav = Navigation(driver)
     tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=SECOND_TRACKER_WEBSITE)
