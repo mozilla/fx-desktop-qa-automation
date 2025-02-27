@@ -39,6 +39,68 @@ class Autofill(BasePage):
         """Clicks submit on the form"""
         self.click_on("submit-button", labels=[field_name])
 
+    def verify_field_highlight(
+        self,
+        fields_to_test: List[str],
+        expected_highlighted_fields: Optional[List[str]] = None,
+        extra_fields: Optional[List[str]] = None,
+    ):
+        """
+        A common method to check which fields have the "yellow highlight". This is used in both CC and Address pages.
+        - fields_to_test: The primary list of fields for this page (cc fields, address fields).
+        - expected_highlighted_fields: Which ones are expected to be highlighted. Defaults to all in `fields_to_test`.
+        - extra_fields: If some pages have extra fields to test (e.g. 'cc-csc'), pass them here.
+        """
+
+        if expected_highlighted_fields is None:
+            # By default, everything in fields_to_test is expected to be highlighted
+            expected_highlighted_fields = fields_to_test[:]
+
+        if extra_fields:
+            fields_to_actually_check = fields_to_test + extra_fields
+        else:
+            fields_to_actually_check = fields_to_test
+
+        browser_action_obj = BrowserActions(self.driver)
+
+        def is_yellow_highlight(rgb_tuple):
+            """
+            Returns True if the color tuple is bright yellow-ish.
+            """
+            if len(rgb_tuple) == 3:
+                r, g, b = rgb_tuple
+            else:
+                r, g, b, *_ = rgb_tuple
+
+            return (r >= 250) and (g >= 250) and (180 < b < 220)
+
+        for field_name in fields_to_actually_check:
+            # Focus the field so the highlight is visible
+            self.click_on("form-field", labels=[field_name])
+
+            # Get all colors in the field
+            selector = self.get_selector("form-field", labels=[field_name])
+            colors = browser_action_obj.get_all_colors_in_element(selector)
+            logging.info(f"Colors found in '{field_name}': {colors}")
+
+            # Check the highlight
+            is_field_highlighted = any(is_yellow_highlight(color) for color in colors)
+            should_be_highlighted = field_name in expected_highlighted_fields
+
+            # Assert based on expectation
+            if should_be_highlighted:
+                assert is_field_highlighted, (
+                    f"Expected yellow highlight on '{field_name}', but none found."
+                )
+                logging.info(f"Yellow highlight found in '{field_name}'.")
+            else:
+                assert not is_field_highlighted, (
+                    f"Expected NO yellow highlight on '{field_name}', but found one."
+                )
+                logging.info(f"No yellow highlight in '{field_name}', as expected.")
+
+        return self
+
 
 class CreditCardFill(Autofill):
     """
@@ -323,50 +385,15 @@ class CreditCardFill(Autofill):
 
     def verify_field_yellow_highlights(self, expected_highlighted_fields=None):
         """
-        Verifies that specified form fields have the expected highlight state
+        Reuses the common highlight-check method from the base class.
+        We also want to include the "cc-csc" field in the test, so we
+        pass it via 'extra_fields'.
         """
-        if expected_highlighted_fields is None:
-            expected_highlighted_fields = self.fields
-
-        browser_action_obj = BrowserActions(self.driver)
-
-        # Check if a color is yellow-ish
-        def is_yellow_highlight(rgb_tuple):
-            if len(rgb_tuple) == 3:
-                r, g, b = rgb_tuple
-            elif len(rgb_tuple) >= 4:
-                r, g, b, *_ = rgb_tuple
-            else:
-                return False
-            # Uses a tolerance to detect a yellow highlight
-            return r >= 250 and g >= 250 and 180 < b < 220
-
-        all_fields = self.fields + ["cc-csc"]
-
-        for field_name in all_fields:
-            # Bring the fields into focus
-            self.click_on("form-field", labels=[field_name])
-
-            # Get the color of the fields
-            selector = self.get_selector("form-field", labels=[field_name])
-            colors = browser_action_obj.get_all_colors_in_element(selector)
-            logging.info(f"Colors found in {field_name}: {colors}")
-
-            is_field_highlighted = any(is_yellow_highlight(color) for color in colors)
-            should_be_highlighted = field_name in expected_highlighted_fields
-
-            if should_be_highlighted:
-                assert is_field_highlighted, (
-                    f"Expected yellow highlight on {field_name}, but none found."
-                )
-                logging.info(f"Yellow highlight correctly found in {field_name}.")
-            else:
-                assert not is_field_highlighted, (
-                    f"Expected no yellow highlight on {field_name}, but found one."
-                )
-                logging.info(f"No yellow highlight found in {field_name}, as expected.")
-
-        return self
+        return self.verify_field_highlight(
+            fields_to_test=self.fields,
+            expected_highlighted_fields=expected_highlighted_fields,
+            extra_fields=["cc-csc"],
+        )
 
 
 class LoginAutofill(Autofill):
@@ -413,6 +440,18 @@ class AddressFill(Autofill):
     """
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic.html"
+
+    fields = [
+        "name",
+        "organization",
+        "street-address",
+        "address-level2",  # city
+        "address-level1",  # state/province
+        "postal-code",
+        "country",
+        "email",
+        "tel",
+    ]
 
     def save_information_basic(self, autofill_info: AutofillAddressBase):
         """
@@ -518,6 +557,17 @@ class AddressFill(Autofill):
             assert actual == expected, (
                 f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
             )
+
+    def verify_field_yellow_highlights(
+        self, fields_to_test=None, expected_highlighted_fields=None
+    ):
+        if fields_to_test is None:
+            fields_to_test = self.fields  # By default, test all address fields
+
+        return self.verify_field_highlight(
+            fields_to_test=fields_to_test,
+            expected_highlighted_fields=expected_highlighted_fields,
+        )
 
     def verify_all_fields_cleared(self):
         """
