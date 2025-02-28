@@ -102,7 +102,8 @@ def reportable(platform_to_test=None):
         minor_num, _ = second_half.split("-")
     else:
         minor_num = second_half
-    channel = os.environ.get("FX_CHANNEL").title()
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
     if not channel:
         if "b" in minor_num:
             channel = "Beta"
