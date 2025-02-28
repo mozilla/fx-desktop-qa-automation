@@ -13,7 +13,7 @@ def test_case():
 
 # Set search region
 @pytest.fixture()
-def overwrite_prefs():
+def add_to_prefs_list():
     return [
         ("browser.search.region", "DE"),
     ]

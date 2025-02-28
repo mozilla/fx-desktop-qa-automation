@@ -22,7 +22,8 @@ def test_password_csv_export(
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
+    about_logins.open()
     keyboard = Controller()
 
     # Click on buttons to export passwords
@@ -31,7 +32,7 @@ def test_password_csv_export(
     about_logins.click_on("continue-export-button")
 
     # Download the password file
-    time.sleep(4)
+    time.sleep(5)
     keyboard.tap(Key.enter)
 
     # Verify that the file exists
