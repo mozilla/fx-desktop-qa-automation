@@ -3,6 +3,7 @@ import logging
 import os
 import platform
 import re
+import sys
 import time
 from copy import deepcopy
 from pathlib import Path
@@ -678,19 +679,54 @@ class BasePage(Page):
 
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
-        self.driver.switch_to.window(self.driver.window_handles[-1])
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.switch_to.window(self.driver.window_handles[-1])
         return self
 
     def switch_to_new_window(self) -> Page:
         """Switch to the most recently opened window. Can be a standard or private window"""
-        all_window_handles = self.driver.window_handles
-        self.driver.switch_to.window(all_window_handles[-1])
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            all_window_handles = self.driver.window_handles
+            self.driver.switch_to.window(all_window_handles[-1])
         return self
 
     def wait_for_num_windows(self, num: int) -> Page:
         """Wait for the number of open tabs + windows to equal given int"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             return self.wait_for_num_tabs(num)
+
+    def open_and_switch_to_new_window(self, browser_window: str) -> Page:
+        """
+        Opens a new browser window of the given type, then switches to it.
+
+        Parameters:
+            browser_window: Can be a standard 'window', 'tab' or 'private' browser window.
+        """
+        if browser_window == "private":
+            self.open_and_switch_to_private_window_via_keyboard()
+        else:
+            self.driver.switch_to.new_window(browser_window)
+        return self
+
+    def open_and_switch_to_private_window_via_keyboard(self) -> Page:
+        """
+        Opens a new private browsing window via keyboard shortcut and switch to it
+        """
+        # Keep track of window count to ensure we get a new one to switch to
+        window_count = len(self.driver.window_handles)
+
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            os_name = sys.platform
+            mod_key = Keys.COMMAND if os_name == "darwin" else Keys.CONTROL
+            self.actions.key_down(mod_key)
+            self.actions.key_down(Keys.SHIFT)
+            self.actions.send_keys("p")
+            self.actions.key_up(Keys.SHIFT)
+            self.actions.key_up(mod_key).perform()
+        expected_window_count = window_count + 1
+        self.wait_for_num_windows(expected_window_count)
+        self.switch_to_new_window()
+        return self
 
     def switch_to_frame(self, frame: str, labels=[]) -> Page:
         """Switch to inline document frame"""
