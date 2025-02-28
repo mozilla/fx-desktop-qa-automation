@@ -145,35 +145,19 @@ class CreditCardFill(Autofill):
         self.double_click("form-field", labels=["cc-csc"])
         ccp.ensure_autofill_dropdown_not_visible()
 
-    def verify_four_fields(
-        self, ccp: AutofillPopup, credit_card_sample_data: CreditCardBase
+    def verify_credit_card_form_data(
+        self, credit_card_sample_data: CreditCardBase
     ) -> Autofill:
         """
-        Verifies that after clicking the autofill panel the information is filled correctly.
+        Verifies that the information is filled correctly.
 
         Attributes
         ----------
 
-        ccp: CreditCardPopup
-            The credit card popup object
-
         credit_card_sample_data: CreditCardBase
             The object that contains all the relevant information about the credit card autofill
         """
-        self.double_click("form-field", labels=["cc-name"])
         info_list = self.extract_credit_card_obj_into_list(credit_card_sample_data)
-        # Click on popup form value with name only
-        if self.sys_platform() == "Linux":
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                ccp.custom_wait(timeout=30, poll_frequency=0.5).until(
-                    EC.element_to_be_clickable(
-                        ccp.get_selector(
-                            "select-form-option-by-value", labels=[info_list[0]]
-                        )
-                    )
-                )
-        ccp.click_on("select-form-option-by-value", labels=[info_list[0]])
-
         for i in range(len(info_list)):
             self.element_attribute_contains(
                 "form-field", "value", info_list[i], labels=[self.fields[i]]
@@ -225,13 +209,19 @@ class CreditCardFill(Autofill):
         self.fill_input_element(ba, field, field_data)
         self.click_form_button("submit")
 
-    def press_autofill_panel(self, credit_card_popoup_obj: AutofillPopup):
+    def press_autofill_panel(
+        self, autofill_popup: AutofillPopup, field: str = "cc-name"
+    ):
         """
         Presses the autofill panel that pops up after you double-click an input field
+
+        Argument:
+            field:  field to click to show autofill option.
         """
-        self.double_click("form-field", labels=["cc-name"])
+        self.double_click("form-field", labels=[field])
+        autofill_popup.ensure_autofill_dropdown_visible()
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            credit_card_popoup_obj.get_element("select-form-option").click()
+            autofill_popup.get_element("select-form-option").click()
 
     def update_credit_card_information(
         self,
@@ -303,7 +293,7 @@ class CreditCardFill(Autofill):
         self.update_credit_card_information(autofill_popup_obj, field_name, new_data)
 
         # verifying the correct data
-        self.verify_four_fields(autofill_popup_obj, credit_card_sample_data)
+        self.verify_credit_card_form_data(autofill_popup_obj, credit_card_sample_data)
         return self
 
     def update_cc_name(
@@ -382,6 +372,21 @@ class CreditCardFill(Autofill):
             # Verify that the 'cc-csc' field does not trigger an autofill dropdown
             self.double_click("form-field", labels=["cc-csc"])
             autofill_popup_obj.ensure_autofill_dropdown_not_visible()
+
+    def autofill_and_clear_all_fields(
+        self, autofill_popup: AutofillPopup, credit_card_data: CreditCardBase
+    ):
+        """
+        For each field select autofill option and clear.
+        """
+        for field in self.fields:
+            # press autofill panel for a field.
+            self.press_autofill_panel(autofill_popup, field)
+            # verify cc data in form.
+            self.verify_credit_card_form_data(credit_card_data)
+            # Clear the fields after verification
+            self.click_on("form-field", labels=[field])
+            autofill_popup.click_clear_form_option()
 
     def verify_field_yellow_highlights(self, expected_highlighted_fields=None):
         """
