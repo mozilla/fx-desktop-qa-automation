@@ -3,6 +3,7 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
+from l10n_CM.Unified.conftest import region
 from modules.page_object import AboutPrefs
 from modules.util import Utilities
 
@@ -28,7 +29,7 @@ def test_create_new_cc_profile(
     about_prefs_privacy.switch_to_saved_payments_popup_iframe()
 
     # Save CC information using fake data
-    credit_card_sample_data = util.fake_credit_card_data()
+    credit_card_sample_data = util.fake_credit_card_data(region)
 
     # Add a new CC profile
     about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])

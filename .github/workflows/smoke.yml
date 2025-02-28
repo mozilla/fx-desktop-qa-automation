@@ -9,6 +9,7 @@ on:
       channel:
         description: "Channel to run tests against"
         default: "beta"
+        type: string
         required: false
       job_to_run:
         required: true

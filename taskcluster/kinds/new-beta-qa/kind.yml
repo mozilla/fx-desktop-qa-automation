@@ -48,7 +48,7 @@ tasks:
         export REPORTABLE=1;
         pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
         export BETA_VERSION=$(pipenv run python collect_executables.py -n)
-        if ![[ "${BETA_VERSION}" == *"b6"* ]] && ![[ "${BETA_VERSION}" == *"b8"* ]]; then exit 0;
+        if ![[ "${BETA_VERSION}" == *"b6"* ]] && ![[ "${BETA_VERSION}" == *"b9"* ]]; then exit 0;
         export FX_CHANNEL="devedition";
         mv ./ci_pyproject.toml ./pyproject.toml;
         ./collect_executables.sh;
