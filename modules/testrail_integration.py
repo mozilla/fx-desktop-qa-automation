@@ -98,7 +98,10 @@ def reportable(platform_to_test=None):
     logging.warning(f"Got version from collect_executable.py! {version}")
     tr_session = testrail_init()
     major_number, second_half = version.split(".")
-    minor_num, build_num = second_half.split("-")
+    if "-" in second_half:
+        minor_num, _ = second_half.split("-")
+    else:
+        minor_num = second_half
     channel = os.environ.get("FX_CHANNEL").title()
     if not channel:
         if "b" in minor_num:

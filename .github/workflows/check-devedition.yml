@@ -2,7 +2,7 @@ name: Check new devedition version
 
 on:
   schedule:
-    - cron: "56 * * * *"
+    - cron: "18 * * * *"
 env:
   LATEST: ""
 permissions:
