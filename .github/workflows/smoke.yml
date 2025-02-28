@@ -144,8 +144,6 @@ jobs:
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
         id: setup
-        outputs:
-          app_name: ${{ setup.outputs.app_name }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -155,10 +153,9 @@ jobs:
           pipenv install;
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Run Smoke Tests in MacOS
-        needs: setup
         if: steps.setup.conclusion == 'success'
         env:
-          FX_EXECUTABLE: /Volumes/${{ needs.setup.outputs.app_name }}/${{ needs.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run python choose_ci_set.py
