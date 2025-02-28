@@ -123,6 +123,7 @@ else:
             fx_download_dir_url = next_candidate
 
         devedition_version = fx_download_dir_url.split("/")[-2]
+        fx_download_dir_url = f"{fx_download_dir_url}{get_fx_platform()}/{language}/"
 
     else:
         # Anything but devedition
@@ -176,8 +177,10 @@ else:
         build -= 1
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
+    print(f"trying {fx_download_dir_url}")
     response = requests.get(fx_download_dir_url)
     status = response.status_code
+    print(f"response code: {status}")
     response_text = None
     for _ in range(3):
         if status < 300:
