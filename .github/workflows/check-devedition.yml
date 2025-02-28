@@ -2,7 +2,7 @@ name: Check new devedition version
 
 on:
   schedule:
-    - cron: "46 */12 * * *"
+    - cron: "38 * * * *"
 env:
   LATEST: ""
 permissions:
@@ -30,8 +30,8 @@ jobs:
           echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
           echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
   Run-Win-Smoke:
-    needs: Check-Beta-Version
-    if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
+    needs: Check-DevEdition-Version
+    if: ${{ needs.Check-DevEdition-Version.outputs.win_reportable == 'True' }}
     uses: ./.github/workflows/smoke.yml
     with:
       channel: "devedition"
@@ -39,8 +39,8 @@ jobs:
     secrets: inherit
 
   Run-Mac-Smoke:
-    needs: Check-Beta-Version
-    if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
+    needs: Check-DevEdition-Version
+    if: ${{ needs.Check-DevEdition-Version.outputs.mac_reportable == 'True' }}
     uses: ./.github/workflows/smoke.yml
     with:
       channel: "devedition"
