@@ -13,6 +13,7 @@
     "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
     "test_demo_cc_dropdown_presence.py",
     "test_demo_ad_verify_new_address_added.py",
-    "test_demo_ad_yellow_highlight_phone_email.py"
+    "test_demo_ad_yellow_highlight_phone_email.py",
+    "test_demo_ad_clear_address_fields.py"
   ]
 }
