@@ -37,6 +37,7 @@ tasks:
         pip3 install 'ruff>=0.4.8,<0.5';
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
+        export FX_CHANNEL="beta";
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
         pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
