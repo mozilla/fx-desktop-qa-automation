@@ -234,7 +234,6 @@ class CreditCardFill(Autofill):
         Updates the credit card based on field that is to be changed by first autofilling everything then updating
         the field of choice then pressing submit and handling the popup.
         """
-        self.press_autofill_panel(autofill_popup_obj)
         self.update_field(field_name, field_data, autofill_popup_obj)
         self.click_form_button("submit")
 
@@ -292,67 +291,39 @@ class CreditCardFill(Autofill):
         # updating the profile accordingly
         self.update_credit_card_information(autofill_popup_obj, field_name, new_data)
 
+        # autofill data
+        self.press_autofill_panel(autofill_popup_obj)
+
         # verifying the correct data
-        self.verify_credit_card_form_data(autofill_popup_obj, credit_card_sample_data)
+        self.verify_credit_card_form_data(credit_card_sample_data)
         return self
 
-    def update_cc_name(
+    def update_cc(
         self,
         util: Utilities,
         credit_card_sample_data: CreditCardBase,
         autofill_popup_obj: AutofillPopup,
+        field: str,
     ) -> Autofill:
         """
-        Generates a new name, updates the credit card information in the form.
+        Generates a new data for credit card according to field given, updates the credit card information in the form.
         """
-        new_cc_name = util.fake_credit_card_data().name
-        credit_card_sample_data.name = new_cc_name
+        cc_mapping = {
+            "cc-name": "name",
+            "cc-exp-month": "expiration_month",
+            "cc-exp-year": "expiration_year",
+            "cc-number": "card_number",
+        }
+        new_cc_data = getattr(util.fake_credit_card_data(), cc_mapping[field])
+        while new_cc_data == getattr(credit_card_sample_data, cc_mapping[field]):
+            new_cc_data = getattr(util.fake_credit_card_data(), cc_mapping[field])
+        setattr(credit_card_sample_data, cc_mapping[field], new_cc_data)
 
         self.verify_updated_information(
             autofill_popup_obj,
             credit_card_sample_data,
-            "cc-name",
-            credit_card_sample_data.name,
-        )
-        return self
-
-    def update_cc_exp_month(
-        self,
-        util: Utilities,
-        credit_card_sample_data: CreditCardBase,
-        autofill_popup_obj: AutofillPopup,
-    ) -> Autofill:
-        """
-        Generates a new expiry month, updates the credit card information in the form.
-        """
-        new_cc_exp_month = util.fake_credit_card_data().expiration_month
-        credit_card_sample_data.expiration_month = new_cc_exp_month
-
-        self.verify_updated_information(
-            autofill_popup_obj,
-            credit_card_sample_data,
-            "cc-exp-month",
-            credit_card_sample_data.expiration_month,
-        )
-        return self
-
-    def update_cc_exp_year(
-        self,
-        util: Utilities,
-        credit_card_sample_data: CreditCardBase,
-        autofill_popup_obj: AutofillPopup,
-    ) -> Autofill:
-        """
-        Generates a new expiry year, updates the credit card information in the form.
-        """
-        new_cc_exp_year = util.fake_credit_card_data().expiration_year
-        credit_card_sample_data.expiration_year = new_cc_exp_year
-
-        self.verify_updated_information(
-            autofill_popup_obj,
-            credit_card_sample_data,
-            "cc-exp-year",
-            credit_card_sample_data.expiration_year,
+            field,
+            new_cc_data,
         )
         return self
 
