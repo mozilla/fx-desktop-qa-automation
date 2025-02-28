@@ -703,12 +703,12 @@ class BasePage(Page):
             browser_window: Can be a standard 'window', 'tab' or 'private' browser window.
         """
         if browser_window == "private":
-            self.open_and_switch_to_private_window()
+            self.open_and_switch_to_private_window_via_keyboard()
         else:
             self.driver.switch_to.new_window(browser_window)
         return self
 
-    def open_and_switch_to_private_window(self) -> Page:
+    def open_and_switch_to_private_window_via_keyboard(self) -> Page:
         """
         Opens a new private browsing window via keyboard shortcut and switch to it
         """
