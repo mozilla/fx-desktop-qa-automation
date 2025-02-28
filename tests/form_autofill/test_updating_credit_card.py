@@ -35,18 +35,9 @@ def test_update_cc_no_dupe_name(driver: Firefox, field: str):
     credit_card_fill_obj.press_autofill_panel(autofill_popup_obj)
 
     # updating the name of the cc holder
-    if field == "cc-name":
-        credit_card_fill_obj.update_cc_name(
-            util, credit_card_sample_data, autofill_popup_obj
-        )
-    elif field == "cc-exp-month":
-        credit_card_fill_obj.update_cc_exp_month(
-            util, credit_card_sample_data, autofill_popup_obj
-        )
-    else:
-        credit_card_fill_obj.update_cc_exp_year(
-            util, credit_card_sample_data, autofill_popup_obj
-        )
+    credit_card_fill_obj.update_cc(
+        util, credit_card_sample_data, autofill_popup_obj, field
+    )
 
     # navigate to settings
     about_prefs = AboutPrefs(driver, category="privacy").open()
