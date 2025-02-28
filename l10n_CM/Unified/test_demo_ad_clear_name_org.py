@@ -21,9 +21,6 @@ def test_demo_ad_clear_name_org(
     """
     C2888560 - Verify clear functionality after selecting an entry from name/org fields
     """
-    # Instantiate objects
-    # address_autofill_popup = AutofillPopup(driver)
-
     # Create fake data and fill it in
     address_autofill.open()
     address_autofill_data = util.fake_autofill_data(region)
