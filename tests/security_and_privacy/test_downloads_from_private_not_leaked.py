@@ -19,7 +19,7 @@ NUM_LINKS = 3
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [("pdfjs.disabled", True)]
 
 

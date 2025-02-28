@@ -21,7 +21,7 @@ SCREEN_CAP_LABEL_BACK_PT = "veja sua tela?"
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     return [("services.sync.prefs.sync-seen.intl.accept_languages", True)]
 
 

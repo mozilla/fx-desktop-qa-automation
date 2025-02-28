@@ -11,7 +11,7 @@ def test_case():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     """Set prefs"""
     return [("clipboard.imageAsFile.enabled", False)]
 

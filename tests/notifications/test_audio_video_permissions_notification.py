@@ -26,7 +26,7 @@ def temp_selectors():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     """Set prefs"""
     return [("media.navigator.streams.fake", True)]
 

@@ -7,9 +7,16 @@ def suite_id():
 
 
 @pytest.fixture()
-def set_prefs():
-    """Set prefs"""
-    return [("browser.tabs.delayHidingAudioPlayingIconMS", "200")]
+def prefs_list(add_to_prefs_list: dict):
+    """List of prefs to send to main conftest.py driver fixture"""
+    prefs = [("browser.tabs.delayHidingAudioPlayingIconMS", "200")]
+    prefs.extend(add_to_prefs_list)
+    return prefs
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return []
 
 
 @pytest.fixture()

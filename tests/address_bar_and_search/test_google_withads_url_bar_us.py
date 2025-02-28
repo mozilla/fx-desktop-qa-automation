@@ -16,7 +16,7 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [("cookiebanners.service.mode", 1)]
 
 

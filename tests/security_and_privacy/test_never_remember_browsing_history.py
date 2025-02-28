@@ -25,7 +25,7 @@ HISTORY_LABEL_TEXT = "Firefox will use the same settings as private browsing, an
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [("browser.privatebrowsing.autostart", True)]
 
 

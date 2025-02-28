@@ -1,7 +1,9 @@
 import csv
 import os
 import re
+import sys
 import time
+from os import environ
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -14,17 +16,22 @@ def test_case():
     return "2241522"
 
 
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
+
+
 @pytest.mark.headed
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_platform):
     """
     C2241522: Check that password.csv displays the correct information
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
     keyboard = Controller()
 
     # Click on buttons to export passwords
+    about_logins.open()
     about_logins.click_on("menu-button")
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")

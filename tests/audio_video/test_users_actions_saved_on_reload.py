@@ -13,7 +13,7 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [
         ("media.autoplay.default", 1),
         ("media.autoplay.enabled.user-gestures-needed", True),

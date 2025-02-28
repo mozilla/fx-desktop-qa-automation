@@ -7,8 +7,8 @@ def suite_id():
 
 
 @pytest.fixture()
-def set_prefs(add_prefs: dict):
-    """Set prefs"""
+def prefs_list(add_to_prefs_list: dict):
+    """List of prefs to send to main conftest.py driver fixture"""
     prefs = [
         ("browser.newtabpage.enabled", True),
         ("browser.newtabpage.storageVersion", True),
@@ -38,5 +38,5 @@ def set_prefs(add_prefs: dict):
             True,
         ),
     ]
-    prefs.extend(add_prefs)
+    prefs.extend(add_to_prefs_list)
     return prefs

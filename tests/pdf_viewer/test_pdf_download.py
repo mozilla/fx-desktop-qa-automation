@@ -13,11 +13,6 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
-    return []
-
-
-@pytest.fixture()
 def delete_files_regex_string():
     return r"i-9.*\.pdf"
 

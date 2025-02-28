@@ -18,7 +18,7 @@ def delete_files_regex_string():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     return [
         ("print_printer", "Mozilla Save to PDF"),
         ("print.save_print_settings", False),
