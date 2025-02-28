@@ -14,8 +14,8 @@ def test_case():
 def test_address_yellow_highlight_on_name_organization_fields(
     driver: Firefox,
     region: str,
-    util: Utilities,
     address_autofill: AddressFill,
+    util: Utilities,
     autofill_popup: AutofillPopup,
 ):
     """
@@ -30,7 +30,7 @@ def test_address_yellow_highlight_on_name_organization_fields(
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
 
-    # Double click inside phone field and select a saved address entry from the dropdown
+    # Double click inside name field and select a saved address entry from the dropdown
     address_autofill.double_click("form-field", labels=["name"])
 
     # Click on the first element from the autocomplete dropdown

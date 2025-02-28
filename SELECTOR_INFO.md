@@ -1389,6 +1389,13 @@ Location: Appears as part of the dropdown under the autofill panel, within any e
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: select-form-option-by-index
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem:nth:child({index})"
+Description: Select n individual entry within the autofill dropdown, using the index of the child.
+Location: Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: clear-form-option
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']"
 Description: The "Clear Autofill Form" option in the dropdown that appears when interacting with an autofill-enabled input field

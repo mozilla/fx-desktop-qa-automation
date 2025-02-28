@@ -12,7 +12,8 @@ jobs:
   Check-DevEdition-Version:
     runs-on: ubuntu-latest
     outputs:
-      reportable: ${{ steps.reportable.outputs.test }}
+      win_reportable: ${{ steps.reportable.outputs.win }}
+      mac_reportable: ${{ steps.reportable.outputs.mac }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

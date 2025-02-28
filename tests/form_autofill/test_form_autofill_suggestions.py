@@ -11,11 +11,7 @@ def test_case():
     return "122401"
 
 
-indices = range(2)
-
-
-@pytest.mark.parametrize("index", indices)
-def test_form_autofill_suggestions(driver: Firefox, index: str):
+def test_form_autofill_suggestions(driver: Firefox):
     """
     C122401, checks that the corresponding autofill suggestion autofills the fields correctly
     """
@@ -29,13 +25,15 @@ def test_form_autofill_suggestions(driver: Firefox, index: str):
     sample_data = [
         credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj) for _ in range(2)
     ]
+    # reverse data list to match form options
+    sample_data.reverse()
 
     # press the corresponding option (according to the parameter)
     credit_card_fill_obj.click_on("form-field", labels=["cc-name"])
 
-    # verify information based, verify based on second object if we are verifying first option (this is the newer option) and
-    # vice versa
-    check_index = 1 - index
-    credit_card_fill_obj.verify_four_fields(
-        autofill_popup_obj, sample_data[check_index]
-    )
+    # verify form data in reverse (newer options are at the top)
+    for idx in range(1, 3):
+        autofill_popup_obj.select_nth_element(idx)
+        credit_card_fill_obj.verify_credit_card_form_data(sample_data[idx - 1])
+        credit_card_fill_obj.click_on("form-field", labels=["cc-name"])
+        autofill_popup_obj.click_clear_form_option()
