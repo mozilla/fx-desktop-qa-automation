@@ -14,7 +14,7 @@
         "test_demo_cc_dropdown-presence.py",
         "test_demo_cc_yellow_highlight.py",
         "test_demo_ad_yellow_highlight_name_org.py",
-        "test_demo_ad_yellow_highlight_address.py"
+        "test_demo_ad_yellow_highlight_address.py",
         "test_demo_ad_yellow_highlight_phone_email.py"
 
   ]
