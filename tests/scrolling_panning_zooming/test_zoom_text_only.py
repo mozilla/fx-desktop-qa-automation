@@ -52,7 +52,7 @@ WEBSITE_2 = "https://start.duckduckgo.com/"
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     """
     Set the pref to zoom text only (simulate after restart)
     """

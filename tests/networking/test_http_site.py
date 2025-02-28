@@ -12,7 +12,7 @@ def test_case():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     return [
         ("dom.security.https_only_mode_ever_enabled", True),
         ("dom.security.https_only_mode_ever_enabled_pbm", True),

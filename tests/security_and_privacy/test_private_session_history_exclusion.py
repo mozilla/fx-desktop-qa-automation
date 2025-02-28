@@ -15,7 +15,7 @@ AMAZON_URL = "https://www.amazon.com/"
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return []
 
 

@@ -12,9 +12,12 @@ def test_case():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     """Set prefs"""
-    return [("signon.rememberSignons", True), ("signon.autofillForms", True)]
+    return [
+        ("signon.rememberSignons", True),
+        ("signon.autofillForms", True)
+    ]
 
 
 def test_never_save_login_via_doorhanger(driver: Firefox):

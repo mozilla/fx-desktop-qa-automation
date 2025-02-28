@@ -43,9 +43,18 @@ def start_time():
 
 
 @pytest.fixture()
-def set_prefs(fxa_url):
-    """Set prefs"""
-    return [("identity.fxaccounts.autoconfig.uri", fxa_url)]
+def prefs_list(add_to_prefs_list: dict, fxa_url):
+    """List of prefs to send to main conftest.py driver fixture"""
+    prefs = [
+        ("identity.fxaccounts.autoconfig.uri", fxa_url)
+    ]
+    prefs.extend(add_to_prefs_list)
+    return prefs
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return []
 
 
 @pytest.fixture()

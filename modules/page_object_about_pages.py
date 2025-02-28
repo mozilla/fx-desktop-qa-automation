@@ -36,8 +36,8 @@ class AboutConfig(BasePage):
     def toggle_true_false_config(self, term: str) -> BasePage:
         """
         Main method to toggle a true false pref in about:config
-        Note: To use this in a test, use set_pref - ("browser.aboutConfig.showWarning", False),
-        in the test suite's conftest.py
+        Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py or use add_to_prefs_list fixture in the test itself
         """
         self.search_pref(term)
         toggle_tf_button = self.get_element("value-edit-button")
@@ -47,8 +47,8 @@ class AboutConfig(BasePage):
     def change_config_value(self, term: str, value) -> BasePage:
         """
         Main method to change a config's value in about:config
-        Note: To use this in a test, use set_pref - ("browser.aboutConfig.showWarning", False),
-        in the test suite's conftest.py
+        Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py or use add_to_prefs_list fixture in the test itself.
         """
         self.search_pref(term)
         pref_edit_button = self.get_element("value-edit-button")

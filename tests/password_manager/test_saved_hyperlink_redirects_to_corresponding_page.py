@@ -13,9 +13,11 @@ def test_case():
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
     """Set prefs"""
-    return [("signon.rememberSignons", True), ("signon.autofillForms", True)]
+    return [
+        ("signon.rememberSignons", True),
+        ("signon.autofillForms", True)]
 
 
 def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):

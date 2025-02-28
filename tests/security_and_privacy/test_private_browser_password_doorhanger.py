@@ -15,7 +15,7 @@ SAMPLE_PASS = "123456"
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 

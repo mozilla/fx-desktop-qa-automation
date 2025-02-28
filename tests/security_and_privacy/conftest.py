@@ -7,13 +7,15 @@ def suite_id():
 
 
 @pytest.fixture()
-def add_prefs():
-    return []
+def prefs_list(add_to_prefs_list: dict):
+    """List of prefs to send to main conftest.py driver fixture"""
+    prefs = [
+        ("browser.urlbar.scotchBonnet.enableOverride", True)
+    ]
+    prefs.extend(add_to_prefs_list)
+    return prefs
 
 
 @pytest.fixture()
-def set_prefs(add_prefs: dict):
-    """Set prefs"""
-    prefs = [("browser.urlbar.scotchBonnet.enableOverride", True)]
-    prefs.extend(add_prefs)
-    return prefs
+def add_to_prefs_list():
+    return []
