@@ -102,6 +102,33 @@ else:
     if not language:
         language = "en-US"
 
+    if channel == "-devedition":
+        this_devedition = BACKSTOP
+        fx_download_dir_url = (
+            "https://archive.mozilla.org/pub/devedition/releases/135.0b5/"
+        )
+
+        while True:
+            (major, _) = this_devedition.split(".")
+            major = int(major)
+            this_devedition = f"{major + 1}.0b5"
+            next_candidate = f"https://archive.mozilla.org/pub/devedition/releases/{this_devedition}/"
+
+            rs = requests.get(next_candidate)
+            if rs.status_code > 399:
+                break
+
+            fx_download_dir_url = next_candidate
+
+        devedition_version = fx_download_dir_url.split("/")[-2]
+        if NUMBER_ONLY:
+            print(devedition_version)
+        else:
+            print(
+                f"{fx_download_dir_url}{get_fx_platform()}/{language}/Firefox%20{devedition_version}.{get_fx_executable_extension()}"
+            )
+        exit()
+
     candidate_exists = True
     this_beta = BACKSTOP
     while candidate_exists:

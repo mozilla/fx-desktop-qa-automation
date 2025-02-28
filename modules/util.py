@@ -214,6 +214,8 @@ class Utilities:
             return None  # No fallback
 
         try:
+            # seed to get consistent data
+            Faker.seed(locale)
             faker = Faker(locale)
             faker.add_provider(internet)
             faker.add_provider(misc)
@@ -285,17 +287,17 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self) -> CreditCardBase:
+    def fake_credit_card_data(self, country_code: str = "US") -> CreditCardBase:
         """
-        Generates fake information related to the CC scenarios.
+        Generates fake information related to the CC scenarios for a given country code.
 
 
         Returns
         -------
         CreditCardBase
-            The object that contains all of the fake data generated.
+            The object that contains all the fake data generated.
         """
-        fake = Faker()
+        fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()
@@ -378,6 +380,7 @@ class Utilities:
 
     def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
         """
+
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
         to only the <country-code>xxxxxxxxxx format and return it.
 
@@ -499,7 +502,9 @@ class Utilities:
         digits = re.sub(r"\D", "", phone)
 
         # Determine country code
-        country_code = country_codes.get(region, "1")  # Default to "1" (US/CA) if region is unknown
+        country_code = country_codes.get(
+            region, "1"
+        )  # Default to "1" (US/CA) if region is unknown
         local_number = digits
 
         # Check if phone already contains a valid country code
@@ -507,7 +512,7 @@ class Utilities:
             if digits.startswith(code):
                 country_code = code
                 # Remove country code from local number
-                local_number = digits[len(code):]
+                local_number = digits[len(code) :]
                 break
 
         # Handle leading zero in local numbers (France & Germany)
