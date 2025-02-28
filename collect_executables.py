@@ -177,10 +177,8 @@ else:
         build -= 1
         fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
-    print(f"trying {fx_download_dir_url}")
     response = requests.get(fx_download_dir_url)
     status = response.status_code
-    print(f"response code: {status}")
     response_text = None
     for _ in range(3):
         if status < 300:
