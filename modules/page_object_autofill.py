@@ -549,6 +549,15 @@ class AddressFill(Autofill):
             expected_highlighted_fields=expected_highlighted_fields,
         )
 
+    def verify_autofill_preview(self, field_label: str, expected_value: str):
+        """Reusable method to verify autofill preview for a given field."""
+        self.double_click("form-field", labels=[field_label])
+        first_item = self.get_nth_element(1)
+        actual_value = self.hover(first_item).get_primary_value(first_item)
+        assert expected_value == actual_value, (
+            f"Expected {expected_value}, but got {actual_value}"
+        )
+
 
 class TextAreaFormAutofill(Autofill):
     """
