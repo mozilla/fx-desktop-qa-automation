@@ -515,7 +515,9 @@ class AddressFill(Autofill):
             "ZIP Code": autofill_data.postal_code,
             "Country": autofill_data.country,
             "Email": autofill_data.email,
-            "Phone": util.normalize_regional_phone_numbers(autofill_data.telephone, region),
+            "Phone": util.normalize_regional_phone_numbers(
+                autofill_data.telephone, region
+            ),
         }
 
         # Validate each field
@@ -549,7 +551,9 @@ class AddressFill(Autofill):
             expected_highlighted_fields=expected_highlighted_fields,
         )
 
-    def autofill_and_verify(self, address_autofill_popup, field_label, address_autofill_data, util):
+    def autofill_and_verify(
+        self, address_autofill_popup, field_label, address_autofill_data, util
+    ):
         """
         Autofills a form field, verifies the data, and clears it if necessary.
         Parameters:
@@ -566,7 +570,10 @@ class AddressFill(Autofill):
             The region code to handle localization.
         """
         # Skip address-level1 (State) selection for DE and FR
-        if field_label == "address-level1" and address_autofill_data.country in ["DE", "FR"]:
+        if field_label == "address-level1" and address_autofill_data.country in [
+            "DE",
+            "FR",
+        ]:
             return
 
         # Double-click a field and choose the first element from the autocomplete dropdown
@@ -575,7 +582,9 @@ class AddressFill(Autofill):
         address_autofill_popup.click_on(first_item)
 
         # Verify autofill data
-        self.verify_autofill_data(address_autofill_data, address_autofill_data.country, util)
+        self.verify_autofill_data(
+            address_autofill_data, address_autofill_data.country, util
+        )
 
         # Clear form autofill
         self.double_click("form-field", labels=[field_label])

@@ -130,7 +130,7 @@
     },
 
     "search-mode-switcher-option": {
-        "selectorData": "toolbarbutton[label*='{title}']",
+        "selectorData": "menuitem[label*='{title}']",
         "strategy": "css",
         "groups": []
     },
