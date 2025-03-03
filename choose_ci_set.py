@@ -139,8 +139,8 @@ if __name__ == "__main__":
         .splitlines()
     )
 
-    main_conftest = os.path.join(SCRIPT_DIR, "conftest.py")
-    base_page = os.path.join(SCRIPT_DIR, "modules", "page_base.py")
+    main_conftest = "conftest.py"
+    base_page = os.path.join("modules", "page_base.py")
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
