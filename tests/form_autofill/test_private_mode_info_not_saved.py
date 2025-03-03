@@ -16,7 +16,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    """Set prefs"""
+    """Add to list of prefs to set"""
     return [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),

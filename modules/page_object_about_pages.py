@@ -1,4 +1,7 @@
 import logging
+import os
+import re
+import sys
 
 from pypom import Page
 from selenium.common.exceptions import (
@@ -175,6 +178,18 @@ class AboutLogins(BasePage):
                 assert login in actual_logins
         else:
             assert expected_logins == actual_logins
+
+    def remove_password_csv(self, home_folder):
+        # Delete password.csv, if there is one in test location
+        if self.sys_platform == "Linux":
+            downloads_folder = os.getcwd()
+        else:
+            downloads_folder = os.path.join(home_folder, "Downloads")
+        passwords_csv = os.path.join(downloads_folder, "passwords.csv")
+        for file in os.listdir(downloads_folder):
+            delete_files_regex = re.compile(r"\bpasswords.csv\b")
+            if delete_files_regex.match(file):
+                os.remove(passwords_csv)
 
 
 class AboutPrivatebrowsing(BasePage):

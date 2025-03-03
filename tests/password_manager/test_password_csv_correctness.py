@@ -1,9 +1,7 @@
 import csv
 import os
 import re
-import sys
 import time
-from os import environ
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -16,11 +14,7 @@ def test_case():
     return "2241522"
 
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
-
-
 @pytest.mark.headed
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_platform):
     """
     C2241522: Check that password.csv displays the correct information
@@ -29,6 +23,9 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     (driver, usernames, logins) = driver_and_saved_logins
     about_logins = AboutLogins(driver)
     keyboard = Controller()
+
+    # Ensure the Downloads folder doesn't contain a passwords.csv file
+    about_logins.remove_password_csv(home_folder)
 
     # Click on buttons to export passwords
     about_logins.open()
@@ -67,7 +64,4 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     about_logins.check_logins_present(actual_logins, logins)
 
     # Delete the password.csv created
-    for file in os.listdir(downloads_folder):
-        delete_files_regex = re.compile(r"\bpasswords.csv\b")
-        if delete_files_regex.match(file):
-            os.remove(passwords_csv)
+    about_logins.remove_password_csv(home_folder)

@@ -12,7 +12,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    """Set prefs"""
+    """Add to list of prefs to set"""
     return [("signon.rememberSignons", True)]
 
 
