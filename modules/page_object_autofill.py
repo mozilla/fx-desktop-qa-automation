@@ -39,6 +39,43 @@ class Autofill(BasePage):
         """Clicks submit on the form"""
         self.click_on("submit-button", labels=[field_name])
 
+    def verify_field_autofill_dropdown(
+        self,
+        autofill_popup: AutofillPopup,
+        fields_to_test: List[str],
+        excluded_fields: Optional[List[str]] = None,
+        region: Optional[str] = None,
+    ):
+        """
+        A common method to check which fields trigger the autofill dropdown. This is used in both CC and Address pages.
+        - fields_to_test: The primary list of fields for this page (cc fields, address fields).
+        - excluded_fields: Fields that should NOT trigger an autofill dropdown.
+        - region: If provided, handle region-specific behavior (e.g., skip address-level1 for DE/FR).
+        """
+        # Create a copy of fields_to_test to avoid modifying the original
+        fields_to_check = fields_to_test[:]
+
+        # Handle region-specific behavior
+        if region in ["DE", "FR"] and "address-level1" in fields_to_check:
+            fields_to_check.remove("address-level1")
+
+        # Check fields that SHOULD trigger the autofill dropdown
+        for field_name in fields_to_check:
+            self.double_click("form-field", labels=[field_name])
+            autofill_popup.ensure_autofill_dropdown_visible()
+            logging.info(f"Autofill dropdown appears for field '{field_name}'.")
+
+        # Check fields that should NOT trigger the autofill dropdown
+        if excluded_fields:
+            for field_name in excluded_fields:
+                self.double_click("form-field", labels=[field_name])
+                autofill_popup.ensure_autofill_dropdown_not_visible()
+                logging.info(
+                    f"No autofill dropdown appears for field '{field_name}', as expected."
+                )
+
+        return self
+
     def verify_field_highlight(
         self,
         fields_to_test: List[str],
@@ -136,14 +173,11 @@ class CreditCardFill(Autofill):
 
         self.click_form_button("submit")
 
-    def verify_autofill_dropdown_all_fields(self, ccp: AutofillPopup):
-        """Given a CreditCardPopup object, verify all fields"""
-        for field in self.fields:
-            self.double_click("form-field", labels=[field])
-            ccp.ensure_autofill_dropdown_visible()
-        # Ensure 'cc-csc' does NOT trigger the autofill dropdown
-        self.double_click("form-field", labels=["cc-csc"])
-        ccp.ensure_autofill_dropdown_not_visible()
+    def verify_autofill_dropdown_credit_card(self, autofill_popup: AutofillPopup):
+        """Verifies autofill dropdown for credit card fields."""
+        return self.verify_field_autofill_dropdown(
+            autofill_popup, fields_to_test=self.fields, excluded_fields=["cc-csc"]
+        )
 
     def verify_credit_card_form_data(
         self, credit_card_sample_data: CreditCardBase
@@ -547,6 +581,17 @@ class AddressFill(Autofill):
         return self.verify_field_highlight(
             fields_to_test=fields_to_test,
             expected_highlighted_fields=expected_highlighted_fields,
+        )
+
+    def verify_autofill_dropdown_addresses(
+        self, autofill_popup: AutofillPopup, region=None, fields_to_test=None
+    ):
+        """Verifies autofill dropdown for address fields."""
+        if fields_to_test is None:
+            fields_to_test = self.fields
+
+        return self.verify_field_autofill_dropdown(
+            autofill_popup=autofill_popup, fields_to_test=fields_to_test, region=region
         )
 
 
