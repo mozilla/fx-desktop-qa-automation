@@ -36,7 +36,7 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
         f"Checkbox with selector '{sponsors_checkbox}' is not checked"
     )
 
-    # Check if sponsored suggestion is displayed. Keep checking until the sponsered suggestions are displayed
+    # Check if sponsored suggestion is displayed. Keep checking until the sponsored suggestions are displayed
     found = False
     retries = 0
     while not found and retries < 20:

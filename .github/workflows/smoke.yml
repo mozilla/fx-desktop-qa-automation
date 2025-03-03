@@ -151,11 +151,11 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-          bash ./collect_executables.sh;
+          echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
-          FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run python choose_ci_set.py

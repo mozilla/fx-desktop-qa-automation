@@ -12,7 +12,7 @@ def test_case():
 
 @pytest.mark.parametrize(
     "search_mode",
-    ["Google", "eBay", "Bing", "DuckDuckGo", "Wikipedia (en)", "Amazon.com"],
+    ["Google", "Amazon.com", "Bing", "DuckDuckGo", "eBay", "Wikipedia (en)"],
 )
 def test_search_engine_selector_and_validator(driver: Firefox, search_mode: str):
     """
