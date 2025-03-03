@@ -164,6 +164,7 @@
     },
 
     "sponsored-suggestion": {
+        "doNotCache": true,
         "selectorData": "urlbarView-row-body-description",
         "strategy": "class",
         "groups": []
