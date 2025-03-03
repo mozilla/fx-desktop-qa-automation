@@ -20,7 +20,8 @@ def test_clear_all_history(driver: Firefox):
     """
     C172045: Verify that the user can Clear all the History
     """
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
     gen_page = GenericPage(driver)
     panel_ui.open_history_menu()
     ba = BrowserActions(driver)

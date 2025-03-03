@@ -31,13 +31,18 @@ CONNECTION_NOT_SECURE = "Connection is not secure"
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 
+    # Instantiate objects
+
     # Basic functionality
     prefs = AboutPrefs(driver, category="privacy")
+    nav = Navigation(driver)
+    panel_ui = PanelUi(driver)
+
+    # Basic functionality
     prefs.open()
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_DISABLED)
-    driver.switch_to.new_window("tab")
+    panel_ui.open_and_switch_to_new_window("tab")
     driver.get(HTTP_SITE)
-    nav = Navigation(driver)
     nav.element_attribute_contains("lock-icon", "tooltiptext", CONNECTION_NOT_SECURE)
 
     # Blocking
@@ -58,9 +63,8 @@ def test_http_site(driver: Firefox):
     nav.element_attribute_contains("lock-icon", "tooltiptext", CONNECTION_NOT_SECURE)
 
     # Private browsing - blocked
-    hamburger = PanelUi(driver)
-    hamburger.open_private_window()
-    nav.switch_to_new_window()
+    panel_ui.open_and_switch_to_new_window("private")
+
     try:
         driver.get(HTTP_SITE)
         assert "badssl" not in driver.current_url, "Site should not be displayed"
