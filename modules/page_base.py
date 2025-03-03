@@ -714,6 +714,7 @@ class BasePage(Page):
         """
         # Keep track of window count to ensure we get a new one to switch to
         window_count = len(self.driver.window_handles)
+        logging.warning(self.driver.window_handles)
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
             os_name = sys.platform
@@ -723,9 +724,11 @@ class BasePage(Page):
             self.actions.send_keys("p")
             self.actions.key_up(Keys.SHIFT)
             self.actions.key_up(mod_key).perform()
-        expected_window_count = window_count + 1
-        self.wait_for_num_windows(expected_window_count)
-        self.switch_to_new_window()
+            expected_window_count = window_count + 1
+            self.wait_for_num_windows(expected_window_count)
+            self.switch_to_new_window()
+            self.title_contains("Private")
+        self.driver.get("about:blank")
         return self
 
     def switch_to_frame(self, frame: str, labels=[]) -> Page:
