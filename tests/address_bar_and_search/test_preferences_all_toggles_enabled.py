@@ -1,8 +1,8 @@
-import pytest
 import sys
-
-from selenium.webdriver import Firefox
 from time import sleep
+
+import pytest
+from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_prefs import AboutPrefs

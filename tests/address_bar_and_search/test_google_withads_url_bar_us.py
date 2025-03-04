@@ -23,7 +23,7 @@ def add_to_prefs_list():
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
-@pytest.mark.unstable(reason = "Google re-captcha")
+@pytest.mark.unstable(reason="Google re-captcha")
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_google_withads_url_bar_us(driver: Firefox):
     """

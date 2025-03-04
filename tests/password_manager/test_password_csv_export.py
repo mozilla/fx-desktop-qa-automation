@@ -1,7 +1,6 @@
 import os
 import sys
 import time
-
 from os import environ
 
 import pytest

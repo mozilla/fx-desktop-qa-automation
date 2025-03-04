@@ -674,7 +674,9 @@ class BasePage(Page):
         try:
             self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
         except TimeoutException:
-            logging.warn("Timeout waiting for the number of windows to be:", num_tabs)
+            logging.warning(
+                "Timeout waiting for the number of windows to be:", num_tabs
+            )
         return self
 
     def switch_to_new_tab(self) -> Page:
@@ -723,9 +725,11 @@ class BasePage(Page):
             self.actions.send_keys("p")
             self.actions.key_up(Keys.SHIFT)
             self.actions.key_up(mod_key).perform()
-        expected_window_count = window_count + 1
-        self.wait_for_num_windows(expected_window_count)
-        self.switch_to_new_window()
+            expected_window_count = window_count + 1
+            self.wait_for_num_windows(expected_window_count)
+            self.switch_to_new_window()
+            self.title_contains("Private")
+        self.driver.get("about:blank")
         return self
 
     def switch_to_frame(self, frame: str, labels=[]) -> Page:

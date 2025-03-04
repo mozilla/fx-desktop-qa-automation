@@ -13,7 +13,7 @@ def test_case():
     return "1365108"
 
 
-@pytest.mark.unstable(reason = "Google re-captcha")
+@pytest.mark.unstable(reason="Google re-captcha")
 def test_sap_google_adclick(driver: Firefox):
     """
     C1365108, Test SAP Google adclick - URL bar - US
