@@ -2,8 +2,9 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import CreditCardFill
+from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
+
 
 
 @pytest.fixture()
@@ -11,15 +12,17 @@ def test_case():
     return "2886600"
 
 
-def test_cc_autofill_from_dropdown(driver: Firefox):
+def test_cc_autofill_from_dropdown(
+    driver: Firefox,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
+    credit_card_fill_obj: CreditCardFill,
+
+):
     """
     Verify that saved credit card information is autofilled correctly when selected from the dropdown,
     except for the CVV field.
     """
-    # Instantiate objects
-    credit_card_fill_obj = CreditCardFill(driver)
-    autofill_popup = AutofillPopup(driver)
-    util = Utilities()
 
     # Open credit card form page
     credit_card_fill_obj.open()
