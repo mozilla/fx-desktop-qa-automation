@@ -13,44 +13,51 @@ def test_case():
     return "127239"
 
 
-TARGET_LINK = "about:telemetry"
 # The number of colors that can be different between two images
 # before we call them different color schemes
 TOLERANCE = 3
 
+TARGET_PAGE = "about:about"
+TARGET_LINK = "about:telemetry"
 
-def compare(a: int, b: int) -> bool:
-    return abs(a - b) < TOLERANCE
+selector = (By.CSS_SELECTOR, f"a[href='{TARGET_LINK}']")
+
+
+def are_lists_different(a: int, b: int) -> bool:
+    return abs(a - b) > TOLERANCE
 
 
 @pytest.mark.ci
-def test_find_toolbar_search(driver: Firefox):
+def test_find_toolbar_search(
+    driver: Firefox, find_toolbar: FindToolbar, browser_actions: BrowserActions
+):
     """
     C127239: Perform a search (using the Find Toolbar)
-    """
-    driver.get("about:about")
-    ba = BrowserActions(driver)
 
+    Arguments:
+        browser_actions: instantiation of BrowserActions BOM.
+        find_toolbar: instantiation of FindToolbar BOM.
+    """
+    driver.get(TARGET_PAGE)
     # Check highlighting: get a reference for what colors are in the link before
-    selector = (By.CSS_SELECTOR, f"a[href='{TARGET_LINK}']")
-    ref_colors = ba.get_all_colors_in_element(selector)
+    ref_colors = browser_actions.get_all_colors_in_element(selector)
 
     # Search part of the target text
-    find_toolbar = FindToolbar(driver).open()
+    find_toolbar.open()
     find_toolbar.find(TARGET_LINK[6:12])
 
-    # Check highlighting: get the list of colors that are in the link after hilite
-    target_colors = ba.get_all_colors_in_element(selector)
+    # Check highlighting: get the list of colors that are in the link after hit
+    target_colors = browser_actions.get_all_colors_in_element(selector)
 
     # Should be more colors after we highlight part of the word
     logging.info(f"{len(target_colors)}, {len(ref_colors)}")
-    assert not compare(len(target_colors), len(ref_colors))
+    assert are_lists_different(len(target_colors), len(ref_colors))
 
     # Search for something where our target will no longer be the first hit
-    driver.get("about:about")
+    driver.get(TARGET_PAGE)
     find_toolbar.find("about")
 
     # Confirm that our target is no longer highlighted by matching colors with reference
-    cleared_colors = ba.get_all_colors_in_element(selector)
+    cleared_colors = browser_actions.get_all_colors_in_element(selector)
 
-    assert compare(len(ref_colors), len(cleared_colors))
+    assert not are_lists_different(len(ref_colors), len(cleared_colors))
