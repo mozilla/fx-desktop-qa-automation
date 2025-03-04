@@ -372,9 +372,8 @@ def collect_changes(testrail_session: TestRail, report):
     """
 
     # Find milestone to attach to
-    channel = os.environ.get("FX_CHANNEL").title()
-    if not channel:
-        channel = "Beta"
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
     if channel == "Release":
         raise ValueError("Release reporting currently not supported")
 

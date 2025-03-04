@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from l10n_CM.Unified.conftest import region
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.page_object_prefs import AboutPrefs
