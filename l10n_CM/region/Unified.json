@@ -11,7 +11,7 @@
         "test_demo_cc_clear_form.py",
         "test_demo_cc_doorhanger_data_is_stored_in_about_prefs.py",
         "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
-        "test_demo_cc_dropdown-presence.py",
+        "test_demo_cc_dropdown_presence.py",
         "test_demo_cc_yellow_highlight.py",
         "test_demo_ad_yellow_highlight.py",
         "test_demo_ad_yellow_highlight_phone_email.py",
