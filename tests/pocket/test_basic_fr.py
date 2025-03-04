@@ -10,7 +10,7 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [
         ("browser.search.region", "FR"),
         ("browser.ping-centre.log", True),

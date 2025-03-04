@@ -14,8 +14,15 @@ def suite_id():
 
 
 @pytest.fixture()
-def set_prefs():
-    """Set prefs"""
+def prefs_list(add_to_prefs_list: dict):
+    """List of prefs to send to main conftest.py driver fixture"""
+    prefs = []
+    prefs.extend(add_to_prefs_list)
+    return prefs
+
+
+@pytest.fixture()
+def add_to_prefs_list():
     return []
 
 
@@ -45,7 +52,8 @@ def driver_and_saved_logins(driver: Firefox, faker: Faker, origins):
 
     def add_login(origin: str, username: str, password: str):
         logging.info("Adding login...")
-        _about_logins = AboutLogins(driver).open()
+        _about_logins = AboutLogins(driver)
+        _about_logins.open()
         logging.info("about:logins opened. Clicking plus button...")
         _about_logins.click_add_login_button()
         logging.info("Plus button clicked. Adding new login...")

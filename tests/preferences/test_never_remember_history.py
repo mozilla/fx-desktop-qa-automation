@@ -15,7 +15,7 @@ def test_case():
 
 # make sure Firefox remembers history
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [("browser.privatebrowsing.autostart", False)]
 
 

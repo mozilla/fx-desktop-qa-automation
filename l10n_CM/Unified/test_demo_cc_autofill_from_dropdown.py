@@ -6,7 +6,6 @@ from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
 
 
-
 @pytest.fixture()
 def test_case():
     return "2886600"
@@ -17,7 +16,6 @@ def test_cc_autofill_from_dropdown(
     util: Utilities,
     autofill_popup: AutofillPopup,
     credit_card_fill_obj: CreditCardFill,
-
 ):
     """
     Verify that saved credit card information is autofilled correctly when selected from the dropdown,
