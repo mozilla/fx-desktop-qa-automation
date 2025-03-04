@@ -590,11 +590,14 @@ class AddressFill(Autofill):
         self.double_click("form-field", labels=[field_label])
         address_autofill_popup.click_clear_form_option()
 
-    def verify_autofill_preview(self, field_label: str, expected_value: str):
-        """Reusable method to verify autofill preview for a given field."""
+    def verify_autofill_preview(self, autofill_popup: AutofillPopup, field_label: str, expected_value: str):
+        """
+        Verifies that hovering over an autofill dropdown entry for a given field shows the expected value.
+        """
         self.double_click("form-field", labels=[field_label])
-        first_item = self.get_nth_element(1)
-        actual_value = self.hover(first_item).get_primary_value(first_item)
+        first_item = autofill_popup.get_nth_element(1)
+        actual_value = autofill_popup.hover(first_item).get_primary_value(first_item)
+
         assert expected_value == actual_value, (
             f"Expected {expected_value}, but got {actual_value}"
         )
