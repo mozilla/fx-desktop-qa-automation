@@ -13,6 +13,8 @@
         "test_demo_cc_doorhanger_shown_on_valid_credit_card_submission.py",
         "test_demo_cc_dropdown-presence.py",
         "test_demo_cc_yellow_highlight.py",
+        "test_demo_ad_yellow_highlight.py",
+        "test_demo_ad_autofill_address_fields.py",
         "test_demo_ad_yellow_highlight_name_org.py",
         "test_demo_ad_yellow_highlight_address.py",
         "test_demo_ad_yellow_highlight_phone_email.py",

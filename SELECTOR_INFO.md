@@ -2983,7 +2983,7 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: search-mode-switcher-option
-Selector Data: toolbarbutton[label*='{title}']
+Selector Data: menuitem[label*='{title}']
 Description: Option by label in search mode list
 Location: Search mode of awesomebar
 Path to .json: modules/data/navigation.components.json
