@@ -29,26 +29,13 @@ def test_demo_ad_autofill_name_org(
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
 
-    # Double inside Name field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["name"])
+    # List of field labels to be autofilled and verified
+    fields_to_test = [
+        "name",
+        "organization"
+    ]
 
-    # Click on the first element from the autocomplete dropdown
-    first_item = autofill_popup.get_nth_element(1)
-    autofill_popup.click_on(first_item)
-
-    # Verify autofill data
-    address_autofill.verify_autofill_data(address_autofill_data, region, util)
-
-    # Double inside Name field and select clear form autofill
-    address_autofill.double_click("form-field", labels=["name"])
-    autofill_popup.click_clear_form_option()
-
-    # Double inside Organization field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["organization"])
-
-    # Click on the first element from the autocomplete dropdown
-    first_item = autofill_popup.get_nth_element(1)
-    autofill_popup.click_on(first_item)
-
-    # Verify autofill data
-    address_autofill.verify_autofill_data(address_autofill_data, region, util)
+    # Loop through each field and perform the autofill test
+    for field in fields_to_test:
+        address_autofill.autofill_and_verify(autofill_popup, field,
+                                             address_autofill_data, util)
