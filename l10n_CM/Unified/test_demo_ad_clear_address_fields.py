@@ -12,11 +12,11 @@ def test_case():
 
 
 def test_demo_ad_clear_address_fields(
-        driver: Firefox,
-        region: str,
-        address_autofill: AddressFill,
-        util: Utilities,
-        autofill_popup: AutofillPopup
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
 ):
     """
     C2888565 - Verify clear functionality after selecting an entry from address fields
@@ -35,7 +35,7 @@ def test_demo_ad_clear_address_fields(
         "address-level2",
         "address-level1",  # This will be skipped for DE/FR
         "postal-code",
-        "country"
+        "country",
     ]
 
     # Loop through each field and perform the autofill test

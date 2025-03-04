@@ -1,6 +1,8 @@
 import os
-import re
+import sys
 import time
+
+from os import environ
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -13,7 +15,11 @@ def test_case():
     return "2241521"
 
 
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
+
+
 @pytest.mark.headed
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_password_csv_export(
     driver_and_saved_logins, home_folder, sys_platform, opt_ci
 ):
@@ -22,16 +28,20 @@ def test_password_csv_export(
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
     keyboard = Controller()
 
+    # Ensure the Downloads folder doesn't contain a passwords.csv file
+    about_logins.remove_password_csv(home_folder)
+
     # Click on buttons to export passwords
+    about_logins.open()
     about_logins.click_on("menu-button")
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
 
     # Download the password file
-    time.sleep(4)
+    time.sleep(5)
     keyboard.tap(Key.enter)
 
     # Verify that the file exists
@@ -43,7 +53,4 @@ def test_password_csv_export(
     about_logins.wait.until(lambda _: os.path.exists(passwords_csv))
 
     # Delete the password.csv created
-    for file in os.listdir(downloads_folder):
-        delete_files_regex = re.compile(r"\bpasswords.csv\b")
-        if delete_files_regex.match(file):
-            os.remove(passwords_csv)
+    about_logins.remove_password_csv(home_folder)

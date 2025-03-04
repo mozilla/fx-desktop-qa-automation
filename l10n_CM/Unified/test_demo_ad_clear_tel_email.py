@@ -12,11 +12,11 @@ def test_case():
 
 
 def test_demo_ad_clear_tel_email(
-        driver: Firefox,
-        region: str,
-        address_autofill: AddressFill,
-        util: Utilities,
-        autofill_popup: AutofillPopup
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
 ):
     """
     C2888571 - Verify clear functionality after selecting an entry from tele/email fields
@@ -31,10 +31,7 @@ def test_demo_ad_clear_tel_email(
     autofill_popup.click_doorhanger_button("save")
 
     # List of field labels to be autofilled and verified
-    fields_to_test = [
-        "email",
-        "tel"
-    ]
+    fields_to_test = ["email", "tel"]
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:

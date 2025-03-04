@@ -394,7 +394,7 @@ def driver(
     fx_executable: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
-    set_prefs: List[Tuple],
+    prefs_list: List[Tuple],
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
@@ -426,7 +426,7 @@ def driver(
     opt_implicit_timeout: int
         Timeout, in seconds for driver-level wait attribute.
 
-    set_prefs: List[Tuple]
+    prefs_list: List[Tuple]
         Preferences to set before the Firefox object is created.
         Usually set in the conftest.py inside a test suite folder.
 
@@ -454,7 +454,7 @@ def driver(
             profile_path = tmp_path / use_profile
             unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
             options.profile = profile_path
-        for opt, value in set_prefs:
+        for opt, value in prefs_list:
             options.set_preference(opt, value)
         driver = Firefox(options=options)
         separator = "x"

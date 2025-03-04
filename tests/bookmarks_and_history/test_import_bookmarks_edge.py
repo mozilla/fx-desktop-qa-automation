@@ -53,7 +53,7 @@ def edge_bookmarks(sys_platform, home_folder):
 @pytest.mark.skipif(
     os.environ.get("GITHUB_ACTIONS") == "true"
     and not sys.platform.lower().startswith("win"),
-    reason="No GHA Mac",
+    reason="No Edge on GHA Mac",
 )
 def test_edge_bookmarks_imported(driver: Firefox, edge_bookmarks):
     about_prefs = AboutPrefs(driver, category="General")

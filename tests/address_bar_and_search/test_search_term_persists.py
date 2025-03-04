@@ -11,7 +11,7 @@ def test_case():
 
 # Set search region
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [
         ("browser.urlbar.showSearchTerms.enabled", True),
         ("browser.urlbar.showSearchTerms.featureGate", True),

@@ -83,7 +83,7 @@ class TabBar(BasePage):
             self.get_element("tab-by-title", labels=[title]).click()
         return self
 
-    def get_tab_by_title(self, title: str) -> BasePage:
+    def get_tab_by_title(self, title: str) -> WebElement:
         """Given a full page title, return the corresponding tab"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             return self.get_element("tab-by-title", labels=[title])

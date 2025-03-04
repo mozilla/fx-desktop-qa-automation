@@ -13,18 +13,8 @@ def httpserver_listen_address():
 
 
 @pytest.fixture()
-def add_prefs():
-    return []
-
-
-@pytest.fixture()
-def overwrite_prefs():
-    return []
-
-
-@pytest.fixture()
-def set_prefs(add_prefs: dict, overwrite_prefs):
-    """Set prefs"""
+def prefs_list(add_to_prefs_list: dict):
+    """List of prefs to send to main conftest.py driver fixture"""
     prefs = [
         ("browser.aboutConfig.showWarning", False),
         ("privacy.donottrackheader.enabled", False),
@@ -38,12 +28,13 @@ def set_prefs(add_prefs: dict, overwrite_prefs):
         ("browser.search.region", "US"),
         ("browser.urlbar.scotchBonnet.enableOverride", True),
     ]
-    prefs.extend(add_prefs)
-    for overwrite_pref in overwrite_prefs:
-        match = [pref for pref in prefs if pref[0] == overwrite_pref[0]]
-        if match:
-            prefs[prefs.index(match[0])] = overwrite_pref
+    prefs.extend(add_to_prefs_list)
     return prefs
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return []
 
 
 @pytest.fixture()
