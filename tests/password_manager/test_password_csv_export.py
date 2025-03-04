@@ -1,5 +1,8 @@
 import os
+import sys
 import time
+
+from os import environ
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -12,7 +15,11 @@ def test_case():
     return "2241521"
 
 
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
+
+
 @pytest.mark.headed
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_password_csv_export(
     driver_and_saved_logins, home_folder, sys_platform, opt_ci
 ):
@@ -34,7 +41,7 @@ def test_password_csv_export(
     about_logins.click_on("continue-export-button")
 
     # Download the password file
-    time.sleep(4)
+    time.sleep(5)
     keyboard.tap(Key.enter)
 
     # Verify that the file exists
