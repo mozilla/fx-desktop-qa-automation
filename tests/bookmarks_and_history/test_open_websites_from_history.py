@@ -29,7 +29,8 @@ def test_open_websites_from_history(driver: Firefox):
     """
     C118807: Verify that the user can open websites from the Toolbar History submenu
     """
-    panel_ui = PanelUi(driver).open()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
 
     panel_ui.open_history_menu()
 

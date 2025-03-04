@@ -100,6 +100,8 @@ class Utilities:
             "Nunavut": "NU",
             "Yukon": "YT",
         }
+        self.fake = None
+        self.locale = None
 
     def remove_file(self, path: str):
         try:
@@ -215,8 +217,13 @@ class Utilities:
 
         try:
             # seed to get consistent data
-            Faker.seed(locale)
-            faker = Faker(locale)
+            if self.fake is None:
+                if locale != self.locale:
+                    Faker.seed(locale)
+                    self.locale = locale
+                self.fake = Faker(locale)
+            faker = self.fake
+            self.fake = faker
             faker.add_provider(internet)
             faker.add_provider(misc)
             return faker, True
