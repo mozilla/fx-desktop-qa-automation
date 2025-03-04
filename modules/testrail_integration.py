@@ -10,6 +10,7 @@ from modules.testrail import TestRail
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
 FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
     "[{channel} {major}] Automated testing {major}.{minor}b{beta}-build{build}"
@@ -23,7 +24,18 @@ def get_plan_title(version_str: str, channel: str) -> str:
     """Given a version string, get the plan_title"""
 
     version_match = FX_PRERC_VERSION_RE.match(version_str)
-    if version_match:
+    if channel == "Devedition":
+        logging.info(f"DevEdition: {version_str}")
+        version_match = FX_DEVED_VERSION_RE.match(version_str)
+        (major, minor, beta) = [version_match[n] for n in range(1, 4)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{minor}", minor)
+            .replace("{beta}", beta)
+            .split("-")[0]
+        )
+    elif version_match:
         logging.info(version_match)
         (major, minor, beta, build) = [version_match[n] for n in range(1, 5)]
         logging.info(f"major {major} minor {minor} beta {beta} build {build}")
@@ -86,9 +98,17 @@ def reportable(platform_to_test=None):
     logging.warning(f"Got version from collect_executable.py! {version}")
     tr_session = testrail_init()
     major_number, second_half = version.split(".")
-    minor_num, build_num = second_half.split("-")
-    channel = "Beta" if "b" in minor_num else "Release"
-    # TODO: Logic for Nightly testing
+    if "-" in second_half:
+        minor_num, _ = second_half.split("-")
+    else:
+        minor_num = second_half
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
+    if not channel:
+        if "b" in minor_num:
+            channel = "Beta"
+        else:
+            channel = "Release"
 
     major_version = f"Firefox {major_number}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
@@ -102,10 +122,15 @@ def reportable(platform_to_test=None):
         major_milestone, f"{channel} {major_number}"
     )
     if not channel_milestone:
-        logging.warning(
-            f"Not reporting: Could not find matching submilestone for {channel} {major_number}"
-        )
-        return False
+        if channel == "Devedition":
+            channel_milestone = tr_session.matching_submilestone(
+                major_milestone, f"Beta {major_number}"
+            )
+        if not channel_milestone:
+            logging.warning(
+                f"Not reporting: Could not find matching submilestone for {channel} {major_number}"
+            )
+            return False
 
     plan_title = get_plan_title(version, channel)
     logging.warning(f"Plan title: {plan_title}")
@@ -347,9 +372,8 @@ def collect_changes(testrail_session: TestRail, report):
     """
 
     # Find milestone to attach to
-    channel = os.environ.get("STARFOX_CHANNEL")
-    if not channel:
-        channel = "Beta"
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
     if channel == "Release":
         raise ValueError("Release reporting currently not supported")
 
@@ -394,6 +418,10 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
+    if (not channel_milestone) and channel == "Devedition":
+        channel_milestone = testrail_session.matching_submilestone(
+            major_milestone, f"Beta {major}"
+        )
 
     # Find plan to attach runs to, create if doesn't exist
     logging.info(f"Plan title: {plan_title}")

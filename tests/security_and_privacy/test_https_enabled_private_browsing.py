@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.browser_object import Navigation, PanelUi
+from modules.browser_object import PanelUi
 from modules.page_object import AboutPrefs
 
 
@@ -19,15 +19,15 @@ def test_https_first_mode_in_private_browsing(driver: Firefox):
     C1362731 Check that https First Mode is properly enabled and working in Private Browsing
     """
 
-    # Navigate to the HTTP Site in a Private Window
+    # Instantiate objects
     prefs = AboutPrefs(driver, category="privacy")
+    panel_ui = PanelUi(driver)
+
+    # Navigate to the HTTP Site in a Private Window
     prefs.open()
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE)
-    hamburger = PanelUi(driver)
-    hamburger.open_private_window()
-
-    nav = Navigation(driver)
-    nav.switch_to_new_private_window()
+    panel_ui.open_and_switch_to_new_window("private")
+    driver.get("about:blank")
     driver.get(HTTP_SITE)
 
     # Wait for the URL to be redirected to HTTPS

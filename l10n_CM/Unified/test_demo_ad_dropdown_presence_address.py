@@ -8,18 +8,19 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888569"
+    return "2888561"
 
 
-def test_demo_ad_autofill_phone_email(
+def test_dropdown_presence_address_field(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    autofill_popup: AutofillPopup,
     util: Utilities,
+    autofill_popup: AutofillPopup,
 ):
     """
-    C2888569 - Verify Autofill functionality when selecting an entry from the dropdown for tele/email fields
+    C2888561 - Verify that the autofill dropdown is displayed  for the eligible address fields after an address was
+    previously saved
     """
 
     # Create fake data and fill it in
@@ -30,13 +31,14 @@ def test_demo_ad_autofill_phone_email(
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
 
-    # List of field labels to be autofilled and verified
     fields_to_test = [
-        "email",
-        "tel"
+        "street-address",
+        "address-level2",
+        "address-level1",
+        "postal-code",
+        "country",
     ]
 
-    # Loop through each field and perform the autofill test
-    for field in fields_to_test:
-        address_autofill.autofill_and_verify(autofill_popup, field,
-                                             address_autofill_data, util)
+    address_autofill.verify_autofill_dropdown_addresses(
+        autofill_popup=autofill_popup, fields_to_test=fields_to_test, region=region
+    )

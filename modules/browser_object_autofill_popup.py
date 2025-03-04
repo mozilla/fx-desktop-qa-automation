@@ -64,7 +64,7 @@ class AutofillPopup(BasePage):
             return self.get_element(selector).text
 
     # Interaction with autocomplete list elements
-    def get_nth_element(self, index: str) -> WebElement:
+    def get_nth_element(self, index: str | int) -> WebElement:
         """
         Get the nth element from the autocomplete list
         Parameters: index (str): The index of the element to retrieve (1-based)
@@ -79,6 +79,20 @@ class AutofillPopup(BasePage):
                     )
                 )
             )
+
+    def select_nth_element(self, index: int):
+        """
+        Select the nth element from the autocomplete list
+        Arguments:
+            index (int): The index of the element to retrieve (1-based)
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.expect(
+                EC.visibility_of(
+                    self.get_element("select-form-option-by-index", labels=[str(index)])
+                )
+            )
+            self.get_element("select-form-option-by-index", labels=[str(index)]).click()
 
     def get_primary_value(self, element: WebElement) -> str:
         """

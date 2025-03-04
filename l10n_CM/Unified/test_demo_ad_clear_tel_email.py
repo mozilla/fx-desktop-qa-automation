@@ -8,18 +8,18 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888569"
+    return "2888571"
 
 
-def test_demo_ad_autofill_phone_email(
-    driver: Firefox,
-    region: str,
-    address_autofill: AddressFill,
-    autofill_popup: AutofillPopup,
-    util: Utilities,
+def test_demo_ad_clear_tel_email(
+        driver: Firefox,
+        region: str,
+        address_autofill: AddressFill,
+        util: Utilities,
+        autofill_popup: AutofillPopup
 ):
     """
-    C2888569 - Verify Autofill functionality when selecting an entry from the dropdown for tele/email fields
+    C2888571 - Verify clear functionality after selecting an entry from tele/email fields
     """
 
     # Create fake data and fill it in
@@ -38,5 +38,4 @@ def test_demo_ad_autofill_phone_email(
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.autofill_and_verify(autofill_popup, field,
-                                             address_autofill_data, util)
+        address_autofill.clear_and_verify(autofill_popup, field, address_autofill_data)

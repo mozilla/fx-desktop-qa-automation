@@ -6,10 +6,16 @@ on:
   pull_request:
   workflow_call:
     inputs:
-      job_to_run: 
+      channel:
+        description: "Channel to run tests against"
+        default: "beta"
+        type: string
+        required: false
+      job_to_run:
         required: true
         type: string
 env:
+  FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
@@ -17,6 +23,7 @@ env:
 
 jobs:
   Smoke-Windows:
+    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request' }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -110,6 +117,7 @@ jobs:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
+    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -137,7 +145,7 @@ jobs:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
-        id: setup        
+        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -145,11 +153,11 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-          bash ./collect_executables.sh;
+          echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
-          FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox --version
           pipenv run python choose_ci_set.py

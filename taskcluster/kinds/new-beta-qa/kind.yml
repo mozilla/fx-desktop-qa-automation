@@ -37,11 +37,24 @@ tasks:
         pip3 install 'ruff>=0.4.8,<0.5';
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
+        export FX_CHANNEL="beta";
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
         pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./keyring-unlock.sh
+        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
+        export FAILURE=${?};
+        mv ./ci_pyproject_headed.toml ./pyproject.toml;
+        export REPORTABLE=1;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
+        export BETA_VERSION=$(pipenv run python collect_executables.py -n)
+        if ![[ "${BETA_VERSION}" == *"b6"* ]] && ![[ "${BETA_VERSION}" == *"b9"* ]]; then exit 0;
+        export FX_CHANNEL="devedition";
+        mv ./ci_pyproject.toml ./pyproject.toml;
+        ./collect_executables.sh;
+        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
+        $FX_EXECUTABLE --version;
         pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
         export FAILURE=${?};
         mv ./ci_pyproject_headed.toml ./pyproject.toml;

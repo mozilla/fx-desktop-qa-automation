@@ -103,6 +103,8 @@ class Utilities:
             "Nunavut": "NU",
             "Yukon": "YT",
         }
+        self.fake = None
+        self.locale = None
 
     def remove_file(self, path: str):
         try:
@@ -217,7 +219,14 @@ class Utilities:
             return None  # No fallback
 
         try:
-            faker = Faker(locale)
+            # seed to get consistent data
+            if self.fake is None:
+                if locale != self.locale:
+                    Faker.seed(locale)
+                    self.locale = locale
+                self.fake = Faker(locale)
+            faker = self.fake
+            self.fake = faker
             faker.add_provider(internet)
             faker.add_provider(misc)
             return faker, True
@@ -288,17 +297,17 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self) -> CreditCardBase:
+    def fake_credit_card_data(self, country_code: str = "US") -> CreditCardBase:
         """
-        Generates fake information related to the CC scenarios.
+        Generates fake information related to the CC scenarios for a given country code.
 
 
         Returns
         -------
         CreditCardBase
-            The object that contains all of the fake data generated.
+            The object that contains all the fake data generated.
         """
-        fake = Faker()
+        fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()
@@ -381,6 +390,7 @@ class Utilities:
 
     def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
         """
+
         Given a phone number in some format, +1(xxx)-xxx-xxxx or something similar, it will strip the phone number
         to only the <country-code>xxxxxxxxxx format and return it.
 
@@ -471,6 +481,62 @@ class Utilities:
         :return: The corresponding abbreviation or "Not Found" if not in the dictionary.
         """
         return self.state_province_abbr.get(full_name, "Not Found")
+
+    def normalize_regional_phone_numbers(self, phone: str, region: str) -> str:
+        """
+        Normalizes a phone number by separating the country prefix and verifying the rest of the number as an integer.
+        This is used for localization (l10n) regional tests.
+        Parameters:
+        -----------
+        phone : str
+            The phone number to be normalized.
+        region : str
+            The region (country) code to determine the correct country prefix.
+        Returns:
+        --------
+        str
+            The normalized phone number in the format <country-code><number>.
+        """
+
+        # Country code mapping for different regions
+        country_codes = {
+            "US": "1",
+            "CA": "1",
+            "FR": "33",
+            "DE": "49",
+        }
+
+        # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
+        phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
+        # Sub out anything that is not a digit with the empty string to ensure the phone number is formatted with no spaces or special characters
+        digits = re.sub(r"\D", "", phone)
+
+        # Determine country code
+        country_code = country_codes.get(
+            region, "1"
+        )  # Default to "1" (US/CA) if region is unknown
+        local_number = digits
+
+        # Check if phone already contains a valid country code
+        for code in country_codes.values():
+            if digits.startswith(code):
+                country_code = code
+                # Remove country code from local number
+                local_number = digits[len(code) :]
+                break
+
+        # Handle leading zero in local numbers (France & Germany)
+        if region in ["FR", "DE"] and local_number.startswith("0"):
+            # Remove the leading zero
+            local_number = local_number[1:]
+
+        # Validate local number length
+        if len(local_number) < 6:  # Too short to be valid
+            logging.warning(f"Invalid phone number format: {phone}")
+            return ""
+
+        # Return formatted phone number with correct country code
+        return f"{country_code}{local_number}"
 
 
 class BrowserActions:

@@ -102,54 +102,81 @@ else:
     if not language:
         language = "en-US"
 
-    candidate_exists = True
-    this_beta = BACKSTOP
-    while candidate_exists:
-        (major, minor_beta) = this_beta.split(".")
-        (minor, beta) = minor_beta.split("b")
-        major = int(major)
-        minor = int(minor)
-        beta = int(beta)
+    if channel == "-devedition":
+        # Devedition has special requirements as it's testing a release
 
-        next_major = f"{major + 1}.0b1"
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/"
-        rs = requests.get(fx_download_dir_url)
-        if rs.status_code < 300:
-            latest_beta_ver = next_major
-            this_beta = next_major
-            continue
+        this_devedition = BACKSTOP
+        fx_download_dir_url = (
+            "https://archive.mozilla.org/pub/devedition/releases/135.0b5/"
+        )
 
-        next_minor = f"{major}.{minor + 1}b1"
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/build1/"
-        rs = requests.get(fx_download_dir_url)
-        if rs.status_code < 300:
-            latest_beta_ver = next_minor
-            this_beta = next_minor
-            continue
+        while True:
+            (major, _) = this_devedition.split(".")
+            major = int(major)
+            this_devedition = f"{major + 1}.0b5"
+            next_candidate = f"https://archive.mozilla.org/pub/devedition/releases/{this_devedition}/"
 
-        next_beta = f"{major}.{minor}b{beta + 1}"
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/build1/"
-        rs = requests.get(fx_download_dir_url)
-        if rs.status_code < 300:
-            latest_beta_ver = next_beta
-            this_beta = next_beta
-            continue
+            rs = requests.get(next_candidate)
+            if rs.status_code > 399:
+                break
 
-        candidate_exists = False
+            fx_download_dir_url = next_candidate
 
-    status = 200
-    build = 0
-    while status < 400 and build < 20:
-        build += 1
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/"
+        devedition_version = fx_download_dir_url.split("/")[-2]
+        fx_download_dir_url = f"{fx_download_dir_url}{get_fx_platform()}/{language}/"
 
-        # Fetch the page
-        response = requests.get(fx_download_dir_url)
-        status = response.status_code
+    else:
+        # Anything but devedition
 
-    # Correct build is the last one that didn't 404
-    build -= 1
-    fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+        candidate_exists = True
+        this_beta = BACKSTOP
+        while candidate_exists:
+            (major, minor_beta) = this_beta.split(".")
+            (minor, beta) = minor_beta.split("b")
+            major = int(major)
+            minor = int(minor)
+            beta = int(beta)
+
+            next_major = f"{major + 1}.0b1"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/"
+            rs = requests.get(fx_download_dir_url)
+            if rs.status_code < 300:
+                latest_beta_ver = next_major
+                this_beta = next_major
+                continue
+
+            next_minor = f"{major}.{minor + 1}b1"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/build1/"
+            rs = requests.get(fx_download_dir_url)
+            if rs.status_code < 300:
+                latest_beta_ver = next_minor
+                this_beta = next_minor
+                continue
+
+            next_beta = f"{major}.{minor}b{beta + 1}"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/build1/"
+            rs = requests.get(fx_download_dir_url)
+            if rs.status_code < 300:
+                latest_beta_ver = next_beta
+                this_beta = next_beta
+                continue
+
+            candidate_exists = False
+
+        status = 200
+        build = 0
+        while status < 400 and build < 20:
+            build += 1
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/"
+
+            # Fetch the page
+            response = requests.get(fx_download_dir_url)
+            status = response.status_code
+
+        # Correct build is the last one that didn't 404
+        build -= 1
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+
     response = requests.get(fx_download_dir_url)
     status = response.status_code
     response_text = None
@@ -179,8 +206,11 @@ else:
 
     fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
     if NUMBER_ONLY:
-        number_cand = fx_download_dir_url.split("/")[6]
-        number = number_cand.split("-")[0]
-        print(f"{number}-build{build}")
+        if channel == "-devedition":
+            print(devedition_version)
+        else:
+            number_cand = fx_download_dir_url.split("/")[6]
+            number = number_cand.split("-")[0]
+            print(f"{number}-build{build}")
     else:
         print(fx_download_executable_url)

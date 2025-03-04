@@ -14,11 +14,6 @@ FACEBOOK_URL = "https://www.facebook.com/"
 AMAZON_URL = "https://www.amazon.com/"
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 def test_websites_visited_in_private_browser_not_displayed_in_history(driver: Firefox):
     """
     C101663 - Verify the visited websites from the Private Browsing session are not displayed inside the normal session
@@ -27,9 +22,9 @@ def test_websites_visited_in_private_browser_not_displayed_in_history(driver: Fi
 
     initial_window_handle = driver.current_window_handle
 
-    panel_ui = PanelUi(driver).open()
-    panel_ui.open_private_window()
-    panel_ui.switch_to_new_private_window()
+    panel_ui = PanelUi(driver)
+    panel_ui.open()
+    panel_ui.open_and_switch_to_new_window("private")
 
     driver.get(YOUTUBE_URL)
     driver.get(FACEBOOK_URL)

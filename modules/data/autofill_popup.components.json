@@ -61,6 +61,12 @@
          "groups": []
     },
 
+    "select-form-option-by-index": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})",
+        "strategy":"css",
+        "groups": []
+    },
+
     "update-card-info-popup-button": {
         "selectorData": "button[label='Update existing card']",
         "strategy": "css",
