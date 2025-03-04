@@ -97,15 +97,16 @@ def test_zoom_text_only_from_settings(
     """
     # Initializing objects
     nav = Navigation(driver)
+    panel_ui = PanelUi(driver)
 
     # Save the original positions of elements for comparison
-    driver.switch_to.new_window("tab")
+    panel_ui.open_and_switch_to_new_window("tab")
     nav.search(WEBSITE_2)
     web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
     original_positions = save_original_positions(driver, web_page)
 
     # Set the pref to zoom text only
-    driver.switch_to.new_window("tab")
+    panel_ui.open_and_switch_to_new_window("tab")
     about_prefs = AboutPrefs(driver, category="General").open()
     about_prefs.click_on("zoom-text-only")
 
@@ -132,15 +133,16 @@ def test_zoom_text_only_after_restart(
     """
     # Initializing objects
     nav = Navigation(driver)
+    panel_ui = PanelUi(driver)
 
     # Save the original positions of elements for comparison
-    driver.switch_to.new_window("tab")
+    panel_ui.open_and_switch_to_new_window("tab")
     nav.search(WEBSITE_2)
     web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
     original_positions = save_original_positions(driver, web_page)
 
     # Set default zoom level
-    driver.switch_to.new_window("tab")
+    panel_ui.open_and_switch_to_new_window("tab")
     about_prefs = AboutPrefs(driver, category="General").open()
     about_prefs.set_default_zoom_level(110)
 

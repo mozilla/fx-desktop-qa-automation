@@ -3,7 +3,6 @@ import json
 import pytest
 from selenium.webdriver import Firefox
 
-from l10n_CM.Unified.conftest import region
 from modules.page_object import AboutPrefs
 from modules.util import Utilities
 

@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
 
 
@@ -27,13 +26,8 @@ def test_the_website_opened_in_new_window_is_present_in_history_menu(driver: Fir
     for url in WEBSITES:
         GenericPage(driver, url=url).open()
 
-    tabs = TabBar(driver)
     panel_ui = PanelUi(driver)
-
-    panel_ui.open_panel_menu()
-    panel_ui.select_panel_setting("panel-ui-new-window")
-    tabs.wait_for_num_tabs(2)
-    tabs.switch_to_new_window()
+    panel_ui.open_and_switch_to_new_window("window")
 
     page = GenericPage(driver, url=YOUTUBE_URL)
     page.open()
