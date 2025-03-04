@@ -10,6 +10,7 @@ class AutofillAddressBase:
     address_level_1: str | None = None
     postal_code: str | None = None
     country: str | None = None
+    country_code: str | None = None
     email: str | None = None
     telephone: str | None = None
     """
@@ -31,6 +32,8 @@ class AutofillAddressBase:
         The postal code for the address.
     country : str | None
         The country of the address.
+    country_code: str | None
+        The code of the country.
     email : str | None
         The email address associated with the address.
     telephone : str | None

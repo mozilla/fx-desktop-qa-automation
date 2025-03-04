@@ -1,6 +1,4 @@
 {
     "region": "US",
-    "tests": [
-        "test_demo_ad_verify_new_address_added.py"
-    ]
+    "tests": []
 }

@@ -3,9 +3,11 @@ from time import sleep
 from typing import List
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
@@ -88,16 +90,8 @@ class AboutPrefs(BasePage):
 
     def set_country_autofill_panel(self, country: str) -> BasePage:
         """Sets the country value in the autofill view"""
-        for _ in range(self.TABS_TO_COUNTRY):
-            self.actions.send_keys(Keys.TAB).perform()
-
-        self.actions.send_keys(country)
-
-        added_tabs = 6
-        for _ in range(self.TABS_TO_COUNTRY + added_tabs):
-            self.perform_key_combo(Keys.SHIFT, Keys.TAB)
-            sleep(0.3)
-
+        select_country = Select(self.driver.find_element(By.ID, "country"))
+        select_country.select_by_value(country)
         return self
 
     def extract_content_from_html(self, initial_string: str) -> AutofillAddressBase:
@@ -188,21 +182,21 @@ class AboutPrefs(BasePage):
             "address-level2": autofill_info.address_level_2,
             "address-level1": autofill_info.address_level_1,
             "postal-code": autofill_info.postal_code,
-            "country": "Canada" if autofill_info.country == "CA" else "United States",
             "tel": autofill_info.telephone,
             "email": autofill_info.email,
         }
 
-        self.set_country_autofill_panel(fields["country"])
+        self.set_country_autofill_panel(autofill_info.country_code)
+        form_element = self.get_element("form-container")
+        children = [
+            x.get_attribute("id")
+            for x in form_element.find_elements(By.CSS_SELECTOR, "*")
+        ]
 
-        for field in fields:
-            if field == "country":
-                self.actions.send_keys(Keys.TAB)
-                continue
-            self.actions.send_keys(fields[field] + Keys.TAB).perform()
-        if self.sys_platform() != "Windows":
-            self.actions.send_keys(Keys.TAB).perform()
-        self.actions.send_keys(Keys.ENTER).perform()
+        for key, val in fields.items():
+            if key in children:
+                form_element.find_element(By.ID, key).send_keys(val)
+        self.get_element("save-button").click()
         return self
 
     def fill_cc_panel_information(
@@ -296,7 +290,10 @@ class AboutPrefs(BasePage):
         """
         self.switch_to_saved_addresses_popup_iframe()
         self.get_element("add-address").click()
+        self.driver.switch_to.default_content()
+        self.driver.switch_to.frame(2)
         self.fill_autofill_panel_information(address_data)
+        self.driver.switch_to.default_content()
         return self
 
     def get_password_exceptions_popup_iframe(self) -> WebElement:

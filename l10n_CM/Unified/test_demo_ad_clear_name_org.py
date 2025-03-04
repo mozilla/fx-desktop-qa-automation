@@ -12,11 +12,11 @@ def test_case():
 
 
 def test_demo_ad_clear_name_org(
-        driver: Firefox,
-        region: str,
-        address_autofill: AddressFill,
-        util: Utilities,
-        autofill_popup: AutofillPopup
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
 ):
     """
     C2888560 - Verify clear functionality after selecting an entry from name/org fields
@@ -30,10 +30,7 @@ def test_demo_ad_clear_name_org(
     autofill_popup.click_doorhanger_button("save")
 
     # List of field labels to be autofilled and verified
-    fields_to_test = [
-        "name",
-        "organization"
-    ]
+    fields_to_test = ["name", "organization"]
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
