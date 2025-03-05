@@ -61,6 +61,7 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     autofill_popup.element_has_text("address-doorhanger-country", expected_country)
 
     # Click the "Save" button
+
     autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
