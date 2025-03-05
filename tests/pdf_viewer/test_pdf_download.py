@@ -17,11 +17,9 @@ def test_case():
 def delete_files_regex_string():
     return r"i-9.*\.pdf"
 
-
 @pytest.fixture()
 def file_name():
     return "i-9.pdf"
-
 
 @pytest.mark.headed
 def test_pdf_download(

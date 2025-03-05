@@ -16,14 +16,14 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [("cookiebanners.service.mode", 1)]
 
 
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
-@pytest.mark.unstable
+@pytest.mark.unstable(reason="Google re-captcha")
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
 def test_google_withads_url_bar_us(driver: Firefox):
     """
