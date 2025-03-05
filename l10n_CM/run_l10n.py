@@ -8,7 +8,6 @@ current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def run_tests(reg, flg, all_tests):
