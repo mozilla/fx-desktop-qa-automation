@@ -21,7 +21,7 @@ ALLOWED_COOKIES = set(
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [
         ("privacy.trackingprotection.pbmode.enabled", False),
         ("privacy.trackingprotection.cryptomining.enabled", False),

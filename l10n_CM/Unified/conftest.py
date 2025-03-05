@@ -15,20 +15,20 @@ def region():
 
 
 @pytest.fixture()
-def add_prefs(region: str):
+def add_to_prefs_list(region: str):
     return []
 
 
 @pytest.fixture()
-def set_prefs(add_prefs: List[tuple[str, str | bool]], region: str):
-    """Set prefs"""
+def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
+    """List of prefs to send to main conftest.py driver fixture"""
     prefs = [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
         ("browser.aboutConfig.showWarning", False),
         ("browser.search.region", region),
     ]
-    prefs.extend(add_prefs)
+    prefs.extend(add_to_prefs_list)
     return prefs
 
 

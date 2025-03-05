@@ -8,19 +8,20 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888558"
+    return "2888571"
 
 
-def test_demo_ad_autofill_name_org(
+def test_demo_ad_clear_tel_email(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    autofill_popup: AutofillPopup,
     util: Utilities,
+    autofill_popup: AutofillPopup,
 ):
     """
-    C2888558 - Verify Autofill functionality when selecting an entry from the dropdown for name/org fields
+    C2888571 - Verify clear functionality after selecting an entry from tele/email fields
     """
+
     # Create fake data and fill it in
     address_autofill.open()
     address_autofill_data = util.fake_autofill_data(region)
@@ -30,10 +31,8 @@ def test_demo_ad_autofill_name_org(
     autofill_popup.click_doorhanger_button("save")
 
     # List of field labels to be autofilled and verified
-    fields_to_test = ["name", "organization"]
+    fields_to_test = ["email", "tel"]
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.autofill_and_verify(
-            autofill_popup, field, address_autofill_data, util
-        )
+        address_autofill.clear_and_verify(autofill_popup, field, address_autofill_data)

@@ -30,26 +30,11 @@ def test_demo_ad_autofill_phone_email(
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
 
-    # Double inside phone field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["tel"])
+    # List of field labels to be autofilled and verified
+    fields_to_test = ["email", "tel"]
 
-    # Click on the first element from the autocomplete dropdown
-    first_item = autofill_popup.get_nth_element(1)
-    autofill_popup.click_on(first_item)
-
-    # Verify autofill data
-    address_autofill.verify_autofill_data(address_autofill_data, region, util)
-
-    # Double inside phone field and select clear form autofill
-    address_autofill.double_click("form-field", labels=["tel"])
-    autofill_popup.click_clear_form_option()
-
-    # Double inside email field and select a saved address entry from the dropdown
-    address_autofill.double_click("form-field", labels=["email"])
-
-    # Click on the first element from the autocomplete dropdown
-    first_item = autofill_popup.get_nth_element(1)
-    autofill_popup.click_on(first_item)
-
-    # Verify autofill data
-    address_autofill.verify_autofill_data(address_autofill_data, region, util)
+    # Loop through each field and perform the autofill test
+    for field in fields_to_test:
+        address_autofill.autofill_and_verify(
+            autofill_popup, field, address_autofill_data, util
+        )

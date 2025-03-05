@@ -10,7 +10,8 @@ TEST_PHRASE = "Aloha"
 
 
 @pytest.fixture()
-def set_prefs():
+def add_to_prefs_list():
+    """Add to list of prefs to set"""
     return [("dom.webnotifications.enabled", True)]
 
 

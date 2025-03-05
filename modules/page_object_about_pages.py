@@ -1,4 +1,7 @@
 import logging
+import os
+import re
+import sys
 
 from pypom import Page
 from selenium.common.exceptions import (
@@ -36,8 +39,8 @@ class AboutConfig(BasePage):
     def toggle_true_false_config(self, term: str) -> BasePage:
         """
         Main method to toggle a true false pref in about:config
-        Note: To use this in a test, use set_pref - ("browser.aboutConfig.showWarning", False),
-        in the test suite's conftest.py
+        Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py or use add_to_prefs_list fixture in the test itself
         """
         self.search_pref(term)
         toggle_tf_button = self.get_element("value-edit-button")
@@ -47,8 +50,8 @@ class AboutConfig(BasePage):
     def change_config_value(self, term: str, value) -> BasePage:
         """
         Main method to change a config's value in about:config
-        Note: To use this in a test, use set_pref - ("browser.aboutConfig.showWarning", False),
-        in the test suite's conftest.py
+        Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py or use add_to_prefs_list fixture in the test itself.
         """
         self.search_pref(term)
         pref_edit_button = self.get_element("value-edit-button")
@@ -175,6 +178,18 @@ class AboutLogins(BasePage):
                 assert login in actual_logins
         else:
             assert expected_logins == actual_logins
+
+    def remove_password_csv(self, home_folder):
+        # Delete password.csv, if there is one in test location
+        if self.sys_platform == "Linux":
+            downloads_folder = os.getcwd()
+        else:
+            downloads_folder = os.path.join(home_folder, "Downloads")
+        passwords_csv = os.path.join(downloads_folder, "passwords.csv")
+        for file in os.listdir(downloads_folder):
+            delete_files_regex = re.compile(r"\bpasswords.csv\b")
+            if delete_files_regex.match(file):
+                os.remove(passwords_csv)
 
 
 class AboutPrivatebrowsing(BasePage):
