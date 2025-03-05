@@ -10,6 +10,7 @@ from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
 from faker import Faker
+from faker.config import AVAILABLE_LOCALES
 from faker.providers import internet, misc
 from jsonpath_ng import parse
 from PIL import Image
@@ -199,15 +200,9 @@ class Utilities:
         -------
         Optional[Tuple[Faker, bool]] -> (faker_instance, is_valid_locale) or None if invalid.
         """
-        locale_map = {
-            "US": "en_US",
-            "CA": "en_CA",
-            "DE": "de_DE",
-            "FR": "fr_FR",
-        }
 
         # Check if locale exists, otherwise return None
-        locale = locale_map.get(country_code.upper())
+        locale = next(filter(lambda x: country_code in x, AVAILABLE_LOCALES), None)
 
         if not locale:
             logging.error(
@@ -227,21 +222,24 @@ class Utilities:
             faker.add_provider(internet)
             faker.add_provider(misc)
             return faker, True
-        except AttributeError:
+        except AttributeError as e:
             logging.error(
                 f"Invalid locale `{locale}`. Faker instance could not be created."
             )
+
             return None
 
-    def generate_localized_phone_US_CA(self, fake: Faker) -> str:
+    def generate_localized_phone(self, country_code: str, fake: Faker) -> str:
         """
-        Generates a phone number that is valid based on the US and CA locale.
+        Generates a phone number that is valid based on country code
 
-        This means that only numbers that do not start with 1 (in the actual phone number not the area code) are considered valid.
+        For US and CA, this means that only numbers that do not start with 1 (in the actual phone number not the area code) are considered valid.
 
         ...
         Attributes
         ----------
+        country_code: str
+            The country code
         fake : Faker
             The localized Faker object
 
@@ -250,35 +248,38 @@ class Utilities:
         str
             The raw, generated phone number
         """
-        phone = ""
-        while True:
+        if country_code in ["US", "CA"]:
+            while True:
+                phone = self.normalize_phone_number(fake.phone_number())
+                if phone[:2] != "11":
+                    break
+        else:
             phone = self.normalize_phone_number(fake.phone_number())
-            if phone[:2] != "11":
-                break
         return phone
 
     def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
         """
         Generates fake autofill data for a given country code.
         """
+        # valid attributes to get region for locale
+        region_attributes = ["state", "administrative_unit", "region"]
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
         organization = fake.company().replace(",", "")
         street_address = fake.street_address()
+        # find correct attribute for selected locale
+        valid_attribute = next(
+            filter(lambda attr: hasattr(fake, attr), region_attributes), None
+        )
+        # set correct region if valid attribute is found else none
+        address_level_1 = (
+            getattr(fake, valid_attribute)() if valid_attribute else valid_attribute
+        )
         address_level_2 = fake.city()
-        try:
-            address_level_1 = fake.state()
-        except AttributeError:
-            address_level_1 = fake.administrative_unit()
         postal_code = fake.postcode()
-        country = "CA" if not valid_code else country_code
+        country = fake.current_country()
         email = fake.email()
-
-        # Use `generate_localized_phone_US_CA` only for US & CA, otherwise use default Faker phone number.
-        if country in ["US", "CA"]:
-            telephone = self.generate_localized_phone_US_CA(fake)
-        else:
-            telephone = fake.phone_number()
+        telephone = self.generate_localized_phone(country_code, fake)
 
         fake_data = AutofillAddressBase(
             name=name,
@@ -288,6 +289,7 @@ class Utilities:
             address_level_1=address_level_1,
             postal_code=postal_code,
             country=country,
+            country_code=country_code,
             email=email,
             telephone=telephone,
         )

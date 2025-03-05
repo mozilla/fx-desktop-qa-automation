@@ -492,6 +492,18 @@
         "groups": []
     },
 
+    "form-container": {
+        "selectorData": "form",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "save-button": {
+        "selectorData": "save",
+        "strategy": "id",
+        "groups": []
+    },
+
     "reenter-new-password": {
         "selectorData": "pw2",
         "strategy": "id",

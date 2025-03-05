@@ -679,6 +679,11 @@ class BasePage(Page):
             )
         return self
 
+    def switch_to_default_frame(self) -> Page:
+        """Switch to default content frame"""
+        self.driver.switch_to.default_content()
+        return self
+
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):

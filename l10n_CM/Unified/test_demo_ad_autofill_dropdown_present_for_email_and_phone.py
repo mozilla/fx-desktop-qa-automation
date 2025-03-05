@@ -12,11 +12,11 @@ def test_case():
 
 
 def test_dropdown_presence_email_phone_field(
-        driver: Firefox,
-        region: str,
-        address_autofill: AddressFill,
-        util: Utilities,
-        autofill_popup: AutofillPopup,
+    driver: Firefox,
+    region: str,
+    address_autofill: AddressFill,
+    util: Utilities,
+    autofill_popup: AutofillPopup,
 ):
     """
     C2888567 - Verify that the autofill dropdown is displayed for the email and phone fields

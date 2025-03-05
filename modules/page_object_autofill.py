@@ -482,7 +482,7 @@ class AddressFill(Autofill):
             "address-level2": autofill_info.address_level_2,
             "address-level1": autofill_info.address_level_1,
             "postal-code": autofill_info.postal_code,
-            "country": autofill_info.country,
+            "country": autofill_info.country_code,
             "email": autofill_info.email,
             "tel": autofill_info.telephone,
         }
@@ -547,7 +547,7 @@ class AddressFill(Autofill):
             "City": autofill_data.address_level_2,
             "State": autofill_data.address_level_1,
             "ZIP Code": autofill_data.postal_code,
-            "Country": autofill_data.country,
+            "Country": autofill_data.country_code,
             "Email": autofill_data.email,
             "Phone": util.normalize_regional_phone_numbers(
                 autofill_data.telephone, region
@@ -597,7 +597,11 @@ class AddressFill(Autofill):
         )
 
     def autofill_and_verify(
-        self, address_autofill_popup, field_label, address_autofill_data, util
+        self,
+        address_autofill_popup,
+        field_label,
+        address_autofill_data: AutofillAddressBase,
+        util,
     ):
         """
         Autofills a form field, verifies the data, and clears it if necessary.
@@ -609,13 +613,13 @@ class AddressFill(Autofill):
             The popup handler for autofill suggestions.
         field_label : str
             The label of the field being autofilled.
-        address_autofill_data : dict
+        address_autofill_data : AutofillAddressBase
             The generated autofill data for verification.
         region : str
             The region code to handle localization.
         """
         # Skip address-level1 (State) selection for DE and FR
-        if field_label == "address-level1" and address_autofill_data.country in [
+        if field_label == "address-level1" and address_autofill_data.country_code in [
             "DE",
             "FR",
         ]:
@@ -628,7 +632,7 @@ class AddressFill(Autofill):
 
         # Verify autofill data
         self.verify_autofill_data(
-            address_autofill_data, address_autofill_data.country, util
+            address_autofill_data, address_autofill_data.country_code, util
         )
 
         # Clear form autofill
@@ -662,7 +666,10 @@ class AddressFill(Autofill):
             assert not value, f"Field '{field}' is not empty: Found '{value}'"
 
     def clear_and_verify(
-        self, address_autofill_popup, field_label, address_autofill_data
+        self,
+        address_autofill_popup,
+        field_label,
+        address_autofill_data: AutofillAddressBase,
     ):
         """
         Autofills a form field, clears it, and verifies that it is empty.
@@ -680,7 +687,7 @@ class AddressFill(Autofill):
             The region code to handle localization.
         """
         # Skip address-level1 (State) selection for DE and FR
-        if field_label == "address-level1" and address_autofill_data.country in [
+        if field_label == "address-level1" and address_autofill_data.country_code in [
             "DE",
             "FR",
         ]:
