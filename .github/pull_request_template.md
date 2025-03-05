@@ -1,28 +1,37 @@
-### Description
+### Relevant Links
 
-Please include a summary of the changes and the related issue. Please also include relevant motivation and context. List any dependencies that are required for this change.
+Bugzilla: _
+TestRail: _
 
-### Bugzilla bug ID
+### Description of Code / Doc Changes
 
-**Testrail:**
-**Link:**
+_Leave a bullet-pointed list of changes you made._
 
-### Type of change
+### Process Changes Required
 
-Please delete options that are not relevant.
+_Mark the relevant boxes:_
 
-- [ ] New Test
-- [ ] New POM
-- [ ] Other Changes (Please specify)
+- [ ] Adds a dependency (rerun `pipenv install`)
+- [ ] Changes the BasePage
+- [ ] Changes or creates a BOM/POM (name the object model): _
+- [ ] Changes CI flow
+- [ ] Changes scheduled Beta or DevEdition
+- [ ] Changes Git hooks or Github settings
+- [ ] Changes L10n harness
 
-### How does this resolve / make progress on that bug?
+### Screenshots or Explanations
 
-Please describe the progress or significance with respect to the bug listed above.
+_If you need to explain your code, do it here._
 
-### Screenshots / Explanations
+### Comments or Future Work
 
-Please upload any relevant media or add a relevant description with respect to the bug listed above.
+_Do we need to start another PR soon to address something you saw while working on this?_
 
-### Comments / Concerns
+### Workflow Checklist
 
-Please add a short blurb about any comments or concerns that this change might cause.
+- [ ] Please request reviewers
+- [ ] If this is an unblocker, please post in Slack.
+- [ ] If asked to address comments, please resolve conversations.
+- [ ] If asked to change code, please re-request review from the person who wanted changes.
+
+Thank you!
