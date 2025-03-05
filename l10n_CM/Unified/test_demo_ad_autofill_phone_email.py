@@ -31,12 +31,10 @@ def test_demo_ad_autofill_phone_email(
     autofill_popup.click_doorhanger_button("save")
 
     # List of field labels to be autofilled and verified
-    fields_to_test = [
-        "email",
-        "tel"
-    ]
+    fields_to_test = ["email", "tel"]
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.autofill_and_verify(autofill_popup, field,
-                                             address_autofill_data, util)
+        address_autofill.autofill_and_verify(
+            autofill_popup, field, address_autofill_data, util
+        )

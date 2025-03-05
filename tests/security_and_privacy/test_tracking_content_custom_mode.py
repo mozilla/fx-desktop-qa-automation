@@ -17,7 +17,7 @@ Tracker_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracki
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [
         ("network.cookie.cookieBehavior", 0),
         ("privacy.trackingprotection.pbmode.enabled", False),

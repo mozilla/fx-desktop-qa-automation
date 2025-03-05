@@ -19,11 +19,6 @@ associated_labels = [
 ]
 
 
-@pytest.fixture()
-def add_prefs():
-    return []
-
-
 @pytest.mark.parametrize("button_data, button_text, permission", associated_labels)
 def test_notifications_allow(
     driver: Firefox, button_data: str, button_text: str, permission: str

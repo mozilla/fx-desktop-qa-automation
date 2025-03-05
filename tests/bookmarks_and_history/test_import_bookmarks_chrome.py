@@ -17,7 +17,7 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs():
+def add_to_prefs_list():
     return [
         ("browser.migrate.chrome.get_permissions.enabled", True),
         ("devtools.chrome.enabled", True),

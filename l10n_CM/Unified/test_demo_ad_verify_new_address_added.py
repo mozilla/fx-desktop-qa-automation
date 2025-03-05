@@ -13,7 +13,7 @@ def test_case():
 
 
 @pytest.fixture()
-def add_prefs(region: str):
+def add_to_prefs_list(region: str):
     return [
         ("extensions.formautofill.creditCards.supportedCountries", region),
         ("extensions.formautofill.addresses.supported", "on"),

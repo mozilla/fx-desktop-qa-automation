@@ -13,7 +13,7 @@ def test_case():
 
 # Set search region
 @pytest.fixture()
-def overwrite_prefs():
+def add_to_prefs_list():
     return [
         ("browser.search.region", "DE"),
     ]
@@ -23,7 +23,7 @@ def overwrite_prefs():
 FX_SEARCH_CODE = "client=firefox-b-d"
 
 
-@pytest.mark.unstable
+@pytest.mark.unstable(reason="Google re-captcha")
 def test_search_code_google_non_us(driver: Firefox):
     """
     C1365269 - Default Search Code: Google - non-US

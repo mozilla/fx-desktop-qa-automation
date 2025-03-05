@@ -1,4 +1,4 @@
 {
     "region": "US",
-    "tests": []
+    "tests": ["test_demo_ad_autofill_dropdown_present_for_email_and_phone.py"]
 }
