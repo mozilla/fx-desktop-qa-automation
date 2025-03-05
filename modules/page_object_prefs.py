@@ -94,7 +94,8 @@ class AboutPrefs(BasePage):
         select_country.select_by_value(country)
         return self
 
-    def extract_content_from_html(self, initial_string: str) -> AutofillAddressBase:
+    @staticmethod
+    def extract_content_from_html(initial_string: str) -> str:
         """
         Takes the raw innerHTML and uses regex to filter out the tags.
 
@@ -114,7 +115,8 @@ class AboutPrefs(BasePage):
         clean_text = [s[1:-1] for s in text]
         return clean_text[0]
 
-    def extract_and_split_text(self, text: str) -> List[str]:
+    @staticmethod
+    def extract_and_split_text(text: str) -> List[str]:
         """
         Takes the raw text and strips it of any extra spaces and splits it by the character ','
 
@@ -125,7 +127,8 @@ class AboutPrefs(BasePage):
         """
         return [item.strip() for item in text.split(",")]
 
-    def organize_data_into_obj(self, observed_text: List[str]) -> AutofillAddressBase:
+    @staticmethod
+    def organize_data_into_obj(observed_text: List[str]) -> AutofillAddressBase | None:
         """
         Takes a list of text that has been split into an array and instantiates an AutofillAddressBase object
 
