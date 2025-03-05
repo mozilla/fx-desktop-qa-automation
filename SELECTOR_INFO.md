@@ -459,6 +459,20 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: form-container
+Selector Data: "form"
+Description: Form to to fill in saved addresses data
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: save-button
+Selector Data: "save"
+Description: Button to save filled in address form.
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: find-in-settings
 Selector Data: "searchInput"
 Description: Find in Settings input field (is a shadow root)

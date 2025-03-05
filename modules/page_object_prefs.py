@@ -3,9 +3,11 @@ from time import sleep
 from typing import List
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
@@ -88,19 +90,12 @@ class AboutPrefs(BasePage):
 
     def set_country_autofill_panel(self, country: str) -> BasePage:
         """Sets the country value in the autofill view"""
-        for _ in range(self.TABS_TO_COUNTRY):
-            self.actions.send_keys(Keys.TAB).perform()
-
-        self.actions.send_keys(country)
-
-        added_tabs = 6
-        for _ in range(self.TABS_TO_COUNTRY + added_tabs):
-            self.perform_key_combo(Keys.SHIFT, Keys.TAB)
-            sleep(0.3)
-
+        select_country = Select(self.driver.find_element(By.ID, "country"))
+        select_country.select_by_value(country)
         return self
 
-    def extract_content_from_html(self, initial_string: str) -> AutofillAddressBase:
+    @staticmethod
+    def extract_content_from_html(initial_string: str) -> str:
         """
         Takes the raw innerHTML and uses regex to filter out the tags.
 
@@ -120,7 +115,8 @@ class AboutPrefs(BasePage):
         clean_text = [s[1:-1] for s in text]
         return clean_text[0]
 
-    def extract_and_split_text(self, text: str) -> List[str]:
+    @staticmethod
+    def extract_and_split_text(text: str) -> List[str]:
         """
         Takes the raw text and strips it of any extra spaces and splits it by the character ','
 
@@ -131,7 +127,8 @@ class AboutPrefs(BasePage):
         """
         return [item.strip() for item in text.split(",")]
 
-    def organize_data_into_obj(self, observed_text: List[str]) -> AutofillAddressBase:
+    @staticmethod
+    def organize_data_into_obj(observed_text: List[str]) -> AutofillAddressBase | None:
         """
         Takes a list of text that has been split into an array and instantiates an AutofillAddressBase object
 
@@ -150,24 +147,24 @@ class AboutPrefs(BasePage):
         address_level_2 = observed_text[2]
         organization = observed_text[3]
         address_level_1 = observed_text[4]
-        country = observed_text[5]
+        country_code = observed_text[5]
         postal_code = observed_text[6]
         telephone = observed_text[7]
         email = observed_text[8]
 
         return AutofillAddressBase(
-            name,
-            organization,
-            address,
-            address_level_2,
-            address_level_1,
-            postal_code,
-            country,
-            email,
-            telephone,
+            name=name,
+            organization=organization,
+            street_address=address,
+            address_level_2=address_level_2,
+            address_level_1=address_level_1,
+            postal_code=postal_code,
+            country_code=country_code,
+            email=email,
+            telephone=telephone,
         )
 
-    def fill_autofill_panel_information(
+    def fill_and_save_autofill_panel_information(
         self, autofill_info: AutofillAddressBase
     ) -> BasePage:
         """
@@ -188,21 +185,21 @@ class AboutPrefs(BasePage):
             "address-level2": autofill_info.address_level_2,
             "address-level1": autofill_info.address_level_1,
             "postal-code": autofill_info.postal_code,
-            "country": "Canada" if autofill_info.country == "CA" else "United States",
             "tel": autofill_info.telephone,
             "email": autofill_info.email,
         }
 
-        self.set_country_autofill_panel(fields["country"])
+        self.set_country_autofill_panel(autofill_info.country_code)
+        form_element = self.get_element("form-container")
+        children = [
+            x.get_attribute("id")
+            for x in form_element.find_elements(By.CSS_SELECTOR, "*")
+        ]
 
-        for field in fields:
-            if field == "country":
-                self.actions.send_keys(Keys.TAB)
-                continue
-            self.actions.send_keys(fields[field] + Keys.TAB).perform()
-        if self.sys_platform() != "Windows":
-            self.actions.send_keys(Keys.TAB).perform()
-        self.actions.send_keys(Keys.ENTER).perform()
+        for key, val in fields.items():
+            if key in children:
+                form_element.find_element(By.ID, key).send_keys(val)
+        self.get_element("save-button").click()
         return self
 
     def fill_cc_panel_information(self, credit_card_fill_information: CreditCardBase):
@@ -273,16 +270,30 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_element("prefs-button", labels=["Saved addresses"]).click()
+        self.get_saved_addresses_popup().click()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def get_saved_addresses_popup(self) -> WebElement:
+        """
+        Returns saved addresses button element
+        """
+        return self.get_element("prefs-button", labels=["Saved addresses"])
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
         switch to save addresses popup frame.
         """
-        save_addresses = self.get_saved_addresses_popup_iframe()
-        self.driver.switch_to.frame(save_addresses)
+        self.switch_to_default_frame()
+        self.driver.switch_to.frame(1)
+        return self
+
+    def switch_to_edit_saved_addresses_popup_iframe(self) -> BasePage:
+        """
+        Switch to form iframe to edit saved addresses.
+        """
+        self.switch_to_default_frame()
+        self.driver.switch_to.frame(2)
         return self
 
     def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
@@ -294,7 +305,9 @@ class AboutPrefs(BasePage):
         """
         self.switch_to_saved_addresses_popup_iframe()
         self.get_element("add-address").click()
-        self.fill_autofill_panel_information(address_data)
+        self.switch_to_edit_saved_addresses_popup_iframe()
+        self.fill_and_save_autofill_panel_information(address_data)
+        self.switch_to_default_frame()
         return self
 
     def get_password_exceptions_popup_iframe(self) -> WebElement:

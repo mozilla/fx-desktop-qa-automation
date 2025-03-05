@@ -18,10 +18,10 @@ def test_autofill_credit_card(driver: Firefox):
     util = Utilities()
 
     credit_card_fill_obj = CreditCardFill(driver).open()
-    autofill_popup_obj = AutofillPopup(driver)
+    autofill_popup = AutofillPopup(driver)
 
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup_obj.click_doorhanger_button("save")
+    credit_card_data = util.fake_credit_card_data()
+    credit_card_fill_obj.fill_credit_card_info(credit_card_data)
+    autofill_popup.click_doorhanger_button("save")
 
     credit_card_fill_obj.verify_autofill_dropdown_credit_card(autofill_popup_obj)

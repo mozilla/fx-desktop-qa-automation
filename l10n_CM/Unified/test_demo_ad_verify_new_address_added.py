@@ -13,11 +13,6 @@ def test_case():
 
 
 @pytest.fixture()
-def region():
-    return "US"
-
-
-@pytest.fixture()
 def add_to_prefs_list(region: str):
     return [
         ("extensions.formautofill.creditCards.supportedCountries", region),
@@ -38,23 +33,25 @@ def test_verify_new_address_is_added(
 
     # open saved addresses and add entry
     about_prefs_privacy.open()
+    about_prefs_privacy.get_saved_addresses_popup().click()
     about_prefs_privacy.add_entry_to_saved_addresses(address_autofill_data)
+    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # verify that the address saved is the same.
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
     elements = about_prefs_privacy.get_element("saved-addresses-values").text.split(",")
     address_match = all(
-        data_sanitizer(element, region, inverted_state_province_abbr)
+        data_sanitizer(util, element, region, inverted_state_province_abbr)
         in address_autofill_data.__dict__.values()
         for element in elements
     )
     assert address_match, "Address found is not equal to address created!"
 
 
-def data_sanitizer(value: str, region: str, state_province: Dict):
+def data_sanitizer(util: Utilities, value: str, region: str, state_province: Dict):
     value = value.strip()
     if value[0] == "+":
-        return value[1:]
+        return util.normalize_phone_number(value)
     elif len(value) == 2 and value != region:
         return state_province.get(value, value)
     return value
