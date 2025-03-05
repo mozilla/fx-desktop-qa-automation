@@ -56,7 +56,7 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     autofill_popup.element_has_text(zip_selector, expected_zip)
 
     # Containing Country field
-    expected_country = address_autofill_data.country
+    expected_country = address_autofill_data.country_code
 
     autofill_popup.element_has_text("address-doorhanger-country", expected_country)
 

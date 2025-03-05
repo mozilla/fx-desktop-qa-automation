@@ -144,24 +144,24 @@ class AboutPrefs(BasePage):
         address_level_2 = observed_text[2]
         organization = observed_text[3]
         address_level_1 = observed_text[4]
-        country = observed_text[5]
+        country_code = observed_text[5]
         postal_code = observed_text[6]
         telephone = observed_text[7]
         email = observed_text[8]
 
         return AutofillAddressBase(
-            name,
-            organization,
-            address,
-            address_level_2,
-            address_level_1,
-            postal_code,
-            country,
-            email,
-            telephone,
+            name=name,
+            organization=organization,
+            street_address=address,
+            address_level_2=address_level_2,
+            address_level_1=address_level_1,
+            postal_code=postal_code,
+            country_code=country_code,
+            email=email,
+            telephone=telephone,
         )
 
-    def fill_autofill_panel_information(
+    def fill_and_save_autofill_panel_information(
         self, autofill_info: AutofillAddressBase
     ) -> BasePage:
         """
@@ -269,16 +269,30 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_element("prefs-button", labels=["Saved addresses"]).click()
+        self.get_saved_addresses_popup().click()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def get_saved_addresses_popup(self) -> WebElement:
+        """
+        Returns saved addresses button element
+        """
+        return self.get_element("prefs-button", labels=["Saved addresses"])
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
         switch to save addresses popup frame.
         """
-        save_addresses = self.get_saved_addresses_popup_iframe()
-        self.driver.switch_to.frame(save_addresses)
+        self.switch_to_default_frame()
+        self.driver.switch_to.frame(1)
+        return self
+
+    def switch_to_edit_saved_addresses_popup_iframe(self) -> BasePage:
+        """
+        Switch to form iframe to edit saved addresses.
+        """
+        self.switch_to_default_frame()
+        self.driver.switch_to.frame(2)
         return self
 
     def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
@@ -290,10 +304,9 @@ class AboutPrefs(BasePage):
         """
         self.switch_to_saved_addresses_popup_iframe()
         self.get_element("add-address").click()
-        self.driver.switch_to.default_content()
-        self.driver.switch_to.frame(2)
-        self.fill_autofill_panel_information(address_data)
-        self.driver.switch_to.default_content()
+        self.switch_to_edit_saved_addresses_popup_iframe()
+        self.fill_and_save_autofill_panel_information(address_data)
+        self.switch_to_default_frame()
         return self
 
     def get_password_exceptions_popup_iframe(self) -> WebElement:

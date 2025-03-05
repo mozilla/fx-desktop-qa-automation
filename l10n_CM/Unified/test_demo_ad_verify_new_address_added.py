@@ -33,8 +33,9 @@ def test_verify_new_address_is_added(
 
     # open saved addresses and add entry
     about_prefs_privacy.open()
+    about_prefs_privacy.get_saved_addresses_popup().click()
     about_prefs_privacy.add_entry_to_saved_addresses(address_autofill_data)
-    driver.switch_to.frame(1)
+    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # verify that the address saved is the same.
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
