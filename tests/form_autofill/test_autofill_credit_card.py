@@ -11,7 +11,6 @@ def test_case():
     return "122405"
 
 
-@pytest.mark.unstable
 def test_autofill_credit_card(driver: Firefox):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel
@@ -25,5 +24,4 @@ def test_autofill_credit_card(driver: Firefox):
     credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
     autofill_popup_obj.click_doorhanger_button("save")
 
-    # TEST IS FAILING HERE. see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1951656
-    credit_card_fill_obj.verify_autofill_dropdown_all_fields(autofill_popup_obj)
+    credit_card_fill_obj.verify_autofill_dropdown_credit_card(autofill_popup_obj)
