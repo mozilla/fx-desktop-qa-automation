@@ -715,7 +715,7 @@ class BasePage(Page):
         if isinstance(reference, int) or isinstance(reference, WebElement):
             self.driver.switch_to.frame(reference)
         elif isinstance(reference, str):
-            frame_selector = self.get_selector(reference, labels)
+            frame_selector = self.get_selector(reference, labels=labels)
             self.expect(EC.frame_to_be_available_and_switch_to_it(frame_selector))
         elif isinstance(reference, tuple):
             self.expect(EC.frame_to_be_available_and_switch_to_it(reference))
