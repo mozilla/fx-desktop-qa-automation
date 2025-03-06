@@ -1361,6 +1361,13 @@ Location: Inside any autofill-eligible form field, triggered by user interaction
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: address-preview-form-container
+Selector Data: "address-save-update-notification-content"
+Description: Form container that is hidden in chrome context. Used to verify hover preview data
+Location: Inside chrome context, holds the data that would be showed as a preview when autofill is hovered.
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-save-button
 Selector Data: button[label='Save'].popup-notification-primary-button
 Description: The "Save" button 
