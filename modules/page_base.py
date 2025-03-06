@@ -708,9 +708,17 @@ class BasePage(Page):
         self.driver.switch_to.default_content()
         return self
 
-    def switch_to_iframe(self, index: int):
+    def switch_to_iframe(
+        self, reference: Union[str, tuple, WebElement, int], labels=[]
+    ):
         """Switch to frame of given index"""
-        self.driver.switch_to.frame(index)
+        if isinstance(reference, int) or isinstance(reference, WebElement):
+            self.driver.switch_to.frame(reference)
+        elif isinstance(reference, str):
+            frame_selector = self.get_selector(reference, labels)
+            self.expect(EC.frame_to_be_available_and_switch_to_it(frame_selector))
+        elif isinstance(reference, tuple):
+            self.expect(EC.frame_to_be_available_and_switch_to_it(reference))
         return self
 
     def switch_to_new_tab(self) -> Page:
@@ -764,16 +772,6 @@ class BasePage(Page):
             self.switch_to_new_window()
             self.title_contains("Private")
         self.driver.get("about:blank")
-        return self
-
-    def switch_to_frame(self, frame: str, labels=[]) -> Page:
-        """Switch to inline document frame"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.expect(
-                EC.frame_to_be_available_and_switch_to_it(
-                    self.get_selector(frame, labels=labels)
-                )
-            )
         return self
 
     def hide_popup(self, context_menu: str, chrome=True) -> Page:
