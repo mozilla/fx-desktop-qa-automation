@@ -287,7 +287,7 @@ class AboutPrefs(BasePage):
         switch to save addresses popup frame.
         """
         self.switch_to_default_frame()
-        self.driver.switch_to.frame(1)
+        self.switch_to_iframe(1)
         return self
 
     def switch_to_edit_saved_addresses_popup_iframe(self) -> BasePage:
@@ -295,7 +295,7 @@ class AboutPrefs(BasePage):
         Switch to form iframe to edit saved addresses.
         """
         self.switch_to_default_frame()
-        self.driver.switch_to.frame(2)
+        self.switch_to_iframe(2)
         return self
 
     def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):

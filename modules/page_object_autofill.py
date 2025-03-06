@@ -511,6 +511,11 @@ class AddressFill(Autofill):
         elem.clear()
         elem.send_keys(new_value)
 
+    def hover_over_field(self, field):
+        """Hover over a given field."""
+        self.hover(field)
+        return self
+
     def verify_autofill_data(
         self, autofill_data: AutofillAddressBase, region: str, util: Utilities
     ):
