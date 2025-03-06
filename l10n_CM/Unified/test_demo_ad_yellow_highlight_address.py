@@ -21,24 +21,20 @@ def test_address_yellow_highlight_address_fields(
     """
     C2888564 - Verify the yellow highlight appears on autofilled fields for the address fields.
     """
-
-    # Instantiate objects
-    address_autofill_popup = AutofillPopup(driver)
-
     # Create fake data and fill it in
     address_autofill.open()
     address_autofill_data = util.fake_autofill_data(region)
     address_autofill.save_information_basic(address_autofill_data)
 
     # Click the "Save" button
-    address_autofill_popup.click_doorhanger_button("save")
+    autofill_popup.click_doorhanger_button("save")
 
     # Double click inside street address field and select a saved address entry from the dropdown
     address_autofill.double_click("form-field", labels=["street-address"])
 
     # Click on the first element from the autocomplete dropdown
-    first_item = address_autofill_popup.get_nth_element(1)
-    address_autofill_popup.click_on(first_item)
+    first_item = autofill_popup.get_nth_element(1)
+    autofill_popup.click_on(first_item)
 
     # Verify the address fields are highlighted
     address_autofill.verify_field_yellow_highlights(
