@@ -6,6 +6,7 @@ import re
 import sys
 import time
 from copy import deepcopy
+from functools import wraps
 from pathlib import Path
 from typing import List, Union
 
@@ -103,6 +104,28 @@ class BasePage(Page):
         """Make sure the Selenium driver is using CONTEXT_CHROME"""
         if self._xul_source_snippet not in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CHROME)
+
+    @staticmethod
+    def context_chrome(func):
+        """Decorator to switch to CONTEXT_CHROME"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @staticmethod
+    def context_content(func):
+        """Decorator to switch to CONTEXT_CONTENT"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                return func(self, *args, **kwargs)
+
+        return wrapper
 
     def set_content_context(self):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
@@ -227,7 +250,7 @@ class BasePage(Page):
         match = braces.findall(selector[1])
         for i in range(len(labels)):
             logging.info(f"Replace {match[i]} with {labels[i]}")
-            selector[1] = selector[1].replace(match[i], labels[i])
+            selector[1] = selector[1].replace(match[i], labels[i], 1)
         logging.info("Returned selector.")
         return selector
 
@@ -421,6 +444,7 @@ class BasePage(Page):
 
     def url_contains(self, url_part: str) -> Page:
         """Expect helper: wait until driver URL contains given text or timeout"""
+        self.context_id = self.driver.CONTEXT_CONTENT
         self.expect(EC.url_contains(url_part))
         return self
 
