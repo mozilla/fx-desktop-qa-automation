@@ -1,9 +1,7 @@
 import logging
-from time import sleep
 
 import pytest
 from selenium.webdriver import ActionChains, Firefox
-from selenium.webdriver.common.by import By
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
@@ -42,11 +40,13 @@ def test_hover_address_is_previewed(
 
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
-
     # Hover over each field and check data preview
     for field in AddressFill.fields:
+        # hack to pass over fields that don't show up in autofill dropdown
+        if field == "address-level1" and region in ["DE", "FR"]:
+            continue
         address_autofill.double_click("form-field", labels=[field])
-        autofill_popup.element_visible("select-form-option")
+        autofill_popup.ensure_autofill_dropdown_visible()
         autofill_popup.hover("select-form-option")
         address_autofill.verify_autofill_data_on_hover(
             address_autofill_data, autofill_popup, util

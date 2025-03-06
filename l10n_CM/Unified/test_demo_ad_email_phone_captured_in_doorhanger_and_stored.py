@@ -42,10 +42,8 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     if expected_phone:
         with driver.context(driver.CONTEXT_CHROME):
             actual_phone = autofill_popup.get_element("address-doorhanger-phone").text
-        normalize_expected = util.normalize_regional_phone_numbers(
-            expected_phone, region
-        )
-        normalized_actual = util.normalize_regional_phone_numbers(actual_phone, region)
+        normalize_expected = util.normalize_phone_number(expected_phone, region)
+        normalized_actual = util.normalize_phone_number(actual_phone, region)
         assert normalized_actual == normalize_expected, (
             f"Phone number mismatch for {region} | Expected: {normalize_expected}, Got: {normalized_actual}"
         )
@@ -55,6 +53,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
+    about_prefs_privacy.get_saved_addresses_popup().click()
     about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: Email and phone

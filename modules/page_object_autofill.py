@@ -1,4 +1,5 @@
 import logging
+from html import unescape
 from typing import List, Optional
 
 from selenium.webdriver.common.by import By
@@ -277,8 +278,9 @@ class CreditCardFill(Autofill):
         else:
             autofill_popup_obj.click_on("doorhanger-save-button")
 
+    @staticmethod
     def extract_credit_card_obj_into_list(
-        self, credit_card_sample_data: CreditCardBase
+        credit_card_sample_data: CreditCardBase,
     ) -> List[str]:
         """
         Extracts the credit card information from the object and returns it as a list.
@@ -590,15 +592,12 @@ class AddressFill(Autofill):
             autofill_data.telephone, autofill_data.country_code
         )
         for expected in children:
-            logging.warning(expected)
             if expected[0] == "+":
-                expected = util.normalize_regional_phone_numbers(
-                    expected, autofill_data.country_code
-                )
+                expected = util.normalize_phone_number(expected)
             if len(expected) == 2 and expected != autofill_data.country_code:
                 continue
-            assert expected in autofill_data.__dict__.values(), (
-                f"Mismatched data: {expected} not in actual data."
+            assert unescape(expected) in autofill_data.__dict__.values(), (
+                f"Mismatched data: {expected} not in {autofill_data}."
             )
 
     @staticmethod
@@ -614,9 +613,7 @@ class AddressFill(Autofill):
 
             # Normalize phone numbers before comparison
             if field == "Phone":
-                actual = util.normalize_regional_phone_numbers(
-                    actual, expected_values["Country"]
-                )
+                actual = util.normalize_phone_number(actual)
 
             assert actual == expected, (
                 f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
