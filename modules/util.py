@@ -6,6 +6,7 @@ import platform
 import re
 from os import remove
 from random import shuffle
+from time import sleep
 from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
@@ -23,6 +24,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
@@ -552,6 +555,7 @@ class BrowserActions:
 
     def __init__(self, driver: Firefox):
         self.driver = driver
+        self.wait = WebDriverWait(driver, timeout=2)
 
     def clear_and_fill(self, webelement: WebElement, term: str, press_enter=True):
         """
@@ -618,6 +622,17 @@ class BrowserActions:
         Switches back to the normal context
         """
         self.driver.switch_to.default_content()
+
+    def select_file_opening_option(self, option: str = "handleInternally"):
+        """
+        select an option when file opening window prompt is shown
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+            self.driver.find_element(By.ID, option).click()
+            confirm_button = self.driver.find_element(By.ID, "unknownContentTypeWindow")
+            sleep(2)
+            confirm_button.send_keys(Keys.ENTER)
 
     def get_all_colors_in_element(self, selector: tuple) -> set:
         """
