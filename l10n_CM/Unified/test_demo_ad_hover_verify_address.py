@@ -44,17 +44,10 @@ def test_hover_address_is_previewed(
     autofill_popup.click_doorhanger_button("save")
 
     # Hover over each field and check data preview
-    # for field in AddressFill.fields:
-    address_autofill.double_click("form-field", labels=["name"])
-    autofill_popup.element_visible("select-form-option")
-    autofill_popup.hover("select-form-option")
-    with driver.context(driver.CONTEXT_CHROME):
-        element = autofill_popup.get_element("address-preview-form-container")
-        children = [
-            x.get_attribute("innerHTML")
-            for x in element.find_elements(By.TAG_NAME, "span")
-            if x.get_attribute("innerHTML").strip()
-        ]
-        logging.warning(children)
-        logging.warning(element.get_attribute("innerHTML"))
-        # address_autofill.verify_autofill_data(address_autofill_data, region, util)
+    for field in AddressFill.fields:
+        address_autofill.double_click("form-field", labels=[field])
+        autofill_popup.element_visible("select-form-option")
+        autofill_popup.hover("select-form-option")
+        address_autofill.verify_autofill_data_on_hover(
+            address_autofill_data, autofill_popup, util
+        )

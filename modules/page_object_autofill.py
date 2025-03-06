@@ -1,6 +1,7 @@
 import logging
 from typing import List, Optional
 
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -516,15 +517,13 @@ class AddressFill(Autofill):
         self.hover(field)
         return self
 
-    def verify_autofill_data(
-        self, autofill_data: AutofillAddressBase, region: str, util: Utilities
-    ):
+    def verify_autofill_data(self, autofill_data: AutofillAddressBase, util: Utilities):
         """
         Verifies that the autofill data matches the expected values.
 
-        :param autofill_data: AutofillAddressBase object containing expected data.
-        :param region: The region code (e.g., "US", "DE", "FR").
-        :param util: Utilities instance to normalize values.
+        Arguments:
+            autofill_data: AutofillAddressBase object containing expected data.
+            util: Utilities instance to normalize values.
         """
         field_mapping = {
             "Name": "name-field",
@@ -555,21 +554,69 @@ class AddressFill(Autofill):
             "Country": autofill_data.country_code,
             "Email": autofill_data.email,
             "Phone": util.normalize_regional_phone_numbers(
-                autofill_data.telephone, region
+                autofill_data.telephone, autofill_data.country_code
             ),
         }
 
+        self.verify_data(actual_values, expected_values, util)
+
+    @BasePage.context_chrome
+    def verify_autofill_data_on_hover(
+        self,
+        autofill_data: AutofillAddressBase,
+        autofill_popup: AutofillPopup,
+        util: Utilities,
+    ):
+        """
+        Verifies that the autofill preview data matches the expected values when hovering
+
+        Arguments:
+            autofill_data: AutofillAddressBase object containing expected data.
+            autofill_popup: AutofillPopup object to get element from dropdown.
+            util: Utilities instance to normalize values.
+        """
+
+        # get preview data from hovering through the chrome context
+        element = autofill_popup.get_element("address-preview-form-container")
+        # get every span element that is a child of the form and is not empty
+        children = [
+            x.get_attribute("innerHTML")
+            for x in element.find_elements(By.TAG_NAME, "span")
+            if len(x.get_attribute("innerHTML").strip()) >= 2
+        ]
+
+        # normalize phone number data
+        autofill_data.telephone = util.normalize_regional_phone_numbers(
+            autofill_data.telephone, autofill_data.country_code
+        )
+        for expected in children:
+            logging.warning(expected)
+            if expected[0] == "+":
+                expected = util.normalize_regional_phone_numbers(
+                    expected, autofill_data.country_code
+                )
+            if len(expected) == 2 and expected != autofill_data.country_code:
+                continue
+            assert expected in autofill_data.__dict__.values(), (
+                f"Mismatched data: {expected} not in actual data."
+            )
+
+    @staticmethod
+    def verify_data(actual_values, expected_values, util: Utilities):
+        """Verify data between actual and expected values"""
         # Validate each field
         for field, expected in expected_values.items():
             actual = actual_values[field]
 
             # Skip State verification for DE and FR
-            if field == "State" and region in ["DE", "FR"]:
+            if field == "State" and expected_values["Country"] in ["DE", "FR"]:
                 continue
 
             # Normalize phone numbers before comparison
             if field == "Phone":
-                actual = util.normalize_regional_phone_numbers(actual, region)
+                actual = util.normalize_regional_phone_numbers(
+                    actual, expected_values["Country"]
+                )
 
             assert actual == expected, (
                 f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
@@ -636,9 +683,7 @@ class AddressFill(Autofill):
         address_autofill_popup.click_on(first_item)
 
         # Verify autofill data
-        self.verify_autofill_data(
-            address_autofill_data, address_autofill_data.country_code, util
-        )
+        self.verify_autofill_data(address_autofill_data, util)
 
         # Clear form autofill
         self.double_click("form-field", labels=[field_label])
