@@ -468,6 +468,18 @@
         "groups": []
     },
 
+    "actions-menu": {
+        "selectorData": "richlistitem[type='{.*}'] menulist.actionsMenu",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "actions-menu-option": {
+        "selectorData": "richlistitem[type='{.*}'] menuitem[label='{.*}']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "exceptions-item": {
         "selectorData": "//*[@id='permissionsBox']//*[@origin]",
         "strategy": "xpath",
@@ -488,6 +500,18 @@
 
     "enter-new-password": {
         "selectorData": "pw1",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "form-container": {
+        "selectorData": "form",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "save-button": {
+        "selectorData": "save",
         "strategy": "id",
         "groups": []
     },

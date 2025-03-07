@@ -33,7 +33,8 @@ def test_create_address_profile(driver: Firefox):
     ).click()
 
     # fill in the data and clean it up
-    about_prefs_obj.fill_autofill_panel_information(autofill_sample_data)
+    about_prefs_obj.add_entry_to_saved_addresses(autofill_sample_data)
+    about_prefs_obj.switch_to_saved_addresses_popup_iframe()
     saved_address_option = about_prefs_obj.get_element("saved-addresses")
     inner_content = saved_address_option.get_attribute("innerHTML")
     cleaned_data = about_prefs_obj.extract_content_from_html(inner_content)
@@ -47,6 +48,7 @@ def test_create_address_profile(driver: Firefox):
 
     # currently ignoring the address level 1 field
     observed_data.telephone = util.normalize_phone_number(observed_data.telephone)
+    observed_data.country = autofill_sample_data.country
     observed_data.address_level_1 = autofill_sample_data.address_level_1
 
     # ensure that the objects have the same fields

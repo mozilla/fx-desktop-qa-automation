@@ -44,6 +44,7 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
+    about_prefs_privacy.get_saved_addresses_popup().click()
     about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization

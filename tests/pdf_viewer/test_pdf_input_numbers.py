@@ -4,6 +4,8 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
 
+TEST_VALUE = "12345"
+
 
 @pytest.fixture()
 def test_case():
@@ -20,26 +22,30 @@ def hard_quit():
     return True
 
 
+@pytest.fixture()
+def file_name():
+    return "i-9.pdf"
+
+
 def test_pdf_input_numbers(
     driver: Firefox,
-    fillable_pdf_url: str,
+    pdf_viewer: GenericPdf,
     downloads_folder: str,
     sys_platform,
     delete_files,
 ):
     """
     C1017528: Input data in numeric fields
+
+    Arguments:
+        sys_platform: Current System Platform Type
+        pdf_viewer: instance of GenericPdf with correct path.
+        downloads_folder: downloads folder path
+        delete_files: fixture to remove the files after the test finishes
     """
 
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
-    pdf.open()
-    numeric_field = pdf.get_element("zipcode-field")
-
-    # Test value to input in the field
-    test_value = "12345"
-
     # Clear the field and enter the test value
-    numeric_field.send_keys(test_value + Keys.TAB)
+    pdf_viewer.fill_element("zipcode-field", TEST_VALUE + Keys.TAB)
 
     # Verify the value is still present
-    pdf.element_attribute_contains("zipcode-field", "value", test_value)
+    pdf_viewer.element_attribute_contains("zipcode-field", "value", TEST_VALUE)
