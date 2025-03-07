@@ -24,6 +24,7 @@
     "test_demo_ad_clear_tel_email.py",
     "test_demo_ad_autofill_dropdown_present_for_email_and_phone.py",
     "test_demo_ad_hover_verify_address.py",
-    "test_demo_ad_hover_over_tele_and_email_dropdown.py"
+    "test_demo_ad_hover_over_tele_and_email_dropdown.py",
+    "test_demo_ad_hover_name_org.py"
   ]
 }
