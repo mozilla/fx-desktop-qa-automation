@@ -504,6 +504,15 @@ class AddressFill(Autofill):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
 
+    def check_autofill_preview_for_field(self, field_label: str, autofill_data, autofill_popup, util: Utilities, region: str = None):
+        # Skip fields that don't appear in the dropdown for certain regions.
+        if field_label == "address-level1" and region in ["DE", "FR"]:
+            return
+        self.double_click("form-field", labels=[field_label])
+        autofill_popup.ensure_autofill_dropdown_visible()
+        autofill_popup.hover("select-form-option")
+        self.verify_autofill_data_on_hover(autofill_data, autofill_popup, util)
+
     def send_keys_to_element(self, name: str, label: str, keys: str):
         """
         Send keys to the specified element.
