@@ -26,6 +26,10 @@ def test_hover_email_and_phone_autofill_preview(
     autofill_popup.click_doorhanger_button("save")
 
     # Check Email field preview.
-    address_autofill.check_autofill_preview_for_field("email", autofill_data, autofill_popup, util)
+    address_autofill.check_autofill_preview_for_field(
+        "email", autofill_data, autofill_popup, util
+    )
     # Check Phone field preview (using the correct label "tel").
-    address_autofill.check_autofill_preview_for_field("tel", autofill_data, autofill_popup, util)
+    address_autofill.check_autofill_preview_for_field(
+        "tel", autofill_data, autofill_popup, util
+    )

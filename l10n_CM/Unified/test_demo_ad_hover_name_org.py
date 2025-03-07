@@ -34,4 +34,6 @@ def test_demo_ad_hover_name_org(
     # Hover over each field and check data preview
     fields_to_test = ["name", "organization"]
     for field in fields_to_test:
-        address_autofill.check_autofill_preview_for_field(field, autofill_data, autofill_popup, util)
+        address_autofill.check_autofill_preview_for_field(
+            field, autofill_data, autofill_popup, util
+        )
