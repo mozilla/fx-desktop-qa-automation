@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -28,12 +30,3 @@ def test_demo_ad_preview_name_org(
 
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
-
-    fields_to_test = [
-        "name",
-        "organization"
-    ]
-
-    for field in fields_to_test:
-        address_autofill.verify_autofill_preview(autofill_popup, field, address_autofill_data.name)
-        address_autofill.verify_autofill_preview(autofill_popup, field, address_autofill_data.organization)

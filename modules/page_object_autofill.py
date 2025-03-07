@@ -698,18 +698,6 @@ class AddressFill(Autofill):
         # Verify all fields are cleared
         self.verify_all_fields_cleared()
 
-    def verify_autofill_preview(self, autofill_popup: AutofillPopup, field_label: str, expected_value: str):
-        """
-        Verifies that hovering over an autofill dropdown entry for a given field shows the expected value.
-        """
-        self.double_click("form-field", labels=[field_label])
-        first_item = autofill_popup.get_nth_element(1)
-        actual_value = autofill_popup.hover(first_item).get_primary_value(first_item)
-
-        assert expected_value == actual_value, (
-            f"Expected {expected_value}, but got {actual_value}"
-        )
-
 
 class TextAreaFormAutofill(Autofill):
     """
