@@ -1,7 +1,5 @@
-import logging
-
 import pytest
-from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
