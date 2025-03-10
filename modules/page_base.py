@@ -711,7 +711,7 @@ class BasePage(Page):
     def switch_to_iframe(
         self, reference: Union[str, tuple, WebElement, int], labels=[]
     ):
-        """Switch to frame of given index, selector, selector name, or element"""
+        """Switch to frame of given index, selector, selector name, or element."""
         if isinstance(reference, int) or isinstance(reference, WebElement):
             self.driver.switch_to.frame(reference)
         elif isinstance(reference, str):
