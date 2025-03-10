@@ -1,15 +1,16 @@
 """Get the link to download Fx or Geckodriver, for any supported platform.
 Use -g to get geckodriver, otherwise you will get Fx. Use -n to just get the Fx version number.
 Set env var FX_CHANNEL to get non-beta, blank string for Release.
-Set env var FX_LOCALE to get a different locale build."""
+Set env var FX_LOCALE to get a different locale build.
+Set env var FX_PLATFORM to get a platform other than current system."""
 
+import logging
 from os import environ
 from platform import uname
 from sys import argv, exit
 from time import sleep
 
 import requests
-import logging
 from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
@@ -19,13 +20,14 @@ NUMBER_ONLY = False
 
 def get_fx_platform():
     u = uname()
-    if u.system == "Darwin":
+    _system = environ.get("FX_PLATFORM") or u.system
+    if _system == "Darwin":
         return "mac"
-    if u.system == "Linux":
+    if _system == "Linux":
         if "64" in u.machine:
             return "linux-x86_64"
         return "linux-i686"
-    if u.system == "Windows":
+    if _system == "Windows":
         if u.machine == "AMD64" and not environ.get("GITHUB_ACTIONS"):
             return "win64-aarch64"
         if "64" in u.machine:
@@ -35,25 +37,27 @@ def get_fx_platform():
 
 def get_fx_executable_extension():
     u = uname()
-    if u.system == "Darwin":
+    _system = environ.get("FX_PLATFORM") or u.system
+    if _system == "Darwin":
         return "dmg"
-    if u.system == "Linux":
+    if _system == "Linux":
         return "xz"
-    if u.system == "Windows":
+    if _system == "Windows":
         return "exe"
 
 
 def get_gd_platform():
     u = uname()
-    if u.system == "Darwin":
+    _system = environ.get("FX_PLATFORM") or u.system
+    if _system == "Darwin":
         return "macos"
-    if u.system == "Linux":
+    if _system == "Linux":
         if u.machine == "AMD64":
             return "linux-aarch64"
         if "64" in u.machine:
             return "linux64"
         return "linux32"
-    if u.system == "Windows":
+    if _system == "Windows":
         if u.machine == "AMD64" and not environ.get("GITHUB_ACTIONS"):
             return "win-aarch64"
         if "64" in u.machine:
