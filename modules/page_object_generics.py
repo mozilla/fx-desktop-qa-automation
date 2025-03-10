@@ -74,6 +74,7 @@ class GenericPdf(BasePage):
         return self
 
     def add_image(self, image_path: str, sys_platform: str) -> BasePage:
+        """Add an image to a pdf file"""
         self.get_element("toolbar-add-image").click()
         self.get_element("toolbar-add-image-confirm").click()
         sleep(3)
