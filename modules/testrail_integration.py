@@ -89,7 +89,9 @@ def reportable(platform_to_test=None):
         return True
 
     # Find the correct test plan
-    sys_platform = platform.system()
+    sys_platform = platform_to_test or platform.system()
+    if platform_to_test:
+        os.environ["FX_PLATFORM"] = platform_to_test
     version = (
         subprocess.check_output([sys.executable, "./collect_executables.py", "-n"])
         .strip()
