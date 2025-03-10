@@ -163,7 +163,7 @@ def reportable(platform_to_test=None):
             num_suites += 1
 
     logging.warning(
-        f"Potentially matching run found, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
+        f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
     )
     return covered_suites < num_suites
 
