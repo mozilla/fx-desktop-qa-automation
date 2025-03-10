@@ -9,6 +9,7 @@ from sys import argv, exit
 from time import sleep
 
 import requests
+import logging
 from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
@@ -187,6 +188,8 @@ else:
             sleep(3)
             response = requests.get(fx_download_dir_url)
             status = response.status_code
+
+    logging.warning(f"Collecting executable at {fx_download_dir_url}")
 
     if response_text is None:
         exit(f"Could not find build at {fx_download_dir_url}.")
