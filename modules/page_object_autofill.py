@@ -278,6 +278,35 @@ class CreditCardFill(Autofill):
         else:
             autofill_popup_obj.click_on("doorhanger-save-button")
 
+    @BasePage.context_chrome
+    def verify_autofill_cc_data_on_hover(
+        self,
+        autofill_data: CreditCardBase,
+        autofill_popup: AutofillPopup,
+    ):
+        """
+        Verifies that the credit card autofill preview data matches the expected values when hovering
+
+        Arguments:
+            autofill_data: CreditCardBase object containing expected credit card data.
+            autofill_popup: AutofillPopup object to get element from dropdown.
+        """
+        # Get preview data from hovering through the chrome context
+        element = autofill_popup.get_element("cc-preview-form-container")
+
+        # Get every span element that is a child of the form and is not empty
+        children = [
+            x.get_attribute("innerHTML")
+            for x in element.find_elements(By.TAG_NAME, "span")
+            if len(x.get_attribute("innerHTML").strip()) >= 2
+        ]
+
+        for expected in children:
+            # Check if this value exists in our CreditCardBase object
+            assert unescape(expected) in autofill_data.__dict__.values(), (
+                f"Mismatched data: {expected} not in {autofill_data}."
+            )
+
     @staticmethod
     def extract_credit_card_obj_into_list(
         credit_card_sample_data: CreditCardBase,
@@ -503,6 +532,22 @@ class AddressFill(Autofill):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             element = self.get_element("select-address")
             self.expect(EC.visibility_of(element))
+
+    def check_autofill_preview_for_field(
+        self,
+        field_label: str,
+        autofill_data,
+        autofill_popup,
+        util: Utilities,
+        region: str = None,
+    ):
+        # Skip fields that don't appear in the dropdown for certain regions.
+        if field_label == "address-level1" and region in ["DE", "FR"]:
+            return
+        self.double_click("form-field", labels=[field_label])
+        autofill_popup.ensure_autofill_dropdown_visible()
+        autofill_popup.hover("select-form-option")
+        self.verify_autofill_data_on_hover(autofill_data, autofill_popup, util)
 
     def send_keys_to_element(self, name: str, label: str, keys: str):
         """
