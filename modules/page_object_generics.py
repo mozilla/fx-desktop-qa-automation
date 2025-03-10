@@ -93,6 +93,10 @@ class GenericPdf(BasePage):
         sleep(2)
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
+        sleep(2)
+        for _ in range(3):
+            keyboard.tap(Key.tab)
+        keyboard.tap(Key.enter)
         return self
 
     def fill_element(self, element: str, data: str) -> BasePage:
