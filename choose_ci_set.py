@@ -122,7 +122,7 @@ if __name__ == "__main__":
         "suite_conftest_re_string": r".*/.*/conftest\.py",
         "selectors_json_re_string": r"modules/data/.*\.components\.json",
         "object_model_re_string": r"modules/.*.object.*\.py",
-        "class_re_string": r"\s*class (\w+):",
+        "class_re_string": r"\s*class (\w+)[(A-Za-z0-9_)]*:",
     }
     for k in list(re_obj.keys()):
         if slash == "\\":
