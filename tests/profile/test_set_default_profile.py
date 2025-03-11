@@ -105,28 +105,29 @@ def test_set_default_profile(driver: Firefox, opt_ci):
             logging.info(f"Found the default profile at {i}!")
             cur_default = i
             break
+    test_profile_idx = 0 if cur_default != 0 else cur_default + 1
 
     # Set test profile as the default and verify the rows
     logging.info("Preparing to set test profile to the default.")
     about_profiles.get_element(
         "profile-container-item-button",
-        parent_element=profiles[-1],
+        parent_element=profiles[test_profile_idx],
         labels=["profiles-set-as-default"],
     ).click()
 
     # Refetch data to ensure no stale elements
     profiles = about_profiles.get_all_children("profile-container")
-
-    table_rows = about_profiles.get_element(
+    test_profile_rows = about_profiles.get_element(
         "profile-container-item-table-row",
         multiple=True,
-        parent_element=profiles[-1],
+        parent_element=profiles[test_profile_idx],
     )
+    default_profile_information = about_profiles.get_element(
+        "profile-container-item-table-row-value", parent_element=test_profile_rows[0]
+    )
+
     about_profiles.wait.until(
-        lambda _: about_profiles.get_element(
-            "profile-container-item-table-row-value", parent_element=table_rows[0]
-        ).get_attribute("innerHTML")
-        == "yes"
+        lambda _: default_profile_information.get_attribute("innerHTML") == "yes"
     )
     logging.info("Verified that test profile was set to the default.")
 
