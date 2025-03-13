@@ -159,7 +159,7 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
-          $FX_EXECUTABLE --version
+          "$FX_EXECUTABLE" --version
           pipenv run python choose_ci_set.py
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
