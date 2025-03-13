@@ -77,11 +77,16 @@ def create_profiles(profile_paths, sys_platform):
         os.remove(profile_file)
 
 
-def test_set_default_profile(driver: Firefox, opt_ci):
+def test_set_default_profile(
+    driver: Firefox, opt_ci: bool, about_profiles: AboutProfiles
+):
     """
-    C130792: Set the default profile through the firefox browser
+    C130792: Set the default profile through the firefox
+
+    Arguments:
+        about_profiles: AboutProfiles page object model.
+        opt_ci: Boolean to verify if test is run in ci.
     """
-    about_profiles = AboutProfiles(driver)
 
     # Get the profiles container, extract all relevant children under it.
     about_profiles.open()
