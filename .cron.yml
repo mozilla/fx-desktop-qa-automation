@@ -39,5 +39,5 @@ jobs:
       target-tasks-method: new_devedition_qa
     when:
       - {hour: 11, minute: 15}
-      - {hour: 18, minute: 15}
+      - {hour: 19, minute: 30}
       - {hour: 23, minute: 15}
