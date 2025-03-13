@@ -14,6 +14,11 @@ DELETE_MENU_OPTION = "pdfjs-delete"
 
 
 @pytest.fixture()
+def hard_quit():
+    return True
+
+
+@pytest.fixture()
 def test_case():
     return "2228202"
 
