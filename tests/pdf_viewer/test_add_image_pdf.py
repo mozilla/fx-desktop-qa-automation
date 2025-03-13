@@ -23,6 +23,14 @@ def test_case():
     return "2228202"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.ml.enable", True),
+        ("pdfjs.enableUpdatedAddImage", True),
+    ]
+
+
 @pytest.mark.headed
 def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):
     """
