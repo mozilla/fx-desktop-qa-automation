@@ -4,7 +4,7 @@ jobs:
   - name: new-beta-qa
     job:
       type: decision-task
-      treeherder-symbol: smoke-test-dte
+      treeherder-symbol: STARb
       target-tasks-method: new_beta_qa
     when:
       - {hour: 0, minute: 15}
@@ -27,7 +27,17 @@ jobs:
       - {hour: 17, minute: 15}
       - {hour: 18, minute: 15}
       - {hour: 19, minute: 15}
-      - {hour: 20, minute: 00}
+      - {hour: 20, minute: 15}
       - {hour: 21, minute: 15}
       - {hour: 22, minute: 15}
+      - {hour: 23, minute: 15}
+
+  - name: new-devedition-qa
+    job:
+      type: decision-task
+      treeherder-symbol: STARd
+      target-tasks-method: new_devedition_qa
+    when:
+      - {hour: 11, minute: 15}
+      - {hour: 18, minute: 15}
       - {hour: 23, minute: 15}
