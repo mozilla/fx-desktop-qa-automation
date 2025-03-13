@@ -3,8 +3,8 @@ transforms:
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Test New Beta Version"
-  description: "Checks for new betas, tests them, reports to TestRail and Slack"
+  label: "Test New DevEdition Version"
+  description: "Checks for new DevEdition builds (b5), tests them, reports to TestRail and Slack"
   worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
@@ -25,7 +25,7 @@ task-defaults:
 tasks:
   linux:
     attributes:
-      beta-qa: true
+      devedition-qa: true
     run-on-tasks-for: []
     run:
       using: run-task
@@ -37,7 +37,7 @@ tasks:
         pip3 install 'ruff>=0.4.8,<0.5';
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        export FX_CHANNEL="beta";
+        export FX_CHANNEL="devedition";
         ./collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
         pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
@@ -48,8 +48,6 @@ tasks:
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         export REPORTABLE=1;
         pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
-        export BETA_VERSION=$(pipenv run python collect_executables.py -n)
-        if ![[ "${BETA_VERSION}" == *"b6"* ]] && ![[ "${BETA_VERSION}" == *"b9"* ]]; then exit 0;
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
