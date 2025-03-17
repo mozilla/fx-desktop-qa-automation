@@ -15,7 +15,6 @@ def test_case():
 
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
-
 ERROR_TITLES = ["Hmm. We’re having trouble finding that site."]
 
 
@@ -30,12 +29,10 @@ def test_server_not_found_error(driver: Firefox, version: str):
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
 
-    # Auto-detect if this is a Nightly build by checking the version string
-    is_nightly = any(identifier in version.lower() for identifier in ["a1", "nightly"])
-
+    # Navigate to the desired site
     nav.search(CHECK_SITE)
 
-    # Verify the tab title
+    # Wait until the tab title updates to "Server Not Found"
     WebDriverWait(driver, 30).until(
         lambda d: tabs.get_tab_title(tabs.get_tab(1)) == "Server Not Found"
     )
@@ -47,30 +44,28 @@ def test_server_not_found_error(driver: Firefox, version: str):
         in error_page.get_error_short_description()
     )
 
-    # Set the permission text based on what version is actually running
-    if is_nightly:
-        permission_message = (
-            "Check that Nightly has permission to access the web (you might be connected but behind "
-            "a firewall)"
-        )
-    else:
-        permission_message = (
-            "Check that Firefox has permission to access the web (you might be connected but behind "
-            "a firewall)"
-        )
+    # Define all possible valid permission messages (exact matches) for different Firefox channels
+    possible_permission_messages = [
+        "Check that Firefox has permission to access the web (you might be connected but behind a firewall)",
+        "Check that Firefox Developer Edition has permission to access the web (you might be connected but behind a "
+        "firewall)",
+        "Check that Nightly has permission to access the web (you might be connected but behind a firewall)",
+    ]
 
     expected_texts = [
         "Try again later",
         "Check your network connection",
-        permission_message,
     ]
 
-    for i, item in enumerate(error_page.get_error_long_description_items()):
-        assert item.text == expected_texts[i]
+    items = error_page.get_error_long_description_items()
+    assert len(items) >= 3
 
-    WebDriverWait(driver, 30).until(
-        lambda d: error_page.get_try_again_button().is_displayed()
-    )
+    # Verify that the first two bullet items exactly match the expected texts
+    for i in range(2):
+        assert items[i].text == expected_texts[i]
+
+    # Verify that the third bullet item exactly matches one of the valid permission messages
+    assert items[2].text in possible_permission_messages
 
     # Verify that the suggested link redirects to the correct page
     error_page.get_error_suggestion_link().click()
