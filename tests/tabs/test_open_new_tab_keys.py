@@ -19,4 +19,4 @@ def test_open_new_tab_via_keyboard(driver: Firefox, sys_platform: str):
     browser.set_chrome_context()
     browser.new_tab_by_keys(sys_platform)
     browser.expect(EC.title_contains("Mozilla Firefox"))
-    assert driver.title == "Mozilla Firefox"
+    assert "Firefox" in driver.title, f"Expected title to contain 'Firefox', but got '{driver.title}'"

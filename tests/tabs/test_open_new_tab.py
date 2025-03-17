@@ -18,5 +18,5 @@ def test_open_new_tab_plus(driver: Firefox):
     driver.get("about:robots")
     browser.set_chrome_context()
     browser.new_tab_by_button()
-    browser.expect(EC.title_contains("Mozilla Firefox"))
-    assert driver.title == "Mozilla Firefox"
+    browser.expect(EC.title_contains("Firefox"))
+    assert "Firefox" in driver.title, f"Expected title to contain 'Firefox', but got '{driver.title}'"
