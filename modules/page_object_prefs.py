@@ -483,6 +483,13 @@ class AboutAddons(BasePage):
 
     URL_TEMPLATE = "about:addons"
 
+    def is_devedition(self):
+        active_theme_el = self.driver.find_element(
+            By.CSS_SELECTOR, ".card.addon[active] h3.addon-name"
+        )
+        active_theme_name = active_theme_el.text.lower()
+        return "dark" in active_theme_name or "developer edition" in active_theme_name
+
     def choose_sidebar_option(self, option: str):
         """
         Clicks the corresponding sidebar option from the about:addons page.
