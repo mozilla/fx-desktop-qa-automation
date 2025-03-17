@@ -48,7 +48,6 @@ tasks:
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         export REPORTABLE=1;
         pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
-        export BETA_VERSION=$(pipenv run python collect_executables.py -n)
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
