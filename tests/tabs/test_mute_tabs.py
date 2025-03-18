@@ -3,8 +3,11 @@ from os import environ
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from modules.browser_object import TabBar
+
+PLAY_BUTTON_SELECTOR = ".ytp-play-button"
+COOKIE_CONSENT_SELECTOR = "button[aria-label^='Accept all'], button[aria-label^='Accept the use']"
 
 @pytest.fixture()
 def test_case():
@@ -20,12 +23,16 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
 
     # Dismiss cookie banner if present
     try:
-        consent_button = driver.find_element(By.CSS_SELECTOR, "button[aria-label^='Accept all'], button[aria-label^='Accept the use']")
+        consent_button = driver.find_element(By.CSS_SELECTOR, COOKIE_CONSENT_SELECTOR)
         consent_button.click()
     except NoSuchElementException:
-        pass  # Banner was not displayed; proceed normally
+        pass  # Banner not displayed; proceed normally
+    except ElementNotInteractableException:
+        driver.execute_script("arguments[0].click();", consent_button)
 
-    play_button = driver.find_element(By.CSS_SELECTOR, ".ytp-play-button")
+    # Scroll the play button into view before clicking
+    play_button = driver.find_element(By.CSS_SELECTOR, PLAY_BUTTON_SELECTOR)
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", play_button)
     play_button.click()
 
     with driver.context(driver.CONTEXT_CHROME):
