@@ -15,6 +15,7 @@ def test_case():
 
 GHA = environ.get("GITHUB_ACTIONS") == "true"
 
+@pytest.mark.headed
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
@@ -33,7 +34,6 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     # Scroll the play button into view before clicking
     play_button = driver.find_element(By.CSS_SELECTOR, PLAY_BUTTON_SELECTOR)
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", play_button)
-    play_button.click()
 
     with driver.context(driver.CONTEXT_CHROME):
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
