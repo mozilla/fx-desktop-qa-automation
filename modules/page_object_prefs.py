@@ -523,6 +523,13 @@ class AboutAddons(BasePage):
             else:
                 return background_color
 
+    def is_devedition(self):
+        active_theme_el = self.driver.find_element(
+            By.CSS_SELECTOR, ".card.addon[active] h3.addon-name"
+        )
+        active_theme_name = active_theme_el.text.lower()
+        return "dark" in active_theme_name or "developer edition" in active_theme_name
+
     def enabled_theme_matches(self, expected_theme: str) -> bool:
         """
         Check the enabled theme name against any string.
