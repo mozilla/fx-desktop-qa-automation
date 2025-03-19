@@ -1,4 +1,5 @@
 import logging
+import os
 
 from modules.testrail_integration import testrail_init
 
@@ -6,6 +7,9 @@ MY_SUITES = ["Menus", "Networking", "Notifications, Push Notifications and Alert
 PROJECT_ID = 17
 
 if __name__ == "__main__":
+    os.environ["TESTRAIL_BASE_URL"] = "https://mozilla.testrail.io"
+    os.environ["TESTRAIL_USERNAME"] = "payalew@mozilla.com"
+    os.environ["TESTRAIL_API_KEY"] = "WNl7Py3VoWq1yjsVH/Qb-4ypBk/VqBR//JF4hLg9i"
     tr = testrail_init()
 
     # get suite ids for our project
@@ -20,7 +24,12 @@ if __name__ == "__main__":
         val = tr._get_test_cases(17, suite_id)
         # check that pulled result is all the test cases for the suite.
         if val["size"] < val["limit"]:
-            case_ids.extend(map(lambda d: d["id"], val["cases"]))
+            case_ids.extend(
+                map(
+                    lambda d: d["id"],
+                    filter(lambda d: d["custom_automated_test_names"], val["cases"]),
+                )
+            )
         else:
             logging.warning(f"Suite {suite_id} test cases over limit.")
 
