@@ -21,8 +21,8 @@ from testrail import TestRail
 
 # Configuration - Update these values accordingly
 TESTRAIL_HOST = "https://mozilla.testrail.io"
-USERNAME = "twalker@mozilla.com"  # "your_username"
-PASSWORD = "6GG8ucf1/.YAHWXRZ1o1-SNhMu9jCqhu5xxS.P7uT"  # "your_api_key"
+USERNAME = "your_username"  # TestRail login email
+PASSWORD = "your_api_key"
 TESTRAIL_FX_DESK_PRJ_ID = 17
 # SUITE_IDS = [
 #     43517,
