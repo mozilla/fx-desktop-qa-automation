@@ -73,11 +73,46 @@ class AboutPrefs(BasePage):
         cc_info_json: dict
             The dictionary that is the json representation of the extracted information from a web page
         credit_card_fill_obj: CreditCardBase
-            The object that contains all of the generated information
+            The object that contains all the generated information
         """
         assert cc_info_json["name"] == credit_card_fill_obj.name
         assert cc_info_json["number"][-4:] == credit_card_fill_obj.card_number[-4:]
         assert int(cc_info_json["month"]) == int(credit_card_fill_obj.expiration_month)
+        return self
+
+    def verify_cc_edit_saved_payments_profile(
+        self, credit_card_fill_obj: CreditCardBase
+    ):
+        """
+        Verify saved payment profile data is the same as the generated fake credit_card_fill_obj data.
+        Make sure cvv is not displayed.
+
+        Arguments:
+            credit_card_fill_obj: CreditCardBase
+                The object that contains all the generated information
+        """
+        self.switch_to_edit_saved_payments_popup_iframe()
+        form_container = self.get_element("form-container")
+        input_elements = form_container.find_elements(By.TAG_NAME, "input")
+        for element in input_elements:
+            field_name = element.get_attribute("id")
+            if field_name.startswith("cc"):
+                field_value = element.get_attribute("value")
+                assert field_value in credit_card_fill_obj.__dict__.values(), (
+                    f"{field_name} not found in generated data."
+                )
+                assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
+        select_elements = form_container.find_elements(By.TAG_NAME, "select")
+        for element in select_elements:
+            field_name = element.get_attribute("id")
+            if field_name.startswith("cc"):
+                val = Select(element)
+                # Only get the last two digits
+                field_value = val.first_selected_option.get_attribute("value")[-2:]
+                assert field_value in credit_card_fill_obj.__dict__.values(), (
+                    f"{field_name} not found in generated data."
+                )
+                assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
         return self
 
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
@@ -233,9 +268,27 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
+        self.open_saved_payments_list()
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def open_saved_payments_list(self):
+        """
+        Open saved payments dialog panel
+        """
+        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
+        return self
+
+    def click_edit_saved_payment(self):
+        """
+        Click on edit button on saved payments dialog panel
+        """
+        edit_button = self.get_element(
+            "panel-popup-button", labels=["autofill-manage-edit-button"]
+        )
+        self.expect(EC.element_to_be_clickable(edit_button))
+        edit_button.click()
+        return self
 
     def switch_to_saved_payments_popup_iframe(self) -> BasePage:
         """
@@ -243,6 +296,14 @@ class AboutPrefs(BasePage):
         """
         saved_payments = self.get_saved_payments_popup_iframe()
         self.driver.switch_to.frame(saved_payments)
+        return self
+
+    def switch_to_edit_saved_payments_popup_iframe(self) -> BasePage:
+        """
+        Switch to form iframe to edit saved payments.
+        """
+        self.switch_to_default_frame()
+        self.switch_to_iframe(2)
         return self
 
     def update_cc_field_panel(self, num_tabs: int, new_info: str) -> BasePage:

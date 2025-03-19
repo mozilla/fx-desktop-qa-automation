@@ -525,13 +525,13 @@ class AddressFill(Autofill):
 
         self.click_form_button("submit")
 
+    @BasePage.context_chrome
     def verify_autofill_displayed(self):
         """
         Verifies that the autofill suggestions are displayed.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            element = self.get_element("select-address")
-            self.expect(EC.visibility_of(element))
+        element = self.get_element("select-address")
+        self.expect(EC.visibility_of(element))
 
     def check_autofill_preview_for_field(
         self,
