@@ -18,11 +18,6 @@ MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("d
 
 
 @pytest.mark.headed
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
-@pytest.mark.skipif(
-    sys.platform.lower().startswith("linux"),
-    reason="Test unstable in CI on Linux. see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1951666",
-)
 def test_password_csv_export(
     driver_and_saved_logins, home_folder, sys_platform, opt_ci
 ):
