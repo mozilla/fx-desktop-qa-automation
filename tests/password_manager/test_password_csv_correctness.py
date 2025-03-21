@@ -38,7 +38,7 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
 
-    # Download the password file
+    # Export the password file
     time.sleep(5)
     keyboard.tap(Key.enter)
 
@@ -47,7 +47,7 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     csv_file = os.path.join(documents_directory, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
-    # Verify the results
+    # Verify the contents of the exported csv file
     guid_pattern = re.compile(
         r"{[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}}"
     )

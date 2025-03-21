@@ -38,7 +38,7 @@ def test_password_csv_export(
     about_logins.click_on("export-passwords-button")
     about_logins.click_on("continue-export-button")
 
-    # Download the password file
+    # Export the password file
     time.sleep(5)
     keyboard.tap(Key.enter)
 
