@@ -39,7 +39,7 @@ def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: instance of GenericPdf with correct path.
+        pdf_viewer: Instance of GenericPdf with correct path.
     """
     context_menu = ContextMenu(driver)
     image_path = Path("data") / IMAGE_FILE_NAME
