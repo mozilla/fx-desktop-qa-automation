@@ -83,6 +83,7 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
+          git --no-pager diff --name-only origin/main
           pipenv run pytest -n 4 $(cat selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -161,6 +162,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run python choose_ci_set.py
+          git --no-pager diff --name-only origin/main
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
