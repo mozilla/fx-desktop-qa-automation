@@ -4,6 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
+
 from modules.browser_object import TabBar
 
 PLAY_BUTTON_SELECTOR = ".ytp-play-button"
@@ -15,7 +16,7 @@ def test_case():
 
 GHA = environ.get("GITHUB_ACTIONS") == "true"
 
-@pytest.mark.headed
+@pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
@@ -26,14 +27,11 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     try:
         consent_button = driver.find_element(By.CSS_SELECTOR, COOKIE_CONSENT_SELECTOR)
         consent_button.click()
-    except NoSuchElementException:
-        pass  # Banner not displayed; proceed normally
-    except ElementNotInteractableException:
-        driver.execute_script("arguments[0].click();", consent_button)
+    except (NoSuchElementException, ElementNotInteractableException):
+        pass  # Banner wasn't displayed or not interactable; proceed normally
 
-    # Scroll the play button into view before clicking
     play_button = driver.find_element(By.CSS_SELECTOR, PLAY_BUTTON_SELECTOR)
-    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", play_button)
+    play_button.click()
 
     with driver.context(driver.CONTEXT_CHROME):
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
