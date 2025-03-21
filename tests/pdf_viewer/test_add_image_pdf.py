@@ -27,6 +27,7 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("browser.ml.enable", True),
+        ("pdfjs.enableAltText", False),
         ("pdfjs.enableUpdatedAddImage", True),
     ]
 
