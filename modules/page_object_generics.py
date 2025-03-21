@@ -77,27 +77,29 @@ class GenericPdf(BasePage):
         """Add an image to a pdf file"""
         self.get_element("toolbar-add-image").click()
         self.get_element("toolbar-add-image-confirm").click()
-        sleep(3)
+        sleep(1.5)
         from pynput.keyboard import Controller, Key
 
         keyboard = Controller()
         if sys_platform == "Darwin" or sys_platform == "Linux":
             keyboard.type("/")
-            sleep(3)
+            sleep(1.5)
             keyboard.type(image_path.lstrip("/"))
         else:
-            sleep(2)
+            sleep(1.5)
             keyboard.type(image_path)
         sleep(1)
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
-        sleep(2)
+        sleep(1)
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
-        sleep(2)
+        sleep(1.5)
         for _ in range(3):
             keyboard.tap(Key.tab)
+        sleep(0.5)
         keyboard.tap(Key.enter)
+        sleep(1)
         return self
 
     def fill_element(self, element: str, data: str) -> BasePage:
