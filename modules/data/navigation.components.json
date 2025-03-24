@@ -588,5 +588,11 @@
         "selectorData": "window-modal-dialog",
         "strategy": "id",
         "groups": []
+    },
+
+    "developer-tool-button": {
+        "selectorData": "developer-button",
+        "strategy": "id",
+        "groups": []
     }
 }
