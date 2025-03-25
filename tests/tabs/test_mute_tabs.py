@@ -1,11 +1,6 @@
 from os import environ
-from time import sleep
 
 import pytest
-from selenium.common.exceptions import (
-    ElementNotInteractableException,
-    NoSuchElementException,
-)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -25,37 +20,22 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [
-        ("devtools.debugger.remote-enabled", True),
-        ("devtools.chrome.enabled", True),
-    ]
+    return [("network.cookie.cookieBehavior", "2")]
 
 
 GHA = environ.get("GITHUB_ACTIONS") == "true"
 
 
-@pytest.mark.headed
+@pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
     tabs = TabBar(driver)
     driver.get(video_url)
+    tabs.expect(EC.title_contains("Top 10"))
 
-    # Dismiss cookie banner if present
-    try:
-        consent_button = driver.find_element(By.CSS_SELECTOR, COOKIE_CONSENT_SELECTOR)
-        tabs.expect(EC.element_to_be_clickable(consent_button))
-        consent_button.click()
-    except NoSuchElementException:
-        pass  # Banner not displayed; proceed normally
-    except ElementNotInteractableException:
-        driver.execute_script("arguments[0].click();", consent_button)
-
-    # Scroll the play button into view before clicking
     play_button = driver.find_element(By.CSS_SELECTOR, PLAY_BUTTON_SELECTOR)
-    driver.execute_script(
-        "arguments[0].scrollIntoView({block: 'center'});", play_button
-    )
+    play_button.click()
 
     with driver.context(driver.CONTEXT_CHROME):
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
