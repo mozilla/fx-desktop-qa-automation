@@ -7,9 +7,6 @@ MY_SUITES = ["Menus", "Networking", "Notifications, Push Notifications and Alert
 PROJECT_ID = 17
 
 if __name__ == "__main__":
-    os.environ["TESTRAIL_BASE_URL"] = "https://mozilla.testrail.io"
-    os.environ["TESTRAIL_USERNAME"] = "payalew@mozilla.com"
-    os.environ["TESTRAIL_API_KEY"] = "WNl7Py3VoWq1yjsVH/Qb-4ypBk/VqBR//JF4hLg9i"
     tr = testrail_init()
 
     # get suite ids for our project
