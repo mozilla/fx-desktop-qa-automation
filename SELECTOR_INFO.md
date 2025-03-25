@@ -3058,6 +3058,13 @@ Description: Refresh Firefox dialog window
 Location: Dialog window
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: developer-tool-button
+Selector Data: developer-button
+Description: Developer tool icon
+Location: Navigation bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

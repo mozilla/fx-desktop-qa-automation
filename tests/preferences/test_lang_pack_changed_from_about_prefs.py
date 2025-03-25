@@ -1,4 +1,5 @@
 import pytest
+from selenium.common import TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, PanelUi, TabBar
@@ -30,6 +31,18 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     C1771617 - The language can be changed in about:preferences.
     We choose to set a pref rather than use a non-US local build.
     """
+    # Skip Developer Edition since modifying menus, messages, and notifications language is blocked and defaults to
+    # English
+    nav = Navigation(driver)
+    try:
+        if nav.element_exists("developer-tool-button"):
+            pytest.skip(
+                "Skipping test: Developer Edition detected dev tools button presence."
+            )
+    except TimeoutException:
+        pass  # If the element doesn't exist run the test
+
+    # Set the alternative language
     about_prefs = AboutPrefs(driver, category="general")
     about_prefs.open()
     about_prefs.set_alternative_language("pt-BR")
@@ -53,7 +66,6 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     screen_cap = GenericPage(driver, url=SCREEN_CAP_URL)
     screen_cap.open()
     screen_cap.find_element("id", "start").click()
-    nav = Navigation(driver)
     nav.element_visible("popup-notification")
     nav.element_attribute_contains(
         "popup-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
