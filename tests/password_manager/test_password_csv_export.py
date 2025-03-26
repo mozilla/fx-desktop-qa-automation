@@ -1,7 +1,5 @@
 import os
-import sys
 import time
-from os import environ
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -14,12 +12,9 @@ def test_case():
     return "2241521"
 
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
-
-
 @pytest.mark.headed
 def test_password_csv_export(
-    driver_and_saved_logins, home_folder, sys_platform, opt_ci
+    driver_and_saved_logins, downloads_folder, sys_platform, opt_ci
 ):
     """
     C2241521: Verify that a password.csv file can be exported from about:logins
@@ -43,8 +38,7 @@ def test_password_csv_export(
     keyboard.tap(Key.enter)
 
     # Verify the exported csv file is present in the target folder
-    downloads_directory = about_logins.get_downloads_dir()
-    csv_file = os.path.join(downloads_directory, "passwords.csv")
+    csv_file = os.path.join(downloads_folder, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
     # Delete the password.csv created

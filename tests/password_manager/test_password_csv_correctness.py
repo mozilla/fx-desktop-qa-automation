@@ -1,9 +1,7 @@
 import csv
 import os
 import re
-import sys
 import time
-from os import environ
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -16,11 +14,10 @@ def test_case():
     return "2241522"
 
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
-
-
 @pytest.mark.headed
-def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_platform):
+def test_password_csv_correctness(
+    driver_and_saved_logins, downloads_folder, sys_platform
+):
     """
     C2241522: Verify than an exported password.csv file displays the correct information
     """
@@ -43,8 +40,7 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     keyboard.tap(Key.enter)
 
     # Verify the exported csv file is present in the target folder
-    downloads_directory = about_logins.get_downloads_dir()
-    csv_file = os.path.join(downloads_directory, "passwords.csv")
+    csv_file = os.path.join(downloads_folder, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
     # Verify the contents of the exported csv file
