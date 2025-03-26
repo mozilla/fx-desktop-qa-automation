@@ -1,5 +1,4 @@
 import logging
-import os
 
 from modules.testrail_integration import testrail_init
 
@@ -24,12 +23,15 @@ if __name__ == "__main__":
             case_ids.extend(
                 map(
                     lambda d: d["id"],
-                    filter(lambda d: d["custom_automated_test_names"], val["cases"]),
+                    filter(
+                        lambda d: d["custom_automated_test_names"]
+                        and d["custom_automation_status"] == 4,
+                        val["cases"],
+                    ),
                 )
             )
         else:
             logging.warning(f"Suite {suite_id} test cases over limit.")
-
     # Update automation_coverage value for each case id.
     # for case_id in case_ids:
     #     tr.update_case_field(case_id, "custom_automation_coverage", 3)
