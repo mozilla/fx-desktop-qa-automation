@@ -14,10 +14,6 @@ def test_case():
     return "1618400"
 
 
-@pytest.mark.skipif(
-    sys.platform.lower().startswith("linux"),
-    reason="Test unstable in CI on Linux. see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1951672",
-)
 def test_preferences_all_toggles_enabled(driver: Firefox):
     """
     C1618400: Preferences - All toggles buttons Enabled

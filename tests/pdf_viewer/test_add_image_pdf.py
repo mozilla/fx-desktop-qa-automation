@@ -1,5 +1,5 @@
-import os
 from pathlib import Path
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -27,6 +27,7 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("browser.ml.enable", True),
+        ("pdfjs.enableAltText", False),
         ("pdfjs.enableUpdatedAddImage", True),
     ]
 
@@ -38,14 +39,14 @@ def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: instance of GenericPdf with correct path.
+        pdf_viewer: Instance of GenericPdf with correct path.
     """
     context_menu = ContextMenu(driver)
     image_path = Path("data") / IMAGE_FILE_NAME
     pdf_viewer.add_image(str(image_path.absolute()), sys_platform)
 
-    pdf_viewer.element_exists(ADDED_IMAGE_ELEMENT)
     pdf_viewer.element_visible(ADDED_IMAGE_ELEMENT)
+    sleep(0.5)
 
     pdf_viewer.context_click(ADDED_IMAGE_ELEMENT)
     context_menu.click_and_hide_menu(DELETE_MENU_OPTION)

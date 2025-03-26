@@ -179,14 +179,17 @@ class AboutLogins(BasePage):
         else:
             assert expected_logins == actual_logins
 
-    def remove_password_csv(self, home_folder):
-        # Delete password.csv, if there is one in test location
-        if self.sys_platform == "Linux":
-            downloads_folder = os.getcwd()
-        else:
-            downloads_folder = os.path.join(home_folder, "Downloads")
-        passwords_csv = os.path.join(downloads_folder, "passwords.csv")
-        for file in os.listdir(downloads_folder):
+    def get_documents_dir(self) -> str:
+        # Return full path to Documents directory
+        home = os.path.expanduser("~")
+        export_dir = os.path.join(home, "Documents")
+        return export_dir
+
+    def remove_password_csv(self):
+        # Delete password.csv, if there is one in the export location
+        documents_dir = self.get_documents_dir()
+        passwords_csv = os.path.join(documents_dir, "passwords.csv")
+        for file in os.listdir(documents_dir):
             delete_files_regex = re.compile(r"\bpasswords.csv\b")
             if delete_files_regex.match(file):
                 os.remove(passwords_csv)

@@ -40,6 +40,19 @@ def test_open_addons(driver: Firefox, theme_name: str):
     nav = Navigation(driver)
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
+
+    # Dynamically detect if running Developer Edition
+    if abt_addons.is_devedition():
+        # Adjust expectations for Developer Edition
+        if theme_name == "firefox-compact-dark_mozilla_org-heading":
+            # Already default on Developer Edition; skip activation/assertion
+            pytest.skip("Compact Dark is default on DevEdition, skipping.")
+    else:
+        # Adjust expectations for standard Firefox
+        if theme_name == "firefox-compact-light_mozilla_org-heading":
+            # Already default on Firefox standard; skip activation/assertion
+            pytest.skip("Compact Light is default on Firefox, skipping.")
+
     abt_addons.activate_theme(nav, theme_name, themes[theme_name])
 
 
