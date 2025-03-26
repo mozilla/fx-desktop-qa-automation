@@ -43,8 +43,8 @@ def test_password_csv_correctness(driver_and_saved_logins, home_folder, sys_plat
     keyboard.tap(Key.enter)
 
     # Verify the exported csv file is present in the target folder
-    documents_directory = about_logins.get_documents_dir()
-    csv_file = os.path.join(documents_directory, "passwords.csv")
+    downloads_directory = about_logins.get_downloads_dir()
+    csv_file = os.path.join(downloads_directory, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
     # Verify the contents of the exported csv file
