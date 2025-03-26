@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -20,6 +22,11 @@ def prefs_list(add_to_prefs_list: dict):
     ]
     prefs.extend(add_to_prefs_list)
     return prefs
+
+
+@pytest.fixture()
+def region():
+    return os.environ.get("FX_REGION", "US")
 
 
 @pytest.fixture()

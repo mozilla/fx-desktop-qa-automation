@@ -11,17 +11,25 @@ def test_case():
     return "122405"
 
 
-def test_autofill_credit_card(driver: Firefox):
+def test_autofill_credit_card(
+    driver: Firefox,
+    util: Utilities,
+    credit_card_autofill: CreditCardFill,
+    autofill_popup: AutofillPopup,
+):
     """
     C122405, tests that after filling autofill and disabling cc info it appears in panel
-    """
-    util = Utilities()
 
-    credit_card_fill_obj = CreditCardFill(driver).open()
-    autofill_popup = AutofillPopup(driver)
+    Arguments:
+        credit_card_autofill: CreditCardFill instance
+        autofill_popup: AutofillPopup instance
+        util: Utilities instance
+    """
+
+    credit_card_autofill.open()
 
     credit_card_data = util.fake_credit_card_data()
-    credit_card_fill_obj.fill_credit_card_info(credit_card_data)
+    credit_card_autofill.fill_credit_card_info(credit_card_data)
     autofill_popup.click_doorhanger_button("save")
 
-    credit_card_fill_obj.autofill_and_clear_all_fields(autofill_popup, credit_card_data)
+    credit_card_autofill.autofill_and_clear_all_fields(autofill_popup, credit_card_data)

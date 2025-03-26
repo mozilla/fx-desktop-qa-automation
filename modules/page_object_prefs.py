@@ -268,16 +268,15 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.open_saved_payments_list()
+        self.get_saved_payments_popup().click()
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def open_saved_payments_list(self):
+    def get_saved_payments_popup(self) -> WebElement:
         """
         Open saved payments dialog panel
         """
-        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
-        return self
+        return self.get_element("prefs-button", labels=["Saved payment methods"])
 
     def click_edit_saved_payment(self):
         """
@@ -290,12 +289,12 @@ class AboutPrefs(BasePage):
         edit_button.click()
         return self
 
-    def switch_to_saved_payments_popup_iframe(self) -> BasePage:
+    def open_and_switch_to_saved_payments_popup(self) -> BasePage:
         """
-        Switch to saved payments popup frame.
+        Open and Switch to saved payments popup frame.
         """
-        saved_payments = self.get_saved_payments_popup_iframe()
-        self.driver.switch_to.frame(saved_payments)
+        saved_payments_iframe = self.get_saved_payments_popup_iframe()
+        self.driver.switch_to.frame(saved_payments_iframe)
         return self
 
     def switch_to_edit_saved_payments_popup_iframe(self) -> BasePage:
@@ -341,9 +340,25 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("prefs-button", labels=["Saved addresses"])
 
+    def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
+        """
+        Open and Switch to saved addresses popup frame.
+        """
+        saved_address_iframe = self.get_saved_addresses_popup_iframe()
+        self.driver.switch_to.frame(saved_address_iframe)
+        return self
+
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
         switch to save addresses popup frame.
+        """
+        self.switch_to_default_frame()
+        self.switch_to_iframe(1)
+        return self
+
+    def switch_to_saved_payments_popup_iframe(self) -> BasePage:
+        """
+        switch to save payments popup frame.
         """
         self.switch_to_default_frame()
         self.switch_to_iframe(1)

@@ -1,5 +1,4 @@
 import json
-import logging
 
 import pytest
 from selenium.webdriver import Firefox
@@ -7,7 +6,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -26,7 +25,7 @@ def test_autofill_cc_cvv(
     C122399, Test form autofill CC CVV number
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance
+        about_prefs_privacy: AboutPrefs instance (privacy category)
         credit_card_autofill: CreditCardFill instance
         autofill_popup: AutofillPopup instance
         util: Utilities instance
@@ -43,7 +42,7 @@ def test_autofill_cc_cvv(
 
     # navigate to prefs
     about_prefs_privacy.open()
-    about_prefs_privacy.switch_to_saved_payments_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     # Get the saved CC data (first entry)
     cc_profile = about_prefs_privacy.get_all_saved_cc_profiles()[0]

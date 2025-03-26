@@ -12,28 +12,35 @@ def test_case():
     return "122392"
 
 
-def test_autofill_credit_card_doorhanger(driver: Firefox):
+def test_autofill_credit_card_doorhanger(
+    driver: Firefox,
+    about_prefs_privacy: AboutPrefs,
+    autofill_popup: AutofillPopup,
+    credit_card_autofill: CreditCardFill,
+    util: Utilities,
+):
     """
     C122392, ensures that pressing not now > never save cards toggles off the setting
-    """
-    # instantiate objects
-    about_prefs_obj = AboutPrefs(driver, category="privacy")
-    autofill_popup_obj = AutofillPopup(driver)
-    util = Utilities()
 
+    Arguments:
+        about_prefs_privacy: AboutPrefs instance (privacy category)
+        autofill_popup: AutofillPopup instance
+        credit_card_autofill: CreditCardFill instance
+        util: Utilities instance
+    """
     # navigate to page
-    credit_card_fill_obj = CreditCardFill(driver).open()
+    credit_card_autofill.open()
 
     # fill data
     credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
+    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
 
     # press the arrow
-    autofill_popup_obj.click_doorhanger_button("dropdown")
-    autofill_popup_obj.click_doorhanger_button("dropdown-never-save-cards")
+    autofill_popup.click_doorhanger_button("dropdown")
+    autofill_popup.click_doorhanger_button("dropdown-never-save-cards")
 
     # ensure that the checked attribute is off
-    about_prefs_obj.open()
-    payment_checkbox = about_prefs_obj.get_element("save-and-fill-payment-methods")
+    about_prefs_privacy.open()
+    payment_checkbox = about_prefs_privacy.get_element("save-and-fill-payment-methods")
     checked_attr = payment_checkbox.get_attribute("checked")
     assert checked_attr is None

@@ -52,7 +52,7 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
-    about_prefs_privacy.switch_to_saved_payments_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     # Get stored values
     elements = [

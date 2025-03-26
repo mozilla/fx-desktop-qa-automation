@@ -273,10 +273,10 @@ class CreditCardFill(Autofill):
         self.update_field(field_name, field_data, autofill_popup_obj)
         self.click_form_button("submit")
 
-        if not save_card:
-            autofill_popup_obj.click_on("update-card-info-popup-button")
-        else:
+        if save_card or field_name == "cc-number":
             autofill_popup_obj.click_on("doorhanger-save-button")
+        else:
+            autofill_popup_obj.click_on("update-card-info-popup-button")
 
     @BasePage.context_chrome
     def verify_autofill_cc_data_on_hover(

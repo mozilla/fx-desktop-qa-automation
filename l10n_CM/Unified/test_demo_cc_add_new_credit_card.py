@@ -25,7 +25,7 @@ def test_create_new_cc_profile(
 
     # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs_privacy.open()
-    about_prefs_privacy.switch_to_saved_payments_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     # Save CC information using fake data
     credit_card_sample_data = util.fake_credit_card_data(region)

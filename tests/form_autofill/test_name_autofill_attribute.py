@@ -5,8 +5,6 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
-COUNTRY_CODE = "US"
-
 
 @pytest.fixture()
 def test_case():
@@ -18,6 +16,7 @@ def test_name_attribute_selection(
     address_autofill: AddressFill,
     autofill_popup: AutofillPopup,
     util: Utilities,
+    region: str,
 ):
     """
     C122356 - This test verifies that after filling the autofill fields and saving the data, hovering over the first
@@ -28,12 +27,13 @@ def test_name_attribute_selection(
         address_autofill: AddressFill instance
         autofill_popup: AutofillPopup instance
         util: Utilities instance
+        region: country code in use
     """
     # open the navigation page
     address_autofill.open()
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
+    autofill_sample_data = util.fake_autofill_data(region)
     address_autofill.save_information_basic(autofill_sample_data)
     autofill_popup.click_doorhanger_button("save")
 
