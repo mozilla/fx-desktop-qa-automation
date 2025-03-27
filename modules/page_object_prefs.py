@@ -14,6 +14,7 @@ from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
+from modules.util import Utilities
 
 
 class AboutPrefs(BasePage):
@@ -47,6 +48,8 @@ class AboutPrefs(BasePage):
 
     HTTPS_ONLY_STATUS = HttpsOnlyStatus()
 
+    # Function Organization
+    ## Search and Settings
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(
@@ -60,11 +63,73 @@ class AboutPrefs(BasePage):
         search_input.send_keys(term)
         return self
 
+    def set_alternative_language(self, lang_code: str) -> BasePage:
+        """Changes the browser language"""
+        self.get_element("language-set-alternative-button").click()
+        self.driver.switch_to.frame(self.get_iframe())
+
+        # Download the language options
+        select_language = self.get_element("language-settings-select")
+        select_language.click()
+        search_languages = self.get_element("language-settings-search")
+        search_languages.click()
+        select_language.click()
+
+        # Select the language, add, and make sure it appears
+        select_language.click()
+        self.get_element("language-option-by-code", labels=[lang_code]).click()
+        select_language.click()
+        self.get_element("language-settings-add-button").click()
+        self.element_attribute_contains(
+            "language-added-list", "last-selected", f"locale-{lang_code}"
+        )
+
+        self.get_element("language-settings-ok").click()
+        return self
+
+    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
+        """
+        Click the HTTPS Only option given
+        """
+        self.find_in_settings("HTTPS")
+        self.element_clickable(str(option_id))
+        self.click_on(str(option_id))
+        self.element_attribute_contains(str(option_id), "checked", "")
+        return self
+
+    def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
+        """
+        Sets the Default Zoom level in about:preferences.
+        """
+        self.click_on("default-zoom-dropdown")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
+        self.click_on("default-zoom-dropdown")
+        return self
+
+    def select_content_and_action(self, content_type: str, action: str) -> BasePage:
+        """
+        From the applications list that handles how downloaded media is used,
+        select a content type and action
+        """
+        el = self.get_element("actions-menu", labels=[content_type])
+        el.click()
+        self.click_on("actions-menu-option", labels=[content_type, action])
+        self.wait.until(lambda _: el.get_attribute("label") == action)
+        return self
+
+    def get_history_menulist(self) -> WebElement:
+        """
+        Gets the webelement for the list of history items that appear in about:preferences
+        """
+        return self.get_element("history_menulist")
+
+    ## Payment and Address Management
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
         """
-        Does the assertions that ensure all of the extracted information (the cc_info_json) is the same as the generated fake credit_card_fill_obj data.
+        Does the assertions that ensure all the extracted information (the cc_info_json) is the same as the generated fake credit_card_fill_obj data.
 
         ...
 
@@ -73,146 +138,93 @@ class AboutPrefs(BasePage):
         cc_info_json: dict
             The dictionary that is the json representation of the extracted information from a web page
         credit_card_fill_obj: CreditCardBase
-            The object that contains all of the generated information
+            The object that contains all the generated information
         """
         assert cc_info_json["name"] == credit_card_fill_obj.name
         assert cc_info_json["number"][-4:] == credit_card_fill_obj.card_number[-4:]
         assert int(cc_info_json["month"]) == int(credit_card_fill_obj.expiration_month)
         return self
 
-    def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
+    def verify_cc_edit_saved_payments_profile(
+        self, credit_card_fill_obj: CreditCardBase
+    ):
         """
-        Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
-        """
-        self.get_element("prefs-button", labels=[button_label]).click()
-        iframe = self.get_element("browser-popup")
-        return iframe
+        Verify saved payment profile data is the same as the generated fake credit_card_fill_obj data.
+        Make sure cvv is not displayed.
 
-    def set_country_autofill_panel(self, country: str) -> BasePage:
-        """Sets the country value in the autofill view"""
-        select_country = Select(self.driver.find_element(By.ID, "country"))
-        select_country.select_by_value(country)
+        Arguments:
+            credit_card_fill_obj: CreditCardBase
+                The object that contains all the generated information
+        """
+        self.switch_to_edit_saved_payments_popup_iframe()
+        form_container = self.get_element("form-container")
+        input_elements = form_container.find_elements(By.TAG_NAME, "input")
+        for element in input_elements:
+            field_name = element.get_attribute("id")
+            if field_name.startswith("cc"):
+                field_value = element.get_attribute("value")
+                assert field_value in credit_card_fill_obj.__dict__.values(), (
+                    f"{field_name} not found in generated data."
+                )
+                assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
+        select_elements = form_container.find_elements(By.TAG_NAME, "select")
+        for element in select_elements:
+            field_name = element.get_attribute("id")
+            if field_name.startswith("cc"):
+                val = Select(element)
+                # Only get the last two digits
+                field_value = val.first_selected_option.get_attribute("value")[-2:]
+                assert field_value in credit_card_fill_obj.__dict__.values(), (
+                    f"{field_name} not found in generated data."
+                )
+                assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
         return self
 
-    @staticmethod
-    def extract_content_from_html(initial_string: str) -> str:
+    def get_saved_payments_popup(self) -> WebElement:
         """
-        Takes the raw innerHTML and uses regex to filter out the tags.
-
-        >[^<]+<"
-        - > match the closing tag
-        - [^<] match anything that isnt the < tag
-        - +< matches the opening tag
-
-        ...
-
-        Attributes
-        ----------
-        initial_string: str
-            The raw innerHTML content extracted
+        Open saved payments dialog panel
         """
-        text = re.findall(r">[^<]+<", initial_string)
-        clean_text = [s[1:-1] for s in text]
-        return clean_text[0]
+        return self.get_element("prefs-button", labels=["Saved payment methods"])
 
-    @staticmethod
-    def extract_and_split_text(text: str) -> List[str]:
+    def click_edit_on_dialog_element(self):
         """
-        Takes the raw text and strips it of any extra spaces and splits it by the character ','
-
-        Attributes
-        ----------
-        text: str
-            The raw text extracted from the HTML content, filtered
+        Click on edit button on dialog panel
         """
-        return [item.strip() for item in text.split(",")]
-
-    @staticmethod
-    def organize_data_into_obj(observed_text: List[str]) -> AutofillAddressBase | None:
-        """
-        Takes a list of text that has been split into an array and instantiates an AutofillAddressBase object
-
-        ...
-
-        Attributes
-        ----------
-        observed_text: List[str]
-            A list that contains the text for each of the fields of data in an object
-        """
-        if len(observed_text) < 8:
-            return None
-
-        name = observed_text[0]
-        address = observed_text[1]
-        address_level_2 = observed_text[2]
-        organization = observed_text[3]
-        address_level_1 = observed_text[4]
-        country_code = observed_text[5]
-        postal_code = observed_text[6]
-        telephone = observed_text[7]
-        email = observed_text[8]
-
-        return AutofillAddressBase(
-            name=name,
-            organization=organization,
-            street_address=address,
-            address_level_2=address_level_2,
-            address_level_1=address_level_1,
-            postal_code=postal_code,
-            country_code=country_code,
-            email=email,
-            telephone=telephone,
+        edit_button = self.get_element(
+            "panel-popup-button", labels=["autofill-manage-edit-button"]
         )
-
-    def fill_and_save_autofill_panel_information(
-        self, autofill_info: AutofillAddressBase
-    ) -> BasePage:
-        """
-        Takes the sample autofill object and fills it into the popup panel in the about:prefs section
-        under saved addresses.
-
-        ...
-
-        Attributes
-        ----------
-        autofill_info: AutofillAddressBase
-            The object containing all of the sample data
-        """
-        fields = {
-            "name": autofill_info.name,
-            "organization": autofill_info.organization,
-            "street-address": autofill_info.street_address,
-            "address-level2": autofill_info.address_level_2,
-            "address-level1": autofill_info.address_level_1,
-            "postal-code": autofill_info.postal_code,
-            "tel": autofill_info.telephone,
-            "email": autofill_info.email,
-        }
-
-        self.set_country_autofill_panel(autofill_info.country_code)
-        form_element = self.get_element("form-container")
-        children = [
-            x.get_attribute("id")
-            for x in form_element.find_elements(By.CSS_SELECTOR, "*")
-        ]
-
-        for key, val in fields.items():
-            if key in children:
-                form_element.find_element(By.ID, key).send_keys(val)
-        self.get_element("save-button").click()
+        self.expect(EC.element_to_be_clickable(edit_button))
+        edit_button.click()
         return self
 
-    def fill_cc_panel_information(self, credit_card_fill_information: CreditCardBase):
+    def click_add_on_dialog_element(self):
+        """
+        Click on add button on dialog panel
+        """
+        add_button = self.get_element(
+            "panel-popup-button", labels=["autofill-manage-add-button"]
+        )
+        self.expect(EC.element_to_be_clickable(add_button))
+        add_button.click()
+        return self
+
+    def open_and_switch_to_saved_payments_popup(self) -> BasePage:
+        """
+        Open and Switch to saved payments popup frame.
+        """
+        saved_payments_iframe = self.get_saved_payments_popup_iframe()
+        self.driver.switch_to.frame(saved_payments_iframe)
+        return self
+
+    def fill_and_save_cc_panel_information(
+        self, credit_card_fill_information: CreditCardBase
+    ):
         """
         Takes the sample cc object and fills it into the popup panel in the about:prefs section
         under saved payment methods.
 
-        ...
-
-        Attributes
-        ----------
-        credit_card_fill_information: CreditCardBase
-            The object containing all of the sample data
+        Arguments:
+            credit_card_fill_information: The object containing all the sample data
         """
         fields = {
             "card_number": credit_card_fill_information.card_number,
@@ -229,42 +241,151 @@ class AboutPrefs(BasePage):
         # Finally, press enter
         self.actions.send_keys(Keys.ENTER).perform()
 
+    def add_entry_to_saved_payments(self, cc_data: CreditCardBase):
+        """
+        Takes the sample AutofillAddressBase object and adds an entry to the saved addresses list.
+        Switches the appropriate frames to accommodate the operation.
+
+        Arguments:
+            cc_data: The object containing all the sample data
+        """
+        self.switch_to_saved_payments_popup_iframe()
+        self.fill_and_save_cc_panel_information(cc_data)
+        self.switch_to_default_frame()
+
+    def update_cc_field_panel(self, field_name: str, value: str | int) -> BasePage:
+        """
+        Updates a field in the credit card popup panel in about:prefs
+        Change value of the field_name given
+        """
+
+        fields = {
+            "card_number": "cc-number",
+            "expiration_month": "cc-exp-month",
+            "expiration_year": "cc-exp-year",
+            "name": "cc-name",
+        }
+        if field_name not in fields.keys():
+            raise ValueError(
+                f"{field_name} is not a valid field name for the cc dialog form."
+            )
+        self.switch_to_edit_saved_payments_popup_iframe()
+        value_field = self.find_element(By.ID, fields[field_name])
+        if value_field.tag_name != "select":
+            value_field.clear()
+        value_field.send_keys(value)
+        self.get_element("save-button").click()
+        return self
+
+    def get_saved_addresses_popup(self) -> WebElement:
+        """
+        Returns saved addresses button element
+        """
+        return self.get_element("prefs-button", labels=["Saved addresses"])
+
+    def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
+        """
+        Open and Switch to saved addresses popup frame.
+        """
+        saved_address_iframe = self.get_saved_addresses_popup_iframe()
+        self.driver.switch_to.frame(saved_address_iframe)
+        return self
+
+    def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
+        """
+        Takes the sample AutofillAddressBase object and adds an entry to the saved addresses list.
+        Switches the appropriate frames to accommodate the operation.
+
+        Arguments:
+            address_data: The object containing all the sample data
+        """
+
+        self.switch_to_edit_saved_addresses_popup_iframe()
+        self.fill_and_save_address_panel_information(address_data)
+        self.switch_to_default_frame()
+        return self
+
+    def get_all_saved_cc_profiles(self) -> List[WebElement]:
+        """Gets the saved credit card profiles in the cc panel"""
+        self.switch_to_saved_payments_popup_iframe()
+        element = Select(self.get_element("cc-saved-options"))
+        return element.options
+
+    def get_all_saved_address_profiles(self) -> List[WebElement]:
+        """Gets the saved credit card profiles in the cc panel"""
+        self.switch_to_saved_addresses_popup_iframe()
+        select_el = self.get_element("address-saved-options")
+        if len(select_el.get_attribute("innerHTML")) > 1:
+            return Select(select_el).options
+        return []
+
+    def extract_address_data_from_saved_addresses_entry(
+        self, util: Utilities, region: str = "US"
+    ) -> AutofillAddressBase:
+        """
+        Extracts the data from the saved addresses entry to a AutofillAddressBase object.
+
+        Arguments:
+            util: Utility instance
+            region: country code in use
+        """
+        self.switch_to_edit_saved_addresses_popup_iframe()
+        fields = {
+            "name": "",
+            "organization": "",
+            "street-address": "",
+            "address-level2": "",
+            "address-level1": "",
+            "postal-code": "",
+            "tel": "",
+            "country": "",
+            "email": "",
+        }
+
+        for key in fields.keys():
+            el = self.find_element(By.ID, key)
+            if el.tag_name == "select":
+                fields[key] = Select(el).first_selected_option.text
+            else:
+                fields[key] = el.get_attribute("value")
+
+        return AutofillAddressBase(
+            name=fields.get("name"),
+            organization=fields.get("organization"),
+            street_address=fields.get("street-address"),
+            address_level_2=fields.get("address-level2"),
+            address_level_1=fields.get("address-level1"),
+            postal_code=fields.get("postal-code"),
+            country=fields.get("country"),
+            country_code=region,
+            email=fields.get("email"),
+            telephone=util.normalize_regional_phone_numbers(fields.get("tel"), region),
+        )
+
+    ## UI Navigation and Iframe Handling
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_element("prefs-button", labels=["Saved payment methods"]).click()
+        self.get_saved_payments_popup().click()
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def switch_to_saved_payments_popup_iframe(self) -> BasePage:
+    def switch_to_edit_saved_payments_popup_iframe(self) -> BasePage:
         """
-        Switch to saved payments popup frame.
+        Switch to form iframe to edit saved payments.
         """
-        saved_payments = self.get_saved_payments_popup_iframe()
-        self.driver.switch_to.frame(saved_payments)
+        self.switch_to_default_frame()
+        self.switch_to_iframe(2)
         return self
 
-    def update_cc_field_panel(self, num_tabs: int, new_info: str) -> BasePage:
+    def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
-        Updates a field in the credit card popup panel in about:prefs by pressing the number of tabs and sending the new information
-        ...
-
-        Attributes
-        ----------
-        autofill_info: AutofillAddressBase
-            The object containing all of the sample date
+        Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
-        for _ in range(num_tabs):
-            self.actions.send_keys(Keys.TAB).perform()
-
-        self.actions.send_keys(new_info).perform()
-
-        for _ in range(self.TABS_TO_SAVE_CC - num_tabs):
-            self.actions.send_keys(Keys.TAB).perform()
-
-        self.actions.send_keys(Keys.ENTER).perform()
-        return self
+        self.get_element("prefs-button", labels=[button_label]).click()
+        iframe = self.get_element("browser-popup")
+        return iframe
 
     def get_saved_addresses_popup_iframe(self) -> WebElement:
         """
@@ -274,15 +395,17 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def get_saved_addresses_popup(self) -> WebElement:
-        """
-        Returns saved addresses button element
-        """
-        return self.get_element("prefs-button", labels=["Saved addresses"])
-
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
         switch to save addresses popup frame.
+        """
+        self.switch_to_default_frame()
+        self.switch_to_iframe(1)
+        return self
+
+    def switch_to_saved_payments_popup_iframe(self) -> BasePage:
+        """
+        switch to save payments popup frame.
         """
         self.switch_to_default_frame()
         self.switch_to_iframe(1)
@@ -296,19 +419,11 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe(2)
         return self
 
-    def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
+    def get_iframe(self) -> WebElement:
         """
-        open saved addresses and add a new entry.
-
-        Arguments:
-            address_data: fake address data specific to region specified.
+        Gets the webelement for the iframe that commonly appears in about:preferences
         """
-        self.switch_to_saved_addresses_popup_iframe()
-        self.get_element("add-address").click()
-        self.switch_to_edit_saved_addresses_popup_iframe()
-        self.fill_and_save_autofill_panel_information(address_data)
-        self.switch_to_default_frame()
-        return self
+        return self.get_element("browser-popup")
 
     def get_password_exceptions_popup_iframe(self) -> WebElement:
         """
@@ -320,7 +435,48 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def get_clear_cookie_data_value(self) -> int:
+    ## Data Extraction and Processing
+    def set_country_autofill_panel(self, country: str) -> BasePage:
+        """Sets the country value in the autofill view"""
+        select_country = Select(self.driver.find_element(By.ID, "country"))
+        select_country.select_by_value(country)
+        return self
+
+    def fill_and_save_address_panel_information(
+        self, address_data: AutofillAddressBase
+    ) -> BasePage:
+        """
+        Takes the sample AutofillAddressBase object and fills it into the popup panel in the about:prefs section
+        under saved addresses methods.
+
+        Arguments:
+            address_data: The object containing all the sample data
+        """
+        fields = {
+            "name": address_data.name,
+            "organization": address_data.organization,
+            "street-address": address_data.street_address,
+            "address-level2": address_data.address_level_2,
+            "address-level1": address_data.address_level_1,
+            "postal-code": address_data.postal_code,
+            "tel": address_data.telephone,
+            "email": address_data.email,
+        }
+
+        self.set_country_autofill_panel(address_data.country_code)
+        form_element = self.get_element("form-container")
+        children = [
+            x.get_attribute("id")
+            for x in form_element.find_elements(By.CSS_SELECTOR, "*")
+        ]
+
+        for key, val in fields.items():
+            if key in children:
+                form_element.find_element(By.ID, key).send_keys(val)
+        self.get_element("save-button").click()
+        return self
+
+    def get_clear_cookie_data_value(self) -> int | None:
         """
         With the 'Clear browsing data and cookies' popup open,
         returns the <memory used> value of the option for 'Cookies and site data (<memory used>)'.
@@ -352,42 +508,7 @@ class AboutPrefs(BasePage):
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
 
-    def get_iframe(self) -> WebElement:
-        """
-        Gets the webelement for the iframe that commonly appears in about:preferences
-        """
-        return self.get_element("browser-popup")
-
-    def set_alternative_language(self, lang_code: str) -> BasePage:
-        """Changes the browser language"""
-        self.get_element("language-set-alternative-button").click()
-        self.driver.switch_to.frame(self.get_iframe())
-
-        # Download the language options
-        select_language = self.get_element("language-settings-select")
-        select_language.click()
-        search_languages = self.get_element("language-settings-search")
-        search_languages.click()
-        select_language.click()
-
-        # Select the language, add, and make sure it appears
-        select_language.click()
-        self.get_element("language-option-by-code", labels=[lang_code]).click()
-        select_language.click()
-        self.get_element("language-settings-add-button").click()
-        self.element_attribute_contains(
-            "language-added-list", "last-selected", f"locale-{lang_code}"
-        )
-
-        self.get_element("language-settings-ok").click()
-        return self
-
-    def get_history_menulist(self) -> WebElement:
-        """
-        Gets the webelement for the list of history items that appear in about:preferences
-        """
-        return self.get_element("history_menulist")
-
+    ## Utility Functions
     def import_bookmarks(self, browser_name: str) -> BasePage:
         """
         Press the import browser data button
@@ -422,14 +543,6 @@ class AboutPrefs(BasePage):
         self.actions.send_keys(" ").perform()
         return self
 
-    def get_all_saved_cc_profiles(self) -> List[WebElement]:
-        """Gets the saved credit card profiles in the cc panel"""
-        if self.iframe:
-            with self.driver.switch_to.frame(self.iframe):
-                return self.get_element("cc-saved-options", multiple=True)
-        else:
-            return self.get_element("cc-saved-options", multiple=True)
-
     def click_popup_panel_button(self, field: str) -> BasePage:
         """Clicks the popup panel button for the specified field"""
         if self.iframe:
@@ -437,37 +550,6 @@ class AboutPrefs(BasePage):
                 self.get_element("panel-popup-button", labels=[field]).click()
         else:
             self.get_element("panel-popup-button", labels=[field]).click()
-        return self
-
-    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
-        """
-        Click the HTTPS Only option given
-        """
-        self.find_in_settings("HTTPS")
-        self.element_clickable(str(option_id))
-        self.click_on(str(option_id))
-        self.element_attribute_contains(str(option_id), "checked", "")
-        return self
-
-    def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
-        """
-        Sets the Default Zoom level in about:preferences.
-        """
-        self.click_on("default-zoom-dropdown")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
-        self.click_on("default-zoom-dropdown")
-        return self
-
-    def select_content_and_action(self, content_type: str, action: str) -> BasePage:
-        """
-        From the applications list that handles how downloaded media is used,
-        select a content type and action
-        """
-        el = self.get_element("actions-menu", labels=[content_type])
-        el.click()
-        self.click_on("actions-menu-option", labels=[content_type, action])
-        self.wait.until(lambda _: el.get_attribute("label") == action)
         return self
 
 

@@ -140,6 +140,22 @@ class Autofill(BasePage):
 
         return self
 
+    def select_autofill_option(
+        self, autofill_popup: AutofillPopup, field, index: int = 1
+    ):
+        """
+        Presses the autofill panel that pops up after you double-click an input field
+
+        Argument:
+            autofill_popup: AutofillPopup
+            field:  field to click to show autofill option.
+            index: which autofill option to pick.
+        """
+        self.double_click("form-field", labels=[field])
+        autofill_popup.ensure_autofill_dropdown_visible()
+        autofill_popup.select_nth_element(index)
+        return self
+
 
 class CreditCardFill(Autofill):
     """
@@ -149,7 +165,7 @@ class CreditCardFill(Autofill):
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic_cc.html"
     fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
 
-    def fill_credit_card_info(self, info: CreditCardBase):
+    def fill_and_submit_credit_card_info(self, info: CreditCardBase):
         """
         Fills a credit card form with the provided information.
 
@@ -200,25 +216,26 @@ class CreditCardFill(Autofill):
             )
         return self
 
-    def fake_and_fill(
-        self, util: Utilities, autofill_popup_obj: AutofillPopup
+    def fill_and_save(
+        self,
+        util: Utilities,
+        autofill_popup_obj: AutofillPopup,
+        door_hanger: bool = True,
     ) -> CreditCardBase:
         """
         Fills a credit card form with randomly generated data and interacts with the autofill popup.
 
         ...
 
-        Parameters
-        ----------
-
-        util: Utilities
-            An instance of the Utilities class
-        autofill_popup_obj: AutofillPopup
-            An instance of the AutofillPopup class used to interact with the autofill popup
+        Arguments:
+            util: An instance of the Utilities class
+            autofill_popup_obj: An instance of the AutofillPopup class used to interact with the autofill popup
+            door_hanger: check to click save on door hanger
         """
         credit_card_sample_data = util.fake_credit_card_data()
-        self.fill_credit_card_info(credit_card_sample_data)
-        autofill_popup_obj.click_doorhanger_button("save")
+        self.fill_and_submit_credit_card_info(credit_card_sample_data)
+        if door_hanger:
+            autofill_popup_obj.click_doorhanger_button("save")
         return credit_card_sample_data
 
     def update_field(
@@ -245,20 +262,6 @@ class CreditCardFill(Autofill):
         self.fill_input_element(ba, field, field_data)
         self.click_form_button("submit")
 
-    def press_autofill_panel(
-        self, autofill_popup: AutofillPopup, field: str = "cc-name"
-    ):
-        """
-        Presses the autofill panel that pops up after you double-click an input field
-
-        Argument:
-            field:  field to click to show autofill option.
-        """
-        self.double_click("form-field", labels=[field])
-        autofill_popup.ensure_autofill_dropdown_visible()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            autofill_popup.get_element("select-form-option").click()
-
     def update_credit_card_information(
         self,
         autofill_popup_obj: AutofillPopup,
@@ -273,10 +276,10 @@ class CreditCardFill(Autofill):
         self.update_field(field_name, field_data, autofill_popup_obj)
         self.click_form_button("submit")
 
-        if not save_card:
-            autofill_popup_obj.click_on("update-card-info-popup-button")
-        else:
+        if save_card or field_name == "cc-number":
             autofill_popup_obj.click_on("doorhanger-save-button")
+        else:
+            autofill_popup_obj.click_on("update-card-info-popup-button")
 
     @BasePage.context_chrome
     def verify_autofill_cc_data_on_hover(
@@ -358,7 +361,7 @@ class CreditCardFill(Autofill):
         self.update_credit_card_information(autofill_popup_obj, field_name, new_data)
 
         # autofill data
-        self.press_autofill_panel(autofill_popup_obj)
+        self.select_autofill_option(autofill_popup_obj, field_name)
 
         # verifying the correct data
         self.verify_credit_card_form_data(credit_card_sample_data)
@@ -418,7 +421,7 @@ class CreditCardFill(Autofill):
         """
         for field in self.fields:
             # press autofill panel for a field.
-            self.press_autofill_panel(autofill_popup, field)
+            self.select_autofill_option(autofill_popup, field)
             # verify cc data in form.
             self.verify_credit_card_form_data(credit_card_data)
             # Clear the fields after verification
@@ -525,13 +528,13 @@ class AddressFill(Autofill):
 
         self.click_form_button("submit")
 
+    @BasePage.context_chrome
     def verify_autofill_displayed(self):
         """
         Verifies that the autofill suggestions are displayed.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            element = self.get_element("select-address")
-            self.expect(EC.visibility_of(element))
+        element = self.get_element("select-address")
+        self.expect(EC.visibility_of(element))
 
     def check_autofill_preview_for_field(
         self,
@@ -684,6 +687,28 @@ class AddressFill(Autofill):
         return self.verify_field_autofill_dropdown(
             autofill_popup=autofill_popup, fields_to_test=fields_to_test, region=region
         )
+
+    def fill_and_save(
+        self,
+        util: Utilities,
+        autofill_popup_obj: AutofillPopup,
+        region: str = "US",
+        door_hanger: bool = True,
+    ) -> AutofillAddressBase:
+        """
+        Fills an address form with randomly generated data and interacts with the autofill popup.
+
+        Arguments:
+            util: An instance of the Utilities class
+            autofill_popup_obj: An instance of the AutofillPopup class used to interact with the autofill popup
+            region: Country code in use
+            door_hanger: check to click save on door hanger
+        """
+        fake_address_autofill_data = util.fake_autofill_data(region)
+        self.save_information_basic(fake_address_autofill_data)
+        if door_hanger:
+            autofill_popup_obj.click_doorhanger_button("save")
+        return fake_address_autofill_data
 
     def autofill_and_verify(
         self,
