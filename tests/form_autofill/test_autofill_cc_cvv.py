@@ -31,13 +31,13 @@ def test_autofill_cc_cvv(
         util: Utilities instance
     """
 
-    # open credit card autofill page
+    # Open credit card autofill page
     credit_card_autofill.open()
 
-    # create fake data, fill it in and press submit and save on the door hanger
+    # Create fake data, fill it in and press submit and save on the door hanger
     credit_card_sample_data = credit_card_autofill.fill_and_save(util, autofill_popup)
 
-    # navigate to prefs
+    # Navigate to prefs
     about_prefs_privacy.open()
     about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
