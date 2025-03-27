@@ -31,7 +31,7 @@ def update_starfox_cases(tr, project_id, suite_id, field_id, new_value, dry_run=
     """Fetch automated test cases (based on the "completed" - 4 status) from a TestRail suite and update a custom
     field to a new value "full" - 3."""
     try:
-        response = tr._get_test_cases(project_id, suite_id)
+        response = tr.get_test_cases(project_id, suite_id)
         cases = response.get("cases", [])
         # Filter cases
         starfox_cases = []
