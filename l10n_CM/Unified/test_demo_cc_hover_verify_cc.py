@@ -39,7 +39,7 @@ def test_cc_preview(
     about_prefs_privacy.click_on(
         "panel-popup-button", labels=["autofill-manage-add-button"]
     )
-    about_prefs_privacy.fill_cc_panel_information(credit_card_sample_data)
+    about_prefs_privacy.fill_and_save_cc_panel_information(credit_card_sample_data)
 
     # Open the credit card fill form
     credit_card_fill_obj.open()

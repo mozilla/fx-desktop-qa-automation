@@ -41,24 +41,19 @@ def test_private_mode_info_not_saved(
         util: Utilities instance
         region: country code in use
     """
-
+    # navigate to address form page
     address_autofill.open()
 
-    # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(autofill_sample_data)
+    # Create fake data, fill in the form, and press submit, no doorhanger because of private mode
+    address_autofill.fill_and_save(util, autofill_popup, region, door_hanger=False)
     autofill_popup.ensure_autofill_dropdown_not_visible()
 
+    # open about:prefs#privacy and switch to saved addresses dialog panel
     about_prefs_privacy.open()
-
     about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+
     # Get all saved addresses items and filter out any false data.
-    element_list = list(
-        filter(
-            lambda d: len(d.get_attribute("innerHTML")) > 1,
-            about_prefs_privacy.get_elements("saved-addresses"),
-        )
-    )
-    assert len(element_list) == 0, (
-        f"Expected 0 saved address, but found {len(element_list)}."
+    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+    assert len(saved_address_profiles) == 0, (
+        f"Expected 0 saved address, but found {len(saved_address_profiles)}."
     )

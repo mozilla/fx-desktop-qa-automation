@@ -43,6 +43,12 @@
         "groups": []
     },
 
+    "pop-up-component": {
+        "selectorData": "PopupAutoComplete",
+        "strategy": "id",
+        "groups": []
+    },
+
     "select-form-option": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
         "strategy":"css",

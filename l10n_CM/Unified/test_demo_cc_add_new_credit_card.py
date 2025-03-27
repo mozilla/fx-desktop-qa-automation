@@ -32,7 +32,7 @@ def test_create_new_cc_profile(
 
     # Add a new CC profile
     about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
-    about_prefs_privacy.fill_cc_panel_information(credit_card_sample_data)
+    about_prefs_privacy.fill_and_save_cc_panel_information(credit_card_sample_data)
 
     # Get the saved CC data
     cc_profiles = about_prefs.get_all_saved_cc_profiles()

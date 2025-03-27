@@ -26,10 +26,11 @@ def test_autofill_credit_card(
         util: Utilities instance
     """
 
+    # navigate to credit card autofill page
     credit_card_autofill.open()
 
-    credit_card_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_data)
-    autofill_popup.click_doorhanger_button("save")
+    # fill autofill forms with fake cc data and submit
+    credit_card_data = credit_card_autofill.fill_and_save(util, autofill_popup)
 
+    # autofill from a given field and verify, repeat for all fields
     credit_card_autofill.autofill_and_clear_all_fields(autofill_popup, credit_card_data)

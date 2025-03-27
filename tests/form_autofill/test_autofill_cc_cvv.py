@@ -35,9 +35,7 @@ def test_autofill_cc_cvv(
     credit_card_autofill.open()
 
     # create fake data, fill it in and press submit and save on the door hanger
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup.click_doorhanger_button("save")
+    credit_card_sample_data = credit_card_autofill.fill_and_save(util, autofill_popup)
 
     # navigate to prefs
     about_prefs_privacy.open()
@@ -52,7 +50,7 @@ def test_autofill_cc_cvv(
 
     # Click on saved address and edit
     cc_profile.click()
-    about_prefs_privacy.click_edit_saved_payment()
+    about_prefs_privacy.click_edit_on_dialog_element()
 
     # Verify that CVV number is not saved under CC profile but the rest of the data is saved
     about_prefs_privacy.verify_cc_edit_saved_payments_profile(credit_card_sample_data)

@@ -38,13 +38,14 @@ def test_update_cc_no_dupe_name(
         util: Utilities instance
         field: credit card field being checked
     """
+    # navigate to credit card form page
     credit_card_autofill.open()
 
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup.click_doorhanger_button("save")
+    # create and fill fake data
+    credit_card_sample_data = credit_card_autofill.fill_and_save(util, autofill_popup)
 
-    credit_card_autofill.press_autofill_panel(autofill_popup)
+    # autofill form
+    credit_card_autofill.select_autofill_option(autofill_popup, field)
 
     # updating the name of the cc holder
     credit_card_autofill.update_cc(util, credit_card_sample_data, autofill_popup, field)
@@ -54,7 +55,7 @@ def test_update_cc_no_dupe_name(
     about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     # assert no dupe profile is saved
-    saved_cc = about_prefs_privacy.get_element("cc-saved-options", multiple=True)
+    saved_cc = about_prefs_privacy.get_all_saved_cc_profiles()
     assert len(saved_cc) == 1 if field != "cc-number" else len(saved_cc) == 2
 
     # preprocessing for validations

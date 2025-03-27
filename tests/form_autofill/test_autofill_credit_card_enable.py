@@ -30,15 +30,21 @@ def test_enable_disable_form_autofill_cc(
         util: Utilities instance
     """
 
+    # open credit card autofill page
     credit_card_autofill.open()
 
-    credit_card_autofill.fake_and_fill(util, autofill_popup)
+    # create fake data, fill it in and press submit and save on the door hanger
+    credit_card_autofill.fill_and_save(util, autofill_popup)
 
+    # navigate to prefs
     about_prefs_privacy.open()
+
+    # toggle autofill cc option
     about_prefs_privacy.get_element("save-and-fill-payment-methods").click()
 
-    new_credit_card_fill_obj = CreditCardFill(driver).open()
-    new_autofill_popup_obj = AutofillPopup(driver)
+    # open credit card autofill page and select field
+    credit_card_autofill.open()
+    credit_card_autofill.double_click("form-field", labels=["cc-name"])
 
-    new_credit_card_fill_obj.double_click("form-field", labels=["cc-name"])
-    new_autofill_popup_obj.ensure_autofill_dropdown_not_visible()
+    # make sure autofill dropdown does not appear
+    autofill_popup.ensure_autofill_dropdown_not_visible()

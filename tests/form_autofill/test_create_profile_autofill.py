@@ -25,24 +25,19 @@ def test_create_address_profile(
 
     # create sample data
     autofill_sample_data = util.fake_autofill_data(region)
+
+    # switch to saved addresses panel
     about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
-    about_prefs_privacy.get_element(
-        "panel-popup-button", labels=["autofill-manage-add-button"]
-    ).click()
+    about_prefs_privacy.click_add_on_dialog_element()
 
-    # fill in the data and clean it up
+    # add entry to saved addresses
     about_prefs_privacy.add_entry_to_saved_addresses(autofill_sample_data)
-    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
-    saved_address_option = about_prefs_privacy.get_element("saved-addresses")
-    inner_content = saved_address_option.get_attribute("innerHTML")
-    cleaned_data = about_prefs_privacy.extract_content_from_html(inner_content)
-    split_text = about_prefs_privacy.extract_and_split_text(cleaned_data)
-    observed_data = about_prefs_privacy.organize_data_into_obj(split_text)
 
-    # currently ignoring the address level 1 field
-    observed_data.telephone = util.normalize_phone_number(observed_data.telephone)
-    observed_data.country = autofill_sample_data.country
-    observed_data.address_level_1 = autofill_sample_data.address_level_1
+    elements = about_prefs_privacy.get_all_saved_address_profiles()
+    about_prefs_privacy.double_click(elements[0])
+    observed_data = about_prefs_privacy.extract_address_data_from_saved_addresses_entry(
+        util, region
+    )
 
     # ensure that the objects have the same fields
     assert autofill_sample_data == observed_data

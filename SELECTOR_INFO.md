@@ -544,9 +544,16 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cc-saved-options
-Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
+Selector Data: "credit-cards"
 Description: The "Add card" modal, containing 4 fields
 Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: address-saved-options
+Selector Data: "addresses"
+Description: gets the selector element for the saved addresses options
+Location: Inside the Saved addresses methods section on the about:preferences#privacy page
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1453,9 +1460,9 @@ Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
 Selector Name: cc-saved-options
-Selector Data: "option[data-l10n-id='credit-card-label-number-name-expiration-2']"
-Description: The actually "Add card" modal, containing 4 fields
-Location: Inside the "Add card" form in the Saved payment methods section on the about:preferences#privacy page
+Selector Data: "credit-cards"
+Description: gets the selector element for the saved cc options
+Location: Inside the Saved payment methods section on the about:preferences#privacy page
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```

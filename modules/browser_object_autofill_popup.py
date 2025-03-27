@@ -23,13 +23,24 @@ class AutofillPopup(BasePage):
         """Confirms that an element exists in popup"""
         self.element_clickable(reference)
 
+    @BasePage.context_chrome
     def ensure_autofill_dropdown_not_visible(self):
-        """Verifies that the autofill dropdown does NOT appear"""
-        self.element_not_visible("select-form-option")
+        """
+        Verifies that the autofill dropdown does NOT appear
+        checks if the parent pop up component have children elements before explicit wait.
+        """
+        self.element_exists("pop-up-component")
+        popup_component = self.get_element("pop-up-component")
+        if popup_component and len(popup_component.get_attribute("innerHTML")) > 1:
+            self.element_not_visible("select-form-option")
         return self
 
+    @BasePage.context_chrome
     def ensure_autofill_dropdown_visible(self):
-        """Verifies that the autofill dropdown appears"""
+        """
+        Verifies that the autofill dropdown appears
+        checks if the parent pop up component have children elements before explicit wait.
+        """
         self.element_visible("select-form-option")
         return self
 
@@ -71,14 +82,12 @@ class AutofillPopup(BasePage):
         Parameters: index (str): The index of the element to retrieve (1-based)
         Returns: WebElement: The nth element in the autocomplete list
         """
-        return self.wait.until(
-            EC.visibility_of_element_located(
-                (
-                    "css selector",
-                    f".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})",
-                )
+        self.wait.until(
+            EC.visibility_of(
+                self.get_element("select-form-option-by-index", labels=[str(index)])
             )
         )
+        return self.get_element("select-form-option-by-index", labels=[str(index)])
 
     @BasePage.context_chrome
     def select_nth_element(self, index: int):

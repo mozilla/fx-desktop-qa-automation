@@ -34,11 +34,8 @@ def test_create_new_cc_profile(
     credit_card_sample_data = util.fake_credit_card_data()
 
     # add a new CC profile
-    about_prefs.get_element(
-        "panel-popup-button", labels=["autofill-manage-add-button"]
-    ).click()
-
-    about_prefs.fill_cc_panel_information(credit_card_sample_data)
+    about_prefs.click_add_on_dialog_element()
+    about_prefs.add_entry_to_saved_payments(credit_card_sample_data)
 
     # get the saved CC data
     cc_profiles = about_prefs.get_all_saved_cc_profiles()

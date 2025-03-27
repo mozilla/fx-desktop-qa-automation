@@ -12,7 +12,7 @@ def test_case():
     return "122392"
 
 
-def test_autofill_credit_card_doorhanger(
+def test_autofill_credit_card_door_hanger(
     driver: Firefox,
     about_prefs_privacy: AboutPrefs,
     autofill_popup: AutofillPopup,
@@ -32,8 +32,7 @@ def test_autofill_credit_card_doorhanger(
     credit_card_autofill.open()
 
     # fill data
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
+    credit_card_autofill.fill_and_save(util, autofill_popup, door_hanger=False)
 
     # press the arrow
     autofill_popup.click_doorhanger_button("dropdown")

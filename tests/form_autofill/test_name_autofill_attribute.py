@@ -33,9 +33,7 @@ def test_name_attribute_selection(
     address_autofill.open()
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(autofill_sample_data)
-    autofill_popup.click_doorhanger_button("save")
+    autofill_sample_data = address_autofill.fill_and_save(util, autofill_popup, region)
 
     # Double-click on the name field to trigger the autocomplete dropdown
     address_autofill.double_click("form-field", labels=["name"])

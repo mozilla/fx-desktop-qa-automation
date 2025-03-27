@@ -33,9 +33,7 @@ def test_enable_disable_autofill(
     address_autofill.open()
 
     # create fake data, fill it in and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(autofill_sample_data)
-    autofill_popup.click_doorhanger_button("save")
+    address_autofill.fill_and_save(util, autofill_popup)
 
     about_prefs_privacy.open()
     about_prefs_privacy.get_element("save-and-fill-addresses").click()

@@ -25,11 +25,14 @@ def test_autofill_four_fields(
         credit_card_autofill: CreditCardFill instance
         util: Utilities instance
     """
+    # navigate to credit card autofill page
     credit_card_autofill.open()
 
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup.click_doorhanger_button("save")
+    # fill autofill forms with fake cc data and submit
+    credit_card_data = credit_card_autofill.fill_and_save(util, autofill_popup)
 
-    credit_card_autofill.press_autofill_panel(autofill_popup)
-    credit_card_autofill.verify_credit_card_form_data(credit_card_sample_data)
+    # select autofill dropdown option
+    credit_card_autofill.select_autofill_option(autofill_popup, "cc-name")
+
+    # verify cc data is correct
+    credit_card_autofill.verify_credit_card_form_data(credit_card_data)

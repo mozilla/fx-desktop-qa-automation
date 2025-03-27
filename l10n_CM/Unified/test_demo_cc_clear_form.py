@@ -31,7 +31,7 @@ def test_cc_clear_form(
 
     credit_card_sample_data = util.fake_credit_card_data(region)
     about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
-    about_prefs_privacy.fill_cc_panel_information(credit_card_sample_data)
+    about_prefs_privacy.fill_and_save_cc_panel_information(credit_card_sample_data)
 
     # Open credit card form page, clear form and verify all fields are empty
     credit_card_fill_obj.open()

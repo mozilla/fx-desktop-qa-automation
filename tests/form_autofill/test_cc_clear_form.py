@@ -25,16 +25,14 @@ def test_clear_form_credit_card(
         credit_card_autofill: CreditCardFill instance
         util: Utilities instance
     """
+    # navigate to credit card autofill page
     credit_card_autofill.open()
 
-    # create fake data, fill it in and press submit and save on the doorhanger
-    credit_card_sample_data = util.fake_credit_card_data()
-    credit_card_autofill.fill_credit_card_info(credit_card_sample_data)
-    autofill_popup.click_doorhanger_button("save")
+    # create fake data, fill it in and press submit and save on the door hanger
+    credit_card_autofill.fill_and_save(util, autofill_popup)
 
     # Open dropdown, select first option, clear autofill form and verify autofill is displayed
-    credit_card_autofill.get_element("form-field", labels=["cc-name"]).click()
-    autofill_popup.click_autofill_form_option()
+    credit_card_autofill.select_autofill_option(autofill_popup, "cc-name")
     credit_card_autofill.get_element("form-field", labels=["cc-name"]).click()
     autofill_popup.click_clear_form_option()
     autofill_popup.verify_autofill_displayed()
