@@ -10,8 +10,8 @@ COMPLETED_STATUS_ID = 4
 
 # Set TestRail credentials
 os.environ["TESTRAIL_BASE_URL"] = "https://mozilla.testrail.io"
-os.environ["TESTRAIL_USERNAME"] = "hyacoub@mozilla.com"
-os.environ["TESTRAIL_API_KEY"] = "HrENZ5FSSxiI1xl3DTMF-NMm1qGug2bVZM3NCALhV"
+os.environ["TESTRAIL_USERNAME"] = ""
+os.environ["TESTRAIL_API_KEY"] = ""
 
 
 def get_all_completed_cases(tr, project_id, suite_id):
