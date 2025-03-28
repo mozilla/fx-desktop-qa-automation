@@ -104,7 +104,7 @@ class APIClient:
             try:
                 error = response.json()
             except (
-                requests.exceptions.HTTPError
+                    requests.exceptions.HTTPError
             ):  # response.content not formatted as JSON
                 error = str(response.content)
             raise APIError(
@@ -176,7 +176,7 @@ class TestRail:
         return self.client.send_post(f"update_case/{case_id}", **kwargs)
 
     def create_test_run_on_plan_entry(
-        self, plan_id, entry_id, config_ids, description=None, case_ids=None
+            self, plan_id, entry_id, config_ids, description=None, case_ids=None
     ):
         """
         Add a test run on an entry (subplan) associated with a plan.
@@ -259,12 +259,12 @@ class TestRail:
         return None
 
     def create_new_plan(
-        self,
-        testrail_project_id,
-        name,
-        description=None,
-        milestone_id=None,
-        entries=None,
+            self,
+            testrail_project_id,
+            name,
+            description=None,
+            milestone_id=None,
+            entries=None,
     ):
         """
         Create a new test plan (on a milestone).
@@ -297,14 +297,14 @@ class TestRail:
         return self.client.send_post(f"/add_plan/{testrail_project_id}", payload)
 
     def create_new_plan_entry(
-        self,
-        plan_id,
-        suite_id,
-        name=None,
-        description=None,
-        case_ids=None,
-        config_ids=None,
-        runs=None,
+            self,
+            plan_id,
+            suite_id,
+            name=None,
+            description=None,
+            case_ids=None,
+            config_ids=None,
+            runs=None,
     ):
         """
         Create a new entry (subplan) on a plan.
@@ -380,12 +380,12 @@ class TestRail:
         return self.client.send_post(f"update_case/{case_id}", data)
 
     def update_test_cases(
-        self,
-        testrail_project_id,
-        testrail_run_id,
-        testrail_suite_id,
-        test_case_ids=[],
-        status="passed",
+            self,
+            testrail_project_id,
+            testrail_run_id,
+            testrail_suite_id,
+            test_case_ids=[],
+            status="passed",
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
@@ -475,6 +475,10 @@ class TestRail:
 
     def _get_case_fields(self):
         return self.client.send_get("get_case_fields")
+
+    def get_suites(self, project_id):
+        """Get all suites for project"""
+        return self.client.send_get(f"get_suites/{project_id}")
 
     def _retry_api_call(self, api_call, *args, max_retries=3, delay=5):
         """
