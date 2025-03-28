@@ -14,10 +14,12 @@ project_root = os.path.abspath(os.path.join(script_dir, ".."))
 env_file_path = os.path.join(project_root, "api_credentials.env")
 load_dotenv(dotenv_path=env_file_path)
 
-MY_SUITES = ["Printing UI", "Profile", "Reader View"]
+MY_SUITES = ["Printing", "Startup and Profile", "Reader View"]
 PROJECT_ID = 17
 
-DRY_RUN = True  # Set to False when performing actual run
+# Define what field to update and its new value
+FIELD_TO_UPDATE = "custom_automation_coverage"
+NEW_FIELD_VALUE = 3  # 3 might represent 'Covered'
 
 def main():
     # Read credentials from environment
@@ -48,28 +50,25 @@ def main():
         val = tr._get_test_cases(PROJECT_ID, suite_id)
         if val["size"] < val["limit"]:
             matching_cases = [
-                case for case in val["cases"] if case["custom_automated_test_names"]
+                case for case in val["cases"]
+                if case.get("custom_automated_test_names") and case.get("custom_automation_status") == 4
             ]
             matching_case_ids = [case["id"] for case in matching_cases]
 
-            if DRY_RUN:
-                logging.info(
-                    f"[DRY RUN] Suite {suite_id} would process cases: {matching_case_ids}"
-                )
-            else:
-                case_ids.extend(matching_case_ids)
-                logging.info(
-                    f"Suite {suite_id} processed and added case IDs: {matching_case_ids}"
-                )
+            case_ids.extend(matching_case_ids)
+            logging.info(
+                f"Suite {suite_id} processed and added case IDs: {matching_case_ids}"
+            )
         else:
             logging.warning(f"Suite {suite_id} test cases exceed retrieval limit.")
 
-    if DRY_RUN:
-        logging.info("[DRY RUN] No actual updates performed.")
-        logging.info(f"[DRY RUN] Total collected case IDs (not updated): {case_ids}")
-    else:
-        logging.info(f"Total collected case IDs: {case_ids}")
-        # Add here actual logic for updates if necessary
+    logging.info(f"Total collected case IDs: {case_ids}")
+
+    # Perform updates to TestRail
+    for case_id in case_ids:
+        response = tr.update_case_field(case_id, FIELD_TO_UPDATE, NEW_FIELD_VALUE)
+        logging.info(f"Updated case ID {case_id}: {response}")
+
 
 if __name__ == "__main__":
     main()
