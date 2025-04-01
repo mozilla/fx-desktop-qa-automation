@@ -4,9 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import AddressFill
-from modules.util import BrowserActions, Utilities
-
-COUNTRY_CODE = "US"
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -24,25 +22,38 @@ def add_to_prefs_list():
     ]
 
 
-def test_private_mode_info_not_saved(driver: Firefox):
+def test_private_mode_info_not_saved(
+    driver: Firefox,
+    about_prefs_privacy: AboutPrefs,
+    address_autofill: AddressFill,
+    autofill_popup: AutofillPopup,
+    util: Utilities,
+    region: str,
+):
     """
     C122587 - Autofill data not saved in private mode.
     This only tests the last part of the written TC - case should be divided
-    """
-    address_form_fields = AddressFill(driver).open()
-    autofill_popup = AutofillPopup(driver)
-    util = Utilities()
-    ba = BrowserActions(driver)
 
-    # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = util.fake_autofill_data(COUNTRY_CODE)
-    address_form_fields.save_information_basic(autofill_sample_data)
+    Arguments:
+        about_prefs_privacy: AboutPrefs instance (privacy category)
+        address_autofill: AddressFill instance
+        autofill_popup: AutofillPopup instance
+        util: Utilities instance
+        region: country code in use
+    """
+    # navigate to address form page
+    address_autofill.open()
+
+    # Create fake data, fill in the form, and press submit, no doorhanger because of private mode
+    address_autofill.fill_and_save(util, autofill_popup, region, door_hanger=False)
     autofill_popup.ensure_autofill_dropdown_not_visible()
 
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    # open about:prefs#privacy and switch to saved addresses dialog panel
+    about_prefs_privacy.open()
+    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    iframe_address_popup = about_prefs.press_button_get_popup_dialog_iframe(
-        "Saved addresses"
+    # Get all saved addresses items and filter out any false data.
+    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+    assert len(saved_address_profiles) == 0, (
+        f"Expected 0 saved address, but found {len(saved_address_profiles)}."
     )
-    ba.switch_to_iframe_context(iframe_address_popup)
-    about_prefs.element_does_not_exist("saved-addresses-values")

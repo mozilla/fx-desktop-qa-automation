@@ -24,13 +24,16 @@ def get_fx_platform():
     if _system == "Darwin":
         return "mac"
     if _system == "Linux":
+        # ARM specifications in uname().machine don't have 32/64
         if "64" in u.machine:
             return "linux-x86_64"
+        elif "arm" in u.machine.lower():
+            return "linux-aarch64"
         return "linux-i686"
     if _system == "Windows":
-        if u.machine == "AMD64" and not environ.get("GITHUB_ACTIONS"):
+        if "arm" in u.machine.lower():
             return "win64-aarch64"
-        if "64" in u.machine:
+        elif "64" in u.machine:
             return "win64"
         return "win32"
 

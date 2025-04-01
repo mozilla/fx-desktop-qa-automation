@@ -26,11 +26,11 @@ def test_dropdown_presence_credit_card(
 
     # Save a credit card in about:preferences
     about_prefs_privacy.open()
-    about_prefs_privacy.switch_to_saved_payments_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     credit_card_sample_data = util.fake_credit_card_data(region)
     about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
-    about_prefs_privacy.fill_cc_panel_information(credit_card_sample_data)
+    about_prefs_privacy.fill_and_save_cc_panel_information(credit_card_sample_data)
 
     # Open credit card form page
     credit_card_fill_obj.open()

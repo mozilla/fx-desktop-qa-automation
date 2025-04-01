@@ -12,23 +12,39 @@ def test_case():
     return "122388"
 
 
-def test_enable_disable_form_autofill_cc(driver: Firefox):
+def test_enable_disable_form_autofill_cc(
+    driver: Firefox,
+    about_prefs_privacy: AboutPrefs,
+    autofill_popup: AutofillPopup,
+    credit_card_autofill: CreditCardFill,
+    util: Utilities,
+):
     """
     C122388, tests that after saving cc information and toggling the autofill credit
     cards box the dropdown does not appear.
+
+    Arguments:
+        about_prefs_privacy: AboutPrefs instance (privacy category)
+        autofill_popup: AutofillPopup instance
+        credit_card_autofill: CreditCardFill instance
+        util: Utilities instance
     """
-    util = Utilities()
 
-    credit_card_fill_obj = CreditCardFill(driver).open()
-    autofill_popup_obj = AutofillPopup(driver)
+    # open credit card autofill page
+    credit_card_autofill.open()
 
-    credit_card_fill_obj.fake_and_fill(util, autofill_popup_obj)
+    # create fake data, fill it in and press submit and save on the door hanger
+    credit_card_autofill.fill_and_save(util, autofill_popup)
 
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-    about_prefs.get_element("save-and-fill-payment-methods").click()
+    # navigate to prefs
+    about_prefs_privacy.open()
 
-    new_credit_card_fill_obj = CreditCardFill(driver).open()
-    new_autofill_popup_obj = AutofillPopup(driver)
+    # toggle autofill cc option
+    about_prefs_privacy.get_element("save-and-fill-payment-methods").click()
 
-    new_credit_card_fill_obj.double_click("form-field", labels=["cc-name"])
-    new_autofill_popup_obj.ensure_autofill_dropdown_not_visible()
+    # open credit card autofill page and select field
+    credit_card_autofill.open()
+    credit_card_autofill.double_click("form-field", labels=["cc-name"])
+
+    # make sure autofill dropdown does not appear
+    autofill_popup.ensure_autofill_dropdown_not_visible()

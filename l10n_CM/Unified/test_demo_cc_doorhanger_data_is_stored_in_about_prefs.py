@@ -28,7 +28,7 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
 
     # Fill data
     credit_card_sample_data = util.fake_credit_card_data(region)
-    credit_card_fill_obj.fill_credit_card_info(credit_card_sample_data)
+    credit_card_fill_obj.fill_and_submit_credit_card_info(credit_card_sample_data)
 
     # The "Save credit card?" doorhanger is displayed
     assert autofill_popup.element_visible("doorhanger-save-button"), (
@@ -52,7 +52,7 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
-    about_prefs_privacy.switch_to_saved_payments_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     # Get stored values
     elements = [

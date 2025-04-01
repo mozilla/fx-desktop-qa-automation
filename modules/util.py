@@ -260,7 +260,7 @@ class Utilities:
             phone = self.normalize_phone_number(fake.phone_number())
         return phone
 
-    def fake_autofill_data(self, country_code: str) -> AutofillAddressBase:
+    def fake_autofill_data(self, country_code) -> AutofillAddressBase:
         """
         Generates fake autofill data for a given country code.
         """
@@ -299,7 +299,9 @@ class Utilities:
 
         return fake_data
 
-    def fake_credit_card_data(self, country_code: str = "US") -> CreditCardBase:
+    def fake_credit_card_data(
+        self, country_code: str = "US", original_data: CreditCardBase = None
+    ) -> CreditCardBase:
         """
         Generates fake information related to the CC scenarios for a given country code.
 
@@ -337,6 +339,25 @@ class Utilities:
                 expiration_year=expiration_year,
                 cvv=cvv,
             )
+        cc_mapping = {
+            "card_number": "credit_card_number",
+            "name": "name",
+            "expiration_year": "credit_card_expire",
+            "expiration_month": "credit_card_expire",
+            "cvv": "credit_card_security_code",
+        }
+        if original_data:
+            for field, faker_method in cc_mapping.items():
+                new_cc_data = getattr(fake_data, field)
+                while new_cc_data == getattr(original_data, field):
+                    new_cc_data = getattr(fake, faker_method)()
+                    if field in {"expiration_year", "expiration_month"}:
+                        new_cc_data = (
+                            new_cc_data.split("/")[0]
+                            if field == "expiration_month"
+                            else new_cc_data.split("/")[1]
+                        )
+                setattr(fake_data, field, new_cc_data)
 
         return fake_data
 

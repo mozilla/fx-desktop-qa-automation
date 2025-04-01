@@ -31,9 +31,11 @@ def test_verify_new_address_is_added(
     # generate fake data for region
     address_autofill_data = util.fake_autofill_data(region)
 
-    # open saved addresses and add entry
+    # open saved addresses
     about_prefs_privacy.open()
-    about_prefs_privacy.get_saved_addresses_popup().click()
+    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+    # add new entry to saved addresses
+    about_prefs_privacy.click_add_on_dialog_element()
     about_prefs_privacy.add_entry_to_saved_addresses(address_autofill_data)
     about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
