@@ -447,7 +447,6 @@ def driver(
     """
     try:
         options = Options()
-        options.add_argument("--remote-allow-system-access")
         if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable

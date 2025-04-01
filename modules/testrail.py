@@ -173,7 +173,7 @@ class TestRail:
         """Given a test case id, update according to keyword args"""
         if not kwargs:
             return None
-        return self.client.send_post(f"update_case/{case_id}", kwargs)
+        return self.client.send_post(f"update_case/{case_id}", **kwargs)
 
     def create_test_run_on_plan_entry(
         self, plan_id, entry_id, config_ids, description=None, case_ids=None
