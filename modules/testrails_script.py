@@ -33,7 +33,21 @@ if __name__ == "__main__":
                     val["cases"],
                 )
             )
-            case_entries.extend(cases)
+            case_entries.extend(
+                map(
+                    lambda d: {
+                        key: d[key]
+                        for key in [
+                            "id",
+                            "section_id",
+                            "title",
+                            "suite_id",
+                            "custom_automated_test_names",
+                        ]
+                    },
+                    cases,
+                )
+            )
             case_ids.extend(
                 map(
                     lambda d: d["id"],
@@ -43,7 +57,7 @@ if __name__ == "__main__":
         else:
             logging.warning(f"Suite {suite_id} test cases over limit.")
     # Dump changed case entries
-    # with open('script_result.json', 'w+') as f:
+    # with open('script_result.json', 'w') as f:
     #     json.dump(case_entries, f, indent=4)
     # Update automation_coverage value for each case id.
     # for case_id in case_ids:
