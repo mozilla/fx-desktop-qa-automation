@@ -4,7 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -12,32 +12,33 @@ def test_case():
     return "122389"
 
 
-def test_create_new_cc_profile(driver: Firefox):
+def test_create_new_cc_profile(
+    driver: Firefox,
+    about_prefs_privacy: AboutPrefs,
+    about_prefs: AboutPrefs,
+    util: Utilities,
+):
     """
     C122389, tests you can create and save a new Credit Card profile
-    """
-    # instantiate objects
-    util = Utilities()
-    browser_action_obj = BrowserActions(driver)
 
+    Arguments:
+        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs: AboutPrefs instance
+        util: Utilities instance
+    """
     # go to about:preferences#privacy and open Saved Payment Methods
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-    iframe = about_prefs.get_saved_payments_popup_iframe()
-    browser_action_obj.switch_to_iframe_context(iframe)
+    about_prefs_privacy.open()
+    about_prefs.open_and_switch_to_saved_payments_popup()
 
     # save CC data by using the fake data
     credit_card_sample_data = util.fake_credit_card_data()
-    about_prefs_cc_popup = AboutPrefs(driver)
 
     # add a new CC profile
-    about_prefs_cc_popup.get_element(
-        "panel-popup-button", labels=["autofill-manage-add-button"]
-    ).click()
-
-    about_prefs.fill_cc_panel_information(credit_card_sample_data)
+    about_prefs.click_add_on_dialog_element()
+    about_prefs.add_entry_to_saved_payments(credit_card_sample_data)
 
     # get the saved CC data
-    cc_profiles = about_prefs_cc_popup.get_all_saved_cc_profiles()
+    cc_profiles = about_prefs.get_all_saved_cc_profiles()
     cc_info_json = json.loads(cc_profiles[0].get_dom_attribute("data-l10n-args"))
 
     # compare input CC data with saved CC data

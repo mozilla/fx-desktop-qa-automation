@@ -23,13 +23,24 @@ class AutofillPopup(BasePage):
         """Confirms that an element exists in popup"""
         self.element_clickable(reference)
 
+    @BasePage.context_chrome
     def ensure_autofill_dropdown_not_visible(self):
-        """Verifies that the autofill dropdown does NOT appear"""
-        self.element_not_visible("select-form-option")
+        """
+        Verifies that the autofill dropdown does NOT appear
+        checks if the parent pop up component have children elements before explicit wait.
+        """
+        self.element_exists("pop-up-component")
+        popup_component = self.get_element("pop-up-component")
+        if popup_component and len(popup_component.get_attribute("innerHTML")) > 1:
+            self.element_not_visible("select-form-option")
         return self
 
+    @BasePage.context_chrome
     def ensure_autofill_dropdown_visible(self):
-        """Verifies that the autofill dropdown appears"""
+        """
+        Verifies that the autofill dropdown appears
+        checks if the parent pop up component have children elements before explicit wait.
+        """
         self.element_visible("select-form-option")
         return self
 
@@ -41,10 +52,10 @@ class AutofillPopup(BasePage):
         return self
 
     # Interaction with form options
+    @BasePage.context_chrome
     def click_autofill_form_option(self) -> BasePage:
         """Clicks the credit card or address selection in the autofill panel"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("select-form-option").click()
+        self.get_element("select-form-option").click()
         return self
 
     def click_clear_form_option(self) -> BasePage:
@@ -56,49 +67,47 @@ class AutofillPopup(BasePage):
         """Retrieves the last 4 digits of the credit card from the doorhanger popup"""
         return self.get_element("doorhanger-cc-number").text
 
+    @BasePage.context_chrome
     def get_cc_doorhanger_data(self, selector: str) -> str:
         """
         get text for the credit card doorhanger data.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            return self.get_element(selector).text
+        return self.get_element(selector).text
 
     # Interaction with autocomplete list elements
+    @BasePage.context_chrome
     def get_nth_element(self, index: str | int) -> WebElement:
         """
         Get the nth element from the autocomplete list
         Parameters: index (str): The index of the element to retrieve (1-based)
         Returns: WebElement: The nth element in the autocomplete list
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            return self.wait.until(
-                EC.visibility_of_element_located(
-                    (
-                        "css selector",
-                        f".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})",
-                    )
-                )
+        self.wait.until(
+            EC.visibility_of(
+                self.get_element("select-form-option-by-index", labels=[str(index)])
             )
+        )
+        return self.get_element("select-form-option-by-index", labels=[str(index)])
 
+    @BasePage.context_chrome
     def select_nth_element(self, index: int):
         """
         Select the nth element from the autocomplete list
         Arguments:
             index (int): The index of the element to retrieve (1-based)
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.expect(
-                EC.visibility_of(
-                    self.get_element("select-form-option-by-index", labels=[str(index)])
-                )
+        self.expect(
+            EC.visibility_of(
+                self.get_element("select-form-option-by-index", labels=[str(index)])
             )
-            self.get_element("select-form-option-by-index", labels=[str(index)]).click()
+        )
+        self.get_element("select-form-option-by-index", labels=[str(index)]).click()
 
+    @BasePage.context_chrome
     def get_primary_value(self, element: WebElement) -> str:
         """
         Get the primary value from the autocomplete element
         Parameters: element (WebElement): The autocomplete element from which to retrieve the primary value
         Returns: str: The primary value extracted from the element's attribute
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            return element.get_attribute("ac-value")
+        return element.get_attribute("ac-value")
