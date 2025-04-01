@@ -23,15 +23,9 @@ def test_dropdown_presence_email_phone_field(
     after the contact information was previously saved.
     """
 
-    # Open autofill page
+    # Open autofill page and fill fake data
     address_autofill.open()
-
-    # Generate and save fake data
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
-
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+    address_autofill.fill_and_save(util, autofill_popup)
 
     fields_to_test = ["email", "tel"]
 

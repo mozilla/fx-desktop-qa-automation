@@ -21,23 +21,19 @@ def test_address_yellow_highlight_address_fields(
     """
     C2888570 - Verify the yellow highlight appears on autofilled fields for the email and phone fields.
     """
-
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
+    address_autofill.fill_and_save(util, autofill_popup)
 
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
-
-    # Double click inside email field and select a saved address entry from the dropdown
+    # Double click inside name field and select a saved address entry from the dropdown
     address_autofill.double_click("form-field", labels=["email"])
+    autofill_popup.ensure_autofill_dropdown_visible()
 
     # Click on the first element from the autocomplete dropdown
-    first_item = autofill_popup.get_nth_element(1)
-    autofill_popup.click_on(first_item)
+    autofill_popup.select_nth_element(1)
 
-    # Verify the email and phone fields are highlighted
+    field_to_test = ["email", "tel"]
+    # Verify the address fields are highlighted
     address_autofill.verify_field_yellow_highlights(
-        fields_to_test=["email", "tel"], expected_highlighted_fields=["email", "tel"]
+        fields_to_test=field_to_test, expected_highlighted_fields=field_to_test
     )

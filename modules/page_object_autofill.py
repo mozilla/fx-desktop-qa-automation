@@ -712,10 +712,10 @@ class AddressFill(Autofill):
 
     def autofill_and_verify(
         self,
-        address_autofill_popup,
-        field_label,
+        address_autofill_popup: AutofillPopup,
+        field_label: str,
         address_autofill_data: AutofillAddressBase,
-        util,
+        util: Utilities,
     ):
         """
         Autofills a form field, verifies the data, and clears it if necessary.
@@ -741,14 +741,15 @@ class AddressFill(Autofill):
 
         # Double-click a field and choose the first element from the autocomplete dropdown
         self.double_click("form-field", labels=[field_label])
-        first_item = address_autofill_popup.get_nth_element(1)
-        address_autofill_popup.click_on(first_item)
+        address_autofill_popup.ensure_autofill_dropdown_visible()
+        address_autofill_popup.select_nth_element(1)
 
         # Verify autofill data
         self.verify_autofill_data(address_autofill_data, util)
 
         # Clear form autofill
         self.double_click("form-field", labels=[field_label])
+        address_autofill_popup.ensure_autofill_dropdown_visible()
         address_autofill_popup.click_clear_form_option()
 
     def verify_all_fields_cleared(self):
@@ -779,8 +780,8 @@ class AddressFill(Autofill):
 
     def clear_and_verify(
         self,
-        address_autofill_popup,
-        field_label,
+        address_autofill_popup: AutofillPopup,
+        field_label: str,
         address_autofill_data: AutofillAddressBase,
     ):
         """
@@ -807,11 +808,12 @@ class AddressFill(Autofill):
 
         # Double-click a field and choose the first element from the autocomplete dropdown
         self.double_click("form-field", labels=[field_label])
-        first_item = address_autofill_popup.get_nth_element(1)
-        address_autofill_popup.click_on(first_item)
+        address_autofill_popup.ensure_autofill_dropdown_visible()
+        address_autofill_popup.select_nth_element(1)
 
         # Clear form autofill
         self.double_click("form-field", labels=[field_label])
+        address_autofill_popup.ensure_autofill_dropdown_visible()
         address_autofill_popup.click_clear_form_option()
 
         # Verify all fields are cleared

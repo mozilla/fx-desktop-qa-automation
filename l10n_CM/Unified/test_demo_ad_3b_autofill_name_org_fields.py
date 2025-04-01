@@ -23,11 +23,7 @@ def test_demo_ad_autofill_name_org(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
-
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+    address_autofill_data = address_autofill.fill_and_save(util, autofill_popup)
 
     # List of field labels to be autofilled and verified
     fields_to_test = ["name", "organization"]
