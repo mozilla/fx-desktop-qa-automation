@@ -1,0 +1,950 @@
+[
+    {
+        "id": 2264626,
+        "title": "Verify that copy and paste actions are displayed in the context menu and work as expected in the most used areas",
+        "section_id": 416494,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 36,
+        "created_on": 1692694722,
+        "updated_by": 70,
+        "updated_on": 1743085035,
+        "estimate": "5m",
+        "estimate_forecast": "4m 33s",
+        "suite_id": 85,
+        "display_order": 1,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/menus/test_copy_paste_actions.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Open a website with a login form",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click inside the Login/Password form and use both Copy/Paste actions\n\n* Copy will not work inside Password field due to security risk",
+                "expected": "Copy and Paste actions are correctly displayed in the context menu and work as expected",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Open a website that contains a textarea field (eg. https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_textarea )",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click inside the textarea and use both Copy/Paste actions",
+                "expected": "Copy and Paste actions are correctly displayed in the context menu and work as expected",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click inside the Address bar and use Copy/Paste/Paste and Go actions",
+                "expected": "Copy/Paste and Paste to Go actions are correctly displayed in the context menu and work as expected",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Visit a website with a search field (eg. google.com)",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click inside the search field and use both Copy/Paste actions",
+                "expected": "Copy and Paste actions are correctly displayed in the context menu and work as expected",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 2637621,
+        "title": "Verify that the most used actions from a hyperlink context menu work as described",
+        "section_id": 416494,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 186,
+        "created_on": 1718891370,
+        "updated_by": 70,
+        "updated_on": 1743085036,
+        "estimate": "3m",
+        "estimate_forecast": "2m 45s",
+        "suite_id": 85,
+        "display_order": 3,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/menus/test_hyperlink_context_menu.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Open a website that has hyperlinks (eg. https://example.com )",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click the hyperlink from the page and use the following actions:\n - Open link in new tab\n - Open link in new window\n - Open link in new private tab\n - Copy link",
+                "expected": "The actions are correctly displayed in the context menu and they work as expected",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": "This was part of split up of test case: https://testrail.stage.mozaws.net/index.php?/cases/view/2264627 - Verify that the most used actions from context menus associated to the most used areas are displayed correctly and work as intended",
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 2637622,
+        "title": "Verify that the most used actions from an image context menu work as described",
+        "section_id": 416494,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 186,
+        "created_on": 1718891379,
+        "updated_by": 70,
+        "updated_on": 1743085037,
+        "estimate": "3m",
+        "estimate_forecast": "2m 45s",
+        "suite_id": 85,
+        "display_order": 4,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/menus/test_image_context_menu_actions.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Open a website that has an image (eg. https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg )",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click the image from the page and use the following actions:\n - Open image in new tab\n - Save image as\n - Copy image link",
+                "expected": "The actions are correctly displayed in the context menu and they work as expected",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": "This was part of split up of test case: https://testrail.stage.mozaws.net/index.php?/cases/view/2264627 - Verify that the most used actions from context menus associated to the most used areas are displayed correctly and work as intended",
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 2637623,
+        "title": "Verify that the most used actions from a page context menu work as described",
+        "section_id": 416494,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 186,
+        "created_on": 1718891382,
+        "updated_by": 70,
+        "updated_on": 1743085038,
+        "estimate": "3m",
+        "estimate_forecast": "2m 30s",
+        "suite_id": 85,
+        "display_order": 5,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/menus/test_frequently_used_context_menu.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Open a website that has hyperlinks (eg. https://example.com )",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click somewhere in a blank area of the page and use the following actions:\n - Save page as\n - Take screenshot\n - Inspect",
+                "expected": "The actions are correctly displayed in the context menu and they work as expected",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": "This was part of split up of test case: https://testrail.stage.mozaws.net/index.php?/cases/view/2264627 - Verify that the most used actions from context menus associated to the most used areas are displayed correctly and work as intended",
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 2637624,
+        "title": "Verify that the most used actions from a tab context menu work as described",
+        "section_id": 416494,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 186,
+        "created_on": 1718891387,
+        "updated_by": 70,
+        "updated_on": 1743085039,
+        "estimate": "3m",
+        "estimate_forecast": "2m 45s",
+        "suite_id": 85,
+        "display_order": 6,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/menus/test_tab_context_menu_actions.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Have multiple tabs opened inside the browser",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Right click any tab and use the following actions:\n - Duplicate tab\n - Pin tab\n - Close multiple tabs (and the sub-actions of it)\n - Reopen closed tab",
+                "expected": "The actions are correctly displayed in the context menu and they work as expected",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": "This was part of split up of test case: https://testrail.stage.mozaws.net/index.php?/cases/view/2264627 - Verify that the most used actions from context menus associated to the most used areas are displayed correctly and work as intended",
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122933,
+        "title": "Verify that WebExtension completed installation is successfully displayed",
+        "section_id": 13847,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517489984,
+        "updated_by": 70,
+        "updated_on": 1743085039,
+        "estimate": "3m",
+        "estimate_forecast": "2m 25s",
+        "suite_id": 1907,
+        "display_order": 2,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": "old-smoke-critical",
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_webextension_completed_installation_successfully_displayed.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following link: https://addons.mozilla.org/en-US/firefox/addon/popup-blocker/\n",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click Add to Firefox\n",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click the *Add* button.",
+                "expected": "The WebExtension completed installation panel is successfully displayed.\n\n* Starting from Firefox 88, the following panel is displayed:\n\n\n* On older Firefox versions the following panel is displayed:\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122611,
+        "title": "Verify that geolocation permission prompt is successfully displayed",
+        "section_id": 13874,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 1,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517478009,
+        "updated_by": 70,
+        "updated_on": 1743085040,
+        "estimate": "2m",
+        "estimate_forecast": "2m 4s",
+        "suite_id": 1907,
+        "display_order": 1,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_geolocation_prompt_presence.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following [Link](https://www.w3schools.com/html/html5_geolocation.asp) and click Try IT.",
+                "expected": "* The test website is successfully displayed.\n* The geolocation prompt is successfully displayed.\n\n**Example:**\n\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122613,
+        "title": "Verify that sharing the geolocation information via the geolocation permission prompt can be denied",
+        "section_id": 13874,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517479514,
+        "updated_by": 70,
+        "updated_on": 1743085041,
+        "estimate": "2m",
+        "estimate_forecast": "2m 8s",
+        "suite_id": 1907,
+        "display_order": 3,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": "old-smoke-critical",
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_deny_geolocation.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following [Link](https://browserleaks.com/geo).",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click on the Don't Allow/Block.",
+                "expected": "The geolocation is not shared and the website displays an error.\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122536,
+        "title": "Verify that camera only permission prompt is successfully displayed",
+        "section_id": 14395,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 1,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517413688,
+        "updated_by": 70,
+        "updated_on": 1743085042,
+        "estimate": "2m",
+        "estimate_forecast": "2m 18s",
+        "suite_id": 1907,
+        "display_order": 2,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_camera_permissions_notification.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following [link](https://mozilla.github.io/webrtc-landing/gum_test.html).",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click on the *Camera* button.",
+                "expected": "* After clicking on the *Camera* button, the **Permission panel** is successfully displayed.\n\n\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122539,
+        "title": "Verify that mic only permission prompt is successfully displayed",
+        "section_id": 14395,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 1,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517414625,
+        "updated_by": 70,
+        "updated_on": 1743085043,
+        "estimate": "2m",
+        "estimate_forecast": "2m 21s",
+        "suite_id": 1907,
+        "display_order": 3,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_microphone_permissions_notification.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following [link](https://mozilla.github.io/webrtc-landing/gum_test.html).",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click on the *Microphone* button.",
+                "expected": "* After clicking on the *Microphone* button, the **Permission panel** is successfully displayed.\n\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122542,
+        "title": "Verify that audio & video permission prompt is successfully displayed",
+        "section_id": 14395,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 1,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517414816,
+        "updated_by": 70,
+        "updated_on": 1743085044,
+        "estimate": "2m",
+        "estimate_forecast": "2m 13s",
+        "suite_id": 1907,
+        "display_order": 4,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_audio_video_permissions_notification.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following [link](https://mozilla.github.io/webrtc-landing/gum_test.html).",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click on the \"Camera & Microphone\" button.",
+                "expected": "* After clicking on the \"Camera & Microphone\" button, the Permission panel is successfully displayed.\n\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122534,
+        "title": "Verify that screen sharing can ve denied via the permission panel",
+        "section_id": 14395,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 79,
+        "created_on": 1517412982,
+        "updated_by": 70,
+        "updated_on": 1743085045,
+        "estimate": "2m",
+        "estimate_forecast": "2m 19s",
+        "suite_id": 1907,
+        "display_order": 6,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 79,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": "old-smoke-critical",
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_deny_screen_capture.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Access the following [link](https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html).",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click the *Start Capture* button",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click the *Not Now*/*Block* button.",
+                "expected": "The screen is not shared and an error is thrown by the webpage. ",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 122443,
+        "title": "Verify that notifications are correctly displayed and have registered service workers",
+        "section_id": 76581,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": "1822817",
+        "created_by": 79,
+        "created_on": 1517407297,
+        "updated_by": 70,
+        "updated_on": 1743085046,
+        "estimate": "4m",
+        "estimate_forecast": "3m 58s",
+        "suite_id": 1907,
+        "display_order": 1,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": null,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": "old-smoke-critical",
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/notifications/test_notifications_displayed.py",
+        "custom_preconds": "* Note: notifications may work only on .exe installer\r\n* ensure that OS notifications for the Firefox browser are enabled\r\n* On Ubuntu, make sure DND (do Not Disturb) is disabled.",
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Load [test](https://www.bennish.net/web-notifications.html) page.",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click the *Authorize* and allow notifications.",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click the *Show* button and observe if the notification is displayed.",
+                "expected": "The Notification is displayed.",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Open https://cleverpush.com/en/test-notifications/ and click on any notification.",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Allow notifications and observe if the notification is displayed.",
+                "expected": "The Notification is displayed.",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Access the *about:debugging#/runtime/this-firefox* page.",
+                "expected": "* The *about:debugging#/runtime/this-firefox* is successfully displayed.\n* The *https://cleverpush.com/cleverpush-worker.js* is displayed as a registered service worker.",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 2300294,
+        "title": "Verify that websites with http protocol are still loaded inside Firefox and displays the correct messages",
+        "section_id": 425004,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 36,
+        "created_on": 1695280339,
+        "updated_by": 70,
+        "updated_on": 1743085047,
+        "estimate": "5m",
+        "estimate_forecast": "4m 28s",
+        "suite_id": 6066,
+        "display_order": 1,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": 3,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/networking/test_http_site.py",
+        "custom_preconds": null,
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Load about:preferences#privacy and make sure that Don't enable HTTPS-Only Mode is enabled",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Visit any of the following HTTP pages:\n- http://demo.t3-framework.org/joomla30/index.php/en/joomla-pages/sample-page-2/login-page\n- http://www.http2demo.io/\n- http://www-db.deis.unibo.it/courses/TW/DOCS/w3schools/website/default.asp.html#gsc.tab=0\n- http://demo.yeastar.com/\n\n(if the pages don't work anymore, it should be replaced by a new ones)",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Click inside the Address bar",
+                "expected": "Connection is not secure icon is displayed and the HTTPS protocol is not displayed in the URL",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Load about:preferences#privacy and activate the Enable HTTPS-Only Mode in all windows",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Revisit the website from step 2",
+                "expected": "Secure Site not available message is displayed",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Load about:preferences#privacy and select Don't enable HTTPS-Only Mode again",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Revisit the website from step 2",
+                "expected": "The content of the website is correctly loaded and the not secure icon is displayed again in the Address bar",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Load about:preferences#privacy and activate the Enable HTTPS-Only Mode in private windows only",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Open a new private window (CMD/Ctrl+shift+P) and visit the URL from step 2",
+                "expected": "Secure Site not available message is displayed",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    },
+    {
+        "id": 2300296,
+        "title": "Verify that the default DNS Protection works as expected",
+        "section_id": 425004,
+        "template_id": 2,
+        "type_id": 11,
+        "priority_id": 4,
+        "milestone_id": null,
+        "refs": null,
+        "created_by": 36,
+        "created_on": 1695283212,
+        "updated_by": 976,
+        "updated_on": 1733349156,
+        "estimate": "5m",
+        "estimate_forecast": "4m 50s",
+        "suite_id": 6066,
+        "display_order": 2,
+        "is_deleted": 0,
+        "case_assignedto_id": null,
+        "custom_test_case_owner": 36,
+        "custom_automation_status": 4,
+        "custom_automation_coverage": null,
+        "custom_test_objective": null,
+        "custom_rotation": null,
+        "custom_automation_bug": null,
+        "custom_testrail_bdd_scenario": null,
+        "custom_automated_test_names": "tests/networking/test_default_dns_protection.py",
+        "custom_preconds": "* ensure that the \"hosts\" file before running this test in order to comment out any IPs from google/youtube that might interfere with the test.\r\n\r\nNote: If located in the US ignore steps 1-4",
+        "custom_steps": null,
+        "custom_expected": null,
+        "custom_steps_separated": [
+            {
+                "content": "Visit about:preferences#privacy and go to DNS over HTTPS",
+                "expected": "Default Protection option is enabled",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Check for the status of the DNS Protection and the provider above the Manage Exceptions... button",
+                "expected": "Status is Off and the provider is not shown\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Go to about:config and change the value of 'doh-rollout.home-region' to 'US'",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Restart Firefox",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Visit about:preferences#privacy and go to DNS over HTTPS",
+                "expected": "Default Protection option is enabled",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Check for the status of the DNS Protection and the provider above the Manage Exceptions... button",
+                "expected": "Status is Active and the provider is Cloudflare\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "Visit wikipedia.org",
+                "expected": "",
+                "additional_info": "",
+                "refs": ""
+            },
+            {
+                "content": "In a new tab go to about:networking#dns and search for wikipedia.org (there might be multiple entries of wikipedia, that is ok)",
+                "expected": "The hostname wikipedia has the TRR set to 'true'\n\n\n",
+                "additional_info": "",
+                "refs": ""
+            }
+        ],
+        "custom_notes": null,
+        "custom_mission": null,
+        "custom_goals": null,
+        "comments": [],
+        "custom_sub_test_suites": [
+            1,
+            2
+        ],
+        "custom_test_area_multi": []
+    }
+]
