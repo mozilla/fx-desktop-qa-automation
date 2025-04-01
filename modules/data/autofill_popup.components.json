@@ -70,7 +70,9 @@
     "select-form-option-by-index": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})",
         "strategy":"css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
 
     "update-card-info-popup-button": {

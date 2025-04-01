@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -25,11 +23,7 @@ def test_demo_ad_hover_name_org(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(autofill_data)
-
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+    autofill_data = address_autofill.fill_and_save(util, autofill_popup)
 
     # Hover over each field and check data preview
     fields_to_test = ["name", "organization"]

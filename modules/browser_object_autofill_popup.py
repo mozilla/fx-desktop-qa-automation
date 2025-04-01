@@ -96,8 +96,8 @@ class AutofillPopup(BasePage):
         Arguments:
             index (int): The index of the element to retrieve (1-based)
         """
-        self.expect(
-            EC.visibility_of(
+        self.wait.until(
+            EC.element_to_be_clickable(
                 self.get_element("select-form-option-by-index", labels=[str(index)])
             )
         )

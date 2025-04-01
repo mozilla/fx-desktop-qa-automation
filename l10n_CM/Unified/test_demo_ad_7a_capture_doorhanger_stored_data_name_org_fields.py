@@ -23,10 +23,11 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     """
     C2888701 - Verify name/org fields are captured in the Capture Doorhanger and stored in about:preferences
     """
-    # create fake data and fill it in
+    # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
+    address_autofill_data = address_autofill.fill_and_save(
+        util, autofill_popup, door_hanger=False
+    )
 
     # The "Save address?" doorhanger is displayed
     autofill_popup.element_visible("address-save-doorhanger")
@@ -44,14 +45,13 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
-    about_prefs_privacy.get_saved_addresses_popup().click()
-    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
-    elements = about_prefs_privacy.get_elements("saved-addresses-values")
-    expected_values = [expected_name, expected_org]
-    found_name_org = any(
-        all(value in element.text for value in expected_values) for element in elements
+    saved_address_profile = about_prefs_privacy.get_all_saved_address_profiles()[0].text
+    found_name_org = all(
+        address_data in saved_address_profile
+        for address_data in [expected_name, expected_org]
     )
     assert found_name_org, (
         "Name or organization were not found in any of the address entries!"

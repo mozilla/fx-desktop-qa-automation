@@ -29,23 +29,21 @@ def test_hover_address_is_previewed(
     util: Utilities,
 ):
     """
-    C2888562: Verify that hovering over field will preview all fields
+    C2888562: Verify that hovering over address fields will preview all fields
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
+    autofill_data = address_autofill.fill_and_save(util, autofill_popup)
 
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
     # Hover over each field and check data preview
-    for field in AddressFill.fields:
-        # hack to pass over fields that don't show up in autofill dropdown
-        if field == "address-level1" and region in ["DE", "FR"]:
-            continue
-        address_autofill.double_click("form-field", labels=[field])
-        autofill_popup.ensure_autofill_dropdown_visible()
-        autofill_popup.hover("select-form-option")
-        address_autofill.verify_autofill_data_on_hover(
-            address_autofill_data, autofill_popup, util
+    fields_to_test = [
+        "street-address",
+        "address-level2",  # city
+        "address-level1",  # state/province
+        "postal-code",
+        "country",
+    ]
+    for field in fields_to_test:
+        address_autofill.check_autofill_preview_for_field(
+            field, autofill_data, autofill_popup, util
         )
