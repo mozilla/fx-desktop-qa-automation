@@ -20,7 +20,7 @@ jobs:
       - {hour: 10, minute: 15}
       - {hour: 11, minute: 15}
       - {hour: 12, minute: 15}
-      - {hour: 13, minute: 15}
+      - {hour: 13, minute: 45}
       - {hour: 14, minute: 15}
       - {hour: 15, minute: 15}
       - {hour: 16, minute: 15}
