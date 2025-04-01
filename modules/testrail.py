@@ -160,10 +160,6 @@ class TestRail:
         """Get a given Test Case"""
         return self.client.send_get(f"get_case/{case_id}")
 
-    def get_test_cases(self, project_id, suite_id):
-        """Get all test cases in a suite"""
-        return self.client.send_get(f"get_cases/{project_id}&suite_id={suite_id}")
-
     def update_cases_in_suite(self, suite_id, case_ids, **kwargs):
         """Given a suite and a list of test cases, update all listed
         test cases according to keyword args"""
