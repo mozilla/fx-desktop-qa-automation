@@ -433,8 +433,8 @@
     },
 
     "checkbox-remember-this-decision": {
-        "selectorData": "label.checkbox-label[flex='1']",
-        "strategy": "css",
+        "selectorData": "popup-notification-checkbox",
+        "strategy": "class",
         "groups": []
     },
 
