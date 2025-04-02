@@ -27,8 +27,9 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     credit_card_fill_obj.open()
 
     # Fill data
-    credit_card_sample_data = util.fake_credit_card_data(region)
-    credit_card_fill_obj.fill_and_submit_credit_card_info(credit_card_sample_data)
+    credit_card_sample_data = credit_card_fill_obj.fill_and_save(
+        util, autofill_popup, door_hanger=False
+    )
 
     # The "Save credit card?" doorhanger is displayed
     assert autofill_popup.element_visible("doorhanger-save-button"), (
@@ -55,20 +56,18 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
     # Get stored values
-    elements = [
-        x.strip()
-        for x in about_prefs_privacy.get_element(
-            "saved-credit-cards-values"
-        ).text.split(",")
-    ]
+    saved_cc_profiles = about_prefs_privacy.get_all_saved_cc_profiles()
+    assert saved_cc_profiles, "No saved cc profiles found"
+
+    saved_cc_profile = [x.strip() for x in saved_cc_profiles[0].text.split(",")]
 
     # Validate stored values match expected values
-    assert elements[0].endswith(credit_card_sample_data.card_number[-4:]), (
-        f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{elements[0]}'"
+    assert saved_cc_profile[0].endswith(credit_card_sample_data.card_number[-4:]), (
+        f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{saved_cc_profile[0]}'"
     )
-    assert elements[1] == credit_card_sample_data.name, (
-        f"Expected name '{credit_card_sample_data.name}' but got '{elements[1]}'"
+    assert saved_cc_profile[1] == credit_card_sample_data.name, (
+        f"Expected name '{credit_card_sample_data.name}' but got '{saved_cc_profile[1]}'"
     )
-    assert credit_card_sample_data.cvv not in elements, (
+    assert credit_card_sample_data.cvv not in saved_cc_profile, (
         f"CVV '{credit_card_sample_data.cvv}' should not be saved, but found in stored values."
     )

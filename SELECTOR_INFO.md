@@ -1537,15 +1537,8 @@ Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
 Selector Name: address-doorhanger-zip
-Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(5)"
-Description: Save address doorhanger zip section for US and CA
-Location: Address bar
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector Name: address-doorhanger-zip-other
-Selector Data: "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
-Description: Save address doorhanger zip section for other regions
+Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-last-of-type(1)"
+Description: Save address doorhanger zip section
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```

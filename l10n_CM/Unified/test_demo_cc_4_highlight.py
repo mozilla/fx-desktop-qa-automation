@@ -24,12 +24,16 @@ def test_cc_yellow_highlight(
     C2886601 - Verify the yellow highlight appears on autofilled fields and make sure csv field is not highlighted
     """
 
-    # Save a credit card in about:preferences
+    # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs_privacy.open()
     about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+
+    # Save CC information using fake data
     credit_card_sample_data = util.fake_credit_card_data(region)
-    about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
-    about_prefs.fill_and_save_cc_panel_information(credit_card_sample_data)
+
+    # Add a new CC profile
+    about_prefs_privacy.click_add_on_dialog_element()
+    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
 
     # Open the credit card fill form and trigger the autofill option
     credit_card_fill_obj.open()

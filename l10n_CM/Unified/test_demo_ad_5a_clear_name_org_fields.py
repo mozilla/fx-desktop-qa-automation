@@ -23,7 +23,7 @@ def test_demo_ad_clear_name_org(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(util, autofill_popup)
+    address_autofill_data = address_autofill.fill_and_save(util, autofill_popup, region)
 
     # List of field labels to be autofilled and verified
     fields_to_test = ["name", "organization"]

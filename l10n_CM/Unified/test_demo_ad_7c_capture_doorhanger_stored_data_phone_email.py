@@ -24,52 +24,44 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
 
-    # create fake data and fill it in
+    # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
+    address_autofill_data = address_autofill.fill_and_save(
+        util, autofill_popup, region, door_hanger=False
+    )
 
     # The "Save address?" doorhanger is displayed
     autofill_popup.element_visible("address-save-doorhanger")
 
-    # containing email field
-    expected_email = address_autofill_data.email
-    autofill_popup.element_has_text("address-doorhanger-email", expected_email)
+    # containing address fields
+    expected_fields = {
+        "email": address_autofill_data.email,
+        "phone": address_autofill_data.telephone,
+    }
 
-    # containing phone field
-    expected_phone = address_autofill_data.telephone
-    # Skip verification if phone number isn't provided
-    if expected_phone:
-        with driver.context(driver.CONTEXT_CHROME):
-            actual_phone = autofill_popup.get_element("address-doorhanger-phone").text
-        normalize_expected = util.normalize_phone_number(expected_phone, region)
-        normalized_actual = util.normalize_phone_number(actual_phone, region)
-        assert normalized_actual == normalize_expected, (
-            f"Phone number mismatch for {region} | Expected: {normalize_expected}, Got: {normalized_actual}"
-        )
+    # check fields in doorhanger
+    for key, value in expected_fields.items():
+        autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
 
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
-    about_prefs_privacy.get_saved_addresses_popup().click()
-    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    # The address saved in step 2 is listed in the "Saved addresses" modal: Email and phone
-    elements = map(
-        data_sanitizer,
-        about_prefs_privacy.get_element("saved-addresses-values").text.split(","),
+    # Get the first saved address profile
+    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+    assert saved_address_profiles, "No saved address profiles found"
+
+    saved_address_profile = saved_address_profiles[0].text
+
+    # Verify each field is present in the saved profile
+    missing_fields = []
+    for field_name, field_value in expected_fields.items():
+        if field_value not in saved_address_profile:
+            missing_fields.append(f"{field_name}: {field_value}")
+
+    assert not missing_fields, (
+        f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
     )
-    expected_values = [expected_phone, expected_email]
-    found_email_phone = list(set(elements) & set(expected_values))
-    assert found_email_phone, (
-        "Email or phone were not found in any of the address entries!"
-    )
-
-
-def data_sanitizer(value: str):
-    value = value.strip()
-    if value[0] == "+":
-        return value[1:]
-    return value
