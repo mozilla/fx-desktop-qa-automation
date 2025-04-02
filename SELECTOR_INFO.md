@@ -2965,11 +2965,8 @@ Location: Autoplay doorhanger
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: autoplay-permission
-Selector Data: blocked-permissions-container
-Description: Autoplay permission
 Selector Name: checkbox-remember-this-decision
-Selector Data: "label.checkbox-label[flex='1']"
+Selector Data: "popup-notification-checkbox"
 Description: Remember this decision checkbox
 Location: Geolocation prompt container in Address bar
 Path to .json: modules/data/navigation.components.json
