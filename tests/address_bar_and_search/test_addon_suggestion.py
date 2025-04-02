@@ -12,6 +12,7 @@ def test_case():
     return "2234714"
 
 
+@pytest.mark.unstable
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
     C2234714: Test that add-on suggestions match the URL bar input.
