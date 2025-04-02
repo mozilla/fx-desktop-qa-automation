@@ -175,7 +175,7 @@ class AboutPrefs(BasePage):
                 # Only get the last two digits
                 field_value = val.first_selected_option.get_attribute("value")[-2:]
                 assert field_value in credit_card_fill_obj.__dict__.values(), (
-                    f"{field_name} not found in generated data. current value is: {field_value}.\n expected values are: {credit_card_fill_obj}.\n"
+                    f"{field_name} not found in generated data. current value is: {field_value}.\n expected values are: {credit_card_fill_obj}.\n Full value: {val.first_selected_option.get_attribute('value')}."
                 )
                 assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
         return self
