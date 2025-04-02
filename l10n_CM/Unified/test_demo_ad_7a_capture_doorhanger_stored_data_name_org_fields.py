@@ -26,19 +26,21 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     # Create fake data and fill it in
     address_autofill.open()
     address_autofill_data = address_autofill.fill_and_save(
-        util, autofill_popup, door_hanger=False
+        util, autofill_popup, region, door_hanger=False
     )
 
     # The "Save address?" doorhanger is displayed
     autofill_popup.element_visible("address-save-doorhanger")
 
-    # containing name field
-    expected_name = address_autofill_data.name
-    autofill_popup.element_has_text("address-doorhanger-name", expected_name)
+    # containing name and org field
+    expected_fields = {
+        "name": address_autofill_data.name,
+        "org": address_autofill_data.organization,
+    }
 
-    # containing org field
-    expected_org = address_autofill_data.organization
-    autofill_popup.element_has_text("address-doorhanger-org", expected_org)
+    # check fields in doorhanger
+    for key, value in expected_fields.items():
+        autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
 
     # Click the "Save" button
     autofill_popup.click_doorhanger_button("save")
@@ -47,12 +49,18 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     about_prefs_privacy.open()
     about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization
-    saved_address_profile = about_prefs_privacy.get_all_saved_address_profiles()[0].text
-    found_name_org = all(
-        address_data in saved_address_profile
-        for address_data in [expected_name, expected_org]
-    )
-    assert found_name_org, (
-        "Name or organization were not found in any of the address entries!"
+    # Get the first saved address profile
+    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+    assert saved_address_profiles, "No saved address profiles found"
+
+    saved_address_profile = saved_address_profiles[0].text
+
+    # Verify each field is present in the saved profile
+    missing_fields = []
+    for field_name, field_value in expected_fields.items():
+        if field_value not in saved_address_profile:
+            missing_fields.append(f"{field_name}: {field_value}")
+
+    assert not missing_fields, (
+        f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
     )

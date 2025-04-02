@@ -19,6 +19,7 @@ def add_to_prefs_list(region: str):
 def test_cc_preview(
     driver: Firefox,
     util: Utilities,
+    region: str,
     about_prefs_privacy: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_fill_obj: CreditCardFill,
@@ -27,21 +28,18 @@ def test_cc_preview(
     C2886599 -  Verify that hovering over field will preview all eligible fields (except for the CVV field)
     """
 
-    browser_action_obj = BrowserActions(driver)
-
-    # Save a credit card in about:preferences
+    # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs_privacy.open()
-    iframe = about_prefs_privacy.get_saved_payments_popup_iframe()
-    browser_action_obj.switch_to_iframe_context(iframe)
+    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
-    # Generate fake CC data & add it
-    credit_card_sample_data = util.fake_credit_card_data()
-    about_prefs_privacy.click_on(
-        "panel-popup-button", labels=["autofill-manage-add-button"]
-    )
-    about_prefs_privacy.fill_and_save_cc_panel_information(credit_card_sample_data)
+    # Save CC information using fake data
+    credit_card_sample_data = util.fake_credit_card_data(region)
 
-    # Open the credit card fill form
+    # Add a new CC profile
+    about_prefs_privacy.click_add_on_dialog_element()
+    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
+
+    # Open credit card form page
     credit_card_fill_obj.open()
 
     # Verify the autofill preview

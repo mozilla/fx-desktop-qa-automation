@@ -23,7 +23,7 @@ def test_address_yellow_highlight_address_fields(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill.fill_and_save(util, autofill_popup)
+    address_autofill.fill_and_save(util, autofill_popup, region)
 
     # Double click inside name field and select a saved address entry from the dropdown
     address_autofill.double_click("form-field", labels=["email"])
@@ -35,5 +35,5 @@ def test_address_yellow_highlight_address_fields(
     field_to_test = ["email", "tel"]
     # Verify the address fields are highlighted
     address_autofill.verify_field_yellow_highlights(
-        fields_to_test=field_to_test, expected_highlighted_fields=field_to_test
+        region, fields_to_test=field_to_test, expected_highlighted_fields=field_to_test
     )

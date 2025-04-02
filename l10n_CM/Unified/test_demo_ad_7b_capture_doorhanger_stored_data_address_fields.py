@@ -25,67 +25,51 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
+    address_autofill_data = address_autofill.fill_and_save(
+        util, autofill_popup, region, door_hanger=False
+    )
 
     # The "Save address?" doorhanger is displayed
     autofill_popup.element_visible("address-save-doorhanger")
 
-    # Containing Street Address field
-    expected_street_add = address_autofill_data.street_address
+    # containing address fields
+    expected_fields = {
+        "street": address_autofill_data.street_address,
+        "city": address_autofill_data.address_level_2,
+        "zip": address_autofill_data.postal_code,
+        "country": address_autofill_data.country_code,
+    }
 
-    autofill_popup.element_has_text("address-doorhanger-street", expected_street_add)
+    if region in ["US", "CA"]:
+        expected_fields["state"] = address_autofill_data.address_level_1
 
-    # Containing City field
-    expected_city = address_autofill_data.address_level_2
-    autofill_popup.element_has_text("address-doorhanger-city", expected_city)
-
-    expected_state = address_autofill_data.address_level_1
-    if region not in ["FR", "DE"]:
-        state_abbreviation = util.get_state_province_abbreviation(expected_state)
-        autofill_popup.element_has_text("address-doorhanger-state", state_abbreviation)
-
-    # Verify Zip Code field (Different selector for DE/FR)
-    expected_zip = address_autofill_data.postal_code
-    zip_selector = (
-        "address-doorhanger-zip-other"
-        if region in ["FR", "DE"]
-        else "address-doorhanger-zip"
-    )
-
-    autofill_popup.element_has_text(zip_selector, expected_zip)
-
-    # Containing Country field
-    expected_country = address_autofill_data.country_code
-
-    autofill_popup.element_has_text("address-doorhanger-country", expected_country)
+    # check fields in doorhanger
+    for key, value in expected_fields.items():
+        if key == "state":
+            value = util.get_state_province_abbreviation(
+                address_autofill_data.address_level_1
+            )
+        autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
 
     # Click the "Save" button
-
     autofill_popup.click_doorhanger_button("save")
 
     # Navigate to about:preferences#privacy => "Autofill" section
     about_prefs_privacy.open()
-    about_prefs_privacy.get_saved_addresses_popup().click()
-    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
+    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    # Verify saved addresses
-    elements = about_prefs_privacy.get_elements("saved-addresses-values")
+    # Get the first saved address profile
+    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+    assert saved_address_profiles, "No saved address profiles found"
 
-    # Expected values for verification
-    expected_values = [
-        expected_street_add,
-        expected_city,
-        expected_zip,
-        expected_country,
-    ]
-    if region not in ["FR", "DE"]:
-        expected_values.insert(2, expected_state)
+    saved_address_profile = saved_address_profiles[0].text
 
-    # Check if all expected values exist in any saved address
-    found_address_data = any(
-        all(value in element.text for value in expected_values) for element in elements
-    )
-    assert found_address_data, (
-        "Street, city, state (if applicable), zip, or country were not found in any of the address entries!"
+    # Verify each field is present in the saved profile
+    missing_fields = []
+    for field_name, field_value in expected_fields.items():
+        if field_value not in saved_address_profile:
+            missing_fields.append(f"{field_name}: {field_value}")
+
+    assert not missing_fields, (
+        f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
     )

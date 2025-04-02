@@ -25,7 +25,7 @@ def test_dropdown_presence_name_organization(
 
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill.fill_and_save(util, autofill_popup)
+    address_autofill.fill_and_save(util, autofill_popup, region)
 
     # Verify that the name and organization fields have the autofill dropdown present
     fields_to_test = ["name", "organization"]

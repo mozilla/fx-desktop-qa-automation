@@ -25,7 +25,7 @@ def test_dropdown_presence_address_field(
 
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill.fill_and_save(util, autofill_popup)
+    address_autofill.fill_and_save(util, autofill_popup, region)
 
     fields_to_test = [
         "street-address",

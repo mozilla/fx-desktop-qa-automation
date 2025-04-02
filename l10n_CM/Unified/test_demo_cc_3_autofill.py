@@ -26,9 +26,7 @@ def test_cc_autofill_from_dropdown(
     credit_card_fill_obj.open()
 
     # Create and save fake credit card data
-    credit_card_data = util.fake_credit_card_data()
-    credit_card_fill_obj.fill_and_submit_credit_card_info(credit_card_data)
-    autofill_popup.click_doorhanger_button("save")
+    credit_card_data = credit_card_fill_obj.fill_and_save(util, autofill_popup)
 
     # Autocomplete and clear all fields
     credit_card_fill_obj.autofill_and_clear_all_fields(autofill_popup, credit_card_data)

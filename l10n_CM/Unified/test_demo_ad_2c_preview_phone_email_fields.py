@@ -22,11 +22,11 @@ def test_hover_email_and_phone_autofill_preview(
 ):
     # Create fake data and fill it in
     address_autofill.open()
-    autofill_data = address_autofill.fill_and_save(util, autofill_popup)
+    autofill_data = address_autofill.fill_and_save(util, autofill_popup, region)
 
     # Hover over each field and check data preview
     fields_to_test = ["email", "tel"]
     for field in fields_to_test:
         address_autofill.check_autofill_preview_for_field(
-            field, autofill_data, autofill_popup, util
+            field, autofill_data, autofill_popup, util, region
         )
