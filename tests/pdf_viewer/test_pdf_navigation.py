@@ -1,11 +1,12 @@
-from typing import Literal
-
 import pytest
+
+# from typing import Literal
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
-from modules.util import Utilities
+
+# from modules.util import Utilities
 
 DOWNWARD = {Keys.DOWN, Keys.RIGHT, Keys.END, "next"}
 
@@ -147,24 +148,34 @@ def test_toolbar_options_cursor(driver: Firefox, pdf_viewer: GenericPdf):
     assert cursor_style == "auto"
 
 
-def test_toolbar_options_rotate(driver: Firefox, pdf_viewer: GenericPdf):
+def test_toolbar_options_rotate_cw(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.5: Ensure the correct rotation is shown
 
     Arguments:
         pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
+    # Rotate clockwise three times
     for i in range(1, 4):
         pdf_viewer.select_toolbar_option("toolbar-rotate-cw")
+        # Click the menu toggle again to close the menu
+        pdf_viewer.get_element("toolbar-toggle").click()
         element = pdf_viewer.get_element("pdf-text-layer")
         pdf_viewer.wait.until(
             lambda _: int(element.get_attribute("data-main-rotation")) == i * 90
         )
-    # rotate clockwise
 
-    # rotate counterclockwise
+
+def test_toolbar_options_rotate_ccw(driver: Firefox, pdf_viewer: GenericPdf):
+    """
+    C3927.5: Ensure the correct rotation is shown
+
+    Arguments:
+        pdf_viewer: instance of generic pdf with given pdf_file_path.
+    """
+    # Rotate counterclockwise once
     pdf_viewer.select_toolbar_option("toolbar-rotate-ccw")
     element = pdf_viewer.get_element("pdf-text-layer")
     pdf_viewer.wait.until(
-        lambda _: element.get_attribute("data-main-rotation") == "180"
+        lambda _: element.get_attribute("data-main-rotation") == "270"
     )
