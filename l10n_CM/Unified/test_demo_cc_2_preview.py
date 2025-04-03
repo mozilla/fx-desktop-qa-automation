@@ -42,13 +42,11 @@ def test_cc_preview(
     # Open credit card form page
     credit_card_fill_obj.open()
 
-    # Verify the autofill preview
-    for field in CreditCardFill.fields:
-        credit_card_fill_obj.click_on("form-field", labels=[field])
-        autofill_popup.ensure_autofill_dropdown_visible()
-        autofill_popup.hover("select-form-option")
-        credit_card_fill_obj.verify_autofill_cc_data_on_hover(
-            credit_card_sample_data, autofill_popup
+    # Hover over each field and check data preview
+    fields_to_test = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+    for field in fields_to_test:
+        credit_card_fill_obj.check_cc_autofill_preview_for_field(
+            field, credit_card_sample_data, autofill_popup
         )
 
     credit_card_fill_obj.click_on("form-field", labels=["cc-csc"])
