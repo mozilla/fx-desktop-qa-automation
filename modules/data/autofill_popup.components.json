@@ -1,174 +1,147 @@
 {
-    "context": "chrome",
-    "do-not-cache": true,
-    "autofill-panel": {
-        "selectorData": "PopupAutoComplete",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "doorhanger-save-button": {
-        "selectorData": "button[label='Save'].popup-notification-primary-button",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "doorhanger-dropdown-button": {
-        "selectorData": "button[aria-label='More actions']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "doorhanger-dropdown-never-save-cards-button": {
-        "selectorData": "menuitem[label='Never save cards']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "doorhanger-more-actions-button": {
-        "selectorData": "[data-l10n-id='popup-notification-more-actions-button']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "doorhanger-never-save-login-button": {
-        "selectorData": "menuitem[label='Never save']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "doorhanger-update-button": {
-        "selectorData": "button[label='Update']",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "pop-up-component": {
-        "selectorData": "PopupAutoComplete",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "select-form-option": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
-        "strategy":"css",
-        "groups": []
-    },
-
-    "select-form-option-by-value": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']",
-        "strategy":"css",
-        "groups": []
-    },
-
-    "clear-form-option": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
-        "strategy":"css",
-         "groups": []
-    },
-
-    "select-form-option-by-index": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})",
-        "strategy":"css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-
-    "update-card-info-popup-button": {
-        "selectorData": "button[label='Update existing card']",
-        "strategy": "css",
-        "groups": []
-    },
-
-     "cc-saved-options": {
-        "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
-        "strategy": "css",
-        "groups": []
-     },
-
-    "password-update-doorhanger": {
-        "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
-        "strategy": "xpath",
-        "groups": []
-    },
-
-    "address-save-doorhanger": {
-        "selectorData": "address-save-update-notification-content",
-        "strategy": "class",
-        "groups": []
-    },
-
-     "cc-doorhanger-data": {
-        "selectorData": "popupnotificationcontent[class='credit-card-save-update-notification-content'] description",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-email": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-phone": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-name": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-org": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-street": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(3) span",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-city": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(1)",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-state": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-zip": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-last-of-type(1)",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-doorhanger-country": {
-        "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span",
-        "strategy": "css",
-        "groups": []
-    },
-
-    "address-preview-form-container": {
-        "selectorData": "address-save-update-notification-content",
-        "strategy": "class",
-        "groups": []
-    },
-
-    "cc-preview-form-container": {
-        "selectorData": "credit-card-save-update-notification-content",
-        "strategy": "class",
-        "groups": []
-    }
+  "context": "chrome",
+  "do-not-cache": true,
+  "autofill-panel": {
+    "selectorData": "PopupAutoComplete",
+    "strategy": "id",
+    "groups": []
+  },
+  "doorhanger-save-button": {
+    "selectorData": "button[label='Save'].popup-notification-primary-button",
+    "strategy": "css",
+    "groups": []
+  },
+  "doorhanger-dropdown-button": {
+    "selectorData": "button[aria-label='More actions']",
+    "strategy": "css",
+    "groups": []
+  },
+  "doorhanger-dropdown-never-save-cards-button": {
+    "selectorData": "menuitem[label='Never save cards']",
+    "strategy": "css",
+    "groups": []
+  },
+  "doorhanger-more-actions-button": {
+    "selectorData": "[data-l10n-id='popup-notification-more-actions-button']",
+    "strategy": "css",
+    "groups": []
+  },
+  "doorhanger-never-save-login-button": {
+    "selectorData": "menuitem[label='Never save']",
+    "strategy": "css",
+    "groups": []
+  },
+  "doorhanger-update-button": {
+    "selectorData": "button[label='Update']",
+    "strategy": "css",
+    "groups": []
+  },
+  "pop-up-component": {
+    "selectorData": "PopupAutoComplete",
+    "strategy": "id",
+    "groups": []
+  },
+  "select-form-option": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem",
+    "strategy": "css",
+    "groups": []
+  },
+  "select-form-option-by-value": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']",
+    "strategy": "css",
+    "groups": []
+  },
+  "clear-form-option": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
+    "strategy": "css",
+    "groups": []
+  },
+  "select-form-option-by-index": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem:nth-child({index})",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "update-card-info-popup-button": {
+    "selectorData": "button[label='Update existing card']",
+    "strategy": "css",
+    "groups": []
+  },
+  "cc-saved-options": {
+    "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
+    "strategy": "css",
+    "groups": []
+  },
+  "password-update-doorhanger": {
+    "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
+    "strategy": "xpath",
+    "groups": []
+  },
+  "address-save-doorhanger": {
+    "selectorData": "address-save-update-notification-content",
+    "strategy": "class",
+    "groups": []
+  },
+  "cc-doorhanger-data": {
+    "selectorData": "popupnotificationcontent[class='credit-card-save-update-notification-content'] description",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-email": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-phone": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-name": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-org": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-street": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(3) span",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-city": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(1)",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-state": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-zip": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-last-of-type(1)",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-doorhanger-country": {
+    "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span",
+    "strategy": "css",
+    "groups": []
+  },
+  "address-preview-form-container": {
+    "selectorData": "address-save-update-notification-content",
+    "strategy": "class",
+    "groups": []
+  },
+  "cc-preview-form-container": {
+    "selectorData": ".autocomplete-richlistbox richlistitem",
+    "strategy": "css",
+    "groups": []
+  }
 }
 
