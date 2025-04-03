@@ -27,22 +27,46 @@ SUITE_MAPPING = {
 PROJECT_ID = 17
 
 
+# Set limit bellow maximum value as a precaution to avoid API errors
+def get_all_test_cases(tr, project_id, suite_id):
+    """Fetch all test cases from a suite by handling pagination."""
+    all_cases = []
+    offset = 0
+    limit = 240  # Default limit for TestRail API is 250
+
+    while True:
+        # Build endpoint with pagination parameters
+        endpoint = (
+            f"get_cases/{project_id}&suite_id={suite_id}&limit={limit}&offset={offset}"
+        )
+        response = tr.client.send_get(endpoint)
+        cases = response.get("cases", [])
+        if not cases:
+            break
+        all_cases.extend(cases)
+        # If the number of cases returned is less than the limit, we've reached the last page.
+        if len(cases) < limit:
+            break
+        offset += limit
+
+    logging.info(f"Total cases fetched from suite {suite_id}: {len(all_cases)}")
+    return all_cases
+
+
 def update_starfox_cases(tr, project_id, suite_id, field_id, new_value, dry_run=True):
     """Fetch automated test cases (based on the "completed" - 4 status) from a TestRail suite and update a custom
     field to a new value "full" - 3."""
     try:
-        response = tr._get_test_cases(project_id, suite_id)
-        cases = response.get("cases", [])
-        # Filter cases
-        starfox_cases = []
+        # Retrieve all test cases using pagination
+        cases = get_all_test_cases(tr, project_id, suite_id)
 
-        for case in cases:
-            if (
-                case.get("custom_automated_test_names")
-                and case.get("custom_automation_status") == 4
-            ):
-                starfox_cases.append(case)
-
+        # Filter cases based on automation criteria
+        starfox_cases = [
+            case
+            for case in cases
+            if case.get("custom_automated_test_names")
+            and case.get("custom_automation_status") == 4
+        ]
         logging.info(
             f"Found {len(starfox_cases)} STARfox automated test cases in suite {suite_id}."
         )
