@@ -159,14 +159,21 @@ class AboutPrefs(BasePage):
         self.switch_to_edit_saved_payments_popup_iframe()
         form_container = self.get_element("form-container")
         input_elements = form_container.find_elements(By.TAG_NAME, "input")
+        expected_cc_data = [
+            int(val) if val.isnumeric() else val
+            for val in credit_card_fill_obj.__dict__.values()
+        ]
+        expected_cvv = int(credit_card_fill_obj.cvv)
         for element in input_elements:
             field_name = element.get_attribute("id")
             if field_name.startswith("cc"):
                 field_value = element.get_attribute("value")
-                assert field_value in credit_card_fill_obj.__dict__.values(), (
-                    f"{field_name} not found in generated data."
+                if field_value.isnumeric():
+                    field_value = int(field_value)
+                assert field_value in expected_cc_data, (
+                    f"{(field_name, field_value)} not found in generated data."
                 )
-                assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
+                assert field_value != expected_cvv, "CVV is displayed."
         select_elements = form_container.find_elements(By.TAG_NAME, "select")
         for element in select_elements:
             field_name = element.get_attribute("id")
@@ -174,10 +181,12 @@ class AboutPrefs(BasePage):
                 val = Select(element)
                 # Only get the last two digits
                 field_value = val.first_selected_option.get_attribute("value")[-2:]
-                assert field_value in credit_card_fill_obj.__dict__.values(), (
-                    f"{field_name} not found in generated data."
+                if field_value.isnumeric():
+                    field_value = int(field_value)
+                assert field_value in expected_cc_data, (
+                    f"{(field_name, field_value)} not found in generated data."
                 )
-                assert field_value != credit_card_fill_obj.cvv, "CVV is displayed."
+                assert field_value != expected_cvv, "CVV is displayed."
         return self
 
     def get_saved_payments_popup(self) -> WebElement:

@@ -24,9 +24,8 @@ def test_cc_check_door_hanger_is_displayed(
     # Navigate to page
     credit_card_fill_obj.open()
 
-    # Fill data
-    credit_card_sample_data = util.fake_credit_card_data(region)
-    credit_card_fill_obj.fill_and_submit_credit_card_info(credit_card_sample_data)
+    # Fill data. Don't click save in doorhanger
+    credit_card_fill_obj.fill_and_save(util, autofill_popup, door_hanger=False)
 
     # Check if an element from the door hanger is visible
     autofill_popup.element_visible("doorhanger-save-button")

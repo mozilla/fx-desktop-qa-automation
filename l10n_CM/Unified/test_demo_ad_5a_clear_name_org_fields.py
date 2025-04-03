@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -10,10 +8,10 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888557"
+    return "2888560"
 
 
-def test_demo_ad_hover_name_org(
+def test_demo_ad_clear_name_org(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
@@ -21,19 +19,15 @@ def test_demo_ad_hover_name_org(
     autofill_popup: AutofillPopup,
 ):
     """
-    C2888557 - Verify Autofill Preview on hover over dropdown entries for name/org fields
+    C2888560 - Verify clear functionality after selecting an entry from name/org fields
     """
     # Create fake data and fill it in
     address_autofill.open()
-    autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(autofill_data)
+    address_autofill_data = address_autofill.fill_and_save(util, autofill_popup, region)
 
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
-
-    # Hover over each field and check data preview
+    # List of field labels to be autofilled and verified
     fields_to_test = ["name", "organization"]
+
+    # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.check_autofill_preview_for_field(
-            field, autofill_data, autofill_popup, util
-        )
+        address_autofill.clear_and_verify(autofill_popup, field, address_autofill_data)

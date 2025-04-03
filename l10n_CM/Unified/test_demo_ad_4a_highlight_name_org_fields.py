@@ -21,24 +21,21 @@ def test_address_yellow_highlight_on_name_organization_fields(
     """
     C2888559 - Verify the yellow highlight appears on autofilled fields for name and organization.
     """
-
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
-
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+    address_autofill.fill_and_save(util, autofill_popup, region)
 
     # Double click inside name field and select a saved address entry from the dropdown
     address_autofill.double_click("form-field", labels=["name"])
+    autofill_popup.ensure_autofill_dropdown_visible()
 
     # Click on the first element from the autocomplete dropdown
-    first_item = autofill_popup.get_nth_element(1)
-    autofill_popup.click_on(first_item)
+    autofill_popup.select_nth_element(1)
 
+    field_to_test = ["name", "organization"]
     # Verify the name and organization fields are highlighted
     address_autofill.verify_field_yellow_highlights(
-        fields_to_test=["name", "organization"],
-        expected_highlighted_fields=["name", "organization"],
+        region,
+        fields_to_test=field_to_test,
+        expected_highlighted_fields=field_to_test,
     )

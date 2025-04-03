@@ -25,13 +25,16 @@ def test_cc_clear_form(
     field from which the clear action was triggered.
     """
 
-    # Save a credit card in about:preferences
+    # Go to about:preferences#privacy and open Saved Payment Methods
     about_prefs_privacy.open()
     about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
+    # Save CC information using fake data
     credit_card_sample_data = util.fake_credit_card_data(region)
-    about_prefs.click_on("panel-popup-button", labels=["autofill-manage-add-button"])
-    about_prefs_privacy.fill_and_save_cc_panel_information(credit_card_sample_data)
+
+    # Add a new CC profile
+    about_prefs_privacy.click_add_on_dialog_element()
+    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
 
     # Open credit card form page, clear form and verify all fields are empty
     credit_card_fill_obj.open()

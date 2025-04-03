@@ -8,35 +8,25 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "2888563"
+    return "2888569"
 
 
-def test_demo_ad_autofill_address_fields(
+def test_demo_ad_autofill_phone_email(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    util: Utilities,
     autofill_popup: AutofillPopup,
+    util: Utilities,
 ):
     """
-    C2888563 - Verify Autofill functionality when selecting an entry from the dropdown for address fields
+    C2888569 - Verify Autofill functionality when selecting an entry from the dropdown for tele/email fields
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = util.fake_autofill_data(region)
-    address_autofill.save_information_basic(address_autofill_data)
-
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+    address_autofill_data = address_autofill.fill_and_save(util, autofill_popup, region)
 
     # List of field labels to be autofilled and verified
-    fields_to_test = [
-        "street-address",
-        "address-level2",
-        "address-level1",  # This will be skipped for DE/FR
-        "postal-code",
-        "country",
-    ]
+    fields_to_test = ["email", "tel"]
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
