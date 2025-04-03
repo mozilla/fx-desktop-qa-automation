@@ -1,12 +1,8 @@
 import pytest
-
-# from typing import Literal
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
-
-# from modules.util import Utilities
 
 DOWNWARD = {Keys.DOWN, Keys.RIGHT, Keys.END, "next"}
 
