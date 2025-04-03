@@ -164,11 +164,10 @@
         "strategy": "class",
         "groups": []
     },
-
-    "cc-preview-form-container": {
-        "selectorData": "credit-card-save-update-notification-content",
-        "strategy": "class",
-        "groups": []
+  "cc-preview-form-container": {
+      "selectorData": ".autocomplete-richlistbox richlistitem",
+      "strategy": "css",
+      "groups": []
     }
 }
 
