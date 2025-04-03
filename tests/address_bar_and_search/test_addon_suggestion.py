@@ -16,9 +16,6 @@ def test_case():
     return "2234714"
 
 
-@pytest.mark.xfail(
-    reason="Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1958038"
-)
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
     C2234714 - Verify that the address bar suggests relevant add-ons based on search input.
