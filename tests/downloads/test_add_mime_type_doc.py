@@ -1,4 +1,5 @@
 import json
+import logging
 import sys
 from os import environ
 
@@ -17,6 +18,9 @@ def test_case():
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+logging.warn(f"wingha: {WIN_GHA}")
+logging.warn(environ.get("GITHUB_ACTIONS"))
+logging.warn(sys.platform)
 
 
 @pytest.fixture()
