@@ -307,6 +307,7 @@ class CreditCardFill(Autofill):
             # If parsing fails, raise ValueError.
             raise ValueError("Given preview data is incomplete.")
         container_data = container.get("fillMessageData", {}).get("profile", {})
+        assert container_data, "No preview data available."
         assert all(field in container_data.keys() for field in self.fields), (
             "Not all fields present in preview data."
         )
@@ -672,7 +673,6 @@ class AddressFill(Autofill):
 
         # get preview data from hovering through the chrome context
         element = autofill_popup.get_element("address-preview-form-container")
-        print(element.get_attribute("innerHTML"))
         # get every span element that is a child of the form and is not empty
         children = [
             x.get_attribute("innerHTML")
