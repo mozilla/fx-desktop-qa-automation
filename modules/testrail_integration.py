@@ -172,11 +172,21 @@ def reportable(platform_to_test=None):
 
 def testrail_init() -> TestRail:
     """Connect to a TestRail API session"""
-    local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
-    tr_session = tr.TestRail(
-        os.environ.get("TESTRAIL_BASE_URL"),
-        os.environ.get("TESTRAIL_USERNAME"),
-        os.environ.get("TESTRAIL_API_KEY"),
+    base_url = os.environ.get("TESTRAIL_BASE_URL")
+    username = os.environ.get("TESTRAIL_USERNAME")
+    api_key = os.environ.get("TESTRAIL_API_KEY")
+
+    if not base_url or not username or not api_key:
+        raise ValueError(
+            "Missing TestRail credentials. Check your api_credentials.env file."
+        )
+
+    local = base_url.split("/")[2].startswith("127")
+
+    tr_session = TestRail(
+        base_url,
+        username,
+        api_key,
         local,
     )
     return tr_session
