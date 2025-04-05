@@ -194,6 +194,7 @@ tests/test_scratch.py
 
 # Credentials
 credentials.json
+testrail_credentials.env
 
 # Do not ignore
 !data/goomy.png
