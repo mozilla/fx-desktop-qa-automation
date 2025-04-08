@@ -1,10 +1,14 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 
 from modules.browser_object import Navigation
+
+ADDONS_BASE_URL = "https://addons.mozilla.org/en-US/firefox/addon/"
+AWESOME_BAR_SELECTOR = "addon-suggestion"
+WAIT_TIMEOUT = 10
 
 
 @pytest.fixture()
@@ -14,15 +18,8 @@ def test_case():
 
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
-    C2234714: Test that add-on suggestions match the URL bar input.
-
-    To avoid lengthy waits caused by network traffic during browser startup,
-    this test loops through the list of addons in a single browser session
-    instead of using parameterization. This reduces the overall test duration
-    by waiting for the network traffic only once.
+    C2234714 - Verify that the address bar suggests relevant add-ons based on search input.
     """
-
-    # Map input text to addon names
     input_to_addon_name = {
         "clips": "video-downloadhelper",
         "grammar": "languagetool",
@@ -35,14 +32,18 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
 
     nav = Navigation(driver)
     nav.set_awesome_bar()
-    sleep(2)
+    WebDriverWait(driver, WAIT_TIMEOUT).until(lambda d: True)
 
     for input_text, addon_name in input_to_addon_name.items():
         nav.type_in_awesome_bar(input_text)
-        nav.element_visible("addon-suggestion")
-        nav.select_element_in_nav("addon-suggestion")
+        try:
+            nav.element_visible(AWESOME_BAR_SELECTOR)
+        except TimeoutException:
+            raise AssertionError(f"Addon suggestion not visible for input: '{input_text}'")
 
-        # Construct the expected URL
-        expected_url = f"https://addons.mozilla.org/en-US/firefox/addon/{addon_name}/"
+        nav.select_element_in_nav(AWESOME_BAR_SELECTOR)
+
+        expected_url = f"{ADDONS_BASE_URL}{addon_name}/"
         nav.expect_in_content(EC.url_contains(expected_url))
+
         nav.clear_awesome_bar()
