@@ -1,3 +1,4 @@
+import json
 import logging
 from html import unescape
 from typing import List, Optional
@@ -295,20 +296,40 @@ class CreditCardFill(Autofill):
             autofill_popup: AutofillPopup object to get element from dropdown.
         """
         # Get preview data from hovering through the chrome context
-        element = autofill_popup.get_element("cc-preview-form-container")
-
-        # Get every span element that is a child of the form and is not empty
-        children = [
-            x.get_attribute("innerHTML")
-            for x in element.find_elements(By.TAG_NAME, "span")
-            if len(x.get_attribute("innerHTML").strip()) >= 2
-        ]
-
-        for expected in children:
-            # Check if this value exists in our CreditCardBase object
-            assert unescape(expected) in autofill_data.__dict__.values(), (
-                f"Mismatched data: {expected} not in {autofill_data}."
+        try:
+            # Attempt to parse the string as JSON
+            container = json.loads(
+                autofill_popup.get_element("cc-preview-form-container").get_attribute(
+                    "ac-comment"
+                )
             )
+        except json.JSONDecodeError:
+            # If parsing fails, raise ValueError.
+            raise ValueError("Given preview data is incomplete.")
+        container_data = container.get("fillMessageData", {}).get("profile", {})
+        assert container_data, "No preview data available."
+        assert all(field in container_data.keys() for field in self.fields), (
+            "Not all fields present in preview data."
+        )
+
+        # sanitize data
+        autofill_data.card_number = autofill_data.card_number[-4:]
+        expected_values = [
+            int(val) if val.isnumeric() else val
+            for val in autofill_data.__dict__.values()
+        ]
+        for field, value in container_data.items():
+            if field in self.fields:
+                value = str(value)
+                if field == "cc-number":
+                    value = value[-4:]
+                elif field == "cc-exp-year":
+                    value = value[-2:]
+                value = int(value) if value.isnumeric() else value
+                # Check if this value exists in our CreditCardBase object
+                assert value in expected_values, (
+                    f"Mismatched data: {(field, value)} not in {expected_values}."
+                )
 
     @staticmethod
     def extract_credit_card_obj_into_list(
@@ -366,6 +387,25 @@ class CreditCardFill(Autofill):
         # verifying the correct data
         self.verify_credit_card_form_data(credit_card_sample_data)
         return self
+
+    def check_cc_autofill_preview_for_field(
+        self,
+        field_label: str,
+        credit_card_sample_data: CreditCardBase,
+        autofill_popup: AutofillPopup,
+    ):
+        """
+        Check that hovering over a field autofill option will prefill the other fields.
+
+        Arguments:
+            field_label: str,
+            credit_card_sample_data: credit card autofill sample data,
+            autofill_popup: AutofillPopup instance
+        """
+        self.double_click("form-field", labels=[field_label])
+        autofill_popup.ensure_autofill_dropdown_visible()
+        autofill_popup.hover("select-form-option")
+        self.verify_autofill_cc_data_on_hover(credit_card_sample_data, autofill_popup)
 
     def update_cc(
         self,
@@ -539,18 +579,28 @@ class AddressFill(Autofill):
     def check_autofill_preview_for_field(
         self,
         field_label: str,
-        autofill_data,
+        address_sample_data,
         autofill_popup,
         util: Utilities,
         region: str = None,
     ):
+        """
+        Check that hovering over a field autofill option will prefill the other fields.
+
+        Arguments:
+            field_label: str,
+            address_sample_data: address autofill sample data,
+            autofill_popup: AutofillPopup instance
+            util: Utilities instance
+            region: country code in use
+        """
         # Skip fields that don't appear in the dropdown for certain regions.
         if field_label == "address-level1" and region in ["DE", "FR"]:
             return
         self.double_click("form-field", labels=[field_label])
         autofill_popup.ensure_autofill_dropdown_visible()
         autofill_popup.hover("select-form-option")
-        self.verify_autofill_data_on_hover(autofill_data, autofill_popup, util)
+        self.verify_autofill_data_on_hover(address_sample_data, autofill_popup, util)
 
     def send_keys_to_element(self, name: str, label: str, keys: str):
         """
