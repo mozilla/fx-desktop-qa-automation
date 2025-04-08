@@ -15,9 +15,7 @@ def test_case():
 
 
 @pytest.mark.headed
-def test_password_csv_correctness(
-    driver_and_saved_logins, downloads_folder, sys_platform
-):
+def test_password_csv_correctness(driver_and_saved_logins, sys_platform):
     """
     C2241522: Verify than an exported password.csv file displays the correct information
     """
@@ -27,7 +25,8 @@ def test_password_csv_correctness(
     keyboard = Controller()
 
     # Ensure the export target folder doesn't contain a passwords.csv file
-    about_logins.remove_password_csv()
+    about_logins.remove_password_csv("Downloads")
+    about_logins.remove_password_csv("Documents")
 
     # Click on buttons to export passwords
     about_logins.open()
@@ -36,12 +35,25 @@ def test_password_csv_correctness(
     about_logins.click_on("continue-export-button")
 
     # Export the password file
-    time.sleep(5)
+    time.sleep(2)
     keyboard.tap(Key.enter)
+    time.sleep(3)
 
-    # Verify the exported csv file is present in the target folder
-    csv_file = os.path.join(downloads_folder, "passwords.csv")
-    about_logins.wait.until(lambda _: os.path.exists(csv_file))
+    # Since CI machines seem to be affected by other tests, the default export directory can
+    # change randomly. This checks if the file exists in any of the directories we've seen
+    # the default get set to.
+    subdirectories = ["Downloads", "Documents"]
+    for directory in subdirectories:
+        home = os.path.expanduser("~")
+        sub_dir = os.path.join(home, directory)
+        csv_file = os.path.join(sub_dir, "passwords.csv")
+        try:
+            if os.path.exists(csv_file):
+                break
+        except ValueError as e:
+            print(f"Caught error: {e}, continuing to next iteration")
+            continue
+        print(f"Successfully completed iteration with sudirectories = {subdirectories}")
 
     # Verify the contents of the exported csv file
     guid_pattern = re.compile(
@@ -61,5 +73,6 @@ def test_password_csv_correctness(
         assert "formActionOrigin" in row.keys()
     about_logins.check_logins_present(actual_logins, logins)
 
-    # Delete the password.csv file created
-    about_logins.remove_password_csv()
+    # Delete the password.csv file created in possible directories
+    about_logins.remove_password_csv("Downloads")
+    about_logins.remove_password_csv("Documents")
