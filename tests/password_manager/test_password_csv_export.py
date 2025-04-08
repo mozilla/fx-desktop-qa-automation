@@ -41,5 +41,5 @@ def test_password_csv_export(
     csv_file = os.path.join(downloads_folder, "passwords.csv")
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
-    # Delete the password.csv created
+    # Delete the password.csv file created
     about_logins.remove_password_csv()

@@ -61,5 +61,5 @@ def test_password_csv_correctness(
         assert "formActionOrigin" in row.keys()
     about_logins.check_logins_present(actual_logins, logins)
 
-    # Delete the password.csv created
+    # Delete the password.csv file created
     about_logins.remove_password_csv()
