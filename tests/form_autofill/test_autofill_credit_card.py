@@ -30,7 +30,7 @@ def test_autofill_credit_card(
     credit_card_autofill.open()
 
     # fill autofill forms with fake cc data and submit
-    credit_card_data = credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_data = credit_card_autofill.fill_and_save()
 
     # autofill from a given field and verify, repeat for all fields
-    credit_card_autofill.autofill_and_clear_all_fields(autofill_popup, credit_card_data)
+    credit_card_autofill.autofill_and_clear_all_fields(credit_card_data)

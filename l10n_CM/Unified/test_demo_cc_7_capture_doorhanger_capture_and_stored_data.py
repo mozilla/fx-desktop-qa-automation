@@ -27,9 +27,7 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     credit_card_fill_obj.open()
 
     # Fill data
-    credit_card_sample_data = credit_card_fill_obj.fill_and_save(
-        util, autofill_popup, door_hanger=False
-    )
+    credit_card_sample_data = credit_card_fill_obj.fill_and_save(door_hanger=False)
 
     # The "Save credit card?" doorhanger is displayed
     assert autofill_popup.element_visible("doorhanger-save-button"), (

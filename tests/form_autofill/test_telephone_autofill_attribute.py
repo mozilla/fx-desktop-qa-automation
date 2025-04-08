@@ -34,7 +34,7 @@ def test_telephone_attribute_autofill(
     address_autofill.open()
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    autofill_sample_data = address_autofill.fill_and_save(util, autofill_popup, region)
+    autofill_sample_data = address_autofill.fill_and_save(region)
 
     # Double-click on the name field to trigger the autocomplete dropdown
     address_autofill.double_click("form-field", labels=["tel"])

@@ -30,10 +30,10 @@ def test_clear_form(
     address_autofill.open()
 
     # create fake data, fill it in and press submit and save on the doorhanger
-    address_autofill.fill_and_save(util, autofill_popup)
+    address_autofill.fill_and_save()
 
     # Open dropdown and select first option and clear autofill form
-    address_autofill.select_autofill_option(autofill_popup, "name")
+    address_autofill.select_autofill_option("name")
     address_autofill.click_on("form-field", labels=["name"])
     # Verify that the form autofill suggestions are displayed.
     autofill_popup.verify_element_displayed("select-form-option")

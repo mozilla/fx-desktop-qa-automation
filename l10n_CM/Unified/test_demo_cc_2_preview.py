@@ -46,7 +46,7 @@ def test_cc_preview(
     fields_to_test = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
     for field in fields_to_test:
         credit_card_fill_obj.check_cc_autofill_preview_for_field(
-            field, credit_card_sample_data, autofill_popup
+            field, credit_card_sample_data
         )
 
     credit_card_fill_obj.click_on("form-field", labels=["cc-csc"])

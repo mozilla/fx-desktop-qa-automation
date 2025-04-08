@@ -23,7 +23,7 @@ def test_address_yellow_highlight_on_name_organization_fields(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill.fill_and_save(util, autofill_popup, region)
+    address_autofill.fill_and_save(region)
 
     # Double click inside name field and select a saved address entry from the dropdown
     address_autofill.double_click("form-field", labels=["name"])

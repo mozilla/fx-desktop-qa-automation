@@ -3,6 +3,7 @@ import logging
 from html import unescape
 from typing import List, Optional
 
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -21,30 +22,30 @@ class Autofill(BasePage):
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/"
 
-    def fill_input_element(self, ba: BrowserActions, field_name: str, term: str):
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.driver = driver
+        self.ba = BrowserActions(driver)
+        self.autofill_popup = AutofillPopup(driver)
+
+    def _fill_input_element(self, field_name: str, term: str):
         """
         Given BrowserActions object, the string of the element to be identified and the string term to be sent to the
         input, identify the webelement and send the term to the input field without any additional keystrokes.
 
-        ...
-        Attributes
-        ----------
-        ba : BrowserActions
-        field_name : str
-            The name of the input field to be identified
-        term: str
-            The string to be sent to the input field
+        Arguments:
+            field_name : The name of the input field to be identified
+            term: The string to be sent to the input field
         """
         form_field_element = self.get_element("form-field", labels=[field_name])
-        ba.clear_and_fill(form_field_element, term, press_enter=False)
+        self.ba.clear_and_fill(form_field_element, term, press_enter=False)
 
-    def click_form_button(self, field_name):
+    def _click_form_button(self, field_name):
         """Clicks submit on the form"""
         self.click_on("submit-button", labels=[field_name])
 
     def verify_field_autofill_dropdown(
         self,
-        autofill_popup: AutofillPopup,
         fields_to_test: List[str],
         excluded_fields: Optional[List[str]] = None,
         region: Optional[str] = None,
@@ -65,14 +66,14 @@ class Autofill(BasePage):
         # Check fields that SHOULD trigger the autofill dropdown
         for field_name in fields_to_check:
             self.double_click("form-field", labels=[field_name])
-            autofill_popup.ensure_autofill_dropdown_visible()
+            self.autofill_popup.ensure_autofill_dropdown_visible()
             logging.info(f"Autofill dropdown appears for field '{field_name}'.")
 
         # Check fields that should NOT trigger the autofill dropdown
         if excluded_fields:
             for field_name in excluded_fields:
                 self.double_click("form-field", labels=[field_name])
-                autofill_popup.ensure_autofill_dropdown_not_visible()
+                self.autofill_popup.ensure_autofill_dropdown_not_visible()
                 logging.info(
                     f"No autofill dropdown appears for field '{field_name}', as expected."
                 )
@@ -141,9 +142,7 @@ class Autofill(BasePage):
 
         return self
 
-    def select_autofill_option(
-        self, autofill_popup: AutofillPopup, field, index: int = 1
-    ):
+    def select_autofill_option(self, field, index: int = 1):
         """
         Presses the autofill panel that pops up after you double-click an input field
 
@@ -153,8 +152,8 @@ class Autofill(BasePage):
             index: which autofill option to pick.
         """
         self.double_click("form-field", labels=[field])
-        autofill_popup.ensure_autofill_dropdown_visible()
-        autofill_popup.select_nth_element(index)
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.select_nth_element(index)
         return self
 
 
@@ -165,6 +164,12 @@ class CreditCardFill(Autofill):
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic_cc.html"
     fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.driver = driver
+        self.util = Utilities()
+        self.autofill_popup = AutofillPopup(self.driver)
 
     def fill_and_submit_credit_card_info(self, info: CreditCardBase):
         """
@@ -185,17 +190,16 @@ class CreditCardFill(Autofill):
             "cc-exp-year": info.expiration_year,
             "cc-csc": info.cvv,
         }
-        ba = BrowserActions(self.driver)
         for field, value in fields.items():
             if value is not None:
-                self.fill_input_element(ba, field, value)
+                self._fill_input_element(field, value)
 
-        self.click_form_button("submit")
+        self._click_form_button("submit")
 
-    def verify_autofill_dropdown_credit_card(self, autofill_popup: AutofillPopup):
+    def verify_autofill_dropdown_credit_card(self):
         """Verifies autofill dropdown for credit card fields."""
         return self.verify_field_autofill_dropdown(
-            autofill_popup, fields_to_test=self.fields, excluded_fields=["cc-csc"]
+            fields_to_test=self.fields, excluded_fields=["cc-csc"]
         )
 
     def verify_credit_card_form_data(
@@ -217,31 +221,22 @@ class CreditCardFill(Autofill):
             )
         return self
 
-    def fill_and_save(
-        self,
-        util: Utilities,
-        autofill_popup_obj: AutofillPopup,
-        door_hanger: bool = True,
-    ) -> CreditCardBase:
+    def fill_and_save(self, door_hanger: bool = True) -> CreditCardBase:
         """
         Fills a credit card form with randomly generated data and interacts with the autofill popup.
 
         ...
 
         Arguments:
-            util: An instance of the Utilities class
-            autofill_popup_obj: An instance of the AutofillPopup class used to interact with the autofill popup
             door_hanger: check to click save on door hanger
         """
-        credit_card_sample_data = util.fake_credit_card_data()
+        credit_card_sample_data = self.util.fake_credit_card_data()
         self.fill_and_submit_credit_card_info(credit_card_sample_data)
         if door_hanger:
-            autofill_popup_obj.click_doorhanger_button("save")
+            self.autofill_popup.click_doorhanger_button("save")
         return credit_card_sample_data
 
-    def update_field(
-        self, field: str, field_data: str, autofill_popup_obj: AutofillPopup
-    ):
+    def update_field(self, field: str, field_data: str):
         """
         Updates a field in the form with given data.
 
@@ -255,53 +250,40 @@ class CreditCardFill(Autofill):
 
         field_data: str
             The data to put in the field
-
-        autofill_popup_obj: AutofillPopup
-            Instantiated AutofillPopup object that describes the existing popup
         """
-        ba = BrowserActions(self.driver)
-        self.fill_input_element(ba, field, field_data)
-        self.click_form_button("submit")
+        self._fill_input_element(field, field_data)
+        self._click_form_button("submit")
 
     def update_credit_card_information(
-        self,
-        autofill_popup_obj: AutofillPopup,
-        field_name: str,
-        field_data: str,
-        save_card=False,
+        self, field_name: str, field_data: str, save_card=False
     ):
         """
         Updates the credit card based on field that is to be changed by first autofilling everything then updating
         the field of choice then pressing submit and handling the popup.
         """
-        self.update_field(field_name, field_data, autofill_popup_obj)
-        self.click_form_button("submit")
+        self.update_field(field_name, field_data)
+        self._click_form_button("submit")
 
         if save_card or field_name == "cc-number":
-            autofill_popup_obj.click_on("doorhanger-save-button")
+            self.autofill_popup.click_on("doorhanger-save-button")
         else:
-            autofill_popup_obj.click_on("update-card-info-popup-button")
+            self.autofill_popup.click_on("update-card-info-popup-button")
 
     @BasePage.context_chrome
-    def verify_autofill_cc_data_on_hover(
-        self,
-        autofill_data: CreditCardBase,
-        autofill_popup: AutofillPopup,
-    ):
+    def verify_autofill_cc_data_on_hover(self, autofill_data: CreditCardBase):
         """
         Verifies that the credit card autofill preview data matches the expected values when hovering
 
         Arguments:
             autofill_data: CreditCardBase object containing expected credit card data.
-            autofill_popup: AutofillPopup object to get element from dropdown.
         """
         # Get preview data from hovering through the chrome context
         try:
             # Attempt to parse the string as JSON
             container = json.loads(
-                autofill_popup.get_element("cc-preview-form-container").get_attribute(
-                    "ac-comment"
-                )
+                self.autofill_popup.get_element(
+                    "cc-preview-form-container"
+                ).get_attribute("ac-comment")
             )
         except json.JSONDecodeError:
             # If parsing fails, raise ValueError.
@@ -352,11 +334,7 @@ class CreditCardFill(Autofill):
         return ret_val
 
     def verify_updated_information(
-        self,
-        autofill_popup_obj: AutofillPopup,
-        credit_card_sample_data: CreditCardBase,
-        field_name: str,
-        new_data: str,
+        self, credit_card_sample_data: CreditCardBase, field_name: str, new_data: str
     ) -> Autofill:
         """
         Verifies that there is only 1 profile in the popup panel, updates the credit card information and verifies all
@@ -364,9 +342,6 @@ class CreditCardFill(Autofill):
 
         Attributes
         ----------
-
-        autofill_popup_obj: AutofillPopup
-            An instance of autofill popup object
 
         credit_card_sample_data: CreditCardBase
             An instance of the fake generated data
@@ -379,20 +354,17 @@ class CreditCardFill(Autofill):
         """
 
         # updating the profile accordingly
-        self.update_credit_card_information(autofill_popup_obj, field_name, new_data)
+        self.update_credit_card_information(field_name, new_data)
 
         # autofill data
-        self.select_autofill_option(autofill_popup_obj, field_name)
+        self.select_autofill_option(field_name)
 
         # verifying the correct data
         self.verify_credit_card_form_data(credit_card_sample_data)
         return self
 
     def check_cc_autofill_preview_for_field(
-        self,
-        field_label: str,
-        credit_card_sample_data: CreditCardBase,
-        autofill_popup: AutofillPopup,
+        self, field_label: str, credit_card_sample_data: CreditCardBase
     ):
         """
         Check that hovering over a field autofill option will prefill the other fields.
@@ -400,19 +372,14 @@ class CreditCardFill(Autofill):
         Arguments:
             field_label: str,
             credit_card_sample_data: credit card autofill sample data,
-            autofill_popup: AutofillPopup instance
         """
         self.double_click("form-field", labels=[field_label])
-        autofill_popup.ensure_autofill_dropdown_visible()
-        autofill_popup.hover("select-form-option")
-        self.verify_autofill_cc_data_on_hover(credit_card_sample_data, autofill_popup)
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.hover("select-form-option")
+        self.verify_autofill_cc_data_on_hover(credit_card_sample_data)
 
     def update_cc(
-        self,
-        util: Utilities,
-        credit_card_sample_data: CreditCardBase,
-        autofill_popup_obj: AutofillPopup,
-        field: str,
+        self, credit_card_sample_data: CreditCardBase, field: str
     ) -> Autofill:
         """
         Generates a new data for credit card according to field given, updates the credit card information in the form.
@@ -423,50 +390,45 @@ class CreditCardFill(Autofill):
             "cc-exp-year": "expiration_year",
             "cc-number": "card_number",
         }
-        new_cc_data = getattr(util.fake_credit_card_data(), cc_mapping[field])
+
+        new_cc_data = getattr(self.util.fake_credit_card_data(), cc_mapping[field])
         while new_cc_data == getattr(credit_card_sample_data, cc_mapping[field]):
-            new_cc_data = getattr(util.fake_credit_card_data(), cc_mapping[field])
+            new_cc_data = getattr(self.util.fake_credit_card_data(), cc_mapping[field])
+
         setattr(credit_card_sample_data, cc_mapping[field], new_cc_data)
 
-        self.verify_updated_information(
-            autofill_popup_obj,
-            credit_card_sample_data,
-            field,
-            new_cc_data,
-        )
+        self.verify_updated_information(credit_card_sample_data, field, new_cc_data)
         return self
 
-    def verify_clear_form_all_fields(self, autofill_popup_obj: AutofillPopup):
+    def verify_clear_form_all_fields(self):
         """
         Clears all fields in the form by triggering the clear action from each field in turn. After each clear
         action, verifies that all fields are empty, regardless of which field initiated the clear.
         """
         for field in self.fields:
             self.click_on("form-field", labels=[field])
-            autofill_popup_obj.click_autofill_form_option()
+            self.autofill_popup.click_autofill_form_option()
             self.click_on("form-field", labels=[field])
-            autofill_popup_obj.click_clear_form_option()
+            self.autofill_popup.click_clear_form_option()
             # Verify that all fields are blank
             for f in self.fields:
                 self.element_attribute_contains("form-field", "value", "", labels=[f])
             # Verify that the 'cc-csc' field does not trigger an autofill dropdown
             self.double_click("form-field", labels=["cc-csc"])
-            autofill_popup_obj.ensure_autofill_dropdown_not_visible()
+            self.autofill_popup.ensure_autofill_dropdown_not_visible()
 
-    def autofill_and_clear_all_fields(
-        self, autofill_popup: AutofillPopup, credit_card_data: CreditCardBase
-    ):
+    def autofill_and_clear_all_fields(self, credit_card_data: CreditCardBase):
         """
         For each field select autofill option and clear.
         """
         for field in self.fields:
             # press autofill panel for a field.
-            self.select_autofill_option(autofill_popup, field)
+            self.select_autofill_option(field)
             # verify cc data in form.
             self.verify_credit_card_form_data(credit_card_data)
             # Clear the fields after verification
             self.click_on("form-field", labels=[field])
-            autofill_popup.click_clear_form_option()
+            self.autofill_popup.click_clear_form_option()
 
     def verify_field_yellow_highlights(self, expected_highlighted_fields=None):
         """
@@ -493,7 +455,9 @@ class LoginAutofill(Autofill):
         Subclass of the Login Autofill Form where you can interact with the Login Form
         """
 
-        def __init__(self, parent: "LoginAutofill") -> None:
+        def __init__(self, driver: Firefox, parent: "LoginAutofill", **kwargs) -> None:
+            super().__init__(driver, **kwargs)
+            self.driver = driver
             self.parent = parent
             self.username_field = None
             self.password_field = None
@@ -538,6 +502,13 @@ class AddressFill(Autofill):
         "tel",
     ]
 
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.driver = driver
+        self.ba = BrowserActions(self.driver)
+        self.util = Utilities()
+        self.autofill_popup = AutofillPopup(self.driver)
+
     def save_information_basic(self, autofill_info: AutofillAddressBase):
         """
         Saves information passed in, in the form of an AutofillAddressBase object.
@@ -549,7 +520,6 @@ class AddressFill(Autofill):
 
         autofill_info: AutofillAddressBase
         """
-        ba = BrowserActions(self.driver)
         fields = {
             "name": autofill_info.name,
             "organization": autofill_info.organization,
@@ -564,9 +534,9 @@ class AddressFill(Autofill):
 
         for field, value in fields.items():
             if value is not None:
-                self.fill_input_element(ba, field, value)
+                self._fill_input_element(field, value)
 
-        self.click_form_button("submit")
+        self._click_form_button("submit")
 
     @BasePage.context_chrome
     def verify_autofill_displayed(self):
@@ -579,9 +549,7 @@ class AddressFill(Autofill):
     def check_autofill_preview_for_field(
         self,
         field_label: str,
-        address_sample_data,
-        autofill_popup,
-        util: Utilities,
+        address_sample_data: AutofillAddressBase,
         region: str = None,
     ):
         """
@@ -590,17 +558,15 @@ class AddressFill(Autofill):
         Arguments:
             field_label: str,
             address_sample_data: address autofill sample data,
-            autofill_popup: AutofillPopup instance
-            util: Utilities instance
             region: country code in use
         """
         # Skip fields that don't appear in the dropdown for certain regions.
         if field_label == "address-level1" and region in ["DE", "FR"]:
             return
         self.double_click("form-field", labels=[field_label])
-        autofill_popup.ensure_autofill_dropdown_visible()
-        autofill_popup.hover("select-form-option")
-        self.verify_autofill_data_on_hover(address_sample_data, autofill_popup, util)
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.hover("select-form-option")
+        self.verify_autofill_data_on_hover(address_sample_data)
 
     def send_keys_to_element(self, name: str, label: str, keys: str):
         """
@@ -612,13 +578,12 @@ class AddressFill(Autofill):
         elem.clear()
         elem.send_keys(new_value)
 
-    def verify_autofill_data(self, autofill_data: AutofillAddressBase, util: Utilities):
+    def verify_autofill_data(self, autofill_data: AutofillAddressBase):
         """
         Verifies that the autofill data matches the expected values.
 
         Arguments:
             autofill_data: AutofillAddressBase object containing expected data.
-            util: Utilities instance to normalize values.
         """
         field_mapping = {
             "Name": "name-field",
@@ -648,31 +613,24 @@ class AddressFill(Autofill):
             "ZIP Code": autofill_data.postal_code,
             "Country": autofill_data.country_code,
             "Email": autofill_data.email,
-            "Phone": util.normalize_regional_phone_numbers(
+            "Phone": self.util.normalize_regional_phone_numbers(
                 autofill_data.telephone, autofill_data.country_code
             ),
         }
 
-        self.verify_data(actual_values, expected_values, util)
+        self.verify_data(actual_values, expected_values)
 
     @BasePage.context_chrome
-    def verify_autofill_data_on_hover(
-        self,
-        autofill_data: AutofillAddressBase,
-        autofill_popup: AutofillPopup,
-        util: Utilities,
-    ):
+    def verify_autofill_data_on_hover(self, autofill_data: AutofillAddressBase):
         """
         Verifies that the autofill preview data matches the expected values when hovering
 
         Arguments:
             autofill_data: AutofillAddressBase object containing expected data.
-            autofill_popup: AutofillPopup object to get element from dropdown.
-            util: Utilities instance to normalize values.
         """
 
         # get preview data from hovering through the chrome context
-        element = autofill_popup.get_element("address-preview-form-container")
+        element = self.autofill_popup.get_element("address-preview-form-container")
         # get every span element that is a child of the form and is not empty
         children = [
             x.get_attribute("innerHTML")
@@ -681,20 +639,19 @@ class AddressFill(Autofill):
         ]
 
         # normalize phone number data
-        autofill_data.telephone = util.normalize_regional_phone_numbers(
+        autofill_data.telephone = self.util.normalize_regional_phone_numbers(
             autofill_data.telephone, autofill_data.country_code
         )
         for expected in children:
             if expected[0] == "+":
-                expected = util.normalize_phone_number(expected)
+                expected = self.util.normalize_phone_number(expected)
             if len(expected) == 2 and expected != autofill_data.country_code:
                 continue
             assert unescape(expected) in autofill_data.__dict__.values(), (
                 f"Mismatched data: {expected} not in {autofill_data}."
             )
 
-    @staticmethod
-    def verify_data(actual_values, expected_values, util: Utilities):
+    def verify_data(self, actual_values, expected_values):
         """Verify data between actual and expected values"""
         # Validate each field
         for field, expected in expected_values.items():
@@ -706,7 +663,7 @@ class AddressFill(Autofill):
 
             # Normalize phone numbers before comparison
             if field == "Phone":
-                actual = util.normalize_phone_number(actual)
+                actual = self.util.normalize_phone_number(actual)
 
             assert actual == expected, (
                 f"Mismatch in {field}: Expected '{expected}', but got '{actual}'"
@@ -727,60 +684,40 @@ class AddressFill(Autofill):
             expected_highlighted_fields=expected_highlighted_fields,
         )
 
-    def verify_autofill_dropdown_addresses(
-        self, autofill_popup: AutofillPopup, region=None, fields_to_test=None
-    ):
+    def verify_autofill_dropdown_addresses(self, region=None, fields_to_test=None):
         """Verifies autofill dropdown for address fields."""
         if fields_to_test is None:
             fields_to_test = self.fields
 
         return self.verify_field_autofill_dropdown(
-            autofill_popup=autofill_popup, fields_to_test=fields_to_test, region=region
+            fields_to_test=fields_to_test, region=region
         )
 
     def fill_and_save(
-        self,
-        util: Utilities,
-        autofill_popup_obj: AutofillPopup,
-        region: str = "US",
-        door_hanger: bool = True,
+        self, region: str = "US", door_hanger: bool = True
     ) -> AutofillAddressBase:
         """
         Fills an address form with randomly generated data and interacts with the autofill popup.
 
         Arguments:
-            util: An instance of the Utilities class
-            autofill_popup_obj: An instance of the AutofillPopup class used to interact with the autofill popup
             region: Country code in use
             door_hanger: check to click save on door hanger
         """
-        fake_address_autofill_data = util.fake_autofill_data(region)
+        fake_address_autofill_data = self.util.fake_autofill_data(region)
         self.save_information_basic(fake_address_autofill_data)
         if door_hanger:
-            autofill_popup_obj.click_doorhanger_button("save")
+            self.autofill_popup.click_doorhanger_button("save")
         return fake_address_autofill_data
 
     def autofill_and_verify(
-        self,
-        address_autofill_popup: AutofillPopup,
-        field_label: str,
-        address_autofill_data: AutofillAddressBase,
-        util: Utilities,
+        self, field_label: str, address_autofill_data: AutofillAddressBase
     ):
         """
         Autofills a form field, verifies the data, and clears it if necessary.
-        Parameters:
-        ----------
-        address_autofill : AddressFill
-            The address autofill handler.
-        address_autofill_popup : AutofillPopup
-            The popup handler for autofill suggestions.
-        field_label : str
-            The label of the field being autofilled.
-        address_autofill_data : AutofillAddressBase
-            The generated autofill data for verification.
-        region : str
-            The region code to handle localization.
+
+        Arguments:
+            field_label : The label of the field being autofilled.
+            address_autofill_data : The generated autofill data for verification.
         """
         # Skip address-level1 (State) selection for DE and FR
         if field_label == "address-level1" and address_autofill_data.country_code in [
@@ -791,16 +728,16 @@ class AddressFill(Autofill):
 
         # Double-click a field and choose the first element from the autocomplete dropdown
         self.double_click("form-field", labels=[field_label])
-        address_autofill_popup.ensure_autofill_dropdown_visible()
-        address_autofill_popup.select_nth_element(1)
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.select_nth_element(1)
 
         # Verify autofill data
-        self.verify_autofill_data(address_autofill_data, util)
+        self.verify_autofill_data(address_autofill_data)
 
         # Clear form autofill
         self.double_click("form-field", labels=[field_label])
-        address_autofill_popup.ensure_autofill_dropdown_visible()
-        address_autofill_popup.click_clear_form_option()
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.click_clear_form_option()
 
     def verify_all_fields_cleared(self):
         """
@@ -829,25 +766,14 @@ class AddressFill(Autofill):
             assert not value, f"Field '{field}' is not empty: Found '{value}'"
 
     def clear_and_verify(
-        self,
-        address_autofill_popup: AutofillPopup,
-        field_label: str,
-        address_autofill_data: AutofillAddressBase,
+        self, field_label: str, address_autofill_data: AutofillAddressBase
     ):
         """
         Autofills a form field, clears it, and verifies that it is empty.
-        Parameters:
-        ----------
-        address_autofill : AddressFill
-            The address autofill handler.
-        address_autofill_popup : AutofillPopup
-            The popup handler for autofill suggestions.
-        field_label : str
-            The label of the field being autofilled.
-        address_autofill_data : dict
-            The generated autofill data for verification.
-        region : str
-            The region code to handle localization.
+
+        Arguments:
+            field_label : The label of the field being autofilled.
+            address_autofill_data : The generated autofill data for verification.
         """
         # Skip address-level1 (State) selection for DE and FR
         if field_label == "address-level1" and address_autofill_data.country_code in [
@@ -858,13 +784,13 @@ class AddressFill(Autofill):
 
         # Double-click a field and choose the first element from the autocomplete dropdown
         self.double_click("form-field", labels=[field_label])
-        address_autofill_popup.ensure_autofill_dropdown_visible()
-        address_autofill_popup.select_nth_element(1)
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.select_nth_element(1)
 
         # Clear form autofill
         self.double_click("form-field", labels=[field_label])
-        address_autofill_popup.ensure_autofill_dropdown_visible()
-        address_autofill_popup.click_clear_form_option()
+        self.autofill_popup.ensure_autofill_dropdown_visible()
+        self.autofill_popup.click_clear_form_option()
 
         # Verify all fields are cleared
         self.verify_all_fields_cleared()

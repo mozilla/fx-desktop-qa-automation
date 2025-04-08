@@ -29,10 +29,10 @@ def test_autofill_four_fields(
     credit_card_autofill.open()
 
     # fill autofill forms with fake cc data and submit
-    credit_card_data = credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_data = credit_card_autofill.fill_and_save()
 
     # select autofill dropdown option
-    credit_card_autofill.select_autofill_option(autofill_popup, "cc-name")
+    credit_card_autofill.select_autofill_option("cc-name")
 
     # verify cc data is correct
     credit_card_autofill.verify_credit_card_form_data(credit_card_data)

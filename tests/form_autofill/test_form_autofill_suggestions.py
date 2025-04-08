@@ -27,9 +27,7 @@ def test_form_autofill_suggestions(
     """
     credit_card_autofill.open()
     # create fake data, two profiles
-    sample_data = [
-        credit_card_autofill.fill_and_save(util, autofill_popup) for _ in range(2)
-    ]
+    sample_data = [credit_card_autofill.fill_and_save() for _ in range(2)]
     # reverse data list to match form options
     sample_data.reverse()
 

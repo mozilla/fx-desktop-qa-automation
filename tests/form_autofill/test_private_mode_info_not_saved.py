@@ -45,7 +45,7 @@ def test_private_mode_info_not_saved(
     address_autofill.open()
 
     # Create fake data, fill in the form, and press submit, no doorhanger because of private mode
-    address_autofill.fill_and_save(util, autofill_popup, region, door_hanger=False)
+    address_autofill.fill_and_save(region, door_hanger=False)
     autofill_popup.ensure_autofill_dropdown_not_visible()
 
     # open about:prefs#privacy and switch to saved addresses dialog panel

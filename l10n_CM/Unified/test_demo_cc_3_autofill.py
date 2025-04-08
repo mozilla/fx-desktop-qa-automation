@@ -26,10 +26,10 @@ def test_cc_autofill_from_dropdown(
     credit_card_fill_obj.open()
 
     # Create and save fake credit card data
-    credit_card_data = credit_card_fill_obj.fill_and_save(util, autofill_popup)
+    credit_card_data = credit_card_fill_obj.fill_and_save()
 
     # Autocomplete and clear all fields
-    credit_card_fill_obj.autofill_and_clear_all_fields(autofill_popup, credit_card_data)
+    credit_card_fill_obj.autofill_and_clear_all_fields(credit_card_data)
 
     # Step 5: Click the csc field (cc-csc), ensure autofill popup is not present
     credit_card_fill_obj.click_on("form-field", labels=["cc-csc"])  # Use single click

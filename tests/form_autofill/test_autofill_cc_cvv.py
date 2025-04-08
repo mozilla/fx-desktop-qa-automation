@@ -35,7 +35,7 @@ def test_autofill_cc_cvv(
     credit_card_autofill.open()
 
     # Create fake data, fill it in and press submit and save on the door hanger
-    credit_card_sample_data = credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_sample_data = credit_card_autofill.fill_and_save()
 
     # Navigate to prefs
     about_prefs_privacy.open()
