@@ -179,15 +179,34 @@ class AboutLogins(BasePage):
         else:
             assert expected_logins == actual_logins
 
-    def remove_password_csv(self, directory):
-        # Delete password.csv, if there is one, in the given subdirectory of home
-        home = os.path.expanduser("~")
-        sub_dir = os.path.join(home, directory)
-        passwords_csv = os.path.join(sub_dir, "passwords.csv")
-        for file in os.listdir(sub_dir):
-            delete_files_regex = re.compile(r"\bpasswords.csv\b")
-            if delete_files_regex.match(file):
-                os.remove(passwords_csv)
+    def remove_password_csv(self, directories):
+        for directory in directories:
+            # Delete password.csv, if there is one, in the given subdirectory of home
+            home = os.path.expanduser("~")
+            sub_dir = os.path.join(home, directory)
+            passwords_csv = os.path.join(sub_dir, "passwords.csv")
+            for file in os.listdir(sub_dir):
+                delete_files_regex = re.compile(r"\bpasswords.csv\b")
+                if delete_files_regex.match(file):
+                    os.remove(passwords_csv)
+
+    def check_csv_file_presence(self) -> str:
+        # Since CI machines seem to be affected by other tests, the default export directory can
+        # change randomly. This checks if the passwords.csv file exists in any of the directories
+        # we've seen the default get set to.
+
+        subdirectories = ["Downloads", "Documents"]
+        csv_file = ""  # Return empty if no path to the csv file is found
+        for directory in subdirectories:
+            home = os.path.expanduser("~")
+            sub_dir = os.path.join(home, directory)
+            csv_file_path = os.path.join(sub_dir, "passwords.csv")
+            if os.path.exists(csv_file_path):
+                csv_file = sub_dir + "/passwords.csv"
+                break
+            else:
+                continue
+        return csv_file
 
 
 class AboutPrivatebrowsing(BasePage):

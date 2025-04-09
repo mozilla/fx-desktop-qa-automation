@@ -1,5 +1,5 @@
 import os
-import time
+from time import sleep
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -22,9 +22,9 @@ def test_password_csv_export(driver_and_saved_logins, sys_platform, opt_ci):
     about_logins = AboutLogins(driver)
     keyboard = Controller()
 
-    # Ensure the export target folder doesn't contain a passwords.csv file
-    about_logins.remove_password_csv("Downloads")
-    about_logins.remove_password_csv("Documents")
+    # Ensure the possible export target folders don't contain a passwords.csv file.
+    # Doing so ensures we won't get the system dialog for choosing to overwrite existing file or not.
+    about_logins.remove_password_csv(["Downloads", "Documents"])
 
     # Click on buttons to export passwords
     about_logins.open()
@@ -33,26 +33,16 @@ def test_password_csv_export(driver_and_saved_logins, sys_platform, opt_ci):
     about_logins.click_on("continue-export-button")
 
     # Export the password file
-    time.sleep(2)
+    sleep(3)
     keyboard.tap(Key.enter)
-    time.sleep(3)
+    sleep(3)
 
-    # Since CI machines seem to be affected by other tests, the default export directory can
-    # change randomly. This checks if the file exists in any of the directories we've seen
-    # the default get set to.
-    subdirectories = ["Downloads", "Documents"]
-    for directory in subdirectories:
-        home = os.path.expanduser("~")
-        sub_dir = os.path.join(home, directory)
-        csv_file = os.path.join(sub_dir, "passwords.csv")
-        try:
-            if os.path.exists(csv_file):
-                break
-        except ValueError as e:
-            print(f"Caught error: {e}, continuing to next iteration")
-            continue
-        print(f"Successfully completed iteration with sudirectories = {subdirectories}")
-
-    # Delete the password.csv file created in possible directories
-    about_logins.remove_password_csv("Downloads")
-    about_logins.remove_password_csv("Documents")
+    try:
+        csv_file_location = about_logins.check_csv_file_presence()
+        if os.path.exists(csv_file_location):
+            print("passwords.csv file found")
+        else:
+            pytest.fail("passwords.csv file was not found!")
+    finally:
+        # Delete the password.csv file created in possible directories
+        about_logins.remove_password_csv(["Downloads", "Documents"])
