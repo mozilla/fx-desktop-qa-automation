@@ -15,6 +15,23 @@ class GenericPage(BasePage):
 
     URL_TEMPLATE = "{url}"
 
+    def navigate_dialog_to_location(self, location: str) -> BasePage:
+        sleep(1.5)
+        from pynput.keyboard import Controller, Key
+
+        keyboard = Controller()
+        if self.sys_platform() == "Darwin" or self.sys_platform() == "Linux":
+            keyboard.type("/")
+            sleep(1.5)
+            keyboard.type(location.lstrip("/"))
+        else:
+            sleep(1.5)
+            keyboard.type(location)
+        sleep(1)
+        keyboard.press(Key.enter)
+        sleep(1)
+        keyboard.press(Key.enter)
+
 
 class GenericPdf(BasePage):
     """

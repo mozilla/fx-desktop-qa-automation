@@ -45,6 +45,10 @@ def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):
     image_path = Path("data") / IMAGE_FILE_NAME
     pdf_viewer.add_image(str(image_path.absolute()), sys_platform)
 
+    sleep(5)
+    with open("pdf.html", "w") as fh:
+        fh.write(driver.page_source)
+
     pdf_viewer.element_visible(ADDED_IMAGE_ELEMENT)
     sleep(0.5)
 
