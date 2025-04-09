@@ -167,7 +167,7 @@ jobs:
       - name: Run Smoke Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
-          FX_EXECUTABLE: /Volumes/Firefox/Firefox.app/Contents/MacOS/firefox
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
