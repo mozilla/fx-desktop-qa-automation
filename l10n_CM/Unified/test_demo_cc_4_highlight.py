@@ -41,4 +41,4 @@ def test_cc_yellow_highlight(
     autofill_popup.click_autofill_form_option()
 
     # Verify that all fields have the yellow highlight, except for the cc-csv field
-    credit_card_autofill.verify_field_yellow_highlights()
+    credit_card_autofill.verify_field_highlight()

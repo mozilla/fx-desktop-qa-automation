@@ -172,14 +172,14 @@ class Autofill(BasePage):
             )
 
         if fields_to_test is None:
-            fields_to_test = self.field_mapping.keys()
+            fields_to_test = self.fields
 
         if region in ["DE", "FR"] and "address-level1" in fields_to_test:
             fields_to_test.remove("address-level1")
 
         if expected_highlighted_fields is None:
             # By default, everything in fields_to_test is expected to be highlighted
-            expected_highlighted_fields = fields_to_test[:]
+            expected_highlighted_fields = fields_to_test
 
         if extra_fields:
             fields_to_actually_check = fields_to_test + extra_fields
