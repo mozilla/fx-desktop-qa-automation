@@ -186,9 +186,16 @@ class Autofill(BasePage):
         else:
             fields_to_actually_check = fields_to_test
 
-        is_yellow_highlight = lambda rgb: (
-            rgb[0] >= 250 and rgb[1] >= 250 and 180 < rgb[2] < 220
-        )
+        def is_yellow_highlight(rgb_tuple):
+            """
+            Returns True if the color tuple is bright yellow-ish.
+            """
+            if len(rgb_tuple) == 3:
+                r, g, b = rgb_tuple
+            else:
+                r, g, b, *_ = rgb_tuple
+
+            return (r >= 250) and (g >= 250) and (180 < b < 220)
 
         for field_name in fields_to_actually_check:
             # Focus the field so the highlight is visible
