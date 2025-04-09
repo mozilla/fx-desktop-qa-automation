@@ -30,4 +30,4 @@ def test_demo_ad_clear_tel_email(
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.clear_and_verify(field, region)
+        address_autofill.clear_and_verify(field, region=region)

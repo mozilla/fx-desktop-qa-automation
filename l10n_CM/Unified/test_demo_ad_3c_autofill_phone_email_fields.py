@@ -30,4 +30,4 @@ def test_demo_ad_autofill_phone_email(
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.autofill_and_verify(field, address_autofill_data)
+        address_autofill.clear_and_verify(field, address_autofill_data)
