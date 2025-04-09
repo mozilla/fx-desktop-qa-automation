@@ -68,6 +68,30 @@ class Autofill(BasePage):
                 self._fill_input_element(field_name, value)
         self._click_form_button("submit")
 
+    def update_form_data(
+        self,
+        sample_data: AutofillAddressBase | CreditCardBase,
+        field: str,
+        value: str | int,
+    ):
+        """
+        Update the form field with the new value.
+
+        Arguments:
+            sample_data: sample data instance used to verify change.
+            field: field being changed.
+            value: value being added.
+        """
+        # updating the profile accordingly
+        self.update_and_save(field, value)
+
+        # autofill data
+        self.select_autofill_option(field)
+
+        # verifying the correct data
+        self.verify_form_data(sample_data)
+        return self
+
     def verify_form_data(self, sample_data: CreditCardBase | AutofillAddressBase):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
@@ -247,6 +271,24 @@ class Autofill(BasePage):
             self.autofill_popup.click_doorhanger_button("save")
         return autofill_data
 
+    def update_and_save(self, field: str, value: str | int, door_hanger: bool = True):
+        """
+        Update form with new field value and save.
+
+        Arguments:
+            field: field label.
+            value: new value to be updated.
+            door_hanger: bool to indication interaction with door_hanger.
+        """
+        self._fill_input_element(field, value)
+        self._click_form_button("submit")
+
+        if door_hanger:
+            if field == "cc-number":
+                self.autofill_popup.click_doorhanger_button("save")
+            else:
+                self.autofill_popup.click_doorhanger_button("update")
+
     def check_autofill_preview_for_field(
         self,
         field_label: str,
@@ -295,6 +337,7 @@ class Autofill(BasePage):
     ):
         """
         Autofills a form field, clears it, and verifies that it is empty.
+        If sample data is present, will verify that data is filled correctly.
 
         Arguments:
             field_label : The label of the field being autofilled.
@@ -325,6 +368,33 @@ class Autofill(BasePage):
 
         # Verify all fields are cleared
         self.verify_all_fields_cleared()
+
+    def generate_field_data(
+        self, sample_data: AutofillAddressBase | CreditCardBase, field: str, region: str
+    ) -> str | int:
+        """
+        Generates a new data for sample data according to field given, updates the information in the form.
+
+        Arguments:
+            sample_data: sample data instance being updated
+            field: field being updated
+            region: region being tested
+        """
+        faker_method = (
+            self.util.fake_credit_card_data
+            if self.__class__ == CreditCardFill
+            else self.util.fake_autofill_data
+        )
+        new_sample_data_value = getattr(
+            faker_method(country_code=region), self.field_mapping[field]
+        )
+        while new_sample_data_value == getattr(sample_data, self.field_mapping[field]):
+            new_sample_data_value = getattr(
+                faker_method(country_code=region), self.field_mapping[field]
+            )
+
+        setattr(sample_data, self.field_mapping[field], new_sample_data_value)
+        return new_sample_data_value
 
 
 class AddressFill(Autofill):
@@ -454,91 +524,6 @@ class CreditCardFill(Autofill):
                 assert value in expected_values, (
                     f"Mismatched data: {(field, value)} not in {expected_values}."
                 )
-
-    def update_field(self, field: str, field_data: str):
-        """
-        Updates a field in the form with given data.
-
-        ...
-
-        Parameters
-        ----------
-
-        field: str
-            The name of the field to fill
-
-        field_data: str
-            The data to put in the field
-        """
-        self._fill_input_element(field, field_data)
-        self._click_form_button("submit")
-
-    def update_credit_card_information(
-        self, field_name: str, field_data: str, save_card=False
-    ):
-        """
-        Updates the credit card based on field that is to be changed by first autofilling everything then updating
-        the field of choice then pressing submit and handling the popup.
-        """
-        self.update_field(field_name, field_data)
-        self._click_form_button("submit")
-
-        if save_card or field_name == "cc-number":
-            self.autofill_popup.click_on("doorhanger-save-button")
-        else:
-            self.autofill_popup.click_on("update-card-info-popup-button")
-
-    def verify_updated_information(
-        self, credit_card_sample_data: CreditCardBase, field_name: str, new_data: str
-    ) -> Autofill:
-        """
-        Verifies that there is only 1 profile in the popup panel, updates the credit card information and verifies all
-        the fields according to the passed in credit card information object
-
-        Attributes
-        ----------
-
-        credit_card_sample_data: CreditCardBase
-            An instance of the fake generated data
-
-        field_name: str
-            The name of the field to update
-
-        new_data: str
-            The data to update the field with
-        """
-
-        # updating the profile accordingly
-        self.update_credit_card_information(field_name, new_data)
-
-        # autofill data
-        self.select_autofill_option(field_name)
-
-        # verifying the correct data
-        self.verify_form_data(credit_card_sample_data)
-        return self
-
-    def update_cc(
-        self, credit_card_sample_data: CreditCardBase, field: str
-    ) -> Autofill:
-        """
-        Generates a new data for credit card according to field given, updates the credit card information in the form.
-        """
-        cc_mapping = {
-            "cc-name": "name",
-            "cc-exp-month": "expiration_month",
-            "cc-exp-year": "expiration_year",
-            "cc-number": "card_number",
-        }
-
-        new_cc_data = getattr(self.util.fake_credit_card_data(), cc_mapping[field])
-        while new_cc_data == getattr(credit_card_sample_data, cc_mapping[field]):
-            new_cc_data = getattr(self.util.fake_credit_card_data(), cc_mapping[field])
-
-        setattr(credit_card_sample_data, cc_mapping[field], new_cc_data)
-
-        self.verify_updated_information(credit_card_sample_data, field, new_cc_data)
-        return self
 
 
 class LoginAutofill(Autofill):

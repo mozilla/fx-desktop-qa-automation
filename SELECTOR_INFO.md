@@ -1383,7 +1383,7 @@ Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
 Selector Name: doorhanger-save-button
-Selector Data: button[label='Save'].popup-notification-primary-button
+Selector Data: button[label^='Save'].popup-notification-primary-button
 Description: The "Save" button 
 Location: Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar
 Path to .json: modules/data/autofill_popup.components.json
@@ -1418,7 +1418,7 @@ Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
 Selector Name: doorhanger-update-button
-Selector Data: "button[label='Update']"
+Selector Data: "button[label^='Update']"
 Description: The "Update" button 
 Location: Inside the autofill save addreses doorhanger that is triggered in navigation bar
 Path to .json: modules/data/autofill_popup.components.json
