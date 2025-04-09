@@ -38,4 +38,4 @@ def test_dropdown_presence_credit_card(
     credit_card_fill_obj.open()
 
     # Verify autofill dropdown is displayed only for the eligible fields
-    credit_card_fill_obj.verify_autofill_dropdown_credit_card()
+    credit_card_fill_obj.verify_field_autofill_dropdown()

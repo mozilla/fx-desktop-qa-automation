@@ -37,6 +37,6 @@ def test_form_autofill_suggestions(
     # verify form data in reverse (newer options are at the top)
     for idx in range(1, 3):
         autofill_popup.select_nth_element(idx)
-        credit_card_autofill.verify_credit_card_form_data(sample_data[idx - 1])
+        credit_card_autofill.verify_form_data(sample_data[idx - 1])
         credit_card_autofill.click_on("form-field", labels=["cc-name"])
         autofill_popup.click_clear_form_option()

@@ -29,6 +29,6 @@ def test_dropdown_presence_email_phone_field(
 
     fields_to_test = ["email", "tel"]
 
-    address_autofill.verify_autofill_dropdown_addresses(
+    address_autofill.verify_field_autofill_dropdown(
         region=region, fields_to_test=fields_to_test
     )

@@ -35,4 +35,4 @@ def test_clear_form_credit_card(
     credit_card_autofill.select_autofill_option("cc-name")
     credit_card_autofill.get_element("form-field", labels=["cc-name"]).click()
     autofill_popup.click_clear_form_option()
-    autofill_popup.verify_autofill_displayed()
+    autofill_popup.ensure_autofill_dropdown_visible()

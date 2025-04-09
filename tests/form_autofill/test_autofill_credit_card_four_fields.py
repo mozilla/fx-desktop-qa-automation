@@ -35,4 +35,4 @@ def test_autofill_four_fields(
     credit_card_autofill.select_autofill_option("cc-name")
 
     # verify cc data is correct
-    credit_card_autofill.verify_credit_card_form_data(credit_card_data)
+    credit_card_autofill.verify_form_data(credit_card_data)

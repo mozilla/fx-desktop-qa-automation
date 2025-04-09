@@ -30,6 +30,6 @@ def test_dropdown_presence_name_organization(
     # Verify that the name and organization fields have the autofill dropdown present
     fields_to_test = ["name", "organization"]
 
-    address_autofill.verify_autofill_dropdown_addresses(
+    address_autofill.verify_field_autofill_dropdown(
         region=region, fields_to_test=fields_to_test
     )

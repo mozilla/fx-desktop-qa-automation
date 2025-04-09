@@ -41,6 +41,8 @@ def test_address_yellow_highlight_address_fields(
     ]
 
     # Verify the address fields are highlighted
-    address_autofill.verify_field_yellow_highlights(
-        region, fields_to_test=field_to_test, expected_highlighted_fields=field_to_test
+    address_autofill.verify_field_highlight(
+        fields_to_test=field_to_test,
+        expected_highlighted_fields=field_to_test,
+        region=region,
     )

@@ -38,4 +38,5 @@ def test_cc_clear_form(
 
     # Open credit card form page, clear form and verify all fields are empty
     credit_card_fill_obj.open()
-    credit_card_fill_obj.verify_clear_form_all_fields()
+    for field in credit_card_fill_obj.fields:
+        credit_card_fill_obj.clear_and_verify(field, region)

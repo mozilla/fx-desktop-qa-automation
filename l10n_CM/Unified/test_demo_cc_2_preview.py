@@ -45,7 +45,7 @@ def test_cc_preview(
     # Hover over each field and check data preview
     fields_to_test = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
     for field in fields_to_test:
-        credit_card_fill_obj.check_cc_autofill_preview_for_field(
+        credit_card_fill_obj.check_autofill_preview_for_field(
             field, credit_card_sample_data
         )
 

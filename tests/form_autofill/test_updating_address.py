@@ -33,14 +33,14 @@ def test_update_address(
     address_autofill.open()
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    address_autofill.fill_and_save(region)
+    sample_data = address_autofill.fill_and_save(region)
 
     # Double-click on the name field to trigger the autocomplete dropdown
     address_autofill.select_autofill_option("name")
 
     # Add a middle name inside the Name field
     address_autofill.click_on("form-field", labels=["name"])
-    address_autofill.send_keys_to_element("form-field", "name", " Doe" + Keys.ENTER)
+    address_autofill.fill_and_submit({"name": sample_data.name + " Doe"})
 
     # Save the updated address
     autofill_popup.click_doorhanger_button("update")
