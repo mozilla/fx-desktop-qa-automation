@@ -1,5 +1,4 @@
 ---
-
 jobs:
   - name: new-beta-qa
     job:
@@ -7,30 +6,30 @@ jobs:
       treeherder-symbol: STARb
       target-tasks-method: new_beta_qa
     when:
-      - {hour: 0, minute: 15}
-      - {hour: 1, minute: 15}
-      - {hour: 2, minute: 15}
-      - {hour: 3, minute: 15}
-      - {hour: 4, minute: 15}
-      - {hour: 5, minute: 15}
-      - {hour: 6, minute: 15}
-      - {hour: 7, minute: 15}
-      - {hour: 8, minute: 15}
-      - {hour: 9, minute: 15}
-      - {hour: 10, minute: 15}
-      - {hour: 11, minute: 15}
-      - {hour: 12, minute: 15}
-      - {hour: 13, minute: 45}
-      - {hour: 14, minute: 15}
-      - {hour: 15, minute: 15}
-      - {hour: 16, minute: 15}
-      - {hour: 17, minute: 15}
-      - {hour: 18, minute: 15}
-      - {hour: 19, minute: 15}
-      - {hour: 20, minute: 15}
-      - {hour: 21, minute: 15}
-      - {hour: 22, minute: 15}
-      - {hour: 23, minute: 15}
+      - { hour: 0, minute: 15 }
+      - { hour: 1, minute: 15 }
+      - { hour: 2, minute: 15 }
+      - { hour: 3, minute: 15 }
+      - { hour: 4, minute: 15 }
+      - { hour: 5, minute: 15 }
+      - { hour: 6, minute: 15 }
+      - { hour: 7, minute: 15 }
+      - { hour: 8, minute: 15 }
+      - { hour: 9, minute: 15 }
+      - { hour: 10, minute: 15 }
+      - { hour: 11, minute: 15 }
+      - { hour: 12, minute: 15 }
+      - { hour: 13, minute: 15 }
+      - { hour: 14, minute: 15 }
+      - { hour: 15, minute: 15 }
+      - { hour: 16, minute: 15 }
+      - { hour: 17, minute: 15 }
+      - { hour: 18, minute: 15 }
+      - { hour: 19, minute: 15 }
+      - { hour: 20, minute: 15 }
+      - { hour: 21, minute: 15 }
+      - { hour: 22, minute: 15 }
+      - { hour: 23, minute: 15 }
 
   - name: new-devedition-qa
     job:
@@ -38,6 +37,5 @@ jobs:
       treeherder-symbol: STARd
       target-tasks-method: new_devedition_qa
     when:
-      - {hour: 11, minute: 15}
-      - {hour: 19, minute: 30}
-      - {hour: 23, minute: 15}
+      - { hour: 11, minute: 15 }
+      - { hour: 23, minute: 15 }
