@@ -23,7 +23,7 @@ def test_demo_ad_clear_tel_email(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(region)
+    address_autofill.fill_and_save(region)
 
     # List of field labels to be autofilled and verified
     fields_to_test = ["email", "tel"]
