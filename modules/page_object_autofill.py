@@ -538,9 +538,7 @@ class LoginAutofill(Autofill):
         Subclass of the Login Autofill Form where you can interact with the Login Form
         """
 
-        def __init__(self, driver: Firefox, parent: "LoginAutofill", **kwargs) -> None:
-            super().__init__(driver, **kwargs)
-            self.driver = driver
+        def __init__(self, parent: "LoginAutofill") -> None:
             self.parent = parent
             self.username_field = None
             self.password_field = None
