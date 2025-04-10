@@ -4,9 +4,8 @@ import re
 import time
 
 import pytest
-from pynput.keyboard import Controller, Key
 
-from modules.page_object import AboutLogins
+from modules.page_object import AboutLogins, GenericPage
 
 
 @pytest.fixture()
@@ -24,10 +23,10 @@ def test_password_csv_correctness(
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
     about_logins = AboutLogins(driver)
-    keyboard = Controller()
+    page = GenericPage(driver)
 
     # Ensure the export target folder doesn't contain a passwords.csv file
-    about_logins.remove_password_csv()
+    about_logins.remove_password_csv(downloads_folder)
 
     # Click on buttons to export passwords
     about_logins.open()
@@ -36,8 +35,8 @@ def test_password_csv_correctness(
     about_logins.click_on("continue-export-button")
 
     # Export the password file
-    time.sleep(5)
-    keyboard.tap(Key.enter)
+    time.sleep(3)
+    page.navigate_dialog_to_location(downloads_folder)
 
     # Verify the exported csv file is present in the target folder
     csv_file = os.path.join(downloads_folder, "passwords.csv")
@@ -62,4 +61,4 @@ def test_password_csv_correctness(
     about_logins.check_logins_present(actual_logins, logins)
 
     # Delete the password.csv created
-    about_logins.remove_password_csv()
+    about_logins.remove_password_csv(downloads_folder)

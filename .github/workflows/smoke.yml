@@ -187,7 +187,6 @@ jobs:
     needs:
       - Smoke-Windows
       - Smoke-MacOS
-    if: ${{ always() && github.event_name == 'pull_request' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
