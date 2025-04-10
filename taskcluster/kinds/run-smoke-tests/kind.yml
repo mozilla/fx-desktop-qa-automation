@@ -35,6 +35,7 @@ tasks:
         ./firefox/firefox --version;
         . ./keyring-unlock.sh
         pipenv run python3 choose_ci_set.py
+        git --no-pager diff --name-only origin/main
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests)
         export FAILURE=${?}
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
