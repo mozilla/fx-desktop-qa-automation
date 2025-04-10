@@ -28,7 +28,7 @@ class Autofill(BasePage):
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.driver = driver
-        self.ba = BrowserActions(self.driver)
+        self.browser_actions = BrowserActions(self.driver)
         self.util = Utilities()
         self.autofill_popup = AutofillPopup(self.driver)
 
@@ -42,7 +42,7 @@ class Autofill(BasePage):
             term: The string to be sent to the input field
         """
         form_field_element = self.get_element("form-field", labels=[field_name])
-        self.ba.clear_and_fill(form_field_element, term, press_enter=False)
+        self.browser_actions.clear_and_fill(form_field_element, term, press_enter=False)
 
     def _click_form_button(self, field_name):
         """Clicks submit on the form"""
@@ -55,6 +55,8 @@ class Autofill(BasePage):
             data_object: object containing autofill data.
         """
         if not self.field_mapping:
+            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
+            # Should not be called directly from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
@@ -95,10 +97,20 @@ class Autofill(BasePage):
     def verify_form_data(self, sample_data: CreditCardBase | AutofillAddressBase):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
+            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
+            # Should not be called directly from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
+
+        is_address_fill = self.__class__ == AddressFill
+        non_us_ca_address = is_address_fill and sample_data.country_code not in [
+            "US",
+            "CA",
+        ]
         for attr_name, field_name in self.field_mapping.items():
+            if non_us_ca_address and field_name == "address-level1":
+                continue
             if field_name != "cc-csc":
                 expected_value = getattr(sample_data, attr_name, None)
                 self.element_attribute_contains(
@@ -121,6 +133,8 @@ class Autofill(BasePage):
         """
 
         if not self.field_mapping:
+            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
+            # Should not be called directly from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
@@ -129,7 +143,7 @@ class Autofill(BasePage):
             fields_to_test = self.fields
 
         # Handle region-specific behavior
-        if region in ["DE", "FR"] and "address-level1" in fields_to_test:
+        if region not in ["US", "CA"] and "address-level1" in fields_to_test:
             fields_to_test.remove("address-level1")
 
         # Check fields that SHOULD trigger the autofill dropdown
@@ -167,6 +181,8 @@ class Autofill(BasePage):
         """
 
         if not self.field_mapping:
+            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
+            # Should not be called directly from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
@@ -174,7 +190,7 @@ class Autofill(BasePage):
         if fields_to_test is None:
             fields_to_test = self.fields
 
-        if region in ["DE", "FR"] and "address-level1" in fields_to_test:
+        if region not in ["US", "CA"] and "address-level1" in fields_to_test:
             fields_to_test.remove("address-level1")
 
         if expected_highlighted_fields is None:
@@ -203,7 +219,7 @@ class Autofill(BasePage):
 
             # Get all colors in the field
             selector = self.get_selector("form-field", labels=[field_name])
-            colors = self.ba.get_all_colors_in_element(selector)
+            colors = self.browser_actions.get_all_colors_in_element(selector)
             logging.info(f"Colors found in '{field_name}': {colors}")
 
             # Check the highlight
@@ -242,6 +258,8 @@ class Autofill(BasePage):
         Abstract Method meant to be implemented in the inherited classes.
         Verifies autofill data when hovering over a field.
         """
+        # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
+        # Should not be called directly from an Autofill instance.
         raise NotImplementedError("Method should be implemented in inherited classes.")
 
     def select_autofill_option(self, field, index: int = 1):
@@ -313,7 +331,7 @@ class Autofill(BasePage):
         if (
             self.__class__ == AddressFill
             and field_label == "address-level1"
-            and region in ["DE", "FR"]
+            and region not in ["US", "CA"]
         ):
             return
         self.double_click("form-field", labels=[field_label])
@@ -353,7 +371,7 @@ class Autofill(BasePage):
         """
         # Skip address-level1 (State) selection for DE and FR
         if (
-            region in ["DE", "FR"]
+            region not in ["US", "CA"]
             and self.__class__ == AddressFill
             and field_label == "address-level1"
         ):

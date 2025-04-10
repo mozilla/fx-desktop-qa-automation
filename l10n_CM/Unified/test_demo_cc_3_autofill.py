@@ -35,7 +35,7 @@ def test_cc_autofill_from_dropdown(
     credit_card_data = credit_card_autofill.fill_and_save(region)
 
     # Autocomplete and clear all fields
-    credit_card_autofill.clear_and_verify_all_fields(credit_card_data, region)
+    credit_card_autofill.clear_and_verify_all_fields(credit_card_data, region=region)
 
     # Step 5: Click the csc field (cc-csc), ensure autofill popup is not present
     credit_card_autofill.click_on("form-field", labels=["cc-csc"])  # Use single click

@@ -35,4 +35,4 @@ def test_autofill_credit_card(
     credit_card_data = credit_card_autofill.fill_and_save(region)
 
     # autofill from a given field and verify, repeat for all fields
-    credit_card_autofill.clear_and_verify_all_fields(credit_card_data, region)
+    credit_card_autofill.clear_and_verify_all_fields(credit_card_data, region=region)
