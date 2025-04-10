@@ -1,7 +1,6 @@
 import logging
 import os
 import re
-import sys
 
 from pypom import Page
 from selenium.common.exceptions import (

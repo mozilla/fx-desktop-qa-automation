@@ -4,7 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, TabBar
-from modules.page_object import AboutPrefs, GenericPdf
+from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
 

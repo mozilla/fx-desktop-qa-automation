@@ -4,7 +4,6 @@ import re
 import time
 
 import pytest
-from pynput.keyboard import Controller, Key
 
 from modules.page_object import AboutLogins, GenericPage
 
@@ -25,7 +24,6 @@ def test_password_csv_correctness(
     (driver, usernames, logins) = driver_and_saved_logins
     about_logins = AboutLogins(driver)
     page = GenericPage(driver)
-    keyboard = Controller()
 
     # Ensure the export target folder doesn't contain a passwords.csv file
     about_logins.remove_password_csv(downloads_folder)
