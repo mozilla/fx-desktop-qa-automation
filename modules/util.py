@@ -24,7 +24,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.classes.autofill_base import AutofillAddressBase
@@ -225,7 +224,7 @@ class Utilities:
             faker.add_provider(internet)
             faker.add_provider(misc)
             return faker, True
-        except AttributeError as e:
+        except AttributeError:
             logging.error(
                 f"Invalid locale `{locale}`. Faker instance could not be created."
             )

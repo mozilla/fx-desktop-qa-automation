@@ -152,7 +152,7 @@
     },
 
     "added-goomy-image": {
-        "selectorData": "canvas[aria-label='goomy.png']",
+        "selectorData": "[data-l10n-id='pdfjs-editor-stamp-editor'][aria-description='goomy.png']",
         "strategy": "css",
         "groups": []
     }

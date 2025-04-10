@@ -4,7 +4,7 @@ import time
 import pytest
 from pynput.keyboard import Controller, Key
 
-from modules.page_object import AboutLogins
+from modules.page_object import AboutLogins, GenericPage
 
 
 @pytest.fixture()
@@ -22,10 +22,11 @@ def test_password_csv_export(
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
     about_logins = AboutLogins(driver)
+    page = GenericPage(driver)
     keyboard = Controller()
 
     # Ensure the export target folder doesn't contain a passwords.csv file
-    about_logins.remove_password_csv()
+    about_logins.remove_password_csv(downloads_folder)
 
     # Click on buttons to export passwords
     about_logins.open()
@@ -34,7 +35,9 @@ def test_password_csv_export(
     about_logins.click_on("continue-export-button")
 
     # Export the password file
-    time.sleep(5)
+    time.sleep(3)
+    page.navigate_dialog_to_location(downloads_folder)
+
     keyboard.tap(Key.enter)
 
     # Verify the exported csv file is present in the target folder
@@ -42,4 +45,4 @@ def test_password_csv_export(
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
     # Delete the password.csv created
-    about_logins.remove_password_csv()
+    about_logins.remove_password_csv(downloads_folder)
