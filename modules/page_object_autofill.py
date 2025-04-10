@@ -58,7 +58,7 @@ class Autofill(BasePage):
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
-        for field_name, attr_name in self.field_mapping.items():
+        for attr_name, field_name in self.field_mapping.items():
             value = (
                 getattr(data_object, attr_name, None)
                 if not isinstance(data_object, dict)
@@ -98,7 +98,7 @@ class Autofill(BasePage):
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
-        for field_name, attr_name in self.field_mapping.items():
+        for attr_name, field_name in self.field_mapping.items():
             if field_name != "cc-csc":
                 expected_value = getattr(sample_data, attr_name, None)
                 self.element_attribute_contains(
@@ -228,7 +228,7 @@ class Autofill(BasePage):
         """
         Verifies that all autofill fields are empty.
         """
-        for field_name in self.field_mapping.keys():
+        for field_name in self.fields:
             value = self.get_element("form-field", labels=[field_name]).get_attribute(
                 "value"
             )
@@ -392,15 +392,16 @@ class Autofill(BasePage):
             if self.__class__ == CreditCardFill
             else self.util.fake_autofill_data
         )
+        inverted_mapping = {v: k for k, v in self.field_mapping.items()}
         new_sample_data_value = getattr(
-            faker_method(country_code=region), self.field_mapping[field]
+            faker_method(country_code=region), inverted_mapping[field]
         )
-        while new_sample_data_value == getattr(sample_data, self.field_mapping[field]):
+        while new_sample_data_value == getattr(sample_data, inverted_mapping[field]):
             new_sample_data_value = getattr(
-                faker_method(country_code=region), self.field_mapping[field]
+                faker_method(country_code=region), inverted_mapping[field]
             )
 
-        setattr(sample_data, self.field_mapping[field], new_sample_data_value)
+        setattr(sample_data, inverted_mapping[field], new_sample_data_value)
         return new_sample_data_value
 
 
@@ -410,7 +411,7 @@ class AddressFill(Autofill):
     """
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic.html"
-
+    # Element Selectors
     fields = [
         "name",
         "organization",
@@ -422,17 +423,17 @@ class AddressFill(Autofill):
         "email",
         "tel",
     ]
-
+    # Class Attributes: Element Selectors
     field_mapping = {
         "name": "name",
         "organization": "organization",
-        "street-address": "street_address",
-        "address-level2": "address_level_2",
-        "address-level1": "address_level_1",
-        "postal-code": "postal_code",
-        "country": "country_code",
+        "street_address": "street-address",
+        "address_level_2": "address-level2",
+        "address_level_1": "address-level1",
+        "postal_code": "postal-code",
+        "country_code": "country",
         "email": "email",
-        "tel": "telephone",
+        "telephone": "tel",
     }
 
     def __init__(self, driver: Firefox, **kwargs):
@@ -476,13 +477,15 @@ class CreditCardFill(Autofill):
     """
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic_cc.html"
+    # Element Selectors
     fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+    # Class Attributes: Element Selectors
     field_mapping = {
-        "cc-name": "name",
-        "cc-number": "card_number",
-        "cc-exp-month": "expiration_month",
-        "cc-exp-year": "expiration_year",
-        "cc-csc": "cvv",
+        "name": "cc-name",
+        "card_number": "cc-number",
+        "expiration_month": "cc-exp-month",
+        "expiration_year": "cc-exp-year",
+        "cvv": "cc-csc",
     }
 
     def __init__(self, driver: Firefox, **kwargs):
