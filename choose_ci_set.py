@@ -112,7 +112,7 @@ if __name__ == "__main__":
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
         with open(OUTPUT_FILE, "w") as fh:
-            print("tests")
+            fh.write("tests")
             sys.exit(0)
 
     slash = "/" if "/" in SCRIPT_DIR else "\\"
