@@ -29,15 +29,17 @@ class GenericPage(BasePage):
             sleep(1)
             keyboard.press(Key.enter)
         else:
-            keyboard.press(Key.control)
+            keyboard.press(Key.ctrl)
             keyboard.tap("l")
-            keyboard.release(Key.control)
+            keyboard.release(Key.ctrl)
             sleep(1.5)
             keyboard.type(location)
             sleep(1)
-            keyboard.press(Key.control)
+            keyboard.tap(Key.enter)
+            sleep(1)
+            keyboard.press(Key.alt)
             keyboard.tap("s")
-            keyboard.release(Key.control)
+            keyboard.release(Key.alt)
 
 
 class GenericPdf(BasePage):
