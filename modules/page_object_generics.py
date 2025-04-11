@@ -37,9 +37,14 @@ class GenericPage(BasePage):
             sleep(1)
             keyboard.tap(Key.enter)
             sleep(1)
-            keyboard.press(Key.alt)
-            keyboard.tap("s")
-            keyboard.release(Key.alt)
+            if self.sys_platform().startswith("Win"):
+                keyboard.press(Key.alt)
+                keyboard.tap("s")
+                keyboard.release(Key.alt)
+            else:
+                keyboard.tab(Key.tab)
+                keyboard.tab(Key.tab)
+                keyboard.tab(Key.enter)
 
 
 class GenericPdf(BasePage):
