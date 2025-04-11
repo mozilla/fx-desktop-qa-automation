@@ -34,7 +34,7 @@ def test_enable_disable_form_autofill_cc(
     credit_card_autofill.open()
 
     # create fake data, fill it in and press submit and save on the door hanger
-    credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_autofill.fill_and_save()
 
     # navigate to prefs
     about_prefs_privacy.open()

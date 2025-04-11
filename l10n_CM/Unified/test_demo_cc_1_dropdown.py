@@ -17,7 +17,7 @@ def test_dropdown_presence_credit_card(
     util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
-    credit_card_fill_obj: CreditCardFill,
+    credit_card_autofill: CreditCardFill,
 ):
     """
     C2886598 - Verify autofill dropdown is displayed only for the eligible fields after a credit card is saved
@@ -35,7 +35,7 @@ def test_dropdown_presence_credit_card(
     about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
 
     # Open credit card form page
-    credit_card_fill_obj.open()
+    credit_card_autofill.open()
 
     # Verify autofill dropdown is displayed only for the eligible fields
-    credit_card_fill_obj.verify_autofill_dropdown_credit_card(autofill_popup)
+    credit_card_autofill.verify_field_autofill_dropdown()

@@ -15,22 +15,28 @@ def test_cc_autofill_from_dropdown(
     driver: Firefox,
     util: Utilities,
     autofill_popup: AutofillPopup,
-    credit_card_fill_obj: CreditCardFill,
+    credit_card_autofill: CreditCardFill,
+    region: str,
 ):
     """
     Verify that saved credit card information is autofilled correctly when selected from the dropdown,
     except for the CVV field.
+    Arguments:
+        credit_card_autofill: CreditCardFill instance
+        autofill_popup: AutofillPopup instance
+        util: Utilities instance
+        region: region being tested
     """
 
     # Open credit card form page
-    credit_card_fill_obj.open()
+    credit_card_autofill.open()
 
     # Create and save fake credit card data
-    credit_card_data = credit_card_fill_obj.fill_and_save(util, autofill_popup)
+    credit_card_data = credit_card_autofill.fill_and_save(region)
 
     # Autocomplete and clear all fields
-    credit_card_fill_obj.autofill_and_clear_all_fields(autofill_popup, credit_card_data)
+    credit_card_autofill.clear_and_verify_all_fields(credit_card_data, region=region)
 
     # Step 5: Click the csc field (cc-csc), ensure autofill popup is not present
-    credit_card_fill_obj.click_on("form-field", labels=["cc-csc"])  # Use single click
+    credit_card_autofill.click_on("form-field", labels=["cc-csc"])  # Use single click
     autofill_popup.ensure_autofill_dropdown_not_visible()

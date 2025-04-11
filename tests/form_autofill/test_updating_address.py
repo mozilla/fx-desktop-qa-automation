@@ -1,5 +1,5 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
+from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
@@ -33,17 +33,15 @@ def test_update_address(
     address_autofill.open()
 
     # Create fake data, fill in the form, and press submit and save on the doorhanger
-    address_autofill.fill_and_save(util, autofill_popup, region)
+    sample_data = address_autofill.fill_and_save(region)
 
     # Double-click on the name field to trigger the autocomplete dropdown
-    address_autofill.select_autofill_option(autofill_popup, "name")
+    address_autofill.select_autofill_option("name")
 
-    # Add a middle name inside the Name field
-    address_autofill.click_on("form-field", labels=["name"])
-    address_autofill.send_keys_to_element("form-field", "name", " Doe" + Keys.ENTER)
-
-    # Save the updated address
-    autofill_popup.click_doorhanger_button("update")
+    # Change name field value.
+    new_name_value = sample_data.name + " Doe"
+    setattr(sample_data, "name", new_name_value)
+    address_autofill.update_form_data(sample_data, "name", new_name_value)
 
     # Navigate to settings
     about_prefs_privacy.open()
@@ -56,7 +54,9 @@ def test_update_address(
     )
 
     # Assert that "Doe" is present in updated entry
-    found_updated_address = any("Doe" in element.text for element in saved_addresses)
+    found_updated_address = any(
+        new_name_value in element.text for element in saved_addresses
+    )
     assert found_updated_address, (
-        "The value 'Doe' was not found in any of the address entries."
+        "The new name was not found in any of the address entries."
     )

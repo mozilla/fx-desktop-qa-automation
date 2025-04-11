@@ -75,7 +75,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
 
     # Verify that all 3 credentials and "Manage Passwords" footer are in the pop-up
     web_page.click_on("username-field")
-    autofill_popup.verify_autofill_displayed()
+    autofill_popup.ensure_autofill_dropdown_visible()
     for i in range(1, 4):
         credential = autofill_popup.get_nth_element(str(i))
         assert autofill_popup.get_primary_value(credential) == f"username{i}"

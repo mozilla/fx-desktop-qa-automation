@@ -26,6 +26,7 @@ def test_update_cc_no_dupe_name(
     credit_card_autofill: CreditCardFill,
     util: Utilities,
     field: str,
+    region: str,
 ):
     """
     C122406, ensures that updating the credit card saves the correct information with no dupe profile for the name and expiry dates
@@ -37,18 +38,24 @@ def test_update_cc_no_dupe_name(
         credit_card_autofill: CreditCardFill instance
         util: Utilities instance
         field: credit card field being checked
+        region: region being tested.
     """
     # navigate to credit card form page
     credit_card_autofill.open()
 
     # create and fill fake data
-    credit_card_sample_data = credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_sample_data = credit_card_autofill.fill_and_save()
 
     # autofill form
-    credit_card_autofill.select_autofill_option(autofill_popup, field)
+    credit_card_autofill.select_autofill_option(field)
 
     # updating the name of the cc holder
-    credit_card_autofill.update_cc(util, credit_card_sample_data, autofill_popup, field)
+    new_field_value = credit_card_autofill.generate_field_data(
+        credit_card_sample_data, field, region
+    )
+    credit_card_autofill.update_form_data(
+        credit_card_sample_data, field, new_field_value
+    )
 
     # navigate to settings
     about_prefs_privacy.open()

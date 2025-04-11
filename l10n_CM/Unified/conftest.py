@@ -58,5 +58,5 @@ def about_prefs(driver):
 
 
 @pytest.fixture()
-def credit_card_fill_obj(driver):
+def credit_card_autofill(driver):
     yield CreditCardFill(driver)

@@ -32,7 +32,7 @@ def test_autofill_credit_card_door_hanger(
     credit_card_autofill.open()
 
     # fill data
-    credit_card_autofill.fill_and_save(util, autofill_popup, door_hanger=False)
+    credit_card_autofill.fill_and_save(door_hanger=False)
 
     # press the arrow
     autofill_popup.click_doorhanger_button("dropdown")

@@ -25,10 +25,10 @@ def test_dropdown_presence_email_phone_field(
 
     # Open autofill page and fill fake data
     address_autofill.open()
-    address_autofill.fill_and_save(util, autofill_popup, region)
+    address_autofill.fill_and_save(region)
 
     fields_to_test = ["email", "tel"]
 
-    address_autofill.verify_autofill_dropdown_addresses(
-        autofill_popup=autofill_popup, fields_to_test=fields_to_test, region=region
+    address_autofill.verify_field_autofill_dropdown(
+        region=region, fields_to_test=fields_to_test
     )

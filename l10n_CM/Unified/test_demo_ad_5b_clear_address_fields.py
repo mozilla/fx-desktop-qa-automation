@@ -23,7 +23,7 @@ def test_demo_ad_clear_address_fields(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(util, autofill_popup, region)
+    address_autofill.fill_and_save(region)
 
     # List of field labels to be autofilled and verified
     fields_to_test = [
@@ -36,4 +36,4 @@ def test_demo_ad_clear_address_fields(
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
-        address_autofill.clear_and_verify(autofill_popup, field, address_autofill_data)
+        address_autofill.clear_and_verify(field, region=region)

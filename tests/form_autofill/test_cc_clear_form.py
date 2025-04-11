@@ -29,10 +29,10 @@ def test_clear_form_credit_card(
     credit_card_autofill.open()
 
     # create fake data, fill it in and press submit and save on the door hanger
-    credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_autofill.fill_and_save()
 
     # Open dropdown, select first option, clear autofill form and verify autofill is displayed
-    credit_card_autofill.select_autofill_option(autofill_popup, "cc-name")
+    credit_card_autofill.select_autofill_option("cc-name")
     credit_card_autofill.get_element("form-field", labels=["cc-name"]).click()
     autofill_popup.click_clear_form_option()
-    autofill_popup.verify_autofill_displayed()
+    autofill_popup.ensure_autofill_dropdown_visible()

@@ -34,8 +34,8 @@ def test_delete_cc_profile(
     credit_card_autofill.open()
 
     # create two profiles
-    credit_card_autofill.fill_and_save(util, autofill_popup)
-    credit_card_autofill.fill_and_save(util, autofill_popup)
+    credit_card_autofill.fill_and_save()
+    credit_card_autofill.fill_and_save()
 
     # navigate to prefs
     about_prefs_privacy.open()

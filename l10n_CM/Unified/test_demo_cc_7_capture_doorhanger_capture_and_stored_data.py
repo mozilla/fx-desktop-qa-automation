@@ -15,7 +15,7 @@ def test_case():
 def test_demo_cc_data_captured_in_doorhanger_and_stored(
     driver: Firefox,
     region: str,
-    credit_card_fill_obj: CreditCardFill,
+    credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
     util: Utilities,
     about_prefs_privacy: AboutPrefs,
@@ -24,12 +24,10 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     C2889999 - Verify credit card data is captured in the Capture Doorhanger and stored in about:preferences
     """
     # Navigate to page
-    credit_card_fill_obj.open()
+    credit_card_autofill.open()
 
     # Fill data
-    credit_card_sample_data = credit_card_fill_obj.fill_and_save(
-        util, autofill_popup, door_hanger=False
-    )
+    credit_card_sample_data = credit_card_autofill.fill_and_save(door_hanger=False)
 
     # The "Save credit card?" doorhanger is displayed
     assert autofill_popup.element_visible("doorhanger-save-button"), (

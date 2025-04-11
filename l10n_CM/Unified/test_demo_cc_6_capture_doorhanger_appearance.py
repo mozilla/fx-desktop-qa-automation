@@ -16,16 +16,16 @@ def test_cc_check_door_hanger_is_displayed(
     region: str,
     util: Utilities,
     autofill_popup: AutofillPopup,
-    credit_card_fill_obj: CreditCardFill,
+    credit_card_autofill: CreditCardFill,
 ):
     """
     C2889441 - Ensures that the door hanger is displayed after filling credit card info
     """
     # Navigate to page
-    credit_card_fill_obj.open()
+    credit_card_autofill.open()
 
     # Fill data. Don't click save in doorhanger
-    credit_card_fill_obj.fill_and_save(util, autofill_popup, door_hanger=False)
+    credit_card_autofill.fill_and_save(door_hanger=False)
 
     # Check if an element from the door hanger is visible
     autofill_popup.element_visible("doorhanger-save-button")

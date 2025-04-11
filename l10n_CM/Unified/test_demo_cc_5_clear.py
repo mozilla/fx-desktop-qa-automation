@@ -18,7 +18,7 @@ def test_cc_clear_form(
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
     about_prefs: AboutPrefs,
-    credit_card_fill_obj: CreditCardFill,
+    credit_card_autofill: CreditCardFill,
 ):
     """
     C2886602 - Verify that clearing the form from any field results in all fields being emptied, regardless of the
@@ -37,5 +37,6 @@ def test_cc_clear_form(
     about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
 
     # Open credit card form page, clear form and verify all fields are empty
-    credit_card_fill_obj.open()
-    credit_card_fill_obj.verify_clear_form_all_fields(autofill_popup)
+    credit_card_autofill.open()
+    for field in credit_card_autofill.fields:
+        credit_card_autofill.clear_and_verify(field, region=region)

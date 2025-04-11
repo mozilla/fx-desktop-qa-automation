@@ -17,7 +17,7 @@ def test_cc_yellow_highlight(
     util: Utilities,
     about_prefs_privacy: AboutPrefs,
     about_prefs: AboutPrefs,
-    credit_card_fill_obj: CreditCardFill,
+    credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
 ):
     """
@@ -36,9 +36,9 @@ def test_cc_yellow_highlight(
     about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
 
     # Open the credit card fill form and trigger the autofill option
-    credit_card_fill_obj.open()
-    credit_card_fill_obj.click_on("form-field", labels=["cc-name"])
+    credit_card_autofill.open()
+    credit_card_autofill.click_on("form-field", labels=["cc-name"])
     autofill_popup.click_autofill_form_option()
 
     # Verify that all fields have the yellow highlight, except for the cc-csv field
-    credit_card_fill_obj.verify_field_yellow_highlights()
+    credit_card_autofill.verify_field_highlight()

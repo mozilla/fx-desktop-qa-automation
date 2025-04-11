@@ -23,7 +23,7 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill.fill_and_save(util, autofill_popup, region, door_hanger=False)
+    address_autofill.fill_and_save(region, door_hanger=False)
 
     # Check "Save Address?" door hanger appears in the Address bar
     autofill_popup.element_visible("address-save-doorhanger")

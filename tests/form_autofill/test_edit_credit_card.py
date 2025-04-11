@@ -50,7 +50,7 @@ def test_edit_credit_card_profile(
     credit_card_autofill.open()
 
     # Fill in fake data
-    original_cc_data = credit_card_autofill.fill_and_save(util, autofill_popup)
+    original_cc_data = credit_card_autofill.fill_and_save()
 
     # navigate to about:prefs and select the saved payment methods
     about_prefs_privacy.open()

@@ -26,9 +26,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
 
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(
-        util, autofill_popup, region, door_hanger=False
-    )
+    address_autofill_data = address_autofill.fill_and_save(region, door_hanger=False)
 
     # The "Save address?" doorhanger is displayed
     autofill_popup.element_visible("address-save-doorhanger")
