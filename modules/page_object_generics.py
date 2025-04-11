@@ -20,17 +20,31 @@ class GenericPage(BasePage):
         from pynput.keyboard import Controller, Key
 
         keyboard = Controller()
-        if self.sys_platform() == "Darwin" or self.sys_platform() == "Linux":
+        if self.sys_platform() == "Darwin":
             keyboard.type("/")
             sleep(1.5)
             keyboard.type(location.lstrip("/"))
+            sleep(1)
+            keyboard.press(Key.enter)
+            sleep(1)
+            keyboard.press(Key.enter)
         else:
+            keyboard.press(Key.ctrl)
+            keyboard.tap("l")
+            keyboard.release(Key.ctrl)
             sleep(1.5)
             keyboard.type(location)
-        sleep(1)
-        keyboard.press(Key.enter)
-        sleep(1)
-        keyboard.press(Key.enter)
+            sleep(1)
+            keyboard.tap(Key.enter)
+            sleep(1)
+            if self.sys_platform().startswith("Win"):
+                keyboard.press(Key.alt)
+                keyboard.tap("s")
+                keyboard.release(Key.alt)
+            else:
+                keyboard.tab(Key.tab)
+                keyboard.tab(Key.tab)
+                keyboard.tab(Key.enter)
 
 
 class GenericPdf(BasePage):
