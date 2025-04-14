@@ -25,6 +25,6 @@ def test_hover_email_and_phone_autofill_preview(
     autofill_data = address_autofill.fill_and_save(region)
 
     # Hover over each field and check data preview
-    fields_to_test = ["email", "tel"]
+    fields_to_test = ["email", "telephone"]
     for field in fields_to_test:
         address_autofill.check_autofill_preview_for_field(field, autofill_data, region)

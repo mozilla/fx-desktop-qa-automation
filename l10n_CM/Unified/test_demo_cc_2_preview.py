@@ -43,11 +43,11 @@ def test_cc_preview(
     credit_card_autofill.open()
 
     # Hover over each field and check data preview
-    fields_to_test = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+    fields_to_test = ["name", "card_number", "expiration_month", "expiration_year"]
     for field in fields_to_test:
         credit_card_autofill.check_autofill_preview_for_field(
             field, credit_card_sample_data
         )
 
-    credit_card_autofill.click_on("form-field", labels=["cc-csc"])
+    credit_card_autofill.click_form_field("cvv")
     autofill_popup.ensure_autofill_dropdown_not_visible()

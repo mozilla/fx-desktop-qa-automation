@@ -26,7 +26,7 @@ def test_demo_ad_autofill_phone_email(
     address_autofill_data = address_autofill.fill_and_save(region)
 
     # List of field labels to be autofilled and verified
-    fields_to_test = ["email", "tel"]
+    fields_to_test = ["email", "telephone"]
 
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
