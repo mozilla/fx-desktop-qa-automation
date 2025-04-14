@@ -1,16 +1,54 @@
 import json
 import logging
 from html import unescape
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
+
+BASE_CC_URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic_cc.html"
+BASE_ADDRESS_URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic.html"
+
+# Class Attributes: Element Selectors
+base_cc_field_mapping = {
+    "name": "cc-name",
+    "card_number": "cc-number",
+    "expiration_month": "cc-exp-month",
+    "expiration_year": "cc-exp-year",
+    "cvv": "cc-csc",
+}
+base_address_field_mapping = {
+    "name": "name",
+    "organization": "organization",
+    "street_address": "street-address",
+    "address_level_2": "address-level2",
+    "address_level_1": "address-level1",
+    "postal_code": "postal-code",
+    "country_code": "country",
+    "email": "email",
+    "telephone": "tel",
+}
+
+# Element Selectors
+base_cc_fields = ("cc-name", "cc-number", "cc-exp-month", "cc-exp-year")
+base_address_fields = (
+    "name",
+    "organization",
+    "street-address",
+    "address-level2",  # city
+    "address-level1",  # state/province
+    "postal-code",
+    "country",
+    "email",
+    "tel",
+)
 
 
 class Autofill(BasePage):
@@ -46,7 +84,24 @@ class Autofill(BasePage):
 
     def _click_form_button(self, field_name):
         """Clicks submit on the form"""
+        submit_button = self.get_element("submit-button", labels=[field_name])
+        actions = ActionChains(self.driver)
+        actions.scroll_by_amount(0, 100).perform()
+        self.driver.save_screenshot("page.png")
         self.click_on("submit-button", labels=[field_name])
+
+    def is_field_present(self, attr_name: str):
+        """checks whether the attribute name exists in the mapping."""
+        field = self.field_mapping.get(attr_name, None)
+        return True if field else False
+
+    def click_form_field(self, attr_name: str):
+        """Click the form field given the attribute name."""
+        field = self.field_mapping.get(attr_name, None)
+        if field:
+            self.double_click("form-field", labels=[field])
+        else:
+            logging.warning(f"The field: {attr_name} is not available in the site.")
 
     def fill_and_submit(self, data_object: CreditCardBase | AutofillAddressBase | dict):
         """Fill and submit from data object or dictionary.
@@ -140,26 +195,38 @@ class Autofill(BasePage):
             )
 
         if fields_to_test is None:
-            fields_to_test = self.fields
+            fields_to_test = [x for x in self.field_mapping.keys() if x != "cvv"]
 
         # Handle region-specific behavior
-        if region not in ["US", "CA"] and "address-level1" in fields_to_test:
-            fields_to_test.remove("address-level1")
+        if region not in ["US", "CA"] and "address_level_1" in fields_to_test:
+            fields_to_test.remove("address_level_1")
 
         # Check fields that SHOULD trigger the autofill dropdown
         for field_name in fields_to_test:
-            self.double_click("form-field", labels=[field_name])
-            self.autofill_popup.ensure_autofill_dropdown_visible()
-            logging.info(f"Autofill dropdown appears for field '{field_name}'.")
+            field = self.field_mapping.get(field_name, None)
+            if field:
+                self.double_click("form-field", labels=[field])
+                self.autofill_popup.ensure_autofill_dropdown_visible()
+                logging.info(f"Autofill dropdown appears for field '{field}'.")
+            else:
+                logging.warning(
+                    f"The field: {field_name} is not available in the site."
+                )
 
         # Check fields that should NOT trigger the autofill dropdown
         if excluded_fields:
             for field_name in excluded_fields:
-                self.double_click("form-field", labels=[field_name])
-                self.autofill_popup.ensure_autofill_dropdown_not_visible()
-                logging.info(
-                    f"No autofill dropdown appears for field '{field_name}', as expected."
-                )
+                field = self.field_mapping.get(field_name, None)
+                if field:
+                    self.double_click("form-field", labels=[field_name])
+                    self.autofill_popup.ensure_autofill_dropdown_not_visible()
+                    logging.info(
+                        f"No autofill dropdown appears for field '{field_name}', as expected."
+                    )
+                else:
+                    logging.warning(
+                        f"The field: {field_name} is not available in the site."
+                    )
 
         return self
 
@@ -188,14 +255,16 @@ class Autofill(BasePage):
             )
 
         if fields_to_test is None:
-            fields_to_test = self.fields
+            fields_to_test = list(self.field_mapping.keys())
 
-        if region not in ["US", "CA"] and "address-level1" in fields_to_test:
-            fields_to_test.remove("address-level1")
+        if region not in ["US", "CA"] and "address_level_1" in fields_to_test:
+            fields_to_test.remove("address_level_1")
 
         if expected_highlighted_fields is None:
-            # By default, everything in fields_to_test is expected to be highlighted
+            # By default, everything in fields_to_test is expected to be highlighted except cvv for cc
             expected_highlighted_fields = fields_to_test
+            if "cvv" in expected_highlighted_fields:
+                expected_highlighted_fields.remove("cvv")
 
         if extra_fields:
             fields_to_actually_check = fields_to_test + extra_fields
@@ -214,29 +283,35 @@ class Autofill(BasePage):
             return (r >= 250) and (g >= 250) and (180 < b < 220)
 
         for field_name in fields_to_actually_check:
-            # Focus the field so the highlight is visible
-            self.click_on("form-field", labels=[field_name])
+            field = self.field_mapping.get(field_name, None)
+            if field:
+                # Focus the field so the highlight is visible
+                self.click_on("form-field", labels=[field])
 
-            # Get all colors in the field
-            selector = self.get_selector("form-field", labels=[field_name])
-            colors = self.browser_actions.get_all_colors_in_element(selector)
-            logging.info(f"Colors found in '{field_name}': {colors}")
+                # Get all colors in the field
+                selector = self.get_selector("form-field", labels=[field])
+                colors = self.browser_actions.get_all_colors_in_element(selector)
+                logging.info(f"Colors found in '{field}': {colors}")
 
-            # Check the highlight
-            is_field_highlighted = any(is_yellow_highlight(color) for color in colors)
-            should_be_highlighted = field_name in expected_highlighted_fields
-
-            # Assert based on expectation
-            if should_be_highlighted:
-                assert is_field_highlighted, (
-                    f"Expected yellow highlight on '{field_name}', but none found."
+                # Check the highlight
+                is_field_highlighted = any(
+                    is_yellow_highlight(color) for color in colors
                 )
-                logging.info(f"Yellow highlight found in '{field_name}'.")
+                should_be_highlighted = field_name in expected_highlighted_fields
+
+                # Assert based on expectation
+                if should_be_highlighted:
+                    assert is_field_highlighted, (
+                        f"Expected yellow highlight on '{field}', but none found."
+                    )
+                    logging.info(f"Yellow highlight found in '{field}'.")
+                else:
+                    assert not is_field_highlighted, (
+                        f"Expected NO yellow highlight on '{field}', but found one."
+                    )
+                    logging.info(f"No yellow highlight in '{field}', as expected.")
             else:
-                assert not is_field_highlighted, (
-                    f"Expected NO yellow highlight on '{field_name}', but found one."
-                )
-                logging.info(f"No yellow highlight in '{field_name}', as expected.")
+                logging.warning(f"The field: {field} is not available in the site.")
 
         return self
 
@@ -330,14 +405,18 @@ class Autofill(BasePage):
         """
         if (
             self.__class__ == AddressFill
-            and field_label == "address-level1"
+            and field_label == "address_level_1"
             and region not in ["US", "CA"]
         ):
             return
-        self.double_click("form-field", labels=[field_label])
-        self.autofill_popup.ensure_autofill_dropdown_visible()
-        self.autofill_popup.hover("select-form-option")
-        self.verify_autofill_data_on_hover(sample_data)
+        field = self.field_mapping.get(field_label, None)
+        if field:
+            self.double_click("form-field", labels=[field])
+            self.autofill_popup.ensure_autofill_dropdown_visible()
+            self.autofill_popup.hover("select-form-option")
+            self.verify_autofill_data_on_hover(sample_data)
+        else:
+            logging.info(f"The field: {field_label} is not present in the site.")
 
     def clear_and_verify_all_fields(
         self,
@@ -373,26 +452,30 @@ class Autofill(BasePage):
         if (
             region not in ["US", "CA"]
             and self.__class__ == AddressFill
-            and field_label == "address-level1"
+            and field_label == "address_level_1"
         ):
             return
 
-        # Double-click a field and choose the first element from the autocomplete dropdown
-        self.double_click("form-field", labels=[field_label])
-        self.autofill_popup.ensure_autofill_dropdown_visible()
-        self.autofill_popup.select_nth_element(1)
+        field = self.field_mapping.get(field_label, None)
+        if field:
+            # Double-click a field and choose the first element from the autocomplete dropdown
+            self.double_click("form-field", labels=[field])
+            self.autofill_popup.ensure_autofill_dropdown_visible()
+            self.autofill_popup.select_nth_element(1)
 
-        if sample_data:
-            ## verify data
-            self.verify_form_data(sample_data)
+            if sample_data:
+                ## verify data
+                self.verify_form_data(sample_data)
 
-        # Clear form autofill
-        self.double_click("form-field", labels=[field_label])
-        self.autofill_popup.ensure_autofill_dropdown_visible()
-        self.autofill_popup.click_clear_form_option()
+            # Clear form autofill
+            self.double_click("form-field", labels=[field])
+            self.autofill_popup.ensure_autofill_dropdown_visible()
+            self.autofill_popup.click_clear_form_option()
 
-        # Verify all fields are cleared
-        self.verify_all_fields_cleared()
+            # Verify all fields are cleared
+            self.verify_all_fields_cleared()
+        else:
+            logging.warning(f"The field: {field_label} is not available in the site.")
 
     def generate_field_data(
         self, sample_data: AutofillAddressBase | CreditCardBase, field: str, region: str
@@ -425,37 +508,24 @@ class Autofill(BasePage):
 
 class AddressFill(Autofill):
     """
-    Page Object Model for auto site (https://mozilla.github.io/form-fill-examples/basic.html)
+    Page Object Model for address autofill site.
+    base site is: (https://mozilla.github.io/form-fill-examples/basic.html)
     """
 
-    URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic.html"
-    # Element Selectors
-    fields = [
-        "name",
-        "organization",
-        "street-address",
-        "address-level2",  # city
-        "address-level1",  # state/province
-        "postal-code",
-        "country",
-        "email",
-        "tel",
-    ]
-    # Class Attributes: Element Selectors
-    field_mapping = {
-        "name": "name",
-        "organization": "organization",
-        "street_address": "street-address",
-        "address_level_2": "address-level2",
-        "address_level_1": "address-level1",
-        "postal_code": "postal-code",
-        "country_code": "country",
-        "email": "email",
-        "telephone": "tel",
-    }
-
-    def __init__(self, driver: Firefox, **kwargs):
+    def __init__(
+        self,
+        driver: Firefox,
+        url_template=None,
+        field_mapping=None,
+        fields=None,
+        **kwargs,
+    ):
         super().__init__(driver, **kwargs)
+        self.field_mapping = (
+            field_mapping if field_mapping else base_address_field_mapping
+        )
+        self.fields = fields if fields else base_address_fields
+        self.URL_TEMPLATE = url_template if url_template else BASE_ADDRESS_URL_TEMPLATE
 
     @BasePage.context_chrome
     def verify_autofill_data_on_hover(self, autofill_data: AutofillAddressBase):
@@ -491,23 +561,22 @@ class AddressFill(Autofill):
 
 class CreditCardFill(Autofill):
     """
-    Page Object Model for auto site (https://mozilla.github.io/form-fill-examples/basic_cc.html)
+    Page Object Model for cc autofill site
+    base site is: (https://mozilla.github.io/form-fill-examples/basic_cc.html)
     """
 
-    URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic_cc.html"
-    # Element Selectors
-    fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
-    # Class Attributes: Element Selectors
-    field_mapping = {
-        "name": "cc-name",
-        "card_number": "cc-number",
-        "expiration_month": "cc-exp-month",
-        "expiration_year": "cc-exp-year",
-        "cvv": "cc-csc",
-    }
-
-    def __init__(self, driver: Firefox, **kwargs):
+    def __init__(
+        self,
+        driver: Firefox,
+        url_template=None,
+        field_mapping=None,
+        fields=None,
+        **kwargs,
+    ):
         super().__init__(driver, **kwargs)
+        self.field_mapping = field_mapping if field_mapping else base_cc_field_mapping
+        self.fields = fields if fields else base_cc_fields
+        self.URL_TEMPLATE = url_template if url_template else BASE_CC_URL_TEMPLATE
 
     @BasePage.context_chrome
     def verify_autofill_data_on_hover(self, autofill_data: CreditCardBase):

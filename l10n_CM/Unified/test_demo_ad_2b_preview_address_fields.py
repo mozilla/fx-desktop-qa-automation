@@ -37,11 +37,11 @@ def test_hover_address_is_previewed(
 
     # Hover over each field and check data preview
     fields_to_test = [
-        "street-address",
-        "address-level2",  # city
-        "address-level1",  # state/province
-        "postal-code",
-        "country",
+        "street_address",
+        "address_level_2",
+        "address_level_1",
+        "postal_code",
+        "country_code",
     ]
     for field in fields_to_test:
         address_autofill.check_autofill_preview_for_field(field, autofill_data, region)

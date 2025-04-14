@@ -27,13 +27,12 @@ def test_demo_ad_autofill_address_fields(
 
     # List of field labels to be autofilled and verified
     fields_to_test = [
-        "address-level1",  # This will be skipped for DE/FR
-        "address-level2",
-        "street-address",
-        "postal-code",
-        "country",
+        "street_address",
+        "address_level_2",
+        "address_level_1",
+        "postal_code",
+        "country_code",
     ]
-
     # Loop through each field and perform the autofill test
     for field in fields_to_test:
         address_autofill.clear_and_verify(field, address_autofill_data, region=region)

@@ -28,11 +28,11 @@ def test_dropdown_presence_address_field(
     address_autofill.fill_and_save(region)
 
     fields_to_test = [
-        "street-address",
-        "address-level2",
-        "address-level1",
-        "postal-code",
-        "country",
+        "street_address",
+        "address_level_2",
+        "address_level_1",
+        "postal_code",
+        "country_code",
     ]
 
     address_autofill.verify_field_autofill_dropdown(
