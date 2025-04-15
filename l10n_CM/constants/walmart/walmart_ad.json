@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8000/walmart.html",
+  "field_mapping": {
+    "name": "given-name",
+    "street_address": "new-password",
+    "address_level_2": "address-level2",
+    "address_level_1": "address-level1",
+    "postal_code": "postal-code",
+    "telephone": "tel"
+  },
+  "fields": [
+    "name",
+    "new-password",
+    "address-level2",
+    "address-level1",
+    "postal-code",
+    "tel"
+  ]
+}
