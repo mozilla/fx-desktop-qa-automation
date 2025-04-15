@@ -15,7 +15,9 @@ class GenericPage(BasePage):
 
     URL_TEMPLATE = "{url}"
 
-    def navigate_dialog_to_location(self, location: str) -> BasePage:
+    def navigate_dialog_to_location(
+        self, location: str, filename="test.txt"
+    ) -> BasePage:
         sleep(1.5)
         from pynput.keyboard import Controller, Key
 
@@ -28,7 +30,7 @@ class GenericPage(BasePage):
             keyboard.press(Key.enter)
             sleep(1)
             keyboard.press(Key.enter)
-        else:
+        elif self.sys_platform().startswith("Win"):
             keyboard.press(Key.ctrl)
             keyboard.tap("l")
             keyboard.release(Key.ctrl)
@@ -37,14 +39,17 @@ class GenericPage(BasePage):
             sleep(1)
             keyboard.tap(Key.enter)
             sleep(1)
-            if self.sys_platform().startswith("Win"):
-                keyboard.press(Key.alt)
-                keyboard.tap("s")
-                keyboard.release(Key.alt)
-            else:
-                keyboard.tap(Key.tab)
-                keyboard.tap(Key.tab)
-                keyboard.tap(Key.enter)
+            keyboard.press(Key.alt)
+            keyboard.tap("s")
+            keyboard.release(Key.alt)
+        else:
+            keyboard.press(Key.ctrl)
+            keyboard.tap("a")
+            keyboard.release(Key.ctrl)
+            sleep(1.5)
+            keyboard.type(f"{location}/{filename}")
+            sleep(1)
+            keyboard.tap(Key.enter)
 
 
 class GenericPdf(BasePage):
