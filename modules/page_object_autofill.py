@@ -6,6 +6,7 @@ from typing import List, Optional, Tuple
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.autofill_base import AutofillAddressBase
@@ -80,14 +81,21 @@ class Autofill(BasePage):
             term: The string to be sent to the input field
         """
         form_field_element = self.get_element("form-field", labels=[field_name])
-        self.browser_actions.clear_and_fill(form_field_element, term, press_enter=False)
+        if form_field_element.tag_name.lower() == "select":
+            selected_form = Select(form_field_element)
+            shortened_state = self.util.get_state_province_abbreviation(term)
+            selected_form.select_by_value(shortened_state)
+        else:
+            self.browser_actions.clear_and_fill(
+                form_field_element, term, press_enter=False
+            )
 
     def _click_form_button(self, field_name):
         """Clicks submit on the form"""
-        submit_button = self.get_element("submit-button", labels=[field_name])
-        actions = ActionChains(self.driver)
-        actions.scroll_by_amount(0, 100).perform()
-        self.driver.save_screenshot("page.png")
+        # submit = self.get_element("submit-button")
+        # actions = ActionChains(self.driver)
+        # actions.scroll_by_amount(0, 100).perform()
+        # self.driver.save_screenshot("page.png")
         self.click_on("submit-button", labels=[field_name])
 
     def is_field_present(self, attr_name: str):
@@ -123,7 +131,8 @@ class Autofill(BasePage):
             )
             if value is not None:
                 self._fill_input_element(field_name, value)
-        self._click_form_button("submit")
+        # self._click_form_button("submit")
+        self.click_on("base-submit-button")
 
     def update_form_data(
         self,

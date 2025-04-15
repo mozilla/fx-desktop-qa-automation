@@ -21,7 +21,8 @@ def region():
 @pytest.fixture()
 def site_data():
     live_site = os.environ.get("FX_SITE", None)
-    # live_site = "amazon"
+    # un comment to test a live site form
+    # live_site = "walmart/walmart_ad"
     if live_site:
         path_to_site = parent_dir + "/constants/"
         with open(path_to_site + live_site + ".json", "r") as fp:
@@ -46,6 +47,16 @@ def field_mapping(site_data):
 
 
 @pytest.fixture()
+def submit_button(site_data):
+    submit = site_data.get("submit_button", None)
+    return (
+        {"submit-button": {"selectorData": submit, "strategy": "css", "groups": []}}
+        if submit
+        else {}
+    )
+
+
+@pytest.fixture()
 def add_to_prefs_list(region: str):
     return []
 
@@ -64,17 +75,21 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
 
 
 @pytest.fixture()
-def address_autofill(driver, url_template, fields, field_mapping):
-    yield AddressFill(
+def address_autofill(driver, url_template, fields, field_mapping, submit_button):
+    af = AddressFill(
         driver, url_template=url_template, field_mapping=field_mapping, fields=fields
     )
+    af.elements |= submit_button
+    yield af
 
 
 @pytest.fixture()
-def credit_card_autofill(driver, url_template, fields, field_mapping):
-    yield CreditCardFill(
+def credit_card_autofill(driver, url_template, fields, field_mapping, submit_button):
+    cf = CreditCardFill(
         driver, url_template=url_template, field_mapping=field_mapping, fields=fields
     )
+    cf.elements |= submit_button
+    yield cf
 
 
 @pytest.fixture()
