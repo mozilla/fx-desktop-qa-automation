@@ -93,8 +93,9 @@ def dedupe(run_list: list, slash: str) -> list:
         for j, entry_b in enumerate(run_list):
             if i == j:
                 continue
-            if entry_a in entry_b:
-                removes.append(j)
+            candidate = max((i, j))
+            if entry_a in entry_b and candidate not in removes:
+                removes.append(candidate)
 
     removes.sort(reverse=True)
     for remove in removes:
