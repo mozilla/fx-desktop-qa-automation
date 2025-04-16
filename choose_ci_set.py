@@ -93,8 +93,9 @@ def dedupe(run_list: list, slash: str) -> list:
         for j, entry_b in enumerate(run_list):
             if i == j:
                 continue
-            if entry_a in entry_b:
-                removes.append(j)
+            candidate = max((i, j))
+            if entry_a in entry_b and candidate not in removes:
+                removes.append(candidate)
 
     removes.sort(reverse=True)
     for remove in removes:
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled beta
         with open(OUTPUT_FILE, "w") as fh:
-            print("tests")
+            fh.write("tests")
             sys.exit(0)
 
     slash = "/" if "/" in SCRIPT_DIR else "\\"

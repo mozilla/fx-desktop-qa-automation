@@ -6,6 +6,8 @@ from pynput.keyboard import Controller, Key
 
 from modules.page_object import AboutLogins, GenericPage
 
+PASSWORDS_FILE = "passwords.csv"
+
 
 @pytest.fixture()
 def test_case():
@@ -36,7 +38,7 @@ def test_password_csv_export(
 
     # Export the password file
     time.sleep(3)
-    page.navigate_dialog_to_location(downloads_folder)
+    page.navigate_dialog_to_location(downloads_folder, PASSWORDS_FILE)
 
     keyboard.tap(Key.enter)
 
