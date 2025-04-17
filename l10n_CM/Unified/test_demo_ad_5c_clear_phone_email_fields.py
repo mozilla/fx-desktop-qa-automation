@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
@@ -17,13 +18,13 @@ def test_demo_ad_clear_tel_email(
     address_autofill: AddressFill,
     util: Utilities,
     autofill_popup: AutofillPopup,
+    fill_and_save_address: AutofillAddressBase,
 ):
     """
     C2888571 - Verify clear functionality after selecting an entry from tele/email fields
     """
     # Create fake data and fill it in
     address_autofill.open()
-    address_autofill.fill_and_save(region)
 
     # List of field labels to be autofilled and verified
     fields_to_test = ["email", "telephone"]

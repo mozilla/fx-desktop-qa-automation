@@ -38,9 +38,9 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
 
 @pytest.fixture()
 def site_data():
-    live_site = os.environ.get("FX_SITE", None)
+    # live_site = os.environ.get("FX_SITE", None)
     # un comment to test a live site form
-    # live_site = "walmart/walmart_ad"
+    live_site = "walmart/walmart_ad"
     if live_site:
         path_to_site = parent_dir + "/constants/"
         with open(path_to_site + live_site + ".json", "r") as fp:

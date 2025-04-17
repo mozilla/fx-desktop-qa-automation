@@ -17,13 +17,17 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
     address_autofill: AddressFill,
     util: Utilities,
     autofill_popup: AutofillPopup,
+    url_template: str,
 ):
     """
     C2886581 - Verify the Capture Door hanger is displayed after entering valid Address data
     """
-    # Create fake data and fill it in
-    address_autofill.open()
-    address_autofill.fill_and_save(region, door_hanger=False)
+    if not url_template:
+        # Create fake data and fill it in
+        address_autofill.open()
+        address_autofill.fill_and_save(region, door_hanger=False)
 
-    # Check "Save Address?" door hanger appears in the Address bar
-    autofill_popup.element_visible("address-save-doorhanger")
+        # Check "Save Address?" door hanger appears in the Address bar
+        autofill_popup.element_visible("address-save-doorhanger")
+    else:
+        pytest.skip("Doorhanger not tested for Live Sites.")

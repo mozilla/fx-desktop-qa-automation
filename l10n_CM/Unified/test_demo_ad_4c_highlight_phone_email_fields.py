@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
@@ -17,6 +18,7 @@ def test_address_yellow_highlight_address_fields(
     address_autofill: AddressFill,
     util: Utilities,
     autofill_popup: AutofillPopup,
+    fill_and_save_address: AutofillAddressBase,
 ):
     """
     C2888570 - Verify the yellow highlight appears on autofilled fields for the email and phone fields.
@@ -24,7 +26,6 @@ def test_address_yellow_highlight_address_fields(
     if address_autofill.is_field_present("email"):
         # Create fake data and fill it in
         address_autofill.open()
-        address_autofill.fill_and_save(region)
 
         # Double click inside name field and select a saved address entry from the dropdown
         address_autofill.click_form_field("email")
