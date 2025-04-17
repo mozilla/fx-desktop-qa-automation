@@ -1,11 +1,8 @@
 import json
 import logging
-from html import unescape
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
-from selenium.webdriver import ActionChains, Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import Firefox
 from selenium.webdriver.support.select import Select
 
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -173,8 +170,22 @@ class Autofill(BasePage):
                 continue
             if field_name != "cc-csc":
                 expected_value = getattr(sample_data, attr_name, None)
-                self.element_attribute_contains(
-                    "form-field", "value", expected_value, labels=[field_name]
+                autofilled_field = self.get_element("form-field", labels=[field_name])
+                if autofilled_field.tag_name.lower() != "select":
+                    autofilled_field_value = autofilled_field.get_attribute("value")
+                    # self.element_attribute_contains(
+                    #     "form-field", "value", expected_value, labels=[field_name]
+                    # )
+                else:
+                    autofilled_field_value = Select(
+                        autofilled_field
+                    ).first_selected_option.text
+                    if field_name == "address-level1":
+                        expected_value = self.util.get_state_province_abbreviation(
+                            expected_value
+                        )
+                assert expected_value in autofilled_field_value, (
+                    f"{autofilled_field_value} is different from {expected_value}"
                 )
 
     def verify_field_autofill_dropdown(
@@ -374,9 +385,9 @@ class Autofill(BasePage):
         if autofill_data.__class__ == CreditCardBase:
             autofill_data.card_number = autofill_data.card_number[-4:]
         else:
-            if (
-                autofill_data.country_code in {"US", "CA"}
-                and len(container_data["address-level1"]) == 2
+            if autofill_data.country_code in {"US", "CA"} and (
+                len(container_data["address-level1"]) == 2
+                and len(autofill_data.address_level_1) > 2
             ):
                 autofill_data.address_level_1 = (
                     self.util.get_state_province_abbreviation(
