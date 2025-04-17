@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.credit_card import CreditCardBase
 from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
 
@@ -23,24 +24,17 @@ def test_cc_preview(
     about_prefs_privacy: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
+    populate_saved_payments: CreditCardBase,
 ):
     """
     C2886599 -  Verify that hovering over field will preview all eligible fields (except for the CVV field)
     """
 
-    # Go to about:preferences#privacy and open Saved Payment Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
-
-    # Save CC information using fake data
-    credit_card_sample_data = util.fake_credit_card_data(region)
-
-    # Add a new CC profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
-
     # Open credit card form page
     credit_card_autofill.open()
+
+    # fake data
+    credit_card_sample_data = populate_saved_payments
 
     # Hover over each field and check data preview
     fields_to_test = ["name", "card_number", "expiration_month", "expiration_year"]

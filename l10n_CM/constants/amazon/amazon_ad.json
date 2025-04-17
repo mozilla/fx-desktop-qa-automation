@@ -1,6 +1,5 @@
 {
   "url": "http://127.0.0.1:8000/amazon.html",
-  "submit_button": "div[class='a-popover a-popover-modal a-declarative'] input[data-testid='bottom-continue-button'][type='{name}']",
   "field_mapping": {
     "name": "name",
     "street_address": "address-ui-widgets-enterAddressLine1",

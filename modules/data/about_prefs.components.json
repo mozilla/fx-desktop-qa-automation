@@ -108,11 +108,6 @@
       "doNotCache"
     ]
   },
-  "dialog-close-button": {
-    "selectorData": "dialogClose",
-    "strategy": "class",
-    "groups": []
-  },
   "saved-addresses": {
     "selectorData": "addresses",
     "strategy": "id",
