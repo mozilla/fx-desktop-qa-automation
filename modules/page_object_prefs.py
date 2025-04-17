@@ -254,6 +254,7 @@ class AboutPrefs(BasePage):
         """
         Takes the sample AutofillAddressBase object and adds an entry to the saved addresses list.
         Switches the appropriate frames to accommodate the operation.
+        Exits after adding entry
 
         Arguments:
             cc_data: The object containing all the sample data
@@ -261,6 +262,14 @@ class AboutPrefs(BasePage):
         self.switch_to_saved_payments_popup_iframe()
         self.fill_and_save_cc_panel_information(cc_data)
         self.switch_to_default_frame()
+        self.close_dialog_box()
+        return self
+
+    def close_dialog_box(self):
+        """Close dialog box for saved addresses or payments."""
+        self.element_clickable("panel-popup-button", labels=["close-button"])
+        self.get_element("panel-popup-button", labels=["close-button"]).click()
+        return self
 
     def update_cc_field_panel(self, field_name: str, value: str | int) -> BasePage:
         """
@@ -304,6 +313,7 @@ class AboutPrefs(BasePage):
         """
         Takes the sample AutofillAddressBase object and adds an entry to the saved addresses list.
         Switches the appropriate frames to accommodate the operation.
+        Exits after adding entry
 
         Arguments:
             address_data: The object containing all the sample data
@@ -312,6 +322,7 @@ class AboutPrefs(BasePage):
         self.switch_to_edit_saved_addresses_popup_iframe()
         self.fill_and_save_address_panel_information(address_data)
         self.switch_to_default_frame()
+        self.close_dialog_box()
         return self
 
     def get_all_saved_cc_profiles(self) -> List[WebElement]:

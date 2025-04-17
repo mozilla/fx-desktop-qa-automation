@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
 from modules.util import Utilities
 
@@ -17,15 +18,14 @@ def test_dropdown_presence_name_organization(
     address_autofill: AddressFill,
     util: Utilities,
     autofill_popup: AutofillPopup,
+    fill_and_save_address: AutofillAddressBase,
 ):
     """
     C2888556 - Verify that the autofill dropdown is displayed  for the name and organization fields after an address was
     previously saved
     """
-
-    # Create fake data and fill it in
+    # open address filling url page
     address_autofill.open()
-    address_autofill.fill_and_save(region)
 
     # Verify that the name and organization fields have the autofill dropdown present
     fields_to_test = ["name", "organization"]
