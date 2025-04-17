@@ -19,6 +19,7 @@ def test_cc_clear_form(
     about_prefs_privacy: AboutPrefs,
     about_prefs: AboutPrefs,
     credit_card_autofill: CreditCardFill,
+    field_mapping: dict,
 ):
     """
     C2886602 - Verify that clearing the form from any field results in all fields being emptied, regardless of the
@@ -38,5 +39,6 @@ def test_cc_clear_form(
 
     # Open credit card form page, clear form and verify all fields are empty
     credit_card_autofill.open()
-    for field in credit_card_autofill.fields:
+    fields = [x for x in credit_card_autofill.field_mapping.keys() if x != "cvv"]
+    for field in fields:
         credit_card_autofill.clear_and_verify(field, region=region)

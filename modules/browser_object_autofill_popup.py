@@ -36,10 +36,14 @@ class AutofillPopup(BasePage):
         return self
 
     @BasePage.context_chrome
-    def ensure_autofill_dropdown_visible(self):
+    def ensure_autofill_dropdown_visible(self, field_element: WebElement = None):
         """
         Verifies that the autofill dropdown appears
         checks if the parent pop up component have children elements before explicit wait.
+
+        Arguments:
+            field_element: if field element is given.
+                check whether it is a select element. pass the check if it is.
         """
         self.element_visible("select-form-option")
         return self

@@ -3,6 +3,7 @@ from typing import Dict
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities
 
@@ -21,23 +22,21 @@ def add_to_prefs_list(region: str):
 
 
 def test_verify_new_address_is_added(
-    driver: Firefox, region: str, about_prefs_privacy: AboutPrefs, util: Utilities
+    driver: Firefox,
+    region: str,
+    about_prefs_privacy: AboutPrefs,
+    util: Utilities,
+    populate_saved_addresses: AutofillAddressBase,
 ):
     """
     C2886580: Verify that a new Address can be added
     """
     # invert state_province_abbr to help with verification
     inverted_state_province_abbr = {v: k for k, v in util.state_province_abbr.items()}
-    # generate fake data for region
-    address_autofill_data = util.fake_autofill_data(region)
 
-    # open saved addresses
-    about_prefs_privacy.open()
+    # address autofill data
+    address_autofill_data = populate_saved_addresses
     about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
-    # add new entry to saved addresses
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_addresses(address_autofill_data)
-    about_prefs_privacy.switch_to_saved_addresses_popup_iframe()
 
     # verify that the address saved is the same.
     # The address saved in step 2 is listed in the "Saved addresses" modal: name and organization

@@ -571,13 +571,6 @@ Location: about:preferences#privacy popup dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: dialog-close-button
-Selector Data: "dialogClose"
-Description: The close button of the popup dialog
-Location: top right corner of about:preferences popup dialog
-Path to .json: modules/data/about_prefs.components.json
-```
-```
 Selector Name: saved-addresses
 Selector Data: "addresses"
 Description: The element that contains the saved addresses
@@ -1368,14 +1361,7 @@ Location: Inside any autofill-eligible form field, triggered by user interaction
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
-Selector Name: address-preview-form-container
-Selector Data: "address-save-update-notification-content"
-Description: Form container that is hidden in chrome context. Used to verify hover preview data
-Location: Inside chrome context, holds the data that would be showed as a preview when autofill is hovered.
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector Name: cc-preview-form-container
+Selector Name: preview-form-container
 Selector Data: ".autocomplete-richlistbox richlistitem"
 Description: Form container that is hidden in chrome context. Used to verify hover preview data
 Location: Inside chrome context, holds the data that would be showed as a preview when autofill is hovered.

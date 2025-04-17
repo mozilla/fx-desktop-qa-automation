@@ -33,6 +33,8 @@ def test_create_address_profile(
     # add entry to saved addresses
     about_prefs_privacy.add_entry_to_saved_addresses(autofill_sample_data)
 
+    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+
     elements = about_prefs_privacy.get_all_saved_address_profiles()
     about_prefs_privacy.double_click(elements[0])
     observed_data = about_prefs_privacy.extract_address_data_from_saved_addresses_entry(

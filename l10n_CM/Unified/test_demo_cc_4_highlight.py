@@ -37,7 +37,7 @@ def test_cc_yellow_highlight(
 
     # Open the credit card fill form and trigger the autofill option
     credit_card_autofill.open()
-    credit_card_autofill.click_on("form-field", labels=["cc-name"])
+    credit_card_autofill.click_form_field("name")
     autofill_popup.click_autofill_form_option()
 
     # Verify that all fields have the yellow highlight, except for the cc-csv field

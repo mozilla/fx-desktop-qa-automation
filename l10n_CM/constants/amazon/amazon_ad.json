@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8000/amazon.html",
+  "field_mapping": {
+    "name": "name",
+    "street_address": "address-ui-widgets-enterAddressLine1",
+    "address_level_2": "address-ui-widgets-enterAddressLine2",
+    "address_level_1": "address-ui-widgets-enterAddressCity",
+    "postal_code": "address-ui-widgets-enterAddressPostalCode",
+    "telephone": "tel"
+  },
+  "fields": [
+    "name",
+    "address-ui-widgets-enterAddressLine1",
+    "address-ui-widgets-enterAddressLine2",
+    "address-ui-widgets-enterAddressCity",
+    "address-ui-widgets-enterAddressPostalCode",
+    "tel"
+  ]
+}

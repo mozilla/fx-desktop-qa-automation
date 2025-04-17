@@ -19,47 +19,52 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
+    url_template: str,
 ):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
+    if not url_template:
+        # Create fake data and fill it in
+        address_autofill.open()
+        address_autofill_data = address_autofill.fill_and_save(
+            region, door_hanger=False
+        )
 
-    # Create fake data and fill it in
-    address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(region, door_hanger=False)
+        # The "Save address?" doorhanger is displayed
+        autofill_popup.element_visible("address-save-doorhanger")
 
-    # The "Save address?" doorhanger is displayed
-    autofill_popup.element_visible("address-save-doorhanger")
+        # containing address fields
+        expected_fields = {
+            "email": address_autofill_data.email,
+            "phone": address_autofill_data.telephone,
+        }
 
-    # containing address fields
-    expected_fields = {
-        "email": address_autofill_data.email,
-        "phone": address_autofill_data.telephone,
-    }
+        # check fields in doorhanger
+        for key, value in expected_fields.items():
+            autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
 
-    # check fields in doorhanger
-    for key, value in expected_fields.items():
-        autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
+        # Click the "Save" button
+        autofill_popup.click_doorhanger_button("save")
 
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+        # Navigate to about:preferences#privacy => "Autofill" section
+        about_prefs_privacy.open()
+        about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+        # Get the first saved address profile
+        saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+        assert saved_address_profiles, "No saved address profiles found"
 
-    # Get the first saved address profile
-    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
-    assert saved_address_profiles, "No saved address profiles found"
+        saved_address_profile = saved_address_profiles[0].text
 
-    saved_address_profile = saved_address_profiles[0].text
+        # Verify each field is present in the saved profile
+        missing_fields = []
+        for field_name, field_value in expected_fields.items():
+            if field_value not in saved_address_profile:
+                missing_fields.append(f"{field_name}: {field_value}")
 
-    # Verify each field is present in the saved profile
-    missing_fields = []
-    for field_name, field_value in expected_fields.items():
-        if field_value not in saved_address_profile:
-            missing_fields.append(f"{field_name}: {field_value}")
-
-    assert not missing_fields, (
-        f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
-    )
+        assert not missing_fields, (
+            f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
+        )
+    else:
+        pytest.skip("Doorhanger not tested for Live Sites.")
