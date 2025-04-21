@@ -7,6 +7,8 @@ import pytest
 
 from modules.page_object import AboutLogins, GenericPage
 
+PASSWORDS_FILE = "passwords.csv"
+
 
 @pytest.fixture()
 def test_case():
@@ -36,10 +38,10 @@ def test_password_csv_correctness(
 
     # Export the password file
     time.sleep(3)
-    page.navigate_dialog_to_location(downloads_folder)
+    page.navigate_dialog_to_location(downloads_folder, PASSWORDS_FILE)
 
     # Verify the exported csv file is present in the target folder
-    csv_file = os.path.join(downloads_folder, "passwords.csv")
+    csv_file = os.path.join(downloads_folder, PASSWORDS_FILE)
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
     # Verify the contents of the exported csv file
