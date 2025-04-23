@@ -371,6 +371,8 @@ class AboutPrefs(BasePage):
 
         return AutofillAddressBase(
             name=fields.get("name"),
+            given_name=fields.get("name", "").split()[0],
+            family_name=fields.get("name", "").split()[1],
             organization=fields.get("organization"),
             street_address=fields.get("street-address"),
             address_level_2=fields.get("address-level2"),
