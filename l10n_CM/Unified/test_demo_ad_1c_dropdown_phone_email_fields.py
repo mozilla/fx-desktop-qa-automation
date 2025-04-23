@@ -28,6 +28,9 @@ def test_dropdown_presence_email_phone_field(
     # Open autofill page
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     fields_to_test = ["email", "telephone"]
 
     address_autofill.verify_field_autofill_dropdown(

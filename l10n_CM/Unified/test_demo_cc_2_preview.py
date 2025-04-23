@@ -24,7 +24,7 @@ def test_cc_preview(
     about_prefs_privacy: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    populate_saved_payments: CreditCardBase,
+    fill_and_save_payments: CreditCardBase,
 ):
     """
     C2886599 -  Verify that hovering over field will preview all eligible fields (except for the CVV field)
@@ -33,11 +33,21 @@ def test_cc_preview(
     # Open credit card form page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # fake data
-    credit_card_sample_data = populate_saved_payments
+    credit_card_sample_data = fill_and_save_payments
 
     # Hover over each field and check data preview
-    fields_to_test = ["name", "card_number", "expiration_month", "expiration_year"]
+    fields_to_test = [
+        "name",
+        "given_name",
+        "family_name",
+        "card_number",
+        "expiration_month",
+        "expiration_year",
+    ]
     for field in fields_to_test:
         credit_card_autofill.check_autofill_preview_for_field(
             field, credit_card_sample_data

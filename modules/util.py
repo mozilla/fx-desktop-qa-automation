@@ -315,17 +315,22 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
+        given_name, family_name = name.split()
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()
         expiration_month, expiration_year = generated_credit_expiry.split("/")
         cvv = fake.credit_card_security_code()
+        telephone = self.generate_localized_phone(country_code, fake)
 
         fake_data = CreditCardBase(
             name=name,
+            given_name=given_name,
+            family_name=family_name,
             card_number=card_number,
             expiration_month=expiration_month,
             expiration_year=expiration_year,
             cvv=cvv,
+            telephone=telephone,
         )
 
         while len(fake_data.card_number) <= 14:

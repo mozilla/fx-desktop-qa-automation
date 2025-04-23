@@ -27,6 +27,9 @@ def test_address_yellow_highlight_address_fields(
         # Create fake data and fill it in
         address_autofill.open()
 
+        # scroll to first form field
+        address_autofill.scroll_to_form_field()
+
         # Double click inside name field and select a saved address entry from the dropdown
         address_autofill.click_form_field("street_address")
         autofill_popup.ensure_autofill_dropdown_visible()

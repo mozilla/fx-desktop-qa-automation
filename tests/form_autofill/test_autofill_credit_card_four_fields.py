@@ -28,6 +28,9 @@ def test_autofill_four_fields(
     # navigate to credit card autofill page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # fill autofill forms with fake cc data and submit
     credit_card_data = credit_card_autofill.fill_and_save()
 
