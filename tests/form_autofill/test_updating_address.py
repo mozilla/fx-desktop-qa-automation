@@ -32,6 +32,9 @@ def test_update_address(
     """
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     # Create fake data, fill in the form, and press submit and save on the doorhanger
     sample_data = address_autofill.fill_and_save(region)
 

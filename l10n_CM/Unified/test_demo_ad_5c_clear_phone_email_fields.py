@@ -26,6 +26,9 @@ def test_demo_ad_clear_tel_email(
     # Create fake data and fill it in
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     # List of field labels to be autofilled and verified
     fields_to_test = ["email", "telephone"]
 

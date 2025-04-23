@@ -26,6 +26,10 @@ def test_form_autofill_suggestions(
         util: Utilities instance
     """
     credit_card_autofill.open()
+
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # create fake data, two profiles
     sample_data = [credit_card_autofill.fill_and_save() for _ in range(2)]
     # reverse data list to match form options

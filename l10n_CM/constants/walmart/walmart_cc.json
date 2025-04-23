@@ -1,16 +1,18 @@
 {
   "url": "http://127.0.0.1:8000/walmart.html",
   "field_mapping": {
-    "name": "cc-name",
     "card_number": "cc-number",
+    "family_name": "cc-family-name",
+    "given_name": "cc-given-name",
     "expiration_month": "cc-exp-month",
     "expiration_year": "cc-exp-year",
     "cvv": "cc-csc"
-  },
+},
   "fields": [
-    "cc-name",
     "cc-number",
+    "cc-family-name",
+    "cc-given-name",
     "cc-exp-month",
     "cc-exp-year"
-  ]
+]
 }

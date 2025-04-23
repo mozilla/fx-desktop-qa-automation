@@ -36,6 +36,9 @@ def test_hover_address_is_previewed(
     # Create fake data
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     # created fake data
     autofill_data = fill_and_save_address
 

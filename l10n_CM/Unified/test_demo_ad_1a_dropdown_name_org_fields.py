@@ -27,6 +27,9 @@ def test_dropdown_presence_name_organization(
     # open address filling url page
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     # Verify that the name and organization fields have the autofill dropdown present
     fields_to_test = ["name", "given_name", "family_name", "organization"]
 

@@ -15,7 +15,12 @@ parent_dir = os.path.dirname(current_dir)
 
 @pytest.fixture()
 def region():
-    return os.environ.get("FX_REGION", "US")
+    return os.environ.get("FX_REGION")
+
+
+@pytest.fixture()
+def live_site():
+    return os.environ.get("FX_SITE")
 
 
 @pytest.fixture()
@@ -37,36 +42,40 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
 
 
 @pytest.fixture()
-def site_data():
-    # live_site = os.environ.get("FX_SITE", None)
-    # un comment to test a live site form
-    live_site = "amazon/amazon_ad"
+def ad_site_data(live_site):
+    ad_live_site = f"{live_site}/{live_site}_ad"
     if live_site:
         path_to_site = parent_dir + "/constants/"
-        with open(path_to_site + live_site + ".json", "r") as fp:
+        with open(path_to_site + ad_live_site + ".json", "r") as fp:
             live_site_data = load(fp)
             return live_site_data
     return {}
 
 
 @pytest.fixture()
-def url_template(site_data):
-    return site_data.get("url", None)
+def ad_url_template(ad_site_data):
+    return ad_site_data.get("url", None)
 
 
 @pytest.fixture()
-def fields(site_data):
-    return site_data.get("fields", None)
+def cc_site_data(live_site):
+    cc_live_site = f"{live_site}/{live_site}_cc"
+    if live_site:
+        path_to_site = parent_dir + "/constants/"
+        with open(path_to_site + cc_live_site + ".json", "r") as fp:
+            live_site_data = load(fp)
+            return live_site_data
+    return {}
 
 
 @pytest.fixture()
-def field_mapping(site_data):
-    return site_data.get("field_mapping", None)
+def cc_url_template(cc_site_data):
+    return cc_site_data.get("url", None)
 
 
 @pytest.fixture()
-def form_field(site_data):
-    selector = site_data.get("form_field", None)
+def ad_form_field(ad_site_data):
+    selector = ad_site_data.get("form_field", None)
     return (
         {"form-field": {"selectorData": selector, "strategy": "css", "groups": []}}
         if selector
@@ -75,20 +84,36 @@ def form_field(site_data):
 
 
 @pytest.fixture()
-def address_autofill(driver, url_template, fields, field_mapping, form_field):
-    af = AddressFill(
-        driver, url_template=url_template, field_mapping=field_mapping, fields=fields
+def cc_form_field(cc_site_data):
+    selector = cc_site_data.get("form_field", None)
+    return (
+        {"form-field": {"selectorData": selector, "strategy": "css", "groups": []}}
+        if selector
+        else {}
     )
-    af.elements |= form_field
+
+
+@pytest.fixture()
+def address_autofill(driver, ad_site_data, ad_form_field):
+    af = AddressFill(
+        driver,
+        url_template=ad_site_data.get("url"),
+        field_mapping=ad_site_data.get("field_mapping"),
+        fields=ad_site_data.get("fields"),
+    )
+    af.elements |= ad_form_field
     return af
 
 
 @pytest.fixture()
-def credit_card_autofill(driver, url_template, fields, field_mapping, form_field):
+def credit_card_autofill(driver, cc_site_data, cc_form_field):
     cf = CreditCardFill(
-        driver, url_template=url_template, field_mapping=field_mapping, fields=fields
+        driver,
+        url_template=cc_site_data.get("url"),
+        field_mapping=cc_site_data.get("field_mapping"),
+        fields=cc_site_data.get("fields"),
     )
-    cf.elements |= form_field
+    cf.elements |= cc_form_field
     return cf
 
 
@@ -150,13 +175,13 @@ def populate_saved_addresses(
 
 @pytest.fixture()
 def fill_and_save_address(
-    address_autofill: AddressFill, url_template: str | None, region: str, request
+    address_autofill: AddressFill, ad_site_data, region: str, request
 ):
     """
     Fixture to populate address entry depending on whether the url is a live site.
     If live site, populate data through about:prefs, if not fill directly through page.
     """
-    if url_template:
+    if ad_site_data.get("url"):
         return request.getfixturevalue("populate_saved_addresses")
     address_autofill.open()
     return address_autofill.fill_and_save(region)
@@ -164,13 +189,13 @@ def fill_and_save_address(
 
 @pytest.fixture()
 def fill_and_save_payments(
-    credit_card_autofill: CreditCardFill, url_template: str | None, region: str, request
+    credit_card_autofill: CreditCardFill, cc_site_data, region: str, request
 ):
     """
     Fixture to populate cc entry depending on whether the url is a live site.
     If live site, populate data through about:prefs, if not fill directly through page.
     """
-    if url_template:
+    if cc_site_data.get("url"):
         return request.getfixturevalue("populate_saved_payments")
     credit_card_autofill.open()
     return credit_card_autofill.fill_and_save(region)

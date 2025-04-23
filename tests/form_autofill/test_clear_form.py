@@ -29,6 +29,9 @@ def test_clear_form(
     # open address page
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     # create fake data, fill it in and press submit and save on the doorhanger
     address_autofill.fill_and_save()
 

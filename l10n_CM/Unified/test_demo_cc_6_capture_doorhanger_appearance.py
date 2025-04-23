@@ -17,14 +17,17 @@ def test_cc_check_door_hanger_is_displayed(
     util: Utilities,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    url_template: str,
+    cc_url_template: str,
 ):
     """
     C2889441 - Ensures that the door hanger is displayed after filling credit card info
     """
-    if not url_template:
+    if not cc_url_template:
         # Navigate to page
         credit_card_autofill.open()
+
+        # scroll to first form field
+        credit_card_autofill.scroll_to_form_field()
 
         # Fill data. Don't click save in doorhanger
         credit_card_autofill.fill_and_save(door_hanger=False)

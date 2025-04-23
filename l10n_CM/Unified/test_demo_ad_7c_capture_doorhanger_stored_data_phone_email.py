@@ -19,14 +19,18 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
-    url_template: str,
+    ad_url_template: str,
 ):
     """
     C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
-    if not url_template:
+    if not ad_url_template:
         # Create fake data and fill it in
         address_autofill.open()
+
+        # scroll to first form field
+        address_autofill.scroll_to_form_field()
+
         address_autofill_data = address_autofill.fill_and_save(
             region, door_hanger=False
         )

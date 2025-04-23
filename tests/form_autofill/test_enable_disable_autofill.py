@@ -31,6 +31,12 @@ def test_enable_disable_autofill(
     """
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
+    # Scroll to form field
+    address_autofill.scroll_to_form_field()
+
     # create fake data, fill it in and press submit and save on the doorhanger
     address_autofill.fill_and_save()
 
@@ -38,6 +44,9 @@ def test_enable_disable_autofill(
     about_prefs_privacy.get_element("save-and-fill-addresses").click()
 
     address_autofill.open()
+
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
 
     # verifying the popup panel does not appear
     address_autofill.double_click("form-field", labels=["name"])

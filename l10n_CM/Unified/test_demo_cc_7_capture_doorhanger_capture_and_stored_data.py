@@ -19,14 +19,17 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     autofill_popup: AutofillPopup,
     util: Utilities,
     about_prefs_privacy: AboutPrefs,
-    url_template: str,
+    cc_url_template: str,
 ):
     """
     C2889999 - Verify credit card data is captured in the Capture Doorhanger and stored in about:preferences
     """
-    if not url_template:
+    if not cc_url_template:
         # Navigate to page
         credit_card_autofill.open()
+
+        # scroll to first form field
+        credit_card_autofill.scroll_to_form_field()
 
         # Fill data
         credit_card_sample_data = credit_card_autofill.fill_and_save(door_hanger=False)

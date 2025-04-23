@@ -43,6 +43,9 @@ def test_update_cc_no_dupe_name(
     # navigate to credit card form page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # create and fill fake data
     credit_card_sample_data = credit_card_autofill.fill_and_save()
 

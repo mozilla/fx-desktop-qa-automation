@@ -27,6 +27,9 @@ def test_dropdown_presence_address_field(
     # open address filling url page
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     fields_to_test = [
         "street_address",
         "address_level_2",

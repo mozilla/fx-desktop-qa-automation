@@ -1,5 +1,5 @@
 import pytest
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
@@ -19,13 +19,16 @@ def test_dropdown_presence_credit_card(
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
     credit_card_autofill: CreditCardFill,
-    populate_saved_payments: CreditCardBase,
+    fill_and_save_payments: CreditCardBase,
 ):
     """
     C2886598 - Verify autofill dropdown is displayed only for the eligible fields after a credit card is saved
     """
     # Open credit card form page
     credit_card_autofill.open()
+
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
 
     # Verify autofill dropdown is displayed only for the eligible fields
     credit_card_autofill.verify_field_autofill_dropdown()

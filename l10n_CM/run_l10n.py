@@ -8,6 +8,8 @@ current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
+valid_sites = {"amazon", "walmart"}
+live_sites = []
 
 
 def run_tests(reg, flg, all_tests):
@@ -86,6 +88,9 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
                 flg.append(arg)
         elif arg in valid_region or arg.isdigit():
             continue
+        elif arg in valid_sites:
+            live_sites.append(arg)
+            flags_arguments.remove(arg)
         else:
             logging.warning(f"Invalid Argument: {arg}.")
             raise ValueError(f"Invalid Argument: {arg}.")
@@ -102,7 +107,12 @@ def run_unified(regions, unified_flags):
     """
     unified_tests = get_region_tests("Unified")
     for unified_region in regions:
-        run_tests(unified_region, unified_flags, unified_tests)
+        if live_sites:
+            for live_site in live_sites:
+                os.environ["FX_SITE"] = live_site
+                run_tests(unified_region, unified_flags, unified_tests)
+        else:
+            run_tests(unified_region, unified_flags, unified_tests)
 
 
 if __name__ == "__main__":
@@ -117,4 +127,11 @@ if __name__ == "__main__":
     for region in arguments:
         tests = get_region_tests(region)
         logging.info(f"Running Specific Tests for {region}.")
-        run_tests(region, flags, tests)
+        # if additional testing sites are added.
+        # for a given region, run all supported tests on the live site.
+        if live_sites:
+            for site in live_sites:
+                os.environ["FX_SITE"] = site
+                run_tests(region, flags, tests)
+        else:
+            run_tests(region, flags, tests)
