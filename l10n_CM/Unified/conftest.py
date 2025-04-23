@@ -40,7 +40,7 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
 def site_data():
     # live_site = os.environ.get("FX_SITE", None)
     # un comment to test a live site form
-    live_site = "walmart/walmart_ad"
+    live_site = "amazon/amazon_ad"
     if live_site:
         path_to_site = parent_dir + "/constants/"
         with open(path_to_site + live_site + ".json", "r") as fp:
@@ -65,17 +65,31 @@ def field_mapping(site_data):
 
 
 @pytest.fixture()
-def address_autofill(driver, url_template, fields, field_mapping):
-    return AddressFill(
-        driver, url_template=url_template, field_mapping=field_mapping, fields=fields
+def form_field(site_data):
+    selector = site_data.get("form_field", None)
+    return (
+        {"form-field": {"selectorData": selector, "strategy": "css", "groups": []}}
+        if selector
+        else {}
     )
 
 
 @pytest.fixture()
-def credit_card_autofill(driver, url_template, fields, field_mapping):
-    return CreditCardFill(
+def address_autofill(driver, url_template, fields, field_mapping, form_field):
+    af = AddressFill(
         driver, url_template=url_template, field_mapping=field_mapping, fields=fields
     )
+    af.elements |= form_field
+    return af
+
+
+@pytest.fixture()
+def credit_card_autofill(driver, url_template, fields, field_mapping, form_field):
+    cf = CreditCardFill(
+        driver, url_template=url_template, field_mapping=field_mapping, fields=fields
+    )
+    cf.elements |= form_field
+    return cf
 
 
 @pytest.fixture()

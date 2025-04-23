@@ -48,6 +48,15 @@ base_address_fields = (
     "tel",
 )
 
+# Preview field mappings
+base_preview_address_mapping = {}
+base_preview_cc_mapping = {
+    "name": "cc-name",
+    "card_number": "cc-number",
+    "expiration_month": "cc-exp-month",
+    "expiration_year": "cc-exp-year",
+}
+
 
 class Autofill(BasePage):
     """
@@ -57,7 +66,8 @@ class Autofill(BasePage):
 
     # Default; subclasses will override
     field_mapping = {}
-    fields = []
+    fields = {}
+    preview_fields = {}
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/"
 
@@ -377,7 +387,7 @@ class Autofill(BasePage):
             raise ValueError("Given preview data is incomplete.")
         container_data = container.get("fillMessageData", {}).get("profile", {})
         assert container_data, "No preview data available."
-        assert all(field in container_data.keys() for field in self.fields), (
+        assert all(field in container_data.keys() for field in self.preview_fields), (
             "Not all fields present in preview data."
         )
 
@@ -395,7 +405,7 @@ class Autofill(BasePage):
                     )
                 )
         for field, value in container_data.items():
-            if field in self.fields:
+            if field in self.preview_fields:
                 value = self.sanitize_preview_data(field, str(value))
                 # Check if this value exists in our CreditCardBase | AutofillAddressBase object
                 assert value in autofill_data.__dict__.values(), (
@@ -615,6 +625,15 @@ class AddressFill(Autofill):
             field_mapping if field_mapping else base_address_field_mapping
         )
         self.fields = fields if fields else base_address_fields
+        self.preview_fields = set(
+            map(
+                lambda field: base_address_field_mapping.get(field, field),
+                self.field_mapping.keys(),
+            )
+        )
+        self.preview_fields = {
+            field for field in self.preview_fields if field is not None
+        }
         self.URL_TEMPLATE = url_template if url_template else BASE_ADDRESS_URL_TEMPLATE
 
 
@@ -635,6 +654,15 @@ class CreditCardFill(Autofill):
         super().__init__(driver, **kwargs)
         self.field_mapping = field_mapping if field_mapping else base_cc_field_mapping
         self.fields = fields if fields else base_cc_fields
+        self.preview_fields = set(
+            map(
+                lambda field: base_preview_cc_mapping.get(field),
+                self.field_mapping.keys(),
+            )
+        )
+        self.preview_fields = {
+            field for field in self.preview_fields if field is not None
+        }
         self.URL_TEMPLATE = url_template if url_template else BASE_CC_URL_TEMPLATE
 
 

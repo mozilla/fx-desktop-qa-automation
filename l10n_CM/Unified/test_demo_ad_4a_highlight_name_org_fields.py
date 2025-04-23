@@ -30,13 +30,16 @@ def test_address_yellow_highlight_on_name_organization_fields(
         address_autofill.open()
 
         # Double click inside name field and select a saved address entry from the dropdown
-        address_autofill.click_form_field("name")
+        if address_autofill.is_field_present("name"):
+            address_autofill.click_form_field("name")
+        else:
+            address_autofill.click_form_field("given_name")
         autofill_popup.ensure_autofill_dropdown_visible()
 
         # Click on the first element from the autocomplete dropdown
         autofill_popup.select_nth_element(1)
 
-        field_to_test = ["name", "organization"]
+        field_to_test = ["given_name", "family_name", "name", "organization"]
         # Verify the name and organization fields are highlighted
         address_autofill.verify_field_highlight(
             fields_to_test=field_to_test,
