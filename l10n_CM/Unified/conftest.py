@@ -15,7 +15,7 @@ parent_dir = os.path.dirname(current_dir)
 
 @pytest.fixture()
 def region():
-    return os.environ.get("FX_REGION")
+    return os.environ.get("FX_REGION", "US")
 
 
 @pytest.fixture()
