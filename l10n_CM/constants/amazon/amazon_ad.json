@@ -1,5 +1,5 @@
 {
-  "url": "http://127.0.0.1:8000/amazon_ad.html",
+  "url": "http://127.0.0.1:8080/amazon_ad.html",
   "field_mapping": {
     "name": "152ffe55-1b63-4bf7-a43c-21d217d8aca1",
     "street_address": "33198fca-ddab-40a0-bc03-8b6f83bc3a98",

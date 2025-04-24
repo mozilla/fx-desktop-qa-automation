@@ -35,8 +35,8 @@ base_address_field_mapping = {
 }
 
 # Element Selectors
-base_cc_fields = ("cc-name", "cc-number", "cc-exp-month", "cc-exp-year")
-base_address_fields = (
+base_cc_fields = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+base_address_fields = [
     "name",
     "organization",
     "street-address",
@@ -46,7 +46,7 @@ base_address_fields = (
     "country",
     "email",
     "tel",
-)
+]
 
 # Preview field mappings
 base_preview_address_mapping = {
@@ -225,10 +225,10 @@ class Autofill(BasePage):
                     autofilled_field_value = Select(
                         autofilled_field
                     ).first_selected_option.text
-                    if field_name == "address-level1":
-                        expected_value = self.util.get_state_province_abbreviation(
-                            expected_value
-                        )
+                if field_name == "address-level1":
+                    expected_value = self.util.get_state_province_abbreviation(
+                        expected_value
+                    )
                 assert expected_value in autofilled_field_value, (
                     f"{autofilled_field_value} is different from {expected_value}"
                 )

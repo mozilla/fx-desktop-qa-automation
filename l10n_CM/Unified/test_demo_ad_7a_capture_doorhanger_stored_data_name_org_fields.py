@@ -19,12 +19,12 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
-    ad_url_template: str,
+    ad_is_live_site: str,
 ):
     """
     C2888701 - Verify name/org fields are captured in the Capture Doorhanger and stored in about:preferences
     """
-    if not ad_url_template:
+    if not ad_is_live_site:
         # Create fake data and fill it in
         address_autofill.open()
         # scroll to first form field

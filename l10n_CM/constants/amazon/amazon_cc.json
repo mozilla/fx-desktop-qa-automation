@@ -1,5 +1,5 @@
 {
-  "url": "http://127.0.0.1:8000/amazon_cc.html",
+  "url": "http://127.0.0.1:8080/amazon_cc.html",
   "field_mapping": {
     "card_number": "7901475e-bfea-4607-98f9-abb787d3dc57",
     "name": "4f630b6e-efd1-458d-9762-9a12a3dd28de",

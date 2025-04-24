@@ -20,7 +20,7 @@ def region():
 
 @pytest.fixture()
 def live_site():
-    return os.environ.get("FX_SITE")
+    return os.environ.get("CM_SITE", "demo")
 
 
 @pytest.fixture()
@@ -42,40 +42,44 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
 
 
 @pytest.fixture()
-def ad_site_data(live_site):
+def ad_site_data(live_site, region):
     ad_live_site = f"{live_site}/{live_site}_ad"
-    if live_site:
-        path_to_site = parent_dir + "/constants/"
-        with open(path_to_site + ad_live_site + ".json", "r") as fp:
-            live_site_data = load(fp)
-            return live_site_data
-    return {}
+    path_to_site = parent_dir + "/constants/"
+    with open(path_to_site + ad_live_site + ".json", "r") as fp:
+        live_site_data = load(fp)
+        # Remove address level 1 for regions other than US and CA
+        if region not in {"US", "CA"} and live_site_data["field_mapping"].get(
+            "address_level_1"
+        ):
+            live_site_data["fields"].remove(
+                live_site_data["field_mapping"]["address_level_1"]
+            )
+            del live_site_data["field_mapping"]["address_level_1"]
+        return live_site_data
 
 
 @pytest.fixture()
-def ad_url_template(ad_site_data):
-    return ad_site_data.get("url", None)
+def ad_is_live_site(live_site):
+    return live_site != "demo"
 
 
 @pytest.fixture()
 def cc_site_data(live_site):
     cc_live_site = f"{live_site}/{live_site}_cc"
-    if live_site:
-        path_to_site = parent_dir + "/constants/"
-        with open(path_to_site + cc_live_site + ".json", "r") as fp:
-            live_site_data = load(fp)
-            return live_site_data
-    return {}
+    path_to_site = parent_dir + "/constants/"
+    with open(path_to_site + cc_live_site + ".json", "r") as fp:
+        live_site_data = load(fp)
+        return live_site_data
 
 
 @pytest.fixture()
-def cc_url_template(cc_site_data):
-    return cc_site_data.get("url", None)
+def cc_is_live_site(live_site):
+    return live_site != "demo"
 
 
 @pytest.fixture()
 def ad_form_field(ad_site_data):
-    selector = ad_site_data.get("form_field", None)
+    selector = ad_site_data.get("form_field")
     return (
         {"form-field": {"selectorData": selector, "strategy": "css", "groups": []}}
         if selector
@@ -85,7 +89,7 @@ def ad_form_field(ad_site_data):
 
 @pytest.fixture()
 def cc_form_field(cc_site_data):
-    selector = cc_site_data.get("form_field", None)
+    selector = cc_site_data.get("form_field")
     return (
         {"form-field": {"selectorData": selector, "strategy": "css", "groups": []}}
         if selector

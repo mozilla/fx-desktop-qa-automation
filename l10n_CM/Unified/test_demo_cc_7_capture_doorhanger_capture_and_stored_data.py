@@ -19,12 +19,12 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     autofill_popup: AutofillPopup,
     util: Utilities,
     about_prefs_privacy: AboutPrefs,
-    cc_url_template: str,
+    cc_is_live_site: str,
 ):
     """
     C2889999 - Verify credit card data is captured in the Capture Doorhanger and stored in about:preferences
     """
-    if not cc_url_template:
+    if not cc_is_live_site:
         # Navigate to page
         credit_card_autofill.open()
 
