@@ -13,6 +13,7 @@ def test_case():
     return "1618400"
 
 
+@pytest.mark.unstable
 def test_preferences_all_toggles_enabled(driver: Firefox):
     """
     C1618400: Preferences - All toggles buttons Enabled
