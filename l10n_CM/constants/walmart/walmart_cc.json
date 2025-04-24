@@ -1,5 +1,5 @@
 {
-  "url": "http://127.0.0.1:8000/walmart.html",
+  "url": "http://127.0.0.1:8000/walmart_cc.html",
   "field_mapping": {
     "card_number": "cc-number",
     "family_name": "cc-family-name",
