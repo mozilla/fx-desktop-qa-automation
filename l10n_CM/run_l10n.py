@@ -8,22 +8,24 @@ current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
-valid_sites = {"amazon", "walmart"}
+valid_sites = {"demo", "amazon", "walmart"}
 live_sites = []
 
 
-def run_tests(reg, flg, all_tests):
+def run_tests(reg, site, flg, all_tests):
     """
     Execute the test suite for a given region with specified flags.
 
     Args:
         reg (str): The test region identifier.
+        site (str): Page being tested.
         flg (list[str]): The list of pytest flags to be used.
         all_tests (list[str]): The list of test file paths to execute.
     """
     try:
         if len(all_tests) > 0:
-            logging.info(f"Tests for {reg}.")
+            logging.info(f"Tests for {reg} region on {site} page.")
+            os.environ["CM_SITE"] = site
             os.environ["FX_REGION"] = reg
             subprocess.run(["pytest", *flg, *all_tests], check=True, text=True)
         else:
@@ -107,17 +109,16 @@ def run_unified(regions, unified_flags):
     """
     unified_tests = get_region_tests("Unified")
     for unified_region in regions:
-        if live_sites:
-            for live_site in live_sites:
-                os.environ["FX_SITE"] = live_site
-                run_tests(unified_region, unified_flags, unified_tests)
-        else:
-            run_tests(unified_region, unified_flags, unified_tests)
+        for live_site in live_sites:
+            run_tests(unified_region, live_site, unified_flags, unified_tests)
 
 
 if __name__ == "__main__":
     arguments = sys.argv[1:]
     flags = get_flags_and_sanitize(arguments)
+    if len(live_sites) == 0:
+        live_sites = valid_sites
+        logging.info(f"Running Against all available live sites ({live_sites}).")
     if len(arguments) == 0:
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)
@@ -129,9 +130,5 @@ if __name__ == "__main__":
         logging.info(f"Running Specific Tests for {region}.")
         # if additional testing sites are added.
         # for a given region, run all supported tests on the live site.
-        if live_sites:
-            for site in live_sites:
-                os.environ["FX_SITE"] = site
-                run_tests(region, flags, tests)
-        else:
-            run_tests(region, flags, tests)
+        for site in live_sites:
+            run_tests(region, site, flags, tests)

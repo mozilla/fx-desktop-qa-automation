@@ -1,0 +1,11 @@
+{
+  "url": "https://mozilla.github.io/form-fill-examples/basic_cc.html",
+  "field_mapping": {
+    "name": "cc-name",
+    "card_number": "cc-number",
+    "expiration_month": "cc-exp-month",
+    "expiration_year": "cc-exp-year",
+    "cvv": "cc-csc"
+  },
+  "fields": ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+}
