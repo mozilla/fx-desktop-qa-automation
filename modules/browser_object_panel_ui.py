@@ -1,6 +1,5 @@
 from typing import List
 
-from pynput.keyboard import Controller, Key
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
