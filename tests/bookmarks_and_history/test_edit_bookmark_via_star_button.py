@@ -25,7 +25,7 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
 
     # Bookmark the given website via star button
     GenericPage(driver, url=URL_TO_EDIT).open()
-    nav.add_bookmark_via_star()
+    nav.add_bookmark_via_star_icon()
 
     # Open the edit bookmark panel and change bookmark name and location
     with driver.context(driver.CONTEXT_CHROME):

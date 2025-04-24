@@ -11,6 +11,7 @@ def test_case():
 
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
+BOOKMARK_TITLE = "Internet for people"
 
 
 @pytest.mark.ci
@@ -18,16 +19,17 @@ def test_bookmark_website_via_star(driver: Firefox):
     """
     C2084539: Verify that the Websites can be bookmarked via star-shaped button
     """
-    # instantiate object
+    # Instantiate object
     nav = Navigation(driver)
     panel = PanelUi(driver)
 
-    # Bookmark the given website and check the bookmark star turned blue
+    # Navigate to test website
     driver.get(URL_TO_BOOKMARK)
-    nav.add_bookmark_via_star()
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.element_visible("blue-star-button")
 
-    # Verify that the bookmark is displayed in bookmarks menu
-    panel.open_bookmarks_menu()
-    panel.element_visible("bookmark-by-title", labels=["Internet for people"])
+    # Bookmark using star button and verify star turned blue
+    nav.add_bookmark_via_star_icon()
+    nav.verify_star_button_is_blue()
+
+    # Verify bookmark appears in Hamburger Menu, Bookmarks section
+    panel.open_bookmarks_panel_from_hamburger_menu()
+    panel.verify_bookmark_exists_in_hamburger_menu(BOOKMARK_TITLE)

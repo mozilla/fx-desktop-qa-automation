@@ -171,6 +171,7 @@
     },
 
     "firefox-suggest": {
+        "doNotCache": true,
         "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
         "strategy": "css",
         "groups": []

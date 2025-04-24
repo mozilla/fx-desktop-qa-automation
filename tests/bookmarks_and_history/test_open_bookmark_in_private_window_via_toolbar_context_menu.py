@@ -27,7 +27,7 @@ def test_open_bookmark_in_new_private_window_via_toolbar_context_menu(driver: Fi
 
     # Bookmark the test page via star button
     page.open()
-    nav.add_bookmark_via_star()
+    nav.add_bookmark_via_star_icon()
 
     # In a new tab, right-click the bookmarked page in the toolbar and select 'Open in New Private Window' from the
     # context menu
