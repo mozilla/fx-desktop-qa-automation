@@ -17,7 +17,7 @@ def test_preferences_all_toggles_enabled(driver: Firefox):
     """
     C1618400: Preferences - All toggles buttons Enabled
     """
-    # instantiate objects
+    # Instantiate objects
     nav = Navigation(driver)
     about_prefs = AboutPrefs(driver, category="search")
     about_prefs.open()

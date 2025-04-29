@@ -27,7 +27,7 @@ def test_open_bookmarks_from_toolbar(driver: Firefox):
 
     # Bookmark the given website via star button
     driver.get(URL_TO_BOOKMARK)
-    nav.add_bookmark_via_star()
+    nav.add_bookmark_via_star_icon()
 
     # Open new tab and click on the bookmark from the Bookmarks Toolbar
     with driver.context(driver.CONTEXT_CHROME):

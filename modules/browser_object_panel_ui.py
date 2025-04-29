@@ -2,9 +2,11 @@ from typing import List
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.browser_object_navigation import Navigation
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, PomUtils
@@ -14,6 +16,10 @@ class PanelUi(BasePage):
     """Browser Object Model for nav panel UI menu (hamburger menu, application menu)"""
 
     URL_TEMPLATE = "about:blank"
+
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.navigation = Navigation(self.driver)
 
     class Menu(Region):
         """
@@ -153,15 +159,6 @@ class PanelUi(BasePage):
             self.get_element("panel-ui-history").click()
         return self
 
-    def open_bookmarks_menu(self) -> BasePage:
-        """
-        Opens the Bookmarks menu
-        """
-        self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-bookmarks").click()
-        return self
-
     def select_clear_history_option(self, option: str) -> BasePage:
         """
         Selects the clear history option, assumes the history panel is open.
@@ -191,4 +188,36 @@ class PanelUi(BasePage):
         self.open_panel_menu()
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.get_element("password-button").click()
+        return self
+
+    # Bookmarks section
+
+    @BasePage.context_chrome
+    def open_bookmarks_panel_from_hamburger_menu(self) -> BasePage:
+        """
+        Opens the Bookmarks panel from the Hamburger Menu
+        """
+        self.open_panel_menu()
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.get_element("panel-ui-bookmarks").click()
+        return self
+
+    @BasePage.context_chrome
+    def bookmark_current_tab_via_hamburger_menu(self) -> BasePage:
+        """
+        Opens the Bookmarks panel from the Hamburger Menu, selects Bookmarks the current tab.. and clicks
+        Save button from Add Bookmark in Address bar "
+        """
+        self.get_element("bookmark-current-tab").click()
+        self.navigation.get_element("save-bookmark-button").click()
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_exists_in_hamburger_menu(self, bookmark_title: str) -> BasePage:
+        """
+        Verifies that a bookmark with the specified title exists inside Bookmark section from Hamburger menu
+        Arguments:
+            bookmark_title (str): The title text to look for in the bookmark
+        """
+        self.element_visible("bookmark-by-title", labels=[bookmark_title])
         return self

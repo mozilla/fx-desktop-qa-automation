@@ -256,6 +256,77 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
+    def wait_for_item_to_download(self, filename: str) -> BasePage:
+        """
+        Check the downloads tool in the toolbar to wait for a given file to download
+        """
+        original_timeout = self.driver.timeouts.implicit_wait
+        try:
+            # Whatever our timeout, we want to lengthen it because downloads
+            self.driver.implicitly_wait(original_timeout * 2)
+            self.element_visible("downloads-item-by-file", labels=[filename])
+            self.expect_not(
+                EC.element_attribute_to_include(
+                    self.get_selector("downloads-button"), "animate"
+                )
+            )
+            with self.driver.context(self.context_id):
+                self.driver.execute_script(
+                    "arguments[0].setAttribute('hidden', true)",
+                    self.get_element("downloads-button"),
+                )
+        finally:
+            self.driver.implicitly_wait(original_timeout)
+        return self
+
+    @BasePage.context_chrome
+    def refresh_page(self) -> BasePage:
+        """
+        Refreshes the current page by clicking the refresh button in the browser.
+        """
+
+        self.get_element("refresh-button").click()
+        self.wait_for_page_to_load()
+        return self
+
+    def handle_geolocation_prompt(self, button_type="primary"):
+        """
+        Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
+        """
+        button_selector = f"popup-notification-{button_type}-button"
+        self.element_clickable(button_selector)
+        self.click_on(button_selector)
+
+    def open_searchmode_switcher_settings(self):
+        """Open search settings from searchmode switcher in awesome bar"""
+        self.click_on("searchmode-switcher")
+        self.click_on("searchmode-switcher-settings")
+        return self
+
+    @BasePage.context_chrome
+    def select_element_in_nav(self, element: str) -> BasePage:
+        self.get_element(element).click()
+        return self
+
+    # Bookmark
+
+    @BasePage.context_chrome
+    def add_bookmark_via_star_icon(self) -> BasePage:
+        """
+        Bookmark a site via star button and click save on the bookmark panel
+        """
+        self.get_element("star-button").click()
+        self.get_element("save-bookmark-button").click()
+        return self
+
+    @BasePage.context_chrome
+    def verify_star_button_is_blue(self) -> BasePage:
+        """
+        Verifies that the star button is blue (indicating a bookmarked page)
+        """
+        self.element_visible("blue-star-button")
+        return self
+
     @BasePage.context_chrome
     def bookmark_page_other(self) -> BasePage:
         self.get_element("star-button").click()
@@ -290,25 +361,6 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def add_bookmark_via_star(self) -> BasePage:
-        """
-        Bookmark a site via star button and click save on the bookmark panel
-        """
-        self.get_element("star-button").click()
-        self.get_element("save-bookmark-button").click()
-        return self
-
-    @BasePage.context_chrome
-    def add_bookmark_via_menu(self) -> BasePage:
-        """
-        Bookmark a site via bookmarks menu and click save on the bookmark panel
-        """
-
-        self.get_element("bookmark-current-tab").click()
-        self.get_element("save-bookmark-button").click()
-        return self
-
-    @BasePage.context_chrome
     def toggle_bookmarks_toolbar_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + B to open the Print Preview, wait for load"""
 
@@ -317,29 +369,6 @@ class Navigation(BasePage):
         else:
             mod_key = Keys.CONTROL
         self.perform_key_combo(mod_key, Keys.SHIFT, "b")
-        return self
-
-    def wait_for_item_to_download(self, filename: str) -> BasePage:
-        """
-        Check the downloads tool in the toolbar to wait for a given file to download
-        """
-        original_timeout = self.driver.timeouts.implicit_wait
-        try:
-            # Whatever our timeout, we want to lengthen it because downloads
-            self.driver.implicitly_wait(original_timeout * 2)
-            self.element_visible("downloads-item-by-file", labels=[filename])
-            self.expect_not(
-                EC.element_attribute_to_include(
-                    self.get_selector("downloads-button"), "animate"
-                )
-            )
-            with self.driver.context(self.context_id):
-                self.driver.execute_script(
-                    "arguments[0].setAttribute('hidden', true)",
-                    self.get_element("downloads-button"),
-                )
-        finally:
-            self.driver.implicitly_wait(original_timeout)
         return self
 
     @BasePage.context_chrome
@@ -360,33 +389,4 @@ class Navigation(BasePage):
             [el.get_attribute("label") in match_string for el in bookmarks]
         )
         assert matches_short_string or matches_long_string
-        return self
-
-    @BasePage.context_chrome
-    def refresh_page(self) -> BasePage:
-        """
-        Refreshes the current page by clicking the refresh button in the browser.
-        """
-
-        self.get_element("refresh-button").click()
-        self.wait_for_page_to_load()
-        return self
-
-    def handle_geolocation_prompt(self, button_type="primary"):
-        """
-        Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
-        """
-        button_selector = f"popup-notification-{button_type}-button"
-        self.element_clickable(button_selector)
-        self.click_on(button_selector)
-
-    def open_searchmode_switcher_settings(self):
-        """Open search settings from searchmode switcher in awesome bar"""
-        self.click_on("searchmode-switcher")
-        self.click_on("searchmode-switcher-settings")
-        return self
-
-    @BasePage.context_chrome
-    def select_element_in_nav(self, element: str) -> BasePage:
-        self.get_element(element).click()
         return self
