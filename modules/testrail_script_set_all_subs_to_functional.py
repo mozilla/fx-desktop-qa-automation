@@ -9,16 +9,33 @@ CUSTOM_SUB_TEST_SUITES = 1  # "Functional Only"
 
 # Set TestRail credentials
 os.environ["TESTRAIL_BASE_URL"] = "https://mozilla.testrail.io"
-os.environ["TESTRAIL_USERNAME"] = ""
-os.environ["TESTRAIL_API_KEY"] = ""
+os.environ["TESTRAIL_USERNAME"] = "hyacoub@mozilla.com"
+os.environ["TESTRAIL_API_KEY"] = "HrENZ5FSSxiI1xl3DTMF-NMm1qGug2bVZM3NCALhV"
 
 
 def get_all_cases_from_suite(tr, project_id, suite_id):
-    """Fetch all test cases in the suite"""
-    response = tr._get_test_cases(project_id, suite_id)
-    cases = response.get("cases", [])
-    logging.info(f"Total cases fetched from suite {suite_id}: {len(cases)}")
-    return cases
+    """Fetch all test cases from a suite by handling pagination."""
+    all_cases = []
+    offset = 0
+    limit = 240  # Default limit for TestRail API is 250
+
+    while True:
+        # Build endpoint with pagination parameters
+        endpoint = (
+            f"get_cases/{project_id}&suite_id={suite_id}&limit={limit}&offset={offset}"
+        )
+        response = tr.client.send_get(endpoint)
+        cases = response.get("cases", [])
+        if not cases:
+            break
+        all_cases.extend(cases)
+        # If the number of cases returned is less than the limit, we've reached the last page.
+        if len(cases) < limit:
+            break
+        offset += limit
+
+    logging.info(f"Total cases fetched from suite {suite_id}: {len(all_cases)}")
+    return all_cases
 
 
 if __name__ == "__main__":
