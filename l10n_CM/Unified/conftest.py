@@ -25,9 +25,11 @@ def is_port_in_use() -> bool:
         return s.connect_ex((LOCALHOST, PORT)) == 0
 
 
-def get_html_files(live_site):
-    address_path_to_site = parent_dir + f"/sites/{live_site}/{live_site}_ad.html"
-    cc_path_to_site = parent_dir + f"/sites/{live_site}/{live_site}_cc.html"
+def get_html_files(live_site, region):
+    address_path_to_site = (
+        parent_dir + f"/sites/{live_site}/{region}/{live_site}_ad.html"
+    )
+    cc_path_to_site = parent_dir + f"/sites/{live_site}/{region}/{live_site}_cc.html"
     if os.path.exists(address_path_to_site) and os.path.exists(cc_path_to_site):
         address_html_file, cc_html_file = "", ""
         with open(address_path_to_site, "r", encoding="utf-8") as fp:
@@ -35,7 +37,7 @@ def get_html_files(live_site):
         with open(cc_path_to_site, "r", encoding="utf-8") as fp:
             cc_html_file = fp.read()
         return address_html_file, cc_html_file
-    return ""
+    return "", ""
 
 
 @pytest.fixture()
@@ -45,7 +47,7 @@ def region():
 
 @pytest.fixture()
 def live_site():
-    return os.environ.get("CM_SITE", "demo")
+    return os.environ.get("CM_SITE", "amazon")
 
 
 @pytest.fixture()
@@ -68,7 +70,11 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
 
 @pytest.fixture()
 def ad_site_data(live_site, region):
-    ad_live_site = f"{live_site}/{live_site}_ad"
+    ad_live_site = (
+        f"{live_site}/{region}/{live_site}_ad"
+        if live_site != "demo"
+        else f"{live_site}/{live_site}_ad"
+    )
     path_to_site = parent_dir + "/constants/"
     with open(path_to_site + ad_live_site + ".json", "r") as fp:
         live_site_data = load(fp)
@@ -84,8 +90,12 @@ def ad_site_data(live_site, region):
 
 
 @pytest.fixture()
-def cc_site_data(live_site):
-    cc_live_site = f"{live_site}/{live_site}_cc"
+def cc_site_data(live_site, region):
+    cc_live_site = (
+        f"{live_site}/{region}/{live_site}_cc"
+        if live_site != "demo"
+        else f"{live_site}/{live_site}_cc"
+    )
     path_to_site = parent_dir + "/constants/"
     with open(path_to_site + cc_live_site + ".json", "r") as fp:
         live_site_data = load(fp)
@@ -105,14 +115,14 @@ def httpserver_listen_address():
 
 
 @pytest.fixture()
-def serve_live_site(is_live_site, live_site, request):
+def serve_live_site(is_live_site, live_site, region, request):
     """Serve the live site only if needed."""
     if not is_live_site or is_port_in_use():
         return
     # only serve content if url is already not served.
     try:
+        ad_html_file, cc_html_file = get_html_files(live_site, region)
         http_server = request.getfixturevalue("httpserver")
-        ad_html_file, cc_html_file = get_html_files(live_site)
         http_server.expect_request(f"/{live_site}_ad.html").respond_with_data(
             ad_html_file, content_type="text/html"
         )

@@ -24,10 +24,11 @@ logging.basicConfig(level=logging.INFO)
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
     live_site = None
+    region = None
 
     def translate_path(self, path):
         """switch the default directory where the html files are served from."""
-        base_dir = os.path.join(current_dir, "sites", self.live_site)
+        base_dir = os.path.join(current_dir, "sites", self.live_site, self.region)
         return os.path.join(base_dir, path.lstrip("/"))
 
     def log_message(self, format, *args):
@@ -35,9 +36,10 @@ class MyHttpRequestHandler(SimpleHTTPRequestHandler):
         pass
 
 
-def start_server(live_site):
+def start_server(live_site, current_region):
     # set live site attribute
     MyHttpRequestHandler.live_site = live_site
+    MyHttpRequestHandler.region = current_region
     # start web server on a separate thread to avoid blocking calls.
     http = HTTPServer((LOCALHOST, PORT), MyHttpRequestHandler)
 
@@ -47,9 +49,15 @@ def start_server(live_site):
 
 
 @contextmanager
-def running_server(live_site):
+def running_server(live_site, test_region):
     """Context manager to run a server and clean it up automatically."""
-    httpd, server_thread = start_server(live_site)
+    html_path = os.path.join(current_dir, "sites", live_site, test_region)
+    if not os.path.exists(html_path):
+        raise FileNotFoundError(
+            f"Expected HTML directory not found at path: {html_path}"
+        )
+
+    httpd, server_thread = start_server(live_site, test_region)
     try:
         yield  # control goes to the caller, server runs in the background
     finally:
@@ -166,8 +174,8 @@ def run_unified(regions, unified_flags):
             for unified_region in regions:
                 run_tests(unified_region, live_site, unified_flags, unified_tests)
         else:
-            with running_server(live_site):
-                for unified_region in regions:
+            for unified_region in regions:
+                with running_server(live_site, unified_region):
                     run_tests(unified_region, live_site, unified_flags, unified_tests)
 
 
@@ -195,5 +203,5 @@ if __name__ == "__main__":
             if site == "demo":
                 run_tests(region, site, flags, tests)
             else:
-                with running_server(site):
+                with running_server(site, region):
                     run_tests(region, site, flags, tests)
