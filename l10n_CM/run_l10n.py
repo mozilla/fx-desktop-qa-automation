@@ -19,8 +19,6 @@ live_sites = []
 LOCALHOST = "127.0.0.1"
 PORT = 8080
 
-logging.basicConfig(level=logging.INFO)
-
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
     live_site = None
@@ -88,7 +86,7 @@ def run_tests(reg, site, flg, all_tests):
             os.environ["FX_REGION"] = reg
             subprocess.run(["pytest", *flg, *all_tests], check=True, text=True)
         else:
-            logging.info(f"{reg} has no tests.")
+            logging.info(f"{reg} region on {site} site has no tests.")
     except subprocess.CalledProcessError as e:
         logging.warning(f"Test run failed. {e}")
 
@@ -175,8 +173,18 @@ def run_unified(regions, unified_flags):
                 run_tests(unified_region, live_site, unified_flags, unified_tests)
         else:
             for unified_region in regions:
-                with running_server(live_site, unified_region):
-                    run_tests(unified_region, live_site, unified_flags, unified_tests)
+                unified_json_path = os.path.join(
+                    current_dir, "constants", live_site, unified_region
+                )
+                if os.path.exists(unified_json_path):
+                    with running_server(live_site, unified_region):
+                        run_tests(
+                            unified_region, live_site, unified_flags, unified_tests
+                        )
+                else:
+                    logging.info(
+                        f"No mapping json file for {unified_region} region and {live_site} site."
+                    )
 
 
 if __name__ == "__main__":
@@ -198,10 +206,12 @@ if __name__ == "__main__":
         # for a given site, run all region specific tests.
         for region in arguments:
             tests = get_region_tests(region)
+            # Check if field mapping json file is present, pass test region if it isn't
+            json_path = os.path.join(current_dir, "constants", site, region)
             logging.info(f"Running Specific Tests for {region}.")
             # If the live_site is 'demo', skip starting the server
             if site == "demo":
                 run_tests(region, site, flags, tests)
-            else:
+            elif os.path.exists(json_path):
                 with running_server(site, region):
                     run_tests(region, site, flags, tests)
