@@ -446,10 +446,7 @@ class Autofill(BasePage):
             if field in self.preview_fields:
                 value = self.sanitize_preview_data(field, str(value))
                 # Check if this value exists in our CreditCardBase | AutofillAddressBase object
-                is_present = any(
-                    [value in val for val in autofill_data.__dict__.values()]
-                )
-                assert is_present, (
+                assert value in autofill_data.__dict__.values(), (
                     f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
                 )
 

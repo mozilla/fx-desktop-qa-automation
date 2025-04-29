@@ -329,6 +329,7 @@ class Utilities:
             card_number=card_number,
             expiration_month=expiration_month,
             expiration_year=expiration_year,
+            expiration_date=generated_credit_expiry,
             cvv=cvv,
             telephone=telephone,
         )
