@@ -15,7 +15,6 @@ URL_TO_EDIT = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
 
 
-@pytest.mark.unstable(reason="https://bugzilla.mozilla.org/show_bug.cgi?id=1963396")
 def test_edit_bookmark_via_star_button(driver: Firefox):
     """
     C2084549: Verify that the user can Edit a Bookmark options from the Star-shaped button

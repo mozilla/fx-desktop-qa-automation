@@ -22,7 +22,6 @@ WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("w
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
-@pytest.mark.unstable(reason="https://bugzilla.mozilla.org/show_bug.cgi?id=1963396")
 def test_add_new_other_bookmark(driver: Firefox):
     """
     C2084518: verify user can add another bookmark from other bookmarks

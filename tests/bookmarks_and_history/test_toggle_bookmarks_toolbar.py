@@ -9,6 +9,11 @@ def test_case():
     return "2084637"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("browser.toolbars.bookmarks.visibility", "never")]
+
+
 def test_toggle_bookmark_toolbar(driver: Firefox):
     """
     C2084637: Verify that the user can Hide or Show the Bookmarks Toolbar using Keyboard shortcuts
