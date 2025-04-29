@@ -9,6 +9,7 @@ class CreditCardBase:
     card_number: str | None = None
     expiration_month: str | None = None
     expiration_year: str | None = None
+    expiration_date: str | None = None
     telephone: str | None = None
     cvv: str | None = None
     """
@@ -28,6 +29,8 @@ class CreditCardBase:
         The month when the credit card expires.
     expiration_year : str | None
         The year when the credit card expires.
+    expiration_date : str | None
+        The year and month when the credit card expires.
     telephone : str | None
         The telephone number associated with the credit card owner.
     cvv : str | None
