@@ -5,7 +5,6 @@ from selenium.webdriver import Firefox
 
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object import AboutPrefs
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -16,7 +15,6 @@ def test_case():
 def test_create_new_cc_profile(
     driver: Firefox,
     region: str,
-    util: Utilities,
     about_prefs_privacy: AboutPrefs,
     populate_saved_payments: CreditCardBase,
 ):

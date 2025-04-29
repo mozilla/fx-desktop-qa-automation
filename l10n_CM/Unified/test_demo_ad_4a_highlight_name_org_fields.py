@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -16,7 +15,6 @@ def test_address_yellow_highlight_on_name_organization_fields(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    util: Utilities,
     autofill_popup: AutofillPopup,
     fill_and_save_address: AutofillAddressBase,
 ):

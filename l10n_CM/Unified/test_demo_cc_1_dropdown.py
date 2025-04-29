@@ -1,10 +1,8 @@
 import pytest
-from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -15,9 +13,6 @@ def test_case():
 def test_dropdown_presence_credit_card(
     driver: Firefox,
     region: str,
-    util: Utilities,
-    autofill_popup: AutofillPopup,
-    about_prefs_privacy: AboutPrefs,
     credit_card_autofill: CreditCardFill,
     fill_and_save_payments: CreditCardBase,
 ):

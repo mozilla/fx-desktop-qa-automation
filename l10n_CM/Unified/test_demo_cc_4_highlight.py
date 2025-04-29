@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
-from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import Utilities
+from modules.page_object import CreditCardFill
 
 
 @pytest.fixture()
@@ -15,11 +13,7 @@ def test_case():
 def test_cc_yellow_highlight(
     driver: Firefox,
     region: str,
-    util: Utilities,
-    about_prefs_privacy: AboutPrefs,
-    about_prefs: AboutPrefs,
     credit_card_autofill: CreditCardFill,
-    autofill_popup: AutofillPopup,
     fill_and_save_payments: CreditCardBase,
 ):
     """
