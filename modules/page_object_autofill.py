@@ -225,7 +225,10 @@ class Autofill(BasePage):
                     autofilled_field_value = Select(
                         autofilled_field
                     ).first_selected_option.text
-                if field_name == "address-level1":
+                if (
+                    field_name == "address-level1"
+                    and autofilled_field_value != expected_value
+                ):
                     expected_value = self.util.get_state_province_abbreviation(
                         expected_value
                     )

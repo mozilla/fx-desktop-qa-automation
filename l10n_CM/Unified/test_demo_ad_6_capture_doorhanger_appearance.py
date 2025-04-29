@@ -17,12 +17,12 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
     address_autofill: AddressFill,
     util: Utilities,
     autofill_popup: AutofillPopup,
-    ad_is_live_site: str,
+    is_live_site: str,
 ):
     """
     C2886581 - Verify the Capture Door hanger is displayed after entering valid Address data
     """
-    if not ad_is_live_site:
+    if not is_live_site:
         # Create fake data and fill it in
         address_autofill.open()
         # scroll to first form field
