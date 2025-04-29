@@ -17,12 +17,12 @@ def test_cc_check_door_hanger_is_displayed(
     util: Utilities,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    cc_is_live_site: str,
+    is_live_site: str,
 ):
     """
     C2889441 - Ensures that the door hanger is displayed after filling credit card info
     """
-    if not cc_is_live_site:
+    if not is_live_site:
         # Navigate to page
         credit_card_autofill.open()
 

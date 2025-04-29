@@ -2,7 +2,12 @@ import logging
 import os
 import subprocess
 import sys
+import threading
+from contextlib import contextmanager
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from json import load
+
+import requests
 
 current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns"}
@@ -10,6 +15,52 @@ flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
 valid_sites = {"demo", "amazon", "walmart"}
 live_sites = []
+
+LOCALHOST = "127.0.0.1"
+PORT = 8080
+
+logging.basicConfig(level=logging.INFO)
+
+
+class MyHttpRequestHandler(SimpleHTTPRequestHandler):
+    live_site = None
+
+    def translate_path(self, path):
+        """switch the default directory where the html files are served from."""
+        base_dir = os.path.join(current_dir, "sites", self.live_site)
+        return os.path.join(base_dir, path.lstrip("/"))
+
+    def log_message(self, format, *args):
+        """Remove logs from the server."""
+        pass
+
+
+def start_server(live_site):
+    # set live site attribute
+    MyHttpRequestHandler.live_site = live_site
+    # start web server on a separate thread to avoid blocking calls.
+    http = HTTPServer((LOCALHOST, PORT), MyHttpRequestHandler)
+
+    thread = threading.Thread(target=lambda: http.serve_forever())
+    thread.start()
+    return http, thread
+
+
+@contextmanager
+def running_server(live_site):
+    """Context manager to run a server and clean it up automatically."""
+    httpd, server_thread = start_server(live_site)
+    try:
+        yield  # control goes to the caller, server runs in the background
+    finally:
+        try:
+            # Send a dummy request to unblock the server if necessary
+            requests.get(f"http://{LOCALHOST}:{PORT}")
+        except Exception:
+            pass
+        httpd.shutdown()
+        server_thread.join()
+        logging.info(f"{live_site} server shutdown.")
 
 
 def run_tests(reg, site, flg, all_tests):
@@ -108,27 +159,41 @@ def run_unified(regions, unified_flags):
         unified_flags (list[str]): A list of pytest flags to be used.
     """
     unified_tests = get_region_tests("Unified")
-    for unified_region in regions:
-        for live_site in live_sites:
-            run_tests(unified_region, live_site, unified_flags, unified_tests)
+    logging.info(f"Testing {live_sites} Sites.")
+    for live_site in live_sites:
+        # If the live_site is 'demo', skip starting the server
+        if live_site == "demo":
+            for unified_region in regions:
+                run_tests(unified_region, live_site, unified_flags, unified_tests)
+        else:
+            with running_server(live_site):
+                for unified_region in regions:
+                    run_tests(unified_region, live_site, unified_flags, unified_tests)
 
 
 if __name__ == "__main__":
     arguments = sys.argv[1:]
     flags = get_flags_and_sanitize(arguments)
     if len(live_sites) == 0:
+        # Run on all live sites.
         live_sites = valid_sites
         logging.info(f"Running Against all available live sites ({live_sites}).")
     if len(arguments) == 0:
+        ## Run on all Regions.
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)
     else:
+        # run on given region and sites.
         logging.info(f"Running Unified Tests for {arguments} Regions.")
         run_unified(arguments, flags)
-    for region in arguments:
-        tests = get_region_tests(region)
-        logging.info(f"Running Specific Tests for {region}.")
-        # if additional testing sites are added.
-        # for a given region, run all supported tests on the live site.
-        for site in live_sites:
-            run_tests(region, site, flags, tests)
+    for site in live_sites:
+        # for a given site, run all region specific tests.
+        for region in arguments:
+            tests = get_region_tests(region)
+            logging.info(f"Running Specific Tests for {region}.")
+            # If the live_site is 'demo', skip starting the server
+            if site == "demo":
+                run_tests(region, site, flags, tests)
+            else:
+                with running_server(site):
+                    run_tests(region, site, flags, tests)
