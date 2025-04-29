@@ -22,7 +22,6 @@ def test_case():
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
-@pytest.mark.unstable(reason="https://bugzilla.mozilla.org/show_bug.cgi?id=1963396")
 def test_delete_other_bookmarks(driver: Firefox):
     """
     C2084524: Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
