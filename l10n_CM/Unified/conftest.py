@@ -30,14 +30,14 @@ def get_html_files(live_site, region):
         parent_dir + f"/sites/{live_site}/{region}/{live_site}_ad.html"
     )
     cc_path_to_site = parent_dir + f"/sites/{live_site}/{region}/{live_site}_cc.html"
+    address_html_file, cc_html_file = "", ""
     if os.path.exists(address_path_to_site) and os.path.exists(cc_path_to_site):
-        address_html_file, cc_html_file = "", ""
         with open(address_path_to_site, "r", encoding="utf-8") as fp:
             address_html_file = fp.read()
         with open(cc_path_to_site, "r", encoding="utf-8") as fp:
             cc_html_file = fp.read()
         return address_html_file, cc_html_file
-    return "", ""
+    return address_html_file, cc_html_file
 
 
 @pytest.fixture()

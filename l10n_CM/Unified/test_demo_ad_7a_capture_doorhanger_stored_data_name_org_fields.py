@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -16,7 +15,6 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
     is_live_site: str,

@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -15,7 +14,6 @@ def test_address_doorhanger_displayed_after_entering_valid_address(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    util: Utilities,
     autofill_popup: AutofillPopup,
     is_live_site: str,
 ):

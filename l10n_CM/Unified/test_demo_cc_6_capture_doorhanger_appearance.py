@@ -14,7 +14,6 @@ def test_case():
 def test_cc_check_door_hanger_is_displayed(
     driver: Firefox,
     region: str,
-    util: Utilities,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
     is_live_site: str,

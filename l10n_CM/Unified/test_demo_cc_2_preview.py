@@ -21,7 +21,6 @@ def test_cc_preview(
     driver: Firefox,
     util: Utilities,
     region: str,
-    about_prefs_privacy: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
     fill_and_save_payments: CreditCardBase,

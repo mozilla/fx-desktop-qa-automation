@@ -14,7 +14,6 @@ def test_case():
 
 def test_cc_autofill_from_dropdown(
     driver: Firefox,
-    util: Utilities,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
     fill_and_save_payments: CreditCardBase,
@@ -26,7 +25,6 @@ def test_cc_autofill_from_dropdown(
     Arguments:
         credit_card_autofill: CreditCardFill instance
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
         region: region being tested
         fill_and_save_payments: fixture to populate data before test.
     """

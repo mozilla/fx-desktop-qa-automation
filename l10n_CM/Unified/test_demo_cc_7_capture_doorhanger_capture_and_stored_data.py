@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -17,7 +16,6 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     region: str,
     credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
-    util: Utilities,
     about_prefs_privacy: AboutPrefs,
     is_live_site: str,
 ):

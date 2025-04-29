@@ -15,10 +15,6 @@ def test_case():
 def test_cc_clear_form(
     driver: Firefox,
     region: str,
-    util: Utilities,
-    autofill_popup: AutofillPopup,
-    about_prefs_privacy: AboutPrefs,
-    about_prefs: AboutPrefs,
     credit_card_autofill: CreditCardFill,
     fill_and_save_payments: CreditCardBase,
 ):
