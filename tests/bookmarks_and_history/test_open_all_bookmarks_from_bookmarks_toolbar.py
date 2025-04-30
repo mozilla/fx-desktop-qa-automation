@@ -38,7 +38,7 @@ def test_open_all_bookmarks_from_bookmarks_toolbar(driver: Firefox):
     GenericPage(driver, url=URL_NOT_BOOKMARKED).open()
 
     # Toggle bookmarks toolbar
-    nav.toggle_bookmarks_toolbar_with_key_combo()
+    # nav.toggle_bookmarks_toolbar_with_key_combo()
 
     # Right-click on a blank space from Bookmarks Toolbar menu and choose open all bookmarks
     panel.context_click("bookmarks-toolbar")
