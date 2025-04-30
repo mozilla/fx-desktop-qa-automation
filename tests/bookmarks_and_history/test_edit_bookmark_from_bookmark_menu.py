@@ -18,6 +18,7 @@ ENABLE_ADD_TAG = """
         """
 
 
+@pytest.mark.unstable(reason="https://bugzilla.mozilla.org/show_bug.cgi?id=1963396")
 def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
     """
     C2084490: Verify that the user can Edit a Bookmark from Bookmarks menu
