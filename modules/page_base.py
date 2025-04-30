@@ -431,7 +431,7 @@ class BasePage(Page):
         self.expect(lambda _: text in self.get_element(name, labels=labels).text)
         return self
 
-    def element_attribute_contains(
+    def expect_element_attribute_contains(
         self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
     ) -> Page:
         """Expect helper: wait until element attribute contains certain value"""
