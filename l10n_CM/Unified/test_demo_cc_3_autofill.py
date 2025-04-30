@@ -42,5 +42,6 @@ def test_cc_autofill_from_dropdown(
     credit_card_autofill.clear_and_verify_all_fields(credit_card_data, region=region)
 
     # Step 5: Click the csc field (cc-csc), ensure autofill popup is not present
-    credit_card_autofill.click_form_field("cvv")  # Use single click
-    autofill_popup.ensure_autofill_dropdown_not_visible()
+    credit_card_autofill.verify_no_dropdown_on_field_interaction(
+        "cvv"
+    )  # Use single click
