@@ -46,11 +46,11 @@ def test_cc_preview(
         "card_number",
         "expiration_month",
         "expiration_year",
+        "expiration_date",
     ]
     for field in fields_to_test:
         credit_card_autofill.check_autofill_preview_for_field(
             field, credit_card_sample_data
         )
 
-    credit_card_autofill.click_form_field("cvv")
-    autofill_popup.ensure_autofill_dropdown_not_visible()
+    credit_card_autofill.verify_no_dropdown_on_field_interaction("cvv")

@@ -150,6 +150,18 @@ class Autofill(BasePage):
         else:
             logging.warning(f"The field: {attr_name} is not available in the site.")
 
+    def verify_no_dropdown_on_field_interaction(self, attr_name):
+        """
+        Click on the form field given the attribute name and ensure that the field
+        does not activate the dropdown.
+        """
+        field = self.field_mapping.get(attr_name, None)
+        if field:
+            self.double_click("form-field", labels=[field])
+            self.autofill_popup.ensure_autofill_dropdown_not_visible()
+        else:
+            logging.warning(f"The field: {attr_name} is not available in the site.")
+
     def fill_and_submit(self, data_object: CreditCardBase | AutofillAddressBase | dict):
         """Fill and submit from data object or dictionary.
 
@@ -272,7 +284,9 @@ class Autofill(BasePage):
             if field:
                 autofill_field = self.get_element("form-field", labels=[field])
                 if autofill_field.tag_name.lower() != "select":
+                    # more general way of activating the dropdown
                     self.double_click("form-field", labels=[field])
+                    autofill_field.send_keys("")
                     self.autofill_popup.ensure_autofill_dropdown_visible()
                     logging.info(f"Autofill dropdown appears for field '{field}'.")
                 else:
@@ -566,7 +580,8 @@ class Autofill(BasePage):
             region: region being tested
             sample_data: verify autofill against sample data if present
         """
-        for field in self.fields:
+        fields = [x for x in self.field_mapping.keys() if x != "cvv"]
+        for field in fields:
             self.clear_and_verify(field, sample_data, region)
 
     def clear_and_verify(
