@@ -27,7 +27,7 @@ def test_open_bookmark_in_new_window_via_toolbar_context_menu(driver: Firefox):
 
     # Bookmark the test page via star button
     page.open()
-    nav.add_bookmark_via_star()
+    nav.add_bookmark_via_star_icon()
 
     # In a new tab, right-click the bookmarked page in the toolbar and select 'Open in New Window' from the context menu
     with driver.context(driver.CONTEXT_CHROME):

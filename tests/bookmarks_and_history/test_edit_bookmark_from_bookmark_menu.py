@@ -18,6 +18,7 @@ ENABLE_ADD_TAG = """
         """
 
 
+@pytest.mark.unstable(reason="https://bugzilla.mozilla.org/show_bug.cgi?id=1963396")
 def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
     """
     C2084490: Verify that the user can Edit a Bookmark from Bookmarks menu
@@ -28,15 +29,15 @@ def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
 
     # Bookmark the given website via bookmarks menu
     GenericPage(driver, url=URL_TO_BOOKMARK).open()
-    panel.open_bookmarks_menu()
-    nav.add_bookmark_via_menu()
+    panel.open_bookmarks_panel_from_hamburger_menu()
+    nav.add_bookmark_via_star_icon()
 
     with driver.context(driver.CONTEXT_CHROME):
         # enable add a tag to a bookmark in the bookmark panel
         driver.execute_script(ENABLE_ADD_TAG)
 
         # Open the Hamburger menu, click on the Edit This Bookmark button from the Bookmarks section
-        panel.open_bookmarks_menu()
+        panel.open_bookmarks_panel_from_hamburger_menu()
         panel.get_element("bookmark-current-tab").click()
 
         # Change bookmark name, location and add a tag

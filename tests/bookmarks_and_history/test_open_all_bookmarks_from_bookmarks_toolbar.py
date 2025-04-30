@@ -32,13 +32,13 @@ def test_open_all_bookmarks_from_bookmarks_toolbar(driver: Firefox):
     urls_to_bookmark = [URL1_TO_BOOKMARK, URL2_TO_BOOKMARK, URL3_TO_BOOKMARK]
     for url in urls_to_bookmark:
         GenericPage(driver, url=url).open()
-        nav.add_bookmark_via_star()
+        nav.add_bookmark_via_star_icon()
 
     # Load a page that we didn't bookmark, so we can ensure that we're not just picking up on that instance of the page
     GenericPage(driver, url=URL_NOT_BOOKMARKED).open()
 
     # Toggle bookmarks toolbar
-    nav.toggle_bookmarks_toolbar_with_key_combo()
+    # nav.toggle_bookmarks_toolbar_with_key_combo()
 
     # Right-click on a blank space from Bookmarks Toolbar menu and choose open all bookmarks
     panel.context_click("bookmarks-toolbar")

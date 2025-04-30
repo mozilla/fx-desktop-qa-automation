@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 
 
@@ -11,21 +10,23 @@ def test_case():
 
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
+BOOKMARK_TITLE = "Internet for people"
 
 
-def test_bookmark_via_bookmark_menu(driver: Firefox):
+def test_bookmark_via_hamburger_menu(driver: Firefox):
     """
-    C2084489: Verify that the user can Bookmark a page from the Bookmarks menu
+    C2084489: Verify that the user can bookmark a page using Bookmark current tab .. opened from Hamburger Menu
     """
-    # instantiate object
-    nav = Navigation(driver)
+    # Instantiate object
     panel = PanelUi(driver)
 
-    # Bookmark the given website via bookmarks menu
+    # Navigate to test website
     driver.get(URL_TO_BOOKMARK)
-    panel.open_bookmarks_menu()
-    nav.add_bookmark_via_menu()
 
-    # Verify that the bookmark is displayed in bookmarks menu
-    panel.open_bookmarks_menu()
-    panel.element_visible("bookmark-by-title", labels=["Internet for people"])
+    # Bookmark using Bookmark current tab option from Hamburger Menu
+    panel.open_bookmarks_panel_from_hamburger_menu()
+    panel.bookmark_current_tab_via_hamburger_menu()
+
+    # Verify bookmark appears in Hamburger Menu, Bookmarks section
+    panel.open_bookmarks_panel_from_hamburger_menu()
+    panel.verify_bookmark_exists_in_hamburger_menu(BOOKMARK_TITLE)
