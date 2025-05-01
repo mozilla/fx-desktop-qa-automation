@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.credit_card import CreditCardBase
 from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
 
@@ -14,29 +15,20 @@ def test_case():
 def test_cc_clear_form(
     driver: Firefox,
     region: str,
-    util: Utilities,
-    autofill_popup: AutofillPopup,
-    about_prefs_privacy: AboutPrefs,
-    about_prefs: AboutPrefs,
     credit_card_autofill: CreditCardFill,
+    fill_and_save_payments: CreditCardBase,
 ):
     """
     C2886602 - Verify that clearing the form from any field results in all fields being emptied, regardless of the
     field from which the clear action was triggered.
     """
 
-    # Go to about:preferences#privacy and open Saved Payment Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
-
-    # Save CC information using fake data
-    credit_card_sample_data = util.fake_credit_card_data(region)
-
-    # Add a new CC profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
-
     # Open credit card form page, clear form and verify all fields are empty
     credit_card_autofill.open()
-    for field in credit_card_autofill.fields:
+
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
+    fields = [x for x in credit_card_autofill.field_mapping.keys() if x != "cvv"]
+    for field in fields:
         credit_card_autofill.clear_and_verify(field, region=region)

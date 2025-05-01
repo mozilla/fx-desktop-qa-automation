@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/amazon_ad.html",
+  "field_mapping": {
+    "name": "address-ui-widgets-enterAddressFullName",
+    "street_address": "address-ui-widgets-enterAddressLine1",
+    "address_level_2": "address-ui-widgets-enterAddressCity",
+    "postal_code": "address-ui-widgets-enterAddressPostalCode",
+    "telephone": "address-ui-widgets-enterAddressPhoneNumber"
+  },
+  "form_field": "*[id='{name}']",
+  "fields": [
+    "address-ui-widgets-enterAddressFullName",
+    "address-ui-widgets-enterAddressPhoneNumber",
+    "address-ui-widgets-enterAddressCity",
+    "address-ui-widgets-enterAddressPostalCode",
+    "address-ui-widgets-enterAddressLine1"
+  ]
+}

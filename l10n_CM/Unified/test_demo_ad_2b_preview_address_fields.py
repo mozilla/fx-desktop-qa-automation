@@ -1,10 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -25,23 +24,27 @@ def test_hover_address_is_previewed(
     region: str,
     about_prefs_privacy: AboutPrefs,
     address_autofill: AddressFill,
-    autofill_popup: AutofillPopup,
-    util: Utilities,
+    fill_and_save_address: AutofillAddressBase,
 ):
     """
     C2888562: Verify that hovering over address fields will preview all fields
     """
-    # Create fake data and fill it in
+    # Create fake data
     address_autofill.open()
-    autofill_data = address_autofill.fill_and_save(region)
+
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
+    # created fake data
+    autofill_data = fill_and_save_address
 
     # Hover over each field and check data preview
     fields_to_test = [
-        "street-address",
-        "address-level2",  # city
-        "address-level1",  # state/province
-        "postal-code",
-        "country",
+        "street_address",
+        "address_level_2",
+        "address_level_1",
+        "postal_code",
+        "country_code",
     ]
     for field in fields_to_test:
         address_autofill.check_autofill_preview_for_field(field, autofill_data, region)

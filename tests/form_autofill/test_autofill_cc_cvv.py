@@ -34,6 +34,9 @@ def test_autofill_cc_cvv(
     # Open credit card autofill page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # Create fake data, fill it in and press submit and save on the door hanger
     credit_card_sample_data = credit_card_autofill.fill_and_save()
 

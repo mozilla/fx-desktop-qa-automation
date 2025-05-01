@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill
 from modules.page_object_prefs import AboutPrefs
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -16,49 +15,57 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
+    is_live_site: str,
 ):
     """
     C2888701 - Verify name/org fields are captured in the Capture Doorhanger and stored in about:preferences
     """
-    # Create fake data and fill it in
-    address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(region, door_hanger=False)
+    if not is_live_site:
+        # Create fake data and fill it in
+        address_autofill.open()
+        # scroll to first form field
+        address_autofill.scroll_to_form_field()
 
-    # The "Save address?" doorhanger is displayed
-    autofill_popup.element_visible("address-save-doorhanger")
+        address_autofill_data = address_autofill.fill_and_save(
+            region, door_hanger=False
+        )
 
-    # containing name and org field
-    expected_fields = {
-        "name": address_autofill_data.name,
-        "org": address_autofill_data.organization,
-    }
+        # The "Save address?" doorhanger is displayed
+        autofill_popup.element_visible("address-save-doorhanger")
 
-    # check fields in doorhanger
-    for key, value in expected_fields.items():
-        autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
+        # containing name and org field
+        expected_fields = {
+            "name": address_autofill_data.name,
+            "org": address_autofill_data.organization,
+        }
 
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+        # check fields in doorhanger
+        for key, value in expected_fields.items():
+            autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
 
-    # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+        # Click the "Save" button
+        autofill_popup.click_doorhanger_button("save")
 
-    # Get the first saved address profile
-    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
-    assert saved_address_profiles, "No saved address profiles found"
+        # Navigate to about:preferences#privacy => "Autofill" section
+        about_prefs_privacy.open()
+        about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    saved_address_profile = saved_address_profiles[0].text
+        # Get the first saved address profile
+        saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+        assert saved_address_profiles, "No saved address profiles found"
 
-    # Verify each field is present in the saved profile
-    missing_fields = []
-    for field_name, field_value in expected_fields.items():
-        if field_value not in saved_address_profile:
-            missing_fields.append(f"{field_name}: {field_value}")
+        saved_address_profile = saved_address_profiles[0].text
 
-    assert not missing_fields, (
-        f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
-    )
+        # Verify each field is present in the saved profile
+        missing_fields = []
+        for field_name, field_value in expected_fields.items():
+            if field_value not in saved_address_profile:
+                missing_fields.append(f"{field_name}: {field_value}")
+
+        assert not missing_fields, (
+            f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
+        )
+    else:
+        pytest.skip("Doorhanger not tested for Live Sites.")

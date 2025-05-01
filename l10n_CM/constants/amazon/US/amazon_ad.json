@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/amazon_ad.html",
+  "field_mapping": {
+    "name": "152ffe55-1b63-4bf7-a43c-21d217d8aca1",
+    "street_address": "33198fca-ddab-40a0-bc03-8b6f83bc3a98",
+    "address_level_2": "bf3bb4bd-06fc-493b-a8d5-7c2c31db66cb",
+    "postal_code": "543e09ec-34d0-4f72-846c-5ae35a323ba8",
+    "telephone": "581c61d2-1257-4da2-9899-9d18e92b6fc4"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "152ffe55-1b63-4bf7-a43c-21d217d8aca1",
+    "581c61d2-1257-4da2-9899-9d18e92b6fc4",
+    "bf3bb4bd-06fc-493b-a8d5-7c2c31db66cb",
+    "543e09ec-34d0-4f72-846c-5ae35a323ba8",
+    "33198fca-ddab-40a0-bc03-8b6f83bc3a98"
+  ]
+}

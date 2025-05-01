@@ -1,13 +1,18 @@
 {
     "do-not-cache": true,
     "form-field": {
-        "selectorData": "input[autocomplete='{name}']",
+        "selectorData": "*[autocomplete='{name}']",
         "strategy": "css",
         "groups": []
     },
 
     "submit-button": {
-        "selectorData": "input[type='{name}']",
+        "selectorData": "*[type='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+    "base-submit-button": {
+        "selectorData": "*[type='submit']",
         "strategy": "css",
         "groups": []
     },

@@ -4,6 +4,8 @@ from dataclasses import dataclass
 @dataclass
 class AutofillAddressBase:
     name: str | None = None
+    given_name: str | None = None
+    family_name: str | None = None
     organization: str | None = None
     street_address: str | None = None
     address_level_2: str | None = None
@@ -20,6 +22,10 @@ class AutofillAddressBase:
     ----------
     name : str | None
         The name of the individual or entity at the address.
+    given_name : str | None
+        First Name of the individual or entity at the address
+    family_name : str | None
+        Last Name of the individual or entity at the address
     organization : str | None
         The name of the organization or company at the address.
     street_address : str | None

@@ -33,6 +33,9 @@ def test_delete_cc_profile(
     # instantiate objects
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # create two profiles
     credit_card_autofill.fill_and_save()
     credit_card_autofill.fill_and_save()

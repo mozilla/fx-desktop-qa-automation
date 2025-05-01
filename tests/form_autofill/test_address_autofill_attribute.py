@@ -31,6 +31,9 @@ def test_address_attribute_selection(
     # open the navigation page
     address_autofill.open()
 
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
     # Create fake data, fill in the form, and press submit and save on the door hanger
     autofill_sample_data = address_autofill.fill_and_save(region)
 

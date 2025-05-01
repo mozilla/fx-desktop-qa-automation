@@ -31,6 +31,9 @@ def test_autofill_credit_card_door_hanger(
     # navigate to page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # fill data
     credit_card_autofill.fill_and_save(door_hanger=False)
 
