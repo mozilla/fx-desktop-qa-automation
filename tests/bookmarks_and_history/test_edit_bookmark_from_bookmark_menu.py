@@ -56,7 +56,6 @@ def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
         # panel.get_element("other-bookmarks-toolbar").click()
 
         # Check tags are correctly added and checked
-        # nav.get_element("star-button").click()
         panel.get_element("extend-bookmark-tags").click()
         work_checkbox = panel.get_element("work-tag")
         work_checked_attr = work_checkbox.get_attribute("checked")
