@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 from modules.util import BrowserActions
+from selenium.webdriver import Firefox
 
 
 class AboutConfig(BasePage):
@@ -133,6 +134,10 @@ class AboutLogins(BasePage):
 
     URL_TEMPLATE = "about:logins"
 
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.ba = BrowserActions(self.driver)
+
     def click_add_login_button(self) -> Page:
         """Click the Add Login button"""
         self.get_element("create-login-button").click()
@@ -144,11 +149,10 @@ class AboutLogins(BasePage):
         Given a dict with keys that match the valid item types in the
         new login dialog, create a new login with those values through UI.
         """
-        ba = BrowserActions(self.driver)
         try:
             for item_type, value in form_info.items():
                 logging.info(f"Filling {item_type} with {value}")
-                ba.clear_and_fill(
+                self.ba.clear_and_fill(
                     self.get_element("login-item-type", labels=[item_type]), value
                 )
             logging.info("Clicking submit...")

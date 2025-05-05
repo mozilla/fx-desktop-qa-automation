@@ -13,7 +13,7 @@ def test_about_logins_navigation_from_password_hamburger_menu(driver: Firefox):
     """
     C2241082 - Verify that clicking the Password option in Hamburger Menu opens about:logins page in a new tab
     """
-
+    # Instantiate objects
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
 

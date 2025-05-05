@@ -17,11 +17,12 @@ def test_password_can_be_shown(driver: Firefox):
     C2264688: Verify that the Show Password button prompts for the Primary Password before revealing the saved login
     """
     # instantiate object
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
 
-    # Click on the "Add password" button
+    # Open about:login and click on the "Add password" button
+    about_logins.open()
     about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.
@@ -52,7 +53,7 @@ def test_password_can_be_shown(driver: Firefox):
         alert = about_prefs.get_alert()
         alert.accept()
 
-    about_logins = AboutLogins(driver).open()
+    about_logins.open()
     show_password_button = about_logins.get_element("show-password-checkbox")
     show_password_button.click()
 

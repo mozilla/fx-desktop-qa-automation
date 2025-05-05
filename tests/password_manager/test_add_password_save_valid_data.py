@@ -15,9 +15,10 @@ def test_add_password_save_valid_data(driver: Firefox):
     C2241112 Verify that a password can be added and saved
     """
     # instantiate object
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
 
-    # Click on the "Add password" button
+    # Open about:logins and click on the "Add password" button
+    about_logins.open()
     about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.

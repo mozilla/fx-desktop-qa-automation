@@ -28,13 +28,14 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     """
 
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
     about_logins = AboutLogins(driver)
 
     # Enable the setup for primary password
+    about_prefs.open()
     about_prefs.click_on("use-primary-password")
     primary_pw_popup = about_prefs.get_element("browser-popup")
     ba.switch_to_iframe_context(primary_pw_popup)
