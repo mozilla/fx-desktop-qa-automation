@@ -20,15 +20,16 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     """
     C2248176 - Securely Generated Password is auto-saved when generated from password field context menu
     """
-
+    # Instantiate objects
     context_menu = ContextMenu(driver)
     tabs = TabBar(driver)
-    login_autofill = LoginAutofill(driver).open()
+    login_autofill = LoginAutofill(driver)
     nav = Navigation(driver)
     about_logins = AboutLogins(driver)
     autofill_popup_panel = AutofillPopup(driver)
 
-    # Select "Suggest Strong Password..." from password field context menu
+    # Open login autofill test page and select "Suggest Strong Password..." from password field context menu
+    login_autofill.open()
     password_field = login_autofill.get_element("password-login-field")
     login_autofill.context_click(password_field)
     context_menu.click_and_hide_menu("context-menu-suggest-strong-password")
@@ -49,16 +50,16 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     about_logins.open()
 
     # Verify the website address saves the correct value
-    about_logins.element_attribute_contains(
+    about_logins.expect_element_attribute_contains(
         "website-address", "href", "https://mozilla.github.io/"
     )
 
     # Verify the username field has no value
-    about_logins.element_attribute_contains(
+    about_logins.expect_element_attribute_contains(
         "about-logins-page-username-field", "placeholder", "(no username)"
     )
 
     # Verify the password field is filled with a value
-    about_logins.element_attribute_contains(
+    about_logins.expect_element_attribute_contains(
         "about-logins-page-password-hidden", "tabindex", "-1"
     )

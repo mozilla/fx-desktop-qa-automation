@@ -38,6 +38,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     # Instantiate objects
     about_logins = AboutLogins(driver)
     keyboard = Controller()
+    autofill_popup = AutofillPopup(driver)
 
     # Save 3 sets of credentials for facebook
     about_logins.open()
@@ -71,7 +72,6 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     # Open saucedemo.com
     web_page = GenericPage(driver, url=SAUCEDEMO_URL).open()
     web_page.elements |= temp_selectors
-    autofill_popup = AutofillPopup(driver)
 
     # Verify that all 3 credentials and "Manage Passwords" footer are in the pop-up
     web_page.click_on("username-field")
@@ -107,5 +107,5 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     driver.switch_to.window(driver.window_handles[0])
     for i in range(1, 4):
         use_credential_n(i)
-        web_page.element_attribute_contains("username-field", "value", f"username{i}")
-        web_page.element_attribute_contains("password-field", "value", f"password{i}")
+        web_page.expect_element_attribute_contains("username-field", "value", f"username{i}")
+        web_page.expect_element_attribute_contains("password-field", "value", f"password{i}")

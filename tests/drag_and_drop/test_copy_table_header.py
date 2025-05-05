@@ -51,14 +51,14 @@ def test_copy_table_header(driver: Firefox):
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 2)
-        web_page.element_attribute_contains(
+        web_page.expect_element_attribute_contains(
             "text-colour", "style", "rgb(255, 255, 255)"
         )
-        web_page.element_attribute_contains(
+        web_page.expect_element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 1"
         )
         web_page.perform_key_combo(Keys.ARROW_RIGHT)
-        web_page.element_attribute_contains(
+        web_page.expect_element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
         web_page.undo()
@@ -71,14 +71,14 @@ def test_copy_table_header(driver: Firefox):
 
         # Verify that the pasted row has header attributes and the selection is pasted properly
         web_page.expect(lambda _: len(web_page.get_elements("table-options")) == 1)
-        web_page.element_attribute_contains(
+        web_page.expect_element_attribute_contains(
             "text-colour", "style", "rgb(255, 255, 255)"
         )
-        web_page.element_attribute_contains(
+        web_page.expect_element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 1"
         )
         web_page.perform_key_combo(Keys.ARROW_RIGHT)
-        web_page.element_attribute_contains(
+        web_page.expect_element_attribute_contains(
             "formula-box-input", "innerHTML", "Column 2"
         )
 

@@ -39,14 +39,14 @@ class PanelUi(BasePage):
             ]
             return all([EC.presence_of_element_located(el) for el in targeted])
 
+    @BasePage.context_chrome
     def open_panel_menu(self) -> BasePage:
         """
         Opens the PanelUi menu.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            panel_root = self.get_element("panel-ui-button")
-            panel_root.click()
-            self.menu = self.Menu(self, root=panel_root)
+        panel_root = self.get_element("panel-ui-button")
+        panel_root.click()
+        self.menu = self.Menu(self, root=panel_root)
         return self
 
     def select_panel_setting(self, name: str, *labels) -> BasePage:
@@ -181,13 +181,13 @@ class PanelUi(BasePage):
             history_items = self.get_elements("bookmark-item")
             return history_items
 
+    @BasePage.context_chrome
     def redirect_to_about_logins_page(self) -> BasePage:
         """
         Opens the about:logins page by clicking the Password option in Hamburger Menu"
         """
         self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("password-button").click()
+        self.get_element("password-button").click()
         return self
 
     # Bookmarks section

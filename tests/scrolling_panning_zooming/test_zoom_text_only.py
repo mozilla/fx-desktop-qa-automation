@@ -205,7 +205,7 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
 
     # Verify that zoom level badge is correct
     with driver.context(driver.CONTEXT_CHROME):
-        nav.element_attribute_contains("toolbar-zoom-level", "label", "90%")
+        nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
 
     # Verify that only text is zoomed out
     assert (

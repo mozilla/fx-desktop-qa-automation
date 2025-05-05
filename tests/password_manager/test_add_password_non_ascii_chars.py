@@ -13,10 +13,11 @@ def test_add_password_non_ascii_chars(driver: Firefox):
     """
     C2241113 Add password - non-ascii characters
     """
-    # instantiate object
-    about_logins = AboutLogins(driver).open()
+    # Instantiate object
+    about_logins = AboutLogins(driver)
 
-    # Click on the "Add password" button
+    # Open about:logins and click on the "Add password" button
+    about_logins.open()
     about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.

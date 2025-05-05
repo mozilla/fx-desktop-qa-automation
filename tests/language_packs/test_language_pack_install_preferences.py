@@ -27,6 +27,6 @@ def test_language_pack_install_about_preferences(
     # redo the page object since the browsing context is gone
     about_prefs = AboutPrefs(driver, category="general")
     about_prefs.open()
-    about_prefs.element_attribute_contains(
+    about_prefs.expect_element_attribute_contains(
         "language-set-alternative-button", "label", localized_text
     )
