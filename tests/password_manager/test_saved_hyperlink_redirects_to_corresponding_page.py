@@ -22,10 +22,12 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
     """
     C2241089 - Verify that a saved hyperlink redirects to the corresponding page
     """
-    about_logins = AboutLogins(driver).open()
+    # Instantiate objects
+    about_logins = AboutLogins(driver)
     login_autofill = LoginAutofill(driver)
 
     # Add a new login
+    about_logins.open()
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {

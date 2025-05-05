@@ -17,10 +17,12 @@ def test_delete_login(driver_and_saved_logins):
     # Adds 6 fake logins in about:login
     driver, usernames, logins = driver_and_saved_logins
 
-    about_logins = AboutLogins(driver).open()
+    # Instantiate objects
+    about_logins = AboutLogins(driver)
     login_autofill = LoginAutofill(driver)
 
-    # Verify the initial number of saved passwords
+    # Open about:logins and verify the initial number of saved passwords
+    about_logins.open()
     password_count = about_logins.get_element("password-count")
     login_autofill.wait.until(
         lambda _: password_count.get_attribute("innerText") == "6 passwords"

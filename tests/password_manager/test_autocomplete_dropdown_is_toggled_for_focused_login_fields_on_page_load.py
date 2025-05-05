@@ -27,6 +27,7 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     """
     C2240907 - Verify that autocomplete dropdown is toggled for focused login fields on page load
     """
+    # Instantiate objects
     tabs = TabBar(driver)
     about_logins = AboutLogins(driver)
     login_autofill = LoginAutofill(driver)
