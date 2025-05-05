@@ -16,10 +16,11 @@ def test_about_logins_search_username(driver_and_saved_logins):
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
     ba = BrowserActions(driver)
 
-    # Search for a username with 2 results
+    # Open about:logins and search for a username with 2 results
+    about_logins.open()
     ba.clear_and_fill(about_logins.get_element("login-filter-input"), usernames[-1])
 
     # Check that only the correct 2 results are shown

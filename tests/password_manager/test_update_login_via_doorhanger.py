@@ -22,13 +22,14 @@ def test_update_login_via_doorhanger(driver: Firefox):
     C2243013 - Verify that Firefox successfully updates login credentials via the update password doorhanger and
     autofill them on subsequent access
     """
-
-    login_autofill = LoginAutofill(driver).open()
+    # Instantiate objects
+    login_autofill = LoginAutofill(driver)
     autofill_popup_panel = AutofillPopup(driver)
     nav = Navigation(driver)
     context_menu = ContextMenu(driver)
 
     # Creating an instance of the LoginForm within the LoginAutofill page object
+    login_autofill.open()
     login_form = LoginAutofill.LoginForm(login_autofill)
 
     # Fill in the login form in demo page and save the login credentials via the doorhanger

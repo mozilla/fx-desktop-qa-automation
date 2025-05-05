@@ -16,10 +16,11 @@ def test_about_logins_search_website(origins, driver_and_saved_logins):
     """
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
-    about_logins = AboutLogins(driver).open()
+    about_logins = AboutLogins(driver)
     ba = BrowserActions(driver)
 
-    # Search for a website
+    # Open about:logins and search for a website
+    about_logins.open()
     ba.clear_and_fill(about_logins.get_element("login-filter-input"), origins[1])
 
     # Check that only the correct 1 result is shown
