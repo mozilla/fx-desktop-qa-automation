@@ -5,7 +5,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.browser_object import Navigation
 
 SEARCH_TERM = "soccer"
-SEARCH_ENGINES = ["Google", "Amazon.com", "Bing", "DuckDuckGo", "eBay", "Wikipedia (en)"]
+SEARCH_ENGINES = [
+    "Google",
+    "Amazon.com",
+    "Bing",
+    "DuckDuckGo",
+    "eBay",
+    "Wikipedia (en)",
+]
 
 
 @pytest.fixture()
@@ -26,7 +33,6 @@ def test_search_engine_selector_and_validator(driver: Firefox, search_engine: st
 
     nav.search(SEARCH_TERM)
     nav.expect_in_content(lambda d: expected_url_fragment in d.current_url)
-
 
     assert expected_url_fragment in driver.current_url
     nav.clear_awesome_bar()

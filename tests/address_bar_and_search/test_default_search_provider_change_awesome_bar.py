@@ -28,4 +28,6 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
 
     driver.get("about:newtab")
-    nav.expect_element_attribute_contains("awesome-bar", "placeholder", EXPECTED_PLACEHOLDER)
+    nav.expect_element_attribute_contains(
+        "awesome-bar", "placeholder", EXPECTED_PLACEHOLDER
+    )

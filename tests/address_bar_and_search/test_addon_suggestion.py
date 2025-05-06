@@ -42,7 +42,9 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
         nav.type_in_awesome_bar(input_text)
 
         if not nav.element_visible("addon-suggestion"):
-            raise AssertionError(f"Addon suggestion not visible for input: '{input_text}'")
+            raise AssertionError(
+                f"Addon suggestion not visible for input: '{input_text}'"
+            )
 
         nav.select_element_in_nav("addon-suggestion")
         expected_url = f"{ADDONS_BASE_URL}{addon_slug}/"

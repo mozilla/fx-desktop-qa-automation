@@ -2616,7 +2616,7 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: sponsored-suggestion
-Selector Data: urlbarView-row-body-description
+Selector Data: urlbarView-group-aria-label
 Description: Sponsored search results
 Location: URL bar search results
 Path to .json: modules/data/navigation.components.json
@@ -2626,6 +2626,13 @@ Selector name: firefox-suggest
 Selector Data: div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner
 Description: Firefox suggestion search results
 Location: URL bar search results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: suggestion-titles
+Selector Data: urlbarView-title
+Description: Firefox suggestion search results item titles
+Location: URL bar suggestion results
 Path to .json: modules/data/navigation.components.json
 ```
 ```

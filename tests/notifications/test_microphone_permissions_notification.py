@@ -51,7 +51,9 @@ def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
     # Verify that the notification is displayed
     nav.element_visible("popup-notification")
     nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
-    nav.expect_element_attribute_contains("popup-notification", "name", "mozilla.github.io")
+    nav.expect_element_attribute_contains(
+        "popup-notification", "name", "mozilla.github.io"
+    )
     nav.expect_element_attribute_contains(
         "popup-notification", "endlabel", " to use your microphone?"
     )
