@@ -50,14 +50,14 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     # Check Panel UI messages
     panel_ui = PanelUi(driver)
     panel_ui.open_panel_menu()
-    panel_ui.element_attribute_contains("more-tools", "label", MORE_TOOLS_PT)
+    panel_ui.expect_element_attribute_contains("more-tools", "label", MORE_TOOLS_PT)
     panel_ui.click_on("panel-ui-button")
 
     # Check context menu messages (tabs)
     tab_bar = TabBar(driver)
     tab_bar.context_click(tab_bar.get_tab(1))
     tab_context_menu = ContextMenu(driver)
-    tab_context_menu.element_attribute_contains(
+    tab_context_menu.expect_element_attribute_contains(
         "context-menu-duplicate-tab", "label", DUPLICATE_TAB_PT
     )
     tab_context_menu.hide_popup_by_child_node("context-menu-duplicate-tab")
@@ -67,9 +67,9 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     screen_cap.open()
     screen_cap.find_element("id", "start").click()
     nav.element_visible("popup-notification")
-    nav.element_attribute_contains(
+    nav.expect_element_attribute_contains(
         "popup-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
     )
-    nav.element_attribute_contains(
+    nav.expect_element_attribute_contains(
         "popup-notification", "endlabel", SCREEN_CAP_LABEL_BACK_PT
     )

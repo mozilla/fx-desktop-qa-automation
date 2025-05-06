@@ -60,7 +60,7 @@ def test_copy_table_with_hyperlink(driver: Firefox, temp_selectors):
         # Verify that the pasted values are correct
         for row_index, row in enumerate(expected_values):
             for col_index, expected_value in enumerate(row):
-                web_page.element_attribute_contains(
+                web_page.expect_element_attribute_contains(
                     "formula-box-input", "innerHTML", expected_value
                 )
                 # Move to the next cell to the right

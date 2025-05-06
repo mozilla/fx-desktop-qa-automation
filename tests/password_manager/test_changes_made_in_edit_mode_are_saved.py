@@ -37,7 +37,7 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     about_logins.click_on("save-edited-login")
 
     # Verify the username field is changed
-    about_logins.element_attribute_contains(
+    about_logins.expect_element_attribute_contains(
         "about-logins-page-username-field", "value", "Testuser"
     )
 
@@ -45,6 +45,6 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     about_logins.click_on("show-password-checkbox")
 
     # Verify the newly entered password is correctly displayed
-    about_logins.element_attribute_contains(
+    about_logins.expect_element_attribute_contains(
         "about-logins-page-password-revealed", "value", "password123"
     )

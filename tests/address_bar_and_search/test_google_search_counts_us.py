@@ -10,39 +10,48 @@ from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
 
+# Constants
+SEARCH_TERM = "festival"
+SEARCH_PROVIDER_PATH = '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum'
+SEARCH_TAG_PATH = '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]'
+WAIT_AFTER_SEARCH = 5
+WAIT_TELEMETRY_LOAD = 2
+
+# Conditional skip for GitHub Actions on macOS
+MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
+
+
 @pytest.fixture()
 def test_case():
     return "1365026"
 
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
-
-
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in macOS GitHub Actions")
 def test_google_search_counts_us(driver: Firefox):
     """
-    C1365026, Test Google Search counts - urlbar US
+    C1365026: Verify Google search counts in telemetry from the URL bar (US region).
     """
-    # instantiate objects
+
     nav = Navigation(driver)
-    nav.search("festival")
-    sleep(5)
-    u = Utilities()
+    nav.search(SEARCH_TERM)
+    sleep(WAIT_AFTER_SEARCH)
 
-    # Click on Raw JSON, switch tab and click on Raw Data
-    about_telemetry = AboutTelemetry(driver).open()
-    sleep(2)
-    about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_to_new_tab()
-    about_telemetry.get_element("rawdata-tab").click()
+    utils = Utilities()
 
-    # Verify pings are recorded
-    json_data = u.decode_url(driver)
-    assert u.assert_json_value(
-        json_data, '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum', 1
-    )
-    assert u.assert_json_value(
-        json_data,
-        '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]',
-        1,
-    )
+    # === Open about:telemetry and navigate to raw JSON ===
+    telemetry = AboutTelemetry(driver).open()
+    sleep(WAIT_TELEMETRY_LOAD)
+    telemetry.get_element("category-raw").click()
+    telemetry.switch_to_new_tab()
+    telemetry.get_element("rawdata-tab").click()
+
+    # === Decode telemetry and validate search provider data ===
+    json_data = utils.decode_url(driver)
+
+    assert utils.assert_json_value(
+        json_data, SEARCH_PROVIDER_PATH, 1
+    ), f"Expected 1 Google search in path: {SEARCH_PROVIDER_PATH}"
+
+    assert utils.assert_json_value(
+        json_data, SEARCH_TAG_PATH, 1
+    ), f"Expected 1 tagged Google search in path: {SEARCH_TAG_PATH}"

@@ -47,7 +47,7 @@ def test_pdf_data_can_be_cleared(
     # Step 1: Click and type inside the text field for the name section
 
     pdf_viewer.fill("first-name-field", TEST_NAME)
-    pdf_viewer.element_attribute_contains("first-name-field", "value", TEST_NAME)
+    pdf_viewer.expect_element_attribute_contains("first-name-field", "value", TEST_NAME)
 
     # Step 2: Click over any checkbox and assert the status is updated
 

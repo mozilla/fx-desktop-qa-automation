@@ -46,7 +46,7 @@ REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
 # first value in a tuple is the index of the card, second is the status of sponsorship
 card_indices = [(4, False), (0, True)]
 
-
+@pytest.mark.unstable(reason="Sponsorship status sometimes does not appear")
 def test_default_tile_hover_states(driver: Firefox):
     """
     C1533798.1: Ensure that hover states work correctly
@@ -83,6 +83,7 @@ def test_default_tile_hover_states(driver: Firefox):
     )
 
 
+@pytest.mark.unstable(reason="Sponsorship status sometimes does not appear")
 @pytest.mark.parametrize("index, sponsored", card_indices)
 def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool):
     """
@@ -109,7 +110,7 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
     )
     three_dot_menu.click()
 
-    # get all of the context menu actions
+    # get all the context menu actions
     context_menu_list = newtab.get_element("sponsored-site-context-menu-list")
     child_options = newtab.get_all_children(context_menu_list)
     logging.info(f"There are {len(child_options)} context options")

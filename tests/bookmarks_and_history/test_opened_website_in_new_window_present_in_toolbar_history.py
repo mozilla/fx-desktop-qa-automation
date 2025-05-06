@@ -36,4 +36,4 @@ def test_the_website_opened_in_new_window_is_present_in_history_menu(driver: Fir
     panel_ui.open_history_menu()
 
     # Verify YouTube is present in the history menu and is on top of the list as the most recent website visited
-    panel_ui.element_attribute_contains("recent-history-content", "value", "YouTube")
+    panel_ui.expect_element_attribute_contains("recent-history-content", "value", "YouTube")

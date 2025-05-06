@@ -44,7 +44,7 @@ def test_copy_from_an_editor_paste_in_another(driver: Firefox, sys_platform):
         for row_index, row in enumerate(expected_values):
             for col_index, expected_value in enumerate(row):
                 # Check that the current cell's value matches expected_value
-                web_page.element_attribute_contains(
+                web_page.expect_element_attribute_contains(
                     "formula-box-input", "innerHTML", expected_value
                 )
                 # Move to the next cell to the right

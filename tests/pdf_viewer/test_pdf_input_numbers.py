@@ -48,4 +48,4 @@ def test_pdf_input_numbers(
     pdf_viewer.fill_element("zipcode-field", TEST_VALUE + Keys.TAB)
 
     # Verify the value is still present
-    pdf_viewer.element_attribute_contains("zipcode-field", "value", TEST_VALUE)
+    pdf_viewer.expect_element_attribute_contains("zipcode-field", "value", TEST_VALUE)

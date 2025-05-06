@@ -41,7 +41,7 @@ def test_password_can_be_shown(driver: Firefox):
     ba.switch_to_iframe_context(primary_pw_popup)
 
     # Current password field is empty and cannot be changed
-    about_prefs.element_attribute_contains("current-password", "disabled", "true")
+    about_prefs.expect_element_attribute_contains("current-password", "disabled", "true")
 
     # Primary password can be changed
     about_prefs.get_element("enter-new-password").send_keys("securePassword1")
@@ -71,6 +71,6 @@ def test_password_can_be_shown(driver: Firefox):
 
     # Verify that the password is unmasked by checking that the type is now text.
     driver.switch_to.window(driver.window_handles[0])
-    about_logins.element_attribute_contains(
+    about_logins.expect_element_attribute_contains(
         "about-logins-page-password-revealed", "type", "text"
     )

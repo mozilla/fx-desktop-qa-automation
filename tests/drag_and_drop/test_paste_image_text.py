@@ -78,7 +78,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
     web_page.paste_to_element(sys_platform, "drop-area")
-    web_page.element_attribute_contains("matching", "outerHTML", "green")
+    web_page.expect_element_attribute_contains("matching", "outerHTML", "green")
 
     # Test pasting text data
     web_page.click_on("paste-html-data")
@@ -96,4 +96,4 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
     web_page.paste_to_element(sys_platform, "drop-area")
-    web_page.element_attribute_contains("matching", "outerHTML", "green")
+    web_page.expect_element_attribute_contains("matching", "outerHTML", "green")
