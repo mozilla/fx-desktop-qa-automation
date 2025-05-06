@@ -6,6 +6,7 @@ from modules.browser_object import ContextMenu, Navigation, TabBar
 TEST_URL = "https://youtube.com"
 EXPECTED_ENGINE = "YouTube"
 
+
 @pytest.fixture()
 def test_case():
     return "1365478"

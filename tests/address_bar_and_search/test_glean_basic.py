@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from werkzeug.wrappers import Request, Response
 
 from modules.browser_object import Navigation
-from modules.page_object import AboutGlean, AboutPrefs, GenericPage, AboutConfig
+from modules.page_object import AboutConfig, AboutGlean, AboutPrefs, GenericPage
 from modules.util import Utilities
 
 # Constants
@@ -34,7 +34,9 @@ def test_case():
     return "2234689"
 
 
-def _verify_glean_ping(ping_actual: str, ping_expected: str, engine_actual: str, engine_expected: str):
+def _verify_glean_ping(
+    ping_actual: str, ping_expected: str, engine_actual: str, engine_expected: str
+):
     assert ping_actual == ping_expected
     assert engine_actual.lower() == engine_expected.lower()
 
@@ -50,7 +52,9 @@ def glean_handler(request: Request) -> Response:
             engine_name = body
             for key in PING_METRIC_PATH:
                 engine_name = engine_name[key]
-            expected_engine = ENGINE_NAME_INITIAL if pings_with_id == 0 else ENGINE_NAME_UPDATED
+            expected_engine = (
+                ENGINE_NAME_INITIAL if pings_with_id == 0 else ENGINE_NAME_UPDATED
+            )
             _verify_glean_ping(
                 ping_actual=incoming_ping_id,
                 ping_expected=ping_id_global,

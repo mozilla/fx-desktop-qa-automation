@@ -18,7 +18,9 @@ def test_case():
 
 
 @pytest.mark.parametrize("search_engine, prefix, url", SEARCH_MODES)
-def test_search_modes_for_sites(driver: Firefox, search_engine: str, prefix: str, url: str):
+def test_search_modes_for_sites(
+    driver: Firefox, search_engine: str, prefix: str, url: str
+):
     """
     C2234690 - Verify that typing the first two letters of a search engine activates its mode in the address bar.
     """

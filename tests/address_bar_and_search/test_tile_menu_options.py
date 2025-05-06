@@ -46,6 +46,7 @@ REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
 # first value in a tuple is the index of the card, second is the status of sponsorship
 card_indices = [(4, False), (0, True)]
 
+
 @pytest.mark.unstable(reason="Sponsorship status sometimes does not appear")
 def test_default_tile_hover_states(driver: Firefox):
     """

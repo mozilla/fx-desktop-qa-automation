@@ -107,5 +107,9 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     driver.switch_to.window(driver.window_handles[0])
     for i in range(1, 4):
         use_credential_n(i)
-        web_page.expect_element_attribute_contains("username-field", "value", f"username{i}")
-        web_page.expect_element_attribute_contains("password-field", "value", f"password{i}")
+        web_page.expect_element_attribute_contains(
+            "username-field", "value", f"username{i}"
+        )
+        web_page.expect_element_attribute_contains(
+            "password-field", "value", f"password{i}"
+        )
