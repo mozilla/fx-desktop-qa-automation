@@ -75,4 +75,4 @@ def test_search_suggests_enabled(driver: Firefox):
         found_non_sponsored = any(
             "Wikipedia - wiki.phtml" in title.text for title in titles
         )
-    assert found_non_sponsored == True
+    assert found_non_sponsored, f"Non-sponsored suggestion not found"
