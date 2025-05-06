@@ -48,7 +48,10 @@ def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
 
         # Temporary fix before the other bookmarks issue is fixed
         nav.get_element("star-button").click()
-        assert panel.get_element("bookmark-location").get_attribute("label") == "Other Bookmarks"
+        assert (
+            panel.get_element("bookmark-location").get_attribute("label")
+            == "Other Bookmarks"
+        )
         # Check bookmark name and location are changed in the bookmarks toolbar
         # panel.get_element("other-bookmarks-toolbar").click()
         # panel.element_visible("other-bookmarks-by-title", labels=["Mozilla Firefox"])

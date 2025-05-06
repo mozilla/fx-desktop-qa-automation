@@ -7,12 +7,12 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 from modules.util import BrowserActions
-from selenium.webdriver import Firefox
 
 
 class AboutConfig(BasePage):
