@@ -9,7 +9,6 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
-
 # Constants
 SEARCH_TERM = "festival"
 SEARCH_PROVIDER_PATH = '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum'
@@ -48,10 +47,10 @@ def test_google_search_counts_us(driver: Firefox):
     # === Decode telemetry and validate search provider data ===
     json_data = utils.decode_url(driver)
 
-    assert utils.assert_json_value(
-        json_data, SEARCH_PROVIDER_PATH, 1
-    ), f"Expected 1 Google search in path: {SEARCH_PROVIDER_PATH}"
+    assert utils.assert_json_value(json_data, SEARCH_PROVIDER_PATH, 1), (
+        f"Expected 1 Google search in path: {SEARCH_PROVIDER_PATH}"
+    )
 
-    assert utils.assert_json_value(
-        json_data, SEARCH_TAG_PATH, 1
-    ), f"Expected 1 tagged Google search in path: {SEARCH_TAG_PATH}"
+    assert utils.assert_json_value(json_data, SEARCH_TAG_PATH, 1), (
+        f"Expected 1 tagged Google search in path: {SEARCH_TAG_PATH}"
+    )
