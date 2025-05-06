@@ -4,7 +4,7 @@ from modules.testrail_integration import testrail_init
 
 # Configuration
 PROJECT_ID = 17
-# SUITE_NAMES = ["Bookmarks and History", "Drag and Drop", "Find Toolbar", "Audio/Video", "Downloads", "WebRTC"]
+SUITE_NAMES = ["Downloads"]
 CUSTOM_SUB_TEST_SUITES = 1  # "Functional Only"
 
 # Set TestRail credentials
@@ -44,7 +44,8 @@ if __name__ == "__main__":
 
     # Get suite IDs for the selected suite names
     suites = tr.get_suites(PROJECT_ID)
-    suite_ids = [suite["id"] for suite in suites]
+    # suite_ids = [suite["id"] for suite in suites]
+    suite_ids = [suite["id"] for suite in suites if suite["name"] in SUITE_NAMES]
     logging.info(f"Found suites: {suite_ids}")
 
     all_cases = []
@@ -55,6 +56,24 @@ if __name__ == "__main__":
     logging.info(f"Total test cases found for selected suites: {len(all_cases)}")
 
     for case in all_cases:
-        tr.update_case_field(case["id"], "custom_sub_tests_suites", CUSTOM_SUB_TEST_SUITES)
+        result = tr.update_case_field(case["id"], "custom_sub_tests_suites", CUSTOM_SUB_TEST_SUITES)
+        logging.debug(f"Updated case {case['id']} result: {result}")
 
     logging.info("All applicable test cases updated to 'Functional Only' successfully!")
+
+    # Re-verify that all cases have been updated correctly
+    logging.info("Verifying that all test cases were updated correctly...")
+    failed_updates = []
+
+    for suite_id in suite_ids:
+        updated_cases = get_all_cases_from_suite(tr, PROJECT_ID, suite_id)
+        for case in updated_cases:
+            if case.get("custom_sub_tests_suites") != CUSTOM_SUB_TEST_SUITES:
+                failed_updates.append(case["id"])
+
+    if failed_updates:
+        logging.warning(f"The following case IDs were not updated correctly: {failed_updates}")
+        logging.warning(f"Number of failed updates: {len(failed_updates)}")
+
+    else:
+        logging.info("All test cases have the correct 'custom_sub_tests_suites' value.")
