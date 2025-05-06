@@ -8,11 +8,11 @@ from modules.browser_object import TabBar
 
 @pytest.fixture()
 def test_case():
-    return "134647"
+    return "134654"
 
 
 def test_navigation_multiple_tabs(driver: Firefox):
-    """C134647 - Verify that multiple tabs can be navigated via the scroll buttons"""
+    """C134647 - Verify that navigation through multiple tabs is allowed"""
 
     tabs = TabBar(driver)
     num_tabs = 20
