@@ -16,6 +16,7 @@ def hard_quit():
 
 
 PRIMARY_PASSWORD = "securePassword1"
+ALERT_MESSAGE = "Primary Password successfully changed."
 
 
 def test_add_primary_password(driver: Firefox):
@@ -45,5 +46,5 @@ def test_add_primary_password(driver: Firefox):
     # Check that the pop-up appears
     with driver.context(driver.CONTEXT_CHROME):
         alert = about_prefs.get_alert()
-        assert alert.text == "Primary Password successfully changed."
+        assert alert.text == ALERT_MESSAGE
         alert.accept()

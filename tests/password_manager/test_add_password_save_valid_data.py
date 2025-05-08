@@ -10,6 +10,9 @@ def test_case():
     return "2241112"
 
 
+WEBSITE_ADDRESS = "mozilla.org"
+
+
 def test_add_password_save_valid_data(driver: Firefox):
     """
     C2241112 Verify that a password can be added and saved
@@ -34,7 +37,7 @@ def test_add_password_save_valid_data(driver: Firefox):
     about_logins.get_element("login-list-item")
     logins = about_logins.get_elements("login-list-item")
     mozilla_login = next(
-        login for login in logins if login.get_attribute("title") == "mozilla.org"
+        login for login in logins if login.get_attribute("title") == WEBSITE_ADDRESS
     )
     assert mozilla_login
 
