@@ -176,7 +176,7 @@ jobs:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Install Executable
         if: ${{ inputs.mac_executable_link }}
-        run:
+        run: |
           curl -o Firefox.dmg -L ${{ inputs.mac_executable_link }}
           hdiutil attach Firefox.dmg
           curl -o geckodriver.tar.gz -L "$(pipenv run python collect_executables.py -g)"
