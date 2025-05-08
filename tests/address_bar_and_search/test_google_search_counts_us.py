@@ -22,7 +22,7 @@ MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("d
 
 @pytest.fixture()
 def test_case():
-    return "1365026"
+    return "3029528"
 
 
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in macOS GitHub Actions")

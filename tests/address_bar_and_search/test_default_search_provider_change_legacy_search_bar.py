@@ -13,7 +13,7 @@ SEARCH_SETTINGS_URL = "about:preferences#search"
 
 @pytest.fixture()
 def test_case():
-    return "1365245"
+    return "3028796"
 
 
 def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
