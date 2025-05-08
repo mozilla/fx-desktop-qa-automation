@@ -14,6 +14,16 @@ on:
       job_to_run:
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      win_executable_link:
+        description: 'The link to the Windows executable to run smoke tests for'
+        required: true
+        type: string
+      mac_executable_link:
+        description: 'The link to the macOS executable to run smoke tests for'
+        required: true
+        type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -65,10 +75,17 @@ jobs:
           unzip geckodriver.zip
         shell: pwsh
       - name: Download Beta
+        if: ${{ !inputs.win_executable_link }}
         run: |
           $fx_url = (pipenv run python collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+        shell: pwsh
+      - name: Download Executable
+        if: ${{ inputs.win_executable_link }}
+        run: |
+          Invoke-WebRequest -Uri ${{ inputs.win_executable_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Install Beta
@@ -153,7 +170,17 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
+      - name: Install Beta
+        if: ${{ !inputs.mac_executable_link }}
+        run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
+      - name: Install Executable
+        if: ${{ inputs.mac_executable_link }}
+        run:
+          curl -o Firefox.dmg -L ${{ inputs.mac_executable_link }}
+          hdiutil attach Firefox.dmg
+          curl -o geckodriver.tar.gz -L "$(pipenv run python collect_executables.py -g)"
+          tar -xvzf geckodriver.tar.gz
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
