@@ -170,9 +170,6 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
           pipenv install;
-      - name: Install Beta
-        if: ${{ !inputs.mac_executable_link }}
-        run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Install Executable
         if: ${{ inputs.mac_executable_link }}
