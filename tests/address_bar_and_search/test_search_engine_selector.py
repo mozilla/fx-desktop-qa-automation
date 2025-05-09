@@ -1,6 +1,5 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 
@@ -17,7 +16,7 @@ SEARCH_ENGINES = [
 
 @pytest.fixture()
 def test_case():
-    return "1365151"
+    return "3028714"
 
 
 @pytest.mark.parametrize("search_engine", SEARCH_ENGINES)

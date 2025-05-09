@@ -15,7 +15,7 @@ EXPECTED_TEXT_FRAGMENT = "nationalgeographic.com/science"
 
 @pytest.fixture()
 def test_case():
-    return "1814373"
+    return "3029070"
 
 
 @pytest.fixture()

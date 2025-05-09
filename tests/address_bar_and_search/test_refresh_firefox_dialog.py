@@ -10,7 +10,7 @@ DIALOG_ID = "refresh-firefox-dialog"
 
 @pytest.fixture()
 def test_case():
-    return "2914620"
+    return "3028765"
 
 
 def test_refresh_firefox_dialog(driver: Firefox):

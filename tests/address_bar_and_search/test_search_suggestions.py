@@ -16,7 +16,7 @@ SECONDS = 3
 
 @pytest.fixture()
 def test_case():
-    return "1618400"
+    return "3029158"
 
 
 def test_search_suggests_enabled(driver: Firefox):

@@ -7,7 +7,7 @@ from modules.browser_object import Navigation
 
 @pytest.fixture()
 def test_case():
-    return "1365228"
+    return "3028780"
 
 
 sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
