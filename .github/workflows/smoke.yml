@@ -250,7 +250,7 @@ jobs:
           echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running smoke tests on supplied executable";
           uname -m;
-          apt install xvfb;
+          sudo apt install xvfb;
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
