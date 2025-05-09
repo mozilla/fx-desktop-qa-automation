@@ -1,5 +1,5 @@
 ---
-name: Mac and Windows Smoke
+name: Smoke Test Execution
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
