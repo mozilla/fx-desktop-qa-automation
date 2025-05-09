@@ -14,6 +14,16 @@ on:
       job_to_run:
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      win_executable_link:
+        description: 'The link to the Windows executable to run smoke tests for'
+        required: true
+        type: string
+      mac_executable_link:
+        description: 'The link to the macOS executable to run smoke tests for'
+        required: true
+        type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -23,7 +33,7 @@ env:
 
 jobs:
   Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request' }}
+    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -65,10 +75,17 @@ jobs:
           unzip geckodriver.zip
         shell: pwsh
       - name: Download Beta
+        if: ${{ !inputs.win_executable_link }}
         run: |
           $fx_url = (pipenv run python collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+        shell: pwsh
+      - name: Download Executable
+        if: ${{ inputs.win_executable_link }}
+        run: |
+          Invoke-WebRequest -Uri ${{ inputs.win_executable_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Install Beta
@@ -117,7 +134,7 @@ jobs:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' }}
+    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -145,14 +162,18 @@ jobs:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Install dependencies
-        id: setup
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
+          pipenv install
+      - name: Install Fx
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_executable_link }}
+        run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
