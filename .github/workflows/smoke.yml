@@ -255,7 +255,7 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
-          mv ./ci_pyproject.toml ./pyproject.toml;
+          mv ./ci_xvfb_pyproject.toml ./pyproject.toml;
           pipenv install;
           ./collect_executables.sh
           ./firefox/firefox --version;
@@ -275,7 +275,7 @@ jobs:
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
-          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
           pipenv run python choose_ci_set.py
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE

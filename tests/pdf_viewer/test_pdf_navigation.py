@@ -144,6 +144,7 @@ def test_toolbar_options_cursor(driver: Firefox, pdf_viewer: GenericPdf):
     assert cursor_style == "auto"
 
 
+@pytest.mark.noxvfb
 def test_toolbar_options_rotate_cw(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.5: Ensure the correct rotation is shown
@@ -162,6 +163,7 @@ def test_toolbar_options_rotate_cw(driver: Firefox, pdf_viewer: GenericPdf):
         )
 
 
+@pytest.mark.noxvfb
 def test_toolbar_options_rotate_ccw(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.5: Ensure the correct rotation is shown
