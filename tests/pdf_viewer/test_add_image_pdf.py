@@ -33,6 +33,7 @@ def add_to_prefs_list():
 
 
 @pytest.mark.headed
+@pytest.mark.noxvfb
 def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):
     """
     C2228202: Verify that the user is able to add an image to a PDF file.

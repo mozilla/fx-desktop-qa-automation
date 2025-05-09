@@ -25,6 +25,7 @@ def delete_files_regex_string():
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """
     C1756748: Verify the user can add the .doc type

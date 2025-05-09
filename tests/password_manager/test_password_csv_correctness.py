@@ -16,6 +16,7 @@ def test_case():
 
 
 @pytest.mark.headed
+@pytest.mark.noxvfb
 def test_password_csv_correctness(
     driver_and_saved_logins, downloads_folder, sys_platform
 ):
