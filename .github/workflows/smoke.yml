@@ -18,15 +18,15 @@ on:
     inputs:
       win_installer_link:
         description: 'The link to the Windows installer (win64) for the Fx under test'
-        required: true
+        required: false
         type: string
       mac_installer_link:
         description: 'The link to the macOS installer for the Fx under test'
-        required: true
+        required: false
         type: string
       linux_tarball_link:
         description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
-        required: true
+        required: false
         type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
@@ -37,7 +37,7 @@ env:
 
 jobs:
   Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -146,7 +146,7 @@ jobs:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -220,7 +220,7 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
   Smoke-Linux:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
       - name: Create app token
@@ -249,8 +249,8 @@ jobs:
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running smoke tests on supplied executable";
+          sudo apt install gnome-screenshot
           uname -m;
-          sudo apt install xvfb;
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
@@ -267,7 +267,8 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run python choose_ci_set.py
-          Xvfb :99 & DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
+          Xvfb :99 '1600x1200x24' > ~/artifacts/xvfb/xvfb.log 2>&1
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in Ubuntu (Headed)
         if: steps.setup.conclusion == 'success' && always()
@@ -276,7 +277,7 @@ jobs:
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run python choose_ci_set.py
-          Xvfb :99 & DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:
