@@ -267,7 +267,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           pipenv run python choose_ci_set.py;
-          Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log;
+          Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in Ubuntu (Headed)
