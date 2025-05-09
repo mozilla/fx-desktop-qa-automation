@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
     inputs:
       win_installer_link:
-        description: 'The link to the Windows installer for the Fx under test'
+        description: 'The link to the Windows installer (win64) for the Fx under test'
         required: true
         type: string
       mac_installer_link:
@@ -25,7 +25,7 @@ on:
         required: true
         type: string
       linux_tarball_link:
-        description: 'The link to the Linux tarball for the Fx under test'
+        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: true
         type: string
 env:
@@ -249,6 +249,7 @@ jobs:
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running smoke tests on supplied executable";
+          uname -m
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
@@ -257,7 +258,7 @@ jobs:
           pipenv install;
           ./collect_executables.sh
           ./firefox/firefox --version;
-          . ./keyring-unlock.sh;
+          #. ./keyring-unlock.sh;
       - name: Run Smoke Tests in Ubuntu
         if: steps.setup.conclusion == 'success'
         env:
