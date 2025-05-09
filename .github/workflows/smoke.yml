@@ -50,7 +50,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Set Environment
+      - name: Set Environment (Manual)
+        if: ${{ inputs.win_executable_link }}
+        run: |
+          $env_contents = @"
+          MANUAL='true'
+          "@
+          New-item -Name .env -Value $env_contents -ItemType File -Force
+          Write-Host "Running smoke tests on supplied executable"
+      - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
         run: |
           $env_contents = @"
@@ -156,11 +164,16 @@ jobs:
           python check_test_cases.py
           exit $?
           echo "Triggered by event: ${{ github.event_name }}"
-      - name: Set Environment
+      - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
+      - name: Set Environment (Manual)
+        if: ${{ inputs.mac_executable_link }}
+        run: |
+          echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
