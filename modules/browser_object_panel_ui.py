@@ -221,3 +221,126 @@ class PanelUi(BasePage):
         """
         self.element_visible("bookmark-by-title", labels=[bookmark_title])
         return self
+
+    @BasePage.context_chrome
+    def prepare_bookmark_for_editing(self) -> BasePage:
+        """
+        Opens the Edit panel for the current tab's bookmark
+
+        Note:
+          This method assumes the page is already bookmarked. It should be called
+          after opening the bookmarks panel via open_bookmarks_panel_from_hamburger_menu().
+        """
+        self.get_element("bookmark-current-tab").click()
+        return self
+
+    @BasePage.context_chrome
+    def edit_bookmark_details(self, name: str, tags: str, location: str) -> BasePage:
+        """
+        Edits the details of a bookmark that is already in edit mode.
+
+        Arguments:
+        name: New name for the bookmark
+        tags: Comma-separated list of tags to add
+        location: Location to move the bookmark to (e.g. "Other Bookmarks")
+        """
+        # Get Navigation instance
+        from modules.browser_object_navigation import Navigation
+        nav = Navigation(self.driver)
+
+        # Edit name - skip clear() which seems to be causing issues
+        edit_input = nav.get_element("edit-bookmark-panel")
+        # Instead of clear(), which might not work if the element isn't fully visible
+        # Just send the new name directly - Firefox UI usually selects all text by default
+        edit_input.send_keys(name)
+
+        # Add tags
+        tags_input = self.get_element("bookmark-tags")
+        # Also skip clear() here
+        tags_input.send_keys(tags)
+
+        # Change location
+        self.get_element("bookmark-location").click()
+        location_id = location.lower().replace(" ", "-")
+        self.get_element(location_id).click()
+
+        # Save changes
+        nav.get_element("save-bookmark-button").click()
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_in_toolbar(self, name: str, location: str) -> BasePage:
+        """
+        Verify bookmark appears in the specified toolbar location with the correct name
+
+        Parameters:
+        -----------
+        name: str
+            Name of the bookmark
+        location: str
+            Location of the bookmark (e.g. "Other Bookmarks")
+        """
+        location_id = f"{location.lower().replace(' ', '-')}-toolbar"
+        self.get_element(location_id).click()
+
+        # Check for bookmark by title
+        bookmark_id = f"{location.lower().replace(' ', '-')}-by-title"
+        self.element_visible(bookmark_id, labels=[name])
+
+        # Close dropdown
+        self.get_element(location_id).click()
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_tags(self, tags: list) -> BasePage:
+        """
+        Verify that bookmark tags are correctly applied
+
+        Parameters:
+        -----------
+        tags: list
+            List of tags that should be applied to the bookmark
+        """
+        self.get_element("extend-bookmark-tags").click()
+
+        for tag in tags:
+            tag_id = f"{tag.lower().replace(' ', '')}-tag"
+            tag_element = self.get_element(tag_id)
+            assert tag_element.get_attribute("checked") is None, f"Tag {tag} should be checked"
+
+        return self
+
+
+    @BasePage.context_chrome
+    def edit_bookmark_details(self, name: str, tags: str, location: str) -> BasePage:
+        """
+        Edits the details of a bookmark that is already in edit mode.
+
+        Parameters:
+        -----------
+        name: str
+            New name for the bookmark
+        tags: str
+            Comma-separated list of tags to add
+        location: str
+            Location to move the bookmark to (e.g. "Other Bookmarks")
+        """
+        # Get Navigation instance to access elements in browser chrome
+        nav = self.navigation
+
+        # Edit name
+        edit_input = nav.get_element("edit-bookmark-panel")
+        edit_input.send_keys(name)
+
+        # Add tags
+        tags_input = self.get_element("bookmark-tags")
+        tags_input.send_keys(tags)
+
+        # Change location
+        self.get_element("bookmark-location").click()
+        location_id = location.lower().replace(" ", "-")
+        self.get_element(location_id).click()
+
+        # Save changes
+        nav.get_element("save-bookmark-button").click()
+        return self
