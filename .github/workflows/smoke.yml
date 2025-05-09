@@ -249,7 +249,8 @@ jobs:
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running smoke tests on supplied executable";
-          uname -m
+          uname -m;
+          apt install xvfb;
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
@@ -261,26 +262,22 @@ jobs:
           #. ./keyring-unlock.sh;
       - name: Run Smoke Tests in Ubuntu
         if: steps.setup.conclusion == 'success'
-        uses: coactions/setup-xvfb@v1
         env:
           FX_EXECUTABLE: ./firefox/firefox
-        with:
-          run: |
-            "$FX_EXECUTABLE" --version
-            pipenv run python choose_ci_set.py
-            pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
-            exit $TEST_EXIT_CODE
+        run: |
+          "$FX_EXECUTABLE" --version
+          pipenv run python choose_ci_set.py
+          Xvfb :99 & DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
+          exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in Ubuntu (Headed)
         if: steps.setup.conclusion == 'success' && always()
-        uses: coactions/setup-xvfb@v1
         env:
           FX_EXECUTABLE: ./firefox/firefox
-        with:
-          run: |
-            mv ./ci_pyproject_headed.toml ./pyproject.toml;
-            pipenv run python choose_ci_set.py
-            pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
-            exit $TEST_EXIT_CODE
+        run: |
+          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          pipenv run python choose_ci_set.py
+          Xvfb :99 & DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          exit $TEST_EXIT_CODE
 
   Use-Artifacts:
     runs-on: ubuntu-latest
