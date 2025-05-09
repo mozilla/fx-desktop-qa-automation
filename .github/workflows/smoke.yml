@@ -16,12 +16,16 @@ on:
         type: string
   workflow_dispatch:
     inputs:
-      win_executable_link:
-        description: 'The link to the Windows executable to run smoke tests for'
+      win_installer_link:
+        description: 'The link to the Windows installer for the Fx under test'
         required: true
         type: string
-      mac_executable_link:
-        description: 'The link to the macOS executable to run smoke tests for'
+      mac_installer_link:
+        description: 'The link to the macOS installer for the Fx under test'
+        required: true
+        type: string
+      linux_tarball_link:
+        description: 'The link to the Linux tarball for the Fx under test'
         required: true
         type: string
 env:
@@ -51,7 +55,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment (Manual)
-        if: ${{ inputs.win_executable_link }}
+        if: ${{ inputs.win_installer_link }}
         run: |
           $env_contents = @"
           MANUAL='true'
@@ -83,7 +87,7 @@ jobs:
           unzip geckodriver.zip
         shell: pwsh
       - name: Download Beta
-        if: ${{ !inputs.win_executable_link }}
+        if: ${{ !inputs.win_installer_link }}
         run: |
           $fx_url = (pipenv run python collect_executables.py) -join "`n"
           echo $fx_url
@@ -91,9 +95,9 @@ jobs:
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Download Executable
-        if: ${{ inputs.win_executable_link }}
+        if: ${{ inputs.win_installer_link }}
         run: |
-          Invoke-WebRequest -Uri ${{ inputs.win_executable_link }} -OutFile "${{ github.workspace }}\setup.exe"
+          Invoke-WebRequest -Uri ${{ inputs.win_installer_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Install Beta
@@ -170,7 +174,7 @@ jobs:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Set Environment (Manual)
-        if: ${{ inputs.mac_executable_link }}
+        if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running smoke tests on supplied executable";
@@ -185,7 +189,7 @@ jobs:
       - name: Install Fx
         id: setup
         env:
-          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_executable_link }}
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
       - name: Run Smoke Tests in MacOS
@@ -215,6 +219,64 @@ jobs:
         with:
           name: artifacts-mac
           path: artifacts-mac
+  Smoke-Linux:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check test case numbers
+        run: |
+          python check_test_cases.py
+          exit $?
+          echo "Triggered by event: ${{ github.event_name }}"
+      - name: Install dependencies
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
+          echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "Running smoke tests on supplied executable";
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install;
+          ./collect_executables.sh
+          ./firefox/firefox --version;
+          . ./keyring-unlock.sh;
+      - name: Run Smoke Tests in Ubuntu
+        if: steps.setup.conclusion == 'success'
+        env:
+          FX_EXECUTABLE: ./firefox/firefox
+        run: |
+          "$FX_EXECUTABLE" --version
+          pipenv run python choose_ci_set.py
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
+          exit $TEST_EXIT_CODE
+      - name: Run Smoke Tests in Ubuntu (Headed)
+        if: steps.setup.conclusion == 'success' && always()
+        env:
+          FX_EXECUTABLE: ./firefox/firefox
+          REPORTABLE: true
+        run: |
+          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          pipenv run python choose_ci_set.py
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          exit $TEST_EXIT_CODE
 
   Use-Artifacts:
     runs-on: ubuntu-latest
