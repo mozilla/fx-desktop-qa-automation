@@ -61,6 +61,8 @@ def test_update_login_via_doorhanger(driver: Firefox):
     # Select Reveal password from password field context menu for headed run purpose only
     password_field = login_autofill.get_element("password-login-field")
     login_autofill.context_click(password_field)
+    # login_autofill.context_click("password-login-field")
+
     context_menu.click_and_hide_menu("context-menu-reveal-password")
 
     # Verify the password matches updated password value

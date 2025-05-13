@@ -16,7 +16,7 @@ def test_password_can_be_shown(driver: Firefox):
     """
     C2264688: Verify that the Show Password button prompts for the Primary Password before revealing the saved login
     """
-    # instantiate object
+    # Instantiate object
     about_logins = AboutLogins(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)

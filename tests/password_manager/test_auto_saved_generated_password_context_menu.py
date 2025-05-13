@@ -16,6 +16,9 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
+UPDATE_DOORHANGER_TEXT = "Update password for mozilla.github.io?"
+
+
 def test_auto_saved_generated_password_context_menu(driver: Firefox):
     """
     C2248176 - Securely Generated Password is auto-saved when generated from password field context menu
@@ -43,7 +46,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
         update_doorhanger = autofill_popup_panel.get_element(
             "password-update-doorhanger"
         )
-        assert update_doorhanger.text == "Update password for mozilla.github.io?"
+        assert update_doorhanger.text == UPDATE_DOORHANGER_TEXT
 
     # Navigate to about:logins page
     tabs.switch_to_new_tab()

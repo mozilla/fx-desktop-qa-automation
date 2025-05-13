@@ -13,7 +13,7 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     """
     C2241121 - Verify that changes made in Edit Mode are saved
     """
-    # instantiate object
+    # Instantiate object
     about_logins = AboutLogins(driver)
 
     # Open about:logins and add a new login
