@@ -2,8 +2,6 @@ import time
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
-
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_generics import GenericPage
@@ -16,11 +14,9 @@ def test_case():
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
-
-
-# ENABLE_ADD_TAG = """
-#             PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);
-#         """
+ENABLE_ADD_TAG = """
+            PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);
+        """
 
 
 def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
@@ -42,6 +38,7 @@ def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
 
     # Open bookmark for editing via hamburger menu
     panel.open_bookmarks_panel_from_hamburger_menu()
+
     panel.prepare_bookmark_for_editing()
 
     # Change bookmark name, location and add a tag
@@ -51,18 +48,11 @@ def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
         location="Other Bookmarks"
     )
 
-    # Wait for the star button to be visible and clickable
-    nav.wait.until(EC.element_to_be_clickable(nav.get_selector("blue-star-button")))
-    nav.get_element("blue-star-button").click()
-
-    # Verify bookmark location is correct
-    assert (
-        panel.get_element("bookmark-location").get_attribute("label")
-        == "Other Bookmarks"
-    )
+    # Click the blue star button
+    nav.click_on("blue-star-button")
 
     # Verify bookmark name and location in toolbar
     panel.verify_bookmark_in_toolbar("Mozilla Firefox", "Other Bookmarks")
-    
+
     # Verify bookmark tags
     panel.verify_bookmark_tags(["Work", "To do"])

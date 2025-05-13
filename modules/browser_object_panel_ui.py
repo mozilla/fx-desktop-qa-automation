@@ -198,8 +198,7 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-bookmarks").click()
+        self.click_on("panel-ui-bookmarks")
         return self
 
     @BasePage.context_chrome
@@ -208,8 +207,8 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu, selects Bookmarks the current tab.. and clicks
         Save button from Add Bookmark in Address bar "
         """
-        self.get_element("bookmark-current-tab").click()
-        self.navigation.get_element("save-bookmark-button").click()
+        self.click_on("bookmark-current-tab")
+        self.navigation.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -231,41 +230,7 @@ class PanelUi(BasePage):
           This method assumes the page is already bookmarked. It should be called
           after opening the bookmarks panel via open_bookmarks_panel_from_hamburger_menu().
         """
-        self.get_element("bookmark-current-tab").click()
-        return self
-
-    @BasePage.context_chrome
-    def edit_bookmark_details(self, name: str, tags: str, location: str) -> BasePage:
-        """
-        Edits the details of a bookmark that is already in edit mode.
-
-        Arguments:
-        name: New name for the bookmark
-        tags: Comma-separated list of tags to add
-        location: Location to move the bookmark to (e.g. "Other Bookmarks")
-        """
-        # Get Navigation instance
-        from modules.browser_object_navigation import Navigation
-        nav = Navigation(self.driver)
-
-        # Edit name - skip clear() which seems to be causing issues
-        edit_input = nav.get_element("edit-bookmark-panel")
-        # Instead of clear(), which might not work if the element isn't fully visible
-        # Just send the new name directly - Firefox UI usually selects all text by default
-        edit_input.send_keys(name)
-
-        # Add tags
-        tags_input = self.get_element("bookmark-tags")
-        # Also skip clear() here
-        tags_input.send_keys(tags)
-
-        # Change location
-        self.get_element("bookmark-location").click()
-        location_id = location.lower().replace(" ", "-")
-        self.get_element(location_id).click()
-
-        # Save changes
-        nav.get_element("save-bookmark-button").click()
+        self.click_on("bookmark-current-tab")
         return self
 
     @BasePage.context_chrome
@@ -273,22 +238,20 @@ class PanelUi(BasePage):
         """
         Verify bookmark appears in the specified toolbar location with the correct name
 
-        Parameters:
+        Arguments:
         -----------
-        name: str
-            Name of the bookmark
-        location: str
-            Location of the bookmark (e.g. "Other Bookmarks")
+        name: Name of the bookmark
+        location: Location of the bookmark
         """
         location_id = f"{location.lower().replace(' ', '-')}-toolbar"
-        self.get_element(location_id).click()
+        self.click_on(location_id)
 
         # Check for bookmark by title
         bookmark_id = f"{location.lower().replace(' ', '-')}-by-title"
         self.element_visible(bookmark_id, labels=[name])
 
         # Close dropdown
-        self.get_element(location_id).click()
+        self.click_on(location_id)
         return self
 
     @BasePage.context_chrome
@@ -296,12 +259,11 @@ class PanelUi(BasePage):
         """
         Verify that bookmark tags are correctly applied
 
-        Parameters:
+        Arguments:
         -----------
-        tags: list
-            List of tags that should be applied to the bookmark
+        tags: List of tags that should be applied to the bookmark
         """
-        self.get_element("extend-bookmark-tags").click()
+        self.click_on("extend-bookmark-tags")
 
         for tag in tags:
             tag_id = f"{tag.lower().replace(' ', '')}-tag"
@@ -309,7 +271,6 @@ class PanelUi(BasePage):
             assert tag_element.get_attribute("checked") is None, f"Tag {tag} should be checked"
 
         return self
-
 
     @BasePage.context_chrome
     def edit_bookmark_details(self, name: str, tags: str, location: str) -> BasePage:
@@ -325,11 +286,9 @@ class PanelUi(BasePage):
         location: str
             Location to move the bookmark to (e.g. "Other Bookmarks")
         """
-        # Get Navigation instance to access elements in browser chrome
-        nav = self.navigation
 
         # Edit name
-        edit_input = nav.get_element("edit-bookmark-panel")
+        edit_input = self.navigation.get_element("edit-bookmark-panel")
         edit_input.send_keys(name)
 
         # Add tags
@@ -337,10 +296,10 @@ class PanelUi(BasePage):
         tags_input.send_keys(tags)
 
         # Change location
-        self.get_element("bookmark-location").click()
+        self.click_on("bookmark-location")
         location_id = location.lower().replace(" ", "-")
-        self.get_element(location_id).click()
+        self.click_on(location_id)
 
         # Save changes
-        nav.get_element("save-bookmark-button").click()
+        self.navigation.click_on("save-bookmark-button")
         return self
