@@ -7,7 +7,8 @@ load_dotenv()
 
 # Configuration Constants
 PROJECT_ID = 17  # The ID of the TestRail project to work with
-SUITE_NAMES = ["Downloads", "Address Bar and Search <136 (to use with late beta) - locked"]  # List of suite names to process
+SUITE_NAMES = ["Fakespot Shopping Sidebar"]  # List of suite names to process
+
 CUSTOM_SUB_TEST_SUITES = [1]  # Value to set for the 'custom_sub_test_suites' field
 DRY_RUN = True  # If True, only log actions without making changes
 
