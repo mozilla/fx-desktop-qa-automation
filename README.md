@@ -127,9 +127,9 @@ You may find that if you are re-running all previously executed test runs that y
 "Session is not reportable." If you wish to overwrite a previously reported session, add
 `REPORTABLE=true` to your environment.
 
-### Manual Execution
+### Manual Execution of Smoke Tests
 
-To run the tests manually against an arbitrary version of Firefox **where the installer or (for Linux)
+To run the smoke tests manually against an arbitrary version of Firefox **where the installer or (for Linux)
 tarball exists on the web**:
 
 - Get write permissions to the repo (ask Ben C, Tracy, or Virgil S to add you)
