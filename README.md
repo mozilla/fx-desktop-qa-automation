@@ -127,6 +127,25 @@ You may find that if you are re-running all previously executed test runs that y
 "Session is not reportable." If you wish to overwrite a previously reported session, add
 `REPORTABLE=true` to your environment.
 
+### Manual Execution
+
+To run the tests manually against an arbitrary version of Firefox **where the installer or (for Linux)
+tarball exists on the web**:
+
+- Get write permissions to the repo (ask Ben C, Tracy, or Virgil S to add you)
+- Go to the [Smoke Test Execution workflow page](https://github.com/mozilla/fx-desktop-qa-automation/actions/workflows/smoke.yml)
+- At the top right of the workflow history panel (near the top right of the page), press the button
+  labeled "Run workflow"
+- Make sure you are running against `Branch: main`
+- Add the URLs to your installers for Windows and MacOS, and the tarball for Linux in the fields below.
+- - **Installers and tarballs must be available on the internet**
+- - **Windows should be x86, 64-bit (win64), .exe installer (no .msi)**
+- - **MacOS should be a .dmg installer (no .pkg)**
+- - **Linux should be a .tar.xz tarball (no .tar.bz2)**
+- Press the green "Run workflow" option
+- In a few minutes, the top workflow should be yours. Click through to watch progress.
+- Linux runs throw a lot of warnings, ignore them and focus on the results. Green checks are the key.
+
 ### Project Contribution
 If you are outside of Mozilla and would like to contribute to this project:
 - Read all the documentation including this README, BEST_PRACTICES and CODE_OF_CONDUCT.
