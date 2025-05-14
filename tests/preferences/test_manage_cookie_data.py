@@ -17,6 +17,7 @@ COOKIE_SITE = "google.com"
 
 
 @pytest.mark.headed
+@pytest.mark.noxvfb
 def test_manage_cookie_data(driver: Firefox):
     """
     C143633 - Cookies and Site Data can be managed

@@ -11,7 +11,7 @@ EXPECTED_PLACEHOLDER = f"Search with {SEARCH_ENGINE} or enter address"
 
 @pytest.fixture()
 def test_case():
-    return "2860208"
+    return "3028795"
 
 
 @pytest.mark.ci
