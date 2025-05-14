@@ -33,14 +33,14 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
 
     # Open login autofill test page and select "Suggest Strong Password..." from password field context menu
     login_autofill.open()
-    password_field = login_autofill.get_element("password-login-field")
-    login_autofill.context_click(password_field)
+    login_autofill.context_click("password-login-field")
     context_menu.click_and_hide_menu("context-menu-suggest-strong-password")
 
     # Select "Use a Securely Generated Password" in password field and check the "Update password" doorhanger
     # is displayed
     with driver.context(driver.CONTEXT_CHROME):
         login_autofill.get_element("generated-securely-password").click()
+        login_autofill.click_on("generated-securely-password")
         nav.element_visible("password-notification-key")
         nav.click_on("password-notification-key")
         update_doorhanger = autofill_popup_panel.get_element(
