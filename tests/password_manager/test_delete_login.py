@@ -19,7 +19,6 @@ def test_delete_login(driver_and_saved_logins):
     driver, usernames, logins = driver_and_saved_logins
     warning("aaaa ")
     warning(driver.capabilities['moz:geckodriverVersion'])
-    return 1
 
     # Instantiate objects
     about_logins = AboutLogins(driver)
