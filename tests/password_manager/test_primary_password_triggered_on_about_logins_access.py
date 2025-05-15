@@ -1,10 +1,14 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
-from selenium.webdriver.support import expected_conditions as EC
-
 from modules.browser_object import PanelUi, TabBar
 from modules.page_object import AboutLogins, AboutPrefs
 from modules.util import BrowserActions
+
+
+PRIMARY_PASSWORD = "securePassword1"
+TEST_PAGE_URL = "mozilla.org"
+PASSWORD = "password"
+USERNAME = "username"
 
 
 @pytest.fixture()
@@ -41,8 +45,8 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     ba.switch_to_iframe_context(primary_pw_popup)
 
     # Set primary password
-    about_prefs.get_element("enter-new-password").send_keys("securePassword1")
-    about_prefs.get_element("reenter-new-password").send_keys("securePassword1")
+    about_prefs.get_element("enter-new-password").send_keys(PASSWORD)
+    about_prefs.get_element("reenter-new-password").send_keys(PASSWORD)
     about_prefs.click_on("submit-password")
 
     # Dismiss the success message after setting the primary password
@@ -55,16 +59,14 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "mozilla.org",
-            "username": "username",
-            "password": "password",
+            "origin": TEST_PAGE_URL,
+            "username": USERNAME,
+            "password": PASSWORD,
         }
     )
 
     # Attempt to view the saved password in order to trigger the primary password prompt
-    show_password = about_logins.get_element("show-password-checkbox")
-    about_logins.expect(EC.element_to_be_clickable(show_password))
-    about_logins.click_on(show_password)
+    about_logins.click_on("show-password-checkbox")
 
     # Dismiss the primary password prompt without entering the password
     with driver.context(driver.CONTEXT_CHROME):
@@ -87,7 +89,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
         primary_password_input_field = about_logins.get_element(
             "primary-password-dialog-input-field"
         )
-        primary_password_input_field.send_keys("securePassword1")
+        primary_password_input_field.send_keys(PASSWORD)
         primary_password_input_field.send_keys(Keys.ENTER)
 
     # Verify that about:logins page is accessible after the primary password was entered
@@ -97,5 +99,5 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     # Verify that the saved login is visible and accessible in the login list
     about_logins.wait.until(
         lambda _: about_logins.get_element("login-list-item").get_attribute("title")
-        == "mozilla.org"
+        == TEST_PAGE_URL
     )

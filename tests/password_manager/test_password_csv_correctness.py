@@ -2,13 +2,10 @@ import csv
 import os
 import re
 import time
-
 import pytest
-
 from modules.page_object import AboutLogins, GenericPage
 
 PASSWORDS_FILE = "passwords.csv"
-
 
 @pytest.fixture()
 def test_case():

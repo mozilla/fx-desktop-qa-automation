@@ -5,12 +5,12 @@ from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import LoginAutofill
 
 
+ABOUT_LOGINS_PAGE_TITLE = "Passwords"
+
+
 @pytest.fixture()
 def test_case():
     return "2241087"
-
-
-ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 
 
 @pytest.mark.ci

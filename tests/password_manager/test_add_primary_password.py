@@ -5,6 +5,10 @@ from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
 
+PRIMARY_PASSWORD = "securePassword1"
+ALERT_MESSAGE = "Primary Password successfully changed."
+
+
 @pytest.fixture()
 def test_case():
     return "2245178"
@@ -13,10 +17,6 @@ def test_case():
 @pytest.fixture()
 def hard_quit():
     return True
-
-
-PRIMARY_PASSWORD = "securePassword1"
-ALERT_MESSAGE = "Primary Password successfully changed."
 
 
 def test_add_primary_password(driver: Firefox):

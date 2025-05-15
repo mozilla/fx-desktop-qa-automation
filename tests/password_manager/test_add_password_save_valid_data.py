@@ -5,12 +5,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.page_object import AboutLogins
 
 
+WEBSITE_ADDRESS = "mozilla.org"
+USERNAME = "username"
+PASSWORD = "password"
+
+
 @pytest.fixture()
 def test_case():
     return "2241112"
-
-
-WEBSITE_ADDRESS = "mozilla.org"
 
 
 def test_add_password_save_valid_data(driver: Firefox):
@@ -27,14 +29,13 @@ def test_add_password_save_valid_data(driver: Firefox):
     # Complete all the fields with valid data and click the "Save" button.
     about_logins.create_new_login(
         {
-            "origin": "mozilla.org",
-            "username": "username",
-            "password": "password",
+            "origin": WEBSITE_ADDRESS,
+            "username": USERNAME,
+            "password": PASSWORD,
         }
     )
 
     # Check password added in the listbox
-    about_logins.get_element("login-list-item")
     logins = about_logins.get_elements("login-list-item")
     mozilla_login = next(
         login for login in logins if login.get_attribute("title") == WEBSITE_ADDRESS

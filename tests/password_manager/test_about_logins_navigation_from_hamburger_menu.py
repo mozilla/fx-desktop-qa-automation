@@ -1,15 +1,14 @@
 import pytest
 from selenium.webdriver import Firefox
-
 from modules.browser_object import PanelUi, TabBar
+
+
+ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 
 
 @pytest.fixture()
 def test_case():
     return "2241082"
-
-
-ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 
 
 def test_about_logins_navigation_from_password_hamburger_menu(driver: Firefox):

@@ -1,8 +1,11 @@
 import pytest
 from selenium.webdriver import Firefox
-
 from modules.browser_object import AutofillPopup, ContextMenu, Navigation, TabBar
 from modules.page_object import AboutLogins, LoginAutofill
+
+
+UPDATE_DOORHANGER_TEXT = "Update password for mozilla.github.io?"
+TEST_WEBSITE = "https://mozilla.github.io/"
 
 
 @pytest.fixture()
@@ -14,9 +17,6 @@ def test_case():
 def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [("signon.rememberSignons", True)]
-
-
-UPDATE_DOORHANGER_TEXT = "Update password for mozilla.github.io?"
 
 
 def test_auto_saved_generated_password_context_menu(driver: Firefox):
@@ -40,8 +40,6 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     # is displayed
     with driver.context(driver.CONTEXT_CHROME):
         login_autofill.get_element("generated-securely-password").click()
-        login_autofill.click_on("generated-securely-password")
-        nav.element_visible("password-notification-key")
         nav.click_on("password-notification-key")
         update_doorhanger = autofill_popup_panel.get_element(
             "password-update-doorhanger"
@@ -54,7 +52,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
 
     # Verify the website address saves the correct value
     about_logins.expect_element_attribute_contains(
-        "website-address", "href", "https://mozilla.github.io/"
+        "website-address", "href", TEST_WEBSITE
     )
 
     # Verify the username field has no value

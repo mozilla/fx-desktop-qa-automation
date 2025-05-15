@@ -7,6 +7,12 @@ from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
 
+URL_TO_TEST = "https://mozilla.github.io/"
+USERNAME = "username"
+PASSWORD = "password"
+PRIMARY_PASSWORD = "securePassword1"
+
+
 @pytest.fixture()
 def test_case():
     return "2264688"
@@ -28,9 +34,9 @@ def test_password_can_be_shown(driver: Firefox):
     # Complete all the fields with valid data and click the "Save" button.
     about_logins.create_new_login(
         {
-            "origin": "mozilla.org",
-            "username": "username",
-            "password": "password",
+            "origin": URL_TO_TEST,
+            "username": USERNAME,
+            "password": PASSWORD,
         }
     )
 
@@ -46,8 +52,8 @@ def test_password_can_be_shown(driver: Firefox):
     )
 
     # Primary password can be changed
-    about_prefs.get_element("enter-new-password").send_keys("securePassword1")
-    about_prefs.get_element("reenter-new-password").send_keys("securePassword1")
+    about_prefs.get_element("enter-new-password").send_keys(PRIMARY_PASSWORD)
+    about_prefs.get_element("reenter-new-password").send_keys(PRIMARY_PASSWORD)
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
@@ -56,8 +62,7 @@ def test_password_can_be_shown(driver: Firefox):
         alert.accept()
 
     about_logins.open()
-    show_password_button = about_logins.get_element("show-password-checkbox")
-    show_password_button.click()
+    about_logins.click_on("show-password-checkbox")
 
     with driver.context(driver.CONTEXT_CHROME):
         driver.switch_to.window(driver.window_handles[-1])
@@ -68,7 +73,7 @@ def test_password_can_be_shown(driver: Firefox):
         primary_password_input_field = about_logins.get_element(
             "primary-password-dialog-input-field"
         )
-        primary_password_input_field.send_keys("securePassword1")
+        primary_password_input_field.send_keys(PRIMARY_PASSWORD)
         primary_password_input_field.send_keys(Keys.ENTER)
 
     # Verify that the password is unmasked by checking that the type is now text.

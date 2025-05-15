@@ -4,12 +4,14 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutLogins
 
 
+WEBSITE_ADDRESS = "mozilla.org"
+USERNAME = "Â£$Âµâ†’â€œ"
+PASSWORD = "Â£$Âµâ†’â€œ"
+
+
 @pytest.fixture()
 def test_case():
     return "2241113"
-
-
-WEBSITE_ADDRESS = "mozilla.org"
 
 
 def test_add_password_non_ascii_chars(driver: Firefox):
@@ -26,14 +28,13 @@ def test_add_password_non_ascii_chars(driver: Firefox):
     # Complete all the fields with valid data and click the "Save" button.
     about_logins.create_new_login(
         {
-            "origin": "mozilla.org",
-            "username": "Â£$Âµâ†’â€œ",
-            "password": "Â£$Âµâ†’â€œ",
+            "origin": WEBSITE_ADDRESS,
+            "username": USERNAME,
+            "password": PASSWORD,
         }
     )
 
     # Check password added in the listbox
-    about_logins.get_element("login-list-item")
     logins = about_logins.get_elements("login-list-item")
     mozilla_login = next(
         login for login in logins if login.get_attribute("title") == WEBSITE_ADDRESS
