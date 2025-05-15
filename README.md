@@ -138,10 +138,11 @@ tarball exists on the web**:
   labeled "Run workflow"
 - Make sure you are running against `Branch: main`
 - Add the URLs to your installers for Windows and MacOS, and the tarball for Linux in the fields below.
-- - **Installers and tarballs must be available on the internet**
-- - **Windows should be x86, 64-bit (win64), .exe installer (no .msi)**
-- - **MacOS should be a .dmg installer (no .pkg)**
-- - **Linux should be a .tar.xz tarball (no .tar.bz2)**
+  - **Installers and tarballs must be available on the internet**
+  - **Windows should be x86, 64-bit (win64), .exe installer (no .msi)**
+  - **MacOS should be a .dmg installer (no .pkg)**
+  - **Linux should be a .tar.xz or .tar.bz2 tarball (no .deb)**
+  - **Version numbers less than 128 are not likely to work**
 - Press the green "Run workflow" option
 - In a few minutes, the top workflow should be yours. Click through to watch progress.
 - Linux runs throw a lot of warnings, ignore them and focus on the results. Green checks are the key.
