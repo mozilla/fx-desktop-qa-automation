@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 faker = "26.3.0"
-selenium = "<4.24"
+selenium = "4.19"
 pynput = "1.7.7"
 pytest = "<9.0"
 pytest-httpserver = "1.0.12"
