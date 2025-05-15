@@ -69,31 +69,13 @@ def get_gd_platform():
 
 
 if "-g" in argv:
-    gecko_rs_obj = requests.get(GECKO_API_URL).json()
-
-    # In mac, sometimes this request fails to produce a link
-    for _ in range(4):
-        if gecko_rs_obj:
-            break
-        sleep(2)
-        gecko_rs_obj = requests.get(GECKO_API_URL).json()
-
-    # If we failed, just dump any old link, maybe update this on new gecko release
-    if not gecko_rs_obj.get("assets"):
-        gd_platform = get_gd_platform()
-        ext = "zip" if "win" in gd_platform else "tar.gz"
-        print(
-            f"https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-{gd_platform}.{ext}"
-        )
-        exit()
-
-    urls = [
-        a.get("browser_download_url")
-        for a in gecko_rs_obj.get("assets")
-        if not a.get("browser_download_url").endswith(".asc")
-    ]
-    gecko_download_url = [u for u in urls if get_gd_platform() in u][0]
-    print(gecko_download_url)
+    # ESR 128 was released when geckodriver 0.34 was the current edition. Update for future ESRs.
+    gd_platform = get_gd_platform()
+    ext = "zip" if "win" in gd_platform else "tar.gz"
+    print(
+        f"https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-{gd_platform}.{ext}"
+    )
+    exit()
 
 else:
     if "-n" in argv:

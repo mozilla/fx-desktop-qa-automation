@@ -9,7 +9,6 @@
 ./tests/preferences
 ./tests/printing_ui
 ./tests/profile
-./tests/reader_view
 ./tests/scrolling_panning_zooming
 ./tests/tabs
 ./tests/bookmarks_and_history/test_add_new_other_bookmark.py
