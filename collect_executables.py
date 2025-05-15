@@ -69,6 +69,13 @@ def get_gd_platform():
 
 
 if "-g" in argv:
+    gd_platform = get_gd_platform()
+    ext = "zip" if "win" in gd_platform else "tar.gz" # type: ignore
+    print(
+        f"https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-{gd_platform}.{ext}"
+    )
+    exit()
+
     gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
     # In mac, sometimes this request fails to produce a link
