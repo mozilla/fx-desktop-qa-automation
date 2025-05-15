@@ -462,9 +462,9 @@ class BasePage(Page):
         self.url_contains(url_substr)
         current_url = self.driver.current_url
 
-        assert re.match(pattern, current_url), (
-            f"URL does not match the expected pattern: {current_url}"
-        )
+        assert re.match(
+            pattern, current_url
+        ), f"URL does not match the expected pattern: {current_url}"
         return self
 
     def fill(
@@ -515,9 +515,9 @@ class BasePage(Page):
             return self.find_element(*reference)
         elif isinstance(reference, WebElement):
             return reference
-        assert False, (
-            "Bad fetch: only selectors, selector names, or WebElements allowed."
-        )
+        assert (
+            False
+        ), "Bad fetch: only selectors, selector names, or WebElements allowed."
 
     def click_on(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
         """Click on an element, no matter the context, return the page"""

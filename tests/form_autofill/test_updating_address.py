@@ -52,14 +52,14 @@ def test_update_address(
 
     # Verify no dupe is saved
     saved_addresses = about_prefs_privacy.get_all_saved_address_profiles()
-    assert len(saved_addresses) == 1, (
-        f"Expected 1 saved address, but found {len(saved_addresses)}."
-    )
+    assert (
+        len(saved_addresses) == 1
+    ), f"Expected 1 saved address, but found {len(saved_addresses)}."
 
     # Assert that "Doe" is present in updated entry
     found_updated_address = any(
         new_name_value in element.text for element in saved_addresses
     )
-    assert found_updated_address, (
-        "The new name was not found in any of the address entries."
-    )
+    assert (
+        found_updated_address
+    ), "The new name was not found in any of the address entries."

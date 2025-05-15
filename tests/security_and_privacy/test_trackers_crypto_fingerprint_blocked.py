@@ -71,6 +71,6 @@ def test_cross_site_trackrs_crypto_fingerprinter_blocked(driver: Firefox):
             rm_set.remove(to_rm_item)
 
     # ensure that we have seen all of the expected items in each section
-    assert len(blocked) == 0 and len(allowed) == 0, (
-        "Not all of the expected items were found in each of the Blocked/Allowed sections."
-    )
+    assert (
+        len(blocked) == 0 and len(allowed) == 0
+    ), "Not all of the expected items were found in each of the Blocked/Allowed sections."

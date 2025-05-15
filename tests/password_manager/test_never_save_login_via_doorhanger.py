@@ -1,9 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import AutofillPopup, Navigation
 from modules.page_object import AboutPrefs, LoginAutofill
 from modules.util import BrowserActions
-
 
 USERNAME = "testUser"
 PASSWORD = "testPassword"
@@ -67,7 +67,4 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
 
     # Verify that the demo page used in the test appears in the Exceptions list
     password_exceptions_element = about_prefs.get_element("exceptions-item")
-    assert (
-        password_exceptions_element.get_attribute("origin")
-        == TEST_URL
-    )
+    assert password_exceptions_element.get_attribute("origin") == TEST_URL

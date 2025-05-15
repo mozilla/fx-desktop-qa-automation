@@ -29,6 +29,6 @@ def test_opened_website_in_private_window_not_captured_in_history_list(driver: F
         empty_label = panel_ui.get_element("recent-history-content").get_attribute(
             "value"
         )
-        assert empty_label == "(Empty)", (
-            f"Expected history to be empty, but found '{empty_label}'"
-        )
+        assert (
+            empty_label == "(Empty)"
+        ), f"Expected history to be empty, but found '{empty_label}'"

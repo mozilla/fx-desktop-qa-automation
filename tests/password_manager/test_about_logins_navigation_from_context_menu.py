@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import LoginAutofill
 
-
 ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 
 

@@ -4,7 +4,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_object import AboutLogins
 
-
 WEBSITE_ADDRESS = "mozilla.org"
 USERNAME = "username"
 PASSWORD = "password"

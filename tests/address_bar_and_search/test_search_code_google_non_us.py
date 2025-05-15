@@ -35,9 +35,9 @@ def test_search_code_google_non_us(driver: Firefox):
     example = ExamplePage(driver)
 
     def verify_search_code_in_url():
-        assert FX_SEARCH_CODE in driver.current_url, (
-            f"Expected '{FX_SEARCH_CODE}' in URL, got: {driver.current_url}"
-        )
+        assert (
+            FX_SEARCH_CODE in driver.current_url
+        ), f"Expected '{FX_SEARCH_CODE}' in URL, got: {driver.current_url}"
         nav.clear_awesome_bar()
 
     # Search via Awesomebar

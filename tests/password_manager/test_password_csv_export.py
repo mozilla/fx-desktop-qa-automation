@@ -1,9 +1,10 @@
 import os
 import time
+
 import pytest
 from pynput.keyboard import Controller, Key
-from modules.page_object import AboutLogins, GenericPage
 
+from modules.page_object import AboutLogins, GenericPage
 
 PASSWORDS_FILE = "passwords.csv"
 

@@ -54,6 +54,6 @@ def test_private_mode_info_not_saved(
 
     # Get all saved addresses items and filter out any false data.
     saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
-    assert len(saved_address_profiles) == 0, (
-        f"Expected 0 saved address, but found {len(saved_address_profiles)}."
-    )
+    assert (
+        len(saved_address_profiles) == 0
+    ), f"Expected 0 saved address, but found {len(saved_address_profiles)}."

@@ -81,6 +81,4 @@ def test_list_all_tabs(driver: Firefox, screenshot):
             )
             if about_about_location["y"] > all_tabs_menu_bottom:
                 entry_out_of_view = True
-        assert entry_out_of_view, (
-            f"Entry location {about_about_location['y']} should be greater than {all_tabs_menu.size['height']}"
-        )
+        assert entry_out_of_view, f"Entry location {about_about_location['y']} should be greater than {all_tabs_menu.size['height']}"

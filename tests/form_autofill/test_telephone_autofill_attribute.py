@@ -52,6 +52,6 @@ def test_telephone_attribute_autofill(
     # Get the primary value (telephone) from the first item in the dropdown and assert that the actual value
     # matches the expected value
     expected_telephone = util.normalize_phone_number(autofill_sample_data.telephone)
-    assert expected_telephone == actual_value, (
-        f"Expected {expected_telephone}, but got {actual_value}"
-    )
+    assert (
+        expected_telephone == actual_value
+    ), f"Expected {expected_telephone}, but got {actual_value}"

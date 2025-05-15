@@ -64,8 +64,6 @@ def test_demo_ad_name_org_captured_in_doorhanger_and_stored(
             if field_value not in saved_address_profile:
                 missing_fields.append(f"{field_name}: {field_value}")
 
-        assert not missing_fields, (
-            f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
-        )
+        assert not missing_fields, f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
     else:
         pytest.skip("Doorhanger not tested for Live Sites.")
