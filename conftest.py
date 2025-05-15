@@ -467,7 +467,7 @@ def driver(
             elif " " in opt_window_size:
                 separator = " "
         winsize = [int(s) for s in opt_window_size.split(separator)]
-        driver.set_window_size(*winsize)
+        # driver.set_window_size(*winsize)
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         WebDriverWait(driver, timeout=40).until(
