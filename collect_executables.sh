@@ -22,4 +22,4 @@ else
     tar xf firefox.tar.xz
 fi
 curl -o geckodriver.tar.gz -L "$(pipenv run python collect_executables.py -g)"
-tar -xvzf geckodriver.tar.gz
+gunzip -c geckodriver.tar.gz | tar xopf -
