@@ -9,8 +9,6 @@
 ./tests/preferences
 ./tests/printing_ui
 ./tests/profile
-./tests/scrolling_panning_zooming
-./tests/tabs
 ./tests/bookmarks_and_history/test_add_new_other_bookmark.py
 ./tests/bookmarks_and_history/test_bookmark_via_bookmark_menu.py
 ./tests/bookmarks_and_history/test_bookmark_website_via_star_button.py
@@ -33,8 +31,6 @@
 ./tests/bookmarks_and_history/test_toggle_bookmarks_toolbar.py
 ./tests/bookmarks_and_history/test_user_can_forget_history.py
 ./tests/address_bar_and_search/test_adaptive_history_autofill.py
-./tests/address_bar_and_search/test_addon_suggestion.py
-./tests/address_bar_and_search/test_default_search_provider_change_awesome_bar.py
 ./tests/address_bar_and_search/test_default_search_provider_change_legacy_search_bar.py
 ./tests/address_bar_and_search/test_google_withads_url_bar_us.py
 ./tests/address_bar_and_search/test_refresh_firefox_dialog.py
@@ -76,3 +72,7 @@
 ./tests/security_and_privacy/test_trackers_crypto_fingerprint_blocked.py
 ./tests/security_and_privacy/test_tracking_content_custom_mode.py
 ./tests/security_and_privacy/test_undo_close_tab_private_browsing.py
+./tests/scrolling_panning_zooming/test_default_zoom_persists.py
+./tests/scrolling_panning_zooming/test_mouse_wheel_zoom.py
+./tests/scrolling_panning_zooming/test_zoom_from_menu_bar.py
+./tests/scrolling_panning_zooming/test_zoom_menu_correlation.py

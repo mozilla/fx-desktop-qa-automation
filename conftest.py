@@ -4,6 +4,7 @@ import os
 import platform
 import re
 import sys
+import traceback
 from shutil import unpack_archive
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
@@ -480,6 +481,7 @@ def driver(
         yield driver
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
+        print(traceback.format_exc())
     finally:
         if hard_quit:
             return
