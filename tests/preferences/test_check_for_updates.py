@@ -34,17 +34,17 @@ def test_check_for_updates(driver: Firefox):
     # Check the label of the buttons and assert they are correct
     if update_available_button.is_displayed():
         label = update_available_button.text
-        assert (
-            label == "Restart to Update Firefox"
-        ), f"Expected label to be 'Restart to Update Firefox' but got '{label}'"
-        assert (
-            update_available_button.is_enabled()
-        ), "The 'Restart to Update Firefox' button is not clickable"
+        assert label == "Restart to Update Firefox", (
+            f"Expected label to be 'Restart to Update Firefox' but got '{label}'"
+        )
+        assert update_available_button.is_enabled(), (
+            "The 'Restart to Update Firefox' button is not clickable"
+        )
     elif up_to_date_button.is_displayed():
         label = up_to_date_button.text
-        assert (
-            label == "Check for updates"
-        ), f"Expected label to be 'Check for updates' but got '{label}'"
-        assert (
-            up_to_date_button.is_enabled()
-        ), "The 'Check for updates' button is not clickable"
+        assert label == "Check for updates", (
+            f"Expected label to be 'Check for updates' but got '{label}'"
+        )
+        assert up_to_date_button.is_enabled(), (
+            "The 'Check for updates' button is not clickable"
+        )

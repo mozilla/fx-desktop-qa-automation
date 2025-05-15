@@ -170,9 +170,9 @@ class AboutPrefs(BasePage):
                 field_value = element.get_attribute("value")
                 if field_value.isnumeric():
                     field_value = int(field_value)
-                assert (
-                    field_value in expected_cc_data
-                ), f"{(field_name, field_value)} not found in generated data."
+                assert field_value in expected_cc_data, (
+                    f"{(field_name, field_value)} not found in generated data."
+                )
                 assert field_value != expected_cvv, "CVV is displayed."
         select_elements = form_container.find_elements(By.TAG_NAME, "select")
         for element in select_elements:
@@ -183,9 +183,9 @@ class AboutPrefs(BasePage):
                 field_value = val.first_selected_option.get_attribute("value")[-2:]
                 if field_value.isnumeric():
                     field_value = int(field_value)
-                assert (
-                    field_value in expected_cc_data
-                ), f"{(field_name, field_value)} not found in generated data."
+                assert field_value in expected_cc_data, (
+                    f"{(field_name, field_value)} not found in generated data."
+                )
                 assert field_value != expected_cvv, "CVV is displayed."
         return self
 

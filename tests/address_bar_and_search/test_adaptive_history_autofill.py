@@ -58,9 +58,9 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     tabs.set_chrome_context()
     autofill_element = nav.get_element("search-result-autofill-adaptive-element")
 
-    assert (
-        autofill_element.get_attribute("type") == EXPECTED_TYPE
-    ), f"Expected type '{EXPECTED_TYPE}', got '{autofill_element.get_attribute('type')}'"
-    assert (
-        EXPECTED_TEXT_FRAGMENT in autofill_element.text
-    ), f"Autofill text did not contain expected URL. Got: {autofill_element.text}"
+    assert autofill_element.get_attribute("type") == EXPECTED_TYPE, (
+        f"Expected type '{EXPECTED_TYPE}', got '{autofill_element.get_attribute('type')}'"
+    )
+    assert EXPECTED_TEXT_FRAGMENT in autofill_element.text, (
+        f"Autofill text did not contain expected URL. Got: {autofill_element.text}"
+    )

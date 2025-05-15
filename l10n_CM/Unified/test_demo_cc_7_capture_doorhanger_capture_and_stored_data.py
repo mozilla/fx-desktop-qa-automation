@@ -33,21 +33,21 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
         credit_card_sample_data = credit_card_autofill.fill_and_save(door_hanger=False)
 
         # The "Save credit card?" doorhanger is displayed
-        assert autofill_popup.element_visible(
-            "doorhanger-save-button"
-        ), "Credit card save doorhanger is not visible"
+        assert autofill_popup.element_visible("doorhanger-save-button"), (
+            "Credit card save doorhanger is not visible"
+        )
 
         # Verify Credit Card Doorhanger Data
         doorhanger_text = autofill_popup.get_cc_doorhanger_data("cc-doorhanger-data")
-        assert (
-            credit_card_sample_data.card_number[-4:] in doorhanger_text
-        ), f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but not found."
-        assert (
-            credit_card_sample_data.name in doorhanger_text
-        ), f"Expected name '{credit_card_sample_data.name}' but not found."
-        assert (
-            credit_card_sample_data.cvv not in doorhanger_text
-        ), f"CVV '{credit_card_sample_data.cvv}' should not be saved, but found in doorhanger."
+        assert credit_card_sample_data.card_number[-4:] in doorhanger_text, (
+            f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but not found."
+        )
+        assert credit_card_sample_data.name in doorhanger_text, (
+            f"Expected name '{credit_card_sample_data.name}' but not found."
+        )
+        assert credit_card_sample_data.cvv not in doorhanger_text, (
+            f"CVV '{credit_card_sample_data.cvv}' should not be saved, but found in doorhanger."
+        )
 
         # Click the "Save" button using click_doorhanger_button
         autofill_popup.click_doorhanger_button("save")
@@ -63,16 +63,14 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
         saved_cc_profile = [x.strip() for x in saved_cc_profiles[0].text.split(",")]
 
         # Validate stored values match expected values
-        assert saved_cc_profile[
-            0
-        ].endswith(
-            credit_card_sample_data.card_number[-4:]
-        ), f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{saved_cc_profile[0]}'"
-        assert (
-            saved_cc_profile[1] == credit_card_sample_data.name
-        ), f"Expected name '{credit_card_sample_data.name}' but got '{saved_cc_profile[1]}'"
-        assert (
-            credit_card_sample_data.cvv not in saved_cc_profile
-        ), f"CVV '{credit_card_sample_data.cvv}' should not be saved, but found in stored values."
+        assert saved_cc_profile[0].endswith(credit_card_sample_data.card_number[-4:]), (
+            f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{saved_cc_profile[0]}'"
+        )
+        assert saved_cc_profile[1] == credit_card_sample_data.name, (
+            f"Expected name '{credit_card_sample_data.name}' but got '{saved_cc_profile[1]}'"
+        )
+        assert credit_card_sample_data.cvv not in saved_cc_profile, (
+            f"CVV '{credit_card_sample_data.cvv}' should not be saved, but found in stored values."
+        )
     else:
         pytest.skip("Doorhanger not tested for Live Sites.")

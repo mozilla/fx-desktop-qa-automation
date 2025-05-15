@@ -244,9 +244,9 @@ class Autofill(BasePage):
                     expected_value = self.util.get_state_province_abbreviation(
                         expected_value
                     )
-                assert (
-                    expected_value in autofilled_field_value
-                ), f"{autofilled_field_value} is different from {expected_value}"
+                assert expected_value in autofilled_field_value, (
+                    f"{autofilled_field_value} is different from {expected_value}"
+                )
 
     def verify_field_autofill_dropdown(
         self,
@@ -388,14 +388,14 @@ class Autofill(BasePage):
 
                     # Assert based on expectation
                     if should_be_highlighted:
-                        assert (
-                            is_field_highlighted
-                        ), f"Expected yellow highlight on '{field}', but none found."
+                        assert is_field_highlighted, (
+                            f"Expected yellow highlight on '{field}', but none found."
+                        )
                         logging.info(f"Yellow highlight found in '{field}'.")
                     else:
-                        assert (
-                            not is_field_highlighted
-                        ), f"Expected NO yellow highlight on '{field}', but found one."
+                        assert not is_field_highlighted, (
+                            f"Expected NO yellow highlight on '{field}', but found one."
+                        )
                         logging.info(f"No yellow highlight in '{field}', as expected.")
                 else:
                     logging.info(
@@ -439,9 +439,9 @@ class Autofill(BasePage):
             raise ValueError("Given preview data is incomplete.")
         container_data = container.get("fillMessageData", {}).get("profile", {})
         assert container_data, "No preview data available."
-        assert all(
-            field in container_data.keys() for field in self.preview_fields
-        ), f"Not all fields present in preview data."
+        assert all(field in container_data.keys() for field in self.preview_fields), (
+            "Not all fields present in preview data."
+        )
 
         # sanitize data
         if autofill_data.__class__ == CreditCardBase:
@@ -463,7 +463,9 @@ class Autofill(BasePage):
                 is_present = any(
                     [value in val for val in autofill_data.__dict__.values()]
                 )
-                assert is_present, f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
+                assert is_present, (
+                    f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
+                )
 
     def sanitize_preview_data(self, field, value):
         if field == "cc-number":

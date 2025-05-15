@@ -62,9 +62,9 @@ def test_download_pdf_with_form_fields(
     saved_pdf_location = os.path.join(downloads_folder, PDF_FILE_NAME)
 
     # Verify if the file exists
-    assert os.path.exists(
-        saved_pdf_location
-    ), f"The file was not downloaded to {saved_pdf_location}."
+    assert os.path.exists(saved_pdf_location), (
+        f"The file was not downloaded to {saved_pdf_location}."
+    )
 
     # Open the saved pdf and check if the edited field is displayed
     driver.get("file://" + os.path.realpath(saved_pdf_location))

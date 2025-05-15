@@ -48,9 +48,9 @@ def test_download_pdf(
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Verify if the file exists
-    assert os.path.exists(
-        saved_pdf_location
-    ), f"The file was not downloaded to {saved_pdf_location}."
+    assert os.path.exists(saved_pdf_location), (
+        f"The file was not downloaded to {saved_pdf_location}."
+    )
 
     print(
         f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."

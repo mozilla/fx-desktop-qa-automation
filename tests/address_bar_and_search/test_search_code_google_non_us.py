@@ -1,6 +1,5 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
@@ -35,9 +34,9 @@ def test_search_code_google_non_us(driver: Firefox):
     example = ExamplePage(driver)
 
     def verify_search_code_in_url():
-        assert (
-            FX_SEARCH_CODE in driver.current_url
-        ), f"Expected '{FX_SEARCH_CODE}' in URL, got: {driver.current_url}"
+        assert FX_SEARCH_CODE in driver.current_url, (
+            f"Expected '{FX_SEARCH_CODE}' in URL, got: {driver.current_url}"
+        )
         nav.clear_awesome_bar()
 
     # Search via Awesomebar

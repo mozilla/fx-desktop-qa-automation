@@ -52,6 +52,6 @@ def test_never_remember_history(driver: Firefox, sys_platform: str):
 
     # Check that the preference is now True
     preference_string = 'user_pref("browser.privatebrowsing.autostart", true);'
-    assert (
-        preference_string in prefs_content
-    ), f"The preference {preference_string} is not set correctly."
+    assert preference_string in prefs_content, (
+        f"The preference {preference_string} is not set correctly."
+    )

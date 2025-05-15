@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
 from modules.page_object import CreditCardFill
-from modules.util import Utilities
 
 
 @pytest.fixture()

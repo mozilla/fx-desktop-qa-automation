@@ -35,14 +35,14 @@ def test_search_suggests_enabled(driver: Firefox):
         suggestions_checkbox.click()
 
     nonsponsored_checkbox = prefs.get_element("firefox-suggest-nonsponsored")
-    assert (
-        nonsponsored_checkbox.is_selected()
-    ), f"'firefox-suggest-nonsponsored' checkbox not checked"
+    assert nonsponsored_checkbox.is_selected(), (
+        "'firefox-suggest-nonsponsored' checkbox not checked"
+    )
 
     sponsored_checkbox = prefs.get_element("firefox-suggest-sponsored")
-    assert (
-        sponsored_checkbox.is_selected()
-    ), f"'firefox-suggest-sponsored' checkbox not checked"
+    assert sponsored_checkbox.is_selected(), (
+        "'firefox-suggest-sponsored' checkbox not checked"
+    )
 
     # Check for sponsored suggestion
     # Trigger the suggests once. First time, it's not populated correctly in automation
@@ -62,9 +62,9 @@ def test_search_suggests_enabled(driver: Firefox):
                 for item in nav.get_elements("sponsored-suggestion")
             )
         retries += 1
-    assert (
-        found_sponsored
-    ), f"No sponsored suggestion found after {RETRY_LIMIT} retries."
+    assert found_sponsored, (
+        f"No sponsored suggestion found after {RETRY_LIMIT} retries."
+    )
 
     # Check for non-sponsored suggestion
     actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
@@ -75,4 +75,4 @@ def test_search_suggests_enabled(driver: Firefox):
         found_non_sponsored = any(
             "Wikipedia - wiki.phtml" in title.text for title in titles
         )
-    assert found_non_sponsored, f"Non-sponsored suggestion not found"
+    assert found_non_sponsored, "Non-sponsored suggestion not found"
