@@ -16,6 +16,7 @@ def test_delete_login(driver_and_saved_logins):
     """
     # Adds 6 fake logins in about:login
     driver, usernames, logins = driver_and_saved_logins
+    print(driver.capabilities['moz:geckodriverVersion'])
 
     # Instantiate objects
     about_logins = AboutLogins(driver)

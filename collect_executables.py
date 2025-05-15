@@ -70,6 +70,10 @@ def get_gd_platform():
 
 if "-g" in argv:
     gecko_rs_obj = requests.get(GECKO_API_URL).json()
+    print(
+            f"https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-{gd_platform}.{ext}"
+        )
+    exit()
 
     # In mac, sometimes this request fails to produce a link
     for _ in range(4):
