@@ -23,3 +23,4 @@ else
 fi
 curl -o geckodriver.tar.gz -L "$(pipenv run python collect_executables.py -g)"
 gunzip -c geckodriver.tar.gz | tar xopf -
+chmod +x geckodriver
