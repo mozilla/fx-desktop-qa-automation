@@ -83,7 +83,7 @@ if "-g" in argv:
         gd_platform = get_gd_platform()
         ext = "zip" if "win" in gd_platform else "tar.gz"
         print(
-            f"https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-{gd_platform}.{ext}"
+            f"https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-{gd_platform}.{ext}"
         )
         exit()
 
