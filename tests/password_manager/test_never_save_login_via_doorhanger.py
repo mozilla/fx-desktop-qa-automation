@@ -1,9 +1,13 @@
 import pytest
 from selenium.webdriver import Firefox
-
 from modules.browser_object import AutofillPopup, Navigation
 from modules.page_object import AboutPrefs, LoginAutofill
 from modules.util import BrowserActions
+
+
+USERNAME = "testUser"
+PASSWORD = "testPassword"
+TEST_URL = "https://mozilla.github.io"
 
 
 @pytest.fixture()
@@ -37,8 +41,8 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
 
     # Fill in the login form in demo page, opt for Never Save the credentials via doorhanger and see the doorhanger is
     # dismissed
-    login_form.fill_username("testUser")
-    login_form.fill_password("testPassword")
+    login_form.fill_username(USERNAME)
+    login_form.fill_password(PASSWORD)
     login_form.submit()
 
     autofill_popup_panel.click_doorhanger_button("more-actions")
@@ -65,5 +69,5 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     password_exceptions_element = about_prefs.get_element("exceptions-item")
     assert (
         password_exceptions_element.get_attribute("origin")
-        == "https://mozilla.github.io"
+        == TEST_URL
     )

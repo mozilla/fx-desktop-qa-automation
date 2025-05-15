@@ -10,7 +10,7 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "1533798"
+    return "3029100"
 
 
 ALLOWED_RGB_BEFORE_VALUES_CARD = set(["rgba(0, 0, 0, 0)"])

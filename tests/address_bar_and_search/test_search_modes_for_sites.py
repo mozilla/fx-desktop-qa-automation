@@ -14,7 +14,7 @@ SEARCH_MODES = [
 
 @pytest.fixture()
 def test_case():
-    return "2234690"
+    return "3028754"
 
 
 @pytest.mark.parametrize("search_engine, prefix, url", SEARCH_MODES)

@@ -20,7 +20,7 @@ INPUT_TO_ADDON_NAME = {
 
 @pytest.fixture()
 def test_case():
-    return "2234714"
+    return "3029292"
 
 
 @pytest.fixture()
@@ -31,6 +31,7 @@ def add_to_prefs_list():
     ]
 
 
+@pytest.mark.noxvfb
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
     C2234714 - Verify that the address bar suggests relevant add-ons based on search input.

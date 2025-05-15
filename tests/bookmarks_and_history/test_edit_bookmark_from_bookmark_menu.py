@@ -12,9 +12,6 @@ def test_case():
 
 URL_TO_BOOKMARK = "https://www.mozilla.org/"
 URL_TO_SAVE = "https://monitor.mozilla.org/"
-ENABLE_ADD_TAG = """
-            PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);
-        """
 BOOKMARK_NAME = "Mozilla Firefox"
 BOOKMARK_LOCATION = "Other Bookmarks"
 BOOKMARK_TAGS_STR = "Work, To do"
