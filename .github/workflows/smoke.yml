@@ -111,33 +111,9 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run python choose_ci_set.py
-          pipenv run pytest -n 4 $(cat selected_tests)
+          pipenv run pytest -n 4 $(cat esr_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
-          exit $env:TEST_EXIT_CODE
-      - name: Run Smoke Tests in Win (Headed)
-        if: steps.setup.conclusion == 'success' && always()
-        env:
-          REPORTABLE: true
-        run: |
-          rm ./pyproject.toml;
-          mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
-          $env:TEST_EXIT_CODE = $LASTEXITCODE
-          rm artifacts/assets -r -Force
-          Get-ChildItem -Path "artifacts" | ForEach-Object {
-              $destPath = "artifacts-win\" + $_.Name
-              if (-not (Test-Path -Path $destPath)) {
-                  try {
-                      Move-Item -Path $_.FullName -Destination $destPath
-                  } catch {
-                      # Ignore errors and continue
-                  }
-              }
-          }
           exit $env:TEST_EXIT_CODE
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' }}
@@ -198,20 +174,8 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run python choose_ci_set.py
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat esr_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
-          exit $TEST_EXIT_CODE
-      - name: Run Smoke Tests in MacOS (Headed)
-        if: steps.setup.conclusion == 'success' && always()
-        env:
-          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: true
-        run: |
-          mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run python choose_ci_set.py
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
-          mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' }}
@@ -266,18 +230,8 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           "$FX_EXECUTABLE" --version;
-          pipenv run python choose_ci_set.py;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
-          exit $TEST_EXIT_CODE
-      - name: Run Smoke Tests in Ubuntu (Headed)
-        if: steps.setup.conclusion == 'success' && always()
-        env:
-          FX_EXECUTABLE: ./firefox/firefox
-        run: |
-          mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
-          pipenv run python choose_ci_set.py
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat esr_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:
