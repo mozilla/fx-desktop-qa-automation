@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.classes.credit_card import CreditCardBase
-from modules.page_object import AboutPrefs, CreditCardFill
+from modules.page_object import CreditCardFill
 
 
 @pytest.fixture()

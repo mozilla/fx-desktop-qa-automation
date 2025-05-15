@@ -7,7 +7,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
 
-
 SAUCEDEMO_URL = "https://www.saucedemo.com/"
 USERNAME = "username1"
 PASSWORD = "password1"

@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
-from modules.page_object_about_pages import AboutLogins
 
+from modules.page_object_about_pages import AboutLogins
 
 URL_TO_TEST = "https://mozilla.github.io/"
 USERNAME = "username"
@@ -38,7 +38,9 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
 
     # Change username and the password
     about_logins.get_element("about-logins-page-username-field").send_keys(NEW_USERNAME)
-    about_logins.get_element("about-logins-page-password-hidden").send_keys(ADD_TO_PASSWORD)
+    about_logins.get_element("about-logins-page-password-hidden").send_keys(
+        ADD_TO_PASSWORD
+    )
 
     # Click the "Save" button
     about_logins.click_on("save-edited-login")

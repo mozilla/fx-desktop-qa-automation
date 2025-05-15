@@ -36,12 +36,12 @@ def test_search_suggests_enabled(driver: Firefox):
 
     nonsponsored_checkbox = prefs.get_element("firefox-suggest-nonsponsored")
     assert nonsponsored_checkbox.is_selected(), (
-        f"'firefox-suggest-nonsponsored' checkbox not checked"
+        "'firefox-suggest-nonsponsored' checkbox not checked"
     )
 
     sponsored_checkbox = prefs.get_element("firefox-suggest-sponsored")
     assert sponsored_checkbox.is_selected(), (
-        f"'firefox-suggest-sponsored' checkbox not checked"
+        "'firefox-suggest-sponsored' checkbox not checked"
     )
 
     # Check for sponsored suggestion
@@ -75,4 +75,4 @@ def test_search_suggests_enabled(driver: Firefox):
         found_non_sponsored = any(
             "Wikipedia - wiki.phtml" in title.text for title in titles
         )
-    assert found_non_sponsored, f"Non-sponsored suggestion not found"
+    assert found_non_sponsored, "Non-sponsored suggestion not found"

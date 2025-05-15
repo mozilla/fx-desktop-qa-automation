@@ -440,7 +440,7 @@ class Autofill(BasePage):
         container_data = container.get("fillMessageData", {}).get("profile", {})
         assert container_data, "No preview data available."
         assert all(field in container_data.keys() for field in self.preview_fields), (
-            f"Not all fields present in preview data."
+            "Not all fields present in preview data."
         )
 
         # sanitize data

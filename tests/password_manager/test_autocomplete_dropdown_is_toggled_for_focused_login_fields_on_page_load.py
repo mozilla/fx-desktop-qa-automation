@@ -6,7 +6,6 @@ from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 from modules.page_object_generics import GenericPage
 
-
 BSKY_URL = "https://bsky.app/"
 USERNAME = "username1"
 PASSWORD = "password1"

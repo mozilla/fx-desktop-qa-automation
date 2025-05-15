@@ -6,7 +6,6 @@ from modules.page_object import AboutLogins
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
-
 URL_TO_TEST = "https://mozilla.github.io/"
 USERNAME = "username"
 PASSWORD = "password"
