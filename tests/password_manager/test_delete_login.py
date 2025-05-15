@@ -2,6 +2,7 @@ import pytest
 
 from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
+from logging import warning
 
 
 @pytest.fixture()
@@ -16,7 +17,7 @@ def test_delete_login(driver_and_saved_logins):
     """
     # Adds 6 fake logins in about:login
     driver, usernames, logins = driver_and_saved_logins
-    print(driver.capabilities['moz:geckodriverVersion'])
+    warning(driver.capabilities['moz:geckodriverVersion'])
 
     # Instantiate objects
     about_logins = AboutLogins(driver)
