@@ -137,6 +137,8 @@ tarball exists on the web**:
 - At the top right of the workflow history panel (near the top right of the page), press the button
   labeled "Run workflow"
 - Make sure you are running against `Branch: main`
+  - Alternately, runs can be made against ESR versions 128 and higher by running against `Branch: 00esr-manual`
+  - MacOS ESR manual runs are currently not supported
 - Add the URLs to your installers for Windows and MacOS, and the tarball for Linux in the fields below.
   - **Installers and tarballs must be available on the internet**
   - **Windows should be x86, 64-bit (win64), .exe installer (no .msi)**
