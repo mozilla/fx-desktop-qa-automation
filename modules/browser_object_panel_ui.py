@@ -277,14 +277,11 @@ class PanelUi(BasePage):
         """
         Edits the details of a bookmark that is already in edit mode.
 
-        Parameters:
+        Arguments:
         -----------
-        name: str
-            New name for the bookmark
-        tags: str
-            Comma-separated list of tags to add
-        location: str
-            Location to move the bookmark to (e.g. "Other Bookmarks")
+        name: New name for the bookmark
+        tags: Comma-separated list of tags to add
+        location: Location to move the bookmark to (e.g. "Other Bookmarks")
         """
 
         # Edit name
@@ -301,5 +298,15 @@ class PanelUi(BasePage):
         self.click_on(location_id)
 
         # Save changes
+        self.navigation.click_on("save-bookmark-button")
+        return self
+
+    @BasePage.context_chrome
+    def disable_editor_when_saving_bookmarks(self) -> BasePage:
+        """
+        Disables 'Show editor when saving'.
+        """
+        self.navigation.click_on("star-button")
+        self.click_on("show-editor-when-saving-checkbox")
         self.navigation.click_on("save-bookmark-button")
         return self

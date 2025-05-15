@@ -6,43 +6,50 @@ from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_generics import GenericPage
 
 
+URL_TO_EDIT = "https://www.mozilla.org/"
+URL_TO_SAVE = "https://monitor.mozilla.org/"
+BOOKMARK_NAME = "Mozilla Firefox"
+BOOKMARK_LOCATION = "Other Bookmarks"
+
+
 @pytest.fixture()
 def test_case():
     return "2084549"
 
 
-URL_TO_EDIT = "https://www.mozilla.org/"
-URL_TO_SAVE = "https://monitor.mozilla.org/"
-
-
 def test_edit_bookmark_via_star_button(driver: Firefox):
     """
-    C2084549: Verify that the user can Edit a Bookmark options from the Star-shaped button
+    C2084549: Verify that the user can edit bookmark options from the star-shaped button,
+    update name/location, and disable editor visibility on future bookmarks.
     """
-    # instantiate object
     nav = Navigation(driver)
     panel = PanelUi(driver)
-    page =  GenericPage(driver, url=URL_TO_EDIT)
+    edit_page = GenericPage(driver, url=URL_TO_EDIT)
+    save_page = GenericPage(driver, url=URL_TO_SAVE)
 
-    # Bookmark the given website via star button
-    page.open()
+
+    # Bookmark current tab using the star button
+    edit_page.open()
     nav.add_bookmark_via_star_icon()
 
-    # Open the edit bookmark panel and change bookmark name and location
+    # Edit the bookmark from the blue star and update details
     nav.click_on("blue-star-button")
-    panel.edit_bookmark_details()
+    panel.edit_bookmark_details(
+        name=BOOKMARK_NAME,
+        tags="",
+        location=BOOKMARK_LOCATION
+    )
 
+    # Verify bookmark details
+    panel.verify_bookmark_in_toolbar(
+        name=BOOKMARK_NAME,
+        location=BOOKMARK_LOCATION
+    )
 
-    #     # Check bookmark name and location are changed in the bookmarks toolbar
-    #     panel.get_element("other-bookmarks-toolbar").click()
-    #     panel.element_visible("other-bookmarks-by-title", labels=["Mozilla Firefox"])
-    #     panel.get_element("other-bookmarks-toolbar").click()
-    #
-    #     # Uncheck show editor when saving and verify that panel isn't displayed when bookmark a new website
-    #     nav.get_element("star-button").click()
-    #     panel.get_element("show-editor-when-saving-checkbox").click()
-    #     nav.get_element("save-bookmark-button").click()
-    # GenericPage(driver, url=URL_TO_SAVE).open()
-    # with driver.context(driver.CONTEXT_CHROME):
-    #     nav.get_element("star-button").click()
-    #     nav.element_not_visible("edit-bookmark-panel")
+    # Disable 'show editor when saving'
+    panel.disable_editor_when_saving_bookmarks()
+
+    # Bookmark a second page and confirm the editor is not shown
+    save_page.open()
+    nav.click_on("star-button")
+    nav.element_not_visible("edit-bookmark-panel")
