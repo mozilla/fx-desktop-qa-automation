@@ -198,8 +198,7 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-bookmarks").click()
+        self.click_on("panel-ui-bookmarks")
         return self
 
     @BasePage.context_chrome
@@ -208,8 +207,8 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu, selects Bookmarks the current tab.. and clicks
         Save button from Add Bookmark in Address bar "
         """
-        self.get_element("bookmark-current-tab").click()
-        self.navigation.get_element("save-bookmark-button").click()
+        self.click_on("bookmark-current-tab")
+        self.navigation.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -220,4 +219,94 @@ class PanelUi(BasePage):
             bookmark_title (str): The title text to look for in the bookmark
         """
         self.element_visible("bookmark-by-title", labels=[bookmark_title])
+        return self
+
+    @BasePage.context_chrome
+    def prepare_bookmark_for_editing(self) -> BasePage:
+        """
+        Opens the Edit panel for the current tab's bookmark
+
+        Note:
+          This method assumes the page is already bookmarked. It should be called
+          after opening the bookmarks panel via open_bookmarks_panel_from_hamburger_menu().
+        """
+        self.click_on("bookmark-current-tab")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_in_toolbar(self, name: str, location: str) -> BasePage:
+        """
+        Verify bookmark appears in the specified toolbar location with the correct name
+
+        Arguments:
+        -----------
+        name: Name of the bookmark
+        location: Location of the bookmark
+        """
+        location_id = f"{location.lower().replace(' ', '-')}-toolbar"
+        self.click_on(location_id)
+
+        # Check for bookmark by title
+        bookmark_id = f"{location.lower().replace(' ', '-')}-by-title"
+        self.element_visible(bookmark_id, labels=[name])
+
+        # Close dropdown
+        self.click_on(location_id)
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_tags(self, tags: list) -> BasePage:
+        """
+        Verify that bookmark tags are correctly applied
+
+        Arguments:
+        -----------
+        tags: List of tags that should be applied to the bookmark
+        """
+        self.click_on("extend-bookmark-tags")
+
+        for tag in tags:
+            tag_id = f"{tag.lower().replace(' ', '')}-tag"
+            tag_element = self.get_element(tag_id)
+            assert tag_element.get_attribute("checked") is None, f"Tag {tag} should be checked"
+
+        return self
+
+    @BasePage.context_chrome
+    def edit_bookmark_details(self, name: str, tags: str, location: str) -> BasePage:
+        """
+        Edits the details of a bookmark that is already in edit mode.
+
+        Arguments:
+        -----------
+        name: New name for the bookmark
+        tags: Comma-separated list of tags to add
+        location: Location to move the bookmark to (e.g. "Other Bookmarks")
+        """
+
+        # Edit name
+        edit_input = self.navigation.get_element("edit-bookmark-panel")
+        edit_input.send_keys(name)
+
+        # Add tags
+        tags_input = self.get_element("bookmark-tags")
+        tags_input.send_keys(tags)
+
+        # Change location
+        self.click_on("bookmark-location")
+        location_id = location.lower().replace(" ", "-")
+        self.click_on(location_id)
+
+        # Save changes
+        self.navigation.click_on("save-bookmark-button")
+        return self
+
+    @BasePage.context_chrome
+    def disable_editor_when_saving_bookmarks(self) -> BasePage:
+        """
+        Disables 'Show editor when saving'.
+        """
+        self.navigation.click_on("star-button")
+        self.click_on("show-editor-when-saving-checkbox")
+        self.navigation.click_on("save-bookmark-button")
         return self

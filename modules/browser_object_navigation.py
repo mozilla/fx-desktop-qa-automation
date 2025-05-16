@@ -31,6 +31,9 @@ class Navigation(BasePage):
         "Wikipedia (en)",
     }
 
+    # Script to enable tagging
+    ENABLE_ADD_TAG = """PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);"""
+
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.search_bar = None
@@ -390,3 +393,12 @@ class Navigation(BasePage):
         )
         assert matches_short_string or matches_long_string
         return self
+
+    @BasePage.context_chrome
+    def enable_bookmark_tagging(self) -> BasePage:
+        """
+        Enable tagging functionality for bookmarks by executing a script
+        """
+        self.driver.execute_script(self.ENABLE_ADD_TAG)
+        return self
+
