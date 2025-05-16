@@ -11,7 +11,8 @@ markers = [
     "ci: basic tests to run in ci",
     "locale_de: tests run in DE locale versions",
     "locale_fr: tests run in FR locale versions",
-    "locale_gb: tests run in GB locale versions"
+    "locale_gb: tests run in GB locale versions",
+    "noxvfb: tests that should not run in xvfb sessions"
 ]
 testpaths = [
     "tests"
