@@ -7,6 +7,13 @@
 #
 # To enable this hook, rename this file to "pre-commit".
 
+pytest test_pre_commit.py
+if [[ $? -ne 0 ]]; then
+  echo "Please update your firefox/geckodriver!"
+  exit 1
+fi
+
+
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then
 	against=HEAD
