@@ -46,3 +46,19 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     nav.type_in_awesome_bar("nat")
     nav.click_firefox_suggest()
     nav.expect_in_content(EC.url_contains(TEST_URL))
+
+    # Step 4: Open new tab and check for autofill suggestion
+    tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(2)
+    driver.switch_to.window(driver.window_handles[-1])
+    nav.type_in_awesome_bar("nat")
+
+    tabs.set_chrome_context()
+    autofill_element = nav.get_element("search-result-autofill-adaptive-element")
+
+    assert autofill_element.get_attribute("type") == EXPECTED_TYPE, (
+        f"Expected type '{EXPECTED_TYPE}', got '{autofill_element.get_attribute('type')}'"
+    )
+    assert EXPECTED_TEXT_FRAGMENT in autofill_element.text, (
+        f"Autofill text did not contain expected URL. Got: {autofill_element.text}"
+    )
