@@ -19,7 +19,7 @@ def suite_id():
     return ("-1", "None")
 
 
-def test_pre_commit(driver: Firefox, version):
+def test_local_executables_updated(driver: Firefox, version):
     """
     Test if the local firefox and geckodriver version are up-to-date.
     """
