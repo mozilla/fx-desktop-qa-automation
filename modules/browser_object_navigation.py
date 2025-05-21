@@ -107,6 +107,11 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_firefox_suggest(self) -> None:
+        """Click the Firefox suggested result."""
+        self.get_element("firefox-suggest").click()
+
+    @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
@@ -215,6 +220,7 @@ class Navigation(BasePage):
         self.get_element("search-mode-switcher-option", labels=[search_mode]).click()
         return self
 
+    @BasePage.context_chrome
     def context_click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         actions = ActionChains(self.driver)
@@ -390,3 +396,8 @@ class Navigation(BasePage):
         )
         assert matches_short_string or matches_long_string
         return self
+
+    @BasePage.context_chrome
+    def get_legacy_search_engine_label(self) -> str:
+        """Return the displayed engine name from the legacy search bar."""
+        return self.driver.find_element(By.CSS_SELECTOR, ".searchbar-engine-name").get_attribute("value")

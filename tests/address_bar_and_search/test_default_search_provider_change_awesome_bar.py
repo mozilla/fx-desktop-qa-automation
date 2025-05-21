@@ -22,12 +22,13 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     nav = Navigation(driver)
     prefs = AboutPrefs(driver)
 
+    # Step 1: Open new tab and go to search engine settings
     driver.get("about:newtab")
     nav.open_searchmode_switcher_settings()
 
+    # Step 2: Change the default search engine
     prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
 
+    # Step 3: Re-open new tab and verify placeholder
     driver.get("about:newtab")
-    nav.expect_element_attribute_contains(
-        "awesome-bar", "placeholder", EXPECTED_PLACEHOLDER
-    )
+    nav.expect_element_attribute_contains("awesome-bar", "placeholder", EXPECTED_PLACEHOLDER)

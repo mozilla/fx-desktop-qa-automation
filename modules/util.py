@@ -106,6 +106,12 @@ class Utilities:
         self.fake = None
         self.locale = None
 
+    def assert_search_code_in_url(self, driver, nav, expected_code):
+        assert expected_code in driver.current_url, (
+            f"Expected '{expected_code}' in URL, got: {driver.current_url}"
+        )
+        nav.clear_awesome_bar()
+
     def remove_file(self, path: str):
         try:
             os.remove(path)

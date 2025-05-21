@@ -16,7 +16,6 @@ SEARCH_TAG_PATH = '$..["browser.search.content.urlbar"].["google:tagged:firefox-
 WAIT_AFTER_SEARCH = 5
 WAIT_TELEMETRY_LOAD = 2
 
-# Conditional skip for GitHub Actions on macOS
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
@@ -28,29 +27,45 @@ def test_case():
 @pytest.mark.skipif(MAC_GHA, reason="Test unstable in macOS GitHub Actions")
 def test_google_search_counts_us(driver: Firefox):
     """
-    C1365026: Verify Google search counts in telemetry from the URL bar (US region).
+    C1365026 - Verify Google search counts in telemetry from the URL bar (US region).
+    Retries up to 5 times if telemetry is missing or blocked by CAPTCHA.
     """
+    max_attempts = 5
+    for attempt in range(1, max_attempts + 1):
+        nav = Navigation(driver)
+        nav.search(SEARCH_TERM)
+        sleep(WAIT_AFTER_SEARCH)
 
-    nav = Navigation(driver)
-    nav.search(SEARCH_TERM)
-    sleep(WAIT_AFTER_SEARCH)
+        utils = Utilities()
 
-    utils = Utilities()
+        telemetry = AboutTelemetry(driver).open()
+        sleep(WAIT_TELEMETRY_LOAD)
+        telemetry.get_element("category-raw").click()
+        telemetry.switch_to_new_tab()
+        telemetry.get_element("rawdata-tab").click()
 
-    # === Open about:telemetry and navigate to raw JSON ===
-    telemetry = AboutTelemetry(driver).open()
-    sleep(WAIT_TELEMETRY_LOAD)
-    telemetry.get_element("category-raw").click()
-    telemetry.switch_to_new_tab()
-    telemetry.get_element("rawdata-tab").click()
+        json_data = utils.decode_url(driver)
 
-    # === Decode telemetry and validate search provider data ===
-    json_data = utils.decode_url(driver)
+        if "recaptcha" in driver.page_source.lower():
+            if attempt < max_attempts:
+                driver.delete_all_cookies()
+                driver.get("about:newtab")
+                sleep(2)
+                continue
+            else:
+                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
 
-    assert utils.assert_json_value(json_data, SEARCH_PROVIDER_PATH, 1), (
-        f"Expected 1 Google search in path: {SEARCH_PROVIDER_PATH}"
-    )
+        provider_ok = utils.assert_json_value(json_data, SEARCH_PROVIDER_PATH, 1)
+        tag_ok = utils.assert_json_value(json_data, SEARCH_TAG_PATH, 1)
 
-    assert utils.assert_json_value(json_data, SEARCH_TAG_PATH, 1), (
-        f"Expected 1 tagged Google search in path: {SEARCH_TAG_PATH}"
-    )
+        if provider_ok and tag_ok:
+            return  # Success
+
+        if attempt < max_attempts:
+            sleep(2)
+            driver.get("about:newtab")
+        else:
+            pytest.fail(
+                f"Telemetry paths not found after {max_attempts} attempts:\n"
+                f"{SEARCH_PROVIDER_PATH} and/or {SEARCH_TAG_PATH}"
+            )
