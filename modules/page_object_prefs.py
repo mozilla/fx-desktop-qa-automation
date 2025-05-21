@@ -34,7 +34,7 @@ class AboutPrefs(BasePage):
         super().__init__(driver, **kwargs)
         self.driver = driver
 
-    # number of tabs to reach the country tab
+    # Number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
 
@@ -49,7 +49,7 @@ class AboutPrefs(BasePage):
     HTTPS_ONLY_STATUS = HttpsOnlyStatus()
 
     # Function Organization
-    ## Search and Settings
+    # Search and Settings
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(
@@ -120,11 +120,11 @@ class AboutPrefs(BasePage):
 
     def get_history_menulist(self) -> WebElement:
         """
-        Gets the webelement for the list of history items that appear in about:preferences
+        Gets the web element for the list of history items that appear in about:preferences
         """
         return self.get_element("history_menulist")
 
-    ## Payment and Address Management
+    # Payment and Address Management
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
@@ -384,7 +384,7 @@ class AboutPrefs(BasePage):
             telephone=util.normalize_regional_phone_numbers(fields.get("tel"), region),
         )
 
-    ## UI Navigation and Iframe Handling
+    # UI Navigation and Iframe Handling
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
@@ -457,7 +457,7 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    ## Data Extraction and Processing
+    # Data Extraction and Processing
     def set_country_autofill_panel(self, country: str) -> BasePage:
         """Sets the country value in the autofill view"""
         select_country = Select(self.driver.find_element(By.ID, "country"))
@@ -530,8 +530,8 @@ class AboutPrefs(BasePage):
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
 
-    ## Utility Functions
-    def import_bookmarks(self, browser_name: str) -> BasePage:
+    # Utility Functions
+    def import_bookmarks(self, browser_name: str, platform) -> BasePage:
         """
         Press the import browser data button
         """
@@ -556,6 +556,13 @@ class AboutPrefs(BasePage):
             tries += 1
 
         self.click_on("migration-import-button")
+        sleep(1)
+
+        # On Windows, Tab to and use the Skip button
+        if platform.lower().startswith("win"):
+            for _ in range(3):
+                self.actions.send_keys(Keys.TAB).perform()
+            self.actions.send_keys(Keys.RETURN).perform()
 
         # There are two messages that indicate a successful migration
         self.wait.until(
