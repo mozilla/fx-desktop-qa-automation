@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/walmart_ad.html",
+  "field_mapping": {
+    "given_name": "given-name",
+    "family_name": "family-name",
+    "address_level_2": "address-level2",
+    "address_level_1": "address-level1",
+    "postal_code": "postal-code",
+    "telephone": "tel"
+  },
+  "fields": [
+    "given-name",
+    "family-name",
+    "address-level2",
+    "address-level1",
+    "postal-code",
+    "tel"
+  ]
+}
