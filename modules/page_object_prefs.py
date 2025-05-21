@@ -557,9 +557,12 @@ class AboutPrefs(BasePage):
 
         self.click_on("migration-import-button")
         sleep(1)
-        for _ in range(3):
-            self.actions.send_keys(Keys.TAB).perform()
-        self.actions.send_keys(Keys.RETURN).perform()
+
+        # On Windows, Tab to and use the Skip button
+        if platform.lower().startswith("win"):
+            for _ in range(3):
+                self.actions.send_keys(Keys.TAB).perform()
+            self.actions.send_keys(Keys.RETURN).perform()
 
         # There are two messages that indicate a successful migration
         self.wait.until(

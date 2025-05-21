@@ -76,12 +76,6 @@
     "shadowParent": "migration-popup",
     "groups": []
   },
-  "password-import-skip-button": {
-    "selectorData": "manual-passport-import-skip",
-    "strategy": "class",
-    "shadowParent": "migration-popup",
-    "groups": []
-},
   "migration-progress-header": {
     "selectorData": "h1#progress-header",
     "strategy": "css",
