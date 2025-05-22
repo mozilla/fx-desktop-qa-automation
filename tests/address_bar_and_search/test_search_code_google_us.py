@@ -4,9 +4,10 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
 
-EXPECTED_TITLE = "Google Search"
-FX_SEARCH_CODE = "client=firefox-b-1-d"
+EXPECTED_TITLE = "google.com"
+FX_SEARCH_CODE = "client%3Dfirefox-b-1-d"
 SEARCH_TERM = "soccer"
+
 
 @pytest.fixture()
 def test_case():
@@ -18,7 +19,6 @@ def add_to_prefs_list():
     return [("cookiebanners.service.mode", 1)]
 
 
-@pytest.mark.unstable(reason="Google re-captcha")
 def test_search_code_google_us(driver: Firefox):
     """
     C1365268 - Default Search Code: Google - US
