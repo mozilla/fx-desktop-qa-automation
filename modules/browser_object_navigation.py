@@ -400,4 +400,6 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def get_legacy_search_engine_label(self) -> str:
         """Return the displayed engine name from the legacy search bar."""
-        return self.driver.find_element(By.CSS_SELECTOR, ".searchbar-engine-name").get_attribute("value")
+        return self.driver.find_element(
+            By.CSS_SELECTOR, ".searchbar-engine-name"
+        ).get_attribute("value")

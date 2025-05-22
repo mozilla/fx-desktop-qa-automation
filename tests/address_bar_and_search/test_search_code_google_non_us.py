@@ -5,9 +5,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
 
-FX_SEARCH_CODE = "client=firefox-b-d"
+FX_SEARCH_CODE = "client%3Dfirefox-b-d"
 SEARCH_TERM = "soccer"
-EXPECTED_TITLE = "Google Search"
+EXPECTED_TITLE = "google.com"
 
 
 @pytest.fixture()
@@ -23,7 +23,6 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.mark.unstable(reason="Google re-captcha")
 def test_search_code_google_non_us(driver: Firefox):
     """
     C1365269 - Default Search Code: Google - non-US.

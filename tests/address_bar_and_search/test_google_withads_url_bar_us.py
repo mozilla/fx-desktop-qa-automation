@@ -1,7 +1,8 @@
 import sys
 from os import environ
-import pytest
 from time import sleep
+
+import pytest
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
@@ -59,4 +60,6 @@ def test_google_withads_url_bar_us(driver):
             sleep(2)
             driver.get("about:newtab")
         else:
-            pytest.fail(f"Telemetry path {path} not found after {max_attempts} attempts.")
+            pytest.fail(
+                f"Telemetry path {path} not found after {max_attempts} attempts."
+            )
