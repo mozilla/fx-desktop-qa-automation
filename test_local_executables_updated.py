@@ -41,7 +41,7 @@ def test_local_executables_updated(driver: Firefox, version):
         print("You are not running the latest geckodriver version!!!")
         print(f"Latest version is {latest_gd_ver} but you are running {local_gd_ver}")
         raise RuntimeError(
-            f"Update geckodriver here: https://github.com/mozilla/geckodriver/releases/"
+            "Update geckodriver here: https://github.com/mozilla/geckodriver/releases/"
         )
 
 
