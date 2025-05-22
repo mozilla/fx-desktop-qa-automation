@@ -12,7 +12,6 @@ DIALOG_ID = "refresh-firefox-dialog"
 def test_case():
     return "3028765"
 
-
 def test_refresh_firefox_dialog(driver: Firefox):
     """
     C2914620 - Verify that the 'Refresh Firefox' dialog appears from the address bar.
