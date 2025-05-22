@@ -36,8 +36,8 @@ def test_add_password_save_valid_data(driver: Firefox):
 
     # Check password added in the listbox
     logins = about_logins.get_elements("login-list-item")
-    mozilla_login = next(
-        login for login in logins if login.get_attribute("title") == WEBSITE_ADDRESS
+    mozilla_login = any(
+        [login for login in logins if login.get_attribute("title") == WEBSITE_ADDRESS]
     )
     assert mozilla_login
 

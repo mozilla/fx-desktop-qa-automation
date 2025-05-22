@@ -4,6 +4,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
 
+EXPECTED_TITLE = "Google Search"
+FX_SEARCH_CODE = "client=firefox-b-1-d"
+SEARCH_TERM = "soccer"
 
 @pytest.fixture()
 def test_case():
@@ -13,10 +16,6 @@ def test_case():
 @pytest.fixture()
 def add_to_prefs_list():
     return [("cookiebanners.service.mode", 1)]
-
-
-FX_SEARCH_CODE = "client=firefox-b-1-d"
-SEARCH_TERM = "soccer"
 
 
 @pytest.mark.unstable(reason="Google re-captcha")
@@ -36,7 +35,7 @@ def test_search_code_google_us(driver: Firefox):
 
     # Search via the Awesomebar
     nav.search(SEARCH_TERM)
-    tab.expect_title_contains("Google Search")
+    tab.expect_title_contains(EXPECTED_TITLE)
     assert_search_code_in_url()
 
     # Search via context menu of selected text
@@ -45,5 +44,5 @@ def test_search_code_google_us(driver: Firefox):
     context_menu.click_and_hide_menu("context-menu-search-selected-text")
 
     driver.switch_to.window(driver.window_handles[-1])
-    tab.expect_title_contains("Google Search")
+    tab.expect_title_contains(EXPECTED_TITLE)
     assert_search_code_in_url()
