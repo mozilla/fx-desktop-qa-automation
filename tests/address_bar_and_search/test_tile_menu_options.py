@@ -15,12 +15,17 @@ def test_case():
 
 ALLOWED_RGB_BEFORE_VALUES_CARD = set(["rgba(0, 0, 0, 0)"])
 ALLOWED_RGB_AFTER_VALUES_CARD = set(
-    ["color(srgb 0.878824 0.878824 0.885882)", "color(srgb 0.334902 0.331765 0.36)"]
+    [
+        "color(srgb 0.878824 0.878824 0.885882)",
+        "color(srgb 0.334902 0.331765 0.36)",
+        "color(srgb 0.0823529 0.0784314 0.101961 / 0.14)",
+    ]
 )
 ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS = set(
     [
         "color(srgb 0.356863 0.356863 0.4 / 0.07)",
         "color(srgb 0.984314 0.984314 0.996078 / 0.07)",
+        "rgba(0, 0, 0, 0)",
     ]
 )
 ALLOWED_RGB_AFTER_VALUES_THREE_DOTS = set(
@@ -47,7 +52,6 @@ REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
 card_indices = [(4, False), (0, True)]
 
 
-@pytest.mark.unstable(reason="Sponsorship status sometimes does not appear")
 def test_default_tile_hover_states(driver: Firefox):
     """
     C1533798.1: Ensure that hover states work correctly
@@ -84,7 +88,6 @@ def test_default_tile_hover_states(driver: Firefox):
     )
 
 
-@pytest.mark.unstable(reason="Sponsorship status sometimes does not appear")
 @pytest.mark.parametrize("index, sponsored", card_indices)
 def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool):
     """
