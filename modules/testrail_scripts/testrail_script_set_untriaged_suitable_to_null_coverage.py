@@ -36,7 +36,6 @@ SUITES = [
     ("1907", "Notifications"),
     ("65", "PDF Viewer"),
     ("43517", "Password Manager"),
-    ("5403", "Pocket"),
     ("2241", "Preferences"),
     ("2119", "Profile"),
     ("73", "Printing UI"),
