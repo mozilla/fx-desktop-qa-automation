@@ -255,7 +255,7 @@ class BasePage(Page):
         return selector
 
     def get_element(
-            self, name: str, multiple=False, parent_element=None, labels=[]
+        self, name: str, multiple=False, parent_element=None, labels=[]
     ) -> Union[list[WebElement], WebElement]:
         """
         Given a key for a self.elements dict entry, return the Selenium WebElement(s).
@@ -377,7 +377,7 @@ class BasePage(Page):
         return self.get_element(name, multiple=True, labels=labels)
 
     def get_parent_of(
-            self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> WebElement:
         """
         Given a name + labels, a WebElement, or a tuple, return the direct parent node of the element.
@@ -400,7 +400,7 @@ class BasePage(Page):
         """Expect helper: wait until element is visible or timeout"""
         self.expect(
             lambda _: self.get_element(name, labels=labels)
-                      and self.get_element(name, labels=labels).is_displayed()
+            and self.get_element(name, labels=labels).is_displayed()
         )
         return self
 
@@ -408,7 +408,7 @@ class BasePage(Page):
         """Expect helper: wait until element is not visible or timeout"""
         self.expect(
             lambda _: self.get_elements(name, labels=labels) == []
-                      or not self.get_element(name, labels=labels).is_displayed()
+            or not self.get_element(name, labels=labels).is_displayed()
         )
         return self
 
@@ -422,7 +422,7 @@ class BasePage(Page):
         """Expect helper: wait until element is selected or timeout"""
         self.expect(
             lambda _: self.get_element(name, labels=labels)
-                      and self.get_element(name, labels=labels).is_selected()
+            and self.get_element(name, labels=labels).is_selected()
         )
         return self
 
@@ -432,13 +432,13 @@ class BasePage(Page):
         return self
 
     def expect_element_attribute_contains(
-            self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
+        self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
     ) -> Page:
         """Expect helper: wait until element attribute contains certain value"""
         self.expect(
             lambda _: self.get_element(name, labels=labels)
-                      and str(attr_value)
-                      in self.get_element(name, labels=labels).get_attribute(attr_name)
+            and str(attr_value)
+            in self.get_element(name, labels=labels).get_attribute(attr_name)
         )
         return self
 
@@ -468,7 +468,7 @@ class BasePage(Page):
         return self
 
     def fill(
-            self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
+        self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
     ) -> Page:
         """
         Get a fillable element and fill it with text. Return self.
@@ -527,7 +527,7 @@ class BasePage(Page):
         return self
 
     def multi_click(
-            self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
+        self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Perform multiple clicks at once on an element by name, selector, or WebElement"""
         with self.driver.context(self.context_id):
@@ -559,7 +559,7 @@ class BasePage(Page):
         return self.multi_click(3, reference, labels)
 
     def context_click(
-            self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Context (right-) click on an element"""
         with self.driver.context(self.context_id):
@@ -595,7 +595,7 @@ class BasePage(Page):
         return self
 
     def paste_to_element(
-            self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
+        self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Paste the copied item into the element"""
         with self.driver.context(self.context_id):
@@ -608,7 +608,7 @@ class BasePage(Page):
         return self
 
     def copy_image_from_element(
-            self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Copy from the given element using right click (pynput)"""
         with self.driver.context(self.context_id):
@@ -623,7 +623,7 @@ class BasePage(Page):
         return self
 
     def copy_selection(
-            self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Copy from the current selection using right click (pynput)"""
         with self.driver.context(self.context_id):
@@ -636,7 +636,7 @@ class BasePage(Page):
         return self
 
     def click_and_hide_menu(
-            self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """Click an option in a context menu, then hide it"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -667,7 +667,7 @@ class BasePage(Page):
         return self
 
     def get_all_children(
-            self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> List[WebElement]:
         """
         Gets all the children of a webelement
@@ -679,7 +679,7 @@ class BasePage(Page):
         return children
 
     def wait_for_no_children(
-            self, parent: Union[str, tuple, WebElement], labels=[]
+        self, parent: Union[str, tuple, WebElement], labels=[]
     ) -> Page:
         """
         Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
@@ -840,7 +840,7 @@ class BasePage(Page):
         keyboard.release(Key.enter)
 
     def hide_popup_by_child_node(
-            self, reference: Union[str, tuple, WebElement], labels=[], retry=False
+        self, reference: Union[str, tuple, WebElement], labels=[], retry=False
     ) -> Page:
         try:
             with self.driver.context(self.context_id):

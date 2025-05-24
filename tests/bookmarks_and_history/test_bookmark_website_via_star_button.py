@@ -3,6 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -22,11 +23,10 @@ def test_bookmark_website_via_star(driver: Firefox):
     # Instantiate object
     nav = Navigation(driver)
     panel = PanelUi(driver)
-
-    # Navigate to test website
-    driver.get(URL_TO_BOOKMARK)
+    page = GenericPage(driver, url=URL_TO_BOOKMARK)
 
     # Bookmark using star button and verify star turned blue
+    page.open()
     nav.add_bookmark_via_star_icon()
     nav.verify_star_button_is_blue()
 

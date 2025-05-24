@@ -8,6 +8,7 @@ EXPECTED_TITLE = "Google Search"
 FX_SEARCH_CODE = "client=firefox-b-1-d"
 SEARCH_TERM = "soccer"
 
+
 @pytest.fixture()
 def test_case():
     return "3029765"

@@ -31,4 +31,6 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
 
     # Step 3: Re-open new tab and verify placeholder
     driver.get("about:newtab")
-    nav.expect_element_attribute_contains("awesome-bar", "placeholder", EXPECTED_PLACEHOLDER)
+    nav.expect_element_attribute_contains(
+        "awesome-bar", "placeholder", EXPECTED_PLACEHOLDER
+    )

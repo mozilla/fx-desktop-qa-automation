@@ -6,6 +6,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
@@ -20,6 +21,7 @@ class PanelUi(BasePage):
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.navigation = Navigation(self.driver)
+        self.context_menu = ContextMenu(self.driver)
 
     class Menu(Region):
         """
@@ -220,4 +222,50 @@ class PanelUi(BasePage):
             bookmark_title (str): The title text to look for in the bookmark
         """
         self.element_visible("bookmark-by-title", labels=[bookmark_title])
+        return self
+
+    @BasePage.context_chrome
+    def open_other_bookmarks_context_menu(self) -> BasePage:
+        """
+        Opens the Other Bookmarks folder and displays its context menu
+        """
+        self.click_on("other-bookmarks")
+        self.navigation.context_click("other-bookmarks-popup")
+        return self
+
+    def open_bookmark_in_new_window_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-clicks bookmark and opens it in a new window via context menu
+
+        Arguments:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-window")
+        return self
+
+    def open_bookmark_in_new_private_window_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-clicks bookmark and opens it in a new private window via context menu
+
+        Arguments:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
+        return self
+
+    @BasePage.context_chrome
+    def open_all_bookmarks_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and opens all bookmarks via context menu
+        """
+        self.context_click("bookmarks-toolbar")
+        self.context_menu.click_on("context-menu-toolbar-open-all-bookmarks")
         return self

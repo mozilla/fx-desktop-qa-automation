@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -19,9 +20,10 @@ def test_bookmark_via_hamburger_menu(driver: Firefox):
     """
     # Instantiate object
     panel = PanelUi(driver)
+    page = GenericPage(driver, url=URL_TO_BOOKMARK)
 
     # Navigate to test website
-    driver.get(URL_TO_BOOKMARK)
+    page.open()
 
     # Bookmark using Bookmark current tab option from Hamburger Menu
     panel.open_bookmarks_panel_from_hamburger_menu()
