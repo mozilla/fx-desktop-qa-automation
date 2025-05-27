@@ -567,7 +567,7 @@ class AboutPrefs(BasePage):
         # There are two messages that indicate a successful migration
         self.wait.until(
             lambda _: self.get_element("migration-progress-header").text
-            in ["Data Imported Successfully", "Data Import Complete"]
+            in ["Data imported successfully", "Data import complete"]
         )
         self.actions.send_keys(" ").perform()
         return self
