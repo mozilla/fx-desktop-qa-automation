@@ -7,46 +7,16 @@ from dotenv import load_dotenv
 from modules.testrail_integration import testrail_init
 
 # Set up logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 # Load env file from project root
 script_dir = os.path.dirname(__file__)
-project_root = os.path.abspath(os.path.join(script_dir, ".."))
+project_root = os.path.abspath(os.path.join(script_dir, "..", ".."))
 env_file_path = os.path.join(project_root, "testrail_credentials.env")
 load_dotenv(dotenv_path=env_file_path)
 
 # TestRail project ID (Fx Desktop)
 PROJECT_ID = 17
-
-# Specific suites to process
-SUITES = [
-    ("18215", "Address Bar and Search"),
-    ("1731", "Audio/Video"),
-    ("2525", "Bookmarks and History"),
-    ("29219", "Downloads"),
-    ("5259", "Drag and Drop"),
-    ("2085", "Find Toolbar"),
-    ("2054", "Form Autofill"),
-    ("498", "Geolocation"),
-    ("22801", "Language Packs"),
-    ("85", "Menus"),
-    ("6066", "Networking"),
-    ("1907", "Notifications"),
-    ("65", "PDF Viewer"),
-    ("43517", "Password Manager"),
-    ("5403", "Pocket"),
-    ("2241", "Preferences"),
-    ("2119", "Profile"),
-    ("73", "Printing UI"),
-    ("2126", "Reader View"),
-    ("102", "Scrolling"),
-    ("5833", "Security and Privacy"),
-    ("2130", "Sync & Firefox Account"),
-    ("2103", "Tabs"),
-    ("1997", "Theme and Toolbar"),
-]
 
 # Automation status values
 AUTOMATION_STATUS = {"UNTRIAGED": 1, "SUITABLE": 2, "NOT_SUITABLE": 3, "COMPLETED": 4}
@@ -56,6 +26,13 @@ AUTOMATION_COVERAGE = {"NONE": 1, "PARTIAL": 2, "FULL": 3}
 
 # Coverage value to name mapping for better logging
 COVERAGE_NAMES = {1: "None", 2: "Partial", 3: "Full"}
+
+
+def get_all_suites(tr, project_id):
+    """Get all suites from the project"""
+    suites = tr.client.send_get(f"get_suites/{project_id}")
+    logging.info(f"Found {len(suites)} suites in project {project_id}")
+    return suites
 
 
 def get_all_test_cases(tr, project_id, suite_id):
@@ -83,11 +60,10 @@ def get_all_test_cases(tr, project_id, suite_id):
     return all_cases
 
 
-def set_untriaged_suitable_to_null_coverage(
-    tr, project_id, dry_run=True, batch_size=25
-):
+def update_coverage_to_none(tr, project_id, dry_run=True, batch_size=25):
     """
-    Set automation coverage to None for test cases that have automation status of Untriaged or Suitable
+    Set automation coverage to None for all test cases that have automation status of
+    Untriaged, Suitable, or Not Suitable, regardless of their current coverage value
     """
     start_time = time.time()
     try:
@@ -97,10 +73,14 @@ def set_untriaged_suitable_to_null_coverage(
         updated_count = 0
         changed_case_ids = []  # Track all case IDs that will be changed
 
-        # Process each specified suite
-        total_suites = len(SUITES)
-        for index, (suite_id, suite_name) in enumerate(SUITES, 1):
-            # Show progress
+        # Get all suites in the project
+        suites = get_all_suites(tr, project_id)
+        total_suites = len(suites)
+
+        # Process each suite
+        for index, suite in enumerate(suites, 1):
+            suite_id = suite["id"]
+            suite_name = suite["name"]
             logging.info(f"Processing suite {index}/{total_suites}: {suite_name}")
 
             try:
@@ -112,18 +92,16 @@ def set_untriaged_suitable_to_null_coverage(
                     status = case.get("custom_automation_status")
                     coverage = case.get("custom_automation_coverage")
 
-                    # Check if status is Untriaged or Suitable
+                    # Check if status is Untriaged, Suitable, or Not Suitable
                     if status in [
                         AUTOMATION_STATUS["UNTRIAGED"],
                         AUTOMATION_STATUS["SUITABLE"],
+                        AUTOMATION_STATUS["NOT_SUITABLE"],
                     ]:
-                        # Check coverage value
-                        if coverage in [
-                            AUTOMATION_COVERAGE["FULL"],
-                            AUTOMATION_COVERAGE["PARTIAL"],
-                        ]:
+                        # If coverage is not None, add to update targets
+                        if coverage != AUTOMATION_COVERAGE["NONE"]:
                             update_targets.append(case)
-                        elif coverage == AUTOMATION_COVERAGE["NONE"]:
+                        else:
                             skipped_cases += 1
 
                 suite_update_count = len(update_targets)
@@ -143,14 +121,12 @@ def set_untriaged_suitable_to_null_coverage(
                             batch_ids = []
                             for case in batch:
                                 case_id = case["id"]
-                                coverage = case.get("custom_automation_coverage")
-                                coverage_name = COVERAGE_NAMES.get(coverage)
-
-                                if coverage_name is None:
-                                    logging.warning(
-                                        f"Case {case_id} has unexpected coverage value: {coverage}"
-                                    )
-                                    coverage_name = "Unknown"
+                                current_coverage = case.get(
+                                    "custom_automation_coverage"
+                                )
+                                coverage_name = COVERAGE_NAMES.get(
+                                    current_coverage, "Empty"
+                                )
 
                                 try:
                                     tr.update_case_field(
@@ -175,15 +151,12 @@ def set_untriaged_suitable_to_null_coverage(
                             )
                             for case in batch:
                                 case_id = case["id"]
-                                coverage = case.get("custom_automation_coverage")
-                                coverage_name = COVERAGE_NAMES.get(coverage)
-
-                                if coverage_name is None:
-                                    logging.warning(
-                                        f"Case {case_id} has unexpected coverage value: {coverage}"
-                                    )
-                                    coverage_name = "Unknown"
-
+                                current_coverage = case.get(
+                                    "custom_automation_coverage"
+                                )
+                                coverage_name = COVERAGE_NAMES.get(
+                                    current_coverage, "Empty"
+                                )
                                 logging.info(
                                     f"  Case {case_id} - {coverage_name} → None"
                                 )
@@ -242,7 +215,7 @@ def main():
 
     # Process all cases in the project
     logging.info(f"Processing project ID: {PROJECT_ID}...")
-    set_untriaged_suitable_to_null_coverage(tr, PROJECT_ID, dry_run)
+    update_coverage_to_none(tr, PROJECT_ID, dry_run)
 
 
 if __name__ == "__main__":
