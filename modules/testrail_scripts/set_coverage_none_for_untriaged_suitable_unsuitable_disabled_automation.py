@@ -19,13 +19,28 @@ load_dotenv(dotenv_path=env_file_path)
 PROJECT_ID = 17
 
 # Automation status values
-AUTOMATION_STATUS = {"UNTRIAGED": 1, "SUITABLE": 2, "NOT_SUITABLE": 3, "COMPLETED": 4}
+AUTOMATION_STATUS = {
+    "UNTRIAGED": 1,
+    "SUITABLE": 2,
+    "UNSUITABLE": 3,
+    "COMPLETED": 4,
+    "DISABLED": 5,
+}
 
 # Automation coverage values
 AUTOMATION_COVERAGE = {"NONE": 1, "PARTIAL": 2, "FULL": 3}
 
 # Coverage value to name mapping for better logging
 COVERAGE_NAMES = {1: "None", 2: "Partial", 3: "Full"}
+
+# Status value to name mapping for better logging
+STATUS_NAMES = {
+    1: "Untriaged",
+    2: "Suitable",
+    3: "Unsuitable",
+    4: "Completed",
+    5: "Disabled",
+}
 
 
 def get_all_suites(tr, project_id):
@@ -92,11 +107,12 @@ def update_coverage_to_none(tr, project_id, dry_run=True, batch_size=25):
                     status = case.get("custom_automation_status")
                     coverage = case.get("custom_automation_coverage")
 
-                    # Check if status is Untriaged, Suitable, or Not Suitable
+                    # Check if status is one that should have None coverage
                     if status in [
-                        AUTOMATION_STATUS["UNTRIAGED"],
-                        AUTOMATION_STATUS["SUITABLE"],
-                        AUTOMATION_STATUS["NOT_SUITABLE"],
+                        AUTOMATION_STATUS["UNTRIAGED"],  # Not decided yet
+                        AUTOMATION_STATUS["SUITABLE"],  # Approved for automation
+                        AUTOMATION_STATUS["UNSUITABLE"],  # Won't be automated
+                        AUTOMATION_STATUS["DISABLED"],  # Not active
                     ]:
                         # If coverage is not None, add to update targets
                         if coverage != AUTOMATION_COVERAGE["NONE"]:
@@ -151,14 +167,18 @@ def update_coverage_to_none(tr, project_id, dry_run=True, batch_size=25):
                             )
                             for case in batch:
                                 case_id = case["id"]
+                                current_status = case.get("custom_automation_status")
                                 current_coverage = case.get(
                                     "custom_automation_coverage"
+                                )
+                                status_name = STATUS_NAMES.get(
+                                    current_status, "Unknown"
                                 )
                                 coverage_name = COVERAGE_NAMES.get(
                                     current_coverage, "Empty"
                                 )
                                 logging.info(
-                                    f"  Case {case_id} - {coverage_name} → None"
+                                    f"  Case {case_id} - Status: {status_name}, Coverage: {coverage_name} → None"
                                 )
                                 changed_case_ids.append((case_id, suite_name))
 
