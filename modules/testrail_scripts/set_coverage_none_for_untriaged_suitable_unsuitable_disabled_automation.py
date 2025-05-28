@@ -22,7 +22,7 @@ PROJECT_ID = 17
 AUTOMATION_STATUS = {
     "UNTRIAGED": 1,
     "SUITABLE": 2,
-    "UNSUITABLE": 3,
+    "NOT_SUITABLE": 3,
     "COMPLETED": 4,
     "DISABLED": 5,
 }
@@ -109,10 +109,10 @@ def update_coverage_to_none(tr, project_id, dry_run=True, batch_size=25):
 
                     # Check if status is one that should have None coverage
                     if status in [
-                        AUTOMATION_STATUS["UNTRIAGED"],  # Not decided yet
-                        AUTOMATION_STATUS["SUITABLE"],  # Approved for automation
-                        AUTOMATION_STATUS["UNSUITABLE"],  # Won't be automated
-                        AUTOMATION_STATUS["DISABLED"],  # Not active
+                        AUTOMATION_STATUS["UNTRIAGED"],
+                        AUTOMATION_STATUS["SUITABLE"],
+                        AUTOMATION_STATUS["NOT_SUITABLE"],
+                        AUTOMATION_STATUS["DISABLED"],
                     ]:
                         # If coverage is not None, add to update targets
                         if coverage != AUTOMATION_COVERAGE["NONE"]:
