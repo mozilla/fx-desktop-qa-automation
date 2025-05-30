@@ -7,6 +7,14 @@ from selenium.webdriver import Firefox
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
 
+SAUCEDEMO_URL = "https://www.saucedemo.com/"
+USERNAME = "username1"
+PASSWORD = "password1"
+USERNAME2 = "username2"
+PASSWORD2 = "password2"
+USERNAME3 = "username3"
+PASSWORD3 = "password3"
+
 
 @pytest.fixture()
 def test_case():
@@ -27,9 +35,6 @@ def temp_selectors():
     }
 
 
-SAUCEDEMO_URL = "https://www.saucedemo.com/"
-
-
 @pytest.mark.headed
 def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     """
@@ -38,40 +43,40 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     # Instantiate objects
     about_logins = AboutLogins(driver)
     keyboard = Controller()
+    autofill_popup = AutofillPopup(driver)
 
     # Save 3 sets of credentials for facebook
     about_logins.open()
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://www.saucedemo.com/",
-            "username": "username1",
-            "password": "password1",
+            "origin": SAUCEDEMO_URL,
+            "username": USERNAME,
+            "password": PASSWORD,
         }
     )
     time.sleep(0.1)
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://www.saucedemo.com/",
-            "username": "username2",
-            "password": "password2",
+            "origin": SAUCEDEMO_URL,
+            "username": USERNAME2,
+            "password": PASSWORD2,
         }
     )
     time.sleep(0.1)
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
-            "origin": "https://www.saucedemo.com/",
-            "username": "username3",
-            "password": "password3",
+            "origin": SAUCEDEMO_URL,
+            "username": USERNAME3,
+            "password": PASSWORD3,
         }
     )
 
     # Open saucedemo.com
     web_page = GenericPage(driver, url=SAUCEDEMO_URL).open()
     web_page.elements |= temp_selectors
-    autofill_popup = AutofillPopup(driver)
 
     # Verify that all 3 credentials and "Manage Passwords" footer are in the pop-up
     web_page.click_on("username-field")
@@ -107,5 +112,9 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     driver.switch_to.window(driver.window_handles[0])
     for i in range(1, 4):
         use_credential_n(i)
-        web_page.element_attribute_contains("username-field", "value", f"username{i}")
-        web_page.element_attribute_contains("password-field", "value", f"password{i}")
+        web_page.expect_element_attribute_contains(
+            "username-field", "value", f"username{i}"
+        )
+        web_page.expect_element_attribute_contains(
+            "password-field", "value", f"password{i}"
+        )

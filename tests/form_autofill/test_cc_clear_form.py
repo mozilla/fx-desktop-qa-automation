@@ -28,6 +28,9 @@ def test_clear_form_credit_card(
     # navigate to credit card autofill page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # create fake data, fill it in and press submit and save on the door hanger
     credit_card_autofill.fill_and_save()
 

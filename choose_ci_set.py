@@ -107,11 +107,14 @@ def dedupe(run_list: list, slash: str) -> list:
 if __name__ == "__main__":
     if os.path.exists(".env"):
         with open(".env") as fh:
-            if "TESTRAIL_REPORT='true'" in fh.read():
+            contents = fh.read()
+            if "TESTRAIL_REPORT='true'" in contents:
                 os.environ["TESTRAIL_REPORT"] = "true"
+            if "RUN_ALL='true'" in contents:
+                os.environ["MANUAL"] = "true"
 
-    if os.environ.get("TESTRAIL_REPORT"):
-        # Run all tests if this is a scheduled beta
+    if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
+        # Run all tests if this is a scheduled beta or a manual run
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("tests")
             sys.exit(0)

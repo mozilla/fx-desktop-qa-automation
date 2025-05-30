@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8080/amazon_cc.html",
+  "field_mapping": {
+    "card_number": "cc-number",
+    "expiration_date": "cc-exp"
+  },
+  "fields": [
+    "cc-number",
+    "cc-exp"
+  ]
+}

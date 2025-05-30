@@ -106,6 +106,12 @@ class Utilities:
         self.fake = None
         self.locale = None
 
+    def assert_search_code_in_url(self, driver, nav, expected_code):
+        assert expected_code in driver.current_url, (
+            f"Expected '{expected_code}' in URL, got: {driver.current_url}"
+        )
+        nav.clear_awesome_bar()
+
     def remove_file(self, path: str):
         try:
             os.remove(path)
@@ -267,6 +273,7 @@ class Utilities:
         region_attributes = ["state", "administrative_unit", "region"]
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
+        given_name, family_name = name.split()
         organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         # find correct attribute for selected locale
@@ -285,6 +292,8 @@ class Utilities:
 
         fake_data = AutofillAddressBase(
             name=name,
+            family_name=family_name,
+            given_name=given_name,
             organization=organization,
             street_address=street_address,
             address_level_2=address_level_2,
@@ -312,17 +321,23 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
+        given_name, family_name = name.split()
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()
         expiration_month, expiration_year = generated_credit_expiry.split("/")
         cvv = fake.credit_card_security_code()
+        telephone = self.generate_localized_phone(country_code, fake)
 
         fake_data = CreditCardBase(
             name=name,
+            given_name=given_name,
+            family_name=family_name,
             card_number=card_number,
             expiration_month=expiration_month,
             expiration_year=expiration_year,
+            expiration_date=generated_credit_expiry,
             cvv=cvv,
+            telephone=telephone,
         )
 
         while len(fake_data.card_number) <= 14:

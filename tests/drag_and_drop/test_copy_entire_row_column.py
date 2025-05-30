@@ -36,7 +36,7 @@ def test_copy_entire_row_column(driver: Firefox):
 
         # Verify that the row is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains(
+            web_page.expect_element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
             web_page.perform_key_combo(Keys.TAB)
@@ -50,7 +50,7 @@ def test_copy_entire_row_column(driver: Firefox):
 
         # Verify that the row is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains(
+            web_page.expect_element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
             web_page.perform_key_combo(Keys.TAB)
@@ -70,7 +70,7 @@ def test_copy_entire_row_column(driver: Firefox):
 
         # Verify that the column is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains(
+            web_page.expect_element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
             web_page.perform_key_combo(Keys.TAB)
@@ -85,7 +85,7 @@ def test_copy_entire_row_column(driver: Firefox):
 
         # Verify that the column is pasted properly
         for i in range(1, 4):
-            web_page.element_attribute_contains(
+            web_page.expect_element_attribute_contains(
                 "formula-box-input", "innerHTML", str(i)
             )
             web_page.perform_key_combo(Keys.TAB)

@@ -1,0 +1,25 @@
+{
+  "url": "https://mozilla.github.io/form-fill-examples/basic.html",
+  "field_mapping": {
+    "name": "name",
+    "organization": "organization",
+    "street_address": "street-address",
+    "address_level_2": "address-level2",
+    "address_level_1": "address-level1",
+    "postal_code": "postal-code",
+    "country_code": "country",
+    "email": "email",
+    "telephone": "tel"
+  },
+  "fields": [
+    "name",
+    "organization",
+    "street-address",
+    "address-level2",
+    "address-level1",
+    "postal-code",
+    "country",
+    "email",
+    "tel"
+  ]
+}

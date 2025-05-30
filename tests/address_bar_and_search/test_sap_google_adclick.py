@@ -7,41 +7,40 @@ from modules.browser_object_navigation import Navigation
 from modules.page_object_about_pages import AboutConfig, AboutTelemetry
 from modules.util import Utilities
 
+SEARCH_TERM = "iphone"
+SLEEP_AFTER_CLICK = 2
+SLEEP_BEFORE_VERIFICATION = 3
+
 
 @pytest.fixture()
 def test_case():
-    return "1365108"
+    return "3029662"
 
 
 @pytest.mark.unstable(reason="Google re-captcha")
 def test_sap_google_adclick(driver: Firefox):
     """
-    C1365108, Test SAP Google adclick - URL bar - US
+    C1365108 - Verify Google ad click from URL bar is recorded in telemetry (US region).
     """
-    # instantiate objects
     nav = Navigation(driver)
     about_config = AboutConfig(driver)
-    u = Utilities()
+    utils = Utilities()
 
-    # change pref value in order to not display accept cookies banner
     about_config.change_config_value("cookiebanners.service.mode", 1)
 
-    # search and click on an ad
-    nav.search("iphone")
+    nav.search(SEARCH_TERM)
     nav.get_element("search-result").click()
-    sleep(2)
+    sleep(SLEEP_AFTER_CLICK)
 
-    # Click on Raw JSON, switch tab and click on Raw Data
-    about_telemetry = AboutTelemetry(driver).open()
-    sleep(2)
-    about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_to_new_tab()
-    about_telemetry.get_element("rawdata-tab").click()
+    telemetry = AboutTelemetry(driver).open()
+    sleep(SLEEP_BEFORE_VERIFICATION)
+    telemetry.get_element("category-raw").click()
+    telemetry.switch_to_new_tab()
+    telemetry.get_element("rawdata-tab").click()
 
-    # Verify pings are recorded
-    json_data = u.decode_url(driver)
-    assert u.assert_json_value(
+    json_data = utils.decode_url(driver)
+    assert utils.assert_json_value(
         json_data,
         '$..keyedScalars.["browser.search.adclicks.urlbar"].["google:tagged"]',
         1,
-    )
+    ), "Expected telemetry ad click to be recorded."

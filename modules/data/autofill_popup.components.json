@@ -158,13 +158,7 @@
         "strategy": "css",
         "groups": []
     },
-
-    "address-preview-form-container": {
-        "selectorData": "address-save-update-notification-content",
-        "strategy": "class",
-        "groups": []
-    },
-  "cc-preview-form-container": {
+  "preview-form-container": {
       "selectorData": ".autocomplete-richlistbox richlistitem",
       "strategy": "css",
       "groups": []

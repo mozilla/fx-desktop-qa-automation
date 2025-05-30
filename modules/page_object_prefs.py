@@ -34,7 +34,7 @@ class AboutPrefs(BasePage):
         super().__init__(driver, **kwargs)
         self.driver = driver
 
-    # number of tabs to reach the country tab
+    # Number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
 
@@ -49,7 +49,7 @@ class AboutPrefs(BasePage):
     HTTPS_ONLY_STATUS = HttpsOnlyStatus()
 
     # Function Organization
-    ## Search and Settings
+    # Search and Settings
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(
@@ -80,7 +80,7 @@ class AboutPrefs(BasePage):
         self.get_element("language-option-by-code", labels=[lang_code]).click()
         select_language.click()
         self.get_element("language-settings-add-button").click()
-        self.element_attribute_contains(
+        self.expect_element_attribute_contains(
             "language-added-list", "last-selected", f"locale-{lang_code}"
         )
 
@@ -94,7 +94,7 @@ class AboutPrefs(BasePage):
         self.find_in_settings("HTTPS")
         self.element_clickable(str(option_id))
         self.click_on(str(option_id))
-        self.element_attribute_contains(str(option_id), "checked", "")
+        self.expect_element_attribute_contains(str(option_id), "checked", "")
         return self
 
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
@@ -120,11 +120,11 @@ class AboutPrefs(BasePage):
 
     def get_history_menulist(self) -> WebElement:
         """
-        Gets the webelement for the list of history items that appear in about:preferences
+        Gets the web element for the list of history items that appear in about:preferences
         """
         return self.get_element("history_menulist")
 
-    ## Payment and Address Management
+    # Payment and Address Management
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
@@ -254,6 +254,7 @@ class AboutPrefs(BasePage):
         """
         Takes the sample AutofillAddressBase object and adds an entry to the saved addresses list.
         Switches the appropriate frames to accommodate the operation.
+        Exits after adding entry
 
         Arguments:
             cc_data: The object containing all the sample data
@@ -261,6 +262,14 @@ class AboutPrefs(BasePage):
         self.switch_to_saved_payments_popup_iframe()
         self.fill_and_save_cc_panel_information(cc_data)
         self.switch_to_default_frame()
+        self.close_dialog_box()
+        return self
+
+    def close_dialog_box(self):
+        """Close dialog box for saved addresses or payments."""
+        self.element_clickable("panel-popup-button", labels=["close-button"])
+        self.get_element("panel-popup-button", labels=["close-button"]).click()
+        return self
 
     def update_cc_field_panel(self, field_name: str, value: str | int) -> BasePage:
         """
@@ -304,6 +313,7 @@ class AboutPrefs(BasePage):
         """
         Takes the sample AutofillAddressBase object and adds an entry to the saved addresses list.
         Switches the appropriate frames to accommodate the operation.
+        Exits after adding entry
 
         Arguments:
             address_data: The object containing all the sample data
@@ -312,6 +322,7 @@ class AboutPrefs(BasePage):
         self.switch_to_edit_saved_addresses_popup_iframe()
         self.fill_and_save_address_panel_information(address_data)
         self.switch_to_default_frame()
+        self.close_dialog_box()
         return self
 
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
@@ -360,6 +371,8 @@ class AboutPrefs(BasePage):
 
         return AutofillAddressBase(
             name=fields.get("name"),
+            given_name=fields.get("name", "").split()[0],
+            family_name=fields.get("name", "").split()[1],
             organization=fields.get("organization"),
             street_address=fields.get("street-address"),
             address_level_2=fields.get("address-level2"),
@@ -371,7 +384,7 @@ class AboutPrefs(BasePage):
             telephone=util.normalize_regional_phone_numbers(fields.get("tel"), region),
         )
 
-    ## UI Navigation and Iframe Handling
+    # UI Navigation and Iframe Handling
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
@@ -444,7 +457,7 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    ## Data Extraction and Processing
+    # Data Extraction and Processing
     def set_country_autofill_panel(self, country: str) -> BasePage:
         """Sets the country value in the autofill view"""
         select_country = Select(self.driver.find_element(By.ID, "country"))
@@ -517,8 +530,8 @@ class AboutPrefs(BasePage):
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
 
-    ## Utility Functions
-    def import_bookmarks(self, browser_name: str) -> BasePage:
+    # Utility Functions
+    def import_bookmarks(self, browser_name: str, platform) -> BasePage:
         """
         Press the import browser data button
         """
@@ -543,11 +556,18 @@ class AboutPrefs(BasePage):
             tries += 1
 
         self.click_on("migration-import-button")
+        sleep(1)
+
+        # On Windows, Tab to and use the Skip button
+        if platform.lower().startswith("win"):
+            for _ in range(3):
+                self.actions.send_keys(Keys.TAB).perform()
+            self.actions.send_keys(Keys.RETURN).perform()
 
         # There are two messages that indicate a successful migration
         self.wait.until(
             lambda _: self.get_element("migration-progress-header").text
-            in ["Data Imported Successfully", "Data Import Complete"]
+            in ["Data imported successfully", "Data import complete"]
         )
         self.actions.send_keys(" ").perform()
         return self

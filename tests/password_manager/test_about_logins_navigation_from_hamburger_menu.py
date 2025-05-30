@@ -3,6 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
 
+ABOUT_LOGINS_PAGE_TITLE = "Passwords"
+
 
 @pytest.fixture()
 def test_case():
@@ -13,7 +15,7 @@ def test_about_logins_navigation_from_password_hamburger_menu(driver: Firefox):
     """
     C2241082 - Verify that clicking the Password option in Hamburger Menu opens about:logins page in a new tab
     """
-
+    # Instantiate objects
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
 
@@ -23,4 +25,4 @@ def test_about_logins_navigation_from_password_hamburger_menu(driver: Firefox):
 
     # Verify that the about:logins page is opened in a new tab
     tabs.wait_for_num_tabs(2)
-    tabs.title_contains("Passwords")
+    tabs.title_contains(ABOUT_LOGINS_PAGE_TITLE)

@@ -2,7 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs, CreditCardFill
+from modules.classes.credit_card import CreditCardBase
+from modules.page_object import CreditCardFill
 from modules.util import Utilities
 
 
@@ -20,34 +21,36 @@ def test_cc_preview(
     driver: Firefox,
     util: Utilities,
     region: str,
-    about_prefs_privacy: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
+    fill_and_save_payments: CreditCardBase,
 ):
     """
     C2886599 -  Verify that hovering over field will preview all eligible fields (except for the CVV field)
     """
 
-    # Go to about:preferences#privacy and open Saved Payment Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
-
-    # Save CC information using fake data
-    credit_card_sample_data = util.fake_credit_card_data(region)
-
-    # Add a new CC profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
-
     # Open credit card form page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
+    # fake data
+    credit_card_sample_data = fill_and_save_payments
+
     # Hover over each field and check data preview
-    fields_to_test = ["cc-name", "cc-number", "cc-exp-month", "cc-exp-year"]
+    fields_to_test = [
+        "name",
+        "given_name",
+        "family_name",
+        "card_number",
+        "expiration_month",
+        "expiration_year",
+        "expiration_date",
+    ]
     for field in fields_to_test:
         credit_card_autofill.check_autofill_preview_for_field(
             field, credit_card_sample_data
         )
 
-    credit_card_autofill.click_on("form-field", labels=["cc-csc"])
-    autofill_popup.ensure_autofill_dropdown_not_visible()
+    credit_card_autofill.verify_no_dropdown_on_field_interaction("cvv")

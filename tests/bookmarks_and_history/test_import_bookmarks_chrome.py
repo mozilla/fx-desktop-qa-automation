@@ -77,7 +77,7 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
         logging.warning(e)
         yield None
 
-    # Teardown: We don't actually want to destroy the Chrome setup of local users
+    # Teardown: We don't want to destroy the Chrome setup of local users
     if os.path.exists(bookmarks_target):
         os.remove(bookmarks_target)
     if fake_install:
@@ -91,12 +91,12 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
         os.rename(tmp_path / "Bookmarks", bookmarks_target)
 
 
-def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox):
+def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox, sys_platform):
     if not chrome_bookmarks:
         pytest.skip("Google Chrome not installed or directory could not be created")
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.click_on("import-browser-data")
-    about_prefs.import_bookmarks("Chrome")
+    about_prefs.import_bookmarks("Chrome", sys_platform)
     toolbar = Navigation(driver)
     toolbar.confirm_bookmark_exists(TEST_PAGE_TITLE)

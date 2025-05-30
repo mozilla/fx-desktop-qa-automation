@@ -165,7 +165,7 @@
 
     "sponsored-suggestion": {
         "doNotCache": true,
-        "selectorData": "urlbarView-row-body-description",
+        "selectorData": "urlbarView-group-aria-label",
         "strategy": "class",
         "groups": []
     },
@@ -176,6 +176,13 @@
         "strategy": "css",
         "groups": []
     },
+
+    "suggestion-titles": {
+        "doNotCache": true,
+        "selectorData": "urlbarView-title",
+        "strategy": "class",
+        "groups": []
+},
 
     "search-result-autofill-adaptive-element": {
         "selectorData": ".//*[@type='autofill_adaptive']",

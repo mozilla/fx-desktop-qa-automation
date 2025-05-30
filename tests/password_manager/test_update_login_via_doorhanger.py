@@ -5,6 +5,10 @@ from modules.browser_object import ContextMenu, Navigation
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import LoginAutofill
 
+USERNAME = "testUser"
+PASSWORD = "testPassword"
+UPDATED_PASSWORD = "testPasswordUpdate"
+
 
 @pytest.fixture()
 def test_case():
@@ -22,18 +26,19 @@ def test_update_login_via_doorhanger(driver: Firefox):
     C2243013 - Verify that Firefox successfully updates login credentials via the update password doorhanger and
     autofill them on subsequent access
     """
-
-    login_autofill = LoginAutofill(driver).open()
+    # Instantiate objects
+    login_autofill = LoginAutofill(driver)
     autofill_popup_panel = AutofillPopup(driver)
     nav = Navigation(driver)
     context_menu = ContextMenu(driver)
 
     # Creating an instance of the LoginForm within the LoginAutofill page object
+    login_autofill.open()
     login_form = LoginAutofill.LoginForm(login_autofill)
 
     # Fill in the login form in demo page and save the login credentials via the doorhanger
-    login_form.fill_username("testUser")
-    login_form.fill_password("testPassword")
+    login_form.fill_username(USERNAME)
+    login_form.fill_password(PASSWORD)
     login_form.submit()
     autofill_popup_panel.click_doorhanger_button("save")
 
@@ -44,7 +49,7 @@ def test_update_login_via_doorhanger(driver: Firefox):
     # Verify the initial password value
     password_element = login_autofill.get_element("password-login-field")
     login_autofill.wait.until(
-        lambda _: password_element.get_attribute("value") == "testPassword"
+        lambda _: password_element.get_attribute("value") == PASSWORD
     )
 
     # Add several characters inside the password field in demo page, update the login credentials via the doorhanger
@@ -58,12 +63,12 @@ def test_update_login_via_doorhanger(driver: Firefox):
     new_login_autofill.open()
 
     # Select Reveal password from password field context menu for headed run purpose only
-    password_field = login_autofill.get_element("password-login-field")
-    login_autofill.context_click(password_field)
+    login_autofill.context_click("password-login-field")
+
     context_menu.click_and_hide_menu("context-menu-reveal-password")
 
     # Verify the password matches updated password value
     password_element = login_autofill.get_element("password-login-field")
     login_autofill.wait.until(
-        lambda _: password_element.get_attribute("value") == "testPasswordUpdate"
+        lambda _: password_element.get_attribute("value") == UPDATED_PASSWORD
     )

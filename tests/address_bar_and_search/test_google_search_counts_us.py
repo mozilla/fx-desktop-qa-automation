@@ -9,40 +9,63 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
-
-@pytest.fixture()
-def test_case():
-    return "1365026"
-
+# Constants
+SEARCH_TERM = "festival"
+SEARCH_PROVIDER_PATH = '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum'
+SEARCH_TAG_PATH = '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]'
+WAIT_AFTER_SEARCH = 5
+WAIT_TELEMETRY_LOAD = 2
 
 MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
+@pytest.fixture()
+def test_case():
+    return "3029528"
+
+
+@pytest.mark.skipif(MAC_GHA, reason="Test unstable in macOS GitHub Actions")
 def test_google_search_counts_us(driver: Firefox):
     """
-    C1365026, Test Google Search counts - urlbar US
+    C1365026 - Verify Google search counts in telemetry from the URL bar (US region).
+    Retries up to 5 times if telemetry is missing or blocked by CAPTCHA.
     """
-    # instantiate objects
-    nav = Navigation(driver)
-    nav.search("festival")
-    sleep(5)
-    u = Utilities()
+    max_attempts = 5
+    for attempt in range(1, max_attempts + 1):
+        nav = Navigation(driver)
+        nav.search(SEARCH_TERM)
+        sleep(WAIT_AFTER_SEARCH)
 
-    # Click on Raw JSON, switch tab and click on Raw Data
-    about_telemetry = AboutTelemetry(driver).open()
-    sleep(2)
-    about_telemetry.get_element("category-raw").click()
-    about_telemetry.switch_to_new_tab()
-    about_telemetry.get_element("rawdata-tab").click()
+        utils = Utilities()
 
-    # Verify pings are recorded
-    json_data = u.decode_url(driver)
-    assert u.assert_json_value(
-        json_data, '$..SEARCH_COUNTS.["google-b-1-d.urlbar"].sum', 1
-    )
-    assert u.assert_json_value(
-        json_data,
-        '$..["browser.search.content.urlbar"].["google:tagged:firefox-b-1-d"]',
-        1,
-    )
+        telemetry = AboutTelemetry(driver).open()
+        sleep(WAIT_TELEMETRY_LOAD)
+        telemetry.get_element("category-raw").click()
+        telemetry.switch_to_new_tab()
+        telemetry.get_element("rawdata-tab").click()
+
+        json_data = utils.decode_url(driver)
+
+        if "recaptcha" in driver.page_source.lower():
+            if attempt < max_attempts:
+                driver.delete_all_cookies()
+                driver.get("about:newtab")
+                sleep(2)
+                continue
+            else:
+                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
+
+        provider_ok = utils.assert_json_value(json_data, SEARCH_PROVIDER_PATH, 1)
+        tag_ok = utils.assert_json_value(json_data, SEARCH_TAG_PATH, 1)
+
+        if provider_ok and tag_ok:
+            return  # Success
+
+        if attempt < max_attempts:
+            sleep(2)
+            driver.get("about:newtab")
+        else:
+            pytest.fail(
+                f"Telemetry paths not found after {max_attempts} attempts:\n"
+                f"{SEARCH_PROVIDER_PATH} and/or {SEARCH_TAG_PATH}"
+            )

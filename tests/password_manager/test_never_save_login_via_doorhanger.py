@@ -5,6 +5,10 @@ from modules.browser_object import AutofillPopup, Navigation
 from modules.page_object import AboutPrefs, LoginAutofill
 from modules.util import BrowserActions
 
+USERNAME = "testUser"
+PASSWORD = "testPassword"
+TEST_URL = "https://mozilla.github.io"
+
 
 @pytest.fixture()
 def test_case():
@@ -24,19 +28,21 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     login form. Additionally, confirm that the demo page is correctly added to the 'Exceptions - Saved Passwords'
     list in the browser's preferences.
     """
-
-    login_autofill = LoginAutofill(driver).open()
+    # Instantiate objects
+    login_autofill = LoginAutofill(driver)
     autofill_popup_panel = AutofillPopup(driver)
     nav = Navigation(driver)
     ba = BrowserActions(driver)
+    about_prefs = AboutPrefs(driver, category="privacy")
 
     # Creating an instance of the LoginForm within the LoginAutofill page object
+    login_autofill.open()
     login_form = LoginAutofill.LoginForm(login_autofill)
 
     # Fill in the login form in demo page, opt for Never Save the credentials via doorhanger and see the doorhanger is
     # dismissed
-    login_form.fill_username("testUser")
-    login_form.fill_password("testPassword")
+    login_form.fill_username(USERNAME)
+    login_form.fill_password(PASSWORD)
     login_form.submit()
 
     autofill_popup_panel.click_doorhanger_button("more-actions")
@@ -55,13 +61,10 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     login_autofill.wait.until(lambda _: password_element.get_attribute("value") == "")
 
     # Navigate to about:preferences#privacy and open Exceptions - Saved Passwords modal
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs.open()
     iframe = about_prefs.get_password_exceptions_popup_iframe()
     ba.switch_to_iframe_context(iframe)
 
     # Verify that the demo page used in the test appears in the Exceptions list
     password_exceptions_element = about_prefs.get_element("exceptions-item")
-    assert (
-        password_exceptions_element.get_attribute("origin")
-        == "https://mozilla.github.io"
-    )
+    assert password_exceptions_element.get_attribute("origin") == TEST_URL

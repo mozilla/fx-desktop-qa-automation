@@ -19,55 +19,65 @@ def test_demo_ad_address_data_captured_in_doorhanger_and_stored(
     util: Utilities,
     autofill_popup: AutofillPopup,
     about_prefs_privacy: AboutPrefs,
+    is_live_site: str,
 ):
     """
     C2888703 - Verify Address data are captured in the Capture Doorhanger and stored in about:preferences
     """
-    # Create fake data and fill it in
-    address_autofill.open()
-    address_autofill_data = address_autofill.fill_and_save(region, door_hanger=False)
+    if not is_live_site:
+        # Create fake data and fill it in
+        address_autofill.open()
 
-    # The "Save address?" doorhanger is displayed
-    autofill_popup.element_visible("address-save-doorhanger")
+        # scroll to first form field
+        address_autofill.scroll_to_form_field()
 
-    # containing address fields
-    expected_fields = {
-        "street": address_autofill_data.street_address,
-        "city": address_autofill_data.address_level_2,
-        "zip": address_autofill_data.postal_code,
-        "country": address_autofill_data.country_code,
-    }
+        address_autofill_data = address_autofill.fill_and_save(
+            region, door_hanger=False
+        )
 
-    if region in ["US", "CA"]:
-        expected_fields["state"] = address_autofill_data.address_level_1
+        # The "Save address?" doorhanger is displayed
+        autofill_popup.element_visible("address-save-doorhanger")
 
-    # check fields in doorhanger
-    for key, value in expected_fields.items():
-        if key == "state":
-            value = util.get_state_province_abbreviation(
-                address_autofill_data.address_level_1
-            )
-        autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
+        # containing address fields
+        expected_fields = {
+            "street": address_autofill_data.street_address,
+            "city": address_autofill_data.address_level_2,
+            "zip": address_autofill_data.postal_code,
+            "country": address_autofill_data.country_code,
+        }
 
-    # Click the "Save" button
-    autofill_popup.click_doorhanger_button("save")
+        if region in ["US", "CA"]:
+            expected_fields["state"] = address_autofill_data.address_level_1
 
-    # Navigate to about:preferences#privacy => "Autofill" section
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+        # check fields in doorhanger
+        for key, value in expected_fields.items():
+            if key == "state":
+                value = util.get_state_province_abbreviation(
+                    address_autofill_data.address_level_1
+                )
+            autofill_popup.element_has_text(f"address-doorhanger-{key}", value)
 
-    # Get the first saved address profile
-    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
-    assert saved_address_profiles, "No saved address profiles found"
+        # Click the "Save" button
+        autofill_popup.click_doorhanger_button("save")
 
-    saved_address_profile = saved_address_profiles[0].text
+        # Navigate to about:preferences#privacy => "Autofill" section
+        about_prefs_privacy.open()
+        about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-    # Verify each field is present in the saved profile
-    missing_fields = []
-    for field_name, field_value in expected_fields.items():
-        if field_value not in saved_address_profile:
-            missing_fields.append(f"{field_name}: {field_value}")
+        # Get the first saved address profile
+        saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
+        assert saved_address_profiles, "No saved address profiles found"
 
-    assert not missing_fields, (
-        f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
-    )
+        saved_address_profile = saved_address_profiles[0].text
+
+        # Verify each field is present in the saved profile
+        missing_fields = []
+        for field_name, field_value in expected_fields.items():
+            if field_value not in saved_address_profile:
+                missing_fields.append(f"{field_name}: {field_value}")
+
+        assert not missing_fields, (
+            f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
+        )
+    else:
+        pytest.skip("Doorhanger not tested for Live Sites.")

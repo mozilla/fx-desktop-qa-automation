@@ -15,6 +15,7 @@ def test_case():
 
 
 @pytest.mark.headed
+@pytest.mark.noxvfb
 def test_password_csv_export(
     driver_and_saved_logins, downloads_folder, sys_platform, opt_ci
 ):
@@ -43,7 +44,7 @@ def test_password_csv_export(
     keyboard.tap(Key.enter)
 
     # Verify the exported csv file is present in the target folder
-    csv_file = os.path.join(downloads_folder, "passwords.csv")
+    csv_file = os.path.join(downloads_folder, PASSWORDS_FILE)
     about_logins.wait.until(lambda _: os.path.exists(csv_file))
 
     # Delete the password.csv created

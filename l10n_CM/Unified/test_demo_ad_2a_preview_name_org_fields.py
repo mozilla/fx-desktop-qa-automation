@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
+from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -15,17 +14,21 @@ def test_demo_ad_hover_name_org(
     driver: Firefox,
     region: str,
     address_autofill: AddressFill,
-    util: Utilities,
-    autofill_popup: AutofillPopup,
+    fill_and_save_address: AutofillAddressBase,
 ):
     """
     C2888557 - Verify Autofill Preview on hover over dropdown entries for name/org fields
     """
-    # Create fake data and fill it in
+    # Create fake data
     address_autofill.open()
-    autofill_data = address_autofill.fill_and_save(region)
+
+    # scroll to first form field
+    address_autofill.scroll_to_form_field()
+
+    # created fake data
+    autofill_data = fill_and_save_address
 
     # Hover over each field and check data preview
-    fields_to_test = ["name", "organization"]
+    fields_to_test = ["name", "given_name", "family_name", "organization"]
     for field in fields_to_test:
         address_autofill.check_autofill_preview_for_field(field, autofill_data, region)

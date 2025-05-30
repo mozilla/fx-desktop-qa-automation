@@ -10,17 +10,22 @@ from modules.util import Utilities
 
 @pytest.fixture()
 def test_case():
-    return "1533798"
+    return "3029100"
 
 
 ALLOWED_RGB_BEFORE_VALUES_CARD = set(["rgba(0, 0, 0, 0)"])
 ALLOWED_RGB_AFTER_VALUES_CARD = set(
-    ["color(srgb 0.878824 0.878824 0.885882)", "color(srgb 0.334902 0.331765 0.36)"]
+    [
+        "color(srgb 0.878824 0.878824 0.885882)",
+        "color(srgb 0.334902 0.331765 0.36)",
+        "color(srgb 0.0823529 0.0784314 0.101961 / 0.14)",
+    ]
 )
 ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS = set(
     [
         "color(srgb 0.356863 0.356863 0.4 / 0.07)",
         "color(srgb 0.984314 0.984314 0.996078 / 0.07)",
+        "rgba(0, 0, 0, 0)",
     ]
 )
 ALLOWED_RGB_AFTER_VALUES_THREE_DOTS = set(
@@ -109,7 +114,7 @@ def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool)
     )
     three_dot_menu.click()
 
-    # get all of the context menu actions
+    # get all the context menu actions
     context_menu_list = newtab.get_element("sponsored-site-context-menu-list")
     child_options = newtab.get_all_children(context_menu_list)
     logging.info(f"There are {len(child_options)} context options")

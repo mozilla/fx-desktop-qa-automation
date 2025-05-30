@@ -49,6 +49,9 @@ def test_edit_credit_card_profile(
     # Open credit card page
     credit_card_autofill.open()
 
+    # scroll to first form field
+    credit_card_autofill.scroll_to_form_field()
+
     # Fill in fake data
     original_cc_data = credit_card_autofill.fill_and_save()
 
