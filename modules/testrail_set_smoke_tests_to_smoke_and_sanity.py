@@ -10,15 +10,6 @@ PROJECT_ID = 17  # The ID of the TestRail project to work with
 SUITE_NAMES = ["PDF Viewer"]  # List of suite names to process
 
 CUSTOM_SUB_TEST_SUITES = [2]  # Value to set for the 'custom_sub_test_suites' field
-TEST_SUB_SUITES = {
-    1: "functional",
-    2: "smoke",
-    3: "accessibility",
-    4: "l10n",
-    5: "security",
-    6: "fxa",
-    7: "other"
-}
 updated_count = 0
 DRY_RUN = True  # If True, only log actions without making changes
 
@@ -91,29 +82,25 @@ if __name__ == "__main__":
     # Iterate through all cases
     for case in all_cases:
         case_id = case["id"]
-        sub_test_suites_value = case.get("sub_test_suites", [])
 
-        logging.info(f"Case ID {case_id} sub_test_suites: {sub_test_suites_value}")
+        type_id = case.get("type_id")
+        current_custom_value = case.get("custom_sub_test_suites", "Not Set")
 
-        case_id = case["id"]
-        sub_test_suites_value = case.get("sub_test_suites", [])  # Fallback to empty list
-        custom_value = case.get("custom_sub_test_suites", "Not Set")
+        logging.info(f"Case ID {case_id} type_id: {type_id}")
 
-        # Check if 2 is present in sub_test_suites
-        if 2 not in sub_test_suites_value:
-            logging.info(f"Skipping case {case_id} – sub_test_suites = {sub_test_suites_value}")
+        if type_id != 6:
+            logging.info(f"Skipping case {case_id} – type_id = {type_id}")
             continue
 
         logging.info(
-            f"Case ID {case_id} matches (contains 2 in sub_test_suites). Current custom_sub_test_suites: {custom_value}")
+            f"Case ID {case_id} matches (type_id == 6). "
+            f"Current custom_sub_test_suites: {current_custom_value}"
+        )
 
         if not DRY_RUN:
-            # Perform the update
-            result = tr.update_case_field(case_id, "custom_sub_test_suites", CUSTOM_SUB_TEST_SUITES)
-            logging.info(f"Updated case {case_id} to '{CUSTOM_SUB_TEST_SUITES}', Result: {result}")
+            result = tr.update_case_field(case_id, "custom_sub_test_suites", [2])
+            logging.info(f"Updated case {case_id} to '[2]', Result: {result}")
         else:
-            logging.info(f"[DRY RUN] Would update case {case_id} from '{custom_value}' to '{CUSTOM_SUB_TEST_SUITES}'.")
+            logging.info(f"[DRY RUN] Would update case {case_id} from '{current_custom_value}' to '[2]'.")
 
         updated_count += 1
-
-    logging.info(f"Total cases {'updated' if not DRY_RUN else 'to be updated'}: {updated_count}")
