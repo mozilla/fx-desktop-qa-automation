@@ -1,6 +1,3 @@
-import sys
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -11,9 +8,9 @@ from modules.util import BrowserActions
 
 BOOKMARK_URL = "about:robots"
 BOOKMARK_URL_2 = "about:cache"
-
-
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+BOOKMARK_NAME = "Cache"
+BOOKMARK_TAGS = "a"
+BOOKMARK_KEYBOARD = "about"
 
 
 @pytest.fixture()
@@ -21,20 +18,20 @@ def test_case():
     return "2084524"
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_delete_other_bookmarks(driver: Firefox):
     """
-    C2084524: Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
+    C2084524 - Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
     """
     nav = Navigation(driver)
-    GenericPage(driver, url=BOOKMARK_URL).open()
+    page = GenericPage(driver, url=BOOKMARK_URL)
     ba = BrowserActions(driver)
     context_menu = ContextMenu(driver)
 
-    # create the first bookmark for other
+    # Create the first bookmark in Other Bookmarks folder
+    page.open()
     nav.bookmark_page_other()
 
-    # get other bookmarks
+    # Create a new bookmark from Other Bookmark context menu
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
         nav.context_click("other-bookmarks-popup")
@@ -43,10 +40,11 @@ def test_delete_other_bookmarks(driver: Firefox):
         context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
         nav.hide_popup("OtherBookmarksPopup")
 
-    # add second bookmark
-    nav.add_bookmark_advanced(Bookmark(url=BOOKMARK_URL_2, name="Cache"), ba)
+    nav.add_bookmark_via_other_bookmark_context_menu(
+        Bookmark(BOOKMARK_URL_2, BOOKMARK_NAME, BOOKMARK_TAGS, BOOKMARK_KEYBOARD), ba
+    )
 
-    # delete first bookmark and verify it's not present anymore
+    # Delete the first bookmark and verify it's not present anymore
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
         nav.context_click("bookmark-about-robots")
