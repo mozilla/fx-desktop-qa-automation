@@ -344,26 +344,24 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def add_bookmark_advanced(
+    def add_bookmark_via_other_bookmark_context_menu(
         self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
         iframe = self.get_element("bookmark-iframe")
         ba.switch_to_iframe_context(iframe)
         # fill name
-        if bookmark_data.name is not None:
-            self.actions.send_keys(bookmark_data.name).perform()
+        self.actions.send_keys(bookmark_data.name).perform()
         self.actions.send_keys(Keys.TAB).perform()
         # fill url
         self.actions.send_keys(bookmark_data.url + Keys.TAB).perform()
         # fill tags
-        if bookmark_data.tags is not None:
-            self.actions.send_keys(bookmark_data.tags).perform()
+        self.actions.send_keys(bookmark_data.tags).perform()
+        self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(Keys.TAB).perform()
         # fill keywords
-        if bookmark_data.keyword is not None:
-            self.actions.send_keys(bookmark_data.keyword).perform()
-        self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
-        ba.switch_to_content_context()
+        self.actions.send_keys(bookmark_data.keyword).perform()
+        # save the bookmark
+        self.actions.send_keys(Keys.ENTER).perform()
         return self
 
     @BasePage.context_chrome
