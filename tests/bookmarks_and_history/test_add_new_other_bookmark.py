@@ -1,6 +1,3 @@
-import sys
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -16,25 +13,26 @@ def test_case():
 
 
 BOOKMARK_URL = "about:robots"
+BOOKMARK_NAME = "Robots 2"
+BOOKMARK_TAGS = "a"
+BOOKMARK_KEYBOARD = "about"
 
 
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
-
-
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_add_new_other_bookmark(driver: Firefox):
     """
-    C2084518: verify user can add another bookmark from other bookmarks
+    C2084518 - Verify another bookmark (with name, url, tag, keyboard) can be added from other bookmarks toolbar
+    context menu
     """
     nav = Navigation(driver)
     ba = BrowserActions(driver)
-    GenericPage(driver, url=BOOKMARK_URL).open()
+    page = GenericPage(driver, url=BOOKMARK_URL)
     context_menu = ContextMenu(driver)
 
-    # create a bookmark for other
+    # Create the first bookmark in Other Bookmarks folder
+    page.open()
     nav.bookmark_page_other()
 
-    # get other bookmarks
+    # Create a new bookmark from Other Bookmark context menu
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
         nav.context_click("other-bookmarks-popup")
@@ -43,8 +41,11 @@ def test_add_new_other_bookmark(driver: Firefox):
         context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
         nav.hide_popup("OtherBookmarksPopup")
 
-    nav.add_bookmark_advanced(Bookmark(url="about:robots", name="Robots 2"), ba)
+        nav.add_bookmark_via_other_bookmark_context_menu(
+            Bookmark(BOOKMARK_URL, BOOKMARK_NAME, BOOKMARK_TAGS, BOOKMARK_KEYBOARD), ba
+        )
 
+    # Verify the presence of the second added bookmarked page
     with driver.context(driver.CONTEXT_CHROME):
         nav.get_element("other-bookmarks").click()
         nav.element_visible("bookmark-robots")
