@@ -1,7 +1,7 @@
 [tool.pytest.ini_options]
 generate_report_on_test = true
 log_cli = true
-log_cli_level = "info"
+log_cli_level = "warn"
 markers = [
     "audio: test is reliant on audio",
     "headed: test must run in headed mode (e.g. uses pynput)",

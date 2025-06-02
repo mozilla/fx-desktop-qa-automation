@@ -2,7 +2,7 @@ name: Check new beta version
 
 on:
   schedule:
-    - cron: "14 */1 * * *"
+    - cron: "34 */1 * * *"
 env:
   LATEST: ""
 permissions:
