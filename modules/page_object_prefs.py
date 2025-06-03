@@ -598,6 +598,7 @@ class AboutAddons(BasePage):
         """
         Clicks the corresponding sidebar option from the about:addons page.
         """
+        sleep(1)
         self.get_element("sidebar-options", labels=[option]).click()
 
     def activate_theme(
@@ -609,7 +610,7 @@ class AboutAddons(BasePage):
         Attributes
         ----------
         nav: Navigation
-            The navgiation object
+            The navigation object
         theme_name: str
             The name of the theme to press
         intended_color: str
@@ -653,7 +654,7 @@ class AboutAddons(BasePage):
 
     def check_theme_has_changed(self, original_theme: str) -> BasePage:
         """
-        Ensure that the theme has changed.
+        Ensure the theme has changed.
         """
         assert not self.enabled_theme_matches(original_theme)
         return self
