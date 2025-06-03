@@ -17,7 +17,7 @@ def test_demo_ad_autofill_phone_email(
     fill_and_save_address: AutofillAddressBase,
 ):
     """
-    C2888569 - Verify Autofill functionality when selecting an entry from the dropdown for tele/email fields
+    C2888569 - Verify Autofill functionality when selecting an entry from the dropdown for phone/email fields
     """
     # Create fake data
     address_autofill.open()

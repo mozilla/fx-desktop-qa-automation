@@ -7,7 +7,7 @@ from modules.page_object import CreditCardFill
 
 @pytest.fixture()
 def test_case():
-    return "2886598"
+    return "3056983"
 
 
 def test_dropdown_presence_credit_card(
@@ -17,7 +17,7 @@ def test_dropdown_presence_credit_card(
     fill_and_save_payments: CreditCardBase,
 ):
     """
-    C2886598 - Verify autofill dropdown is displayed only for the eligible fields after a credit card is saved
+    C3056983 - Verify autofill dropdown is displayed only for the eligible fields after a credit card is saved
     """
     # Open credit card form page
     credit_card_autofill.open()
