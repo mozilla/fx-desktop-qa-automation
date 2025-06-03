@@ -1,9 +1,7 @@
-import logging
 import re
 from time import sleep
 from typing import List
 
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
