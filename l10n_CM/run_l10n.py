@@ -10,7 +10,7 @@ from json import load
 import requests
 
 current_dir = os.path.dirname(__file__)
-valid_flags = {"--run-headless", "-n", "--reruns"}
+valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
 valid_sites = {"demo", "amazon", "walmart"}
@@ -128,8 +128,12 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     """
     # add workers and rerun flaky failed tests.
     flg = []
+    expanded_args = [
+        flag.split() if " " in flag else [flag] for flag in flags_arguments
+    ]
+    flags_arguments[:] = sum(expanded_args, [])
     for arg in flags_arguments[:]:
-        if arg in valid_flags:
+        if arg.split("=")[0] in valid_flags:
             if arg in flag_with_parameter:
                 try:
                     i = flags_arguments.index(arg)

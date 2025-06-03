@@ -27,6 +27,9 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     """
     C1814373 - Verify adaptive history autofill triggers from address bar input.
     """
+    from dotenv import load_dotenv
+
+    load_dotenv()
     nav = Navigation(driver)
     tabs = TabBar(driver)
 
