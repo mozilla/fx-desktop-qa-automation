@@ -2804,24 +2804,10 @@ Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: bookmarks-type-dropdown
-Selector Data: editBMPanel_folderMenuList
-Description: Bookmark location
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: bookmarks-type-dropdown-other
-Selector Data: editBMPanel_unfiledRootItem
-Description: Bookmark location - Other bookmarks
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: other-bookmarks
+Selector name: other-bookmarks-toolbar
 Selector Data: OtherBookmarks
-Description: Other bookmarks option
-Location: Bookmark panel
+Description: Other bookmarks folder
+Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -3244,6 +3230,20 @@ Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: On the hamburger menu > Bookmarks
 Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-type-dropdown
+Selector Data: editBMPanel_folderMenuList
+Description: Bookmark location
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmarks-type-dropdown-other
+Selector Data: editBMPanel_unfiledRootItem
+Description: Bookmark location - Other bookmarks
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: iframe

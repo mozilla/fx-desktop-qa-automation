@@ -331,19 +331,8 @@
         "strategy": "id",
         "groups": []
     },
-    "bookmarks-type-dropdown": {
-        "selectorData": "editBMPanel_folderMenuList",
-        "strategy": "id",
-        "groups": []
-    },
 
-    "bookmarks-type-dropdown-other": {
-        "selectorData": "editBMPanel_unfiledRootItem",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "other-bookmarks": {
+    "other-bookmarks-toolbar": {
         "selectorData": "OtherBookmarks",
         "strategy": "id",
         "groups": []

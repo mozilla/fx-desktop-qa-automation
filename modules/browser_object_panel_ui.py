@@ -2,11 +2,9 @@ from typing import List
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object_navigation import Navigation
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, PomUtils
@@ -16,10 +14,6 @@ class PanelUi(BasePage):
     """Browser Object Model for nav panel UI menu (hamburger menu, application menu)"""
 
     URL_TEMPLATE = "about:blank"
-
-    def __init__(self, driver: Firefox, **kwargs):
-        super().__init__(driver, **kwargs)
-        self.navigation = Navigation(self.driver)
 
     class Menu(Region):
         """

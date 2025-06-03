@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.browser_object_context_menu import ContextMenu
+from modules.browser_object_panel_ui import PanelUi
 from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
 from modules.util import BrowserActions
@@ -36,6 +38,8 @@ class Navigation(BasePage):
         self.search_bar = None
         self.awesome_bar = None
         self.change_search_settings_button = None
+        self.context_menu = ContextMenu(self.driver)
+        self.panel_ui = PanelUi(self.driver)
 
     @BasePage.context_content
     def expect_in_content(self, condition) -> BasePage:
@@ -334,19 +338,21 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def bookmark_page_other(self) -> BasePage:
-        self.get_element("star-button").click()
-        dropdown = self.get_element("bookmarks-type-dropdown")
-        dropdown.click()
-        self.get_element("bookmarks-type-dropdown-other").click()
-        dropdown.click()
-        self.get_element("save-bookmark-button").click()
+    def bookmark_page_in_other_bookmarks(self) -> BasePage:
+        """
+        Bookmark the current page in the Other Bookmarks folder via the star icon in the address bar.
+        """
+        self.click_on("star-button")
+        self.panel_ui.click_on("bookmarks-type-dropdown")
+        self.panel_ui.click_on("bookmarks-type-dropdown-other")
+        self.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
-    def add_bookmark_via_other_bookmark_context_menu(
+    def add_bookmark_via_toolbar_other_bookmark_context_menu(
         self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
+        """Add a bookmark via the toolbar's Other Bookmarks context menu."""
         iframe = self.get_element("bookmark-iframe")
         ba.switch_to_iframe_context(iframe)
         # fill name
@@ -393,6 +399,53 @@ class Navigation(BasePage):
             [el.get_attribute("label") in match_string for el in bookmarks]
         )
         assert matches_short_string or matches_long_string
+        return self
+
+    @BasePage.context_chrome
+    def open_add_bookmark_via_toolbar_other_bookmarks_context_menu(self) -> BasePage:
+        """
+        Open the context menu for Other Bookmarks in the toolbar and select Add Bookmark option.
+        """
+        self.click_on("other-bookmarks-toolbar")
+        self.context_click("other-bookmarks-popup")
+        self.context_menu.click_on("context-menu-add-bookmark")
+        self.context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
+        self.hide_popup("OtherBookmarksPopup")
+        return self
+
+    @BasePage.context_chrome
+    def delete_bookmark_from_other_bookmarks_via_context_menu(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """Deletes a bookmark from Other Bookmarks via context menu.
+        Argument:
+           bookmark_name: The display name of the bookmark to delete
+        """
+        self.click_on("other-bookmarks-toolbar")
+        self.panel_ui.context_click("other-bookmarks-by-title", labels=[bookmark_name])
+        self.context_menu.click_and_hide_menu("context-menu-delete-page")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_exists_in_toolbar_other_bookmarks_folder(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """Verify bookmark exists in Other Bookmarks folder from toolbar"""
+        self.click_on("other-bookmarks-toolbar")  # Navigation selector
+        self.panel_ui.element_visible(
+            "other-bookmarks-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_does_not_exist_in_toolbar_other_bookmarks_folder(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """Verify bookmark does not exist in Other Bookmarks folder from toolbar"""
+        self.click_on("other-bookmarks-toolbar")
+        self.panel_ui.element_not_visible(
+            "other-bookmarks-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome

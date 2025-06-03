@@ -211,12 +211,6 @@
         "groups": []
     },
 
-    "other-bookmarks-toolbar": {
-        "selectorData": "OtherBookmarks",
-        "strategy": "id",
-        "groups": []
-    },
-
     "other-bookmarks-by-title": {
         "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
         "strategy": "css",
@@ -303,6 +297,18 @@
 
     "bookmarks-toolbar": {
         "selectorData": "PlacesToolbar",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmarks-type-dropdown": {
+        "selectorData": "editBMPanel_folderMenuList",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "bookmarks-type-dropdown-other": {
+        "selectorData": "editBMPanel_unfiledRootItem",
         "strategy": "id",
         "groups": []
     }
