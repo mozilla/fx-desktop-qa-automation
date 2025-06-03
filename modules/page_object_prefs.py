@@ -612,7 +612,7 @@ class AboutAddons(BasePage):
         Attributes
         ----------
         nav: Navigation
-            The navgiation object
+            The navigation object
         theme_name: str
             The name of the theme to press
         intended_color: str
