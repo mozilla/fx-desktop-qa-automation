@@ -656,7 +656,7 @@ class AboutAddons(BasePage):
 
     def check_theme_has_changed(self, original_theme: str) -> BasePage:
         """
-        Ensure that the theme has changed.
+        Ensure the theme has changed.
         """
         assert not self.enabled_theme_matches(original_theme)
         return self
