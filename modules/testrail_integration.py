@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 
+from check_l10n_test_cases import valid_l10n_mappings
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
@@ -13,7 +14,7 @@ FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
 FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
-    "[{channel} {major}] Automated testing {major}.{minor}b{beta}-build{build}"
+    "[{channel} {major}] {plan}Automated testing {major}.{minor}b{beta}-build{build}"
 )
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
@@ -24,6 +25,7 @@ def get_plan_title(version_str: str, channel: str) -> str:
     """Given a version string, get the plan_title"""
 
     version_match = FX_PRERC_VERSION_RE.match(version_str)
+    plan_prefix = "L10N " if os.environ.get("FX_L10N") else ""
     if channel == "Devedition":
         logging.info(f"DevEdition: {version_str}")
         version_match = FX_DEVED_VERSION_RE.match(version_str)
@@ -31,6 +33,7 @@ def get_plan_title(version_str: str, channel: str) -> str:
         plan_title = (
             TESTRAIL_RUN_FMT.replace("{channel}", channel)
             .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
             .replace("{minor}", minor)
             .replace("{beta}", beta)
             .split("-")[0]
@@ -42,6 +45,7 @@ def get_plan_title(version_str: str, channel: str) -> str:
         plan_title = (
             TESTRAIL_RUN_FMT.replace("{channel}", channel)
             .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
             .replace("{minor}", minor)
             .replace("{beta}", beta)
             .replace("{build}", build)
@@ -52,6 +56,7 @@ def get_plan_title(version_str: str, channel: str) -> str:
         (major, minor) = [version_match[n] for n in range(1, 3)]
         plan_title = (
             TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{plan}", plan_prefix)
             .replace("{major}", major)
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
@@ -150,24 +155,47 @@ def reportable(platform_to_test=None):
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
 
     plan_entries = this_plan.get("entries")
-    covered_suites = 0
-    for entry in plan_entries:
-        for run_ in entry.get("runs"):
-            if run_.get("config") and platform in run_.get("config"):
-                covered_suites += 1
+    if os.environ.get("FX_L10N"):
+        l10n_mappings = valid_l10n_mappings()
+        covered_suites = 0
+        for entry in plan_entries:
+            if entry.get("name") in l10n_mappings:
+                site = entry.get("name")
+                for run_ in entry.get("runs"):
+                    if run_.get("config"):
+                        run_region, run_platform = run_.get("config").split("-")
+                        covered_suites += (
+                            1
+                            if run_region in l10n_mappings[site]
+                            and platform in run_platform
+                            else 0
+                        )
+        num_suites = 0
+        for site, regions in l10n_mappings.items():
+            num_suites += len(regions)
+        logging.warning(
+            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} site/region mappings already reported.)"
+        )
+        return covered_suites < num_suites
+    else:
+        covered_suites = 0
+        for entry in plan_entries:
+            for run_ in entry.get("runs"):
+                if run_.get("config") and platform in run_.get("config"):
+                    covered_suites += 1
 
-    num_suites = 0
-    for test_dir_name in os.listdir("tests"):
-        test_dir = os.path.join("tests", test_dir_name)
-        if os.path.isdir(test_dir) and not os.path.exists(
-            os.path.join(test_dir, "skip_reporting")
-        ):
-            num_suites += 1
+        num_suites = 0
+        for test_dir_name in os.listdir("tests"):
+            test_dir = os.path.join("tests", test_dir_name)
+            if os.path.isdir(test_dir) and not os.path.exists(
+                os.path.join(test_dir, "skip_reporting")
+            ):
+                num_suites += 1
 
-    logging.warning(
-        f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
-    )
-    return covered_suites < num_suites
+        logging.warning(
+            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
+        )
+        return covered_suites < num_suites
 
 
 def testrail_init() -> TestRail:
@@ -230,6 +258,126 @@ def mark_results(testrail_session: TestRail, test_results):
             )
 
 
+def organize_l10n_entries(
+    testrail_session: TestRail, expected_plan: dict, suite_info: dict
+):
+    # suite and milestone info
+    suite_id = suite_info.get("id")
+    milestone_id = suite_info.get("milestone_id")
+
+    # Config
+    config = suite_info.get("config")
+    site = os.environ.get("CM_SITE")
+    config_id = suite_info.get("config_id")
+
+    # Cases and results
+    cases_in_suite = suite_info.get("cases")
+    cases_in_suite = [int(n) for n in cases_in_suite]
+    results = suite_info.get("results")
+    plan_title = expected_plan.get("name")
+
+    site_entries = [
+        entry for entry in expected_plan.get("entries") if entry.get("name") == site
+    ]
+
+    # Add a missing entry to a plan
+    plan_id = expected_plan.get("id")
+    if not site_entries:
+        # If no entry, create entry for site
+        logging.info(f"Create entry in plan {plan_id} for site {site}")
+        logging.info(f"cases: {cases_in_suite}")
+        entry = testrail_session.create_new_plan_entry(
+            plan_id=plan_id,
+            suite_id=suite_id,
+            name=site,
+            description="Automation-generated test plan entry",
+            case_ids=cases_in_suite,
+        )
+
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        site_entries = [
+            entry for entry in expected_plan.get("entries") if entry.get("name") == site
+        ]
+
+    if len(site_entries) != 1:
+        logging.info("Suite entries are broken somehow")
+
+    # There should only be one entry per site per plan
+    # Check that this entry has a run with the correct config
+    # And if not, make that run
+    entry = site_entries[0]
+    config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
+    logging.info(f"config runs {config_runs}")
+    if not config_runs:
+        expected_plan = testrail_session.create_test_run_on_plan_entry(
+            plan_id,
+            entry.get("id"),
+            [config_id],
+            description=f"Auto test plan entry for site: {site}",
+            case_ids=cases_in_suite,
+        )
+        site_entries = [
+            entry for entry in expected_plan.get("entries") if entry.get("name") == site
+        ]
+        entry = site_entries[0]
+        logging.info(f"new entry: {entry}")
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+    run = testrail_session.get_run(config_runs[0].get("id"))
+
+    # If the run is missing cases, add them
+    run_cases = [
+        t.get("case_id") for t in testrail_session.get_test_results(run.get("id"))
+    ]
+    if run_cases:
+        expected_case_ids = list(set(run_cases + cases_in_suite))
+        if len(expected_case_ids) > len(run_cases):
+            testrail_session.update_run_in_entry(
+                run.get("id"), case_ids=expected_case_ids, include_all=False
+            )
+            run = testrail_session.get_run(config_runs[0].get("id"))
+            run_cases = [
+                t.get("case_id")
+                for t in testrail_session.get_test_results(run.get("id"))
+            ]
+
+    if run.get("is_completed"):
+        logging.info(f"Run {run.get('id')} is already completed.")
+        return {}
+    run_id = run.get("id")
+
+    # Gather the test results by category of result
+    passkey = {
+        "passed": ["passed", "xpassed", "warnings"],
+        "failed": ["failed", "error"],
+        "xfailed": ["xfailed"],
+        "skipped": ["skipped", "deselected"],
+    }
+    test_results = {
+        "project_id": TESTRAIL_FX_DESK_PRJ,
+        "passed": {},
+        "failed": {},
+        "xfailed": {},
+        "skipped": {},
+    }
+
+    for test_case, outcome in results.items():
+        logging.info(f"{test_case}: {outcome}")
+        if outcome == "rerun":
+            logging.info("Rerun result...skipping...")
+            continue
+        category = next(status for status in passkey if outcome in passkey.get(status))
+        if not test_results[category].get(run_id):
+            test_results[category][run_id] = []
+        test_results[category][run_id].append(
+            {"suite_id": suite_id, "site": site, "test_case": test_case}
+        )
+
+    return test_results
+
+
 def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info: dict):
     """
     When we get to the level of entries on a TestRail plan, we need to make sure:
@@ -238,6 +386,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
      * the test cases we care about are on that run or are added
      * test results are batched by run and result type (passed, skipped, failed)
     """
+
     # Suite and milestone info
     suite_id = suite_info.get("id")
     suite_description = suite_info.get("description")
@@ -406,6 +555,9 @@ def collect_changes(testrail_session: TestRail, report):
         release = ".".join(release.split(".")[:-1])
         config = f"{os_name} {release} {arch}"
 
+    if os.environ.get("FX_L10N") and os.environ.get("FX_REGION"):
+        config = f"{os.environ.get('FX_REGION')}-{config}"
+
     logging.warning(f"Reporting for config: {config}")
     if not config.strip():
         raise ValueError("Config cannot be blank.")
@@ -538,6 +690,11 @@ def collect_changes(testrail_session: TestRail, report):
     }
 
     logging.info(f"n run {last_suite_id}, {last_description}")
+    if os.environ.get("FX_L10N"):
+        return merge_results(
+            full_test_results,
+            organize_l10n_entries(testrail_session, expected_plan, suite_info),
+        )
     full_test_results = merge_results(
         full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
     )

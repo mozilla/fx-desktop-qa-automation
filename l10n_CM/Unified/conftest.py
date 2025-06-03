@@ -14,7 +14,11 @@ from modules.util import Utilities
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir)
+from dotenv import load_dotenv
 
+os.environ["TESTRAIL_REPORT"] = "true"
+os.environ["FX_L10N"] = "true"
+load_dotenv()
 LOCALHOST = "127.0.0.1"
 PORT = 8080
 
