@@ -26,6 +26,7 @@ env:
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+  TESTRAIL_REPORT: 'true'
 
 jobs:
   Smoke-MacOS:
