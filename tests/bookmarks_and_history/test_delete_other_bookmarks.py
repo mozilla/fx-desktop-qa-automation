@@ -21,6 +21,7 @@ def test_delete_other_bookmarks(driver: Firefox):
     """
     C2084524 - Verify that a user can Delete a bookmark from 'Other Bookmarks' folder
     """
+    # Instantiate objects
     nav = Navigation(driver)
     page = GenericPage(driver, url=CACHE_PAGE_URL)
     ba = BrowserActions(driver)

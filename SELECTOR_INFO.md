@@ -2755,13 +2755,6 @@ Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: edit-bookmark-panel
-Selector Data: editBMPanel_namePicker
-Description: Edit bookmark panel
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: remove-bookmark-button
 Selector Data: editBookmarkPanelRemoveButton
 Description: Remove bookmark button
@@ -3391,6 +3384,14 @@ Selector Data: "PlacesToolbar"
 Description: Bookmarks toolbar
 Location: Bookmarks toolbar
 Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: edit-bookmark-panel
+Selector Data: editBMPanel_namePicker
+Description: Edit bookmark panel
+Location: Bookmark panel
+Path to .json: modules/data/pane_ui.components.json
+```
 ```
 #### print_preview
 ```

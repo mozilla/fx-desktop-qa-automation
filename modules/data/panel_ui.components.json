@@ -317,5 +317,11 @@
         "selectorData": "editBookmarkPanelDoneButton",
         "strategy": "id",
         "groups": []
+    },
+
+    "edit-bookmark-panel": {
+        "selectorData": "editBMPanel_namePicker",
+        "strategy": "id",
+        "groups": []
     }
 }

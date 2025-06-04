@@ -18,7 +18,7 @@ def test_bookmark_via_hamburger_menu(driver: Firefox):
     """
     C2084489: Verify that the user can bookmark a page using Bookmark current tab .. opened from Hamburger Menu
     """
-    # Instantiate object
+    # Instantiate objects
     panel = PanelUi(driver)
     page = GenericPage(driver, url=BOOKMARK_URL)
 

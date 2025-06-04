@@ -20,6 +20,7 @@ def test_add_new_other_bookmark(driver: Firefox):
     C2084518 - Verify another bookmark (with name, url, tag, keyword) can be added from other bookmarks toolbar
     context menu
     """
+    # Instantiate objects
     nav = Navigation(driver)
     ba = BrowserActions(driver)
     page = GenericPage(driver, url=BOOKMARK.url)

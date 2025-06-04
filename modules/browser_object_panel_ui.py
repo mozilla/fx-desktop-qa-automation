@@ -14,6 +14,9 @@ class PanelUi(BasePage):
     """Browser Object Model for nav panel UI menu (hamburger menu, application menu)"""
 
     URL_TEMPLATE = "about:blank"
+    ENABLE_ADD_TAG = (
+        """PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);"""
+    )
 
     class Menu(Region):
         """
@@ -214,3 +217,45 @@ class PanelUi(BasePage):
         """
         self.element_visible("bookmark-by-title", labels=[bookmark_title])
         return self
+
+    @BasePage.context_chrome
+    def enable_bookmark_tagging(self) -> BasePage:
+        """
+        Enable tagging functionality for bookmarks by executing a script
+        """
+        self.driver.execute_script(self.ENABLE_ADD_TAG)
+        return self
+
+    @BasePage.context_chrome
+    def edit_bookmark_from_hamburger_menu(
+        self, new_name: str, tags: str, location: str
+    ) -> BasePage:
+        """Edit bookmark details from hamburger menu"""
+        self.open_bookmarks_panel_from_hamburger_menu()
+        self.click_on("bookmark-current-tab")
+
+        # Edit bookmark details
+        self.get_element("edit-bookmark-panel").send_keys(new_name)
+        self.get_element("bookmark-tags").send_keys(tags)
+        if location == "Other Bookmarks":
+            self.click_on("bookmark-location")
+            self.click_on("other-bookmarks")
+        elif location == "Bookmarks Toolbar":
+            self.click_on("bookmark-location")
+            self.click_on("bookmarks-toolbar")
+        self.click_on("save-bookmark-button")
+
+    @BasePage.context_chrome
+    def get_bookmark_tags(self, tags: List[str]) -> List[str]:
+        """
+        Returns the actual bookmark tag values from the UI
+        """
+        self.open_bookmarks_panel_from_hamburger_menu()
+        self.click_on("bookmark-current-tab")
+        self.click_on("extend-bookmark-tags")
+        return [
+            self.get_element(f"{tag.lower().replace(' ', '')}-tag").get_attribute(
+                "value"
+            )
+            for tag in tags
+        ]

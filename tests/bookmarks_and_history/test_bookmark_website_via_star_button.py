@@ -20,7 +20,7 @@ def test_bookmark_website_via_star(driver: Firefox):
     """
     C2084539: Verify that the Websites can be bookmarked via star-shaped button
     """
-    # Instantiate object
+    # Instantiate objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
     page = GenericPage(driver, url=BOOKMARK_URL)
