@@ -8,7 +8,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "2886581"
+    return "2888704"
 
 
 def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
@@ -20,7 +20,7 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     is_live_site: str,
 ):
     """
-    C2888704 - Verify tele/email data are captured in the Capture Doorhanger and stored in about:preferences
+    C2888704 - Verify phone/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
     if not is_live_site:
         # Create fake data and fill it in

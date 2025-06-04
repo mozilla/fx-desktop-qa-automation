@@ -8,7 +8,7 @@ from modules.page_object import CreditCardFill
 
 @pytest.fixture()
 def test_case():
-    return "2886600"
+    return "3056985"
 
 
 def test_cc_autofill_from_dropdown(
@@ -19,7 +19,7 @@ def test_cc_autofill_from_dropdown(
     region: str,
 ):
     """
-    Verify that saved credit card information is autofilled correctly when selected from the dropdown,
+    C3056985 - Verify that saved credit card information is autofilled correctly when selected from the dropdown,
     except for the CVV field.
     Arguments:
         credit_card_autofill: CreditCardFill instance
