@@ -63,5 +63,5 @@ jobs:
     with:
       job_to_run: Smoke-MacOS
     env:
-      FX_L10N: true
+      FX_L10N: 'true'
     secrets: inherit
