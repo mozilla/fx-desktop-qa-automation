@@ -27,7 +27,7 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.mark.xfail  # blocked by bug 1866005
+@pytest.mark.skip(reason="Blocked by bug 1866005. Tracked in bug 1940516.")
 def test_blocking_social_media_trackers(driver: Firefox):
     """
     C446406: Ensure that ETP Custom mode with the option "Cross-site tracking cookies, and isolate other
