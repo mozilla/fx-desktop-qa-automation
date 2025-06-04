@@ -18,6 +18,9 @@ def test_hover_email_and_phone_autofill_preview(
     address_autofill: AddressFill,
     fill_and_save_address: AutofillAddressBase,
 ):
+    """
+    C2888568: Verify that hovering over phone/email fields will preview all fields
+    """
     # Create fake data
     address_autofill.open()
 

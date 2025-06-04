@@ -78,6 +78,11 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def close_first_tab_by_icon(self) -> None:
+        """Click the close icon on the first tab."""
+        self.get_elements("tab-x-icon")[0].click()
+
+    @BasePage.context_chrome
     def click_tab_by_title(self, title: str) -> BasePage:
         """Given a full page title, click the corresponding tab"""
         self.get_element("tab-by-title", labels=[title]).click()

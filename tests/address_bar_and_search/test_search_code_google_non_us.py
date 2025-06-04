@@ -1,12 +1,13 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import ContextMenu, Navigation, TabBar
 from modules.page_object import ExamplePage
 
-FX_SEARCH_CODE = "client=firefox-b-d"
+FX_SEARCH_CODE = "client%3Dfirefox-b-d"
 SEARCH_TERM = "soccer"
-EXPECTED_TITLE = "Google Search"
+EXPECTED_TITLE = "google.com"
 
 
 @pytest.fixture()
@@ -22,7 +23,6 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.mark.unstable(reason="Google re-captcha")
 def test_search_code_google_non_us(driver: Firefox):
     """
     C1365269 - Default Search Code: Google - non-US.
@@ -47,7 +47,12 @@ def test_search_code_google_non_us(driver: Firefox):
     # Search via selected text context menu
     example.search_selected_header_via_context_menu()
 
+    current_handles = driver.window_handles
     context_menu.click_and_hide_menu("context-menu-search-selected-text")
+
+    WebDriverWait(driver, 10).until(
+        lambda d: len(d.window_handles) > len(current_handles)
+    )
     driver.switch_to.window(driver.window_handles[-1])
     tab.expect_title_contains(EXPECTED_TITLE)
     verify_search_code_in_url()

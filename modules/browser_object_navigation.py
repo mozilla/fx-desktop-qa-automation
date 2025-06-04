@@ -107,6 +107,11 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_firefox_suggest(self) -> None:
+        """Click the Firefox suggested result."""
+        self.get_element("firefox-suggest").click()
+
+    @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
@@ -215,6 +220,7 @@ class Navigation(BasePage):
         self.get_element("search-mode-switcher-option", labels=[search_mode]).click()
         return self
 
+    @BasePage.context_chrome
     def context_click_in_awesome_bar(self) -> BasePage:
         self.set_awesome_bar()
         actions = ActionChains(self.driver)
@@ -338,26 +344,24 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def add_bookmark_advanced(
+    def add_bookmark_via_other_bookmark_context_menu(
         self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
         iframe = self.get_element("bookmark-iframe")
         ba.switch_to_iframe_context(iframe)
         # fill name
-        if bookmark_data.name is not None:
-            self.actions.send_keys(bookmark_data.name).perform()
+        self.actions.send_keys(bookmark_data.name).perform()
         self.actions.send_keys(Keys.TAB).perform()
         # fill url
         self.actions.send_keys(bookmark_data.url + Keys.TAB).perform()
         # fill tags
-        if bookmark_data.tags is not None:
-            self.actions.send_keys(bookmark_data.tags).perform()
+        self.actions.send_keys(bookmark_data.tags).perform()
+        self.actions.send_keys(Keys.TAB).perform()
         self.actions.send_keys(Keys.TAB).perform()
         # fill keywords
-        if bookmark_data.keyword is not None:
-            self.actions.send_keys(bookmark_data.keyword).perform()
-        self.actions.send_keys(Keys.TAB, Keys.TAB, Keys.TAB, Keys.ENTER).perform()
-        ba.switch_to_content_context()
+        self.actions.send_keys(bookmark_data.keyword).perform()
+        # save the bookmark
+        self.actions.send_keys(Keys.ENTER).perform()
         return self
 
     @BasePage.context_chrome
@@ -390,3 +394,10 @@ class Navigation(BasePage):
         )
         assert matches_short_string or matches_long_string
         return self
+
+    @BasePage.context_chrome
+    def get_legacy_search_engine_label(self) -> str:
+        """Return the displayed engine name from the legacy search bar."""
+        return self.driver.find_element(
+            By.CSS_SELECTOR, ".searchbar-engine-name"
+        ).get_attribute("value")
