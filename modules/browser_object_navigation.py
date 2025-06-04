@@ -434,6 +434,13 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def delete_bookmark_from_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+        """Delete bookmark from bookmarks toolbar via context menu"""
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_name])
+        self.context_menu.click_and_hide_menu("context-menu-delete-page")
+        return self
+
+    @BasePage.context_chrome
     def verify_bookmark_exists_in_toolbar_other_bookmarks_folder(
         self, bookmark_name: str
     ) -> BasePage:
@@ -445,6 +452,14 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def verify_bookmark_exists_in_bookmarks_toolbar(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """Verify bookmark exists in the bookmarks toolbar"""
+        self.panel_ui.element_visible("bookmark-by-title", labels=[bookmark_name])
+        return self
+
+    @BasePage.context_chrome
     def verify_bookmark_does_not_exist_in_toolbar_other_bookmarks_folder(
         self, bookmark_name: str
     ) -> BasePage:
@@ -453,4 +468,12 @@ class Navigation(BasePage):
         self.panel_ui.element_not_visible(
             "other-bookmarks-by-title", labels=[bookmark_name]
         )
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_does_not_exist_in_bookmarks_toolbar(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """Verify bookmark does not exist in the bookmarks toolbar"""
+        self.panel_ui.element_not_visible("bookmark-by-title", labels=[bookmark_name])
         return self
