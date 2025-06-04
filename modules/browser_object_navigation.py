@@ -318,6 +318,13 @@ class Navigation(BasePage):
         self.get_element(element).click()
         return self
 
+    @BasePage.context_chrome
+    def get_legacy_search_engine_label(self) -> str:
+        """Return the displayed engine name from the legacy search bar."""
+        return self.driver.find_element(
+            By.CSS_SELECTOR, ".searchbar-engine-name"
+        ).get_attribute("value")
+
     # Bookmark
 
     @BasePage.context_chrome
@@ -325,8 +332,8 @@ class Navigation(BasePage):
         """
         Bookmark a site via star button and click save on the bookmark panel
         """
-        self.get_element("star-button").click()
-        self.get_element("save-bookmark-button").click()
+        self.click_on("star-button")
+        self.panel_ui.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -345,7 +352,7 @@ class Navigation(BasePage):
         self.click_on("star-button")
         self.panel_ui.click_on("bookmarks-type-dropdown")
         self.panel_ui.click_on("bookmarks-type-dropdown-other")
-        self.click_on("save-bookmark-button")
+        self.panel_ui.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -447,10 +454,3 @@ class Navigation(BasePage):
             "other-bookmarks-by-title", labels=[bookmark_name]
         )
         return self
-
-    @BasePage.context_chrome
-    def get_legacy_search_engine_label(self) -> str:
-        """Return the displayed engine name from the legacy search bar."""
-        return self.driver.find_element(
-            By.CSS_SELECTOR, ".searchbar-engine-name"
-        ).get_attribute("value")

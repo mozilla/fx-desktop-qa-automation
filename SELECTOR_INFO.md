@@ -2734,13 +2734,6 @@ Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: save-bookmark-button
-Selector Data: editBookmarkPanelDoneButton
-Description: Save bookmark
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: blue-star-button
 Selector Data: image[id='star-button'][starred='true']
 Description: Bookmarked page
@@ -3242,6 +3235,13 @@ Path to .json: modules/data/navigation.components.json
 Selector name: bookmarks-type-dropdown-other
 Selector Data: editBMPanel_unfiledRootItem
 Description: Bookmark location - Other bookmarks
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: save-bookmark-button
+Selector Data: editBookmarkPanelDoneButton
+Description: Save bookmark
 Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```

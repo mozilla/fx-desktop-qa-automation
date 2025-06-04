@@ -311,5 +311,11 @@
         "selectorData": "editBMPanel_unfiledRootItem",
         "strategy": "id",
         "groups": []
+    },
+
+    "save-bookmark-button": {
+        "selectorData": "editBookmarkPanelDoneButton",
+        "strategy": "id",
+        "groups": []
     }
 }

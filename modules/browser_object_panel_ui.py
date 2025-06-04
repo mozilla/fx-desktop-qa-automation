@@ -192,8 +192,7 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-bookmarks").click()
+        self.click_on("panel-ui-bookmarks")
         return self
 
     @BasePage.context_chrome
@@ -202,8 +201,8 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu, selects Bookmarks the current tab.. and clicks
         Save button from Add Bookmark in Address bar "
         """
-        self.get_element("bookmark-current-tab").click()
-        self.navigation.get_element("save-bookmark-button").click()
+        self.click_on("bookmark-current-tab")
+        self.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
