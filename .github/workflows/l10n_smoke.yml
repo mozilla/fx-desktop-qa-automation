@@ -27,7 +27,6 @@ env:
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
   FX_L10N: 'true'
-  TESTRAIL_REPORT: 'true'
 
 jobs:
   Smoke-MacOS:
@@ -77,7 +76,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
-      - name: Run Smoke Tests in MacOS
+      - name: Run L10N Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
@@ -90,7 +89,7 @@ jobs:
           done < selected_l10n_mappings
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
-      - name: Run Smoke Tests in MacOS (Headed)
+      - name: Run L10N Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
