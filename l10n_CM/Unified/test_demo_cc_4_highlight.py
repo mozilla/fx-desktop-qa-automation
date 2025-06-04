@@ -7,7 +7,7 @@ from modules.page_object import CreditCardFill
 
 @pytest.fixture()
 def test_case():
-    return "2886601"
+    return "3056986"
 
 
 def test_cc_yellow_highlight(
@@ -17,7 +17,7 @@ def test_cc_yellow_highlight(
     fill_and_save_payments: CreditCardBase,
 ):
     """
-    C2886601 - Verify the yellow highlight appears on autofilled fields and make sure csv field is not highlighted
+    C3056986 - Verify the yellow highlight appears on autofilled fields and make sure csv field is not highlighted
     """
     # Open the credit card fill form and trigger the autofill option
     credit_card_autofill.open()

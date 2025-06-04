@@ -200,11 +200,12 @@ class TestRail:
         logging.info(f"run on plan entry configs {config_ids}")
         payload = {
             "config_ids": config_ids,
-            "description": description,
             "include_all": not bool(case_ids),
         }
         if case_ids:
             payload["case_ids"] = case_ids
+        if description:
+            payload["description"] = description
         logging.info(f"create run on entry payload:\n{payload}")
         return self.client.send_post(
             f"add_run_to_plan_entry/{plan_id}/{entry_id}", payload
