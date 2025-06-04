@@ -8,9 +8,12 @@ load_dotenv()
 # Configuration Constants
 PROJECT_ID = 17  # ID of the TestRail project to work with
 SUITE_NAMES = [
-    "Address Bar and Search",
+    "Address Bar 138+",
+    "Address Bar and Search <136 (to use with late beta) - locked",
+    "Address Bar and Search Scotch Bonnet (to use with early beta)",
     "Audio/Video",
     "Bookmarks and History",
+    "Build Branding",
     "Downloads",
     "Drag and Drop",
     "Find Toolbar",
@@ -19,19 +22,18 @@ SUITE_NAMES = [
     "Language Packs",
     "Menus",
     "Networking",
-    "Notifications",
+    "Notifications, Push Notifications and Alerts",
     "PDF Viewer",
-    "Password Manager",
-    "Pocket",
+    "Password manager",
     "Preferences",
-    "Profile",
-    "Printing UI",
+    "Printing",
     "Reader View",
-    "Scrolling",
+    "Scrolling, Panning and Zooming",
     "Security and Privacy",
+    "Startup and Profile",
     "Sync & Firefox Account",
-    "Tabs",
-    "Theme and Toolbar",
+    "Tabbed Browser",
+    "Theme and Toolbar Customization"
 ]  # Only process suites with this name
 
 CUSTOM_SUB_TEST_SUITES = [2]  # Value to set for 'custom_sub_test_suites' field (e.g. 'Smoke')
