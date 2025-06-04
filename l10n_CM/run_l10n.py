@@ -10,7 +10,7 @@ from json import load
 import requests
 
 current_dir = os.path.dirname(__file__)
-valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable"}
+valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
 valid_sites = {"demo", "amazon", "walmart"}
