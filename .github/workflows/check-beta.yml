@@ -62,6 +62,4 @@ jobs:
     uses: ./.github/workflows/l10n_smoke.yml
     with:
       job_to_run: Smoke-MacOS
-    env:
-      FX_L10N: 'true'
     secrets: inherit
