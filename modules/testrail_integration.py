@@ -693,9 +693,11 @@ def collect_changes(testrail_session: TestRail, report):
 
     logging.info(f"n run {last_suite_id}, {last_description}")
     if os.environ.get("FX_L10N"):
+        entries = organize_l10n_entries(testrail_session, expected_plan, suite_info)
+        logging.warning(f"Entries: {entries}, Full results: {full_test_results}")
         return merge_results(
             full_test_results,
-            organize_l10n_entries(testrail_session, expected_plan, suite_info),
+            entries,
         )
     full_test_results = merge_results(
         full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
