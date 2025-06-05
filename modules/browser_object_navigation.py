@@ -362,8 +362,8 @@ class Navigation(BasePage):
     ) -> BasePage:
         """
         Add a bookmark via the toolbar's Other Bookmarks context menu.
-        Arguments
-        ----------
+
+        Arguments:
         bookmark_data : A Bookmark object containing the bookmark details to be added (name, url, tags, keyword)
         ba : BrowserActions utility
         """
@@ -386,8 +386,9 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def toggle_bookmarks_toolbar_with_key_combo(self) -> BasePage:
-        """Use Cmd/Ctrl + B to open the Print Preview, wait for load"""
-
+        """
+        Use Cmd/Ctrl + B to open the Print Preview, wait for load
+        """
         if self.sys_platform() == "Darwin":
             mod_key = Keys.COMMAND
         else:
@@ -433,8 +434,8 @@ class Navigation(BasePage):
     ) -> BasePage:
         """
         Deletes a bookmark from Other Bookmarks via context menu.
+
         Argument:
-        ----------
         bookmark_name: The display name of the bookmark to delete
         """
         self.click_on("other-bookmarks-toolbar")
@@ -446,8 +447,8 @@ class Navigation(BasePage):
     def delete_bookmark_from_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
         """
         Delete bookmark from bookmarks toolbar via context menu
+
         Argument:
-        ----------
         bookmark_name: The display name of the bookmark to delete
         """
         self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_name])
@@ -460,8 +461,8 @@ class Navigation(BasePage):
     ) -> BasePage:
         """
         Verify bookmark exists in Other Bookmarks folder from toolbar
-        Arguments
-        ----------
+
+        Argument:
         bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
         """
         self.click_on("other-bookmarks-toolbar")  # Navigation selector
@@ -486,8 +487,8 @@ class Navigation(BasePage):
     ) -> BasePage:
         """
         Verify bookmark does not exist in Other Bookmarks folder from toolbar
-        Arguments
-        ----------
+
+        Argument:
         bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
         """
         self.click_on("other-bookmarks-toolbar")
@@ -508,12 +509,10 @@ class Navigation(BasePage):
     def edit_bookmark_via_star_button(self, new_name: str, location: str) -> BasePage:
         """
         Edit bookmark details by opening the edit bookmark panel via the star button
-        Arguments
-        ----------
-        new_name : str
-            The new name/title to assign to the bookmark
-        location : str
-            The folder location where the bookmark should be saved
+
+        Arguments:
+        new_name : The new name/title to assign to the bookmark
+        location : The folder location where the bookmark should be saved
         """
         self.click_on("star-button")
         self.panel_ui.get_element("edit-bookmark-panel").send_keys(new_name)
@@ -523,6 +522,7 @@ class Navigation(BasePage):
         elif location == "Bookmarks Toolbar":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("bookmarks-toolbar")
+        # for else add Bookmark Menu option if needed in the future
         self.panel_ui.click_on("save-bookmark-button")
         return self
 
@@ -549,7 +549,8 @@ class Navigation(BasePage):
     def open_bookmark_from_toolbar(self, bookmark_title: str) -> BasePage:
         """
         Right-clicks bookmark and opens it in a new private window via context menu
-        Arguments:
+
+        Argument:
             bookmark_title: The title of the bookmark to open
         """
         self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
@@ -562,7 +563,8 @@ class Navigation(BasePage):
     ) -> BasePage:
         """
         Right-click bookmark and opens it in a new window via context menu
-        Arguments:
+
+        Argument:
             bookmark_title: The title of the bookmark to open
         """
         self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
@@ -576,7 +578,8 @@ class Navigation(BasePage):
     ) -> BasePage:
         """
         Right-clicks bookmark and opens it in a new private window via context menu
-        Arguments:
+
+        Argument:
             bookmark_title: The title of the bookmark to open
         """
         self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
@@ -598,8 +601,7 @@ class Navigation(BasePage):
         """
         Assert the visibility state of the Bookmarks Toolbar.
 
-        Arguments:
-        ----------
+        Argument:
         expected (bool):
             If True, asserts that the toolbar is visible (collapsed="false").
             If False, asserts that the toolbar is hidden (collapsed="true")

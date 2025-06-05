@@ -230,7 +230,9 @@ class PanelUi(BasePage):
     def edit_bookmark_from_hamburger_menu(
         self, new_name: str, tags: str, location: str
     ) -> BasePage:
-        """Edit bookmark details from hamburger menu"""
+        """
+        Edit bookmark details from hamburger menu
+        """
         self.open_bookmarks_panel_from_hamburger_menu()
         self.click_on("bookmark-current-tab")
 
