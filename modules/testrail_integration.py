@@ -232,6 +232,7 @@ def mark_results(testrail_session: TestRail, test_results):
     logging.info(f"mark results: object\n{test_results}")
     existing_results = {}
     for category in ["passed", "skipped", "blocked", "xfailed", "failed"]:
+        logging.info(f"Marking {category} results...: {test_results}.")
         for run_id in test_results[category]:
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)

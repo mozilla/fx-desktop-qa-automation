@@ -91,9 +91,9 @@ def run_tests(reg, site, flg, all_tests):
     except subprocess.CalledProcessError as e:
         logging.warning(f"Test run failed. {e}")
         logging.warning(f"Exit Code: {e.returncode}")
-        if os.environ.get("TEST_EXIT_CODE") == "0":
-            with open(os.environ.get("GITHUB_OUTPUT"), "a") as f:
-                f.write(f"TEST_EXIT_CODE={str(e.returncode)}\n")
+        # if os.environ.get("TEST_EXIT_CODE") == "0":
+        #     with open(os.environ.get("GITHUB_OUTPUT"), "a") as f:
+        #         f.write(f"TEST_EXIT_CODE={str(e.returncode)}\n")
         os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
