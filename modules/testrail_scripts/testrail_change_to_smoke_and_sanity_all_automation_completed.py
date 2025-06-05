@@ -8,6 +8,7 @@ load_dotenv()
 # Configuration Constants
 PROJECT_ID = 17  # ID of the TestRail project to work with
 SUITE_NAMES = [
+    "[QA-2617] Nimbus Scotch Bonnet",
     "Address Bar 138+",
     "Address Bar and Search <136 (to use with late beta) - locked",
     "Address Bar and Search Scotch Bonnet (to use with early beta)",
