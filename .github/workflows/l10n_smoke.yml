@@ -88,7 +88,7 @@ jobs:
           pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
             echo "Running tests for: $line"
-            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" --run-headless -n 4 --reruns 2 $line || SCRIPT_EXIT_CODE=$?
+            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" -n 4 $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
           mv artifacts artifacts-mac || true
           if [ $TEST_EXIT_CODE != 0 ]; then
@@ -107,7 +107,7 @@ jobs:
           pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
             echo "Running tests for: $line"
-            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" --run-headless -n 4 --reruns 2 $line || SCRIPT_EXIT_CODE=$?
+            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" -n 4 $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
           mv artifacts artifacts-mac || true
           if [ $TEST_EXIT_CODE != 0 ]; then
