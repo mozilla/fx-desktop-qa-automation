@@ -246,7 +246,7 @@ def mark_results(testrail_session: TestRail, test_results):
 
             # Don't set passed tests to another status.
             test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
-            logging.warn(
+            logging.warning(
                 f"Setting the following test cases in run {run_id} to {category}: {test_cases}"
             )
             testrail_session.update_test_cases(
