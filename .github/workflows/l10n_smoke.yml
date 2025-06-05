@@ -27,6 +27,7 @@ env:
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
   FX_L10N: 'true'
+  TESTRAIL_REPORT: 'true'
 
 jobs:
   Smoke-MacOS:
@@ -80,29 +81,39 @@ jobs:
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          TEST_EXIT_CODE: 0
+          SCRIPT_EXIT_CODE: 0
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
-          echo "Running tests for: $line"
-          pipenv run python l10n_CM/run_l10n.py --ci --fx-executable="$FX_EXECUTABLE" --run-headless -n 4 --reruns 2 $line || TEST_EXIT_CODE=$?
+            echo "Running tests for: $line"
+            pipenv run python l10n_CM/run_l10n.py --ci --fx-executable="$FX_EXECUTABLE" --run-headless -n 4 --reruns 2 $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
           mv artifacts artifacts-mac || true
-          exit $TEST_EXIT_CODE
+          if [ $TEST_EXIT_CODE != 0 ]; then
+            exit $TEST_EXIT_CODE
+          fi
+          exit $SCRIPT_EXIT_CODE
       - name: Run L10N Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
+          TEST_EXIT_CODE: 0
+          SCRIPT_EXIT_CODE: 0
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
-          echo "Running tests for: $line"
-          pipenv run python l10n_CM/run_l10n.py --ci --fx-executable="$FX_EXECUTABLE" -n 4 --reruns 2 $line || TEST_EXIT_CODE=$?
+            echo "Running tests for: $line"
+            pipenv run python l10n_CM/run_l10n.py --ci --fx-executable="$FX_EXECUTABLE" --run-headless -n 4 --reruns 2 $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
-          mv -n artifacts/* artifacts-mac/ || true
-          exit $TEST_EXIT_CODE
+          mv artifacts artifacts-mac || true
+          if [ $TEST_EXIT_CODE != 0 ]; then
+            exit $TEST_EXIT_CODE
+          fi
+          exit $SCRIPT_EXIT_CODE
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4

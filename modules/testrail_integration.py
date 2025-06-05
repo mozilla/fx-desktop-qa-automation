@@ -218,7 +218,7 @@ def merge_results(*result_sets) -> dict:
             if not output.get(key):
                 output[key] = results[key]
                 continue
-            if key in ["passed", "skipped", "xfailed", "failed"]:
+            if key in ["passed", "skipped", "blocked", "xfailed", "failed"]:
                 for run_id in results.get(key):
                     if not output.get(key).get(run_id):
                         output[key][run_id] = results[key][run_id]
@@ -231,7 +231,7 @@ def mark_results(testrail_session: TestRail, test_results):
     """For each type of result, and per run, mark tests to status in batches"""
     logging.info(f"mark results: object\n{test_results}")
     existing_results = {}
-    for category in ["passed", "skipped", "xfailed", "failed"]:
+    for category in ["passed", "skipped", "blocked", "xfailed", "failed"]:
         for run_id in test_results[category]:
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)
@@ -353,14 +353,15 @@ def organize_l10n_entries(
         "passed": ["passed", "xpassed", "warnings"],
         "failed": ["failed", "error"],
         "xfailed": ["xfailed"],
-        "skipped": ["skipped", "deselected"],
+        "blocked": ["skipped", "deselected"],
     }
     test_results = {
         "project_id": TESTRAIL_FX_DESK_PRJ,
         "passed": {},
         "failed": {},
         "xfailed": {},
-        "skipped": {},
+        "skipped": {},  # need to remove and replace with blocked
+        "blocked": {},
     }
 
     for test_case, outcome in results.items():
