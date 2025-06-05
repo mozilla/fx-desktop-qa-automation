@@ -18,6 +18,7 @@ live_sites = []
 
 LOCALHOST = "127.0.0.1"
 PORT = 8080
+os.environ["TEST_EXIT_CODE"] = "0"
 
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
@@ -90,6 +91,9 @@ def run_tests(reg, site, flg, all_tests):
     except subprocess.CalledProcessError as e:
         logging.warning(f"Test run failed. {e}")
         logging.warning(f"Exit Code: {e.returncode}")
+        if os.environ.get("TEST_EXIT_CODE") == "0":
+            with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                f.write(f"TEST_EXIT_CODE={str(e.returncode)}\n")
         os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
@@ -205,14 +209,14 @@ if __name__ == "__main__":
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)
     else:
-        # run on given region and sites.
+        # run on a given region and sites.
         logging.info(f"Running Unified Tests for {arguments} Regions.")
         run_unified(arguments, flags)
     for site in live_sites:
-        # for a given site, run all region specific tests.
+        # for a given site, run all region-specific tests.
         for region in arguments:
             tests = get_region_tests(region)
-            # Check if field mapping json file is present, pass test region if it isn't
+            # Check if a field-mapping JSON file is present, pass a test region if it isn't
             json_path = os.path.join(current_dir, "constants", site, region)
             logging.info(f"Running Specific Tests for {region}.")
             # If the live_site is 'demo', skip starting the server
