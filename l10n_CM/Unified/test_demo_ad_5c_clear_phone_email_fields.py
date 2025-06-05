@@ -17,7 +17,7 @@ def test_demo_ad_clear_tel_email(
     fill_and_save_address: AutofillAddressBase,
 ):
     """
-    C2888571 - Verify clear functionality after selecting an entry from tele/email fields
+    C2888571 - Verify clear functionality after selecting an entry from phone/email fields
     """
     # Create fake data and fill it in
     address_autofill.open()
