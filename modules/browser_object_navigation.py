@@ -544,3 +544,50 @@ class Navigation(BasePage):
         self.click_on("star-button")
         self.panel_ui.element_not_visible("show-editor-when-saving-checkbox")
         return self
+
+    def open_bookmark_from_toolbar(self, bookmark_title: str) -> BasePage:
+        """
+        Right-clicks bookmark and opens it in a new private window via context menu
+        Arguments:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        return self
+
+    @BasePage.context_chrome
+    def open_bookmark_in_new_window_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-click bookmark and opens it in a new window via context menu
+        Arguments:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-window")
+        return self
+
+    @BasePage.context_chrome
+    def open_bookmark_in_new_private_window_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-clicks bookmark and opens it in a new private window via context menu
+        Arguments:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
+        return self
+
+    @BasePage.context_chrome
+    def open_all_bookmarks_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and opens all bookmarks via context menu
+        """
+        self.context_click("bookmarks-toolbar")
+        self.context_menu.click_on("context-menu-toolbar-open-all-bookmarks")
+        return self
