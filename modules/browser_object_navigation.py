@@ -38,6 +38,7 @@ class Navigation(BasePage):
         self.search_bar = None
         self.awesome_bar = None
         self.change_search_settings_button = None
+        self.bookmarks_toolbar = "bookmarks-toolbar"
         self.context_menu = ContextMenu(self.driver)
         self.panel_ui = PanelUi(self.driver)
 
@@ -591,3 +592,20 @@ class Navigation(BasePage):
         self.context_click("bookmarks-toolbar")
         self.context_menu.click_on("context-menu-toolbar-open-all-bookmarks")
         return self
+
+    @BasePage.context_chrome
+    def expect_bookmarks_toolbar_visibility(self, expected: bool) -> None:
+        """
+        Assert the visibility state of the Bookmarks Toolbar.
+
+        Arguments:
+        ----------
+        expected (bool):
+            If True, asserts that the toolbar is visible (collapsed="false").
+            If False, asserts that the toolbar is hidden (collapsed="true")
+        """
+
+        expected_value = "false" if expected else "true"
+        self.expect_element_attribute_contains(
+            self.bookmarks_toolbar, "collapsed", expected_value
+        )
