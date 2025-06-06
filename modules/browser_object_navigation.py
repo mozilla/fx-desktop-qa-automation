@@ -546,15 +546,16 @@ class Navigation(BasePage):
         self.panel_ui.element_not_visible("show-editor-when-saving-checkbox")
         return self
 
+    @BasePage.context_chrome
     def open_bookmark_from_toolbar(self, bookmark_title: str) -> BasePage:
         """
-        Right-clicks bookmark and opens it in a new private window via context menu
+        Clicks bookmark to open it in the current tab
 
         Argument:
             bookmark_title: The title of the bookmark to open
         """
         self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.click_on("bookmark-by-title", labels=[bookmark_title])
         return self
 
     @BasePage.context_chrome
