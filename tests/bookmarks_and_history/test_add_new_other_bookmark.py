@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation
+from modules.browser_object import Navigation
 from modules.classes.bookmark import Bookmark
 from modules.page_object import GenericPage
 from modules.util import BrowserActions
@@ -12,40 +12,26 @@ def test_case():
     return "2084518"
 
 
-BOOKMARK_URL = "about:robots"
-BOOKMARK_NAME = "Robots 2"
-BOOKMARK_TAGS = "a"
-BOOKMARK_KEYBOARD = "about"
+BOOKMARK = Bookmark(url="about:robots", name="Robots 2", tags="a", keyword="about")
 
 
 def test_add_new_other_bookmark(driver: Firefox):
     """
-    C2084518 - Verify another bookmark (with name, url, tag, keyboard) can be added from other bookmarks toolbar
+    C2084518 - Verify another bookmark (with name, url, tag, keyword) can be added from other bookmarks toolbar
     context menu
     """
+    # Instantiate objects
     nav = Navigation(driver)
     ba = BrowserActions(driver)
-    page = GenericPage(driver, url=BOOKMARK_URL)
-    context_menu = ContextMenu(driver)
+    page = GenericPage(driver, url=BOOKMARK.url)
 
     # Create the first bookmark in Other Bookmarks folder
     page.open()
-    nav.bookmark_page_other()
+    nav.bookmark_page_in_other_bookmarks()
 
-    # Create a new bookmark from Other Bookmark context menu
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("other-bookmarks").click()
-        nav.context_click("other-bookmarks-popup")
-        context_menu.get_element("context-menu-add-bookmark").click()
+    # Create a new bookmark from Toolbar Other Bookmark context menu
+    nav.open_add_bookmark_via_toolbar_other_bookmarks_context_menu()
+    nav.add_bookmark_via_toolbar_other_bookmark_context_menu(BOOKMARK, ba)
 
-        context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
-        nav.hide_popup("OtherBookmarksPopup")
-
-        nav.add_bookmark_via_other_bookmark_context_menu(
-            Bookmark(BOOKMARK_URL, BOOKMARK_NAME, BOOKMARK_TAGS, BOOKMARK_KEYBOARD), ba
-        )
-
-    # Verify the presence of the second added bookmarked page
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("other-bookmarks").click()
-        nav.element_visible("bookmark-robots")
+    # Verify the bookmark is present in Other Bookmarks folder
+    nav.verify_bookmark_exists_in_toolbar_other_bookmarks_folder(BOOKMARK.name)

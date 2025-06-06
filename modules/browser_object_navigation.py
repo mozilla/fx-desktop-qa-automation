@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.browser_object_context_menu import ContextMenu
+from modules.browser_object_panel_ui import PanelUi
 from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
 from modules.util import BrowserActions
@@ -36,6 +38,9 @@ class Navigation(BasePage):
         self.search_bar = None
         self.awesome_bar = None
         self.change_search_settings_button = None
+        self.bookmarks_toolbar = "bookmarks-toolbar"
+        self.context_menu = ContextMenu(self.driver)
+        self.panel_ui = PanelUi(self.driver)
 
     @BasePage.context_content
     def expect_in_content(self, condition) -> BasePage:
@@ -314,6 +319,13 @@ class Navigation(BasePage):
         self.get_element(element).click()
         return self
 
+    @BasePage.context_chrome
+    def get_legacy_search_engine_label(self) -> str:
+        """Return the displayed engine name from the legacy search bar."""
+        return self.driver.find_element(
+            By.CSS_SELECTOR, ".searchbar-engine-name"
+        ).get_attribute("value")
+
     # Bookmark
 
     @BasePage.context_chrome
@@ -321,8 +333,8 @@ class Navigation(BasePage):
         """
         Bookmark a site via star button and click save on the bookmark panel
         """
-        self.get_element("star-button").click()
-        self.get_element("save-bookmark-button").click()
+        self.click_on("star-button")
+        self.panel_ui.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -334,19 +346,27 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def bookmark_page_other(self) -> BasePage:
-        self.get_element("star-button").click()
-        dropdown = self.get_element("bookmarks-type-dropdown")
-        dropdown.click()
-        self.get_element("bookmarks-type-dropdown-other").click()
-        dropdown.click()
-        self.get_element("save-bookmark-button").click()
+    def bookmark_page_in_other_bookmarks(self) -> BasePage:
+        """
+        Bookmark the current page in the Other Bookmarks folder via the star icon in the address bar.
+        """
+        self.click_on("star-button")
+        self.panel_ui.click_on("bookmarks-type-dropdown")
+        self.panel_ui.click_on("bookmarks-type-dropdown-other")
+        self.panel_ui.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
-    def add_bookmark_via_other_bookmark_context_menu(
+    def add_bookmark_via_toolbar_other_bookmark_context_menu(
         self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
+        """
+        Add a bookmark via the toolbar's Other Bookmarks context menu.
+
+        Arguments:
+        bookmark_data : A Bookmark object containing the bookmark details to be added (name, url, tags, keyword)
+        ba : BrowserActions utility
+        """
         iframe = self.get_element("bookmark-iframe")
         ba.switch_to_iframe_context(iframe)
         # fill name
@@ -366,8 +386,9 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def toggle_bookmarks_toolbar_with_key_combo(self) -> BasePage:
-        """Use Cmd/Ctrl + B to open the Print Preview, wait for load"""
-
+        """
+        Use Cmd/Ctrl + B to open the Print Preview, wait for load
+        """
         if self.sys_platform() == "Darwin":
             mod_key = Keys.COMMAND
         else:
@@ -396,8 +417,198 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def get_legacy_search_engine_label(self) -> str:
-        """Return the displayed engine name from the legacy search bar."""
-        return self.driver.find_element(
-            By.CSS_SELECTOR, ".searchbar-engine-name"
-        ).get_attribute("value")
+    def open_add_bookmark_via_toolbar_other_bookmarks_context_menu(self) -> BasePage:
+        """
+        Open the context menu for Other Bookmarks in the toolbar and select Add Bookmark option.
+        """
+        self.click_on("other-bookmarks-toolbar")
+        self.context_click("other-bookmarks-popup")
+        self.context_menu.click_on("context-menu-add-bookmark")
+        self.context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
+        self.hide_popup("OtherBookmarksPopup")
+        return self
+
+    @BasePage.context_chrome
+    def delete_bookmark_from_other_bookmarks_via_context_menu(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """
+        Deletes a bookmark from Other Bookmarks via context menu.
+
+        Argument:
+        bookmark_name: The display name of the bookmark to delete
+        """
+        self.click_on("other-bookmarks-toolbar")
+        self.panel_ui.context_click("other-bookmarks-by-title", labels=[bookmark_name])
+        self.context_menu.click_and_hide_menu("context-menu-delete-page")
+        return self
+
+    @BasePage.context_chrome
+    def delete_bookmark_from_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+        """
+        Delete bookmark from bookmarks toolbar via context menu
+
+        Argument:
+        bookmark_name: The display name of the bookmark to delete
+        """
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_name])
+        self.context_menu.click_and_hide_menu("context-menu-delete-page")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_exists_in_toolbar_other_bookmarks_folder(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """
+        Verify bookmark exists in Other Bookmarks folder from toolbar
+
+        Argument:
+        bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
+        """
+        self.click_on("other-bookmarks-toolbar")  # Navigation selector
+        self.panel_ui.element_visible(
+            "other-bookmarks-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_exists_in_bookmarks_toolbar(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """
+        Verify bookmark exists in the bookmarks toolbar
+        """
+        self.panel_ui.element_visible("bookmark-by-title", labels=[bookmark_name])
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_does_not_exist_in_toolbar_other_bookmarks_folder(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """
+        Verify bookmark does not exist in Other Bookmarks folder from toolbar
+
+        Argument:
+        bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
+        """
+        self.click_on("other-bookmarks-toolbar")
+        self.panel_ui.element_not_visible(
+            "other-bookmarks-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_does_not_exist_in_bookmarks_toolbar(
+        self, bookmark_name: str
+    ) -> BasePage:
+        """Verify bookmark does not exist in the bookmarks toolbar"""
+        self.panel_ui.element_not_visible("bookmark-by-title", labels=[bookmark_name])
+        return self
+
+    @BasePage.context_chrome
+    def edit_bookmark_via_star_button(self, new_name: str, location: str) -> BasePage:
+        """
+        Edit bookmark details by opening the edit bookmark panel via the star button
+
+        Arguments:
+        new_name : The new name/title to assign to the bookmark
+        location : The folder location where the bookmark should be saved
+        """
+        self.click_on("star-button")
+        self.panel_ui.get_element("edit-bookmark-panel").send_keys(new_name)
+        if location == "Other Bookmarks":
+            self.panel_ui.click_on("bookmark-location")
+            self.panel_ui.click_on("other-bookmarks")
+        elif location == "Bookmarks Toolbar":
+            self.panel_ui.click_on("bookmark-location")
+            self.panel_ui.click_on("bookmarks-toolbar")
+        # for else add Bookmark Menu option if needed in the future
+        self.panel_ui.click_on("save-bookmark-button")
+        return self
+
+    @BasePage.context_chrome
+    def toggle_show_editor_when_saving(self) -> BasePage:
+        """
+        Toggle the show editor checkbox
+        """
+        self.click_on("star-button")
+        self.panel_ui.click_on("show-editor-when-saving-checkbox")
+        self.panel_ui.click_on("save-bookmark-button")
+        return self
+
+    @BasePage.context_chrome
+    def verify_edit_bookmark_panel_not_visible_after_navigation(self) -> BasePage:
+        """
+        Navigate to new URL and verify that edit bookmark panel is not visible when clicking star
+        Uses the exact same pattern as the working test
+        """
+        self.click_on("star-button")
+        self.panel_ui.element_not_visible("show-editor-when-saving-checkbox")
+        return self
+
+    @BasePage.context_chrome
+    def open_bookmark_from_toolbar(self, bookmark_title: str) -> BasePage:
+        """
+        Clicks a bookmark on the bookmark toolbar to open it in the current tab
+
+        Argument:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.click_on("bookmark-by-title", labels=[bookmark_title])
+        return self
+
+    @BasePage.context_chrome
+    def open_bookmark_in_new_window_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-click bookmark and opens it in a new window via context menu
+
+        Argument:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-window")
+        return self
+
+    @BasePage.context_chrome
+    def open_bookmark_in_new_private_window_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-clicks bookmark and opens it in a new private window via context menu
+
+        Argument:
+            bookmark_title: The title of the bookmark to open
+        """
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
+        return self
+
+    @BasePage.context_chrome
+    def open_all_bookmarks_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and opens all bookmarks via context menu
+        """
+        self.context_click("bookmarks-toolbar")
+        self.context_menu.click_on("context-menu-toolbar-open-all-bookmarks")
+        return self
+
+    @BasePage.context_chrome
+    def expect_bookmarks_toolbar_visibility(self, expected: bool) -> None:
+        """
+        Assert the visibility state of the Bookmarks Toolbar.
+
+        Argument:
+        expected (bool):
+            If True, asserts that the toolbar is visible (collapsed="false").
+            If False, asserts that the toolbar is hidden (collapsed="true")
+        """
+
+        expected_value = "false" if expected else "true"
+        self.expect_element_attribute_contains(
+            self.bookmarks_toolbar, "collapsed", expected_value
+        )
