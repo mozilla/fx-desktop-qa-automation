@@ -549,7 +549,7 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def open_bookmark_from_toolbar(self, bookmark_title: str) -> BasePage:
         """
-        Clicks bookmark to open it in the current tab
+        Clicks a bookmark on the bookmark toolbar to open it in the current tab
 
         Argument:
             bookmark_title: The title of the bookmark to open
