@@ -1,5 +1,8 @@
 {
-    "region": "DE",
-    "tests": [
-    ]
+  "region": "DE",
+  "sites": [
+    "demo"
+  ],
+  "tests": [
+  ]
 }
