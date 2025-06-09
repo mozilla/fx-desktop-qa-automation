@@ -905,13 +905,15 @@ class BasePage(Page):
             return float(css_zoom)
 
         # If zoom property is not explicitly set, check the transform scale
-        css_transform_scale = self.driver.execute_script("""
+        css_transform_scale = self.driver.execute_script(
+            """
             const transform = window.getComputedStyle(document.body).transform;
             if (transform && transform !== 'none') {
                 return transform;
             } else {
                 return null;
-        """)
+        """
+        )
 
         # Parse the transform matrix to extract the scale factor (e.g., matrix(a, b, c, d, e, f))
         if css_transform_scale:
