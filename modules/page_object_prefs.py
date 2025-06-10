@@ -236,19 +236,35 @@ class AboutPrefs(BasePage):
             credit_card_fill_information: The object containing all the sample data
         """
         fields = {
-            "card_number": credit_card_fill_information.card_number,
-            "expiration_month": credit_card_fill_information.expiration_month,
-            "expiration_year": f"20{credit_card_fill_information.expiration_year}",
-            "name": credit_card_fill_information.name,
+            "cc-number": credit_card_fill_information.card_number,
+            "cc-exp-month": int(credit_card_fill_information.expiration_month),
+            "cc-exp-year": f"20{credit_card_fill_information.expiration_year}",
+            "cc-name": credit_card_fill_information.name,
         }
 
-        for field in fields:
-            self.actions.send_keys(fields[field] + Keys.TAB).perform()
+        # for field in fields:
+        #     self.actions.send_keys(fields[field] + Keys.TAB).perform()
+        #
+        # # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
+        # self.actions.send_keys(Keys.TAB).perform()
+        # # Finally, press enter
+        # self.actions.send_keys(Keys.ENTER).perform()
 
-        # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
-        self.actions.send_keys(Keys.TAB).perform()
-        # Finally, press enter
-        self.actions.send_keys(Keys.ENTER).perform()
+        form_element = self.get_element("form-container")
+        children = [
+            x.get_attribute("id")
+            for x in form_element.find_elements(By.CSS_SELECTOR, "*")
+        ]
+
+        for key, val in fields.items():
+            if key in children:
+                form_field = form_element.find_element(By.ID, key)
+                if form_field.tag_name == "select":
+                    self.set_select_field(key, val)
+                else:
+                    form_field.send_keys(val)
+        self.get_element("save-button").click()
+        return self
 
     def add_entry_to_saved_payments(self, cc_data: CreditCardBase):
         """
@@ -259,7 +275,7 @@ class AboutPrefs(BasePage):
         Arguments:
             cc_data: The object containing all the sample data
         """
-        self.switch_to_saved_payments_popup_iframe()
+        self.switch_to_edit_saved_payments_popup_iframe()
         self.fill_and_save_cc_panel_information(cc_data)
         self.switch_to_default_frame()
         self.close_dialog_box()
@@ -458,10 +474,18 @@ class AboutPrefs(BasePage):
         return iframe
 
     # Data Extraction and Processing
-    def set_country_autofill_panel(self, country: str) -> BasePage:
-        """Sets the country value in the autofill view"""
-        select_country = Select(self.driver.find_element(By.ID, "country"))
-        select_country.select_by_value(country)
+    def set_select_field(self, field_selector: str, value: str | int) -> BasePage:
+        """Sets the select field to the correct value."""
+        select_element = Select(self.driver.find_element(By.ID, field_selector))
+        if field_selector == "cc-exp-month" or field_selector == "cc-exp-year":
+            if field_selector == "cc-exp-year":
+                available_options = [
+                    x.get_attribute("value") for x in select_element.options
+                ]
+                value = available_options.index(value)
+            select_element.select_by_index(value)
+        else:
+            select_element.select_by_value(value)
         return self
 
     def fill_and_save_address_panel_information(
@@ -485,7 +509,7 @@ class AboutPrefs(BasePage):
             "email": address_data.email,
         }
 
-        self.set_country_autofill_panel(address_data.country_code)
+        self.set_select_field("country", address_data.country_code)
         form_element = self.get_element("form-container")
         children = [
             x.get_attribute("id")
