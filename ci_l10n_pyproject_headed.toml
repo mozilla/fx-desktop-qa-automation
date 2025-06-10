@@ -17,7 +17,7 @@ markers = [
 testpaths = [
     "l10n_CM/Unified"
 ]
-addopts = "-vs --json-report --json-report-file artifacts/headed/report.json --reruns 3 --reruns-delay 2 -m 'not incident and not unstable and headed' --html=artifacts/headed/report.html"
+addopts = "-vs --ci --json-report --json-report-file artifacts/headed/report.json --reruns 3 --reruns-delay 2 -m 'not incident and not unstable and headed' --html=artifacts/headed/report.html"
 
 [tool.ruff]
 target-version = "py310"
