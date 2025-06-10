@@ -657,7 +657,8 @@ def collect_changes(testrail_session: TestRail, report):
         results_by_suite[suite_id][test_case] = outcome
         if suite_id != last_suite_id:
             # When we get the last test_case in a suite, add entry, run, results
-            if last_suite_id:
+            logging.warning(f"Here new suite: {suite_id}, {last_suite_id}")
+            if last_suite_id and not os.environ.get("FX_L10N"):
                 logging.info("n-1 run")
                 cases_in_suite = list(results_by_suite[last_suite_id].keys())
                 cases_in_suite = [int(n) for n in cases_in_suite]
@@ -692,8 +693,6 @@ def collect_changes(testrail_session: TestRail, report):
     }
 
     logging.info(f"n run {last_suite_id}, {last_description}")
-    entries = organize_l10n_entries(testrail_session, expected_plan, suite_info)
-    logging.warning(f"Entries: {entries}, Full results: {full_test_results}")
     if os.environ.get("FX_L10N"):
         entries = organize_l10n_entries(testrail_session, expected_plan, suite_info)
         logging.warning(f"Entries: {entries}, Full results: {full_test_results}")
