@@ -65,7 +65,7 @@ jobs:
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
-          mkdir -p artifacts/headed;
+          mkdir -p artifacts/;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
@@ -101,7 +101,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
-          ls artifacts/
+          ls ./artifacts/
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
           echo "SCRIPT_EXIT_CODE=0" >> $GITHUB_ENV
