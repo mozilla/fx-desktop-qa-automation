@@ -81,7 +81,6 @@ jobs:
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version
           echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
@@ -102,7 +101,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
-          mv ./ci_pyproject_headed.toml ./pyproject.toml;
+          mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
           echo "SCRIPT_EXIT_CODE=0" >> $GITHUB_ENV
           pipenv run python check_l10n_test_cases.py
@@ -110,7 +109,7 @@ jobs:
             echo "Running tests for: $line"
             pipenv run python l10n_CM/run_l10n.py --ci --fx-executable="$FX_EXECUTABLE" -n 4 $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
-          mv artifacts artifacts-mac || true
+          mv -n artifacts/* artifacts-mac/ || true
           if [ $TEST_EXIT_CODE != 0 ]; then
             exit $TEST_EXIT_CODE
           fi
