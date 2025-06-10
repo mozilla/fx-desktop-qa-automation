@@ -65,7 +65,7 @@ jobs:
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
-          mkdir -p artifacts;
+          mkdir -p artifacts/headed;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
