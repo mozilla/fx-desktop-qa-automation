@@ -101,6 +101,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
+          ls artifacts/
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
           echo "SCRIPT_EXIT_CODE=0" >> $GITHUB_ENV
