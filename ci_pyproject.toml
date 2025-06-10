@@ -18,7 +18,7 @@ testpaths = [
     "tests",
     "l10n_CM/Unified"
 ]
-addopts = "-vs --ci --run-headless --json-report --json-report-file artifacts/report.json --reruns 3 --reruns-delay 3 -m 'not incident and not unstable and not headed' --html=artifacts/report.html"
+addopts = "-vs --run-headless --json-report --json-report-file artifacts/report.json --reruns 3 --reruns-delay 3 -m 'not incident and not unstable and not headed' --html=artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"
