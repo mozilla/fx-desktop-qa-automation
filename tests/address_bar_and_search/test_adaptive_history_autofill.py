@@ -42,7 +42,7 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     driver.switch_to.window(driver.window_handles[1])
     tabs.close_first_tab_by_icon()
 
-    # Step 3: Type in address bar, click adaptive suggestion
+    # Step 3: Type in address bar, then click adaptive suggestion
     nav.type_in_awesome_bar("nat")
     nav.click_firefox_suggest()
     nav.expect_in_content(EC.url_contains(TEST_URL))
