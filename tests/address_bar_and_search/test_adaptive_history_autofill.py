@@ -1,3 +1,5 @@
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,7 +38,7 @@ def test_add_adaptive_history_autofill(driver: Firefox):
         lambda d: tabs.expect_title_contains(EXPECTED_IN_TITLE)
     )
 
-    # Step 2: Open new tab, close the original
+    # Step 2: Open a new tab, close the original
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[1])
