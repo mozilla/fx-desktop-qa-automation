@@ -83,6 +83,7 @@ def run_tests(reg, site, flg, all_tests):
     try:
         if len(all_tests) > 0:
             logging.info(f"Tests for {reg} region on {site} page.")
+            logging.warning(f"Running the tests: {all_tests} with flags: {flg}")
             os.environ["CM_SITE"] = site
             os.environ["FX_REGION"] = reg
             subprocess.run(["pytest", *flg, *all_tests], check=True, text=True)
