@@ -2734,13 +2734,6 @@ Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: save-bookmark-button
-Selector Data: editBookmarkPanelDoneButton
-Description: Save bookmark
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: blue-star-button
 Selector Data: image[id='star-button'][starred='true']
 Description: Bookmarked page
@@ -2759,13 +2752,6 @@ Selector name: download-panel-item
 Selector Data: vbox[class='downloadContainer']
 Description: Downloaded item in the download panel
 Location: Download panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: edit-bookmark-panel
-Selector Data: editBMPanel_namePicker
-Description: Edit bookmark panel
-Location: Bookmark panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -2804,24 +2790,10 @@ Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: bookmarks-type-dropdown
-Selector Data: editBMPanel_folderMenuList
-Description: Bookmark location
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: bookmarks-type-dropdown-other
-Selector Data: editBMPanel_unfiledRootItem
-Description: Bookmark location - Other bookmarks
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: other-bookmarks
+Selector name: other-bookmarks-toolbar
 Selector Data: OtherBookmarks
-Description: Other bookmarks option
-Location: Bookmark panel
+Description: Other bookmarks folder
+Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -3246,6 +3218,27 @@ Location: On the hamburger menu > Bookmarks
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: bookmarks-type-dropdown
+Selector Data: editBMPanel_folderMenuList
+Description: Bookmark location
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmarks-type-dropdown-other
+Selector Data: editBMPanel_unfiledRootItem
+Description: Bookmark location - Other bookmarks
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: save-bookmark-button
+Selector Data: editBookmarkPanelDoneButton
+Description: Save bookmark
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: iframe
 Selector Data: dialogFrame
 Description: iframe
@@ -3391,6 +3384,14 @@ Selector Data: "PlacesToolbar"
 Description: Bookmarks toolbar
 Location: Bookmarks toolbar
 Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: edit-bookmark-panel
+Selector Data: editBMPanel_namePicker
+Description: Edit bookmark panel
+Location: Bookmark panel
+Path to .json: modules/data/pane_ui.components.json
+```
 ```
 #### print_preview
 ```

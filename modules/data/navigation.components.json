@@ -272,12 +272,6 @@
         "groups": []
     },
 
-    "save-bookmark-button": {
-        "selectorData": "editBookmarkPanelDoneButton",
-        "strategy": "id",
-        "groups": []
-    },
-
     "blue-star-button": {
         "selectorData": "image[id='star-button'][starred='true']",
         "strategy": "css",
@@ -287,12 +281,6 @@
     "download-panel-item": {
         "selectorData": "vbox[class='downloadContainer']",
         "strategy": "css",
-        "groups": []
-    },
-
-    "edit-bookmark-panel": {
-        "selectorData": "editBMPanel_namePicker",
-        "strategy": "id",
         "groups": []
     },
 
@@ -331,19 +319,8 @@
         "strategy": "id",
         "groups": []
     },
-    "bookmarks-type-dropdown": {
-        "selectorData": "editBMPanel_folderMenuList",
-        "strategy": "id",
-        "groups": []
-    },
 
-    "bookmarks-type-dropdown-other": {
-        "selectorData": "editBMPanel_unfiledRootItem",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "other-bookmarks": {
+    "other-bookmarks-toolbar": {
         "selectorData": "OtherBookmarks",
         "strategy": "id",
         "groups": []

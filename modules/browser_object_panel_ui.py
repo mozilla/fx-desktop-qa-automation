@@ -2,11 +2,9 @@ from typing import List
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object_navigation import Navigation
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, PomUtils
@@ -16,10 +14,9 @@ class PanelUi(BasePage):
     """Browser Object Model for nav panel UI menu (hamburger menu, application menu)"""
 
     URL_TEMPLATE = "about:blank"
-
-    def __init__(self, driver: Firefox, **kwargs):
-        super().__init__(driver, **kwargs)
-        self.navigation = Navigation(self.driver)
+    ENABLE_ADD_TAG = (
+        """PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);"""
+    )
 
     class Menu(Region):
         """
@@ -198,8 +195,7 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-bookmarks").click()
+        self.click_on("panel-ui-bookmarks")
         return self
 
     @BasePage.context_chrome
@@ -208,8 +204,8 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu, selects Bookmarks the current tab.. and clicks
         Save button from Add Bookmark in Address bar "
         """
-        self.get_element("bookmark-current-tab").click()
-        self.navigation.get_element("save-bookmark-button").click()
+        self.click_on("bookmark-current-tab")
+        self.click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -221,3 +217,47 @@ class PanelUi(BasePage):
         """
         self.element_visible("bookmark-by-title", labels=[bookmark_title])
         return self
+
+    @BasePage.context_chrome
+    def enable_bookmark_tagging(self) -> BasePage:
+        """
+        Enable tagging functionality for bookmarks by executing a script
+        """
+        self.driver.execute_script(self.ENABLE_ADD_TAG)
+        return self
+
+    @BasePage.context_chrome
+    def edit_bookmark_from_hamburger_menu(
+        self, new_name: str, tags: str, location: str
+    ) -> BasePage:
+        """
+        Edit bookmark details from hamburger menu
+        """
+        self.open_bookmarks_panel_from_hamburger_menu()
+        self.click_on("bookmark-current-tab")
+
+        # Edit bookmark details
+        self.get_element("edit-bookmark-panel").send_keys(new_name)
+        self.get_element("bookmark-tags").send_keys(tags)
+        if location == "Other Bookmarks":
+            self.click_on("bookmark-location")
+            self.click_on("other-bookmarks")
+        elif location == "Bookmarks Toolbar":
+            self.click_on("bookmark-location")
+            self.click_on("bookmarks-toolbar")
+        self.click_on("save-bookmark-button")
+
+    @BasePage.context_chrome
+    def get_bookmark_tags(self, tags: List[str]) -> List[str]:
+        """
+        Returns the actual bookmark tag values from the UI
+        """
+        self.open_bookmarks_panel_from_hamburger_menu()
+        self.click_on("bookmark-current-tab")
+        self.click_on("extend-bookmark-tags")
+        return [
+            self.get_element(f"{tag.lower().replace(' ', '')}-tag").get_attribute(
+                "value"
+            )
+            for tag in tags
+        ]
