@@ -33,7 +33,7 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     # Step 1: Visit the test site and verify tab title
     nav.search(TEST_URL)
     WebDriverWait(driver, WAIT_TIMEOUT).until(
-        lambda d: tabs.get_tab_title(tabs.get_tab(1)) == EXPECTED_TITLE
+        lambda d: tabs.expect_title_contains(EXPECTED_TITLE)
     )
 
     # Step 2: Open new tab, close the original
