@@ -231,8 +231,8 @@ def mark_results(testrail_session: TestRail, test_results):
     """For each type of result, and per run, mark tests to status in batches"""
     logging.info(f"mark results: object\n{test_results}")
     existing_results = {}
-    for category in ["passed", "skipped", "blocked", "xfailed", "failed"]:
-        logging.warning(f"Marking {category} results...: {test_results}.")
+    # don't send update requests for skipped test cases
+    for category in ["passed", "blocked", "xfailed", "failed"]:
         for run_id in test_results[category]:
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)
@@ -531,7 +531,6 @@ def collect_changes(testrail_session: TestRail, report):
         raise ValueError("Release reporting currently not supported")
 
     metadata = None
-    logging.warning(f"Metadata here {report.get('tests')}...")
     for test in report.get("tests"):
         if test.get("metadata"):
             metadata = test.get("metadata")
