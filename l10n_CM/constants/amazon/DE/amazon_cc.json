@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/amazon_cc.html",
+  "field_mapping": {
+    "card_number": "06014430-b517-476f-8618-f4770f0c078f",
+    "name": "31fd4333-af75-4131-939a-d73a36f70fe9",
+    "expiration_date": "531dc4d3-f97e-4ad0-b78f-da057efe22d9",
+    "cvv":"b7ea2a60-8b59-4a5a-b1b8-e8d640efd511"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "06014430-b517-476f-8618-f4770f0c078f",
+    "31fd4333-af75-4131-939a-d73a36f70fe9",
+    "531dc4d3-f97e-4ad0-b78f-da057efe22d9",
+    "b7ea2a60-8b59-4a5a-b1b8-e8d640efd511"
+  ]
+}
