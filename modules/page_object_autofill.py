@@ -303,7 +303,7 @@ class Autofill(BasePage):
             for field_name in excluded_fields:
                 field = self.field_mapping.get(field_name, None)
                 if field:
-                    self.double_click("form-field", labels=[field_name])
+                    self.double_click("form-field", labels=[field])
                     self.autofill_popup.ensure_autofill_dropdown_not_visible()
                     logging.info(
                         f"No autofill dropdown appears for field '{field_name}', as expected."
