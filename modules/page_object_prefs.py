@@ -242,14 +242,6 @@ class AboutPrefs(BasePage):
             "cc-name": credit_card_fill_information.name,
         }
 
-        # for field in fields:
-        #     self.actions.send_keys(fields[field] + Keys.TAB).perform()
-        #
-        # # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
-        # self.actions.send_keys(Keys.TAB).perform()
-        # # Finally, press enter
-        # self.actions.send_keys(Keys.ENTER).perform()
-
         form_element = self.get_element("form-container")
         children = [
             x.get_attribute("id")

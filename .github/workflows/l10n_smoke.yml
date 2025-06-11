@@ -102,7 +102,6 @@ jobs:
           REPORTABLE: true
         run: |
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          ls -la artifacts-mac/ 2>/dev/null || echo "File does not exist"
           echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
           echo "SCRIPT_EXIT_CODE=0" >> $GITHUB_ENV
           pipenv run python check_l10n_test_cases.py
