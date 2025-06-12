@@ -387,7 +387,6 @@ class TestRail:
         testrail_suite_id,
         test_case_ids=[],
         status="passed",
-        more_results={},
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
@@ -405,13 +404,6 @@ class TestRail:
                 for test_case_id in test_case_ids
             ]
         }
-        for test_case_id, new_item in more_results.items():
-            if test_case_id in test_case_ids:
-                for result in data.get("results"):
-                    if result.get("case_id") == test_case_id:
-                        new_field, new_data = new_item.items()
-                        result[new_field] = new_data
-
         return self._update_test_run_results(testrail_run_id, data)
 
     # Private Methods
