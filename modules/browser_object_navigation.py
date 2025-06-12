@@ -585,9 +585,7 @@ class Navigation(BasePage):
         """
         self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
         self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
-        self.context_menu.click_and_hide_menu(
-            "context-menu-toolbar-open-in-new-private-window"
-        )
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
         return self
 
     @BasePage.context_chrome
