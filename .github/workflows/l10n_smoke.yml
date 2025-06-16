@@ -83,16 +83,16 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
-          echo "SCRIPT_EXIT_CODE=0" >> $GITHUB_ENV
+          echo "0" > TEST_EXIT_CODE
           pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
             echo "Running tests for: $line"
             pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
           mv artifacts artifacts-mac || true
-          if [ $TEST_EXIT_CODE != 0 ]; then
-            exit $TEST_EXIT_CODE
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ $EXIT_CODE != 0 ]; then
+            exit $EXIT_CODE
           fi
           exit $SCRIPT_EXIT_CODE
       - name: Run L10N Tests in MacOS (Headed)
@@ -102,16 +102,16 @@ jobs:
           REPORTABLE: true
         run: |
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          echo "TEST_EXIT_CODE=0" >> $GITHUB_ENV
-          echo "SCRIPT_EXIT_CODE=0" >> $GITHUB_ENV
+          echo "0" > TEST_EXIT_CODE
           pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
             echo "Running tests for: $line"
             pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
           done < selected_l10n_mappings
           mv -n artifacts/* artifacts-mac/ || true
-          if [ $TEST_EXIT_CODE != 0 ]; then
-            exit $TEST_EXIT_CODE
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ $EXIT_CODE != 0 ]; then
+            exit $EXIT_CODE
           fi
           exit $SCRIPT_EXIT_CODE
       - name: Upload artifacts
