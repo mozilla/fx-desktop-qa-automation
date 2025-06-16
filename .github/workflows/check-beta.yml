@@ -61,5 +61,5 @@ jobs:
     if: ${{ needs.Check-Beta-Version.outputs.mac_l10n_reportable == 'True' }}
     uses: ./.github/workflows/l10n_smoke.yml
     with:
-      job_to_run: Smoke-MacOS
+      job_to_run: L10N-MacOS
     secrets: inherit

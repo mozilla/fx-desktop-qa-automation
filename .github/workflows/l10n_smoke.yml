@@ -1,5 +1,5 @@
 ---
-name: L10N Smoke Test Execution
+name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
@@ -30,8 +30,8 @@ env:
   TESTRAIL_REPORT: 'true'
 
 jobs:
-  Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
+  L10N-MacOS:
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
