@@ -27,7 +27,6 @@ env:
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
   FX_L10N: 'true'
-  TESTRAIL_REPORT: 'true'
 
 jobs:
   L10N-MacOS:
@@ -54,7 +53,7 @@ jobs:
           exit $?
           echo "Triggered by event: ${{ github.event_name }}"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        if: ${{ inputs.job_to_run == 'L10N-MacOS' }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
@@ -99,7 +98,7 @@ jobs:
         if: steps.setup.conclusion == 'success' && always()
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: true
+          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
         run: |
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           echo "0" > TEST_EXIT_CODE
