@@ -94,7 +94,7 @@ def run_tests(reg, site, flg, all_tests):
         if e.returncode != 2:
             if os.environ.get("TEST_EXIT_CODE") == "0":
                 with open("TEST_EXIT_CODE", "w") as f:
-                    f.write(f"TEST_EXIT_CODE={str(e.returncode)}\n")
+                    f.write(str(e.returncode))
             os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
