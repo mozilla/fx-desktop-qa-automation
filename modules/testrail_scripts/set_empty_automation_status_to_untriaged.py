@@ -12,7 +12,7 @@ logging.basicConfig(
 
 # Load env file from project root
 script_dir = os.path.dirname(__file__)
-project_root = os.path.abspath(os.path.join(script_dir, ".."))
+project_root = os.path.abspath(os.path.join(script_dir, "..", ".."))
 env_file_path = os.path.join(project_root, "testrail_credentials.env")
 load_dotenv(dotenv_path=env_file_path)
 

@@ -23,14 +23,6 @@ def test_case():
     return "3029292"
 
 
-@pytest.fixture()
-def add_to_prefs_list():
-    return [
-        ("browser.urlbar.suggest.addons", True),
-        ("browser.urlbar.addons.featureGate", True),
-    ]
-
-
 @pytest.mark.noxvfb
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
