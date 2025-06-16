@@ -14,9 +14,7 @@ markers = [
     "locale_gb: tests run in GB locale versions",
     "noxvfb: tests that should not run in xvfb sessions"
 ]
-testpaths = [
-    "tests"
-]
+
 addopts = "-vs --ci --run-headless --json-report --json-report-file artifacts/report.json --reruns 3 --reruns-delay 3 -m 'not unstable and not headed and not noxvfb' --html=artifacts/report.html"
 
 [tool.ruff]
