@@ -140,7 +140,7 @@ class AboutLogins(BasePage):
 
     def click_add_login_button(self) -> Page:
         """Click the Add Login button"""
-        self.get_element("create-login-button").click()
+        self.click_on("create-login-button")
         logging.info("Clicked add login button")
         return self
 

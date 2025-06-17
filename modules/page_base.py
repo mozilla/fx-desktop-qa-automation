@@ -519,9 +519,18 @@ class BasePage(Page):
             "Bad fetch: only selectors, selector names, or WebElements allowed."
         )
 
-    def click_on(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+    def click_on(
+        self, reference: Union[str, tuple, WebElement], labels=[], wait_for_visible=True
+    ) -> Page:
         """Click on an element, no matter the context, return the page"""
         with self.driver.context(self.context_id):
+            if wait_for_visible:
+                if isinstance(reference, str):
+                    self.element_visible(reference)
+                elif isinstance(reference, tuple):
+                    self.wait.until(EC.visibility_of_element_located(reference))
+                else:
+                    self.wait.until(EC.visibility_of(reference))
             self.fetch(reference, labels).click()
             logging.info(f"{reference} clicked")
         return self
