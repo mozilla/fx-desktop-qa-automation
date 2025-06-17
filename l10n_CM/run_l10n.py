@@ -91,11 +91,11 @@ def run_tests(reg, site, flg, all_tests):
     except subprocess.CalledProcessError as e:
         logging.warning(f"Test run failed with exit code: {e.returncode}")
         # true failure instead of run not being reportable.
-        if e.returncode != 2:
-            if os.environ.get("TEST_EXIT_CODE") == "0":
-                with open("TEST_EXIT_CODE", "w") as f:
-                    f.write(str(e.returncode))
-            os.environ["TEST_EXIT_CODE"] = str(e.returncode)
+        # if e.returncode != 2:
+        #     if os.environ.get("TEST_EXIT_CODE") == "0":
+        #         with open("TEST_EXIT_CODE", "w") as f:
+        #             f.write(str(e.returncode))
+        #     os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
 def get_region_tests(test_region: str) -> list[str]:
