@@ -520,7 +520,10 @@ class BasePage(Page):
         )
 
     def click_on(
-        self, reference: Union[str, tuple, WebElement], labels=[], wait_for_visible=True
+        self,
+        reference: Union[str, tuple, WebElement],
+        labels=[],
+        wait_for_visible=False,
     ) -> Page:
         """Click on an element, no matter the context, return the page"""
         with self.driver.context(self.context_id):
