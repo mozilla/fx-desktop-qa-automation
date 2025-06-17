@@ -662,6 +662,13 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: custom-radio
+Selector Data: "customRadio"
+Description: Parent Element in custom tracker blocking checkboxes
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: cookies-checkbox
 Selector Data: "contentBlockingBlockCookiesCheckbox"
 Description: In Enhanced Tracking Protection, the check-box for Cookies

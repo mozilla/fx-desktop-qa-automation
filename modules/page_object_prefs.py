@@ -118,6 +118,19 @@ class AboutPrefs(BasePage):
         self.wait.until(lambda _: el.get_attribute("label") == action)
         return self
 
+    def select_trackers_to_block(self, *options):
+        """Select the trackers to block in the about:preferences page. Unchecks all first."""
+        self.click_on("custom-radio")
+        checkboxes = self.get_element("custom-tracker-options-parent").find_elements(
+            By.TAG_NAME, "checkbox"
+        )
+        for checkbox in checkboxes:
+            if checkbox.is_selected():
+                checkbox.click()
+        for option in options:
+            self.click_on(option)
+        return self
+
     def get_history_menulist(self) -> WebElement:
         """
         Gets the web element for the list of history items that appear in about:preferences
