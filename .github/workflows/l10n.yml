@@ -61,7 +61,7 @@ jobs:
         if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "Running smoke tests on supplied executable";
+          echo "Running l10n tests on supplied executable";
       - name: Install dependencies
         run: |
           mkdir -p artifacts/;
