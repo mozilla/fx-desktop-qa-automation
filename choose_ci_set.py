@@ -229,9 +229,9 @@ if __name__ == "__main__":
         run_list.extend(ci_paths)
 
         # Dedupe just in case
-        run_list = dedupe(run_list, slash)
-        run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
         if slash == "\\":
             run_list = [entry.replace("/", slash) for entry in run_list]
+        run_list = dedupe(run_list, slash)
+        run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
