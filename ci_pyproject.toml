@@ -17,7 +17,7 @@ markers = [
 testpaths = [
     "tests"
 ]
-addopts = "-vs -n 4 --ci --run-headless --json-report --json-report-file artifacts/report.json --reruns 3 --reruns-delay 3 -m 'not incident and not unstable and not headed' --html=artifacts/report.html"
+addopts = "-vs --ci --run-headless --json-report --json-report-file artifacts/report.json --reruns 3 --reruns-delay 3 -m 'not incident and not unstable and not headed' --html=artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"
