@@ -1,0 +1,156 @@
+
+File filter
+---
+name: L10N Test Execution
+
+run-name: ${{ github.actor }} is running l10n tests
+on:
+  pull_request:
+  workflow_call:
+    inputs:
+      channel:
+        description: "Channel to run tests against"
+        default: "beta"
+        type: string
+        required: false
+      job_to_run:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      mac_installer_link:
+        description: 'The link to the macOS installer for the Fx under test'
+        required: false
+        type: string
+env:
+  FX_CHANNEL: ${{ inputs.channel }}
+  TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+  TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+  TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+  SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+  FX_L10N: 'true'
+
+jobs:
+  L10N-MacOS:
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
+    runs-on: macos-latest
+    steps:
+      - name: Create app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check test case numbers
+        run: |
+          python check_test_cases.py
+          exit $?
+          echo "Triggered by event: ${{ github.event_name }}"
+      - name: Set Environment (Scheduled Beta)
+        if: ${{ inputs.job_to_run == 'L10N-MacOS' }}
+        run: |
+          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
+          echo "Running report for most recent Beta on MacOS";
+      - name: Set Environment (Manual)
+        if: ${{ inputs.mac_installer_link }}
+        run: |
+          echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "Running smoke tests on supplied executable";
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts/;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          rm ./pyproject.toml;
+          mv ./ci_pyproject.toml ./pyproject.toml;
+          pipenv install
+      - name: Install Fx
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
+        run:
+          echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
+      - name: Run L10N Tests in MacOS
+        if: steps.setup.conclusion == 'success'
+        env:
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+        run: |
+          "$FX_EXECUTABLE" --version
+          echo "0" > TEST_EXIT_CODE
+          pipenv run python check_l10n_test_cases.py
+          while IFS= read -r line; do
+            echo "Running tests for: $line"
+            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
+          done < selected_l10n_mappings
+          mv artifacts artifacts-mac || true
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ $EXIT_CODE != 0 ]; then
+            exit $EXIT_CODE
+          fi
+          exit $SCRIPT_EXIT_CODE
+      - name: Run L10N Tests in MacOS (Headed)
+        if: steps.setup.conclusion == 'success' && always()
+        env:
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
+        run: |
+          mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
+          echo "0" > TEST_EXIT_CODE
+          pipenv run python check_l10n_test_cases.py
+          while IFS= read -r line; do
+            echo "Running tests for: $line"
+            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
+          done < selected_l10n_mappings
+          mv -n artifacts/* artifacts-mac/ || true
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ $EXIT_CODE != 0 ]; then
+            exit $EXIT_CODE
+          fi
+          exit $SCRIPT_EXIT_CODE
+      - name: Upload artifacts
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-mac
+          path: artifacts-mac
+  Use-Artifacts:
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    needs:
+      - L10N-MacOS
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip3 install 'pipenv==2023.11.15'
+          pipenv install
+      - name: Download MacOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts-mac
+          path: artifacts-mac
+      - name: List downloaded MacOS files
+        run: ls artifacts-mac/
+      - name: Run script with secret
+        env:
+          SLACK_KEY: ${{ secrets.SLACK_KEY }}
+          GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          pipenv run python notifier.py
