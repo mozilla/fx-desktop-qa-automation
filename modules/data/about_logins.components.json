@@ -126,8 +126,8 @@
     },
 
     "login-list-item": {
-        "selectorData": "login-list-item",
-        "strategy": "tag",
+        "selectorData": "list-item",
+        "strategy": "class",
         "shadowParent": "login-list",
         "groups": ["doNotCache"]
     },
