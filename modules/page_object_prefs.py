@@ -1,3 +1,4 @@
+import logging
 import re
 from time import sleep
 from typing import List
@@ -153,6 +154,9 @@ class AboutPrefs(BasePage):
         credit_card_fill_obj: CreditCardBase
             The object that contains all the generated information
         """
+        logging.warning(
+            f"HERE: {cc_info_json} == {credit_card_fill_obj.__dict__.values()}"
+        )
         assert cc_info_json["name"] == credit_card_fill_obj.name
         assert cc_info_json["number"][-4:] == credit_card_fill_obj.card_number[-4:]
         assert int(cc_info_json["month"]) == int(credit_card_fill_obj.expiration_month)
