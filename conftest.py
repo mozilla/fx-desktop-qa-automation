@@ -329,7 +329,7 @@ def pytest_configure(config):
                 raise OSError("Could not find TestRail credentials")
 
         if not tri.reportable():
-            pytest.exit("Test run is not reportable. Exiting.")
+            pytest.exit("Test run is not reportable. Exiting.", 2)
 
 
 def pytest_sessionfinish(session):
