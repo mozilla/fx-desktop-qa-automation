@@ -4,6 +4,8 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
+"""Force rerun"""
+
 
 @pytest.fixture()
 def test_case():
