@@ -112,7 +112,9 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          Start-Process pipenv run pytest -ArgumentList (Get-Content .\selected_tests) -wait -NoNewWindow
+          $selected_tests = Get-Content -Path .\selected_tests -Raw
+          Set-Content -Path .\selected_tests -Value ("run" + "`r`n" + "pytest" + "`r`n" + $selected_tests)
+          Start-Process pipenv -ArgumentList (Get-Content .\selected_tests) -wait -NoNewWindow
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -125,7 +127,9 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run python choose_ci_set.py
-          Start-Process pipenv run pytest -ArgumentList (Get-Content .\selected_tests) -wait -NoNewWindow
+          $selected_tests = Get-Content -Path .\selected_tests -Raw
+          Set-Content -Path .\selected_tests -Value ("run" + "`r`n" + "pytest" + "`r`n" + $selected_tests)
+          Start-Process pipenv -ArgumentList (Get-Content .\selected_tests) -wait -NoNewWindow
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
