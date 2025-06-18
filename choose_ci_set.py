@@ -234,4 +234,4 @@ if __name__ == "__main__":
         if slash == "\\":
             run_list = [entry.replace("/", slash) for entry in run_list]
         with open(OUTPUT_FILE, "w") as fh:
-            fh.write(" ".join(run_list))
+            fh.write("\n".join(run_list))
