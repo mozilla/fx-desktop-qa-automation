@@ -1,0 +1,14 @@
+{
+ "url": "http://127.0.0.1:8080/mediamarkt_cc.html",
+ "field_mapping": {
+   "card_number": "64541173-1c23-4398-9e42-9085d76991f4",
+   "name": "4edb0e50-ed4c-4142-ab00-462daa5ae5e3",
+   "expiration_date": "ef27ace4-89d6-48cf-a25e-32e2adad969e"
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+   "64541173-1c23-4398-9e42-9085d76991f4",
+   "4edb0e50-ed4c-4142-ab00-462daa5ae5e3",
+   "ef27ace4-89d6-48cf-a25e-32e2adad969e"
+ ]
+}
