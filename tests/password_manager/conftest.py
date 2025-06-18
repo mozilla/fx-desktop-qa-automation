@@ -7,8 +7,6 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutLogins
 
-"""Force rerun"""
-
 
 @pytest.fixture()
 def suite_id():

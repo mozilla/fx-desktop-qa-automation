@@ -1,7 +1,5 @@
 import pytest
 
-"""Force rerun"""
-
 
 @pytest.fixture()
 def suite_id():
