@@ -39,8 +39,9 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
         }
     )
 
+    # Wait for item to populate login list
+    about_logins.get_element("login-list-item")
     # Click on the hyperlink website
-    about_logins.get_elements("login-list-item")
     about_logins.click_on("website-address")
     about_logins.switch_to_new_tab()
     about_logins.url_contains("mozilla.github")
