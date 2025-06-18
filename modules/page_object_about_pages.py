@@ -152,11 +152,9 @@ class AboutLogins(BasePage):
         try:
             for item_type, value in form_info.items():
                 logging.info(f"Filling {item_type} with {value}")
-                self.ba.clear_and_fill(
-                    self.get_element("login-item-type", labels=[item_type]), value
-                )
+                self.fill("login-item-type", value, labels=[item_type])
             logging.info("Clicking submit...")
-            self.get_element("create-login-button")
+            self.element_not_visible("login-item-type", labels=["origin"])
             logging.info("Submitted.")
         except (WebDriverException, StaleElementReferenceException):
             logging.info("Element not found or stale, pressing 'Save Changes'")
