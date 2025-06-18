@@ -154,7 +154,7 @@ class AboutLogins(BasePage):
                 logging.info(f"Filling {item_type} with {value}")
                 self.fill("login-item-type", value, labels=[item_type])
             logging.info("Clicking submit...")
-            self.element_not_visible("login-item-type", labels=["origin"])
+            self.element_clickable("create-login-button")
             logging.info("Submitted.")
         except (WebDriverException, StaleElementReferenceException):
             logging.info("Element not found or stale, pressing 'Save Changes'")
