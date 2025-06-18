@@ -390,7 +390,13 @@ class TestRail:
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
-        status_key = {"passed": 1, "skipped": 3, "xfailed": 4, "failed": 5}
+        status_key = {
+            "passed": 1,
+            "skipped": 3,
+            "blocked": 2,
+            "xfailed": 4,
+            "failed": 5,
+        }
         if not test_case_ids:
             test_case_ids = [
                 test_case.get("id")

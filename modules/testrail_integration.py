@@ -1,501 +1,732 @@
-"""
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-TestRail API binding for Python 3.x.
-
-Compatible with TestRail 6.8 and later.
-
-Learn more:
-
-http://docs.gurock.com/testrail-api2/start
-http://docs.gurock.com/testrail-api2/accessing
-
-TestRail is Copyright Gurock Software GmbH. See license.md for details.
-
-=====
-
-This module comprises classes to encapsulate (a) a TestRail interactive session
-and (b) the API calls necessary for this repo to communicate results in the
-required way. Further information is found in class and method docstrings.
-"""
-
-import base64
 import logging
-from time import sleep
+import os
+import re
+import subprocess
+import sys
 
-import requests
+from check_l10n_test_cases import valid_l10n_mappings
+from modules import taskcluster as tc
+from modules import testrail as tr
+from modules.testrail import TestRail
+
+FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
+FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
+TESTRAIL_RUN_FMT = (
+    "[{channel} {major}] {plan}Automated testing {major}.{minor}b{beta}-build{build}"
+)
+PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
+CONFIG_GROUP_ID = 95
+TESTRAIL_FX_DESK_PRJ = 17
 
 
-class APIClient:
-    """
-    TestRail API session.
+def get_plan_title(version_str: str, channel: str) -> str:
+    """Given a version string, get the plan_title"""
 
-    Attributes:
-    ===========
+    version_match = FX_PRERC_VERSION_RE.match(version_str)
+    plan_prefix = "L10N " if os.environ.get("FX_L10N") else ""
+    if channel == "Devedition":
+        logging.info(f"DevEdition: {version_str}")
+        version_match = FX_DEVED_VERSION_RE.match(version_str)
+        (major, minor, beta) = [version_match[n] for n in range(1, 4)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
+            .replace("{minor}", minor)
+            .replace("{beta}", beta)
+            .split("-")[0]
+        )
+    elif version_match:
+        logging.info(version_match)
+        (major, minor, beta, build) = [version_match[n] for n in range(1, 5)]
+        logging.info(f"major {major} minor {minor} beta {beta} build {build}")
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
+            .replace("{minor}", minor)
+            .replace("{beta}", beta)
+            .replace("{build}", build)
+        )
+    else:
+        # Version doesn't look like a normal beta, someone updated to the RC
+        version_match = FX_RC_VERSION_RE.match(version_str)
+        (major, minor) = [version_match[n] for n in range(1, 3)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{plan}", plan_prefix)
+            .replace("{major}", major)
+            .replace("{minor}", minor)
+            .replace("{beta}", "rc")
+        )
+    return plan_title
 
-    base_url: str
-      The "home" of the TestRail instance in question.
 
-    local: bool
-      Assign True if communicating with an instance of Testrail on localhost.
-    """
+def tc_reportable():
+    """For CI: return True if run is reportable, but get TC creds first"""
+    creds = tc.get_tc_secret()
+    if creds:
+        os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+        os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+        os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
+    else:
+        sys.exit(100)
 
-    def __init__(self, base_url, local=False):
-        self.user = ""
-        self.password = ""
-        if not base_url.endswith("/"):
-            base_url += "/"
-        if local:
-            self.__url = base_url
+    if reportable():
+        sys.exit(0)
+    else:
+        sys.exit(100)
+
+
+def reportable(platform_to_test=None):
+    """Return true if we should report to TestRail"""
+    import platform
+
+    if not os.environ.get("TESTRAIL_REPORT"):
+        logging.warning("TESTRAIL_REPORT not set, session not reportable.")
+        return False
+
+    # If we ask for reporting, we can force a report
+    if os.environ.get("REPORTABLE"):
+        logging.warning("REPORTABLE=true; we will report this session.")
+        return True
+
+    # Find the correct test plan
+    sys_platform = platform_to_test or platform.system()
+    if platform_to_test:
+        os.environ["FX_PLATFORM"] = platform_to_test
+    version = (
+        subprocess.check_output([sys.executable, "./collect_executables.py", "-n"])
+        .strip()
+        .decode()
+    )
+    logging.warning(f"Got version from collect_executable.py! {version}")
+    tr_session = testrail_init()
+    major_number, second_half = version.split(".")
+    if "-" in second_half:
+        minor_num, _ = second_half.split("-")
+    else:
+        minor_num = second_half
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
+    if not channel:
+        if "b" in minor_num:
+            channel = "Beta"
         else:
-            self.__url = base_url + "index.php?/api/v2/"
+            channel = "Release"
 
-    def send_get(self, uri, filepath=None):
-        """Issue a GET request (read) against the API.
+    major_version = f"Firefox {major_number}"
+    major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
+    if not major_milestone:
+        logging.warning(
+            f"Not reporting: Could not find matching milestone: Firefox {major_version}"
+        )
+        return False
 
-        Args:
-            uri: The API method to call including parameters, e.g. get_case/1.
-            filepath: The path and file name for attachment download; used only
-                for 'get_attachment/:attachment_id'.
-
-        Returns:
-            A dict containing the result of the request.
-        """
-        return self.__send_request("GET", uri, filepath)
-
-    def send_post(self, uri, data):
-        """Issue a POST request (write) against the API.
-
-        Args:
-            uri: The API method to call, including parameters, e.g. add_case/1.
-            data: The data to submit as part of the request as a dict; strings
-                must be UTF-8 encoded. If adding an attachment, must be the
-                path to the file.
-
-        Returns:
-            A dict containing the result of the request.
-        """
-        return self.__send_request("POST", uri, data)
-
-    def __send_request(self, method, uri, data):
-        url = self.__url + uri
-
-        auth = str(
-            base64.b64encode(bytes("%s:%s" % (self.user, self.password), "utf-8")),
-            "ascii",
-        ).strip()
-        headers = {"Authorization": "Basic " + auth}
-
-        if method == "POST":
-            if uri[:14] == "add_attachment":  # add_attachment API method
-                files = {"attachment": (open(data, "rb"))}
-                response = requests.post(url, headers=headers, files=files)
-                files["attachment"].close()
-            else:
-                headers["Content-Type"] = "application/json"
-                response = requests.post(url, headers=headers, json=data)
-        else:
-            headers["Content-Type"] = "application/json"
-            response = requests.get(url, headers=headers)
-
-        if response.status_code > 201:
-            try:
-                error = response.json()
-            except (
-                requests.exceptions.HTTPError
-            ):  # response.content not formatted as JSON
-                error = str(response.content)
-            raise APIError(
-                "TestRail API returned HTTP %s (%s)" % (response.status_code, error)
+    channel_milestone = tr_session.matching_submilestone(
+        major_milestone, f"{channel} {major_number}"
+    )
+    if not channel_milestone:
+        if channel == "Devedition":
+            channel_milestone = tr_session.matching_submilestone(
+                major_milestone, f"Beta {major_number}"
             )
-        else:
-            if uri[:15] == "get_attachment/":  # Expecting file, not JSON
-                try:
-                    open(data, "wb").write(response.content)
-                    return data
-                except FileNotFoundError:
-                    return "Error saving attachment."
-            else:
-                try:
-                    return response.json()
-                except requests.exceptions.HTTPError:
-                    return {}
+        if not channel_milestone:
+            logging.warning(
+                f"Not reporting: Could not find matching submilestone for {channel} {major_number}"
+            )
+            return False
+
+    plan_title = get_plan_title(version, channel)
+    logging.warning(f"Plan title: {plan_title}")
+    this_plan = tr_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
+    )
+    if not this_plan:
+        logging.warning(
+            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+        )
+        return True
+
+    if platform_to_test:
+        sys_platform = platform_to_test
+    platform = "MacOS" if sys_platform == "Darwin" else sys_platform
+
+    plan_entries = this_plan.get("entries")
+    if os.environ.get("FX_L10N"):
+        l10n_mappings = valid_l10n_mappings()
+        covered_suites = 0
+        for entry in plan_entries:
+            if entry.get("name") in l10n_mappings:
+                site = entry.get("name")
+                for run_ in entry.get("runs"):
+                    if run_.get("config"):
+                        run_region, run_platform = run_.get("config").split("-")
+                        covered_suites += (
+                            1
+                            if run_region in l10n_mappings[site]
+                            and platform in run_platform
+                            else 0
+                        )
+        num_suites = 0
+        for site, regions in l10n_mappings.items():
+            num_suites += len(regions)
+        logging.warning(
+            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} site/region mappings already reported.)"
+        )
+        return covered_suites < num_suites
+    else:
+        covered_suites = 0
+        for entry in plan_entries:
+            for run_ in entry.get("runs"):
+                if run_.get("config") and platform in run_.get("config"):
+                    covered_suites += 1
+
+        num_suites = 0
+        for test_dir_name in os.listdir("tests"):
+            test_dir = os.path.join("tests", test_dir_name)
+            if os.path.isdir(test_dir) and not os.path.exists(
+                os.path.join(test_dir, "skip_reporting")
+            ):
+                num_suites += 1
+
+        logging.warning(
+            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
+        )
+        return covered_suites < num_suites
 
 
-class APIError(Exception):
-    pass
+def testrail_init() -> TestRail:
+    """Connect to a TestRail API session"""
+    local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
+    tr_session = tr.TestRail(
+        os.environ.get("TESTRAIL_BASE_URL"),
+        os.environ.get("TESTRAIL_USERNAME"),
+        os.environ.get("TESTRAIL_API_KEY"),
+        local,
+    )
+    return tr_session
 
 
-class TestRail:
-    """
-    Object describing all necessary API endpoints (and related data handling
-    methods) for test result reporting.
+def merge_results(*result_sets) -> dict:
+    """Merge dictionaries of test results"""
+    output = {}
+    for results in result_sets:
+        for key in results:
+            if not output.get(key):
+                output[key] = results[key]
+                continue
+            if key in ["passed", "skipped", "blocked", "xfailed", "failed"]:
+                for run_id in results.get(key):
+                    if not output.get(key).get(run_id):
+                        output[key][run_id] = results[key][run_id]
+                        continue
+                    output[key][run_id] += results[key][run_id]
+    return output
 
-    Attributes:
-    ===========
 
-    host: str
-      The "home" of the TestRail instance in question
+def mark_results(testrail_session: TestRail, test_results):
+    """For each type of result, and per run, mark tests to status in batches"""
+    logging.info(f"mark results: object\n{test_results}")
+    existing_results = {}
+    # don't send update requests for skipped test cases
+    for category in ["passed", "blocked", "xfailed", "failed"]:
+        for run_id in test_results[category]:
+            if not existing_results.get(run_id):
+                existing_results[run_id] = testrail_session.get_test_results(run_id)
+            current_results = {
+                result.get("case_id"): result.get("status_id")
+                for result in existing_results[run_id]
+            }
+            suite_id = test_results[category][run_id][0].get("suite_id")
+            all_test_cases = [
+                result.get("test_case") for result in test_results[category][run_id]
+            ]
 
-    username: str
-      The username of the TestRail user
+            # Don't set passed tests to another status.
+            test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
+            logging.warning(
+                f"Setting the following test cases in run {run_id} to {category}: {test_cases}"
+            )
+            testrail_session.update_test_cases(
+                test_results.get("project_id"),
+                testrail_run_id=run_id,
+                testrail_suite_id=suite_id,
+                test_case_ids=test_cases,
+                status=category,
+            )
 
-    password: str
-      The API key of the user in question
 
-    local: bool
-      Assign True if the instance of TestRail is hosted on localhost
-    """
+def organize_l10n_entries(
+    testrail_session: TestRail, expected_plan: dict, suite_info: dict
+):
+    # suite and milestone info
+    suite_id = suite_info.get("id")
+    milestone_id = suite_info.get("milestone_id")
 
-    def __init__(self, host, username, password, local=False):
-        self.client = APIClient(host, local)
-        self.client.user = username
-        self.client.password = password
+    # Config
+    config = suite_info.get("config")
+    site = os.environ.get("CM_SITE")
+    config_id = suite_info.get("config_id")
 
-    # Public Methods
+    # Cases and results
+    cases_in_suite = suite_info.get("cases")
+    cases_in_suite = [int(n) for n in cases_in_suite]
+    results = suite_info.get("results")
+    plan_title = expected_plan.get("name")
 
-    def get_test_case(self, case_id):
-        """Get a given Test Case"""
-        return self.client.send_get(f"get_case/{case_id}")
+    site_entries = [
+        entry for entry in expected_plan.get("entries") if entry.get("name") == site
+    ]
 
-    def update_cases_in_suite(self, suite_id, case_ids, **kwargs):
-        """Given a suite and a list of test cases, update all listed
-        test cases according to keyword args"""
-        if not kwargs:
-            return None
-        return self.client.send_post(
-            f"update_cases/{suite_id}", {"case_ids": case_ids, **kwargs}
+    # Add a missing entry to a plan
+    plan_id = expected_plan.get("id")
+    if not site_entries:
+        # If no entry, create entry for site
+        logging.info(f"Create entry in plan {plan_id} for site {site}")
+        logging.info(f"cases: {cases_in_suite}")
+        entry = testrail_session.create_new_plan_entry(
+            plan_id=plan_id,
+            suite_id=suite_id,
+            name=site,
+            description="Automation-generated test plan entry",
+            case_ids=cases_in_suite,
         )
 
-    def update_test_case(self, case_id, **kwargs):
-        """Given a test case id, update according to keyword args"""
-        if not kwargs:
-            return None
-        return self.client.send_post(f"update_case/{case_id}", kwargs)
-
-    def create_test_run_on_plan_entry(
-        self, plan_id, entry_id, config_ids, description=None, case_ids=None
-    ):
-        """
-        Add a test run on an entry (subplan) associated with a plan.
-
-        plan_id: (str | int)
-          The id of the plan containing the entry
-
-        entry_id: (str | int)
-          The id of the entry on which to create the run
-
-        config_ids: list[str | int]
-          A list of confif ids to associate with the run
-
-        description: str
-          (Optional) The description of the run
-
-        case_ids: list[str | int]
-          (Optional) Case ids to associate with the run. If not
-          passed, all cases associated with the entry will be added.
-        """
-        logging.info(f"run on plan entry configs {config_ids}")
-        payload = {
-            "config_ids": config_ids,
-            "include_all": not bool(case_ids),
-        }
-        if case_ids:
-            payload["case_ids"] = case_ids
-        if description:
-            payload["description"] = description
-        logging.info(f"create run on entry payload:\n{payload}")
-        return self.client.send_post(
-            f"add_run_to_plan_entry/{plan_id}/{entry_id}", payload
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
         )
-
-    def update_run_in_entry(self, run_id, **kwargs):
-        """
-        Given a run id and args, update a run in an entry (subplan).
-
-        Valid args are listed here:
-        https://support.testrail.com/hc/en-us/articles/7077711537684-Plans#updateruninplanentry
-        """
-        logging.info(f"update run in entry payload {kwargs}")
-        return self.client.send_post(f"update_run_in_plan_entry/{run_id}", kwargs)
-
-    def matching_milestone(self, testrail_project_id, milestone_name):
-        """Given a project id and a milestone name, return the milestone object that matches"""
-        milestones_response = self._get_milestones(
-            testrail_project_id
-        )  # returns reverse chronological order
-        milestones = milestones_response["milestones"]
-        logging.info(f"Found {len(milestones)} milestones")
-        logging.info(milestones)
-        for milestone in milestones:
-            if milestone_name == milestone["name"]:
-                logging.info(milestone)
-                return milestone
-        return None
-
-    def matching_submilestone(self, milestone, submile_name):
-        """Given a milestone object and a submilestone name, return the submile object that matches"""
-        for submile in milestone["milestones"]:
-            if submile_name == submile["name"]:
-                return submile
-        return None
-
-    def matching_plan_in_milestone(self, testrail_project_id, milestone_id, plan_name):
-        """Given a project id, a milestone id, and a plan name,
-        return the plan object that matches"""
-        plans = self._get_plans_in_milestone(testrail_project_id, milestone_id)
-        for plan in plans:
-            if plan_name in plan["name"]:
-                return self._get_full_plan(plan.get("id"))
-        return None
-
-    def matching_custom_field(self, name):
-        """Given a name, return the case_field object that matches (name or label)"""
-        custom_fields = self._get_case_fields()
-        for field in custom_fields:
-            if name in field.get("name") or name in field.get("label"):
-                return field
-        return None
-
-    def create_new_plan(
-        self,
-        testrail_project_id,
-        name,
-        description=None,
-        milestone_id=None,
-        entries=None,
-    ):
-        """
-        Create a new test plan (on a milestone).
-
-        Arguments:
-        ==========
-
-        testrail_project_id: (str | int)
-          Id of the TestRail project
-
-        name: str
-          Name to give the new plan
-
-        description: str
-          (Optional) Description string for the plan
-
-        milestone_id: (str | int)
-          (Optional) Id of the milestone. If present the plan will attach to the milestone.
-
-        entries: list[dict]
-          (Optional) The runs or entries of the plan to add.
-        """
-        payload = {
-            "name": name,
-            "description": description,
-            "milestone_id": milestone_id,
-        }
-        if entries:
-            payload["entries"] = entries
-        return self.client.send_post(f"/add_plan/{testrail_project_id}", payload)
-
-    def create_new_plan_entry(
-        self,
-        plan_id,
-        suite_id,
-        name=None,
-        description=None,
-        case_ids=None,
-        config_ids=None,
-        runs=None,
-    ):
-        """
-        Create a new entry (subplan) on a plan.
-
-        Arguments:
-        ==========
-
-        plan_id: (str | int)
-          Id of the plan
-
-        suite_id: (str | int)
-          Id of the suite to test in the entry
-
-        description: str
-          (Optional) Description string for the entry
-
-        case_ids: list[str | int]
-          (Optional) List of case ids to add to the entry.
-          If blank, all cases in suite will be added.
-
-        config_ids: list[str | int]
-          (Optional) List of relevant config ids.
-
-        runs: list[dict]
-          (Optional) The runs or entries of the plan to add.
-        """
-        payload = {
-            "suite_id": suite_id,
-            "name": name,
-            "description": description,
-            "include_all": bool(case_ids),
-        }
-        if payload.get("include_all"):
-            payload["case_ids"] = case_ids
-        if payload.get("config_ids"):
-            payload["config_ids"] = config_ids
-        if runs:
-            payload["runs"] = runs
-        return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
-
-    def matching_configs(self, testrail_project_id, config_group_id, config_name):
-        """Given a project id, a config group id, and a config name, return the matching config object"""
-        configs = self.client.send_get(f"/get_configs/{testrail_project_id}")
-        matching_group = next(c for c in configs if c.get("id") == config_group_id)
-        logging.info(f"matching group|| {matching_group}")
-        cfgs = [
-            c
-            for c in matching_group.get("configs")
-            if config_name == c.get("name").strip()
+        site_entries = [
+            entry for entry in expected_plan.get("entries") if entry.get("name") == site
         ]
-        return cfgs
 
-    def add_config(self, config_group_id, name):
-        """Add a config to a config group"""
-        return self.client.send_post(f"/add_config/{config_group_id}", {"name": name})
+    if len(site_entries) != 1:
+        logging.info("Suite entries are broken somehow")
 
-    def get_run(self, run_id):
-        """Return a run object by id"""
-        return self.client.send_get(f"/get_run/{run_id}")
+    # There should only be one entry per site per plan
+    # Check that this entry has a run with the correct config
+    # And if not, make that run
+    entry = site_entries[0]
+    config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
-    def get_test_results(self, run_id):
-        """Given a run id, return all test objects in that run"""
-        results_rs_json = self.client.send_get(f"/get_tests/{run_id}")
-        return results_rs_json.get("tests")
+    logging.info(f"config runs {config_runs}")
+    if not config_runs:
+        expected_plan = testrail_session.create_test_run_on_plan_entry(
+            plan_id,
+            entry.get("id"),
+            [config_id],
+            description=f"Auto test plan entry for site: {site}",
+            case_ids=cases_in_suite,
+        )
+        site_entries = [
+            entry for entry in expected_plan.get("entries") if entry.get("name") == site
+        ]
+        entry = site_entries[0]
+        logging.info(f"new entry: {entry}")
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+    run = testrail_session.get_run(config_runs[0].get("id"))
 
-    def get_custom_fields(self):
-        """Gets all fields of cases"""
-        return self.client.send_get("get_case_fields/")
+    # If the run is missing cases, add them
+    run_cases = [
+        t.get("case_id") for t in testrail_session.get_test_results(run.get("id"))
+    ]
+    if run_cases:
+        expected_case_ids = list(set(run_cases + cases_in_suite))
+        if len(expected_case_ids) > len(run_cases):
+            testrail_session.update_run_in_entry(
+                run.get("id"), case_ids=expected_case_ids, include_all=False
+            )
+            run = testrail_session.get_run(config_runs[0].get("id"))
+            run_cases = [
+                t.get("case_id")
+                for t in testrail_session.get_test_results(run.get("id"))
+            ]
 
-    def update_case_field(self, case_id, field_id, content):
-        """Set the provided field with the new content"""
-        data = {field_id: content}
-        return self.client.send_post(f"update_case/{case_id}", data)
+    if run.get("is_completed"):
+        logging.info(f"Run {run.get('id')} is already completed.")
+        return {}
+    run_id = run.get("id")
 
-    def update_test_cases(
-        self,
-        testrail_project_id,
-        testrail_run_id,
-        testrail_suite_id,
-        test_case_ids=[],
-        status="passed",
-    ):
-        """Given a project id, a run id, and a suite id, for each case given a status,
-        update the test objects with the correct status code"""
-        status_key = {
-            "passed": 1,
-            "skipped": 3,
-            "blocked": 2,
-            "xfailed": 4,
-            "failed": 5,
-        }
-        if not test_case_ids:
-            test_case_ids = [
-                test_case.get("id")
-                for test_case in self._get_test_cases(
-                    testrail_project_id, testrail_suite_id
+    # Gather the test results by category of result
+    passkey = {
+        "passed": ["passed", "xpassed", "warnings"],
+        "failed": ["failed", "error"],
+        "xfailed": ["xfailed"],
+        "blocked": ["skipped", "deselected"],
+    }
+    test_results = {
+        "project_id": TESTRAIL_FX_DESK_PRJ,
+        "passed": {},
+        "failed": {},
+        "xfailed": {},
+        "skipped": {},  # need to remove and replace with blocked
+        "blocked": {},
+    }
+
+    for test_case, outcome in results.items():
+        logging.info(f"{test_case}: {outcome}")
+        if outcome == "rerun":
+            logging.info("Rerun result...skipping...")
+            continue
+        category = next(status for status in passkey if outcome in passkey.get(status))
+        if not test_results[category].get(run_id):
+            test_results[category][run_id] = []
+        test_results[category][run_id].append(
+            {"suite_id": suite_id, "site": site, "test_case": test_case}
+        )
+
+    return test_results
+
+
+def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info: dict):
+    """
+    When we get to the level of entries on a TestRail plan, we need to make sure:
+     * the entry exists or is created
+     * a run matching the current config / platform exists or is created
+     * the test cases we care about are on that run or are added
+     * test results are batched by run and result type (passed, skipped, failed)
+    """
+
+    # Suite and milestone info
+    suite_id = suite_info.get("id")
+    suite_description = suite_info.get("description")
+    milestone_id = suite_info.get("milestone_id")
+
+    # Config
+    config = suite_info.get("config")
+    config_id = suite_info.get("config_id")
+
+    # Cases and results
+    cases_in_suite = suite_info.get("cases")
+    cases_in_suite = [int(n) for n in cases_in_suite]
+    results = suite_info.get("results")
+    plan_title = expected_plan.get("name")
+
+    suite_entries = [
+        entry
+        for entry in expected_plan.get("entries")
+        if entry.get("suite_id") == suite_id
+    ]
+
+    # Add a missing entry to a plan
+    plan_id = expected_plan.get("id")
+    if not suite_entries:
+        # If no entry, create entry for suite
+        logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
+        logging.info(f"cases: {cases_in_suite}")
+        entry = testrail_session.create_new_plan_entry(
+            plan_id=plan_id,
+            suite_id=suite_id,
+            name=suite_description,
+            description="Automation-generated test plan entry",
+            case_ids=cases_in_suite,
+        )
+
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+
+    if len(suite_entries) != 1:
+        logging.info("Suite entries are broken somehow")
+
+    # There should only be one entry per suite per plan
+    # Check that this entry has a run with the correct config
+    # And if not, make that run
+    entry = suite_entries[0]
+    config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
+    logging.info(f"config runs {config_runs}")
+    if not config_runs:
+        expected_plan = testrail_session.create_test_run_on_plan_entry(
+            plan_id,
+            entry.get("id"),
+            [config_id],
+            description=f"Auto test plan entry: {suite_description}",
+            case_ids=cases_in_suite,
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+        entry = suite_entries[0]
+        logging.info(f"new entry: {entry}")
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+    run = testrail_session.get_run(config_runs[0].get("id"))
+
+    # If the run is missing cases, add them
+    run_cases = [
+        t.get("case_id") for t in testrail_session.get_test_results(run.get("id"))
+    ]
+    if run_cases:
+        expected_case_ids = list(set(run_cases + cases_in_suite))
+        if len(expected_case_ids) > len(run_cases):
+            testrail_session.update_run_in_entry(
+                run.get("id"), case_ids=expected_case_ids, include_all=False
+            )
+            run = testrail_session.get_run(config_runs[0].get("id"))
+            run_cases = [
+                t.get("case_id")
+                for t in testrail_session.get_test_results(run.get("id"))
+            ]
+
+    if run.get("is_completed"):
+        logging.info(f"Run {run.get('id')} is already completed.")
+        return {}
+    run_id = run.get("id")
+
+    # Gather the test results by category of result
+    passkey = {
+        "passed": ["passed", "xpassed", "warnings"],
+        "failed": ["failed", "error"],
+        "xfailed": ["xfailed"],
+        "skipped": ["skipped", "deselected"],
+    }
+    test_results = {
+        "project_id": TESTRAIL_FX_DESK_PRJ,
+        "passed": {},
+        "failed": {},
+        "xfailed": {},
+        "skipped": {},
+    }
+
+    for test_case, outcome in results.items():
+        logging.info(f"{test_case}: {outcome}")
+        if outcome == "rerun":
+            logging.info("Rerun result...skipping...")
+            continue
+        category = next(status for status in passkey if outcome in passkey.get(status))
+        if not test_results[category].get(run_id):
+            test_results[category][run_id] = []
+        test_results[category][run_id].append(
+            {"suite_id": suite_id, "test_case": test_case}
+        )
+
+    return test_results
+
+
+def collect_changes(testrail_session: TestRail, report):
+    """
+    Determine what structure needs to be built so that we can report TestRail results.
+     * Construct config and plan name
+     * Find the right milestone to report to
+     * Find the right submilestone
+     * Find the right plan to report to, or create it
+     * Find the right config to attach to the run, or create it
+     * Use organize_entries to create the rest of the structure and gather results
+     * Use mark_results to update the test runs
+    """
+
+    # Find milestone to attach to
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
+    if channel == "Release":
+        raise ValueError("Release reporting currently not supported")
+
+    metadata = None
+    for test in report.get("tests"):
+        if test.get("metadata"):
+            metadata = test.get("metadata")
+            break
+
+    if not metadata:
+        logging.error("No metadata collected. Exiting without report.")
+        return False
+
+    version_str = metadata.get("fx_version")
+    plan_title = get_plan_title(version_str, channel)
+    logging.info(plan_title)
+    plan_match = PLAN_NAME_RE.match(plan_title)
+    (_, major) = [plan_match[n] for n in range(1, 3)]
+    config = metadata.get("machine_config")
+
+    if "linux" in config.lower():
+        os_name = "Linux"
+        for word in config.split(" "):
+            if word.startswith("x"):
+                arch = word
+        release = subprocess.check_output(["lsb_release", "-d"]).decode()
+        release = release.split("\t")[-1].strip()
+        release = ".".join(release.split(".")[:-1])
+        config = f"{os_name} {release} {arch}"
+
+    if os.environ.get("FX_L10N") and os.environ.get("FX_REGION"):
+        config = f"{os.environ.get('FX_REGION')}-{config}"
+
+    logging.warning(f"Reporting for config: {config}")
+    if not config.strip():
+        raise ValueError("Config cannot be blank.")
+
+    with open(".tmp_testrail_info", "w") as fh:
+        fh.write(f"{plan_title}|{config}")
+
+    major_milestone = testrail_session.matching_milestone(
+        TESTRAIL_FX_DESK_PRJ, f"Firefox {major}"
+    )
+    logging.info(f"{channel} {major}")
+    channel_milestone = testrail_session.matching_submilestone(
+        major_milestone, f"{channel} {major}"
+    )
+    if (not channel_milestone) and channel == "Devedition":
+        channel_milestone = testrail_session.matching_submilestone(
+            major_milestone, f"Beta {major}"
+        )
+
+    # Find plan to attach runs to, create if doesn't exist
+    logging.info(f"Plan title: {plan_title}")
+    milestone_id = channel_milestone.get("id")
+    expected_plan = testrail_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+    )
+    if expected_plan is None:
+        logging.info(f"Create plan '{plan_title}' in milestone {milestone_id}")
+        expected_plan = testrail_session.create_new_plan(
+            TESTRAIL_FX_DESK_PRJ,
+            plan_title,
+            description="Automation-generated test plan",
+            milestone_id=milestone_id,
+        )
+    elif expected_plan.get("is_completed"):
+        logging.info(f"Plan found ({expected_plan.get('id')}) but is completed.")
+        return None
+
+    # Find or add correct config for session
+
+    config_matches = None
+    tried = False
+    while not config_matches:
+        config_matches = testrail_session.matching_configs(
+            TESTRAIL_FX_DESK_PRJ, CONFIG_GROUP_ID, config
+        )
+        if tried:
+            break
+        if not config_matches:
+            logging.info("Creating config...")
+            testrail_session.add_config(CONFIG_GROUP_ID, config)
+        tried = True
+    if len(config_matches) == 1:
+        config_id = config_matches[0].get("id")
+        logging.info(f"config id: {config_id}")
+    else:
+        raise ValueError(f"Should only have one matching TR config: {config}")
+
+    # Find or add suite-based runs on the plan
+    # Store test results for later
+
+    last_suite_id = None
+    last_description = None
+    results_by_suite = {}
+    full_test_results = {}
+    tests = [
+        test
+        for test in report.get("tests")
+        if "metadata" in test and "suite_id" in test.get("metadata")
+    ]
+    tests = sorted(tests, key=lambda item: item.get("metadata").get("suite_id"))
+
+    # Iterate through the tests; when we finish a line of same-suite tests, gather them
+    for test in tests:
+        (suite_id_str, suite_description) = test.get("metadata").get("suite_id")
+        try:
+            suite_id = int(suite_id_str.replace("S", ""))
+        except (ValueError, TypeError):
+            logging.info("No suite number, not reporting...")
+            continue
+        test_case = test.get("metadata").get("test_case")
+        try:
+            int(test_case)
+        except (ValueError, TypeError):
+            logging.info("No test case number, not reporting...")
+            continue
+
+        outcome = test.get("outcome")
+        # Tests reported as rerun are a problem -- we need to know pass/fail
+        if outcome == "rerun":
+            outcome = test.get("call").get("outcome")
+        logging.info(f"TC: {test_case}: {outcome}")
+
+        if not results_by_suite.get(suite_id):
+            results_by_suite[suite_id] = {}
+        results_by_suite[suite_id][test_case] = outcome
+        if suite_id != last_suite_id:
+            # When we get the last test_case in a suite, add entry, run, results
+            if last_suite_id:
+                logging.info("n-1 run")
+                cases_in_suite = list(results_by_suite[last_suite_id].keys())
+                cases_in_suite = [int(n) for n in cases_in_suite]
+                suite_info = {
+                    "id": last_suite_id,
+                    "description": last_description,
+                    "milestone_id": milestone_id,
+                    "config": config,
+                    "config_id": config_id,
+                    "cases": cases_in_suite,
+                    "results": results_by_suite[last_suite_id],
+                }
+
+                full_test_results = merge_results(
+                    full_test_results,
+                    organize_entries(testrail_session, expected_plan, suite_info),
                 )
-            ]
-        data = {
-            "results": [
-                {"case_id": test_case_id, "status_id": status_key.get(status)}
-                for test_case_id in test_case_ids
-            ]
-        }
-        return self._update_test_run_results(testrail_run_id, data)
 
-    # Private Methods
+        last_suite_id = suite_id
+        last_description = suite_description
 
-    def _get_test_cases(self, testrail_project_id, testrail_test_suite_id):
-        return self.client.send_get(
-            f"get_cases/{testrail_project_id}&suite_id={testrail_test_suite_id}"
+    # We do need to run this again because we will always have one last suite.
+    cases_in_suite = list(results_by_suite[last_suite_id].keys())
+    suite_info = {
+        "id": last_suite_id,
+        "description": last_description,
+        "milestone_id": milestone_id,
+        "config": config,
+        "config_id": config_id,
+        "cases": cases_in_suite,
+        "results": results_by_suite[last_suite_id],
+    }
+
+    logging.info(f"n run {last_suite_id}, {last_description}")
+    if os.environ.get("FX_L10N"):
+        entries = organize_l10n_entries(testrail_session, expected_plan, suite_info)
+        return merge_results(
+            full_test_results,
+            entries,
         )
+    full_test_results = merge_results(
+        full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
+    )
+    return full_test_results
 
-    def _update_test_run_results(self, testrail_run_id, data):
-        return self.client.send_post(f"add_results_for_cases/{testrail_run_id}", data)
 
-    def _get_milestones(self, project_id, **filters):
-        """
-        Retrieves milestones for a given project with optional filters.
-
-        Args:
-            project_id (int): The ID of the project.
-            **filters: Arbitrary keyword arguments representing API filters.
-
-        Available Filters:
-            is_completed (bool or int):
-                - Set to True or 1 to return completed milestones only.
-                - Set to False or 0 to return open (active/upcoming) milestones only.
-
-            is_started (bool or int):
-                - Set to True or 1 to return started milestones only.
-                - Set to False or 0 to return upcoming milestones only.
-
-            limit (int):
-                - The number of milestones the response should return.
-                - The default response size is 250 milestones.
-
-            offset (int):
-                - Where to start counting the milestones from (the offset).
-                - Used for pagination.
-
-        Returns:
-            dict: The API response containing milestones.
-        """
-
-        if not project_id:
-            raise ValueError("Project ID must be provided.")
-
-        # Base endpoint
-        endpoint = f"get_milestones/{project_id}"
-
-        # Process filters
-        if filters:
-            # Convert boolean values to integers (API expects 1 or 0)
-            for key in ["is_completed", "is_started"]:
-                if key in filters and isinstance(filters[key], bool):
-                    filters[key] = int(filters[key])
-
-            # Build query parameters
-            query_params = "&".join(f"{key}={value}" for key, value in filters.items())
-            endpoint = f"{endpoint}&{query_params}"
-
-        # Make API call
-        return self.client.send_get(endpoint)
-
-    def _get_plans_in_milestone(self, testrail_project_id, milestone_id):
-        plan_obj = self.client.send_get(
-            f"get_plans/{testrail_project_id}&milestone_id={milestone_id}"
-        )
-        return plan_obj.get("plans")
-
-    def _get_full_plan(self, plan_id):
-        return self.client.send_get(f"get_plan/{plan_id}")
-
-    def _get_case_fields(self):
-        return self.client.send_get("get_case_fields")
-
-    def _retry_api_call(self, api_call, *args, max_retries=3, delay=5):
-        """
-        Retries the given API call up to max_retries times with a delay between attempts.
-
-        :param api_call: The API call method to retry.
-        :param args: Arguments to pass to the API call.
-        :param max_retries: Maximum number of retries.
-        :param delay: Delay between retries in seconds.
-        """
-        for attempt in range(max_retries):
-            try:
-                return api_call(*args)
-            except Exception:
-                if attempt == max_retries - 1:
-                    raise  # Reraise the last exception
-                sleep(delay)
+def update_all_test_cases(testrail_session, field_to_update, field_content):
+    """
+    Sets the field of every test case to the new content
+    """
+    print(f"updating all test cases to have {field_content} in {field_to_update}")
+    test_suites = [d for d in os.listdir("./tests/")]
+    for test_suite in test_suites:
+        for test in os.listdir(f"./tests/{test_suite}"):
+            if test[0:4] != "test":
+                continue
+            # Find tests and parse test case number
+            file_name = f"tests/{test_suite}/{test}"
+            with open(file_name) as f:
+                for line in f:
+                    if line.startswith("def test_case():"):
+                        break
+                line = f.readline().strip()
+                ind = line.find('"') + 1
+                test_case = line[ind:-1]
+                if test_case in ("", "N/A"):
+                    continue
+                # Update the test case
+                print(f"updating {test_case}: {file_name}")
+                testrail_session.update_case_field(
+                    test_case, field_to_update, field_content
+                )
