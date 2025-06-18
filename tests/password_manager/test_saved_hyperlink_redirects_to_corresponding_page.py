@@ -5,8 +5,8 @@ from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 
 TEST_PAGE_URL = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
-USERNAME = "username"
-PASSWORD = "password"
+USERNAME = "username1"
+PASSWORD = "dp@ssw0r"
 
 
 @pytest.fixture()
