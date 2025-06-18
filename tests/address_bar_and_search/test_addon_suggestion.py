@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
@@ -31,6 +33,7 @@ def test_addon_suggestion_based_on_search_input(driver: Firefox):
     nav = Navigation(driver)
     nav.set_awesome_bar()
 
+    sleep(3)  # Wait for Firefox to do backend addons initiation
     for input_text, addon_slug in INPUT_TO_ADDON_NAME.items():
         nav.type_in_awesome_bar(input_text)
 
