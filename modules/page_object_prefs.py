@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 from time import sleep
@@ -303,11 +304,16 @@ class AboutPrefs(BasePage):
             )
         self.switch_to_edit_saved_payments_popup_iframe()
         value_field = self.find_element(By.ID, fields[field_name])
-        if value_field.tag_name != "select":
-            value_field.clear()
+        if value.isdigit():
+            value = int(value)
         if field_name == "expiration_year":
-            value = "20" + value
-        value_field.send_keys(value)
+            value -= (datetime.datetime.now().year % 100) + 1
+
+        if value_field.tag_name == "select":
+            Select(value_field).select_by_index(value)
+        else:
+            value_field.clear()
+            value_field.send_keys(value)
         self.get_element("save-button").click()
         return self
 
