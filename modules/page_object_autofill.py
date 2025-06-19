@@ -225,7 +225,6 @@ class Autofill(BasePage):
         for attr_name, field_name in self.field_mapping.items():
             if non_us_ca_address and field_name == "address-level1":
                 continue
-            # Skip CVV field verification
             if attr_name == "cvv":
                 continue
             expected_value = getattr(sample_data, attr_name, None)
@@ -273,7 +272,6 @@ class Autofill(BasePage):
             )
 
         if fields_to_test is None:
-            # Exclude CVV field from testing
             fields_to_test = [x for x in self.field_mapping.keys() if x != "cvv"]
 
         # Handle region-specific behavior
@@ -351,7 +349,6 @@ class Autofill(BasePage):
         if expected_highlighted_fields is None:
             # By default, everything in fields_to_test is expected to be highlighted except cvv for cc
             expected_highlighted_fields = fields_to_test
-            # Remove CVV field from expected highlighted fields
             if "cvv" in expected_highlighted_fields:
                 expected_highlighted_fields.remove("cvv")
 
@@ -584,7 +581,6 @@ class Autofill(BasePage):
             region: region being tested
             sample_data: verify autofill against sample data if present
         """
-        # Exclude CVV field from processing
         fields = [x for x in self.field_mapping.keys() if x != "cvv"]
         for field in fields:
             self.clear_and_verify(field, sample_data, region)
