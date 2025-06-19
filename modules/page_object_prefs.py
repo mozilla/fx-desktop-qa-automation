@@ -306,6 +306,7 @@ class AboutPrefs(BasePage):
         if value_field.tag_name != "select":
             value_field.clear()
         value_field.send_keys(value)
+        logging.warning(f"updating: {value_field.get_attribute('value')} -> {value}")
         self.get_element("save-button").click()
         return self
 
