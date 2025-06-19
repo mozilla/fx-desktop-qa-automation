@@ -281,14 +281,14 @@ def print_numerical_summary(project_stats):
     report.info("NUMERICAL SUMMARY - TOTAL COUNTS")
     report.info(f"{'=' * 80}")
 
-    report.info(f"\n OVERALL TOTALS:")
+    report.info("\n OVERALL TOTALS:")
     report.info(f"   Total Suites: {project_stats['total_suites']}")
     report.info(f"   Total Test Cases: {project_stats['total_cases']}")
 
     if project_stats["total_cases"] == 0:
         return
 
-    report.info(f"\n SUB TEST SUITE TOTALS:")
+    report.info("\n SUB TEST SUITE TOTALS:")
     total_by_sub_suite = sorted(
         project_stats["by_sub_test_suite"].items(), key=lambda x: x[1], reverse=True
     )
@@ -296,7 +296,7 @@ def print_numerical_summary(project_stats):
         percentage = (count / project_stats["total_cases"]) * 100
         report.info(f"   {sub_suite:30}: {count:6} cases ({percentage:5.1f}%)")
 
-    report.info(f"\n AUTOMATION STATUS TOTALS:")
+    report.info("\n AUTOMATION STATUS TOTALS:")
     total_by_status = sorted(
         project_stats["by_automation_status"].items(), key=lambda x: x[1], reverse=True
     )
@@ -304,7 +304,7 @@ def print_numerical_summary(project_stats):
         percentage = (count / project_stats["total_cases"]) * 100
         report.info(f"   {status:20}: {count:6} cases ({percentage:5.1f}%)")
 
-    report.info(f"\n AUTOMATION COVERAGE TOTALS:")
+    report.info("\n AUTOMATION COVERAGE TOTALS:")
     total_by_coverage = sorted(
         project_stats["by_automation_coverage"].items(),
         key=lambda x: x[1],
@@ -434,7 +434,7 @@ def main():
         report.info(f"{'=' * 80}")
         report.info(f" Analyzed {project_stats['total_suites']} suites")
         report.info(f" Processed {project_stats['total_cases']} test cases")
-        report.info(f" Generated detailed statistics and breakdowns")
+        report.info(" Generated detailed statistics and breakdowns")
     else:
         op_log.error(" Analysis failed!")
 
