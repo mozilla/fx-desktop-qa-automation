@@ -360,17 +360,37 @@ class Utilities:
             "expiration_month": "credit_card_expire",
             "cvv": "credit_card_security_code",
         }
+
         if original_data:
             for field, faker_method in cc_mapping.items():
                 new_cc_data = getattr(fake_data, field)
-                while new_cc_data == getattr(original_data, field):
-                    new_cc_data = getattr(fake, faker_method)()
+                original_value = getattr(original_data, field)
+
+                # Keep generating new data until we get a different value
+                attempts = 0
+                max_attempts = 10
+
+                while new_cc_data == original_value and attempts < max_attempts:
+                    attempts += 1
+
                     if field in {"expiration_year", "expiration_month"}:
+                        # Generate new expiry date once
+                        new_expiry = getattr(fake, faker_method)()
                         new_cc_data = (
-                            new_cc_data.split("/")[0]
+                            new_expiry.split("/")[0]
                             if field == "expiration_month"
-                            else new_cc_data.split("/")[1]
+                            else new_expiry.split("/")[1]
                         )
+                        # Update the expiration_date to match
+                        fake_data.expiration_date = new_expiry
+                        # Also update the other expiration field to maintain consistency
+                        if field == "expiration_month":
+                            fake_data.expiration_year = new_expiry.split("/")[1]
+                        else:
+                            fake_data.expiration_month = new_expiry.split("/")[0]
+                    else:
+                        new_cc_data = getattr(fake, faker_method)()
+
                 setattr(fake_data, field, new_cc_data)
 
         return fake_data
