@@ -74,6 +74,7 @@ def test_edit_credit_card_profile(
 
     ## get new json object for the updated field
     saved_profile = about_prefs_privacy.get_all_saved_cc_profiles()
+    logging.warning(f"saved profiles: {[x.text for x in saved_profile]}")
     saved_profile[0].click()
     cc_info_json_new = json.loads(saved_profile[0].get_attribute("data-l10n-args"))
 
