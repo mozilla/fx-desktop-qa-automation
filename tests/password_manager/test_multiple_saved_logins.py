@@ -55,7 +55,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
             "password": PASSWORD,
         }
     )
-    time.sleep(0.1)
+    time.sleep(0.8)
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
@@ -64,7 +64,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
             "password": PASSWORD2,
         }
     )
-    time.sleep(0.1)
+    time.sleep(0.8)
     about_logins.click_add_login_button()
     about_logins.create_new_login(
         {
