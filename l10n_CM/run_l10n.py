@@ -10,7 +10,7 @@ from json import load
 import requests
 
 current_dir = os.path.dirname(__file__)
-valid_flags = {"--run-headless", "-n", "--reruns"}
+valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
 valid_sites = {"demo", "amazon", "walmart", "mediamarkt"}
@@ -18,6 +18,7 @@ live_sites = []
 
 LOCALHOST = "127.0.0.1"
 PORT = 8080
+os.environ["TEST_EXIT_CODE"] = "0"
 
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
@@ -88,7 +89,13 @@ def run_tests(reg, site, flg, all_tests):
         else:
             logging.info(f"{reg} region on {site} site has no tests.")
     except subprocess.CalledProcessError as e:
-        logging.warning(f"Test run failed. {e}")
+        logging.warning(f"Test run failed with exit code: {e.returncode}")
+        # true failure instead of run not being reportable.
+        if e.returncode != 2:
+            if os.environ.get("TEST_EXIT_CODE") == "0":
+                with open("TEST_EXIT_CODE", "w") as f:
+                    f.write(str(e.returncode))
+            os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
 def get_region_tests(test_region: str) -> list[str]:
@@ -128,8 +135,12 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     """
     # add workers and rerun flaky failed tests.
     flg = []
+    expanded_args = [
+        flag.split() if " " in flag else [flag] for flag in flags_arguments
+    ]
+    flags_arguments[:] = sum(expanded_args, [])
     for arg in flags_arguments[:]:
-        if arg in valid_flags:
+        if arg.split("=")[0] in valid_flags:
             if arg in flag_with_parameter:
                 try:
                     i = flags_arguments.index(arg)
@@ -199,14 +210,14 @@ if __name__ == "__main__":
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)
     else:
-        # run on given region and sites.
+        # run on a given region and sites.
         logging.info(f"Running Unified Tests for {arguments} Regions.")
         run_unified(arguments, flags)
     for site in live_sites:
-        # for a given site, run all region specific tests.
+        # for a given site, run all region-specific tests.
         for region in arguments:
             tests = get_region_tests(region)
-            # Check if field mapping json file is present, pass test region if it isn't
+            # Check if a field-mapping JSON file is present, pass a test region if it isn't
             json_path = os.path.join(current_dir, "constants", site, region)
             logging.info(f"Running Specific Tests for {region}.")
             # If the live_site is 'demo', skip starting the server
