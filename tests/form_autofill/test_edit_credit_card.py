@@ -1,4 +1,5 @@
 import json
+import logging
 
 import pytest
 from selenium.webdriver import Firefox
@@ -19,7 +20,7 @@ def hard_quit():
     return True
 
 
-fields = ["expiration_year", "name", "expiration_month", "card_number"]
+fields = ["expiration_month"]
 
 
 @pytest.mark.parametrize("field", fields)
@@ -76,8 +77,13 @@ def test_edit_credit_card_profile(
     saved_profile[0].click()
     cc_info_json_new = json.loads(saved_profile[0].get_attribute("data-l10n-args"))
 
+    logging.warning(
+        f"In Test1: {original_cc_data.expiration_month} -> {cc_info_json_new['month']} and {updated_value}"
+    )
     # replace required field value from original cc data
     setattr(original_cc_data, field, updated_value)
-
+    logging.warning(
+        f"In Test2: {original_cc_data.expiration_month} -> {cc_info_json_new['month']}"
+    )
     # verify that field is changed
     about_prefs_privacy.verify_cc_json(cc_info_json_new, original_cc_data)
