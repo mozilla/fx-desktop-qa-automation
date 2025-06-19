@@ -66,6 +66,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     )
 
     # Attempt to view the saved password in order to trigger the primary password prompt
+    about_logins.element_visible("show-password-checkbox")
     about_logins.click_on("show-password-checkbox")
 
     # Dismiss the primary password prompt without entering the password

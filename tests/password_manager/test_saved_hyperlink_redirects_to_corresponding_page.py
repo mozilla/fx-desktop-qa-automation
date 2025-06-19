@@ -5,8 +5,8 @@ from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 
 TEST_PAGE_URL = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
-USERNAME = "username"
-PASSWORD = "password"
+USERNAME = "username1"
+PASSWORD = "dp@ssw0r"
 
 
 @pytest.fixture()
@@ -39,6 +39,11 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
         }
     )
 
+    # Wait for item to populate login list
+    about_logins.wait.until(
+        lambda _: "initialized"
+        in about_logins.get_element("login-list").get_attribute("class")
+    )
     # Click on the hyperlink website
     about_logins.click_on("website-address")
     about_logins.switch_to_new_tab()

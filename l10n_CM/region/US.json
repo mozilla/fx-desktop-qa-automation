@@ -1,4 +1,9 @@
 {
-    "region": "US",
-    "tests": []
+  "region": "US",
+  "sites": [
+    "amazon",
+    "walmart",
+    "demo"
+  ],
+  "tests": []
 }
