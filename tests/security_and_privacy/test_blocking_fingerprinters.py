@@ -2,6 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
+from modules.browser_object_tracker_panel import TrackerPanel
+from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -23,12 +25,15 @@ def test_blocking_fingerprinter(
     """
     # instantiate objects
     about_prefs_privacy.open()
+    tracker_panel = TrackerPanel(driver)
+    tracking_page = GenericPage(driver, url=FINGERPRINTERS_URL)
 
     # Select custom option and keep just known fingerprinters checked
     about_prefs_privacy.select_trackers_to_block("known-fingerprints-checkbox")
 
     # Access url and click on the shield icon and verify that known fingerprinters are blocked
-    driver.get(FINGERPRINTERS_URL)
+    tracking_page.open()
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracking_page)
 
     nav.open_tracker_panel()
     nav.element_visible("known-fingerprints")
