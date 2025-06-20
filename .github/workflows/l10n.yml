@@ -3,7 +3,6 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -30,7 +29,7 @@ env:
 
 jobs:
   L10N-MacOS:
-    if: ${{ inputs.job_to_run == 'L10N-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
