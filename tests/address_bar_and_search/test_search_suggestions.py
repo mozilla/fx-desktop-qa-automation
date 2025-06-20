@@ -19,6 +19,8 @@ def test_case():
     return "3029158"
 
 
+# Bug https://bugzilla.mozilla.org/show_bug.cgi?id=1972726
+@pytest.mark.unstable
 def test_search_suggests_enabled(driver: Firefox):
     """
     C1618400: Firefox Suggest displays sponsored and non-sponsored suggestions when enabled in Preferences

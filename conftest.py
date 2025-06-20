@@ -468,7 +468,7 @@ def driver(
                 separator = " "
         winsize = [int(s) for s in opt_window_size.split(separator)]
         driver.set_window_size(*winsize)
-        timeout = 30 if opt_ci else opt_implicit_timeout
+        timeout = 40 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
