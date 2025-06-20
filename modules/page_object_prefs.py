@@ -1,3 +1,5 @@
+import datetime
+import logging
 import re
 from time import sleep
 from typing import List
@@ -116,6 +118,19 @@ class AboutPrefs(BasePage):
         el.click()
         self.click_on("actions-menu-option", labels=[content_type, action])
         self.wait.until(lambda _: el.get_attribute("label") == action)
+        return self
+
+    def select_trackers_to_block(self, *options):
+        """Select the trackers to block in the about:preferences page. Unchecks all first."""
+        self.click_on("custom-radio")
+        checkboxes = self.get_element("custom-tracker-options-parent").find_elements(
+            By.TAG_NAME, "checkbox"
+        )
+        for checkbox in checkboxes:
+            if checkbox.is_selected():
+                checkbox.click()
+        for option in options:
+            self.click_on(option)
         return self
 
     def get_history_menulist(self) -> WebElement:
@@ -289,9 +304,16 @@ class AboutPrefs(BasePage):
             )
         self.switch_to_edit_saved_payments_popup_iframe()
         value_field = self.find_element(By.ID, fields[field_name])
-        if value_field.tag_name != "select":
+        if value.isdigit():
+            value = int(value)
+        if field_name == "expiration_year":
+            value -= (datetime.datetime.now().year % 100) + 1
+
+        if value_field.tag_name == "select":
+            Select(value_field).select_by_index(value)
+        else:
             value_field.clear()
-        value_field.send_keys(value)
+            value_field.send_keys(value)
         self.get_element("save-button").click()
         return self
 

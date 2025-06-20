@@ -13,6 +13,11 @@
       "searchEngineDropdown"
     ]
   },
+  "custom-tracker-options-parent": {
+    "selectorData": "contentBlockingOptionCustom",
+    "strategy": "id",
+    "groups": []
+  },
   "search-engine-dropmarker": {
     "selectorData": "dropmarker",
     "strategy": "tag",
