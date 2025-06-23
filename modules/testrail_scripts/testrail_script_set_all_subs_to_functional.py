@@ -1,5 +1,7 @@
 import logging
+
 from dotenv import load_dotenv
+
 from modules.testrail_integration import testrail_init
 
 # Load environment variables from .env file
@@ -31,7 +33,9 @@ def get_all_cases_from_suite(tr, project_id, suite_id):
 
     while True:
         # Build the API endpoint with pagination parameters
-        endpoint = f"get_cases/{project_id}&suite_id={suite_id}&limit={limit}&offset={offset}"
+        endpoint = (
+            f"get_cases/{project_id}&suite_id={suite_id}&limit={limit}&offset={offset}"
+        )
         response = tr.client.send_get(endpoint)  # Send API request to TestRail
         cases = response.get("cases", [])  # Extract the list of test cases
 
@@ -86,13 +90,21 @@ if __name__ == "__main__":
 
         if not DRY_RUN:
             # If not in dry run mode, perform the update
-            result = tr.update_case_field(case["id"], "custom_sub_test_suites", CUSTOM_SUB_TEST_SUITES)
-            logging.info(f"Updated case {case['id']} to '{CUSTOM_SUB_TEST_SUITES}', Result: {result}")
+            result = tr.update_case_field(
+                case["id"], "custom_sub_test_suites", CUSTOM_SUB_TEST_SUITES
+            )
+            logging.info(
+                f"Updated case {case['id']} to '{CUSTOM_SUB_TEST_SUITES}', Result: {result}"
+            )
         else:
             # In dry run mode, just log the intended change without making it
-            logging.info(f"[DRY RUN] Would update case {case['id']} from '{current_value}' to '{CUSTOM_SUB_TEST_SUITES}'.")
+            logging.info(
+                f"[DRY RUN] Would update case {case['id']} from '{current_value}' to '{CUSTOM_SUB_TEST_SUITES}'."
+            )
 
         updated_count += 1  # Increment the updated count
 
     # Log the total number of cases updated or to be updated
-    logging.info(f"Total cases {'updated' if not DRY_RUN else 'to be updated'}: {updated_count}")
+    logging.info(
+        f"Total cases {'updated' if not DRY_RUN else 'to be updated'}: {updated_count}"
+    )

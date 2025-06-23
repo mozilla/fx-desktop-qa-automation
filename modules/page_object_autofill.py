@@ -225,28 +225,26 @@ class Autofill(BasePage):
         for attr_name, field_name in self.field_mapping.items():
             if non_us_ca_address and field_name == "address-level1":
                 continue
-            if field_name != "cc-csc":
-                expected_value = getattr(sample_data, attr_name, None)
-                autofilled_field = self.get_element("form-field", labels=[field_name])
-                if autofilled_field.tag_name.lower() != "select":
-                    autofilled_field_value = autofilled_field.get_attribute("value")
-                    # self.expect_element_attribute_contains(
-                    #     "form-field", "value", expected_value, labels=[field_name]
-                    # )
-                else:
-                    autofilled_field_value = Select(
-                        autofilled_field
-                    ).first_selected_option.text
-                if (
-                    field_name == "address-level1"
-                    and autofilled_field_value != expected_value
-                ):
-                    expected_value = self.util.get_state_province_abbreviation(
-                        expected_value
-                    )
-                assert expected_value in autofilled_field_value, (
-                    f"{autofilled_field_value} is different from {expected_value}"
+            if attr_name == "cvv":
+                continue
+            expected_value = getattr(sample_data, attr_name, None)
+            autofilled_field = self.get_element("form-field", labels=[field_name])
+            if autofilled_field.tag_name.lower() != "select":
+                autofilled_field_value = autofilled_field.get_attribute("value")
+            else:
+                autofilled_field_value = Select(
+                    autofilled_field
+                ).first_selected_option.text
+            if (
+                field_name == "address-level1"
+                and autofilled_field_value != expected_value
+            ):
+                expected_value = self.util.get_state_province_abbreviation(
+                    expected_value
                 )
+            assert expected_value in autofilled_field_value, (
+                f"{autofilled_field_value} is different from {expected_value}"
+            )
 
     def verify_field_autofill_dropdown(
         self,
