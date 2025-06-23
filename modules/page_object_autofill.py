@@ -231,9 +231,6 @@ class Autofill(BasePage):
             autofilled_field = self.get_element("form-field", labels=[field_name])
             if autofilled_field.tag_name.lower() != "select":
                 autofilled_field_value = autofilled_field.get_attribute("value")
-                # self.expect_element_attribute_contains(
-                #     "form-field", "value", expected_value, labels=[field_name]
-                # )
             else:
                 autofilled_field_value = Select(
                     autofilled_field
