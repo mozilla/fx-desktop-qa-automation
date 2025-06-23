@@ -3,8 +3,8 @@
   "field_mapping": {
     "country": "90b596de-e266-4e66-9530-2e41b184555d",
     "name": "28f5f493-ad18-4e7c-99fa-524bc768ed7a",
-    "telephone": "28f5f493-ad18-4e7c-99fa-524bc768ed7a",
-    "address_level_1": "a5fb9e4c-60a0-42a2-9e4a-6a067b55d208",
+    "telephone": "c384d303-3e2b-4b8a-ba89-c741056fc9b4",
+    "street_address": "a5fb9e4c-60a0-42a2-9e4a-6a067b55d208",
     "organization": "9e8475b3-e1a5-46cf-9af0-6f2caab918fe",
     "address_level_2": "67cbe0f8-dbe4-4afd-a077-765186bcf0b3",
     "postal_code": "e38f3160-4ce5-4804-b5d5-b92c3ccc499e"
@@ -13,7 +13,7 @@
   "fields": [
     "90b596de-e266-4e66-9530-2e41b184555d",
     "28f5f493-ad18-4e7c-99fa-524bc768ed7a",
-    "28f5f493-ad18-4e7c-99fa-524bc768ed7a",
+    "c384d303-3e2b-4b8a-ba89-c741056fc9b4",
     "a5fb9e4c-60a0-42a2-9e4a-6a067b55d208",
     "9e8475b3-e1a5-46cf-9af0-6f2caab918fe",
     "67cbe0f8-dbe4-4afd-a077-765186bcf0b3",
