@@ -229,10 +229,14 @@ def merge_results(*result_sets) -> dict:
 
 def mark_results(testrail_session: TestRail, test_results):
     """For each type of result, and per run, mark tests to status in batches"""
-    logging.info(f"mark results: object\n{test_results}")
+    logging.warning(f"mark results: object\n{test_results}")
     existing_results = {}
     # don't send update requests for skipped test cases
     for category in ["passed", "blocked", "xfailed", "failed"]:
+        # Skip the category if it doesn't exist
+        if test_results.get(category) is None:
+            logging.warning(category, "does not exist for this test run")
+            continue
         for run_id in test_results[category]:
             if not existing_results.get(run_id):
                 existing_results[run_id] = testrail_session.get_test_results(run_id)
