@@ -14,7 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
-BACKSTOP = "141.0b1"
+BACKSTOP = "135.0b9"
 NUMBER_ONLY = False
 
 
@@ -136,57 +136,58 @@ else:
     else:
         # Anything but devedition
 
-        # candidate_exists = True
-        # this_beta = BACKSTOP
-        # while candidate_exists:
-        #     (major, minor_beta) = this_beta.split(".")
-        #     (minor, beta) = minor_beta.split("b")
-        #     major = int(major)
-        #     minor = int(minor)
-        #     beta = int(beta)
+        candidate_exists = True
+        this_beta = BACKSTOP
+        while candidate_exists:
+            (major, minor_beta) = this_beta.split(".")
+            (minor, beta) = minor_beta.split("b")
+            major = int(major)
+            minor = int(minor)
+            beta = int(beta)
 
-        #     next_major = f"{major + 1}.0b1"
-        #     fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/"
-        #     rs = requests.get(fx_download_dir_url)
-        #     if rs.status_code < 300:
-        #         latest_beta_ver = next_major
-        #         this_beta = next_major
-        #         continue
+            next_major = f"{major + 1}.0b1"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/"
+            rs = requests.get(fx_download_dir_url)
+            if rs.status_code < 300:
+                latest_beta_ver = next_major
+                this_beta = next_major
+                continue
 
-        #     next_minor = f"{major}.{minor + 1}b1"
-        #     fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/"
-        #     rs = requests.get(fx_download_dir_url)
-        #     if rs.status_code < 300:
-        #         latest_beta_ver = next_minor
-        #         this_beta = next_minor
-        #         continue
+            next_minor = f"{major}.{minor + 1}b1"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/"
+            rs = requests.get(fx_download_dir_url)
+            if rs.status_code < 300:
+                latest_beta_ver = next_minor
+                this_beta = next_minor
+                continue
 
-        #     next_beta = f"{major}.{minor}b{beta + 1}"
-        #     fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/"
-        #     rs = requests.get(fx_download_dir_url)
-        #     if rs.status_code < 300:
-        #         latest_beta_ver = next_beta
-        #         this_beta = next_beta
-        #         continue
+            next_beta = f"{major}.{minor}b{beta + 1}"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/"
+            rs = requests.get(fx_download_dir_url)
+            if rs.status_code < 300:
+                latest_beta_ver = next_beta
+                this_beta = next_beta
+                continue
 
-        #     candidate_exists = False
+            candidate_exists = False
 
         # Look for the latest build
-        status = 200
-        build = 2
-        latest_beta_ver = BACKSTOP
-        while status < 400 and build < 20:
-            build += 1
-            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/"
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/"
+        response = requests.get(fx_download_dir_url)
+        build = 1
+        if response.status_code < 300:
+            soup = BeautifulSoup(response.text, "html.parser")
+            executable_name = ""
+            # Extract the text of each line
+            for line in soup.find_all("a"):
+                line_text = line.getText().split(".")
+                if not line_text[0]:
+                    continue
+                # Get the executable name
+                build = max(int(line_text[0][-2]), build)
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
-            # Fetch the page
-            response = requests.get(fx_download_dir_url)
-            status = response.status_code
-
-        # Correct build is the last one that didn't 404
-        build -= 1
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
-
+    # Get the corresponding executable
     response = requests.get(fx_download_dir_url)
     status = response.status_code
     response_text = None
