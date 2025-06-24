@@ -2,7 +2,7 @@ name: Check new beta version
 
 on:
   schedule:
-    - cron: "34 */1 * * *"
+    - cron: "24 */1 * * *"
 env:
   LATEST: ""
 permissions:
@@ -59,7 +59,7 @@ jobs:
   Run-L10N-Mac-Smoke:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.mac_l10n_reportable == 'True' }}
-    uses: ./.github/workflows/l10n_smoke.yml
+    uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10N-MacOS
     secrets: inherit
