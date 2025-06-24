@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/bestbuy_ad.html",
+ "field_mapping": {
+    "given_name":"218d1211-a6b9-4a33-819e-089bad0c8a20",
+    "family_name":"a7aa0e69-c0e7-41c1-89ff-12f1bda9725d",
+    "street_address":"059f8147-00ad-4c2d-9708-1cb735dca57a",
+    "address_level_2":"9dbe5e1a-fc5a-41a7-9c05-2e3956c27808",
+    "address_level_1":"9c464698-29f7-4e89-80f0-044803a1bfc9",
+    "postal_code":"5dad56fe-6dc3-418c-8d1f-de6564b3ed22"
+
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "218d1211-a6b9-4a33-819e-089bad0c8a20",
+    "a7aa0e69-c0e7-41c1-89ff-12f1bda9725d",
+    "059f8147-00ad-4c2d-9708-1cb735dca57a",
+    "9dbe5e1a-fc5a-41a7-9c05-2e3956c27808",
+    "9c464698-29f7-4e89-80f0-044803a1bfc9",
+    "5dad56fe-6dc3-418c-8d1f-de6564b3ed22"
+ ]
+}

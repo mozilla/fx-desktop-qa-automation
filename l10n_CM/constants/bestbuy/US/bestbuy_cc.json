@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8080/bestbuy_cc.html",
+  "field_mapping": {
+    "card_number": "9387432f-2593-496d-8997-113631d34fbd",
+    "expiration_date": "7e67c316-1322-4a30-b563-de411cbdc54f",
+    "cvv": "1945a8db-03e5-48c5-b860-7182af5cbdfb"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "9387432f-2593-496d-8997-113631d34fbd",
+    "7e67c316-1322-4a30-b563-de411cbdc54f",
+    "1945a8db-03e5-48c5-b860-7182af5cbdfb"
+]
+}
