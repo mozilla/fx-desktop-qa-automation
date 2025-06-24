@@ -14,7 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
-BACKSTOP = "135.0b9"
+BACKSTOP = "141.0b1"
 NUMBER_ONLY = False
 
 
