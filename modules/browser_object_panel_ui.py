@@ -152,7 +152,7 @@ class PanelUi(BasePage):
         """
         Opens the History menu
         """
-        if not self.get_element("panel-main-view").is_displayed():
+        if not self.get_elements("panel-main-view"):
             self.open_panel_menu()
         self.get_element("panel-ui-history").click()
         return self
