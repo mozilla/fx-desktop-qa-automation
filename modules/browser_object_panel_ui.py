@@ -147,13 +147,14 @@ class PanelUi(BasePage):
             self.get_element("panel-ui-new-private-window").click()
         return self
 
+    @BasePage.context_chrome
     def open_history_menu(self) -> BasePage:
         """
         Opens the History menu
         """
-        self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-history").click()
+        if not self.get_element("panel-main-view").is_displayed():
+            self.open_panel_menu()
+        self.get_element("panel-ui-history").click()
         return self
 
     def select_clear_history_option(self, option: str) -> BasePage:

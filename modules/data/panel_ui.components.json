@@ -9,6 +9,12 @@
         ]
     },
 
+    "panel-main-view": {
+        "selectorData": "appMenu-mainView",
+        "strategy": "id",
+        "groups": []
+    },
+
     "sync-user-button": {
         "selectorData": "toolbarbutton[id='fxa-toolbar-menu-button']",
         "strategy": "css",
