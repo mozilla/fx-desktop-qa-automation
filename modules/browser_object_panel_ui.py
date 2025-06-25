@@ -136,6 +136,7 @@ class PanelUi(BasePage):
         """
         self.open_panel_menu()
         self.element_visible("panel-main-view")
+        # Bug 1974080
         if self.sys_platform() == "Windows":
             sleep(2)
         self.click_on("panel-ui-history")
@@ -181,6 +182,9 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
         self.click_on("panel-ui-bookmarks")
         return self
 
