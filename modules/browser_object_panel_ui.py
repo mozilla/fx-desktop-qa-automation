@@ -252,6 +252,7 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def clear_recent_history(self, execute=True) -> BasePage:
+        """Clears recent history. Case of execute=True may not be complete"""
         self.open_panel_menu()
         # Bug 1974080
         if self.sys_platform() == "Windows":
@@ -268,6 +269,7 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def confirm_history_clear(self):
+        """Confirm that the history is empty"""
         self.open_history_menu()
         self.expect_element_attribute_contains(
             "recent-history-content", "value", "(Empty)"
