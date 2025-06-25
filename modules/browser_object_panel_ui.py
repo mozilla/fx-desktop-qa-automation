@@ -135,12 +135,10 @@ class PanelUi(BasePage):
         Opens the History menu
         """
         self.open_panel_menu()
-        self.element_visible("panel-main-view")
         # Bug 1974080
         if self.sys_platform() == "Windows":
             sleep(2)
         self.click_on("panel-ui-history")
-        self.element_visible("panel-ui-history-view")
         return self
 
     def select_clear_history_option(self, option: str) -> BasePage:
@@ -267,3 +265,10 @@ class PanelUi(BasePage):
             self.click("clear_recent_history")
 
         return self
+
+    @BasePage.context_chrome
+    def confirm_history_clear(self):
+        self.open_history_menu()
+        self.expect_element_attribute_contains(
+            "recent-history-content", "value", "(Empty)"
+        )

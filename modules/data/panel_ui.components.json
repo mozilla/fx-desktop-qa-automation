@@ -1,11 +1,11 @@
 {
     "context": "chrome",
+    "do-not-cache": true,
     "panel-ui-button": {
         "selectorData": "PanelUI-menu-button",
         "strategy": "id",
         "groups": [
-            "requiredForPage",
-            "doNotCache"
+            "requiredForPage"
         ]
     },
 
@@ -42,9 +42,7 @@
     "fxa-sync-label": {
         "selectorData": "syncnow-label",
         "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
+        "groups": []
     },
 
     "new-private-window-option": {
@@ -118,9 +116,7 @@
     "panel-ui-history-view": {
         "selectorData": "PanelUI-history",
         "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
+        "groups": []
     },
 
     "panel-ui-history-recently-closed": {
