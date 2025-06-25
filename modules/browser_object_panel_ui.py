@@ -152,9 +152,10 @@ class PanelUi(BasePage):
         """
         Opens the History menu
         """
-        if not self.get_elements("panel-main-view"):
+        if not self.is_element_present("panel-main-view"):
             self.open_panel_menu()
-        self.get_element("panel-ui-history").click()
+        self.click_on("panel-ui-history")
+        self.element_visible("panel-ui-history-view")
         return self
 
     def select_clear_history_option(self, option: str) -> BasePage:

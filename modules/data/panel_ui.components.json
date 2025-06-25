@@ -115,6 +115,14 @@
         "groups": []
     },
 
+    "panel-ui-history-view": {
+        "selectorData": "PanelUI-history",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "panel-ui-history-recently-closed": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
