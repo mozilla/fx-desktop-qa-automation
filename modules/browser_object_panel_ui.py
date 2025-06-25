@@ -1,3 +1,5 @@
+import logging
+import time
 from typing import List
 
 from pypom import Region
@@ -152,7 +154,7 @@ class PanelUi(BasePage):
         """
         Opens the History menu
         """
-        if not self.is_element_present("panel-main-view"):
+        if not self.get_elements("panel-main-view"):
             self.open_panel_menu()
         self.click_on("panel-ui-history")
         self.element_visible("panel-ui-history-view")
