@@ -1,5 +1,4 @@
-import logging
-import time
+from time import sleep
 from typing import List
 
 from pypom import Region
@@ -48,46 +47,27 @@ class PanelUi(BasePage):
         self.menu = self.Menu(self, root=panel_root)
         return self
 
-    def select_panel_setting(self, name: str, *labels) -> BasePage:
-        """
-        Selects a panel setting in PanelUi.
-
-        ...
-
-        Parameters
-        ----------
-
-        name: str
-            Name of setting element
-        labels: *list[str]
-            Labels to pass to get_element()
-        """
-        self.click_on(name, labels=labels)
-        return self
-
     def navigate_to_about_addons(self):
         """
         On the hamburger menu > More Tools > Customize Toolbar > Manage Themes
         """
-        self.select_panel_setting("more-tools")
-        self.select_panel_setting("customize-toolbar")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("manage-themes").click()
+        self.click_on("more-tools")
+        self.click_on("customize-toolbar")
+        self.click_on("manage-themes")
 
     def navigate_to_customize_toolbar(self):
         """
         On the hamburger menu > More Tools > Customize Toolbar
         """
-        self.select_panel_setting("more-tools")
-        self.select_panel_setting("customize-toolbar")
+        self.click_on("more-tools")
+        self.click_on("customize-toolbar")
 
     def click_sync_sign_in_button(self) -> BasePage:
         """
         Click FxA sync button.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.open_panel_menu()
-            self.select_panel_setting("fxa-sign-in")
+        self.open_panel_menu()
+        self.click_on("fxa-sign-in")
         return self
 
     def log_out_fxa(self) -> BasePage:
@@ -154,8 +134,10 @@ class PanelUi(BasePage):
         """
         Opens the History menu
         """
-        if not self.get_elements("panel-main-view"):
-            self.open_panel_menu()
+        self.open_panel_menu()
+        self.element_visible("panel-main-view")
+        if self.sys_platform() == "Windows":
+            sleep(2)
         self.click_on("panel-ui-history")
         self.element_visible("panel-ui-history-view")
         return self
