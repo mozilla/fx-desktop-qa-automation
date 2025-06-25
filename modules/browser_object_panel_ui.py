@@ -251,3 +251,17 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
+
+    @BasePage.context_chrome
+    def clear_recent_history(self, execute=True):
+        self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
+        self.get_element("panel-ui-history").click()
+
+        self.element_exists("clear-recent-history")
+        self.element_visible("clear-recent-history")
+        self.element_clickable("clear-recent-history")
+        if execute:
+            self.click("clear_recent_history")
