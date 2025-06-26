@@ -169,6 +169,9 @@ class PanelUi(BasePage):
         Opens the about:logins page by clicking the Password option in Hamburger Menu"
         """
         self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
         self.get_element("password-button").click()
         return self
 
@@ -284,10 +287,8 @@ class PanelUi(BasePage):
             sleep(2)
         self.click_on("panel-ui-history")
 
-        self.element_clickable("panel-ui-history-recently-closed")
         self.click_on("panel-ui-history-recently-closed")
 
-        self.element_clickable("panel-ui-history-recently-closed-reopen-tabs")
         self.click_on("panel-ui-history-recently-closed-reopen-tabs")
 
         return self
