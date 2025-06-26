@@ -38,7 +38,7 @@ def test_reopen_tab_through_history_menu(driver: Firefox):
 
     # close the first 6 tabs
     for i in range(num_tabs):
-        tabs.close_tab(tabs.get_tab(num_tabs - i))
+        tabs.close_tab(tabs.get_tab(i + 1))
 
     # open menu bar and reopen recently closed tabs
     panel.open()
