@@ -1,3 +1,4 @@
+from time import sleep
 from typing import List
 
 from pypom import Region
@@ -46,46 +47,27 @@ class PanelUi(BasePage):
         self.menu = self.Menu(self, root=panel_root)
         return self
 
-    def select_panel_setting(self, name: str, *labels) -> BasePage:
-        """
-        Selects a panel setting in PanelUi.
-
-        ...
-
-        Parameters
-        ----------
-
-        name: str
-            Name of setting element
-        labels: *list[str]
-            Labels to pass to get_element()
-        """
-        self.click_on(name, labels=labels)
-        return self
-
     def navigate_to_about_addons(self):
         """
         On the hamburger menu > More Tools > Customize Toolbar > Manage Themes
         """
-        self.select_panel_setting("more-tools")
-        self.select_panel_setting("customize-toolbar")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("manage-themes").click()
+        self.click_on("more-tools")
+        self.click_on("customize-toolbar")
+        self.click_on("manage-themes")
 
     def navigate_to_customize_toolbar(self):
         """
         On the hamburger menu > More Tools > Customize Toolbar
         """
-        self.select_panel_setting("more-tools")
-        self.select_panel_setting("customize-toolbar")
+        self.click_on("more-tools")
+        self.click_on("customize-toolbar")
 
     def click_sync_sign_in_button(self) -> BasePage:
         """
         Click FxA sync button.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.open_panel_menu()
-            self.select_panel_setting("fxa-sign-in")
+        self.open_panel_menu()
+        self.click_on("fxa-sign-in")
         return self
 
     def log_out_fxa(self) -> BasePage:
@@ -147,13 +129,16 @@ class PanelUi(BasePage):
             self.get_element("panel-ui-new-private-window").click()
         return self
 
+    @BasePage.context_chrome
     def open_history_menu(self) -> BasePage:
         """
         Opens the History menu
         """
         self.open_panel_menu()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("panel-ui-history").click()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
+        self.click_on("panel-ui-history")
         return self
 
     def select_clear_history_option(self, option: str) -> BasePage:
@@ -184,6 +169,9 @@ class PanelUi(BasePage):
         Opens the about:logins page by clicking the Password option in Hamburger Menu"
         """
         self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
         self.get_element("password-button").click()
         return self
 
@@ -195,6 +183,9 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
         self.click_on("panel-ui-bookmarks")
         return self
 
@@ -261,3 +252,45 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
+
+    @BasePage.context_chrome
+    def clear_recent_history(self, execute=True) -> BasePage:
+        """Clears recent history. Case of execute=True may not be complete"""
+        self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
+        self.get_element("panel-ui-history").click()
+
+        self.element_exists("clear-recent-history")
+        self.element_visible("clear-recent-history")
+        self.element_clickable("clear-recent-history")
+        if execute:
+            self.click("clear_recent_history")
+
+        return self
+
+    @BasePage.context_chrome
+    def confirm_history_clear(self):
+        """Confirm that the history is empty"""
+        self.open_history_menu()
+        self.expect_element_attribute_contains(
+            "recent-history-content", "value", "(Empty)"
+        )
+
+    @BasePage.context_chrome
+    def reopen_recently_closed_tabs(self) -> BasePage:
+        """Reopen all recently closed tabs"""
+        self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
+        self.click_on("panel-ui-history")
+
+        self.click_on("panel-ui-history-recently-closed")
+        if self.sys_platform() == "Linux":
+            sleep(2)
+
+        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
+
+        return self

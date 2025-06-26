@@ -3043,6 +3043,12 @@ Location: Toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-main-view
+Description: Main body of Panel UI
+Location: See above
+Path to .json: modules/data/panel_ui.components.json
+```
+```
 Selector name: sync-user-button
 Selector Data: toolbarbutton[id='fxa-toolbar-menu-button']
 Description: Account button
@@ -3145,6 +3151,12 @@ Selector name: panel-ui-history
 Selector Data: appMenu-history-button
 Description: History button
 Location: Firefox menu
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-ui-history-view
+Description: Subview of Panel UI
+Location: See above
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```

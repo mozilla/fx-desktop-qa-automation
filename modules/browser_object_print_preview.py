@@ -21,13 +21,13 @@ class PrintPreview(BasePage):
 
     URL_TEMPLATE = "about:blank"
 
+    @BasePage.context_chrome
     def open(self) -> BasePage:
         """Use PanelUi to open the Print Preview, wait for element to load"""
         panel_ui = PanelUi(self.driver)
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            panel_ui.open_panel_menu()
-            panel_ui.select_panel_setting("print-option")
-            self.wait_for_page_to_load()
+        panel_ui.open_panel_menu()
+        panel_ui.click_on("print-option")
+        self.wait_for_page_to_load()
         return self
 
     def open_with_key_combo(self) -> BasePage:
