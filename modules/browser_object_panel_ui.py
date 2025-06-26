@@ -45,6 +45,7 @@ class PanelUi(BasePage):
         panel_root = self.get_element("panel-ui-button")
         panel_root.click()
         self.menu = self.Menu(self, root=panel_root)
+        sleep(2)  # Bug 1974080
         return self
 
     def navigate_to_about_addons(self):
@@ -135,9 +136,6 @@ class PanelUi(BasePage):
         Opens the History menu
         """
         self.open_panel_menu()
-        # Bug 1974080
-        if self.sys_platform() == "Windows":
-            sleep(2)
         self.click_on("panel-ui-history")
         return self
 
@@ -169,9 +167,6 @@ class PanelUi(BasePage):
         Opens the about:logins page by clicking the Password option in Hamburger Menu"
         """
         self.open_panel_menu()
-        # Bug 1974080
-        if self.sys_platform() == "Windows":
-            sleep(2)
         self.get_element("password-button").click()
         return self
 
@@ -183,9 +178,6 @@ class PanelUi(BasePage):
         Opens the Bookmarks panel from the Hamburger Menu
         """
         self.open_panel_menu()
-        # Bug 1974080
-        if self.sys_platform() == "Windows":
-            sleep(2)
         self.click_on("panel-ui-bookmarks")
         return self
 
@@ -257,9 +249,6 @@ class PanelUi(BasePage):
     def clear_recent_history(self, execute=True) -> BasePage:
         """Clears recent history. Case of execute=True may not be complete"""
         self.open_panel_menu()
-        # Bug 1974080
-        if self.sys_platform() == "Windows":
-            sleep(2)
         self.get_element("panel-ui-history").click()
 
         self.element_exists("clear-recent-history")
@@ -282,9 +271,6 @@ class PanelUi(BasePage):
     def reopen_recently_closed_tabs(self) -> BasePage:
         """Reopen all recently closed tabs"""
         self.open_panel_menu()
-        # Bug 1974080
-        if self.sys_platform() == "Windows":
-            sleep(2)
         self.click_on("panel-ui-history")
 
         self.click_on("panel-ui-history-recently-closed")
