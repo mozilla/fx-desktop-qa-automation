@@ -37,22 +37,12 @@ def test_reopen_tab_through_history_menu(driver: Firefox):
         driver.switch_to.window(driver.window_handles[i + 1])
 
     # close the first 6 tabs
-    with driver.context(driver.CONTEXT_CHROME):
-        x_icon = tabs.get_element("tab-x-icon", multiple=True)
-        for i in range(num_tabs):
-            x_icon[i].click()
+    for i in range(num_tabs):
+        tabs.close_tab(tabs.get_tab(num_tabs - i))
 
     # open menu bar and reopen recently closed tabs
     panel.open()
-    panel.open_panel_menu()
-    with driver.context(driver.CONTEXT_CHROME):
-        panel.get_element("panel-ui-history").click()
-
-        panel.element_clickable("panel-ui-history-recently-closed")
-        panel.get_element("panel-ui-history-recently-closed").click()
-
-        panel.element_clickable("panel-ui-history-recently-closed-reopen-tabs")
-        panel.get_element("panel-ui-history-recently-closed-reopen-tabs").click()
+    panel.reopen_recently_closed_tabs()
 
     # go through all the tabs and ensure they were the ones that were opened previously
     for i in range(num_tabs):

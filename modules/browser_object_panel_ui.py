@@ -274,3 +274,20 @@ class PanelUi(BasePage):
         self.expect_element_attribute_contains(
             "recent-history-content", "value", "(Empty)"
         )
+
+    @BasePage.context_chrome
+    def reopen_recently_closed_tabs(self) -> BasePage:
+        """Reopen all recently closed tabs"""
+        self.open_panel_menu()
+        # Bug 1974080
+        if self.sys_platform() == "Windows":
+            sleep(2)
+        self.click_on("panel-ui-history")
+
+        self.element_clickable("panel-ui-history-recently-closed")
+        self.click_on("panel-ui-history-recently-closed")
+
+        self.element_clickable("panel-ui-history-recently-closed-reopen-tabs")
+        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
+
+        return self
