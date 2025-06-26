@@ -288,6 +288,8 @@ class PanelUi(BasePage):
         self.click_on("panel-ui-history")
 
         self.click_on("panel-ui-history-recently-closed")
+        if self.sys_platform() == "Linux":
+            sleep(2)
 
         self.click_on("panel-ui-history-recently-closed-reopen-tabs")
 
