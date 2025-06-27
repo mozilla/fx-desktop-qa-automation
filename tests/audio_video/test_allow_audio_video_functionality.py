@@ -1,5 +1,6 @@
 import sys
 from os import environ
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -51,5 +52,13 @@ def test_allow_audio_video_functionality(driver: Firefox):
 
     # Open test website and check the site is loaded and the featured video starts playing with sound
     GenericPage(driver, url=TEST_URL).open()
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            with driver.context(driver.CONTEXT_CHROME):
+                tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+            break  # Success!
+        except AssertionError:
+            sleep(2)
+    else:
+        pytest.fail(f"Tab sound status did not reach PLAYING after {max_retries} retries.")
