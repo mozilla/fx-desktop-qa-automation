@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/etsy_ad.html",
+ "field_mapping": {
+    "name": "7771b652-4623-4583-9545-a9a8fefb3df3",
+    "street_address": "4502ed8f-43f4-4eb4-aa1a-444f42b54f3c",
+    "address_level_2": "22534994-3376-45b8-8255-144bd5fae86e",
+    "address_level_1": "e76a5693-ac48-4b3f-8c1e-1a20dc209b95",
+    "postal_code": "82c605d7-c9b8-4573-a44b-6fac3db96bc0",
+     "email": "ba1830ab-adad-4026-ad15-356f03489722"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "7771b652-4623-4583-9545-a9a8fefb3df3",
+    "4502ed8f-43f4-4eb4-aa1a-444f42b54f3c",
+    "22534994-3376-45b8-8255-144bd5fae86e",
+    "e76a5693-ac48-4b3f-8c1e-1a20dc209b95",
+    "82c605d7-c9b8-4573-a44b-6fac3db96bc0",
+    "ba1830ab-adad-4026-ad15-356f03489722"
+ ]
+}
