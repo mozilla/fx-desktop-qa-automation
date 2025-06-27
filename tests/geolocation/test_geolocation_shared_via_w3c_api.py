@@ -20,51 +20,38 @@ def add_to_prefs_list():
             "geo.provider.network.url",
             "https://www.googleapis.com/geolocation/v1/geolocate?key"
             "=%GOOGLE_LOCATION_SERVICE_API_KEY%",
-        )
+        ),
+        ("devtools.debugger.remote-enabled", True),
+        ("devtools.chrome.enabled", True),
+        ("ui.popup.disable_autohide", True),
     ]
 
 
 TEST_URL = "https://www.w3schools.com/html/html5_geolocation.asp"
 
 
-def handle_cookie_banner(driver, web_page):
-    """
-    Address the cookie banner manually if appears, as the cookie banner dismissal preference is not effective in this
-    context
-    """
-    try:
-        driver.switch_to.window(driver.window_handles[-1])
-        web_page.find_element(By.ID, "accept-choices").click()
-    except NoSuchElementException:
-        # If the cookie banner is not found, continue with the test
-        pass
+@pytest.fixture()
+def temp_selectors():
+    return {
+        "accept-choices": {
+            "selectorData": "accept-choices",
+            "strategy": "id",
+            "groups": [],
+        },
+        "geolocation-button-selector": {
+            "selectorData": "button.w3-btn",
+            "strategy": "css",
+            "groups": ["doNotCache"],
+        },
+        "location-marker": {
+            "selectorData": "mapholder",
+            "strategy": "id",
+            "groups": ["doNotCache"],
+        },
+    }
 
 
-def click_geolocation_button_trigger(web_page):
-    """
-    Clicks the 'Try It' button inside the webpage to trigger the geolocation prompt
-    """
-    geolocation_button_selector = (
-        "button.w3-btn.w3-blue.w3-round[onclick='getLocation()']"
-    )
-    web_page.find_element(By.CSS_SELECTOR, geolocation_button_selector).click()
-
-
-def is_location_marker_displayed(web_page):
-    """
-    Checks if the location marker ('You are here!') is displayed on the web page inside the map.
-    """
-    location_marker = web_page.find_elements(
-        By.CSS_SELECTOR, "div[aria-label='You are here!'][role='img']"
-    )
-
-    if location_marker:  # Check if the marker exists
-        return location_marker[0].is_displayed()
-    else:
-        return False
-
-
-def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox):
+def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selectors):
     """
     C15186 - Verify that geolocation is successfully shared when the user allows permission via the W3C Geolocation API
     """
@@ -72,30 +59,35 @@ def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox):
     # Instantiate Objects
     nav = Navigation(driver)
     web_page = GenericPage(driver, url=TEST_URL).open()
+    web_page.elements |= temp_selectors
     tabs = TabBar(driver)
 
     # Wait for the page to fully load and manually address the cookie banner if appears
     nav.wait_for_page_to_load()
-    handle_cookie_banner(driver, web_page)
+    cookie_element = web_page.get_elements("accept-choices")
+    if cookie_element:
+        cookie_element[0].click()
 
     # Click the 'Try It' button and Allow the location sharing
-    click_geolocation_button_trigger(web_page)
+    web_page.click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="primary")
 
-    # Assert that the location marker is displayed
-    assert is_location_marker_displayed(web_page)
+    # Check that the location marker is displayed
+    # if map is displayed, style attribute will be available
+    web_page.element_visible("location-marker")
+    assert web_page.get_element("location-marker").get_attribute("style")
 
     # Open a new tab, because refresh will keep the allow state of the location for one hour or until the tab is closed
     tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
 
     # Click the 'Try It' button and Allow the location sharing while choose the option Remember this decision
-    click_geolocation_button_trigger(web_page)
-    nav.element_clickable("checkbox-remember-this-decision")
-    nav.click_on("checkbox-remember-this-decision")
-    nav.handle_geolocation_prompt(button_type="primary")
+    web_page.click_on("geolocation-button-selector")
+    nav.handle_geolocation_prompt(button_type="primary", remember_this_decision=True)
 
-    # Assert that the location marker is displayed again
-    assert is_location_marker_displayed(web_page)
+    # Check that the location marker is displayed
+    # if map is displayed, style attribute will be available
+    web_page.element_visible("location-marker")
+    assert web_page.get_element("location-marker").get_attribute("style")
 
     # Assert that the permission icon is displayed in address bar when in a new tab
     tabs.open_web_page_in_new_tab(web_page, num_tabs=3)
@@ -104,7 +96,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox):
         assert permission_icon.is_displayed()
 
 
-def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
+def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selectors):
     """
     C15186 - Verify that geolocation is not shared when the user blocks permission via the W3C Geolocation API
     """
@@ -112,31 +104,34 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
     # Instantiate Objects
     nav = Navigation(driver)
     web_page = GenericPage(driver, url=TEST_URL).open()
+    web_page.elements |= temp_selectors
     tabs = TabBar(driver)
 
     # Wait for the page to fully load and manually address the cookie banner if appears
     nav.wait_for_page_to_load()
-    handle_cookie_banner(driver, web_page)
+    cookie_element = web_page.get_elements("accept-choices")
+    if cookie_element:
+        cookie_element[0].click()
 
     # Click the 'Try It' button and Block the location sharing
-    click_geolocation_button_trigger(web_page)
+    web_page.click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="secondary")
 
-    # Assert that the location marker is not displayed
-    assert not is_location_marker_displayed(web_page)
+    # Check that the location marker is displayed
+    # if map is not displayed, style attribute will not be available
+    assert not web_page.get_element("location-marker").get_attribute("style")
 
     # Click the 'Try It' button and Block the location sharing while choose the option Remember this decision
-    nav.refresh_page()
-    click_geolocation_button_trigger(web_page)
-    nav.element_clickable("checkbox-remember-this-decision")
-    nav.click_on("checkbox-remember-this-decision")
-    nav.handle_geolocation_prompt(button_type="secondary")
+    tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
+    web_page.click_on("geolocation-button-selector")
+    nav.handle_geolocation_prompt(button_type="secondary", remember_this_decision=True)
 
-    # Assert that the location marker is not displayed
-    assert not is_location_marker_displayed(web_page)
+    # Check that the location marker is displayed
+    # if map is not displayed, style attribute will not be available
+    assert not web_page.get_element("location-marker").get_attribute("style")
 
     # Assert that the permission icon is displayed in address bar when in a new tab
-    tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
+    tabs.open_web_page_in_new_tab(web_page, num_tabs=3)
     with driver.context(driver.CONTEXT_CHROME):
         permission_icon = nav.get_element("permissions-location-icon")
         assert permission_icon.is_displayed()
