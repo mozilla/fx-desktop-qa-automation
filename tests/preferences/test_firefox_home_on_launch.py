@@ -38,7 +38,7 @@ def test_firefox_home_on_launch(driver: Firefox, sys_platform: str):
     # make sure that the option was selected correctly
     assert drop_down.get_attribute("label") == "Firefox Home (Default)"
     panel_ui.open_panel_menu()
-    panel_ui.select_panel_setting("panel-ui-new-window")
+    panel_ui.click_on("panel-ui-new-window")
     # wait for the number of tabs and switch
     tabs.wait_for_num_tabs(2)
     driver.switch_to.window(driver.window_handles[-1])

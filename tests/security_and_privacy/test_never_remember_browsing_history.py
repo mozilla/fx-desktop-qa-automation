@@ -71,26 +71,7 @@ def test_never_remember_browsing_history_from_panel(driver: Firefox):
         tabs.switch_to_new_tab()
 
     # close the first 6 tabs
-    with driver.context(driver.CONTEXT_CHROME):
-        x_icon = tabs.get_element("tab-x-icon", multiple=True)
-        for i in range(num_tabs):
-            x_icon[i].click()
+    for i in range(num_tabs):
+        tabs.close_tab(tabs.get_tab(num_tabs - i))
 
-        panel_ui.open_panel_menu()
-
-        # go into the history tab
-        panel_ui.get_element("panel-ui-history").click()
-
-        # check for history
-        recently_visited_container = panel_ui.get_element(
-            "panel-ui-history-recent-history-container"
-        )
-        recently_visited_items = panel_ui.get_element(
-            "panel-ui-history-recent-history-item",
-            multiple=True,
-            parent_element=recently_visited_container,
-        )
-
-        # ensure no actual items are there
-        assert len(recently_visited_items) == 1
-        assert recently_visited_items[0].get_attribute("label") == "(Empty)"
+    panel_ui.confirm_history_clear()

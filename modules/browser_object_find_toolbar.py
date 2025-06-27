@@ -21,7 +21,7 @@ class FindToolbar(BasePage):
     def open(self) -> BasePage:
         """Use PanelUi to open the Find Toolbar, wait for element to load"""
         self.panel_ui.open_panel_menu()
-        self.panel_ui.select_panel_setting("find-in-page")
+        self.panel_ui.click_on("find-in-page")
         self.wait_for_page_to_load()
         return self
 
