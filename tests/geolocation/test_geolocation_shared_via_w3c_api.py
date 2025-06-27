@@ -20,10 +20,7 @@ def add_to_prefs_list():
             "geo.provider.network.url",
             "https://www.googleapis.com/geolocation/v1/geolocate?key"
             "=%GOOGLE_LOCATION_SERVICE_API_KEY%",
-        ),
-        ("devtools.debugger.remote-enabled", True),
-        ("devtools.chrome.enabled", True),
-        ("ui.popup.disable_autohide", True),
+        )
     ]
 
 
