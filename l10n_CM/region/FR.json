@@ -1,6 +1,7 @@
 {
   "region": "FR",
   "sites": [
+    "amazon",
     "demo"
   ],
   "tests": [
