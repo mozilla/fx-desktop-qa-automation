@@ -138,7 +138,9 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     expanded_args = [
         flag.split() if " " in flag else [flag] for flag in flags_arguments
     ]
+    logging.warning(f"Flags: {flags_arguments}")
     flags_arguments[:] = sum(expanded_args, [])
+    logging.warning(f"Expanded Flags: {flags_arguments}")
     for arg in flags_arguments[:]:
         if arg.split("=")[0] in valid_flags:
             if arg in flag_with_parameter:
