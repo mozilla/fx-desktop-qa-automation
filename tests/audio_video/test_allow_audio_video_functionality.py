@@ -61,4 +61,6 @@ def test_allow_audio_video_functionality(driver: Firefox):
         except AssertionError:
             sleep(2)
     else:
-        pytest.fail(f"Tab sound status did not reach PLAYING after {max_retries} retries.")
+        pytest.fail(
+            f"Tab sound status did not reach PLAYING after {max_retries} retries."
+        )
