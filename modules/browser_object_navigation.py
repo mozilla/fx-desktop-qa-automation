@@ -300,12 +300,16 @@ class Navigation(BasePage):
         self.wait_for_page_to_load()
         return self
 
-    def handle_geolocation_prompt(self, button_type="primary"):
+    def handle_geolocation_prompt(
+        self, button_type="primary", remember_this_decision=False
+    ):
         """
         Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
         """
         button_selector = f"popup-notification-{button_type}-button"
         self.element_clickable(button_selector)
+        if remember_this_decision:
+            self.click_on("checkbox-remember-this-decision")
         self.click_on(button_selector)
 
     def open_searchmode_switcher_settings(self):
