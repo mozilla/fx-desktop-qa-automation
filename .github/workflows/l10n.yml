@@ -276,7 +276,6 @@ jobs:
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
               $line = $_
-              Write-Host "Running tests for: $line"
               try {
                   pipenv run python l10n_CM/run_l10n.py --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
@@ -302,7 +301,6 @@ jobs:
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
               $line = $_
-              Write-Host "Running tests for: $line"
               try {
                   pipenv run python l10n_CM/run_l10n.py --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
