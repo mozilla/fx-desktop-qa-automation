@@ -245,6 +245,20 @@ class Autofill(BasePage):
                 )
             elif attr_name == "expiration_date" and len(autofilled_field_value) > 5:
                 autofilled_field_value = autofilled_field_value.replace("20", "")
+
+            # Handle expiration month comparison - normalize to integers to handle leading zeros
+            if attr_name == "expiration_month":
+                try:
+                    expected_int = int(expected_value)
+                    actual_int = int(autofilled_field_value)
+                    assert expected_int == actual_int, (
+                        f"{autofilled_field_value} is different from {expected_value}"
+                    )
+                    continue
+                except (ValueError, TypeError):
+                    # If conversion fails, fall back to string comparison
+                    pass
+
             assert expected_value in autofilled_field_value, (
                 f"{autofilled_field_value} is different from {expected_value}"
             )
