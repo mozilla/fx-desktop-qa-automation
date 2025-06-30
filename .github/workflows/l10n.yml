@@ -3,6 +3,7 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
+  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -17,6 +18,10 @@ on:
     inputs:
       mac_installer_link:
         description: 'The link to the macOS installer for the Fx under test'
+        required: false
+        type: string
+      linux_tarball_link:
+        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: false
         type: string
 env:
@@ -46,11 +51,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Check test case numbers
-        run: |
-          python check_test_cases.py
-          exit $?
-          echo "Triggered by event: ${{ github.event_name }}"
       - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'L10N-MacOS' }}
         run: |
@@ -101,7 +101,6 @@ jobs:
         run: |
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           echo "0" > TEST_EXIT_CODE
-          pipenv run python check_l10n_test_cases.py
           while IFS= read -r line; do
             echo "Running tests for: $line"
             pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
@@ -118,6 +117,79 @@ jobs:
         with:
           name: artifacts-mac
           path: artifacts-mac
+  L10N-Linux:
+    if: ${{inputs.job_to_run == 'L10N-MacOS' || inputs.linux_tarball_link }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
+          echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "Running smoke tests on supplied executable";
+          sudo apt install gnome-screenshot
+          uname -m;
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          rm ./pyproject.toml;
+          mv ./ci_xvfb_pyproject.toml ./pyproject.toml;
+          pipenv install;
+          ./collect_executables.sh
+          ./firefox/firefox --version;
+          #. ./keyring-unlock.sh;
+      - name: Run L10N Tests in Ubuntu
+        if: steps.setup.conclusion == 'success'
+        env:
+          FX_EXECUTABLE: ./firefox/firefox
+        run: |
+          "$FX_EXECUTABLE" --version
+          echo "0" > TEST_EXIT_CODE
+          pipenv run python check_l10n_test_cases.py
+          Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
+          while IFS= read -r line; do
+            echo "Running tests for: $line"
+            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
+          done < selected_l10n_mappings
+          mv artifacts artifacts-mac || true
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ $EXIT_CODE != 0 ]; then
+            exit $EXIT_CODE
+          fi
+          exit $SCRIPT_EXIT_CODE
+      - name: Run Smoke Tests in Ubuntu (Headed)
+        if: steps.setup.conclusion == 'success' && always()
+        env:
+          FX_EXECUTABLE: ./firefox/firefox
+        run: |
+          mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
+          echo "0" > TEST_EXIT_CODE
+          while IFS= read -r line; do
+            echo "Running tests for: $line"
+            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
+          done < selected_l10n_mappings
+          mv -n artifacts/* artifacts-mac/ || true
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ $EXIT_CODE != 0 ]; then
+            exit $EXIT_CODE
+          fi
+          exit $SCRIPT_EXIT_CODE
+
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
