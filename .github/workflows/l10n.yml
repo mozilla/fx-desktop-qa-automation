@@ -34,7 +34,7 @@ env:
 
 jobs:
   L10N-MacOS:
-    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
+    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -118,7 +118,7 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
   L10N-Linux:
-    if: ${{inputs.job_to_run == 'L10N-MacOS' || inputs.linux_tarball_link }}
+    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-MacOS' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
       - name: Create app token
