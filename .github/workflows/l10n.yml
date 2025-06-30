@@ -269,13 +269,14 @@ jobs:
         if: steps.setup.conclusion == 'success'
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+          $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python check_l10n_test_cases.py
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
               $line = $_
+              Write-Host "Running tests for: $line"
               try {
                   pipenv run python l10n_CM/run_l10n.py --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
@@ -295,12 +296,14 @@ jobs:
         run: |
           rm ./pyproject.toml;
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+          $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
+          Write-Host "FX_EXECUTABLE: $FX_EXECUTABLE"
           pipenv run python check_l10n_test_cases.py
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
               $line = $_
+              Write-Host "Running tests for: $line"
               try {
                   pipenv run python l10n_CM/run_l10n.py --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
