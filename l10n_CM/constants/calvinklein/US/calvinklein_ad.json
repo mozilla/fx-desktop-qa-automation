@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/calvinklein_ad.html",
+  "field_mapping": {
+    "given_name": "5d2af5cb-8f6d-4fdc-8ae5-21c7e5e97a43",
+    "family_name": "82900c67-963c-40f8-b0ef-c986a2accc43",
+    "street_address": "de205097-d237-41cb-a1c1-53e0a9952f7b",
+    "address_level_2": "049c2ac8-11d4-4ba3-84d8-ef79cbccbd33",
+    "address_level_1": "afcde680-d03e-45fb-8e33-0642ffd25a67",
+    "postal_code": "b1f91cf0-6b38-4f38-ac61-13fe4cd720f2",
+    "email": "0c994dc2-4e0b-4734-8582-74ce9a1bff55",
+    "telephone": "e1f86567-396f-473c-8666-47447f52d722"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "5d2af5cb-8f6d-4fdc-8ae5-21c7e5e97a43",
+    "82900c67-963c-40f8-b0ef-c986a2accc43",
+    "de205097-d237-41cb-a1c1-53e0a9952f7b",
+    "049c2ac8-11d4-4ba3-84d8-ef79cbccbd33",
+    "afcde680-d03e-45fb-8e33-0642ffd25a67",
+    "b1f91cf0-6b38-4f38-ac61-13fe4cd720f2",
+    "0c994dc2-4e0b-4734-8582-74ce9a1bff55",
+    "e1f86567-396f-473c-8666-47447f52d722"
+  ]
+}
