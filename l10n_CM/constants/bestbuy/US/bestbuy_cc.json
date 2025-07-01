@@ -6,6 +6,7 @@
     "cvv": "3752da40-c202-4c98-8c7b-4d211ed879c4"
 },
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
   "fields": [
     "619571c7-fa6e-4b47-a8e2-a6e36fec376a",
     "2a9ecff6-145f-48de-a8f7-f1ac282885b9",

@@ -12,6 +12,7 @@
 
  },
  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "skip": "True",
  "fields": [
     "24fa9bb9-032c-4aa5-a829-8f3c8950cba3",
     "ca35b256-a76c-476b-bc50-5e651c0a20fe",

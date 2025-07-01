@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -32,6 +34,7 @@ def test_redirect_to_addons(driver: Firefox):
     assert driver.current_url == "about:addons"
 
 
+@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1974109")
 @pytest.mark.parametrize("theme_name", list(themes.keys()))
 def test_open_addons(driver: Firefox, theme_name: str):
     """
@@ -56,6 +59,7 @@ def test_open_addons(driver: Firefox, theme_name: str):
     abt_addons.activate_theme(nav, theme_name, themes[theme_name])
 
 
+@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1974109")
 def test_alpenglow_theme(driver: Firefox):
     """
     C118173, specifically for alpenglow theme because color can be two values for dark or light mode

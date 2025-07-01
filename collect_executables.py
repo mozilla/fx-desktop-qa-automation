@@ -146,7 +146,7 @@ else:
             beta = int(beta)
 
             next_major = f"{major + 1}.0b1"
-            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/build1/"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/"
             rs = requests.get(fx_download_dir_url)
             if rs.status_code < 300:
                 latest_beta_ver = next_major
@@ -154,7 +154,7 @@ else:
                 continue
 
             next_minor = f"{major}.{minor + 1}b1"
-            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/build1/"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/"
             rs = requests.get(fx_download_dir_url)
             if rs.status_code < 300:
                 latest_beta_ver = next_minor
@@ -162,7 +162,7 @@ else:
                 continue
 
             next_beta = f"{major}.{minor}b{beta + 1}"
-            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/build1/"
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/"
             rs = requests.get(fx_download_dir_url)
             if rs.status_code < 300:
                 latest_beta_ver = next_beta
@@ -171,20 +171,23 @@ else:
 
             candidate_exists = False
 
-        status = 200
-        build = 0
-        while status < 400 and build < 20:
-            build += 1
-            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/"
+        # Look for the latest build
+        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/"
+        response = requests.get(fx_download_dir_url)
+        build = 1
+        if response.status_code < 300:
+            soup = BeautifulSoup(response.text, "html.parser")
+            executable_name = ""
+            # Extract the text of each line
+            for line in soup.find_all("a"):
+                line_text = line.getText().split(".")
+                if not line_text[0]:
+                    continue
+                # Get the executable name
+                build = max(int(line_text[0][-2]), build)
+            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
 
-            # Fetch the page
-            response = requests.get(fx_download_dir_url)
-            status = response.status_code
-
-        # Correct build is the last one that didn't 404
-        build -= 1
-        fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
-
+    # Get the corresponding executable
     response = requests.get(fx_download_dir_url)
     status = response.status_code
     response_text = None
