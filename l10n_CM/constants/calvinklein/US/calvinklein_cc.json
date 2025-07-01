@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/calvinklein_cc.html",
+  "field_mapping": {
+    "card_number": "f0c98e17-aa0d-40fb-9e2b-e104af8e5fb5",
+    "expiration_date": "9e4cbe27-0244-4130-bbdf-097dd8f5b1d4",
+    "cvv": "f1d8ae7a-2467-426f-83a1-1dc2b0861bd1"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "f0c98e17-aa0d-40fb-9e2b-e104af8e5fb5",
+    "9e4cbe27-0244-4130-bbdf-097dd8f5b1d4",
+    "f1d8ae7a-2467-426f-83a1-1dc2b0861bd1"
+]
+}
