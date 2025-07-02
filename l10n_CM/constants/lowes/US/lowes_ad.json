@@ -1,0 +1,19 @@
+{
+ "url": "http://127.0.0.1:8080/lowes_ad.html",
+ "field_mapping": {
+    "given_name":"4b1e90aa-9614-4c10-9a07-e1f5d0d0fa5e",
+    "family_name":"eda01517-1593-4907-bd89-e760ac1b3301",
+    "street_address":"24128044-0f39-4679-93f1-788031618aa1",
+    "address_level_2":"35740687-1404-4d7c-973e-4f4a8d49fd2c",
+    "postal_code":"68980560-b0a3-4c07-b4a9-5bbf800cfc5d"
+
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "4b1e90aa-9614-4c10-9a07-e1f5d0d0fa5e",
+    "eda01517-1593-4907-bd89-e760ac1b3301",
+    "24128044-0f39-4679-93f1-788031618aa1",
+    "35740687-1404-4d7c-973e-4f4a8d49fd2c",
+    "68980560-b0a3-4c07-b4a9-5bbf800cfc5d"
+ ]
+}

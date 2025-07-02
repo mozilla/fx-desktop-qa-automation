@@ -1,8 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
+from modules.browser_object import PanelUi, TabBar
 from modules.page_object_generics import GenericPage
 
 

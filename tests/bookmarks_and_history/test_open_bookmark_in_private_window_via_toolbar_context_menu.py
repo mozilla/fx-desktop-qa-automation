@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, PanelUi, TabBar
+from modules.browser_object import Navigation, TabBar
 from modules.page_object_generics import GenericPage
 
 

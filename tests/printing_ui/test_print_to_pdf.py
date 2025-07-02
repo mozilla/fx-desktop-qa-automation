@@ -1,5 +1,6 @@
 import logging
 import os
+from platform import system
 
 import pytest
 from selenium.webdriver import Firefox
@@ -44,6 +45,7 @@ def file_is_somewhere():
     return False
 
 
+@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1974011")
 @pytest.mark.headed
 def test_print_to_pdf(
     driver: Firefox,

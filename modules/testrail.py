@@ -160,6 +160,10 @@ class TestRail:
         """Get a given Test Case"""
         return self.client.send_get(f"get_case/{case_id}")
 
+    def get_suites(self, project_id):
+        """Get all suites for project"""
+        return self.client.send_get(f"get_suites/{project_id}")
+
     def update_cases_in_suite(self, suite_id, case_ids, **kwargs):
         """Given a suite and a list of test cases, update all listed
         test cases according to keyword args"""
@@ -390,7 +394,13 @@ class TestRail:
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
-        status_key = {"passed": 1, "skipped": 3, "xfailed": 4, "failed": 5}
+        status_key = {
+            "passed": 1,
+            "skipped": 3,
+            "blocked": 2,
+            "xfailed": 4,
+            "failed": 5,
+        }
         if not test_case_ids:
             test_case_ids = [
                 test_case.get("id")

@@ -34,6 +34,7 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
         }
     )
     # Click the "Edit" button
+    about_logins.element_visible("edit-login")
     about_logins.click_on("edit-login")
 
     # Change username and the password

@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8080/lowes_cc.html",
+  "field_mapping": {
+    "card_number": "311621a3-d8f9-4dd3-bf9d-1eeb08f7f8a5",
+    "expiration_date": "4ef6a37d-b02f-4fa7-bfc1-0994180238c8",
+    "cvv": "78daaaff-d49c-4a2e-91a7-9cc214224f72"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "311621a3-d8f9-4dd3-bf9d-1eeb08f7f8a5",
+    "4ef6a37d-b02f-4fa7-bfc1-0994180238c8",
+    "78daaaff-d49c-4a2e-91a7-9cc214224f72"
+]
+}

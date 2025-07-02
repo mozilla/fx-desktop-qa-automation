@@ -146,6 +146,7 @@ class Autofill(BasePage):
         """Click the form field given the attribute name."""
         field = self.field_mapping.get(attr_name, None)
         if field:
+            self.get_element("form-field", labels=[field]).clear()
             self.double_click("form-field", labels=[field])
         else:
             logging.warning(f"The field: {attr_name} is not available in the site.")
@@ -225,28 +226,35 @@ class Autofill(BasePage):
         for attr_name, field_name in self.field_mapping.items():
             if non_us_ca_address and field_name == "address-level1":
                 continue
-            if field_name != "cc-csc":
-                expected_value = getattr(sample_data, attr_name, None)
-                autofilled_field = self.get_element("form-field", labels=[field_name])
-                if autofilled_field.tag_name.lower() != "select":
-                    autofilled_field_value = autofilled_field.get_attribute("value")
-                    # self.expect_element_attribute_contains(
-                    #     "form-field", "value", expected_value, labels=[field_name]
-                    # )
-                else:
-                    autofilled_field_value = Select(
-                        autofilled_field
-                    ).first_selected_option.text
-                if (
-                    field_name == "address-level1"
-                    and autofilled_field_value != expected_value
-                ):
-                    expected_value = self.util.get_state_province_abbreviation(
-                        expected_value
-                    )
-                assert expected_value in autofilled_field_value, (
-                    f"{autofilled_field_value} is different from {expected_value}"
+            if attr_name == "cvv":
+                continue
+            expected_value = getattr(sample_data, attr_name, None)
+            autofilled_field = self.get_element("form-field", labels=[field_name])
+            if autofilled_field.tag_name.lower() != "select":
+                autofilled_field_value = autofilled_field.get_attribute("value")
+            else:
+                autofilled_field_value = Select(
+                    autofilled_field
+                ).first_selected_option.text
+            if (
+                attr_name == "address_level_1"
+                and autofilled_field_value != expected_value
+            ):
+                expected_value = self.util.get_state_province_abbreviation(
+                    expected_value
                 )
+            elif attr_name == "expiration_date" and len(autofilled_field_value) > 5:
+                autofilled_field_value = autofilled_field_value.replace("20", "")
+            elif attr_name == "country":
+                expected_value = self.util.get_country_local_translation(expected_value)
+            if autofilled_field_value.isdigit():
+                # Handle expiration month comparison - normalize to integers to handle leading zeros
+                autofilled_field_value = str(int(autofilled_field_value))
+                expected_value = str(int(expected_value))
+
+            assert expected_value in autofilled_field_value, (
+                f"{autofilled_field_value} is different from {expected_value}"
+            )
 
     def verify_field_autofill_dropdown(
         self,
@@ -284,6 +292,7 @@ class Autofill(BasePage):
             if field:
                 autofill_field = self.get_element("form-field", labels=[field])
                 if autofill_field.tag_name.lower() != "select":
+                    autofill_field.clear()
                     # more general way of activating the dropdown
                     self.double_click("form-field", labels=[field])
                     autofill_field.send_keys("")
@@ -372,13 +381,14 @@ class Autofill(BasePage):
             if field:
                 autofill_field = self.get_element("form-field", labels=[field])
                 if autofill_field.tag_name.lower() != "select":
+                    autofill_field.clear()
                     # Focus the field so the highlight is visible
                     self.click_on("form-field", labels=[field])
 
                     # Get all colors in the field
                     selector = self.get_selector("form-field", labels=[field])
                     colors = self.browser_actions.get_all_colors_in_element(selector)
-                    logging.info(f"Colors found in '{field}': {colors}")
+                    logging.info(f"Colors found in '{field_name}': {colors}")
 
                     # Check the highlight
                     is_field_highlighted = any(
@@ -389,20 +399,24 @@ class Autofill(BasePage):
                     # Assert based on expectation
                     if should_be_highlighted:
                         assert is_field_highlighted, (
-                            f"Expected yellow highlight on '{field}', but none found."
+                            f"Expected yellow highlight on '{field_name}', but none found."
                         )
-                        logging.info(f"Yellow highlight found in '{field}'.")
+                        logging.info(f"Yellow highlight found in '{field_name}'.")
                     else:
                         assert not is_field_highlighted, (
-                            f"Expected NO yellow highlight on '{field}', but found one."
+                            f"Expected NO yellow highlight on '{field_name}', but found one."
                         )
-                        logging.info(f"No yellow highlight in '{field}', as expected.")
+                        logging.info(
+                            f"No yellow highlight in '{field_name}', as expected."
+                        )
                 else:
                     logging.info(
-                        f"Field: {field} is a select element. No autofill option."
+                        f"Field: {field_name} is a select element. No autofill option."
                     )
             else:
-                logging.warning(f"The field: {field} is not available in the site.")
+                logging.warning(
+                    f"The field: {field_name} is not available in the site."
+                )
 
         return self
 
@@ -472,7 +486,7 @@ class Autofill(BasePage):
             value = value[-4:]
         elif field == "cc-exp-year":
             value = value[-2:]
-        elif value[0] == "+":
+        elif field == "tel" or value[0] == "+":
             value = self.util.normalize_phone_number(value)
         return value
 
@@ -487,6 +501,7 @@ class Autofill(BasePage):
         """
         autofill_field = self.get_element("form-field", labels=[field])
         if autofill_field.tag_name.lower() != "select":
+            autofill_field.clear()
             self.double_click("form-field", labels=[field])
             self.autofill_popup.ensure_autofill_dropdown_visible()
             self.autofill_popup.select_nth_element(index)
@@ -556,6 +571,7 @@ class Autofill(BasePage):
         if field:
             autofill_field = self.get_element("form-field", labels=[field])
             if autofill_field.tag_name.lower() != "select":
+                autofill_field.clear()
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
                 self.autofill_popup.hover("select-form-option")
@@ -611,6 +627,7 @@ class Autofill(BasePage):
         if field:
             autofill_field = self.get_element("form-field", labels=[field])
             if autofill_field.tag_name.lower() != "select":
+                autofill_field.clear()
                 # Double-click a field and choose the first element from the autocomplete dropdown
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
