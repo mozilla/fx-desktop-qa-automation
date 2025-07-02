@@ -246,6 +246,8 @@ class Autofill(BasePage):
             elif attr_name == "expiration_date" and len(autofilled_field_value) > 5:
                 autofilled_field_value = autofilled_field_value.replace("20", "")
 
+            elif attr_name == "country":
+                expected_value = self.util.get_country_local_translation(expected_value)
             if (
                 attr_name == "expiration_month"
                 and autofilled_field_value.isdigit()
