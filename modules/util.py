@@ -528,7 +528,7 @@ class Utilities:
         Returns the local translation of the country name.
 
         :param country_name: The full name of the country in english
-        :return: The corresponding translation in the local language or the english name itself if not in the dictionary.
+        :return: The corresponding translation in the local language or "Not Found" if not in the dictionary.
         """
         return self.country_local_translation.get(country_name, country_name)
 
