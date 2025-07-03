@@ -3,7 +3,6 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -34,12 +33,11 @@ env:
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
-  TESTRAIL_REPORT: true
   FX_L10N: 'true'
 
 jobs:
   L10N-MacOS:
-    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -198,7 +196,7 @@ jobs:
 
 
   L10N-Windows:
-    if: ${{ inputs.job_to_run == 'L10N-Windows' || github.event_name == 'pull_request' || inputs.win_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
