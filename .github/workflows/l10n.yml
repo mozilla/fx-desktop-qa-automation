@@ -296,7 +296,7 @@ jobs:
       - name: Run L10N Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
-          REPORTABLE: true
+          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
         run: |
           rm ./pyproject.toml;
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
