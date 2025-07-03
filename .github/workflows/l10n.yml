@@ -37,7 +37,7 @@ env:
 
 jobs:
   L10N-MacOS:
-    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
+    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -71,31 +71,31 @@ jobs:
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
           mv ./ci_pyproject.toml ./pyproject.toml;
-          pipenv install
+          pipenv install;
       - name: Install Fx
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
-          echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
+          echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT";
       - name: Run L10N Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
-          "$FX_EXECUTABLE" --version
-          echo "0" > TEST_EXIT_CODE
-          pipenv run python check_l10n_test_cases.py
+          "$FX_EXECUTABLE" --version;
+          echo "0" > TEST_EXIT_CODE;
+          pipenv run python check_l10n_test_cases.py;
           while IFS= read -r line; do
-            echo "Running tests for: $line"
-            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
-          done < selected_l10n_mappings
-          mv artifacts artifacts-mac || true
-          EXIT_CODE=$(cat TEST_EXIT_CODE)
+            echo "Running tests for: $line";
+            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+          done < selected_l10n_mappings;
+          mv artifacts artifacts-mac || true;
+          EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE
+            exit $EXIT_CODE;
           fi
-          exit $SCRIPT_EXIT_CODE
+          exit $SCRIPT_EXIT_CODE;
       - name: Run L10N Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
@@ -103,17 +103,17 @@ jobs:
           REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
         run: |
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          echo "0" > TEST_EXIT_CODE
+          echo "0" > TEST_EXIT_CODE;
           while IFS= read -r line; do
-            echo "Running tests for: $line"
-            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
-          done < selected_l10n_mappings
-          mv -n artifacts/* artifacts-mac/ || true
-          EXIT_CODE=$(cat TEST_EXIT_CODE)
+            echo "Running tests for: $line";
+            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+          done < selected_l10n_mappings;
+          mv -n artifacts/* artifacts-mac/ || true;
+          EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE
+            exit $EXIT_CODE;
           fi
-          exit $SCRIPT_EXIT_CODE
+          exit $SCRIPT_EXIT_CODE;
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
@@ -121,7 +121,7 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
   L10N-Linux:
-    if: ${{ inputs.linux_tarball_link }}
+    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
       - name: Create app token
@@ -145,7 +145,7 @@ jobs:
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running l10n tests on supplied executable";
-          sudo apt install gnome-screenshot
+          sudo apt install gnome-screenshot;
           uname -m;
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -153,50 +153,52 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_xvfb_pyproject.toml ./pyproject.toml;
           pipenv install;
-          ./collect_executables.sh
+          ./collect_executables.sh;
           ./firefox/firefox --version;
-          #. ./keyring-unlock.sh;
       - name: Run L10N Tests in Ubuntu
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
-          "$FX_EXECUTABLE" --version
-          echo "0" > TEST_EXIT_CODE
-          pipenv run python check_l10n_test_cases.py
+          "$FX_EXECUTABLE" --version;
+          echo "0" > TEST_EXIT_CODE;
+          pipenv run python check_l10n_test_cases.py;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
           while IFS= read -r line; do
-            echo "Running tests for: $line"
-            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
-          done < selected_l10n_mappings
-          mv artifacts artifacts-mac || true
-          EXIT_CODE=$(cat TEST_EXIT_CODE)
+            echo "Running tests for: $line";
+            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+          done < selected_l10n_mappings;
+          mv artifacts artifacts-linux || true;
+          EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE
+            exit $EXIT_CODE;
           fi
-          exit $SCRIPT_EXIT_CODE
+          exit $SCRIPT_EXIT_CODE;
       - name: Run Smoke Tests in Ubuntu (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
-          echo "0" > TEST_EXIT_CODE
+          echo "0" > TEST_EXIT_CODE;
           while IFS= read -r line; do
-            echo "Running tests for: $line"
-            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?
-          done < selected_l10n_mappings
-          mv -n artifacts/* artifacts-mac/ || true
-          EXIT_CODE=$(cat TEST_EXIT_CODE)
+            echo "Running tests for: $line";
+            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+          done < selected_l10n_mappings;
+          mv -n artifacts/* artifacts-linux/ || true;
+          EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE
+            exit $EXIT_CODE;
           fi
-          exit $SCRIPT_EXIT_CODE
-
-
-
+          exit $SCRIPT_EXIT_CODE;
+      - name: Upload artifacts
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-linux
+          path: artifacts-linux
   L10N-Windows:
-    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
+    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -338,6 +340,7 @@ jobs:
     needs:
       - L10N-Windows
       - L10N-MacOS
+      - L10N-Linux
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -354,13 +357,20 @@ jobs:
         with:
           name: artifacts-win
           path: artifacts-win
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts-linux
+          path: artifacts-linux
       - name: Download MacOS artifact
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac
           path: artifacts-mac
-      - name: List downloaded files
+      - name: List downloaded Windows files
         run: ls artifacts-win/
+      - name: List downloaded Linux files
+        run: ls artifacts-linux/
       - name: List downloaded MacOS files
         run: ls artifacts-mac/
       - name: Run script with secret
