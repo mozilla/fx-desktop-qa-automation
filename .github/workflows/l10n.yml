@@ -179,6 +179,7 @@ jobs:
       - name: Run Smoke Tests in Ubuntu (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
+          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
