@@ -103,6 +103,8 @@ class Utilities:
             "Nunavut": "NU",
             "Yukon": "YT",
         }
+        # temporary fix until faker issue is resolved
+        self.country_local_translation = {"Germany": "Deutschland"}
         self.fake = None
         self.locale = None
 
@@ -518,6 +520,15 @@ class Utilities:
         :return: The corresponding abbreviation or "Not Found" if not in the dictionary.
         """
         return self.state_province_abbr.get(full_name, "Not Found")
+
+    def get_country_local_translation(self, country_name: str) -> str:
+        """
+        Returns the local translation of the country name.
+
+        :param country_name: The full name of the country in english
+        :return: The corresponding translation in the local language or the english name itself if not in the dictionary.
+        """
+        return self.country_local_translation.get(country_name, country_name)
 
     def normalize_regional_phone_numbers(self, phone: str, region: str) -> str:
         """
