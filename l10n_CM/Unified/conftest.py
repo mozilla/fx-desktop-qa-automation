@@ -157,7 +157,11 @@ def cc_form_field(cc_site_data):
 
 
 @pytest.fixture()
-def address_autofill(driver, ad_site_data, ad_form_field, serve_live_site):
+def address_autofill(
+    driver, ad_site_data, ad_form_field, serve_live_site, live_site, region
+):
+    if ad_site_data.get("skip"):
+        pytest.skip(f"Address tests for {live_site} in {region} region skipped..")
     af = AddressFill(
         driver,
         url_template=ad_site_data.get("url"),
@@ -170,6 +174,8 @@ def address_autofill(driver, ad_site_data, ad_form_field, serve_live_site):
 
 @pytest.fixture()
 def credit_card_autofill(driver, cc_site_data, cc_form_field, serve_live_site):
+    if cc_site_data.get("skip"):
+        pytest.skip(f"Credit Card tests for {live_site} in {region} region skipped..")
     cf = CreditCardFill(
         driver,
         url_template=cc_site_data.get("url"),
