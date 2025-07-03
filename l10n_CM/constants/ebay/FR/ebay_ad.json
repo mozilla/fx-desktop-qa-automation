@@ -1,22 +1,24 @@
 {
   "url": "http://127.0.0.1:8080/ebay_ad.html",
   "field_mapping": {
-    "country": "90b596de-e266-4e66-9530-2e41b184555d",
+    "country": "d0b2c700-1d21-431c-9b63-15ce879bd1d4",
     "given_name": "02e8af39-63ef-4161-ba2a-037f1fc0d126",
-    "telephone": "28f5f493-ad18-4e7c-99fa-524bc768ed7a",
-    "address_level_1": "a5fb9e4c-60a0-42a2-9e4a-6a067b55d208",
-    "organization": "9e8475b3-e1a5-46cf-9af0-6f2caab918fe",
-    "address_level_2": "67cbe0f8-dbe4-4afd-a077-765186bcf0b3",
-    "postal_code": "e38f3160-4ce5-4804-b5d5-b92c3ccc499e"
+    "family_name": "3bbcb88c-0eb3-44f3-97f8-6d53e1b6b3b0",
+    "telephone": "d861a0fd-5093-4a9a-acf3-865630377e05",
+    "address_level_1": "1fa78165-45eb-483a-850f-ede7d77fb276",
+    "email": "81c4f8fa-69ba-435a-824e-d33170457fb2",
+    "address_level_2": "96269fbd-c77b-4bcd-bf56-978d2c1196eb",
+    "postal_code": "48149049-83a7-43b0-ad00-936a7b764257"
   },
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "fields": [
-    "90b596de-e266-4e66-9530-2e41b184555d",
+    "d0b2c700-1d21-431c-9b63-15ce879bd1d4",
     "02e8af39-63ef-4161-ba2a-037f1fc0d126",
-    "28f5f493-ad18-4e7c-99fa-524bc768ed7a",
-    "a5fb9e4c-60a0-42a2-9e4a-6a067b55d208",
-    "9e8475b3-e1a5-46cf-9af0-6f2caab918fe",
-    "67cbe0f8-dbe4-4afd-a077-765186bcf0b3",
-    "e38f3160-4ce5-4804-b5d5-b92c3ccc499e"
+    "3bbcb88c-0eb3-44f3-97f8-6d53e1b6b3b0",
+    "d861a0fd-5093-4a9a-acf3-865630377e05",
+    "1fa78165-45eb-483a-850f-ede7d77fb276",
+    "81c4f8fa-69ba-435a-824e-d33170457fb2",
+    "96269fbd-c77b-4bcd-bf56-978d2c1196eb",
+    "48149049-83a7-43b0-ad00-936a7b764257"
   ]
 }
