@@ -34,12 +34,11 @@ env:
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
-  TESTRAIL_REPORT: true
   FX_L10N: true
 
 jobs:
   L10N-MacOS:
-    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -123,7 +122,7 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
   L10N-Linux:
-    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
       - name: Create app token
@@ -201,7 +200,7 @@ jobs:
           name: artifacts-linux
           path: artifacts-linux
   L10N-Windows:
-    if: ${{ github.event_name == 'pull_request' || inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
