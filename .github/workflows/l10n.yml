@@ -182,7 +182,7 @@ jobs:
           REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
           FX_EXECUTABLE: ./firefox/firefox
         run: |
-          mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
+          mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           echo "0" > TEST_EXIT_CODE;
           while IFS= read -r line; do
             echo "Running tests for: $line";
