@@ -13,15 +13,7 @@ current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
-valid_sites = {
-    "demo",
-    "amazon",
-    "walmart",
-    "mediamarkt",
-    "lowes",
-    "etsy",
-    "calvinklein",
-}
+valid_sites = {"demo", "amazon", "walmart", "mediamarkt", "lowes", "etsy", "calvinklein", "bestbuy"}
 live_sites = []
 
 LOCALHOST = "127.0.0.1"
@@ -144,7 +136,7 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     # add workers and rerun flaky failed tests.
     flg = []
     expanded_args = [
-        flag.split() if " " in flag else [flag] for flag in flags_arguments
+        flag.split() if "--" not in flag else [flag] for flag in flags_arguments
     ]
     flags_arguments[:] = sum(expanded_args, [])
     for arg in flags_arguments[:]:

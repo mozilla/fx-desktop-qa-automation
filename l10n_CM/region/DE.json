@@ -1,8 +1,10 @@
 {
   "region": "DE",
   "sites": [
-    "demo",
-    "mediamarkt"
+
+    "amazon",
+    "mediamarkt",
+    "demo"
   ],
   "tests": [
   ]
