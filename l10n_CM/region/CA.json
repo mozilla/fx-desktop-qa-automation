@@ -1,6 +1,11 @@
 {
     "region": "CA",
-    "sites": ["amazon", "walmart", "demo"],
+    "sites": [
+    "amazon",
+    "walmart",
+    "demo",
+    "etsy"
+  ],
     "tests": [
     ]
 }
