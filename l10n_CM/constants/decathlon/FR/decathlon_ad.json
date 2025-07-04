@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:8080/decathlon_ad.html",
+  "field_mapping": {
+    "given_name": "7c50c746-7a9c-4e4d-9c29-c90000a61dc9",
+    "family_name": "c4ca5150-d94d-4134-aadb-e1f74456ab7b",
+    "telephone": "85bf2089-4db1-4f1c-85a2-915bda5ccb00",
+    "street_address": "32e3d5df-617c-4434-8095-3c2a23e38a5e",
+    "address_level_2": "31388a22-df62-4e60-987a-a19d9121ee3b",
+    "postal_code": "4b97c02d-e7b1-4c1b-9379-c2add21c2546"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "7c50c746-7a9c-4e4d-9c29-c90000a61dc9",
+    "c4ca5150-d94d-4134-aadb-e1f74456ab7b",
+    "85bf2089-4db1-4f1c-85a2-915bda5ccb00",
+    "32e3d5df-617c-4434-8095-3c2a23e38a5e",
+    "31388a22-df62-4e60-987a-a19d9121ee3b",
+    "4b97c02d-e7b1-4c1b-9379-c2add21c2546"
+  ]
+}
