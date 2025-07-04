@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/vans_ad.html",
+  "field_mapping": {
+    "given_name": "24769ef6-37ae-43ea-8e12-95ef478d0baa",
+    "family_name": "30e82a87-0778-48e8-a9a0-daef5e3db773",
+    "street_address": "ce1b0022-1aed-4f8b-a4d0-c415caf78f01",
+    "address_level_2": "a8b1515a-4067-49d4-b632-746e09d33ca2",
+    "postal_code": "85744a7b-9142-4650-a432-5515b59e7ccd",
+    "telephone": "75462c89-1d83-4011-b0b9-961ce67ceb93",
+    "email": "2703d56e-3fa7-4c46-bf3f-de36702d794e"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "24769ef6-37ae-43ea-8e12-95ef478d0baa",
+    "30e82a87-0778-48e8-a9a0-daef5e3db773",
+    "ce1b0022-1aed-4f8b-a4d0-c415caf78f01",
+    "a8b1515a-4067-49d4-b632-746e09d33ca2",
+    "85744a7b-9142-4650-a432-5515b59e7ccd",
+    "75462c89-1d83-4011-b0b9-961ce67ceb93",
+    "2703d56e-3fa7-4c46-bf3f-de36702d794e"
+  ]
+}
