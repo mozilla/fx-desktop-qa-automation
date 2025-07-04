@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:8080/ebay_ad.html",
+  "field_mapping": {
+    "country": "e9e70c93-e9d2-409b-b095-e77314197c7c",
+    "given_name": "24d06c38-32ee-4355-8a51-f24a7670b6b2",
+    "family_name": "9470868e-3a3e-47fb-b532-25f921d01c8b",
+    "address_level_1": "56c8b6d4-3cd4-4109-bc1a-d464c51f30c0",
+    "postal_code": "995c03c6-b354-4dc5-a891-fb3acefd11ff",
+    "address_level_2": "701b8a55-61a8-4bfc-8c47-bc218ae1b6e1"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "e9e70c93-e9d2-409b-b095-e77314197c7c",
+    "24d06c38-32ee-4355-8a51-f24a7670b6b2",
+    "9470868e-3a3e-47fb-b532-25f921d01c8b",
+    "56c8b6d4-3cd4-4109-bc1a-d464c51f30c0",
+    "995c03c6-b354-4dc5-a891-fb3acefd11ff",
+    "701b8a55-61a8-4bfc-8c47-bc218ae1b6e1"
+  ]
+}
