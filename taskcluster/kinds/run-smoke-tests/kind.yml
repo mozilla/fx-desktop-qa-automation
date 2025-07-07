@@ -3,7 +3,6 @@ transforms:
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Smoke Tests"
   description: "Runs Smoke Tests and Notifies Slack"
   worker:
     taskcluster-proxy: true
@@ -80,6 +79,7 @@ task-defaults:
 
 tasks:
   linux:
+    label: "Smoke Tests Linux"
     worker-type: t-linux-wayland
     run:
       using: run-task
@@ -101,6 +101,7 @@ tasks:
         exit $((${?} | ${FAILURE}))
 
   windows:
+    label: "Smoke Tests Windows"
     worker-type: t-win11-64-source
     run:
       using: run-task
