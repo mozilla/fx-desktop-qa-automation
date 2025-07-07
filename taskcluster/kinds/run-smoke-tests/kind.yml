@@ -99,3 +99,17 @@ tasks:
         pipenv run python3 choose_ci_set.py
         pipenv run python3 run_tests.py -s --ci --headed --pyproject ci_pyproject_headed.toml
         exit $((${?} | ${FAILURE}))
+
+  windows:
+    worker-type: t-win11-64-source
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        mkdir -p artifacts;
+        pip3 install 'pipenv==2023.11.15';
+        pipenv install;
+        pipenv run python choose_ci_set.py;
+        pipenv run python run_tests.py -s --ci --install --pyproject ci_pyproject.toml
+        export FAILURE=${?}
+        pipenv run python run_tests.py -s --ci --headed --pyproject ci_pyproject_headed.toml
