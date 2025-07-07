@@ -5,7 +5,6 @@ transforms:
 task-defaults:
   label: "Smoke Tests"
   description: "Runs Smoke Tests and Notifies Slack"
-  worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
     max-run-time: 1800
@@ -18,9 +17,70 @@ task-defaults:
   scopes:
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
+  notify:
+    recipients:
+      - type: slack-channel
+        channel-id: C07AHPJ525V
+        status-type: on-defined
+    content:
+      slack:
+        blocks: [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": "firefox-desktop :firefox: ${task.metadata.name} Linux\n "
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Owner*: ${task.metadata.owner}"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Commit*: <${task.metadata.source}>"
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": ":testops-notify: created by Desktop QA Test Engineering"
+              }
+            ]
+          }
+        ]
+        text: "{task[name]} with id $taskId has finished!"
 
 tasks:
   linux:
+    worker-type: t-linux-wayland
     run:
       using: run-task
       cwd: "{checkout}"
@@ -29,75 +89,13 @@ tasks:
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         pip3 install 'ruff>=0.4.8,<0.5';
-        mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         ./collect_executables.sh;
         ./firefox/firefox --version;
         . ./keyring-unlock.sh
         pipenv run python3 choose_ci_set.py
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests)
+        pipenv run python3 run_tests.py -s --pyproject ci_pyproject.toml
         export FAILURE=${?}
-        mv ./ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run python3 choose_ci_set.py
-        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests)
+        pipenv run python3 run_tests.py -s --headed --pyproject ci_pyproject_headed.toml
         exit $((${?} | ${FAILURE}))
-    notify:
-      recipients:
-        - type: slack-channel
-          channel-id: C07AHPJ525V
-          status-type: on-defined
-      content:
-        slack:
-          blocks: [
-            {
-              "type": "header",
-              "text": {
-                "type": "plain_text",
-                "text": "firefox-desktop :firefox: ${task.metadata.name} Linux\n "
-              }
-            },
-            {
-              "type": "divider"
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*Owner*: ${task.metadata.owner}"
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*Commit*: <${task.metadata.source}>"
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
-              }
-            },
-            {
-              "type": "divider"
-            },
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "type": "mrkdwn",
-                  "text": ":testops-notify: created by Desktop QA Test Engineering"
-                }
-              ]
-            }
-          ]
-          text: "{task[name]} with id $taskId has finished!"
