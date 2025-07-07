@@ -94,8 +94,8 @@ tasks:
         ./firefox/firefox --version;
         . ./keyring-unlock.sh
         pipenv run python3 choose_ci_set.py
-        pipenv run python3 run_tests.py -s --pyproject ci_pyproject.toml
+        pipenv run python3 run_tests.py -s --ci --pyproject ci_pyproject.toml
         export FAILURE=${?}
         pipenv run python3 choose_ci_set.py
-        pipenv run python3 run_tests.py -s --headed --pyproject ci_pyproject_headed.toml
+        pipenv run python3 run_tests.py -s --ci --headed --pyproject ci_pyproject_headed.toml
         exit $((${?} | ${FAILURE}))

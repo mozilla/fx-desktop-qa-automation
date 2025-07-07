@@ -35,6 +35,7 @@ def run_suite(parsed_args):
     if workers:
         pytest_args.extend(["-n", workers])
     pytest_args.extend(tests.split())
+    print("pytest " + " ".join(pytest_args))
     return pytest.main(pytest_args)
 
 
