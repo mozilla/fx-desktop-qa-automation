@@ -13,7 +13,7 @@ MAC_FX_EXEC = ""
 def run_suite(parsed_args):
     """Convert script / argparse args (parsed_args) to pytest_args"""
     pytest_args = parsed_args.added_args or []
-    if "--ci" in pytest_args and "--fx-executable" not in pytest_args:
+    if parsed_args.ci and "--fx-executable" not in pytest_args:
         fx_exec = LINUX_FX_EXEC
         if platform.system().lower().startswith("win"):
             fx_exec = WIN_FX_EXEC
@@ -47,6 +47,7 @@ parser.add_argument("added_args", nargs="*")
 parser.add_argument("--pyproject", default=None)
 parser.add_argument("-w", "--workers", default=None)
 parser.add_argument("-s", "--subset", action="store_true")
+parser.add_argument("--ci", action="store_true")
 parser.add_argument("--headed", action="store_true")
 
 sys.exit(run_suite(parser.parse_args()))
