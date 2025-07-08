@@ -275,7 +275,7 @@ class Autofill(BasePage):
             )
 
         # Handle numeric fields
-        if auto_filled_field_value.isdigit():
+        if attr_name == "expiration_month" and auto_filled_field_value.isdigit():
             # Handle expiration month comparison - normalize to integers to handle leading zeros
             auto_filled_field_value = str(int(auto_filled_field_value))
             expected_value = str(int(expected_value))
