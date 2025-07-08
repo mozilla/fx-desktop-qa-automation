@@ -35,4 +35,4 @@ workers:
       provisioner: '{trust-domain}-t'
       implementation: generic-worker
       os: windows
-      worker-type: '{alias}'
+      worker-type: 'win11-64-24h2-source'
