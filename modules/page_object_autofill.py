@@ -190,6 +190,7 @@ class Autofill(BasePage):
         sample_data: AutofillAddressBase | CreditCardBase,
         field: str,
         value: str | int,
+        region: str,
     ):
         """
         Update the form field with the new value.
@@ -198,6 +199,7 @@ class Autofill(BasePage):
             sample_data: sample data instance used to verify change.
             field: field being changed.
             value: value being added.
+            region: region being tested.
         """
         # updating the profile accordingly
         self.update_and_save(field, value)
@@ -206,7 +208,7 @@ class Autofill(BasePage):
         self.select_autofill_option(field)
 
         # verifying the correct data
-        self.verify_form_data(sample_data)
+        self.verify_form_data(sample_data, region)
         return self
 
     def verify_form_data(
