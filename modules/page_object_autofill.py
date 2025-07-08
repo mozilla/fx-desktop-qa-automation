@@ -212,7 +212,7 @@ class Autofill(BasePage):
         return self
 
     def verify_form_data(
-        self, sample_data: CreditCardBase | AutofillAddressBase, region: str
+        self, sample_data: CreditCardBase | AutofillAddressBase, region: str = "US"
     ):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
