@@ -42,12 +42,12 @@ def get_html_files(live_site, region):
 
 @pytest.fixture()
 def region():
-    return os.environ.get("FX_REGION", "US")
+    return os.environ.get("FX_REGION", "DE")
 
 
 @pytest.fixture()
 def live_site():
-    return os.environ.get("CM_SITE", "demo")
+    return os.environ.get("CM_SITE", "newbalance")
 
 
 @pytest.fixture()
