@@ -1,0 +1,24 @@
+{
+ "url": "http://127.0.0.1:8080/newbalance_ad.html",
+ "field_mapping": {
+    "given_name": "49ae6db7-0ef0-4988-9ee4-36dc1ccbc896",
+    "family_name": "871f6f8f-7739-4e23-978a-e4d914aa62ff",
+    "street_address": "03fca4b9-5203-45c8-ac5c-7d7c316594f3",
+    "address_level_2": "2ef994d8-10fd-4b1e-a856-c0a4ac31e1e1",
+    "address_level_1": "e190fe74-a903-4a86-9740-f51ac7052049",
+    "postal_code": "ac50e99f-2f9c-41ae-b67c-bd188bddbe68",
+    "email": "d7d64b41-de70-4b00-9890-c21b5ffb4ead",
+    "telephone": "7ef64ccb-d18f-4c24-8228-3b98fe7812cc"
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+   "49ae6db7-0ef0-4988-9ee4-36dc1ccbc896",
+   "871f6f8f-7739-4e23-978a-e4d914aa62ff",
+    "03fca4b9-5203-45c8-ac5c-7d7c316594f3",
+    "2ef994d8-10fd-4b1e-a856-c0a4ac31e1e1",
+    "e190fe74-a903-4a86-9740-f51ac7052049",
+    "ac50e99f-2f9c-41ae-b67c-bd188bddbe68",
+    "d7d64b41-de70-4b00-9890-c21b5ffb4ead",
+    "7ef64ccb-d18f-4c24-8228-3b98fe7812cc"
+ ]
+}

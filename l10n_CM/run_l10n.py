@@ -21,6 +21,7 @@ valid_sites = {
     "lowes",
     "etsy",
     "calvinklein",
+    "newbalance",
 }
 live_sites = []
 
