@@ -248,11 +248,7 @@ class Autofill(BasePage):
 
             elif attr_name == "country":
                 expected_value = self.util.get_country_local_translation(expected_value)
-            if (
-                attr_name == "expiration_month"
-                and autofilled_field_value.isdigit()
-                and str(expected_value).isdigit()
-            ):
+            if attr_name == "expiration_month" and autofilled_field_value.isdigit():
                 # Handle expiration month comparison - normalize to integers to handle leading zeros
                 autofilled_field_value = str(int(autofilled_field_value))
                 expected_value = str(int(expected_value))
