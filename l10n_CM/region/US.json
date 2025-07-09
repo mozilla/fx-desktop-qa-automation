@@ -3,6 +3,10 @@
   "sites": [
     "amazon",
     "walmart",
+    "lowes",
+    "etsy",
+    "calvinklein",
+    "bestbuy",
     "demo"
   ],
   "tests": []

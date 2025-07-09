@@ -23,6 +23,7 @@ valid_sites = {
     "calvinklein",
     "bestbuy",
     "ebay",
+
 }
 live_sites = []
 
@@ -146,7 +147,7 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     # add workers and rerun flaky failed tests.
     flg = []
     expanded_args = [
-        flag.split() if " " in flag else [flag] for flag in flags_arguments
+        flag.split() if "--" not in flag else [flag] for flag in flags_arguments
     ]
     flags_arguments[:] = sum(expanded_args, [])
     for arg in flags_arguments[:]:
