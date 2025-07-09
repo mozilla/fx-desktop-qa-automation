@@ -102,7 +102,7 @@ tasks:
 
   windows:
     label: "Smoke Tests Windows"
-    worker-type: t-win11-64-source
+    worker-type: b-win2022
     run:
       using: run-task
       cwd: "{checkout}"
