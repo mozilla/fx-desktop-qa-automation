@@ -14,9 +14,9 @@ jobs:
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
       mac_reportable: ${{ steps.reportable.outputs.mac }}
-      mac_l10n_reportable: ${{ steps.reportable.outputs.mac_l10n }}
-      win_l10n_reportable: ${{ steps.reportable.outputs.win_l10n }}
-      linux_l10n_reportable: ${{ steps.reportable.outputs.linux_l10n }}
+      mac_l10n_reportable: ${{ steps.l10n-reportable.outputs.mac_l10n }}
+      win_l10n_reportable: ${{ steps.l10n-reportable.outputs.win_l10n }}
+      linux_l10n_reportable: ${{ steps.l10n-reportable.outputs.linux_l10n }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
