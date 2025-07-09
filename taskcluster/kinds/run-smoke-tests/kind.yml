@@ -108,7 +108,8 @@ tasks:
       cwd: "{checkout}"
       command: |-
         mkdir -p artifacts;
-        python -m pip install 'pipenv==2023.11.15';
+        python --version
+        python -m pip install pipenv==2023.11.15
         pipenv install;
         pipenv run python choose_ci_set.py;
         pipenv run python run_tests.py -s --ci --install --pyproject ci_pyproject.toml
