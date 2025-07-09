@@ -190,6 +190,7 @@ class Autofill(BasePage):
         sample_data: AutofillAddressBase | CreditCardBase,
         field: str,
         value: str | int,
+        region: str,
     ):
         """
         Update the form field with the new value.
@@ -198,6 +199,7 @@ class Autofill(BasePage):
             sample_data: sample data instance used to verify change.
             field: field being changed.
             value: value being added.
+            region: region being tested.
         """
         # updating the profile accordingly
         self.update_and_save(field, value)
@@ -206,10 +208,12 @@ class Autofill(BasePage):
         self.select_autofill_option(field)
 
         # verifying the correct data
-        self.verify_form_data(sample_data)
+        self.verify_form_data(sample_data, region)
         return self
 
-    def verify_form_data(self, sample_data: CreditCardBase | AutofillAddressBase):
+    def verify_form_data(
+        self, sample_data: CreditCardBase | AutofillAddressBase, region: str = "US"
+    ):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
             # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
@@ -229,33 +233,54 @@ class Autofill(BasePage):
             if attr_name == "cvv":
                 continue
             expected_value = getattr(sample_data, attr_name, None)
-            autofilled_field = self.get_element("form-field", labels=[field_name])
-            if autofilled_field.tag_name.lower() != "select":
-                autofilled_field_value = autofilled_field.get_attribute("value")
-            else:
-                autofilled_field_value = Select(
-                    autofilled_field
-                ).first_selected_option.text
-            if (
-                attr_name == "address_level_1"
-                and autofilled_field_value != expected_value
-            ):
-                expected_value = self.util.get_state_province_abbreviation(
-                    expected_value
-                )
-            elif attr_name == "expiration_date" and len(autofilled_field_value) > 5:
-                autofilled_field_value = autofilled_field_value.replace("20", "")
+            auto_filled_field_value = self._get_field_value(field_name)
 
-            elif attr_name == "country":
-                expected_value = self.util.get_country_local_translation(expected_value)
-            if attr_name == "expiration_month" and autofilled_field_value.isdigit():
-                # Handle expiration month comparison - normalize to integers to handle leading zeros
-                autofilled_field_value = str(int(autofilled_field_value))
-                expected_value = str(int(expected_value))
-
-            assert expected_value in autofilled_field_value, (
-                f"{autofilled_field_value} is different from {expected_value}"
+            # Normalize values for comparison
+            expected_value, auto_filled_field_value = self._normalize_values(
+                attr_name, expected_value, auto_filled_field_value, region
             )
+
+            assert expected_value in auto_filled_field_value, (
+                f"Field '{attr_name}' ('{field_name}'): expected '{expected_value}' to be in '{auto_filled_field_value}'"
+            )
+
+    def _get_field_value(self, field_name: str) -> str:
+        """Get the value from a form field, handling different element types."""
+        autofilled_field = self.get_element("form-field", labels=[field_name])
+        if autofilled_field.tag_name.lower() != "select":
+            return autofilled_field.get_attribute("value")
+        else:
+            return Select(autofilled_field).first_selected_option.text
+
+    def _normalize_values(
+        self,
+        attr_name: str,
+        expected_value: str,
+        auto_filled_field_value: str,
+        region: str,
+    ) -> tuple[str, str]:
+        """Normalize expected and actual values for comparison."""
+        if attr_name == "address_level_1" and auto_filled_field_value != expected_value:
+            expected_value = self.util.get_state_province_abbreviation(expected_value)
+        elif attr_name == "expiration_date" and len(auto_filled_field_value) > 5:
+            auto_filled_field_value = auto_filled_field_value.replace("20", "")
+        elif attr_name == "country":
+            expected_value = self.util.get_country_local_translation(expected_value)
+        elif attr_name == "telephone":
+            expected_value = self.util.normalize_regional_phone_numbers(
+                expected_value, region
+            )
+            auto_filled_field_value = self.util.normalize_regional_phone_numbers(
+                auto_filled_field_value, region
+            )
+
+        # Handle numeric fields
+        if attr_name == "expiration_month" and auto_filled_field_value.isdigit():
+            # Handle expiration month comparison - normalize to integers to handle leading zeros
+            auto_filled_field_value = str(int(auto_filled_field_value))
+            expected_value = str(int(expected_value))
+
+        return expected_value, auto_filled_field_value
 
     def verify_field_autofill_dropdown(
         self,
@@ -433,7 +458,7 @@ class Autofill(BasePage):
 
     @BasePage.context_chrome
     def verify_autofill_data_on_hover(
-        self, autofill_data: CreditCardBase | AutofillAddressBase
+        self, autofill_data: CreditCardBase | AutofillAddressBase, region: str
     ):
         """
         Verifies that the autofill preview data matches the expected values when hovering
@@ -473,7 +498,7 @@ class Autofill(BasePage):
                 )
         for field, value in container_data.items():
             if field in self.preview_fields:
-                value = self.sanitize_preview_data(field, str(value))
+                value = self.sanitize_preview_data(field, str(value), region)
                 # Check if this value exists in our CreditCardBase | AutofillAddressBase object
                 is_present = any(
                     [value in val for val in autofill_data.__dict__.values()]
@@ -482,13 +507,13 @@ class Autofill(BasePage):
                     f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
                 )
 
-    def sanitize_preview_data(self, field, value):
+    def sanitize_preview_data(self, field, value, region):
         if field == "cc-number":
             value = value[-4:]
         elif field == "cc-exp-year":
             value = value[-2:]
         elif field == "tel" or value[0] == "+":
-            value = self.util.normalize_phone_number(value)
+            value = self.util.normalize_regional_phone_numbers(value, region)
         return value
 
     def select_autofill_option(self, field, index: int = 1):
@@ -576,7 +601,7 @@ class Autofill(BasePage):
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
                 self.autofill_popup.hover("select-form-option")
-                self.verify_autofill_data_on_hover(sample_data)
+                self.verify_autofill_data_on_hover(sample_data, region)
                 self.click_on("form-field", labels=[field])
             else:
                 logging.info(
@@ -636,7 +661,7 @@ class Autofill(BasePage):
 
                 if sample_data:
                     ## verify data
-                    self.verify_form_data(sample_data)
+                    self.verify_form_data(sample_data, region)
 
                 # Clear form autofill
                 self.double_click("form-field", labels=[field])

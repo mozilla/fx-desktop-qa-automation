@@ -52,7 +52,7 @@ def test_verify_new_address_is_added(
 def data_sanitizer(util: Utilities, value: str, region: str, state_province: Dict):
     value = value.strip()
     if value[0] == "+":
-        return util.normalize_phone_number(value)
+        return util.normalize_regional_phone_numbers(value, region)
     elif len(value) == 2 and value != region:
         return state_province.get(value, value)
     return value
