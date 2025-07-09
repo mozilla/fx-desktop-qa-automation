@@ -28,6 +28,7 @@ live_sites = []
 LOCALHOST = "127.0.0.1"
 PORT = 8080
 os.environ["TEST_EXIT_CODE"] = "0"
+logging.basicConfig(level=logging.INFO)
 
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
@@ -155,12 +156,12 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
                 )
             )
         should_keep_test = (
-            lambda test: suffix in test
+            lambda test: suffix not in test
             if skipped_tests == "All"
             else test not in skipped_tests
         )
         extracted_tests = list(filter(should_keep_test, extracted_tests))
-    return list(extracted_tests)
+    return extracted_tests
 
 
 def get_skipped_tests(live_site) -> list[str] | str:
