@@ -110,6 +110,7 @@ tasks:
         mkdir -p artifacts;
         python --version
         python -m pip install pipenv==2023.11.15
+        $env:PATH += ";C:\mozilla-build\python3\Scripts"
         pipenv install;
         pipenv run python choose_ci_set.py;
         pipenv run python run_tests.py -s --ci --install --pyproject ci_pyproject.toml
