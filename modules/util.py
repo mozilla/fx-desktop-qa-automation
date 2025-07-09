@@ -564,13 +564,13 @@ class Utilities:
         # Determine country code
         country_code = country_codes.get(
             region, "1"
-        )  # Default to "1" (US/CA) if region is unknown
+        )  # Default to "1" (US/CA) if the region is unknown
         # handle leading zeros
         local_number = digits
 
-        # Check if phone already contains a valid country code
+        # Check if the phone number already contains a valid country code
         if digits.startswith(country_code):
-            # Remove country code from local number
+            # Remove country code from the local number
             local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
