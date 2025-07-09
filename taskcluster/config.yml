@@ -32,7 +32,7 @@ workers:
       os: linux
       worker-type: 't-linux-2204-wayland'
     t-win11-64-source:
-      provisioner: '{trust-domain}-t'
+      provisioner: 'gecko-t'
       implementation: generic-worker
       os: windows
       worker-type: 'win11-64-24h2-source'
