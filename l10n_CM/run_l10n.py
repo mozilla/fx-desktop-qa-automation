@@ -154,11 +154,14 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
                     skipped_tests,
                 )
             )
-        should_keep_test = (
-            lambda test: suffix not in test
-            if skipped_tests == "All"
-            else test not in skipped_tests
-        )
+
+        def should_keep_test(test):
+            return (
+                suffix not in test
+                if skipped_tests == "All"
+                else test not in skipped_tests
+            )
+
         extracted_tests = list(filter(should_keep_test, extracted_tests))
     return extracted_tests
 
