@@ -31,3 +31,8 @@ workers:
       implementation: generic-worker
       os: linux
       worker-type: 't-linux-2204-wayland'
+    b-win2022:
+      provisioner: '{trust-domain}-1'
+      implementation: generic-worker
+      os: windows
+      worker-type: 'b-win2022'
