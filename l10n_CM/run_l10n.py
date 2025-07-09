@@ -28,7 +28,6 @@ live_sites = []
 LOCALHOST = "127.0.0.1"
 PORT = 8080
 os.environ["TEST_EXIT_CODE"] = "0"
-logging.basicConfig(level=logging.INFO)
 
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
