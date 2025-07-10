@@ -22,6 +22,7 @@ valid_sites = {
     "etsy",
     "calvinklein",
     "bestbuy",
+  "newbalance",
     "ebay",
 
 }
