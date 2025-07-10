@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/vans_cc.html",
+  "field_mapping": {
+    "card_number": "7353d366-291a-4092-9a04-d4fe1e52773c",
+    "expiration_date": "16ad72e8-5225-4755-8936-8ab957acc8d4",
+    "cvv": "b0015dc1-af01-4883-b799-521d5a398c9e"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "7353d366-291a-4092-9a04-d4fe1e52773c",
+    "16ad72e8-5225-4755-8936-8ab957acc8d4",
+    "b0015dc1-af01-4883-b799-521d5a398c9e"
+  ]
+}

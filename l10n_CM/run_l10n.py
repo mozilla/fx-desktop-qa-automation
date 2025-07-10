@@ -23,7 +23,8 @@ valid_sites = {
     "calvinklein",
     "bestbuy",
     "decathlon",
-    "ebay",
+    "vans",
+    "ebay"
 }
 live_sites = []
 
