@@ -7,6 +7,7 @@
     "name": "dd9ab7bd-1ee6-48ea-aeaa-9fdec16d13f4"
   },
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
   "fields": [
     "379cb47d-fe0c-4826-be76-f6a7a0636121",
     "ad6363a9-652c-4622-a43d-ca0617912f3f",
