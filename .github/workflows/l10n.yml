@@ -3,7 +3,6 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
