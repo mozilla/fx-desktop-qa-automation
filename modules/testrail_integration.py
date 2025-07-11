@@ -172,6 +172,7 @@ def reportable(platform_to_test=None):
                         )
         num_suites = 0
         for site, regions in l10n_mappings.items():
+            # each region for win and mac (linux not yet added)
             num_suites += len(regions)
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} site/region mappings already reported.)"

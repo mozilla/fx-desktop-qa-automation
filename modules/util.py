@@ -103,6 +103,8 @@ class Utilities:
             "Nunavut": "NU",
             "Yukon": "YT",
         }
+        # temporary fix until faker issue is resolved
+        self.country_local_translation = {"Germany": "Deutschland"}
         self.fake = None
         self.locale = None
 
@@ -262,7 +264,9 @@ class Utilities:
                 if phone[:2] != "11":
                     break
         else:
-            phone = self.normalize_phone_number(fake.phone_number())
+            phone = self.normalize_regional_phone_numbers(
+                fake.phone_number(), country_code
+            )
         return phone
 
     def fake_autofill_data(self, country_code) -> AutofillAddressBase:
@@ -515,9 +519,18 @@ class Utilities:
         Returns the abbreviation for a given state, province, or region full name.
 
         :param full_name: The full name of the state, province, or region.
-        :return: The corresponding abbreviation or "Not Found" if not in the dictionary.
+        :return: The corresponding abbreviation or the full name itself if not in the dictionary.
         """
-        return self.state_province_abbr.get(full_name, "Not Found")
+        return self.state_province_abbr.get(full_name, full_name)
+
+    def get_country_local_translation(self, country_name: str) -> str:
+        """
+        Returns the local translation of the country name.
+
+        :param country_name: The full name of the country in english
+        :return: The corresponding translation in the local language or the english name itself if not in the dictionary.
+        """
+        return self.country_local_translation.get(country_name, country_name)
 
     def normalize_regional_phone_numbers(self, phone: str, region: str) -> str:
         """
@@ -551,16 +564,14 @@ class Utilities:
         # Determine country code
         country_code = country_codes.get(
             region, "1"
-        )  # Default to "1" (US/CA) if region is unknown
+        )  # Default to "1" (US/CA) if the region is unknown
+        # handle leading zeros
         local_number = digits
 
-        # Check if phone already contains a valid country code
-        for code in country_codes.values():
-            if digits.startswith(code):
-                country_code = code
-                # Remove country code from local number
-                local_number = digits[len(code) :]
-                break
+        # Check if the phone number already contains a valid country code
+        if digits.startswith(country_code):
+            # Remove country code from the local number
+            local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
         if region in ["FR", "DE"] and local_number.startswith("0"):

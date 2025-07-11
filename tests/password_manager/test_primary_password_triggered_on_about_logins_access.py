@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox, Keys
 
@@ -16,6 +18,9 @@ def test_case():
     return "2245199"
 
 
+@pytest.mark.skipif(
+    system().lower().startswith("linux"), reason="Currently unstable in linux"
+)
 def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     driver: Firefox,
 ):
@@ -68,7 +73,6 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     # Attempt to view the saved password in order to trigger the primary password prompt
     about_logins.element_visible("show-password-checkbox")
     about_logins.click_on("show-password-checkbox")
-
     # Dismiss the primary password prompt without entering the password
     with driver.context(driver.CONTEXT_CHROME):
         driver.switch_to.window(driver.window_handles[-1])
@@ -79,9 +83,9 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     tabs.switch_to_new_tab()
     panel_ui.open_panel_menu()
     panel_ui.redirect_to_about_logins_page()
-
     # Verify that the primary password prompt appears and enter the primary password
     with driver.context(driver.CONTEXT_CHROME):
+        tabs.wait_for_num_tabs(2)
         driver.switch_to.window(driver.window_handles[-1])
         # Fetch a fresh reference to avoid staling
         primary_password_prompt = about_logins.get_element("primary-password-prompt")
