@@ -256,9 +256,9 @@ def mark_results(testrail_session: TestRail, test_results):
             # Don't set passed tests to another status.
             test_cases_ids = []
             durations = []
-            for i, tc in enumerate(all_test_cases):
-                if current_results.get(tc) != 1:
-                    test_cases_ids.append(tc)
+            for i, test_case in enumerate(all_test_cases):
+                if current_results.get(test_case) != 1:
+                    test_cases_ids.append(test_case)
                     durations.append(all_durations[i])
             logging.warning(
                 f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
