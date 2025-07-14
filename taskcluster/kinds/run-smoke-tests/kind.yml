@@ -113,7 +113,8 @@ tasks:
         cd build\src
         dir .
         set PATH=%PATH%;C:\mozilla-build\python3\scripts
-        pipenv install ;
+        pipenv install
+        wait 15
         pipenv run python choose_ci_set.py
         pipenv run python run_tests.py -s --ci --install --pyproject ci_pyproject.toml
         pipenv run python run_tests.py -s --ci --headed --pyproject ci_pyproject_headed.toml
