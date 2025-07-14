@@ -20,5 +20,14 @@
     "05751aa2-f4a4-4ec7-a914-d3e88f5960e8",
     "91377d28-2268-42fe-9379-54a3c9fdeda6",
     "afcdcda9-0a2a-468b-92c4-df05b035d3f2"
-  ]
+  ],
+  "skipped": [
+     "test_demo_ad_1b_dropdown_address_fields.py",
+     "test_demo_ad_2b_preview_address_fields.py",
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py",
+     "test_demo_ad_4b_highlight_address_fields.py",
+     "test_demo_ad_5b_clear_address_fields.py"
+   ]
 }
