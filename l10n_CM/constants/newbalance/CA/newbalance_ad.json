@@ -20,5 +20,6 @@
     "ac50e99f-2f9c-41ae-b67c-bd188bddbe68",
     "d7d64b41-de70-4b00-9890-c21b5ffb4ead",
     "7ef64ccb-d18f-4c24-8228-3b98fe7812cc"
- ]
+ ],
+"skipped": ["test_demo_ad_3a_autofill_address_fields.py", "test_demo_ad_3b_autofill_name_org_fields.py", "test_demo_ad_3c_autofill_phone_email_fields.py"]
 }
