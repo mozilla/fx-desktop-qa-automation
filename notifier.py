@@ -74,10 +74,13 @@ def list_and_write(source_directory: str, links: List[str]):
                 f.write(contents)
 
 
-def compile_link_file(links_win: List[str], links_mac: List[str]):
+def compile_link_file(
+    links_win: List[str], links_mac: List[str], links_linux: List[str] = []
+):
     print("Compiling the current artifact link file...")
     links_mac.sort()
     links_win.sort()
+    links_linux.sort()
 
     output_file_path = os.path.join(time_now, "full_report.txt")
     content_type = get_content_type(output_file_path)
@@ -94,12 +97,18 @@ def compile_link_file(links_win: List[str], links_mac: List[str]):
 
         for url in links_mac:
             f.write(url + "\n")
+
+        f.write("\nLinux Artifacts:\n\n")
+
+        for url in links_linux:
+            f.write(url + "\n")
     return f"{root_url}{time_now}/full_report.txt"
 
 
 time_now = get_current_timestamp()
 links_win = []
 links_mac = []
+links_linux = []
 root_url = "https://storage.googleapis.com/notifier-artifact-bucket/"
 report_file = ""
 
@@ -114,12 +123,13 @@ try:
     bucket = storage_client.bucket(bucket_name)
     list_and_write("artifacts-mac", links_mac)
     list_and_write("artifacts-win", links_win)
+    list_and_write("artifacts-linux", links_linux)
 except Exception as e:
     print("The artifact upload process ran into some issues: ", e)
 
 
 try:
-    report_file = compile_link_file(links_win, links_mac)
+    report_file = compile_link_file(links_win, links_mac, links_linux)
 except Exception as e:
     print(f"The link compilation had some issues: {e}")
 

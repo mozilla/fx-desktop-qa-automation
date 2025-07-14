@@ -21,7 +21,10 @@ valid_sites = {
     "lowes",
     "etsy",
     "calvinklein",
-    "newbalance",
+    "bestbuy",
+    "decathlon",
+    "vans",
+    "ebaynewbalance",
 }
 live_sites = []
 

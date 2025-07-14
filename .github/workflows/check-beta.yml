@@ -14,7 +14,9 @@ jobs:
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
       mac_reportable: ${{ steps.reportable.outputs.mac }}
-      mac_l10n_reportable: ${{ steps.reportable.outputs.mac_l10n }}
+      mac_l10n_reportable: ${{ steps.l10n-reportable.outputs.mac_l10n }}
+      win_l10n_reportable: ${{ steps.l10n-reportable.outputs.win_l10n }}
+      linux_l10n_reportable: ${{ steps.l10n-reportable.outputs.linux_l10n }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,7 +40,10 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-        run: echo mac_l10n=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
+        run: |
+          echo win_l10n=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
+          echo mac_l10n=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
+          echo linux_l10n=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Linux"))') >> "$GITHUB_OUTPUT"
 
   Run-Win-Smoke:
     needs: Check-Beta-Version
@@ -62,4 +67,20 @@ jobs:
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10N-MacOS
+    secrets: inherit
+
+  Run-L10N-Win-Smoke:
+    needs: Check-Beta-Version
+    if: ${{ needs.Check-Beta-Version.outputs.win_l10n_reportable == 'True' }}
+    uses: ./.github/workflows/l10n.yml
+    with:
+      job_to_run: L10N-Windows
+    secrets: inherit
+
+  Run-L10N-Linux-Smoke:
+    needs: Check-Beta-Version
+    if: ${{ needs.Check-Beta-Version.outputs.linux_l10n_reportable == 'True' }}
+    uses: ./.github/workflows/l10n.yml
+    with:
+      job_to_run: L10N-Linux
     secrets: inherit
