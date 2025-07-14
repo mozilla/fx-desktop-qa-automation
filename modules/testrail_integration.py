@@ -246,21 +246,33 @@ def mark_results(testrail_session: TestRail, test_results):
                 for result in existing_results[run_id]
             }
             suite_id = test_results[category][run_id][0].get("suite_id")
-            all_test_cases = [
-                result.get("test_case") for result in test_results[category][run_id]
-            ]
+
+            all_test_cases = []
+            all_durations = []
+            for result in test_results[category][run_id]:
+                all_test_cases.append(result.get("test_case"))
+                all_durations.append(result.get("duration"))
 
             # Don't set passed tests to another status.
-            test_cases = [tc for tc in all_test_cases if current_results.get(tc) != 1]
+            test_cases_ids = []
+            durations = []
+            for i, test_case in enumerate(all_test_cases):
+                if current_results.get(test_case) != 1:
+                    test_cases_ids.append(test_case)
+                    durations.append(all_durations[i])
             logging.warning(
-                f"Setting the following test cases in run {run_id} to {category}: {test_cases}"
+                f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
+            )            
+            logging.warning(
+                f"Setting the following test cases {test_cases_ids} to duration {durations}"
             )
             testrail_session.update_test_cases(
                 test_results.get("project_id"),
                 testrail_run_id=run_id,
                 testrail_suite_id=suite_id,
-                test_case_ids=test_cases,
+                test_case_ids=test_cases_ids,
                 status=category,
+                elapsed=durations
             )
 
 
@@ -407,6 +419,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     cases_in_suite = suite_info.get("cases")
     cases_in_suite = [int(n) for n in cases_in_suite]
     results = suite_info.get("results")
+    durations = suite_info.get("durations")
     plan_title = expected_plan.get("name")
 
     suite_entries = [
@@ -502,8 +515,10 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         "skipped": {},
     }
 
-    for test_case, outcome in results.items():
-        logging.info(f"{test_case}: {outcome}")
+    for test_case in results.keys():
+        outcome = results[test_case]
+        duration = durations[test_case]
+        logging.info(f"{test_case}: {outcome} {duration}")
         if outcome == "rerun":
             logging.info("Rerun result...skipping...")
             continue
@@ -511,7 +526,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         if not test_results[category].get(run_id):
             test_results[category][run_id] = []
         test_results[category][run_id].append(
-            {"suite_id": suite_id, "test_case": test_case}
+            {"suite_id": suite_id, "test_case": test_case, "duration": f"{duration}s"}
         )
 
     return test_results
@@ -547,7 +562,7 @@ def collect_changes(testrail_session: TestRail, report):
 
     version_str = metadata.get("fx_version")
     plan_title = get_plan_title(version_str, channel)
-    logging.info(plan_title)
+    logging.warning(f"Got plan title: {plan_title} from version {version_str} and channel {channel}")
     plan_match = PLAN_NAME_RE.match(plan_title)
     (_, major) = [plan_match[n] for n in range(1, 3)]
     config = metadata.get("machine_config")
@@ -628,6 +643,7 @@ def collect_changes(testrail_session: TestRail, report):
     last_suite_id = None
     last_description = None
     results_by_suite = {}
+    durations_by_suite = {}
     full_test_results = {}
     tests = [
         test
@@ -655,11 +671,16 @@ def collect_changes(testrail_session: TestRail, report):
         # Tests reported as rerun are a problem -- we need to know pass/fail
         if outcome == "rerun":
             outcome = test.get("call").get("outcome")
-        logging.info(f"TC: {test_case}: {outcome}")
+        duration = test['setup']['duration'] + test['call']['duration'] + test['teardown']['duration']
+        logging.info(f"TC: {test_case}: {outcome} using {duration}s ")
 
         if not results_by_suite.get(suite_id):
             results_by_suite[suite_id] = {}
+            durations_by_suite[suite_id] = {}
         results_by_suite[suite_id][test_case] = outcome
+        durations_by_suite[suite_id].setdefault(test_case, 0)
+        durations_by_suite[suite_id][test_case] = round(durations_by_suite[suite_id][test_case] + duration, 2)
+
         if suite_id != last_suite_id:
             # When we get the last test_case in a suite, add entry, run, results
             if last_suite_id:
@@ -674,6 +695,7 @@ def collect_changes(testrail_session: TestRail, report):
                     "config_id": config_id,
                     "cases": cases_in_suite,
                     "results": results_by_suite[last_suite_id],
+                    "durations": durations_by_suite[last_suite_id]
                 }
 
                 full_test_results = merge_results(
@@ -694,6 +716,7 @@ def collect_changes(testrail_session: TestRail, report):
         "config_id": config_id,
         "cases": cases_in_suite,
         "results": results_by_suite[last_suite_id],
+        "durations": durations_by_suite[last_suite_id]
     }
 
     logging.info(f"n run {last_suite_id}, {last_description}")
@@ -706,6 +729,8 @@ def collect_changes(testrail_session: TestRail, report):
     full_test_results = merge_results(
         full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
     )
+    logging.warning(f"full test results: {full_test_results}")
+
     return full_test_results
 
 
