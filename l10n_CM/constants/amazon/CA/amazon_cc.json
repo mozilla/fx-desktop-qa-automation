@@ -1,11 +1,15 @@
 {
   "url": "http://127.0.0.1:8080/amazon_cc.html",
   "field_mapping": {
-    "card_number": "cc-number",
-    "expiration_date": "cc-exp"
+    "card_number": "5c01d093-4e7c-422a-99b3-6c7b9a8cd49f",
+    "expiration_date": "6c5f05c1-72f0-4392-a1ef-a0f7e69ee1b2",
+    "name": "286af831-a430-43ce-893a-a9e5f21a7417"
   },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
   "fields": [
-    "cc-number",
-    "cc-exp"
+    "5c01d093-4e7c-422a-99b3-6c7b9a8cd49f",
+    "6c5f05c1-72f0-4392-a1ef-a0f7e69ee1b2",
+    "286af831-a430-43ce-893a-a9e5f21a7417"
   ]
 }

@@ -13,7 +13,21 @@ current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
-valid_sites = {"demo", "amazon", "walmart", "mediamarkt", "lowes", "etsy", "newegg"}
+
+valid_sites = {
+    "demo",
+    "amazon",
+    "walmart",
+    "mediamarkt",
+    "lowes",
+    "etsy",
+    "calvinklein",
+    "bestbuy",
+    "decathlon",
+    "vans",
+    "ebay"
+}
+
 live_sites = []
 
 LOCALHOST = "127.0.0.1"
@@ -80,6 +94,7 @@ def run_tests(reg, site, flg, all_tests):
         flg (list[str]): The list of pytest flags to be used.
         all_tests (list[str]): The list of test file paths to execute.
     """
+    all_tests = remove_skipped_tests(all_tests, site, reg)
     try:
         if len(all_tests) > 0:
             logging.info(f"Tests for {reg} region on {site} page.")
@@ -119,6 +134,59 @@ def get_region_tests(test_region: str) -> list[str]:
         )
 
 
+def remove_skipped_tests(extracted_tests, live_site, reg):
+    """
+    Reads the mapping for the given region and site and removes any tests that are marked as skipped.
+
+    Args:
+        extracted_tests (list[str]): The list of test file paths to execute.
+        live_site (str): Page being tested.
+        reg (str): The test region identifier.
+    Returns:
+        list[str]: A list of test file paths for the given region.
+    """
+    mid_path = f"/{reg}/" if live_site != "demo" else "/"
+    live_sites = [
+        (f"{live_site}{mid_path}{live_site}_{suffix}", f"_{suffix}_")
+        for suffix in ("ad", "cc")
+    ]
+    for live_site, suffix in live_sites:
+        skipped_tests = get_skipped_tests(live_site)
+        if skipped_tests and skipped_tests != "All":
+            skipped_tests = list(
+                map(
+                    lambda test: os.path.join(current_dir, "Unified", test),
+                    skipped_tests,
+                )
+            )
+
+        def should_keep_test(test):
+            return (
+                suffix not in test
+                if skipped_tests == "All"
+                else test not in skipped_tests
+            )
+
+        extracted_tests = list(filter(should_keep_test, extracted_tests))
+    return extracted_tests
+
+
+def get_skipped_tests(live_site) -> list[str] | str:
+    """
+    Read the mapping for the given region and site and return any tests that are marked as skipped.
+
+    Arg:
+        live_site (str): The site is being tested.
+    Returns:
+        list[str] | str: A list of tests that should be skipped, or "All" if all tests should be skipped.
+    """
+    with open(current_dir + "/constants/" + live_site + ".json", "r") as fp:
+        live_site_data = load(fp)
+        if live_site_data.get("skip"):
+            return "All"
+        return live_site_data.get("skipped", [])
+
+
 def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     """
     Extract and validate pytest flags from command-line arguments.
@@ -136,7 +204,7 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     # add workers and rerun flaky failed tests.
     flg = []
     expanded_args = [
-        flag.split() if " " in flag else [flag] for flag in flags_arguments
+        flag.split() if "--" not in flag else [flag] for flag in flags_arguments
     ]
     flags_arguments[:] = sum(expanded_args, [])
     for arg in flags_arguments[:]:
