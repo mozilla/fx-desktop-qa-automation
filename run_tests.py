@@ -49,7 +49,7 @@ def run_suite(parsed_args):
     if parsed_args.ci and "--fx-executable" not in pytest_args:
         pytest_args.extend(["--fx-executable", get_fx_exec()])
     if parsed_args.pyproject:
-        os.rename(parsed_args.pyproject, "pyproject.toml")
+        os.replace(parsed_args.pyproject, "pyproject.toml")
     if parsed_args.subset:
         tests = open("selected_tests").read()
     else:
@@ -75,7 +75,7 @@ parser.add_argument("added_args", nargs="*")
 parser.add_argument("--pyproject", default=None)
 parser.add_argument("-w", "--workers", default=None)
 parser.add_argument("-s", "--subset", action="store_true")
-parser.add_argument("--install", default=None)
+parser.add_argument("--install", action="store_true")
 parser.add_argument("--ci", action="store_true")
 parser.add_argument("--headed", action="store_true")
 
