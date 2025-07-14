@@ -110,7 +110,7 @@ tasks:
         mkdir -p artifacts;
         python --version
         python -m pip install pipenv==2023.11.15
-        cd build
+        cd build\src
         dir .
         set PATH=%PATH%;C:\mozilla-build\python3\scripts
         pipenv install
