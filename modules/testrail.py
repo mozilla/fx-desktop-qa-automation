@@ -391,7 +391,7 @@ class TestRail:
         testrail_suite_id,
         test_case_ids=[],
         status="passed",
-        elapsed=[]
+        elapsed=[],
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
@@ -409,14 +409,14 @@ class TestRail:
                     testrail_project_id, testrail_suite_id
                 )
             ]
-        
+
         results = []
         for i in range(len(test_case_ids)):
             results.append(
                 {
                     "case_id": test_case_ids[i],
                     "status_id": status_key.get(status),
-                    "elapsed": elapsed[i]
+                    "elapsed": elapsed[i],
                 }
             )
         logging.warning(f"Going to update cases with payload: {results}")

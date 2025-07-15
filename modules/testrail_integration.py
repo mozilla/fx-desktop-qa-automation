@@ -262,7 +262,7 @@ def mark_results(testrail_session: TestRail, test_results):
                     durations.append(all_durations[i])
             logging.warning(
                 f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
-            )            
+            )
             logging.warning(
                 f"Setting the following test cases {test_cases_ids} to duration {durations}"
             )
@@ -272,7 +272,7 @@ def mark_results(testrail_session: TestRail, test_results):
                 testrail_suite_id=suite_id,
                 test_case_ids=test_cases_ids,
                 status=category,
-                elapsed=durations
+                elapsed=durations,
             )
 
 
@@ -562,7 +562,9 @@ def collect_changes(testrail_session: TestRail, report):
 
     version_str = metadata.get("fx_version")
     plan_title = get_plan_title(version_str, channel)
-    logging.warning(f"Got plan title: {plan_title} from version {version_str} and channel {channel}")
+    logging.warning(
+        f"Got plan title: {plan_title} from version {version_str} and channel {channel}"
+    )
     plan_match = PLAN_NAME_RE.match(plan_title)
     (_, major) = [plan_match[n] for n in range(1, 3)]
     config = metadata.get("machine_config")
@@ -671,7 +673,11 @@ def collect_changes(testrail_session: TestRail, report):
         # Tests reported as rerun are a problem -- we need to know pass/fail
         if outcome == "rerun":
             outcome = test.get("call").get("outcome")
-        duration = test['setup']['duration'] + test['call']['duration'] + test['teardown']['duration']
+        duration = (
+            test["setup"]["duration"]
+            + test["call"]["duration"]
+            + test["teardown"]["duration"]
+        )
         logging.info(f"TC: {test_case}: {outcome} using {duration}s ")
 
         if not results_by_suite.get(suite_id):
@@ -679,7 +685,9 @@ def collect_changes(testrail_session: TestRail, report):
             durations_by_suite[suite_id] = {}
         results_by_suite[suite_id][test_case] = outcome
         durations_by_suite[suite_id].setdefault(test_case, 0)
-        durations_by_suite[suite_id][test_case] = round(durations_by_suite[suite_id][test_case] + duration, 2)
+        durations_by_suite[suite_id][test_case] = round(
+            durations_by_suite[suite_id][test_case] + duration, 2
+        )
 
         if suite_id != last_suite_id:
             # When we get the last test_case in a suite, add entry, run, results
@@ -695,7 +703,7 @@ def collect_changes(testrail_session: TestRail, report):
                     "config_id": config_id,
                     "cases": cases_in_suite,
                     "results": results_by_suite[last_suite_id],
-                    "durations": durations_by_suite[last_suite_id]
+                    "durations": durations_by_suite[last_suite_id],
                 }
 
                 full_test_results = merge_results(
@@ -716,7 +724,7 @@ def collect_changes(testrail_session: TestRail, report):
         "config_id": config_id,
         "cases": cases_in_suite,
         "results": results_by_suite[last_suite_id],
-        "durations": durations_by_suite[last_suite_id]
+        "durations": durations_by_suite[last_suite_id],
     }
 
     logging.info(f"n run {last_suite_id}, {last_description}")
