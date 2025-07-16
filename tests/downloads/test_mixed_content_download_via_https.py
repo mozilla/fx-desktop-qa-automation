@@ -19,7 +19,7 @@ def delete_files_regex_string():
     return r"\bdownload\b"
 
 
-MIXED_CONTENT_DOWNLOAD_URL = "https://b-mcb-download.glitch.me/"
+MIXED_CONTENT_DOWNLOAD_URL = "https://file-examples.com/wp-content/storage/2018/04/file_example_AVI_480_750kB.avi"
 
 
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
@@ -29,14 +29,10 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
 
     web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
 
-    # Wait up to 30 seconds for test website to wake up and load the content
+    # Wait up to 30 seconds for test website to wake up and download the content
     web_page.open()
     with driver.context(driver.CONTEXT_CHROME):
-        WebDriverWait(driver, 30).until(EC.title_contains("Hello!"))
-
-    WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.XPATH, "//button[@onclick='runtestSec()']"))
-    ).click()
+        WebDriverWait(driver, 30).until(EC.title_contains("File Examples"))
 
     with driver.context(driver.CONTEXT_CHROME):
         download_name = WebDriverWait(driver, 10).until(
@@ -49,7 +45,7 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
 
         # Verify that the desired download target element is present directly, no extra steps needed.
         download_value = download_name.get_attribute("value")
-        assert re.match(r"download(\(\d+\))?$", download_value), (
+        assert re.match(r"file_example_AVI_480_750kB(\(\d+\)).avi$", download_value), (
             f"The download name is incorrect: {download_value}"
         )
 
