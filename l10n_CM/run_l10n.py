@@ -25,6 +25,7 @@ valid_sites = {
     "decathlon",
     "vans",
     "ebay",
+    "newbalance",
 }
 live_sites = []
 
