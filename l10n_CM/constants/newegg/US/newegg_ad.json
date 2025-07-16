@@ -1,0 +1,33 @@
+{
+  "url": "http://127.0.0.1:8080/newegg_ad.html",
+  "field_mapping": {
+    "name": "53aa95a7-20d5-49bc-9ba4-5b5c22e437cc",
+    "street_address": "f4acb449-f06d-4810-80bc-b7777d68c04b",
+    "address_level_2": "a3e820b4-9276-4828-876f-47424016a652",
+    "address_level_1": "4452806d-bb31-4799-8ff6-076d8ec8f2df",
+    "postal_code": "2015d105-63dc-49a4-a7ce-70ab043751bf",
+    "country": "05751aa2-f4a4-4ec7-a914-d3e88f5960e8",
+    "email": "91377d28-2268-42fe-9379-54a3c9fdeda6",
+    "telephone":"afcdcda9-0a2a-468b-92c4-df05b035d3f2"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "53aa95a7-20d5-49bc-9ba4-5b5c22e437cc",
+    "f4acb449-f06d-4810-80bc-b7777d68c04b",
+    "a3e820b4-9276-4828-876f-47424016a652",
+    "4452806d-bb31-4799-8ff6-076d8ec8f2df",
+    "2015d105-63dc-49a4-a7ce-70ab043751bf",
+    "05751aa2-f4a4-4ec7-a914-d3e88f5960e8",
+    "91377d28-2268-42fe-9379-54a3c9fdeda6",
+    "afcdcda9-0a2a-468b-92c4-df05b035d3f2"
+  ],
+  "skipped": [
+     "test_demo_ad_1b_dropdown_address_fields.py",
+     "test_demo_ad_2b_preview_address_fields.py",
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py",
+     "test_demo_ad_4b_highlight_address_fields.py",
+     "test_demo_ad_5b_clear_address_fields.py"
+   ]
+}
