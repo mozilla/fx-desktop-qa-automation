@@ -138,12 +138,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Set Environment (Scheduled Beta)
+        if: ${{ inputs.job_to_run == 'L10N-Linux' }}
+        run: |
+          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
+          echo "Running report for most recent Beta on Linux";
       - name: Install dependencies
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          echo "MANUAL='true'" >> "$GITHUB_ENV";
           echo "Running l10n tests on supplied executable";
           sudo apt install gnome-screenshot;
           uname -m;
@@ -225,7 +229,7 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running l10n tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
+        if: ${{ inputs.job_to_run == 'L10N-Windows' }}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'

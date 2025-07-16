@@ -13,7 +13,6 @@ current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR"}
-
 valid_sites = {
     "demo",
     "amazon",
@@ -26,9 +25,7 @@ valid_sites = {
     "decathlon",
     "vans",
     "ebay",
-    "newegg",
 }
-
 live_sites = []
 
 LOCALHOST = "127.0.0.1"
