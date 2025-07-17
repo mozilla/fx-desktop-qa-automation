@@ -32,7 +32,7 @@ def install():
         target_filename = "Firefox.dmg"
     elif platform.system().lower().startswith("linux"):
         target_filename = "firefox.tar.xz"
-    url = check_output(command).decode()
+    url = check_output(command).decode().strip()
     if "collect_executables.py" in command:
         resp = requests.get(url)
         resp.raise_for_status()
