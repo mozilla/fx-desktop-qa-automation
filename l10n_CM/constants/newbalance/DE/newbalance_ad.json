@@ -18,7 +18,5 @@
     "3587a8f1-2639-4cb1-94be-16db11d1f291",
     "36708c9a-2675-46f5-bef2-eb7e87460b8c",
     "59b9f19d-2422-40ec-b1ea-e4e557e50512"
- ],
-    "skipped": ["test_demo_ad_3c_autofill_phone_email_fields.py"]
-
+ ]
 }
