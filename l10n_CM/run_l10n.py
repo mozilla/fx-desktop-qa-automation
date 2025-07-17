@@ -23,6 +23,7 @@ valid_sites = {
     "calvinklein",
     "bestbuy",
     "decathlon",
+    "newegg",
     "vans",
     "ebay",
     "zalando",
