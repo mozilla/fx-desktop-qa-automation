@@ -24,7 +24,7 @@ def get_fx_exec():
 
 
 def install():
-    command = ["python", "collect_executables.py"]
+    command = ["pipenv", "run", "python", "collect_executables.py"]
     if not platform.system().lower().startswith("win"):
         command = ["./collect_executables.sh"]
     target_filename = "setup.exe"
