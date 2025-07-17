@@ -12,7 +12,6 @@
 
  },
  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
- "skip": "True",
  "fields": [
     "24fa9bb9-032c-4aa5-a829-8f3c8950cba3",
     "ca35b256-a76c-476b-bc50-5e651c0a20fe",
@@ -22,5 +21,14 @@
     "1f396341-9cfb-400a-9946-80ac1a721c09",
     "afe0ae5c-f224-46f2-9331-aa9b3053dcc8",
     "b9c75b09-1531-479e-8823-45d212333bd2"
- ]
+ ],
+  "skipped": [
+     "test_demo_ad_1c_dropdown_phone_email_fields.py",
+     "test_demo_ad_2c_preview_phone_email_fields.py",
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py",
+     "test_demo_ad_4c_highlight_phone_email_fields.py",
+     "test_demo_ad_5c_clear_phone_email_fields.py"
+   ]
 }
