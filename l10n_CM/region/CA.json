@@ -1,12 +1,13 @@
 {
-    "region": "CA",
-    "sites": [
+  "region": "CA",
+  "sites": [
     "amazon",
     "walmart",
     "demo",
     "etsy",
     "newbalance"
+    "ebay"
   ],
-    "tests": [
-    ]
+  "tests": [
+  ]
 }
