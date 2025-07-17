@@ -1,6 +1,8 @@
 import re
+import time
 
 import pytest
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,6 +22,7 @@ def delete_files_regex_string():
 
 
 MIXED_CONTENT_DOWNLOAD_URL = "https://file-examples.com/wp-content/storage/2018/04/file_example_AVI_480_750kB.avi"
+TIMEOUT = 30
 
 
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
@@ -50,7 +53,17 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
         )
 
         # Verify that the download progress has reached 100%, which indicates that the download is complete.
-        download_status_value = download_status.get_attribute("value")
-        assert download_status_value == "100", (
-            f"The download status is not '100': {download_status_value}"
-        )
+        start_time = time.time()
+        while True:
+            try:
+                download_value = download_status.get_attribute("value")
+                if download_value == "100":
+                    break
+            except StaleElementReferenceException:
+                pass
+
+            if time.time() - start_time > TIMEOUT:
+                raise TimeoutError(
+                    "Download progress did not reach 100% within the timeout."
+                )
+            time.sleep(1)
