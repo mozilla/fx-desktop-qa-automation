@@ -30,7 +30,9 @@ valid_sites = {
     "ebay",
     "newbalance",
     "zalando",
+    "cdiscount",
     "aldoshoes",
+
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
@@ -137,9 +139,7 @@ def get_region_tests(test_region: str) -> list[str]:
         region_data = load(fp)
         raw_tests = region_data.get("tests", [])
         return (
-            list(
-                map(lambda test: os.path.join(current_dir, "Unified", test), raw_tests)
-            )
+            list(map(lambda test: current_dir + "/Unified/" + test, raw_tests))
             if len(raw_tests) > 0
             else raw_tests
         )
