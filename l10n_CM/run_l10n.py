@@ -30,7 +30,7 @@ valid_sites = {
     "zalando",
     "cdiscount",
     "aldoshoes",
-
+    "canadatire"
 }
 live_sites = []
 
