@@ -29,6 +29,8 @@ valid_sites = {
     "newbalance",
     "zalando",
     "cdiscount",
+    "aldoshoes",
+
 }
 live_sites = []
 
