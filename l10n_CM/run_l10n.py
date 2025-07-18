@@ -38,6 +38,7 @@ valid_sites = valid_sites.union(set(loaded_valid_sites))
 
 live_sites = []
 
+
 LOCALHOST = "127.0.0.1"
 PORT = 8080
 os.environ["TEST_EXIT_CODE"] = "0"
