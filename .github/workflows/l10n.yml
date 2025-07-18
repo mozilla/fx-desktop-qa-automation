@@ -88,7 +88,7 @@ jobs:
           pipenv run python check_l10n_test_cases.py;
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv artifacts artifacts-mac || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -106,7 +106,7 @@ jobs:
           echo "0" > TEST_EXIT_CODE;
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv -n artifacts/* artifacts-mac/ || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -170,7 +170,7 @@ jobs:
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv artifacts artifacts-linux || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -188,7 +188,7 @@ jobs:
           echo "0" > TEST_EXIT_CODE;
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            DISPLAY=:99 pipenv run python l10n_CM/run_l10n.py --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv -n artifacts/* artifacts-linux/ || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -284,7 +284,7 @@ jobs:
               $line = $_
               Write-Host "Running tests for: $line"
               try {
-                  pipenv run python l10n_CM/run_l10n.py --fx-executable="$env:FX_EXECUTABLE" $line
+                  pipenv run python -m l10n_CM.run_l10n --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
@@ -311,7 +311,7 @@ jobs:
               $line = $_
               Write-Host "Running tests for: $line"
               try {
-                  pipenv run python l10n_CM/run_l10n.py --fx-executable="$env:FX_EXECUTABLE" $line
+                  pipenv run python -m l10n_CM.run_l10n --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
