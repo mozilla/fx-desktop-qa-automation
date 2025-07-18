@@ -1,19 +1,23 @@
 {
   "url": "http://127.0.0.1:8080/aldoshoes_ad.html",
   "field_mapping": {
+    "email": "0601af09-6be4-458e-aece-b697f54440d0",
     "given_name":"4923a310-2b5b-4053-8864-7059d5522d23",
     "family_name":"e9558e91-ba1a-49c9-aa33-8dda969f7f47",
     "street_address": "7cba876b-f9c1-4c3a-8f6b-32f448794b48",
     "address_level_2": "bcb31920-3557-4816-8b78-7a7d2848d953",
+    "address_level_1": "ab93b6cb-cb1f-44a2-8b82-6d086c31729f",
     "postal_code": "859aaa97-ad32-4b51-8d1e-57182fffdf00",
     "telephone": "d355f108-0b70-4b02-b170-6ecd80e8e914"
   },
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "fields": [
+    "0601af09-6be4-458e-aece-b697f54440d0",
     "4923a310-2b5b-4053-8864-7059d5522d23",
     "e9558e91-ba1a-49c9-aa33-8dda969f7f47",
     "7cba876b-f9c1-4c3a-8f6b-32f448794b48",
     "bcb31920-3557-4816-8b78-7a7d2848d953",
+    "ab93b6cb-cb1f-44a2-8b82-6d086c31729f",
     "859aaa97-ad32-4b51-8d1e-57182fffdf00",
     "d355f108-0b70-4b02-b170-6ecd80e8e914"
   ]
