@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/cdiscount_cc.html",
+  "field_mapping": {
+    "card_number": "03b45e0e-3ee5-4588-bb52-11c51280b1a1",
+    "expiration_date": "1f545e96-cf5e-4bdd-8f70-8d307f9de357",
+    "cvv": "963fd1a5-05f5-4464-adba-71c1529dc983",
+    "cardholder_name": "e9f9c0b6-2960-47f0-91ca-74b18b3f1056"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "03b45e0e-3ee5-4588-bb52-11c51280b1a1",
+    "1f545e96-cf5e-4bdd-8f70-8d307f9de357",
+    "963fd1a5-05f5-4464-adba-71c1529dc983",
+    "e9f9c0b6-2960-47f0-91ca-74b18b3f1056"
+  ]
+}

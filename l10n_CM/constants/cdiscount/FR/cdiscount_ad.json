@@ -1,0 +1,24 @@
+{
+  "url": "http://127.0.0.1:8080/cdiscount_ad.html",
+  "field_mapping": {
+    "given_name": "6be28779-ec7a-413e-a02a-4c52e13c4e82",
+    "family_name": "33a53ab7-94d4-4406-8b8e-f60fc41af203",
+    "address_level_2": "94555611-ca46-4468-ab4e-5795616b0fd1",
+    "street_address" : "ee3cb5a9-8100-4a31-af20-809609cdd4fb",
+    "postal_code": "48ead2a0-c336-46eb-a533-d75511f1b0f6",
+    "country" : "739b4de7-c7f2-4e9c-ade2-16a78af0dea6",
+    "telephone": "9250bcbf-33d7-4fec-87bd-9614956820cd"
+
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "6be28779-ec7a-413e-a02a-4c52e13c4e82",
+    "33a53ab7-94d4-4406-8b8e-f60fc41af203",
+    "94555611-ca46-4468-ab4e-5795616b0fd1",
+    "ee3cb5a9-8100-4a31-af20-809609cdd4fb",
+    "48ead2a0-c336-46eb-a533-d75511f1b0f6",
+    "739b4de7-c7f2-4e9c-ade2-16a78af0dea6",
+    "9250bcbf-33d7-4fec-87bd-9614956820cd"
+
+  ]
+}
