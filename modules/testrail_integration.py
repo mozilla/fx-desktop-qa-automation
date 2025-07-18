@@ -177,7 +177,7 @@ def reportable(platform_to_test=None):
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} site/region mappings already reported.)"
         )
-        return covered_suites < num_suites - 2  # account for some incomplete mappings
+        return covered_suites < num_suites
     else:
         covered_suites = 0
         for entry in plan_entries:
