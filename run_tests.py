@@ -38,7 +38,10 @@ def install():
         resp.raise_for_status()
         with open(target_filename, "wb") as fh:
             fh.write(resp.content)
-        mozinstall.install(target_filename, Path(get_fx_exec()).parent)
+        installdir = Path(get_fx_exec()).parent
+        if not installdir.is_dir():
+            os.makedirs(installdir, exist_ok=True)
+        mozinstall.install(target_filename, installdir)
 
 
 def run_suite(parsed_args):
