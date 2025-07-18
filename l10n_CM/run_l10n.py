@@ -9,6 +9,8 @@ from json import load
 
 import requests
 
+from check_l10n_test_cases import valid_l10n_mappings
+
 current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
@@ -30,6 +32,8 @@ valid_sites = {
     "zalando",
     "aldoshoes",
 }
+loaded_valid_sites = valid_l10n_mappings().keys()
+valid_sites = valid_sites.union(set(loaded_valid_sites))
 live_sites = []
 
 LOCALHOST = "127.0.0.1"
