@@ -71,7 +71,7 @@ The harness relies on several configuration files:
 ## Usage
 
 ```bash
-python run_l10n.py [FLAGS] [REGIONS] [SITES]
+python -m l10n_CM.run_l10n [FLAGS] [REGIONS] [SITES]
 ```
 
 ### Parameters
@@ -92,22 +92,22 @@ python run_l10n.py [FLAGS] [REGIONS] [SITES]
 
 ```bash
 # Run tests for all regions and sites
-python run_l10n.py
+python -m l10n_CM.run_l10n
 
 # Run all tests for US region only across all available sites
-python run_l10n.py US
+python -m l10n_CM.run_l10n US
 
 # Run all tests for amazon site only across all regions
-python run_l10n.py US
+python -m l10n_CM.run_l10n US
 
 # Run tests for US region on amazon site
-python run_l10n.py US amazon
+python -m l10n_CM.run_l10n US amazon
 
 # Run tests for US and CA regions with 4 parallel workers
-python run_l10n.py -n 4 US CA
+python -m l10n_CM.run_l10n -n 4 US CA
 
 # Run tests for US region on amazon site in headless mode
-python run_l10n.py --run-headless US amazon
+python -m l10n_CM.run_l10n --run-headless US amazon
 ```
 
 ## Architecture
@@ -137,6 +137,7 @@ The framework sets the following environment variables during test execution:
 - `CM_SITE`: The site being tested
 - `FX_REGION`: The region being tested
 - `TEST_EXIT_CODE`: Exit code of the test execution
+- `FX_L10N`: Flag to check whether l10n workflow is being run.
 
 ## Adding New Tests
 
@@ -152,6 +153,10 @@ The framework sets the following environment variables during test execution:
 4. Create necessary HTML files in `sites/{site_name}/{region}/` directory.
 5. Create the necessary mapping files in `constants/{site_name}/{region}/`
    * The naming convention for both the mapping files and the HTML files are `{site}_ad` for Address Pages and `{site}_cc` for Credit Card Pages.
+
+## Useful Documents
+- [Sites/Regions to Automate](https://docs.google.com/spreadsheets/d/15_ejIC3YABnMGHafgkLeuuu_wakfpiLapOmUdBF2pVI/edit?usp=sharing)
+- [Skipped Automation Test Combinations](https://docs.google.com/document/d/18zYICZ3lbtUK7-LC-2Gt8jRbxQp0w0Is0ytM2BrcD7w/edit?usp=sharing)
 
 ## Troubleshooting
 

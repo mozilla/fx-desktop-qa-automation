@@ -32,8 +32,10 @@ valid_sites = {
     "zalando",
     "aldoshoes",
 }
+
 loaded_valid_sites = valid_l10n_mappings().keys()
 valid_sites = valid_sites.union(set(loaded_valid_sites))
+
 live_sites = []
 
 LOCALHOST = "127.0.0.1"
@@ -113,7 +115,7 @@ def run_tests(reg, site, flg, all_tests):
         logging.warning(f"Test run failed with exit code: {e.returncode}")
         # true failure instead of run not being reportable.
         if e.returncode != 2:
-            if os.environ.get("TEST_EXIT_CODE") == "0":
+            if os.environ.get("FX_L10N") and os.environ.get("TEST_EXIT_CODE") == "0":
                 with open("TEST_EXIT_CODE", "w") as f:
                     f.write(str(e.returncode))
             os.environ["TEST_EXIT_CODE"] = str(e.returncode)
