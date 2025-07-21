@@ -32,7 +32,6 @@ valid_sites = {
     "zalando",
     "cdiscount",
     "aldoshoes",
-    "canadatire",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
