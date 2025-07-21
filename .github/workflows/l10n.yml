@@ -317,7 +317,7 @@ jobs:
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
           }
-          rm artifacts/assets -r -Force
+          rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
           Get-ChildItem -Path "artifacts" | ForEach-Object {
               $destPath = "artifacts-win\" + $_.Name
               if (-not (Test-Path -Path $destPath)) {
