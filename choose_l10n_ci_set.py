@@ -84,7 +84,6 @@ if __name__ == "__main__":
         r"modules/data/credit_card_fill\.components\.json",
         r"modules/browser_object_autofill_popup\.py",
         r"modules/data/autofill_popup\.components\.json",
-        r"l10n_CM/run_l10n\.py",
     ]
     re_set_select = [
         r"l10n_CM/constants/.*/.*/.*\.json",
