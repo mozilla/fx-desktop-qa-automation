@@ -9,6 +9,7 @@ from json import load
 
 import requests
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from check_l10n_test_cases import valid_l10n_mappings
 
 current_dir = os.path.dirname(__file__)
@@ -32,7 +33,8 @@ valid_sites = {
     "zalando",
     "cdiscount",
     "aldoshoes",
-    "canadatire"
+    "canadatire",
+    "thomann",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()

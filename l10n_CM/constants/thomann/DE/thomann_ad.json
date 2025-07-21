@@ -1,0 +1,28 @@
+{
+  "url": "http://127.0.0.1:8080/thomann_ad.html",
+  "field_mapping": {
+    "organization": "77ab7eab-bd86-4658-ab17-f29af596f7a8",
+    "given_name": "7ef779ba-f521-4823-90a2-6e21ca472da3",
+    "family_name": "10e0055a-778e-40e5-94ff-5e6bef694af2",
+    "address_level_2": "66cac315-4e9c-49fc-99a8-4fff18c20851",
+    "street_address": "fd6b2396-b4ac-4ed4-a786-521a13fab7bb",
+    "postal_code": "b3429de2-79c2-4843-9f2a-330044334546",
+    "country": "9078b023-3840-4c74-bdc7-d2fd08b6ae2e",
+    "telephone": "ad50e28c-f72d-458e-913e-62213d4b4575",
+    "email": "f616f843-6521-4a63-957d-523171d50514"
+
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "77ab7eab-bd86-4658-ab17-f29af596f7a8",
+    "7ef779ba-f521-4823-90a2-6e21ca472da3",
+    "10e0055a-778e-40e5-94ff-5e6bef694af2",
+    "66cac315-4e9c-49fc-99a8-4fff18c20851",
+    "fd6b2396-b4ac-4ed4-a786-521a13fab7bb",
+    "b3429de2-79c2-4843-9f2a-330044334546",
+    "9078b023-3840-4c74-bdc7-d2fd08b6ae2e",
+    "ad50e28c-f72d-458e-913e-62213d4b4575",
+    "f616f843-6521-4a63-957d-523171d50514"
+],
+  "skipped": ["test_demo_ad_3a_autofill_address_fields.py", "test_demo_ad_3b_autofill_name_org_fields.py", "test_demo_ad_3c_autofill_phone_email_fields.py"]
+}
