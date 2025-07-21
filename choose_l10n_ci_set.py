@@ -41,15 +41,20 @@ def add_selected_mappings(mappings):
 def process_changed_file(f, selected_mappings):
     split = f.split(SLASH)
     if f.startswith("l10n_CM/sites/") or f.startswith("l10n_CM/constants/"):
+        # if constants or sites are changed, add a single site/region mapping entry.
         site = split[2]
         region = split[3]
         region_path = os.path.join("l10n_CM", "region", f"{region}.json")
+        # make sure the region mapping file exists before adding the mapping
         if os.path.exists(region_path):
             selected_mappings[site].add(region)
     elif f.startswith("l10n_CM/region/"):
+        # if a region file is changed, add the region to each site mapping.
         region = split[-1].split(".")[0]
-        for mapping in selected_mappings.values():
-            mapping.add(region)
+        with open(f, "r+") as f:
+            region_file = json.load(f)
+            for site in region_file.get("sites", []):
+                selected_mappings[site].add(region)
 
 
 if __name__ == "__main__":
@@ -123,6 +128,8 @@ if __name__ == "__main__":
             if re_val.match(f):
                 add_selected_mappings(l10n_mappings)
                 sys.exit(0)
+        # check if constants, sites or region directory files were changed or added.
+        # if so, add the site/region mappings.
         for re_val in re_set_select:
             if re_val.match(f):
                 process_changed_file(f, selected_mappings)
