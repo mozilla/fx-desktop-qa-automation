@@ -18,9 +18,6 @@ def test_case():
     return "2245199"
 
 
-@pytest.mark.skipif(
-    system().lower().startswith("linux"), reason="Currently unstable in linux"
-)
 def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     driver: Firefox,
 ):
