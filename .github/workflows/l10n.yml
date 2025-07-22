@@ -3,7 +3,6 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -38,7 +37,7 @@ env:
 
 jobs:
   L10N-MacOS:
-    if: ${{ inputs.job_to_run == 'L10N-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -86,7 +85,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
-          pipenv run python choose_l10n_ci_set.py;
+          pipenv run python check_l10n_test_cases.py;
           while IFS= read -r line; do
             echo "Running tests for: $line";
             pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
@@ -122,7 +121,7 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
   L10N-Linux:
-    if: ${{ inputs.job_to_run == 'L10N-Linux' || github.event_name == 'pull_request' || inputs.linux_tarball_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
       - name: Create app token
@@ -167,7 +166,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
-          pipenv run python choose_l10n_ci_set.py;
+          pipenv run python check_l10n_test_cases.py;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
           while IFS= read -r line; do
             echo "Running tests for: $line";
@@ -204,7 +203,7 @@ jobs:
           name: artifacts-linux
           path: artifacts-linux
   L10N-Windows:
-    if: ${{ inputs.job_to_run == 'L10N-Windows' || github.event_name == 'pull_request' || inputs.win_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -278,7 +277,7 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run python choose_l10n_ci_set.py
+          pipenv run python check_l10n_test_cases.py
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
@@ -305,7 +304,7 @@ jobs:
           mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
           Write-Host "FX_EXECUTABLE: $FX_EXECUTABLE"
-          pipenv run python choose_l10n_ci_set.py
+          pipenv run python check_l10n_test_cases.py
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
@@ -317,8 +316,7 @@ jobs:
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
           }
-          mkdir artifacts -Force
-          rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
+          rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
               $destPath = "artifacts-win\" + $_.Name
               if (-not (Test-Path -Path $destPath)) {
