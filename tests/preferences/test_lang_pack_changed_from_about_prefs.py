@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver import Firefox
@@ -26,6 +28,7 @@ def add_to_prefs_list():
     return [("services.sync.prefs.sync-seen.intl.accept_languages", True)]
 
 
+@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1978595")
 def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     """
     C1771617 - The language can be changed in about:preferences.
