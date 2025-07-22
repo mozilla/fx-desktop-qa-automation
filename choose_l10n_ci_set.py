@@ -13,6 +13,12 @@ OUTPUT_FILE = "selected_l10n_mappings"
 
 
 def valid_l10n_mappings():
+    """
+    Get a dictionary of valid l10n mappings by going through the region files.
+
+    Returns:
+        The dictionary of valid l10n mappings.
+    """
     mapping = defaultdict(set)
     region_paths = [d for d in os.listdir("./l10n_CM/region/")]
     for region_path in region_paths:
@@ -39,6 +45,13 @@ def add_selected_mappings(mappings):
 
 
 def process_changed_file(f, selected_mappings):
+    """
+    process the changed file to add the site/region mappings.
+
+    Args:
+        f: the changed file.
+        selected_mappings: the selected mappings dictionary (updated in place).
+    """
     split = f.split(SLASH)
     if f.startswith("l10n_CM/sites/") or f.startswith("l10n_CM/constants/"):
         # if constants or sites are changed, add a single site/region mapping entry.
