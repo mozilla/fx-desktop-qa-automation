@@ -103,7 +103,6 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
         assert item.get_attribute("value") in ALLOWED_TRACKING_URLS
 
 
-@pytest.mark.skip(reason="Bug 1973795")
 def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
@@ -132,4 +131,4 @@ def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox)
 
     assert "hidden" not in block_status.get_attribute("class")
     assert "hidden" not in load_status.get_attribute("class")
-    assert "hidden" not in dnt_status.get_attribute("class")
+    assert "incorrect" in dnt_status.get_attribute("class")

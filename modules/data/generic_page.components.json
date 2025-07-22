@@ -48,7 +48,7 @@
     },
 
     "simulated-tracker-dnt-status": {
-        "selectorData": "dnt-on",
+        "selectorData": "dnt-off",
         "strategy": "id",
         "groups": []
     },

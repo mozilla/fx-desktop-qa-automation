@@ -9,8 +9,7 @@ from json import load
 
 import requests
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from check_l10n_test_cases import valid_l10n_mappings
+from choose_l10n_ci_set import valid_l10n_mappings
 
 current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
