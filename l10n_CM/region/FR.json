@@ -2,6 +2,10 @@
   "region": "FR",
   "sites": [
     "amazon",
+    "cdiscount",
+    "decathlon",
+    "ebay",
+    "vans",
     "demo"
   ],
   "tests": [
