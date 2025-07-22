@@ -87,7 +87,7 @@ if __name__ == "__main__":
     ]
     re_set_select = [
         r"l10n_CM/constants/.*/.*/.*\.json",
-        r"l10n_CM/sites/.*/.*\.json",
+        r"l10n_CM/sites/.*/.*/.*\.html",
         r"l10n_CM/region/.*\.json",
     ]
 

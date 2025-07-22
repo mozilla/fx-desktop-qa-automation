@@ -192,6 +192,9 @@ drivers/
 temp.py
 tests/test_scratch.py
 
+# L10N files
+selected_l10n_mappings
+
 # Credentials
 credentials.json
 testrail_credentials.env
