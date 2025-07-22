@@ -3,6 +3,9 @@
   "sites": [
     "amazon",
     "mediamarkt",
+    "zalando",
+    "ebay",
+    "newbalance",
     "demo"
   ],
   "tests": [
