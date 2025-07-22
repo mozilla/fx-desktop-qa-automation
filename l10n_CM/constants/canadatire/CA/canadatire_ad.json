@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8080/canadatire_ad.html",
+  "field_mapping": {
+    "street_address": "0a83813e-53bc-4e86-9e5c-e7c3d82903e5",
+    "address_level_2": "9d74745a-8c68-4fe5-b163-d035468a3935",
+    "postal_code": "fe227768-f39b-4ec5-8f02-ee824696bca0"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "0a83813e-53bc-4e86-9e5c-e7c3d82903e5",
+    "9d74745a-8c68-4fe5-b163-d035468a3935",
+    "fe227768-f39b-4ec5-8f02-ee824696bca0"
+  ]
+}

@@ -1,11 +1,14 @@
 {
-    "region": "CA",
-    "sites": [
+  "region": "CA",
+  "sites": [
     "amazon",
     "walmart",
     "demo",
-    "etsy"
+    "etsy",
+    "newbalance",
+    "canadatire",
+    "ebay"
   ],
-    "tests": [
-    ]
+  "tests": [
+  ]
 }
