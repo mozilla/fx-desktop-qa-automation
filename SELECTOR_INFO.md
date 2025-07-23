@@ -2135,8 +2135,8 @@ Path to .json: modules/data/generic_page.components.json
 ```
 ```
 Selector Name: simulated-tracker-dnt-status
-Selector Data: "dnt-on"
-Description: The Do Not Track status
+Selector Data: "dnt-ff"
+Description: The Do Not Track (DNT) status
 Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
