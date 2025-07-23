@@ -319,7 +319,7 @@ jobs:
           }
           rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
           mkdir artifacts-win -Force
-          Get-ChildItem -Path "artifacts" | ForEach-Object {
+          Get-ChildItem -Path "artifacts" -ErrorAction SilentlyContinue | ForEach-Object {
               $destPath = "artifacts-win\" + $_.Name
               if (-not (Test-Path -Path $destPath)) {
                   try {
