@@ -157,27 +157,25 @@ def reportable(platform_to_test=None):
     plan_entries = this_plan.get("entries")
     if os.environ.get("FX_L10N"):
         l10n_mappings = valid_l10n_mappings()
-        covered_suites = 0
+        covered_mappings = 0
+        # keeping this logic to still see how many mappings are reported.
         for entry in plan_entries:
             if entry.get("name") in l10n_mappings:
                 site = entry.get("name")
                 for run_ in entry.get("runs"):
                     if run_.get("config"):
                         run_region, run_platform = run_.get("config").split("-")
-                        covered_suites += (
+                        covered_mappings += (
                             1
                             if run_region in l10n_mappings[site]
                             and platform in run_platform
                             else 0
                         )
-        num_suites = 0
-        for site, regions in l10n_mappings.items():
-            # each region for win and mac (linux not yet added)
-            num_suites += len(regions)
         logging.warning(
-            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} site/region mappings already reported.)"
+            f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported.)"
         )
-        return covered_suites < num_suites
+        # Only report when there is a new beta and no other site/region mappings are reported.
+        return covered_mappings == 0
     else:
         covered_suites = 0
         for entry in plan_entries:
