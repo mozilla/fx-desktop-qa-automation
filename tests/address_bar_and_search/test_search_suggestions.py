@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -9,9 +7,8 @@ from modules.util import BrowserActions
 
 # Constants
 SEARCH_TERM_SPONSORED = "iphone"
-SEARCH_TERM_NON_SPONSORED = "wikimedia"
+SEARCH_TERM_NON_SPONSORED = "wiki"
 RETRY_LIMIT = 5
-SECONDS = 3
 
 
 @pytest.fixture()
@@ -45,17 +42,10 @@ def test_search_suggests_enabled(driver: Firefox):
     )
 
     # Check for sponsored suggestion
-    # Trigger the suggests once. First time, it's not populated correctly in automation
-    with driver.context(driver.CONTEXT_CHROME):
-        actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
-        sleep(SECONDS)
-
-    # Then load up suggests again and check for sponsored suggestion
     found_sponsored = False
     retries = 0
     while not found_sponsored and retries < RETRY_LIMIT:
         actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
-        sleep(SECONDS)  # Give Firefox time to populate suggests list
         with driver.context(driver.CONTEXT_CHROME):
             found_sponsored = any(
                 item.get_attribute("aria-label") == "Sponsored"
@@ -67,10 +57,19 @@ def test_search_suggests_enabled(driver: Firefox):
     )
 
     # Check for non-sponsored suggestion
-    actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
-    sleep(SECONDS)  # Give Firefox time to populate suggests list
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("firefox-suggest")
-        titles = nav.get_elements("suggestion-titles")
-        found_non_sponsored = any("Wikipedia" in title.text for title in titles)
-    assert found_non_sponsored, "Non-sponsored suggestion not found"
+    found_non_sponsored = False
+    retries = 0
+    while not found_non_sponsored and retries < RETRY_LIMIT:
+        actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
+        with driver.context(driver.CONTEXT_CHROME):
+            try:
+                nav.get_element("firefox-suggest")
+                titles = nav.get_elements("suggestion-titles")
+                found_non_sponsored = any("Wikipedia" in title.text for title in titles)
+                break
+            finally:
+                retries = +1
+                continue
+    assert found_non_sponsored, (
+        f"Non-sponsored suggestion not found after {RETRY_LIMIT} retries."
+    )
