@@ -1,25 +1,22 @@
 {
   "url": "http://127.0.0.1:8080/artsper_ad.html",
   "field_mapping": {
-    "given_name": "7d7a6c7c-7084-477e-afda-b27c826032a8",
-    "family_name": "179a5ec2-4a98-45e9-9806-abb5496700d0",
-    "street_address": "a9506204-8cee-4723-acb0-91307b9ae8ef",
-    "address_level_2": "3fdac58a-13b3-4ca5-a5fb-8b5cc9712360",
-    "address_level_1": "d7171e42-f617-4093-bca7-d655ac58f2c9",
-    "postal_code": "a2d9e97a-4dab-44cf-960f-f5bbc1db447a",
-    "email": "e4ebe951-0ed1-4ea9-b2c2-518b7b2ec034",
-    "telephone": "57aab032-b31d-4bf9-8b7a-3fc5f265f6fc"
+    "given_name": "7a26aa14-1711-46ef-bb59-ee07a3a78e7a",
+    "family_name": "46633581-d70d-411c-8525-f47e98a1c7e6",
+    "organization": "00ae70e7-638a-48d9-84c2-f0c116ba3974",
+    "street_address": "41436bba-351b-493b-ba3b-a83c0632a203",
+    "address_level_2": "ec64782b-ae40-44fe-ac38-2147be6fd7b5",
+    "postal_code": "0db3d939-9d04-4d95-9f33-5d33ba281fec",
+    "telephone": "8755f1ec-42e6-4a4f-ac5f-1cf696a0271a"
   },
   "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
-  "skip": "True",
   "fields": [
-    "7d7a6c7c-7084-477e-afda-b27c826032a8",
-    "179a5ec2-4a98-45e9-9806-abb5496700d0",
-    "a9506204-8cee-4723-acb0-91307b9ae8ef",
-    "3fdac58a-13b3-4ca5-a5fb-8b5cc9712360",
-    "d7171e42-f617-4093-bca7-d655ac58f2c9",
-    "a2d9e97a-4dab-44cf-960f-f5bbc1db447a",
-    "e4ebe951-0ed1-4ea9-b2c2-518b7b2ec034",
-    "57aab032-b31d-4bf9-8b7a-3fc5f265f6fc"
+    "7a26aa14-1711-46ef-bb59-ee07a3a78e7a",
+    "46633581-d70d-411c-8525-f47e98a1c7e6",
+    "00ae70e7-638a-48d9-84c2-f0c116ba3974",
+    "41436bba-351b-493b-ba3b-a83c0632a203",
+    "ec64782b-ae40-44fe-ac38-2147be6fd7b5",
+    "0db3d939-9d04-4d95-9f33-5d33ba281fec",
+    "8755f1ec-42e6-4a4f-ac5f-1cf696a0271a"
   ]
 }
