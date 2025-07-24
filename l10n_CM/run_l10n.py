@@ -135,12 +135,14 @@ def get_region_tests(test_region: str) -> list[str]:
     Returns:
         list[str]: A list of test file paths for the given region.
     """
-    path_to_region = current_dir + "/region/"
-    with open(path_to_region + test_region + ".json", "r") as fp:
+    path_to_region = os.path.join(current_dir, "region")
+    with open(os.path.join(path_to_region, test_region) + ".json", "r") as fp:
         region_data = load(fp)
         raw_tests = region_data.get("tests", [])
         return (
-            list(map(lambda test: current_dir + "/Unified/" + test, raw_tests))
+            list(
+                map(lambda test: os.path.join(current_dir, "Unified", test), raw_tests)
+            )
             if len(raw_tests) > 0
             else raw_tests
         )
