@@ -187,6 +187,7 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
 def get_skipped_tests(live_site) -> list[str] | str:
     """
     Read the mapping for the given region and site and return any tests that are marked as skipped.
+    It is either a list of tests to skip or skipping all tests for the given site.
 
     Arg:
         live_site (str): The site is being tested.
