@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/promod_cc.html",
+  "field_mapping": {
+    "card_name": "",
+    "card_number": "",
+    "expiration_date": "",
+    "cvv": ""
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "",
+    "",
+    "",
+    ""
+]
+}

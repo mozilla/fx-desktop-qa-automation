@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/promod_ad.html",
+  "field_mapping": {
+    "given_name": "",
+    "family_name": "",
+    "street_address": "",
+    "address_level_2": "",
+    "postal_code": "",
+    "telephone": "",
+    "email": ""
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ]
+}
