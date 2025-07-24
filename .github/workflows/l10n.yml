@@ -328,12 +328,15 @@ jobs:
                   }
               }
           }
+          mkdir artifacts-win -Force
+          if (-not (Test-Path -Path "artifacts-win\*")) {
+            New-Item -Path "artifacts-win\placeholder.txt" -ItemType File
+          }
           $EXIT_CODE = Get-Content -Path "TEST_EXIT_CODE"
           if ($EXIT_CODE -ne 0) {
               exit [int]$EXIT_CODE
           }
           exit $env:SCRIPT_EXIT_CODE
-          mkdir artifacts-win -Force
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
