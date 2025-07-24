@@ -109,6 +109,7 @@ jobs:
             echo "Running tests for: $line";
             pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
+          ls artifacts-mac/* &>/dev/null || echo "No mappings to report" >> artifacts-mac/placeholder.txt
           mv -n artifacts/* artifacts-mac/ || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
@@ -191,6 +192,7 @@ jobs:
             echo "Running tests for: $line";
             DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
+          ls artifacts-linux/* &>/dev/null || echo "No mappings to report" >> artifacts-linux/placeholder.txt
           mv -n artifacts/* artifacts-linux/ || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
@@ -317,8 +319,8 @@ jobs:
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
           }
-          rm artifacts/assets -r -Force
-          Get-ChildItem -Path "artifacts" | ForEach-Object {
+          rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
+          Get-ChildItem -Path "artifacts" -ErrorAction SilentlyContinue | ForEach-Object {
               $destPath = "artifacts-win\" + $_.Name
               if (-not (Test-Path -Path $destPath)) {
                   try {
@@ -327,6 +329,10 @@ jobs:
                       # Ignore errors and continue
                   }
               }
+          }
+          mkdir artifacts-win -Force
+          if (-not (Test-Path -Path "artifacts-win\*")) {
+            New-Item -Path "artifacts-win\placeholder.txt" -ItemType File -Value "no mappings to report."
           }
           $EXIT_CODE = Get-Content -Path "TEST_EXIT_CODE"
           if ($EXIT_CODE -ne 0) {
@@ -363,7 +369,7 @@ jobs:
         with:
           name: artifacts-win
           path: artifacts-win
-      - name: Download Windows artifact
+      - name: Download Linux artifact
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux
