@@ -28,7 +28,7 @@ def test_add_search_engine_from_address_bar(driver: Firefox):
 
     # Step 1: Open target site
     driver.get(TEST_URL)
-    nav.custom_wait(timeout=20).until(lambda d: "youtube.com" in d.current_url)
+    nav.custom_wait(timeout=25).until(lambda d: "youtube.com" in d.current_url)
 
     # Step 2: Open context menu on address bar and click "Add search engine"
     nav.context_click_in_awesome_bar()
