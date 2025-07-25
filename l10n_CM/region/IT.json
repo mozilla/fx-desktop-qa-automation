@@ -1,8 +1,7 @@
 {
   "region": "IT",
   "sites": [
-    "ebay",
-    "demo"
+    "ebay"
   ],
   "tests": [
   ]
