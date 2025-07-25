@@ -34,7 +34,8 @@ valid_sites = {
     "cdiscount",
     "aldoshoes",
     "canadatire",
-    "artsper"
+    "wish",
+    "artsper",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
