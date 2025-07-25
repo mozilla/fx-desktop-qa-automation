@@ -33,6 +33,7 @@ valid_sites = {
     "cdiscount",
     "aldoshoes",
     "canadatire",
+    "artsper",
     "yellowkorner"
 }
 
