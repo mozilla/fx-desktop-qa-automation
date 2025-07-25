@@ -30,7 +30,7 @@ jobs:
 
   Run-Mac-Smoke:
     needs: Select-Channels
-    if: contains(fromJSON(needs.dispatch.outputs.channels), 'smoke')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels_dispatch), 'smoke')
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-MacOS
@@ -39,7 +39,7 @@ jobs:
 
   Run-Win-L10n:
     needs: Select-Channels
-    if: contains(fromJSON(needs.dispatch.outputs.channels), 'l10n')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels_dispatch), 'l10n')
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10n-Windows
@@ -48,7 +48,7 @@ jobs:
 
   Run-Mac-L10n:
     needs: Select-Channels
-    if: contains(fromJSON(needs.dispatch.outputs.channels), 'l10n')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels_dispatch), 'l10n')
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10n-MacOS
@@ -57,7 +57,7 @@ jobs:
 
   Run-Linux-L10n:
     needs: Select-Channels
-    if: contains(fromJSON(needs.dispatch.outputs.channels), 'l10n')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels_dispatch), 'l10n')
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10n-Linux
