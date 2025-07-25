@@ -3,7 +3,6 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -14,6 +13,11 @@ on:
       job_to_run:
         required: true
         type: string
+      is_pull_request:
+        description: "Is this a PR?"
+        default: false
+        type: boolean
+        required: true
   workflow_dispatch:
     inputs:
       win_installer_link:
@@ -56,7 +60,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'L10N-MacOS' }}
+        if: ${{ inputs.job_to_run == 'L10N-MacOS' && inputs.is_pull_request == false }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
@@ -141,7 +145,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'L10N-Linux' }}
+        if: ${{ inputs.job_to_run == 'L10N-Linux' && inputs.is_pull_request == false }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on Linux";
@@ -232,7 +236,7 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running l10n tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'L10N-Windows' }}
+        if: ${{ inputs.job_to_run == 'L10N-Windows' && inputs.is_pull_request == false}}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
