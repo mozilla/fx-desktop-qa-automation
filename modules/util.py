@@ -539,12 +539,7 @@ class Utilities:
         """
 
         # Country code mapping for different regions
-        country_codes = {
-            "US": "1",
-            "CA": "1",
-            "FR": "33",
-            "DE": "49",
-        }
+        country_codes = {"US": "1", "CA": "1", "FR": "33", "DE": "49", "GB": "44"}
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
@@ -564,7 +559,7 @@ class Utilities:
             local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE"] and local_number.startswith("0"):
+        if region in ["FR", "DE", "GB"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 
