@@ -281,7 +281,6 @@ jobs:
           $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_l10n_ci_set.py
-          cat selected_l10n_mappings
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
