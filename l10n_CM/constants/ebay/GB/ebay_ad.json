@@ -1,0 +1,26 @@
+{
+  "url": "http://127.0.0.1:8080/ebay_ad.html",
+  "field_mapping": {
+    "country": "country",
+    "given_name": "firstName",
+    "family_name": "lastName",
+    "telephone": "phoneNumber",
+    "street_address": "addressLine1",
+    "address_level_1": "stateOrProvince",
+    "email": "email",
+    "address_level_2": "city",
+    "postal_code": "postalCode"
+  },
+  "form_field": "*[id='{name}']",
+  "fields": [
+    "country",
+    "firstName",
+    "lastName",
+    "phoneNumber",
+    "addressLine1",
+    "stateOrProvince",
+    "email",
+    "city",
+    "postalCode"
+  ]
+}
