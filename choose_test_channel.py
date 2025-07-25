@@ -52,7 +52,6 @@ for f in committed_files:
 
     for test_channel in file_subsets:
         for subset in file_subsets[test_channel]:
-            print(f, test_channel, subset)
             if subset in f and test_channel not in channels:
                 channels.append(test_channel)
 
