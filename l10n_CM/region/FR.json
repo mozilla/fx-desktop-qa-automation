@@ -2,7 +2,8 @@
   "region": "FR",
   "sites": [
     "amazon",
-    "demo"
+    "demo",
+    "artsper"
   ],
   "tests": [
   ]
