@@ -39,6 +39,16 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     # Select "Use a Securely Generated Password" in password field and check the "Update password" doorhanger
     with driver.context(driver.CONTEXT_CHROME):
         login_autofill.get_element("generated-securely-password").click()
+
+    # Wait for password field to actually get filled
+    login_autofill.expect(
+        lambda _: login_autofill.get_element("password-login-field").get_attribute(
+            "value"
+        )
+        != ""
+    )
+
+    with driver.context(driver.CONTEXT_CHROME):
         nav.element_visible("password-notification-key")
         nav.click_on("password-notification-key")
         autofill_popup_panel.expect(
