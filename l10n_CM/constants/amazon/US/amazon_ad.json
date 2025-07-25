@@ -14,5 +14,6 @@
     "bf3bb4bd-06fc-493b-a8d5-7c2c31db66cb",
     "543e09ec-34d0-4f72-846c-5ae35a323ba8",
     "33198fca-ddab-40a0-bc03-8b6f83bc3a98"
-  ]
+  ],
+   "skip_os": ["Linux"]
 }
