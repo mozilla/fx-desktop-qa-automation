@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -37,14 +39,14 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     context_menu.click_and_hide_menu("context-menu-suggest-strong-password")
 
     # Select "Use a Securely Generated Password" in password field and check the "Update password" doorhanger
-    # is displayed
     with driver.context(driver.CONTEXT_CHROME):
         login_autofill.get_element("generated-securely-password").click()
+        nav.element_visible("password-notification-key")
         nav.click_on("password-notification-key")
-        update_doorhanger = autofill_popup_panel.get_element(
-            "password-update-doorhanger"
+        autofill_popup_panel.expect(
+            lambda _: UPDATE_DOORHANGER_TEXT
+            in autofill_popup_panel.get_element("password-update-doorhanger").text
         )
-        assert update_doorhanger.text == UPDATE_DOORHANGER_TEXT
 
     # Navigate to about:logins page
     tabs.switch_to_new_tab()
