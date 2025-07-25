@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/artsper_cc.html",
+  "field_mapping": {
+    "name": "7ac2adf1-10a4-4dff-93be-b406b92ef86d",
+    "card_number": "1d8fbfaa-dc6f-4146-ada4-f9f2644cb09d",
+    "expiration_month": "8152d7c1-e0a8-43c3-a4d9-2220a521c216",
+    "expiration_year": "4610e1d5-b20a-4ae9-a587-81ee3e7e21d4",
+    "cvv": "0039f41b-1ca3-46be-89a7-8e46cbaacc61"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "7ac2adf1-10a4-4dff-93be-b406b92ef86d",
+    "1d8fbfaa-dc6f-4146-ada4-f9f2644cb09d",
+    "8152d7c1-e0a8-43c3-a4d9-2220a521c216",
+    "4610e1d5-b20a-4ae9-a587-81ee3e7e21d4",
+    "0039f41b-1ca3-46be-89a7-8e46cbaacc61"
+]
+}

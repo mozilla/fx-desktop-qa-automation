@@ -135,8 +135,6 @@ if __name__ == "__main__":
 
     # Run all the tests for all mappings if any core l10n model, component, conftest, or tests are changed.
     selected_mappings = defaultdict(set)
-    # by default, have the demo page run for US
-    selected_mappings["demo"] = {"US"}
     for f in committed_files:
         for re_val in re_set_all:
             if re_val.match(f):

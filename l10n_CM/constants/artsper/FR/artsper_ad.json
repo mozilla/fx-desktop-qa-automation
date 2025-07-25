@@ -1,0 +1,22 @@
+{
+  "url": "http://127.0.0.1:8080/artsper_ad.html",
+  "field_mapping": {
+    "given_name": "7a26aa14-1711-46ef-bb59-ee07a3a78e7a",
+    "family_name": "46633581-d70d-411c-8525-f47e98a1c7e6",
+    "organization": "00ae70e7-638a-48d9-84c2-f0c116ba3974",
+    "street_address": "41436bba-351b-493b-ba3b-a83c0632a203",
+    "address_level_2": "ec64782b-ae40-44fe-ac38-2147be6fd7b5",
+    "postal_code": "0db3d939-9d04-4d95-9f33-5d33ba281fec",
+    "telephone": "8755f1ec-42e6-4a4f-ac5f-1cf696a0271a"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "7a26aa14-1711-46ef-bb59-ee07a3a78e7a",
+    "46633581-d70d-411c-8525-f47e98a1c7e6",
+    "00ae70e7-638a-48d9-84c2-f0c116ba3974",
+    "41436bba-351b-493b-ba3b-a83c0632a203",
+    "ec64782b-ae40-44fe-ac38-2147be6fd7b5",
+    "0db3d939-9d04-4d95-9f33-5d33ba281fec",
+    "8755f1ec-42e6-4a4f-ac5f-1cf696a0271a"
+  ]
+}
