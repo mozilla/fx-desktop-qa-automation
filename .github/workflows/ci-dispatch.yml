@@ -4,6 +4,8 @@ name: DTE Automation Dispatch
 run-name: CI tests kicked off by ${{ github.actor }}
 on:
   pull_request:
+permissions:
+  contents: "write"
 
 jobs:
   Select-Channels:
@@ -14,14 +16,12 @@ jobs:
       - name: Select test channels
         id: dispatch
         run: |
-          pip3 install 'pipenv==2023.11.15';
-          pipenv install
-          echo channels=$(pipenv run python choose_test_channel.py) >> "$GITHUB_OUTPUT"
+          echo channels=$(python3 choose_test_channel.py) >> "$GITHUB_OUTPUT"
 
 
   Run-Win-Smoke:
     needs: Select-Channels
-    if: contains(fromJSON(needs.dispatch.outputs.channels), 'smoke')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels_dispatch), 'smoke')
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-Windows
