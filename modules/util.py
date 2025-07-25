@@ -343,20 +343,10 @@ class Utilities:
             cvv=cvv,
             telephone=telephone,
         )
-
-        while len(fake_data.card_number) <= 14:
-            name = fake.name()
+        card_number = fake_data.card_number
+        while len(card_number) <= 14:
             card_number = fake.credit_card_number()
-            generated_credit_expiry = fake.credit_card_expire()
-            expiration_month, expiration_year = generated_credit_expiry.split("/")
-            cvv = fake.credit_card_security_code()
-            fake_data = CreditCardBase(
-                name=name,
-                card_number=card_number,
-                expiration_month=expiration_month,
-                expiration_year=expiration_year,
-                cvv=cvv,
-            )
+        setattr(fake_data, "card_number", card_number)
         cc_mapping = {
             "card_number": "credit_card_number",
             "name": "name",
@@ -549,12 +539,7 @@ class Utilities:
         """
 
         # Country code mapping for different regions
-        country_codes = {
-            "US": "1",
-            "CA": "1",
-            "FR": "33",
-            "DE": "49",
-        }
+        country_codes = {"US": "1", "CA": "1", "FR": "33", "DE": "49", "GB": "44"}
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
@@ -574,7 +559,7 @@ class Utilities:
             local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE"] and local_number.startswith("0"):
+        if region in ["FR", "DE", "GB"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 

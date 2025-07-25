@@ -53,7 +53,10 @@ def process_changed_file(f, selected_mappings):
         selected_mappings: the selected mappings dictionary (updated in place).
     """
     split = f.split(SLASH)
-    if f.startswith("l10n_CM/sites/") or f.startswith("l10n_CM/constants/"):
+
+    if f.startswith(os.path.join("l10n_CM", "sites")) or f.startswith(
+        os.path.join("l10n_CM", "constants")
+    ):
         # if constants or sites are changed, add a single site/region mapping entry.
         site = split[2]
         region = split[3]
@@ -61,7 +64,7 @@ def process_changed_file(f, selected_mappings):
         # make sure the region mapping file exists before adding the mapping
         if os.path.exists(region_path):
             selected_mappings[site].add(region)
-    elif f.startswith("l10n_CM/region/"):
+    elif f.startswith(os.path.join("l10n_CM", "region")):
         # if a region file is changed, add the region to each site mapping.
         region = split[-1].split(".")[0]
         with open(f, "r+") as f:

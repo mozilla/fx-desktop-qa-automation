@@ -57,7 +57,7 @@ def add_to_prefs_list(region: str):
 
 @pytest.fixture()
 def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
-    """List of prefs to send to main conftest.py driver fixture"""
+    """List of prefs to send to the main conftest.py driver fixture"""
     prefs = [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
