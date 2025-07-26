@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/fnac_ad.html",
+  "field_mapping": {
+    "given_name": "4c929eea-6b02-416b-ab91-5c12df732fc7",
+    "family_name": "be324d87-0dda-45d4-a884-8f622d4e5be8",
+    "street_address": "b3b475eb-3b91-4170-a6ca-880a071c6c3f",
+    "address_level_2": "55790e94-fabf-4684-b2db-6846fa1056c2",
+    "address_level_1": "ac6e6f42-0d04-4671-8ced-9c5e7f8dc51a",
+    "country": "b3b87b3b-867d-4ec6-8e4b-aa13a45fe9ed",
+    "postal_code": "8bd2a4c8-0eed-4721-8179-47d35717a188",
+    "telephone": "82310c4a-3f30-4898-b0da-3605ec2dc6fd"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "4c929eea-6b02-416b-ab91-5c12df732fc7",
+    "be324d87-0dda-45d4-a884-8f622d4e5be8",
+    "b3b475eb-3b91-4170-a6ca-880a071c6c3f",
+    "55790e94-fabf-4684-b2db-6846fa1056c2",
+    "ac6e6f42-0d04-4671-8ced-9c5e7f8dc51a",
+    "b3b87b3b-867d-4ec6-8e4b-aa13a45fe9ed",
+    "8bd2a4c8-0eed-4721-8179-47d35717a188",
+    "82310c4a-3f30-4898-b0da-3605ec2dc6fd"
+  ]
+}
