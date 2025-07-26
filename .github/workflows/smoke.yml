@@ -3,7 +3,6 @@ name: Smoke Test Execution
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -14,6 +13,11 @@ on:
       job_to_run:
         required: true
         type: string
+      is_pull_request:
+        description: "Is this a PR?"
+        default: false
+        type: boolean
+        required: true
   workflow_dispatch:
     inputs:
       win_installer_link:
@@ -37,7 +41,7 @@ env:
 
 jobs:
   Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || github.event_name == 'pull_request' || inputs.win_installer_link }}
+    if: ${{ inputs.job_to_run == 'Smoke-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -63,7 +67,7 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running smoke tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' }}
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' && inputs.is_pull_request == false}}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
@@ -169,7 +173,7 @@ jobs:
           exit $?
           echo "Triggered by event: ${{ github.event_name }}"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' }}
+        if: ${{ inputs.job_to_run == 'Smoke-MacOS' && inputs.is_pull_request == false}}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
