@@ -1,5 +1,6 @@
 import logging
 import os
+import platform
 import subprocess
 import sys
 import threading
@@ -35,6 +36,7 @@ valid_sites = {
     "canadatire",
     "artsper",
     "yellowkorner"
+    "wish"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
@@ -136,12 +138,14 @@ def get_region_tests(test_region: str) -> list[str]:
     Returns:
         list[str]: A list of test file paths for the given region.
     """
-    path_to_region = current_dir + "/region/"
-    with open(path_to_region + test_region + ".json", "r") as fp:
+    path_to_region = os.path.join(current_dir, "region")
+    with open(os.path.join(path_to_region, test_region) + ".json", "r") as fp:
         region_data = load(fp)
         raw_tests = region_data.get("tests", [])
         return (
-            list(map(lambda test: current_dir + "/Unified/" + test, raw_tests))
+            list(
+                map(lambda test: os.path.join(current_dir, "Unified", test), raw_tests)
+            )
             if len(raw_tests) > 0
             else raw_tests
         )
@@ -187,15 +191,17 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
 def get_skipped_tests(live_site) -> list[str] | str:
     """
     Read the mapping for the given region and site and return any tests that are marked as skipped.
+    It is either a list of tests to skip or skipping all tests for the given site.
 
     Arg:
         live_site (str): The site is being tested.
     Returns:
         list[str] | str: A list of tests that should be skipped, or "All" if all tests should be skipped.
     """
-    with open(current_dir + "/constants/" + live_site + ".json", "r") as fp:
+    with open(os.path.join(current_dir, "constants", live_site) + ".json", "r") as fp:
         live_site_data = load(fp)
-        if live_site_data.get("skip"):
+        platform_skip = platform.system() in live_site_data.get("skip_os", [])
+        if live_site_data.get("skip") or platform_skip:
             return "All"
         return live_site_data.get("skipped", [])
 
