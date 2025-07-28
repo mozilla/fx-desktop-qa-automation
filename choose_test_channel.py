@@ -48,6 +48,7 @@ if main_conftest in committed_files or base_page in committed_files:
 
 for f in committed_files:
     if any([r.match(f) for r in l10n_module_patterns]):
+        print(ALL_CHANNELS)
         sys.exit()
 
     for test_channel in file_subsets:
