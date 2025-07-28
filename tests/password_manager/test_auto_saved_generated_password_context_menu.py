@@ -25,6 +25,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     """
     C2248176 - Securely Generated Password is auto-saved when generated from password field context menu
     """
+
     # Instantiate objects
     context_menu = ContextMenu(driver)
     tabs = TabBar(driver)
