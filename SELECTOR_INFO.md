@@ -3034,6 +3034,13 @@ Description: Developer tool icon
 Location: Navigation bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: password-saved-confirmation
+Selector Data: confirmation-hint
+Description: Password saved confirmation banner
+Location: Navigation bar, bellow the Password key icon
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
