@@ -150,7 +150,7 @@ jobs:
           name: artifacts-win
           path: artifacts-win
   Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
