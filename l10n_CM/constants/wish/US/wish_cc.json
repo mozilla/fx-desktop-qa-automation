@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/wish_cc.html",
+  "field_mapping": {
+    "card_number": "6e530a2b-9ee5-489a-8ce3-68f014a3bb27",
+    "expiration_date": "dbc81cc7-75dc-454f-b4e4-eaf40f956bce",
+    "cvv": "4e2ac2c7-ef80-43b1-bab7-50da89d54acb"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": true,
+  "fields": [
+    "6e530a2b-9ee5-489a-8ce3-68f014a3bb27",
+    "dbc81cc7-75dc-454f-b4e4-eaf40f956bce",
+    "4e2ac2c7-ef80-43b1-bab7-50da89d54acb"
+]
+
+}
