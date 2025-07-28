@@ -584,6 +584,6 @@
     "password-saved-confirmation": {
         "selectorData": "confirmation-hint",
         "strategy": "id",
-        "groups": []
+        "groups": ["doNotCache"]
     }
 }
