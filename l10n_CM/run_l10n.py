@@ -35,6 +35,7 @@ valid_sites = {
     "aldoshoes",
     "canadatire",
     "artsper",
+    "justspices"
     "yellowkorner"
     "wish"
 }
