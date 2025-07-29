@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/bijoubrigitte_cc.html",
+  "field_mapping": {
+    "name": "",
+    "card_number": "",
+    "expiration_month": "",
+    "expiration_year": "",
+    "cvv": ""
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+}
