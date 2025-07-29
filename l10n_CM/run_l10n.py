@@ -36,6 +36,7 @@ valid_sites = {
     "canadatire",
     "wish",
     "artsper",
+    "justspices"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
