@@ -17,14 +17,15 @@ def test_active_tab(driver: Firefox):
     tabs = TabBar(driver)
     num_tabs = 5
 
-    # opening 5 tabs
+    # Open 5 tabs
     for i in range(num_tabs):
         tabs.new_tab_by_button()
 
-    # go through all the tabs and ensure highlighted one is correct, +2 since 1 indexed and additional tab for the beginning
+    # Go through all the tabs and ensure the focus is correct
     for i in range(1, num_tabs + 2):
-        target_tab = tabs.get_tab(i)
         with driver.context(driver.CONTEXT_CHROME):
+            target_tab = tabs.get_tab(i)
             target_tab.click()
-            visibility = target_tab.get_attribute("visuallyselected")
-            assert visibility == ""
+            tabs.custom_wait(timeout=3).until(
+                lambda d: target_tab.get_attribute("visuallyselected") == ""
+            )
