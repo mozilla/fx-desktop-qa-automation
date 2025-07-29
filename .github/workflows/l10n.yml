@@ -371,17 +371,17 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifacts-win
+          name: artifacts-win-l10n
           path: artifacts-win
       - name: Download Linux artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifacts-linux
+          name: artifacts-linux-l10n
           path: artifacts-linux
       - name: Download MacOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifacts-mac
+          name: artifacts-mac-l10n
           path: artifacts-mac
       - name: List downloaded Windows files
         run: ls artifacts-win/
