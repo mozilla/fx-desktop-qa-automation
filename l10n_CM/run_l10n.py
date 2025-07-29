@@ -34,14 +34,16 @@ valid_sites = {
     "cdiscount",
     "aldoshoes",
     "canadatire",
-    "wish",
     "artsper",
+    "yellowkorner"
+    "wish"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
 valid_sites = valid_sites.union(set(loaded_valid_sites))
 
 live_sites = []
+
 
 LOCALHOST = "127.0.0.1"
 PORT = 8080
