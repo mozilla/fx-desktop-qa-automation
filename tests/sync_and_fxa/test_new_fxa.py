@@ -39,11 +39,9 @@ def test_sync_new_fxa(driver: Firefox, fxa_url: str, new_fxa_prep: dict, get_otp
     fxa.create_new_account(new_fxa_prep.password)
     otp = get_otp_code(new_fxa_prep.restmail)
     fxa.fill_otp_code(otp)
-    fxa.get_element("continue-browsing-link").click()
+    # fxa.get_element("continue-browsing-link").click()
 
     # Walk through the Finish Account Setup flow and confirm sync
-    fxa.driver.get(fxa_url)
-    fxa.get_element("submit-button").click()
-    panel_ui.manage_fxa_account()
+    panel_ui.manage_fxa_finish_sign_in()
     fxa.finish_account_setup(new_fxa_prep.password)
     panel_ui.confirm_sync_in_progress()

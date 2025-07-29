@@ -62,10 +62,7 @@ def new_fxa_prep(fxa_url: str, acct_password: str) -> FxaPrep:
     prep = FxaPrep(fxa_url, acct_password)
     prep.restmail.clear()
     yield prep
-    try:
-        prep.destroy_account()
-    except OutOfProtocolError as e:
-        logging.info(repr(e))
+    prep.destroy_account()
 
 
 @pytest.fixture()

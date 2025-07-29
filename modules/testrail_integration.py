@@ -392,7 +392,12 @@ def organize_l10n_entries(
         if not test_results[category].get(run_id):
             test_results[category][run_id] = []
         test_results[category][run_id].append(
-            {"suite_id": suite_id, "site": site, "test_case": test_case, "duration": f"{duration}s"}
+            {
+                "suite_id": suite_id,
+                "site": site,
+                "test_case": test_case,
+                "duration": f"{duration}s",
+            }
         )
 
     return test_results

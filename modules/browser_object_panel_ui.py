@@ -71,6 +71,21 @@ class PanelUi(BasePage):
         self.click_on("fxa-sign-in")
         return self
 
+    def open_account_toolbar(self):
+        """
+        Open the FxA account toolbar.
+        """
+        self.click_on("sync-user-button")
+        return self
+
+    def click_finish_sign_in_button(self):
+        """
+        Click FxA finish sign in button.
+        """
+        self.open_account_toolbar()
+        self.click_on("fxa-finish-sign-in")
+        return self
+
     def log_out_fxa(self) -> BasePage:
         """
         Click FxA signout button.
@@ -87,6 +102,15 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.click_sync_sign_in_button()
             self.get_element("fxa-manage-account-button").click()
+        return self
+
+    @BasePage.context_chrome
+    def manage_fxa_finish_sign_in(self):
+        """
+        Open the FxA management flow to finish sign in.
+        """
+        self.open_account_toolbar()
+        self.click_on("fxa-manage-account-button")
         return self
 
     def confirm_sync_in_progress(self) -> BasePage:

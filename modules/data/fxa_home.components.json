@@ -1,6 +1,6 @@
 {
     "login-email-input": {
-        "selectorData": "input[type='email']",
+        "selectorData": "input[name='email']",
         "strategy": "css",
         "groups": [
             "requiredForPage"

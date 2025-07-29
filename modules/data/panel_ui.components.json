@@ -38,6 +38,11 @@
         "strategy": "css",
         "groups": []
     },
+    "fxa-finish-sign-in": {
+        "selectorData": "appMenu-header-description",
+        "strategy": "id",
+        "groups": []
+    },
 
     "fxa-sync-label": {
         "selectorData": "syncnow-label",
@@ -56,6 +61,8 @@
         "strategy": "id",
         "groups": []
     },
+
+
 
     "customize-toolbar": {
         "selectorData": "overflowMenu-customize-button",
