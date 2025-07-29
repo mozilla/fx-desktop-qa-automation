@@ -5,8 +5,6 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.page_object_autofill import AddressFill
 
-# test comment
-
 
 @pytest.fixture()
 def test_case():
