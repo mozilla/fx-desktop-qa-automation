@@ -234,7 +234,7 @@ def mark_results(testrail_session: TestRail, test_results):
     for category in ["passed", "blocked", "xfailed", "failed"]:
         # Skip the category if it doesn't exist
         if test_results.get(category) is None:
-            logging.warning(category, "does not exist for this test run")
+            logging.warning(f"{category} does not exist for this test run")
             continue
         for run_id in test_results[category]:
             if not existing_results.get(run_id):
