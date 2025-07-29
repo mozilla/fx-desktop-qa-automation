@@ -39,7 +39,6 @@ jobs:
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-Windows
-      is_pull_request: false
     secrets: inherit
 
   Run-Mac-Smoke:
@@ -48,5 +47,4 @@ jobs:
     uses: ./.github/workflows/smoke.yml
     with:
       job_to_run: Smoke-MacOS
-      is_pull_request: false
     secrets: inherit
