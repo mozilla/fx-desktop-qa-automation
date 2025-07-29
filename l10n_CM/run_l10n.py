@@ -1,5 +1,6 @@
 import logging
 import os
+import platform
 import subprocess
 import sys
 import threading
@@ -34,6 +35,7 @@ valid_sites = {
     "aldoshoes",
     "canadatire",
     "thomann",
+    "wish",
     "artsper",
 }
 
@@ -41,7 +43,6 @@ loaded_valid_sites = valid_l10n_mappings().keys()
 valid_sites = valid_sites.union(set(loaded_valid_sites))
 
 live_sites = []
-
 
 LOCALHOST = "127.0.0.1"
 PORT = 8080
@@ -189,15 +190,17 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
 def get_skipped_tests(live_site) -> list[str] | str:
     """
     Read the mapping for the given region and site and return any tests that are marked as skipped.
+    It is either a list of tests to skip or skipping all tests for the given site.
 
     Arg:
         live_site (str): The site is being tested.
     Returns:
         list[str] | str: A list of tests that should be skipped, or "All" if all tests should be skipped.
     """
-    with open(current_dir + "/constants/" + live_site + ".json", "r") as fp:
+    with open(os.path.join(current_dir, "constants", live_site) + ".json", "r") as fp:
         live_site_data = load(fp)
-        if live_site_data.get("skip"):
+        platform_skip = platform.system() in live_site_data.get("skip_os", [])
+        if live_site_data.get("skip") or platform_skip:
             return "All"
         return live_site_data.get("skipped", [])
 
