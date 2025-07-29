@@ -41,6 +41,7 @@ jobs:
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10N-MacOS
+      is_pull_request: false
     secrets: inherit
 
   Run-L10N-Win-Smoke:
@@ -49,6 +50,7 @@ jobs:
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10N-Windows
+      is_pull_request: false
     secrets: inherit
 
   Run-L10N-Linux-Smoke:
@@ -57,4 +59,5 @@ jobs:
     uses: ./.github/workflows/l10n.yml
     with:
       job_to_run: L10N-Linux
+      is_pull_request: false
     secrets: inherit
