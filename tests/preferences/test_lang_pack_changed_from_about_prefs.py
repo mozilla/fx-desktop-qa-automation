@@ -28,7 +28,6 @@ def add_to_prefs_list():
     return [("services.sync.prefs.sync-seen.intl.accept_languages", True)]
 
 
-@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1978595")
 def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     """
     C1771617 - The language can be changed in about:preferences.
@@ -69,6 +68,12 @@ def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     screen_cap = GenericPage(driver, url=SCREEN_CAP_URL)
     screen_cap.open()
     screen_cap.find_element("id", "start").click()
+
+    # In automation, Windows is putting the popup behind the browser window.
+    # A click in the awesomebar magically makes the popup visible.
+    if system() == "Windows":
+        nav.click_in_awesome_bar()
+
     nav.element_visible("popup-notification")
     nav.expect_element_attribute_contains(
         "popup-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
