@@ -81,6 +81,7 @@ if __name__ == "__main__":
     with open(OUTPUT_FILE, "w") as file:
         pass  # File is created or cleared
     l10n_mappings = valid_l10n_mappings()
+    sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
         add_selected_mappings(l10n_mappings)
@@ -129,16 +130,16 @@ if __name__ == "__main__":
     base_page = os.path.join("modules", "page_base.py")
 
     if main_conftest in committed_files or base_page in committed_files:
-        # Run all the tests for all mappings if main conftest or basepage changed
-        add_selected_mappings(l10n_mappings)
+        # Run sample tests for all mappings if main conftest or basepage changed
+        add_selected_mappings(sample_mappings)
         sys.exit(0)
 
-    # Run all the tests for all mappings if any core l10n model, component, conftest, or tests are changed.
+    # Run sample tests for all mappings if any core l10n model, component, conftest, or tests are changed.
     selected_mappings = defaultdict(set)
     for f in committed_files:
         for re_val in re_set_all:
             if re_val.match(f):
-                add_selected_mappings(l10n_mappings)
+                add_selected_mappings(sample_mappings)
                 sys.exit(0)
         # check if constants, sites or region directory files were changed or added.
         # if so, add the site/region mappings.

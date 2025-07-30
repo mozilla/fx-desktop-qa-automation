@@ -1,7 +1,5 @@
 import pytest
-from selenium.common import NoSuchElementException
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import GenericPage
