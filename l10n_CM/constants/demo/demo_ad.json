@@ -21,5 +21,6 @@
     "country",
     "email",
     "tel"
-  ]
+  ],
+  "skip_regions": ["IT"]
 }
