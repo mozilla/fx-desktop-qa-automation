@@ -42,7 +42,7 @@ def get_html_files(live_site, region):
 
 @pytest.fixture()
 def region():
-    return os.environ.get("FX_REGION", "US")
+    return os.environ.get("FX_REGION", "GB")
 
 
 @pytest.fixture()
@@ -61,6 +61,7 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
     prefs = [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
+        ("extensions.formautofill.addresses.supportedCountries", region),
         ("browser.aboutConfig.showWarning", False),
         ("browser.search.region", region),
     ]

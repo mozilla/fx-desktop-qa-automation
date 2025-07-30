@@ -347,6 +347,15 @@ class AboutPrefs(BasePage):
         self.close_dialog_box()
         return self
 
+    def select_saved_address_entry(self, idx=0):
+        """
+        Select one of the entries in the saved addresses list.
+        """
+        self.switch_to_saved_addresses_popup_iframe()
+        select_el = Select(self.get_element("address-saved-options"))
+        self.double_click(select_el.options[idx])
+        return self
+
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
         self.switch_to_saved_payments_popup_iframe()

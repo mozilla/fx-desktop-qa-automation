@@ -4,22 +4,22 @@
     "country": "139f9745-aa36-410f-8f74-b034d2e68cc9",
     "given_name": "eeb50a23-2faf-40cf-939f-9f6a96d57a1e",
     "family_name": "4b5f7dbd-ef96-4362-a6d6-799f1514e24e",
+    "street_address": "1accdedb-5ac4-403f-848c-07dbae40086a",
     "telephone": "62d794bf-b73a-4065-b494-8abb6388b3ce",
-    "address_level_1": "1accdedb-5ac4-403f-848c-07dbae40086a",
     "email": "35fe569e-aa96-4f38-8b16-a2b3859ba154",
-    "address_level_2": "deee6941-08f5-47f4-8c9f-353ec042ee08",
+    "address_level_1": "9d7ea453-7e6a-4f94-b35c-671d5ac7c134",
     "postal_code": "b82b85a9-f315-4d04-8f5d-daa0285a2676"
   },
-  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "skip": "True",
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "fields": [
     "139f9745-aa36-410f-8f74-b034d2e68cc9",
     "eeb50a23-2faf-40cf-939f-9f6a96d57a1e",
-    "4b5f7dbd-ef96-4362-a6d6-799f1514e24e",
     "62d794bf-b73a-4065-b494-8abb6388b3ce",
+    "4b5f7dbd-ef96-4362-a6d6-799f1514e24e",
     "1accdedb-5ac4-403f-848c-07dbae40086a",
     "35fe569e-aa96-4f38-8b16-a2b3859ba154",
-    "deee6941-08f5-47f4-8c9f-353ec042ee08",
+    "9d7ea453-7e6a-4f94-b35c-671d5ac7c134",
     "b82b85a9-f315-4d04-8f5d-daa0285a2676"
   ]
 }
