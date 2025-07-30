@@ -16,4 +16,4 @@ tasks:
         pip3 install 'ruff>=0.4.8,<0.5'
         mv ./dev_pyproject.toml ./pyproject.toml;
         python3 -m ruff format .;
-        python3 -m ruff check --fix .;
+        python3 -m ruff check .;

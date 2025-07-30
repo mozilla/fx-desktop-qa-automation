@@ -1,0 +1,68 @@
+---
+name: DTE Automation Dispatch
+
+run-name: CI tests kicked off by ${{ github.actor }}
+on:
+  pull_request:
+permissions:
+  contents: "write"
+
+jobs:
+  Select-Channels:
+    runs-on: ubuntu-latest
+    outputs:
+      channels: ${{ steps.dispatch.outputs.channels }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Select test channels
+        id: dispatch
+        run: |
+          python3 choose_test_channel.py
+          echo channels=$(python3 choose_test_channel.py) >> "$GITHUB_OUTPUT"
+
+
+  Run-Smoke-Win:
+    needs: Select-Channels
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'smoke')
+    uses: ./.github/workflows/smoke.yml
+    with:
+      job_to_run: Smoke-Windows
+      is_pull_request: true
+    secrets: inherit
+
+  Run-Smoke-Mac:
+    needs: Select-Channels
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'smoke')
+    uses: ./.github/workflows/smoke.yml
+    with:
+      job_to_run: Smoke-MacOS
+      is_pull_request: true
+    secrets: inherit
+
+  Run-L10n-Win:
+    needs: Select-Channels
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n')
+    uses: ./.github/workflows/l10n.yml
+    with:
+      job_to_run: L10n-Windows
+      is_pull_request: true
+    secrets: inherit
+
+  Run-L10n-Mac:
+    needs: Select-Channels
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n')
+    uses: ./.github/workflows/l10n.yml
+    with:
+      job_to_run: L10n-MacOS
+      is_pull_request: true
+    secrets: inherit
+
+  Run-L10n-Linux:
+    needs: Select-Channels
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n')
+    uses: ./.github/workflows/l10n.yml
+    with:
+      job_to_run: L10n-Linux
+      is_pull_request: true
+    secrets: inherit
