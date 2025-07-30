@@ -36,7 +36,8 @@ valid_sites = {
     "canadatire",
     "artsper",
     "yellowkorner"
-    "wish"
+    "wish",
+    "bijoubrigitte"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
