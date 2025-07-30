@@ -75,6 +75,16 @@
         "strategy": "css",
         "groups": []
     },
+    "do-it-later-button": {
+        "selectorData": "inline_recovery_key_setup_create_do_it_later",
+        "strategy": "id",
+        "groups": []
+    },
+     "not-now-button": {
+        "selectorData": "choice-pair-not-now",
+        "strategy": "id",
+        "groups": []
+    },
 
     "sign-in-button": {
         "selectorData": "use-logged-in",

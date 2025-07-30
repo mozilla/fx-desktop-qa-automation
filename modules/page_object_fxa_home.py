@@ -51,4 +51,6 @@ class FxaHome(BasePage):
         self.driver.switch_to.window(self.driver.window_handles[-1])
         self.fill("login-password-input", password, press_enter=False)
         self.get_element("submit-button").click()
+        # self.get_element("do-it-later-button").click()
+        # self.get_element("not-now-button").click()
         return self

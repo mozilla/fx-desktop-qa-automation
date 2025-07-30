@@ -2042,6 +2042,20 @@ Location: In the FxA signin page flow
 Path to .json: modules/data/fxa_home.components.json
 ```
 ```
+Selector Name: do-it-later-button
+Selector Data: "inline_recovery_key_setup_create_do_it_later"
+Description: Coninute fxa account creation flow
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: login-password-input
+Selector Data: "choice-pair-not-now"
+Description: Dont pair with phone now
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
 Selector Name: signin-otp-input
 Selector Data: "[data-testid='signin-token-code-input-field']"
 Description: The FxAccount One Time Password entry field

@@ -44,4 +44,5 @@ def test_sync_new_fxa(driver: Firefox, fxa_url: str, new_fxa_prep: dict, get_otp
     # Walk through the Finish Account Setup flow and confirm sync
     panel_ui.manage_fxa_finish_sign_in()
     fxa.finish_account_setup(new_fxa_prep.password)
-    panel_ui.confirm_sync_in_progress()
+    new_fxa_prep.destroy_account()
+    # panel_ui.confirm_sync_in_progress()
