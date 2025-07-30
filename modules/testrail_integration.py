@@ -234,7 +234,7 @@ def mark_results(testrail_session: TestRail, test_results):
     for category in ["passed", "blocked", "xfailed", "failed"]:
         # Skip the category if it doesn't exist
         if test_results.get(category) is None:
-            logging.warning(category, "does not exist for this test run")
+            logging.warning(f"{category} does not exist for this test run")
             continue
         for run_id in test_results[category]:
             if not existing_results.get(run_id):
@@ -290,6 +290,7 @@ def organize_l10n_entries(
     cases_in_suite = suite_info.get("cases")
     cases_in_suite = [int(n) for n in cases_in_suite]
     results = suite_info.get("results")
+    durations = suite_info.get("durations")
     plan_title = expected_plan.get("name")
 
     site_entries = [
@@ -380,8 +381,10 @@ def organize_l10n_entries(
         "blocked": {},
     }
 
-    for test_case, outcome in results.items():
-        logging.info(f"{test_case}: {outcome}")
+    for test_case in results.keys():
+        outcome = results[test_case]
+        duration = durations[test_case]
+        logging.info(f"{test_case}: {outcome} {duration}")
         if outcome == "rerun":
             logging.info("Rerun result...skipping...")
             continue
@@ -389,7 +392,12 @@ def organize_l10n_entries(
         if not test_results[category].get(run_id):
             test_results[category][run_id] = []
         test_results[category][run_id].append(
-            {"suite_id": suite_id, "site": site, "test_case": test_case}
+            {
+                "suite_id": suite_id,
+                "site": site,
+                "test_case": test_case,
+                "duration": f"{duration}s",
+            }
         )
 
     return test_results

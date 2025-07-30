@@ -2,7 +2,9 @@
   "region": "FR",
   "sites": [
     "amazon",
-    "demo"
+    "demo",
+    "artsper",
+    "yellowkorner"
   ],
   "tests": [
   ]

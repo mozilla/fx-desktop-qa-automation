@@ -3,7 +3,6 @@ name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
 on:
-  pull_request:
   workflow_call:
     inputs:
       channel:
@@ -14,6 +13,10 @@ on:
       job_to_run:
         required: true
         type: string
+      is_pull_request:
+        description: "Is this a PR?"
+        default: false
+        type: boolean
   workflow_dispatch:
     inputs:
       win_installer_link:
@@ -38,7 +41,7 @@ env:
 
 jobs:
   L10N-MacOS:
-    if: ${{ inputs.job_to_run == 'L10N-MacOS' || github.event_name == 'pull_request' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Create app token
@@ -56,7 +59,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'L10N-MacOS' }}
+        if: ${{ inputs.job_to_run == 'L10N-MacOS' && inputs.is_pull_request == false }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
@@ -123,7 +126,7 @@ jobs:
           name: artifacts-mac
           path: artifacts-mac
   L10N-Linux:
-    if: ${{ inputs.job_to_run == 'L10N-Linux' || github.event_name == 'pull_request' || inputs.linux_tarball_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
       - name: Create app token
@@ -141,7 +144,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'L10N-Linux' }}
+        if: ${{ inputs.job_to_run == 'L10N-Linux' && inputs.is_pull_request == false }}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on Linux";
@@ -200,13 +203,13 @@ jobs:
           fi
           exit $SCRIPT_EXIT_CODE;
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' }}
+        if: ${{ always() && inputs.is_pull_request == true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-linux
           path: artifacts-linux
   L10N-Windows:
-    if: ${{ inputs.job_to_run == 'L10N-Windows' || github.event_name == 'pull_request' || inputs.win_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Create app token
@@ -232,7 +235,7 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running l10n tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'L10N-Windows' }}
+        if: ${{ inputs.job_to_run == 'L10N-Windows' && inputs.is_pull_request == false}}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
@@ -340,7 +343,7 @@ jobs:
           }
           exit $env:SCRIPT_EXIT_CODE
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' }}
+        if: ${{ always() && inputs.is_pull_request == true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win
@@ -367,17 +370,17 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifacts-win
+          name: artifacts-win-l10n
           path: artifacts-win
       - name: Download Linux artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifacts-linux
+          name: artifacts-linux-l10n
           path: artifacts-linux
       - name: Download MacOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifacts-mac
+          name: artifacts-mac-l10n
           path: artifacts-mac
       - name: List downloaded Windows files
         run: ls artifacts-win/
