@@ -42,7 +42,7 @@ def get_html_files(live_site, region):
 
 @pytest.fixture()
 def region():
-    return os.environ.get("FX_REGION", "US")
+    return os.environ.get("FX_REGION", "IT")
 
 
 @pytest.fixture()
@@ -104,9 +104,11 @@ def cc_site_data(live_site, region):
 
 
 @pytest.fixture
-def is_live_site(live_site):
-    """Determine if the site is live."""
-    return live_site != "demo"
+def is_live_site(live_site, region):
+    """Determine if the site is live.
+    Treat demo IT as a live site until the doorhanger bug is fixed.
+    """
+    return live_site != "demo" or region in {"IT"}
 
 
 @pytest.fixture(scope="session")
