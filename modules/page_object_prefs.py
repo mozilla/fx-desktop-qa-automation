@@ -435,7 +435,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
-        self.get_element("prefs-button", labels=[button_label]).click()
+        self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -535,6 +535,7 @@ class AboutPrefs(BasePage):
         The <memory used> value for no cookies is '0 bytes', otherwise values are '### MB', or '### KB'
         """
         # Find the dialog option elements containing the checkbox label
+        self.element_exists("clear-data-dialog-options")
         options = self.get_elements("clear-data-dialog-options")
 
         # Extract the text from the label the second option
@@ -628,8 +629,8 @@ class AboutAddons(BasePage):
         """
         Clicks the corresponding sidebar option from the about:addons page.
         """
-        sleep(1)
-        self.get_element("sidebar-options", labels=[option]).click()
+        self.element_exists("sidebar-options", labels=[option])
+        self.click_on("sidebar-options", labels=[option])
 
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
