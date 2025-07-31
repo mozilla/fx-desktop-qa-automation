@@ -629,7 +629,7 @@ class AboutAddons(BasePage):
         """
         Clicks the corresponding sidebar option from the about:addons page.
         """
-        self.element_exists("sidebar-options", labels=[option])
+        self.element_clickable("sidebar-options", labels=[option])
         self.click_on("sidebar-options", labels=[option])
 
     def activate_theme(
