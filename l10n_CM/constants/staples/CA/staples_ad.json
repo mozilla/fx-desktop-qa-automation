@@ -1,0 +1,23 @@
+{
+ "url": "http://127.0.0.1:8080/staples_ad.html",
+ "field_mapping": {
+    "given_name": "3b3d82f9-58f3-4274-8aef-9005217f5924",
+    "family_name": "8357dcd8-37b9-400b-8a2c-25f205454830",
+    "street_address": "a65c46a7-f23c-4fd5-9ee3-56d03a11bf2f",
+    "address_level_2": "ff860e00-5b0c-4a79-8215-a790ab09d9ca",
+    "address_level_1": "69fb18cd-6155-4339-9d26-94033beeb651",
+    "postal_code": "7dc1f52d-5afe-43d6-a969-df597917cc93",
+    "telephone": "1c37c9bf-5f50-48cd-8748-3bfb4da03ed0"
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "3b3d82f9-58f3-4274-8aef-9005217f5924",
+    "8357dcd8-37b9-400b-8a2c-25f205454830",
+    "ff860e00-5b0c-4a79-8215-a790ab09d9ca",
+    "a65c46a7-f23c-4fd5-9ee3-56d03a11bf2f",
+    "69fb18cd-6155-4339-9d26-94033beeb651",
+    "7dc1f52d-5afe-43d6-a969-df597917cc93",
+    "1c37c9bf-5f50-48cd-8748-3bfb4da03ed0"
+
+ ]
+}
