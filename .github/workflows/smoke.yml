@@ -115,7 +115,7 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          pipenv run pytest -n 4 tests/preferences/test_clear_cookie_data.py tests/language_packs
+          pipenv run pytest $(cat selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -202,7 +202,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run python choose_ci_set.py
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
@@ -271,7 +271,7 @@ jobs:
           "$FX_EXECUTABLE" --version;
           pipenv run python choose_ci_set.py;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" -n 4 $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in Ubuntu (Headed)
         if: steps.setup.conclusion == 'success' && always()
