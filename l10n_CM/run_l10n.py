@@ -38,6 +38,7 @@ valid_sites = {
     "justspices",
     "yellowkorner",
     "wish",
+    "bijoubrigitte",
     "burtsbees",
 }
 
