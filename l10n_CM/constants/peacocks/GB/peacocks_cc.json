@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/peacocks_cc.html",
+  "field_mapping": {
+    "card_number": "e27f8899-b587-421c-bd3c-1d73bd683f33",
+    "name": "1463e29f-0a7b-409d-8b30-3a47b2d906c2",
+    "expiration_month": "8d5473ae-cc97-4335-a0d7-9a0fe8885c0a",
+    "expiration_year": "4560acbf-79ca-4938-a48b-8daae2dd208f",
+    "cvv": "2d164aa8-4ebc-4a65-95b9-6d5d4cebc82d"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "e27f8899-b587-421c-bd3c-1d73bd683f33",
+    "1463e29f-0a7b-409d-8b30-3a47b2d906c2",
+    "8d5473ae-cc97-4335-a0d7-9a0fe8885c0a",
+    "4560acbf-79ca-4938-a48b-8daae2dd208f",
+    "2d164aa8-4ebc-4a65-95b9-6d5d4cebc82d"
+  ]
+}
