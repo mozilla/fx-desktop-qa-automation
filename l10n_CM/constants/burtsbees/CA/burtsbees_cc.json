@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/burtsbees_cc.html",
+  "field_mapping": {
+    "card_number": "39b722f9-ff49-4e30-a801-4a38945cc7e1",
+    "expiration_date": "57021e0e-6309-45b1-9c15-62cd56e1e930",
+    "cvv": "57021e0e-6309-45b1-9c15-62cd56e1e930"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "39b722f9-ff49-4e30-a801-4a38945cc7e1",
+    "57021e0e-6309-45b1-9c15-62cd56e1e930",
+    "57021e0e-6309-45b1-9c15-62cd56e1e930"
+]
+}

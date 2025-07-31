@@ -38,7 +38,8 @@ valid_sites = {
     "justspices",
     "yellowkorner",
     "wish",
-    "bijoubrigitte"
+    "bijoubrigitte",
+    "burtsbees",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()

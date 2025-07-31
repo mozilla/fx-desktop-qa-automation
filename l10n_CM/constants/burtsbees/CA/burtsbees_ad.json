@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:8080/burtsbees_ad.html",
+  "field_mapping": {
+    "given_name": "484c9a5e-d921-4d8d-8006-45ba05e0f68a",
+    "family_name": "f5cade23-4cbf-47dd-8011-4979698b5d12",
+    "street_address": "5bad4ca0-fc9e-452c-a04c-1ffc66bd2024",
+    "address_level_2": "7a97a81e-44e2-40b0-a3ac-d8608463cd1e",
+    "postal_code": "95c16291-635f-4ed0-b18e-e733d36fcc83",
+    "telephone": "75d72d2e-61d0-415f-b51f-0ed1fe1d1922"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "484c9a5e-d921-4d8d-8006-45ba05e0f68a",
+    "f5cade23-4cbf-47dd-8011-4979698b5d12",
+    "5bad4ca0-fc9e-452c-a04c-1ffc66bd2024",
+    "7a97a81e-44e2-40b0-a3ac-d8608463cd1e",
+    "95c16291-635f-4ed0-b18e-e733d36fcc83",
+    "75d72d2e-61d0-415f-b51f-0ed1fe1d1922"
+  ]
+}
