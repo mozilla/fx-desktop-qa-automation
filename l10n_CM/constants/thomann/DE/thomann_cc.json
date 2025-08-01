@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/thomann_cc.html",
+  "field_mapping": {
+    "card_number": "11111111-aaaa-bbbb-cccc-000000000000",
+    "expiration_date": "22222222-bbbb-cccc-dddd-111111111111",
+    "cvv": "33333333-cccc-dddd-eeee-222222222222"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "11111111-aaaa-bbbb-cccc-000000000000",
+    "22222222-bbbb-cccc-dddd-111111111111",
+    "33333333-cccc-dddd-eeee-222222222222"
+  ]
+}
