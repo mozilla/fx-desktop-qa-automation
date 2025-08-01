@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/whittard_cc.html",
+  "field_mapping": {
+    "card_name": "6e32bfc1-3e4d-4d3b-90c1-a079316bb378",
+    "card_number": "cf035d07-1eb9-4efe-ad91-2ed125c685be",
+    "expiration_month": "1c5508ad-3599-410f-9853-1ec898d759d4",
+    "expiration_year": "a4f54662-6c32-49cb-97ab-2ef2430a4f50",
+    "cvv": "f4020ed8-6221-4359-ac0a-3dff8bc30282"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "6e32bfc1-3e4d-4d3b-90c1-a079316bb378",
+    "cf035d07-1eb9-4efe-ad91-2ed125c685be",
+    "1c5508ad-3599-410f-9853-1ec898d759d4",
+    "a4f54662-6c32-49cb-97ab-2ef2430a4f50",
+    "f4020ed8-6221-4359-ac0a-3dff8bc30282"
+]
+}
