@@ -8,6 +8,7 @@
     "cvv": "f4020ed8-6221-4359-ac0a-3dff8bc30282"
 },
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
   "fields": [
     "6e32bfc1-3e4d-4d3b-90c1-a079316bb378",
     "cf035d07-1eb9-4efe-ad91-2ed125c685be",
