@@ -1,19 +1,19 @@
 {
   "url": "http://127.0.0.1:8080/peacocks_cc.html",
   "field_mapping": {
-    "card_number": "e27f8899-b587-421c-bd3c-1d73bd683f33",
-    "name": "1463e29f-0a7b-409d-8b30-3a47b2d906c2",
-    "expiration_month": "8d5473ae-cc97-4335-a0d7-9a0fe8885c0a",
-    "expiration_year": "4560acbf-79ca-4938-a48b-8daae2dd208f",
-    "cvv": "2d164aa8-4ebc-4a65-95b9-6d5d4cebc82d"
+    "card_number": "72b3f40c-b66c-4a02-adfb-a79a2868fa45",
+    "name": "71408c5c-451b-4242-9ed7-550cf4a8c893",
+    "expiration_month": "6f76ab0a-3ee3-4fcb-a047-b2dac639e54a",
+    "expiration_year": "fe5c1862-ad33-4df4-abca-c45b1ccd989a",
+    "cvv": "a544ec67-6767-4c72-9484-b247b32c2827"
   },
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "skip": "True",
   "fields": [
-    "e27f8899-b587-421c-bd3c-1d73bd683f33",
-    "1463e29f-0a7b-409d-8b30-3a47b2d906c2",
-    "8d5473ae-cc97-4335-a0d7-9a0fe8885c0a",
-    "4560acbf-79ca-4938-a48b-8daae2dd208f",
-    "2d164aa8-4ebc-4a65-95b9-6d5d4cebc82d"
+    "72b3f40c-b66c-4a02-adfb-a79a2868fa45",
+    "71408c5c-451b-4242-9ed7-550cf4a8c893",
+    "6f76ab0a-3ee3-4fcb-a047-b2dac639e54a",
+    "fe5c1862-ad33-4df4-abca-c45b1ccd989a",
+    "a544ec67-6767-4c72-9484-b247b32c2827"
   ]
 }
