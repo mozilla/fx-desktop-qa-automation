@@ -34,6 +34,7 @@ valid_sites = {
     "cdiscount",
     "aldoshoes",
     "canadatire",
+    "apple",
     "artsper",
     "justspices",
     "yellowkorner",
