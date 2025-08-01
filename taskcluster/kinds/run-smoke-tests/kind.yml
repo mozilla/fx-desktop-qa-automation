@@ -34,7 +34,6 @@ tasks:
         ./collect_executables.sh;
         ./firefox/firefox --version;
         . ./keyring-unlock.sh
-        pipenv run python3 -c 'from os import environ; print([environ.get(k) for k in ["TASKCLUSTER_PROXY_URL", "RUN_ID", "TASK_ID"]])'
         if [[ ! $(python3 choose_test_channel.py) =~ "smoke" ]]; then exit 0; fi
         pipenv run python3 choose_ci_set.py
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests)
