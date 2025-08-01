@@ -353,8 +353,8 @@ def organize_l10n_entries(
 
     # Add execution link to plan description
 
-    os = config.split(" ")[0]
-    description = replace_link_in_description(expected_plan["description"], os)
+    os_name = config.split(" ")[0]
+    description = replace_link_in_description(expected_plan["description"], os_name)
     tr.update_plan_entry(plan_id, entry["id"], description)
 
     # There should only be one entry per site per plan
