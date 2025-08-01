@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/justspices_cc.html",
+  "field_mapping": {
+    "name": "79c20d90-38f6-4b37-a523-9451488f43a6",
+    "card_number": "3db1e745-4e9d-4571-a607-276feb1099fd",
+    "expiration_date": "93bddbeb-cc5c-4708-93ea-fbe0864fe3cd",
+    "cvv": "5cb55c7b-747e-4ae4-a303-b5dfc119c499"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "79c20d90-38f6-4b37-a523-9451488f43a6",
+    "3db1e745-4e9d-4571-a607-276feb1099fd",
+    "93bddbeb-cc5c-4708-93ea-fbe0864fe3cd",
+    "5cb55c7b-747e-4ae4-a303-b5dfc119c499"
+]
+}
