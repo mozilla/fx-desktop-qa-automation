@@ -1,5 +1,4 @@
 import datetime
-import logging
 import re
 from time import sleep
 from typing import List
@@ -347,6 +346,15 @@ class AboutPrefs(BasePage):
         self.close_dialog_box()
         return self
 
+    def select_saved_address_entry(self, idx=0):
+        """
+        Select one of the entries in the saved addresses list.
+        """
+        self.switch_to_saved_addresses_popup_iframe()
+        select_el = Select(self.get_element("address-saved-options"))
+        self.double_click(select_el.options[idx])
+        return self
+
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
         self.switch_to_saved_payments_popup_iframe()
@@ -427,7 +435,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
-        self.get_element("prefs-button", labels=[button_label]).click()
+        self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -527,6 +535,7 @@ class AboutPrefs(BasePage):
         The <memory used> value for no cookies is '0 bytes', otherwise values are '### MB', or '### KB'
         """
         # Find the dialog option elements containing the checkbox label
+        self.element_exists("clear-data-dialog-options")
         options = self.get_elements("clear-data-dialog-options")
 
         # Extract the text from the label the second option
@@ -620,8 +629,8 @@ class AboutAddons(BasePage):
         """
         Clicks the corresponding sidebar option from the about:addons page.
         """
-        sleep(1)
-        self.get_element("sidebar-options", labels=[option]).click()
+        self.element_clickable("sidebar-options", labels=[option])
+        self.click_on("sidebar-options", labels=[option])
 
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
