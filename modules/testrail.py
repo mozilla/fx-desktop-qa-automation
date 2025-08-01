@@ -350,6 +350,12 @@ class TestRail:
             payload["runs"] = runs
         return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
 
+    def update_plan_entry(self, plan_id, entry_id, **kwargs):
+        """Given a plan id and entry id, update the entry per kwargs"""
+        if not kwargs:
+            return False
+        return self.client.send_post(f"/update_plan_entry/{plan_id}/{entry_id}", kwargs)
+
     def matching_configs(self, testrail_project_id, config_group_id, config_name):
         """Given a project id, a config group id, and a config name, return the matching config object"""
         configs = self.client.send_get(f"/get_configs/{testrail_project_id}")
