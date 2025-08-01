@@ -15,7 +15,7 @@ from choose_l10n_ci_set import valid_l10n_mappings
 current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
-valid_region = {"US", "CA", "DE", "FR"}
+valid_region = {"US", "CA", "DE", "FR", "IT", "GB"}
 valid_sites = {
     "demo",
     "amazon",
@@ -38,8 +38,7 @@ valid_sites = {
     "justspices",
     "yellowkorner",
     "wish",
-    "bijoubrigitte",
-    "peacocks"
+    "bijoubrigitte"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
@@ -171,7 +170,7 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
         for suffix in ("ad", "cc")
     ]
     for live_site, suffix in live_sites:
-        skipped_tests = get_skipped_tests(live_site)
+        skipped_tests = get_skipped_tests(live_site, reg)
         if skipped_tests and skipped_tests != "All":
             skipped_tests = list(
                 map(
@@ -191,7 +190,7 @@ def remove_skipped_tests(extracted_tests, live_site, reg):
     return extracted_tests
 
 
-def get_skipped_tests(live_site) -> list[str] | str:
+def get_skipped_tests(live_site, reg) -> list[str] | str:
     """
     Read the mapping for the given region and site and return any tests that are marked as skipped.
     It is either a list of tests to skip or skipping all tests for the given site.
@@ -204,7 +203,8 @@ def get_skipped_tests(live_site) -> list[str] | str:
     with open(os.path.join(current_dir, "constants", live_site) + ".json", "r") as fp:
         live_site_data = load(fp)
         platform_skip = platform.system() in live_site_data.get("skip_os", [])
-        if live_site_data.get("skip") or platform_skip:
+        region_skip = reg in live_site_data.get("skip_regions", [])
+        if live_site_data.get("skip") or platform_skip or region_skip:
             return "All"
         return live_site_data.get("skipped", [])
 
