@@ -40,7 +40,8 @@ valid_sites = {
     "wish",
     "bijoubrigitte",
     "burtsbees",
-    "whittard"
+    "whittard",
+    
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
