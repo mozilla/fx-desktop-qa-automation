@@ -355,7 +355,7 @@ def organize_l10n_entries(
 
     os_name = config.split(" ")[0]
     description = replace_link_in_description(expected_plan["description"], os_name)
-    tr_session.update_plan(plan_id, description=description)
+    testrail_session.update_plan(plan_id, description=description)
 
     # There should only be one entry per site per plan
     # Check that this entry has a run with the correct config
