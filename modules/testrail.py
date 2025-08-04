@@ -350,6 +350,12 @@ class TestRail:
             payload["runs"] = runs
         return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
 
+    def update_plan(self, plan_id, **kwargs):
+        """Given a plan id, update the plan per kwargs"""
+        if not kwargs:
+            return False
+        return self.client.send_post(f"/update_plan/{plan_id}", kwargs)
+
     def update_plan_entry(self, plan_id, entry_id, **kwargs):
         """Given a plan id and entry id, update the entry per kwargs"""
         if not kwargs:

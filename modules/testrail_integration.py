@@ -28,7 +28,7 @@ def get_execution_link() -> str:
     if "TASKCLUSTER_PROXY_URL" in os.environ:
         link = TC_EXECUTION_TEMPLATE
         for item in ["RUN_ID", "TASK_ID"]:
-            link = link.replace(f"%{item}", os.environ.get(item))
+            link = link.replace(f"%{item}%", os.environ.get(item))
         return link
 
 
@@ -355,7 +355,7 @@ def organize_l10n_entries(
 
     os_name = config.split(" ")[0]
     description = replace_link_in_description(expected_plan["description"], os_name)
-    tr.update_plan_entry(plan_id, entry["id"], description)
+    tr.update_plan(plan_id, description=description)
 
     # There should only be one entry per site per plan
     # Check that this entry has a run with the correct config
