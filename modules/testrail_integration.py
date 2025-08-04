@@ -19,6 +19,36 @@ TESTRAIL_RUN_FMT = (
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
+TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/public/logs/live.log"
+
+
+def get_execution_link() -> str:
+    """Using environment variables, get the link to the test execution"""
+    link = ""
+    if "TASKCLUSTER_PROXY_URL" in os.environ:
+        link = TC_EXECUTION_TEMPLATE
+        for item in ["RUN_ID", "TASK_ID"]:
+            link = link.replace(f"%{item}", os.environ.get(item))
+        return link
+
+
+def replace_link_in_description(description, os_name) -> str:
+    """Add or replace a test execution link in the test run description"""
+    if os_name not in description:
+        # TODO: remove following conditional when links for GHA resolved
+        if os_name == "Linux":
+            return f"{description}\n[{os_name} execution link]({get_execution_link()})"
+    else:
+        link = get_execution_link()
+        if link in description:
+            return description
+        lines = description.split("\n")
+        for i, line in enumerate(lines):
+            if os_name in line:
+                lines[i] = (
+                    f"{description}\n[{os_name} execution link]({get_execution_link()})"
+                )
+    return description
 
 
 def get_plan_title(version_str: str, channel: str) -> str:
@@ -320,6 +350,12 @@ def organize_l10n_entries(
 
     if len(site_entries) != 1:
         logging.info("Suite entries are broken somehow")
+
+    # Add execution link to plan description
+
+    os_name = config.split(" ")[0]
+    description = replace_link_in_description(expected_plan["description"], os_name)
+    tr.update_plan_entry(plan_id, entry["id"], description)
 
     # There should only be one entry per site per plan
     # Check that this entry has a run with the correct config
