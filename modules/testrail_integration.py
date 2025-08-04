@@ -32,21 +32,21 @@ def get_execution_link() -> str:
         return link
 
 
-def replace_link_in_description(description, os) -> str:
+def replace_link_in_description(description, os_name) -> str:
     """Add or replace a test execution link in the test run description"""
-    if os not in description:
+    if os_name not in description:
         # TODO: remove following conditional when links for GHA resolved
-        if os == "Linux":
-            return f"{description}\n[{os} execution link]({get_execution_link()})"
+        if os_name == "Linux":
+            return f"{description}\n[{os_name} execution link]({get_execution_link()})"
     else:
         link = get_execution_link()
         if link in description:
             return description
         lines = description.split("\n")
         for i, line in enumerate(lines):
-            if os in line:
+            if os_name in line:
                 lines[i] = (
-                    f"{description}\n[{os} execution link]({get_execution_link()})"
+                    f"{description}\n[{os_name} execution link]({get_execution_link()})"
                 )
     return description
 
