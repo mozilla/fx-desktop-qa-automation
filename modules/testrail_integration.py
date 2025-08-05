@@ -19,7 +19,7 @@ TESTRAIL_RUN_FMT = (
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/public/logs/live.log"
+TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
 
 
 def get_execution_link() -> str:
