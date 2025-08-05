@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import random
 import re
 import subprocess
 import sys
@@ -44,7 +43,7 @@ def distribute_mappings_evenly(mappings, version):
         version (int): The beta_version of the beta.
     """
     if not mappings:
-        return
+        return {}
     # sort the mappings by the length of the regions per site
     mappings = dict(sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True))
     # place the mappings into 3 containers evenly according to the load
@@ -94,7 +93,8 @@ def save_mappings(selected_container):
         Args:
             selected_container: the selected mappings container.
     """
-
+    if not selected_container:
+        return
     current_running_mappings = [
         f"{key} {' '.join(value)}\n" for key, value in selected_container.items()
     ]
