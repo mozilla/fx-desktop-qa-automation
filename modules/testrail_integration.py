@@ -352,12 +352,6 @@ def organize_l10n_entries(
     if len(site_entries) != 1:
         logging.info("Suite entries are broken somehow")
 
-    # Add execution link to plan description
-
-    os_name = config.split(" ")[0]
-    description = replace_link_in_description(expected_plan["description"], os_name)
-    testrail_session.update_plan(plan_id, description=description)
-
     # There should only be one entry per site per plan
     # Check that this entry has a run with the correct config
     # And if not, make that run
@@ -661,6 +655,12 @@ def collect_changes(testrail_session: TestRail, report):
     elif expected_plan.get("is_completed"):
         logging.info(f"Plan found ({expected_plan.get('id')}) but is completed.")
         return None
+
+    # Add execution link to plan description
+
+    os_name = config.split(" ")[0]
+    description = replace_link_in_description(expected_plan["description"], os_name)
+    testrail_session.update_plan(expected_plan["id"], description=description)
 
     # Find or add correct config for session
 
