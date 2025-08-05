@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import random
 import re
@@ -43,7 +44,6 @@ def add_selected_mappings(mappings):
     """
     # sort the mappings by the length of the regions per site
     mappings = dict(sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True))
-    print(mappings)
     # place the mappings into 3 containers evenly according to the load
     loads = [0, 0, 0]
     containers = [[] for _ in range(3)]
@@ -71,10 +71,10 @@ def add_selected_mappings(mappings):
         version = 0
     # get container index according to beta version
     run_idx = version % 3
+    current_running_mappings = "\n".join(containers[run_idx])
+    logging.warning(f"Running the mappings:\n{current_running_mappings}")
     with open(OUTPUT_FILE, "a+") as f:
-        for mapping in containers[run_idx]:
-            print(mapping)
-            f.write(f"{mapping}\n")
+        f.write(f"{current_running_mappings}\n")
 
 
 def process_changed_file(f, selected_mappings):
