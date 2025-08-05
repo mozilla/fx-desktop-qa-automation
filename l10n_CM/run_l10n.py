@@ -41,6 +41,7 @@ valid_sites = {
     "yellowkorner",
     "wish",
     "bijoubrigitte",
+    "whittard",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
