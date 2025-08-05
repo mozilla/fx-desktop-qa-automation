@@ -35,11 +35,15 @@ valid_sites = {
     "aldoshoes",
     "canadatire",
     "apple",
+    "thomann",
+    "wish",
     "artsper",
     "justspices",
     "yellowkorner",
     "wish",
     "bijoubrigitte",
+    "peacocks",
+    "whittard",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()

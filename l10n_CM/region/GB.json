@@ -2,7 +2,9 @@
   "region": "GB",
   "sites": [
     "ebay",
-    "demo"
+    "demo",
+    "peacocks",
+    "whittard"
   ],
   "tests": [
   ]
