@@ -34,15 +34,16 @@ valid_sites = {
     "cdiscount",
     "aldoshoes",
     "canadatire",
+    "apple",
     "thomann",
     "wish",
     "artsper",
     "justspices",
     "yellowkorner",
-    "wish",
     "bijoubrigitte",
     "peacocks",
     "whittard",
+    "diy"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()

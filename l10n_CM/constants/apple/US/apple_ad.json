@@ -1,0 +1,22 @@
+{
+  "url": "http://127.0.0.1:8080/apple_ad.html",
+  "field_mapping": {
+    "given_name": "064e83ef-0759-4550-b07f-aa7946ec2656",
+    "family_name": "d3c05647-2ebb-4645-a514-723f23190bd2",
+    "street_address" : "b676e225-528d-450a-8b9a-a3b906da9be9",
+    "postal_code": "4d918f60-7d0f-4d6b-a351-69d385d2f1fa",
+    "email": "74d4253b-eedd-4f15-8e74-34bc2c69f340",
+    "telephone": "6ec0489f-dc1d-403a-bb13-0293b3c9bef4"
+
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "064e83ef-0759-4550-b07f-aa7946ec2656",
+    "d3c05647-2ebb-4645-a514-723f23190bd2",
+    "b676e225-528d-450a-8b9a-a3b906da9be9",
+    "4d918f60-7d0f-4d6b-a351-69d385d2f1fa",
+    "74d4253b-eedd-4f15-8e74-34bc2c69f340",
+    "6ec0489f-dc1d-403a-bb13-0293b3c9bef4"
+
+  ]
+}
