@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/diy_cc.html",
+  "field_mapping": {
+    "card_name": "7d607801-efce-412d-916f-81f1b99ce9af",
+    "card_number": "7d762fdc-dabf-4cb4-9ed2-86b7ae92dc19",
+    "expiration_date": "a4312b6f-02cb-4395-9365-df1580bcb5ec",
+    "cvv": "84be2cbe-c6c2-4948-98fe-c734d1df56cd"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "7d607801-efce-412d-916f-81f1b99ce9af",
+    "7d762fdc-dabf-4cb4-9ed2-86b7ae92dc19",
+    "a4312b6f-02cb-4395-9365-df1580bcb5ec",
+    "84be2cbe-c6c2-4948-98fe-c734d1df56cd"
+]
+}
