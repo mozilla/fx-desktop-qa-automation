@@ -1,0 +1,31 @@
+{
+  "url": "http://127.0.0.1:8080/movieposters_ad.html",
+  "field_mapping": {
+    "given_name": "76d61249-afe6-4bc4-9c9a-a62c5d8107de",
+    "family_name": "9536d8e7-519e-4197-ae5b-7bbe127925d0",
+    "organization": "5c8e00c8-ad7d-488b-aff3-67a728498ae0",
+    "street_address": "fdc9d3f2-13f8-47db-90a3-7a18584028cb",
+    "address_level_2": "3ee2821f-8f38-4a9d-b95c-e3f62b4ea69e",
+    "address_level_1": "ecbdd508-3d94-45ec-97b5-c2b642dc3fe6",
+    "postal_code": "f60c786d-a9bb-41af-ac0f-bff95bb7d3ad",
+
+    "country" : "c02b72d4-ba59-4c54-bd27-b4b686cc9133",
+    "telephone": "c11c59df-db4e-459a-9590-4798a6d22030",
+    "email": "5f14e679-8b86-4b2d-98ab-0746f1902eca"
+
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "76d61249-afe6-4bc4-9c9a-a62c5d8107de",
+    "9536d8e7-519e-4197-ae5b-7bbe127925d0",
+    "5c8e00c8-ad7d-488b-aff3-67a728498ae0",
+    "fdc9d3f2-13f8-47db-90a3-7a18584028cb",
+    "3ee2821f-8f38-4a9d-b95c-e3f62b4ea69e",
+    "ecbdd508-3d94-45ec-97b5-c2b642dc3fe6",
+    "f60c786d-a9bb-41af-ac0f-bff95bb7d3ad",
+    "c02b72d4-ba59-4c54-bd27-b4b686cc9133",
+    "c11c59df-db4e-459a-9590-4798a6d22030",
+    "5f14e679-8b86-4b2d-98ab-0746f1902eca"
+
+  ]
+}
