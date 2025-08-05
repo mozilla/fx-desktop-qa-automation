@@ -44,7 +44,8 @@ valid_sites = {
     "burtsbees",
     "peacocks",
     "whittard",
-    "diy"
+    "diy",
+    "assos",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
