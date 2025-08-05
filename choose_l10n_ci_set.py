@@ -66,7 +66,7 @@ def add_selected_mappings(mappings):
             .split(".")[1]
             .split("b")[1]
         )
-    except:
+    except ValueError:
         # failsafe version
         version = 0
     # get container index according to beta version
