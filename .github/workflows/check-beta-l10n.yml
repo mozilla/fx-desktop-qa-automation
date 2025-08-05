@@ -2,7 +2,7 @@ name: Check new beta version - L10N
 
 on:
   schedule:
-    - cron: "40 */1 * * *"
+    - cron: "12 */1 * * *"
 env:
   LATEST: ""
 permissions:
