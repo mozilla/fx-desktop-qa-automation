@@ -196,22 +196,21 @@ def reportable(platform_to_test=None):
         # keeping this logic to still see how many mappings are reported.
         for entry in plan_entries:
             if entry.get("name") in distributed_mappings:
-                report = False
                 site = entry.get("name")
                 for run_ in entry.get("runs"):
                     if run_.get("config"):
                         run_region, run_platform = run_.get("config").split("-")
-                        covered_mappings += (
-                            1
-                            if run_region in distributed_mappings[site]
+                        if (
+                            run_region in distributed_mappings[site]
                             and platform in run_platform
-                            else 0
-                        )
+                        ):
+                            covered_mappings += 1
+                            report = False
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported.)"
         )
         # Only report when there is a new beta and no other site/region mappings are reported.
-        return report or covered_mappings == 0
+        return report
     else:
         covered_suites = 0
         for entry in plan_entries:
