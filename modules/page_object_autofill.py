@@ -235,10 +235,11 @@ class Autofill(BasePage):
             expected_value = getattr(sample_data, attr_name, None)
             auto_filled_field_value = self._get_field_value(field_name)
 
-            # Normalize values for comparison
-            expected_value, auto_filled_field_value = self._normalize_values(
-                attr_name, expected_value, auto_filled_field_value, region
-            )
+            # Normalize values for comparison if they are different
+            if auto_filled_field_value != expected_value:
+                expected_value, auto_filled_field_value = self._normalize_values(
+                    attr_name, expected_value, auto_filled_field_value, region
+                )
 
             assert expected_value in auto_filled_field_value, (
                 f"Field '{attr_name}' ('{field_name}'): expected '{expected_value}' to be in '{auto_filled_field_value}'"
@@ -260,7 +261,7 @@ class Autofill(BasePage):
         region: str,
     ) -> tuple[str, str]:
         """Normalize expected and actual values for comparison."""
-        if attr_name == "address_level_1" and auto_filled_field_value != expected_value:
+        if attr_name == "address_level_1":
             expected_value = self.util.get_state_province_abbreviation(expected_value)
         elif attr_name == "expiration_date" and len(auto_filled_field_value) > 5:
             auto_filled_field_value = auto_filled_field_value.replace("20", "")
@@ -408,6 +409,7 @@ class Autofill(BasePage):
                 autofill_field = self.get_element("form-field", labels=[field])
                 if autofill_field.tag_name.lower() != "select":
                     autofill_field.clear()
+                    self.scroll_to_element("form-field", labels=[field])
                     # Focus the field so the highlight is visible
                     self.click_on("form-field", labels=[field])
 
