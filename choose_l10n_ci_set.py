@@ -42,6 +42,8 @@ def add_selected_mappings(mappings):
     Args:
         mappings (dict): A dictionary of mappings, where the keys are sites and the values are sets of regions.
     """
+    if not mappings:
+        return
     # sort the mappings by the length of the regions per site
     mappings = dict(sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True))
     # place the mappings into 3 containers evenly according to the load
