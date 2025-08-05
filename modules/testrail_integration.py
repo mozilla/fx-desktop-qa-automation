@@ -209,6 +209,7 @@ def reportable(platform_to_test=None):
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported.)"
         )
+        logging.warning(f"Run is reportable: {report}")
         # Only report when there is a new beta and no other site/region mappings are reported.
         return report
     else:
