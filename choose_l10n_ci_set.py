@@ -53,7 +53,10 @@ def process_changed_file(f, selected_mappings):
         selected_mappings: the selected mappings dictionary (updated in place).
     """
     split = f.split(SLASH)
-    if f.startswith("l10n_CM/sites/") or f.startswith("l10n_CM/constants/"):
+
+    if f.startswith(os.path.join("l10n_CM", "sites")) or f.startswith(
+        os.path.join("l10n_CM", "constants")
+    ):
         # if constants or sites are changed, add a single site/region mapping entry.
         site = split[2]
         region = split[3]
@@ -61,7 +64,7 @@ def process_changed_file(f, selected_mappings):
         # make sure the region mapping file exists before adding the mapping
         if os.path.exists(region_path):
             selected_mappings[site].add(region)
-    elif f.startswith("l10n_CM/region/"):
+    elif f.startswith(os.path.join("l10n_CM", "region")):
         # if a region file is changed, add the region to each site mapping.
         region = split[-1].split(".")[0]
         with open(f, "r+") as f:
@@ -128,24 +131,22 @@ if __name__ == "__main__":
     )
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
-
+    selected_mappings = defaultdict(set)
     if main_conftest in committed_files or base_page in committed_files:
         # Run sample tests for all mappings if main conftest or basepage changed
-        add_selected_mappings(sample_mappings)
-        sys.exit(0)
+        selected_mappings |= sample_mappings
 
     # Run sample tests for all mappings if any core l10n model, component, conftest, or tests are changed.
-    selected_mappings = defaultdict(set)
     for f in committed_files:
-        for re_val in re_set_all:
-            if re_val.match(f):
-                add_selected_mappings(sample_mappings)
-                sys.exit(0)
         # check if constants, sites or region directory files were changed or added.
         # if so, add the site/region mappings.
         for re_val in re_set_select:
             if re_val.match(f):
                 process_changed_file(f, selected_mappings)
+        for re_val in re_set_all:
+            if re_val.match(f):
+                selected_mappings |= sample_mappings
+                break
 
     add_selected_mappings(selected_mappings)
     sys.exit(0)

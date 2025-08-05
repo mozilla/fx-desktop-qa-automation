@@ -61,6 +61,7 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
     prefs = [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
+        ("extensions.formautofill.addresses.supportedCountries", region),
         ("browser.aboutConfig.showWarning", False),
         ("browser.search.region", region),
     ]
@@ -103,9 +104,11 @@ def cc_site_data(live_site, region):
 
 
 @pytest.fixture
-def is_live_site(live_site):
-    """Determine if the site is live."""
-    return live_site != "demo"
+def is_live_site(live_site, region):
+    """Determine if the site is live.
+    Treat demo IT as a live site until the doorhanger bug is fixed.
+    """
+    return live_site != "demo" or region in {"IT"}
 
 
 @pytest.fixture(scope="session")
