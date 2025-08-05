@@ -34,12 +34,16 @@ valid_sites = {
     "cdiscount",
     "aldoshoes",
     "canadatire",
+    "apple",
+    "thomann",
+    "wish",
     "artsper",
     "justspices",
     "yellowkorner",
     "wish",
     "bijoubrigitte",
     "burtsbees",
+    "peacocks",
     "whittard",
 }
 
