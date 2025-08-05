@@ -1,6 +1,8 @@
 import json
 import os
+import random
 import re
+import subprocess
 import sys
 from collections import defaultdict
 from subprocess import check_output
@@ -39,9 +41,40 @@ def add_selected_mappings(mappings):
     Args:
         mappings (dict): A dictionary of mappings, where the keys are sites and the values are sets of regions.
     """
-    for site, regions in mappings.items():
-        with open(OUTPUT_FILE, "a+") as f:
-            f.write(f"{site} {' '.join(regions)}\n")
+    # sort the mappings by the length of the regions per site
+    mappings = dict(sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True))
+    print(mappings)
+    # place the mappings into 3 containers evenly according to the load
+    loads = [0, 0, 0]
+    containers = [[] for _ in range(3)]
+    for key, value in mappings.items():
+        min_idx = loads.index(min(loads))
+        containers[min_idx].append(f"{key} {' '.join(value)}")
+        loads[min_idx] += len(value)
+    # shuffle the containers so each run for a beta is random.
+    random.shuffle(containers)
+    try:
+        version = int(
+            (
+                subprocess.check_output(
+                    [sys.executable, "./collect_executables.py", "-n"]
+                )
+                .strip()
+                .decode()
+            )
+            .split("-")[0]
+            .split(".")[1]
+            .split("b")[1]
+        )
+    except:
+        # failsafe version
+        version = 0
+    # get container index according to beta version
+    run_idx = version % 3
+    with open(OUTPUT_FILE, "a+") as f:
+        for mapping in containers[run_idx]:
+            print(mapping)
+            f.write(f"{mapping}\n")
 
 
 def process_changed_file(f, selected_mappings):
@@ -53,7 +86,7 @@ def process_changed_file(f, selected_mappings):
         selected_mappings: the selected mappings dictionary (updated in place).
     """
     split = f.split(SLASH)
-
+    print(split)
     if f.startswith(os.path.join("l10n_CM", "sites")) or f.startswith(
         os.path.join("l10n_CM", "constants")
     ):
