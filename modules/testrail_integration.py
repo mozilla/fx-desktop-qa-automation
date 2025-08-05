@@ -4,7 +4,7 @@ import re
 import subprocess
 import sys
 
-from choose_l10n_ci_set import valid_l10n_mappings
+from choose_l10n_ci_set import distribute_mappings_evenly, valid_l10n_mappings
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
@@ -187,18 +187,23 @@ def reportable(platform_to_test=None):
 
     plan_entries = this_plan.get("entries")
     if os.environ.get("FX_L10N"):
-        l10n_mappings = valid_l10n_mappings()
+        report = True
+        beta_version = int(minor_num.split("b")[-1])
+        distributed_mappings = distribute_mappings_evenly(
+            valid_l10n_mappings(), beta_version
+        )
         covered_mappings = 0
         # keeping this logic to still see how many mappings are reported.
         for entry in plan_entries:
-            if entry.get("name") in l10n_mappings:
+            if entry.get("name") in distributed_mappings:
+                report = False
                 site = entry.get("name")
                 for run_ in entry.get("runs"):
                     if run_.get("config"):
                         run_region, run_platform = run_.get("config").split("-")
                         covered_mappings += (
                             1
-                            if run_region in l10n_mappings[site]
+                            if run_region in distributed_mappings[site]
                             and platform in run_platform
                             else 0
                         )
@@ -206,7 +211,7 @@ def reportable(platform_to_test=None):
             f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported.)"
         )
         # Only report when there is a new beta and no other site/region mappings are reported.
-        return covered_mappings == 0
+        return report or covered_mappings == 0
     else:
         covered_suites = 0
         for entry in plan_entries:
