@@ -88,7 +88,6 @@ def process_changed_file(f, selected_mappings):
         selected_mappings: the selected mappings dictionary (updated in place).
     """
     split = f.split(SLASH)
-    print(split)
     if f.startswith(os.path.join("l10n_CM", "sites")) or f.startswith(
         os.path.join("l10n_CM", "constants")
     ):
