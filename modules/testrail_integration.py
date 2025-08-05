@@ -34,6 +34,7 @@ def get_execution_link() -> str:
 
 def replace_link_in_description(description, os_name) -> str:
     """Add or replace a test execution link in the test run description"""
+    logging.warning(f"Modifying plan description for %{os_name}%")
     if os_name not in description:
         # TODO: remove following conditional when links for GHA resolved
         if os_name == "Linux":
