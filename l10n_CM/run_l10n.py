@@ -40,6 +40,7 @@ valid_sites = {
     "artsper",
     "justspices",
     "yellowkorner",
+    "wish",
     "bijoubrigitte",
     "peacocks",
     "whittard",
