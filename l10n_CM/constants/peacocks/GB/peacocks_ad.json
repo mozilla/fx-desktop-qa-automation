@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/peacocks_ad.html",
+  "field_mapping": {
+    "given_name": "2fb50c78-6562-462d-9b34-c967f30e63a3",
+    "family_name": "b1cc8bd9-057e-49ca-bf8e-5b18e1880854",
+    "street_address": "9fc1faad-e6d2-43a0-bc0d-6ceb88a3d01c",
+    "address_level_2": "32891e12-a4e5-4cd1-94c7-36d38328c899",
+    "postal_code": "8621750d-0979-4795-9079-e40eeef17f66",
+    "country": "f132c39a-0cf7-49ce-bad1-12b4e075af02",
+    "telephone": "3de63156-1e5d-4512-ad88-3493385f9ab2"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "2fb50c78-6562-462d-9b34-c967f30e63a3",
+    "b1cc8bd9-057e-49ca-bf8e-5b18e1880854",
+    "9fc1faad-e6d2-43a0-bc0d-6ceb88a3d01c",
+    "32891e12-a4e5-4cd1-94c7-36d38328c899",
+    "8621750d-0979-4795-9079-e40eeef17f66",
+    "f132c39a-0cf7-49ce-bad1-12b4e075af02",
+    "3de63156-1e5d-4512-ad88-3493385f9ab2"
+  ]
+}
