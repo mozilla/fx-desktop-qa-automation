@@ -2,13 +2,14 @@
   "region": "CA",
   "sites": [
     "amazon",
-    "canadatire",
+    "walmart",
     "demo",
-    "ebay",
     "etsy",
     "newbalance",
-    "staples",
-    "walmart"
+    "canadatire",
+    "ebay",
+    "burtsbees",
+    "staples"
   ],
   "tests": [
   ]

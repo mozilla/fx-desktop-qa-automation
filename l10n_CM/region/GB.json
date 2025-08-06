@@ -1,12 +1,12 @@
 {
   "region": "GB",
   "sites": [
-    "assos",
-    "demo",
-    "diy",
     "ebay",
+    "demo",
     "peacocks",
-    "whittard"
+    "whittard",
+    "diy",
+    "assos"
   ],
   "tests": [
   ]
