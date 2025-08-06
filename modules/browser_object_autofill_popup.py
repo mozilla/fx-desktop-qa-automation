@@ -1,3 +1,4 @@
+import logging
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
@@ -45,7 +46,13 @@ class AutofillPopup(BasePage):
             field_element: if field element is given.
                 check whether it is a select element. pass the check if it is.
         """
-        self.element_visible("select-form-option")
+        self.element_exists("pop-up-component")
+        popup_component = self.get_element("pop-up-component")
+        logging.warning(
+            f"Parent pop up component: {len(popup_component.get_attribute('innerHTML')) > 1}"
+        )
+        if popup_component:
+            self.element_visible("select-form-option")
         return self
 
     # Interaction with popup elements
