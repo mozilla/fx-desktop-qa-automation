@@ -43,7 +43,8 @@ valid_sites = {
     "bijoubrigitte",
     "peacocks",
     "whittard",
-    "diy"
+    "diy",
+    "tiffany"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
