@@ -36,7 +36,7 @@ def valid_l10n_mappings():
 
 def distribute_mappings_evenly(mappings, version):
     """
-    Write the selected mappings to the output file.
+    Distribute the selected mappings if its a reportable run.
 
     Args:
         mappings (dict): A dictionary of mappings, where the keys are sites and the values are sets of regions.
@@ -44,18 +44,23 @@ def distribute_mappings_evenly(mappings, version):
     """
     if not mappings:
         return {}
-    # sort the mappings by the length of the regions per site
-    mappings = dict(sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True))
-    # place the mappings into 3 containers evenly according to the load
-    loads = [0, 0, 0]
-    containers = [defaultdict(set) for _ in range(3)]
-    for key, value in mappings.items():
-        min_idx = loads.index(min(loads))
-        containers[min_idx][key] = value
-        loads[min_idx] += len(value)
-    # get container index according to beta beta_version
-    run_idx = version % 3
-    return containers[run_idx]
+    if os.environ.get("TESTRAIL_REPORT"):
+        # sort the mappings by the length of the regions per site
+        mappings = dict(
+            sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True)
+        )
+        # place the mappings into 3 containers evenly according to the load
+        loads = [0, 0, 0]
+        containers = [defaultdict(set) for _ in range(3)]
+        for key, value in mappings.items():
+            min_idx = loads.index(min(loads))
+            containers[min_idx][key] = value
+            loads[min_idx] += len(value)
+        # get container index according to beta beta_version
+        run_idx = version % 3
+        return containers[run_idx]
+    else:
+        return mappings
 
 
 def process_changed_file(f, selected_mappings):
