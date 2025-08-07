@@ -20,6 +20,5 @@
     "stateOrProvince",
     "city",
     "postalCode"
-  ],
-  "skip_os": ["Linux"]
+  ]
 }
