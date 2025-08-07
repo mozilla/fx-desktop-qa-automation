@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/assos_ad.html",
+  "field_mapping": {
+    "given_name": "7327e2ab-c813-41a0-914c-b6f499f20872",
+    "family_name": "be07f0e9-8e7b-4c50-9891-1ffd8421c0e4",
+    "address_level_2": "55a16b07-7c42-4b38-8bd6-d02640d46139",
+    "address_level_1": "48c17b5e-dc31-464b-83c2-fd8c9378508a",
+    "street_address" : "1b5887d6-7e78-4406-81f6-a8a269d279a3",
+    "postal_code": "517f152f-ceee-4fbd-9f41-d022b3596b09",
+    "telephone": "dd270ccb-e8ea-49ac-bfcd-a48bc225b535"
+
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "7327e2ab-c813-41a0-914c-b6f499f20872",
+    "be07f0e9-8e7b-4c50-9891-1ffd8421c0e4",
+    "55a16b07-7c42-4b38-8bd6-d02640d46139",
+    "48c17b5e-dc31-464b-83c2-fd8c9378508a",
+    "1b5887d6-7e78-4406-81f6-a8a269d279a3",
+    "517f152f-ceee-4fbd-9f41-d022b3596b09",
+    "dd270ccb-e8ea-49ac-bfcd-a48bc225b535"
+  ]
+}
