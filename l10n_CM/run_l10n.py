@@ -45,6 +45,7 @@ valid_sites = {
     "peacocks",
     "whittard",
     "diy",
+    "tiffany",
     "assos",
 }
 
