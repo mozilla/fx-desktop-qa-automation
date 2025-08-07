@@ -26,5 +26,6 @@
     "c11c59df-db4e-459a-9590-4798a6d22030",
     "5f14e679-8b86-4b2d-98ab-0746f1902eca"
 
-  ]
+  ],
+  "skip_os": ["Linux", "Windows"]
 }

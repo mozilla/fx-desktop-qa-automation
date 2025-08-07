@@ -24,8 +24,7 @@ valid_sites = {
     "assos",
     "bestbuy",
     "bijoubrigitte",
-    "burtsbees"
-    "calvinklein",
+    "burtsbeescalvinklein",
     "canadatire",
     "cdiscount",
     "decathlon",
@@ -47,7 +46,7 @@ valid_sites = {
     "whittard",
     "wish",
     "yellowkorner",
-    "zalando"
+    "zalando",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
