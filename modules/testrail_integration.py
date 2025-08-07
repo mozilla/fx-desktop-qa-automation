@@ -186,24 +186,28 @@ def reportable(platform_to_test=None):
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
 
     plan_entries = this_plan.get("entries")
-    covered_suites = 0
-    for entry in plan_entries:
-        for run_ in entry.get("runs"):
-            if run_.get("config") and platform in run_.get("config"):
-                covered_suites += 1
+    # if its an l10n run check and there is already a plan created, do not report.
+    if os.environ.get("FX_L10N") and this_plan:
+        return False
+    else:
+        covered_suites = 0
+        for entry in plan_entries:
+            for run_ in entry.get("runs"):
+                if run_.get("config") and platform in run_.get("config"):
+                    covered_suites += 1
 
-    num_suites = 0
-    for test_dir_name in os.listdir("tests"):
-        test_dir = os.path.join("tests", test_dir_name)
-        if os.path.isdir(test_dir) and not os.path.exists(
-            os.path.join(test_dir, "skip_reporting")
-        ):
-            num_suites += 1
+        num_suites = 0
+        for test_dir_name in os.listdir("tests"):
+            test_dir = os.path.join("tests", test_dir_name)
+            if os.path.isdir(test_dir) and not os.path.exists(
+                os.path.join(test_dir, "skip_reporting")
+            ):
+                num_suites += 1
 
-    logging.warning(
-        f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
-    )
-    return covered_suites < num_suites
+        logging.warning(
+            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
+        )
+        return covered_suites < num_suites
 
 
 def testrail_init() -> TestRail:

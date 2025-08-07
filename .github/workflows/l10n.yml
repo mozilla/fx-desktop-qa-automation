@@ -38,7 +38,6 @@ env:
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
   FX_L10N: true
-  TESTRAIL_REPORT: true
 jobs:
   L10N-MacOS:
     if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
