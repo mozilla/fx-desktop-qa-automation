@@ -1,25 +1,25 @@
 {
   "url": "http://127.0.0.1:8080/ebay_ad.html",
   "field_mapping": {
-    "country": "777a724d-298b-4e04-ba0d-4c5aa481f2ea",
-    "given_name": "561728d9-7e27-41ac-851d-ac48ea8d35b8",
-    "family_name": "7acf2150-7ec1-4b6b-a2d9-a6b51260f23c",
-    "telephone": "d7dd9d2e-0617-4536-bbe5-f40bb24586f5",
-    "street_address": "674d2ca1-2a01-4876-be13-776f95f216cd",
-    "address_level_1": "cac30da5-5047-46b8-a96d-9531b43e67d9",
-    "address_level_2": "269c57db-3621-4980-9e9b-e2c3c2e5b9dd",
-    "postal_code": "d751e4ef-d705-4297-8296-8aa26875b905"
+    "country": "country",
+    "given_name": "firstName",
+    "family_name": "lastName",
+    "telephone": "phoneNumber",
+    "street_address": "addressLine1",
+    "address_level_1": "stateOrProvince",
+    "address_level_2": "city",
+    "postal_code": "postalCode"
   },
   "form_field": "*[id='{name}']",
   "fields": [
-    "777a724d-298b-4e04-ba0d-4c5aa481f2ea",
-    "561728d9-7e27-41ac-851d-ac48ea8d35b8",
-    "7acf2150-7ec1-4b6b-a2d9-a6b51260f23c",
-    "d7dd9d2e-0617-4536-bbe5-f40bb24586f5",
-    "674d2ca1-2a01-4876-be13-776f95f216cd",
-    "cac30da5-5047-46b8-a96d-9531b43e67d9",
-    "269c57db-3621-4980-9e9b-e2c3c2e5b9dd",
-    "d751e4ef-d705-4297-8296-8aa26875b905"
+    "country",
+    "firstName",
+    "lastName",
+    "phoneNumber",
+    "addressLine1",
+    "stateOrProvince",
+    "city",
+    "postalCode"
   ],
   "skip_os": ["Linux"]
 }
