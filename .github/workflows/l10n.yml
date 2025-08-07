@@ -266,7 +266,7 @@ jobs:
               $line = $_
               Write-Host "Running tests for: $line"
               try {
-                  pipenv run python -m l10n_CM.run_l10n --fx-executable="$env:FX_EXECUTABLE" $line
+                  pipenv run python -m l10n_CM.run_l10n --reruns 4 --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
