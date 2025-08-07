@@ -1,4 +1,3 @@
-import logging
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement

@@ -4,7 +4,6 @@ import re
 import subprocess
 import sys
 
-from choose_l10n_ci_set import distribute_mappings_evenly, valid_l10n_mappings
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
