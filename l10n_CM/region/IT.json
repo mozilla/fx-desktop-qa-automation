@@ -1,7 +1,8 @@
 {
   "region": "IT",
   "sites": [
-    "ebay"
+    "ebay",
+    "tiffany"
   ],
   "tests": [
   ]

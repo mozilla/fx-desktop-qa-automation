@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/tiffany_ad.html",
+  "field_mapping": {
+    "given_name": "49a1a737-4c43-4734-8eca-d7003b79e161",
+    "family_name": "1d7d5f3f-d66a-477a-8f32-cfa102b0c36a",
+    "address_level_1": "3dd7e188-ec6c-43d9-ae4e-9d11515704b4",
+    "address_level_2": "b1346a12-09d9-44bd-ab9d-32320c08920f",
+    "telephone": "b49283ef-6ded-4302-bb57-e4fad796eff6"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "49a1a737-4c43-4734-8eca-d7003b79e161",
+    "1d7d5f3f-d66a-477a-8f32-cfa102b0c36a",
+    "3dd7e188-ec6c-43d9-ae4e-9d11515704b4",
+    "b1346a12-09d9-44bd-ab9d-32320c08920f",
+    "b49283ef-6ded-4302-bb57-e4fad796eff6"
+],
+  "skipped": ["test_demo_ad_3a_autofill_address_fields.py"]
+}
