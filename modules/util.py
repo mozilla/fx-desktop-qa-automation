@@ -104,7 +104,7 @@ class Utilities:
             "Yukon": "YT",
         }
         # temporary fix until faker issue is resolved
-        self.country_local_translation = {"Germany": "Deutschland", "Italy": "Italia"}
+        self.country_local_translation = {"Germany": "Deutschland", "Italy": "Italia", "Spain": "Espana"}
         self.fake = None
         self.locale = None
 
@@ -546,6 +546,7 @@ class Utilities:
             "DE": "49",
             "GB": "44",
             "IT": "39",
+            "ES": "34"
         }
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
@@ -566,7 +567,7 @@ class Utilities:
             local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE", "GB", "IT"] and local_number.startswith("0"):
+        if region in ["FR", "DE", "GB", "IT", "ES"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 
