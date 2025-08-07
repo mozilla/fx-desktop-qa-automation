@@ -186,51 +186,24 @@ def reportable(platform_to_test=None):
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
 
     plan_entries = this_plan.get("entries")
-    if os.environ.get("FX_L10N"):
-        report = True
-        beta_version = int(minor_num.split("b")[-1])
-        distributed_mappings = distribute_mappings_evenly(
-            valid_l10n_mappings(), beta_version
-        )
-        covered_mappings = 0
-        # keeping this logic to still see how many mappings are reported.
-        for entry in plan_entries:
-            if entry.get("name") in distributed_mappings:
-                site = entry.get("name")
-                for run_ in entry.get("runs"):
-                    if run_.get("config"):
-                        run_region, run_platform = run_.get("config").split("-")
-                        if (
-                            run_region in distributed_mappings[site]
-                            and platform in run_platform
-                        ):
-                            covered_mappings += 1
-                            report = False
-        logging.warning(
-            f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported.)"
-        )
-        logging.warning(f"Run is reportable: {report}")
-        # Only report when there is a new beta and no other site/region mappings are reported.
-        return report
-    else:
-        covered_suites = 0
-        for entry in plan_entries:
-            for run_ in entry.get("runs"):
-                if run_.get("config") and platform in run_.get("config"):
-                    covered_suites += 1
+    covered_suites = 0
+    for entry in plan_entries:
+        for run_ in entry.get("runs"):
+            if run_.get("config") and platform in run_.get("config"):
+                covered_suites += 1
 
-        num_suites = 0
-        for test_dir_name in os.listdir("tests"):
-            test_dir = os.path.join("tests", test_dir_name)
-            if os.path.isdir(test_dir) and not os.path.exists(
-                os.path.join(test_dir, "skip_reporting")
-            ):
-                num_suites += 1
+    num_suites = 0
+    for test_dir_name in os.listdir("tests"):
+        test_dir = os.path.join("tests", test_dir_name)
+        if os.path.isdir(test_dir) and not os.path.exists(
+            os.path.join(test_dir, "skip_reporting")
+        ):
+            num_suites += 1
 
-        logging.warning(
-            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
-        )
-        return covered_suites < num_suites
+    logging.warning(
+        f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
+    )
+    return covered_suites < num_suites
 
 
 def testrail_init() -> TestRail:
