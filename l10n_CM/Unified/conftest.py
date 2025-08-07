@@ -106,9 +106,9 @@ def cc_site_data(live_site, region):
 @pytest.fixture
 def is_live_site(live_site, region):
     """Determine if the site is live.
-    Treat demo IT as a live site until the doorhanger bug is fixed.
+    Treat demo IT and ES as a live site until the doorhanger bug is fixed.
     """
-    return live_site != "demo" or region in {"IT"}
+    return live_site != "demo" or region in {"IT", "ES"}
 
 
 @pytest.fixture(scope="session")
