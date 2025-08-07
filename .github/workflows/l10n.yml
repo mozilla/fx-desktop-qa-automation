@@ -44,16 +44,8 @@ jobs:
     if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
-      - name: Create app token
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ secrets.BOT_CLIENT_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -129,16 +121,8 @@ jobs:
     if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create app token
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ secrets.BOT_CLIENT_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -212,16 +196,8 @@ jobs:
     if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
-      - name: Create app token
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ secrets.BOT_CLIENT_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ steps.app-token.outputs.token }}
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:

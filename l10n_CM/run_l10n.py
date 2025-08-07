@@ -41,6 +41,7 @@ valid_sites = {
     "newegg",
     "peacocks",
     "thomann",
+    "tiffany",
     "vans",
     "walmart",
     "whittard",
