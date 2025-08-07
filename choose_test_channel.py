@@ -57,5 +57,5 @@ for f in committed_files:
                 channels.append(test_channel)
 
 if not channels:
-    channels = ["smoke"]
+    channels = ["l10n"]
 print(channels)
