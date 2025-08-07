@@ -23,6 +23,12 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
     C2888704 - Verify phone/email data are captured in the Capture Doorhanger and stored in about:preferences
     """
     if not is_live_site:
+        # Skip for PL region due to Firefox doorhanger bug where phone field doesn't appear
+        if region == "PL":
+            pytest.skip(
+                "Phone field not displayed in doorhanger during automated testing for PL region"
+            )
+
         # Create fake data and fill it in
         address_autofill.open()
 
