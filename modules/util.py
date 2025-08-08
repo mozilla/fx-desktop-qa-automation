@@ -104,7 +104,11 @@ class Utilities:
             "Yukon": "YT",
         }
         # temporary fix until faker issue is resolved
-        self.country_local_translation = {"Germany": "Deutschland", "Italy": "Italia"}
+        self.country_local_translation = {
+            "Germany": "Deutschland",
+            "Italy": "Italia",
+            "Poland": "Polska",
+        }
         self.fake = None
         self.locale = None
 
