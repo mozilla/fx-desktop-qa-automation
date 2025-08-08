@@ -1,4 +1,3 @@
-import logging
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
@@ -48,9 +47,6 @@ class AutofillPopup(BasePage):
         """
         self.element_exists("pop-up-component")
         popup_component = self.get_element("pop-up-component")
-        logging.warning(
-            f"Parent pop up component: {len(popup_component.get_attribute('innerHTML')) > 1}"
-        )
         if popup_component:
             self.element_visible("select-form-option")
         return self
