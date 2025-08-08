@@ -546,6 +546,7 @@ class Utilities:
             "DE": "49",
             "GB": "44",
             "IT": "39",
+            "PL": "48",
         }
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
