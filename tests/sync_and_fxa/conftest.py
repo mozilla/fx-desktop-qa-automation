@@ -56,9 +56,11 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
-def new_fxa_prep(fxa_url: str, acct_password: str) -> FxaPrep:
+def new_fxa_prep(fxa_url: str, fxa_env: str, acct_password: str) -> FxaPrep:
     """Create a PyFxA object and return a dict with artifacts"""
     # Create a testing account using an @restmail.net address.
+    if fxa_env == "stage":
+        fxa_url = "https://api-accounts.stage.mozaws.net"
     prep = FxaPrep(fxa_url, acct_password)
     prep.restmail.clear()
     yield prep
