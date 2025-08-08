@@ -6,9 +6,9 @@ from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
 # Constants
-SEARCH_TERM_SPONSORED = "iphone"
+SEARCH_TERM_SPONSORED = "xbox one"
 SEARCH_TERM_NON_SPONSORED = "wiki"
-RETRY_LIMIT = 5
+RETRY_LIMIT = 10
 
 
 @pytest.fixture()
