@@ -104,7 +104,7 @@ class Utilities:
             "Yukon": "YT",
         }
         # temporary fix until faker issue is resolved
-        self.country_local_translation = {"Germany": "Deutschland", "Italy": "Italia"}
+        self.country_local_translation = {"Germany": "Deutschland", "Italy": "Italia", "Spain": "España"}
         self.fake = None
         self.locale = None
 
@@ -277,7 +277,12 @@ class Utilities:
         region_attributes = ["state", "administrative_unit", "region"]
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        given_name, family_name = name.split()
+
+        # Safely split the name
+        name_parts = name.split()
+        given_name = name_parts[0]
+        family_name = name_parts[-1] if len(name_parts) > 1 else ""
+
         organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         # find correct attribute for selected locale
@@ -325,7 +330,12 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        given_name, family_name = name.split()
+
+        # Safely split the name
+        name_parts = name.split()
+        given_name = name_parts[0]
+        family_name = name_parts[-1] if len(name_parts) > 1 else ""
+
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()
         expiration_month, expiration_year = generated_credit_expiry.split("/")
@@ -547,6 +557,7 @@ class Utilities:
             "GB": "44",
             "IT": "39",
             "PL": "48",
+            "ES": "34"
         }
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
@@ -567,7 +578,7 @@ class Utilities:
             local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE", "GB", "IT"] and local_number.startswith("0"):
+        if region in ["FR", "DE", "GB", "IT", "ES"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 
