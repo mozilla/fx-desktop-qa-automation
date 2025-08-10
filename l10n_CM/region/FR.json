@@ -2,12 +2,8 @@
   "region": "FR",
   "sites": [
     "amazon",
-    "artsper",
-    "cdiscount",
-    "decathlon",
     "demo",
-    "ebay",
-    "vans",
+    "artsper",
     "yellowkorner"
   ],
   "tests": [
