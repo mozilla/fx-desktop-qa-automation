@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from time import sleep
 
 import pytest
@@ -38,7 +38,7 @@ def fxa_url(fxa_env):
 
 @pytest.fixture()
 def start_time():
-    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 @pytest.fixture()
