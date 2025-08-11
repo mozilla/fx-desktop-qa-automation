@@ -1,11 +1,8 @@
-import logging
 from typing import Tuple
 
 import pytest
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import PanelUi
 from modules.page_object import FxaHome
