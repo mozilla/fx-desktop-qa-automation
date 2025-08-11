@@ -33,17 +33,10 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     tabs.expect(EC.title_contains("mov_bbb.mp4"))
 
     with driver.context(driver.CONTEXT_CHROME):
-        sound_status = False
-        retries = 0
-        while not sound_status and retries < RETRY_LIMIT:
-            try:
-                sound_status = tabs.expect_tab_sound_status(
-                    1, tabs.MEDIA_STATUS.PLAYING
-                )
-            except NoSuchElementException:
-                logging.info("Tab sound status not found")
-            retries += 1
-            sleep(0.5)
+        tab = tabs.get_tab(1)
+        tabs.wait.until(
+            lambda _: tab.get_attribute(tabs.MEDIA_STATUS.PLAYING) is not None
+        )
 
         tabs.click_tab_mute_button(1)
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
