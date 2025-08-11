@@ -11,7 +11,6 @@ PLAY_BUTTON_SELECTOR = ".ytp-play-button"
 COOKIE_CONSENT_SELECTOR = (
     "button[aria-label^='Accept all'], button[aria-label^='Accept the use']"
 )
-RETRY_LIMIT = 10
 
 
 @pytest.fixture()
