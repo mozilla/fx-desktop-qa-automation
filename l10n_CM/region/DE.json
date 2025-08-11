@@ -2,14 +2,10 @@
   "region": "DE",
   "sites": [
     "amazon",
-    "bijoubrigitte",
-    "demo",
-    "ebay",
-    "justspices",
     "mediamarkt",
-    "newbalance",
-    "thomann",
-    "zalando"
+    "demo",
+    "justspices",
+    "bijoubrigitte"
   ],
   "tests": [
   ]
