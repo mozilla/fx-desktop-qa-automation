@@ -34,35 +34,6 @@ def valid_l10n_mappings():
     return mapping
 
 
-def distribute_mappings_evenly(mappings, version):
-    """
-    Distribute the selected mappings if its a reportable run.
-
-    Args:
-        mappings (dict): A dictionary of mappings, where the keys are sites and the values are sets of regions.
-        version (int): The beta_version of the beta.
-    """
-    if not mappings:
-        return {}
-    if os.environ.get("TESTRAIL_REPORT"):
-        # sort the mappings by the length of the regions per site
-        mappings = dict(
-            sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True)
-        )
-        # place the mappings into 3 containers evenly according to the load
-        loads = [0, 0, 0]
-        containers = [defaultdict(set) for _ in range(3)]
-        for key, value in mappings.items():
-            min_idx = loads.index(min(loads))
-            containers[min_idx][key] = value
-            loads[min_idx] += len(value)
-        # get container index according to beta beta_version
-        run_idx = version % 3
-        return containers[run_idx]
-    else:
-        return mappings
-
-
 def process_changed_file(f, selected_mappings):
     """
     process the changed file to add the site/region mappings.
@@ -135,15 +106,15 @@ if __name__ == "__main__":
         # failsafe beta_version
         beta_version = 0
     # choose split number
-    beta_version %= 3
+    beta_version = (beta_version % 3) + 1
     l10n_mappings = valid_l10n_mappings()
     sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
     if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json"):
-        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json", "w") as f:
+        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json", "r") as f:
             l10n_mappings = json.load(f)
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
-        save_mappings(distribute_mappings_evenly(l10n_mappings, beta_version))
+        save_mappings(l10n_mappings)
         sys.exit(0)
 
     re_set_all = [
@@ -204,5 +175,5 @@ if __name__ == "__main__":
                 selected_mappings |= sample_mappings
                 break
 
-    save_mappings(distribute_mappings_evenly(selected_mappings, beta_version))
+    save_mappings(selected_mappings)
     sys.exit(0)
