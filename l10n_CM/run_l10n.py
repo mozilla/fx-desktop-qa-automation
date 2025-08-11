@@ -47,6 +47,7 @@ valid_sites = {
     "diy",
     "tiffany",
     "assos",
+    "zooplus"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
