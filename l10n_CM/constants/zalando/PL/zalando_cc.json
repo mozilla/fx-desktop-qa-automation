@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/zalando_cc.html",
+  "field_mapping": {
+    "card_name": "7985a423-775d-4938-a25b-13ba236fd152",
+    "card_number": "773a1b5d-5337-4dba-bb10-d4ed80bb151e",
+    "expiration_date": "7985a423-775d-4938-a25b-13ba236fd152",
+    "cvv": "a8d8392a-b65c-45b0-83d9-f26a6d51815b"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "7985a423-775d-4938-a25b-13ba236fd152",
+    "773a1b5d-5337-4dba-bb10-d4ed80bb151e",
+    "7985a423-775d-4938-a25b-13ba236fd152",
+    "a8d8392a-b65c-45b0-83d9-f26a6d51815b"
+]
+}
