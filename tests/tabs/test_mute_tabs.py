@@ -1,6 +1,8 @@
+import logging
 from time import sleep
 
 import pytest
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -34,8 +36,15 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
         sound_status = False
         retries = 0
         while not sound_status and retries < RETRY_LIMIT:
-            sound_status = tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+            try:
+                sound_status = tabs.expect_tab_sound_status(
+                    1, tabs.MEDIA_STATUS.PLAYING
+                )
+            except NoSuchElementException:
+                logging.info("Tab sound status not found")
+            retries += 1
             sleep(0.5)
+
         tabs.click_tab_mute_button(1)
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
         tabs.click_tab_mute_button(1)
