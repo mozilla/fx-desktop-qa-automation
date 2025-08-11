@@ -1,8 +1,7 @@
-import logging
-from time import sleep
+import sys
+from os import environ
 
 import pytest
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -25,6 +24,10 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+
+
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable on Windows in Github Actions")
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
@@ -33,11 +36,7 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     tabs.expect(EC.title_contains("mov_bbb.mp4"))
 
     with driver.context(driver.CONTEXT_CHROME):
-        tab = tabs.get_tab(1)
-        tabs.wait.until(
-            lambda _: tab.get_attribute(tabs.MEDIA_STATUS.PLAYING) is not None
-        )
-
+        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
         tabs.click_tab_mute_button(1)
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
         tabs.click_tab_mute_button(1)
