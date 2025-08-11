@@ -108,6 +108,7 @@ class Utilities:
             "Germany": "Deutschland",
             "Italy": "Italia",
             "Spain": "España",
+            "Poland": "Polska",
         }
         self.fake = None
         self.locale = None
@@ -561,7 +562,7 @@ class Utilities:
             "GB": "44",
             "IT": "39",
             "PL": "48",
-            "ES": "34"
+            "ES": "34",
         }
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
