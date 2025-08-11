@@ -18,7 +18,15 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("network.cookie.cookieBehavior", "2")]
+    return [
+        ("network.cookie.cookieBehavior", "2"),
+        ("dom.webdriver.enabled", False),
+        ("useAutomationExtension", False),
+        (
+            "general.useragent.override",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:142.0) Gecko/20100101 Firefox/142.0",
+        ),
+    ]
 
 
 @pytest.mark.audio
