@@ -22,4 +22,3 @@ def add_to_prefs_list():
 @pytest.fixture()
 def video_url():
     return "https://www.w3schools.com/html/mov_bbb.mp4"
-    # return "https://www.youtube.com/watch?v=mAia0v3ojzw"

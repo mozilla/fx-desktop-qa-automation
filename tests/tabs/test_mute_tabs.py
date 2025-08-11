@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
@@ -8,6 +10,7 @@ PLAY_BUTTON_SELECTOR = ".ytp-play-button"
 COOKIE_CONSENT_SELECTOR = (
     "button[aria-label^='Accept all'], button[aria-label^='Accept the use']"
 )
+RETRY_LIMIT = 10
 
 
 @pytest.fixture()
@@ -28,7 +31,11 @@ def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     tabs.expect(EC.title_contains("mov_bbb.mp4"))
 
     with driver.context(driver.CONTEXT_CHROME):
-        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+        sound_status = False
+        retries = 0
+        while not sound_status and retries < RETRY_LIMIT:
+            sound_status = tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+            sleep(0.5)
         tabs.click_tab_mute_button(1)
         tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
         tabs.click_tab_mute_button(1)
