@@ -41,12 +41,14 @@ valid_sites = {
     "justspices",
     "yellowkorner",
     "bijoubrigitte",
+    "fnac",
     "burtsbees",
     "peacocks",
     "whittard",
     "diy",
     "tiffany",
     "assos",
+    "duka",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
