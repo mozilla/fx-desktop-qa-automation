@@ -26,6 +26,7 @@ def add_to_prefs_list():
 GHA = environ.get("GITHUB_ACTIONS") == "true"
 
 
+@pytest.mark.unstable(reason="Bug https://bugzilla.mozilla.org/show_bug.cgi?id=1982379")
 @pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
