@@ -134,8 +134,13 @@ if __name__ == "__main__":
     except ValueError:
         # failsafe beta_version
         beta_version = 0
+    # choose split number
+    beta_version %= 3
     l10n_mappings = valid_l10n_mappings()
     sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
+    if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json"):
+        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json", "w") as f:
+            l10n_mappings = json.load(f)
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
         save_mappings(distribute_mappings_evenly(l10n_mappings, beta_version))
