@@ -79,6 +79,21 @@ def save_mappings(selected_container):
         f.writelines(current_running_mappings)
 
 
+def select_l10n_mappings(beta_version):
+    """
+    Select the correct l10n mappings.
+
+    Args:
+        beta_version: the current beta version.
+    """
+    beta_split = (beta_version % 3) + 1
+    if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json"):
+        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json", "r") as f:
+            return json.load(f)
+    else:
+        return valid_l10n_mappings()
+
+
 if __name__ == "__main__":
     if os.path.exists(".env"):
         with open(".env") as fh:
@@ -106,12 +121,8 @@ if __name__ == "__main__":
         # failsafe beta_version
         beta_version = 0
     # choose split number
-    beta_version = (beta_version % 3) + 1
-    l10n_mappings = valid_l10n_mappings()
+    l10n_mappings = select_l10n_mappings(beta_version)
     sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
-    if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json"):
-        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_version}.json", "r") as f:
-            l10n_mappings = json.load(f)
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
         save_mappings(l10n_mappings)
