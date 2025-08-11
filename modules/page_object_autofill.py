@@ -241,6 +241,11 @@ class Autofill(BasePage):
                     attr_name, expected_value, auto_filled_field_value, region
                 )
 
+            # Strip whitespace before asserting
+            if expected_value is not None and auto_filled_field_value is not None:
+                expected_value = expected_value.strip()
+                auto_filled_field_value = auto_filled_field_value.strip()
+
             assert expected_value in auto_filled_field_value, (
                 f"Field '{attr_name}' ('{field_name}'): expected '{expected_value}' to be in '{auto_filled_field_value}'"
             )

@@ -1,0 +1,10 @@
+{
+  "region": "PL",
+  "sites": [
+    "demo",
+    "zalando",
+    "duka"
+  ],
+  "tests": [
+  ]
+}
