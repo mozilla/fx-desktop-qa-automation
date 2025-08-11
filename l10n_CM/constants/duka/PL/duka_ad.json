@@ -1,0 +1,26 @@
+{
+ "url": "http://127.0.0.1:8080/duka_ad.html",
+ "field_mapping": {
+    "given_name":"c0fd584b-ff6c-4805-93a4-12eaf7195c89",
+    "family_name":"672a6e9a-5923-4a74-9977-1ad535a2f31f",
+    "organization": "b3f7e7ef-7711-46c1-b469-163fc4bd1858",
+    "street_address":"3c509d39-e8b2-4b65-8afe-7f2f70bde4f1",
+    "postal_code":"1fe5e273-6087-44ae-9968-7a6724606864",
+    "address_level_2": "f6a2144e-50e7-46db-a01f-d80aa098fc08",
+    "country": "65ba7dc0-54ec-40b8-8879-f5dbe05c8303",
+    "telephone": "8758cbc6-287e-40a7-b94e-88b35da48d76"
+
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "c0fd584b-ff6c-4805-93a4-12eaf7195c89",
+    "672a6e9a-5923-4a74-9977-1ad535a2f31f",
+    "b3f7e7ef-7711-46c1-b469-163fc4bd1858",
+    "3c509d39-e8b2-4b65-8afe-7f2f70bde4f1",
+    "1fe5e273-6087-44ae-9968-7a6724606864",
+    "f6a2144e-50e7-46db-a01f-d80aa098fc08",
+    "65ba7dc0-54ec-40b8-8879-f5dbe05c8303",
+    "8758cbc6-287e-40a7-b94e-88b35da48d76"
+
+ ]
+}
