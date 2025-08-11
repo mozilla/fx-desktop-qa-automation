@@ -4,14 +4,13 @@ from time import sleep
 
 import pytest
 from fxa.core import Client
-from fxa.errors import OutOfProtocolError
 from fxa.tests.utils import TestEmailAccount
 
 
-class FxaPrep:
-    def __init__(self, url: str, password: str):
+class FxaSession:
+    def __init__(self, url: str, password: str, restmail_session=None):
         self.client = Client(url)
-        self.restmail = TestEmailAccount()
+        self.restmail = restmail_session if restmail_session else TestEmailAccount()
         self.password = password
         self.otp_code = None
         logging.info(self.restmail.email)
@@ -56,15 +55,28 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
-def new_fxa_prep(fxa_url: str, fxa_env: str, acct_password: str) -> FxaPrep:
+def fxa_session(
+    fxa_url: str, fxa_env: str, acct_password: str, fxa_test_account, request
+) -> FxaSession:
     """Create a PyFxA object and return a dict with artifacts"""
     # Create a testing account using an @restmail.net address.
     if fxa_env == "stage":
         fxa_url = "https://api-accounts.stage.mozaws.net"
-    prep = FxaPrep(fxa_url, acct_password)
+    if fxa_test_account:
+        prep = FxaSession(
+            fxa_url, acct_password, request.getfixturevalue("restmail_session")
+        )
+    else:
+        prep = FxaSession(fxa_url, acct_password)
     prep.restmail.clear()
     yield prep
     prep.destroy_account()
+
+
+@pytest.fixture()
+def fxa_test_account():
+    """return none by default"""
+    return None
 
 
 @pytest.fixture()
@@ -74,11 +86,11 @@ def restmail_session(fxa_test_account) -> TestEmailAccount:
 
 
 @pytest.fixture()
-def create_fxa(new_fxa_prep: FxaPrep, get_otp_code) -> FxaPrep:
+def create_fxa(fxa_session: FxaSession, get_otp_code) -> FxaSession:
     """Create FxA from a PyFxA object"""
-    new_fxa_prep.create_account()
-    new_fxa_prep.session.verify_email_code(get_otp_code())
-    return new_fxa_prep
+    fxa_session.create_account()
+    fxa_session.session.verify_email_code(get_otp_code())
+    return fxa_session
 
 
 @pytest.fixture()
