@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import List, Union
 
 from pynput.keyboard import Controller, Key
-from pynput.mouse import Button, Controller
+from pynput.mouse import Button, Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -573,7 +573,7 @@ class BasePage(Page):
         """Perform a middle mouse click on desired element"""
         with self.driver.context(self.driver.CONTEXT_CONTENT):
             self.driver.maximize_window()
-            mouse = Controller()
+            mouse = MouseController()
             element = self.fetch(reference, labels)
 
             element_location = element.location
