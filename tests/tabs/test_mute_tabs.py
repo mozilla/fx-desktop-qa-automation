@@ -11,6 +11,7 @@ PLAY_BUTTON_SELECTOR = ".ytp-play-button"
 COOKIE_CONSENT_SELECTOR = (
     "button[aria-label^='Accept all'], button[aria-label^='Accept the use']"
 )
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.fixture()
@@ -21,9 +22,6 @@ def test_case():
 @pytest.fixture()
 def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
-
-
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.mark.skipif(WIN_GHA, reason="Test unstable on Windows in Github Actions")
