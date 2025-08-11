@@ -1,0 +1,23 @@
+---
+name: L10N output mapping splits
+
+run-name: ${{ github.actor }} is writing L10N mapping splits
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+
+permissions:
+  contents: "write"
+
+jobs:
+  Select-Channels:
+    runs-on: ubuntu-latest
+    outputs:
+      channels: ${{ steps.splits.outputs.channels }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Select test channels
+        id: splits
+        run: |
+          python3 choose_l10n_beta_split.py

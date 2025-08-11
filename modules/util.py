@@ -104,7 +104,11 @@ class Utilities:
             "Yukon": "YT",
         }
         # temporary fix until faker issue is resolved
-        self.country_local_translation = {"Germany": "Deutschland", "Italy": "Italia", "Spain": "España"}
+        self.country_local_translation = {
+            "Germany": "Deutschland",
+            "Italy": "Italia",
+            "Spain": "España",
+        }
         self.fake = None
         self.locale = None
 
@@ -557,7 +561,7 @@ class Utilities:
             "GB": "44",
             "IT": "39",
             "PL": "48",
-            "ES": "34"
+            "ES": "34",
         }
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
