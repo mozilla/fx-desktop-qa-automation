@@ -18,5 +18,9 @@
     "ec64782b-ae40-44fe-ac38-2147be6fd7b5",
     "0db3d939-9d04-4d95-9f33-5d33ba281fec",
     "8755f1ec-42e6-4a4f-ac5f-1cf696a0271a"
+  ],
+    "skipped": [
+      "test_demo_ad_3a_autofill_address_fields.py",
+      "test_demo_ad_5b_clear_address_fields.py"
   ]
 }

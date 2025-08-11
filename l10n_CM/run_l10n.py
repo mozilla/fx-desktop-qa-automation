@@ -41,6 +41,7 @@ valid_sites = {
     "justspices",
     "yellowkorner",
     "bijoubrigitte",
+    "fnac",
     "burtsbees",
     "peacocks",
     "whittard",

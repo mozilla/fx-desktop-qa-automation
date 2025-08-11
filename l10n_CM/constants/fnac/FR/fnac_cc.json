@@ -1,0 +1,22 @@
+{
+  "url": "http://127.0.0.1:8080/fnac_cc.html",
+  "field_mapping": {
+    "name": "c39e0aac-c334-43d5-81ac-1e799ecf7b63",
+    "card_number": "2508fd7b-a4c9-4d63-80a1-79b4e12a8826",
+    "expiration_date": "3181324d-01b3-4665-bdd9-5de4be475336",
+    "cvv": "bc2807a3-960e-4071-9cf0-5713b340911a"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "c39e0aac-c334-43d5-81ac-1e799ecf7b63",
+    "2508fd7b-a4c9-4d63-80a1-79b4e12a8826",
+    "3181324d-01b3-4665-bdd9-5de4be475336",
+    "bc2807a3-960e-4071-9cf0-5713b340911a"
+  ],
+  "skipped": [
+    "test_demo_cc_1_dropdown.py",
+    "test_demo_cc_2_preview.py",
+    "test_demo_cc_3_autofill.py",
+    "test_demo_cc_5_clear.py"
+  ]
+}
