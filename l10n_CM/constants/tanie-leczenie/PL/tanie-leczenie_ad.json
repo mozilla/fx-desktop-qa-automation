@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/tanie-leczenie_ad.html",
+  "field_mapping": {
+    "given_name": "1177a861-767c-4d49-b6aa-4a31cd99c9ad",
+    "family_name": "f7e8ee2b-9d6c-4ae4-afbe-794d204bcd1e",
+    "street_address": "dfe6784d-d99f-409a-964c-5254533ca1b4",
+    "postal_code": "d5f2ea78-3730-45e3-a878-05bdc42ce9ee",
+    "address_level_2": "ce419e26-5ec6-4298-bbfd-82a15e3fbb8b",
+    "telephone": "b5ae5d44-bc6e-4adf-be70-c00961aad612"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "1177a861-767c-4d49-b6aa-4a31cd99c9ad",
+    "f7e8ee2b-9d6c-4ae4-afbe-794d204bcd1e",
+    "dfe6784d-d99f-409a-964c-5254533ca1b4",
+    "d5f2ea78-3730-45e3-a878-05bdc42ce9ee",
+    "ce419e26-5ec6-4298-bbfd-82a15e3fbb8b",
+    "b5ae5d44-bc6e-4adf-be70-c00961aad612"
+  ]
+}
