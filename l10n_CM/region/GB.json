@@ -1,0 +1,13 @@
+{
+  "region": "GB",
+  "sites": [
+    "ebay",
+    "demo",
+    "peacocks",
+    "whittard",
+    "diy",
+    "assos"
+  ],
+  "tests": [
+  ]
+}

@@ -68,6 +68,8 @@ The harness relies on several configuration files:
   # list of OS platforms to skip for this configuration run.
   # "Darwin", "Linux" or "Windows"
   "skip_os": []
+  # regions to skip the tests for
+  "skip_region": []
 }
 
 ```

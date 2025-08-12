@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/yellowkorner_cc.html",
+  "field_mapping": {
+    "card_name": "78acaa43-767a-4b0c-9f33-843a69bbb513",
+    "card_number": "5e681607-501f-4b81-a250-5de8fe10981e",
+    "expiration_date": "bf493d87-1b04-4068-bd84-da672a2eb33a",
+    "cvv": "c77b687d-b39c-4046-88d7-a5340f9ad980"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "78acaa43-767a-4b0c-9f33-843a69bbb513",
+    "5e681607-501f-4b81-a250-5de8fe10981e",
+    "bf493d87-1b04-4068-bd84-da672a2eb33a",
+    "c77b687d-b39c-4046-88d7-a5340f9ad980"
+]
+}

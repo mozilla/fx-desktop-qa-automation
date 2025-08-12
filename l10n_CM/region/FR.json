@@ -3,7 +3,9 @@
   "sites": [
     "amazon",
     "demo",
-    "artsper"
+    "artsper",
+    "fnac",
+    "yellowkorner"
   ],
   "tests": [
   ]

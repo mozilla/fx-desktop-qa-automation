@@ -1,0 +1,22 @@
+{
+  "url": "http://127.0.0.1:8080/justspices_ad.html",
+  "field_mapping": {
+    "given_name": "e9ead99b-3303-40da-9464-467d6513ad0e",
+    "family_name": "3b629ea8-30e4-438e-a486-86e042ff940f",
+    "street_address": "fa1f501d-691b-4d76-8459-1b2ecb7d5f35",
+    "address_level_2": "86049b91-6cc7-44b1-aaa4-a7d4d27b0cb5",
+    "postal_code": "bf63d255-5cdc-4b18-a8a5-5426ca1908ad",
+    "telephone": "92f0f12c-1193-4430-9ca3-363cfbaadcd1",
+    "country": "d575c937-5b58-43e2-b9de-d638f6327002"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "e9ead99b-3303-40da-9464-467d6513ad0e",
+    "3b629ea8-30e4-438e-a486-86e042ff940f",
+    "fa1f501d-691b-4d76-8459-1b2ecb7d5f35",
+    "86049b91-6cc7-44b1-aaa4-a7d4d27b0cb5",
+    "bf63d255-5cdc-4b18-a8a5-5426ca1908ad",
+    "92f0f12c-1193-4430-9ca3-363cfbaadcd1",
+    "d575c937-5b58-43e2-b9de-d638f6327002"
+  ]
+}

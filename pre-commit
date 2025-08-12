@@ -58,12 +58,12 @@ if ! python run_commit_tests.py; then
 fi
 
 # Lint and format with ruff
-ruff check --select I --fix
+ruff check --select I
 ruff format
 git add -u
 
-# if ruff fix doesn't work, we need to fail
-if ! ruff check -q --select I --fix; then
+# if ruff check  doesn't work, we need to fail
+if ! ruff check -q --select I; then
     echo "Linting failed!"
     exit 1
 fi

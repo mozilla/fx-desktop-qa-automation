@@ -1,0 +1,10 @@
+{
+  "region": "ES",
+  "sites": [
+    "demo",
+    "ebay",
+    "zooplus"
+  ],
+  "tests": [
+  ]
+}

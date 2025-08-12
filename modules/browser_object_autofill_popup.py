@@ -45,7 +45,10 @@ class AutofillPopup(BasePage):
             field_element: if field element is given.
                 check whether it is a select element. pass the check if it is.
         """
-        self.element_visible("select-form-option")
+        self.element_exists("pop-up-component")
+        popup_component = self.get_element("pop-up-component")
+        if popup_component:
+            self.element_visible("select-form-option")
         return self
 
     # Interaction with popup elements

@@ -1,6 +1,8 @@
 import json
+import logging
 import os
 import re
+import subprocess
 import sys
 from collections import defaultdict
 from subprocess import check_output
@@ -32,16 +34,33 @@ def valid_l10n_mappings():
     return mapping
 
 
-def add_selected_mappings(mappings):
+def distribute_mappings_evenly(mappings, version):
     """
-    Write the selected mappings to the output file.
+    Distribute the selected mappings if its a reportable run.
 
     Args:
         mappings (dict): A dictionary of mappings, where the keys are sites and the values are sets of regions.
+        version (int): The beta_version of the beta.
     """
-    for site, regions in mappings.items():
-        with open(OUTPUT_FILE, "a+") as f:
-            f.write(f"{site} {' '.join(regions)}\n")
+    if not mappings:
+        return {}
+    if os.environ.get("TESTRAIL_REPORT"):
+        # sort the mappings by the length of the regions per site
+        mappings = dict(
+            sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True)
+        )
+        # place the mappings into 3 containers evenly according to the load
+        loads = [0, 0, 0]
+        containers = [defaultdict(set) for _ in range(3)]
+        for key, value in mappings.items():
+            min_idx = loads.index(min(loads))
+            containers[min_idx][key] = value
+            loads[min_idx] += len(value)
+        # get container index according to beta beta_version
+        run_idx = version % 3
+        return containers[run_idx]
+    else:
+        return mappings
 
 
 def process_changed_file(f, selected_mappings):
@@ -53,7 +72,9 @@ def process_changed_file(f, selected_mappings):
         selected_mappings: the selected mappings dictionary (updated in place).
     """
     split = f.split(SLASH)
-    if f.startswith("l10n_CM/sites/") or f.startswith("l10n_CM/constants/"):
+    if f.startswith(os.path.join("l10n_CM", "sites")) or f.startswith(
+        os.path.join("l10n_CM", "constants")
+    ):
         # if constants or sites are changed, add a single site/region mapping entry.
         site = split[2]
         region = split[3]
@@ -61,13 +82,30 @@ def process_changed_file(f, selected_mappings):
         # make sure the region mapping file exists before adding the mapping
         if os.path.exists(region_path):
             selected_mappings[site].add(region)
-    elif f.startswith("l10n_CM/region/"):
+    elif f.startswith(os.path.join("l10n_CM", "region")):
         # if a region file is changed, add the region to each site mapping.
         region = split[-1].split(".")[0]
         with open(f, "r+") as f:
             region_file = json.load(f)
             for site in region_file.get("sites", []):
                 selected_mappings[site].add(region)
+
+
+def save_mappings(selected_container):
+    """
+    Save the selected mappings to the output file.
+
+        Args:
+            selected_container: the selected mappings container.
+    """
+    if not selected_container:
+        return
+    current_running_mappings = [
+        f"{key} {' '.join(value)}\n" for key, value in selected_container.items()
+    ]
+    logging.warning(f"Running the mappings:\n{''.join(current_running_mappings)}")
+    with open(OUTPUT_FILE, "a+") as f:
+        f.writelines(current_running_mappings)
 
 
 if __name__ == "__main__":
@@ -80,10 +118,27 @@ if __name__ == "__main__":
                 os.environ["MANUAL"] = "true"
     with open(OUTPUT_FILE, "w") as file:
         pass  # File is created or cleared
+    try:
+        beta_version = int(
+            (
+                subprocess.check_output(
+                    [sys.executable, "./collect_executables.py", "-n"]
+                )
+                .strip()
+                .decode()
+            )
+            .split("-")[0]
+            .split(".")[1]
+            .split("b")[1]
+        )
+    except ValueError:
+        # failsafe beta_version
+        beta_version = 0
     l10n_mappings = valid_l10n_mappings()
+    sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
-        add_selected_mappings(l10n_mappings)
+        save_mappings(distribute_mappings_evenly(l10n_mappings, beta_version))
         sys.exit(0)
 
     re_set_all = [
@@ -127,24 +182,22 @@ if __name__ == "__main__":
     )
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
-
-    if main_conftest in committed_files or base_page in committed_files:
-        # Run all the tests for all mappings if main conftest or basepage changed
-        add_selected_mappings(l10n_mappings)
-        sys.exit(0)
-
-    # Run all the tests for all mappings if any core l10n model, component, conftest, or tests are changed.
     selected_mappings = defaultdict(set)
+    if main_conftest in committed_files or base_page in committed_files:
+        # Run sample tests for all mappings if main conftest or basepage changed
+        selected_mappings |= sample_mappings
+
+    # Run sample tests for all mappings if any core l10n model, component, conftest, or tests are changed.
     for f in committed_files:
-        for re_val in re_set_all:
-            if re_val.match(f):
-                add_selected_mappings(l10n_mappings)
-                sys.exit(0)
         # check if constants, sites or region directory files were changed or added.
         # if so, add the site/region mappings.
         for re_val in re_set_select:
             if re_val.match(f):
                 process_changed_file(f, selected_mappings)
+        for re_val in re_set_all:
+            if re_val.match(f):
+                selected_mappings |= sample_mappings
+                break
 
-    add_selected_mappings(selected_mappings)
+    save_mappings(distribute_mappings_evenly(selected_mappings, beta_version))
     sys.exit(0)

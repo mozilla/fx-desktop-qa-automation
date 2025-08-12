@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/bijoubrigitte_cc.html",
+  "field_mapping": {
+    "name": "f6db701f-3ed9-4e1a-8b39-1748970787e9",
+    "card_number": "dbc00304-f99d-4da6-a65e-4e70233db1ac",
+    "expiration_date": "2ef13882-4ba1-48c9-9773-9e1abfd544da",
+    "cvv": "1cd00b1b-a82b-4a11-bcaf-e64f5a3728e7"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "f6db701f-3ed9-4e1a-8b39-1748970787e9",
+    "dbc00304-f99d-4da6-a65e-4e70233db1ac",
+    "2ef13882-4ba1-48c9-9773-9e1abfd544da",
+    "1cd00b1b-a82b-4a11-bcaf-e64f5a3728e7"
+]
+}
