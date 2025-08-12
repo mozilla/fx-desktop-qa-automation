@@ -2,7 +2,8 @@
   "region": "PL",
   "sites": [
     "demo",
-    "zalando"
+    "zalando",
+    "tanie-leczenie"
   ],
   "tests": [
   ]
