@@ -48,6 +48,7 @@ valid_sites = {
     "diy",
     "tiffany",
     "assos",
+    "duka",
     "tanie-leczenie",
 }
 
