@@ -2,7 +2,8 @@
   "region": "ES",
   "sites": [
     "demo",
-    "ebay"
+    "ebay",
+    "calvinklein"
   ],
   "tests": [
   ]
