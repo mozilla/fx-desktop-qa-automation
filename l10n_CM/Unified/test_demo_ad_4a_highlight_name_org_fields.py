@@ -38,7 +38,7 @@ def test_address_yellow_highlight_on_name_organization_fields(
         autofill_popup.ensure_autofill_dropdown_visible()
 
         # Click on the first element from the autocomplete dropdown
-        autofill_popup.select_nth_element(1)
+        autofill_popup.select_autofill_panel()
 
         field_to_test = ["given_name", "family_name", "name", "organization"]
         # Verify the name and organization fields are highlighted

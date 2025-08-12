@@ -607,7 +607,7 @@ class Autofill(BasePage):
                 autofill_field.clear()
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
-                self.autofill_popup.hover("select-form-option")
+                self.autofill_popup.hover_over_autofill_panel()
                 self.verify_autofill_data_on_hover(sample_data, region)
                 self.click_on("form-field", labels=[field])
             else:
@@ -664,7 +664,7 @@ class Autofill(BasePage):
                 # Double-click a field and choose the first element from the autocomplete dropdown
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
-                self.autofill_popup.select_nth_element(1)
+                self.autofill_popup.select_autofill_panel()
 
                 if sample_data:
                     ## verify data
