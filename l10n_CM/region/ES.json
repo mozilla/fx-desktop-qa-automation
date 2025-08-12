@@ -2,7 +2,9 @@
   "region": "ES",
   "sites": [
     "demo",
-    "ebay"
+    "ebay",
+    "zooplus",
+    "calvinklein"
   ],
   "tests": [
   ]
