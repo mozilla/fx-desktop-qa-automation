@@ -25,6 +25,9 @@ MIXED_CONTENT_DOWNLOAD_URL = "https://file-examples.com/wp-content/storage/2018/
 MAX_CHECKS = 30
 
 
+@pytest.mark.unstable(
+    reason="Flaky in CI, see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1976520"
+)
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
@@ -41,7 +44,9 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
         download_name = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "downloadTarget"))
         )
-
+        #
+        # Test failing here:
+        #
         download_status = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "downloadProgress"))
         )
