@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/zara_cc.html",
+  "field_mapping": {
+    "card_number": "9a274e10-05a0-4052-9081-1773bf115b66",
+    "expiration_month": "c7404086-ff9c-454c-807d-cc5c861d29a9",
+    "expiration_year": "45bc4b88-170f-4891-b98a-fa2eea26de8c",
+    "cvv": "661119d0-9696-4685-9d45-c2e3ea53a861"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "9a274e10-05a0-4052-9081-1773bf115b66",
+    "c7404086-ff9c-454c-807d-cc5c861d29a9",
+    "45bc4b88-170f-4891-b98a-fa2eea26de8c",
+    "661119d0-9696-4685-9d45-c2e3ea53a861"
+]
+}
