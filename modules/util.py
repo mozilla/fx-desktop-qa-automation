@@ -110,6 +110,7 @@ class Utilities:
             "Spain": "España",
             "Poland": "Polska",
         }
+
         self.fake = None
         self.locale = None
 
