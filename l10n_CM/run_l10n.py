@@ -48,7 +48,13 @@ valid_sites = {
     "diy",
     "tiffany",
     "assos",
+    "tanie-leczenie",
     "duka",
+    "ceneo",
+    "thenorthface",
+    "zooplus",
+    "zara",
+    "cocolita"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
