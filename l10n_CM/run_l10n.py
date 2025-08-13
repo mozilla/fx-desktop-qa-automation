@@ -52,7 +52,9 @@ valid_sites = {
     "duka",
     "ceneo",
     "thenorthface",
-    "cocolita",
+    "zooplus",
+    "zara",
+    "cocolita"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
