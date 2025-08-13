@@ -51,7 +51,8 @@ valid_sites = {
     "tanie-leczenie",
     "duka",
     "ceneo",
-    "thenorthface"
+    "thenorthface",
+    "cocolita",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
