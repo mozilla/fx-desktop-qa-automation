@@ -138,7 +138,6 @@ def run_tests(reg, site, flg, all_tests):
             logging.info(f"{reg} region on {site} site has no tests.")
     except subprocess.CalledProcessError as e:
         logging.warning(f"Test run failed with exit code: {e.returncode}")
-        sys.exit(e.returncode)
         # true failure instead of run not being reportable.
         if e.returncode != 2:
             if os.environ.get("FX_L10N") and os.environ.get("TEST_EXIT_CODE") == "0":
