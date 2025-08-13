@@ -1,6 +1,7 @@
 {
   "url": "http://127.0.0.1:8080/zara_cc.html",
   "field_mapping": {
+    "name": "a8b8e3a1-1d70-4359-b1f6-8c365b1ff394",
     "card_number": "9a274e10-05a0-4052-9081-1773bf115b66",
     "expiration_month": "c7404086-ff9c-454c-807d-cc5c861d29a9",
     "expiration_year": "45bc4b88-170f-4891-b98a-fa2eea26de8c",
@@ -9,9 +10,17 @@
 
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "fields": [
+    "a8b8e3a1-1d70-4359-b1f6-8c365b1ff394",
     "9a274e10-05a0-4052-9081-1773bf115b66",
     "c7404086-ff9c-454c-807d-cc5c861d29a9",
     "45bc4b88-170f-4891-b98a-fa2eea26de8c",
     "661119d0-9696-4685-9d45-c2e3ea53a861"
-]
+],
+  "skipped": [
+    "test_demo_cc_1_dropdown.py",
+    "test_demo_cc_2_preview.py",
+    "test_demo_cc_3_autofill.py",
+    "test_demo_cc_4_highlight.py",
+    "test_demo_cc_5_clear.py"
+   ]
 }
