@@ -43,6 +43,11 @@
       "doNotCache"
     ]
   },
+  "pop-up-component-box": {
+    "selectorData": "#PopupAutoComplete richlistbox",
+    "strategy": "css",
+    "groups": []
+  },
   "select-form-option": {
     "selectorData": "#PopupAutoComplete .autocomplete-richlistitem",
     "strategy": "css",

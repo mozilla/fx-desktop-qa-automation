@@ -31,7 +31,13 @@ class AutofillPopup(BasePage):
         checks if the parent pop up component has hidden attribute.
         """
         self.element_exists("pop-up-component")
-        self.expect_element_attribute_contains("pop-up-component", "hidden", "true")
+        popup_component = self.get_element("pop-up-component")
+        if len(popup_component.get_attribute("innerHTML")) > 1:
+            self.expect_element_attribute_contains(
+                "pop-up-component-box", "style", "0px;"
+            )
+        else:
+            self.expect_element_attribute_contains("pop-up-component", "hidden", "true")
         return self
 
     @BasePage.context_chrome
@@ -40,15 +46,7 @@ class AutofillPopup(BasePage):
         Verifies that the autofill dropdown appears
         checks if the parent pop up component has hidden attribute.
         """
-        self.expect(
-            lambda _: len(
-                self.get_element("pop-up-component").get_attribute("innerHTML")
-            )
-            > 1
-        )
-        assert self.get_element("pop-up-component").get_attribute("hidden") is None, (
-            "Pop up autofill panel hidden."
-        )
+        self.element_clickable("pop-up-component-box")
         return self
 
     @BasePage.context_chrome
@@ -109,19 +107,16 @@ class AutofillPopup(BasePage):
         Arguments:
             index (int): The index of the element to retrieve (1-based)
         """
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.get_element("select-form-option-by-index", labels=[str(index)])
-            )
-        )
-        self.get_element("select-form-option-by-index", labels=[str(index)]).click()
+        self.element_clickable("select-form-option-by-index", labels=[str(index)])
+        self.click_on("select-form-option-by-index", labels=[str(index)])
 
     @BasePage.context_chrome
     def select_autofill_panel(self):
         """
         Select the first autofill panel in the autocomplete list.
         """
-        self.get_element("select-form-option-autofill").click()
+        self.element_clickable("select-form-option-autofill")
+        self.click_on("select-form-option-autofill")
         return self
 
     @BasePage.context_chrome

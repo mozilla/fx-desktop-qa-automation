@@ -523,7 +523,7 @@ class Autofill(BasePage):
             value = self.util.normalize_regional_phone_numbers(value, region)
         return value
 
-    def select_autofill_option(self, field, index: int = 1):
+    def select_autofill_option(self, field):
         """
         Presses the autofill panel that pops up after you double-click an input field
 
@@ -537,7 +537,7 @@ class Autofill(BasePage):
             autofill_field.clear()
             self.double_click("form-field", labels=[field])
             self.autofill_popup.ensure_autofill_dropdown_visible()
-            self.autofill_popup.select_nth_element(index)
+            self.autofill_popup.select_autofill_panel()
         else:
             logging.info(f"Field: {field} is a select element. No autofill option.")
         return self
