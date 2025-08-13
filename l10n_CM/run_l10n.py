@@ -50,8 +50,9 @@ valid_sites = {
     "assos",
     "tanie-leczenie",
     "duka",
+    "ceneo",
+    "thenorthface"
     "zooplus",
-    "thenorthface",
     "zara"
 }
 
