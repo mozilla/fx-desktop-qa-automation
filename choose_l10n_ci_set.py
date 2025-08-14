@@ -89,7 +89,8 @@ def select_l10n_mappings(beta_version):
     beta_split = (beta_version % 3) + 1
     if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json"):
         with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json", "r") as f:
-            return json.load(f)
+            current_split_mappings = {k: set(v) for k, v in json.load(f).items()}
+            return current_split_mappings
     else:
         return valid_l10n_mappings()
 
