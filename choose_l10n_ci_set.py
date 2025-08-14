@@ -21,7 +21,7 @@ def valid_l10n_mappings():
     Returns:
         The dictionary of valid l10n mappings.
     """
-    mapping = defaultdict(list)
+    mapping = defaultdict(set)
     region_paths = [d for d in os.listdir("./l10n_CM/region/")]
     for region_path in region_paths:
         if region_path != "Unified.json":
@@ -30,7 +30,7 @@ def valid_l10n_mappings():
                 region_file = json.load(f)
                 if region_file.get("sites"):
                     for site in region_file.get("sites"):
-                        mapping[site].append(region)
+                        mapping[site].add(region)
     return mapping
 
 
@@ -52,14 +52,14 @@ def process_changed_file(f, selected_mappings):
         region_path = os.path.join("l10n_CM", "region", f"{region}.json")
         # make sure the region mapping file exists before adding the mapping
         if os.path.exists(region_path):
-            selected_mappings[site].append(region)
+            selected_mappings[site].add(region)
     elif f.startswith(os.path.join("l10n_CM", "region")):
         # if a region file is changed, add the region to each site mapping.
         region = split[-1].split(".")[0]
         with open(f, "r+") as f:
             region_file = json.load(f)
             for site in region_file.get("sites", []):
-                selected_mappings[site].append(region)
+                selected_mappings[site].add(region)
 
 
 def save_mappings(selected_container):
@@ -89,7 +89,8 @@ def select_l10n_mappings(beta_version):
     beta_split = (beta_version % 3) + 1
     if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json"):
         with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json", "r") as f:
-            return json.load(f)
+            current_split_mappings = {k: set(v) for k, v in json.load(f).items()}
+            return current_split_mappings
     else:
         return valid_l10n_mappings()
 
@@ -169,7 +170,7 @@ if __name__ == "__main__":
     )
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
-    selected_mappings = defaultdict(list)
+    selected_mappings = defaultdict(set)
     if main_conftest in committed_files or base_page in committed_files:
         # Run sample tests for all mappings if main conftest or basepage changed
         selected_mappings |= sample_mappings
