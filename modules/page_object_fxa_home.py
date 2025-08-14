@@ -25,7 +25,6 @@ class FxaHome(BasePage):
         """Fill out the password and age fields, then submit and wait for code"""
         self.fill("signup-password-input", password, press_enter=False)
         self.fill("signup-password-repeat-input", password, press_enter=False)
-        # self.fill("age-input", str(age), press_enter=False)
         self.element_clickable("submit-button")
         self.get_element("submit-button").click()
         self.element_has_text("card-header", "Enter confirmation code")
