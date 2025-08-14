@@ -16,11 +16,6 @@ def fxa_env():
     return "stage"
 
 
-@pytest.fixture()
-def acct_password():
-    return "Test123???"
-
-
 def test_sync_new_fxa(driver: Firefox, fxa_url: str, fxa_session: dict, get_otp_code):
     """C131094: The user is able to create a new Firefox Account"""
 

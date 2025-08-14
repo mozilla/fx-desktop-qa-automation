@@ -16,8 +16,10 @@ class FxaHome(BasePage):
         self.set_content_context()
         self.fill("login-password-input", password, press_enter=False)
         self.get_element("submit-button").click()
-        self.element_visible("signed-in-status")
         return self
+
+    def is_otp_input_required(self) -> bool:
+        return len(self.get_elements("otp-input")) > 0
 
     def create_new_account(self, password: str, age=30) -> BasePage:
         """Fill out the password and age fields, then submit and wait for code"""

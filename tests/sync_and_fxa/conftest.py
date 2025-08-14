@@ -8,9 +8,9 @@ from fxa.tests.utils import TestEmailAccount
 
 
 class FxaSession:
-    def __init__(self, url: str, password: str, restmail_session=None):
+    def __init__(self, url: str, password: str, restmail_session):
         self.client = Client(url)
-        self.restmail = restmail_session if restmail_session else TestEmailAccount()
+        self.restmail = restmail_session
         self.password = password
         self.otp_code = None
         logging.info(self.restmail.email)
@@ -55,19 +55,19 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
+def acct_password():
+    return "Test123???"
+
+
+@pytest.fixture()
 def fxa_session(
-    fxa_url: str, fxa_env: str, acct_password: str, fxa_test_account, request
-) -> FxaSession:
+    fxa_url: str, fxa_env: str, acct_password: str, restmail_session, request
+):
     """Create a PyFxA object and return a dict with artifacts"""
-    # Create a testing account using an @restmail.net address.
+    # Create a testing account using and @restmail.net address.
     if fxa_env == "stage":
         fxa_url = "https://api-accounts.stage.mozaws.net"
-    if fxa_test_account:
-        prep = FxaSession(
-            fxa_url, acct_password, request.getfixturevalue("restmail_session")
-        )
-    else:
-        prep = FxaSession(fxa_url, acct_password)
+    prep = FxaSession(fxa_url, acct_password, restmail_session)
     prep.restmail.clear()
     yield prep
     prep.destroy_account()
@@ -76,7 +76,7 @@ def fxa_session(
 @pytest.fixture()
 def fxa_test_account():
     """return none by default"""
-    return None
+    return None, None
 
 
 @pytest.fixture()
@@ -86,10 +86,11 @@ def restmail_session(fxa_test_account) -> TestEmailAccount:
 
 
 @pytest.fixture()
-def create_fxa(fxa_session: FxaSession, get_otp_code) -> FxaSession:
+def create_fxa(restmail_session, fxa_session: FxaSession, get_otp_code) -> FxaSession:
     """Create FxA from a PyFxA object"""
     fxa_session.create_account()
-    fxa_session.session.verify_email_code(get_otp_code())
+    code = get_otp_code(restmail_session) if restmail_session else get_otp_code()
+    fxa_session.session.verify_email_code(code)
     return fxa_session
 
 

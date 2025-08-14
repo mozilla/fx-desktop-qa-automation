@@ -27,6 +27,7 @@ def test_sync_existing_fxa(
     driver: Firefox,
     fxa_test_account: Tuple[str, str],
     restmail_session,
+    get_otp_code,
     screenshot,
 ):
     """C131098: User is able to log in with existing FxAccount"""
@@ -36,5 +37,9 @@ def test_sync_existing_fxa(
     fxa = FxaHome(driver)
     fxa.sign_up_sign_in(email)
     fxa.fill_password(password)
+    if fxa.is_otp_input_required():
+        otp = get_otp_code(restmail_session)
+        fxa.fill_otp_code(otp)
+    fxa.element_visible("signed-in-status")
     status_element = fxa.get_element("signed-in-status").find_element(By.TAG_NAME, "p")
     assert "You’re signed in" in status_element.text

@@ -49,7 +49,7 @@ valid_sites = {
     "tiffany",
     "assos",
     "zooplus",
-    "duka"
+    "duka",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
