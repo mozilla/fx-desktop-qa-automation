@@ -31,6 +31,8 @@ The harness relies on several configuration files:
     ]
 }
 ```
+**NOTE**: If both the address and credit card tests are skipped for the site, do not add it to the region files.
+
 - **Site Test Configuration**: Located in `constants/{site_name}.json` or `constants/{site_name}/{region}.json`, defining site-specific test configurations and skipped tests. Here we map the attributes for either `AutofillAddressBase` or `CreditCardBase` to the corresponding selectors.
 
 ```aiignore
