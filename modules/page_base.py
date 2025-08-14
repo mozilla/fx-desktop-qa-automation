@@ -454,6 +454,11 @@ class BasePage(Page):
         self.expect(EC.title_contains(url_part))
         return self
 
+    def title_is(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL is given text or timeout"""
+        self.expect(EC.title_is(url_part))
+        return self
+
     def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
         """
         Given a part of a URL and a regex, wait for that substring to exist in
