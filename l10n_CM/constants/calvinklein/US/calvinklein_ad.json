@@ -10,9 +10,7 @@
     "email": "0c994dc2-4e0b-4734-8582-74ce9a1bff55",
     "telephone": "e1f86567-396f-473c-8666-47447f52d722"
   },
-
   "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
-  "skip": "True",
   "fields": [
     "5d2af5cb-8f6d-4fdc-8ae5-21c7e5e97a43",
     "82900c67-963c-40f8-b0ef-c986a2accc43",
