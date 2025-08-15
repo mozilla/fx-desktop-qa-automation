@@ -33,7 +33,7 @@ def test_address_yellow_highlight_address_fields(
         autofill_popup.ensure_autofill_dropdown_visible()
 
         # Click on the first element from the autocomplete dropdown
-        autofill_popup.select_nth_element(1)
+        autofill_popup.select_autofill_panel()
 
         field_to_test = ["email", "telephone"]
         # Verify the address fields are highlighted
