@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,6 +26,7 @@ def temp_selectors():
 TEST_URL = "https://addons.mozilla.org/en-US/firefox/addon/popup-blocker/"
 
 
+@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 1983280")
 def test_webextension_completed_installation_successfully_displayed(
     driver: Firefox, temp_selectors
 ):
