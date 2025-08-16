@@ -12,6 +12,7 @@ def test_case():
     return "134655"
 
 
+# TODO: remove this comment
 ROBOT_TAB = 16
 
 
