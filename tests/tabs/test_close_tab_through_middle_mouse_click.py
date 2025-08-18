@@ -20,7 +20,7 @@ def test_close_tab_through_middle_mouse_click(driver: Firefox):
     tabs = TabBar(driver)
     example.open()
 
-    # Open 2 additional tabs for a total of 3
+    # Open 2 mnew tabs for a total of 3
     for _ in range(2):
         tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(3)
