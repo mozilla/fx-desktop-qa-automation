@@ -187,5 +187,5 @@ if __name__ == "__main__":
                 selected_mappings |= sample_mappings
                 break
 
-    save_mappings(l10n_mappings)
+    save_mappings(selected_mappings)
     sys.exit(0)
