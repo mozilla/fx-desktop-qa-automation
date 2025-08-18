@@ -219,14 +219,12 @@ class Utilities:
         """
 
         # Check if locale exists, otherwise return None
-        locale = list(filter(lambda x: country_code in x, AVAILABLE_LOCALES))
+        locale = next(filter(lambda x: country_code in x, AVAILABLE_LOCALES[::-1]), None)
 
         if not locale:
-            logging.error(
-                f"Invalid country code `{country_code}`. No faker instance created."
-            )
+            logging.error(f"Invalid country code `{country_code}`. No faker instance created.")
             return None  # No fallback
-        locale = locale[-1]
+
         try:
             # seed to get consistent data
             if self.fake is None:
