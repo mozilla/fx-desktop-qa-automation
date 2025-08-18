@@ -584,8 +584,8 @@ class Utilities:
             # Remove country code from the local number
             local_number = digits[len(country_code) :]
 
-        # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE", "GB", "IT", "ES", "BE"] and local_number.startswith("0"):
+        # Handle leading zero in local numbers
+        if region not in ["US", "CA"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 
