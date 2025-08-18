@@ -109,7 +109,7 @@ class Utilities:
             "Italy": "Italia",
             "Spain": "España",
             "Poland": "Polska",
-            "Belgium": "Belgique"
+            "Belgium": "België"
         }
 
         self.fake = None
@@ -219,14 +219,14 @@ class Utilities:
         """
 
         # Check if locale exists, otherwise return None
-        locale = next(filter(lambda x: country_code in x, AVAILABLE_LOCALES), None)
+        locale = list(filter(lambda x: country_code in x, AVAILABLE_LOCALES))
 
         if not locale:
             logging.error(
                 f"Invalid country code `{country_code}`. No faker instance created."
             )
             return None  # No fallback
-
+        locale = locale[-1]
         try:
             # seed to get consistent data
             if self.fake is None:
@@ -301,7 +301,7 @@ class Utilities:
             getattr(fake, valid_attribute)() if valid_attribute else valid_attribute
         )
         address_level_2 = fake.city()
-        postal_code = fake.postcode()
+        postal_code = fake.postcode()[:4]
         country = fake.current_country()
         email = fake.email()
         telephone = self.generate_localized_phone(country_code, fake)
