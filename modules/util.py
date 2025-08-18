@@ -109,6 +109,7 @@ class Utilities:
             "Italy": "Italia",
             "Spain": "España",
             "Poland": "Polska",
+            "Belgium": "Belgique"
         }
 
         self.fake = None
@@ -564,6 +565,7 @@ class Utilities:
             "IT": "39",
             "PL": "48",
             "ES": "34",
+            "BE": "32"
         }
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
@@ -584,7 +586,7 @@ class Utilities:
             local_number = digits[len(country_code) :]
 
         # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE", "GB", "IT", "ES"] and local_number.startswith("0"):
+        if region in ["FR", "DE", "GB", "IT", "ES", "BE"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 
