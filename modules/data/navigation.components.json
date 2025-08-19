@@ -552,8 +552,8 @@
     },
 
     "searchmode-switcher-settings": {
-        "selectorData": "searchmode-switcher-popup-search-settings-button",
-        "strategy": "id",
+        "selectorData": "menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']",
+        "strategy": "css",
         "groups": []
     },
 
