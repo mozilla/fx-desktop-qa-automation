@@ -86,13 +86,13 @@ def select_l10n_mappings(beta_version):
     Args:
         beta_version: the current beta version.
     """
-    # beta_split = (beta_version % 3) + 1
-    # if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json"):
-    #     with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json", "r") as f:
-    #         current_split_mappings = {k: set(v) for k, v in json.load(f).items()}
-    #         return current_split_mappings
-    # else:
-    return valid_l10n_mappings()
+    beta_split = (beta_version % 3) + 1
+    if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json"):
+        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json", "r") as f:
+            current_split_mappings = {k: set(v) for k, v in json.load(f).items()}
+            return current_split_mappings
+    else:
+        return valid_l10n_mappings()
 
 
 if __name__ == "__main__":
@@ -187,5 +187,5 @@ if __name__ == "__main__":
                 selected_mappings |= sample_mappings
                 break
 
-    save_mappings(l10n_mappings)
+    save_mappings(selected_mappings)
     sys.exit(0)
