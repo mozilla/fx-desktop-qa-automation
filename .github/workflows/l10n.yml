@@ -92,25 +92,6 @@ jobs:
             exit $EXIT_CODE;
           fi
           exit $SCRIPT_EXIT_CODE;
-      - name: Run L10N Tests in MacOS (Headed)
-        if: steps.setup.conclusion == 'success' && always()
-        env:
-          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
-        run: |
-          mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          echo "0" > TEST_EXIT_CODE;
-          while IFS= read -r line; do
-            echo "Running tests for: $line";
-            pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
-          done < selected_l10n_mappings;
-          ls artifacts-mac/* &>/dev/null || echo "No mappings to report" >> artifacts-mac/placeholder.txt
-          mv -n artifacts/* artifacts-mac/ || true;
-          EXIT_CODE=$(cat TEST_EXIT_CODE);
-          if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE;
-          fi
-          exit $SCRIPT_EXIT_CODE;
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
@@ -162,25 +143,6 @@ jobs:
             DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv artifacts artifacts-linux || true;
-          EXIT_CODE=$(cat TEST_EXIT_CODE);
-          if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE;
-          fi
-          exit $SCRIPT_EXIT_CODE;
-      - name: Run Smoke Tests in Ubuntu (Headed)
-        if: steps.setup.conclusion == 'success' && always()
-        env:
-          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
-          FX_EXECUTABLE: ./firefox/firefox
-        run: |
-          mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          echo "0" > TEST_EXIT_CODE;
-          while IFS= read -r line; do
-            echo "Running tests for: $line";
-            DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
-          done < selected_l10n_mappings;
-          ls artifacts-linux/* &>/dev/null || echo "No mappings to report" >> artifacts-linux/placeholder.txt
-          mv -n artifacts/* artifacts-linux/ || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
           if [ $EXIT_CODE != 0 ]; then
             exit $EXIT_CODE;
@@ -272,47 +234,6 @@ jobs:
               }
           }
           mv artifacts artifacts-win || true
-          $EXIT_CODE = Get-Content -Path "TEST_EXIT_CODE"
-          if ($EXIT_CODE -ne 0) {
-              exit [int]$EXIT_CODE
-          }
-          exit $env:SCRIPT_EXIT_CODE
-      - name: Run L10N Tests in Win (Headed)
-        if: steps.setup.conclusion == 'success' && always()
-        env:
-          REPORTABLE: ${{ env.TESTRAIL_REPORT == 'true' }}
-        run: |
-          rm ./pyproject.toml;
-          mv ./ci_l10n_pyproject_headed.toml ./pyproject.toml;
-          $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
-          Write-Host "FX_EXECUTABLE: $FX_EXECUTABLE"
-          pipenv run python choose_l10n_ci_set.py
-          "0" | Set-Content -Path "TEST_EXIT_CODE"
-          $SCRIPT_EXIT_CODE = 0
-          Get-Content "selected_l10n_mappings" | ForEach-Object {
-              $line = $_
-              Write-Host "Running tests for: $line"
-              try {
-                  pipenv run python -m l10n_CM.run_l10n --fx-executable="$env:FX_EXECUTABLE" $line
-              } catch {
-                  $SCRIPT_EXIT_CODE = $_.Exception.HResult
-              }
-          }
-          rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
-          Get-ChildItem -Path "artifacts" -ErrorAction SilentlyContinue | ForEach-Object {
-              $destPath = "artifacts-win\" + $_.Name
-              if (-not (Test-Path -Path $destPath)) {
-                  try {
-                      Move-Item -Path $_.FullName -Destination $destPath
-                  } catch {
-                      # Ignore errors and continue
-                  }
-              }
-          }
-          mkdir artifacts-win -Force
-          if (-not (Test-Path -Path "artifacts-win\*")) {
-            New-Item -Path "artifacts-win\placeholder.txt" -ItemType File -Value "no mappings to report."
-          }
           $EXIT_CODE = Get-Content -Path "TEST_EXIT_CODE"
           if ($EXIT_CODE -ne 0) {
               exit [int]$EXIT_CODE

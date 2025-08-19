@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import List, Union
 
 from pynput.keyboard import Controller, Key
+from pynput.mouse import Button
+from pynput.mouse import Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -453,6 +455,11 @@ class BasePage(Page):
         self.expect(EC.title_contains(url_part))
         return self
 
+    def title_is(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL is given text or timeout"""
+        self.expect(EC.title_is(url_part))
+        return self
+
     def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
         """
         Given a part of a URL and a regex, wait for that substring to exist in
@@ -557,6 +564,50 @@ class BasePage(Page):
     def triple_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
         """Actions helper: perform triple-click on a given element"""
         return self.multi_click(3, reference, labels)
+
+    def control_click(
+        self, reference: Union[str, tuple, WebElement], labels=[]
+    ) -> Page:
+        """Actions helper: perform control-click on given element"""
+        element = self.fetch(reference, labels)
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.actions.key_down(mod_key).click(element).key_up(mod_key).perform()
+        return self
+
+    def middle_click(self, reference: Union[str, tuple, WebElement], labels=[]):
+        """Actions helper: Perform a middle mouse click on desired element"""
+        with self.driver.context(self.context_id):
+            mouse = MouseController()
+            element = self.fetch(reference, labels)
+
+            element_location = element.location
+            element_size = element.size
+            window_position = self.driver.get_window_position()
+
+            inner_height = self.driver.execute_script("return window.innerHeight;")
+            outer_height = self.driver.execute_script("return window.outerHeight;")
+            chrome_height = outer_height - inner_height
+
+            element_x = (
+                window_position["x"]
+                + element_location["x"]
+                + (element_size["width"] / 2)
+            )
+            element_y = (
+                window_position["y"]
+                + element_location["y"]
+                + (element_size["height"] / 2)
+                + chrome_height
+            )
+            mouse.position = (element_x, element_y)
+
+            # Need a short wait to ensure the mouse move completes, then middle click
+            time.sleep(0.5)
+            mouse.click(Button.middle, 1)
+        return self
 
     def context_click(
         self, reference: Union[str, tuple, WebElement], labels=[]

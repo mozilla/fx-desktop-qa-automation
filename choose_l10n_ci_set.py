@@ -34,35 +34,6 @@ def valid_l10n_mappings():
     return mapping
 
 
-def distribute_mappings_evenly(mappings, version):
-    """
-    Distribute the selected mappings if its a reportable run.
-
-    Args:
-        mappings (dict): A dictionary of mappings, where the keys are sites and the values are sets of regions.
-        version (int): The beta_version of the beta.
-    """
-    if not mappings:
-        return {}
-    if os.environ.get("TESTRAIL_REPORT"):
-        # sort the mappings by the length of the regions per site
-        mappings = dict(
-            sorted(mappings.items(), key=lambda val: len(val[1]), reverse=True)
-        )
-        # place the mappings into 3 containers evenly according to the load
-        loads = [0, 0, 0]
-        containers = [defaultdict(set) for _ in range(3)]
-        for key, value in mappings.items():
-            min_idx = loads.index(min(loads))
-            containers[min_idx][key] = value
-            loads[min_idx] += len(value)
-        # get container index according to beta beta_version
-        run_idx = version % 3
-        return containers[run_idx]
-    else:
-        return mappings
-
-
 def process_changed_file(f, selected_mappings):
     """
     process the changed file to add the site/region mappings.
@@ -108,6 +79,22 @@ def save_mappings(selected_container):
         f.writelines(current_running_mappings)
 
 
+def select_l10n_mappings(beta_version):
+    """
+    Select the correct l10n mappings.
+
+    Args:
+        beta_version: the current beta version.
+    """
+    beta_split = (beta_version % 3) + 1
+    if os.path.exists(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json"):
+        with open(f"l10n_CM/beta_run_splits/l10n_split_{beta_split}.json", "r") as f:
+            current_split_mappings = {k: set(v) for k, v in json.load(f).items()}
+            return current_split_mappings
+    else:
+        return valid_l10n_mappings()
+
+
 if __name__ == "__main__":
     if os.path.exists(".env"):
         with open(".env") as fh:
@@ -134,11 +121,12 @@ if __name__ == "__main__":
     except ValueError:
         # failsafe beta_version
         beta_version = 0
-    l10n_mappings = valid_l10n_mappings()
+    # choose split number
+    l10n_mappings = select_l10n_mappings(beta_version)
     sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
-        save_mappings(distribute_mappings_evenly(l10n_mappings, beta_version))
+        save_mappings(l10n_mappings)
         sys.exit(0)
 
     re_set_all = [
@@ -199,5 +187,5 @@ if __name__ == "__main__":
                 selected_mappings |= sample_mappings
                 break
 
-    save_mappings(distribute_mappings_evenly(selected_mappings, beta_version))
+    save_mappings(selected_mappings)
     sys.exit(0)

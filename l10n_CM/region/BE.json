@@ -1,0 +1,9 @@
+{
+  "region": "BE",
+  "sites": [
+    "demo",
+    "torfs"
+  ],
+  "tests": [
+  ]
+}

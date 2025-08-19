@@ -1,0 +1,23 @@
+{
+ "url": "http://127.0.0.1:8080/ceneo_ad.html",
+ "field_mapping": {
+    "given_name":"f8f9891d-12cd-420c-985d-70f2d8c8ec1a",
+    "family_name":"0cb0083f-7c52-47e6-96c5-7d79b930833a",
+    "street_address":"0508d7ab-83f5-452d-82a3-8cc66f3bff6f",
+    "postal_code":"f4e53ce9-7da5-4a81-84ba-48949869f01a",
+    "address_level_2": "15265be2-76bd-490b-91ab-3cb621c6f7bb",
+    "telephone": "bf4ce736-117f-4480-a74a-d1c7ddd1248c",
+    "email":"4e7ff8fc-f441-426a-98f4-886071d7b782"
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "4e7ff8fc-f441-426a-98f4-886071d7b782",
+    "f8f9891d-12cd-420c-985d-70f2d8c8ec1a",
+    "0cb0083f-7c52-47e6-96c5-7d79b930833a",
+    "0508d7ab-83f5-452d-82a3-8cc66f3bff6f",
+    "f4e53ce9-7da5-4a81-84ba-48949869f01a",
+    "15265be2-76bd-490b-91ab-3cb621c6f7bb",
+    "bf4ce736-117f-4480-a74a-d1c7ddd1248c",
+    "4e7ff8fc-f441-426a-98f4-886071d7b782"
+ ]
+}
