@@ -56,7 +56,7 @@ valid_sites = {
     "zara",
     "cocolita",
     "torfs",
-    "standaardboekhandel"
+    "standaardboekhandel",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
