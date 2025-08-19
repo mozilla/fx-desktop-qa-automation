@@ -2,7 +2,8 @@
   "region": "BE",
   "sites": [
     "demo",
-    "torfs"
+    "torfs",
+    "brico"
   ],
   "tests": [
   ]
