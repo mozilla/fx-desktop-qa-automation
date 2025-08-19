@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/standaardboekhandel_ad.html",
+  "field_mapping": {
+    "given_name": "f7da8c97-af92-4b8c-bcde-895f3244d2a8",
+    "family_name": "4600a8cc-b261-4a0b-9447-b2f8b7d6c0cb",
+    "street_address": "0573bd18-33bc-48a8-a5e3-48dd606ef2b5",
+    "address_level_2": "9f77ee99-3852-4872-8b14-a1f3bcc9814d",
+    "postal_code": "e298246f-e1c7-42c5-acd7-56edd84b0631"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "f7da8c97-af92-4b8c-bcde-895f3244d2a8",
+    "4600a8cc-b261-4a0b-9447-b2f8b7d6c0cb",
+    "0573bd18-33bc-48a8-a5e3-48dd606ef2b5",
+    "9f77ee99-3852-4872-8b14-a1f3bcc9814d",
+    "e298246f-e1c7-42c5-acd7-56edd84b0631"
+  ],
+  "skipped": [
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py"
+   ]
+}

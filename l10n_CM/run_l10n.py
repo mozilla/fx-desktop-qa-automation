@@ -56,6 +56,7 @@ valid_sites = {
     "zara",
     "cocolita",
     "torfs",
+    "standaardboekhandel",
     "brico"
 }
 

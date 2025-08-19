@@ -3,6 +3,7 @@
   "sites": [
     "demo",
     "torfs",
+    "standaardboekhandel",
     "brico"
   ],
   "tests": [
