@@ -267,6 +267,12 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
+    @BasePage.context_chrome
+    def click_file_download_warning_panel(self) -> BasePage:
+        """ exit file download warning panel if present """
+        self.element_clickable("file-download-warning-button")
+        self.click_on("file-download-warning-button")
+        return self
     def wait_for_item_to_download(self, filename: str) -> BasePage:
         """
         Check the downloads tool in the toolbar to wait for a given file to download
