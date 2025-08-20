@@ -23,6 +23,7 @@ valid_sites = {
     "mediamarkt",
     "lowes",
     "etsy",
+    "euronics",
     "calvinklein",
     "bestbuy",
     "decathlon",
