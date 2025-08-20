@@ -73,7 +73,7 @@
     ]
   },
   "select-form-option-by-index": {
-    "selectorData": ".autocomplete-richlistitem .autocomplete-richlistitem:nth-child({index})",
+    "selectorData": "richlistitem:nth-child({index})",
     "strategy": "css",
     "groups": [
       "doNotCache"

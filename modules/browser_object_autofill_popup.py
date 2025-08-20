@@ -106,7 +106,7 @@ class AutofillPopup(BasePage):
         Arguments:
             index (int): The index of the element to retrieve (1-based)
         """
-        self.element_clickable("select-form-option-by-index", labels=[str(index)])
+        self.element_clickable("pop-up-component-box")
         self.click_on("select-form-option-by-index", labels=[str(index)])
 
     @BasePage.context_chrome
