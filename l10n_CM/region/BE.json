@@ -3,7 +3,10 @@
   "sites": [
     "demo",
     "torfs",
-    "standaardboekhandel"
+    "standaardboekhandel",
+    "douglas",
+    "brico",
+    "toychamp"
   ],
   "tests": [
   ]
