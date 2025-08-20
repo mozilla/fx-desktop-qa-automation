@@ -28,6 +28,7 @@ def delete_files_regex_string():
     return r"opm.*\.pdf"
 
 
+@pytest.mark.unstable(reason="Bug 1983849")
 @pytest.mark.slow
 @pytest.mark.audio
 def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
@@ -59,11 +60,16 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
         and el.is_displayed()
     ]
     # first link is large, skip it
+    panel_skipped = False
     for link in valid_links[1 : (NUM_LINKS + 1)]:
         target = link.get_attribute("href")
         logging.info(f"Downloading target {target}:")
         logging.info(link.text)
         link.click()
+        if not panel_skipped:
+            # skip download warning panel once.
+            nav.click_file_download_warning_panel()
+            panel_skipped = True
         nav.wait_for_item_to_download(target.split("/")[-1])
 
     # Check that everything looks good in About:Downloads

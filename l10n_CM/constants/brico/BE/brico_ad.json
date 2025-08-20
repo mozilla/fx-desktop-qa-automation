@@ -1,0 +1,27 @@
+{
+  "url": "http://127.0.0.1:8080/brico_ad.html",
+  "field_mapping": {
+    "given_name": "41c39dfe-af73-4124-800a-9c6b81cf019c",
+    "family_name": "49f46362-b2b3-4370-b5a8-265a3e335219",
+    "street_address": "bc2a2c3d-d581-4737-94e5-772e5092c997",
+    "address_level_2": "e413d097-dc7c-4e54-88cc-b0d312f66225",
+    "postal_code": "a24ae667-9e81-4b83-8e3e-98bb3d4bb994",
+    "telephone": "2d34b8c9-0a43-49a4-89fc-a5b10f4641a0",
+    "email": "d0ef33cf-b005-4e1b-9d96-97392c79ac89"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "41c39dfe-af73-4124-800a-9c6b81cf019c",
+    "49f46362-b2b3-4370-b5a8-265a3e335219",
+    "bc2a2c3d-d581-4737-94e5-772e5092c997",
+    "e413d097-dc7c-4e54-88cc-b0d312f66225",
+    "a24ae667-9e81-4b83-8e3e-98bb3d4bb994",
+    "2d34b8c9-0a43-49a4-89fc-a5b10f4641a0",
+    "d0ef33cf-b005-4e1b-9d96-97392c79ac89"
+  ],
+  "skipped": [
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py"
+   ]
+}

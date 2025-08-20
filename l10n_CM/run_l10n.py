@@ -57,6 +57,7 @@ valid_sites = {
     "cocolita",
     "torfs",
     "standaardboekhandel",
+    "brico",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
