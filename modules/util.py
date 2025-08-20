@@ -109,7 +109,7 @@ class Utilities:
             "Italy": "Italia",
             "Spain": "España",
             "Poland": "Polska",
-            "Belgium": "België"
+            "Belgium": "België",
         }
 
         self.fake = None
@@ -222,10 +222,12 @@ class Utilities:
         locales = list(filter(lambda x: country_code in x, AVAILABLE_LOCALES))
 
         if not locales:
-            logging.error(f"Invalid country code `{country_code}`. No faker instance created.")
+            logging.error(
+                f"Invalid country code `{country_code}`. No faker instance created."
+            )
             return None  # No fallback
 
-        locale = next(filter(lambda x: 'en' in x, locales), locales[-1])
+        locale = next(filter(lambda x: "en" in x, locales), locales[-1])
         try:
             # seed to get consistent data
             if self.fake is None:
@@ -564,8 +566,23 @@ class Utilities:
             "IT": "39",
             "PL": "48",
             "ES": "34",
-            "BE": "32"
+            "BE": "32",
+            "AT": "43",
         }
+
+        # If phone is already normalized, return as it is
+        expected_country_code = country_codes.get(region)
+        if (
+            expected_country_code
+            and phone.isdigit()
+            and phone.startswith(expected_country_code)
+            and len(phone) >= len(expected_country_code) + 6
+        ):
+            return phone
+
+        # Fix Austrian duplicated country code before processing
+        if region == "AT" and phone.startswith("+4343"):
+            phone = "+43" + phone[5:]  # Remove duplicated 43
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)

@@ -15,7 +15,7 @@ from choose_l10n_ci_set import valid_l10n_mappings
 current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
-valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES", "BE"}
+valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES", "BE", "AT"}
 valid_sites = {
     "demo",
     "amazon",
@@ -56,7 +56,7 @@ valid_sites = {
     "zara",
     "cocolita",
     "torfs",
-    "standaardboekhandel"
+    "standaardboekhandel",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
