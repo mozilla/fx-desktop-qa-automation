@@ -1,5 +1,6 @@
 import os
 import time
+from platform import system
 
 import pytest
 from pynput.keyboard import Controller, Key
@@ -14,6 +15,7 @@ def test_case():
     return "2241521"
 
 
+@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 1983843")
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_export(

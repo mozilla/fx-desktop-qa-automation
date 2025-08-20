@@ -189,12 +189,21 @@ def reportable(platform_to_test=None):
     if os.environ.get("FX_L10N"):
         beta_version = int(minor_num.split("b")[-1])
         distributed_mappings = select_l10n_mappings(beta_version)
-        expected_mappings = len(distributed_mappings)
+        expected_mappings = sum(map(lambda x: len(x), distributed_mappings.values()))
         covered_mappings = 0
         # keeping this logic to still see how many mappings are reported.
         for entry in plan_entries:
             if entry.get("name") in distributed_mappings:
-                covered_mappings += 1
+                site = entry.get("name")
+                for run_ in entry.get("runs"):
+                    if run_.get("config"):
+                        run_region, run_platform = run_.get("config").split("-")
+                        if (
+                            run_region in distributed_mappings[site]
+                            and platform in run_platform
+                        ):
+                            logging.warning(f"Already reported: {site} {run_region},{run_platform}")
+                            covered_mappings += 1
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
         )
