@@ -2,7 +2,10 @@
   "region": "BE",
   "sites": [
     "demo",
-    "torfs"
+    "torfs",
+    "standaardboekhandel",
+    "douglas",
+    "brico"
   ],
   "tests": [
   ]
