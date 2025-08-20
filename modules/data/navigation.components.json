@@ -393,6 +393,18 @@
         "groups": []
     },
 
+    "file-download-warning-panel": {
+        "selectorData": "downloadsPanel-privateBrowsing",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "file-download-warning-button": {
+        "selectorData": "button[data-l10n-id='downloads-private-browsing-accept-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "bookmark-in-bar": {
         "selectorData": "toolbarbutton.bookmark-item",
         "strategy": "css",
@@ -552,8 +564,8 @@
     },
 
     "searchmode-switcher-settings": {
-        "selectorData": "searchmode-switcher-popup-search-settings-button",
-        "strategy": "id",
+        "selectorData": "menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']",
+        "strategy": "css",
         "groups": []
     },
 

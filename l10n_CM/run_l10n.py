@@ -15,30 +15,36 @@ from choose_l10n_ci_set import valid_l10n_mappings
 current_dir = os.path.dirname(__file__)
 valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
-valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES"}
+valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES", "BE"}
 valid_sites = {
-    "demo",
-    "amazon",
-    "walmart",
-    "mediamarkt",
-    "lowes",
-    "etsy",
-    "calvinklein",
-    "bestbuy",
-    "decathlon",
-    "newegg",
-    "vans",
-    "ebay",
-    "newbalance",
-    "zalando",
-    "cdiscount",
     "aldoshoes",
-    "canadatire",
+    "amazon",
     "apple",
-    "thomann",
-    "wish",
     "artsper",
+    "assos",
+    "bestbuy",
+    "bijoubrigitte",
+    "burtsbeescalvinklein",
+    "canadatire",
+    "cdiscount",
+    "decathlon",
+    "demo",
+    "diy",
+    "ebay",
+    "etsy",
     "justspices",
+    "lowes",
+    "mediamarkt",
+    "movieposters",
+    "newbalance",
+    "newegg",
+    "peacocks",
+    "thomann",
+    "tiffany",
+    "vans",
+    "walmart",
+    "whittard",
+    "wish",
     "yellowkorner",
     "bijoubrigitte",
     "fnac",
@@ -50,16 +56,20 @@ valid_sites = {
     "assos",
     "tanie-leczenie",
     "duka",
+    "zalando",
     "ceneo",
     "thenorthface",
     "zooplus",
     "zara",
     "cocolita",
+    "torfs",
+    "standaardboekhandel",
+    "douglas",
+    "brico"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
 valid_sites = valid_sites.union(set(loaded_valid_sites))
-
 live_sites = []
 
 

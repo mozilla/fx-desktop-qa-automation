@@ -1,6 +1,3 @@
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.support import expected_conditions as EC
-
 from modules.page_base import BasePage
 
 
@@ -19,20 +16,15 @@ class FxaHome(BasePage):
         self.set_content_context()
         self.fill("login-password-input", password, press_enter=False)
         self.get_element("submit-button").click()
-        # If OTP is needed, wait for the field to be ready, else move on.
-        try:
-            self.custom_wait(timeout=3).until(
-                EC.presence_of_element_located(self.get_selector("connected-heading"))
-            )
-        except (TimeoutException, NoSuchElementException):
-            self.element_exists("otp-input")
         return self
+
+    def is_otp_input_required(self) -> bool:
+        return len(self.get_elements("otp-input")) > 0
 
     def create_new_account(self, password: str, age=30) -> BasePage:
         """Fill out the password and age fields, then submit and wait for code"""
         self.fill("signup-password-input", password, press_enter=False)
         self.fill("signup-password-repeat-input", password, press_enter=False)
-        self.fill("age-input", str(age), press_enter=False)
         self.element_clickable("submit-button")
         self.get_element("submit-button").click()
         self.element_has_text("card-header", "Enter confirmation code")
@@ -42,7 +34,7 @@ class FxaHome(BasePage):
         """Given an OTP, confirm the account, submit, and wait for account activation"""
         self.fill("otp-input", otp, press_enter=False)
         self.get_element("submit-button").click()
-        self.element_exists("connected-heading")
+        self.title_is("Mozilla accounts")
         return self
 
     def finish_account_setup(self, password: str) -> BasePage:
@@ -51,4 +43,5 @@ class FxaHome(BasePage):
         self.driver.switch_to.window(self.driver.window_handles[-1])
         self.fill("login-password-input", password, press_enter=False)
         self.get_element("submit-button").click()
+        self.element_visible("signed-in-status")
         return self
