@@ -63,6 +63,13 @@ valid_sites = {
     "zalando",
     "zara",
     "zooplus",
+    "zara",
+    "cocolita",
+    "torfs",
+    "standaardboekhandel",
+    "douglas",
+    "brico",
+    "toychamp",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
