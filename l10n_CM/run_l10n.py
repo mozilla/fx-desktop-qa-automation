@@ -57,6 +57,8 @@ valid_sites = {
     "cocolita",
     "torfs",
     "standaardboekhandel",
+    "douglas",
+    "brico",
     "toychamp"
 }
 
