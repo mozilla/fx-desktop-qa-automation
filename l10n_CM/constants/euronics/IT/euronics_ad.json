@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/euronics_ad.html",
+  "field_mapping": {
+    "family_name": "777b8d0d-9a9f-438f-9039-9e050575cc57",
+    "given_name": "d9939fee-9629-4e0f-8139-4f1f62d75fce",
+    "street_address": "0352063c-cd11-4311-bdf0-49563edefe0c",
+    "address_level_2": "3aec2f8f-5ce4-44db-9f55-aeafed9da83a",
+    "address_level_1": "1ead381a-e551-4c6f-8ed7-c22edba65bfa",
+    "postal_code": "902fef2a-b369-4f72-a974-cbfce742656b",
+    "email": "1d4dc263-d95a-4532-8112-8f7213bd18df"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "777b8d0d-9a9f-438f-9039-9e050575cc57",
+    "d9939fee-9629-4e0f-8139-4f1f62d75fce",
+    "0352063c-cd11-4311-bdf0-49563edefe0c",
+    "3aec2f8f-5ce4-44db-9f55-aeafed9da83a",
+    "1ead381a-e551-4c6f-8ed7-c22edba65bfa",
+    "902fef2a-b369-4f72-a974-cbfce742656b",
+    "1d4dc263-d95a-4532-8112-8f7213bd18df"
+  ]
+}
