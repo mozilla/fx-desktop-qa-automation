@@ -49,6 +49,7 @@ valid_sites = {
     "newegg",
     "peacocks",
     "standaardboekhandel",
+    "staples",
     "tanie-leczenie",
     "thenorthface",
     "thomann",
@@ -62,7 +63,7 @@ valid_sites = {
     "yellowkorner",
     "zalando",
     "zara",
-    "zooplus"
+    "zooplus",
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
