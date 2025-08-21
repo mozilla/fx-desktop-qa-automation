@@ -3022,7 +3022,7 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchmode-switcher-settings
-Selector Data: searchmode-switcher-popup-search-settings-button
+Selector Data: menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']
 Description: Search settings button in the searchmode switcher dropdown
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
