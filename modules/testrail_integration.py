@@ -275,6 +275,9 @@ def reportable(platform_to_test=None):
                             run_region in distributed_mappings[site]
                             and platform in run_platform
                         ):
+                            logging.warning(
+                                f"Already reported: {site} {run_region},{run_platform}"
+                            )
                             covered_mappings += 1
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"

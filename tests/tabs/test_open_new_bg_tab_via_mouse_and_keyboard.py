@@ -17,7 +17,8 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     """
 
     test_url = "https://www.iana.org/help/example-domains"
-    example = ExamplePage(driver).open()
+    example = ExamplePage(driver)
+    example.open()
 
     # Middle click link, verify new background tab opens with correct URL
     example.middle_click("more-information")

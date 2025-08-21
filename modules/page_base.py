@@ -455,6 +455,11 @@ class BasePage(Page):
         self.expect(EC.title_contains(url_part))
         return self
 
+    def title_is(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL is given text or timeout"""
+        self.expect(EC.title_is(url_part))
+        return self
+
     def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
         """
         Given a part of a URL and a regex, wait for that substring to exist in
@@ -573,9 +578,8 @@ class BasePage(Page):
         return self
 
     def middle_click(self, reference: Union[str, tuple, WebElement], labels=[]):
-        """Perform a middle mouse click on desired element"""
-        with self.driver.context(self.driver.CONTEXT_CONTENT):
-            self.driver.maximize_window()
+        """Actions helper: Perform a middle mouse click on desired element"""
+        with self.driver.context(self.context_id):
             mouse = MouseController()
             element = self.fetch(reference, labels)
 
@@ -600,7 +604,8 @@ class BasePage(Page):
             )
             mouse.position = (element_x, element_y)
 
-            time.sleep(1)
+            # Need a short wait to ensure the mouse move completes, then middle click
+            time.sleep(0.5)
             mouse.click(Button.middle, 1)
         return self
 

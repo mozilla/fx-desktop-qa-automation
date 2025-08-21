@@ -1,0 +1,13 @@
+{
+  "region": "BE",
+  "sites": [
+    "demo",
+    "torfs",
+    "standaardboekhandel",
+    "douglas",
+    "brico",
+    "toychamp"
+  ],
+  "tests": [
+  ]
+}
