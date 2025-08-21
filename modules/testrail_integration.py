@@ -96,7 +96,6 @@ def replace_link_in_description(description, os_name) -> str:
 
 def determine_current_os() -> str:
     """Determine the current operating system for execution link generation"""
-    import platform
 
     # Check if we're in GitHub Actions
     if os.environ.get("GITHUB_ACTIONS"):
