@@ -26,29 +26,32 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def ensure_autofill_dropdown_not_visible(self):
         """
-        Verifies that the autofill dropdown does NOT appear
-        checks if the parent pop up component have children elements before explicit wait.
+        Verifies that the autofill dropdown does not appear
+        checks if the parent pop up component has hidden attribute.
         """
         self.element_exists("pop-up-component")
         popup_component = self.get_element("pop-up-component")
-        if popup_component and len(popup_component.get_attribute("innerHTML")) > 1:
-            self.element_not_visible("select-form-option")
+        if len(popup_component.get_attribute("innerHTML")) > 1:
+            self.expect_element_attribute_contains(
+                "pop-up-component-box", "style", "0px;"
+            )
+        else:
+            self.expect_element_attribute_contains("pop-up-component", "hidden", "true")
         return self
 
     @BasePage.context_chrome
-    def ensure_autofill_dropdown_visible(self, field_element: WebElement = None):
+    def ensure_autofill_dropdown_visible(self):
         """
         Verifies that the autofill dropdown appears
-        checks if the parent pop up component have children elements before explicit wait.
-
-        Arguments:
-            field_element: if field element is given.
-                check whether it is a select element. pass the check if it is.
+        checks if the parent pop up component has hidden attribute.
         """
-        self.element_exists("pop-up-component")
-        popup_component = self.get_element("pop-up-component")
-        if popup_component:
-            self.element_visible("select-form-option")
+        self.element_clickable("pop-up-component-box")
+        return self
+
+    @BasePage.context_chrome
+    def hover_over_autofill_panel(self):
+        self.element_visible("select-form-option")
+        self.hover("select-form-option")
         return self
 
     # Interaction with popup elements
@@ -103,12 +106,17 @@ class AutofillPopup(BasePage):
         Arguments:
             index (int): The index of the element to retrieve (1-based)
         """
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.get_element("select-form-option-by-index", labels=[str(index)])
-            )
-        )
-        self.get_element("select-form-option-by-index", labels=[str(index)]).click()
+        self.element_clickable("pop-up-component-box")
+        self.click_on("select-form-option-by-index", labels=[str(index)])
+
+    @BasePage.context_chrome
+    def select_autofill_panel(self):
+        """
+        Select the first autofill panel in the autocomplete list.
+        """
+        self.element_clickable("select-form-option-autofill")
+        self.click_on("select-form-option-autofill")
+        return self
 
     @BasePage.context_chrome
     def get_primary_value(self, element: WebElement) -> str:
