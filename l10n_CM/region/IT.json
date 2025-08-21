@@ -2,6 +2,7 @@
   "region": "IT",
   "sites": [
     "ebay",
+    "calvinklein",
     "tiffany"
   ],
   "tests": [
