@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/euronics_cc.html",
+  "field_mapping": {
+    "card_number": "68e46f67-9780-43cc-a050-8865e87c2c43",
+    "expiration_month": "7f2068c8-a116-4341-8d6b-3fd7763de20b",
+    "expiration_year": "adf4d593-2488-4b17-a735-b304249ac6c1",
+    "cvv": "492ad4a2-ae36-4ef3-a178-2a3b1ca7c6ff"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "68e46f67-9780-43cc-a050-8865e87c2c43",
+    "7f2068c8-a116-4341-8d6b-3fd7763de20b",
+    "adf4d593-2488-4b17-a735-b304249ac6c1",
+    "492ad4a2-ae36-4ef3-a178-2a3b1ca7c6ff"
+  ]
+}

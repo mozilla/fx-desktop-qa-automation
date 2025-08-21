@@ -2,6 +2,7 @@ import csv
 import os
 import re
 import time
+from platform import system
 
 import pytest
 
@@ -15,6 +16,7 @@ def test_case():
     return "2241522"
 
 
+@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 1983843")
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_correctness(

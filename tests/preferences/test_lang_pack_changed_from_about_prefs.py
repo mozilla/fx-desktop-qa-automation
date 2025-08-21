@@ -28,6 +28,7 @@ def add_to_prefs_list():
     return [("services.sync.prefs.sync-seen.intl.accept_languages", True)]
 
 
+@pytest.mark.unstable(reason="Bug 1978598")
 def test_lang_pack_changed_from_about_prefs(driver: Firefox):
     """
     C1771617 - The language can be changed in about:preferences.
