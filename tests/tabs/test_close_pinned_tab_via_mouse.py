@@ -16,7 +16,8 @@ def test_close_pinned_tab_via_middle_click(driver: Firefox):
     C134726 - Verify middle-clicking pinned tab will close it
     """
 
-    example = ExamplePage(driver).open()
+    example = ExamplePage(driver)
+    example.open()
     tabs = TabBar(driver)
     tab_menu = ContextMenu(driver)
 
