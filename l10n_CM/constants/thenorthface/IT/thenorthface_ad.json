@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/thenorthface_ad.html",
+  "field_mapping": {
+    "family_name": "7d2bc71f-04d8-4c60-9407-a3a8f446e893",
+    "given_name": "96cdedb0-6307-47d4-a916-db6fb6664845",
+    "street_address": "8baa4448-0aeb-4d2e-b657-6d25888e143d",
+    "address_level_2": "065d40e6-be79-41c6-accd-3d103c5ef1f1",
+    "postal_code": "c4bc48d0-bbb2-45b3-a482-963e3bc0af88",
+    "telephone": "b7cdccf4-6159-4b1a-9ab3-ffec7f04119f",
+    "email": "8796ea94-38d6-434c-bb05-89edbb2123e4"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "7d2bc71f-04d8-4c60-9407-a3a8f446e893",
+    "96cdedb0-6307-47d4-a916-db6fb6664845",
+    "8baa4448-0aeb-4d2e-b657-6d25888e143d",
+    "065d40e6-be79-41c6-accd-3d103c5ef1f1",
+    "c4bc48d0-bbb2-45b3-a482-963e3bc0af88",
+    "b7cdccf4-6159-4b1a-9ab3-ffec7f04119f",
+    "8796ea94-38d6-434c-bb05-89edbb2123e4"
+  ]
+}
