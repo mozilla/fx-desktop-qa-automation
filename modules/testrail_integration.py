@@ -58,28 +58,19 @@ def get_execution_link(os_name: str = None) -> str:
     return ""
 
 
-def _get_os_execution_link_pattern(os_name):
-    """Create regex pattern to match execution link lines exactly"""
-    import re
-
-    return re.compile(
-        rf"^\s*\[{re.escape(os_name)}\s+execution\s+link\]\(.*?\)\s*$",
-        re.IGNORECASE,
-    )
-
-
 def replace_link_in_description(description, os_name) -> str:
     """Add or replace a test execution link in the test run description"""
-    logging.warning(f"Modifying plan description for %{os_name}%")
 
-    description = description or ""
     link = get_execution_link(os_name)
     if not link:
         return description
 
     new_line = f"[{os_name} execution link]({link})"
-    lines = description.split("\n") if description else []
-    pat = _get_os_execution_link_pattern(os_name)
+    lines = description.splitlines()
+    pat = re.compile(
+        rf"^\s*\[{re.escape(os_name)}\s+execution\s+link\]\(.*?\)\s*$",
+        re.IGNORECASE,
+    )
 
     # Look for existing line to replace
     for i, line in enumerate(lines):
@@ -99,17 +90,6 @@ def determine_current_os() -> str:
 
     # Check if we're in GitHub Actions
     if os.environ.get("GITHUB_ACTIONS"):
-        # GitHub Actions provides RUNNER_OS environment variable
-        runner_os = os.environ.get("RUNNER_OS")
-        if runner_os:
-            if runner_os == "Windows":
-                return "Windows"
-            elif runner_os == "macOS":
-                return "Mac"
-            elif runner_os == "Linux":
-                return "Linux"
-
-        # Fallback to sys.platform if RUNNER_OS not available
         if sys.platform == "win32":
             return "Windows"
         elif sys.platform == "darwin":
