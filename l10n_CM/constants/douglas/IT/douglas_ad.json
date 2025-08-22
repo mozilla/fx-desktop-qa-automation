@@ -3,7 +3,7 @@
   "field_mapping": {
     "given_name": "65d859d7-de57-4263-a4ca-4d5f45460682",
     "family_name": "7b95a889-1031-40ec-be05-417ea571e3e1",
-    "address_line_1": "f0890e88-7fe5-43da-8760-abc84b3930b2",
+    "street_address": "f0890e88-7fe5-43da-8760-abc84b3930b2",
     "postal_code": "0a22fade-195d-4b4c-957b-42f1b3d7e74b",
     "address_level_2": "1d3580c0-806b-4c5c-bc35-913f71f57ca1",
     "telephone": "2fb9d6af-f8e4-4526-adfd-c85639f6e247",
@@ -17,6 +17,6 @@
     "0a22fade-195d-4b4c-957b-42f1b3d7e74b",
     "1d3580c0-806b-4c5c-bc35-913f71f57ca1",
     "2fb9d6af-f8e4-4526-adfd-c85639f6e247",
-    "fc505ce9-6e99-466-b541-b51fdb888cfd"
+    "fc505ce9-6e99-4664-b541-b51fdb888cfd"
   ]
 }
