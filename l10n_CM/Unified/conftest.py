@@ -47,7 +47,7 @@ def region():
 
 @pytest.fixture()
 def live_site():
-    return os.environ.get("CM_SITE", "DEMO")
+    return os.environ.get("CM_SITE", "demo")
 
 
 @pytest.fixture()
