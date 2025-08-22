@@ -2,9 +2,11 @@
   "region": "IT",
   "sites": [
     "ebay",
+    "calvinklein",
     "tiffany",
     "euronics",
     "douglas"
+    "thenorthface"
   ],
   "tests": [
   ]
