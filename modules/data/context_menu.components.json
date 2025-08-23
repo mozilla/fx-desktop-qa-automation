@@ -115,12 +115,6 @@
         "groups": []
     },
 
-    "context-menu-toolbar-open-in-new-tab": {
-        "selectorData": "placesContext_open:newtab",
-        "strategy": "id",
-        "groups": ["doNotCache"]
-    },
-
     "context-menu-open-link-in-new-window": {
         "selectorData": "context-openlink",
         "strategy": "id",
@@ -210,6 +204,13 @@
         "strategy": "id",
         "groups": []
     },
+
+    "context-menu-toolbar-open-in-new-tab": {
+        "selectorData": "placesContext_open:newtab",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    },
+
 
     "context-menu-toolbar-open-all-bookmarks": {
         "selectorData": "placesContext_openBookmarkContainer:tabs",
