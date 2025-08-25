@@ -579,17 +579,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        # Right-click the bookmark to make the menu appear
+        # Right-click the bookmark and open it in new tabe via context menu item
         self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
         self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
-
-        # Find the menu item we want to click
-        # We use .fetch() here to get the element without clicking it yet
-        menu_item = self.context_menu.fetch("context-menu-toolbar-open-in-new-tab")
-
-        # Use ActionChains to perform a more reliable click
-        actions = ActionChains(self.driver)
-        actions.move_to_element(menu_item).click().perform()
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-tab")
 
         return self
 
