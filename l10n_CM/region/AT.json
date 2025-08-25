@@ -1,8 +1,7 @@
 {
   "region": "AT",
   "sites": [
-    "demo",
-    "torfs"
+    "demo"
   ],
   "tests": [
   ]
