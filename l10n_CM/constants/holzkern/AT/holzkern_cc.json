@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/holzkern_cc.html",
+  "field_mapping": {
+    "card_number": "5f16cdfc-5654-4c4a-bfd3-3843dc119c92",
+    "expiration_date": "fa4be257-23a6-4a6e-8fd9-1fbb9a49baf0",
+    "cvv": "f10d4c5c-be08-43b8-9244-cdc47433186a"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "5f16cdfc-5654-4c4a-bfd3-3843dc119c92",
+    "fa4be257-23a6-4a6e-8fd9-1fbb9a49baf0",
+    "f10d4c5c-be08-43b8-9244-cdc47433186a"
+  ]
+}
