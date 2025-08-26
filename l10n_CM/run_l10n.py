@@ -64,6 +64,7 @@ valid_sites = {
     "zalando",
     "zara",
     "zooplus",
+    "giesswein"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
