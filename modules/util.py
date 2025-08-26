@@ -571,6 +571,16 @@ class Utilities:
             "AT": "43",
         }
 
+        # Handle leading zero in local numbers
+        if region not in ["US", "CA"] and phone.startswith("0"):
+            # Remove the leading zero
+            phone = phone[1:]
+
+        # Fix Austrian phone number duplication issue before processing
+        if region == "AT" and "4343" in phone:
+            # Remove the duplicated country code
+            phone = phone.replace("4343", "43")
+
         # If phone is already normalized, return as it is
         expected_country_code = country_codes.get(region)
         if (
@@ -580,11 +590,6 @@ class Utilities:
             and len(phone) >= len(expected_country_code) + 6
         ):
             return phone
-
-        # Fix Austrian phone number duplication issue before processing
-        if region == "AT" and "4343" in phone:
-            # Remove the duplicated country code
-            phone = phone.replace("4343", "43")
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
@@ -602,11 +607,6 @@ class Utilities:
         if digits.startswith(country_code):
             # Remove country code from the local number
             local_number = digits[len(country_code) :]
-
-        # Handle leading zero in local numbers
-        if region not in ["US", "CA"] and local_number.startswith("0"):
-            # Remove the leading zero
-            local_number = local_number[1:]
 
         # Validate local number length
         if len(local_number) < 6:  # Too short to be valid
