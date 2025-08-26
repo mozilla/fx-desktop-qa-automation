@@ -510,6 +510,7 @@ class Autofill(BasePage):
                 is_present = any(
                     [value in val for val in autofill_data.__dict__.values()]
                 )
+
                 assert is_present, (
                     f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
                 )

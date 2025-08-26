@@ -1,7 +1,8 @@
 {
   "region": "AT",
   "sites": [
-    "demo"
+    "demo",
+    "mediamarkt"
   ],
   "tests": [
   ]
