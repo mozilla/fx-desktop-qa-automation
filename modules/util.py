@@ -112,6 +112,19 @@ class Utilities:
             "Belgium": "België",
             "Austria": "Österreich",
         }
+        # Country code mapping for different regions
+        self.country_codes = {
+            "US": "1",
+            "CA": "1",
+            "FR": "33",
+            "DE": "49",
+            "GB": "44",
+            "IT": "39",
+            "PL": "48",
+            "ES": "34",
+            "BE": "32",
+            "AT": "43",
+        }
 
         self.fake = None
         self.locale = None
@@ -556,22 +569,7 @@ class Utilities:
         str
             The normalized phone number in the format <country-code><number>.
         """
-
-        # Country code mapping for different regions
-        country_codes = {
-            "US": "1",
-            "CA": "1",
-            "FR": "33",
-            "DE": "49",
-            "GB": "44",
-            "IT": "39",
-            "PL": "48",
-            "ES": "34",
-            "BE": "32",
-            "AT": "43",
-        }
-
-        # Handle leading zero in local numbers
+        # Handle leading zero in local numbers before country code is removed
         if region not in ["US", "CA"] and phone.startswith("0"):
             # Remove the leading zero
             phone = phone[1:]
@@ -582,7 +580,7 @@ class Utilities:
             phone = phone.replace("4343", "43")
 
         # If phone is already normalized, return as it is
-        expected_country_code = country_codes.get(region)
+        expected_country_code = self.country_codes.get(region)
         if (
             expected_country_code
             and phone.isdigit()
@@ -597,7 +595,7 @@ class Utilities:
         digits = re.sub(r"\D", "", phone)
 
         # Determine country code
-        country_code = country_codes.get(
+        country_code = self.country_codes.get(
             region, "1"
         )  # Default to "1" (US/CA) if the region is unknown
         # handle leading zeros
@@ -607,6 +605,11 @@ class Utilities:
         if digits.startswith(country_code):
             # Remove country code from the local number
             local_number = digits[len(country_code) :]
+
+        # Handle leading zero in local numbers after country code is removed
+        if region not in ["US", "CA"] and local_number.startswith("0"):
+            # Remove the leading zero
+            local_number = local_number[1:]
 
         # Validate local number length
         if len(local_number) < 6:  # Too short to be valid
