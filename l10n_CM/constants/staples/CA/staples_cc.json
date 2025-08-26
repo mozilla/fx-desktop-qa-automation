@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:8080/staples_cc.html",
+  "field_mapping": {
+    "card_number": "6193a679-d300-453b-8b76-abde7f81c151",
+    "expiration_date": "e5837950-c398-43b6-b5a9-ea9d9a60a0e0"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "6193a679-d300-453b-8b76-abde7f81c151",
+    "e5837950-c398-43b6-b5a9-ea9d9a60a0e0"
+  ]
+}

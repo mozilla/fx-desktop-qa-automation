@@ -49,6 +49,7 @@ valid_sites = {
     "newegg",
     "peacocks",
     "standaardboekhandel",
+    "staples",
     "tanie-leczenie",
     "thenorthface",
     "thomann",
