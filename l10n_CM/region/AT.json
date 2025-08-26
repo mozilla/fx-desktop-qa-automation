@@ -2,6 +2,7 @@
   "region": "AT",
   "sites": [
     "demo",
+    "ebay",
     "mediamarkt"
   ],
   "tests": [
