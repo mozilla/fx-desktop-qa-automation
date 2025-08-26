@@ -570,6 +570,23 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def open_bookmark_in_new_tab_via_context_menu(
+        self, bookmark_title: str
+    ) -> BasePage:
+        """
+        Right-click bookmark and opens it in a new tab via context menu
+
+        Argument:
+            bookmark_title: The title of the bookmark to open
+        """
+        # Right-click the bookmark and open it in new tabe via context menu item
+        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.context_menu.click_on("context-menu-toolbar-open-in-new-tab")
+
+        return self
+
+    @BasePage.context_chrome
     def open_bookmark_in_new_window_via_context_menu(
         self, bookmark_title: str
     ) -> BasePage:

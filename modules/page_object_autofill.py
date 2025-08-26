@@ -510,23 +510,6 @@ class Autofill(BasePage):
                 is_present = any(
                     [value in val for val in autofill_data.__dict__.values()]
                 )
-                # Special handling for Austrian phone numbers with duplicated country code
-                if not is_present and field == "tel" and region == "AT":
-                    # Check if this is the Austrian phone duplication issue
-                    # Browser provides duplicated country code (e.g., '43439839147007'), test data has correct format (e.g., '439839147007')
-                    if value.startswith("4343") and len(value) > 12:
-                        # Try to find a match by removing the duplicated '43'
-                        corrected_value = "43" + value[4:]
-                        is_present = any(
-                            [
-                                corrected_value in val
-                                for val in autofill_data.__dict__.values()
-                            ]
-                        )
-                        if is_present:
-                            logging.info(
-                                f"Fixed Austrian phone duplication: {value} -> {corrected_value}"
-                            )
                 assert is_present, (
                     f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
                 )

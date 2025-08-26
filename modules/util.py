@@ -112,6 +112,19 @@ class Utilities:
             "Belgium": "België",
             "Austria": "Österreich",
         }
+        # Country code mapping for different regions
+        self.country_codes = {
+            "US": "1",
+            "CA": "1",
+            "FR": "33",
+            "DE": "49",
+            "GB": "44",
+            "IT": "39",
+            "PL": "48",
+            "ES": "34",
+            "BE": "32",
+            "AT": "43",
+        }
 
         self.fake = None
         self.locale = None
@@ -556,23 +569,18 @@ class Utilities:
         str
             The normalized phone number in the format <country-code><number>.
         """
+        # Handle leading zero in local numbers before country code is removed
+        if region not in ["US", "CA"] and phone.startswith("0"):
+            # Remove the leading zero
+            phone = phone[1:]
 
-        # Country code mapping for different regions
-        country_codes = {
-            "US": "1",
-            "CA": "1",
-            "FR": "33",
-            "DE": "49",
-            "GB": "44",
-            "IT": "39",
-            "PL": "48",
-            "ES": "34",
-            "BE": "32",
-            "AT": "43",
-        }
+        # Fix Austrian phone number duplication issue before processing
+        if region == "AT" and "4343" in phone:
+            # Remove the duplicated country code
+            phone = phone.replace("4343", "43")
 
         # If phone is already normalized, return as it is
-        expected_country_code = country_codes.get(region)
+        expected_country_code = self.country_codes.get(region)
         if (
             expected_country_code
             and phone.isdigit()
@@ -581,18 +589,13 @@ class Utilities:
         ):
             return phone
 
-        # Fix Austrian phone number duplication issue before processing
-        if region == "AT" and "4343" in phone:
-            # Remove the duplicated country code
-            phone = phone.replace("4343", "43")
-
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
         # Sub out anything that is not a digit with the empty string to ensure the phone number is formatted with no spaces or special characters
         digits = re.sub(r"\D", "", phone)
 
         # Determine country code
-        country_code = country_codes.get(
+        country_code = self.country_codes.get(
             region, "1"
         )  # Default to "1" (US/CA) if the region is unknown
         # handle leading zeros
@@ -603,7 +606,7 @@ class Utilities:
             # Remove country code from the local number
             local_number = digits[len(country_code) :]
 
-        # Handle leading zero in local numbers
+        # Handle leading zero in local numbers after country code is removed
         if region not in ["US", "CA"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
@@ -614,7 +617,9 @@ class Utilities:
             return ""
 
         # Return formatted phone number with correct country code
-        return f"{country_code}{local_number}"
+        result = f"{country_code}{local_number}"
+        logging.info(f"Phone normalization result: {phone} -> {result}")
+        return result
 
 
 class BrowserActions:
