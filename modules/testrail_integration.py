@@ -22,34 +22,86 @@ TESTRAIL_FX_DESK_PRJ = 17
 TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
 
 
-def get_execution_link() -> str:
+def get_execution_link(os_name: str = None) -> str:
     """Using environment variables, get the link to the test execution"""
-    link = ""
+    # TaskCluster (Linux)
+    if os_name == "Linux" and "TASKCLUSTER_PROXY_URL" in os.environ:
+        link = TC_EXECUTION_TEMPLATE
+        for item in ["RUN_ID", "TASK_ID"]:
+            link = link.replace(f"%{item}%", os.environ.get(item))
+        return link
+
+    # GitHub Actions support for Windows and Mac
+    if os_name in ["Windows", "Mac"]:
+        repo = os.environ.get("GITHUB_REPOSITORY")
+        run_id = os.environ.get("GITHUB_RUN_ID")
+        if repo and run_id:
+            return f"https://github.com/{repo}/actions/runs/{run_id}"
+
+    # Generic GitHub run fallback
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    run_id = os.environ.get("GITHUB_RUN_ID")
+    server = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
+    if repo and run_id:
+        return f"{server}/{repo}/actions/runs/{run_id}"
+
+    # Fallback for backward compatibility (when no os_name is passed)
     if "TASKCLUSTER_PROXY_URL" in os.environ:
         link = TC_EXECUTION_TEMPLATE
         for item in ["RUN_ID", "TASK_ID"]:
             link = link.replace(f"%{item}%", os.environ.get(item))
         return link
 
+    logging.warning(
+        f"Could not generate execution link for os_name={os_name}. Missing required environment variables."
+    )
+    return ""
+
 
 def replace_link_in_description(description, os_name) -> str:
     """Add or replace a test execution link in the test run description"""
-    logging.warning(f"Modifying plan description for %{os_name}%")
-    if os_name not in description:
-        # TODO: remove following conditional when links for GHA resolved
-        if os_name == "Linux":
-            return f"{description}\n[{os_name} execution link]({get_execution_link()})"
-    else:
-        link = get_execution_link()
-        if link in description:
-            return description
-        lines = description.split("\n")
-        for i, line in enumerate(lines):
-            if os_name in line:
-                lines[i] = (
-                    f"{description}\n[{os_name} execution link]({get_execution_link()})"
-                )
-    return description
+
+    link = get_execution_link(os_name)
+    if not link:
+        return description
+
+    new_line = f"[{os_name} execution link]({link})"
+    lines = description.splitlines()
+    pat = re.compile(
+        rf"^\s*\[{re.escape(os_name)}\s+execution\s+link\]\(.*?\)\s*$",
+        re.IGNORECASE,
+    )
+
+    # Look for existing line to replace
+    for i, line in enumerate(lines):
+        if pat.match(line):
+            if line.strip() == new_line:
+                return description
+            lines[i] = new_line
+            return "\n".join(lines)
+
+    # No existing line found, append new one
+    lines.append(new_line)
+    return "\n".join(lines)
+
+
+def determine_current_os() -> str:
+    """Determine the current operating system for execution link generation"""
+
+    # Check if we're in GitHub Actions
+    if os.environ.get("GITHUB_ACTIONS"):
+        if sys.platform == "win32":
+            return "Windows"
+        elif sys.platform == "darwin":
+            return "Mac"
+        elif sys.platform.startswith("linux"):
+            return "Linux"
+
+    # Check if we're in TaskCluster (Linux)
+    elif "TASKCLUSTER_PROXY_URL" in os.environ:
+        return "Linux"
+
+    return None
 
 
 def get_plan_title(version_str: str, channel: str) -> str:
@@ -660,11 +712,22 @@ def collect_changes(testrail_session: TestRail, report):
         logging.info(f"Plan found ({expected_plan.get('id')}) but is completed.")
         return None
 
-    # Add execution link to plan description
-
-    os_name = config.split(" ")[0]
-    description = replace_link_in_description(expected_plan["description"], os_name)
-    testrail_session.update_plan(expected_plan["id"], description=description)
+    # Add execution link for current OS only
+    current_os = determine_current_os()
+    if current_os:
+        description = expected_plan.get("description") or ""
+        updated_description = replace_link_in_description(description, current_os)
+        if updated_description != description:
+            logging.info(f"Adding {current_os} execution link to TestRail plan")
+            testrail_session.update_plan(
+                expected_plan["id"], description=updated_description
+            )
+        else:
+            logging.info(
+                f"TestRail plan already has current {current_os} execution link"
+            )
+    else:
+        logging.warning("Could not determine current OS for execution link")
 
     # Find or add correct config for session
 

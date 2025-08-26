@@ -50,8 +50,8 @@ class AutofillPopup(BasePage):
 
     @BasePage.context_chrome
     def hover_over_autofill_panel(self):
-        self.element_visible("select-form-option")
-        self.hover("select-form-option")
+        self.element_clickable("pop-up-component-box")
+        self.hover("pop-up-component-box")
         return self
 
     # Interaction with popup elements
