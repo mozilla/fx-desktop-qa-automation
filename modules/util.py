@@ -581,9 +581,10 @@ class Utilities:
         ):
             return phone
 
-        # Fix Austrian duplicated country code before processing
-        if region == "AT" and phone.startswith("+4343"):
-            phone = "+43" + phone[5:]  # Remove duplicated 43
+        # Fix Austrian phone number duplication issue before processing
+        if region == "AT" and "4343" in phone:
+            # Remove the duplicated country code
+            phone = phone.replace("4343", "43")
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
