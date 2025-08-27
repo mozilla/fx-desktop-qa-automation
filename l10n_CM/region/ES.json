@@ -1,12 +1,12 @@
 {
   "region": "ES",
   "sites": [
+    "calvinklein",
     "demo",
     "ebay",
-    "zooplus",
     "thenorthface",
-    "calvinklein",
-    "zara"
+    "zara",
+    "zooplus"
   ],
   "tests": [
   ]

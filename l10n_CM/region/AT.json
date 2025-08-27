@@ -2,9 +2,10 @@
   "region": "AT",
   "sites": [
     "demo",
-    "holzkern",
     "ebay",
+    "giesswein",
     "hofer",
+    "holzkern",
     "mediamarkt"
   ],
   "tests": [
