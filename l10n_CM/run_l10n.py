@@ -41,6 +41,7 @@ valid_sites = {
     "euronics",
     "fnac",
     "justspices",
+    "hofer",
     "lowes",
     "mediamarkt",
     "movieposters",
@@ -63,7 +64,8 @@ valid_sites = {
     "zalando",
     "zara",
     "zooplus",
-    "giesswein"
+    "giesswein",
+    "holzkern"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()

@@ -3,7 +3,9 @@
   "sites": [
     "demo",
     "giesswein",
+    "holzkern",
     "ebay",
+    "hofer",
     "mediamarkt"
   ],
   "tests": [
