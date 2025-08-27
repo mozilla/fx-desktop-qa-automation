@@ -28,7 +28,6 @@ def delete_files_regex_string():
     return r"opm.*\.pdf"
 
 
-@pytest.mark.unstable(reason="Bug 1983849")
 @pytest.mark.slow
 @pytest.mark.audio
 def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
