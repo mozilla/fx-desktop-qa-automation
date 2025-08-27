@@ -26,7 +26,6 @@ valid_sites = {
     "bijoubrigitte",
     "brico",
     "burtsbees",
-    "burtsbeescalvinklein",
     "calvinklein",
     "canadatire",
     "cdiscount",

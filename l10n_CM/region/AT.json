@@ -3,7 +3,9 @@
   "sites": [
     "demo",
     "torfs",
-    "giesswein"
+    "giesswein",
+    "ebay",
+    "mediamarkt"
   ],
   "tests": [
   ]
