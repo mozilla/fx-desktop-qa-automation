@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/hofer_ad.html",
+  "field_mapping": {
+    "given_name": "d888610d-fe93-43bb-9cc8-602f1a8f69ce",
+    "family_name": "17d0cbc2-4d29-48d0-a026-3a2a3a5bd2ed",
+    "street_address": "ad534c01-7c16-4e22-816f-6b3d70462481",
+    "address_level_2": "977cf1c9-fa73-4184-b6d8-6eaad16f5bf2",
+    "postal_code": "263c5231-e710-4ff9-aa84-fb0186b30e06",
+    "email": "684b63d6-b6d4-4f4d-93bf-9404761eb409"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "d888610d-fe93-43bb-9cc8-602f1a8f69ce",
+    "17d0cbc2-4d29-48d0-a026-3a2a3a5bd2ed",
+    "ad534c01-7c16-4e22-816f-6b3d70462481",
+    "977cf1c9-fa73-4184-b6d8-6eaad16f5bf2",
+    "263c5231-e710-4ff9-aa84-fb0186b30e06",
+    "684b63d6-b6d4-4f4d-93bf-9404761eb409"
+  ]
+}
