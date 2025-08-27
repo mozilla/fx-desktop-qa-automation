@@ -3,7 +3,9 @@
   "sites": [
     "demo",
     "torfs",
-    "holzkern"
+    "holzkern",
+    "ebay",
+    "mediamarkt"
   ],
   "tests": [
   ]
