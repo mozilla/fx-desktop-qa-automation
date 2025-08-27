@@ -41,6 +41,7 @@ valid_sites = {
     "euronics",
     "fnac",
     "justspices",
+    "hofer",
     "lowes",
     "mediamarkt",
     "movieposters",

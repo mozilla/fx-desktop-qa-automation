@@ -3,6 +3,7 @@
   "sites": [
     "demo",
     "ebay",
+    "hofer",
     "mediamarkt"
   ],
   "tests": [
