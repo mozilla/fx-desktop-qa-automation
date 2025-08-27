@@ -64,6 +64,7 @@ valid_sites = {
     "zalando",
     "zara",
     "zooplus",
+    "giesswein",
     "holzkern"
 }
 
