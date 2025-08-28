@@ -65,7 +65,8 @@ valid_sites = {
     "zara",
     "zooplus",
     "giesswein",
-    "holzkern"
+    "holzkern",
+    "gapcanada"
 }
 
 loaded_valid_sites = valid_l10n_mappings().keys()
