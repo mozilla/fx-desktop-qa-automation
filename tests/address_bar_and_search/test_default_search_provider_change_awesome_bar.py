@@ -1,10 +1,11 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
 
-WAIT_TIMEOUT = 10
 SEARCH_ENGINE = "DuckDuckGo"
 EXPECTED_PLACEHOLDER = f"Search with {SEARCH_ENGINE} or enter address"
 
@@ -14,7 +15,7 @@ def test_case():
     return "3028795"
 
 
-@pytest.mark.unstable(reason="Bug 1983836")
+@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1983836")
 @pytest.mark.ci
 def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """

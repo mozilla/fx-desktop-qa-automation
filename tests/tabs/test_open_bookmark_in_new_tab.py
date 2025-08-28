@@ -32,6 +32,7 @@ def test_open_bookmark_in_new_tab(driver: Firefox):
 
     # In a new tab, right-click the bookmarked page in the toolbar and select Open in New Tab from the context menu
     tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(2)
     nav.open_bookmark_in_new_tab_via_context_menu(BOOKMARK_TITLE)
 
     # Verify that the test page is opened in a new normal tab
