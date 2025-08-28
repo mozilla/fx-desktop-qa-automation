@@ -1,10 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
 from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
 from modules.page_object import ExamplePage
+from modules.page_object_customize_firefox import CustomizeFirefox
 
 
 @pytest.fixture()
@@ -20,6 +20,7 @@ def test_customize_button_displayed_in_tab_bar(driver: Firefox):
 
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
+    custom_page = CustomizeFirefox(driver)
 
     # Open an initial example page
     example = ExamplePage(driver)
@@ -43,5 +44,5 @@ def test_customize_button_displayed_in_tab_bar(driver: Firefox):
     # Verify that the customize firefox tab is opened and correct
     example.switch_to_new_tab()
     with driver.context(driver.CONTEXT_CHROME):
-        element = driver.find_element(By.ID, "customization-container")
+        element = custom_page.get_element("customize-page")
         assert element, "element not found"
