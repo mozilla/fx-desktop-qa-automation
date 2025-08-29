@@ -47,6 +47,7 @@ valid_sites = {
     "movieposters",
     "newbalance",
     "newegg",
+    "leroymerlin",
     "peacocks",
     "standaardboekhandel",
     "staples",
