@@ -45,6 +45,7 @@ valid_sites = {
     "hofer",
     "holzkern",
     "justspices",
+    "kohls",
     "lowes",
     "mediamarkt",
     "movieposters",
