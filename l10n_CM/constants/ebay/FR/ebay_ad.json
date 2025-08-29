@@ -10,6 +10,7 @@
     "address_level_2": "96269fbd-c77b-4bcd-bf56-978d2c1196eb",
     "postal_code": "48149049-83a7-43b0-ad00-936a7b764257"
   },
+
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "fields": [
     "d0b2c700-1d21-431c-9b63-15ce879bd1d4",
@@ -20,5 +21,7 @@
     "81c4f8fa-69ba-435a-824e-d33170457fb2",
     "96269fbd-c77b-4bcd-bf56-978d2c1196eb",
     "48149049-83a7-43b0-ad00-936a7b764257"
-  ]
+  ],
+
+  "skip_os": ["Linux"]
 }
