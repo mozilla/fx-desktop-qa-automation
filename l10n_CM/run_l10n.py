@@ -40,6 +40,7 @@ valid_sites = {
     "etsy",
     "euronics",
     "fnac",
+    "gapcanada",
     "giesswein",
     "hofer",
     "holzkern",

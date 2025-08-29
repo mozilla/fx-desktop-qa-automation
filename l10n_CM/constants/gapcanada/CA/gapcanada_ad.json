@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/gapcanada_ad.html",
+  "field_mapping": {
+    "name": "c2f93d9b-89f2-4ddd-b65f-253ebb30ba48",
+    "street_address": "394bd19c-d1a5-4e1b-9293-9808291517d9",
+    "address_level_2": "62abf981-6478-44bd-9391-a16460552444",
+    "postal_code": "ff8206c2-2a7d-42a3-bcea-c0c4567c6fb3",
+    "telephone": "cdb38050-4b23-4abc-bcfe-528fc1641da8"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "c2f93d9b-89f2-4ddd-b65f-253ebb30ba48",
+    "394bd19c-d1a5-4e1b-9293-9808291517d9",
+    "62abf981-6478-44bd-9391-a16460552444",
+    "ff8206c2-2a7d-42a3-bcea-c0c4567c6fb3",
+    "cdb38050-4b23-4abc-bcfe-528fc1641da8"
+  ]
+}
