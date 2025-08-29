@@ -26,7 +26,10 @@ def distribute_mappings_evenly(mappings):
         loads[min_idx] += len(regions)
     for i in range(len(balanced_splits)):
         logging.info(f"Beta split: {i}")
-        current_split = [f"{site} {' '.join(regions)}" for site, regions in balanced_splits[i].items()]
+        current_split = [
+            f"{site} {' '.join(regions)}"
+            for site, regions in balanced_splits[i].items()
+        ]
         logging.info(f"{'\n'.join(current_split)}")
     return balanced_splits
 
