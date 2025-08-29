@@ -1,12 +1,12 @@
 {
   "region": "IT",
   "sites": [
-    "ebay",
     "calvinklein",
-    "tiffany",
-    "euronics",
     "douglas",
+    "ebay",
+    "euronics",
     "thenorthface",
+    "tiffany",
     "zalando"
   ],
   "tests": [

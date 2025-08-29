@@ -2,15 +2,17 @@
   "region": "CA",
   "sites": [
     "amazon",
-    "walmart",
-    "demo",
-    "etsy",
-    "newbalance",
-    "canadatire",
-    "ebay",
     "burtsbees",
+    "calvinklein",
+    "canadatire",
+    "demo",
+    "ebay",
+    "etsy",
+    "gapcanada",
+    "movieposters",
+    "newbalance",
     "staples",
-    "gapcanada"
+    "walmart"
   ],
   "tests": [
   ]

@@ -1,12 +1,12 @@
 {
   "region": "PL",
   "sites": [
-    "demo",
-    "zalando",
-    "duka",
     "ceneo",
+    "cocolita",
+    "demo",
+    "duka",
     "tanie-leczenie",
-    "cocolita"
+    "zalando"
   ],
   "tests": [
   ]
