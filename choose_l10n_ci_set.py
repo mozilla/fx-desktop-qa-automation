@@ -31,8 +31,19 @@ def valid_l10n_mappings():
                 if region_file.get("sites"):
                     for site in region_file.get("sites"):
                         report_mapping = True
-                        if site != "demo" and os.path.exists(f"./l10n_CM/constants/{site}/{region}"):
-                            with open(f"./l10n_CM/constants/{site}/{region}/{site}_ad.json", "r+") as ad_file, open(f"./l10n_CM/constants/{site}/{region}/{site}_cc.json", "r+") as cc_file:
+                        if site != "demo" and os.path.exists(
+                            f"./l10n_CM/constants/{site}/{region}"
+                        ):
+                            with (
+                                open(
+                                    f"./l10n_CM/constants/{site}/{region}/{site}_ad.json",
+                                    "r+",
+                                ) as ad_file,
+                                open(
+                                    f"./l10n_CM/constants/{site}/{region}/{site}_cc.json",
+                                    "r+",
+                                ) as cc_file,
+                            ):
                                 ad = json.load(ad_file)
                                 cc = json.load(cc_file)
                                 if ad.get("skip") and cc.get("skip"):
