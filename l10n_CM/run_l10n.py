@@ -54,6 +54,7 @@ valid_sites = {
     "newegg",
     "leroymerlin",
     "peacocks",
+    "saksfifthavenue",
     "standaardboekhandel",
     "staples",
     "tanie-leczenie",
