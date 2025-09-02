@@ -31,21 +31,26 @@ def get_execution_link(os_name: str = None) -> str:
             link = link.replace(f"%{item}%", os.environ.get(item))
         return link
 
-    # GitHub Actions support for Windows and Mac
-    if os_name in ["Windows", "Mac"]:
+    # GitHub Actions support
+    if "GITHUB_ACTIONS" in os.environ:
+        # prefer the per-job URL if the action provided it
+        job_html = os.environ.get("GITHUB_JOB_HTML")
+        if job_html:
+            return job_html
+
         repo = os.environ.get("GITHUB_REPOSITORY")
         run_id = os.environ.get("GITHUB_RUN_ID")
+        job_id = os.environ.get("GITHUB_JOB_ID")
+        server = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
+
         if repo and run_id:
-            return f"https://github.com/{repo}/actions/runs/{run_id}"
+            if job_id:
+                # deep link to this job
+                return f"{server}/{repo}/actions/runs/{run_id}/job/{job_id}"
+            # run-level link
+            return f"{server}/{repo}/actions/runs/{run_id}"
 
-    # Generic GitHub run fallback
-    repo = os.environ.get("GITHUB_REPOSITORY")
-    run_id = os.environ.get("GITHUB_RUN_ID")
-    server = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
-    if repo and run_id:
-        return f"{server}/{repo}/actions/runs/{run_id}"
-
-    # Fallback for backward compatibility (when no os_name is passed)
+    # Fallback for backward compatibility
     if "TASKCLUSTER_PROXY_URL" in os.environ:
         link = TC_EXECUTION_TEMPLATE
         for item in ["RUN_ID", "TASK_ID"]:
@@ -144,6 +149,10 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
+
+    # Add [TEST] prefix for safe PR testing to avoid polluting real milestone plans
+    if os.environ.get("GITHUB_EVENT_NAME") == "pull_request":
+        plan_title = f"[TEST] {plan_title}"
     return plan_title
 
 

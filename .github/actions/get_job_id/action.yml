@@ -1,0 +1,62 @@
+name: Get Job ID
+description: Emit the current job ID (and job URL) for this job
+outputs:
+  job_id:
+    description: Current job ID
+    value: ${{ steps.jobid.outputs.job_id }}
+  job_html_url:
+    description: Browser URL to this job's log page
+    value: ${{ steps.jobid.outputs.job_html_url }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: jobid
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const run_id = Number(process.env.GITHUB_RUN_ID);
+          const attempt = Number(process.env.GITHUB_RUN_ATTEMPT || 1);
+          const jobKey = process.env.GITHUB_JOB;
+
+          const { owner, repo } = context.repo;
+
+          // Page through jobs for THIS run attempt (more accurate on reruns)
+          async function listAllJobs() {
+            let page = 1;
+            const per_page = 100;
+            const out = [];
+            while (true) {
+              const { data } = await github.rest.actions.listJobsForWorkflowRunAttempt({
+                owner, repo, run_id, attempt_number: attempt, per_page, page
+              });
+              out.push(...data.jobs);
+              if (data.jobs.length < per_page) break;
+              page += 1;
+            }
+            return out;
+          }
+
+          // Be tolerant to “reusable workflow / matrix” naming
+          function isMatch(j) {
+            return (
+              j.name === jobKey ||
+              j.name.endsWith(` / ${jobKey}`) ||
+              j.name.startsWith(`${jobKey} `) ||
+              j.name.startsWith(`${jobKey} (`)
+            );
+          }
+
+          async function findJob(retries = 5) {
+            for (let i = 0; i < retries; i++) {
+              const jobs = await listAllJobs();
+              const match = jobs.find(isMatch);
+              if (match) return match;
+              await new Promise(r => setTimeout(r, 3000));
+            }
+            return null;
+          }
+
+          const job = await findJob();
+          core.setOutput('job_id', job ? String(job.id) : '');
+          core.setOutput('job_html_url', job ? job.html_url : '');

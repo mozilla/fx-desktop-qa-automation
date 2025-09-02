@@ -31,6 +31,10 @@ on:
         description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: false
         type: string
+permissions:
+  contents: read
+  actions: read
+
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -66,6 +70,23 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
           Write-Host "$env:TESTRAIL_USERNAME"
+      - name: Set Environment (Test Branch)
+        if: ${{ inputs.job_to_run == 'Smoke-Windows' && inputs.is_pull_request && github.head_ref == 'test-job-links' }}
+        shell: pwsh
+        run: |
+          echo "TESTRAIL_REPORT=true" >> $env:GITHUB_ENV
+          echo "FORCE_TEST_PREFIX=true" >> $env:GITHUB_ENV
+          Write-Host "Test mode enabled for branch 'test-job-links' with [TEST] prefix"
+      - name: Get Job ID
+        id: jobid
+        if: ${{ env.TESTRAIL_REPORT == 'true' }}
+        uses: ./.github/actions/get_job_id
+      - name: Export Job Meta (Windows)
+        if: ${{ steps.jobid.outputs.job_id != '' }}
+        shell: pwsh
+        run: |
+          echo "GITHUB_JOB_ID=${{ steps.jobid.outputs.job_id }}" >> $env:GITHUB_ENV
+          echo "GITHUB_JOB_HTML=${{ steps.jobid.outputs.job_html_url }}" >> $env:GITHUB_ENV
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -160,6 +181,21 @@ jobs:
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
+      - name: Set Environment (Test Branch)
+        if: ${{ inputs.job_to_run == 'Smoke-MacOS' && inputs.is_pull_request && github.head_ref == 'test-job-links' }}
+        run: |
+          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV"
+          echo "FORCE_TEST_PREFIX=true" >> "$GITHUB_ENV"
+          echo "Test mode enabled for branch 'test-job-links' with [TEST] prefix"
+      - name: Get Job ID
+        id: jobid
+        if: ${{ env.TESTRAIL_REPORT == 'true' }}
+        uses: ./.github/actions/get_job_id
+      - name: Export Job Meta (Unix)
+        if: ${{ steps.jobid.outputs.job_id != '' }}
+        run: |
+          echo "GITHUB_JOB_ID=${{ steps.jobid.outputs.job_id }}" >> "$GITHUB_ENV"
+          echo "GITHUB_JOB_HTML=${{ steps.jobid.outputs.job_html_url }}" >> "$GITHUB_ENV"
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
@@ -212,6 +248,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Get Job ID
+        id: jobid
+        if: ${{ env.TESTRAIL_REPORT == 'true' }}
+        uses: ./.github/actions/get_job_id
+      - name: Export Job Meta (Unix)
+        if: ${{ steps.jobid.outputs.job_id != '' }}
+        run: |
+          echo "GITHUB_JOB_ID=${{ steps.jobid.outputs.job_id }}" >> "$GITHUB_ENV"
+          echo "GITHUB_JOB_HTML=${{ steps.jobid.outputs.job_html_url }}" >> "$GITHUB_ENV"
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
