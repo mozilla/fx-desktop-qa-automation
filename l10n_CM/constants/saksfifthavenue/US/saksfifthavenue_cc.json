@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/saksfifthavenue_cc.html",
+  "field_mapping": {
+    "name": "eec5ff9c-22dd-4872-b01b-7c3b0a49afde",
+    "card_number": "28d48b81-624e-4dcf-be6f-e6b0bbd1db11",
+    "expiration_month": "10d4c3cb-dfa8-4cae-8472-ea674b1ed82d",
+    "expiration_year": "cb6921b1-bb46-419f-90f0-7bc3bde0fa2e",
+    "cvv": "6b28c132-9ff6-421f-bd55-3d4a6320d03f"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "eec5ff9c-22dd-4872-b01b-7c3b0a49afde",
+    "28d48b81-624e-4dcf-be6f-e6b0bbd1db11",
+    "10d4c3cb-dfa8-4cae-8472-ea674b1ed82d",
+    "cb6921b1-bb46-419f-90f0-7bc3bde0fa2e",
+    "6b28c132-9ff6-421f-bd55-3d4a6320d03f"
+  ]
+}

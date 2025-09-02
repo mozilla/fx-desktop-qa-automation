@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/saksfifthavenue_ad.html",
+  "field_mapping": {
+    "given_name": "6bb25052-4ffa-4e22-9b12-2686e60c4a83",
+    "family_name": "5246462a-f31d-4a31-a236-9e675b596e33",
+    "street_address": "e9835e91-c23b-4795-93da-ccc62e6d938c",
+    "address_level_2": "952fa130-cf22-4bfb-a9e0-26ab6c0bbd0d",
+    "address_level_1": "3791b3dd-7a7b-440f-b915-800d7a8a6313",
+    "postal_code": "5d8b79a1-612a-4849-bdc1-08797b29d71f",
+    "country": "ff577c7d-d33b-4ed1-932b-903353abfb67"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "6bb25052-4ffa-4e22-9b12-2686e60c4a83",
+    "5246462a-f31d-4a31-a236-9e675b596e33",
+    "e9835e91-c23b-4795-93da-ccc62e6d938c",
+    "952fa130-cf22-4bfb-a9e0-26ab6c0bbd0d",
+    "3791b3dd-7a7b-440f-b915-800d7a8a6313",
+    "5d8b79a1-612a-4849-bdc1-08797b29d71f",
+    "ff577c7d-d33b-4ed1-932b-903353abfb67"
+  ]
+}
