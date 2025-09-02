@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/kastnerandoehler_ad.html",
+  "field_mapping": {
+    "given_name": "e1ca22c2-fbe5-40f5-b33d-4584155366af",
+    "family_name": "c58f933c-a454-4471-be60-f3143416330d",
+    "street_address": "cd9ba9d4-9f06-4345-9025-a89d31dc812a",
+    "address_level_2": "3b0d3b79-2fc7-4dbb-9ff3-ca0b67b302b8",
+    "postal_code": "6f571e38-f01a-4fd0-b103-eef1f6ab2059",
+    "country": "e2c3e027-02e1-4fc7-a105-906bf530bbfe"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "e1ca22c2-fbe5-40f5-b33d-4584155366af",
+    "c58f933c-a454-4471-be60-f3143416330d",
+    "cd9ba9d4-9f06-4345-9025-a89d31dc812a",
+    "3b0d3b79-2fc7-4dbb-9ff3-ca0b67b302b8",
+    "6f571e38-f01a-4fd0-b103-eef1f6ab2059",
+    "e2c3e027-02e1-4fc7-a105-906bf530bbfe"
+  ]
+}
