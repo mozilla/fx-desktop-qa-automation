@@ -31,6 +31,7 @@ valid_sites = {
     "cdiscount",
     "ceneo",
     "cocolita",
+    "cupshe",
     "decathlon",
     "demo",
     "diy",

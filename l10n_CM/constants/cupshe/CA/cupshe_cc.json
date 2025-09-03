@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/cupshe_cc.html",
+  "field_mapping": {
+    "name": "aab79622-29d5-45c1-b06e-4a5a166e3664",
+    "card_number": "b439d02d-365f-4568-8cb6-a93136e42100",
+    "expiration_date": "2819550d-324a-42a1-96ac-66db21c0c8a3",
+    "cvv": "af6ace23-3c90-4a8d-949b-7e5ed81a73fb"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "aab79622-29d5-45c1-b06e-4a5a166e3664",
+    "b439d02d-365f-4568-8cb6-a93136e42100",
+    "2819550d-324a-42a1-96ac-66db21c0c8a3",
+    "af6ace23-3c90-4a8d-949b-7e5ed81a73fb"
+  ]
+}
