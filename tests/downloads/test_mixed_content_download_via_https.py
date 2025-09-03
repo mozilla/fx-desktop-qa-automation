@@ -21,13 +21,12 @@ def delete_files_regex_string():
     return r"\bdownload\b"
 
 
-MIXED_CONTENT_DOWNLOAD_URL = "https://file-examples.com/wp-content/storage/2018/04/file_example_AVI_480_750kB.avi"
+MIXED_CONTENT_DOWNLOAD_URL = (
+    "https://file-examples.com/wp-content/storage/2017/10/file-sample_100kB.odt"
+)
 MAX_CHECKS = 30
 
 
-@pytest.mark.unstable(
-    reason="Flaky in CI, see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1976520"
-)
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
@@ -44,16 +43,14 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
         download_name = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "downloadTarget"))
         )
-        #
-        # Test failing here:
-        #
+
         download_status = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "downloadProgress"))
         )
 
         # Verify that the desired download target element is present directly, no extra steps needed.
         download_value = download_name.get_attribute("value")
-        assert re.match(r"file_example_AVI_480_750kB(\(\d+\)).avi$", download_value), (
+        assert re.match(r"file-sample_100kB(\(\d+\)).odt$", download_value), (
             f"The download name is incorrect: {download_value}"
         )
 
