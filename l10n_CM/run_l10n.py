@@ -63,6 +63,7 @@ valid_sites = {
     "tiffany",
     "toychamp",
     "torfs",
+    "urbanoutfitters",
     "vans",
     "walmart",
     "whittard",
