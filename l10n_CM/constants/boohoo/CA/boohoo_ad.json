@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/boohoo_ad.html",
+  "field_mapping": {
+    "given_name": "441ca8be-1b86-4720-92b8-cc0d846fca70",
+    "family_name": "48013fb6-65f1-45f3-aa42-59f2a060e85b",
+    "country": "c1be6cd3-3c70-425b-a2e7-3e30bb16edb9",
+    "street_address": "ddb1ad68-71b4-4e28-b689-b6ae257c5640",
+    "address_level_2": "4d0d74e4-08a8-475b-b3e3-4dc0803f97cf",
+    "address_level_1": "60c6aeb4-16ea-4947-a4e6-5b6819fc5405",
+    "postal_code": "fdbcc179-452d-421f-8dad-6ae803605ee5",
+    "telephone": "2a1f2fbb-ba51-4ad9-b585-0deb23e42c2d"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "441ca8be-1b86-4720-92b8-cc0d846fca70",
+    "48013fb6-65f1-45f3-aa42-59f2a060e85b",
+    "c1be6cd3-3c70-425b-a2e7-3e30bb16edb9",
+    "ddb1ad68-71b4-4e28-b689-b6ae257c5640",
+    "4d0d74e4-08a8-475b-b3e3-4dc0803f97cf",
+    "60c6aeb4-16ea-4947-a4e6-5b6819fc5405",
+    "fdbcc179-452d-421f-8dad-6ae803605ee5",
+    "2a1f2fbb-ba51-4ad9-b585-0deb23e42c2d"
+  ]
+}

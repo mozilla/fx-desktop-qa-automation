@@ -24,6 +24,7 @@ valid_sites = {
     "assos",
     "bestbuy",
     "bijoubrigitte",
+    "boohoo",
     "brico",
     "burtsbees",
     "calvinklein",
