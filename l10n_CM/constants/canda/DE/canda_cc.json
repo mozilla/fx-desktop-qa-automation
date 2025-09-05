@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/canda_cc.html",
+  "field_mapping": {
+    "card_number": "c77a5f60-a2f2-46a1-92d7-cd4b43c8f384",
+    "expiration_date": "65587e02-a8bc-4fa7-87b9-6775f95acf4f",
+    "cvv": "659a8eaa-e4f3-4ff2-83ea-c89e92e163f8",
+    "name": "2a32fed3-1e2e-48e0-9ade-599dd505cc5d"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "c77a5f60-a2f2-46a1-92d7-cd4b43c8f384",
+    "65587e02-a8bc-4fa7-87b9-6775f95acf4f",
+    "659a8eaa-e4f3-4ff2-83ea-c89e92e163f8",
+    "2a32fed3-1e2e-48e0-9ade-599dd505cc5d"
+  ],
+
+  "skipped": [
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py"
+   ]
+}

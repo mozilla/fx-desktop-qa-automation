@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/canda_ad.html",
+  "field_mapping": {
+    "given_name": "f85b6e2e-05e1-4b7d-835a-957a238f7feb",
+    "family_name": "bd52a237-af0a-42a1-be09-1d11508cfb53",
+    "address_level_2": "e5f3f245-fa1d-4450-8c56-c9b9651d0477",
+    "street_address" : "9aa878a1-6648-475d-9b0a-17096686a42d",
+    "postal_code": "934fb524-bb16-49b1-a096-32b70b505945",
+    "telephone": "947c5164-f2d6-42b7-85cf-15166f1ff764",
+    "email": "45ee78f0-baf5-44de-a996-50e060cca00f"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "f85b6e2e-05e1-4b7d-835a-957a238f7feb",
+    "bd52a237-af0a-42a1-be09-1d11508cfb53",
+    "e5f3f245-fa1d-4450-8c56-c9b9651d0477",
+    "9aa878a1-6648-475d-9b0a-17096686a42d",
+    "934fb524-bb16-49b1-a096-32b70b505945",
+    "947c5164-f2d6-42b7-85cf-15166f1ff764",
+    "45ee78f0-baf5-44de-a996-50e060cca00f"
+  ]
+}
