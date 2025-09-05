@@ -57,6 +57,7 @@ valid_sites = {
     "movieposters",
     "newbalance",
     "newegg",
+    "pacsun",
     "peacocks",
     "saksfifthavenue",
     "standaardboekhandel",

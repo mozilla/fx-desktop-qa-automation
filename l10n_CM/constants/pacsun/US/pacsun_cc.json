@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/pacsun_cc.html",
+  "field_mapping": {
+    "card_number": "3ba2424e-4659-447c-9aae-760d13d38708",
+    "name": "7d045443-29d0-4920-865b-84aecc5c97bb",
+    "expiration_month": "7e83e3c0-c98e-4aac-8a2e-c4174b389956",
+    "expiration_year": "e3c724af-40e6-42a9-a321-828988c74db8",
+    "cvv": "74279b98-bcb2-4904-92b2-33cb9b230ea7"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "3ba2424e-4659-447c-9aae-760d13d38708",
+    "7d045443-29d0-4920-865b-84aecc5c97bb",
+    "7e83e3c0-c98e-4aac-8a2e-c4174b389956",
+    "e3c724af-40e6-42a9-a321-828988c74db8",
+    "74279b98-bcb2-4904-92b2-33cb9b230ea7"
+  ]
+}
