@@ -36,6 +36,7 @@ valid_sites = {
     "decathlon",
     "demo",
     "diy",
+    "dm",
     "douglas",
     "duka",
     "ebay",
