@@ -29,6 +29,7 @@ valid_sites = {
     "burtsbees",
     "calvinklein",
     "canadatire",
+    "canda",
     "cdiscount",
     "ceneo",
     "cocolita",
