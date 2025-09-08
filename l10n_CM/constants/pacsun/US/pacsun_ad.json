@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/pacsun_ad.html",
+  "field_mapping": {
+    "given_name": "f998e8ff-dfb0-4365-a465-010ba0510ba4",
+    "family_name": "6ebcf8ef-f788-4406-84e3-1c49c9b343ee",
+    "address_line_1": "a2ae85ce-7911-4d9b-bc0c-50fcb341de5e",
+    "address_level_2": "73d49642-27c1-411f-a88e-8f0378142c8f",
+    "postal_code": "a891daea-ef0c-448b-a0e6-a92645a063af"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "f998e8ff-dfb0-4365-a465-010ba0510ba4",
+    "6ebcf8ef-f788-4406-84e3-1c49c9b343ee",
+    "a2ae85ce-7911-4d9b-bc0c-50fcb341de5e",
+    "73d49642-27c1-411f-a88e-8f0378142c8f",
+    "a891daea-ef0c-448b-a0e6-a92645a063af"
+  ],
+  "skipped": [
+    "test_demo_ad_2a_preview_name_org_fields.py",
+    "test_demo_ad_2b_preview_address_fields.py",
+    "test_demo_ad_3a_autofill_address_fields.py",
+    "test_demo_ad_3b_autofill_name_org_fields.py",
+    "test_demo_cc_5_clear.py"
+  ]
+}
