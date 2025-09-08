@@ -17,6 +17,7 @@ valid_flags = {"--run-headless", "-n", "--reruns", "--fx-executable", "--ci"}
 flag_with_parameter = {"-n", "--reruns"}
 valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES", "BE", "AT"}
 valid_sites = {
+    "aldi",
     "aldoshoes",
     "amazon",
     "apple",

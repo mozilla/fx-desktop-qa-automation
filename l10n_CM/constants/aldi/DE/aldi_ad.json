@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/aldi_ad.html",
+  "field_mapping": {
+    "email": "96534480-084a-4964-9d3e-8e67f3b797ec",
+    "given_name": "04bd2647-2ed9-40f7-8c7f-d1ce051e9ee3",
+    "family_name": "0b457917-9c62-424e-af19-1493c2228f51",
+    "street_address": "16f3b736-ca55-4f7b-9e51-4a4aaf25a907",
+    "address_level_2": "ecac411e-e74b-420a-b636-a96306a04725",
+    "postal_code": "6d2e0b74-408e-4677-a416-06b7464ac6a7"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "96534480-084a-4964-9d3e-8e67f3b797ec",
+    "04bd2647-2ed9-40f7-8c7f-d1ce051e9ee3",
+    "0b457917-9c62-424e-af19-1493c2228f51",
+    "16f3b736-ca55-4f7b-9e51-4a4aaf25a907",
+    "ecac411e-e74b-420a-b636-a96306a04725",
+    "6d2e0b74-408e-4677-a416-06b7464ac6a7"
+  ]
+}
