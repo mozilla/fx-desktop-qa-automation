@@ -307,6 +307,18 @@ class Navigation(BasePage):
         self.wait_for_page_to_load()
         return self
 
+    @BasePage.context_chrome
+    def hard_reload_with_key_combo(self) -> BasePage:
+        """
+        Use Cmd/Ctrl + Shift + R to hard reload the page and overide cache.
+        """
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.perform_key_combo(mod_key, Keys.SHIFT, "r")
+        return self
+
     def handle_geolocation_prompt(
         self, button_type="primary", remember_this_decision=False
     ):
