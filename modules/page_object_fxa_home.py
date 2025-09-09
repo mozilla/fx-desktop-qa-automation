@@ -34,7 +34,8 @@ class FxaHome(BasePage):
         """Given an OTP, confirm the account, submit, and wait for account activation"""
         self.fill("otp-input", otp, press_enter=False)
         self.get_element("submit-button").click()
-        self.title_is("Mozilla accounts")
+        self.title_contains("Set up Firefox sync")
+        self.title_contains("Mozilla accounts")
         return self
 
     def finish_account_setup(self, password: str) -> BasePage:
