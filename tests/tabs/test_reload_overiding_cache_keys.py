@@ -2,9 +2,9 @@ import pytest
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import TabBar
+from modules.browser_object_navigation import Navigation
 
 
 @pytest.fixture()
@@ -21,23 +21,15 @@ def test_reload_overiding_cache_keys(driver: Firefox, sys_platform: str):
     """
 
     browser = TabBar(driver)
+    nav = Navigation(driver)
 
     # New tab + navigate
     browser.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
     driver.get(TEST_URL)
 
-    # Hard reload action sequence hold CTRL/CMD + SHIFT and press "r"
-    with driver.context(driver.CONTEXT_CHROME):
-        actions = browser.actions
-        if sys_platform == "Darwin":
-            actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).send_keys("r").key_up(
-                Keys.SHIFT
-            ).key_up(Keys.COMMAND).perform()
-        else:
-            actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys("r").key_up(
-                Keys.SHIFT
-            ).key_up(Keys.CONTROL).perform()
+    # Hard reload using helper function for action CTRL/CMD + SHIFT + "r"
+    nav.hard_reload_with_key_combo()
 
     # Verify cache is not being used by checking for http request headers
     # Header "if-none-match" should not be sent
