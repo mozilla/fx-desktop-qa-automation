@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/ilcorteinglesa_cc.html",
+  "field_mapping": {
+    "card_number": "be447126-c104-44dd-9780-90a2a98e8ec0",
+    "expiration_date": "0918e7e2-0b99-4e96-854b-e863eaed9fa4",
+    "cvv": "73287616-27d2-44f7-aa27-94e68bf5e11a"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "be447126-c104-44dd-9780-90a2a98e8ec0",
+    "0918e7e2-0b99-4e96-854b-e863eaed9fa4",
+    "73287616-27d2-44f7-aa27-94e68bf5e11a"
+]
+}

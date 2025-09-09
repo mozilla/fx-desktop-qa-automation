@@ -50,6 +50,7 @@ valid_sites = {
     "giesswein",
     "hofer",
     "holzkern",
+    "ilcorteinglesa",
     "justspices",
     "kastnerandoehler",
     "kohls",
