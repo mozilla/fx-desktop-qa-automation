@@ -22,5 +22,11 @@
         "selectorData": "wrapper-search-container",
         "strategy": "id",
         "groups": []
+    },
+
+    "customize-page": {
+        "selectorData": "customization-container",
+        "strategy": "id",
+        "groups": []
     }
 }

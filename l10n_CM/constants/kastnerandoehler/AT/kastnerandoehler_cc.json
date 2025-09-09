@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/kastnerandoehler_cc.html",
+  "field_mapping": {
+    "card_number": "f53ececb-7186-408d-8aea-2e20f0538916",
+    "expiration_date": "c5ea1c35-54ab-4a1e-846d-63eb08a2f6a2",
+    "cvv": "b9b50745-ce5d-4adc-aed2-d2b700de2202"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "f53ececb-7186-408d-8aea-2e20f0538916",
+    "c5ea1c35-54ab-4a1e-846d-63eb08a2f6a2",
+    "b9b50745-ce5d-4adc-aed2-d2b700de2202"
+]
+}

@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/hofer_cc.html",
+  "field_mapping": {
+    "card_number": "0d671919-ce39-46b4-9484-2b9c100b6122",
+    "name": "8a60bb89-f689-4af2-a12b-6fce1c4eec06",
+    "expiration_month": "d3db28d4-5888-4ae4-95a3-822282e0a165",
+    "expiration_year": "60c3a269-fd75-41f7-aa4d-7689615e2d24",
+    "cvv":"b41ff16e-8943-4e84-9190-407d3c74593b"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "0d671919-ce39-46b4-9484-2b9c100b6122",
+    "8a60bb89-f689-4af2-a12b-6fce1c4eec06",
+    "d3db28d4-5888-4ae4-95a3-822282e0a165",
+    "60c3a269-fd75-41f7-aa4d-7689615e2d24",
+    "b41ff16e-8943-4e84-9190-407d3c74593b"
+  ]
+}

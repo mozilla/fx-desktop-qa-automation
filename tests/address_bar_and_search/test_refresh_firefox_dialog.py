@@ -13,12 +13,14 @@ def test_case():
     return "3028765"
 
 
+@pytest.mark.unstable(
+    reason="Fx change landed: bug 1958537, we're tracking in bug 1958537"
+)
 def test_refresh_firefox_dialog(driver: Firefox):
     """
     C2914620 - Verify that the 'Refresh Firefox' dialog appears from the address bar.
     """
     nav = Navigation(driver)
-    nav.set_awesome_bar()
     nav.type_in_awesome_bar(SEARCH_QUERY)
 
     nav.click_on(REFRESH_BUTTON_ID)

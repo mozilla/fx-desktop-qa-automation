@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/holzkern_ad.html",
+  "field_mapping": {
+    "given_name": "6deb2457-9fa3-47ee-ade4-70d5a0a81489",
+    "family_name": "e6d31f64-467a-4306-bc1e-de1b61d0fd37",
+    "street_address": "56798ddf-b705-4e21-809d-7093437e6eab",
+    "address_level_1": "8dc43e95-aaba-4328-96a2-6c6d84a288b0",
+    "postal_code": "f1b536b7-15b9-4068-8269-4249f1d03d9a",
+    "telephone": "3d5d1a68-852c-4233-a0b8-8617b23ca782"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "6deb2457-9fa3-47ee-ade4-70d5a0a81489",
+    "e6d31f64-467a-4306-bc1e-de1b61d0fd37",
+    "56798ddf-b705-4e21-809d-7093437e6eab",
+    "8dc43e95-aaba-4328-96a2-6c6d84a288b0",
+    "f1b536b7-15b9-4068-8269-4249f1d03d9a",
+    "3d5d1a68-852c-4233-a0b8-8617b23ca782"
+  ]
+}

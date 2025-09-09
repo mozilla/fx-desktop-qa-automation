@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/gapcanada_cc.html",
+  "field_mapping": {
+    "card_number": "c9e8eb6a-d1bd-4385-a0a1-60f9cd67a230",
+    "expiration_date": "a340db3d-08ab-47b3-aa76-1a97f6ff2f9b",
+    "cvv": "3726fd34-acd2-4565-8160-0cad2577faf3"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "c9e8eb6a-d1bd-4385-a0a1-60f9cd67a230",
+    "a340db3d-08ab-47b3-aa76-1a97f6ff2f9b",
+    "3726fd34-acd2-4565-8160-0cad2577faf3"
+  ]
+}

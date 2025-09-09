@@ -1,16 +1,20 @@
 {
   "region": "US",
   "sites": [
-    "amazon",
-    "walmart",
-    "lowes",
-    "etsy",
-    "calvinklein",
-    "bestbuy",
-    "demo",
-    "newegg",
     "aldoshoes",
+    "amazon",
     "apple",
+    "bestbuy",
+    "calvinklein",
+    "demo",
+    "etsy",
+    "kohls",
+    "lowes",
+    "newegg",
+    "pacsun",
+    "saksfifthavenue",
+    "urbanoutfitters",
+    "walmart",
     "wish"
   ],
   "tests": []

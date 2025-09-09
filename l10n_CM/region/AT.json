@@ -2,7 +2,12 @@
   "region": "AT",
   "sites": [
     "demo",
-    "torfs"
+    "ebay",
+    "giesswein",
+    "hofer",
+    "holzkern",
+    "kastnerandoehler",
+    "mediamarkt"
   ],
   "tests": [
   ]

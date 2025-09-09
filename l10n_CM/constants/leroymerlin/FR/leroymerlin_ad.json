@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/leroymerlin_ad.html",
+  "field_mapping": {
+    "given_name": "2938e113-5ed3-4a12-84b0-bd45956706f1",
+    "family_name": "a8349d9e-2d9c-44f3-9006-f274712b802b",
+    "street_address": "24b3a995-0163-4d93-b526-8f1419face01",
+    "postal_code": "9330f907-3864-4177-8b6f-b5801b9c209c",
+    "address_level_2": "d4500fd5-5829-4ae0-8fe5-9d1dbb2a9d8d",
+    "telephone": "f985fc6b-6eed-4d4a-94cd-e069897e0269"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "2938e113-5ed3-4a12-84b0-bd45956706f1",
+    "a8349d9e-2d9c-44f3-9006-f274712b802b",
+    "24b3a995-0163-4d93-b526-8f1419face01",
+    "9330f907-3864-4177-8b6f-b5801b9c209c",
+    "d4500fd5-5829-4ae0-8fe5-9d1dbb2a9d8d",
+    "f985fc6b-6eed-4d4a-94cd-e069897e0269"
+  ]
+}
