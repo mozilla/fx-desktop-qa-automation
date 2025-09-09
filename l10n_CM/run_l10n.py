@@ -49,6 +49,7 @@ valid_sites = {
     "giesswein",
     "hofer",
     "holzkern",
+    "johnlewis",
     "justspices",
     "kastnerandoehler",
     "kohls",
