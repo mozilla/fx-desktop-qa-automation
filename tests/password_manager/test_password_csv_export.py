@@ -15,7 +15,6 @@ def test_case():
     return "2241521"
 
 
-@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 1983843")
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_export(
