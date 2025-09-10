@@ -48,6 +48,7 @@ valid_sites = {
     "fnac",
     "gapcanada",
     "giesswein",
+    "helikon-tex",
     "hofer",
     "holzkern",
     "ilcorteinglesa",

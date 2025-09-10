@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/helikon-tex_cc.html",
+  "field_mapping": {
+    "card_number": "e4f50878-f85b-4474-85df-6704ee2449a0",
+    "expiration_date": "06bedb0e-8ab5-4012-b354-02f2c5af5a2a",
+    "cvv": "238a3ea2-2c3e-42cf-9455-230690243f8d"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "e4f50878-f85b-4474-85df-6704ee2449a0",
+    "06bedb0e-8ab5-4012-b354-02f2c5af5a2a",
+    "238a3ea2-2c3e-42cf-9455-230690243f8d"
+  ]
+}
