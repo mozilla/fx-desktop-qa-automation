@@ -1,11 +1,12 @@
 {
   "region": "GB",
   "sites": [
-    "cultbeauty",
     "assos",
+    "cultbeauty",
     "demo",
     "diy",
     "ebay",
+    "johnlewis",
     "peacocks",
     "whittard"
   ],

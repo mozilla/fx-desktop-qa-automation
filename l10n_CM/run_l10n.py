@@ -51,6 +51,7 @@ valid_sites = {
     "hofer",
     "holzkern",
     "ilcorteinglesa",
+    "johnlewis",
     "justspices",
     "kastnerandoehler",
     "kohls",
