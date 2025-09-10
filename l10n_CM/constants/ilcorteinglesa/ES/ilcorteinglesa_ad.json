@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/ilcorteinglesa_ad.html",
+  "field_mapping": {
+    "given_name": "7caed521-67d6-4541-893b-b6e438aadda6",
+    "family_name": "0f2283b6-b690-4a25-9779-9c6e66d33c8b",
+    "postal_code": "8ab4bbd2-6edd-4329-9ffd-57134ebdc3f7",
+    "telephone": "16b8d8ea-dcad-4e9d-8e3a-1655f87c23f0"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "7caed521-67d6-4541-893b-b6e438aadda6",
+    "0f2283b6-b690-4a25-9779-9c6e66d33c8b",
+    "8ab4bbd2-6edd-4329-9ffd-57134ebdc3f7",
+    "16b8d8ea-dcad-4e9d-8e3a-1655f87c23f0"
+  ]
+}
