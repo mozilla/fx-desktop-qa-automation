@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/helikon-tex_ad.html",
+  "field_mapping": {
+    "given_name": "ec845cec-f33e-49b4-b7d9-4c865a5af197",
+    "family_name": "1df1afd6-1432-41ff-b187-b3a8fe6018b9",
+    "street_address": "5c79303b-e740-44b5-a302-6bd67de10239",
+    "address_level_2": "efe3b2d1-7918-4373-a57d-82037fc74435",
+    "country": "21be377a-2d9c-44b3-a6b3-16fe9f3c64bf",
+    "postal_code": "3f7561c1-000d-4dfa-a873-2678307840d4",
+    "organization": "84001ef3-945b-4704-bfab-a5d3a40206f9",
+    "telephone": "3b92336b-45e0-4233-9c35-a9fcd847d759"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "ec845cec-f33e-49b4-b7d9-4c865a5af197",
+    "1df1afd6-1432-41ff-b187-b3a8fe6018b9",
+    "5c79303b-e740-44b5-a302-6bd67de10239",
+    "efe3b2d1-7918-4373-a57d-82037fc74435",
+    "21be377a-2d9c-44b3-a6b3-16fe9f3c64bf",
+    "3f7561c1-000d-4dfa-a873-2678307840d4",
+    "84001ef3-945b-4704-bfab-a5d3a40206f9",
+    "3b92336b-45e0-4233-9c35-a9fcd847d759"
+  ]
+}
