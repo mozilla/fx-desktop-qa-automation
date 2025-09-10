@@ -2,7 +2,6 @@ import csv
 import os
 import re
 import time
-from platform import system
 
 import pytest
 

@@ -1,6 +1,5 @@
 import os
 import time
-from platform import system
 
 import pytest
 from pynput.keyboard import Controller, Key
