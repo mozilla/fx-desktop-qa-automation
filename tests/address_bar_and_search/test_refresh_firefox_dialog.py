@@ -13,6 +13,11 @@ def test_case():
     return "3028765"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("browser.profiles.enabled", False)]
+
+
 @pytest.mark.unstable(
     reason="Fx change landed: bug 1958537, we're tracking in bug 1958537"
 )
