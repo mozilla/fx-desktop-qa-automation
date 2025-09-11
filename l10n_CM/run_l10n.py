@@ -33,6 +33,7 @@ valid_sites = {
     "canda",
     "cdiscount",
     "ceneo",
+    "centrumrowerowe",
     "cocolita",
     "cultbeauty",
     "cupshe",
