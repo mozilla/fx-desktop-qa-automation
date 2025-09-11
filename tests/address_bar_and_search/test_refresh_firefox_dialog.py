@@ -18,9 +18,6 @@ def add_to_prefs_list():
     return [("browser.profiles.enabled", False)]
 
 
-@pytest.mark.unstable(
-    reason="Fx change landed: bug 1958537, we're tracking in bug 1958537"
-)
 def test_refresh_firefox_dialog(driver: Firefox):
     """
     C2914620 - Verify that the 'Refresh Firefox' dialog appears from the address bar.
