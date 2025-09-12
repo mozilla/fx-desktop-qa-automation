@@ -68,6 +68,7 @@ valid_sites = {
     "pacsun",
     "peacocks",
     "saksfifthavenue",
+    "scapino",
     "standaardboekhandel",
     "staples",
     "tanie-leczenie",
