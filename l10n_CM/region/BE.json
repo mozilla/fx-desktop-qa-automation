@@ -1,6 +1,7 @@
 {
   "region": "BE",
   "sites": [
+    "alternate",
     "brico",
     "demo",
     "douglas",
