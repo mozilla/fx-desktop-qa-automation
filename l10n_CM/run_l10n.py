@@ -42,6 +42,7 @@ valid_sites = {
     "diy",
     "dm",
     "douglas",
+    "doz",
     "duka",
     "ebay",
     "etsy",
