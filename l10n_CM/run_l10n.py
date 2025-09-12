@@ -71,6 +71,7 @@ valid_sites = {
     "standaardboekhandel",
     "staples",
     "tanie-leczenie",
+    "tchibo",
     "thenorthface",
     "thomann",
     "tiffany",
