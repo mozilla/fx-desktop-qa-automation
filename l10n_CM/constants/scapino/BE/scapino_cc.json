@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/scapino_cc.html",
+  "field_mapping": {
+    "name": "a1b459f4-b923-4f1a-8952-a1a645e2e531",
+    "card_number": "573a8fbd-ad42-4a81-a1ce-fd5e5dc515b1",
+    "expiration_date": "237f9475-b7ff-4c9e-899b-6910c3281ed8",
+    "cvv": "8a112042-5ada-4298-8ce7-03b6a8c32370"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "a1b459f4-b923-4f1a-8952-a1a645e2e531",
+    "573a8fbd-ad42-4a81-a1ce-fd5e5dc515b1",
+    "237f9475-b7ff-4c9e-899b-6910c3281ed8",
+    "8a112042-5ada-4298-8ce7-03b6a8c32370"
+  ]
+}
