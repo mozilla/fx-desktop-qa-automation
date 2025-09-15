@@ -59,6 +59,7 @@ valid_sites = {
     "justspices",
     "kastnerandoehler",
     "kohls",
+    "lakeland",
     "leevalley",
     "leroymerlin",
     "lowes",
