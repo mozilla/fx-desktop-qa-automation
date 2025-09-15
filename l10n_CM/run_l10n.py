@@ -19,6 +19,7 @@ valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES", "BE", "AT"}
 valid_sites = {
     "aldi",
     "aldoshoes",
+    "alternate",
     "amazon",
     "apple",
     "artsper",
