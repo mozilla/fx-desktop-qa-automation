@@ -24,6 +24,7 @@ valid_sites = {
     "apple",
     "artsper",
     "assos",
+    "aveda",
     "bestbuy",
     "bijoubrigitte",
     "boohoo",
