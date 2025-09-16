@@ -1,6 +1,8 @@
+import random
 from time import sleep
-from typing import List
+from typing import List, Tuple
 
+import pytest
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
@@ -190,6 +192,48 @@ class PanelUi(BasePage):
         with self.driver.context(self.driver.CONTEXT_CHROME):
             history_items = self.get_elements("bookmark-item")
             return history_items
+
+    @BasePage.context_chrome
+    def get_random_history_entry(self) -> Tuple[str, str]:
+        """
+        Retrieve a random browser history entry from the Panel UI.
+
+        This method ensures the History submenu is open, fetches all available
+        history items, selects one at random, extracts its URL and title, and
+        returns them after validating both are usable.
+        """
+        items = self.get_elements("bookmark-item")
+
+        if not items:
+            pytest.skip("No history available to test.")
+
+        item = random.choice(items)
+        raw_url = item.get_attribute("image")
+        label = item.get_attribute("label")
+
+        trimmed_url = self._extract_url_from_history(raw_url)
+        assert trimmed_url and label, "History item has missing URL or label."
+
+        return trimmed_url, label
+
+    def _extract_url_from_history(self, raw_url: str) -> str:
+        """
+            Extract a valid HTTP(S) URL from a raw history image attribute.
+
+        Firefox stores history URLs using special schemes like:
+            'moz-anno:favicon:https://example.com'
+        This method locates the first occurrence of "http" and returns the substring from there.
+
+        Args:
+            raw_url (str): The raw string value from the 'image' attribute of a history entry.
+        """
+        if not raw_url:
+            return ""
+
+        if "http" in raw_url:
+            return raw_url[raw_url.find("http") :]
+
+        return raw_url.strip()
 
     @BasePage.context_chrome
     def redirect_to_about_logins_page(self) -> BasePage:
