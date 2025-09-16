@@ -18,5 +18,5 @@ def test_clear_recent_history_displayed(driver: Firefox):
     panel = PanelUi(driver)
 
     # Open Clear recent history dialog
-    panel.open()
+    panel.open_history_menu()
     panel.open_clear_history_dialog()
