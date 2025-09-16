@@ -65,6 +65,7 @@ valid_sites = {
     "newegg",
     "pacsun",
     "peacocks",
+    "philips",
     "saksfifthavenue",
     "standaardboekhandel",
     "staples",

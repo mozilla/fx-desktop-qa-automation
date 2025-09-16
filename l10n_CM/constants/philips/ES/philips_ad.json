@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/philips_ad.html",
+  "field_mapping": {
+    "given_name": "811b04b5-8a2a-4297-a899-35ed52239a3e",
+    "family_name": "c3a01713-c573-4ef0-a410-63425730756e",
+    "address_line_1": "e5b45102-2a2c-44ae-88cc-11459d062a51",
+    "address_level_2": "17d9b51a-6dc7-49a0-ab50-49e44454d079",
+    "postal_code": "1db8c1bf-4f83-4180-8eb4-a265f66099af",
+    "telephone": "5db393fa-58d0-43e1-b6d3-1543514d0906"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "811b04b5-8a2a-4297-a899-35ed52239a3e",
+    "c3a01713-c573-4ef0-a410-63425730756e",
+    "e5b45102-2a2c-44ae-88cc-11459d062a51",
+    "17d9b51a-6dc7-49a0-ab50-49e44454d079",
+    "1db8c1bf-4f83-4180-8eb4-a265f66099af",
+    "5db393fa-58d0-43e1-b6d3-1543514d0906"
+  ]
+}

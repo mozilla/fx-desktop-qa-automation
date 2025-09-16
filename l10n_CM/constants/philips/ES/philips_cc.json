@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8080/philips_cc.html",
+  "field_mapping": {
+    "name": "72adedfc-9f4d-4084-9706-c96850224a5b"
+  },
+  "skip": "True",
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "72adedfc-9f4d-4084-9706-c96850224a5b"
+  ]
+}
