@@ -16,11 +16,11 @@ def test_case():
 TOLERANCE = 3
 
 TARGET_PAGE = "about:about"
-DELETE_PROFILE_SELECTOR = "a[href='about:deleteprofile']"
 PROCESSES_SELECTOR = "a[href='about:processes']"
+PROTECTIONS_SELECTOR = "a[href='about:protections']"
 
-first_match = (By.CSS_SELECTOR, DELETE_PROFILE_SELECTOR)
-fourth_match = (By.CSS_SELECTOR, PROCESSES_SELECTOR)
+first_match = (By.CSS_SELECTOR, PROCESSES_SELECTOR)
+fourth_match = (By.CSS_SELECTOR, PROTECTIONS_SELECTOR)
 
 
 def are_lists_different(a: int, b: int) -> bool:
@@ -42,7 +42,7 @@ def test_find_toolbar_navigation(
     find_toolbar.open()
     find_toolbar.find("pro")
     match_status = find_toolbar.match_dict
-    assert match_status["total"] == 7
+    assert match_status["total"] == 4
 
     # Sometimes we get a match that isn't the first
     # (This also tests that the number is correct)
