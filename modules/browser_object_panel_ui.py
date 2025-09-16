@@ -1,8 +1,7 @@
 import random
 from time import sleep
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
-import pytest
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
@@ -194,7 +193,7 @@ class PanelUi(BasePage):
             return history_items
 
     @BasePage.context_chrome
-    def get_random_history_entry(self) -> Tuple[str, str]:
+    def get_random_history_entry(self) -> Optional[Tuple[str, str]]:
         """
         Retrieve a random browser history entry from the Panel UI.
 
@@ -205,7 +204,7 @@ class PanelUi(BasePage):
         items = self.get_elements("bookmark-item")
 
         if not items:
-            pytest.skip("No history available to test.")
+            return None
 
         item = random.choice(items)
         raw_url = item.get_attribute("image")

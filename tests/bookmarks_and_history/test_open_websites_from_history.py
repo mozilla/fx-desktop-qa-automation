@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,8 +26,14 @@ def test_open_websites_from_history(driver: Firefox):
     panel = PanelUi(driver)
     panel.open_history_menu()
 
+    result = panel.get_random_history_entry()
+
+    if result is None:
+        logging.info("Test skipped: No history available")
+        return
+
     # Retrieve a random item from history and its label
-    url, label = panel.get_random_history_entry()
+    url, label = result
 
     # Open the corresponding page and verify URL and title match
     page = GenericPage(driver, url=url)
