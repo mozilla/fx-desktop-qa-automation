@@ -24,7 +24,8 @@ def test_clear_all_history(driver: Firefox):
     page = GenericPage(driver)
     panel = PanelUi(driver)
 
-    # Open Clear History menu
+    # Open Clear History dialog
+    panel.open_history_menu()
     panel.open_clear_history_dialog()
 
     # Select the option to clear all the history

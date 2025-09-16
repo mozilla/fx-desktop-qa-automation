@@ -166,9 +166,7 @@ class PanelUi(BasePage):
     @BasePage.context_chrome
     def open_clear_history_dialog(self) -> BasePage:
         """Opens the clear history dialog and switches to iframe context"""
-        self.open_history_menu()
-        self.element_visible("clear-recent-history")
-        self.element_clickable("clear-recent-history")
+
         self.click_on("clear-recent-history")
 
         self.element_visible("iframe")
