@@ -163,19 +163,27 @@ class PanelUi(BasePage):
         self.click_on("panel-ui-history")
         return self
 
-    def select_clear_history_option(self, option: str) -> BasePage:
-        """
-        Selects the clear history option, assumes the history panel is open.
-        """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("clear-recent-history").click()
-            iframe = self.get_element("iframe")
-            BrowserActions(self.driver).switch_to_iframe_context(iframe)
+    @BasePage.context_chrome
+    def open_clear_history_dialog(self) -> BasePage:
+        """Opens the clear history dialog and switches to iframe context"""
+        self.open_history_menu()
+        self.element_clickable("clear-recent-history")
+        self.click_on("clear-recent-history")
 
-            with self.driver.context(self.driver.CONTEXT_CONTENT):
-                dropdown_root = self.get_element("clear-history-dropdown")
-                dropdown = Dropdown(page=self, root=dropdown_root, require_shadow=False)
-                dropdown.select_option(option)
+        self.element_visible("iframe")
+        iframe = self.get_element("iframe")
+        BrowserActions(self.driver).switch_to_iframe_context(iframe)
+        return self
+
+    @BasePage.context_content
+    def select_history_time_range_option(self, option: str) -> BasePage:
+        """
+        Selects time range option (assumes already in iframe context)
+        """
+        dropdown_root = self.get_element("clear-history-dropdown")
+        dropdown = Dropdown(page=self, root=dropdown_root, require_shadow=False)
+        dropdown.select_option(option)
+        return self
 
     def get_all_history(self) -> List[WebElement]:
         """
@@ -268,20 +276,6 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
-
-    @BasePage.context_chrome
-    def clear_recent_history(self, execute=True) -> BasePage:
-        """Clears recent history. Case of execute=True may not be complete"""
-        self.open_panel_menu()
-        self.get_element("panel-ui-history").click()
-
-        self.element_exists("clear-recent-history")
-        self.element_visible("clear-recent-history")
-        self.element_clickable("clear-recent-history")
-        if execute:
-            self.click("clear_recent_history")
-
-        return self
 
     @BasePage.context_chrome
     def confirm_history_clear(self):
