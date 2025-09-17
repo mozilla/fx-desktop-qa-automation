@@ -73,7 +73,7 @@ def test_open_addons(driver: Firefox, theme_name: str):
     current_bg = abt_addons.activate_theme(
         nav, theme_name, themes[theme_name], perform_assert=False
     )
-    assert current_bg == themes[theme_name]
+    assert colors_match(current_bg, themes[theme_name])
 
 
 def test_alpenglow_theme(driver: Firefox):
