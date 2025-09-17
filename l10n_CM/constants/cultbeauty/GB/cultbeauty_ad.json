@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/cultbeauty_ad.html",
+ "field_mapping": {
+    "name": "a2230da4-744f-41b8-b2a3-686741e94715",
+    "street_address": "7ec63af6-73de-4b4d-98c7-7af4239defde",
+    "postal_code": "b4ba6987-de2d-49be-a1f5-1d983cf1525e",
+    "address_level_2": "ef22ba0f-7275-4086-af6e-6ef43cac4c25",
+    "telephone": "731ec27e-9e60-4fbe-858f-de1d8c168b3d",
+    "country": "7a482a0f-85c5-4b73-ac52-639ad8038635"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "a2230da4-744f-41b8-b2a3-686741e94715",
+    "7ec63af6-73de-4b4d-98c7-7af4239defde",
+    "b4ba6987-de2d-49be-a1f5-1d983cf1525e",
+    "ef22ba0f-7275-4086-af6e-6ef43cac4c25",
+    "731ec27e-9e60-4fbe-858f-de1d8c168b3d",
+    "7a482a0f-85c5-4b73-ac52-639ad8038635"
+ ]
+}

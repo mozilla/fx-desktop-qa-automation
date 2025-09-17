@@ -1,0 +1,23 @@
+{
+ "url": "http://127.0.0.1:8080/centrumrowerowe_ad.html",
+ "field_mapping": {
+    "given_name": "000c7a2d-03d9-4457-8470-42f84c1d2fea",
+    "family_name": "8f84624f-7880-429b-9af5-ef9a0685095e",
+    "street_address": "919061ad-0c42-42ce-9fe6-f49cfe7476df",
+    "postal_code": "86773648-f71c-4221-a092-7c58784d43ed",
+    "address_level_2": "549127b1-a0a9-4b60-8209-bec7559f0b7b",
+    "telephone": "9c77f880-6cf8-4a6d-9371-03a6f96f894e",
+    "email": "cb49749d-34be-485f-8bb6-6c57eef24ce7"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "000c7a2d-03d9-4457-8470-42f84c1d2fea",
+    "8f84624f-7880-429b-9af5-ef9a0685095e",
+    "919061ad-0c42-42ce-9fe6-f49cfe7476df",
+    "86773648-f71c-4221-a092-7c58784d43ed",
+    "549127b1-a0a9-4b60-8209-bec7559f0b7b",
+    "9c77f880-6cf8-4a6d-9371-03a6f96f894e",
+    "cb49749d-34be-485f-8bb6-6c57eef24ce7"
+ ]
+}

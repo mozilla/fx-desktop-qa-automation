@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/doz_cc.html",
+  "field_mapping": {
+    "name": "1a48ce3d-6490-4e58-af28-30b84f988453",
+    "card_number": "5af332b0-cf77-478d-a167-2855aaee5149",
+    "expiration_month": "3ab78af1-57ad-48ab-ae5b-d10170885d75",
+    "expiration_year": "c3394ffb-9d6d-40a9-b6e0-03d9592424a3",
+    "cvv": "6e1f889f-5885-4553-88c7-7adc77be79f1"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "1a48ce3d-6490-4e58-af28-30b84f988453",
+    "5af332b0-cf77-478d-a167-2855aaee5149",
+    "3ab78af1-57ad-48ab-ae5b-d10170885d75",
+    "c3394ffb-9d6d-40a9-b6e0-03d9592424a3",
+    "6e1f889f-5885-4553-88c7-7adc77be79f1"
+  ]
+}

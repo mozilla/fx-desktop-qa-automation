@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/lakeland_cc.html",
+  "field_mapping": {
+    "card_number": "de4e7548-4c5a-48c7-ac11-7a28f0b133bf",
+    "expiration_date": "7f609a16-0093-434b-85d7-c2399e663c81",
+    "cvv": "89f89fd0-8275-4c6e-841d-daa614154397"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "de4e7548-4c5a-48c7-ac11-7a28f0b133bf",
+    "7f609a16-0093-434b-85d7-c2399e663c81",
+    "89f89fd0-8275-4c6e-841d-daa614154397"
+]
+}

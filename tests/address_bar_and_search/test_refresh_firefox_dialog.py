@@ -13,13 +13,23 @@ def test_case():
     return "3028765"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("browser.profiles.enabled", True)]
+
+
+@pytest.fixture()
+def use_profile():
+    return "theme_change"
+
+
 def test_refresh_firefox_dialog(driver: Firefox):
     """
     C2914620 - Verify that the 'Refresh Firefox' dialog appears from the address bar.
     """
     nav = Navigation(driver)
-    nav.set_awesome_bar()
     nav.type_in_awesome_bar(SEARCH_QUERY)
 
-    nav.click_on(REFRESH_BUTTON_ID)
-    nav.element_visible(DIALOG_ID)
+    # Bug 1928138 will restore Refresh Fx for some profiles
+    nav.element_does_not_exist(REFRESH_BUTTON_ID)
+    # nav.element_visible(DIALOG_ID)

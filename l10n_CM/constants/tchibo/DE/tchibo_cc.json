@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/tchibo_cc.html",
+  "field_mapping": {
+    "card_number": "e61121a9-0c0c-4c67-988c-6b20527ad679",
+    "name": "8e4c1a49-9d02-42fc-bb2f-3652ed18be5b",
+    "expiration_month": "e3cb8acb-b4c2-4b03-807c-a9e1cd5f2c7c",
+    "expiration_year": "5ca8c412-cd25-49bc-9eaa-e14f39fb9304",
+    "cvv": "89b541d3-a625-426d-873f-6b717cf5d2af"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "e61121a9-0c0c-4c67-988c-6b20527ad679",
+    "8e4c1a49-9d02-42fc-bb2f-3652ed18be5b",
+    "e3cb8acb-b4c2-4b03-807c-a9e1cd5f2c7c",
+    "5ca8c412-cd25-49bc-9eaa-e14f39fb9304",
+    "89b541d3-a625-426d-873f-6b717cf5d2af"
+]
+}

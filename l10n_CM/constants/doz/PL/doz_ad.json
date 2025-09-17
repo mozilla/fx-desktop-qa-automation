@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/doz_ad.html",
+  "field_mapping": {
+    "given_name": "3e317226-9634-4a08-ad2f-df4302ad2fae",
+    "family_name": "084d41f5-9f51-4024-9065-3503a4deffd5",
+    "street_address": "82dfacde-813f-4ae8-a057-b176a3d08834",
+    "postal_code": "3c21f11a-0456-43e3-b3c4-089ab919c151",
+    "address_level_2": "7a284096-319d-499f-b326-5b1172f9e1fd",
+    "telephone": "83f798e3-f30a-40da-8cc9-9acf1e602756",
+    "email": "6da1faaf-e1ad-4e38-8a22-14db4ec367a9"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "3e317226-9634-4a08-ad2f-df4302ad2fae",
+    "084d41f5-9f51-4024-9065-3503a4deffd5",
+    "82dfacde-813f-4ae8-a057-b176a3d08834",
+    "3c21f11a-0456-43e3-b3c4-089ab919c151",
+    "7a284096-319d-499f-b326-5b1172f9e1fd",
+    "83f798e3-f30a-40da-8cc9-9acf1e602756",
+    "6da1faaf-e1ad-4e38-8a22-14db4ec367a9"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/centrumrowerowe_cc.html",
+  "field_mapping": {
+    "name": "a3c6a19b-3504-4bba-873d-2fcf69f6fa02",
+    "card_number": "0b56bb5d-89ab-4b72-acba-60e220e7d42a",
+    "expiration_date": "e59153dd-a6e4-4927-b790-dd2bce682932",
+    "cvv": "d818a527-9452-48d1-a08f-33eab4d4b895"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "a3c6a19b-3504-4bba-873d-2fcf69f6fa02",
+    "0b56bb5d-89ab-4b72-acba-60e220e7d42a",
+    "e59153dd-a6e4-4927-b790-dd2bce682932",
+    "d818a527-9452-48d1-a08f-33eab4d4b895"
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "region": "DE",
   "sites": [
+    "aldi",
     "amazon",
     "bijoubrigitte",
     "canda",
@@ -10,6 +11,7 @@
     "justspices",
     "mediamarkt",
     "newbalance",
+    "tchibo",
     "thomann",
     "zalando"
   ],
