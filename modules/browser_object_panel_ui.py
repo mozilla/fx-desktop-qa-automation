@@ -193,6 +193,20 @@ class PanelUi(BasePage):
             return history_items
 
     @BasePage.context_chrome
+    def verify_most_recent_history_item(self, expected_value: str) -> BasePage:
+        """
+        Verify that the specified value is the most recent item in the history menu.
+        Argument:
+            Expected_value (str): The expected value of the most recent history entry
+        """
+
+        recent_history_items = self.get_elements("recent-history-content")
+        actual_value = recent_history_items[0].get_attribute("value")
+        assert actual_value == expected_value
+
+        return self
+
+    @BasePage.context_chrome
     def get_random_history_entry(self) -> Optional[Tuple[str, str]]:
         """
         Retrieve a random browser history entry from the Panel UI.
@@ -217,13 +231,9 @@ class PanelUi(BasePage):
 
     def _extract_url_from_history(self, raw_url: str) -> str:
         """
-            Extract a valid HTTP(S) URL from a raw history image attribute.
-
-        Firefox stores history URLs using special schemes like:
-            'moz-anno:favicon:https://example.com'
-        This method locates the first occurrence of "http" and returns the substring from there.
-
-        Args:
+        Extract a valid HTTP(S) URL from a raw history image attribute. This method locates the first occurrence of
+        "http" and returns the substring from there.
+        Argument:
             raw_url (str): The raw string value from the 'image' attribute of a history entry.
         """
         if not raw_url:
