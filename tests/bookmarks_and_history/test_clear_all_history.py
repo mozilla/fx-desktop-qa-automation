@@ -30,8 +30,7 @@ def test_clear_all_history(driver: Firefox):
 
     # Select the option to clear all the history
     panel.select_history_time_range_option("Everything")
-    # A method in panel-ui with selectors moved accordingly would work better, limited for now due to context level
-    # set to chrome context while shadow parent needs content context
+    # A method in panel-ui with selectors moved accordingly would work better, I'll come to this later, couldn't make it work so far
     page.click_on("clear-history-button")
 
     # Verify all the history is deleted

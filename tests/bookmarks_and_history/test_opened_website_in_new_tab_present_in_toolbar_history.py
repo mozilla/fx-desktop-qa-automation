@@ -10,37 +10,29 @@ def test_case():
     return "118802"
 
 
-FACEBOOK_URL = "https://www.facebook.com/"
-AMAZON_URL = "https://www.amazon.com/"
-YOUTUBE_URL = "https://www.youtube.com/"
+@pytest.fixture()
+def use_profile():
+    return "theme_change"
 
-WEBSITES = [FACEBOOK_URL, AMAZON_URL]
+
+ETSY_URL = "https://www.etsy.com/"
 
 
 def test_the_website_opened_in_new_tab_is_present_in_history_menu(driver: Firefox):
     """
-    C118802 - Verify that the website opened in new tab is displayed in the Toolbar History submenu on top of the
+    C118802 - Verify that the website opened in new tab is displayed in Hamburger Menu, History section, on top of the
     list
     """
-
-    for url in WEBSITES:
-        GenericPage(driver, url=url).open()
-
+    # Instantiate objects
     tabs = TabBar(driver)
+    page = GenericPage(driver, url=ETSY_URL)
+    panel = PanelUi(driver)
 
-    tabs.new_tab_by_button()
-    tabs.wait_for_num_tabs(2)
-    tabs.switch_to_new_tab()
+    # Open a new tab, switch to it and verify is the url contains the desired domain
+    tabs.open_web_page_in_new_tab(page, 2)
+    page.url_contains("etsy")
 
-    page = GenericPage(driver, url=YOUTUBE_URL)
-    page.open()
-    page.url_contains("youtube")
-
-    panel_ui = PanelUi(driver)
-    panel_ui.open()
-    panel_ui.open_history_menu()
-
-    # Verify YouTube is present in the history menu and is on top of the list as the most recent website visited
-    panel_ui.expect_element_attribute_contains(
-        "recent-history-content", "value", "YouTube"
-    )
+    # Verify Etsy is present in the Hamburger Menu, History section and is on top of the list as the most recent
+    # website visited
+    panel.open_history_menu()
+    panel.expect_element_attribute_contains("recent-history-content", "value", "Etsy")
