@@ -156,6 +156,31 @@ class PanelUi(BasePage):
         return self
 
     @BasePage.context_chrome
+    def redirect_to_about_logins_page(self) -> BasePage:
+        """
+        Opens the about:logins page by clicking the Password option in Hamburger Menu"
+        """
+        self.open_panel_menu()
+        self.get_element("password-button").click()
+        return self
+
+    @BasePage.context_chrome
+    def reopen_recently_closed_tabs(self) -> BasePage:
+        """Reopen all recently closed tabs"""
+        self.open_panel_menu()
+        self.click_on("panel-ui-history")
+
+        self.click_on("panel-ui-history-recently-closed")
+        if self.sys_platform() == "Linux":
+            sleep(2)
+
+        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
+
+        return self
+
+    # History
+
+    @BasePage.context_chrome
     def open_history_menu(self) -> BasePage:
         """
         Opens the History menu
@@ -166,9 +191,12 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def open_clear_history_dialog(self) -> BasePage:
-        """Opens the clear history dialog and switches to iframe context, assuming the history panel is opened"""
+        """
+        Opens the clear history dialog and switches to iframe context, assuming the history panel is opened
+        """
         self.click_on("clear-recent-history")
 
+        # Switch to iframe
         self.element_visible("iframe")
         iframe = self.get_element("iframe")
         BrowserActions(self.driver).switch_to_iframe_context(iframe)
@@ -199,11 +227,9 @@ class PanelUi(BasePage):
         Argument:
             Expected_value (str): The expected value of the most recent history entry
         """
-
         recent_history_items = self.get_elements("recent-history-content")
         actual_value = recent_history_items[0].get_attribute("value")
         assert actual_value == expected_value
-
         return self
 
     @BasePage.context_chrome
@@ -226,7 +252,6 @@ class PanelUi(BasePage):
 
         trimmed_url = self._extract_url_from_history(raw_url)
         assert trimmed_url and label, "History item has missing URL or label."
-
         return trimmed_url, label
 
     def _extract_url_from_history(self, raw_url: str) -> str:
@@ -238,20 +263,19 @@ class PanelUi(BasePage):
         """
         if not raw_url:
             return ""
-
         if "http" in raw_url:
             return raw_url[raw_url.find("http") :]
-
         return raw_url.strip()
 
     @BasePage.context_chrome
-    def redirect_to_about_logins_page(self) -> BasePage:
+    def confirm_history_clear(self):
         """
-        Opens the about:logins page by clicking the Password option in Hamburger Menu"
+        Confirm that the history is empty
         """
-        self.open_panel_menu()
-        self.get_element("password-button").click()
-        return self
+        self.open_history_menu()
+        self.expect_element_attribute_contains(
+            "recent-history-content", "value", "(Empty)"
+        )
 
     # Bookmarks section
 
@@ -327,25 +351,3 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
-
-    @BasePage.context_chrome
-    def confirm_history_clear(self):
-        """Confirm that the history is empty"""
-        self.open_history_menu()
-        self.expect_element_attribute_contains(
-            "recent-history-content", "value", "(Empty)"
-        )
-
-    @BasePage.context_chrome
-    def reopen_recently_closed_tabs(self) -> BasePage:
-        """Reopen all recently closed tabs"""
-        self.open_panel_menu()
-        self.click_on("panel-ui-history")
-
-        self.click_on("panel-ui-history-recently-closed")
-        if self.sys_platform() == "Linux":
-            sleep(2)
-
-        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
-
-        return self

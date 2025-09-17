@@ -30,6 +30,7 @@ def test_the_most_recent_website_is_present_in_history_menu(driver: Firefox):
     # Open the desired webpage
     page.open()
 
-    # Verify Wikipedia is present in the history menu and is on top of the list as the most recent website visited
+    # Verify the opened webpage from last step is present in the Hamburger Menu, History section and is on top of the
+    # list as the most recent website visited
     panel.open_history_menu()
     panel.verify_most_recent_history_item("Wikipedia")

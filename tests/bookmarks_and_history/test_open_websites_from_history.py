@@ -21,21 +21,22 @@ def test_open_websites_from_history(driver: Firefox):
     """
     C118807: Verify that the user can open any random website from Hamburger Menu, History section
     """
-
-    # Instantiate objects
+    # Instantiate object
     panel = PanelUi(driver)
-    panel.open_history_menu()
 
+    # Open History section from Hamburger Menu and get a random entry from browser history
+    panel.open_history_menu()
     result = panel.get_random_history_entry()
 
+    # Skip test if no history entries are available
     if result is None:
         logging.info("Test skipped: No history available")
         return
 
-    # Retrieve a random item from history and its label
+    # Extract URL and page title from the selected history entry
     url, label = result
 
-    # Open the corresponding page and verify URL and title match
+    # Navigate to the selected page and verify it loads correctly
     page = GenericPage(driver, url=url)
     page.open()
     page.url_contains(url)
