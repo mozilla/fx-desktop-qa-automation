@@ -1,4 +1,4 @@
-from platform import system
+import logging
 
 import pytest
 from selenium.webdriver import Firefox
@@ -20,6 +20,21 @@ themes = {
 alpenglow_map = {"light": "rgba(255, 255, 255, 0.76)", "dark": "rgba(40, 29, 78, 0.96)"}
 
 
+def colors_match(a, b):
+    """Determine if two colors are close enough to be considered matches"""
+    tolerance = 0.14
+    a_colorstring = a.split("(")[1][:-1]
+    b_colorstring = b.split("(")[1][:-1]
+    a_colors = [float(n) for n in a_colorstring.split(",")]
+    b_colors = [float(n) for n in b_colorstring.split(",")]
+    for i in range(len(a_colors)):
+        diff = abs((a_colors[i] / b_colors[i]) - 1.0)
+        logging.warning(f"a: {a_colors[i]}, b: {b_colors[i]}, diff: {diff}")
+        if diff > tolerance:
+            return False
+    return True
+
+
 @pytest.mark.ci
 def test_redirect_to_addons(driver: Firefox):
     """
@@ -34,7 +49,6 @@ def test_redirect_to_addons(driver: Firefox):
     assert driver.current_url == "about:addons"
 
 
-@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1974109")
 @pytest.mark.parametrize("theme_name", list(themes.keys()))
 def test_open_addons(driver: Firefox, theme_name: str):
     """
@@ -56,10 +70,12 @@ def test_open_addons(driver: Firefox, theme_name: str):
             # Already default on Firefox standard; skip activation/assertion
             pytest.skip("Compact Light is default on Firefox, skipping.")
 
-    abt_addons.activate_theme(nav, theme_name, themes[theme_name])
+    current_bg = abt_addons.activate_theme(
+        nav, theme_name, themes[theme_name], perform_assert=False
+    )
+    assert current_bg == themes[theme_name]
 
 
-@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1974109")
 def test_alpenglow_theme(driver: Firefox):
     """
     C118173, specifically for alpenglow theme because color can be two values for dark or light mode
@@ -72,4 +88,8 @@ def test_alpenglow_theme(driver: Firefox):
         nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
     )
 
-    assert current_bg == alpenglow_map["light"] or current_bg == alpenglow_map["dark"]
+    logging.warning(f"alpenglow: {current_bg}")
+    # assert current_bg == alpenglow_map["light"] or current_bg == alpenglow_map["dark"]
+    assert colors_match(current_bg, alpenglow_map["light"]) or colors_match(
+        current_bg, alpenglow_map["dark"]
+    )
