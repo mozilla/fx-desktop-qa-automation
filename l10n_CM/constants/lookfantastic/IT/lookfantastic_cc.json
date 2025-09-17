@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/lookfantastic_cc.html",
+  "field_mapping": {
+    "name": "3ff9e2bc-2350-44ab-984d-57c81baa370e",
+    "card_number": "da13014a-3e23-4cd1-887a-318dbc1a042c",
+    "expiration_month": "b5ba3b01-143c-4d01-98d9-b176d4158c9c",
+    "expiration_year": "b1b5864d-759d-4cab-8e65-f4c940143f96",
+    "cvv": "821d792f-e706-4ecb-8ac5-d0abe06a73fb"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "3ff9e2bc-2350-44ab-984d-57c81baa370e",
+    "da13014a-3e23-4cd1-887a-318dbc1a042c",
+    "b5ba3b01-143c-4d01-98d9-b176d4158c9c",
+    "b1b5864d-759d-4cab-8e65-f4c940143f96",
+    "821d792f-e706-4ecb-8ac5-d0abe06a73fb"
+  ]
+}
