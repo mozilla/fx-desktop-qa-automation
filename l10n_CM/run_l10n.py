@@ -70,6 +70,7 @@ valid_sites = {
     "newegg",
     "pacsun",
     "peacocks",
+    "pescaderiascorunesas",
     "saksfifthavenue",
     "scapino",
     "standaardboekhandel",
