@@ -33,6 +33,7 @@ valid_sites = {
     "calvinklein",
     "canadatire",
     "canda",
+    "carpimoto",
     "cdiscount",
     "ceneo",
     "centrumrowerowe",
