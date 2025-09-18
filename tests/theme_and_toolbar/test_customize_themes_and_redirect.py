@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -29,7 +27,6 @@ def colors_match(a, b):
     b_colors = [float(n) for n in b_colorstring.split(",")]
     for i in range(len(a_colors)):
         diff = abs((a_colors[i] / b_colors[i]) - 1.0)
-        logging.warning(f"a: {a_colors[i]}, b: {b_colors[i]}, diff: {diff}")
         if diff > tolerance:
             return False
     return True
@@ -88,7 +85,6 @@ def test_alpenglow_theme(driver: Firefox):
         nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
     )
 
-    logging.warning(f"alpenglow: {current_bg}")
     # assert current_bg == alpenglow_map["light"] or current_bg == alpenglow_map["dark"]
     assert colors_match(current_bg, alpenglow_map["light"]) or colors_match(
         current_bg, alpenglow_map["dark"]
