@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/pescaderiascorunesas_cc.html",
+  "field_mapping": {
+    "name": "c9ba66f2-fbca-41dc-862f-ba1020de4e78",
+    "card_number": "f75d3908-4d8b-4fdf-b961-f2a1d37036d5",
+    "expiration_date": "646de9e9-ac5d-47b2-b0a0-a9e3086534ae",
+    "cvv": "d7a6b247-16a7-4bcb-a92e-e9b1dc2b92f6"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "c9ba66f2-fbca-41dc-862f-ba1020de4e78",
+    "f75d3908-4d8b-4fdf-b961-f2a1d37036d5",
+    "646de9e9-ac5d-47b2-b0a0-a9e3086534ae",
+    "d7a6b247-16a7-4bcb-a92e-e9b1dc2b92f6"
+]
+}

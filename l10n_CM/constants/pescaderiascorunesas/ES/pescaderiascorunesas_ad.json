@@ -1,0 +1,31 @@
+{
+  "url": "http://127.0.0.1:8080/pescaderiascorunesas_ad.html",
+  "field_mapping": {
+    "name": "eac63167-e396-4c29-9343-680cac6590f3",
+    "family_name": "6a660d0a-0f17-41cd-ad15-73f174c3c580",
+    "organization": "833a879c-39c0-4df7-8499-36bd6016e9a4",
+    "address_line_1": "6f188fbf-9c6d-41a1-b5ed-0c193e581fe6",
+    "address_level_2": "1ed8b343-d59d-4b1a-9b2e-63b298479ef0",
+    "postal_code": "247ae3eb-1c6f-42e2-bee3-72ee6e9fc325",
+    "telephone": "ac43f261-edf5-4a40-9167-09cf1df51b78"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "eac63167-e396-4c29-9343-680cac6590f3",
+    "6a660d0a-0f17-41cd-ad15-73f174c3c580",
+    "833a879c-39c0-4df7-8499-36bd6016e9a4",
+    "6f188fbf-9c6d-41a1-b5ed-0c193e581fe6",
+    "1ed8b343-d59d-4b1a-9b2e-63b298479ef0",
+    "247ae3eb-1c6f-42e2-bee3-72ee6e9fc325",
+    "ac43f261-edf5-4a40-9167-09cf1df51b78"
+  ],
+  "skipped": [
+    "test_demo_ad_2a_preview_name_org_fields.py",
+    "test_demo_ad_2b_preview_address_fields.py",
+    "test_demo_ad_2c_preview_phone_email_fields.py",
+    "test_demo_ad_3a_autofill_address_fields.py",
+    "test_demo_ad_3b_autofill_name_org_fields.py",
+    "test_demo_ad_3c_autofill_phone_email_fields.py",
+    "test_demo_cc_3_autofill.py"
+  ]
+}
