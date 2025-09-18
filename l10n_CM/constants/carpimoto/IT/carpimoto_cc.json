@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/carpimoto_cc.html",
+  "field_mapping": {
+    "card_number": "7c1e8580-ef24-4518-904a-aa6666938dd7",
+    "expiration_date": "1f251c80-a5f9-43e4-91a0-095dfe3034af",
+    "cvv": "044a5437-4a8c-4418-89ee-332e5f907127",
+    "name": "1d78a4c6-7d52-496e-866e-957c985ee518"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "7c1e8580-ef24-4518-904a-aa6666938dd7",
+    "1f251c80-a5f9-43e4-91a0-095dfe3034af",
+    "044a5437-4a8c-4418-89ee-332e5f907127",
+    "1d78a4c6-7d52-496e-866e-957c985ee518"
+  ]
+}
