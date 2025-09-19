@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/fossil_ad.html",
+  "field_mapping": {
+    "given_name": "99a70545-7f95-4d53-97f8-bc5bf8fc639b",
+    "family_name": "b39a17aa-c511-45b0-b2bb-8c6240b27107",
+    "street_address": "f463c9aa-081b-4266-8ac2-0a2c86374c42",
+    "address_level_2": "6f9be43b-64cb-4ab7-bc58-ce19bc732b08",
+    "email": "cbf954aa-ace7-4e4d-aa64-b6bfeb437b97",
+    "country": "f5270f7d-62dd-4ee0-a4d3-104419e4cd10",
+    "postal_code": "0ab59bb3-c582-424e-a4cb-c39d0ceb9eab",
+    "telephone": "afd69703-573b-4eee-b746-4027ac4a2135"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "99a70545-7f95-4d53-97f8-bc5bf8fc639b",
+    "b39a17aa-c511-45b0-b2bb-8c6240b27107",
+    "f463c9aa-081b-4266-8ac2-0a2c86374c42",
+    "6f9be43b-64cb-4ab7-bc58-ce19bc732b08",
+    "cbf954aa-ace7-4e4d-aa64-b6bfeb437b97",
+    "f5270f7d-62dd-4ee0-a4d3-104419e4cd10",
+    "0ab59bb3-c582-424e-a4cb-c39d0ceb9eab",
+    "afd69703-573b-4eee-b746-4027ac4a2135"
+  ]
+}
