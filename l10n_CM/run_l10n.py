@@ -37,6 +37,7 @@ valid_sites = {
     "cdiscount",
     "ceneo",
     "centrumrowerowe",
+    "clarins",
     "cocolita",
     "cultbeauty",
     "cupshe",

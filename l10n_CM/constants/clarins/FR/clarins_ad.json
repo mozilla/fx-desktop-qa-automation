@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/clarins_ad.html",
+ "field_mapping": {
+    "given_name": "48bc09f5-2207-480b-828e-f2025a98a4d8",
+    "family_name": "db3fe4bf-5ad1-4945-b656-2bf6f50154cb",
+    "street_address": "c55fe2af-352a-4252-ac31-fe18e62c1dd5",
+    "postal_code": "2c117932-e636-4a6e-9d03-99dda7cc85be",
+    "address_level_2": "3ef7d28a-05f1-4468-be8d-93a759a7fce9",
+    "telephone": "c1dbb091-879d-4d67-8295-b47b0048d376"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "48bc09f5-2207-480b-828e-f2025a98a4d8",
+    "db3fe4bf-5ad1-4945-b656-2bf6f50154cb",
+    "c55fe2af-352a-4252-ac31-fe18e62c1dd5",
+    "2c117932-e636-4a6e-9d03-99dda7cc85be",
+    "3ef7d28a-05f1-4468-be8d-93a759a7fce9",
+    "c1dbb091-879d-4d67-8295-b47b0048d376"
+ ]
+}
