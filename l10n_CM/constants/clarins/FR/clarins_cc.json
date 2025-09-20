@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/clarins_cc.html",
+  "field_mapping": {
+    "name": "8cd95110-aea2-4df1-b4ef-89373b2adc85",
+    "card_number": "7e7a831d-e8d2-4992-b6ec-a09fcf06802a",
+    "expiration_month": "b39b243a-07b5-4e3b-9df6-701a66d280eb",
+    "expiration_year": "83f8139c-0a81-4c03-a5d0-e2673e335200",
+    "cvv": "8f904f13-fdce-445c-92ba-b9280f4e42e8"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "8cd95110-aea2-4df1-b4ef-89373b2adc85",
+    "7e7a831d-e8d2-4992-b6ec-a09fcf06802a",
+    "b39b243a-07b5-4e3b-9df6-701a66d280eb",
+    "83f8139c-0a81-4c03-a5d0-e2673e335200",
+    "8f904f13-fdce-445c-92ba-b9280f4e42e8"
+  ]
+}
