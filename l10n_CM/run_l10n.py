@@ -51,6 +51,7 @@ valid_sites = {
     "etsy",
     "euronics",
     "fnac",
+    "fossil",
     "gapcanada",
     "giesswein",
     "helikon-tex",
