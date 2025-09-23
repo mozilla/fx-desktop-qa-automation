@@ -13,7 +13,9 @@ def test_clear_recent_history_displayed(driver: Firefox):
     """
     C172043: Clear recent history panel displayed
     """
-    panel_ui = PanelUi(driver)
-    panel_ui.open()
+    # Instantiate object
+    panel = PanelUi(driver)
 
-    panel_ui.clear_recent_history(execute=False)
+    # Open Clear recent history dialog
+    panel.open_history_menu()
+    panel.open_clear_history_dialog()
