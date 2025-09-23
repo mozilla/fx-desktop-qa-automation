@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/sarenza_ad.html",
+  "field_mapping": {
+    "given_name": "8f1c09e7-f66b-4177-8d26-f97b3edf3e08",
+    "family_name": "0bd6b4c3-a54e-43de-909c-87a2734b27d9",
+    "street_address": "58a7eb76-1b46-4d0f-9df4-06cbd18a7541",
+    "address_level_2": "05630f71-0351-4304-be4b-7b86d09073d6",
+    "telephone": "b23b228f-853b-4b8b-9161-40dd7330cdf0",
+    "postal_code": "7a953ef8-326f-4dc6-acc1-ce69d9be2491"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "8f1c09e7-f66b-4177-8d26-f97b3edf3e08",
+    "0bd6b4c3-a54e-43de-909c-87a2734b27d9",
+    "58a7eb76-1b46-4d0f-9df4-06cbd18a7541",
+    "05630f71-0351-4304-be4b-7b86d09073d6",
+    "b23b228f-853b-4b8b-9161-40dd7330cdf0",
+    "7a953ef8-326f-4dc6-acc1-ce69d9be2491"
+  ]
+}

@@ -75,6 +75,7 @@ valid_sites = {
     "peacocks",
     "pescaderiascorunesas",
     "saksfifthavenue",
+    "sarenza",
     "scapino",
     "standaardboekhandel",
     "staples",
