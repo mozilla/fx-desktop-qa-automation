@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ForgetPanel, Navigation, PanelUi, TabBar
-from modules.page_object import CustomizeFirefox, GenericPage
+from modules.page_object import CustomizeFirefox
 
 
 @pytest.fixture()
