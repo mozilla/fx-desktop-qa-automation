@@ -44,13 +44,14 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     # set download option for pdf as always ask
     about_prefs.select_content_and_action("application/pdf", "Always ask")
     # search pdf file
+    tabs.open()
     nav.search(CONTENT_DISPOSITION_ATTACHMENT_URL)
+
     # wait till open option is available
     sleep(3)
     browser_actions.select_file_opening_option()
 
     tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()
-    ## url_contains isn't working for some reason.
-    # assert driver.current_url.endswith(".pdf"), f"New tab should be a pdf file."
+
     nav.url_contains(".pdf")
