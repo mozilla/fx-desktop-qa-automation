@@ -56,7 +56,7 @@ def test_allow_permission_on_geolocation_via_html5(driver: Firefox):
     wait_for_geolocation_data(web_page)
 
     # Allow the location sharing while choose the option Remember this decision
-    tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
+    tabs.open_single_page_in_new_tab(web_page, num_tabs=2)
     nav.element_clickable("checkbox-remember-this-decision")
     nav.click_on("checkbox-remember-this-decision")
     nav.handle_geolocation_prompt(button_type="primary")
@@ -65,7 +65,7 @@ def test_allow_permission_on_geolocation_via_html5(driver: Firefox):
     wait_for_geolocation_data(web_page)
 
     # Assert that the permission icon is displayed in address bar when in a new tab
-    tabs.open_web_page_in_new_tab(web_page, num_tabs=3)
+    tabs.open_single_page_in_new_tab(web_page, num_tabs=3)
     with driver.context(driver.CONTEXT_CHROME):
         permission_icon = nav.get_element("permissions-location-icon")
         assert permission_icon.is_displayed()
@@ -91,7 +91,7 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
     )
 
     # Block the location sharing while choose the option Remember this decision
-    tabs.open_web_page_in_new_tab(web_page, num_tabs=2)
+    tabs.open_single_page_in_new_tab(web_page, num_tabs=2)
     nav.element_clickable("checkbox-remember-this-decision")
     nav.click_on("checkbox-remember-this-decision")
     nav.handle_geolocation_prompt(button_type="secondary")
@@ -104,7 +104,7 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
     )
 
     # Assert that the permission icon is displayed in address bar when in a new tab
-    tabs.open_web_page_in_new_tab(web_page, num_tabs=3)
+    tabs.open_single_page_in_new_tab(web_page, num_tabs=3)
     with driver.context(driver.CONTEXT_CHROME):
         permission_icon = nav.get_element("permissions-location-icon")
         assert permission_icon.is_displayed()
