@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/bocage_ad.html",
+  "field_mapping": {
+    "given_name": "30faf3ba-3ab3-450b-bf22-3f1bbfec3bf3",
+    "family_name": "0e2a4aeb-0eb2-4b9f-9c12-023d74629b39",
+    "country": "484f456e-5267-415a-973d-90d6532311c8",
+    "street_address": "b6740652-5653-4482-9ac6-086f7d86c635",
+    "postal_code": "d7450d00-dc6b-4933-a4e9-c82bbc732c62",
+    "telephone": "0e92a9b7-cf68-4849-a83f-7bea6365f7f8"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "30faf3ba-3ab3-450b-bf22-3f1bbfec3bf3",
+    "0e2a4aeb-0eb2-4b9f-9c12-023d74629b39",
+    "484f456e-5267-415a-973d-90d6532311c8",
+    "b6740652-5653-4482-9ac6-086f7d86c635",
+    "d7450d00-dc6b-4933-a4e9-c82bbc732c62",
+    "0e92a9b7-cf68-4849-a83f-7bea6365f7f8"
+  ]
+}

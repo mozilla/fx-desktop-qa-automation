@@ -27,6 +27,7 @@ valid_sites = {
     "aveda",
     "bestbuy",
     "bijoubrigitte",
+    "bocage",
     "boohoo",
     "brico",
     "burtsbees",
