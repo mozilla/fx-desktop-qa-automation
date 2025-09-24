@@ -39,10 +39,13 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     nav = Navigation(driver)
     about_prefs = AboutPrefs(driver, category="general").open()
     browser_actions = BrowserActions(driver)
+
     # search for Applications section in settings
     about_prefs.find_in_settings("appl")
+
     # set download option for pdf as always ask
     about_prefs.select_content_and_action("application/pdf", "Always ask")
+
     # search pdf file
     tabs.open()
     nav.search(CONTENT_DISPOSITION_ATTACHMENT_URL)
