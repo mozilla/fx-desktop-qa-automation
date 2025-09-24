@@ -1,0 +1,23 @@
+{
+ "url": "http://127.0.0.1:8080/taniaksiazka_ad.html",
+ "field_mapping": {
+    "given_name": "",
+    "family_name": "",
+    "street_address": "",
+    "address_level_2": "",
+    "address_level_1": "1",
+    "postal_code": "",
+    "telephone": ""
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "",
+    "0",
+    "",
+    "",
+    "",
+    "",
+    ""
+ ]
+}
