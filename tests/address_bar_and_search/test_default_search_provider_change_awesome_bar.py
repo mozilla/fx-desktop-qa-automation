@@ -15,7 +15,6 @@ def test_case():
     return "3028795"
 
 
-@pytest.mark.skipif(system().lower().startswith("win"), reason="Bug 1983836")
 @pytest.mark.ci
 def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
