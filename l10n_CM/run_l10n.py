@@ -80,6 +80,7 @@ valid_sites = {
     "scapino",
     "standaardboekhandel",
     "staples",
+    "taniaksiazka",
     "tanie-leczenie",
     "tchibo",
     "thenorthface",
