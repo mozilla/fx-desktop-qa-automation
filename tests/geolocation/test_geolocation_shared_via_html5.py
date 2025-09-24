@@ -70,6 +70,7 @@ def test_allow_permission_on_geolocation_via_html5(driver: Firefox):
         permission_icon = nav.get_element("permissions-location-icon")
         assert permission_icon.is_displayed()
 
+#did GHA DID THIS?
 
 def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
     """
