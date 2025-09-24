@@ -41,6 +41,7 @@ valid_sites = {
     "cocolita",
     "cultbeauty",
     "cupshe",
+    "cyberport",
     "decathlon",
     "demo",
     "diy",

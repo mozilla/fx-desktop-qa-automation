@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/cyberport_ad.html",
+ "field_mapping": {
+    "given_name":"ee8196b3-57de-4d73-9aee-fd69dcb47e65",
+    "family_name":"fbb3086a-6b1e-4f0e-8b90-d6836cb14ec3",
+   "country": "23d84fe7-03a1-4026-b61d-58bd9451a219",
+    "address_line_1":"d68625dd-8e00-43f4-aba1-83ecd3d0cee2",
+    "postal_code":"b30df5f6-fb04-4ae7-a596-c4ad67978e36",
+    "email": "d6bf56a5-0c69-4b11-956f-aa80e736aafd"
+
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "ee8196b3-57de-4d73-9aee-fd69dcb47e65",
+    "fbb3086a-6b1e-4f0e-8b90-d6836cb14ec3",
+   "23d84fe7-03a1-4026-b61d-58bd9451a219",
+    "d68625dd-8e00-43f4-aba1-83ecd3d0cee2",
+    "b30df5f6-fb04-4ae7-a596-c4ad67978e36",
+    "d6bf56a5-0c69-4b11-956f-aa80e736aafd"
+ ]
+}

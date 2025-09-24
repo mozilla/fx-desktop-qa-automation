@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/cyberport_cc.html",
+  "field_mapping": {
+    "card_number": "79a6eb0ee-c8c9-4a2b-9eb0-914e41009e49",
+    "name": "b6bc277f-abd9-4887-a737-befb1b51070b",
+    "expiration_date": "7e40e21c-20bf-424f-badd-c346ec830c49",
+    "cvv":"b1221057-ec5d-4497-a8f5-5c400295fbad"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "9a6eb0ee-c8c9-4a2b-9eb0-914e41009e49",
+    "b6bc277f-abd9-4887-a737-befb1b51070b",
+    "7e40e21c-20bf-424f-badd-c346ec830c49",
+    "b1221057-ec5d-4497-a8f5-5c400295fbad"
+  ]
+}
