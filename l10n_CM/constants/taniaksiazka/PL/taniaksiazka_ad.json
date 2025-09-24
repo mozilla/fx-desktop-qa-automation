@@ -1,23 +1,25 @@
 {
  "url": "http://127.0.0.1:8080/taniaksiazka_ad.html",
  "field_mapping": {
-    "given_name": "",
-    "family_name": "",
-    "street_address": "",
-    "address_level_2": "",
-    "address_level_1": "1",
-    "postal_code": "",
-    "telephone": ""
+    "given_name": "2eff0d7f-db30-475b-b148-2a1acefdbf96",
+    "family_name": "46e63b30-c3c0-408f-b017-ea00434d7aa8",
+    "street_address": "6933dab1-337b-406d-877b-3fed9c9611c8",
+    "address_level_2": "a012812d-76d9-44df-94a6-5d3a5aacc761",
+    "country": "2db46a1d-d2b7-4714-980f-110d49a96578",
+    "postal_code": "ab6049bf-6666-4b9a-a4a8-84d30004036f",
+    "telephone": "4d295e65-db27-4d97-a5bf-ea9d7bce2d12",
+    "email": "d9a7209d-837b-424f-83f5-89b5727068e3"
  },
 
  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
  "fields": [
-    "",
-    "0",
-    "",
-    "",
-    "",
-    "",
-    ""
+    "2eff0d7f-db30-475b-b148-2a1acefdbf96",
+    "46e63b30-c3c0-408f-b017-ea00434d7aa8",
+    "6933dab1-337b-406d-877b-3fed9c9611c8",
+    "a012812d-76d9-44df-94a6-5d3a5aacc761",
+    "2db46a1d-d2b7-4714-980f-110d49a96578",
+    "ab6049bf-6666-4b9a-a4a8-84d30004036f",
+    "4d295e65-db27-4d97-a5bf-ea9d7bce2d12",
+   "d9a7209d-837b-424f-83f5-89b5727068e3"
  ]
 }

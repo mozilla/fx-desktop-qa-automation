@@ -1,17 +1,19 @@
 {
   "url": "http://127.0.0.1:8080/taniaksiazka_cc.html",
   "field_mapping": {
-    "name": "",
-    "card_number": "",
-    "expiration_date": "",
-    "cvv": ""
+    "name": "6ee8d9a4-e454-489c-afa8-54d88fc7bc43",
+    "card_number": "e2282ef7-0002-4b17-8ff9-9e960b267ea0",
+    "expiration_month": "5bc69d62-b7f2-4adf-a217-ac437a32a8a9",
+    "expiration_year": "e28c0acb-b8ee-46ff-901b-8ebe0b81254c",
+    "cvv": "89f19ffc-cb43-4fe9-829d-e900ed6b71ab"
   },
 
   "form_field": "*[data-moz-autofill-inspect-id='{name}']",
   "fields": [
-    "",
-    "",
-    "",
-    ""
+    "6ee8d9a4-e454-489c-afa8-54d88fc7bc43",
+    "e2282ef7-0002-4b17-8ff9-9e960b267ea0",
+    "5bc69d62-b7f2-4adf-a217-ac437a32a8a9",
+    "e28c0acb-b8ee-46ff-901b-8ebe0b81254c",
+    "89f19ffc-cb43-4fe9-829d-e900ed6b71ab"
   ]
 }
