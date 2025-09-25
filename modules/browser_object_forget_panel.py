@@ -10,7 +10,6 @@ class ForgetPanel(BasePage):
 
     URL_TEMPLATE = ""
 
-    @BasePage.context_chrome
     def select_timeframe(
         self,
         timeframe: Literal["forget-five-minutes", "forget-two-hours", "forget-one-day"],
@@ -26,7 +25,6 @@ class ForgetPanel(BasePage):
         self.click_on(timeframe)
         return self
 
-    @BasePage.context_chrome
     def forget_history(
         self,
         timeframe: Literal["forget-five-minutes", "forget-two-hours", "forget-one-day"],
