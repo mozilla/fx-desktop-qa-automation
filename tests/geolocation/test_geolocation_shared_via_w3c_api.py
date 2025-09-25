@@ -1,3 +1,6 @@
+import sys
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,6 +27,8 @@ def add_to_prefs_list():
 
 TEST_URL = "https://www.w3schools.com/html/html5_geolocation.asp"
 
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+
 
 @pytest.fixture()
 def temp_selectors():
@@ -46,6 +51,7 @@ def temp_selectors():
     }
 
 
+@pytest.mark.skipif(WIN_GHA, reason="Recent permission changes at their side")
 def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selectors):
     """
     C15186 - Verify that geolocation is successfully shared when the user allows permission via the W3C Geolocation API
@@ -91,6 +97,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selec
         assert permission_icon.is_displayed()
 
 
+@pytest.mark.skipif(WIN_GHA, reason="Recent permission changes at their side")
 def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selectors):
     """
     C15186 - Verify that geolocation is not shared when the user blocks permission via the W3C Geolocation API
