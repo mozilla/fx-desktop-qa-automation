@@ -36,7 +36,7 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     GenericPage(driver, url=TEST_URL).open()
 
     # Open the Site information panel and check "Allow Audio and Video"
-    nav.click_on("autoplay-permission")
+    nav.click_on("autoplay-icon-blocked")
     nav.click_on("permission-popup-audio-blocked")
     nav.click_and_hide_menu("allow-audio-video-menuitem")
 
@@ -61,7 +61,7 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     GenericPage(driver, url=TEST_URL).open()
 
     # Open the Site information panel and check "Block Audio and Video"
-    nav.click_on("autoplay-permission")
+    nav.click_on("autoplay-icon-blocked")
     nav.click_on("permission-popup-audio-video-allowed")
     nav.click_and_hide_menu("block-audio-video-menuitem")
 
