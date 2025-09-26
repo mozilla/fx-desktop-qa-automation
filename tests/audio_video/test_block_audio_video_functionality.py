@@ -24,9 +24,9 @@ def test_block_audio_video_functionality(driver: Firefox):
     page = GenericPage(driver, url=TEST_URL)
 
     # Open privacy and click on the "Settings" button from Autoplay
-    about_prefs.set_autoplay_setting("block-audio-video")
+    about_prefs.set_autoplay_setting_in_preferences("block-audio-video")
 
     # Open test website and check the site is loaded and the featured video is not playing
     page.open()
     nav.click_on("autoplay-icon-blocked")
-    nav.element_visible("permission-popup-audio-video-blocked")
+    nav.verify_autoplay_state("block")

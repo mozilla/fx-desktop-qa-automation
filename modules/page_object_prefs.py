@@ -561,7 +561,7 @@ class AboutPrefs(BasePage):
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
 
-    def open_autopaly_modal(self) -> BasePage:
+    def open_autoplay_modal(self) -> BasePage:
         """
         Opens the Autoplay settings modal dialog from the about:preferences#privacy page.
         """
@@ -571,23 +571,15 @@ class AboutPrefs(BasePage):
         self.click_on("autoplay-settings")
         return self
 
-    def set_autoplay_setting(
-        self,
-        settings: Literal[
-            "allow-audio-video",
-            "block-audio-video",
-            "allow-audio-only",
-        ],
-    ) -> "AboutPrefs":
+    def set_autoplay_setting_in_preferences(
+            self, settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"]) -> BasePage:
         """
-        Open the Autoplay settings panel and choose a policy for all sites.
+        Open the Autoplay settings panel and choose a setting for all sites.
         Arguments:
-        policy : Literal["allow-audio-video", "block-audio-video", "allow-audio-only"]
-            - "allow-audio-video": Allow both audio and video autoplay
-            - "block-audio-video": Block both audio and video autoplay
-            - "allow-audio-only": Allow audio but block video autoplay
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video,
+            "allow-audio-only" → Allow Audio but block Video
         """
-        self.open_autopaly_modal()
+        self.open_autoplay_modal()
         self.click_on(settings)
         self.click_on("spacer")
         self.click_on("autoplay-save-changes")

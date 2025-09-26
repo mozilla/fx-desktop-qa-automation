@@ -33,7 +33,7 @@ def test_allow_audio_video_functionality(driver: Firefox):
     page = GenericPage(driver, url=TEST_URL)
 
     # Open privacy and click on the "Settings" button from Autoplay
-    about_prefs.set_autoplay_setting("allow-audio-video")
+    about_prefs.set_autoplay_setting_in_preferences("allow-audio-video")
 
     # Open the website and check if the video starts playing with sound
     page.open()

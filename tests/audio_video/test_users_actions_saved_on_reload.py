@@ -31,39 +31,31 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy")
     page = GenericPage(driver, url=TEST_URL)
 
-    # Open Test page
+    # Open the test page
     page.open()
 
     # Open the Audio-Video Permission panel and check "Allow Audio and Video"
-    nav.open_audio_video_permission()
+    nav.set_site_autoplay_permission("allow-audio-video")
 
-    # Refresh test page and check the site information panel shows "Allow Audio and Video"
+    # Refresh test page and check the Audio-Video Permission panel shows "Allow Audio and Video" and the crossed off
+    # Play icon is no longer displayed
     driver.get(driver.current_url)
-    nav.element_visible("permission-popup-audio-video-allowed")
-
-    # Check the Crossed off Play icon is no longer displayed
-    nav.element_not_visible("autoplay-icon-blocked")
+    nav.verify_autoplay_state("allow")
 
     # Check the website is added to the exceptions list in about:preferences#privacy
-    about_prefs.open_autopaly_modal()
+    about_prefs.open_autoplay_modal()
     about_prefs.element_visible("mlb-allow-audio-video-settings")
 
-    # # Open Test page
+    # # Open the test page
     page.open()
 
-    # Open the Site information panel and check "Block Audio and Video"
-    nav.click_on("autoplay-icon-blocked")
-    nav.click_on("permission-popup-audio-video-allowed")
-    nav.click_and_hide_menu("block-audio-video-menuitem")
+    # Open the Audio-Video Permission panel and check "Block Audio and Video"
+    nav.set_site_autoplay_permission("block-audio-video")
 
-    # Refresh test page and check the site information panel shows "Block Audio and Video"
+    # Refresh test page and check the Audio-Video Permission panel shows "Block Audio and Video"
     driver.get(driver.current_url)
-    nav.element_visible("permission-popup-audio-video-blocked")
-    nav.element_visible("autoplay-icon-blocked")
+    nav.verify_autoplay_state("block")
 
     # Revisit test page and check Site information panel shows "Block Audio and Video"
     page.open()
-    nav.element_visible("permission-popup-audio-video-blocked")
-
-    # Check the Crossed off Play icon is displayed
-    nav.element_visible("autoplay-icon-blocked")
+    nav.verify_autoplay_state("block")
