@@ -66,6 +66,7 @@ valid_sites = {
     "lakeland",
     "leevalley",
     "leroymerlin",
+    "libro",
     "lookfantastic",
     "lowes",
     "mediamarkt",

@@ -286,12 +286,33 @@ class TabBar(BasePage):
         self.get_element("tab-x-icon", parent_element=tab).click()
         return self
 
-    def open_web_page_in_new_tab(self, web_page: BasePage, num_tabs: int) -> BasePage:
+    def open_single_page_in_new_tab(self, page: BasePage, num_tabs: int) -> BasePage:
         """
         Opens a new tab, switches the driver context to the new tab, and opens the given webpage
+        Arguments:
+            page: The page object to open in the new tab
+            num_tabs: Expected total number of tabs after opening the new tab (used for waiting)
         """
         self.new_tab_by_button()
         self.wait_for_num_tabs(num_tabs)
         self.driver.switch_to.window(self.driver.window_handles[-1])
-        web_page.open()
+        page.open()
+        return self
+
+    def open_multiple_tabs_with_pages(self, pages: list) -> "TabBar":
+        """
+        Opens multiple new tabs and navigates to different pages in each tab.
+
+        Argument:
+            pages: List of page objects or URLs to open in separate tabs
+        """
+        for page in pages:
+            self.new_tab_by_button()
+            self.wait_for_num_tabs(len(self.driver.window_handles))
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+
+            if isinstance(page, str):
+                self.driver.get(page)
+            else:
+                page.open()
         return self
