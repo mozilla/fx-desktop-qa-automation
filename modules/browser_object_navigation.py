@@ -343,6 +343,12 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def open_forget_panel(self) -> BasePage:
+        """Open the Forget Panel by clicking the Forget button in the toolbar."""
+        self.get_element("forget-button").click()
+        return self
+
+    @BasePage.context_chrome
     def get_legacy_search_engine_label(self) -> str:
         """Return the displayed engine name from the legacy search bar."""
         return self.driver.find_element(
