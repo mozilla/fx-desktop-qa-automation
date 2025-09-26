@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -30,15 +29,13 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     # Instantiate objects
     nav = Navigation(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
-    ba = BrowserActions(driver)
+    page = GenericPage(driver, url=TEST_URL)
 
     # Open Test page
-    GenericPage(driver, url=TEST_URL).open()
+    page.open()
 
-    # Open the Site information panel and check "Allow Audio and Video"
-    nav.click_on("autoplay-icon-blocked")
-    nav.click_on("permission-popup-audio-blocked")
-    nav.click_and_hide_menu("allow-audio-video-menuitem")
+    # Open the Audio-Video Permission panel and check "Allow Audio and Video"
+    nav.open_audio_video_permission()
 
     # Refresh test page and check the site information panel shows "Allow Audio and Video"
     driver.get(driver.current_url)
@@ -48,17 +45,11 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     nav.element_not_visible("autoplay-icon-blocked")
 
     # Check the website is added to the exceptions list in about:preferences#privacy
-    about_prefs.open()
-    about_prefs.get_element("autoplay-settings-button").click()
-
-    # Get the web element for the iframe
-    iframe = about_prefs.get_iframe()
-    ba.switch_to_iframe_context(iframe)
-
+    about_prefs.open_autopaly_modal()
     about_prefs.element_visible("mlb-allow-audio-video-settings")
 
-    # Open Test page
-    GenericPage(driver, url=TEST_URL).open()
+    # # Open Test page
+    page.open()
 
     # Open the Site information panel and check "Block Audio and Video"
     nav.click_on("autoplay-icon-blocked")
@@ -71,7 +62,7 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     nav.element_visible("autoplay-icon-blocked")
 
     # Revisit test page and check Site information panel shows "Block Audio and Video"
-    GenericPage(driver, url=TEST_URL).open()
+    page.open()
     nav.element_visible("permission-popup-audio-video-blocked")
 
     # Check the Crossed off Play icon is displayed

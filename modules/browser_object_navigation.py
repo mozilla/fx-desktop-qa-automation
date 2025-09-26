@@ -658,3 +658,11 @@ class Navigation(BasePage):
         self.expect_element_attribute_contains(
             self.bookmarks_toolbar, "collapsed", expected_value
         )
+
+    def open_audio_video_permission(self) -> BasePage:
+        """Open the Site information panel and select "Allow Audio and Video" """
+        self.click_on("autoplay-icon-blocked")
+        self.element_clickable("permission-popup-audio-blocked")
+        self.click_on("permission-popup-audio-blocked")
+        self.click_and_hide_menu("allow-audio-video-menuitem")
+        return self
