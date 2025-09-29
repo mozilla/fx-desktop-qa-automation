@@ -1,5 +1,6 @@
+import random
 from time import sleep
-from typing import List
+from typing import List, Optional, Tuple
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -155,6 +156,31 @@ class PanelUi(BasePage):
         return self
 
     @BasePage.context_chrome
+    def redirect_to_about_logins_page(self) -> BasePage:
+        """
+        Opens the about:logins page by clicking the Password option in Hamburger Menu"
+        """
+        self.open_panel_menu()
+        self.get_element("password-button").click()
+        return self
+
+    @BasePage.context_chrome
+    def reopen_recently_closed_tabs(self) -> BasePage:
+        """Reopen all recently closed tabs"""
+        self.open_panel_menu()
+        self.click_on("panel-ui-history")
+
+        self.click_on("panel-ui-history-recently-closed")
+        if self.sys_platform() == "Linux":
+            sleep(2)
+
+        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
+
+        return self
+
+    # History
+
+    @BasePage.context_chrome
     def open_history_menu(self) -> BasePage:
         """
         Opens the History menu
@@ -163,19 +189,28 @@ class PanelUi(BasePage):
         self.click_on("panel-ui-history")
         return self
 
-    def select_clear_history_option(self, option: str) -> BasePage:
+    @BasePage.context_chrome
+    def open_clear_history_dialog(self) -> BasePage:
         """
-        Selects the clear history option, assumes the history panel is open.
+        Opens the clear history dialog and switches to iframe context, assuming the history panel is opened
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("clear-recent-history").click()
-            iframe = self.get_element("iframe")
-            BrowserActions(self.driver).switch_to_iframe_context(iframe)
+        self.click_on("clear-recent-history")
 
-            with self.driver.context(self.driver.CONTEXT_CONTENT):
-                dropdown_root = self.get_element("clear-history-dropdown")
-                dropdown = Dropdown(page=self, root=dropdown_root, require_shadow=False)
-                dropdown.select_option(option)
+        # Switch to iframe
+        self.element_visible("iframe")
+        iframe = self.get_element("iframe")
+        BrowserActions(self.driver).switch_to_iframe_context(iframe)
+        return self
+
+    @BasePage.context_content
+    def select_history_time_range_option(self, option: str) -> BasePage:
+        """
+        Selects time range option (assumes already in iframe context)
+        """
+        dropdown_root = self.get_element("clear-history-dropdown")
+        dropdown = Dropdown(page=self, root=dropdown_root, require_shadow=False)
+        dropdown.select_option(option)
+        return self
 
     def get_all_history(self) -> List[WebElement]:
         """
@@ -186,13 +221,61 @@ class PanelUi(BasePage):
             return history_items
 
     @BasePage.context_chrome
-    def redirect_to_about_logins_page(self) -> BasePage:
+    def verify_most_recent_history_item(self, expected_value: str) -> BasePage:
         """
-        Opens the about:logins page by clicking the Password option in Hamburger Menu"
+        Verify that the specified value is the most recent item in the history menu.
+        Argument:
+            Expected_value (str): The expected value of the most recent history entry
         """
-        self.open_panel_menu()
-        self.get_element("password-button").click()
+        recent_history_items = self.get_elements("recent-history-content")
+        actual_value = recent_history_items[0].get_attribute("value")
+        assert actual_value == expected_value
         return self
+
+    @BasePage.context_chrome
+    def get_random_history_entry(self) -> Optional[Tuple[str, str]]:
+        """
+        Retrieve a random browser history entry from the Panel UI.
+
+        This method ensures the History submenu is open, fetches all available
+        history items, selects one at random, extracts its URL and title, and
+        returns them after validating both are usable.
+        """
+        items = self.get_elements("bookmark-item")
+
+        if not items:
+            return None
+
+        item = random.choice(items)
+        raw_url = item.get_attribute("image")
+        label = item.get_attribute("label")
+
+        trimmed_url = self._extract_url_from_history(raw_url)
+        assert trimmed_url and label, "History item has missing URL or label."
+        return trimmed_url, label
+
+    def _extract_url_from_history(self, raw_url: str) -> str:
+        """
+        Extract a valid HTTP(S) URL from a raw history image attribute. This method locates the first occurrence of
+        "http" and returns the substring from there.
+        Argument:
+            raw_url (str): The raw string value from the 'image' attribute of a history entry.
+        """
+        if not raw_url:
+            return ""
+        if "http" in raw_url:
+            return raw_url[raw_url.find("http") :]
+        return raw_url.strip()
+
+    @BasePage.context_chrome
+    def confirm_history_clear(self):
+        """
+        Confirm that the history is empty
+        """
+        self.open_history_menu()
+        self.expect_element_attribute_contains(
+            "recent-history-content", "value", "(Empty)"
+        )
 
     # Bookmarks section
 
@@ -268,39 +351,3 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
-
-    @BasePage.context_chrome
-    def clear_recent_history(self, execute=True) -> BasePage:
-        """Clears recent history. Case of execute=True may not be complete"""
-        self.open_panel_menu()
-        self.get_element("panel-ui-history").click()
-
-        self.element_exists("clear-recent-history")
-        self.element_visible("clear-recent-history")
-        self.element_clickable("clear-recent-history")
-        if execute:
-            self.click("clear_recent_history")
-
-        return self
-
-    @BasePage.context_chrome
-    def confirm_history_clear(self):
-        """Confirm that the history is empty"""
-        self.open_history_menu()
-        self.expect_element_attribute_contains(
-            "recent-history-content", "value", "(Empty)"
-        )
-
-    @BasePage.context_chrome
-    def reopen_recently_closed_tabs(self) -> BasePage:
-        """Reopen all recently closed tabs"""
-        self.open_panel_menu()
-        self.click_on("panel-ui-history")
-
-        self.click_on("panel-ui-history-recently-closed")
-        if self.sys_platform() == "Linux":
-            sleep(2)
-
-        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
-
-        return self

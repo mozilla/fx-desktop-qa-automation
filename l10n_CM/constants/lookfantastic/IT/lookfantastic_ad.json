@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/lookfantastic_ad.html",
+  "field_mapping": {
+    "given_name": "e8f8bcf6-999d-4afa-a8a6-9fbaf6f7eb3f",
+    "family_name": "c408edd6-914f-49e4-bfe1-8aa5b9087c7b",
+    "street_address": "7a00fc12-a6b6-4171-843f-2a60b4184746",
+    "postal_code": "d4101078-e8b0-4d37-8804-e6913c564705",
+    "address_level_2": "d476ec34-dc7e-498a-9d81-dab41794edb0",
+    "telephone": "8357c145-c00e-4df6-a8c3-50dbd4a462cc",
+    "country": "07802b02-0143-4cbb-aebb-a0f228166a26"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "e8f8bcf6-999d-4afa-a8a6-9fbaf6f7eb3f",
+    "c408edd6-914f-49e4-bfe1-8aa5b9087c7b",
+    "7a00fc12-a6b6-4171-843f-2a60b4184746",
+    "d4101078-e8b0-4d37-8804-e6913c564705",
+    "d476ec34-dc7e-498a-9d81-dab41794edb0",
+    "8357c145-c00e-4df6-a8c3-50dbd4a462cc",
+    "07802b02-0143-4cbb-aebb-a0f228166a26"
+  ]
+}

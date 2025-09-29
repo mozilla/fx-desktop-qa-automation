@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/fossil_cc.html",
+  "field_mapping": {
+    "card_number": "79d06c42-b482-4e92-aa96-89e6e5fa50a4",
+    "expiration_month": "3f05f764-8536-47ed-a80b-40869070f04c",
+    "expiration_year": "4a2915b3-3f81-4bb7-907b-ec9dba2628a7",
+    "cvv": "38332785-5fce-4e51-9d6e-b201e22b07aa"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "79d06c42-b482-4e92-aa96-89e6e5fa50a4",
+    "3f05f764-8536-47ed-a80b-40869070f04c",
+    "4a2915b3-3f81-4bb7-907b-ec9dba2628a7",
+    "38332785-5fce-4e51-9d6e-b201e22b07aa"
+  ]
+}

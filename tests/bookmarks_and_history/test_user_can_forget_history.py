@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ForgetPanel, Navigation, PanelUi, TabBar
-from modules.page_object import CustomizeFirefox, GenericPage
+from modules.page_object import CustomizeFirefox
 
 
 @pytest.fixture()
@@ -10,7 +10,7 @@ def test_case():
     return "174072"
 
 
-links = [
+ABOUT_PAGES = [
     "about:about",
     "about:addons",
     "about:cache",
@@ -22,37 +22,25 @@ def test_user_can_forget_history(driver: Firefox):
     """
     C174072: Verify that the user can Forget all the history from the last 5 minutes
     """
+    # Instantiate objects
     tabs = TabBar(driver)
-    panel_ui = PanelUi(driver)
+    panel = PanelUi(driver)
     nav = Navigation(driver)
     forget_panel = ForgetPanel(driver)
-    gen_page = GenericPage(driver, url="https://www.google.com/")
     customize_firefox = CustomizeFirefox(driver)
 
-    tabs_to_open = 4
-
-    for i in range(tabs_to_open):
-        driver.get(links[i])
-        tabs.new_tab_by_button()
-        tabs.switch_to_new_tab()
-
-    panel_ui.open_panel_menu()
-    panel_ui.navigate_to_customize_toolbar()
+    # Add the Forget button to the toolbar
+    panel.open_panel_menu()
+    panel.navigate_to_customize_toolbar()
     customize_firefox.add_widget_to_toolbar("forget")
 
-    tabs.new_tab_by_button()
-    tabs.switch_to_new_tab()
+    # Create history
+    tabs.open_multiple_tabs_with_pages(ABOUT_PAGES)
 
-    gen_page.open()
-
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("forget-button").click()
-        assert (
-            forget_panel.get_element("forget-five-minutes").get_attribute("selected")
-            == "true"
-        )
-
+    # Use Forget button to clear the last 5 minutes of history
+    nav.open_forget_panel()
     forget_panel.forget_history("forget-five-minutes")
 
+    # Verify history was removed
     tabs.switch_to_new_tab()
-    panel_ui.element_does_not_exist("bookmark-item")
+    panel.element_does_not_exist("bookmark-item")

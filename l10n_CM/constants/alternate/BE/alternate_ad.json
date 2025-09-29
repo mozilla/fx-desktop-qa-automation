@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/alternate_ad.html",
+  "field_mapping": {
+    "given_name": "83bb9821-72f5-4928-b0af-154f9f95a915",
+    "family_name": "b33144f0-50e0-4a3e-a016-555ed341d64a",
+    "street_address": "340d2657-f771-4aec-b207-e6644b7cecf6",
+    "address_level_2": "279dc691-25de-4ba6-bcc5-36880a4214b7",
+    "country": "124b93a8-4c62-4be5-bdc9-5dcd19c919b1",
+    "postal_code": "4ec21b37-e959-4925-8729-e9038bca6ccf",
+    "telephone": "71a40676-c828-4248-b01a-22db83eff62c",
+    "email": "b9bf8c23-e3f2-46ff-92d0-30263cd3996e"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "83bb9821-72f5-4928-b0af-154f9f95a915",
+    "b33144f0-50e0-4a3e-a016-555ed341d64a",
+    "340d2657-f771-4aec-b207-e6644b7cecf6",
+    "279dc691-25de-4ba6-bcc5-36880a4214b7",
+    "124b93a8-4c62-4be5-bdc9-5dcd19c919b1",
+    "4ec21b37-e959-4925-8729-e9038bca6ccf",
+    "71a40676-c828-4248-b01a-22db83eff62c",
+    "b9bf8c23-e3f2-46ff-92d0-30263cd3996e"
+  ]
+}

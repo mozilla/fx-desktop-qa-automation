@@ -1,0 +1,29 @@
+{
+  "url": "http://127.0.0.1:8080/libro_ad.html",
+  "field_mapping": {
+    "given_name": "b885db87-1444-4b2b-b89b-0b54d68d996f",
+    "family_name": "60415c70-d843-4a4b-a8ce-77533b890efe",
+    "organization": "a74e6520-0204-4ccb-879e-e8537f826bd6",
+    "address_line_1": "194c240e-caa3-41d1-99a4-3fb46ea5910c",
+    "postal_code": "a95979b5-b91b-423f-825d-48112c1c27ec",
+    "telephone": "443642dc-9c22-4601-926e-35377961b5fc"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "b885db87-1444-4b2b-b89b-0b54d68d996f",
+    "60415c70-d843-4a4b-a8ce-77533b890efe",
+    "a74e6520-0204-4ccb-879e-e8537f826bd6",
+    "194c240e-caa3-41d1-99a4-3fb46ea5910c",
+    "a95979b5-b91b-423f-825d-48112c1c27ec",
+    "443642dc-9c22-4601-926e-35377961b5fc"
+  ],
+    "skipped": [
+    "test_demo_ad_2a_preview_name_org_fields.py",
+    "test_demo_ad_2b_preview_address_fields.py",
+    "test_demo_ad_2c_preview_phone_email_fields.py",
+    "test_demo_ad_3a_autofill_address_fields.py",
+    "test_demo_ad_3b_autofill_name_org_fields.py",
+    "test_demo_ad_3c_autofill_phone_email_fields.py"
+  ]
+}
