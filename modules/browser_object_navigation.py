@@ -661,12 +661,15 @@ class Navigation(BasePage):
         )
 
     #
-    def set_site_autoplay_permission(self, settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"]) -> BasePage:
+    def set_site_autoplay_permission(
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
         """
         Open the Site audio-video permission panel and set a specific autoplay setting.
 
-        Arguments: 
-            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video, 
+        Arguments:
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video,
             "allow-audio-only" → Allow Audio but block Video
         """
         self.click_on("autoplay-icon-blocked")
@@ -686,9 +689,9 @@ class Navigation(BasePage):
         return self
 
     def verify_autoplay_state(self, expected: Literal["allow", "block"]) -> None:
-        """ Verify the current state of the autoplay permission panel and icon.
-            Arguments:
-                expected: "allow" → Allow Audio and Video, "block" → Block Audio and Video
+        """Verify the current state of the autoplay permission panel and icon.
+        Arguments:
+            expected: "allow" → Allow Audio and Video, "block" → Block Audio and Video
         """
         if expected == "allow":
             self.element_visible("permission-popup-audio-video-allowed")
@@ -696,4 +699,3 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
-

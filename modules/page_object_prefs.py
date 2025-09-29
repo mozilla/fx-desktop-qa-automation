@@ -572,7 +572,9 @@ class AboutPrefs(BasePage):
         return self
 
     def set_autoplay_setting_in_preferences(
-            self, settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"]) -> BasePage:
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
         """
         Open the Autoplay settings panel and choose a setting for all sites.
         Arguments:
