@@ -305,6 +305,22 @@ class BasePage(Page):
             cache_name = f"{name}{labelscode}"
             if cache_name not in self.elements:
                 self.elements[cache_name] = deepcopy(self.elements[name])
+        # FIX: Check for doNotCache BEFORE trying to use cached elements
+        if (
+            not multiple
+            and "doNotCache"
+            not in self.elements[cache_name]["groups"]  # ADD THIS CHECK
+            and "seleniumObject" in self.elements[cache_name]
+        ):
+            # no caching for multiples
+            cached_element = self.elements[cache_name]["seleniumObject"]
+            try:
+                self.instawait.until_not(EC.staleness_of(cached_element))
+                logging.info(f"Returned {cache_name} from object cache!")
+                return self.elements[cache_name]["seleniumObject"]
+            except (TimeoutError, TimeoutException):
+                # Because we have a timeout of 0, this should not cause delays
+                pass
         if multiple:
             logging.info(f"Multiples: Not caching {cache_name}...")
         if not multiple and "seleniumObject" in self.elements[cache_name]:
