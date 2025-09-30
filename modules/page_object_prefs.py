@@ -1,4 +1,5 @@
 import datetime
+import json
 import re
 from time import sleep
 from typing import List
@@ -611,6 +612,24 @@ class AboutPrefs(BasePage):
         else:
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
+
+    def get_app_name_for_mime_type(self, mime_type: str) -> str:
+        """
+        Return the application name associated with a given MIME type in about:preferences.
+        Argument:
+            mime_type: the MIME type to look up (e.g., "application/msword").
+        """
+        # Locate the row for the given MIME type
+        mime_type_item = self.get_element("mime-type-item", labels=[mime_type])
+
+        # Find the description element that contains application info
+        action_description = self.get_element(
+            "mime-type-item-description", parent_element=mime_type_item
+        )
+
+        # Parse the JSON data-l10n-args attribute and extract app name
+        mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
+        return mime_type_data["app-name"]
 
 
 class AboutAddons(BasePage):
