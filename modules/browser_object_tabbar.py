@@ -136,6 +136,7 @@ class TabBar(BasePage):
         tab_label = tab_element.find_element(*self.get_selector("tab-title"))
         return tab_label.text
 
+    @BasePage.context_chrome
     def expect_tab_sound_status(
         self, identifier: Union[str, int], status: MediaStatus
     ) -> BasePage:
