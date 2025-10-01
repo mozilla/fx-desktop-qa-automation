@@ -1,9 +1,5 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
