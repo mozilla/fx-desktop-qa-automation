@@ -1,3 +1,6 @@
+import sys
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -10,6 +13,9 @@ def test_case():
     return "143627"
 
 
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+
+
 def open_clear_cookies_data_dialog(about_prefs: AboutPrefs, ba: BrowserActions):
     about_prefs.open()
     clear_data_popup = about_prefs.press_button_get_popup_dialog_iframe("Clear Data")
@@ -17,6 +23,7 @@ def open_clear_cookies_data_dialog(about_prefs: AboutPrefs, ba: BrowserActions):
     return about_prefs.get_clear_cookie_data_value()
 
 
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows GA, tracked in 1990570")
 def test_clear_cookie_data(driver: Firefox):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel

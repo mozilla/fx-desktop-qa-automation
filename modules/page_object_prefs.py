@@ -1,7 +1,7 @@
 import datetime
 import re
 from time import sleep
-from typing import List
+from typing import List, Literal
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -560,6 +560,32 @@ class AboutPrefs(BasePage):
         """
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
+
+    def open_autoplay_modal(self) -> BasePage:
+        """
+        Opens the Autoplay settings modal dialog from the about:preferences#privacy page.
+        """
+        self.open()
+        self.click_on("autoplay-settings-button")
+        self.driver.switch_to.frame(self.get_iframe())
+        self.click_on("autoplay-settings")
+        return self
+
+    def set_autoplay_setting_in_preferences(
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
+        """
+        Open the Autoplay settings panel and choose a setting for all sites.
+        Arguments:
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video,
+            "allow-audio-only" → Allow Audio but block Video
+        """
+        self.open_autoplay_modal()
+        self.click_on(settings)
+        self.click_on("spacer")
+        self.click_on("autoplay-save-changes")
+        return self
 
     # Utility Functions
     def import_bookmarks(self, browser_name: str, platform) -> BasePage:
