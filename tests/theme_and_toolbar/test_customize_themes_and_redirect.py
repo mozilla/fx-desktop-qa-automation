@@ -9,7 +9,6 @@ def test_case():
     return "118173"
 
 
-# Exact values preserved from the original file
 THEMES: dict[str, str] = {
     "firefox-compact-dark_mozilla_org-heading": "rgb(43, 42, 51)",
     "firefox-compact-light_mozilla_org-heading": "rgb(249, 249, 251)",
@@ -24,7 +23,6 @@ ALPENGLOW_MAP: dict[str, str] = {
 def colors_match(a: str, b: str, tolerance: float = 0.14) -> bool:
     """
     Determine if two CSS colors are close enough to be considered matches.
-    Preserves the original multiplicative tolerance logic and supports rgb/rgba.
     """
     try:
         a_vals = a.split("(")[1][:-1]
