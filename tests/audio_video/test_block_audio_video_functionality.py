@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -21,26 +20,13 @@ def test_block_audio_video_functionality(driver: Firefox):
     """
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
-    ba = BrowserActions(driver)
     nav = Navigation(driver)
+    page = GenericPage(driver, url=TEST_URL)
 
     # Open privacy and click on the "Settings" button from Autoplay
-    about_prefs.open()
-    about_prefs.get_element("autoplay-settings-button").click()
-
-    # Get the web element for the iframe
-    iframe = about_prefs.get_iframe()
-    ba.switch_to_iframe_context(iframe)
-
-    # Click on the autoplay settings for all websites
-    about_prefs.get_element("autoplay-settings").click()
-
-    # Choose block audio and video and save changes
-    about_prefs.click_on("block-audio-video")
-    about_prefs.get_element("spacer").click()
-    about_prefs.get_element("autoplay-save-changes").click()
+    about_prefs.set_autoplay_setting_in_preferences("block-audio-video")
 
     # Open test website and check the site is loaded and the featured video is not playing
-    GenericPage(driver, url=TEST_URL).open()
-    nav.click_on("autoplay-permission")
-    nav.element_visible("permission-popup-audio-video-blocked")
+    page.open()
+    nav.click_on("autoplay-icon-blocked")
+    nav.verify_autoplay_state("block")
