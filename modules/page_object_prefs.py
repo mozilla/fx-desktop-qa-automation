@@ -657,6 +657,31 @@ class AboutPrefs(BasePage):
         mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
         return mime_type_data["app-name"]
 
+    def set_pdf_handling_to_always_ask(self) -> BasePage:
+        """
+        Set PDF content type handling to "Always ask" in Applications settings.
+        """
+        self.click_on("pdf-content-type")
+        self.click_on("pdf-actions-menu")
+        menu = self.get_element("pdf-actions-menu")
+        menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
+        return self
+
+    @BasePage.context_chrome
+    def handle_unknown_content_dialog(self) -> BasePage:
+        """
+        Wait for the unknown content type dialog to appear and close it with Escape.
+        """
+        self.wait.until(lambda _: len(self.driver.window_handles) > 1)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.wait.until(lambda _: self.get_element("unknown-content-type-dialog"))
+
+        # Close the dialog with Escape
+        dialog = self.get_element("unknown-content-type-dialog")
+        dialog.send_keys(Keys.ESCAPE)
+        return self
+
 
 class AboutAddons(BasePage):
     """
