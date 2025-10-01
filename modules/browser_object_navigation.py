@@ -1,4 +1,5 @@
 import logging
+from typing import Literal
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains, Firefox
@@ -658,3 +659,43 @@ class Navigation(BasePage):
         self.expect_element_attribute_contains(
             self.bookmarks_toolbar, "collapsed", expected_value
         )
+
+    #
+    def set_site_autoplay_permission(
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
+        """
+        Open the Site audio-video permission panel and set a specific autoplay setting.
+
+        Arguments:
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video,
+            "allow-audio-only" → Allow Audio but block Video
+        """
+        self.click_on("autoplay-icon-blocked")
+
+        if settings == "allow-audio-video":
+            self.element_clickable("permission-popup-audio-blocked")
+            self.click_on("permission-popup-audio-blocked")
+            self.click_and_hide_menu("allow-audio-video-menuitem")
+
+        elif settings == "block-audio-video":
+            self.element_clickable("permission-popup-audio-video-allowed")
+            self.click_and_hide_menu("block-audio-video-menuitem")
+
+        elif settings == "allow-audio-only":
+            self.element_clickable("permission-popup-audio-video-allowed")
+            self.click_and_hide_menu("allow-audio-only-menuitem")
+        return self
+
+    def verify_autoplay_state(self, expected: Literal["allow", "block"]) -> None:
+        """Verify the current state of the autoplay permission panel and icon.
+        Arguments:
+            expected: "allow" → Allow Audio and Video, "block" → Block Audio and Video
+        """
+        if expected == "allow":
+            self.element_visible("permission-popup-audio-video-allowed")
+            self.element_not_visible("autoplay-icon-blocked")
+        else:
+            self.element_visible("permission-popup-audio-video-blocked")
+            self.element_visible("autoplay-icon-blocked")
