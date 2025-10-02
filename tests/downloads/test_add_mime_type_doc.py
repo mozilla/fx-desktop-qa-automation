@@ -25,7 +25,7 @@ def delete_files_regex_string():
 
 def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
     """
-    Decide which default application should be used to open .doc files, based on OS and CI environment
+    Decide which default application should be used to open .doc files, based on OS
     """
     if sys_platform == "Darwin":
         return "TextEdit" if opt_ci else "Pages"

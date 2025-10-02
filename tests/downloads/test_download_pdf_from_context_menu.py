@@ -28,18 +28,27 @@ def test_download_pdf_from_context_menu(
 ):
     """
     C1756790: Verify that Telemetry is Recorded when Saving a PDF from the Context menu
+
+     Notes:
+        - Firefox is launched with a new profile (also a test case precondition) that has default download settings.
+        - This means the OS-level "Save File" dialog will appear for every download.
+        - Selenium cannot interact with this native dialog directly, so the test
+          must rely on fixed waits to give the OS time to render the dialog and to
+          finish writing the file.
     """
 
     from pynput.keyboard import Controller
 
+    # Initialize objects
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
-    pdf.open()
     keyboard = Controller()
-    body = pdf.get_element("pdf-body")
-
-    # Right-click on the body of the file and select Save page as
-    pdf.context_click(body)
     context_menu = ContextMenu(driver)
+    about_telemetry = AboutTelemetry(driver)
+
+    # Open the PDF file, right-click on the body of the file and select "Save page as"
+    pdf.open()
+    body = pdf.get_element("pdf-body")
+    pdf.context_click(body)
     context_menu.click_and_hide_menu("context-menu-save-page-as")
 
     # Allow time for the save dialog to appear and handle prompt
@@ -51,8 +60,8 @@ def test_download_pdf_from_context_menu(
     sleep(3)
 
     # Open about:telemetry and go to events tab
-    about_telemetry = AboutTelemetry(driver).open()
-    about_telemetry.get_element("events-tab").click()
+    about_telemetry.open()
+    about_telemetry.click_on("events-tab")
 
     # Verify that Telemetry is recorded
     pdf_telemetry_data = ["downloads", "added", "fileExtension", "pdf"]
