@@ -291,12 +291,35 @@ class Navigation(BasePage):
         self.click_on("file-download-warning-button")
         return self
 
-    @BasePage.context_chrome
-    def wait_for_download_elements(self) -> BasePage:
+    # @BasePage.context_chrome
+    # def wait_for_download_elements(self) -> BasePage:
+    #     """
+    #     Wait for download elements to be present.
+    #     """
+    #     self.element_visible("download-target-element")
+    #     return self
+
+    def wait_for_item_to_download(self, filename: str) -> BasePage:
         """
-        Wait for download elements to be present.
+        Check the downloads tool in the toolbar to wait for a given file to download
         """
-        self.element_visible("download-target-element")
+        original_timeout = self.driver.timeouts.implicit_wait
+        try:
+            # Whatever our timeout, we want to lengthen it because downloads
+            self.driver.implicitly_wait(original_timeout * 2)
+            self.element_visible("downloads-item-by-file", labels=[filename])
+            self.expect_not(
+                EC.element_attribute_to_include(
+                    self.get_selector("downloads-button"), "animate"
+                )
+            )
+            with self.driver.context(self.context_id):
+                self.driver.execute_script(
+                    "arguments[0].setAttribute('hidden', true)",
+                    self.get_element("downloads-button"),
+                )
+        finally:
+            self.driver.implicitly_wait(original_timeout)
         return self
 
     @BasePage.context_chrome

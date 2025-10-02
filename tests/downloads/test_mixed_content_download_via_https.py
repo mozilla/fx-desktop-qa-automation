@@ -33,9 +33,6 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     web_page.open()
     web_page.wait.until(lambda _: web_page.title_contains("File Examples"))
 
-    # Wait for download elements to appear
-    nav.wait_for_download_elements()
-
     # Verify download name matches expected pattern
     nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")
 
