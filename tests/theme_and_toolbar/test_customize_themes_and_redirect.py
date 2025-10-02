@@ -117,7 +117,8 @@ def test_alpenglow_theme(driver: Firefox) -> None:
     """
 
     nav = Navigation(driver)
-    abt_addons = AboutAddons(driver).open()
+    abt_addons = AboutAddons(driver)
+    abt_addons.open()
     abt_addons.choose_sidebar_option("theme")
 
     current_bg = abt_addons.activate_theme(
