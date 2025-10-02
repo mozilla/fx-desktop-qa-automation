@@ -52,7 +52,7 @@ def test_change_position_of_pinned_tabs(driver: Firefox):
     # Move second pinned tab to the left
     tabs.context_click(pinned_tab_two)
     tab_context_menu.click_and_hide_menu("context-menu-move-tab-to-start")
-    # Click-and-hide doesn't hide the parent popup
+    # Click-and-hide won't hide the parent popup
     tabs.hide_popup("tabContextMenu")
 
     # Get the titles for each of the rearranged pinned tabs
