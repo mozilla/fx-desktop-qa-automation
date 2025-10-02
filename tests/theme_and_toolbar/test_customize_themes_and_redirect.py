@@ -22,43 +22,65 @@ ALPENGLOW_MAP: dict[str, str] = {
 
 def colors_match(a: str, b: str, tolerance: float = 0.14) -> bool:
     """
-    Determine if two CSS colors are close enough to be considered matches.
+    Compare two CSS color strings and determine if they are close enough to be considered equal.
+
+    Args:
+        a (str): First CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+        b (str): Second CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+        tolerance (float, optional): Allowed relative difference between each color channel.
+            Defaults to 0.14. A higher value means colors can differ more and still match.
+
+    Returns:
+        bool: True if the two colors are considered a match within the given tolerance.
+              False if the color strings are invalid.
     """
     try:
         a_vals = a.split("(")[1][:-1]
         b_vals = b.split("(")[1][:-1]
         a_nums = [float(n.strip()) for n in a_vals.split(",")]
         b_nums = [float(n.strip()) for n in b_vals.split(",")]
-        for i in range(min(len(a_nums), len(b_nums))):
-            base = b_nums[i] if b_nums[i] != 0 else 1.0  # avoid div by zero
-            diff = abs((a_nums[i] / base) - 1.0)
-            if diff > tolerance:
-                return False
-        return True
-    except Exception:
+    except (IndexError, ValueError) as e:
+        # Raised if string doesn't contain expected format or non-numeric parts
         return False
+
+    # Compare up to the shortest length (rgb vs rgba)
+    for i in range(min(len(a_nums), len(b_nums))):
+        base = b_nums[i] if b_nums[i] != 0 else 1.0
+        diff = abs((a_nums[i] / base) - 1.0)
+        if diff > tolerance:
+            return False
+
+    return True
 
 
 @pytest.mark.ci
 def test_redirect_to_addons(driver: Firefox) -> None:
     """
-    C118173: ensure the user is redirected to about:addons through the UI panel.
+    C118173: Ensure the user is redirected to about:addons via the UI panel.
     """
     panel_ui = PanelUi(driver)
     panel_ui.open()
     panel_ui.open_panel_menu()
     panel_ui.navigate_to_about_addons()
-    windows = driver.window_handles
-    driver.switch_to.window(windows[2])
+
+    # remember original window, then switch to newly opened one
+    orig = driver.window_handles[0]
+    new  = driver.window_handles[-1]
+    driver.switch_to.window(new)
     assert driver.current_url == "about:addons"
+
+    # cleanup: close the tab we opened and restore focus
+    driver.close()
+    driver.switch_to.window(orig)
 
 
 @pytest.mark.parametrize("theme_name", list(THEMES.keys()))
-def test_open_addons(driver: Firefox, theme_name: str) -> None:
+def test_activate_theme_background_matches_expected(driver: Firefox, theme_name: str) -> None:
     """
-    C118173: continuation ensures that all the themes are set correctly.
-    Handles Developer Edition vs standard Firefox defaults as in the original.
+    C118173: Ensure that activating each theme in about:addons applies the expected background color.
+    Handles Developer Edition vs standard Firefox defaults.
     """
+
     nav = Navigation(driver)
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
@@ -79,9 +101,10 @@ def test_open_addons(driver: Firefox, theme_name: str) -> None:
 
 def test_alpenglow_theme(driver: Firefox) -> None:
     """
-    C118173: Alpenglow theme can render two values depending on light/dark mode.
-    Accept either using the tolerance-based comparison.
+    C118173: Alpenglow theme can render two values depending on light / dark mode.
+    Accept either using  the tolerance - based comparison.
     """
+
     nav = Navigation(driver)
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
