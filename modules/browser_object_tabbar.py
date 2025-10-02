@@ -316,3 +316,13 @@ class TabBar(BasePage):
             else:
                 page.open()
         return self
+
+    @BasePage.context_chrome
+    def verify_tab_focus_cycle(self, num_tabs: int):
+        """Go through all the tabs and ensure the focus changes correctly."""
+        for i in range(1, num_tabs + 2):
+            target_tab = self.get_tab(i)
+            self.click_on(target_tab)
+            self.custom_wait(timeout=3).until(
+                lambda d: target_tab.get_attribute("visuallyselected") == ""
+            )
