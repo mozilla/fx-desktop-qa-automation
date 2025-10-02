@@ -1,13 +1,7 @@
-import re
-from time import sleep
-
 import pytest
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
+from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
 
@@ -31,42 +25,19 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
     """
-
+    # Initialize objects
     web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
+    nav = Navigation(driver)
 
-    # Wait up to 30 seconds for test website to wake up and download the content
+    # Wait for the test website to wake up and download the content
     web_page.open()
-    with driver.context(driver.CONTEXT_CHROME):
-        WebDriverWait(driver, 30).until(EC.title_contains("File Examples"))
+    web_page.wait.until(lambda _: web_page.title_contains("File Examples"))
 
-    with driver.context(driver.CONTEXT_CHROME):
-        download_name = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "downloadTarget"))
-        )
+    # Wait for download elements to appear
+    nav.wait_for_download_elements()
 
-        download_status = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "downloadProgress"))
-        )
+    # Verify download name matches expected pattern
+    nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")
 
-        # Verify that the desired download target element is present directly, no extra steps needed.
-        download_value = download_name.get_attribute("value")
-        assert re.match(r"file-sample_100kB(\(\d+\)).odt$", download_value), (
-            f"The download name is incorrect: {download_value}"
-        )
-
-        # Verify that the download progress has reached 100%, which indicates that the download is complete.
-        i = 1
-        while True:
-            try:
-                download_value = download_status.get_attribute("value")
-                if download_value == "100":
-                    break
-            except StaleElementReferenceException:
-                pass
-
-            if i > MAX_CHECKS:
-                raise TimeoutError(
-                    "Download progress did not reach 100% within reasonable time."
-                )
-            sleep(1)
-            i = +1
+    # Wait for download completion
+    nav.wait_for_download_completion()
