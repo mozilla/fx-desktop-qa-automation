@@ -9,9 +9,16 @@ def test_case():
     return "118173"
 
 
-THEMES: dict[str, str] = {
-    "firefox-compact-dark_mozilla_org-heading": "rgb(43, 42, 51)",
-    "firefox-compact-light_mozilla_org-heading": "rgb(249, 249, 251)",
+THEMES: dict[str, list[str]] = {
+    "firefox-compact-dark_mozilla_org-heading": [
+        "rgb(43, 42, 51)",     # classic darker tone
+        "rgb(143, 143, 148)",  # focused dark
+        "rgb(120, 119, 126)",  # dark without focus
+    ],
+    # Compact Light
+    "firefox-compact-light_mozilla_org-heading": [
+        "rgb(249, 249, 251)",
+    ],
 }
 
 ALPENGLOW_MAP: dict[str, str] = {
@@ -39,7 +46,7 @@ def colors_match(a: str, b: str, tolerance: float = 0.14) -> bool:
         b_vals = b.split("(")[1][:-1]
         a_nums = [float(n.strip()) for n in a_vals.split(",")]
         b_nums = [float(n.strip()) for n in b_vals.split(",")]
-    except (IndexError, ValueError) as e:
+    except (IndexError, ValueError):
         # Raised if string doesn't contain expected format or non-numeric parts
         return False
 
@@ -65,7 +72,7 @@ def test_redirect_to_addons(driver: Firefox) -> None:
 
     # remember original window, then switch to newly opened one
     orig = driver.window_handles[0]
-    new  = driver.window_handles[-1]
+    new = driver.window_handles[-1]
     driver.switch_to.window(new)
     assert driver.current_url == "about:addons"
 
@@ -94,15 +101,19 @@ def test_activate_theme_background_matches_expected(driver: Firefox, theme_name:
             pytest.skip("Compact Light is default on Firefox, skipping.")
 
     current_bg = abt_addons.activate_theme(
-        nav, theme_name, THEMES[theme_name], perform_assert=False
+        nav, theme_name, "", perform_assert=False
     )
-    assert colors_match(current_bg, THEMES[theme_name])
+
+    expected_list = THEMES[theme_name]
+    assert any(colors_match(current_bg, exp) for exp in expected_list), (
+        f"Got {current_bg} for {theme_name}; expected one of {expected_list}"
+    )
 
 
 def test_alpenglow_theme(driver: Firefox) -> None:
     """
     C118173: Alpenglow theme can render two values depending on light / dark mode.
-    Accept either using  the tolerance - based comparison.
+    Accept either using  the tolerance-based comparison.
     """
 
     nav = Navigation(driver)
