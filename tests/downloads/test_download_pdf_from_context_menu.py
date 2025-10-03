@@ -61,7 +61,7 @@ def test_download_pdf_from_context_menu(
 
     # Open about:telemetry and go to events tab
     about_telemetry.open()
-    about_telemetry.click_on("events-tab")
+    about_telemetry.get_element("events-tab").click()
 
     # Verify that Telemetry is recorded
     pdf_telemetry_data = ["downloads", "added", "fileExtension", "pdf"]
