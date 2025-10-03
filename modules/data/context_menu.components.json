@@ -109,6 +109,12 @@
         "groups": []
     },
 
+    "context-menu-move-tab-to-start": {
+        "selectorData": "menuitem[data-l10n-id='move-to-start']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "context-menu-open-link-in-tab": {
         "selectorData": "context-openlinkintab",
         "strategy": "id",

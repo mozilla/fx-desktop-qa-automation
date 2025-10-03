@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutAddons
 
@@ -11,7 +12,7 @@ def test_case():
 
 THEMES: dict[str, list[str]] = {
     "firefox-compact-dark_mozilla_org-heading": [
-        "rgb(43, 42, 51)",     # classic darker tone
+        "rgb(43, 42, 51)",  # classic darker tone
         "rgb(143, 143, 148)",  # focused dark
         "rgb(120, 119, 126)",  # dark without focus
     ],
@@ -82,7 +83,9 @@ def test_redirect_to_addons(driver: Firefox) -> None:
 
 
 @pytest.mark.parametrize("theme_name", list(THEMES.keys()))
-def test_activate_theme_background_matches_expected(driver: Firefox, theme_name: str) -> None:
+def test_activate_theme_background_matches_expected(
+    driver: Firefox, theme_name: str
+) -> None:
     """
     C118173: Ensure that activating each theme in about:addons applies the expected background color.
     Handles Developer Edition vs standard Firefox defaults.
@@ -100,9 +103,7 @@ def test_activate_theme_background_matches_expected(driver: Firefox, theme_name:
         if theme_name == "firefox-compact-light_mozilla_org-heading":
             pytest.skip("Compact Light is default on Firefox, skipping.")
 
-    current_bg = abt_addons.activate_theme(
-        nav, theme_name, "", perform_assert=False
-    )
+    current_bg = abt_addons.activate_theme(nav, theme_name, "", perform_assert=False)
 
     expected_list = THEMES[theme_name]
     assert any(colors_match(current_bg, exp) for exp in expected_list), (

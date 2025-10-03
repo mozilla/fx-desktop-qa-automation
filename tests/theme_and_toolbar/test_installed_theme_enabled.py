@@ -12,7 +12,9 @@ def test_case():
     return "118174"
 
 
-MAC_GHA: bool = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
+MAC_GHA: bool = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith(
+    "darwin"
+)
 
 AMO_HOST: str = "addons.mozilla.org"
 AMO_THEMES_PATH: str = "firefox/themes"
@@ -44,7 +46,9 @@ def test_installed_theme_enabled(driver: Firefox) -> None:
     about_addons.choose_sidebar_option("theme")
 
     # Capture currently enabled theme title
-    starting_theme = about_addons.get_element("enabled-theme-title").get_attribute("innerText")
+    starting_theme = about_addons.get_element("enabled-theme-title").get_attribute(
+        "innerText"
+    )
 
     # Go to AMO and install a recommended theme (POM encapsulates waits and flows)
     AmoThemes(driver).open().install_recommended_theme()
