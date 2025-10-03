@@ -1,9 +1,9 @@
 import logging
-
 import pytest
 from selenium.webdriver import Firefox
-
 from modules.browser_object import TabBar
+
+NUM_TABS = 20
 
 
 @pytest.fixture()
@@ -14,11 +14,11 @@ def test_case():
 def test_navigation_multiple_tabs(driver: Firefox):
     """C134647 - Verify that navigation through multiple tabs is allowed"""
 
+    # Instantiate objects
     tabs = TabBar(driver)
-    num_tabs = 20
 
     # Open multiple tabs
-    for _ in range(num_tabs):
+    for _ in range(NUM_TABS):
         tabs.new_tab_by_button()
 
     with driver.context(driver.CONTEXT_CHROME):
