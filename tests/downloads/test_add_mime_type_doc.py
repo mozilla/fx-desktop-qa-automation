@@ -33,7 +33,7 @@ def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
     return "LibreOffice Writer"
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+# @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 @pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """
