@@ -68,7 +68,7 @@ def test_add_zip_type(
     about_prefs.open()
     about_prefs.get_app_name_for_mime_type("application/zip")
 
-    # Remove the directory created as MacOS automatically unzips
+    # Remove the directory created as macOS automatically unzips
     if sys_platform == "Darwin":
         dir_created = os.path.join(home_folder, "Downloads", "api-guidelines-vNext")
         shutil.rmtree(dir_created)

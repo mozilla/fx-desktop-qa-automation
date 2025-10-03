@@ -15,7 +15,6 @@ def test_case():
 
 # Constants
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.fixture()
@@ -33,7 +32,6 @@ def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
     return "LibreOffice Writer"
 
 
-# @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 @pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """

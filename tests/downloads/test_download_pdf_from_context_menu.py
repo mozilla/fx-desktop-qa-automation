@@ -36,18 +36,19 @@ def test_download_pdf_from_context_menu(
           must rely on fixed waits to give the OS time to render the dialog and to
           finish writing the file.
     """
+    # Any attempt to refactor this test make the test fail in CI, if time, it can be revised later.
 
     from pynput.keyboard import Controller
 
     # Initialize objects
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
-    keyboard = Controller()
-    context_menu = ContextMenu(driver)
-
-    # Open the PDF file, right-click on the body of the file and select Save page as
     pdf.open()
+    keyboard = Controller()
     body = pdf.get_element("pdf-body")
+
+    # Right-click on the body of the file and select Save page as
     pdf.context_click(body)
+    context_menu = ContextMenu(driver)
     context_menu.click_and_hide_menu("context-menu-save-page-as")
 
     # Allow time for the save dialog to appear and handle prompt
@@ -59,8 +60,7 @@ def test_download_pdf_from_context_menu(
     sleep(3)
 
     # Open about:telemetry and go to events tab
-    about_telemetry = AboutTelemetry(driver)
-    about_telemetry.open()
+    about_telemetry = AboutTelemetry(driver).open()
     about_telemetry.get_element("events-tab").click()
 
     # Verify that Telemetry is recorded
