@@ -4,6 +4,7 @@ import sys
 from subprocess import check_output
 
 import pytest
+import yaml
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CI_MARK = "@pytest.mark.ci"
@@ -105,7 +106,25 @@ def dedupe(run_list: list, slash: str) -> list:
     return run_list
 
 
+def parse_manifest(manifest_list, slash):
+    tests = []
+    for manifest_file in manifest_list:
+        if not manifest_file.endswith(".yaml"):
+            manifest_file = f"{manifest_file}.yaml"
+            with open(manifest_file) as fh:
+                manifest = yaml.safe_load(fh)
+                for suite, suite_manifest in manifest.items():
+                    for test in suite_manifest.keys():
+                        tests.append(slash.join(["tests", suite, test]))
+
+    with open(OUTPUT_FILE, "w") as fh:
+        fh.write("\n".join(run_list))
+
+
 if __name__ == "__main__":
+    slash = "/" if "/" in SCRIPT_DIR else "\\"
+    if len(sys.argv) > 1:
+        parse_manifest(sys.argv[1:], slash)
     if os.path.exists(".env"):
         with open(".env") as fh:
             contents = fh.read()
@@ -119,8 +138,6 @@ if __name__ == "__main__":
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("tests")
             sys.exit(0)
-
-    slash = "/" if "/" in SCRIPT_DIR else "\\"
 
     re_obj = {
         "test_re_string": r".*/.*/test_.*\.py",
