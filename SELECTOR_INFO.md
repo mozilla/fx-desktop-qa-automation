@@ -1788,6 +1788,13 @@ Description: Open all bookmarks from the context menu option from a Toolbar book
 Location: Context menu - Toolbar
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-move-tab-to-start
+Selector Data: menuitem[data-l10n-id='move-to-start']
+Description: Context menu option to move a tab to the start of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
