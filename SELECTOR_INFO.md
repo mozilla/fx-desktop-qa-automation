@@ -1151,6 +1151,13 @@ Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: unknown-content-type-dialog
+Selector Data: unknownContentTypeWindo
+Description: The unknown content type dialog
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container

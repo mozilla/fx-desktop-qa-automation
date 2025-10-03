@@ -405,6 +405,24 @@
         "groups": []
     },
 
+    "download-target-element": {
+        "selectorData": "downloadTarget",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "download-progress-element": {
+        "selectorData": "downloadProgress",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "download-details-element": {
+        "selectorData": "downloadDetailsNormal",
+        "strategy": "class",
+        "groups": []
+    },
+
     "bookmark-in-bar": {
         "selectorData": "toolbarbutton.bookmark-item",
         "strategy": "css",

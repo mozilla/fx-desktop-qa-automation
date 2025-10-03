@@ -27,14 +27,23 @@ def test_download_pdf(
     delete_files,
 ):
     """
-    C1756769: Verify that the user can Download a PDF
+    C1756769 - Verify that the user can Download a PDF
+
+    Notes:
+        - Firefox is launched with a new profile (also a test case precondition) that has default download settings.
+        - This means the OS-level "Save File" dialog will appear for every download.
+        - Selenium cannot interact with this native dialog directly, so the test
+          must rely on fixed waits to give the OS time to render the dialog and to
+          finish writing the file.
     """
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url).open()
+
+    # Initialize objects
+    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     keyboard = Controller()
 
     # Click the download button
-    download_button = pdf.get_element("download-button")
-    download_button.click()
+    pdf.open()
+    pdf.click_download_button()
 
     # Allow time for the download dialog to appear and pressing handle the prompt
     time.sleep(2)
