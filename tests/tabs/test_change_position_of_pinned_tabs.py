@@ -5,6 +5,10 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
 
+# --- Expected Title Constants ---
+EXPECTED_MOZILLA_TITLE = "Mozilla"
+EXPECTED_ROBOT_TITLE = "Gort!"
+
 
 @pytest.fixture()
 def test_case():
@@ -66,9 +70,9 @@ def test_change_position_of_pinned_tabs(driver: Firefox):
     new_pinned_tab_two_title = driver.title
     logging.info("Tab title: %s", new_pinned_tab_two_title)
 
-    assert "Mozilla" in new_pinned_tab_one_title, (
+    assert EXPECTED_MOZILLA_TITLE in new_pinned_tab_one_title, (
         "Mozilla should now be the first pinned tab"
     )
-    assert "Gort!" in new_pinned_tab_two_title, (
+    assert EXPECTED_ROBOT_TITLE in new_pinned_tab_two_title, (
         "Robot should now be the second pinned tab"
     )
