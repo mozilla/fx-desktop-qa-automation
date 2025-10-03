@@ -42,8 +42,8 @@ def test_password_csv_correctness(
     page.navigate_dialog_to_location(downloads_folder, PASSWORDS_FILE)
 
     # Verify the exported csv file is present in the target folder
-    csv_file = os.path.join(downloads_folder, PASSWORDS_FILE)
-    about_logins.wait.until(lambda _: os.path.exists(csv_file))
+    csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
+    assert os.path.exists(csv_file)
 
     # Verify the contents of the exported csv file
     guid_pattern = re.compile(
