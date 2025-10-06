@@ -118,7 +118,7 @@ def parse_manifest(manifest_list, slash):
                         tests.append(slash.join(["tests", suite, test]))
 
     with open(OUTPUT_FILE, "w") as fh:
-        fh.write("\n".join(run_list))
+        fh.write("\n".join(tests))
 
 
 if __name__ == "__main__":
