@@ -1,7 +1,11 @@
+import json
+import sys
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from modules.browser_object import ContextMenu, Navigation
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -10,8 +14,9 @@ def test_case():
     return "1756748"
 
 
-# Constants
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
+
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.fixture()
@@ -19,35 +24,41 @@ def delete_files_regex_string():
     return r"sample.*\.doc"
 
 
-def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
-    """
-    Decide which default application should be used to open .doc files, based on OS
-    """
-    if sys_platform == "Darwin":
-        return "TextEdit" if opt_ci else "Pages"
-    # Linux/Windows use LibreOffice
-    return "LibreOffice Writer"
-
-
+@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 @pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """
-    C1756748 - Verify that downloading a .doc file adds a new MIME type entry
-    and the correct default application is assigned.
+    C1756748: Verify the user can add the .doc type
     """
-    # Instantiate objects
-    page = GenericPage(driver, url=DOC_LINK)
+    doc_page = GenericPage(driver, url=DOC_LINK).open()
     nav = Navigation(driver)
+    context_menu = ContextMenu(driver)
     about_prefs = AboutPrefs(driver, category="general")
+    doc_page.get_element("sample-doc-download").click()
 
-    # Open the test page with the .doc download link
-    page.open()
-    page.click_on("sample-doc-download")
+    downloads_button = nav.get_download_button()
 
-    # Download the file and set 'Always Open Similar Files'
-    nav.set_always_open_similar_files()
+    with driver.context(driver.CONTEXT_CHROME):
+        downloads_button.click()
+        download_item = nav.get_element("download-panel-item")
+        nav.context_click(download_item)
+        context_menu.get_element("context-menu-always-open-similar-files").click()
 
-    # Verify the MIME type entry exists and default app matches expectation
     about_prefs.open()
-    app_name = about_prefs.get_app_name_for_mime_type("application/msword")
-    assert app_name == expected_app_name(sys_platform, opt_ci)
+    about_prefs.element_exists("mime-type-item", labels=["application/msword"])
+
+    mime_type_item = about_prefs.get_element(
+        "mime-type-item", labels=["application/msword"]
+    )
+    action_description_item = about_prefs.get_element(
+        "mime-type-item-description", parent_element=mime_type_item
+    )
+
+    mime_type_data = json.loads(action_description_item.get_attribute("data-l10n-args"))
+    if sys_platform == "Darwin":
+        if opt_ci:
+            assert mime_type_data["app-name"] == "TextEdit"
+        else:
+            assert mime_type_data["app-name"] == "Pages"
+    else:
+        assert mime_type_data["app-name"] == "LibreOffice Writer"

@@ -28,19 +28,10 @@ def test_download_pdf_from_context_menu(
 ):
     """
     C1756790: Verify that Telemetry is Recorded when Saving a PDF from the Context menu
-
-    Notes:
-        - Firefox is launched with a new profile (also a test case precondition) that has default download settings.
-        - This means the OS-level "Save File" dialog will appear for every download.
-        - Selenium cannot interact with this native dialog directly, so the test
-          must rely on fixed waits to give the OS time to render the dialog and to
-          finish writing the file.
     """
-    # Any attempt to refactor this test make the test fail in CI, if time, it can be revised later.
 
     from pynput.keyboard import Controller
 
-    # Initialize objects
     pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
     pdf.open()
     keyboard = Controller()
