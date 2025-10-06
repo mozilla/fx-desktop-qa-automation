@@ -1,7 +1,8 @@
 import logging
+import re
 from typing import Literal
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -246,6 +247,21 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def set_always_open_similar_files(self) -> BasePage:
+        """
+        From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
+        """
+        downloads_button = self.get_download_button()
+        downloads_button.click()
+
+        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
+        download_item = self.get_element("download-panel-item")
+        self.context_click(download_item)
+        self.context_menu.get_element("context-menu-always-open-similar-files").click()
+
+        return self
+
+    @BasePage.context_chrome
     def wait_for_download_animation_finish(
         self, downloads_button: WebElement
     ) -> BasePage:
@@ -275,27 +291,40 @@ class Navigation(BasePage):
         self.click_on("file-download-warning-button")
         return self
 
-    def wait_for_item_to_download(self, filename: str) -> BasePage:
+    def wait_for_item_to_download(self) -> BasePage:
         """
-        Check the downloads tool in the toolbar to wait for a given file to download
+        Wait for download elements to be present.
+
         """
-        original_timeout = self.driver.timeouts.implicit_wait
-        try:
-            # Whatever our timeout, we want to lengthen it because downloads
-            self.driver.implicitly_wait(original_timeout * 2)
-            self.element_visible("downloads-item-by-file", labels=[filename])
-            self.expect_not(
-                EC.element_attribute_to_include(
-                    self.get_selector("downloads-button"), "animate"
-                )
-            )
-            with self.driver.context(self.context_id):
-                self.driver.execute_script(
-                    "arguments[0].setAttribute('hidden', true)",
-                    self.get_element("downloads-button"),
-                )
-        finally:
-            self.driver.implicitly_wait(original_timeout)
+        self.element_visible("download-target-element")
+        return self
+
+    @BasePage.context_chrome
+    def verify_download_name(self, expected_pattern: str) -> BasePage:
+        """
+        Verify download name matches expected pattern.
+        Argument:
+            expected_pattern: Regex pattern to match against download name
+        """
+        download_name = self.get_element("download-target-element")
+        download_value = download_name.get_attribute("value")
+        assert re.match(expected_pattern, download_value), (
+            f"The download name is incorrect: {download_value}"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_download_completion(self) -> BasePage:
+        """Wait until the most recent download reaches 100% progress."""
+
+        def _download_complete(_):
+            try:
+                element = self.get_element("download-progress-element")
+                return element.get_attribute("value") == "100"
+            except StaleElementReferenceException:
+                return False
+
+        self.wait.until(_download_complete)
         return self
 
     @BasePage.context_chrome

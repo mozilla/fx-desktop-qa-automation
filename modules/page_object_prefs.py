@@ -3,6 +3,7 @@ import re
 from time import sleep
 from typing import List, Literal
 
+from rich import json
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -636,6 +637,49 @@ class AboutPrefs(BasePage):
                 self.get_element("panel-popup-button", labels=[field]).click()
         else:
             self.get_element("panel-popup-button", labels=[field]).click()
+        return self
+
+    def get_app_name_for_mime_type(self, mime_type: str) -> str:
+        """
+        Return the application name associated with a given MIME type in about:preferences.
+        Argument:
+            mime_type: the MIME type to look up (e.g., "application/msword").
+        """
+        # Locate the row for the given MIME type
+        mime_type_item = self.get_element("mime-type-item", labels=[mime_type])
+
+        # Find the description element that contains application info
+        action_description = self.get_element(
+            "mime-type-item-description", parent_element=mime_type_item
+        )
+
+        # Parse the JSON data-l10n-args attribute and extract app name
+        mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
+        return mime_type_data["app-name"]
+
+    def set_pdf_handling_to_always_ask(self) -> BasePage:
+        """
+        Set PDF content type handling to "Always ask" in Applications settings.
+        """
+        self.click_on("pdf-content-type")
+        self.click_on("pdf-actions-menu")
+        menu = self.get_element("pdf-actions-menu")
+        menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
+        return self
+
+    @BasePage.context_chrome
+    def handle_unknown_content_dialog(self) -> BasePage:
+        """
+        Wait for the unknown content type dialog to appear and close it with Escape.
+        """
+        self.wait.until(lambda _: len(self.driver.window_handles) > 1)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.wait.until(lambda _: self.get_element("unknown-content-type-dialog"))
+
+        # Close the dialog with Escape
+        dialog = self.get_element("unknown-content-type-dialog")
+        dialog.send_keys(Keys.ESCAPE)
         return self
 
 

@@ -541,5 +541,13 @@
     "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
     "strategy": "css",
     "groups": []
-  }
+  },
+
+    "unknown-content-type-dialog": {
+        "selectorData": "unknownContentTypeWindow",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    }
 }
