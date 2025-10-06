@@ -3,6 +3,7 @@ from os import environ
 
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
@@ -23,7 +24,7 @@ def open_clear_cookies_data_dialog(about_prefs: AboutPrefs, ba: BrowserActions):
     return about_prefs.get_clear_cookie_data_value()
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows GA, tracked in 1990570")
+#@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows GA, tracked in 1990570")
 def test_clear_cookie_data(driver: Firefox):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel
@@ -31,6 +32,7 @@ def test_clear_cookie_data(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
+    wait = WebDriverWait(driver, 10, poll_frequency=0.5)
 
     # Visit a site to get a cookie added to saved data
     driver.get("https://www.wikipedia.com")
@@ -42,8 +44,9 @@ def test_clear_cookie_data(driver: Firefox):
 
     # Then clear the cookies and site data
     about_prefs.get_element("clear-data-accept-button").click()
+    ba.switch_to_content_context()
 
     # Finally, check the value of the dialog option, it should be 0
-
+    wait.until(lambda d: int(open_clear_cookies_data_dialog(about_prefs, ba)) == 0)
     cookie_value2 = open_clear_cookies_data_dialog(about_prefs, ba)
     assert cookie_value2 == 0
