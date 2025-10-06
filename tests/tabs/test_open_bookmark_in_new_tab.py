@@ -18,7 +18,6 @@ EXPECTED_TEST = "youtube"
 
 
 def test_open_bookmark_in_new_tab(driver: Firefox):
-
     """
     C134460: Verify that New Tabs can be opened by right clicking and selecting new tab from the bookmarks.
     """
