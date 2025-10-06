@@ -13,7 +13,7 @@ from modules.util import BrowserActions
 def test_case():
     return "143627"
 
-
+WEBSITE_ADDRESS = "https://www.wikipedia.com"
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
@@ -35,7 +35,7 @@ def test_clear_cookie_data(driver: Firefox):
     wait = WebDriverWait(driver, 10, poll_frequency=0.5)
 
     # Visit a site to get a cookie added to saved data
-    driver.get("https://www.wikipedia.com")
+    driver.get(WEBSITE_ADDRESS)
 
     # Navigate to the clear data dialog of about:preferences#privacy
     # Check for a non-zero value of the 'Cookies and site data' option
