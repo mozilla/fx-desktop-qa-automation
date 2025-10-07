@@ -250,13 +250,24 @@ class Navigation(BasePage):
         """
         From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
         """
-        downloads_button = self.get_download_button()
-        downloads_button.click()
+        print("\n[DEBUG] Starting set_always_open_similar_files")
 
-        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
+        downloads_button = self.get_download_button()
+        print("[DEBUG] Got downloads button")
+        downloads_button.click()
+        print("[DEBUG] Clicked downloads button")
+
         download_item = self.get_element("download-panel-item")
+        print(
+            f"[DEBUG] Got download item: {download_item.get_attribute('outerHTML')[:200]}"
+        )
+
         self.context_click(download_item)
+        print("[DEBUG] Context clicked download item")
+
         self.context_menu.get_element("context-menu-always-open-similar-files").click()
+        print("[DEBUG] Clicked 'Always Open Similar Files'")
+
         return self
 
     @BasePage.context_chrome
