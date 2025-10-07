@@ -639,47 +639,24 @@ class AboutPrefs(BasePage):
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
+    @BasePage.context_content
     def get_app_name_for_mime_type(self, mime_type: str) -> str:
         """
         Return the application name associated with a given MIME type in about:preferences.
         Argument:
             mime_type: the MIME type to look up (e.g., "application/msword").
         """
-        print(f"\n[DEBUG] Looking for MIME type: {mime_type}")
+        # Locate the row for the given MIME type
+        mime_type_item = self.get_element("mime-type-item", labels=[mime_type])
 
-        try:
-            mime_type_item = self.get_element("mime-type-item", labels=[mime_type])
-            print(
-                f"[DEBUG] Found MIME type item: {mime_type_item.get_attribute('outerHTML')[:300]}"
-            )
-        except Exception as e:
-            print(f"[DEBUG] Failed to find MIME type item: {e}")
-            raise
+        # Find the description element that contains application info
+        action_description = self.get_element(
+            "mime-type-item-description", parent_element=mime_type_item
+        )
 
-        try:
-            action_description = self.get_element(
-                "mime-type-item-description", parent_element=mime_type_item
-            )
-            print(
-                f"[DEBUG] Found action description: {action_description.get_attribute('outerHTML')[:300]}"
-            )
-        except Exception as e:
-            print(f"[DEBUG] Failed to find action description: {e}")
-            raise
-
-        try:
-            data_attr = action_description.get_attribute("data-l10n-args")
-            print(f"[DEBUG] data-l10n-args: {data_attr}")
-
-            mime_type_data = json.loads(data_attr)
-            print(f"[DEBUG] Parsed JSON: {mime_type_data}")
-
-            app_name = mime_type_data["app-name"]
-            print(f"[DEBUG] Extracted app-name: {app_name}")
-            return app_name
-        except Exception as e:
-            print(f"[DEBUG] Failed to parse app name: {e}")
-            raise
+        # Parse the JSON data-l10n-args attribute and extract app name
+        mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
+        return mime_type_data["app-name"]
 
 
 class AboutAddons(BasePage):

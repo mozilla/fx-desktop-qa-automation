@@ -250,29 +250,18 @@ class Navigation(BasePage):
         """
         From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
         """
-        print("\n[DEBUG] Starting set_always_open_similar_files")
-
         downloads_button = self.get_download_button()
-        print("[DEBUG] Got downloads button")
         downloads_button.click()
-        print("[DEBUG] Clicked downloads button")
 
+        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
         download_item = self.get_element("download-panel-item")
-        print(
-            f"[DEBUG] Got download item: {download_item.get_attribute('outerHTML')[:200]}"
-        )
-
         self.context_click(download_item)
-        print("[DEBUG] Context clicked download item")
-
         self.context_menu.get_element("context-menu-always-open-similar-files").click()
-        print("[DEBUG] Clicked 'Always Open Similar Files'")
-
         return self
 
     @BasePage.context_chrome
     def wait_for_download_animation_finish(
-        self, downloads_button: WebElement
+            self, downloads_button: WebElement
     ) -> BasePage:
         """
         Waits for the download button to finish playing the animation for downloading to local computer
@@ -346,7 +335,7 @@ class Navigation(BasePage):
         return self
 
     def handle_geolocation_prompt(
-        self, button_type="primary", remember_this_decision=False
+            self, button_type="primary", remember_this_decision=False
     ):
         """
         Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
@@ -413,7 +402,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def add_bookmark_via_toolbar_other_bookmark_context_menu(
-        self, bookmark_data: Bookmark, ba: BrowserActions
+            self, bookmark_data: Bookmark, ba: BrowserActions
     ) -> BasePage:
         """
         Add a bookmark via the toolbar's Other Bookmarks context menu.
@@ -485,7 +474,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def delete_bookmark_from_other_bookmarks_via_context_menu(
-        self, bookmark_name: str
+            self, bookmark_name: str
     ) -> BasePage:
         """
         Deletes a bookmark from Other Bookmarks via context menu.
@@ -512,7 +501,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def verify_bookmark_exists_in_toolbar_other_bookmarks_folder(
-        self, bookmark_name: str
+            self, bookmark_name: str
     ) -> BasePage:
         """
         Verify bookmark exists in Other Bookmarks folder from toolbar
@@ -528,7 +517,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def verify_bookmark_exists_in_bookmarks_toolbar(
-        self, bookmark_name: str
+            self, bookmark_name: str
     ) -> BasePage:
         """
         Verify bookmark exists in the bookmarks toolbar
@@ -538,7 +527,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def verify_bookmark_does_not_exist_in_toolbar_other_bookmarks_folder(
-        self, bookmark_name: str
+            self, bookmark_name: str
     ) -> BasePage:
         """
         Verify bookmark does not exist in Other Bookmarks folder from toolbar
@@ -554,7 +543,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def verify_bookmark_does_not_exist_in_bookmarks_toolbar(
-        self, bookmark_name: str
+            self, bookmark_name: str
     ) -> BasePage:
         """Verify bookmark does not exist in the bookmarks toolbar"""
         self.panel_ui.element_not_visible("bookmark-by-title", labels=[bookmark_name])
@@ -615,7 +604,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def open_bookmark_in_new_tab_via_context_menu(
-        self, bookmark_title: str
+            self, bookmark_title: str
     ) -> BasePage:
         """
         Right-click bookmark and opens it in a new tab via context menu
@@ -632,7 +621,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def open_bookmark_in_new_window_via_context_menu(
-        self, bookmark_title: str
+            self, bookmark_title: str
     ) -> BasePage:
         """
         Right-click bookmark and opens it in a new window via context menu
@@ -647,7 +636,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def open_bookmark_in_new_private_window_via_context_menu(
-        self, bookmark_title: str
+            self, bookmark_title: str
     ) -> BasePage:
         """
         Right-clicks bookmark and opens it in a new private window via context menu
@@ -687,8 +676,8 @@ class Navigation(BasePage):
 
     #
     def set_site_autoplay_permission(
-        self,
-        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+            self,
+            settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
     ) -> BasePage:
         """
         Open the Site audio-video permission panel and set a specific autoplay setting.
