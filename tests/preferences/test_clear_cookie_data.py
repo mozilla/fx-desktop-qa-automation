@@ -14,7 +14,7 @@ def test_case():
     return "143627"
 
 WEBSITE_ADDRESS = "https://www.wikipedia.com"
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+#WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 def _dialog_options_present(about_prefs: AboutPrefs) -> bool:
