@@ -14,6 +14,7 @@ def test_case():
 
 # Constants
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
+# WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 @pytest.fixture()
@@ -32,6 +33,7 @@ def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
 
 
 @pytest.mark.noxvfb
+# @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """
     C1756748 - Verify that downloading a .doc file adds a new MIME type entry
@@ -51,6 +53,8 @@ def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_
 
     # Verify the MIME type entry exists and default app matches expectation
     about_prefs.open()
+    about_prefs.element_exists("mime-type-item", labels=["application/msword"])
+
     app_name = about_prefs.get_app_name_for_mime_type("application/msword")
     assert app_name == expected_app_name(sys_platform, opt_ci)
 
