@@ -4,7 +4,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import TabBar
 
-
 URL = "about:robots"
 EXPECTED_TEXT = "Firefox"
 
