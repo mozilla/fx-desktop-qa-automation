@@ -1,7 +1,8 @@
 import logging
+import re
 from typing import Literal
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -257,6 +258,7 @@ class Navigation(BasePage):
         download_item = self.get_element("download-panel-item")
         self.context_click(download_item)
         self.context_menu.get_element("context-menu-always-open-similar-files").click()
+
         return self
 
     @BasePage.context_chrome
@@ -310,6 +312,34 @@ class Navigation(BasePage):
                 )
         finally:
             self.driver.implicitly_wait(original_timeout)
+        return self
+
+    @BasePage.context_chrome
+    def verify_download_name(self, expected_pattern: str) -> BasePage:
+        """
+        Verify download name matches expected pattern.
+        Argument:
+            expected_pattern: Regex pattern to match against download name
+        """
+        download_name = self.get_element("download-target-element")
+        download_value = download_name.get_attribute("value")
+        assert re.match(expected_pattern, download_value), (
+            f"The download name is incorrect: {download_value}"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_download_completion(self) -> BasePage:
+        """Wait until the most recent download reaches 100% progress."""
+
+        def _download_complete(_):
+            try:
+                element = self.get_element("download-progress-element")
+                return element.get_attribute("value") == "100"
+            except StaleElementReferenceException:
+                return False
+
+        self.wait.until(_download_complete)
         return self
 
     @BasePage.context_chrome
