@@ -18,6 +18,15 @@ def delete_files_regex_string():
     return r".*i-9.pdf"
 
 
+def wait_for_file_download(file_path, timeout=10, interval=0.5):
+    start = time.time()
+    while time.time() - start < timeout:
+        if os.path.exists(file_path):
+            return True
+        time.sleep(interval)
+    return False
+
+
 @pytest.mark.headed
 def test_download_pdf(
     driver: Firefox,
@@ -54,14 +63,6 @@ def test_download_pdf(
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Wait up to 10 seconds for the file to appear and finish downloading
-    timeout = 10
-    start = time.time()
-    while time.time() - start < timeout:
-        if os.path.exists(saved_pdf_location):
-            break
-        time.sleep(0.5)
-
-    # Verify that the file was downloaded
-    assert os.path.exists(saved_pdf_location), (
-        f"The file was not downloaded to {saved_pdf_location} after {timeout} seconds."
+    assert wait_for_file_download(saved_pdf_location, timeout=10), (
+        f"File not found: {saved_pdf_location}"
     )
