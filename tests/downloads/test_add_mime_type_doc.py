@@ -4,6 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
+from modules.browser_object_tabbar import TabBar
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -43,6 +44,7 @@ def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_
     page = GenericPage(driver, url=DOC_LINK)
     nav = Navigation(driver)
     about_prefs = AboutPrefs(driver, category="general")
+    tabs = TabBar(driver)
 
     # Open the test page with the .doc download link
     page.open()
@@ -52,9 +54,9 @@ def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_
     nav.set_always_open_similar_files()
 
     # Verify the MIME type entry exists and default app matches expectation
+    tabs.new_tab_by_button()
+    tabs.switch_to_new_tab()
     about_prefs.open()
-    about_prefs.element_exists("mime-type-item", labels=["application/msword"])
-
     app_name = about_prefs.get_app_name_for_mime_type("application/msword")
     assert app_name == expected_app_name(sys_platform, opt_ci)
 
