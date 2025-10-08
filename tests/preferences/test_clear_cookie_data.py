@@ -10,8 +10,9 @@ from modules.util import BrowserActions
 def test_case():
     return "143627"
 
+
 WEBSITE_ADDRESS = "https://www.wikipedia.com"
-#WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+# WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
 def _dialog_options_present(about_prefs: AboutPrefs) -> bool:
@@ -23,7 +24,9 @@ def _dialog_options_present(about_prefs: AboutPrefs) -> bool:
         return False
 
 
-def open_clear_cookies_data_dialog(about_prefs: AboutPrefs, ba: BrowserActions, wait: WebDriverWait):
+def open_clear_cookies_data_dialog(
+    about_prefs: AboutPrefs, ba: BrowserActions, wait: WebDriverWait
+):
     """
     Open about:preferences#privacy, show 'Clear Data' dialog, switch into its iframe,
     wait for its options container to be present, read the value, then switch back.
