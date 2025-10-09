@@ -1,9 +1,9 @@
 import datetime
+import json
 import re
 from time import sleep
 from typing import List, Literal
 
-from rich import json
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -639,6 +639,7 @@ class AboutPrefs(BasePage):
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
 
+    @BasePage.context_content
     def get_app_name_for_mime_type(self, mime_type: str) -> str:
         """
         Return the application name associated with a given MIME type in about:preferences.
