@@ -14,7 +14,7 @@ def test_case() -> str:
     return "130919"
 
 
-#Constants / parametrization
+# Constants / parametrization
 READER_VIEW_URL: str = (
     "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
 )
@@ -45,7 +45,6 @@ def _css_int(util: Utilities, element, prop: str) -> int:
     Read a CSS property and normalize it to an integer by stripping non-numeric chars.
     """
     return int(util.remove_all_non_numbers(element.value_of_css_property(prop)))
-
 
 
 @pytest.mark.ci
@@ -99,9 +98,9 @@ def test_type_control_panel_size(driver: Firefox, control: SizeControl) -> None:
 
 @pytest.mark.parametrize("alignment,intended_alignment", ALIGNMENTS)
 def test_type_control_panel_text_alignment(
-    driver: Firefox,
-    alignment: AlignKey,
-    intended_alignment: AlignCSS,
+        driver: Firefox,
+        alignment: AlignKey,
+        intended_alignment: AlignCSS,
 ) -> None:
     """
     C130919.3: Ensure the functionality of the type control panels works (text alignment).
