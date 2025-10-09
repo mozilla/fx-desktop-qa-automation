@@ -28,13 +28,16 @@ def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
     return "LibreOffice Writer"
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.skipif(
+    WIN_GHA, reason="Most runners don’t have a .doc handler registered on Windows"
+)
 @pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """
     C1756748 - Verify that downloading a .doc file adds a new MIME type entry
     and the correct default application is assigned.
     """
+
     # Instantiate objects
     page = GenericPage(driver, url=DOC_LINK)
     nav = Navigation(driver)
