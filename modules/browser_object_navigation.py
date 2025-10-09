@@ -264,11 +264,13 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def wait_for_download_animation_finish(self) -> BasePage:
         """Waits for the download button to finish playing the animation"""
-
-        downloads_button = self.get_download_button()
-        self.wait.until(
-            lambda _: downloads_button.get_attribute("notification") == "finish"
-        )
+        try:
+            downloads_button = self.get_download_button()
+            self.wait.until(
+                lambda _: downloads_button.get_attribute("notification") == "finish"
+            )
+        except TimeoutException:
+            logging.warning("Animation did not finish or did not play.")
         return self
 
     @BasePage.context_chrome
