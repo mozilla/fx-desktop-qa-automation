@@ -6,6 +6,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu
+from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object import AboutTelemetry, GenericPdf
 
@@ -33,28 +34,36 @@ def test_download_pdf_from_context_menu(
 ):
     """
     C1756790: Verify that Telemetry is Recorded when Saving a PDF from the Context menu
+
+     Notes:
+        - Firefox is launched with a new profile that has default download settings.
+        - This means the OS-level "Save File" dialog will appear for every download.
+        - Selenium cannot interact with this native dialog directly, so the test
+          must rely on fixed waits to give the OS time to render the dialog and to
+          finish writing the file.
     """
 
     # Initialize objects
-    pdf = GenericPdf(driver, pdf_url=fillable_pdf_url)
+    pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url)
     context_menu = ContextMenu(driver)
     about_telemetry = AboutTelemetry(driver)
     tabs = TabBar(driver)
+    nav = Navigation(driver)
 
     # Right-click on the body of the file and select Save page as
-    pdf.open()
-    body = pdf.get_element("pdf-body")
-    pdf.context_click(body)
+    pdf_page.open()
+    body = pdf_page.get_element("pdf-body")
+    pdf_page.context_click(body)
     context_menu.click_and_hide_menu("context-menu-save-page-as")
 
     # Allow time for the save dialog to appear and handle prompt
     sleep(2)
     context_menu.hide_popup_by_child_node("context-menu-save-page-as")
     keyboard = Controller()
-    pdf.handle_os_download_confirmation(keyboard, sys_platform)
+    pdf_page.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Allow time for the download to complete
-    sleep(3)
+    nav.wait_for_download_animation_finish()
 
     # Open about:telemetry in a new tab and go to the Events tab
     tabs.new_tab_by_button()
@@ -74,6 +83,5 @@ def test_download_pdf_from_context_menu(
                 pdf_telemetry_row = cells
                 break
 
-    assert pdf_telemetry_row is not None, "PDF telemetry data not found in events table"
     cell_texts = [cell.text.strip() for cell in pdf_telemetry_row[1:]]
     assert PDF_TELEMETRY_DATA == cell_texts
