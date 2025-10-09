@@ -262,13 +262,10 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def wait_for_download_animation_finish(
-        self, downloads_button: WebElement
-    ) -> BasePage:
-        """
-        Waits for the download button to finish playing the animation for downloading to local computer
-        """
+    def wait_for_download_animation_finish(self) -> BasePage:
+        """Waits for the download button to finish playing the animation"""
         try:
+            downloads_button = self.get_download_button()
             self.wait.until(
                 lambda _: downloads_button.get_attribute("notification") == "finish"
             )
