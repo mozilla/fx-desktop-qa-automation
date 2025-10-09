@@ -133,7 +133,7 @@
     },
 
     "panel-ui-history-recently-closed-reopen-tabs": {
-        "selectorData": "toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']",
+        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']",
         "strategy": "css",
         "groups": []
     },

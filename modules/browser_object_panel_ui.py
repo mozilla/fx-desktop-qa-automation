@@ -171,7 +171,7 @@ class PanelUi(BasePage):
         self.click_on("panel-ui-history")
 
         self.click_on("panel-ui-history-recently-closed")
-        if self.sys_platform() == "Linux":
+        if self.sys_platform() in ("Linux", "Darwin"):
             sleep(2)
 
         self.click_on("panel-ui-history-recently-closed-reopen-tabs")

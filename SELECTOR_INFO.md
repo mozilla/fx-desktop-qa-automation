@@ -3238,7 +3238,7 @@ Path to .json: modules/data/panel_ui.components.json
 ```
 ```
 Selector name: panel-ui-history-recently-closed-reopen-tabs
-Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']
+Selector Data: toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']
 Description: Recently closed reopen tabs
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
