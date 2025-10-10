@@ -10,30 +10,46 @@ def test_case():
     return "130908"
 
 
-WIKI_URL = (
+READER_VIEW_URL: str = (
     "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
 )
 
 
-def test_reader_view_open_close_using_searchbar(driver: Firefox):
+def test_reader_view_open_close_using_searchbar(driver: Firefox) -> None:
     """
-    C130908.1: Ensure that reader view is opened and closed from the location bar
+    C130908.1: Verify that Reader View can be opened and closed using the
+    location bar (search bar) control.
     """
-    wiki_page = GenericPage(driver, url=WIKI_URL)
-    reader_view = ReaderView(driver)
+    page = GenericPage(driver, url=READER_VIEW_URL)
+    rv = ReaderView(driver)
 
-    wiki_page.open()
-    reader_view.open_reader_view_searchbar()
-    reader_view.close_reader_view_searchbar()
+    # Open the Reader View through the search bar icon
+    page.open()
+    rv.open_reader_view_searchbar()
+    if hasattr(rv, "wait_for_reader_view_open"):
+        rv.wait_for_reader_view_open()
+
+    # Close Reader View through the same toolbar control
+    rv.close_reader_view_searchbar()
+    if hasattr(rv, "wait_for_reader_view_closed"):
+        rv.wait_for_reader_view_closed()
 
 
 def test_reader_view_open_close_using_keys(driver: Firefox):
     """
-    C130908.2: Ensure that the reader view is opened and closed using keys
+    C130908.2: Verify that Reader View can be opened and closed using keyboard shortcuts.
     """
-    wiki_page = GenericPage(driver, url=WIKI_URL)
-    reader_view = ReaderView(driver)
+    page = GenericPage(driver, url=READER_VIEW_URL)
+    rv = ReaderView(driver)
 
-    wiki_page.open()
-    reader_view.open_reader_view_keys()
-    reader_view.close_reader_view_keys()
+    page.open()
+
+    # Open using the platform-specific shortcut (handled internally in ReaderView)
+    rv.open_reader_view_keys()
+    if hasattr(rv, "wait_for_reader_view_open"):
+        rv.wait_for_reader_view_open()
+
+    # Close using the same shortcut
+    rv.close_reader_view_keys()
+    if hasattr(rv, "wait_for_reader_view_closed"):
+        rv.wait_for_reader_view_closed()
