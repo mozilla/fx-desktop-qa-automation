@@ -9,6 +9,7 @@ from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
 import pytest
+import yaml
 from PIL import Image, ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
@@ -153,6 +154,13 @@ def pytest_addoption(parser):
         help="Size for Fx window, default is '1152x864'",
     )
 
+    parser.addoption(
+        "--manifest",
+        action="store",
+        default=None,
+        help="Location of test manifest yaml file",
+    )
+
 
 def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
     if not filename.endswith(".png"):
@@ -194,6 +202,11 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
 @pytest.fixture()
 def opt_headless(request):
     return request.config.getoption("--run-headless")
+
+
+@pytest.fixture(scope="session")
+def opt_manifest(request):
+    return request.config.getoption("--manifest")
 
 
 @pytest.fixture()
@@ -389,6 +402,36 @@ def hard_quit():
     return False
 
 
+@pytest.fixture(scope="session")
+def read_manifest(opt_manifest, sys_platform):
+    syskey = {"Windows": "win", "Darwin": "mac", "Linux": "linux"}
+    if not opt_manifest:
+        return None
+    with open(opt_manifest) as fh:
+        manifest = yaml.safe_load(fh)
+    for suite in manifest:
+        result = None
+        for entry in suite:
+            if isinstance(manifest[suite][entry], dict):
+                result = manifest[suite][entry][syskey[sys_platform]]
+            else:
+                result = manifest[suite][entry]
+            if result == "unstable":
+                os.environ[f"SKIP_{entry}"] = True
+            elif result == "fail":
+                os.environ[f"XFAIL_{entry}"] = True
+
+
+@pytest.fixture()
+def modtests(request, read_manifest):
+    filename = os.path.split(request.module.__file__)[-1]
+    entry_name = filename.rsplit(".", 1)[0]
+    if os.environ.get(f"XFAIL_{entry_name}"):
+        request.node.add_marker(
+            pytest.mark.xfail(reason="Test was marked xfail in manifest.")
+        )
+
+
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
@@ -408,6 +451,7 @@ def driver(
     json_metadata,
     hard_quit,
     create_profiles,
+    modtests,
 ):
     """
     Return the webdriver object.

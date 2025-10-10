@@ -88,12 +88,16 @@ jobs:
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          "MANIFEST=" >> $env:GITHUB_ENV
+          "MANIFEST_ARG=" >> $env:GITHUB_ENV
         shell: pwsh
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
           Invoke-WebRequest -Uri ${{ inputs.win_installer_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          "MANIFEST=incident_manifest.yaml" >> $env:GITHUB_ENV
+          "MANIFEST_ARG=\"--manifest incident_manifest.yaml\"" >> $env:GITHUB_ENV
         shell: pwsh
       - name: Install Beta
         id: setup
@@ -106,8 +110,8 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
+          pipenv run python choose_ci_set.py $env:MANIFEST
+          pipenv run pytest $(cat selected_tests) $env:MANIFEST_ARG
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -119,8 +123,8 @@ jobs:
           rm ./pyproject.toml;
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
+          pipenv run python choose_ci_set.py $env:MANIFEST
+          pipenv run pytest $(cat selected_tests) $env:MANIFEST_ARG
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -179,14 +183,19 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
+      - name: Identify Manifests
+        if: ${{ inputs.mac_installer_link }}
+        run: |
+          echo "MANIFEST=incident_manifest.yaml" >> "$GITHUB_ENV";
+          echo "MANIFEST_ARG=\"--manifest incident_manifest.yaml" >> "$GITHUB_ENV";
       - name: Run Smoke Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run python choose_ci_set.py
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          pipenv run python choose_ci_set.py $MANIFEST
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $MANIFEST_ARG $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in MacOS (Headed)
@@ -196,8 +205,8 @@ jobs:
           REPORTABLE: true
         run: |
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run python choose_ci_set.py
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          pipenv run python choose_ci_set.py $MANIFEST
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $MANIFEST_ARG $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
       - name: Upload artifacts
@@ -239,15 +248,20 @@ jobs:
           ./collect_executables.sh
           ./firefox/firefox --version;
           #. ./keyring-unlock.sh;
+      - name: Identify Manifests
+        if: ${{ inputs.linux_tarball_link }}
+        run: |
+          echo "MANIFEST=incident_manifest.yaml" >> "$GITHUB_ENV";
+          echo "MANIFEST_ARG=\"--manifest incident_manifest.yaml" >> "$GITHUB_ENV";
       - name: Run Smoke Tests in Ubuntu
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           "$FX_EXECUTABLE" --version;
-          pipenv run python choose_ci_set.py;
+          pipenv run python choose_ci_set.py $MANIFEST;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $MANIFEST_ARG $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
       - name: Run Smoke Tests in Ubuntu (Headed)
         if: steps.setup.conclusion == 'success' && always()
@@ -255,8 +269,8 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           mv ./ci_xvfb_pyproject_headed.toml ./pyproject.toml;
-          pipenv run python choose_ci_set.py
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          pipenv run python choose_ci_set.py $MANIFEST
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $MANIFEST_ARG $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:
