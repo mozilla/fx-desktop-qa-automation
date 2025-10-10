@@ -15,7 +15,7 @@ READER_VIEW_URL: str = (
 )
 
 
-def test_reader_view_open_close_using_searchbar(driver: Firefox) -> None:
+def test_reader_view_open_close_using_searchbar(driver: Firefox):
     """
     C130908.1: Verify that Reader View can be opened and closed using the
     location bar (search bar) control.

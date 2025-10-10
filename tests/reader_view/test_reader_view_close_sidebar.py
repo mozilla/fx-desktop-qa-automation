@@ -6,7 +6,7 @@ from modules.page_object import GenericPage
 
 
 @pytest.fixture()
-def test_case() -> str:
+def test_case():
     return "130912"
 
 
@@ -15,7 +15,7 @@ READER_VIEW_URL: str = (
 )
 
 
-def test_reader_view_close_from_sidebar(driver: Firefox) -> None:
+def test_reader_view_close_from_sidebar(driver: Firefox):
     """
     C130912: Ensure that Reader View can be closed from the sidebar toolbar.
     """
