@@ -193,6 +193,12 @@ class AboutLogins(BasePage):
             if delete_files_regex.match(file):
                 os.remove(passwords_csv)
 
+    def verify_csv_export(self, downloads_folder: str, filename: str):
+        """Wait until the exported CSV file is present in the target folder."""
+        csv_file = os.path.join(downloads_folder, filename)
+        self.wait.until(lambda _: os.path.exists(csv_file))
+        return csv_file
+
 
 class AboutPrivatebrowsing(BasePage):
     """

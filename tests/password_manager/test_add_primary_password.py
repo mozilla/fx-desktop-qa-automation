@@ -43,7 +43,6 @@ def test_add_primary_password(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    with driver.context(driver.CONTEXT_CHROME):
-        alert = about_prefs.get_alert()
-        assert alert.text == ALERT_MESSAGE
-        alert.accept()
+    alert = about_prefs.get_alert()
+    assert alert.text == ALERT_MESSAGE
+    alert.accept()
