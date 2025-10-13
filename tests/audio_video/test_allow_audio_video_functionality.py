@@ -1,6 +1,3 @@
-import sys
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 
