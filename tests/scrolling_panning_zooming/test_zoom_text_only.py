@@ -101,11 +101,11 @@ def test_zoom_text_only_from_settings(
     nav = Navigation(driver)
     panel_ui = PanelUi(driver)
 
-    # Save the original positions of elements for comparison
+    # Save the original sizes and positions for comparison
     panel_ui.open_and_switch_to_new_window("tab")
     nav.search(WEBSITE_2)
     web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
-    original_positions = save_original_positions(driver, web_page)
+    original_data = save_original_data(driver, web_page)
 
     # Set the pref to zoom text only
     panel_ui.open_and_switch_to_new_window("tab")
@@ -116,7 +116,7 @@ def test_zoom_text_only_from_settings(
     about_prefs.set_default_zoom_level(110)
 
     # Verify results
-    zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
+    zoom_text_only_functionality_test(driver, nav, web_page, original_data)
 
     # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
     about_prefs = AboutPrefs(driver, category="General").open()
@@ -137,11 +137,11 @@ def test_zoom_text_only_after_restart(
     nav = Navigation(driver)
     panel_ui = PanelUi(driver)
 
-    # Save the original positions of elements for comparison
+    # Save the original sizes and positions for comparison
     panel_ui.open_and_switch_to_new_window("tab")
     nav.search(WEBSITE_2)
     web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
-    original_positions = save_original_positions(driver, web_page)
+    original_data = save_original_data(driver, web_page)
 
     # Set default zoom level
     panel_ui.open_and_switch_to_new_window("tab")
@@ -149,7 +149,7 @@ def test_zoom_text_only_after_restart(
     about_prefs.set_default_zoom_level(110)
 
     # Verify results
-    zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
+    zoom_text_only_functionality_test(driver, nav, web_page, original_data)
 
     # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
     about_prefs = AboutPrefs(driver, category="General").open()
@@ -157,42 +157,42 @@ def test_zoom_text_only_after_restart(
     about_prefs.click_on("zoom-text-only")
 
 
-def save_original_positions(driver, web_page):
+def save_original_data(driver, web_page):
     """
-    Saves the original positions of elements to be tested to verify the effects of zooming
+    Saves the original positions and sizes for comparison.
     """
     driver.switch_to.window(driver.window_handles[0])
     original_website1_image_position = web_page.get_element("yahoo-logo").location["x"]
     original_website1_text_position = web_page.get_element(
         "yahoo-login-button"
     ).location["x"]
+
     driver.switch_to.window(driver.window_handles[1])
-    original_website2_image_position = web_page.get_element("duckduckgo-logo").location[
-        "x"
-    ]
+    original_website2_image_size = web_page.get_element("duckduckgo-logo").size
     original_website2_text_position = web_page.get_element(
         "duckduckgo-tagline"
     ).location["x"]
+
     return (
         original_website1_image_position,
         original_website1_text_position,
-        original_website2_image_position,
+        original_website2_image_size,
         original_website2_text_position,
     )
 
 
-def zoom_text_only_functionality_test(driver, nav, web_page, original_positions):
+def zoom_text_only_functionality_test(driver, nav, web_page, original_data):
     """
     Verifies that zoom text only works
     """
     (
         original_website1_image_position,
         original_website1_text_position,
-        original_website2_image_position,
+        original_website2_image_size,
         original_website2_text_position,
-    ) = original_positions
+    ) = original_data
 
-    # Verify only text is enlarged
+    # Verify Yahoo: image position unchanged, text position changed
     driver.switch_to.window(driver.window_handles[0])
     new_image_position = web_page.get_element("yahoo-logo").location["x"]
     new_text_position = web_page.get_element("yahoo-login-button").location["x"]
@@ -209,7 +209,7 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
     with driver.context(driver.CONTEXT_CHROME):
         nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
 
-    # Verify that only text is zoomed out
+    # Verify Yahoo at 90%: image position still unchanged, text position changed
     assert (
         web_page.get_element("yahoo-logo").location["x"]
         == original_website1_image_position
@@ -219,12 +219,11 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
         > original_website1_text_position
     )
 
-    # Verify that zoom level is default level for a different website and only text is enlarged
+    # Verify DuckDuckGo: image SIZE unchanged, text position changed
     driver.switch_to.window(driver.window_handles[1])
     assert (
-        web_page.get_element("duckduckgo-logo").location["x"]
-        == original_website2_image_position
-    )
+        web_page.get_element("duckduckgo-logo").size == original_website2_image_size
+    ), "DuckDuckGo image size should not change (text-only zoom)"
     assert (
         web_page.get_element("duckduckgo-tagline").location["x"]
         < original_website2_text_position

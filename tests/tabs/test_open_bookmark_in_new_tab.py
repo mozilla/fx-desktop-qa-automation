@@ -14,6 +14,7 @@ def test_case():
 
 BOOKMARK_URL = "https://www.youtube.com/"
 BOOKMARK_TITLE = "YouTube"
+EXPECTED_TEST = "youtube"
 
 
 def test_open_bookmark_in_new_tab(driver: Firefox):
@@ -39,6 +40,6 @@ def test_open_bookmark_in_new_tab(driver: Firefox):
     tabs.wait_for_num_tabs(3)
     driver.switch_to.window(driver.window_handles[-1])
 
-    WebDriverWait(driver, 5).until(EC.url_contains("youtube"))
-    assert "youtube" in driver.current_url
-    page.url_contains("youtube")
+    WebDriverWait(driver, 5).until(EC.url_contains(EXPECTED_TEST))
+    assert EXPECTED_TEST in driver.current_url
+    page.url_contains(EXPECTED_TEST)

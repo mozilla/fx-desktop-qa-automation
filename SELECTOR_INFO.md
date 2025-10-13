@@ -1151,6 +1151,13 @@ Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: unknown-content-type-dialog
+Selector Data: unknownContentTypeWindo
+Description: The unknown content type dialog
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1786,6 +1793,13 @@ Selector Name: context-menu-toolbar-open-all-bookmarks
 Selector Data: placesContext_openBookmarkContainer:tabs
 Description: Open all bookmarks from the context menu option from a Toolbar bookmark
 Location: Context menu - Toolbar
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-tab-to-start
+Selector Data: menuitem[data-l10n-id='move-to-start']
+Description: Context menu option to move a tab to the start of the tab bar.
+Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -2793,6 +2807,27 @@ Path to .json: modules/data/navigation.components.json
 Selector name: download-panel-item
 Selector Data: vbox[class='downloadContainer']
 Description: Downloaded item in the download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: download-target-element
+Selector Data: downloadTarget
+Description: Downloaded item in the download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: download-progress-element
+Selector Data: downloadProgress
+Description: Download progress bar
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: ddownload-details-element
+Selector Data: downloadDetailsNormal
+Description: Download details element
 Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```

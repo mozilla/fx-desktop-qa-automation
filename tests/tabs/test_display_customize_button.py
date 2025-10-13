@@ -18,15 +18,14 @@ def test_customize_button_displayed_in_tab_bar(driver: Firefox):
     and the Customize tab persists when switching tabs.
     """
 
+    # Instantiate objects
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
     custom_page = CustomizeFirefox(driver)
-
-    # Open an initial example page
     example = ExamplePage(driver)
-    example.open()
 
     # Open customize firefox toolbar tab
+    example.open()
     panel_ui.open_panel_menu()
     panel_ui.navigate_to_customize_toolbar()
 
