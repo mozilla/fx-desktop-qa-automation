@@ -495,14 +495,14 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-addresses
-Selector Data: "checkbox[label='Save and fill addresses']"
+Selector Data: "[data-l10n-id='autofill-addresses-checkbox-message']"
 Description: Label for Autofill > Save and fill addresses option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-payment-methods
-Selector Data: "checkbox[label='Save and fill payment methods']"
+Selector Data: "[data-l10n-id='autofill-payment-methods-checkbox-message-2']"
 Description: Label for Autofill > Save and fill payment methods option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -511,6 +511,20 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: prefs-button
 Selector Data: "button[label^='{name}']"
 Description: Checkbox for a option by label
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payments-button
+Selector Data: "[data-l10n-id='autofill-payment-methods-manage-payments-button']"
+Description: Embedded button/label for "Manage Saved Payments"
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses-button
+Selector Data: "[data-l10n-id='autofill-addresses-manage-addresses-button']"
+Description: Embedded button/label for "Manage Addresses and more..."
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
