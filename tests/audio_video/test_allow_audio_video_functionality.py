@@ -1,3 +1,6 @@
+import sys
+from os import environ
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -11,9 +14,13 @@ def test_case():
     return "330155"
 
 
+WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 TEST_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
 
 
+@pytest.mark.skipif(
+    WIN_GHA, reason="Audio playback not supported in Windows CI environment"
+)
 @pytest.mark.audio
 @pytest.mark.noxvfb
 def test_allow_audio_video_functionality(driver: Firefox):
