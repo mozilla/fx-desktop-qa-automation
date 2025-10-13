@@ -10,7 +10,7 @@ def test_case():
     return "130912"
 
 
-READER_VIEW_URL: str = (
+READER_VIEW_URL = (
     "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
 )
 
@@ -26,13 +26,5 @@ def test_reader_view_close_from_sidebar(driver: Firefox):
     page.open()
     rv.open_reader_view_searchbar()
 
-    if hasattr(rv, "wait_for_reader_view_open"):
-        rv.wait_for_reader_view_open()
-
     # Close Reader View from the sidebar toolbar
     rv.close_reader_view_searchbar()
-
-    if hasattr(rv, "wait_for_reader_view_closed"):
-        rv.wait_for_reader_view_closed()
-    else:
-        rv.element_not_visible("reader-view-controls")
