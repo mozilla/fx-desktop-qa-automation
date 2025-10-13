@@ -1834,7 +1834,7 @@ Path to .json: modules/data/exemple_page.components.json
 ```
 ```
 Selector Name: more-information
-Selector Data: "More information..."
+Selector Data: "Learn more"
 Description: More information..." link 
 Location: The hyperlink positioned in the middle of example.com page  
 Path to .json: modules/data/exemple_page.components.json
