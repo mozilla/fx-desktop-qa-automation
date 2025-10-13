@@ -15,7 +15,7 @@
     },
 
     "more-information": {
-        "selectorData": "More information...",
+        "selectorData": "Learn more",
         "strategy": "link_text",
         "groups": []
     }

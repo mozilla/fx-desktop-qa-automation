@@ -1,6 +1,6 @@
-import pytest
 from typing import Literal
 
+import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ReaderView
@@ -25,8 +25,16 @@ AlignCSS = Literal["start", "right", "center"]
 SliderDirection = Literal["decrease", "increase"]
 
 SIZE_CONTROLS: list[SizeControl] = ["minus", "plus"]
-FONTS: list[Literal["sans-serif", "serif", "monospace"]] = ["sans-serif", "serif", "monospace"]
-ALIGNMENTS: list[tuple[AlignKey, AlignCSS]] = [("left", "start"), ("right", "right"), ("center", "center")]
+FONTS: list[Literal["sans-serif", "serif", "monospace"]] = [
+    "sans-serif",
+    "serif",
+    "monospace",
+]
+ALIGNMENTS: list[tuple[AlignKey, AlignCSS]] = [
+    ("left", "start"),
+    ("right", "right"),
+    ("center", "center"),
+]
 SLIDER_DIRS: list[SliderDirection] = ["decrease", "increase"]
 
 
@@ -49,7 +57,9 @@ def _css_int(util: Utilities, element, prop: str) -> int:
 
 @pytest.mark.ci
 @pytest.mark.parametrize("font", FONTS)
-def test_type_control_panel_font(driver: Firefox, font: Literal["sans-serif", "serif", "monospace"]) -> None:
+def test_type_control_panel_font(
+    driver: Firefox, font: Literal["sans-serif", "serif", "monospace"]
+) -> None:
     """
     C130919.1: Ensure the functionality of the type control panels works (font family).
     """
@@ -61,10 +71,14 @@ def test_type_control_panel_font(driver: Firefox, font: Literal["sans-serif", "s
     body = web_page.get_element("page-body")
 
     # Ensure default is sans-serif first so the next wait has a stable baseline
-    reader_view.wait.until(lambda _: "sans-serif" in body.value_of_css_property("font-family"))
+    reader_view.wait.until(
+        lambda _: "sans-serif" in body.value_of_css_property("font-family")
+    )
 
     font_dropdown_root = reader_view.get_element("toolbar-font-selector")
-    font_dropdown = Dropdown(page=reader_view, require_shadow=False, root=font_dropdown_root)
+    font_dropdown = Dropdown(
+        page=reader_view, require_shadow=False, root=font_dropdown_root
+    )
     font_dropdown.select_option(
         f"about-reader-font-type-{font}",
         option_tag="option",
@@ -91,16 +105,20 @@ def test_type_control_panel_size(driver: Firefox, control: SizeControl) -> None:
     reader_view.get_element(f"toolbar-textsize-{control}").click()
 
     if control == "minus":
-        reader_view.wait.until(lambda _: _css_int(util, body, "--font-size") < size_before)
+        reader_view.wait.until(
+            lambda _: _css_int(util, body, "--font-size") < size_before
+        )
     else:
-        reader_view.wait.until(lambda _: _css_int(util, body, "--font-size") > size_before)
+        reader_view.wait.until(
+            lambda _: _css_int(util, body, "--font-size") > size_before
+        )
 
 
 @pytest.mark.parametrize("alignment,intended_alignment", ALIGNMENTS)
 def test_type_control_panel_text_alignment(
-        driver: Firefox,
-        alignment: AlignKey,
-        intended_alignment: AlignCSS,
+    driver: Firefox,
+    alignment: AlignKey,
+    intended_alignment: AlignCSS,
 ) -> None:
     """
     C130919.3: Ensure the functionality of the type control panels works (text alignment).
@@ -114,11 +132,16 @@ def test_type_control_panel_text_alignment(
     reader_view.open_advanced_options()
 
     reader_view.get_element(f"toolbar-text-align-{alignment}").click()
-    reader_view.wait.until(lambda _: container.value_of_css_property("--text-alignment") == intended_alignment)
+    reader_view.wait.until(
+        lambda _: container.value_of_css_property("--text-alignment")
+        == intended_alignment
+    )
 
 
 @pytest.mark.parametrize("direction", SLIDER_DIRS)
-def test_type_control_panel_content_width(driver: Firefox, direction: SliderDirection) -> None:
+def test_type_control_panel_content_width(
+    driver: Firefox, direction: SliderDirection
+) -> None:
     """
     C130919.4: Ensure the functionality of the type control panels works (content width slider).
     """
@@ -137,13 +160,19 @@ def test_type_control_panel_content_width(driver: Firefox, direction: SliderDire
     reader_view.change_slider_value(slider, increase=(direction == "increase"))
 
     if direction == "decrease":
-        reader_view.wait.until(lambda _: _css_int(util, body, "--content-width") < width_before)
+        reader_view.wait.until(
+            lambda _: _css_int(util, body, "--content-width") < width_before
+        )
     else:
-        reader_view.wait.until(lambda _: _css_int(util, body, "--content-width") > width_before)
+        reader_view.wait.until(
+            lambda _: _css_int(util, body, "--content-width") > width_before
+        )
 
 
 @pytest.mark.parametrize("direction", SLIDER_DIRS)
-def test_type_control_panel_line_spacing(driver: Firefox, direction: SliderDirection) -> None:
+def test_type_control_panel_line_spacing(
+    driver: Firefox, direction: SliderDirection
+) -> None:
     """
     C130919.5: Ensure the functionality of the type control panels works (line spacing slider).
     """
@@ -162,9 +191,13 @@ def test_type_control_panel_line_spacing(driver: Firefox, direction: SliderDirec
     reader_view.change_slider_value(slider, increase=(direction == "increase"))
 
     if direction == "decrease":
-        reader_view.wait.until(lambda _: _css_int(util, body, "block-size") < block_before)
+        reader_view.wait.until(
+            lambda _: _css_int(util, body, "block-size") < block_before
+        )
     else:
-        reader_view.wait.until(lambda _: _css_int(util, body, "block-size") > block_before)
+        reader_view.wait.until(
+            lambda _: _css_int(util, body, "block-size") > block_before
+        )
 
 
 def test_type_control_panel_character_spacing(driver: Firefox) -> None:
@@ -186,7 +219,9 @@ def test_type_control_panel_character_spacing(driver: Firefox) -> None:
 
     reader_view.change_slider_value(slider, increase=True)
 
-    reader_view.wait.until(lambda _: _css_int(util, container, "--letter-spacing") > letter_before)
+    reader_view.wait.until(
+        lambda _: _css_int(util, container, "--letter-spacing") > letter_before
+    )
 
 
 def test_type_control_panel_word_spacing(driver: Firefox) -> None:
@@ -208,4 +243,6 @@ def test_type_control_panel_word_spacing(driver: Firefox) -> None:
 
     reader_view.change_slider_value(slider, increase=True)
 
-    reader_view.wait.until(lambda _: _css_int(util, container, "--word-spacing") > word_before)
+    reader_view.wait.until(
+        lambda _: _css_int(util, container, "--word-spacing") > word_before
+    )
