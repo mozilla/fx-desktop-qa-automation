@@ -1833,7 +1833,7 @@ Location: Any non-linked content space inside example.com page
 Path to .json: modules/data/exemple_page.components.json
 ```
 ```
-Selector Name: more-information
+Selector Name: learn-more
 Selector Data: "Learn more"
 Description: More information..." link 
 Location: The hyperlink positioned in the middle of example.com page  

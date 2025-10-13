@@ -24,7 +24,7 @@ def test_open_new_via_hyperlink(driver: Firefox):
 
     # Use context menu option to open link in new tab
     example.open()
-    example.context_click("more-information")
+    example.context_click("learn-more")
     context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
 
     # Get the title of the new tab
