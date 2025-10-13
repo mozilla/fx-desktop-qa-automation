@@ -20,7 +20,7 @@ def test_open_link_in_new_window(driver: Firefox):
     example.open()
 
     # Right-click the hyperlink
-    example.context_click("more-information")
+    example.context_click("learn-more")
 
     # Click on the open in new window option
     hyperlink_context.click_and_hide_menu("context-menu-open-link-in-new-window")
