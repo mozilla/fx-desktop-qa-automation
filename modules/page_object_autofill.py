@@ -807,22 +807,34 @@ class LoginAutofill(Autofill):
                 self.submit_button = self.parent.get_element("submit-button-login")
             self.submit_button.click()
 
-        def verify_password_value(self, expected_password: str, field: str = "password-login-field"):
+        def verify_password_value(
+            self, expected_password: str, field: str = "password-login-field"
+        ):
             """Wait until the password field contains the expected value."""
             element = self.parent.get_element(field)
-            self.parent.wait.until(lambda _: element.get_attribute("value") == expected_password)
+            self.parent.wait.until(
+                lambda _: element.get_attribute("value") == expected_password
+            )
             return element
 
-        def verify_username_value(self, expected_username: str, field: str = "username-login-field"):
+        def verify_username_value(
+            self, expected_username: str, field: str = "username-login-field"
+        ):
             """Wait until the username field contains the expected value."""
             element = self.parent.get_element(field)
-            self.parent.wait.until(lambda _: element.get_attribute("value") == expected_username)
+            self.parent.wait.until(
+                lambda _: element.get_attribute("value") == expected_username
+            )
             return element
 
-        def verify_password_length(self, expected_length: int = 8, field: str = "password-login-field"):
+        def verify_password_length(
+            self, expected_length: int = 8, field: str = "password-login-field"
+        ):
             """Wait until the password field contains the expected number of characters."""
             element = self.parent.get_element(field)
-            self.parent.wait.until(lambda _: len(element.get_attribute("value")) == expected_length)
+            self.parent.wait.until(
+                lambda _: len(element.get_attribute("value")) == expected_length
+            )
             return element
 
         def verify_field_empty(self, field: str):
