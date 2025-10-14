@@ -326,3 +326,24 @@ class TabBar(BasePage):
             self.custom_wait(timeout=3).until(
                 lambda d: target_tab.get_attribute("visuallyselected") == ""
             )
+
+    @BasePage.context_chrome
+    def reopen_tabs_with_shortcut(self, sys_platform: str, count: int) -> None:
+        """Reopen closed tabs using keyboard shortcut Ctrl/Cmd + Shift + T."""
+        actions = self.actions
+
+        # Press modifier keys
+        if sys_platform == "Darwin":
+            actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).perform()
+        else:
+            actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).perform()
+
+        # Press 'T' multiple times to reopen tabs
+        for _ in range(count):
+            self.actions.send_keys("t").perform()
+
+        # Release modifier keys
+        if sys_platform == "Darwin":
+            self.actions.key_up(Keys.SHIFT).key_up(Keys.COMMAND).perform()
+        else:
+            self.actions.key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
