@@ -221,7 +221,7 @@ def downloads_folder(sys_platform):
     """Return the downloads folder location for this OS"""
     if sys_platform == "Windows":
         user = os.environ.get("USERNAME")
-        return f"C:\\Users\\{user}\\Downloads"
+        return rf"C:\Users\{user}\Downloads"
     elif sys_platform == "Darwin":  # MacOS
         user = os.environ.get("USER")
         return f"/Users/{user}/Downloads"
@@ -242,11 +242,11 @@ def fx_executable(request, sys_platform):
     location = ""
     if sys_platform == "Windows":
         if version == "Firefox":
-            location = "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+            location = r"C:\Program Files\Mozilla Firefox\firefox.exe"
         elif version == "Nightly":
-            location = "C:\\Program Files\\Firefox Nightly\\firefox.exe"
+            location = r"C:\Program Files\Firefox Nightly\firefox.exe"
         elif version == "Custom":
-            location = '"C:\\Program Files\\Custom Firefox\\firefox.exe"'
+            location = r"C:\Program Files\Custom Firefox\firefox.exe"
     elif sys_platform == "Darwin":
         if version == "Firefox":
             location = "/Applications/Firefox.app/Contents/MacOS/firefox"
@@ -450,6 +450,7 @@ def driver(
         options.add_argument("--remote-allow-system-access")
         if opt_headless:
             options.add_argument("--headless")
+        logging.warning(f"FX loc: {fx_executable}")
         options.binary_location = fx_executable
         if use_profile:
             profile_path = tmp_path / use_profile
