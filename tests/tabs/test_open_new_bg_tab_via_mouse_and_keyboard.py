@@ -21,7 +21,7 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     example.open()
 
     # Middle click link, verify new background tab opens with correct URL
-    example.middle_click("more-information")
+    example.middle_click("learn-more")
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
 
@@ -32,7 +32,7 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     example.switch_to_new_tab()
 
     # Control click link, verify new background tab opens with correct URL
-    example.control_click("more-information")
+    example.control_click("learn-more")
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
 
