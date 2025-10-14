@@ -56,9 +56,9 @@ def test_password_can_be_shown(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    with driver.context(driver.CONTEXT_CHROME):
-        alert = about_prefs.get_alert()
-        alert.accept()
+    # with driver.context(driver.CONTEXT_CHROME):
+    alert = about_prefs.get_alert()
+    alert.accept()
 
     about_logins.open()
     about_logins.click_on("show-password-checkbox")
