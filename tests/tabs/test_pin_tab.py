@@ -3,8 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
 
-
 NUM_TABS = 5
+
 
 @pytest.fixture()
 def test_case():
