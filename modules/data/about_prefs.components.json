@@ -317,7 +317,7 @@
     "groups": []
   },
   "cookies-privacy-label": {
-    "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
+    "selectorData": "[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
     "strategy": "css",
     "groups": []
   },

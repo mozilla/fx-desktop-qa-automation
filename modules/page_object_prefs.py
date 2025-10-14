@@ -412,6 +412,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
+        self.find_in_settings("pay")
         self.click_on("saved-payments-button")
         iframe = self.get_element("browser-popup")
         return iframe
@@ -436,6 +437,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
+        self.find_in_settings("pay")
         self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
