@@ -97,7 +97,7 @@ def test_copy_link(driver: Firefox):
 
     # right click the hyperlink
     sleep(1)
-    example.context_click("more-information")
+    example.context_click("learn-more")
 
     # click on the open in new window option
     sleep(1)
