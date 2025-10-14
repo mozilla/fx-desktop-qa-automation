@@ -1835,7 +1835,7 @@ Path to .json: modules/data/exemple_page.components.json
 ```
 Selector Name: learn-more
 Selector Data: "Learn more"
-Description: More information..." link 
+Description: "Learn more" link
 Location: The hyperlink positioned in the middle of example.com page  
 Path to .json: modules/data/exemple_page.components.json
 ```
@@ -3238,7 +3238,7 @@ Path to .json: modules/data/panel_ui.components.json
 ```
 ```
 Selector name: panel-ui-history-recently-closed-reopen-tabs
-Selector Data: toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']
+Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']
 Description: Recently closed reopen tabs
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json
