@@ -5,6 +5,9 @@ from selenium.webdriver.common.keys import Keys
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 
+@pytest.fixture()
+def test_case():
+    return "3028730"
 
 @pytest.mark.parametrize("engine", ["DuckDuckGo"])
 def test_search_mode_persists_mixed_with_bing(driver: Firefox, engine):
