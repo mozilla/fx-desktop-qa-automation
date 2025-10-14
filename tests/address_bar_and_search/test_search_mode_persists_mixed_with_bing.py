@@ -7,7 +7,7 @@ from modules.page_object_generics import GenericPage
 
 
 @pytest.mark.parametrize("engine", ["DuckDuckGo"])
-def test_search_mode_persists(driver: Firefox, engine):
+def test_search_mode_persists_mixed_with_bing(driver: Firefox, engine):
     """
     TC 3028730: Ensure '@bing' is NOT recognized as a special Bing search when DuckDuckGo is selected.
     """
