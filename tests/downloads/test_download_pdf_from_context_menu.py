@@ -1,3 +1,4 @@
+from platform import system
 from time import sleep
 
 import pytest
@@ -24,6 +25,10 @@ def delete_files_regex_string():
 PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 
+@pytest.mark.skipif(
+    system().lower().startswith("darwin") or system().lower().startswith("linux"),
+    reason="bug 1994061",
+)
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,

@@ -76,7 +76,7 @@ class TrackerPanel(BasePage):
         self, nav: Navigation, page: BasePage
     ) -> BasePage:
         """
-        Waits for the shield icon to indicate that cookies/trackers are being blocked by continuously refresing the page
+        Waits for the shield icon to indicate that cookies/trackers are being blocked by continuously refreshing the page
 
         Remember to open the passed in page beforehand, this waits for the page to load.
 

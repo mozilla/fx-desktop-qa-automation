@@ -1,3 +1,4 @@
+from platform import system
 from time import sleep
 
 import pytest
@@ -16,6 +17,7 @@ def test_case():
 COOKIE_SITE = "google.com"
 
 
+@pytest.mark.skipif(system().lower().startswith("darwin"), reason="bug 1994056")
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_manage_cookie_data(driver: Firefox):
