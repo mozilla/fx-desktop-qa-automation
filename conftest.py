@@ -246,7 +246,7 @@ def fx_executable(request, sys_platform):
         elif version == "Nightly":
             location = "C:\\Program Files\\Firefox Nightly\\firefox.exe"
         elif version == "Custom":
-            location = "C:\\Program Files\\Custom Firefox\\firefox.exe"
+            location = '"C:\\Program Files\\Custom Firefox\\firefox.exe"'
     elif sys_platform == "Darwin":
         if version == "Firefox":
             location = "/Applications/Firefox.app/Contents/MacOS/firefox"
