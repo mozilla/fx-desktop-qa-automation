@@ -15,12 +15,12 @@ def test_case():
 
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+TEST_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
 
 
-TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
-
-
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.skipif(
+    WIN_GHA, reason="Audio playback not supported in Windows CI environment"
+)
 @pytest.mark.audio
 @pytest.mark.noxvfb
 def test_allow_audio_video_functionality(driver: Firefox):
@@ -32,9 +32,11 @@ def test_allow_audio_video_functionality(driver: Firefox):
     tabs = TabBar(driver)
     page = GenericPage(driver, url=TEST_URL)
 
-    # Open privacy and click on the "Settings" button from Autoplay
+    # Open privacy and security preferences and set 'Allow Audio and Video' for autoplay
     about_prefs.set_autoplay_setting_in_preferences("allow-audio-video")
 
-    # Open the website and check if the video starts playing with sound
+    # Open the website in a new tab and check if the video starts playing with sound
+    tabs.new_tab_by_button()
+    tabs.switch_to_new_tab()
     page.open()
-    tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+    tabs.expect_tab_sound_status(2, tabs.MEDIA_STATUS.PLAYING)
