@@ -121,6 +121,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run python choose_ci_set.py
+          pipenv run pytest tests/meta/test_version.py --reruns 1
           pipenv run pytest $(cat selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
