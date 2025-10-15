@@ -327,8 +327,8 @@
     "groups": []
   },
   "history-privacy-label": {
-    "selectorData": "[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
-    "strategy": "css",
+    "selectorData": "historyPane",
+    "strategy": "id",
     "groups": []
   },
   "cookies-delete-on-close": {
