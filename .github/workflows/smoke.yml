@@ -110,7 +110,7 @@ jobs:
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
           $env:SE_DISABLE_DRIVER_MANAGEMENT = "true"
-          pipenv run pytest tests/meta/test_version.py --reruns 1"
+          pipenv run pytest tests/meta/test_version.py --reruns 1
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
