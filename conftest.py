@@ -465,7 +465,6 @@ def driver(
         options.add_argument("--remote-allow-system-access")
         if opt_headless:
             options.add_argument("--headless")
-        logging.warning(f"FX loc: {fx_executable}")
         options.binary_location = fx_executable
         if use_profile:
             profile_path = tmp_path / use_profile
