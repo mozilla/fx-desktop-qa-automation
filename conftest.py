@@ -15,6 +15,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -134,6 +135,13 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
+        "--geckodriver",
+        action="store",
+        default="",
+        help="Path to geckodriver.",
+    )
+
+    parser.addoption(
         "--run-headless",
         action="store_true",
         default=False,
@@ -215,6 +223,11 @@ def opt_window_size(request):
 @pytest.fixture(scope="session")
 def sys_platform():
     return platform.system()
+
+
+@pytest.fixture(scope="session")
+def geckodriver(request):
+    return request.config.getoption("--geckodriver")
 
 
 @pytest.fixture()
@@ -393,6 +406,7 @@ def hard_quit():
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
+    geckodriver: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
     prefs_list: List[Tuple],
@@ -459,7 +473,11 @@ def driver(
             options.profile = profile_path
         for opt, value in prefs_list:
             options.set_preference(opt, value)
-        driver = Firefox(options=options)
+        if geckodriver:
+            service = Service(executable_path=geckodriver)
+            driver = Firefox(service=service, options=options)
+        else:
+            driver = Firefox(options=options)
         for proc in psutil.process_iter(["name", "exe", "cmdline"]):
             if proc.info["name"] and "firefox" in proc.info["name"].lower():
                 print(proc.info)
