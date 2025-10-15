@@ -105,12 +105,9 @@ jobs:
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          $env:MOZ_LOG = "timestamp,command:5"
-          $env:MOZ_LOG_FILE = "gecko.log"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
           pipenv run pytest tests/meta/test_version.py --reruns 1
-          cat gecko.log
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
