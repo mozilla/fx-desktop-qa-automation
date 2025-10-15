@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import os
 import platform
@@ -14,7 +15,6 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -451,7 +451,6 @@ def driver(
         options.add_argument("--remote-allow-system-access")
         if opt_headless:
             options.add_argument("--headless")
-        service = Service(log_path="geckodriver_debug.log")
         logging.warning(f"FX loc: {fx_executable}")
         options.binary_location = fx_executable
         if use_profile:
@@ -460,7 +459,11 @@ def driver(
             options.profile = profile_path
         for opt, value in prefs_list:
             options.set_preference(opt, value)
-        driver = Firefox(service=service, options=options)
+        driver = Firefox(options=options)
+        resp = driver.command_executor._request(
+            "GET", f"{driver.command_executor._url}/session/{driver.session_id}"
+        )
+        logging.warning(json.dumps(resp, indent=2))
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
