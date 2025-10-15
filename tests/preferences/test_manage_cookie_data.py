@@ -1,4 +1,3 @@
-from platform import system
 from time import sleep
 
 import pytest
