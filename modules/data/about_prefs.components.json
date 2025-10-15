@@ -307,8 +307,8 @@
     "groups": []
   },
   "cookies-privacy-label": {
-    "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']",
-    "strategy": "css",
+    "selectorData": "deleteOnCloseInfo",
+    "strategy": "id",
     "groups": []
   },
   "cookies-delete-on-close": {

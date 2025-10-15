@@ -845,7 +845,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cookies-privacy-label
-Selector Data: "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']"
+Selector Data: "deleteOnCloseInfo"
 Description: Message in Cookies and Site data when History is not remembered
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
