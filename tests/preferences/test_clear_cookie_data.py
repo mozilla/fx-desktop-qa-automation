@@ -52,6 +52,7 @@ def _open_clear_cookies_data_dialog(
     about_prefs.close_dialog_box()
     return value
 
+
 def test_clear_cookie_data(driver: Firefox):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel

@@ -45,12 +45,12 @@
     "groups": []
   },
   "save-and-fill-addresses": {
-    "selectorData": "checkbox[label='Save and fill addresses']",
+    "selectorData": "[data-l10n-id='autofill-addresses-checkbox-message']",
     "strategy": "css",
     "groups": []
   },
   "save-and-fill-payment-methods": {
-    "selectorData": "checkbox[label='Save and fill payment methods']",
+    "selectorData": "[data-l10n-id='autofill-payment-methods-checkbox-message-2']",
     "strategy": "css",
     "groups": []
   },
@@ -62,6 +62,16 @@
   "clear-site-data-button": {
     "selectorData": "clearSiteDataButton",
     "strategy": "id",
+    "groups": []
+  },
+  "saved-payments-button": {
+    "selectorData": "[data-l10n-id='autofill-payment-methods-manage-payments-button']",
+    "strategy": "css",
+    "groups": []
+  },
+  "saved-addresses-button": {
+    "selectorData": "[data-l10n-id='autofill-addresses-manage-addresses-button']",
+    "strategy": "css",
     "groups": []
   },
   "import-browser-data": {
@@ -317,7 +327,7 @@
     "groups": []
   },
   "history-privacy-label": {
-    "selectorData": "description[data-l10n-id='history-dontremember-description']",
+    "selectorData": "[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
     "strategy": "css",
     "groups": []
   },

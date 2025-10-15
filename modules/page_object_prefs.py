@@ -204,12 +204,6 @@ class AboutPrefs(BasePage):
                 assert field_value != expected_cvv, "CVV is displayed."
         return self
 
-    def get_saved_payments_popup(self) -> WebElement:
-        """
-        Open saved payments dialog panel
-        """
-        return self.get_element("prefs-button", labels=["Manage payment methods"])
-
     def click_edit_on_dialog_element(self):
         """
         Click on edit button on dialog panel
@@ -283,7 +277,11 @@ class AboutPrefs(BasePage):
     def close_dialog_box(self):
         """Close dialog box for saved addresses or payments."""
         self.element_clickable("panel-popup-button", labels=["close-button"])
-        self.get_element("panel-popup-button", labels=["close-button"]).click()
+        self.click_on("panel-popup-button", labels=["close-button"])
+        if self.get_element(
+            "panel-popup-button", labels=["close-button"]
+        ).is_displayed():
+            self.click_on("panel-popup-button", labels=["close-button"])
         return self
 
     def update_cc_field_panel(self, field_name: str, value: str | int) -> BasePage:
@@ -316,12 +314,6 @@ class AboutPrefs(BasePage):
             value_field.send_keys(value)
         self.get_element("save-button").click()
         return self
-
-    def get_saved_addresses_popup(self) -> WebElement:
-        """
-        Returns saved addresses button element
-        """
-        return self.get_element("prefs-button", labels=["Manage addresses and more"])
 
     def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
         """
@@ -420,7 +412,8 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_saved_payments_popup().click()
+        self.find_in_settings("pay")
+        self.click_on("saved-payments-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -447,11 +440,13 @@ class AboutPrefs(BasePage):
         self.click_on("clear-site-data-button")
         iframe = self.get_element("browser-popup")
         return iframe
+
     def get_saved_addresses_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_saved_addresses_popup().click()
+        self.find_in_settings("pay")
+        self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
 

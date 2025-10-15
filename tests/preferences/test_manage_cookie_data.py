@@ -15,6 +15,7 @@ def test_case():
 
 COOKIE_SITE = "google.com"
 
+
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_manage_cookie_data(driver: Firefox):

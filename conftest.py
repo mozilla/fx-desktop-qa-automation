@@ -8,12 +8,14 @@ from shutil import unpack_archive
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
+# import psutil
 import pytest
 from PIL import Image, ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -133,6 +135,13 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
+        "--geckodriver",
+        action="store",
+        default="",
+        help="Path to geckodriver.",
+    )
+
+    parser.addoption(
         "--run-headless",
         action="store_true",
         default=False,
@@ -216,12 +225,17 @@ def sys_platform():
     return platform.system()
 
 
+@pytest.fixture(scope="session")
+def geckodriver(request):
+    return request.config.getoption("--geckodriver")
+
+
 @pytest.fixture()
 def downloads_folder(sys_platform):
     """Return the downloads folder location for this OS"""
     if sys_platform == "Windows":
         user = os.environ.get("USERNAME")
-        return f"C:\\Users\\{user}\\Downloads"
+        return rf"C:\Users\{user}\Downloads"
     elif sys_platform == "Darwin":  # MacOS
         user = os.environ.get("USER")
         return f"/Users/{user}/Downloads"
@@ -242,11 +256,11 @@ def fx_executable(request, sys_platform):
     location = ""
     if sys_platform == "Windows":
         if version == "Firefox":
-            location = "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+            location = r"C:\Program Files\Mozilla Firefox\firefox.exe"
         elif version == "Nightly":
-            location = "C:\\Program Files\\Firefox Nightly\\firefox.exe"
+            location = r"C:\Program Files\Firefox Nightly\firefox.exe"
         elif version == "Custom":
-            location = "C:\\Program Files\\Custom Firefox\\firefox.exe"
+            location = r"C:\Program Files\Custom Firefox\firefox.exe"
     elif sys_platform == "Darwin":
         if version == "Firefox":
             location = "/Applications/Firefox.app/Contents/MacOS/firefox"
@@ -392,6 +406,7 @@ def hard_quit():
 @pytest.fixture(autouse=True)
 def driver(
     fx_executable: str,
+    geckodriver: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
     prefs_list: List[Tuple],
@@ -457,7 +472,15 @@ def driver(
             options.profile = profile_path
         for opt, value in prefs_list:
             options.set_preference(opt, value)
-        driver = Firefox(options=options)
+        if geckodriver:
+            service = Service(executable_path=geckodriver)
+            driver = Firefox(service=service, options=options)
+        else:
+            driver = Firefox(options=options)
+        # Uncomment below to find Fx process info
+        # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
+        #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
+        #        print(proc.info)
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
