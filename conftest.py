@@ -454,7 +454,6 @@ def driver(
         service = Service(log_path="geckodriver_debug.log")
         logging.warning(f"FX loc: {fx_executable}")
         options.binary_location = fx_executable
-        logging.warning(f"binary loc: {options.binary_location}")
         if use_profile:
             profile_path = tmp_path / use_profile
             unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
