@@ -208,7 +208,7 @@ class AboutPrefs(BasePage):
         """
         Open saved payments dialog panel
         """
-        return self.get_element("prefs-button", labels=["Saved payment methods"])
+        return self.get_element("prefs-button", labels=["Manage payment methods"])
 
     def click_edit_on_dialog_element(self):
         """
@@ -321,7 +321,7 @@ class AboutPrefs(BasePage):
         """
         Returns saved addresses button element
         """
-        return self.get_element("prefs-button", labels=["Saved addresses"])
+        return self.get_element("prefs-button", labels=["Manage addresses and more"])
 
     def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
         """
@@ -440,6 +440,13 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
+    def clear_cookies_and_get_dialog_iframe(self):
+        """
+        Returns the iframe object for the dialog panel in the popup after pressing the clear site data button.
+        """
+        self.click_on("clear-site-data-button")
+        iframe = self.get_element("browser-popup")
+        return iframe
     def get_saved_addresses_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup

@@ -55,8 +55,13 @@
     "groups": []
   },
   "prefs-button": {
-    "selectorData": "button[label^='{name}']",
+    "selectorData": "moz-box-button[label^='{name}']",
     "strategy": "css",
+    "groups": []
+  },
+  "clear-site-data-button": {
+    "selectorData": "clearSiteDataButton",
+    "strategy": "id",
     "groups": []
   },
   "import-browser-data": {

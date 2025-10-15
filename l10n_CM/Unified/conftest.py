@@ -64,6 +64,8 @@ def prefs_list(add_to_prefs_list: List[tuple[str, str | bool]], region: str):
         ("extensions.formautofill.addresses.supportedCountries", region),
         ("browser.aboutConfig.showWarning", False),
         ("browser.search.region", region),
+        ("extensions.formautofill.addresses.enabled", True),
+        ("extensions.formautofill.creditCards.enabled", True),
     ]
     prefs.extend(add_to_prefs_list)
     return prefs

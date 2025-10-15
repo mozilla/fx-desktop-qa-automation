@@ -36,7 +36,7 @@ def _open_clear_cookies_data_dialog(
     about_prefs.open()
 
     # Click the button and grab the dialog iframe element
-    dlg_iframe = about_prefs.press_button_get_popup_dialog_iframe("Clear Data")
+    dlg_iframe = about_prefs.clear_cookies_and_get_dialog_iframe()
 
     # Wait until the iframe is attached and visible before switching
     wait.until(lambda _: dlg_iframe and dlg_iframe.is_displayed())
@@ -51,14 +51,9 @@ def _open_clear_cookies_data_dialog(
 
     # Always return to content context
     ba.switch_to_content_context()
+    about_prefs.close_dialog_box()
     return value
 
-
-# @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows GA, tracked in 1990570")
-@pytest.mark.skipif(
-    system().lower().startswith("darwin") or system().lower().startswith("linux"),
-    reason="bug 1994055",
-)
 def test_clear_cookie_data(driver: Firefox):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel
@@ -76,7 +71,7 @@ def test_clear_cookie_data(driver: Firefox):
 
     # Clear cookies and site data: open dialog again, wait for iframe, click clear
     about_prefs.open()
-    dlg_iframe = about_prefs.press_button_get_popup_dialog_iframe("Clear Data")
+    dlg_iframe = about_prefs.clear_cookies_and_get_dialog_iframe()
     wait.until(lambda _: dlg_iframe and dlg_iframe.is_displayed())
     ba.switch_to_iframe_context(dlg_iframe)
     about_prefs.get_element("clear-data-accept-button").click()
