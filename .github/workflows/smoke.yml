@@ -109,7 +109,7 @@ jobs:
           Start-Sleep -Seconds 6
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          pipenv run pytest tests/meta/test_version.py --reruns 1 --fx-executable "$FX_EXECUTABLE"
+          pipenv run pytest tests/meta/test_version.py --reruns 1 --fx-executable "env:$FX_EXECUTABLE"
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
