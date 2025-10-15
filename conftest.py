@@ -8,7 +8,7 @@ from shutil import unpack_archive
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
 
-import psutil
+# import psutil
 import pytest
 from PIL import Image, ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -477,9 +477,10 @@ def driver(
             driver = Firefox(service=service, options=options)
         else:
             driver = Firefox(options=options)
-        for proc in psutil.process_iter(["name", "exe", "cmdline"]):
-            if proc.info["name"] and "firefox" in proc.info["name"].lower():
-                print(proc.info)
+        # Uncomment below to find Fx process info
+        # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
+        #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
+        #        print(proc.info)
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
