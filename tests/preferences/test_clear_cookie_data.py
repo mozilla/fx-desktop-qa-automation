@@ -69,7 +69,7 @@ def test_clear_cookie_data(driver: Firefox):
     cookie_value = _open_clear_cookies_data_dialog(about_prefs, ba, wait)
     assert cookie_value > 0, f"Expected cookie/site data > 0, got {cookie_value}"
 
-    # Clear cookies and site data: open dialog again, wait for iframe, click clear
+    # Clear cookies and site data: open the dialog again, wait for iframe, click clear
     about_prefs.open()
     dlg_iframe = about_prefs.clear_cookies_and_get_dialog_iframe()
     wait.until(lambda _: dlg_iframe and dlg_iframe.is_displayed())
