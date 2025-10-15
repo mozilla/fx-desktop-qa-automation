@@ -312,7 +312,12 @@
     "groups": []
   },
   "cookies-privacy-label": {
-    "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']",
+    "selectorData": "moz-message-bar[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
+    "strategy": "css",
+    "groups": []
+  },
+  "history-privacy-label": {
+    "selectorData": "description[data-l10n-id='history-dontremember-description']",
     "strategy": "css",
     "groups": []
   },
@@ -329,11 +334,6 @@
   "logins-exceptions": {
     "selectorData": "passwordExceptions",
     "strategy": "id",
-    "groups": []
-  },
-  "history-privacy-label": {
-    "selectorData": "description[data-l10n-id='history-dontremember-description']",
-    "strategy": "css",
     "groups": []
   },
   "language-dropdown": {
