@@ -8,6 +8,7 @@ TABS_TO_OPEN = 4
 FIRST_URL = "about:about"
 SECOND_URL = "about:robots"
 
+
 @pytest.fixture()
 def test_case():
     return "134648"

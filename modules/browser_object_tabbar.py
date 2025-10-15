@@ -347,3 +347,23 @@ class TabBar(BasePage):
             self.actions.key_up(Keys.SHIFT).key_up(Keys.COMMAND).perform()
         else:
             self.actions.key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+
+    @BasePage.context_chrome
+    def reload_tab(self, nav, mod_key=None, extra_key=None):
+        """
+        Reloads the current tab using a keyboard shortcut inside Chrome context.
+
+        Args:
+            nav: Navigation object to click before sending keys.
+            mod_key: Modifier key (e.g., Keys.CONTROL, Keys.COMMAND) for Ctrl/Cmd+R.
+            extra_key: Extra key to press (e.g., 'r' for Ctrl/Cmd+R, or Keys.F5 for F5).
+        """
+        nav.click_on("navigation-background-component")
+
+        # Determine which key combo to use
+        if mod_key and extra_key:
+            self.perform_key_combo(mod_key, extra_key)
+        elif extra_key:
+            self.perform_key_combo(extra_key)
+        else:
+            raise ValueError("You must provide extra_key to perform reload.")
