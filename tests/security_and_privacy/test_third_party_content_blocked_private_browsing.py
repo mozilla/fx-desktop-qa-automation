@@ -12,6 +12,11 @@ def test_case():
     return "446323"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("privacy.trackingprotection.pbmode.enabled", True)]
+
+
 ALLOWED_TRACKING_URLS = {
     "https://content-track-digest256.dummytracker.org",
     "https://ads-track-digest256.dummytracker.org",
