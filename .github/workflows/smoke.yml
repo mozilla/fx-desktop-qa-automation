@@ -99,13 +99,13 @@ jobs:
         id: setup
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          Get-Acl 'C:\Program Files\Custom Firefox\firefox.exe'
         shell: pwsh
       - name: Run Smoke Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          Get-Acl $env:FX_EXECUTABLE
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
           pipenv run pytest tests/meta/test_version.py --reruns 1
