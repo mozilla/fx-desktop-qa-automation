@@ -27,8 +27,9 @@ EXPECTED_TEXTS = ["Try again later", "Check your network connection"]
 
 def test_server_not_found_error_on_private_window(driver: Firefox, version: str):
     """
-    C3029188: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
-    displayed. The error page contains the correct elements, and the suggested link redirects to the appropriate page.
+    C3029188 - This tests that when a user navigates to a non-existent site in private window, a "Server Not Found"
+    error is displayed. The error page contains the correct elements, and the suggested link redirects to the
+    appropriate page.
     """
 
     # Instantiate objects

@@ -9,26 +9,30 @@ class ErrorPage(BasePage):
     """
 
     def get_error_title(self) -> str:
+        """Get the main title text of the error page."""
         return self.get_element("error-title").get_attribute("innerText")
 
     def get_error_short_description(self) -> str:
+        """Get the short description text of the error page."""
         return self.get_element("error-short-description").get_attribute("innerText")
 
     def get_error_long_description_items(self) -> list[WebElement]:
+        """Get the list of bullet items under the long description section."""
         return self.get_elements("error-long-description-items")
 
     def get_try_again_button(self) -> WebElement:
+        """Get the 'Try Again' button element."""
         return self.get_element("try-again-button")
 
     def get_error_suggestion_link(self) -> WebElement:
+        """Get the suggestion link element."""
         return self.get_element("error-suggestion-link")
 
     def verify_error_header(self, expected_titles: list[str], short_site: str) -> None:
         """Verify the main title and short description on the error page.
         Arguments:
             expected_titles: The list of valid titles accepted for the error page.
-            short_site: The short version of the site URL (e.g., "example" from "http://example").
-        """
+            short_site: The short version of the site URL (eg. "example" from "http://example")."""
         assert self.get_error_title() in expected_titles
         assert (
             f"We can’t connect to the server at {short_site}"
@@ -43,20 +47,19 @@ class ErrorPage(BasePage):
         """Verify bullet items under the long description section.
         Arguments:
             expected_texts: The list of exact text strings expected for the first two bullet items.
-            possible_permission_messages: The list of valid permission-related messages accepted for the third bullet item.
-        """
+            possible_permission_messages: The list of valid permission-related messages accepted for the third bullet item."""
         items = self.get_error_long_description_items()
         assert len(items) >= 3
-        # First two must match exactly
+
         for i in range(2):
             assert items[i].text == expected_texts[i]
-        # Third must match one of the permission messages
+        # Third must match one of the permission messages based on the chanel
         assert items[2].text in possible_permission_messages
 
-    def click_suggestion_and_verify_redirect(self, redirect_url: str) -> None:
+    def click_suggestion_and_verify_redirect(self, redirect_url: str) -> "BasePage":
         """Click the suggestion link and verify it redirects correctly.
         Arguments:
-            redirect_url: The expected URL after clicking the suggestion link.
-        """
+            redirect_url: The expected URL after clicking the suggestion link."""
         self.get_error_suggestion_link().click()
         self.url_contains(redirect_url)
+        return self

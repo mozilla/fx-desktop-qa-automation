@@ -137,16 +137,18 @@ class TabBar(BasePage):
         return tab_label.text
 
     @BasePage.context_chrome
-    def wait_for_tab_title(self, expected_title: str, timeout: int = 30) -> None:
+    def wait_for_tab_title(
+        self, expected_title: str, tab_index: int = 1, timeout: int = 30
+    ) -> None:
         """
         Wait until the tab title matches the expected value.
-
-        Arguments
+        Arguments:
             expected_title: The tab title to wait for.
+            tab_index: The tab index to check (default is 1).
             timeout: Time limit (in seconds) before raising TimeoutException.
         """
         self.custom_wait(timeout=timeout).until(
-            lambda d: self.get_tab_title(self.get_tab(1)) == expected_title
+            lambda d: self.get_tab_title(self.get_tab(tab_index)) == expected_title
         )
 
     @BasePage.context_chrome
