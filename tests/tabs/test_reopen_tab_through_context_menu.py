@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
 
-
 TABS_TO_OPEN = 4
 FIRST_URL = "about:about"
 SECOND_URL = "about:robots"

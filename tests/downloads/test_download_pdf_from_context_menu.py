@@ -24,6 +24,7 @@ def delete_files_regex_string():
 PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 
+@pytest.mark.xfail(reason="1994389")
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,

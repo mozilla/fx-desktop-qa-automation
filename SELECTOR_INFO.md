@@ -495,14 +495,14 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-addresses
-Selector Data: "checkbox[label='Save and fill addresses']"
+Selector Data: "[data-l10n-id='autofill-addresses-checkbox-message']"
 Description: Label for Autofill > Save and fill addresses option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-payment-methods
-Selector Data: "checkbox[label='Save and fill payment methods']"
+Selector Data: "[data-l10n-id='autofill-payment-methods-checkbox-message-2']"
 Description: Label for Autofill > Save and fill payment methods option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -511,6 +511,20 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: prefs-button
 Selector Data: "button[label^='{name}']"
 Description: Checkbox for a option by label
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payments-button
+Selector Data: "[data-l10n-id='autofill-payment-methods-manage-payments-button']"
+Description: Embedded button/label for "Manage Saved Payments"
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses-button
+Selector Data: "[data-l10n-id='autofill-addresses-manage-addresses-button']"
+Description: Embedded button/label for "Manage Addresses and more..."
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -845,7 +859,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cookies-privacy-label
-Selector Data: "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']"
+Selector Data: "[data-l10n-id='sitedata-delete-on-close-private-browsing3']"
 Description: Message in Cookies and Site data when History is not remembered
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -1835,7 +1849,7 @@ Path to .json: modules/data/exemple_page.components.json
 ```
 Selector Name: learn-more
 Selector Data: "Learn more"
-Description: More information..." link 
+Description: "Learn more" link
 Location: The hyperlink positioned in the middle of example.com page  
 Path to .json: modules/data/exemple_page.components.json
 ```
@@ -3238,7 +3252,7 @@ Path to .json: modules/data/panel_ui.components.json
 ```
 ```
 Selector name: panel-ui-history-recently-closed-reopen-tabs
-Selector Data: toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']
+Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button']
 Description: Recently closed reopen tabs
 Location: On the hamburger menu > History
 Path to .json: modules/data/panel_ui.components.json

@@ -1,3 +1,5 @@
+from platform import system
+
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
@@ -24,7 +26,7 @@ def _dialog_options_present(about_prefs: AboutPrefs) -> bool:
         return False
 
 
-def open_clear_cookies_data_dialog(
+def _open_clear_cookies_data_dialog(
     about_prefs: AboutPrefs, ba: BrowserActions, wait: WebDriverWait
 ):
     """
@@ -53,6 +55,10 @@ def open_clear_cookies_data_dialog(
 
 
 # @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows GA, tracked in 1990570")
+@pytest.mark.skipif(
+    system().lower().startswith("darwin") or system().lower().startswith("linux"),
+    reason="bug 1994055",
+)
 def test_clear_cookie_data(driver: Firefox):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel
@@ -65,7 +71,7 @@ def test_clear_cookie_data(driver: Firefox):
     driver.get(WEBSITE_ADDRESS)
 
     # Open dialog and read current value (must be > 0)
-    cookie_value = open_clear_cookies_data_dialog(about_prefs, ba, wait)
+    cookie_value = _open_clear_cookies_data_dialog(about_prefs, ba, wait)
     assert cookie_value > 0, f"Expected cookie/site data > 0, got {cookie_value}"
 
     # Clear cookies and site data: open dialog again, wait for iframe, click clear
@@ -77,7 +83,7 @@ def test_clear_cookie_data(driver: Firefox):
     ba.switch_to_content_context()
 
     # Wait until the dialog reports 0 (reopen/poll via helper)
-    wait.until(lambda _: open_clear_cookies_data_dialog(about_prefs, ba, wait) == 0)
+    wait.until(lambda _: _open_clear_cookies_data_dialog(about_prefs, ba, wait) == 0)
 
-    final_value = open_clear_cookies_data_dialog(about_prefs, ba, wait)
+    final_value = _open_clear_cookies_data_dialog(about_prefs, ba, wait)
     assert final_value == 0, f"Expected 0 after clearing, got {final_value}"

@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu
 from modules.page_object import ExamplePage
 
-
 URL = "https://www.iana.org/help/example-domains"
 
 
