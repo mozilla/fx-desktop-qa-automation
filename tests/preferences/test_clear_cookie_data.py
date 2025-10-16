@@ -36,9 +36,6 @@ def _open_clear_cookies_data_dialog(
     # Click the button and grab the dialog iframe element
     dlg_iframe = about_prefs.clear_cookies_and_get_dialog_iframe()
 
-    # Wait until the iframe is attached and visible before switching
-    about_prefs.wait.until(lambda _: dlg_iframe and dlg_iframe.is_displayed())
-
     # Enter dialog iframe
     ba.switch_to_iframe_context(dlg_iframe)
 
