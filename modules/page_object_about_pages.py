@@ -199,6 +199,22 @@ class AboutLogins(BasePage):
         self.wait.until(lambda _: os.path.exists(csv_file))
         return csv_file
 
+    def add_login(self, origin: str, username: str, password: str):
+        """
+        Adds a new saved login entry.
+
+        Args:
+            origin (str): The site URL (e.g., https://example.com)
+            username (str): The username to save
+            password (str): The password to save
+        """
+        self.click_add_login_button()
+        self.create_new_login({
+            "origin": origin,
+            "username": username,
+            "password": password,
+        })
+
 
 class AboutPrivatebrowsing(BasePage):
     """
