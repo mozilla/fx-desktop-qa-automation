@@ -9,7 +9,7 @@ from modules.page_object_error_page import ErrorPage
 
 @pytest.fixture()
 def test_case():
-    return "3029186"
+    return "3029188"
 
 
 CHECK_SITE = "http://example"

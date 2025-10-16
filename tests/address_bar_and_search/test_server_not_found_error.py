@@ -29,7 +29,7 @@ EXPECTED_TEXTS = [
 
 def test_server_not_found_error(driver: Firefox, version: str):
     """
-    C1901393: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
+    C3029186 - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
     displayed. The error page contains the correct elements, and the suggested link redirects to the appropriate page.
     """
 
