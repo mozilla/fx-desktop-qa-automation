@@ -14,16 +14,6 @@ def test_case():
 WEBSITE_ADDRESS = "https://www.wikipedia.com"
 # WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
-
-def _dialog_options_present(about_prefs: AboutPrefs) -> bool:
-    """Return True when the Clear Data dialog options container exists."""
-    try:
-        about_prefs.get_element("clear-data-dialog-options")
-        return True
-    except Exception:
-        return False
-
-
 def _open_clear_cookies_data_dialog(
     about_prefs: AboutPrefs, ba: BrowserActions
 ):
@@ -38,9 +28,6 @@ def _open_clear_cookies_data_dialog(
 
     # Enter dialog iframe
     ba.switch_to_iframe_context(dlg_iframe)
-
-    # Wait for dialog content to be ready (no custom timeout kwarg)
-    about_prefs.wait.until(lambda _: _dialog_options_present(about_prefs))
 
     value = about_prefs.get_clear_cookie_data_value()
 

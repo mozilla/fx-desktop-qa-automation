@@ -425,11 +425,14 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe(2)
         return self
 
-    def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
+    def press_button_get_popup_dialog_iframe(self, button: str | WebElement) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
-        self.click_on("prefs-button", labels=[button_label])
+        if isinstance(button, str):
+            self.click_on("prefs-button", labels=[button])
+        else:
+            self.click_on(button)
         iframe = self.get_element("browser-popup")
         return iframe
 

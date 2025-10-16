@@ -30,8 +30,9 @@ def test_manage_cookie_data(driver: Firefox):
 
     def open_manage_cookies_data_dialog():
         about_prefs.open()
+        manage_button = about_prefs.get_element("manage-browsing-data-button")
         manage_data_popup = about_prefs.press_button_get_popup_dialog_iframe(
-            "Manage browsing data"
+            manage_button
         )
         ba.switch_to_iframe_context(manage_data_popup)
 
