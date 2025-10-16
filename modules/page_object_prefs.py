@@ -425,14 +425,11 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe(2)
         return self
 
-    def press_button_get_popup_dialog_iframe(self, button: str | WebElement) -> WebElement:
+    def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
-        if isinstance(button, str):
-            self.click_on("prefs-button", labels=[button])
-        else:
-            self.click_on(button)
+        self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -440,6 +437,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing the clear site data button.
         """
+        self.element_clickable("clear-site-data-button")
         self.click_on("clear-site-data-button")
         iframe = self.get_element("browser-popup")
         return iframe

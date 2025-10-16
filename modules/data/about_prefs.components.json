@@ -64,11 +64,6 @@
     "strategy": "id",
     "groups": []
   },
-  "manage-browsing-data-button": {
-    "selectorData": "siteDataSettings",
-    "strategy": "id",
-    "groups": []
-  },
   "saved-payments-button": {
     "selectorData": "[data-l10n-id='autofill-payment-methods-manage-payments-button']",
     "strategy": "css",
