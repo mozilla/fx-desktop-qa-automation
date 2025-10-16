@@ -52,7 +52,6 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     )
 
     # Verify the update doorhanger is displayed
-    # with driver.context(driver.CONTEXT_CHROME):
     sleep(3)
     nav.click_on("password-notification-key")
     autofill_popup_panel.expect(
