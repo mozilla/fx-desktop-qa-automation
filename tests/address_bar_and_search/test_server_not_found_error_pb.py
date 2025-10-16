@@ -2,6 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
+from modules.browser_object_panel_ui import PanelUi
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_error_page import ErrorPage
 
@@ -21,15 +22,12 @@ POSSIBLE_PERMISSION_MESSAGES = [
     "firewall)",
     "Check that Nightly has permission to access the web (you might be connected but behind a firewall)",
 ]
-EXPECTED_TEXTS = [
-    "Try again later",
-    "Check your network connection",
-]
+EXPECTED_TEXTS = ["Try again later", "Check your network connection"]
 
 
-def test_server_not_found_error(driver: Firefox, version: str):
+def test_server_not_found_error_on_private_window(driver: Firefox, version: str):
     """
-    C1901393: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
+    C3029188: - This tests that when a user navigates to a non-existent site, a "Server Not Found" error is
     displayed. The error page contains the correct elements, and the suggested link redirects to the appropriate page.
     """
 
@@ -37,8 +35,9 @@ def test_server_not_found_error(driver: Firefox, version: str):
     nav = Navigation(driver)
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
+    panel = PanelUi(driver)
 
-    # Navigate to the desired site
+    panel.open_and_switch_to_new_window("private")
     nav.search(CHECK_SITE)
 
     # Wait until the tab title updates to "Server Not Found"
