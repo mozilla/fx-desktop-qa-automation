@@ -38,6 +38,7 @@ def test_server_not_found_error_on_private_window(driver: Firefox, version: str)
     error_page = ErrorPage(driver)
     panel = PanelUi(driver)
 
+    # Open a new private window and navigate to the desired site
     panel.open_and_switch_to_new_window("private")
     nav.search(CHECK_SITE)
 
