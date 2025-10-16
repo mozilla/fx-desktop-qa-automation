@@ -59,6 +59,11 @@
     "strategy": "css",
     "groups": []
   },
+  "action-button": {
+    "selectorData": "button[label^='{name}']",
+    "strategy": "css",
+    "groups": []
+  },
   "clear-site-data-button": {
     "selectorData": "clearSiteDataButton",
     "strategy": "id",

@@ -429,6 +429,9 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
+        # hack to know if the current iframe is the default browser one or not
+        if self.get_iframe().aria_role != 'none':
+            self.click_on('action-button', labels=['Cancel'])
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
