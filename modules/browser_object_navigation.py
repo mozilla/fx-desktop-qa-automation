@@ -327,6 +327,7 @@ class Navigation(BasePage):
         Argument:
             expected_pattern: Regex pattern to match against download name
         """
+        self.element_visible("download-target-element")
         download_name = self.get_element("download-target-element")
         download_value = download_name.get_attribute("value")
         assert re.match(expected_pattern, download_value), (
