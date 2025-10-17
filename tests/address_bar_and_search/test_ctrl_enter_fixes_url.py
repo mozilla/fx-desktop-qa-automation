@@ -11,7 +11,7 @@ def test_case():
 
 
 URL_FIXES = [
-    ("cnn", "https://edition.cnn.com/"),
+    ("example", "https://www.example.com/"),
     ("facebook", "https://www.facebook.com/"),
 ]
 
