@@ -1,11 +1,10 @@
 import csv
 import os
 import re
-import time
 
 import pytest
 
-from modules.page_object import AboutLogins, GenericPage
+from modules.page_object import AboutLogins
 
 PASSWORDS_FILE = "passwords.csv"
 
@@ -26,20 +25,12 @@ def test_password_csv_correctness(
     # Initializing objects
     (driver, usernames, logins) = driver_and_saved_logins
     about_logins = AboutLogins(driver)
-    page = GenericPage(driver)
 
     # Ensure the export target folder doesn't contain a passwords.csv file
     about_logins.remove_password_csv(downloads_folder)
 
-    # Click on buttons to export passwords
-    about_logins.open()
-    about_logins.click_on("menu-button")
-    about_logins.click_on("export-passwords-button")
-    about_logins.click_on("continue-export-button")
-
-    # Export the password file
-    time.sleep(3)
-    page.navigate_dialog_to_location(downloads_folder, PASSWORDS_FILE)
+    # Export the passwords CSV
+    about_logins.export_passwords_csv(downloads_folder, "passwords.csv")
 
     # Verify the exported csv file is present in the target folder
     csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
