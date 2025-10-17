@@ -546,6 +546,8 @@ class AboutPrefs(BasePage):
         options = self.get_elements("clear-data-dialog-options")
 
         # Extract the text from the label the second option
+        print(f"All options: {options}")
+        self.expect(lambda _: len(options) > 1)
         second_option = options[1]
         label_text = second_option.text
         print(f"The text of the option is: {label_text}")
