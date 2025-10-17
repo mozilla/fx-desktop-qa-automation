@@ -431,7 +431,7 @@ class AboutPrefs(BasePage):
         """
         # hack to know if the current iframe is the default browser one or not
         if self.get_iframe().location['x'] > 0:
-            self.click_on('action-button', labels=['Cancel'])
+            self.click_on('close-dialog')
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe

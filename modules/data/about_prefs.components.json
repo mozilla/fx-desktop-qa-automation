@@ -64,6 +64,11 @@
     "strategy": "css",
     "groups": []
   },
+  "close-dialog": {
+    "selectorData": "button[data-l10n-id='close-button']",
+    "strategy": "css",
+    "groups": []
+  },
   "clear-site-data-button": {
     "selectorData": "clearSiteDataButton",
     "strategy": "id",
