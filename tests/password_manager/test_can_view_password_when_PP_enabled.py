@@ -28,16 +28,9 @@ def test_password_can_be_shown(driver: Firefox):
 
     # Open about:login and click on the "Add password" button
     about_logins.open()
-    about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.
-    about_logins.create_new_login(
-        {
-            "origin": URL_TO_TEST,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(URL_TO_TEST, USERNAME, PASSWORD)
 
     # Select the "Use a primary password" check box to trigger the "Change Primary Password" window
     about_prefs.open()
@@ -56,7 +49,6 @@ def test_password_can_be_shown(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    # with driver.context(driver.CONTEXT_CHROME):
     alert = about_prefs.get_alert()
     alert.accept()
 

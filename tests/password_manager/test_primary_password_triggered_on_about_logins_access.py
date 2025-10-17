@@ -56,14 +56,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     # Open about:logins page and create a login entry
     tabs.switch_to_new_tab()
     about_logins.open()
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": TEST_PAGE_URL,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(TEST_PAGE_URL, USERNAME, PASSWORD)
 
     # Attempt to view the saved password in order to trigger the primary password prompt
     about_logins.element_visible("show-password-checkbox")

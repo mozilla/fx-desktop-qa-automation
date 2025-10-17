@@ -30,14 +30,7 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
 
     # Add a new login
     about_logins.open()
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": TEST_PAGE_URL,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(TEST_PAGE_URL, USERNAME, PASSWORD)
 
     # Wait for item to populate login list
     about_logins.wait.until(
