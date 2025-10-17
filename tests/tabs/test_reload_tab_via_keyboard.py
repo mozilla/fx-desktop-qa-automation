@@ -1,12 +1,8 @@
 import platform
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
@@ -31,7 +27,6 @@ def test_reload_tab_via_keyboard(driver: Firefox, sys_platform: str):
     # Instantiate objects
     page = GenericPage(driver, url=TEST_URL)
     ba = BrowserActions(driver)
-    wait = WebDriverWait(driver, 10)
     nav = Navigation(driver)
     tabbar = TabBar(driver)
 
@@ -41,7 +36,7 @@ def test_reload_tab_via_keyboard(driver: Firefox, sys_platform: str):
     page.open()
 
     # Type "test" into the search field
-    search_field = wait.until(
+    search_field = page.custom_wait(timeout=10).until(
         lambda d: driver.find_element(By.ID, SEARCH_FIELD_ID)
     )
     search_field = page.fill_field_and_verify(search_field, TEST_TEXT, ba.clear_and_fill)

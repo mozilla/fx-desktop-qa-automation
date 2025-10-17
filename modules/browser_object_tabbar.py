@@ -330,13 +330,12 @@ class TabBar(BasePage):
     @BasePage.context_chrome
     def reopen_tabs_with_shortcut(self, sys_platform: str, count: int) -> None:
         """Reopen closed tabs using keyboard shortcut Ctrl/Cmd + Shift + T."""
-        actions = self.actions
 
         # Press modifier keys
         if sys_platform == "Darwin":
-            actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).perform()
+            self.actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).perform()
         else:
-            actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).perform()
+            self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).perform()
 
         # Press 'T' multiple times to reopen tabs
         for _ in range(count):

@@ -68,13 +68,11 @@ class GenericPage(BasePage):
             WebElement: The refreshed search field.
         """
 
-        wait = WebDriverWait(self.driver, wait_time)
-
         # Wait for the old element to be stale (page reload)
-        wait.until(EC.staleness_of(old_field))
+        self.wait.until(EC.staleness_of(old_field))
 
         # Wait for the new one to appear and be visible
-        new_field = wait.until(
+        new_field = self.wait.until(
             lambda d: (
                 elem if (elem := d.find_element(By.ID, field_id)).is_displayed() else False
             )
