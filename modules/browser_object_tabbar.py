@@ -328,7 +328,7 @@ class TabBar(BasePage):
             )
 
     @BasePage.context_chrome
-    def select_tabs_by_indices(
+    def select_multiple_tabs_by_indices(
         self, indices: list[int], sys_platform: str
     ) -> list[WebElement]:
         """
