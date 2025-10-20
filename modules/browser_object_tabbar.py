@@ -341,3 +341,41 @@ class TabBar(BasePage):
             self.custom_wait(timeout=3).until(
                 lambda d: target_tab.get_attribute("visuallyselected") == ""
             )
+
+    @BasePage.context_chrome
+    def select_multiple_tabs_by_indices(
+        self, indices: list[int], sys_platform: str
+    ) -> list[WebElement]:
+        """
+        Selects multiple tabs based on their indices and returns list of tabs.
+
+        Preconditions:
+            - len(indices) > 1
+            - max(indices) < number of open tabs
+            - min(indices) >= 1
+        Notes:
+            - Opens (clicks) the tab at the first index in indices
+            - the first tab in the window is denoted by index 1 (1-based indexing)
+        """
+
+        start_tab = self.get_tab(indices[0])
+        selected_tabs = [start_tab]
+        start_tab.click()
+
+        actions = self.actions
+        if sys_platform == "Darwin":
+            actions.key_down(Keys.COMMAND).perform()
+        else:
+            actions.key_down(Keys.CONTROL).perform()
+
+        for i in range(1, len(indices)):
+            tab = self.get_tab(indices[i])
+            actions.click(tab).perform()
+            selected_tabs.append(tab)
+
+        if sys_platform == "Darwin":
+            actions.key_up(Keys.COMMAND).perform()
+        else:
+            actions.key_up(Keys.CONTROL).perform()
+
+        return selected_tabs
