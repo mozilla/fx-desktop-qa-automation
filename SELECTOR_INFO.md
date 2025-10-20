@@ -509,8 +509,22 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: prefs-button
+Selector Data: "moz-box-button[label^='{name}']"
+Description: Checkbox for a option by label of moz box button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: action-button
 Selector Data: "button[label^='{name}']"
-Description: Checkbox for a option by label
+Description: Checkbox for a option by label of normal button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: close-dialog
+Selector Data: "button[data-l10n-id='close-button']"
+Description: Close dialog button
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```

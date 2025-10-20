@@ -429,7 +429,19 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
+        # hack to know if the current iframe is the default browser one or not
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
         self.click_on("prefs-button", labels=[button_label])
+        iframe = self.get_element("browser-popup")
+        return iframe
+
+    def clear_cookies_and_get_dialog_iframe(self):
+        """
+        Returns the iframe object for the dialog panel in the popup after pressing the clear site data button.
+        """
+        self.element_clickable("clear-site-data-button")
+        self.click_on("clear-site-data-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -534,6 +546,8 @@ class AboutPrefs(BasePage):
         options = self.get_elements("clear-data-dialog-options")
 
         # Extract the text from the label the second option
+        print(f"All options: {options}")
+        self.expect(lambda _: len(options) > 1)
         second_option = options[1]
         label_text = second_option.text
         print(f"The text of the option is: {label_text}")
