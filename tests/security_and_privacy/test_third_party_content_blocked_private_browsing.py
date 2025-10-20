@@ -1,5 +1,3 @@
-from platform import system
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -10,6 +8,11 @@ from modules.page_object import GenericPage
 @pytest.fixture()
 def test_case():
     return "446323"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("privacy.trackingprotection.pbmode.enabled", True)]
 
 
 ALLOWED_TRACKING_URLS = {
@@ -103,10 +106,6 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
         assert item.get_attribute("value") in ALLOWED_TRACKING_URLS
 
 
-@pytest.mark.skipif(
-    system().lower().startswith("darwin") or system().lower().startswith("linux"),
-    reason="bug 1994060",
-)
 def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
