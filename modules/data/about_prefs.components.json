@@ -55,8 +55,23 @@
     "groups": []
   },
   "prefs-button": {
+    "selectorData": "moz-box-button[label^='{name}']",
+    "strategy": "css",
+    "groups": []
+  },
+  "action-button": {
     "selectorData": "button[label^='{name}']",
     "strategy": "css",
+    "groups": []
+  },
+  "close-dialog": {
+    "selectorData": "button[data-l10n-id='close-button']",
+    "strategy": "css",
+    "groups": []
+  },
+  "clear-site-data-button": {
+    "selectorData": "clearSiteDataButton",
+    "strategy": "id",
     "groups": []
   },
   "saved-payments-button": {
@@ -317,8 +332,13 @@
     "groups": []
   },
   "cookies-privacy-label": {
-    "selectorData": "[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
+    "selectorData": "moz-message-bar[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
     "strategy": "css",
+    "groups": []
+  },
+  "history-privacy-label": {
+    "selectorData": "historyPane",
+    "strategy": "id",
     "groups": []
   },
   "cookies-delete-on-close": {
@@ -334,11 +354,6 @@
   "logins-exceptions": {
     "selectorData": "passwordExceptions",
     "strategy": "id",
-    "groups": []
-  },
-  "history-privacy-label": {
-    "selectorData": "description[data-l10n-id='history-dontremember-description']",
-    "strategy": "css",
     "groups": []
   },
   "language-dropdown": {
