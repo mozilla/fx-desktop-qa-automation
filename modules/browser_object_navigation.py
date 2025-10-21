@@ -281,6 +281,60 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
+    def wait_for_suggestions_present(self, at_least: int = 1):
+        """Wait until the suggestion list has at least one visible item."""
+        self.set_chrome_context()
+        self.expect(lambda _: len(self.get_elements("suggestion-titles")) >= at_least)
+        return self
+
+    def wait_for_suggestions_absent(self):
+        """Wait for the suggestions list to disappear (for non-general engines)."""
+        self.set_chrome_context()
+        self.element_not_visible("suggestion-titles")
+        return self
+
+    def open_usb_and_select_engine(self, engine_title: str):
+        """Click the USB icon and select a search engine by its title."""
+        self.get_element("searchmode-switcher").click()
+        self.get_element("search-mode-switcher-option", labels=[engine_title]).click()
+        return self
+
+    def assert_search_mode_chip_visible(self):
+        """Ensure the search mode indicator (chip) is visible on the left."""
+        self.set_chrome_context()
+        self.get_element("search-mode-span")
+        return self
+
+    def click_first_suggestion_row(self):
+        """
+        Clicks the first visible suggestion row in the list, using robust scrolling and fallback.
+        """
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.common.action_chains import ActionChains
+
+        self.set_chrome_context()
+        driver = self.driver
+
+        try:
+            # Prefer Firefox Suggest row if present
+            row = self.get_element("firefox-suggest")
+        except Exception:
+            titles = self.get_elements("suggestion-titles")
+            assert titles, "No visible suggestion items found."
+            target = next((t for t in titles if t.is_displayed()), titles[0])
+            try:
+                row = target.find_element(By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]")
+            except Exception:
+                row = target
+
+        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", row)
+        try:
+            ActionChains(driver).move_to_element(row).click().perform()
+        except Exception:
+            driver.execute_script("arguments[0].click();", row)
+
+        return self
+
     @BasePage.context_chrome
     def click_file_download_warning_panel(self) -> BasePage:
         """exit file download warning panel if present"""

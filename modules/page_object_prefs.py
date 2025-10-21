@@ -65,6 +65,15 @@ class AboutPrefs(BasePage):
         search_input.send_keys(term)
         return self
 
+    def enable_private_window_suggestions(self):
+        """Enable 'Show search suggestions in Private Windows' if not already checked."""
+        from selenium.webdriver.common.by import By
+
+        checkbox = self.driver.find_element(By.ID, "showSearchSuggestionsPrivateWindows")
+        if checkbox.get_attribute("checked") != "true":
+            checkbox.click()
+        return self
+
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
         self.get_element("language-set-alternative-button").click()
@@ -676,6 +685,8 @@ class AboutPrefs(BasePage):
         dialog = self.get_element("unknown-content-type-dialog")
         dialog.send_keys(Keys.ESCAPE)
         return self
+
+
 
 
 class AboutAddons(BasePage):
