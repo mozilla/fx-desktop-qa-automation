@@ -750,3 +750,36 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
+
+    @BasePage.context_chrome
+    def press_ctrl_key(self, key: str) -> BasePage:
+        """
+        Press Ctrl/Cmd + the specified key in the Awesome Bar.
+
+        Args:
+            key (str): The key to press along with Ctrl/Cmd (e.g., "c" or "v").
+        """
+        modifier = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
+        self.perform_key_combo(modifier, key)
+        return self
+
+    @BasePage.context_chrome
+    def verify_https_hidden_in_address_bar(self) -> None:
+        """
+        Wait until the HTTPS prefix is hidden in the address bar display.
+        """
+        self.wait.until(
+            lambda d: "https" not in self.get_element("awesome-bar").get_attribute("value")
+        )
+
+    @BasePage.context_chrome
+    def verify_address_bar_value_prefix(self, prefix: str) -> None:
+        """
+        Wait until the value in the address bar starts with the given prefix.
+
+        Args:
+            prefix (str): Expected starting string (e.g., "https://").
+        """
+        self.wait.until(
+            lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
+        )
