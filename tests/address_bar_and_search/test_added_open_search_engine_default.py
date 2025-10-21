@@ -1,8 +1,5 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox, Keys
-from selenium.webdriver.common.by import By
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
