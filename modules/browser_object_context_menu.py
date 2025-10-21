@@ -13,15 +13,16 @@ class ContextMenu(BasePage):
 
     URL_TEMPLATE = ""
 
+    @BasePage.context_chrome
     def click_context_item(
         self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> BasePage:
         """
         Clicks the context item.
         """
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.fetch(reference, labels=labels).click()
-            return self
+
+        self.fetch(reference, labels=labels).click()
+        return self
 
 
 class AboutDownloadsContextMenu(ContextMenu):

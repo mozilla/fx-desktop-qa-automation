@@ -750,3 +750,13 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
+
+    @BasePage.context_chrome
+    def get_status_panel_url(self) -> str:
+        """
+        Gets the URL displayed in the status panel at the bottom left of the browser.
+        """
+        self.element_visible("status-panel-label")
+        status_label = self.get_element("status-panel-label")
+        url = status_label.get_attribute("value")
+        return url

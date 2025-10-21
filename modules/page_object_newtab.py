@@ -1,8 +1,10 @@
 import logging
 
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
+from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
 
 
@@ -44,6 +46,10 @@ class AboutNewtab(BasePage):
     URL_TEMPLATE = "about:newtab"
     TOP_SITES_TOTAL = [7, 8]
     REC_ARTICLE_TOTAL = 21
+
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.navigation = Navigation(driver)
 
     def set_language_code(self, lang_code: str) -> BasePage:
         """
@@ -132,3 +138,38 @@ class AboutNewtab(BasePage):
         logging.info(f"Found {self.count_top_sites()} top sites")
         # ODD: Sometimes we get 7 top sites, not 8
         assert self.count_top_sites() in self.TOP_SITES_TOTAL
+
+    @BasePage.context_content
+    def get_topsite_element(self, tile_title: str):
+        """Get a top site tile element by title."""
+        return self.get_element("top-site-by-title", labels=[tile_title])
+
+    @BasePage.context_content
+    def open_topsite_context_menu_by_title(self, tile_title: str):
+        """
+        Opens the context menu for a top site tile by its title.
+        Argument:
+            tile_title: The title text of the tile (eg. "Wikipedia")
+        """
+        # Get the tile by title and right-click on it to open context menu
+        tile = self.get_topsite_element(tile_title)
+        self.context_click(tile)
+        return self
+
+    @BasePage.context_content
+    def hover_topsite_and_verify_url(self, tile_title: str, expected_url: str):
+        """
+        Hovers over a top site tile and verifies the status panel shows the expected URL, displayed in the
+        bottom-left corner of the new tab window.
+        Arguments:
+            tile_title: The title text of the tile (e.g., "Wikipedia")
+            expected_url: The expected URL to be displayed in the status panel
+        """
+        tile = self.get_topsite_element(tile_title)
+        self.hover(tile)
+        navigation = Navigation(self.driver)
+        actual_url = navigation.get_status_panel_url()
+        assert expected_url in actual_url, (
+            f"Expected '{expected_url}' in '{actual_url}'"
+        )
+        return self
