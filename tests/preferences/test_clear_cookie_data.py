@@ -14,9 +14,8 @@ def test_case():
 WEBSITE_ADDRESS = "https://www.wikipedia.com"
 # WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
-def _open_clear_cookies_data_dialog(
-    about_prefs: AboutPrefs, ba: BrowserActions
-):
+
+def _open_clear_cookies_data_dialog(about_prefs: AboutPrefs, ba: BrowserActions):
     """
     Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
     wait for its option container to be present, read the value, then switch back.
