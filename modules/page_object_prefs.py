@@ -69,7 +69,7 @@ class AboutPrefs(BasePage):
         """Enable 'Show search suggestions in Private Windows' if not already checked."""
         from selenium.webdriver.common.by import By
 
-        checkbox = self.driver.find_element(By.ID, "showSearchSuggestionsPrivateWindows")
+        checkbox = self.get_element("search-suggestion-in-private-windows")
         if checkbox.get_attribute("checked") != "true":
             checkbox.click()
         return self

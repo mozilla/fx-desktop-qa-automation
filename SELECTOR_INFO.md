@@ -921,6 +921,13 @@ Location: about:preferences#general Language subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: search-suggestion-in-private-windows
+Selector Data: "showSearchSuggestionsPrivateWindows"
+Description: Show search suggestions in Private Windows
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: language-settings-search
 Selector Data: "menuitem[value='search']"
 Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
