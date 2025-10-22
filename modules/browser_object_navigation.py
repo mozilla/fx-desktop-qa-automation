@@ -760,3 +760,14 @@ class Navigation(BasePage):
         status_label = self.get_element("status-panel-label")
         url = status_label.get_attribute("value")
         return url
+
+    def verify_status_panel_url(self, expected_url: str):
+        """
+        Asserts that the browser status panel (bottom-left) contains the expected URL.
+        Argument:
+            expected_url: The expected URL substring to be found in the status panel
+        """
+        actual_url = self.get_status_panel_url()
+        assert expected_url in actual_url, (
+            f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
+        )

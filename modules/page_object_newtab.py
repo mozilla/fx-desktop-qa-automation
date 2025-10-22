@@ -155,21 +155,3 @@ class AboutNewtab(BasePage):
         tile = self.get_topsite_element(tile_title)
         self.context_click(tile)
         return self
-
-    @BasePage.context_content
-    def hover_topsite_and_verify_url(self, tile_title: str, expected_url: str):
-        """
-        Hovers over a top site tile and verifies the status panel shows the expected URL, displayed in the
-        bottom-left corner of the new tab window.
-        Arguments:
-            tile_title: The title text of the tile (e.g., "Wikipedia")
-            expected_url: The expected URL to be displayed in the status panel
-        """
-        tile = self.get_topsite_element(tile_title)
-        self.hover(tile)
-        navigation = Navigation(self.driver)
-        actual_url = navigation.get_status_panel_url()
-        assert expected_url in actual_url, (
-            f"Expected '{expected_url}' in '{actual_url}'"
-        )
-        return self

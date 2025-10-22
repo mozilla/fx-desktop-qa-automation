@@ -13,19 +13,20 @@ def test_case():
     return "3029116"
 
 
-EXPECTED_CONTEXT_MENU_OPTIONS = {
+STATIC_CONTEXT_MENU_OPTIONS = {
     "context-menu-open-link-in-tab": "Open Link in New Tab",
     "context-menu-open-link-in-new-window": "Open Link in New Window",
     "context-menu-open-link-in-new-private-window": "Open Link in New Private Window",
     "context-menu-bookmark-link": "Bookmark Link",
-    "context-menu-save-link": "Save Link As...",
+    "context-menu-save-link": "Save Link As",
     "context-menu-copy-link": "Copy Link",
-    "context-menu-search-select": "Search Google for",
-    "context-menu-ask-chatbot": "Ask an AI Chatbot",
     "context-menu-inspect": "Inspect",
 }
 
+DYNAMIC_CONTEXT_MENU_ITEMS = ["context-menu-search-select"]
+
 TOPSITE_TITLE = "Wikipedia"
+TOPSITE_URL = "www.wikipedia.org"
 
 
 def test_non_sponsored_topsite_context_menu_option(driver: Firefox) -> None:
@@ -34,28 +35,29 @@ def test_non_sponsored_topsite_context_menu_option(driver: Firefox) -> None:
     when right-clicking a top site tile, and that the opened link matches the
     status panel URL shown on hover.
     """
-    # Instantiate page objects
     tabs = TabBar(driver)
     newtab = AboutNewtab(driver)
     context_menu = ContextMenu(driver)
     nav = Navigation(driver)
     page = GenericPage(driver, url="about:newtab")
 
-    # Hover over Wikipedia tile and capture the status panel URL (browser's bottom-left corner)
+    # Open about:newtab and hover over Wikipedia tile
     page.open()
-    newtab.hover_topsite_and_verify_url(TOPSITE_TITLE, "wikipedia.org")
+    title_element = newtab.get_topsite_element(TOPSITE_TITLE)
+    newtab.hover(title_element)
+    nav.verify_status_panel_url(TOPSITE_URL)
     status_panel_url = nav.get_status_panel_url()
 
-    # Right-click on the Wikipedia tile to open context menu
+    # Right-click to open context menu
     newtab.open_topsite_context_menu_by_title(TOPSITE_TITLE)
 
-    # Verify all expected context menu options are present
-    for selector, description in EXPECTED_CONTEXT_MENU_OPTIONS.items():
-        context_menu.element_visible(selector)
+    context_menu.verify_topsites_tile_context_menu_options(
+        STATIC_CONTEXT_MENU_OPTIONS,
+        DYNAMIC_CONTEXT_MENU_ITEMS,
+        TOPSITE_TITLE,
+    )
 
-    # Click "Open Link in New Tab" from context menu
+    # Click first option and verify link opens in new tab
     context_menu.click_context_item("context-menu-open-link-in-tab")
-
-    # Switch to the newly opened tab
     tabs.switch_to_new_tab()
     nav.url_contains(status_panel_url)
