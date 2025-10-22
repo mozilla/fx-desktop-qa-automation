@@ -171,6 +171,7 @@ class BasePage(Page):
             self.wait.until_not(condition)
         return self
 
+    @context_chrome
     def perform_key_combo(self, *keys) -> Page:
         """
         Use ActionChains to perform key combos. Modifier keys should come first in the function call.
