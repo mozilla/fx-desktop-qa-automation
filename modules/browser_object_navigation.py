@@ -33,6 +33,7 @@ class Navigation(BasePage):
         "Bing",
         "DuckDuckGo",
         "Wikipedia (en)",
+        "Firefox Add-ons"
     }
 
     def __init__(self, driver: Firefox, **kwargs):
@@ -84,6 +85,15 @@ class Navigation(BasePage):
         self.set_awesome_bar()
         self.awesome_bar.click()
         self.awesome_bar.send_keys(term)
+        return self
+
+    @BasePage.context_chrome
+    def press_ctrl_enter(self) -> BasePage:
+        """Press Ctrl/Cmd + Enter in Awesome Bar."""
+        if self.sys_platform() == "Darwin":
+            self.perform_key_combo(Keys.COMMAND, Keys.ENTER)
+        else:
+            self.perform_key_combo(Keys.CONTROL, Keys.ENTER)
         return self
 
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
@@ -372,6 +382,7 @@ class Navigation(BasePage):
         Argument:
             expected_pattern: Regex pattern to match against download name
         """
+        self.element_visible("download-target-element")
         download_name = self.get_element("download-target-element")
         download_value = download_name.get_attribute("value")
         assert re.match(expected_pattern, download_value), (

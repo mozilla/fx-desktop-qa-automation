@@ -1,5 +1,3 @@
-from platform import system
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,48 +15,27 @@ WEBSITE_ADDRESS = "https://www.wikipedia.com"
 # WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
 
 
-def _dialog_options_present(about_prefs: AboutPrefs) -> bool:
-    """Return True when the Clear Data dialog options container exists."""
-    try:
-        about_prefs.get_element("clear-data-dialog-options")
-        return True
-    except Exception:
-        return False
-
-
-def _open_clear_cookies_data_dialog(
-    about_prefs: AboutPrefs, ba: BrowserActions, wait: WebDriverWait
-):
+def _open_clear_cookies_data_dialog(about_prefs: AboutPrefs, ba: BrowserActions):
     """
-    Open about:preferences#privacy, show 'Clear Data' dialog, switch into its iframe,
-    wait for its options container to be present, read the value, then switch back.
+    Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
+    wait for its option container to be present, read the value, then switch back.
     """
     about_prefs.open()
 
     # Click the button and grab the dialog iframe element
-    dlg_iframe = about_prefs.press_button_get_popup_dialog_iframe("Clear Data")
-
-    # Wait until the iframe is attached and visible before switching
-    wait.until(lambda _: dlg_iframe and dlg_iframe.is_displayed())
+    dlg_iframe = about_prefs.clear_cookies_and_get_dialog_iframe()
 
     # Enter dialog iframe
     ba.switch_to_iframe_context(dlg_iframe)
 
-    # Wait for dialog content to be ready (no custom timeout kwarg)
-    wait.until(lambda _: _dialog_options_present(about_prefs))
-
     value = about_prefs.get_clear_cookie_data_value()
 
-    # Always return to content context
+    # Always return to the content context
     ba.switch_to_content_context()
+    about_prefs.close_dialog_box()
     return value
 
 
-# @pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows GA, tracked in 1990570")
-@pytest.mark.skipif(
-    system().lower().startswith("darwin") or system().lower().startswith("linux"),
-    reason="bug 1994055",
-)
 def test_clear_cookie_data(driver: Firefox):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel
@@ -71,19 +48,19 @@ def test_clear_cookie_data(driver: Firefox):
     driver.get(WEBSITE_ADDRESS)
 
     # Open dialog and read current value (must be > 0)
-    cookie_value = _open_clear_cookies_data_dialog(about_prefs, ba, wait)
+    cookie_value = _open_clear_cookies_data_dialog(about_prefs, ba)
     assert cookie_value > 0, f"Expected cookie/site data > 0, got {cookie_value}"
 
-    # Clear cookies and site data: open dialog again, wait for iframe, click clear
+    # Clear cookies and site data: open the dialog again, wait for iframe, click clear
     about_prefs.open()
-    dlg_iframe = about_prefs.press_button_get_popup_dialog_iframe("Clear Data")
+    dlg_iframe = about_prefs.clear_cookies_and_get_dialog_iframe()
     wait.until(lambda _: dlg_iframe and dlg_iframe.is_displayed())
     ba.switch_to_iframe_context(dlg_iframe)
     about_prefs.get_element("clear-data-accept-button").click()
     ba.switch_to_content_context()
 
     # Wait until the dialog reports 0 (reopen/poll via helper)
-    wait.until(lambda _: _open_clear_cookies_data_dialog(about_prefs, ba, wait) == 0)
+    wait.until(lambda _: _open_clear_cookies_data_dialog(about_prefs, ba) == 0)
 
-    final_value = _open_clear_cookies_data_dialog(about_prefs, ba, wait)
+    final_value = _open_clear_cookies_data_dialog(about_prefs, ba)
     assert final_value == 0, f"Expected 0 after clearing, got {final_value}"
