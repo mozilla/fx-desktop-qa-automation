@@ -33,7 +33,7 @@ class Navigation(BasePage):
         "Bing",
         "DuckDuckGo",
         "Wikipedia (en)",
-        "Firefox Add-ons"
+        "Firefox Add-ons",
     }
 
     def __init__(self, driver: Firefox, **kwargs):
