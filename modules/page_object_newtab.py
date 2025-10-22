@@ -1,10 +1,8 @@
 import logging
 
-from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
 
 
@@ -46,10 +44,6 @@ class AboutNewtab(BasePage):
     URL_TEMPLATE = "about:newtab"
     TOP_SITES_TOTAL = [7, 8]
     REC_ARTICLE_TOTAL = 21
-
-    def __init__(self, driver: Firefox, **kwargs):
-        super().__init__(driver, **kwargs)
-        self.navigation = Navigation(driver)
 
     def set_language_code(self, lang_code: str) -> BasePage:
         """
@@ -141,13 +135,13 @@ class AboutNewtab(BasePage):
 
     @BasePage.context_content
     def get_topsite_element(self, tile_title: str):
-        """Get a top site tile element by title."""
+        """Get a topsite tile element by title."""
         return self.get_element("top-site-by-title", labels=[tile_title])
 
     @BasePage.context_content
     def open_topsite_context_menu_by_title(self, tile_title: str):
         """
-        Opens the context menu for a top site tile by its title.
+        Opens the context menu for a topsite tile by its title.
         Argument:
             tile_title: The title text of the tile (eg. "Wikipedia")
         """

@@ -25,14 +25,6 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
-    def get_menu_item_label(self, selector: str) -> str:
-        """
-        Returns the label text of a context menu item, normalized.
-        """
-        el = self.get_element(selector)
-        return (el.get_attribute("label") or el.text or "").strip()
-
-    @BasePage.context_chrome
     def verify_topsites_tile_context_menu_options(
         self,
         static_items: Dict[str, str],
@@ -40,7 +32,7 @@ class ContextMenu(BasePage):
         tile_title: str,
     ):
         """
-        Verifies expected context menu items are visible and optionally checks label match.
+        Verifies expected context menu options are present upon right clicking a topsite tile.
         Arguments:
             static_items: Dict mapping of selector name to expected label text.
             dynamic_items: List of selector names for items with dynamic labels.
@@ -50,7 +42,6 @@ class ContextMenu(BasePage):
         for selector, expected_label in static_items.items():
             option = self.get_element(selector)
             label = (option.get_attribute("label") or option.text or "").strip()
-            print(f"[DEBUG] Static label for {selector}: {label}")
             assert expected_label in label, (
                 f'Expected label "{expected_label}" not found. Got: "{label}"'
             )
@@ -60,7 +51,6 @@ class ContextMenu(BasePage):
             option = self.get_element(selector)
             label = (option.get_attribute("label") or option.text or "").strip()
             normalized = label.lower()
-            print(f"[DEBUG] Dynamic label for {selector}: {label}")
             assert normalized.startswith("search"), (
                 f'Label does not start with "Search": "{label}"'
             )

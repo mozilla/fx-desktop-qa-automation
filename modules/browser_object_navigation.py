@@ -763,7 +763,7 @@ class Navigation(BasePage):
 
     def verify_status_panel_url(self, expected_url: str):
         """
-        Asserts that the browser status panel (bottom-left) contains the expected URL.
+        Verify that the browser status panel (browser's bottom-left) contains the expected URL.
         Argument:
             expected_url: The expected URL substring to be found in the status panel
         """

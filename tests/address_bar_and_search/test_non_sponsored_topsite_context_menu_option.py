@@ -41,7 +41,7 @@ def test_non_sponsored_topsite_context_menu_option(driver: Firefox) -> None:
     nav = Navigation(driver)
     page = GenericPage(driver, url="about:newtab")
 
-    # Open about:newtab and hover over Wikipedia tile
+    # Open about:newtab and hover over the topsite tite and verify status panel URL (bottom-left)
     page.open()
     title_element = newtab.get_topsite_element(TOPSITE_TITLE)
     newtab.hover(title_element)
@@ -51,6 +51,7 @@ def test_non_sponsored_topsite_context_menu_option(driver: Firefox) -> None:
     # Right-click to open context menu
     newtab.open_topsite_context_menu_by_title(TOPSITE_TITLE)
 
+    # Verify context menu options
     context_menu.verify_topsites_tile_context_menu_options(
         STATIC_CONTEXT_MENU_OPTIONS,
         DYNAMIC_CONTEXT_MENU_ITEMS,

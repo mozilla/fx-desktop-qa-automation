@@ -223,30 +223,12 @@
         "groups": []
     },
 
-    "context-menu-open-link-in-container-tab": {
-        "selectorData": "context-openlinkinusercontext-menu",
-        "strategy": "id",
-        "groups": []
-    },
-
     "context-menu-bookmark-link": {
         "selectorData": "context-bookmarklink",
         "strategy": "id",
         "groups": []
-    },
-
-    "context-menu-inspect-a11y": {
-        "selectorData": "context-inspect-a11y",
-        "strategy": "id",
-        "groups": []
-    },
-
-    "context-menu-ask-chatbot": {
-        "selectorData": "context-ask-chat",
-        "strategy": "id",
-        "groups": []
-
      },
+
     "context-menu-search-select": {
         "selectorData": "context-searchselect",
         "strategy": "id",
