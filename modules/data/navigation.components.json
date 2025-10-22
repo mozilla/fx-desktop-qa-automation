@@ -603,5 +603,11 @@
         "selectorData": "developer-button",
         "strategy": "id",
         "groups": []
+    },
+
+    "google-default-engine": {
+        "selectorData": "toolbarbutton#urlbar-searchmode-switcher[label='Google, pick a search engine']",
+        "strategy": "css",
+        "groups": []
     }
 }

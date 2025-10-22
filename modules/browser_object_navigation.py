@@ -751,3 +751,8 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
+
+    def verify_engine_returned_default(self) -> None:
+        self.wait.until(
+            lambda d: self.element_visible("google-default-engine")
+        )

@@ -3132,6 +3132,13 @@ Description: Developer tool icon
 Location: Navigation bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: google-default-engine
+Selector Data: "toolbarbutton#urlbar-searchmode-switcher[label='Google, pick a search engine']"
+Description: Google default search engine
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
