@@ -807,6 +807,27 @@ class Navigation(BasePage):
             self.element_visible("autoplay-icon-blocked")
 
     @BasePage.context_chrome
+    def get_status_panel_url(self) -> str:
+        """
+        Gets the URL displayed in the status panel at the bottom left of the browser.
+        """
+        self.element_visible("status-panel-label")
+        status_label = self.get_element("status-panel-label")
+        url = status_label.get_attribute("value")
+        return url
+
+    def verify_status_panel_url(self, expected_url: str):
+        """
+        Verify that the browser status panel (browser's bottom-left) contains the expected URL.
+        Argument:
+            expected_url: The expected URL substring to be found in the status panel
+        """
+        actual_url = self.get_status_panel_url()
+        assert expected_url in actual_url, (
+            f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
+        )
+
+    @BasePage.context_chrome
     def verify_https_hidden_in_address_bar(self) -> None:
         """
         Wait until the HTTPS prefix is hidden in the address bar display.
