@@ -176,8 +176,9 @@ class BasePage(Page):
         Use ActionChains to perform key combos. Modifier keys should come first in the function call.
         Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
         """
-        while Keys.CONTROL in keys and self.sys_platform == "Darwin":
-            keys[keys.index(Keys.CONTROL)] = Keys.COMMAND
+        if self.sys_platform() == "Darwin":
+            keys = tuple(Keys.COMMAND if k == Keys.CONTROL else k for k in keys)
+
         for k in keys[:-1]:
             self.actions.key_down(k)
 

@@ -30,12 +30,12 @@ def test_copied_url_contains_https(driver: Firefox):
 
     # Click on the URL bar once and hit CTRL/CMD+C to copy the link
     nav.click_in_awesome_bar()
-    nav.perform_key_combo(Keys.CONTROL, "c")
+    nav.perform_key_combo_chrome(Keys.CONTROL, "c")
 
     # Open a new tab and paste (CTRL/CMD+V) the link
     nav.open_and_switch_to_new_window("tab")
     nav.click_in_awesome_bar()
-    nav.perform_key_combo(Keys.CONTROL, "v")
+    nav.perform_key_combo_chrome(Keys.CONTROL, "v")
 
     # Check that full link, including https://, is pasted in the address bar
     nav.verify_address_bar_value_prefix("https://")
