@@ -443,6 +443,14 @@ Description: The Firefox logo
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```
+```
+Selector Name: top-site-by-title
+Selector Data: "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/.."
+Description: Topsite tile by title
+Location: The about:newtab page (middle section)
+Path to .json: modules/data/about_newtab.components.json
+```
+
 #### about_prefs
 ```
 Selector Name: search-engine-dropdown-root
@@ -3137,13 +3145,6 @@ Selector Name: developer-tool-button
 Selector Data: developer-button
 Description: Developer tool icon
 Location: Navigation bar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: google-default-engine
-Selector Data: "toolbarbutton#urlbar-searchmode-switcher[label='Google, pick a search engine']"
-Description: Google default search engine
-Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

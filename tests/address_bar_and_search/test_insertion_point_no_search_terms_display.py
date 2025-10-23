@@ -31,7 +31,7 @@ def test_insertion_point_no_search_terms_display(driver: Firefox, engine):
     # check that the selected engine is returned to using default engine
     nav.verify_engine_returned_default()
 
-    # Type anything in the url bar (example moza)
+    # Type anything in the url bar (example fire)
     nav.type_in_awesome_bar("fire")
 
     # check that there is no Bing "Search Mode", search suggestions populate with default engine

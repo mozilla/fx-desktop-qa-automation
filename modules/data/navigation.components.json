@@ -605,6 +605,12 @@
         "groups": []
     },
 
+    "status-panel-label": {
+        "selectorData": "statuspanel-label",
+        "strategy": "id",
+        "groups": []
+    },
+
     "google-default-engine": {
         "selectorData": "toolbarbutton#urlbar-searchmode-switcher[label='Google, pick a search engine']",
         "strategy": "css",
