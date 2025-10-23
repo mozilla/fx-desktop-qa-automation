@@ -41,7 +41,7 @@ def test_non_sponsored_topsite_context_menu_option(driver: Firefox) -> None:
     nav = Navigation(driver)
     page = GenericPage(driver, url="about:newtab")
 
-    # Open about:newtab and hover over the topsite tite and verify status panel URL (bottom-left)
+    # Open about:newtab and hover over the desired TOPSITE_TITLE tile and verify status panel URL (bottom-left)
     page.open()
     title_element = newtab.get_topsite_element(TOPSITE_TITLE)
     newtab.hover(title_element)
