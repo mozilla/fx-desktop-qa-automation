@@ -221,5 +221,18 @@
         "selectorData": "placesContext_openBookmarkContainer:tabs",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-bookmark-link": {
+        "selectorData": "context-bookmarklink",
+        "strategy": "id",
+        "groups": []
+     },
+
+    "context-menu-search-select": {
+        "selectorData": "context-searchselect",
+        "strategy": "id",
+        "groups": []
     }
+
 }
