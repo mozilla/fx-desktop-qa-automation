@@ -93,27 +93,29 @@ def test_copy_link(driver: Firefox):
     nav = Navigation(driver)
     hyperlink_context = ContextMenu(driver)
     tabs = TabBar(driver)
-    example = ExamplePage(driver).open()
+    example = ExamplePage(driver)
 
-    # right click the hyperlink
+    example.open()
+
+    # Right-click the hyperlink
     sleep(1)
-    example.context_click("more-information")
+    example.context_click("learn-more")
 
-    # click on the open in new window option
+    # Click on the open in new window option
     sleep(1)
     hyperlink_context.click_and_hide_menu("context-menu-copy-link")
 
-    # open a new tab
+    # Open a new tab
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
     sleep(1)
     driver.switch_to.window(driver.window_handles[1])
 
-    # # context click and paste
+    # Context click and paste
     search_bar = nav.get_awesome_bar()
     nav.context_click(search_bar)
 
-    # paste and go
+    # Paste and go
     nav.click_and_hide_menu("context-menu-paste-and-go")
 
     example.title_contains(example.MORE_INFO_TITLE)

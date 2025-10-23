@@ -20,7 +20,7 @@ def test_open_link_in_private_window(driver: Firefox):
     nav = Navigation(driver)
 
     sleep(1)
-    example.context_click("more-information")
+    example.context_click("learn-more")
     sleep(1)
     context_menu.click_and_hide_menu("context-menu-open-link-in-new-private-window")
 

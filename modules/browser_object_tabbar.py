@@ -136,10 +136,28 @@ class TabBar(BasePage):
         tab_label = tab_element.find_element(*self.get_selector("tab-title"))
         return tab_label.text
 
+    @BasePage.context_chrome
+    def wait_for_tab_title(
+        self, expected_title: str, tab_index: int = 1, timeout: int = 30
+    ) -> None:
+        """
+        Wait until the tab title matches the expected value.
+        Arguments:
+            expected_title: The tab title to wait for.
+            tab_index: The tab index to check (default is 1).
+            timeout: Time limit (in seconds) before raising TimeoutException.
+        """
+        self.custom_wait(timeout=timeout).until(
+            lambda d: self.get_tab_title(self.get_tab(tab_index)) == expected_title
+        )
+
+    @BasePage.context_chrome
     def expect_tab_sound_status(
         self, identifier: Union[str, int], status: MediaStatus
     ) -> BasePage:
-        """Check to see if the tab has an expected MediaStatus"""
+        """
+        Check to see if the tab has an expected MediaStatus
+        """
         tab = self.get_tab(identifier)
         self.wait.until(lambda _: tab.get_attribute(status) is not None)
         return self
@@ -313,3 +331,51 @@ class TabBar(BasePage):
             else:
                 page.open()
         return self
+
+    @BasePage.context_chrome
+    def verify_tab_focus_cycle(self, num_tabs: int):
+        """Go through all the tabs and ensure the focus changes correctly."""
+        for i in range(1, num_tabs + 2):
+            target_tab = self.get_tab(i)
+            self.click_on(target_tab)
+            self.custom_wait(timeout=3).until(
+                lambda d: target_tab.get_attribute("visuallyselected") == ""
+            )
+
+    @BasePage.context_chrome
+    def select_multiple_tabs_by_indices(
+        self, indices: list[int], sys_platform: str
+    ) -> list[WebElement]:
+        """
+        Selects multiple tabs based on their indices and returns list of tabs.
+
+        Preconditions:
+            - len(indices) > 1
+            - max(indices) < number of open tabs
+            - min(indices) >= 1
+        Notes:
+            - Opens (clicks) the tab at the first index in indices
+            - the first tab in the window is denoted by index 1 (1-based indexing)
+        """
+
+        start_tab = self.get_tab(indices[0])
+        selected_tabs = [start_tab]
+        start_tab.click()
+
+        actions = self.actions
+        if sys_platform == "Darwin":
+            actions.key_down(Keys.COMMAND).perform()
+        else:
+            actions.key_down(Keys.CONTROL).perform()
+
+        for i in range(1, len(indices)):
+            tab = self.get_tab(indices[i])
+            actions.click(tab).perform()
+            selected_tabs.append(tab)
+
+        if sys_platform == "Darwin":
+            actions.key_up(Keys.COMMAND).perform()
+        else:
+            actions.key_up(Keys.CONTROL).perform()
+
+        return selected_tabs

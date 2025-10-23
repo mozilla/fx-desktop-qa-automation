@@ -109,6 +109,12 @@
         "groups": []
     },
 
+    "context-menu-move-tab-to-start": {
+        "selectorData": "menuitem[data-l10n-id='move-to-start']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "context-menu-open-link-in-tab": {
         "selectorData": "context-openlinkintab",
         "strategy": "id",
@@ -215,5 +221,18 @@
         "selectorData": "placesContext_openBookmarkContainer:tabs",
         "strategy": "id",
         "groups": []
+    },
+
+    "context-menu-bookmark-link": {
+        "selectorData": "context-bookmarklink",
+        "strategy": "id",
+        "groups": []
+     },
+
+    "context-menu-search-select": {
+        "selectorData": "context-searchselect",
+        "strategy": "id",
+        "groups": []
     }
+
 }

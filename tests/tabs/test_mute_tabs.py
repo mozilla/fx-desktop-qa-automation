@@ -28,13 +28,17 @@ def add_to_prefs_list():
 @pytest.mark.audio
 def test_mute_unmute_tab(screenshot, driver: Firefox, video_url: str):
     """C134719, test that tabs can be muted and unmuted"""
+
+    # Instantiate objects
     tabs = TabBar(driver)
+
+    # Open the video URL and verify the page title contains "mov_bbb.mp4"
     driver.get(video_url)
     tabs.expect(EC.title_contains("mov_bbb.mp4"))
 
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
-        tabs.click_tab_mute_button(1)
-        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
-        tabs.click_tab_mute_button(1)
-        tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+    # Check that the tab is currently playing audio and click on mute
+    tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+    tabs.click_tab_mute_button(1)
+    tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
+    tabs.click_tab_mute_button(1)
+    tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)

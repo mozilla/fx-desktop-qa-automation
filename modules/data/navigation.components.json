@@ -405,6 +405,24 @@
         "groups": []
     },
 
+    "download-target-element": {
+        "selectorData": "downloadTarget",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "download-progress-element": {
+        "selectorData": "downloadProgress",
+        "strategy": "class",
+        "groups": []
+    },
+
+    "download-details-element": {
+        "selectorData": "downloadDetailsNormal",
+        "strategy": "class",
+        "groups": []
+    },
+
     "bookmark-in-bar": {
         "selectorData": "toolbarbutton.bookmark-item",
         "strategy": "css",
@@ -501,12 +519,6 @@
         "groups": []
     },
 
-    "autoplay-permission": {
-        "selectorData": "blocked-permissions-container",
-        "strategy": "id",
-        "groups": []
-    },
-
     "permissions-location-icon": {
         "selectorData": "permissions-granted-icon",
         "strategy": "id",
@@ -589,6 +601,12 @@
 
     "developer-tool-button": {
         "selectorData": "developer-button",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "status-panel-label": {
+        "selectorData": "statuspanel-label",
         "strategy": "id",
         "groups": []
     }

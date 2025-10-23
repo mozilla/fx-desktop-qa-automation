@@ -443,6 +443,14 @@ Description: The Firefox logo
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```
+```
+Selector Name: top-site-by-title
+Selector Data: "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/.."
+Description: Topsite tile by title
+Location: The about:newtab page (middle section)
+Path to .json: modules/data/about_newtab.components.json
+```
+
 #### about_prefs
 ```
 Selector Name: search-engine-dropdown-root
@@ -495,22 +503,50 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-addresses
-Selector Data: "checkbox[label='Save and fill addresses']"
+Selector Data: "[data-l10n-id='autofill-addresses-checkbox-message']"
 Description: Label for Autofill > Save and fill addresses option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-payment-methods
-Selector Data: "checkbox[label='Save and fill payment methods']"
+Selector Data: "[data-l10n-id='autofill-payment-methods-checkbox-message-2']"
 Description: Label for Autofill > Save and fill payment methods option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: prefs-button
+Selector Data: "moz-box-button[label^='{name}']"
+Description: Checkbox for a option by label of moz box button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: action-button
 Selector Data: "button[label^='{name}']"
-Description: Checkbox for a option by label
+Description: Checkbox for a option by label of normal button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: close-dialog
+Selector Data: "button[data-l10n-id='close-button']"
+Description: Close dialog button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payments-button
+Selector Data: "[data-l10n-id='autofill-payment-methods-manage-payments-button']"
+Description: Embedded button/label for "Manage Saved Payments"
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses-button
+Selector Data: "[data-l10n-id='autofill-addresses-manage-addresses-button']"
+Description: Embedded button/label for "Manage Addresses and more..."
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -845,7 +881,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cookies-privacy-label
-Selector Data: "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']"
+Selector Data: "[data-l10n-id='sitedata-delete-on-close-private-browsing3']"
 Description: Message in Cookies and Site data when History is not remembered
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -904,6 +940,13 @@ Selector Name: language-settings-select
 Selector Data: "[data-l10n-id='browser-languages-select-language']"
 Description: In the Language Set Alternatives dialog, the Select a language to add button
 Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-suggestion-in-private-windows
+Selector Data: "showSearchSuggestionsPrivateWindows"
+Description: Show search suggestions in Private Windows
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1149,6 +1192,13 @@ Selector Name: default-zoom-dropdown-value
 Selector Data: menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']
 Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: unknown-content-type-dialog
+Selector Data: unknownContentTypeWindo
+Description: The unknown content type dialog
+Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -1788,6 +1838,27 @@ Description: Open all bookmarks from the context menu option from a Toolbar book
 Location: Context menu - Toolbar
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-move-tab-to-start
+Selector Data: menuitem[data-l10n-id='move-to-start']
+Description: Context menu option to move a tab to the start of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-bookmark-link
+Selector Data: context-bookmarklink
+Description: Context menu option to bookmark a link
+Location: Context menu - topsite context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-search-select
+Selector Data: coontext-searchselect
+Description: Context menu option to search selected text with the engine set as default
+Location: Context menu - topsite context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -1819,9 +1890,9 @@ Location: Any non-linked content space inside example.com page
 Path to .json: modules/data/exemple_page.components.json
 ```
 ```
-Selector Name: more-information
-Selector Data: "More information..."
-Description: More information..." link 
+Selector Name: learn-more
+Selector Data: "Learn more"
+Description: "Learn more" link
 Location: The hyperlink positioned in the middle of example.com page  
 Path to .json: modules/data/exemple_page.components.json
 ```
@@ -2797,6 +2868,27 @@ Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: download-target-element
+Selector Data: downloadTarget
+Description: Downloaded item in the download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: download-progress-element
+Selector Data: downloadProgress
+Description: Download progress bar
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: ddownload-details-element
+Selector Data: downloadDetailsNormal
+Description: Download details element
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: remove-bookmark-button
 Selector Data: editBookmarkPanelRemoveButton
 Description: Remove bookmark button
@@ -3067,6 +3159,13 @@ Selector Name: developer-tool-button
 Selector Data: developer-button
 Description: Developer tool icon
 Location: Navigation bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: status-panel-label
+Selector Data: statuspanel-label
+Description: Status panel URL label
+Location: newtab page bottom left corner on link hover
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
@@ -3446,7 +3545,7 @@ Description: Edit bookmark panel
 Location: Bookmark panel
 Path to .json: modules/data/pane_ui.components.json
 ```
-```
+
 #### print_preview
 ```
 Selector name: print-preview-browser

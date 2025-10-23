@@ -10,14 +10,17 @@ def test_case():
     return "446323"
 
 
-ALLOWED_TRACKING_URLS = set(
-    [
-        "https://content-track-digest256.dummytracker.org",
-        "https://ads-track-digest256.dummytracker.org",
-        "https://social-track-digest256.dummytracker.org",
-        "https://analytics-track-digest256.dummytracker.org",
-    ]
-)
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("privacy.trackingprotection.pbmode.enabled", True)]
+
+
+ALLOWED_TRACKING_URLS = {
+    "https://content-track-digest256.dummytracker.org",
+    "https://ads-track-digest256.dummytracker.org",
+    "https://social-track-digest256.dummytracker.org",
+    "https://analytics-track-digest256.dummytracker.org",
+}
 BLOCKED_TRACKER_URL = "https://content-track-digest256.dummytracker.org"
 
 FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"

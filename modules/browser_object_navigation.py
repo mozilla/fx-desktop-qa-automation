@@ -1,6 +1,8 @@
 import logging
+import re
+from typing import Literal
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -31,6 +33,7 @@ class Navigation(BasePage):
         "Bing",
         "DuckDuckGo",
         "Wikipedia (en)",
+        "Firefox Add-ons",
     }
 
     def __init__(self, driver: Firefox, **kwargs):
@@ -82,6 +85,15 @@ class Navigation(BasePage):
         self.set_awesome_bar()
         self.awesome_bar.click()
         self.awesome_bar.send_keys(term)
+        return self
+
+    @BasePage.context_chrome
+    def press_ctrl_enter(self) -> BasePage:
+        """Press Ctrl/Cmd + Enter in Awesome Bar."""
+        if self.sys_platform() == "Darwin":
+            self.perform_key_combo(Keys.COMMAND, Keys.ENTER)
+        else:
+            self.perform_key_combo(Keys.CONTROL, Keys.ENTER)
         return self
 
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
@@ -245,13 +257,25 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def wait_for_download_animation_finish(
-        self, downloads_button: WebElement
-    ) -> BasePage:
+    def set_always_open_similar_files(self) -> BasePage:
         """
-        Waits for the download button to finish playing the animation for downloading to local computer
+        From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
         """
+        downloads_button = self.get_download_button()
+        downloads_button.click()
+
+        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
+        download_item = self.get_element("download-panel-item")
+        self.context_click(download_item)
+        self.context_menu.get_element("context-menu-always-open-similar-files").click()
+
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_download_animation_finish(self) -> BasePage:
+        """Waits for the download button to finish playing the animation"""
         try:
+            downloads_button = self.get_download_button()
             self.wait.until(
                 lambda _: downloads_button.get_attribute("notification") == "finish"
             )
@@ -265,6 +289,60 @@ class Navigation(BasePage):
         Clicks the shield icon and opens the panel associated with it
         """
         self.get_element("shield-icon").click()
+        return self
+
+    def wait_for_suggestions_present(self, at_least: int = 1):
+        """Wait until the suggestion list has at least one visible item."""
+        self.set_chrome_context()
+        self.expect(lambda _: len(self.get_elements("suggestion-titles")) >= at_least)
+        return self
+
+    def wait_for_suggestions_absent(self):
+        """Wait for the suggestions list to disappear (for non-general engines)."""
+        self.set_chrome_context()
+        self.element_not_visible("suggestion-titles")
+        return self
+
+    def open_usb_and_select_engine(self, engine_title: str):
+        """Click the USB icon and select a search engine by its title."""
+        self.get_element("searchmode-switcher").click()
+        self.get_element("search-mode-switcher-option", labels=[engine_title]).click()
+        return self
+
+    def assert_search_mode_chip_visible(self):
+        """Ensure the search mode indicator (chip) is visible on the left."""
+        self.set_chrome_context()
+        self.get_element("search-mode-span")
+        return self
+
+    def click_first_suggestion_row(self):
+        """
+        Clicks the first visible suggestion row in the list, using robust scrolling and fallback.
+        """
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.common.action_chains import ActionChains
+
+        self.set_chrome_context()
+        driver = self.driver
+
+        try:
+            # Prefer Firefox Suggest row if present
+            row = self.get_element("firefox-suggest")
+        except Exception:
+            titles = self.get_elements("suggestion-titles")
+            assert titles, "No visible suggestion items found."
+            target = next((t for t in titles if t.is_displayed()), titles[0])
+            try:
+                row = target.find_element(By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]")
+            except Exception:
+                row = target
+
+        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", row)
+        try:
+            ActionChains(driver).move_to_element(row).click().perform()
+        except Exception:
+            driver.execute_script("arguments[0].click();", row)
+
         return self
 
     @BasePage.context_chrome
@@ -295,6 +373,35 @@ class Navigation(BasePage):
                 )
         finally:
             self.driver.implicitly_wait(original_timeout)
+        return self
+
+    @BasePage.context_chrome
+    def verify_download_name(self, expected_pattern: str) -> BasePage:
+        """
+        Verify download name matches expected pattern.
+        Argument:
+            expected_pattern: Regex pattern to match against download name
+        """
+        self.element_visible("download-target-element")
+        download_name = self.get_element("download-target-element")
+        download_value = download_name.get_attribute("value")
+        assert re.match(expected_pattern, download_value), (
+            f"The download name is incorrect: {download_value}"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_download_completion(self) -> BasePage:
+        """Wait until the most recent download reaches 100% progress."""
+
+        def _download_complete(_):
+            try:
+                element = self.get_element("download-progress-element")
+                return element.get_attribute("value") == "100"
+            except StaleElementReferenceException:
+                return False
+
+        self.wait.until(_download_complete)
         return self
 
     @BasePage.context_chrome
@@ -657,4 +764,65 @@ class Navigation(BasePage):
         expected_value = "false" if expected else "true"
         self.expect_element_attribute_contains(
             self.bookmarks_toolbar, "collapsed", expected_value
+        )
+
+    #
+    def set_site_autoplay_permission(
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
+        """
+        Open the Site audio-video permission panel and set a specific autoplay setting.
+
+        Arguments:
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video,
+            "allow-audio-only" → Allow Audio but block Video
+        """
+        self.click_on("autoplay-icon-blocked")
+
+        if settings == "allow-audio-video":
+            self.element_clickable("permission-popup-audio-blocked")
+            self.click_on("permission-popup-audio-blocked")
+            self.click_and_hide_menu("allow-audio-video-menuitem")
+
+        elif settings == "block-audio-video":
+            self.element_clickable("permission-popup-audio-video-allowed")
+            self.click_and_hide_menu("block-audio-video-menuitem")
+
+        elif settings == "allow-audio-only":
+            self.element_clickable("permission-popup-audio-video-allowed")
+            self.click_and_hide_menu("allow-audio-only-menuitem")
+        return self
+
+    def verify_autoplay_state(self, expected: Literal["allow", "block"]) -> None:
+        """Verify the current state of the autoplay permission panel and icon.
+        Arguments:
+            expected: "allow" → Allow Audio and Video, "block" → Block Audio and Video
+        """
+        if expected == "allow":
+            self.element_visible("permission-popup-audio-video-allowed")
+            self.element_not_visible("autoplay-icon-blocked")
+        else:
+            self.element_visible("permission-popup-audio-video-blocked")
+            self.element_visible("autoplay-icon-blocked")
+
+    @BasePage.context_chrome
+    def get_status_panel_url(self) -> str:
+        """
+        Gets the URL displayed in the status panel at the bottom left of the browser.
+        """
+        self.element_visible("status-panel-label")
+        status_label = self.get_element("status-panel-label")
+        url = status_label.get_attribute("value")
+        return url
+
+    def verify_status_panel_url(self, expected_url: str):
+        """
+        Verify that the browser status panel (browser's bottom-left) contains the expected URL.
+        Argument:
+            expected_url: The expected URL substring to be found in the status panel
+        """
+        actual_url = self.get_status_panel_url()
+        assert expected_url in actual_url, (
+            f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
         )

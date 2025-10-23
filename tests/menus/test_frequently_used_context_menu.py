@@ -49,8 +49,6 @@ def test_save_page_as(driver: Firefox):
 
     context_menu.click_and_hide_menu("context-menu-save-page-as")
 
-    downloads_button = nav.get_download_button()
-
     # short sleep to ensure menu is shown
     sleep(0.5)
 
@@ -75,7 +73,7 @@ def test_save_page_as(driver: Firefox):
     key_press_release(Key.enter)
 
     # Wait for the animation to complete
-    nav.wait_for_download_animation_finish(downloads_button)
+    nav.wait_for_download_animation_finish()
 
     # verify and delete downloaded file
     saved_image_location = util.get_saved_file_path("Example Domain.html")

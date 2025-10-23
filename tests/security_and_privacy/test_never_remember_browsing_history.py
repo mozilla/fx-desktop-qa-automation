@@ -38,7 +38,7 @@ def test_never_remember_browsing_history_settings(driver: Firefox):
 
     # perform all about:preferences#privacy assertions according to testrail
     cookies_label = about_prefs.get_element("cookies-privacy-label")
-    assert cookies_label.get_attribute("innerHTML") == COOKIE_LABEL_TEXT
+    assert cookies_label.get_attribute("message") == COOKIE_LABEL_TEXT
 
     delete_cookies_checkbox = about_prefs.get_element("cookies-delete-on-close")
     assert delete_cookies_checkbox.get_attribute("checked") == "true"
@@ -49,8 +49,7 @@ def test_never_remember_browsing_history_settings(driver: Firefox):
     login_exceptions = about_prefs.get_element("logins-exceptions")
     assert login_exceptions.get_attribute("disabled") == "true"
 
-    history_label = about_prefs.get_element("history-privacy-label")
-    assert history_label.get_attribute("innerHTML") == HISTORY_LABEL_TEXT
+    about_prefs.element_has_text("history-privacy-label", HISTORY_LABEL_TEXT)
 
 
 def test_never_remember_browsing_history_from_panel(driver: Firefox):

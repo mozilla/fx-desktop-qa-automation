@@ -1,7 +1,8 @@
 import datetime
+import json
 import re
 from time import sleep
-from typing import List
+from typing import List, Literal
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -62,6 +63,14 @@ class AboutPrefs(BasePage):
         search_input = self.get_element("find-in-settings-input")
         search_input.clear()
         search_input.send_keys(term)
+        return self
+
+    def enable_private_window_suggestions(self):
+        """Enable 'Show search suggestions in Private Windows' if not already checked."""
+
+        checkbox = self.get_element("search-suggestion-in-private-windows")
+        if checkbox.get_attribute("checked") != "true":
+            checkbox.click()
         return self
 
     def set_alternative_language(self, lang_code: str) -> BasePage:
@@ -203,12 +212,6 @@ class AboutPrefs(BasePage):
                 assert field_value != expected_cvv, "CVV is displayed."
         return self
 
-    def get_saved_payments_popup(self) -> WebElement:
-        """
-        Open saved payments dialog panel
-        """
-        return self.get_element("prefs-button", labels=["Saved payment methods"])
-
     def click_edit_on_dialog_element(self):
         """
         Click on edit button on dialog panel
@@ -282,7 +285,11 @@ class AboutPrefs(BasePage):
     def close_dialog_box(self):
         """Close dialog box for saved addresses or payments."""
         self.element_clickable("panel-popup-button", labels=["close-button"])
-        self.get_element("panel-popup-button", labels=["close-button"]).click()
+        self.click_on("panel-popup-button", labels=["close-button"])
+        if self.get_element(
+            "panel-popup-button", labels=["close-button"]
+        ).is_displayed():
+            self.click_on("panel-popup-button", labels=["close-button"])
         return self
 
     def update_cc_field_panel(self, field_name: str, value: str | int) -> BasePage:
@@ -315,12 +322,6 @@ class AboutPrefs(BasePage):
             value_field.send_keys(value)
         self.get_element("save-button").click()
         return self
-
-    def get_saved_addresses_popup(self) -> WebElement:
-        """
-        Returns saved addresses button element
-        """
-        return self.get_element("prefs-button", labels=["Saved addresses"])
 
     def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
         """
@@ -419,7 +420,8 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_saved_payments_popup().click()
+        self.find_in_settings("pay")
+        self.click_on("saved-payments-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -435,7 +437,19 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
         """
+        # hack to know if the current iframe is the default browser one or not
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
         self.click_on("prefs-button", labels=[button_label])
+        iframe = self.get_element("browser-popup")
+        return iframe
+
+    def clear_cookies_and_get_dialog_iframe(self):
+        """
+        Returns the iframe object for the dialog panel in the popup after pressing the clear site data button.
+        """
+        self.element_clickable("clear-site-data-button")
+        self.click_on("clear-site-data-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -443,7 +457,8 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_saved_addresses_popup().click()
+        self.find_in_settings("pay")
+        self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -539,6 +554,8 @@ class AboutPrefs(BasePage):
         options = self.get_elements("clear-data-dialog-options")
 
         # Extract the text from the label the second option
+        print(f"All options: {options}")
+        self.expect(lambda _: len(options) > 1)
         second_option = options[1]
         label_text = second_option.text
         print(f"The text of the option is: {label_text}")
@@ -560,6 +577,32 @@ class AboutPrefs(BasePage):
         """
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
+
+    def open_autoplay_modal(self) -> BasePage:
+        """
+        Opens the Autoplay settings modal dialog from the about:preferences#privacy page.
+        """
+        self.open()
+        self.click_on("autoplay-settings-button")
+        self.driver.switch_to.frame(self.get_iframe())
+        self.click_on("autoplay-settings")
+        return self
+
+    def set_autoplay_setting_in_preferences(
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
+        """
+        Open the Autoplay settings panel and choose a setting for all sites.
+        Arguments:
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" → Block Audio and Video,
+            "allow-audio-only" → Allow Audio but block Video
+        """
+        self.open_autoplay_modal()
+        self.click_on(settings)
+        self.click_on("spacer")
+        self.click_on("autoplay-save-changes")
+        return self
 
     # Utility Functions
     def import_bookmarks(self, browser_name: str, platform) -> BasePage:
@@ -611,6 +654,52 @@ class AboutPrefs(BasePage):
         else:
             self.get_element("panel-popup-button", labels=[field]).click()
         return self
+
+    @BasePage.context_content
+    def get_app_name_for_mime_type(self, mime_type: str) -> str:
+        """
+        Return the application name associated with a given MIME type in about:preferences.
+        Argument:
+            mime_type: the MIME type to look up (e.g., "application/msword").
+        """
+        # Locate the row for the given MIME type
+        mime_type_item = self.get_element("mime-type-item", labels=[mime_type])
+
+        # Find the description element that contains application info
+        action_description = self.get_element(
+            "mime-type-item-description", parent_element=mime_type_item
+        )
+
+        # Parse the JSON data-l10n-args attribute and extract app name
+        mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
+        return mime_type_data["app-name"]
+
+    def set_pdf_handling_to_always_ask(self) -> BasePage:
+        """
+        Set PDF content type handling to "Always ask" in Applications settings.
+        """
+        self.click_on("pdf-content-type")
+        self.click_on("pdf-actions-menu")
+        menu = self.get_element("pdf-actions-menu")
+        menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
+        return self
+
+    @BasePage.context_chrome
+    def handle_unknown_content_dialog(self) -> BasePage:
+        """
+        Wait for the unknown content type dialog to appear and close it with Escape.
+        """
+        self.wait.until(lambda _: len(self.driver.window_handles) > 1)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.wait.until(lambda _: self.get_element("unknown-content-type-dialog"))
+
+        # Close the dialog with Escape
+        dialog = self.get_element("unknown-content-type-dialog")
+        dialog.send_keys(Keys.ESCAPE)
+        return self
+
+
 
 
 class AboutAddons(BasePage):

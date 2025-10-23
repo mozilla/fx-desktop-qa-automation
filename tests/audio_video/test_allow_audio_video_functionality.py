@@ -1,6 +1,5 @@
 import sys
 from os import environ
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -8,7 +7,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -17,50 +15,28 @@ def test_case():
 
 
 WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
+TEST_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
 
 
-TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
-
-
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+@pytest.mark.skipif(
+    WIN_GHA, reason="Audio playback not supported in Windows CI environment"
+)
 @pytest.mark.audio
 @pytest.mark.noxvfb
 def test_allow_audio_video_functionality(driver: Firefox):
     """
-    C330155 : 'Allow Audio and Video' functionality
+    C330155: 'Allow Audio and Video' functionality
     """
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
-    ba = BrowserActions(driver)
     tabs = TabBar(driver)
+    page = GenericPage(driver, url=TEST_URL)
 
-    # Open privacy and click on the "Settings" button from Autoplay
-    about_prefs.open()
-    about_prefs.get_element("autoplay-settings-button").click()
+    # Open privacy and security preferences and set 'Allow Audio and Video' for autoplay
+    about_prefs.set_autoplay_setting_in_preferences("allow-audio-video")
 
-    # Get the web element for the iframe
-    iframe = about_prefs.get_iframe()
-    ba.switch_to_iframe_context(iframe)
-
-    # Click on the autoplay settings for all websites
-    about_prefs.get_element("autoplay-settings").click()
-
-    # Choose allow audio and video and save changes
-    about_prefs.click_on("allow-audio-video")
-    about_prefs.get_element("spacer").click()
-    about_prefs.get_element("autoplay-save-changes").click()
-
-    # Open test website and check the site is loaded and the featured video starts playing with sound
-    GenericPage(driver, url=TEST_URL).open()
-    max_retries = 3
-    for attempt in range(max_retries):
-        try:
-            with driver.context(driver.CONTEXT_CHROME):
-                tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
-            break  # Success!
-        except AssertionError:
-            sleep(2)
-    else:
-        pytest.fail(
-            f"Tab sound status did not reach PLAYING after {max_retries} retries."
-        )
+    # Open the website in a new tab and check if the video starts playing with sound
+    tabs.new_tab_by_button()
+    tabs.switch_to_new_tab()
+    page.open()
+    tabs.expect_tab_sound_status(2, tabs.MEDIA_STATUS.PLAYING)
