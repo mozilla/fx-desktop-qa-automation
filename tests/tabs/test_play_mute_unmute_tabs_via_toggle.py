@@ -38,7 +38,6 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     playlist_url = "https://www.youtube.com/@Mozilla/videos"
     playlist_page = GenericPage(driver, url=playlist_url)
     playlist_page.open()
-    driver.maximize_window()
 
     # Locate and open 2 latest videos in new tabs
     video_selector = "ytd-rich-item-renderer a#video-title-link"
