@@ -32,7 +32,7 @@ def test_insertion_point_no_search_terms_display(driver: Firefox, engine):
     nav.verify_engine_returned_default()
 
     # Type anything in the url bar (example moza)
-    nav.type_in_awesome_bar("moza")
+    nav.type_in_awesome_bar("fire")
 
     # check that there is no Bing "Search Mode", search suggestions populate with default engine
     nav.verify_engine_returned_default()
