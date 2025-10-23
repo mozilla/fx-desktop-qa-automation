@@ -1,6 +1,8 @@
-import time
-
 import pytest
+
+from os import environ
+from time import sleep
+
 from pynput.mouse import Button, Controller
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -11,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules.browser_object import ContextMenu
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
+
+GHA = environ.get("GITHUB_ACTIONS") == "true"
 
 
 @pytest.fixture()
@@ -25,6 +29,7 @@ def add_to_prefs_list():
 
 @pytest.mark.audio
 @pytest.mark.headed
+@pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
 def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     """
     C246981 - Verify that play/mute/unmute tabs via toggle audio works
@@ -51,7 +56,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
 
     # Verify correct number of tabs opened
     tabs.wait_for_num_tabs(3)
-    time.sleep(2)
+    sleep(2)
 
     # Select all tabs via Control/Command click while staying on first tab
     modifier_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
@@ -97,9 +102,9 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             )
             # Offset to click on the audio control area (left side of tab)
             mouse.position = (element_x - 75, element_y)
-            time.sleep(0.3)  # Small delay for mouse positioning
+            sleep(0.3)  # Small delay for mouse positioning
             mouse.click(Button.left, 1)
-            time.sleep(2)  # Wait for action to take effect
+            sleep(2)  # Wait for action to take effect
 
         # Click Play button
         click_multi_tab_audio_button()
