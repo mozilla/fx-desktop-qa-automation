@@ -371,6 +371,11 @@
     "strategy": "id",
     "groups": []
   },
+    "search-suggestion-in-private-windows": {
+    "selectorData": "showSearchSuggestionsPrivateWindows",
+    "strategy": "id",
+    "groups": []
+  },
   "language-settings-select": {
     "selectorData": "[data-l10n-id='browser-languages-select-language']",
     "strategy": "css",
