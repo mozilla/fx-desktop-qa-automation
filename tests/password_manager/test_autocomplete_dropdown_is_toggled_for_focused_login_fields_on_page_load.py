@@ -24,6 +24,7 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
+@pytest.mark.unstable(reason="Bug 1996241")
 def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     driver: Firefox,
 ):

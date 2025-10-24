@@ -73,6 +73,7 @@ def test_text_area_copy_paste(driver: Firefox):
     assert text_area.get_attribute("value") == random_text
 
 
+@pytest.mark.unstable(reason="Bug 1996242")
 def test_search_field_copy_paste(driver: Firefox):
     context_menu = ContextMenu(driver)
     google_search = GoogleSearch(driver).open()
