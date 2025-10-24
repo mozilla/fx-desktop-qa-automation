@@ -112,6 +112,7 @@ def test_search_field_copy_paste(driver: Firefox):
     context_menu.click_and_hide_menu("context-menu-copy")
 
     # delete the current text
+    google_search.triple_click("search-bar-textarea")  # Select all again
     search_bar.send_keys(Keys.BACK_SPACE)
     assert search_bar.get_attribute("value") == ""
 
