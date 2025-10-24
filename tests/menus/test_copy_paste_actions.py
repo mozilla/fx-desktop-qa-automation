@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -74,8 +75,27 @@ def test_text_area_copy_paste(driver: Firefox):
 
 
 def test_search_field_copy_paste(driver: Firefox):
+    max_attempts = 5
     context_menu = ContextMenu(driver)
-    google_search = GoogleSearch(driver).open()
+    google_search = GoogleSearch(driver)
+
+    for attempt in range(1, max_attempts + 1):
+        google_search.open()
+
+        # Check for CAPTCHA after opening the page
+        if "recaptcha" in driver.page_source.lower():
+            logging.warning(f"CAPTCHA detected on attempt {attempt}. Retrying...")
+            if attempt < max_attempts:
+                driver.delete_all_cookies()
+                driver.get("about:newtab")
+                sleep(2)
+                continue
+            else:
+                pytest.skip("CAPTCHA triggered repeatedly. Skipping test after 5 attempts.")
+
+        # If no CAPTCHA, proceed with the test and break out of retry loop
+        break
+
     util = Utilities()
 
     # send the text
