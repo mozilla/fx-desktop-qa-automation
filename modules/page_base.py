@@ -190,6 +190,17 @@ class BasePage(Page):
 
         return self
 
+    @context_chrome
+    def perform_key_combo_chrome(self, *keys) -> Page:
+        """
+         Perform a keyboard shortcut in the browser chrome context (e.g., address bar).
+         This method should be used for actions that target browser UI elements such as the
+         awesome bar or toolbar buttons — not web content.
+         Example:
+             self.perform_key_combo_chrome(Keys.COMMAND, "c")  # Copy from address bar
+         """
+        return self.perform_key_combo(*keys)
+
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
         logging.info(f"Loading element manifest: {manifest_loc}")

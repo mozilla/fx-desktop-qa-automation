@@ -827,3 +827,8 @@ class Navigation(BasePage):
         assert expected_url in actual_url, (
             f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
         )
+
+    def verify_engine_returned_default(self) -> None:
+        self.wait.until(
+            lambda d: self.element_visible("google-default-engine")
+        )
