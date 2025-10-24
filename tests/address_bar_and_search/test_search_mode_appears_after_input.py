@@ -55,9 +55,9 @@ def test_search_mode_appears_and_suggestions_update(driver):
 
 def test_private_mode_repeat_after_enabling_pref(driver):
     """
-      - Enable “Show search suggestions in Private Windows”.
-      - Open Private Window.
-      - Repeat steps 1–5 (verify search works with selected engine).
+    - Enable “Show search suggestions in Private Windows”.
+    - Open Private Window.
+    - Repeat steps 1–5 (verify search works with selected engine).
     """
     nav = Navigation(driver)
     actions = BrowserActions(driver)
