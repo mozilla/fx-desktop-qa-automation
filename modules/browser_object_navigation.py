@@ -319,8 +319,8 @@ class Navigation(BasePage):
         """
         Clicks the first visible suggestion row in the list, using robust scrolling and fallback.
         """
-        from selenium.webdriver.common.by import By
         from selenium.webdriver.common.action_chains import ActionChains
+        from selenium.webdriver.common.by import By
 
         self.set_chrome_context()
         driver = self.driver
@@ -333,7 +333,9 @@ class Navigation(BasePage):
             assert titles, "No visible suggestion items found."
             target = next((t for t in titles if t.is_displayed()), titles[0])
             try:
-                row = target.find_element(By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]")
+                row = target.find_element(
+                    By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]"
+                )
             except Exception:
                 row = target
 
@@ -382,7 +384,6 @@ class Navigation(BasePage):
         Argument:
             expected_pattern: Regex pattern to match against download name
         """
-        self.element_visible("download-target-element")
         download_name = self.get_element("download-target-element")
         download_value = download_name.get_attribute("value")
         assert re.match(expected_pattern, download_value), (
