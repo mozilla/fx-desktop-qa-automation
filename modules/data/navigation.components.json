@@ -603,5 +603,11 @@
         "selectorData": "developer-button",
         "strategy": "id",
         "groups": []
+    },
+
+    "status-panel-label": {
+        "selectorData": "statuspanel-label",
+        "strategy": "id",
+        "groups": []
     }
 }

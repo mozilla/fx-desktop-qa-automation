@@ -33,7 +33,7 @@ class Navigation(BasePage):
         "Bing",
         "DuckDuckGo",
         "Wikipedia (en)",
-        "Firefox Add-ons"
+        "Firefox Add-ons",
     }
 
     def __init__(self, driver: Firefox, **kwargs):
@@ -291,6 +291,62 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
+    def wait_for_suggestions_present(self, at_least: int = 1):
+        """Wait until the suggestion list has at least one visible item."""
+        self.set_chrome_context()
+        self.expect(lambda _: len(self.get_elements("suggestion-titles")) >= at_least)
+        return self
+
+    def wait_for_suggestions_absent(self):
+        """Wait for the suggestions list to disappear (for non-general engines)."""
+        self.set_chrome_context()
+        self.element_not_visible("suggestion-titles")
+        return self
+
+    def open_usb_and_select_engine(self, engine_title: str):
+        """Click the USB icon and select a search engine by its title."""
+        self.get_element("searchmode-switcher").click()
+        self.get_element("search-mode-switcher-option", labels=[engine_title]).click()
+        return self
+
+    def assert_search_mode_chip_visible(self):
+        """Ensure the search mode indicator (chip) is visible on the left."""
+        self.set_chrome_context()
+        self.get_element("search-mode-span")
+        return self
+
+    def click_first_suggestion_row(self):
+        """
+        Clicks the first visible suggestion row in the list, using robust scrolling and fallback.
+        """
+        from selenium.webdriver.common.action_chains import ActionChains
+        from selenium.webdriver.common.by import By
+
+        self.set_chrome_context()
+        driver = self.driver
+
+        try:
+            # Prefer Firefox Suggest row if present
+            row = self.get_element("firefox-suggest")
+        except Exception:
+            titles = self.get_elements("suggestion-titles")
+            assert titles, "No visible suggestion items found."
+            target = next((t for t in titles if t.is_displayed()), titles[0])
+            try:
+                row = target.find_element(
+                    By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]"
+                )
+            except Exception:
+                row = target
+
+        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", row)
+        try:
+            ActionChains(driver).move_to_element(row).click().perform()
+        except Exception:
+            driver.execute_script("arguments[0].click();", row)
+
+        return self
+
     @BasePage.context_chrome
     def click_file_download_warning_panel(self) -> BasePage:
         """exit file download warning panel if present"""
@@ -328,7 +384,6 @@ class Navigation(BasePage):
         Argument:
             expected_pattern: Regex pattern to match against download name
         """
-        self.element_visible("download-target-element")
         download_name = self.get_element("download-target-element")
         download_value = download_name.get_attribute("value")
         assert re.match(expected_pattern, download_value), (
@@ -751,3 +806,24 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
+
+    @BasePage.context_chrome
+    def get_status_panel_url(self) -> str:
+        """
+        Gets the URL displayed in the status panel at the bottom left of the browser.
+        """
+        self.element_visible("status-panel-label")
+        status_label = self.get_element("status-panel-label")
+        url = status_label.get_attribute("value")
+        return url
+
+    def verify_status_panel_url(self, expected_url: str):
+        """
+        Verify that the browser status panel (browser's bottom-left) contains the expected URL.
+        Argument:
+            expected_url: The expected URL substring to be found in the status panel
+        """
+        actual_url = self.get_status_panel_url()
+        assert expected_url in actual_url, (
+            f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
+        )

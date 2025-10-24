@@ -65,6 +65,14 @@ class AboutPrefs(BasePage):
         search_input.send_keys(term)
         return self
 
+    def enable_private_window_suggestions(self):
+        """Enable 'Show search suggestions in Private Windows' if not already checked."""
+
+        checkbox = self.get_element("search-suggestion-in-private-windows")
+        if checkbox.get_attribute("checked") != "true":
+            checkbox.click()
+        return self
+
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
         self.get_element("language-set-alternative-button").click()

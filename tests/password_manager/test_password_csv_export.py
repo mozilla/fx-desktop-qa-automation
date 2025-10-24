@@ -12,6 +12,7 @@ def test_case():
     return "2241521"
 
 
+@pytest.mark.unstable(reason="Bug 1996005")
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_export(
