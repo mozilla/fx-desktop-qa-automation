@@ -1,4 +1,5 @@
 import os
+
 import pytest
 from pynput.keyboard import Controller, Key
 
