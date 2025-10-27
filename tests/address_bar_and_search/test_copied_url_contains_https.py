@@ -28,11 +28,11 @@ def test_copied_url_contains_https(driver: Firefox):
     # Check that HTTPS is NOT displayed in the address bar for the website
     nav.verify_https_hidden_in_address_bar()
 
-    # Click on the URL bar once and hit CTRL/CMD+C to copy the link
+    # Click on the URL bar once and hit CTRL/CMD+c to copy the link
     nav.click_in_awesome_bar()
     nav.perform_key_combo_chrome(Keys.CONTROL, "c")
 
-    # Open a new tab and paste (CTRL/CMD+V) the link
+    # Open a new tab and paste (CTRL/CMD+v) the link
     nav.open_and_switch_to_new_window("tab")
     nav.click_in_awesome_bar()
     nav.perform_key_combo_chrome(Keys.CONTROL, "v")
