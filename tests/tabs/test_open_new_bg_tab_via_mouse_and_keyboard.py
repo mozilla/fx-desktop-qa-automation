@@ -4,6 +4,9 @@ from selenium.webdriver import Firefox
 from modules.page_object import ExamplePage
 
 
+TEST_URL = "https://www.iana.org/help/example-domains"
+
+
 @pytest.fixture()
 def test_case():
     return "134455"
@@ -16,7 +19,7 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     shortcuts creates new background tabs
     """
 
-    test_url = "https://www.iana.org/help/example-domains"
+    # Instantiate objects
     example = ExamplePage(driver)
     example.open()
 
@@ -25,7 +28,7 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
 
-    assert driver.current_url == test_url
+    assert driver.current_url == TEST_URL
 
     # Close new tab, switch back to original example page
     driver.close()
@@ -36,4 +39,4 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
 
-    assert driver.current_url == test_url
+    assert driver.current_url == TEST_URL
