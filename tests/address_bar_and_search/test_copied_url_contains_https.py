@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import Navigation
-from modules.browser_object_tabbar import TabBar
 
 TEST_WEBSITE = "https://www.firefox.com/"
 TEXT = "https"
@@ -20,7 +19,6 @@ def test_copied_url_contains_https(driver: Firefox):
 
     # Instantiate objects
     nav = Navigation(driver)
-    tabs = TabBar(driver)
 
     # Input a URL in the address bar and hit enter
     nav.type_in_awesome_bar(TEST_WEBSITE + Keys.ENTER)
