@@ -28,13 +28,13 @@ def test_insertion_point_no_search_terms_display(driver: Firefox, engine):
     # Press [backspace/Delete in macOS]
     nav.perform_key_combo_chrome(Keys.BACKSPACE)
 
-    # check that the selected engine is returned to using default engine
+    # Check that the selected engine is returned to using default engine
     nav.verify_engine_returned_default()
 
     # Type anything in the url bar (example fire)
     nav.type_in_awesome_bar("fire")
 
-    # check that there is no Bing "Search Mode", search suggestions populate with default engine
+    # Check that there is no Bing "Search Mode", search suggestions populate with default engine
     nav.verify_engine_returned_default()
 
     # Press enter key
