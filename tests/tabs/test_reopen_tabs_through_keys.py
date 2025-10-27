@@ -24,7 +24,7 @@ def test_reopen_tabs_through_keys(driver: Firefox, sys_platform: str):
     the keyboard shortcut (Ctrl/Cmd + Shift + T).
     """
 
-    # Instantiate objects
+    # Instantiate object
     tabs = TabBar(driver)
 
     # Create 4 new tabs
