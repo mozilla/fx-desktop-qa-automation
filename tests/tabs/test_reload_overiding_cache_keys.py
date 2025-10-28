@@ -20,6 +20,7 @@ def test_reload_overiding_cache_keys(driver: Firefox, sys_platform: str):
     C134642 - Verify that tabs can be hard reloaded (overriding cache) using keyboard shortcut CTRL/CMD + SHIFT + R.
     """
 
+    # Instantiate objects
     browser = TabBar(driver)
     nav = Navigation(driver)
 
@@ -41,7 +42,7 @@ def test_reload_overiding_cache_keys(driver: Firefox, sys_platform: str):
     except NoSuchElementException:
         pass
 
-    # Header "pragma" should be sent with with value "no-cache"
+    # Header "pragma" should be sent with value "no-cache"
     pragma_text = driver.find_element(By.ID, "/headers/pragma").get_attribute(
         "innerText"
     )
@@ -49,7 +50,7 @@ def test_reload_overiding_cache_keys(driver: Firefox, sys_platform: str):
         f"Expected 'no-cache' in pragma; got: {pragma_text!r}"
     )
 
-    # Header "cache-control" should be sent with with value "no-cache"
+    # Header "cache-control" should be sent with value "no-cache"
     cache_control_text = driver.find_element(
         By.ID, "/headers/cache-control"
     ).get_attribute("innerText")

@@ -25,14 +25,8 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
 
     # Open about:logins and add a new login
     about_logins.open()
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": URL_TO_TEST,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(URL_TO_TEST, USERNAME, PASSWORD)
+
     # Click the "Edit" button
     about_logins.element_visible("edit-login")
     about_logins.click_on("edit-login")
