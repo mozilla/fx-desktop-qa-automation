@@ -23,16 +23,9 @@ def test_add_password_non_ascii_chars(driver: Firefox):
     # Open about:logins and click on the "Add password" button
     about_logins.open()
     original_logins_amount = len(about_logins.get_elements("login-list-item"))
-    about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.
-    about_logins.create_new_login(
-        {
-            "origin": WEBSITE_ADDRESS,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(WEBSITE_ADDRESS, USERNAME, PASSWORD)
 
     # Check password added in the listbox
     about_logins.wait.until(
