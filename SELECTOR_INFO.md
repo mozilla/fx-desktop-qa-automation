@@ -3168,6 +3168,13 @@ Description: Status panel URL label
 Location: newtab page bottom left corner on link hover
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: searchmode-engine
+Selector Data: toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']
+Description: Searchmode engine label
+Location: Address bar searchmode engine label
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
