@@ -1888,6 +1888,20 @@ Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-move-tab-to-end
+Selector Data: menuitem[data-l10n-id='move-to-end']
+Description: Context menu option to move a tab to the end of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-to-new-window
+Selector Data: menuitem[data-l10n-id='move-to-new-window']
+Description: Context menu option to move a tab to a new window.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-bookmark-link
 Selector Data: context-bookmarklink
 Description: Context menu option to bookmark a link
@@ -1899,8 +1913,8 @@ Selector Name: context-menu-search-select
 Selector Data: coontext-searchselect
 Description: Context menu option to search selected text with the engine set as default
 Location: Context menu - topsite context menu
-Path to .json: modules/data/context_menu.components.json
 ```
+
 #### credit_card_fill
 ```
 Selector Name: form-field

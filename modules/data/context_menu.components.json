@@ -115,6 +115,19 @@
         "groups": []
     },
 
+    "context-menu-move-tab-to-end": {
+        "selectorData": "menuitem[data-l10n-id='move-to-end']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "context-menu-move-to-new-window": {
+        "selectorData": "menuitem[data-l10n-id='move-to-new-window']",
+        "strategy": "css",
+        "groups": []
+    },
+
+
     "context-menu-open-link-in-tab": {
         "selectorData": "context-openlinkintab",
         "strategy": "id",
