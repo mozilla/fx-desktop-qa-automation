@@ -1,10 +1,5 @@
-import logging
-import platform
-import time
-
 import pytest
-from selenium.webdriver import ActionChains, Firefox, Keys
-from selenium.webdriver.common.by import By
+from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
 
