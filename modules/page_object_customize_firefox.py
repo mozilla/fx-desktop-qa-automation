@@ -13,13 +13,13 @@ class CustomizeFirefox(BasePage):
 
     URL_TEMPLATE = ""
 
+    @BasePage.context_chrome
     def add_widget_to_toolbar(
         self, reference: Union[str, tuple, WebElement], labels=[]
     ) -> BasePage:
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            widget = self.fetch(reference, labels=labels)
-            self.context_click(widget)
-            ContextMenu(self.driver).click_and_hide_menu(
-                "customize-firefox-add-toolbar"
-            )
+        widget = self.fetch(reference, labels=labels)
+        self.context_click(widget)
+        ContextMenu(self.driver).click_and_hide_menu("customize-firefox-add-toolbar")
+        self.element_clickable("nav-searchbar")
+        self.click_on("done-button")
         return self
