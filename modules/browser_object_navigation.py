@@ -324,15 +324,19 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
         """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
-        suggestion_container = self.get_element("legacy-search-mode-suggestion-container")
+        suggestion_container = self.get_element(
+            "legacy-search-mode-suggestion-container"
+        )
         if min_suggestions > 2:
-            return suggestion_container.find_element(By.XPATH, "./*[1]").tag_name == "richlistitem"
+            return (
+                suggestion_container.find_element(By.XPATH, "./*[1]").tag_name
+                == "richlistitem"
+            )
         else:
             has_children = self.driver.execute_script(
                 "return arguments[0].children.length > 0;", suggestion_container
             )
             return has_children
-
 
     def wait_for_suggestions_present(self, at_least: int = 1):
         """Wait until the suggestion list has at least one visible item."""
