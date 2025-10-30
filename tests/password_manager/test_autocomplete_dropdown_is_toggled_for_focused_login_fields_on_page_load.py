@@ -24,6 +24,7 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
+@pytest.mark.unstable(reason="Bug 1996241")
 def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     driver: Firefox,
 ):
@@ -43,22 +44,8 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
 
     # Save 2 set of credentials for the visited site
     about_logins.open()
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": BSKY_URL,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": BSKY_URL,
-            "username": USERNAME2,
-            "password": PASSWORD2,
-        }
-    )
+    about_logins.add_login(BSKY_URL, USERNAME, PASSWORD)
+    about_logins.add_login(BSKY_URL, USERNAME2, PASSWORD2)
 
     # Autocomplete dropdown is toggled for focused login fields on page load
     tabs.click_tab_by_index(1)

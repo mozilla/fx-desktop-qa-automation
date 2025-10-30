@@ -12,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
+from modules.page_object_generics import GenericPage
 from modules.util import BrowserActions
 
 
@@ -198,6 +199,42 @@ class AboutLogins(BasePage):
         csv_file = os.path.join(downloads_folder, filename)
         self.wait.until(lambda _: os.path.exists(csv_file))
         return csv_file
+
+    def add_login(self, origin: str, username: str, password: str):
+        """
+        Adds a new saved login entry.
+
+        Args:
+            origin (str): The site URL (e.g., https://example.com)
+            username (str): The username to save
+            password (str): The password to save
+        """
+        self.click_add_login_button()
+        self.create_new_login(
+            {
+                "origin": origin,
+                "username": username,
+                "password": password,
+            }
+        )
+
+    def export_passwords_csv(self, downloads_folder: str, filename: str):
+        """
+        Export passwords to a CSV file and navigate the save dialog to the target location.
+
+        Args:
+            downloads_folder (str): The folder where the CSV should be saved.
+            filename (str): The name of the CSV file.
+        """
+        # Open about:logins and click export buttons
+        self.open()
+        self.click_on("menu-button")
+        self.click_on("export-passwords-button")
+        self.click_on("continue-export-button")
+
+        # Wait for export dialog and navigate to folder
+        page = GenericPage(self.driver)
+        page.navigate_dialog_to_location(downloads_folder, filename)
 
 
 class AboutPrivatebrowsing(BasePage):
