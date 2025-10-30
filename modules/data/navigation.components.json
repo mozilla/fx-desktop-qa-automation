@@ -609,5 +609,11 @@
         "selectorData": "statuspanel-label",
         "strategy": "id",
         "groups": []
+    },
+
+    "searchmode-engine": {
+        "selectorData": "toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']",
+        "strategy": "css",
+        "groups": []
     }
 }

@@ -1,12 +1,16 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object_navigation import Navigation
+
+
+TEXT = "@bing mozilla"
+SEARCH_ENGINE = "Bing"
 
 
 @pytest.fixture()
 def test_case():
-    return "3028732"
+    return "3028779"
 
 
 def test_addressbar_search_engine_keywords(driver: Firefox):
@@ -15,11 +19,12 @@ def test_addressbar_search_engine_keywords(driver: Firefox):
     """
 
     # Instantiate objects
-    prefs = AboutPrefs(driver, category="search")
+    nav = Navigation(driver)
 
-    # Go to about:preferences#search
-    prefs.open()
+    # TODO: Add a keyword for one search engine (e.g. for Bing add "bn" keyword) and search for (e.g. "bn mozilla")
 
-    # Add a keyword for one search engine (e.g. for Bing add "bn" keyword)
+    # In the address bar type the default search engine keyword and a search term (e.g. "@bing mozilla")
+    nav.type_in_awesome_bar(TEXT)
 
-    # In the address bar type the keyword from step 3 and a search term (e.g. "bn mozilla")
+    # Results from URL bar state that the search will be performed with "Bing" (e.g. "mozilla - Search with Bing")
+    nav.verify_engine_returned(SEARCH_ENGINE)
