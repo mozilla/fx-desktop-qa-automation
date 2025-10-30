@@ -21,7 +21,7 @@ def test_copied_url_contains_https(driver: Firefox):
     nav = Navigation(driver)
 
     # Input a URL in the address bar and hit enter
-    nav.type_in_awesome_bar(TEST_WEBSITE + Keys.ENTER)
+    nav.search(TEST_WEBSITE)
 
     # Check that HTTPS is NOT displayed in the address bar for the website
     nav.verify_https_hidden_in_address_bar()
