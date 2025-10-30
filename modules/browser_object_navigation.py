@@ -827,3 +827,15 @@ class Navigation(BasePage):
         assert expected_url in actual_url, (
             f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
         )
+
+    @BasePage.context_chrome
+    def verify_engine_returned(self, engine: str) -> None:
+        """
+        Verify that the given search engine is visible in the search mode switcher.
+        """
+        engine_locator = (
+            self.elements["searchmode-engine"]["selectorData"].format(engine=engine)
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
+        )
