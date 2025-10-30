@@ -40,7 +40,7 @@ def test_3028799_no_search_engine_suggestions_in_private_window(driver: Firefox)
 
         # Activate search mode via shortcut
         nav.clear_awesome_bar()
-        nav.type_in_awesome_bar(shortcut + Keys.ENTER)
+        nav.search(shortcut)
 
         # Type a query and verify no external search suggestions are shown
         nav.clear_awesome_bar()
