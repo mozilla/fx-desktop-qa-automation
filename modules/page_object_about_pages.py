@@ -210,11 +210,13 @@ class AboutLogins(BasePage):
             password (str): The password to save
         """
         self.click_add_login_button()
-        self.create_new_login({
-            "origin": origin,
-            "username": username,
-            "password": password,
-        })
+        self.create_new_login(
+            {
+                "origin": origin,
+                "username": username,
+                "password": password,
+            }
+        )
 
     def export_passwords_csv(self, downloads_folder: str, filename: str):
         """

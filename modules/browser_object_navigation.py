@@ -829,6 +829,18 @@ class Navigation(BasePage):
         )
 
     @BasePage.context_chrome
+    def verify_engine_returned(self, engine: str) -> None:
+        """
+        Verify that the given search engine is visible in the search mode switcher.
+        """
+        engine_locator = (
+            self.elements["searchmode-engine"]["selectorData"].format(engine=engine)
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
+        )
+
+    @BasePage.context_chrome
     def verify_https_hidden_in_address_bar(self) -> None:
         """
         Wait until the HTTPS prefix is hidden in the address bar display.

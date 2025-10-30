@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import ExamplePage
 
-
 TEST_URL = "https://www.iana.org/help/example-domains"
 
 

@@ -19,6 +19,7 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
+@pytest.mark.unstable(reason="Bug 1996838")
 def test_auto_saved_generated_password_context_menu(driver: Firefox):
     """
     C2248176 - Securely Generated Password is auto-saved when generated from password field context menu
@@ -50,9 +51,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     )
 
     # Verify the update doorhanger is displayed
-    nav.expect(
-        lambda _: nav.element_visible("password-notification-key")
-    )
+    nav.expect(lambda _: nav.element_visible("password-notification-key"))
     nav.click_on("password-notification-key")
     autofill_popup_panel.expect(
         lambda _: UPDATE_DOORHANGER_TEXT
