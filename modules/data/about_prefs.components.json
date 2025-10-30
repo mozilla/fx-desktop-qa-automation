@@ -13,6 +13,7 @@
       "searchEngineDropdown"
     ]
   },
+
   "custom-tracker-options-parent": {
     "selectorData": "contentBlockingOptionCustom",
     "strategy": "id",
@@ -166,6 +167,16 @@
   "show-suggestions": {
     "selectorData": "checkbox[data-l10n-id='search-show-suggestions-option']",
     "strategy": "css",
+    "groups": []
+  },
+  "show-suggestions-in-address-bar": {
+    "selectorData": "showSearchSuggestionsFirstCheckbox",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-suggestions-awesomebar": {
+    "selectorData": "urlBarSuggestion",
+    "strategy": "id",
     "groups": []
   },
   "firefox-suggest-nonsponsored": {

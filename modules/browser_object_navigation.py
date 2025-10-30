@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 from typing import Literal
 
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
@@ -290,6 +291,52 @@ class Navigation(BasePage):
         """
         self.get_element("shield-icon").click()
         return self
+
+    def search_and_check_if_suggestions_are_present(
+        self, text, search_mode: str = "awesome", min_suggestions=0
+    ):
+        """
+        Search in the given address bar and check if suggestions are present.
+
+        Args:
+            text (str): Text to search for in the suggestions.
+            search_mode(str): Search mode to use. Can be 'awesome' or 'search'. Defaults to 'awesome'.
+            min_suggestions (int): Minimum number of suggestions to collect.
+        """
+        if search_mode == "awesome":
+            self.clear_awesome_bar()
+            self.type_in_awesome_bar(text)
+            time.sleep(0.5)
+            return self.awesome_bar_has_suggestions()
+        elif search_mode == "search":
+            self.set_search_bar()
+            self.type_in_search_bar(text)
+            return self.search_bar_has_suggestions(min_suggestions)
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
+
+    def awesome_bar_has_suggestions(self) -> bool:
+        """Check if the awesome bar has any suggestions."""
+        self.wait_for_suggestions_present(1)
+        suggestions = self.get_all_children("results-dropdown")
+        return len(suggestions) > 2
+
+    @BasePage.context_chrome
+    def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
+        """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
+        suggestion_container = self.get_element(
+            "legacy-search-mode-suggestion-container"
+        )
+        if min_suggestions > 2:
+            return (
+                suggestion_container.find_element(By.XPATH, "./*[1]").tag_name
+                == "richlistitem"
+            )
+        else:
+            has_children = self.driver.execute_script(
+                "return arguments[0].children.length > 0;", suggestion_container
+            )
+            return has_children
 
     def wait_for_suggestions_present(self, at_least: int = 1):
         """Wait until the suggestion list has at least one visible item."""

@@ -28,5 +28,15 @@
         "selectorData": "customization-container",
         "strategy": "id",
         "groups": []
+    },
+    "nav-searchbar": {
+      "selectorData": "search-container",
+      "strategy": "id",
+      "groups": []
+    },
+    "done-button": {
+      "selectorData": "customization-done-button",
+      "strategy": "id",
+      "groups": []
     }
 }
