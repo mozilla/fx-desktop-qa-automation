@@ -17,6 +17,7 @@ def test_insertion_point_no_search_terms_display(driver: Firefox, engine):
     """
     C3028716 - Verify that Insertion Point without search terms is correctly displayed
     """
+
     # Instantiate objects
     nav = Navigation(driver)
 
