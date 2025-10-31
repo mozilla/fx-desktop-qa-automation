@@ -880,8 +880,8 @@ class Navigation(BasePage):
         """
         Verify that the given search engine is visible in the search mode switcher.
         """
-        engine_locator = (
-            self.elements["searchmode-engine"]["selectorData"].format(engine=engine)
+        engine_locator = self.elements["searchmode-engine"]["selectorData"].format(
+            engine=engine
         )
         self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
@@ -893,7 +893,8 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https" not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: "https"
+            not in self.get_element("awesome-bar").get_attribute("value")
         )
 
     @BasePage.context_chrome
@@ -905,5 +906,7 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
+            lambda d: self.get_element("awesome-bar")
+            .get_attribute("value")
+            .startswith(prefix)
         )
