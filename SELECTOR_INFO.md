@@ -2567,6 +2567,13 @@ Location: Any clickable area on the awesome bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: legacy-search-mode-suggestion-container
+Selector Data: richlistbox[class='autocomplete-richlistbox search-panel-tree']
+Description: Legacy search container
+Location: Any clickable area on the awesome bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: results-dropdown
 Selector Data: urlbar-results
 Description: URL bar search results

@@ -195,10 +195,8 @@ class BasePage(Page):
     def perform_key_combo_chrome(self, *keys) -> Page:
         """
          Perform a keyboard shortcut in the browser chrome context (e.g., address bar).
-
          This method should be used for actions that target browser UI elements such as the
          awesome bar or toolbar buttons — not web content.
-
          Example:
              self.perform_key_combo_chrome(Keys.COMMAND, "c")  # Copy from address bar
          """
