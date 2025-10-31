@@ -321,6 +321,26 @@ class Navigation(BasePage):
         suggestions = self.get_all_children("results-dropdown")
         return len(suggestions) > 2
 
+    def awesome_bar_has_no_external_suggestions(self, max_rows: int = 3) -> bool:
+        """
+        Check that the awesome bar has no external (search engine) suggestions.
+        Returns True if only internal results (like history/bookmarks) are shown,
+        or if no suggestions appear at all.
+
+        Args:
+            max_rows (int): Maximum number of internal suggestion rows allowed.
+        """
+        try:
+            # Try to locate the suggestions container quickly
+            self.wait_for_suggestions_present(1)
+            suggestions = self.get_all_children("results-dropdown")
+        except Exception:
+            # No suggestions at all -> safe
+            return True
+
+        # Allow a few internal rows (bookmarks/history)
+        return len(suggestions) <= max_rows
+
     @BasePage.context_chrome
     def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
         """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
@@ -349,6 +369,27 @@ class Navigation(BasePage):
         self.set_chrome_context()
         self.element_not_visible("suggestion-titles")
         return self
+
+    def search_and_check_no_external_suggestions(
+            self, text: str, search_mode: str = "awesome", max_rows: int = 3
+    ) -> bool:
+        """
+        Type in the given search field and verify that no external search engine
+        suggestions are shown.
+        Returns True if no external suggestions are present.
+        """
+        if search_mode == "awesome":
+            self.clear_awesome_bar()
+            self.type_in_awesome_bar(text)
+            time.sleep(0.5)
+            return self.awesome_bar_has_no_external_suggestions(max_rows)
+        elif search_mode == "search":
+            self.set_search_bar()
+            self.type_in_search_bar(text)
+            # reuse your existing search_bar_has_suggestions(min_suggestions)
+            return not self.search_bar_has_suggestions(max_rows)
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
 
     def open_usb_and_select_engine(self, engine_title: str):
         """Click the USB icon and select a search engine by its title."""

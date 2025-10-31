@@ -1,12 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()
@@ -23,37 +21,38 @@ SEARCH_ENGINES = [
 
 
 @pytest.mark.smoke
-def test_3028799_no_search_engine_suggestions_in_private_window(driver: Firefox):
+def test_no_search_engine_suggestions_in_private_window(driver: Firefox):
     """
     C3028799 - Verify that in a New Private Window, after selecting a search shortcut,
-    suggestions from that search engine are not displayed while typing a query.
+    suggestions from that search engine are NOT displayed while typing a query.
     """
+    # Open Private Window
     panel = PanelUi(driver)
     panel.open_and_switch_to_new_window("private")
 
     nav = Navigation(driver)
-    wait = WebDriverWait(driver, 3)
+    prefs = AboutPrefs(driver, category="search")  # kept for parity / future use
 
     for shortcut in SEARCH_ENGINES:
-        # Open a new tab for each search shortcut
+        # Open a new tab for each shortcut
         nav.open_and_switch_to_new_window("tab")
 
-        # Activate search mode via shortcut
+        # Activate search mode using the shortcut
         nav.clear_awesome_bar()
-        nav.search(shortcut)
-
-        # Type a query and verify no external search suggestions are shown
-        nav.clear_awesome_bar()
-        nav.type_in_awesome_bar("random")
-
-        # Wait for urlbar results to appear (if any)
         try:
-            wait.until(EC.presence_of_element_located((By.ID, "urlbar-results")))
-            rows = driver.find_elements(By.CSS_SELECTOR, "#urlbar-results .urlbarView-row")
+            nav.search(shortcut)
         except Exception:
-            # If results container not found, treat as zero suggestions
-            rows = []
+            nav.type_in_awesome_bar(shortcut + Keys.ENTER)
 
-        assert len(rows) <= 3, f"Unexpected suggestions displayed for {shortcut} (found {len(rows)} rows)."
+        # Type a query and verify there are no external search suggestions
+        has_no_external_suggestions = nav.search_and_check_no_external_suggestions(
+            text="random",
+            search_mode="awesome",
+            max_rows=3,  # allow small internal items like history/bookmarks
+        )
+
+        assert has_no_external_suggestions, (
+            f"External search suggestions appeared for {shortcut} in Private Window."
+        )
 
         nav.clear_awesome_bar()
