@@ -17,7 +17,7 @@ def test_copied_url_contains_https(driver: Firefox):
     C3028712 - URLs copied from address bar contain https tags
     """
 
-    # Instantiate objects
+    # Instantiate object
     nav = Navigation(driver)
 
     # Input a URL in the address bar and hit enter
