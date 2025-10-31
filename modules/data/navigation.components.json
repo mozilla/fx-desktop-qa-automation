@@ -29,6 +29,12 @@
         "groups": []
     },
 
+    "legacy-search-mode-suggestion-container": {
+      "selectorData": "richlistbox[class='autocomplete-richlistbox search-panel-tree']",
+      "strategy": "css",
+      "groups": []
+    },
+
     "overflow-item": {
         "selectorData": "[class='urlbarView-title urlbarView-overflowable']",
         "strategy": "css",
@@ -609,5 +615,12 @@
         "selectorData": "statuspanel-label",
         "strategy": "id",
         "groups": []
+    },
+
+    "searchmode-engine": {
+        "selectorData": "toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']",
+        "strategy": "css",
+        "groups": []
     }
+
 }
