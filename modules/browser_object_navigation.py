@@ -880,8 +880,8 @@ class Navigation(BasePage):
         """
         Verify that the given search engine is visible in the search mode switcher.
         """
-        engine_locator = (
-            self.elements["searchmode-engine"]["selectorData"].format(engine=engine)
+        engine_locator = self.elements["searchmode-engine"]["selectorData"].format(
+            engine=engine
         )
         self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
