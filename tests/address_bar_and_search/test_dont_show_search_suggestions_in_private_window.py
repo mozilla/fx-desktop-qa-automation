@@ -4,7 +4,6 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation
 from modules.browser_object_panel_ui import PanelUi
-from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()
