@@ -31,7 +31,6 @@ def test_no_search_engine_suggestions_in_private_window(driver: Firefox):
     panel.open_and_switch_to_new_window("private")
 
     nav = Navigation(driver)
-    prefs = AboutPrefs(driver, category="search")  # kept for parity / future use
 
     for shortcut in SEARCH_ENGINES:
         # Open a new tab for each shortcut
