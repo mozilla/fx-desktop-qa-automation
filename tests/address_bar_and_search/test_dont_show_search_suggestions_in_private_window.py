@@ -35,12 +35,7 @@ def test_no_search_engine_suggestions_in_private_window(driver: Firefox):
         # Open a new tab for each shortcut
         nav.open_and_switch_to_new_window("tab")
 
-        # Activate search mode using the shortcut
         nav.clear_awesome_bar()
-        try:
-            nav.search(shortcut)
-        except Exception:
-            nav.type_in_awesome_bar(shortcut + Keys.ENTER)
 
         # Type a query and verify there are no external search suggestions
         has_no_external_suggestions = nav.search_and_check_no_external_suggestions(
