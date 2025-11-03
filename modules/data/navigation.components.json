@@ -621,6 +621,12 @@
         "selectorData": "toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']",
         "strategy": "css",
         "groups": []
+    },
+
+    "searchbar-search-engine": {
+        "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine_name}'][selected]",
+        "strategy": "css",
+        "groups": []
     }
 
 }
