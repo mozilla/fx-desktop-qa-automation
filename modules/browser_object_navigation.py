@@ -907,6 +907,7 @@ class Navigation(BasePage):
         self.wait.until(
             lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
         )
+
     @BasePage.context_chrome
     def verify_searchbar_engine_is_focused(self, engine: str) -> None:
         """
