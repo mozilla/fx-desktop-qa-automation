@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox, Keys
 
@@ -31,7 +29,6 @@ def test_searchbar_display_alpenglow_theme(driver: Firefox):
     # Have the Proton Alpenglow theme Activated
     abt_addons.open()
     abt_addons.choose_sidebar_option("theme")
-
     abt_addons.activate_theme(
         nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
     )
@@ -48,7 +45,8 @@ def test_searchbar_display_alpenglow_theme(driver: Firefox):
     # Write an input
     nav.type_in_search_bar(TEXT)
 
-    sleep(2)
+    # Wait until the search suggestions dropdown is visible
+    nav.wait_for_searchbar_suggestions()
 
     # Hit Tab a few times
     for _ in range(2):
@@ -57,12 +55,9 @@ def test_searchbar_display_alpenglow_theme(driver: Firefox):
     # The highlight goes through the one-off buttons accordingly
     nav.verify_searchbar_engine_is_focused("Bing")
 
-    sleep(2)
-
     # Hit the down Arrow key a few times
     for _ in range(2):
         nav.perform_key_combo_chrome(Keys.DOWN)
 
     # The highlight goes through the one-off buttons accordingly
-
-    nav.verify_searchbar_engine_is_focused("Ebay")
+    nav.verify_searchbar_engine_is_focused("eBay")

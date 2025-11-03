@@ -3182,6 +3182,20 @@ Description: Searchmode engine label
 Location: Address bar searchmode engine label
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: selected_searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
+Description: Searchbar-search-engine
+Location: Selected search bar search engine 
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-suggestions
+Selector Data: hbox.search-one-offs
+Description: Searchbar suggestions
+Location: Searchbar results 
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

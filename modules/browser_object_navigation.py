@@ -887,23 +887,27 @@ class Navigation(BasePage):
             EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
         )
 
-    def verify_searchbar_engine_is_focused(self, engine_name: str, timeout: int = 5) -> None:
+    @BasePage.context_chrome
+    def verify_searchbar_engine_is_focused(self, engine: str) -> None:
         """
-        Verify that the given search engine is focused (i.e., has the 'selected' attribute)
-        using the shared 'searchbar-search-engine' locator.
+        Verify that the given search engine button is focused (has 'selected' attribute)
+        using the dynamic 'searchbar-search-engine' locator.
         """
-        # Retrieve the locator template and fill in engine_name
-        locator_template = self.elements["searchbar-search-engine"]["selectorData"]
-        strategy = self.elements["searchbar-search-engine"]["strategy"]
-
-        # Format the CSS selector with the engine name
-        formatted_locator = locator_template.format(engine_name=engine_name)
-
-        # Create locator tuple (By.<strategy>, selector)
-        by_strategy = By.CSS_SELECTOR if strategy == "css" else By.XPATH
-
-        # Wait until the element is visible
+        engine_locator = (
+            self.elements["selected_searchbar-search-engine"]["selectorData"].format(engine=engine)
+        )
         self.wait.until(
-            EC.visibility_of_element_located((by_strategy, formatted_locator)),
-            message=f"Expected '{engine_name}' engine to be focused, but it was not."
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator)),
+            message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible."
+        )
+
+    @BasePage.context_chrome
+    def wait_for_searchbar_suggestions(self) -> None:
+        """Wait until the search suggestions dropdown is visible."""
+        locator = (
+            self.elements["searchbar-suggestions"]["selectorData"]
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, locator)),
+            message="Search suggestions did not appear in time."
         )
