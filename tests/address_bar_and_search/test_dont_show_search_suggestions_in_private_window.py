@@ -37,7 +37,7 @@ def test_no_search_engine_suggestions_in_private_window(driver: Firefox):
         nav.clear_awesome_bar()
 
         # Type a query and verify there are no external search suggestions
-        has_no_external_suggestions = nav.search_and_check_no_external_suggestions(
+        has_no_external_suggestions = nav.verify_no_external_suggestions(
             text="random",
             search_mode="awesome",
             max_rows=3,  # allow small internal items like history/bookmarks

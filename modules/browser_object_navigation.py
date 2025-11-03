@@ -321,25 +321,47 @@ class Navigation(BasePage):
         suggestions = self.get_all_children("results-dropdown")
         return len(suggestions) > 2
 
-    def awesome_bar_has_no_external_suggestions(self, max_rows: int = 3) -> bool:
+    def verify_no_external_suggestions(
+            self,
+            text: str | None = None,
+            search_mode: str = "awesome",
+            max_rows: int = 3,
+            type_delay: float = 0.5,
+    ) -> bool:
         """
-        Check that the awesome bar has no external (search engine) suggestions.
-        Returns True if only internal results (like history/bookmarks) are shown,
-        or if no suggestions appear at all.
+        Returns True if no external (search engine) suggestions are shown.
+        Allows up to `max_rows` internal rows (history/bookmarks) in the awesome bar.
 
-        Args:
-            max_rows (int): Maximum number of internal suggestion rows allowed.
+        If `text` is provided, it types it into the chosen field first.
         """
-        try:
-            # Try to locate the suggestions container quickly
-            self.wait_for_suggestions_present(1)
-            suggestions = self.get_all_children("results-dropdown")
-        except Exception:
-            # No suggestions at all -> safe
-            return True
 
-        # Allow a few internal rows (bookmarks/history)
-        return len(suggestions) <= max_rows
+        if search_mode == "awesome":
+            if text is not None:
+                self.clear_awesome_bar()
+                self.type_in_awesome_bar(text)
+                import time;
+                time.sleep(type_delay)
+
+            # Try to detect suggestions container
+            try:
+                self.wait_for_suggestions_present(1)
+                suggestions = self.get_all_children("results-dropdown")
+            except Exception:
+                return True  # no suggestions at all
+
+            # Internal-only suggestions are fine up to `max_rows`
+            return len(suggestions) <= max_rows
+
+        elif search_mode == "search":
+            # Legacy search bar path: if *any* suggestions show, treat as external
+            if text is not None:
+                self.set_search_bar()
+                self.type_in_search_bar(text)
+            # Reuse your existing probe: True => suggestions exist (external), so invert
+            return not self.search_bar_has_suggestions(min_suggestions=1)
+
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
 
     @BasePage.context_chrome
     def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
@@ -369,27 +391,6 @@ class Navigation(BasePage):
         self.set_chrome_context()
         self.element_not_visible("suggestion-titles")
         return self
-
-    def search_and_check_no_external_suggestions(
-            self, text: str, search_mode: str = "awesome", max_rows: int = 3
-    ) -> bool:
-        """
-        Type in the given search field and verify that no external search engine
-        suggestions are shown.
-        Returns True if no external suggestions are present.
-        """
-        if search_mode == "awesome":
-            self.clear_awesome_bar()
-            self.type_in_awesome_bar(text)
-            time.sleep(0.5)
-            return self.awesome_bar_has_no_external_suggestions(max_rows)
-        elif search_mode == "search":
-            self.set_search_bar()
-            self.type_in_search_bar(text)
-            # reuse your existing search_bar_has_suggestions(min_suggestions)
-            return not self.search_bar_has_suggestions(max_rows)
-        else:
-            raise ValueError("search_mode must be either 'awesome' or 'search'")
 
     def open_usb_and_select_engine(self, engine_title: str):
         """Click the USB icon and select a search engine by its title."""
