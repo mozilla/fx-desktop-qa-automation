@@ -888,6 +888,26 @@ class Navigation(BasePage):
         )
 
     @BasePage.context_chrome
+    def verify_https_hidden_in_address_bar(self) -> None:
+        """
+        Wait until the HTTPS prefix is hidden in the address bar display.
+        """
+        self.wait.until(
+            lambda d: "https" not in self.get_element("awesome-bar").get_attribute("value")
+        )
+
+    @BasePage.context_chrome
+    def verify_address_bar_value_prefix(self, prefix: str) -> None:
+        """
+        Wait until the value in the address bar starts with the given prefix.
+
+        Args:
+            prefix (str): Expected starting string (e.g., "https://").
+        """
+        self.wait.until(
+            lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
+        )
+    @BasePage.context_chrome
     def verify_searchbar_engine_is_focused(self, engine: str) -> None:
         """
         Verify that the given search engine button is focused (has 'selected' attribute)
