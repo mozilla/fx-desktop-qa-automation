@@ -7,6 +7,7 @@ from modules.browser_object_navigation import Navigation
 TEXT = "Moza"
 DEFAULT_ENGINE = "Google"
 
+
 @pytest.fixture()
 def test_case():
     return "3028716"
