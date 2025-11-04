@@ -38,7 +38,9 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     context_menu = ContextMenu(driver)
     mouse = Controller()
     wait = WebDriverWait(driver, 10)
-
+    DELAY = 2
+    POSITION_DELAY = 0.3
+    
     # Open Mozilla's Youtube Page
     playlist_url = "https://www.youtube.com/@Mozilla/videos"
     playlist_page = GenericPage(driver, url=playlist_url)
@@ -56,7 +58,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
 
     # Verify correct number of tabs opened
     tabs.wait_for_num_tabs(3)
-    sleep(2)
+    sleep(DELAY)
 
     # Select all tabs via Control/Command click while staying on first tab
     modifier_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
@@ -102,9 +104,9 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             )
             # Offset to click on the audio control area (left side of tab)
             mouse.position = (element_x - 75, element_y)
-            sleep(0.3)  # Small delay for mouse positioning
+            sleep(POSITION_DELAY)  # Small delay for mouse positioning
             mouse.click(Button.left, 1)
-            sleep(2)  # Wait for action to take effect
+            sleep(DELAY)  # Wait for action to take effect
 
         # Click Play button
         click_multi_tab_audio_button()
