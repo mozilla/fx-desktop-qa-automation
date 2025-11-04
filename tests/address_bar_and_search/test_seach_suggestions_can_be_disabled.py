@@ -20,9 +20,7 @@ def test_search_suggestions_pref_affects_urlbar_and_searchbar(driver):
     customize = CustomizeFirefox(driver)
 
     # Add legacy search bar to toolbar.
-    panel_ui.open_panel_menu()
-    panel_ui.navigate_to_customize_toolbar()
-    customize.add_widget_to_toolbar("search-bar")
+    nav.add_search_bar_to_toolbar()
 
     # --- Step 1: Disable the pref
     prefs.open()

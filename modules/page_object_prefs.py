@@ -88,22 +88,36 @@ class AboutPrefs(BasePage):
         return self
 
     def select_search_engine_from_tree(self, engine_name: str) -> BasePage:
-        """Select a search engine from the Search Shortcuts table using JavaScript."""
+        """
+        Select a search engine from the 'Search Shortcuts' list in about:preferences.
+        Note:
+            This method handles browser UI built with Firefox’s internal XUL TreeView API,
+            where items are generated virtually rather than as standard DOM nodes. Since
+            Selenium cannot interact with these virtual rows directly, this method scrolls
+            to the table and delegates selection to a JavaScript-based helper.
+        Argument:
+            engine_name (str): Name of the search engine to select (e.g., "DuckDuckGo")
+        """
         search_shortcuts_group = self.get_element("search-shortcuts-group")
-
-        # Ensure visible
-        try:
-            search_shortcuts_group.location_once_scrolled_into_view
-        except Exception:
-            pass
-
         engine_list = self.get_element(
             "search-engine-list", parent_element=search_shortcuts_group
         )
         return self._select_engine_with_javascript(engine_list, engine_name)
 
     def _select_engine_with_javascript(self, engine_list, engine_name: str) -> BasePage:
-        """Select engine using JavaScript (XUL tree view API)."""
+        """
+        Select a search engine from a XUL TreeView-backed list via JavaScript.
+        Note:
+            The 'Search Shortcuts' table is rendered using Firefox’s internal TreeView API,
+            not the standard DOM. Therefore, Selenium cannot access or click individual rows.
+            This method executes JavaScript to loop through the TreeView rows and programmatically
+            select the row that matches the given engine name.
+        Arguments:
+            engine_list: WebElement representing the XUL tree container.
+            engine_name (str): Search engine name to select (case-insensitive match).
+        Raises:
+            Exception: If no matching search engine is found in the TreeView.
+        """
         js = """
         let tree = arguments[0];
         let name = arguments[1].toLowerCase();

@@ -26,9 +26,7 @@ def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
     prefs = AboutPrefs(driver, category="search")
 
     # Step 1: Add legacy search bar to toolbar
-    panel_ui.open_panel_menu()
-    panel_ui.navigate_to_customize_toolbar()
-    customize.add_widget_to_toolbar("search-bar")
+    nav.add_search_bar_to_toolbar()
 
     # Step 2: Open a new tab and trigger search settings from search bar
     tabs.new_tab_by_button()

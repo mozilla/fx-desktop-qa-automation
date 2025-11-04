@@ -644,7 +644,7 @@
     "searchbar-search-engine": {
         "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
         "strategy": "css",
-        "groups": []
+        "groups": ["doNotCache"]
     }
 
 }

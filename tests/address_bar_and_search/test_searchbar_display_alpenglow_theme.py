@@ -33,9 +33,7 @@ def test_searchbar_display_alpenglow_theme(driver: Firefox):
     )
 
     # Add the Search bar to Toolbar
-    panel_ui.open_panel_menu()
-    panel_ui.navigate_to_customize_toolbar()
-    customize.add_widget_to_toolbar("search-bar")
+    nav.add_search_bar_to_toolbar()
 
     # Open a new tab and hit Ctrl/Cmd + K
     nav.open_and_switch_to_new_window("tab")
