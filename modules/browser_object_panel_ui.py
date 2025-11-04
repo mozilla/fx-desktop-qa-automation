@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -351,3 +352,18 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
+
+    @BasePage.context_chrome
+    def unfocus_address_bar(self) -> None:
+        """
+        Click away from the address bar by clicking in the new tab page content area.
+        """
+        locator = self.elements["toolbarspring"]["selectorData"]
+
+        # Wait until the element is visible and clickable
+        element = self.wait.until(
+            EC.visibility_of_element_located((By.ID, locator)),
+            message="New tab page content area not clickable."
+        )
+        # Click to unfocus the address bar
+        element.click()

@@ -3601,7 +3601,13 @@ Description: Edit bookmark panel
 Location: Bookmark panel
 Path to .json: modules/data/pane_ui.components.json
 ```
-
+```
+Selector Name: toolbarspring
+Selector Data: ustomizableui-special-spring2
+Description: toolbarspring
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### print_preview
 ```
 Selector name: print-preview-browser
