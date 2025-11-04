@@ -460,6 +460,20 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: show-suggestions-in-address-bar
+Selector Data: showSearchSuggestionsFirstCheckbox
+Description: Parent Checkbox element to show suggestions in search
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-suggestions-awesomebar
+Selector Data: urlBarSuggestion
+Description: Checkbox element to show suggestions in the Awesomebar
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-engine-dropmarker
 Selector Data: "dropmarker"
 Description: Button that opens the search engine options list
@@ -1901,6 +1915,20 @@ Path to .json: modules/data/exemple_page.components.json
 Selector Name: forget
 Selector Data: "wrapper-panic-button"
 Description: The forget option button from the customizing options
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: nav-searchbar
+Selector Data: "search-container"
+Description: the search container element
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: done-button
+Selector Data: "customization-done-button"
+Description: The done button in the customizd toolbar
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
