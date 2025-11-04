@@ -326,38 +326,21 @@ class Navigation(BasePage):
             text: str | None = None,
             search_mode: str = "awesome",
             max_rows: int = 3,
-            type_delay: float = 0.5,
+            type_delay: float = 0.3,
     ) -> bool:
-        """
-        Returns True if no external (search engine) suggestions are shown.
-        Allows up to `max_rows` internal rows (history/bookmarks) in the awesome bar.
-
-        If `text` is provided, it types it into the chosen field first.
-        """
-
         if search_mode == "awesome":
             if text is not None:
                 self.clear_awesome_bar()
                 self.type_in_awesome_bar(text)
-                import time;
-                time.sleep(type_delay)
+                time.sleep(type_delay)  # allow dropdown to update
 
-            # Try to detect suggestions container
-            try:
-                self.wait_for_suggestions_present(1)
-                suggestions = self.get_all_children("results-dropdown")
-            except Exception:
-                return True  # no suggestions at all
-
-            # Internal-only suggestions are fine up to `max_rows`
+            suggestions = self.get_all_children("results-dropdown")
             return len(suggestions) <= max_rows
 
         elif search_mode == "search":
-            # Legacy search bar path: if *any* suggestions show, treat as external
             if text is not None:
                 self.set_search_bar()
                 self.type_in_search_bar(text)
-            # Reuse your existing probe: True => suggestions exist (external), so invert
             return not self.search_bar_has_suggestions(min_suggestions=1)
 
         else:
