@@ -87,6 +87,45 @@ class AboutPrefs(BasePage):
             checkbox.click()
         return self
 
+    def select_search_engine_from_tree(self, engine_name: str) -> BasePage:
+        """Select a search engine from the Search Shortcuts table using JavaScript."""
+        search_shortcuts_group = self.get_element("search-shortcuts-group")
+
+        # Ensure visible
+        try:
+            search_shortcuts_group.location_once_scrolled_into_view
+        except Exception:
+            pass
+
+        engine_list = self.get_element(
+            "search-engine-list", parent_element=search_shortcuts_group
+        )
+        return self._select_engine_with_javascript(engine_list, engine_name)
+
+    def _select_engine_with_javascript(self, engine_list, engine_name: str) -> BasePage:
+        """Select engine using JavaScript (XUL tree view API)."""
+        js = """
+        let tree = arguments[0];
+        let name = arguments[1].toLowerCase();
+        let view = tree.view;
+        for (let i = 0; i < view.rowCount; i++) {
+            let text = view.getCellText(i, tree.columns.getNamedColumn("engineName"));
+            if (text && text.toLowerCase().includes(name)) {
+                view.selection.select(i);
+                tree.ensureRowIsVisible(i);
+                return true;
+            }
+        }
+        return false;
+        """
+
+        found = self.driver.execute_script(js, engine_list, engine_name)
+        if not found:
+            raise Exception(
+                f"Search engine '{engine_name}' not found in Search Shortcuts table."
+            )
+        return self
+
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
         self.get_element("language-set-alternative-button").click()

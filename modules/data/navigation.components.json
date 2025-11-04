@@ -633,6 +633,18 @@
         "selectorData": "hbox.search-one-offs",
         "strategy": "css",
         "groups": []
+    },
+
+    "searchbar-magnifying-glass-button": {
+        "selectorData": "hbox.searchbar-search-button[data-l10n-id='searchbar-icon']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "searchbar-search-engine": {
+        "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
+        "strategy": "css",
+        "groups": []
     }
 
 }

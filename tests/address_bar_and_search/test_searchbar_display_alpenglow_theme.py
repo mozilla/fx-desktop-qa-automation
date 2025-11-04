@@ -6,7 +6,6 @@ from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.page_object_prefs import AboutAddons
 
-
 TEXT = "Firefox"
 
 

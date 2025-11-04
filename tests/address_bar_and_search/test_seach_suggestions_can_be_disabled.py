@@ -1,4 +1,5 @@
 import pytest
+
 from modules.browser_object import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_customize_firefox import CustomizeFirefox

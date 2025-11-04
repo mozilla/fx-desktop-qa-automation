@@ -880,8 +880,8 @@ class Navigation(BasePage):
         """
         Verify that the given search engine is visible in the search mode switcher.
         """
-        engine_locator = (
-            self.elements["searchmode-engine"]["selectorData"].format(engine=engine)
+        engine_locator = self.elements["searchmode-engine"]["selectorData"].format(
+            engine=engine
         )
         self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
@@ -893,7 +893,8 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https" not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: "https"
+            not in self.get_element("awesome-bar").get_attribute("value")
         )
 
     @BasePage.context_chrome
@@ -905,7 +906,9 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
+            lambda d: self.get_element("awesome-bar")
+            .get_attribute("value")
+            .startswith(prefix)
         )
 
     @BasePage.context_chrome
@@ -914,21 +917,19 @@ class Navigation(BasePage):
         Verify that the given search engine button is focused (has 'selected' attribute)
         using the dynamic 'searchbar-search-engine' locator.
         """
-        engine_locator = (
-            self.elements["selected_searchbar-search-engine"]["selectorData"].format(engine=engine)
-        )
+        engine_locator = self.elements["selected_searchbar-search-engine"][
+            "selectorData"
+        ].format(engine=engine)
         self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator)),
-            message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible."
+            message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible.",
         )
 
     @BasePage.context_chrome
     def wait_for_searchbar_suggestions(self) -> None:
         """Wait until the search suggestions dropdown is visible."""
-        locator = (
-            self.elements["searchbar-suggestions"]["selectorData"]
-        )
+        locator = self.elements["searchbar-suggestions"]["selectorData"]
         self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, locator)),
-            message="Search suggestions did not appear in time."
+            message="Search suggestions did not appear in time.",
         )
