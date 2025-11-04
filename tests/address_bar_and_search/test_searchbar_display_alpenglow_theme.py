@@ -2,8 +2,6 @@ import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.page_object_prefs import AboutAddons
 
 TEXT = "Firefox"
@@ -22,8 +20,6 @@ def test_searchbar_display_alpenglow_theme(driver: Firefox):
     # Instantiate objects
     nav = Navigation(driver)
     abt_addons = AboutAddons(driver)
-    panel_ui = PanelUi(driver)
-    customize = CustomizeFirefox(driver)
 
     # Have the Proton Alpenglow theme Activated
     abt_addons.open()
