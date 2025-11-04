@@ -321,6 +321,31 @@ class Navigation(BasePage):
         suggestions = self.get_all_children("results-dropdown")
         return len(suggestions) > 2
 
+    def verify_no_external_suggestions(
+            self,
+            text: str | None = None,
+            search_mode: str = "awesome",
+            max_rows: int = 3,
+            type_delay: float = 0.3,
+    ) -> bool:
+        if search_mode == "awesome":
+            if text is not None:
+                self.clear_awesome_bar()
+                self.type_in_awesome_bar(text)
+                time.sleep(type_delay)  # allow dropdown to update
+
+            suggestions = self.get_all_children("results-dropdown")
+            return len(suggestions) <= max_rows
+
+        elif search_mode == "search":
+            if text is not None:
+                self.set_search_bar()
+                self.type_in_search_bar(text)
+            return not self.search_bar_has_suggestions(min_suggestions=1)
+
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
+
     @BasePage.context_chrome
     def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
         """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
