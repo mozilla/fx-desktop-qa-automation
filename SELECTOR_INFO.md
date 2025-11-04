@@ -2567,6 +2567,13 @@ Location: Any clickable area on the awesome bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: legacy-search-mode-suggestion-container
+Selector Data: richlistbox[class='autocomplete-richlistbox search-panel-tree']
+Description: Legacy search container
+Location: Any clickable area on the awesome bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: results-dropdown
 Selector Data: urlbar-results
 Description: URL bar search results
@@ -3166,6 +3173,27 @@ Selector Name: status-panel-label
 Selector Data: statuspanel-label
 Description: Status panel URL label
 Location: newtab page bottom left corner on link hover
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-engine
+Selector Data: toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']
+Description: Searchmode engine label
+Location: Address bar searchmode engine label
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: selected_searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
+Description: Searchbar-search-engine
+Location: Selected search bar search engine 
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-suggestions
+Selector Data: hbox.search-one-offs
+Description: Searchbar suggestions
+Location: Searchbar results 
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

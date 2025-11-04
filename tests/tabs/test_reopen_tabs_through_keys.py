@@ -1,6 +1,5 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import TabBar
 
@@ -24,6 +23,7 @@ def test_reopen_tabs_through_keys(driver: Firefox, sys_platform: str):
     the keyboard shortcut (Ctrl/Cmd + Shift + T).
     """
 
+    # Instantiate object
     tabs = TabBar(driver)
 
     # Create 4 new tabs
@@ -39,21 +39,8 @@ def test_reopen_tabs_through_keys(driver: Firefox, sys_platform: str):
         driver.switch_to.window(driver.window_handles[-1])
     assert len(driver.window_handles) == 1
 
-    # Action Sequence hold CTRL/CMD + SHIFT and press “t” 4 times
-    with driver.context(driver.CONTEXT_CHROME):
-        actions = tabs.actions
-        if sys_platform == "Darwin":
-            actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).perform()
-        else:
-            actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).perform()
-
-        for _ in range(4):
-            tabs.actions.send_keys("t").perform()
-
-        if sys_platform == "Darwin":
-            tabs.actions.key_up(Keys.SHIFT).key_up(Keys.COMMAND).perform()
-        else:
-            tabs.actions.key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+    # Use the refactored method to reopen tabs with shortcut
+    tabs.reopen_tabs_with_shortcut(sys_platform, count=4)
 
     # Verify the correct tabs reopened (order is not considered)
     open_urls = set()

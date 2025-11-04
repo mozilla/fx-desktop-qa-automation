@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 from typing import Literal
 
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
@@ -291,6 +292,77 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
+    def search_and_check_if_suggestions_are_present(
+        self, text, search_mode: str = "awesome", min_suggestions=0
+    ):
+        """
+        Search in the given address bar and check if suggestions are present.
+
+        Args:
+            text (str): Text to search for in the suggestions.
+            search_mode(str): Search mode to use. Can be 'awesome' or 'search'. Defaults to 'awesome'.
+            min_suggestions (int): Minimum number of suggestions to collect.
+        """
+        if search_mode == "awesome":
+            self.clear_awesome_bar()
+            self.type_in_awesome_bar(text)
+            time.sleep(0.5)
+            return self.awesome_bar_has_suggestions()
+        elif search_mode == "search":
+            self.set_search_bar()
+            self.type_in_search_bar(text)
+            return self.search_bar_has_suggestions(min_suggestions)
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
+
+    def awesome_bar_has_suggestions(self) -> bool:
+        """Check if the awesome bar has any suggestions."""
+        self.wait_for_suggestions_present(1)
+        suggestions = self.get_all_children("results-dropdown")
+        return len(suggestions) > 2
+
+    def verify_no_external_suggestions(
+            self,
+            text: str | None = None,
+            search_mode: str = "awesome",
+            max_rows: int = 3,
+            type_delay: float = 0.3,
+    ) -> bool:
+        if search_mode == "awesome":
+            if text is not None:
+                self.clear_awesome_bar()
+                self.type_in_awesome_bar(text)
+                time.sleep(type_delay)  # allow dropdown to update
+
+            suggestions = self.get_all_children("results-dropdown")
+            return len(suggestions) <= max_rows
+
+        elif search_mode == "search":
+            if text is not None:
+                self.set_search_bar()
+                self.type_in_search_bar(text)
+            return not self.search_bar_has_suggestions(min_suggestions=1)
+
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
+
+    @BasePage.context_chrome
+    def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
+        """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
+        suggestion_container = self.get_element(
+            "legacy-search-mode-suggestion-container"
+        )
+        if min_suggestions > 2:
+            return (
+                suggestion_container.find_element(By.XPATH, "./*[1]").tag_name
+                == "richlistitem"
+            )
+        else:
+            has_children = self.driver.execute_script(
+                "return arguments[0].children.length > 0;", suggestion_container
+            )
+            return has_children
+
     def wait_for_suggestions_present(self, at_least: int = 1):
         """Wait until the suggestion list has at least one visible item."""
         self.set_chrome_context()
@@ -319,8 +391,8 @@ class Navigation(BasePage):
         """
         Clicks the first visible suggestion row in the list, using robust scrolling and fallback.
         """
-        from selenium.webdriver.common.by import By
         from selenium.webdriver.common.action_chains import ActionChains
+        from selenium.webdriver.common.by import By
 
         self.set_chrome_context()
         driver = self.driver
@@ -333,7 +405,9 @@ class Navigation(BasePage):
             assert titles, "No visible suggestion items found."
             target = next((t for t in titles if t.is_displayed()), titles[0])
             try:
-                row = target.find_element(By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]")
+                row = target.find_element(
+                    By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]"
+                )
             except Exception:
                 row = target
 
@@ -382,7 +456,6 @@ class Navigation(BasePage):
         Argument:
             expected_pattern: Regex pattern to match against download name
         """
-        self.element_visible("download-target-element")
         download_name = self.get_element("download-target-element")
         download_value = download_name.get_attribute("value")
         assert re.match(expected_pattern, download_value), (
@@ -825,4 +898,62 @@ class Navigation(BasePage):
         actual_url = self.get_status_panel_url()
         assert expected_url in actual_url, (
             f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
+        )
+
+    @BasePage.context_chrome
+    def verify_engine_returned(self, engine: str) -> None:
+        """
+        Verify that the given search engine is visible in the search mode switcher.
+        """
+        engine_locator = (
+            self.elements["searchmode-engine"]["selectorData"].format(engine=engine)
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
+        )
+
+    @BasePage.context_chrome
+    def verify_https_hidden_in_address_bar(self) -> None:
+        """
+        Wait until the HTTPS prefix is hidden in the address bar display.
+        """
+        self.wait.until(
+            lambda d: "https" not in self.get_element("awesome-bar").get_attribute("value")
+        )
+
+    @BasePage.context_chrome
+    def verify_address_bar_value_prefix(self, prefix: str) -> None:
+        """
+        Wait until the value in the address bar starts with the given prefix.
+
+        Args:
+            prefix (str): Expected starting string (e.g., "https://").
+        """
+        self.wait.until(
+            lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
+        )
+
+    @BasePage.context_chrome
+    def verify_searchbar_engine_is_focused(self, engine: str) -> None:
+        """
+        Verify that the given search engine button is focused (has 'selected' attribute)
+        using the dynamic 'searchbar-search-engine' locator.
+        """
+        engine_locator = (
+            self.elements["selected_searchbar-search-engine"]["selectorData"].format(engine=engine)
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator)),
+            message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible."
+        )
+
+    @BasePage.context_chrome
+    def wait_for_searchbar_suggestions(self) -> None:
+        """Wait until the search suggestions dropdown is visible."""
+        locator = (
+            self.elements["searchbar-suggestions"]["selectorData"]
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, locator)),
+            message="Search suggestions did not appear in time."
         )

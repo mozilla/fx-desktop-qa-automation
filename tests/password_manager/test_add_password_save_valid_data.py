@@ -21,21 +21,15 @@ def test_add_password_save_valid_data(driver: Firefox):
     """
     C2241112 Verify that a password can be added and saved
     """
-    # instantiate object
+
+    # Instantiate object
     about_logins = AboutLogins(driver)
 
     # Open about:logins and click on the "Add password" button
     about_logins.open()
-    about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.
-    about_logins.create_new_login(
-        {
-            "origin": WEBSITE_ADDRESS,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(WEBSITE_ADDRESS, USERNAME, PASSWORD)
 
     # Check password added in the listbox
     logins = about_logins.get_elements("login-list-item")

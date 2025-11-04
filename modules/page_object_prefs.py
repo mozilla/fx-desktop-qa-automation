@@ -52,6 +52,20 @@ class AboutPrefs(BasePage):
 
     # Function Organization
     # Search and Settings
+
+    def select_search_suggestions_in_address_bar(self, value: bool = True) -> BasePage:
+        """
+        Selects the search suggestions in the Address Bar checkbox according to the value given.
+        """
+        checkbox = self.get_element("show-suggestions")
+        awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
+        checked = bool(checkbox.get_attribute("checked"))
+        if value != checked:
+            checkbox.click()
+        if value and not awesome_bar_checkbox.get_attribute("checked"):
+            awesome_bar_checkbox.click()
+        return self
+
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(
@@ -698,8 +712,6 @@ class AboutPrefs(BasePage):
         dialog = self.get_element("unknown-content-type-dialog")
         dialog.send_keys(Keys.ESCAPE)
         return self
-
-
 
 
 class AboutAddons(BasePage):
