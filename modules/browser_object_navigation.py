@@ -909,4 +909,30 @@ class Navigation(BasePage):
             lambda d: self.get_element("awesome-bar")
             .get_attribute("value")
             .startswith(prefix)
+            lambda d: self.get_element("awesome-bar").get_attribute("value").startswith(prefix)
+        )
+
+    @BasePage.context_chrome
+    def verify_searchbar_engine_is_focused(self, engine: str) -> None:
+        """
+        Verify that the given search engine button is focused (has 'selected' attribute)
+        using the dynamic 'searchbar-search-engine' locator.
+        """
+        engine_locator = (
+            self.elements["selected_searchbar-search-engine"]["selectorData"].format(engine=engine)
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator)),
+            message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible."
+        )
+
+    @BasePage.context_chrome
+    def wait_for_searchbar_suggestions(self) -> None:
+        """Wait until the search suggestions dropdown is visible."""
+        locator = (
+            self.elements["searchbar-suggestions"]["selectorData"]
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, locator)),
+            message="Search suggestions did not appear in time."
         )
