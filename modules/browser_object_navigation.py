@@ -293,7 +293,7 @@ class Navigation(BasePage):
         return self
 
     def search_and_check_if_suggestions_are_present(
-        self, text, search_mode: str = "awesome", min_suggestions=0
+        self, text, search_mode: str = "awesome", min_suggestions=1
     ):
         """
         Search in the given address bar and check if suggestions are present.
@@ -307,7 +307,7 @@ class Navigation(BasePage):
             self.clear_awesome_bar()
             self.type_in_awesome_bar(text)
             time.sleep(0.5)
-            return self.awesome_bar_has_suggestions()
+            return self.awesome_bar_has_suggestions(min_suggestions)
         elif search_mode == "search":
             self.set_search_bar()
             self.type_in_search_bar(text)
@@ -315,11 +315,17 @@ class Navigation(BasePage):
         else:
             raise ValueError("search_mode must be either 'awesome' or 'search'")
 
-    def awesome_bar_has_suggestions(self) -> bool:
+    @BasePage.context_chrome
+    def awesome_bar_has_suggestions(self, min_suggestions: int =1) -> bool:
         """Check if the awesome bar has any suggestions."""
-        self.wait_for_suggestions_present(1)
-        suggestions = self.get_all_children("results-dropdown")
-        return len(suggestions) > 2
+        self.wait_for_suggestions_present(min_suggestions)
+        suggestion_container = self.get_element(
+            "results-dropdown"
+        )
+        has_children = self.driver.execute_script(
+            f"return arguments[0].children.length > {min_suggestions};", suggestion_container
+        )
+        return has_children
 
     @BasePage.context_chrome
     def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
