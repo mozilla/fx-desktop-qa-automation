@@ -21,7 +21,6 @@ def add_to_prefs_list():
 SEARCH_TERMS = ["alpha test", "beta test", "gamma test"]
 
 
-@pytest.mark.smoke
 def test_suggestions_for_empty_query_not_shown_in_search_mode(driver: Firefox):
     """
     Step 1: Create search history for Google (3 terms)
