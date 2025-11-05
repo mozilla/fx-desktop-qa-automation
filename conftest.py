@@ -479,8 +479,8 @@ def driver(
             driver = Firefox(options=options)
         # Uncomment below to find Fx process info
         # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
-        #     if proc.info["name"] and "firefox" in proc.info["name"].lower():
-        #         print(proc.info)
+        #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
+        #        print(proc.info)
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
