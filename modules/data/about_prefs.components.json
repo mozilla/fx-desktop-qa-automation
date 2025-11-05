@@ -85,11 +85,7 @@
     "strategy": "id",
     "groups": []
   },
-  "search-engine-children": {
-    "selectorData": "engineChildren",
-    "strategy": "id",
-    "groups": []
-  },
+
   "remove-search-engine-button": {
     "selectorData": "removeEngineButton",
     "strategy": "id",
@@ -611,24 +607,11 @@
   },
 
   "unknown-content-type-dialog": {
-      "selectorData": "unknownContentTypeWindow",
-      "strategy": "id",
-      "groups": [
-          "doNotCache"
-      ]
-    },
-
-  "remove-search-engine button": {
-      "selectorData": "removeEngineButton",
-      "strategy": "id",
-      "groups": []
-      },
-
-  "restore-default-search-engine button": {
-      "selectorData": "restoreDefaultSearchEngines",
-      "strategy": "id",
-      "groups": []
-      }
-
+    "selectorData": "unknownContentTypeWindow",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  }
 
 }

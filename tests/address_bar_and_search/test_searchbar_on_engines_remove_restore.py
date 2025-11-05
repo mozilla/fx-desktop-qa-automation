@@ -42,7 +42,7 @@ def test_searchbar_engine_remove_restore_affects_both_windows(driver):
 
     # Remove the targeted engine
     prefs.select_search_engine_from_tree(ENGINE_NAME)
-    prefs.click_on("remove-search-engine button")
+    prefs.remove_search_engine(ENGINE_NAME)
 
     # Verify the targeted engine is removed in regular window
     nav.verify_engine_visibility_in_searchbar_suggestion(
@@ -58,7 +58,7 @@ def test_searchbar_engine_remove_restore_affects_both_windows(driver):
     # Restore the targeted engine search engine
     panel_ui.open_and_switch_to_new_window("window")
     prefs.open()
-    prefs.click_on("restore-default-search-engine button")
+    prefs.restore_default_search_engines()
 
     # Verify the targeted engine is visible in regular window
     nav.verify_engine_visibility_in_searchbar_suggestion(

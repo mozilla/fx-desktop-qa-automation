@@ -140,6 +140,26 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    @BasePage.context_chrome
+    def remove_search_engine(self, engine_name: str) -> BasePage:
+        """
+        Remove a search engine from the 'Search Shortcuts' list in about:preferences.
+        Argument:
+            engine_name (str): Name of the search engine to remove (e.g., "DuckDuckGo")
+        """
+        self.element_visible("remove-search-engine-button")
+        self.click_on("remove-search-engine-button")
+        return self
+
+    @BasePage.context_chrome
+    def restore_default_search_engines(self) -> BasePage:
+        """
+        Restore the default search engines in the 'Search Shortcuts' list in about:preferences.
+        """
+        self.element_visible("restore-default-search-engines-button")
+        self.click_on("restore-default-search-engines-button")
+        return self
+
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
         self.get_element("language-set-alternative-button").click()
