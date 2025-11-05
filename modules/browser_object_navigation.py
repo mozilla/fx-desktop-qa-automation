@@ -327,11 +327,11 @@ class Navigation(BasePage):
         return has_children
 
     def verify_no_external_suggestions(
-            self,
-            text: str | None = None,
-            search_mode: str = "awesome",
-            max_rows: int = 3,
-            type_delay: float = 0.3,
+        self,
+        text: str | None = None,
+        search_mode: str = "awesome",
+        max_rows: int = 3,
+        type_delay: float = 0.3,
     ) -> bool:
         if search_mode == "awesome":
             if text is not None:
