@@ -363,7 +363,7 @@ class PanelUi(BasePage):
         # Wait until the element is visible and clickable
         element = self.wait.until(
             EC.visibility_of_element_located((By.ID, locator)),
-            message="New tab page content area not clickable.",
+            message="New tab page content area not clickable."
         )
         # Click to unfocus the address bar
         element.click()
