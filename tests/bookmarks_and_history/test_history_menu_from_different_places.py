@@ -45,8 +45,10 @@ def test_history_menu_in_different_places(driver: Firefox):
         "Search History": "search_history",
         "Clear Recent History": "clear-recent-history",
         "Recent History": "recent_history",
-        "Manage History": "manage_history",
     }
+
+    # Wait for the final item of the menu to be visible before asserting the others are visible
+    panel.element_visible("manage_history")
     assert_elements_visibility(panel, hamburger_menu_elements, "Hamburger Menu")
 
     # 2. Verify History options from Menu Bar
@@ -86,8 +88,10 @@ def test_history_menu_in_different_places(driver: Firefox):
         "Search History": "toolbar-history-search-history",
         "Clear Recent History": "toolbar-history-clear-recent-history",
         "Recent History": "toolbar-history-recent_history",
-        "Manage History": "toolbar-history-manage_history",
     }
+
+    # Wait for the final item of the menu to be visible before asserting the others are visible
+    nav.element_visible("toolbar-history-manage_history")
     assert_elements_visibility(nav, history_toolbar_elements, "Toolbar History")
 
     panel.open_panel_menu()
@@ -103,4 +107,7 @@ def test_history_menu_in_different_places(driver: Firefox):
     library_toolbar_elements = (
         history_toolbar_elements  # Reuse the same locators from a different path
     )
+
+    # Wait for the final item of the menu to be visible before asserting the others are visible
+    nav.element_visible("toolbar-history-manage_history")
     assert_elements_visibility(nav, library_toolbar_elements, "Toolbar Library")

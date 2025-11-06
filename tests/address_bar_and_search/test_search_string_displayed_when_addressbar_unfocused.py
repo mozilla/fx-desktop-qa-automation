@@ -12,7 +12,9 @@ def test_case():
     return "3028954"
 
 
-def test_address_bar_and_search_string_displayed_when_addressbar_unfocused(driver: Firefox):
+def test_address_bar_and_search_string_displayed_when_addressbar_unfocused(
+    driver: Firefox,
+):
     """
     C3028954 - Search string is correctly displayed when the Address bar is unfocused
     """
