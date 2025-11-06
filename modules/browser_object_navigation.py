@@ -14,6 +14,7 @@ from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_panel_ui import PanelUi
 from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
+from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.util import BrowserActions
 
 
@@ -45,6 +46,7 @@ class Navigation(BasePage):
         self.bookmarks_toolbar = "bookmarks-toolbar"
         self.context_menu = ContextMenu(self.driver)
         self.panel_ui = PanelUi(self.driver)
+        self.customize = CustomizeFirefox(self.driver)
 
     @BasePage.context_content
     def expect_in_content(self, condition) -> BasePage:
@@ -963,3 +965,34 @@ class Navigation(BasePage):
             EC.visibility_of_element_located((By.CSS_SELECTOR, locator)),
             message="Search suggestions did not appear in time.",
         )
+
+    @BasePage.context_chrome
+    def verify_engine_visibility_in_searchbar_suggestion(
+        self,
+        term: str,
+        engine_name: str,
+        expected_state: Literal["visible", "not_visible"],
+    ):
+        """
+        Type into the search bar and verify if a search engine suggestion is shown or not.
+        Arguments:
+            term: Search term to type in the search bar.
+            engine_name: The search engine to check (e.g., "DuckDuckGo").
+            expected_state: Expected visibility state of the engine ("visible" or "not_visible")
+        """
+        self.type_in_search_bar(term)
+        if expected_state == "visible":
+            self.element_visible("searchbar-search-engine", labels=[engine_name])
+        else:
+            self.element_not_visible("searchbar-search-engine", labels=[engine_name])
+
+    @BasePage.context_chrome
+    def add_search_bar_to_toolbar(self) -> BasePage:
+        """
+        Add the search bar to the toolbar via customize mode.
+        """
+
+        self.panel_ui.open_panel_menu()
+        self.panel_ui.navigate_to_customize_toolbar()
+        self.customize.add_widget_to_toolbar("search-bar")
+        return self

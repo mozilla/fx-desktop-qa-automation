@@ -1215,6 +1215,34 @@ Description: The unknown content type dialog
 Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: search-shortcuts-group
+Selector Data: oneClickSearchProvidersGroup
+Description: The Search shortcuts table
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-engine-list
+Selector Data: engineList
+Description: The Search shortcuts options list
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-search-engine-button
+Selector Data: removeEngineButton
+Description: The Remove button under Search shortcuts tabel
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: restore-default-search-engines-button
+Selector Data: restoreDefaultSearchEngines
+Description: The Restore Default Search Engines button under Search shortcuts tabel
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -3224,6 +3252,21 @@ Description: Searchbar suggestions
 Location: Searchbar results 
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: searchbar-magnifying-glass-button
+Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
+Description: Searchbar magnifying glass button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'
+Description: Searchbar search engine button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+searchbar-search-engine
 #### panel_ui
 ```
 Selector name: panel-ui-button

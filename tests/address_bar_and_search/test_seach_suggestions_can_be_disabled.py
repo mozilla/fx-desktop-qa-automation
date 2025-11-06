@@ -1,8 +1,6 @@
 import pytest
 
 from modules.browser_object import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.page_object_prefs import AboutPrefs
 
 RANDOM_TEXT = "cluj"
@@ -16,13 +14,9 @@ def test_case():
 def test_search_suggestions_pref_affects_urlbar_and_searchbar(driver):
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
-    panel_ui = PanelUi(driver)
-    customize = CustomizeFirefox(driver)
 
     # Add legacy search bar to toolbar.
-    panel_ui.open_panel_menu()
-    panel_ui.navigate_to_customize_toolbar()
-    customize.add_widget_to_toolbar("search-bar")
+    nav.add_search_bar_to_toolbar()
 
     # --- Step 1: Disable the pref
     prefs.open()

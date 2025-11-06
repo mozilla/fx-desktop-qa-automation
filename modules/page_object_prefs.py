@@ -87,6 +87,79 @@ class AboutPrefs(BasePage):
             checkbox.click()
         return self
 
+    def select_search_engine_from_tree(self, engine_name: str) -> BasePage:
+        """
+        Select a search engine from the 'Search Shortcuts' list in about:preferences.
+        Note:
+            This method handles browser UI built with Firefox’s internal XUL TreeView API,
+            where items are generated virtually rather than as standard DOM nodes. Since
+            Selenium cannot interact with these virtual rows directly, this method scrolls
+            to the table and delegates selection to a JavaScript-based helper.
+        Argument:
+            engine_name (str): Name of the search engine to select (e.g., "DuckDuckGo")
+        """
+        search_shortcuts_group = self.get_element("search-shortcuts-group")
+        engine_list = self.get_element(
+            "search-engine-list", parent_element=search_shortcuts_group
+        )
+        return self._select_engine_with_javascript(engine_list, engine_name)
+
+    def _select_engine_with_javascript(self, engine_list, engine_name: str) -> BasePage:
+        """
+        Select a search engine from a XUL TreeView-backed list via JavaScript.
+        Note:
+            The 'Search Shortcuts' table is rendered using Firefox’s internal TreeView API,
+            not the standard DOM. Therefore, Selenium cannot access or click individual rows.
+            This method executes JavaScript to loop through the TreeView rows and programmatically
+            select the row that matches the given engine name.
+        Arguments:
+            engine_list: WebElement representing the XUL tree container.
+            engine_name (str): Search engine name to select (case-insensitive match).
+        Raises:
+            Exception: If no matching search engine is found in the TreeView.
+        """
+        js = """
+        let tree = arguments[0];
+        let name = arguments[1].toLowerCase();
+        let view = tree.view;
+        for (let i = 0; i < view.rowCount; i++) {
+            let text = view.getCellText(i, tree.columns.getNamedColumn("engineName"));
+            if (text && text.toLowerCase().includes(name)) {
+                view.selection.select(i);
+                tree.ensureRowIsVisible(i);
+                return true;
+            }
+        }
+        return false;
+        """
+
+        found = self.driver.execute_script(js, engine_list, engine_name)
+        if not found:
+            raise Exception(
+                f"Search engine '{engine_name}' not found in Search Shortcuts table."
+            )
+        return self
+
+    @BasePage.context_chrome
+    def remove_search_engine(self, engine_name: str) -> BasePage:
+        """
+        Remove a search engine from the 'Search Shortcuts' list in about:preferences.
+        Argument:
+            engine_name (str): Name of the search engine to remove (e.g., "DuckDuckGo")
+        """
+        self.element_visible("remove-search-engine-button")
+        self.click_on("remove-search-engine-button")
+        return self
+
+    @BasePage.context_chrome
+    def restore_default_search_engines(self) -> BasePage:
+        """
+        Restore the default search engines in the 'Search Shortcuts' list in about:preferences.
+        """
+        self.element_visible("restore-default-search-engines-button")
+        self.click_on("restore-default-search-engines-button")
+        return self
+
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
         self.get_element("language-set-alternative-button").click()
