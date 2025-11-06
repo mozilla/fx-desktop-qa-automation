@@ -101,6 +101,6 @@ def test_history_menu_in_different_places(driver: Firefox):
     nav.click_on("library-history-submenu-button")
 
     library_toolbar_elements = (
-        history_toolbar_elements  # Reuse the same locators from a different path
+        history_toolbar_elements  # Reuse the same locators from toolbar list
     )
     assert_elements_visibility(nav, library_toolbar_elements, "Toolbar Library")
