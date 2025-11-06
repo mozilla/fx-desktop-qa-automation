@@ -1,8 +1,9 @@
 import sys
+
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation
 from modules.page_object_prefs import AboutPrefs
@@ -11,6 +12,7 @@ from modules.page_object_prefs import AboutPrefs
 @pytest.fixture()
 def test_case():
     return "3028905"
+
 
 @pytest.fixture()
 def add_to_prefs_list():
