@@ -131,7 +131,7 @@ class AutofillPopup(BasePage):
     def verify_update_password_doorhanger(self, nav, expected_text):
         """
         Wait for and verify that the 'Update password' doorhanger is displayed
-        with the expected text.
+        with the expected text
         """
         # Wait for and open the doorhanger
         nav.expect(lambda _: nav.element_visible("password-notification-key"))
