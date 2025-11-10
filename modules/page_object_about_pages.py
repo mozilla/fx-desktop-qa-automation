@@ -10,6 +10,7 @@ from selenium.common.exceptions import (
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
 from modules.page_object_generics import GenericPage
@@ -194,10 +195,28 @@ class AboutLogins(BasePage):
             if delete_files_regex.match(file):
                 os.remove(passwords_csv)
 
-    def verify_csv_export(self, downloads_folder: str, filename: str):
-        """Wait until the exported CSV file is present in the target folder."""
+    def verify_csv_export(self, downloads_folder: str, filename: str, timeout: int = 20):
+        """
+        Wait until the exported CSV file is present, non-empty, and readable.
+        """
         csv_file = os.path.join(downloads_folder, filename)
-        self.wait.until(lambda _: os.path.exists(csv_file))
+
+        def file_ready(_):
+            if not os.path.exists(csv_file):
+                return False
+            try:
+                # Check if file has data
+                if os.path.getsize(csv_file) == 0:
+                    return False
+                # Try to open and read a few bytes to confirm readability
+                with open(csv_file, "r", encoding="utf-8") as f:
+                    f.read(10)
+                return True
+            except (OSError, PermissionError):
+                # File exists but is not yet fully written or locked — retry
+                return False
+
+        WebDriverWait(self.driver, timeout).until(file_ready)
         return csv_file
 
     def add_login(self, origin: str, username: str, password: str):
