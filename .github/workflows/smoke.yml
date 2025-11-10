@@ -80,6 +80,7 @@ jobs:
           echo $gecko_url
           Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
+          echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         shell: pwsh
       - name: Download Beta
         if: ${{ !inputs.win_installer_link }}
@@ -107,7 +108,7 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          pipenv run pytest --geckodriver geckodriver.exe $(cat selected_tests)
+          pipenv run pytest $(cat selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -120,7 +121,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run python choose_ci_set.py
-          pipenv run pytest --geckodriver geckodriver.exe $(cat selected_tests)
+          pipenv run pytest $(cat selected_tests)
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {

@@ -75,6 +75,28 @@
     "strategy": "id",
     "groups": []
   },
+  "search-shortcuts-group": {
+    "selectorData": "oneClickSearchProvidersGroup",
+    "strategy": "id",
+    "groups": []
+  },
+  "search-engine-list": {
+    "selectorData": "engineList",
+    "strategy": "id",
+    "groups": []
+  },
+
+  "remove-search-engine-button": {
+    "selectorData": "removeEngineButton",
+    "strategy": "id",
+    "groups": []
+  },
+
+  "restore-default-search-engines-button": {
+    "selectorData": "restoreDefaultSearchEngines",
+    "strategy": "id",
+    "groups": []
+  },
   "saved-payments-button": {
     "selectorData": "[data-l10n-id='autofill-payment-methods-manage-payments-button']",
     "strategy": "css",
@@ -584,11 +606,12 @@
     "groups": []
   },
 
-    "unknown-content-type-dialog": {
-        "selectorData": "unknownContentTypeWindow",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    }
+  "unknown-content-type-dialog": {
+    "selectorData": "unknownContentTypeWindow",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  }
+
 }
