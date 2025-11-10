@@ -202,18 +202,23 @@ class AboutLogins(BasePage):
         csv_file = os.path.join(downloads_folder, filename)
 
         def file_ready(_):
+            # Check if the file path exists. If not, continue
             if not os.path.exists(csv_file):
                 return False
             try:
-                # Check if file has data
+                # Verify that the file isn't empty
                 if os.path.getsize(csv_file) == 0:
                     return False
-                # Try to open and read a few bytes to confirm readability
+
+                # Attempt to read a few bytes to ensure the file is unlocked
+                # and readable (handles cases where the OS is still writing).
                 with open(csv_file, "r", encoding="utf-8") as f:
                     f.read(10)
                 return True
-            except (OSError, PermissionError):
-                # File exists but is not yet fully written or locked — retry
+
+            except (OSError, PermissionError) as e:
+                # Log and retry until timeout instead of failing immediately
+                logging.debug(f"[verify_csv_export] File not ready yet: {e}")
                 return False
 
         WebDriverWait(self.driver, timeout).until(file_ready)
