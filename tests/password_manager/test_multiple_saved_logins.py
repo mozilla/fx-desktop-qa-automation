@@ -45,7 +45,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     keyboard = Controller()
     autofill_popup = AutofillPopup(driver)
 
-    # Save 3 sets of credentials for facebook
+    # Save 3 sets of credentials for Saucedemo
     about_logins.open()
     about_logins.add_login(SAUCEDEMO_URL, USERNAME, PASSWORD)
     time.sleep(0.8)

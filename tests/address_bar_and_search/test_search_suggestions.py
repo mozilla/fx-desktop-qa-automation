@@ -31,14 +31,14 @@ def test_search_suggests_enabled(driver: Firefox):
     if not suggestions_checkbox.is_selected():
         suggestions_checkbox.click()
 
-    nonsponsored_checkbox = prefs.get_element("firefox-suggest-nonsponsored")
+    nonsponsored_checkbox = prefs.get_element("firefox-suggestions")
     assert nonsponsored_checkbox.is_selected(), (
-        "'firefox-suggest-nonsponsored' checkbox not checked"
+        "'firefox-suggestions' checkbox not checked"
     )
 
-    sponsored_checkbox = prefs.get_element("firefox-suggest-sponsored")
+    sponsored_checkbox = prefs.get_element("firefox-trending-suggestions")
     assert sponsored_checkbox.is_selected(), (
-        "'firefox-suggest-sponsored' checkbox not checked"
+        "'firefox-trending-suggestions' checkbox not checked"
     )
 
     # Check for sponsored suggestion

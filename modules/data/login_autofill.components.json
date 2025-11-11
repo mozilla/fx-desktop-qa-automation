@@ -31,6 +31,12 @@
         ]
     },
 
+    "facebook-credentials": {
+        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "username-login-field": {
         "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='username']",
         "strategy": "xpath",
