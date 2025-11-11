@@ -2611,6 +2611,13 @@ Path to .json: modules/data/login_autofill.components.json
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
 Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Location: bsky page load
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: facebook-credentials
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
+Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
 Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
