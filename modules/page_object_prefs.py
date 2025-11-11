@@ -512,6 +512,7 @@ class AboutPrefs(BasePage):
         self.find_in_settings("pay")
         payment_button = self.find_element(By.XPATH, "//*[contains(@label, 'payment methods')]")
         logging.warning("Payment button: " + payment_button.get_attribute("label"))
+        logging.warning("Firefox Version: " + self.driver.capabilities.get("browserVersion"))
         payment_button.click()
         iframe = self.get_element("browser-popup")
         return iframe
@@ -551,6 +552,7 @@ class AboutPrefs(BasePage):
         self.find_in_settings("pay")
         addresses_button = self.find_element(By.XPATH, "//*[(name()='button' or name()='moz-box-button') and contains(@label, 'addresses')]")
         logging.warning("Address button: " + addresses_button.get_attribute("label"))
+        logging.warning("Firefox Version: " + self.driver.capabilities.get("browserVersion"))
         addresses_button.click()
         iframe = self.get_element("browser-popup")
         return iframe
