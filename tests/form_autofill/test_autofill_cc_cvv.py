@@ -30,6 +30,9 @@ def test_autofill_cc_cvv(
         autofill_popup: AutofillPopup instance
         util: Utilities instance
     """
+    caps = driver.capabilities
+    print("Firefox Version: " + caps.get("browserVersion"))
+    print("Gecko Version: " + caps.get("moz:geckodriverVersion"))
 
     # Open credit card autofill page
     credit_card_autofill.open()
