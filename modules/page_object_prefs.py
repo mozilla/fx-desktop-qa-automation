@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 import re
 from time import sleep
 from typing import List, Literal
@@ -507,11 +506,9 @@ class AboutPrefs(BasePage):
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
-        Using a xpath search because the button elements and attributes are different between windows and other OS
         """
         self.find_in_settings("pay")
-        payment_button = self.find_element(By.XPATH, "//*[contains(@label, 'payment methods')]")
-        payment_button.click()
+        self.click_on("saved-payments-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -548,8 +545,7 @@ class AboutPrefs(BasePage):
         Returns the iframe object for the dialog panel in the popup
         """
         self.find_in_settings("pay")
-        addresses_button = self.find_element(By.XPATH, "//*[(name()='button' or name()='moz-box-button') and contains(@label, 'addresses')]")
-        addresses_button.click()
+        self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
