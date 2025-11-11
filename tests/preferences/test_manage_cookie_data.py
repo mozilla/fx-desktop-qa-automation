@@ -14,27 +14,25 @@ def test_case():
 
 
 COOKIE_SITE = "google.com"
+TEST_SITES = [
+    "https://www.google.com",
+    "https://www.jetbrains.com",
+    "https://www.wikipedia.com",
+]
 
 
-@pytest.mark.headed
 @pytest.mark.noxvfb
 def test_manage_cookie_data(driver: Firefox):
     """
-    C143633 - Cookies and Site Data can be managed
-    via the "Managed Cookies and Site Data" pane.
+    C143633 - Cookies and Site Data can be managed via the "Managed Cookies and Site Data" panel.
     """
     # Initialize objects
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
 
     # Visit some sites to add cookies
-    for site in [
-        "https://www.google.com",
-        "https://www.jetbrains.com",
-        "https://www.wikipedia.com",
-    ]:
+    for site in TEST_SITES:
         driver.get(site)
-        sleep(1)
 
     # Open the Manage Cookies dialog
     about_prefs.open()
