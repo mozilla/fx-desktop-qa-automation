@@ -4,7 +4,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutPrefs
+from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
 
@@ -16,25 +16,16 @@ def test_case():
 COOKIE_SITE = "google.com"
 
 
+@pytest.mark.headed
 @pytest.mark.noxvfb
 def test_manage_cookie_data(driver: Firefox):
     """
     C143633 - Cookies and Site Data can be managed
     via the "Managed Cookies and Site Data" pane.
     """
+    # Initialize objects
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
-
-    def open_manage_cookies_data_dialog():
-        """Open the 'Manage Cookies and Site Data' dialog safely."""
-        about_prefs.open()
-
-        # Wait until the Manage browsing data button is clickable
-        about_prefs.element_clickable("prefs-button", labels=["Manage browsing data"])
-        manage_data_popup = about_prefs.press_button_get_popup_dialog_iframe(
-            "Manage browsing data"
-        )
-        ba.switch_to_iframe_context(manage_data_popup)
 
     # Visit some sites to add cookies
     for site in [
@@ -43,9 +34,11 @@ def test_manage_cookie_data(driver: Firefox):
         "https://www.wikipedia.com",
     ]:
         driver.get(site)
+        sleep(1)
 
     # Open the Manage Cookies dialog
-    open_manage_cookies_data_dialog()
+    about_prefs.open()
+    about_prefs.open_manage_cookies_data_dialog()
 
     # Select and remove one cookie
     cookie_item = about_prefs.get_manage_data_site_element(COOKIE_SITE)
@@ -63,6 +56,7 @@ def test_manage_cookie_data(driver: Firefox):
 
     # Save changes and handle confirmation alert
     about_prefs.get_element("manage-data-save-changes-button").click()
+    sleep(1)
 
     try:
         alert = about_prefs.get_alert()
@@ -76,7 +70,7 @@ def test_manage_cookie_data(driver: Firefox):
     sleep(1)
 
     # Reopen and confirm cookies cleared
-    open_manage_cookies_data_dialog()
+    about_prefs.open_manage_cookies_data_dialog()
     cookie_list_post_remove = about_prefs.get_elements("cookies-manage-data-sitelist")
     assert len(cookie_list_post_remove) == 1
     logging.info("All cookie data cleared successfully.")
