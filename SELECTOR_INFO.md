@@ -663,16 +663,16 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: firefox-suggest-nonsponsored
-Selector Data: "firefoxSuggestNonsponsored"
+Selector Name: firefox-suggestions
+Selector Data: showSearchSuggestionsFirstCheckbox
 Description: The Suggestions from Firefox check-box
 Location: about:preferences#search > Address Bar - Firefox Suggest
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: firefox-suggest-sponsored
-Selector Data: "firefoxSuggestSponsored"
-Description: The Suggestions from sponsors check-box
+Selector Name: firefox-trending-suggestions
+Selector Data: showTrendingSuggestions
+Description: Trending search suggestions check-box
 Location: about:preferences#search > Address Bar - Firefox Suggest
 Path to .json: modules/data/about_prefs.components.json
 ```
