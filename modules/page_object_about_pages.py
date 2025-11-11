@@ -195,7 +195,9 @@ class AboutLogins(BasePage):
             if delete_files_regex.match(file):
                 os.remove(passwords_csv)
 
-    def verify_csv_export(self, downloads_folder: str, filename: str, timeout: int = 20):
+    def verify_csv_export(
+        self, downloads_folder: str, filename: str, timeout: int = 20
+    ):
         """
         Wait until the exported CSV file is present, non-empty, and readable.
         """
