@@ -18,7 +18,6 @@ SEARCH_ENGINES = [
 ]
 
 
-@pytest.mark.smoke
 def test_no_search_engine_suggestions_in_private_window(driver: Firefox):
     """
     C3028799 - Verify that in a New Private Window, after selecting a search shortcut,

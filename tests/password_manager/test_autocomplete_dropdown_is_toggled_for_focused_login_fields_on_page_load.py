@@ -6,7 +6,7 @@ from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 from modules.page_object_generics import GenericPage
 
-BSKY_URL = "https://bsky.app/"
+TEST_PAGE = "https://www.facebook.com/"
 USERNAME = "username1"
 PASSWORD = "password1"
 USERNAME2 = "username2"
@@ -24,7 +24,6 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
-@pytest.mark.unstable(reason="Bug 1996241")
 def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     driver: Firefox,
 ):
@@ -35,22 +34,21 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     tabs = TabBar(driver)
     about_logins = AboutLogins(driver)
     login_autofill = LoginAutofill(driver)
-    generic_page = GenericPage(driver)
 
     # Go to a site that have login field focus on page load
-    GenericPage(driver, url=BSKY_URL).open()
+    GenericPage(driver, url=TEST_PAGE).open()
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
     # Save 2 set of credentials for the visited site
     about_logins.open()
-    about_logins.add_login(BSKY_URL, USERNAME, PASSWORD)
-    about_logins.add_login(BSKY_URL, USERNAME2, PASSWORD2)
+    about_logins.add_login(TEST_PAGE, USERNAME, PASSWORD)
+    about_logins.add_login(TEST_PAGE, USERNAME2, PASSWORD2)
 
     # Autocomplete dropdown is toggled for focused login fields on page load
     tabs.click_tab_by_index(1)
     driver.switch_to.window(driver.window_handles[0])
-    generic_page.get_element("bsky-signin-button").click()
+
     with driver.context(driver.CONTEXT_CHROME):
-        username_element = login_autofill.get_element("bsky-credentials")
+        username_element = login_autofill.get_element("facebook-credentials")
         assert username_element.get_attribute("ac-value") == USERNAME

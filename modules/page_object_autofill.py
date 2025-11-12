@@ -843,6 +843,28 @@ class LoginAutofill(Autofill):
             self.parent.wait.until(lambda _: element.get_attribute("value") == "")
             return element
 
+        def generate_secure_password(self, context_menu):
+            """
+            Opens the login autofill page, triggers the 'Suggest Strong Password'
+            option from the context menu, confirms the generated password,
+            and waits until the field is filled.
+            """
+            self.parent.open()
+            self.parent.context_click("password-login-field")
+            context_menu.click_and_hide_menu("context-menu-suggest-strong-password")
+
+            # Switch to chrome context to click 'Use a Securely Generated Password'
+            with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):
+                self.parent.get_element("generated-securely-password").click()
+
+            # Wait until the password field is actually filled
+            self.parent.expect(
+                lambda _: (
+                        (elem := self.parent.get_element("password-login-field"))
+                        and elem.get_attribute("value") not in ("", None)
+                )
+            )
+
 
 class TextAreaFormAutofill(Autofill):
     """
