@@ -1,3 +1,4 @@
+import time
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
@@ -126,3 +127,19 @@ class AutofillPopup(BasePage):
         Returns: str: The primary value extracted from the element's attribute
         """
         return element.get_attribute("ac-value")
+
+    @BasePage.context_chrome
+    def verify_update_password_doorhanger(self, nav, expected_text):
+        """
+        Wait for and verify that the 'Update password' doorhanger is displayed
+        with the expected text
+        """
+        # Wait for and open the doorhanger
+        time.sleep(1)
+        nav.expect(lambda _: nav.element_visible("password-notification-key"))
+        nav.click_on("password-notification-key")
+
+        # Verify the doorhanger text
+        self.expect(
+            lambda _: expected_text in self.get_element("password-update-doorhanger").text
+        )
