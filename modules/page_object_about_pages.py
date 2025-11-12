@@ -200,28 +200,39 @@ class AboutLogins(BasePage):
         Wait until the exported CSV file is present, non-empty, and readable.
         """
         csv_file = os.path.join(downloads_folder, filename)
+        partial_file = csv_file + ".part"
 
         def file_ready(_):
-            # Check if the file path exists. If not, continue
-            if not os.path.exists(csv_file):
+            # Checks if partial file exists
+            if os.path.exists(partial_file):
+                logging.debug(f"[verify_csv_export] Found partial file: {partial_file}")
                 return False
+
+            # File must exist
+            if not os.path.exists(csv_file):
+                logging.debug(f"[verify_csv_export] CSV not yet found at {csv_file}")
+                return False
+
             try:
-                # Verify that the file isn't empty
-                if os.path.getsize(csv_file) == 0:
+                # Checks file must have non-zero size
+                size = os.path.getsize(csv_file)
+                if size == 0:
+                    logging.debug("[verify_csv_export] CSV file is empty.")
                     return False
 
-                # Attempt to read a few bytes to ensure the file is unlocked
-                # and readable (handles cases where the OS is still writing).
+                # Try to read the first few bytes to ensure it's fully written and unlocked
                 with open(csv_file, "r", encoding="utf-8") as f:
                     f.read(10)
+                logging.debug(f"[verify_csv_export] CSV ready (size={size} bytes).")
                 return True
 
             except (OSError, PermissionError) as e:
-                # Log and retry until timeout instead of failing immediately
+                # File is not yet fully written or locked — retry
                 logging.debug(f"[verify_csv_export] File not ready yet: {e}")
                 return False
 
-        WebDriverWait(self.driver, timeout).until(file_ready)
+        # Poll every 0.5s for up to 40 seconds
+        WebDriverWait(self.driver, timeout, poll_frequency=0.5).until(file_ready)
         return csv_file
 
     def add_login(self, origin: str, username: str, password: str):
