@@ -197,41 +197,49 @@ class AboutLogins(BasePage):
 
     def verify_csv_export(self, downloads_folder: str, filename: str, timeout: int = 40):
         """
-        Wait until the exported CSV file is present, non-empty, and readable.
+        Wait until the exported CSV file is fully written, non-empty, and readable.
         """
+        import time
+
         csv_file = os.path.join(downloads_folder, filename)
         partial_file = csv_file + ".part"
 
         def file_ready(_):
-            # Checks if partial file exists
+            # If Firefox still writes .part, not done yet
             if os.path.exists(partial_file):
-                logging.debug(f"[verify_csv_export] Found partial file: {partial_file}")
+                logging.debug(f"[verify_csv_export] Partial file still present: {partial_file}")
                 return False
 
-            # File must exist
+            # Check existence
             if not os.path.exists(csv_file):
                 logging.debug(f"[verify_csv_export] CSV not yet found at {csv_file}")
                 return False
 
             try:
-                # Checks file must have non-zero size
-                size = os.path.getsize(csv_file)
-                if size == 0:
-                    logging.debug("[verify_csv_export] CSV file is empty.")
+                # Check file size stabilization
+                size1 = os.path.getsize(csv_file)
+                time.sleep(1)
+                size2 = os.path.getsize(csv_file)
+                if size1 != size2:
+                    logging.debug(
+                        f"[verify_csv_export] File size changing ({size1} → {size2}), waiting..."
+                    )
                     return False
 
-                # Try to read the first few bytes to ensure it's fully written and unlocked
+                # Check readability
                 with open(csv_file, "r", encoding="utf-8") as f:
-                    f.read(10)
-                logging.debug(f"[verify_csv_export] CSV ready (size={size} bytes).")
+                    head = f.read(20)
+                    if not head:
+                        logging.debug("[verify_csv_export] File empty after read attempt.")
+                        return False
+
+                logging.debug(f"[verify_csv_export] CSV ready (size={size2} bytes).")
                 return True
 
             except (OSError, PermissionError) as e:
-                # File is not yet fully written or locked — retry
                 logging.debug(f"[verify_csv_export] File not ready yet: {e}")
                 return False
 
-        # Poll every 0.5s for up to 40 seconds
         WebDriverWait(self.driver, timeout, poll_frequency=0.5).until(file_ready)
         return csv_file
 
