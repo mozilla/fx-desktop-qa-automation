@@ -1,3 +1,4 @@
+import time
 from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
@@ -134,6 +135,7 @@ class AutofillPopup(BasePage):
         with the expected text
         """
         # Wait for and open the doorhanger
+        time.sleep(1)
         nav.expect(lambda _: nav.element_visible("password-notification-key"))
         nav.click_on("password-notification-key")
 
