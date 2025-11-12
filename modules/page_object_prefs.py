@@ -16,7 +16,7 @@ from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
-from modules.util import Utilities
+from modules.util import BrowserActions, Utilities
 
 
 class AboutPrefs(BasePage):
@@ -784,6 +784,25 @@ class AboutPrefs(BasePage):
         # Close the dialog with Escape
         dialog = self.get_element("unknown-content-type-dialog")
         dialog.send_keys(Keys.ESCAPE)
+        return self
+
+    def open_manage_cookies_data_dialog(self) -> BasePage:
+        """
+        Open the 'Manage Cookies and Site Data' dialog safely.
+
+        Waits for the 'Manage browsing data' button to be clickable, clicks it to open
+        the dialog, and switches the driver context to the dialog's iframe. After
+        calling this method, subsequent element interactions will be within the
+        dialog's iframe context.
+
+        Note: This method assumes the about:preferences page is already open.
+        Call self.open() first if needed.
+        """
+        self.element_clickable("prefs-button", labels=["Manage browsing data"])
+        manage_data_popup = self.press_button_get_popup_dialog_iframe(
+            "Manage browsing data"
+        )
+        BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
         return self
 
 
