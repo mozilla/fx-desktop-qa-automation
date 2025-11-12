@@ -201,13 +201,13 @@
     "strategy": "id",
     "groups": []
   },
-  "firefox-suggest-nonsponsored": {
-    "selectorData": "firefoxSuggestNonsponsored",
+  "firefox-suggestions": {
+    "selectorData": "showSearchSuggestionsFirstCheckbox",
     "strategy": "id",
     "groups": []
   },
-  "firefox-suggest-sponsored": {
-    "selectorData": "firefoxSuggestSponsored",
+  "firefox-trending-suggestions": {
+    "selectorData": "showTrendingSuggestions",
     "strategy": "id",
     "groups": []
   },
