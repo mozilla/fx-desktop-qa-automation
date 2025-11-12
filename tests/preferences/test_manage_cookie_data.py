@@ -71,4 +71,3 @@ def test_manage_cookie_data(driver: Firefox):
     about_prefs.open_manage_cookies_data_dialog()
     cookie_list_post_remove = about_prefs.get_elements("cookies-manage-data-sitelist")
     assert len(cookie_list_post_remove) == 1
-    logging.info("All cookie data cleared successfully.")
