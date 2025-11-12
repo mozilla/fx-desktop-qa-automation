@@ -93,6 +93,10 @@ jobs:
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
+          $env_contents = @"
+          STARFOX_MANIFEST='.\manifests\incident.yaml'
+          "@
+          New-Item -Name .env -Value $env_contents -ItemType File -Force
           Invoke-WebRequest -Uri ${{ inputs.win_installer_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
@@ -165,6 +169,7 @@ jobs:
         if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "STARFOX_MANIFEST='manifest/incident.yaml'" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
@@ -228,6 +233,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "STARFOX_MANIFEST='manifest/incident.yaml'" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;
