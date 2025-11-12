@@ -22,7 +22,7 @@ def test_bookmark_website_via_star(driver: Firefox):
     """
     caps = driver.capabilities
     print(f"Browser version: {caps['browserVersion']}")
-    print(f"Gecko driver: {caps['moz:geckodriverVersion']}")`
+    print(f"Gecko driver: {caps['moz:geckodriverVersion']}")
     # Instantiate objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
