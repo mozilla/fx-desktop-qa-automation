@@ -122,7 +122,7 @@ class MyHttpRequestHandler(SimpleHTTPRequestHandler):
     region = None
 
     def translate_path(self, path):
-        """switch the default directory where the html files are served from."""
+        """switch the default directory where the HTML files are served from."""
         base_dir = os.path.join(current_dir, "sites", self.live_site, self.region)
         return os.path.join(base_dir, path.lstrip("/"))
 
