@@ -141,5 +141,6 @@ class AutofillPopup(BasePage):
 
         # Verify the doorhanger text
         self.expect(
-            lambda _: expected_text in self.get_element("password-update-doorhanger").text
+            lambda _: expected_text
+            in self.get_element("password-update-doorhanger").text
         )
