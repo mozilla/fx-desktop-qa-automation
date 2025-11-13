@@ -25,7 +25,7 @@ def close_file_manager(sys_platform):
     # Let the test run first
     yield
 
-    # --- macOS : Finder auto-unzips directories ---
+    # macOS : Finder auto-unzips directories ---
     if sys_platform == "Darwin":
         subprocess.run(
             ["osascript", "-e", 'tell application "Finder" to close windows'],
@@ -33,7 +33,7 @@ def close_file_manager(sys_platform):
             stderr=subprocess.DEVNULL,
         )
 
-    # --- Ubuntu / Linux : Archive Manager AND LibreOffice auto-open ZIPs ---
+    # Ubuntu / Linux : Archive Manager AND LibreOffice auto-open ZIPs ---
     elif sys_platform == "Linux":
         # Close common Ubuntu archive managers
         for proc_name in (
