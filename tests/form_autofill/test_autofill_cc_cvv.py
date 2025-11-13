@@ -1,4 +1,5 @@
 import json
+import logging
 
 import pytest
 from selenium.webdriver import Firefox
@@ -30,9 +31,12 @@ def test_autofill_cc_cvv(
         autofill_popup: AutofillPopup instance
         util: Utilities instance
     """
+    caps = driver.capabilities
+    logging.warning(f"Browser: {caps['browserVersion']}")
+    logging.warning(f"GeckoDriver: {caps['moz:geckodriverVersion']}")
 
     # Open credit card autofill page
-    credit_card_autofill.open()
+    # credit_card_autofill.open()
 
     # scroll to first form field
     credit_card_autofill.scroll_to_form_field()
