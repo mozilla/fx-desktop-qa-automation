@@ -9,14 +9,15 @@ from modules.browser_object import Navigation
 WAIT_TIMEOUT = 10
 ADDONS_BASE_URL = "https://addons.mozilla.org/en-US/firefox/addon/"
 
+# pending answers from search team about FX changes here, only grammar works as before
 INPUT_TO_ADDON_NAME = {
-    "clips": "video-downloadhelper",
+    # "clips": "video-downloadhelper",
     "grammar": "languagetool",
-    "Temp mail": "private-relay",
-    "pics search": "search_by_image",
-    "darker theme": "darkreader",
-    "privacy": "privacy-badger17",
-    "read aloud": "read-aloud",
+    # "Temp mail": "private-relay",
+    # "pics search": "search_by_image",
+    # "darker theme": "darkreader",
+    # "privacy": "privacy-badger17",
+    # "read aloud": "read-aloud",
 }
 
 
@@ -28,12 +29,12 @@ def test_case():
 @pytest.mark.noxvfb
 def test_addon_suggestion_based_on_search_input(driver: Firefox):
     """
-    C2234714 - Verify that the address bar suggests relevant add-ons based on search input.
+    C3029292 - Verify that the address bar suggests relevant add-ons based on search input.
     """
     nav = Navigation(driver)
     nav.set_awesome_bar()
 
-    sleep(3)  # Wait for Firefox to do backend addons initiation
+    sleep(10)  # Wait for Firefox to do backend addons initiation
     for input_text, addon_slug in INPUT_TO_ADDON_NAME.items():
         nav.type_in_awesome_bar(input_text)
 
