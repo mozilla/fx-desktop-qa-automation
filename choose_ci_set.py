@@ -114,6 +114,8 @@ def convert_manifest_to_list(manifest_loc):
     manifest = yaml.safe_load(open(manifest_loc))
     toplevel = [".", "tests"]
     tests = []
+    if manifest:
+        print(f"Reading {manifest_loc}")
     for suite in manifest:
         print(suite)
         if suite == "add_manifest":
@@ -122,20 +124,20 @@ def convert_manifest_to_list(manifest_loc):
                     convert_manifest_to_list(SLASH.join(["manifests", linked_manifest]))
                 )
         for test in manifest[suite]:
-            print(f"   {test}")
+            # print(f"   {test}")
             addtest = False
             test_name = f"{test}.py"
             if manifest[suite][test] == "pass":
                 addtest = True
             elif isinstance(manifest[suite][test], dict):
-                print(f"==={manifest[suite][test].get(sysname())}===")
+                # print(f"==={manifest[suite][test].get(sysname())}===")
                 if manifest[suite][test].get(sysname()) == "pass":
                     addtest = True
                 else:
                     for subtest in manifest[suite][test]:
                         if subtest in ["mac", "win", "linux"]:
                             continue
-                        print(f"        {subtest}")
+                        # print(f"        {subtest}")
                         test_name = f"{test}.py::{subtest}"
                         if isinstance(manifest[suite][test][subtest], dict):
                             if manifest[suite][test][subtest].get(sysname()) == "pass":

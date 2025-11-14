@@ -512,7 +512,7 @@ def driver(
     finally:
         if hard_quit:
             return
-        if "driver" in locals() or "driver" in globals():
+        if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 
