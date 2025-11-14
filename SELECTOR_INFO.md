@@ -3273,7 +3273,12 @@ Description: Searchbar search engine button
 Location: Searchbar
 Path to .json: modules/data/navigation.components.json
 ```
-searchbar-search-engine
+```
+Selector Name: search-mode-chicklet
+Selector Data: label.searchmode-switcher-title
+Description: Search mode chicklet
+Location: Address bar search mode
+Path to .json: modules/data/navigation.components.json
 #### panel_ui
 ```
 Selector name: panel-ui-button

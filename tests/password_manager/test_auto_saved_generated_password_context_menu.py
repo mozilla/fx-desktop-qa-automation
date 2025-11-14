@@ -36,9 +36,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     login_autofill.LoginForm(login_autofill).generate_secure_password(context_menu)
 
     # Verify the update doorhanger is displayed
-    autofill_popup_panel.verify_update_password_doorhanger(
-        nav, UPDATE_DOORHANGER_TEXT
-    )
+    autofill_popup_panel.verify_update_password_doorhanger(nav, UPDATE_DOORHANGER_TEXT)
 
     # Navigate to about:logins page
     tabs.switch_to_new_tab()
