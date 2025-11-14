@@ -155,6 +155,7 @@ def convert_manifest_to_list(manifest_loc):
 
 
 if __name__ == "__main__":
+    print("Selecting test set...")
     if os.path.exists(".env"):
         with open(".env") as fh:
             contents = fh.read()
