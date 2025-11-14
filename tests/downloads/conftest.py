@@ -37,8 +37,8 @@ def close_file_manager(sys_platform):
     elif sys_platform == "Linux":
         # Close common Ubuntu archive managers
         for proc_name in (
-                "file-roller",
-                "org.gnome.ArchiveManager",
+            "file-roller",
+            "org.gnome.ArchiveManager",
         ):
             subprocess.run(
                 ["pkill", "-f", proc_name],
@@ -48,10 +48,10 @@ def close_file_manager(sys_platform):
 
         # Close LibreOffice Writer and related processes
         for proc_name in (
-                "libreoffice",
-                "libreoffice-writer",
-                "soffice",
-                "soffice.bin",
+            "libreoffice",
+            "libreoffice-writer",
+            "soffice",
+            "soffice.bin",
         ):
             subprocess.run(
                 ["pkill", "-f", proc_name],
