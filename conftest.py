@@ -203,7 +203,9 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
 def _get_version(driver: Firefox):
     driver.get("chrome://browser/content/aboutDialog.xhtml")
     version_el = driver.find_element(By.ID, "version")
-    return version_el.text
+    version = version_el.text
+    driver.get("about:blank")
+    return version
 
 
 @pytest.fixture()
