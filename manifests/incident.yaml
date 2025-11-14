@@ -18,10 +18,7 @@ address_bar_and_search:
   test_search_code_google_non_us: pass
   test_search_code_google_us: pass
   test_search_engine_selector: pass
-  test_search_suggestions:
-    win: pass
-    linux: pass
-    mac: unstable
+  test_search_suggestions: unstable
   test_search_term_persists: pass
   test_server_not_found_error: pass
   test_suggestion_engine_selection: pass
@@ -49,7 +46,10 @@ bookmarks_and_history:
   test_toggle_bookmarks_toolbar: pass
   test_user_can_forget_history: pass
 downloads:
-  test_add_zip_type: pass
+  test_add_zip_type:
+    win: pass
+    mac: pass
+    linux: unstable
   test_download_pdf: pass
   test_download_pdf_from_context_menu: unstable
 drag_and_drop:

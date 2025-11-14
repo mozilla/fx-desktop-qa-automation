@@ -7,7 +7,6 @@ from subprocess import check_output
 import yaml
 
 CI_MANIFEST = "manifests/ci.yaml"
-CI_MARK = "@pytest.mark.ci"
 HEADED_MARK = "@pytest.mark.headed"
 MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
