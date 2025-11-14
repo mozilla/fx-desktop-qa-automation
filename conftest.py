@@ -200,6 +200,14 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
     return fullpath
 
 
+def _get_version(driver: Firefox):
+    driver.get("chrome://browser/content/aboutDialog.xhtml")
+    version_el = driver.find_element(By.ID, "version")
+    version = version_el.text
+    driver.get("about:blank")
+    return version
+
+
 @pytest.fixture()
 def opt_headless(request):
     return request.config.getoption("--run-headless")
@@ -496,7 +504,7 @@ def driver(
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        json_metadata["fx_version"] = version
+        json_metadata["fx_version"] = _get_version(driver)
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = suite_id
         json_metadata["test_case"] = test_case
@@ -506,7 +514,7 @@ def driver(
     finally:
         if hard_quit:
             return
-        if "driver" in locals() or "driver" in globals():
+        if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 
