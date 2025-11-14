@@ -6,18 +6,16 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object import Navigation
 
-WAIT_TIMEOUT = 10
 ADDONS_BASE_URL = "https://addons.mozilla.org/en-US/firefox/addon/"
 
 # pending answers from search team about FX changes here, only grammar works as before
 INPUT_TO_ADDON_NAME = {
-    # "clips": "video-downloadhelper",
+    "video download": "video-downloadhelper",
     "grammar": "languagetool",
-    # "Temp mail": "private-relay",
-    # "pics search": "search_by_image",
-    # "darker theme": "darkreader",
-    # "privacy": "privacy-badger17",
-    # "read aloud": "read-aloud",
+    "alias": "private-relay",
+    "image finder": "search_by_image",
+    "darker theme": "darkreader",
+    "accessibility reade": "read-aloud",
 }
 
 
