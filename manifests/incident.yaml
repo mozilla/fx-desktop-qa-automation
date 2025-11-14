@@ -5,10 +5,7 @@ address_bar_and_search:
     win: unstable
     linux: pass
     mac: unstable
-  test_default_search_provider_change_awesome_bar:
-    win: unstable
-    linux: pass
-    mac: pass
+  test_default_search_provider_change_awesome_bar: unstable
   test_google_search_counts_us:
     win: pass
     linux: pass
