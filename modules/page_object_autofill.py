@@ -860,8 +860,8 @@ class LoginAutofill(Autofill):
             # Wait until the password field is actually filled
             self.parent.expect(
                 lambda _: (
-                        (elem := self.parent.get_element("password-login-field"))
-                        and elem.get_attribute("value") not in ("", None)
+                    (elem := self.parent.get_element("password-login-field"))
+                    and elem.get_attribute("value") not in ("", None)
                 )
             )
 
