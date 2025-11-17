@@ -645,6 +645,12 @@
         "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
         "strategy": "css",
         "groups": ["doNotCache"]
+    },
+
+    "history-button-search-mode": {
+        "selectorData": "search-button-history",
+        "strategy": "id",
+        "groups": []
     }
 
 }

@@ -996,3 +996,15 @@ class Navigation(BasePage):
         self.panel_ui.navigate_to_customize_toolbar()
         self.customize.add_widget_to_toolbar("search-bar")
         return self
+
+    @BasePage.context_chrome
+    def click_history_button_search_mode(self) -> None:
+        """
+        Click the 'History' button in the search mode.
+        Waits until the button is visible and clickable before performing the click.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(lambda _: self.get_element("history-button-search-mode").is_displayed())
+
+        # Click the button
+        self.get_element("history-button-search-mode").click()

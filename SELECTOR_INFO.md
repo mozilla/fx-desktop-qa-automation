@@ -3273,6 +3273,13 @@ Description: Searchbar search engine button
 Location: Searchbar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: history-button-search-mode
+Selector Data: search-button-history
+Description: Histroy button search mode
+Location: Search mode
+Path to .json: modules/data/navigation.components.json
+```
 searchbar-search-engine
 #### panel_ui
 ```
