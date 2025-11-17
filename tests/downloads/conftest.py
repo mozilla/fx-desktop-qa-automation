@@ -1,5 +1,4 @@
 import subprocess
-import sys
 
 import pytest
 
@@ -20,8 +19,6 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
-
-
 
 
 def _close_macos_windows(app_name: str) -> None:
