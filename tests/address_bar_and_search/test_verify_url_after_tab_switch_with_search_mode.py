@@ -9,7 +9,7 @@ TEST_WEBSITE = "https://www.firefox.com/"
 
 @pytest.fixture()
 def test_case():
-    return "3028997"
+    return "3028842"
 
 
 def test_verify_url_after_tab_switch_with_search_mode(driver: Firefox):
