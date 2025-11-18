@@ -39,7 +39,7 @@ def test_search_mode_appears_and_suggestions_update(driver):
     nav.wait_for_suggestions_present()
 
     # 4) Click the USB and select another engine
-    nav.open_usb_and_select_engine(GENERAL_ENGINE)
+    nav.open_usb_and_select_option(GENERAL_ENGINE)
 
     # 5) Search mode chip appears
     nav.assert_search_mode_chip_visible()
@@ -74,7 +74,7 @@ def test_private_mode_repeat_after_enabling_pref(driver):
         actions.search(QUERY, with_enter=False)
 
         nav.wait_for_suggestions_present()
-        nav.open_usb_and_select_engine(GENERAL_ENGINE)
+        nav.open_usb_and_select_option(GENERAL_ENGINE)
         nav.assert_search_mode_chip_visible()
         nav.wait_for_suggestions_present()
 
