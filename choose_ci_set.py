@@ -165,8 +165,10 @@ if __name__ == "__main__":
 
     if os.environ.get("TESTRAIL_REPORT"):
         # Run all tests if this is a scheduled run
+        run_list = convert_manifest_to_list("manifests/smoke.yaml")
+        run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
-            fh.write("tests")
+            fh.write("\n".join(run_list))
             sys.exit(0)
 
     if os.environ.get("STARFOX_MANIFEST"):
@@ -203,8 +205,10 @@ if __name__ == "__main__":
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run all the tests (no files as arguments) if main conftest or basepage changed
+        run_list = convert_manifest_to_list("manifests/all.yaml")
+        run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
-            fh.write("tests")
+            fh.write("\n".join(run_list))
         sys.exit(0)
 
     all_tests = []
