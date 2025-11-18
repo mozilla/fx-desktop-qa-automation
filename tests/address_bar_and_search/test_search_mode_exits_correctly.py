@@ -21,7 +21,7 @@ def test_search_mode_exits_correctly(driver: Firefox):
     C3028848: Search mode is correctly exited
     """
 
-    # Instantiate objects
+    # Instantiate object
     nav = Navigation(driver)
 
     # Open a new tab, focus the urlbar, type some text, and choose an engine from the USB
