@@ -50,7 +50,7 @@ def close_external_apps(sys_platform):
     Generic cleanup fixture for external apps that may auto-open downloads.
 
     Currently:
-      - macOS: closes Finder windows (so auto-unzipped dirs don’t stay open)
+      - macOS: closes Finder windows
       - Linux: kills Archive Manager + LibreOffice processes
     """
     # Let the test run first
