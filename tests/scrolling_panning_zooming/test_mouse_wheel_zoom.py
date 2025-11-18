@@ -1,5 +1,4 @@
 import logging
-import platform
 import time
 
 import pytest
@@ -19,11 +18,7 @@ def test_case():
 TEST_PAGE = "https://www.example.com"
 
 
-# Skip this test if running on macOS
-@pytest.mark.skipif(
-    platform.system() == "Darwin",
-    reason="Test skipped on macOS due to incompatible zoom controls",
-)
+# This test is not compatible with MacOS wheel controls
 def test_mouse_wheel_zoom(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
@@ -38,7 +33,8 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # Locate the main <div> element on the page
     div = driver.find_element(By.TAG_NAME, "div")
-    initial_position = div.location["x"]  # Get the initial X position of the div
+    # Get the initial X position of the div
+    initial_position = div.location["x"]
     logging.info(f"Initial X position of div: {initial_position}")
 
     # Initialize ActionChains for zooming with Ctrl + Mouse Wheel
@@ -55,7 +51,8 @@ def test_mouse_wheel_zoom(driver: Firefox):
     # Switch to chrome context to check zoom level in the toolbar
     with driver.context(driver.CONTEXT_CHROME):
         zoom_button = nav.get_element("toolbar-zoom-level")
-        zoom_level = nav.get_element("toolbar-zoom-level").get_attribute("label")
+        zoom_level = nav.get_element(
+            "toolbar-zoom-level").get_attribute("label")
         logging.info(f"Zoom level after zoom-in: {zoom_level}")
 
         # Assert that the zoom level label is "110%" after zooming in
@@ -71,7 +68,8 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # **Step 2**: Reset zoom to 100% using the keyboard shortcut (Ctrl + 0)
     with driver.context(driver.CONTEXT_CHROME):
-        actions.key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
+        actions.key_down(Keys.CONTROL).send_keys(
+            "0").key_up(Keys.CONTROL).perform()
     time.sleep(1)  # Allow time for reset effect to take place
     reset_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-reset: {reset_position}")
@@ -111,5 +109,6 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # Reset the zoom level back to 100%
     with driver.context(driver.CONTEXT_CHROME):
-        actions.key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
+        actions.key_down(Keys.CONTROL).send_keys(
+            "0").key_up(Keys.CONTROL).perform()
     time.sleep(1)  # Allow time for reset effect to take place

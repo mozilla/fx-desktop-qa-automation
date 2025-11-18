@@ -1,5 +1,3 @@
-import sys
-from os import environ
 from time import sleep
 
 import pytest
@@ -32,10 +30,9 @@ def add_to_prefs_list():
 
 
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
+# Test is unstable in MacOS GHA for now
 def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
     """
     C122539 - Verify that Microphone only permission prompt is successfully displayed when the website asks for microphone permissions
@@ -50,7 +47,8 @@ def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
 
     # Verify that the notification is displayed
     nav.element_visible("popup-notification")
-    nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
+    nav.expect_element_attribute_contains(
+        "popup-notification", "label", "Allow ")
     nav.expect_element_attribute_contains(
         "popup-notification", "name", "mozilla.github.io"
     )

@@ -14,7 +14,7 @@ def test_case():
     return "2241522"
 
 
-@pytest.mark.unstable(reason="Bug 1996004")
+# This test is unstable for now: Bug 1996004
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_correctness(
@@ -34,7 +34,8 @@ def test_password_csv_correctness(
     about_logins.export_passwords_csv(downloads_folder, "passwords.csv")
 
     # Verify the exported csv file is present in the target folder
-    csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
+    csv_file = about_logins.verify_csv_export(
+        downloads_folder, "passwords.csv")
     assert os.path.exists(csv_file)
 
     # Verify the contents of the exported csv file
@@ -46,7 +47,8 @@ def test_password_csv_correctness(
         reader = csv.DictReader(pw)
         actual_logins = {}
         for row in reader:
-            actual_logins[row["username"] + "@" + row["url"][8:]] = row["password"]
+            actual_logins[row["username"] + "@" +
+                          row["url"][8:]] = row["password"]
             assert re.match(guid_pattern, row["guid"])
             assert re.match(time_pattern, row["timeCreated"])
             assert re.match(time_pattern, row["timeLastUsed"])

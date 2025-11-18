@@ -1,5 +1,3 @@
-import sys
-from os import environ
 from time import sleep
 
 import pytest
@@ -16,15 +14,13 @@ SEARCH_TAG_PATH = '$..["browser.search.content.urlbar"].["google:tagged:firefox-
 WAIT_AFTER_SEARCH = 5
 WAIT_TELEMETRY_LOAD = 2
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
-
 
 @pytest.fixture()
 def test_case():
     return "3029528"
 
 
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in macOS GitHub Actions")
+# This test is unstable in MacOS GHA for now
 def test_google_search_counts_us(driver: Firefox):
     """
     C1365026 - Verify Google search counts in telemetry from the URL bar (US region).
@@ -53,9 +49,11 @@ def test_google_search_counts_us(driver: Firefox):
                 sleep(2)
                 continue
             else:
-                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
+                pytest.fail(
+                    "CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
 
-        provider_ok = utils.assert_json_value(json_data, SEARCH_PROVIDER_PATH, 1)
+        provider_ok = utils.assert_json_value(
+            json_data, SEARCH_PROVIDER_PATH, 1)
         tag_ok = utils.assert_json_value(json_data, SEARCH_TAG_PATH, 1)
 
         if provider_ok and tag_ok:

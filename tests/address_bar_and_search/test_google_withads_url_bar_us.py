@@ -8,8 +8,6 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
-
 
 @pytest.fixture()
 def test_case():
@@ -21,8 +19,8 @@ def add_to_prefs_list():
     return [("cookiebanners.service.mode", 1)]
 
 
-@pytest.mark.unstable(reason="Google re-captcha")
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
+# Google re-captcha makes test unstable for now
+# Mac GHA makes test unstable for now
 def test_google_withads_url_bar_us(driver):
     """
     C1365070 - Retry up to 5 times if Google CAPTCHA blocks telemetry path.
@@ -44,7 +42,8 @@ def test_google_withads_url_bar_us(driver):
                 sleep(2)
                 continue
             else:
-                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
+                pytest.fail(
+                    "CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
 
         about_telemetry = AboutTelemetry(driver).open()
         sleep(5)
