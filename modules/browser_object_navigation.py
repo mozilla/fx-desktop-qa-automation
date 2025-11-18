@@ -996,3 +996,15 @@ class Navigation(BasePage):
         self.panel_ui.navigate_to_customize_toolbar()
         self.customize.add_widget_to_toolbar("search-bar")
         return self
+
+    @BasePage.context_chrome
+    def click_exit_button_searchmode(self) -> None:
+        """
+        Click the 'Exit' button in the search mode.
+        Waits until the button is visible and clickable before performing the click.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(lambda _: self.get_element("exit-button-searchmode").is_displayed())
+
+        # Click the button
+        self.get_element("exit-button-searchmode").click()

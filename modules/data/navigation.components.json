@@ -645,6 +645,11 @@
         "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
         "strategy": "css",
         "groups": ["doNotCache"]
-    }
+    },
 
+    "exit-button-searchmode": {
+        "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
+        "strategy": "css",
+        "groups": []
+    }
 }
