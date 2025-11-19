@@ -1901,6 +1901,13 @@ Description: Context menu option to search selected text with the engine set as 
 Location: Context menu - topsite context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: search-handoff-button
+Selector Data: search-handoff-button
+Description: Button to handle handoffs in newtab
+Location: new tab
+Path to .json: modules/data/navigation.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field

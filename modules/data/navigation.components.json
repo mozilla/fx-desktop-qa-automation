@@ -645,6 +645,12 @@
         "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
         "strategy": "css",
         "groups": ["doNotCache"]
+    },
+
+    "search-handoff-button": {
+        "selectorData": ".search-handoff-button",
+        "strategy": "css",
+        "groups": ["awesomeBar"]
     }
 
 }
