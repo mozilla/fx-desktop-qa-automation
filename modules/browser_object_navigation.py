@@ -397,13 +397,13 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def verify_search_mode_is_visible(self):
-        """Ensure the search mode is visible in URLbar."""
+        """Ensure the search mode is visible in URLbar"""
         self.element_visible("search-mode-chicklet")
         return self
 
     @BasePage.context_chrome
     def verify_search_mode_is_not_visible(self):
-        """Ensure the search mode is cleared from URLbar."""
+        """Ensure the search mode is cleared from URLbar"""
         self.element_not_visible("search-mode-chicklet")
         return self
 
