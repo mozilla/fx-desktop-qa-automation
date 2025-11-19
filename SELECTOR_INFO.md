@@ -3274,6 +3274,13 @@ Location: Searchbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: search-mode-chicklet
+Selector Data: label.searchmode-switcher-title
+Description: Search mode chicklet
+Location: Address bar search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: exit-button-searchmode
 Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
 Description: Exit button searchmode

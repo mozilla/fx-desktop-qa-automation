@@ -382,6 +382,7 @@ class Navigation(BasePage):
         self.element_not_visible("suggestion-titles")
         return self
 
+    @BasePage.context_chrome
     def open_usb_and_select_engine(self, engine_title: str):
         """Click the USB icon and select a search engine by its title."""
         self.get_element("searchmode-switcher").click()
@@ -392,6 +393,18 @@ class Navigation(BasePage):
         """Ensure the search mode indicator (chip) is visible on the left."""
         self.set_chrome_context()
         self.get_element("search-mode-span")
+        return self
+
+    @BasePage.context_chrome
+    def verify_search_mode_is_visible(self):
+        """Ensure the search mode is visible in URLbar"""
+        self.element_visible("search-mode-chicklet")
+        return self
+
+    @BasePage.context_chrome
+    def verify_search_mode_is_not_visible(self):
+        """Ensure the search mode is cleared from URLbar"""
+        self.element_not_visible("search-mode-chicklet")
         return self
 
     def click_first_suggestion_row(self):
