@@ -33,4 +33,5 @@ def test_verify_url_after_tab_switch_with_search_mode(driver: Firefox):
     tabs.click_tab_by_index(1)
 
     # Check previous tab is opened and url string is correctly displayed
+    nav.wait_for_page_to_load()
     nav.url_contains(TEST_WEBSITE)
