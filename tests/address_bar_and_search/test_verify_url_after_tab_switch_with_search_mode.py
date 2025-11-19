@@ -22,7 +22,7 @@ def test_verify_url_after_tab_switch_with_search_mode(driver: Firefox):
     nav = Navigation(driver)
     tabs = TabBar(driver)
 
-    # Open a new tab, open any website
+    # Open any website
     nav.search(TEST_WEBSITE)
 
     # Open another new tab and click History from the USB
