@@ -50,7 +50,7 @@ def test_handoff_to_awesome_bar(driver: Firefox):
         f"Expected '{TEST_TEXT_2}' in the awesome bar on the new tab."
     )
 
-    # Open another tab, click the search handoff control, then type via pynput
+    # Open another tab; click the search handoff control, then type via pynput
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
