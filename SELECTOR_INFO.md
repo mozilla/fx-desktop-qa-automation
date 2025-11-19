@@ -3274,13 +3274,19 @@ Location: Searchbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: search-mode-chicklet
+Selector Data: label.searchmode-switcher-title
+Description: Search mode chicklet
+Location: Address bar search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: history-button-search-mode
 Selector Data: search-button-history
 Description: Histroy button search mode
 Location: Search mode
 Path to .json: modules/data/navigation.components.json
 ```
-searchbar-search-engine
 #### panel_ui
 ```
 Selector name: panel-ui-button
