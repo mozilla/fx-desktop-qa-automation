@@ -23,7 +23,7 @@ def test_search_mode_cleared_on_engine_removal(driver):
 
     # Enter search mode for the desired search engine in a new tab
     nav.open_and_switch_to_new_window("tab")
-    nav.open_usb_and_select_engine(SEARCH_ENGINE)
+    nav.open_usb_and_select_option(SEARCH_ENGINE)
 
     # Verify search mode is entered for the corresponding engine
     nav.verify_search_mode_is_visible()

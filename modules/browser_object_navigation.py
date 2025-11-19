@@ -383,10 +383,10 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def open_usb_and_select_engine(self, engine_title: str):
-        """Click the USB icon and select a search engine by its title."""
+    def open_usb_and_select_option(self, option_title: str):
+        """Click the USB icon and select an option by its title."""
         self.get_element("searchmode-switcher").click()
-        self.get_element("search-mode-switcher-option", labels=[engine_title]).click()
+        self.get_element("search-mode-switcher-option", labels=[option_title]).click()
         return self
 
     def assert_search_mode_chip_visible(self):

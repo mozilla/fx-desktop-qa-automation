@@ -3281,6 +3281,13 @@ Location: Address bar search mode
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: history-button-search-mode
+Selector Data: search-button-history
+Description: Histroy button search mode
+Location: Search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: exit-button-searchmode
 Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
 Description: Exit button searchmode
