@@ -645,6 +645,12 @@
         "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
         "strategy": "css",
         "groups": ["doNotCache"]
-    }
+    },
+
+    "search-mode-chicklet": {
+        "selectorData": "label.searchmode-switcher-title",
+        "strategy": "css",
+        "groups": []
+}
 
 }
