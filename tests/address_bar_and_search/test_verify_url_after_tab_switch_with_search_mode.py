@@ -6,6 +6,7 @@ from modules.browser_object_tabbar import TabBar
 
 TEST_WEBSITE = "https://www.firefox.com/"
 OPTION = "History"
+TAB_TITLE = "Get Firefox for desktop — Firefox (US)"
 
 
 @pytest.fixture()
@@ -24,6 +25,7 @@ def test_verify_url_after_tab_switch_with_search_mode(driver: Firefox):
 
     # Open any website
     nav.search(TEST_WEBSITE)
+    tabs.wait_for_tab_title(TAB_TITLE)
 
     # Open another new tab and click History from the USB
     tabs.new_tab_by_button()
@@ -33,5 +35,4 @@ def test_verify_url_after_tab_switch_with_search_mode(driver: Firefox):
     tabs.click_tab_by_index(1)
 
     # Check previous tab is opened and url string is correctly displayed
-    nav.wait_for_page_to_load()
     nav.url_contains(TEST_WEBSITE)
