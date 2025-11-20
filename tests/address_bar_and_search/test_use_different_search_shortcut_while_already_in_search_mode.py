@@ -11,13 +11,15 @@ URL_DOMAIN = "wikipedia.org"
 
 @pytest.fixture()
 def test_case():
-    return "3028844"
+    return "3028851"
 
 
-def test_search_mode_shortcut_mix(driver: Firefox):
+def test_use_search_shortcut_for_a_different_search_engine_while_already_in_search_mode(
+    driver: Firefox,
+):
     """
-    C3028844 - Verify that removing a search engine from about:preferences#search clears search mode if that engine
-    is currently selected in search mode in a different tab.
+    C3028851 - Verify that using a search shortcut for a different search engine while in search mode
+    for another engine works as expected.
     """
     # Instantiate objects
     nav = Navigation(driver)
