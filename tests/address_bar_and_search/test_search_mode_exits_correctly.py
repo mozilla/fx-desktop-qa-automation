@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,7 +22,7 @@ def test_search_mode_exits_correctly(driver: Firefox):
     # Instantiate object
     nav = Navigation(driver)
 
-    # Open a new tab, focus the urlbar, type some text and choose an engine from the USB
+    # In a new tab, focus the urlbar, type some text and choose an engine from the USB
     nav.type_in_awesome_bar(TEXT)
     nav.click_search_mode_switcher()
     nav.set_search_mode("Bing")
