@@ -40,11 +40,14 @@ def temp_selectors():
             "strategy": "id",
             "groups": [],
         },
-        "notification-log": {"selectorData": "log", "strategy": "id", "groups": []},
+        "notification-log": {
+            "selectorData": "log",
+            "strategy": "id",
+            "groups": []
+        },
     }
 
 
-@pytest.mark.ci
 def test_notifications_displayed(driver: Firefox, temp_page, temp_selectors):
     """
     This test does not (and SHOULD not) test that the OS displays web notifications

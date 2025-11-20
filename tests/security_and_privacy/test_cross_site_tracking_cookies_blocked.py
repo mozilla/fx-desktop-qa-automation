@@ -11,13 +11,11 @@ def test_case():
 
 
 FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
-ALLOWED_COOKIES = set(
-    [
-        "https://ads-track-digest256.dummytracker.org",
-        "https://social-track-digest256.dummytracker.org",
-        "https://analytics-track-digest256.dummytracker.org",
-    ]
-)
+ALLOWED_COOKIES = set([
+    "https://ads-track-digest256.dummytracker.org",
+    "https://social-track-digest256.dummytracker.org",
+    "https://analytics-track-digest256.dummytracker.org",
+])
 
 
 @pytest.fixture()
@@ -30,7 +28,6 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.mark.ci
 def test_cross_site_tracking_cookies_blocked(driver: Firefox):
     """
     C446402: Ensures the cross tracking cookies are displayed in the tracker panel

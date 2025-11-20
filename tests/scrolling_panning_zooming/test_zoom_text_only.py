@@ -78,18 +78,17 @@ def reject_consent_page(web_page: GenericPage):
     try:
         if web_page.element_clickable("yahoo-consent-page-scroll"):
             web_page.click_on("yahoo-consent-page-scroll")
-        web_page.wait.until(lambda _: web_page.element_clickable("yahoo-reject-cookie"))
+        web_page.wait.until(
+            lambda _: web_page.element_clickable("yahoo-reject-cookie"))
         web_page.click_on("yahoo-reject-cookie")
     except TimeoutException:
         pass
 
 
 @pytest.mark.skip(reason="Tracked in bug 1991139")
-@pytest.mark.ci
 @pytest.mark.noxvfb
-def test_zoom_text_only_from_settings(
-    driver: Firefox, web_page: GenericPage, reject_consent_page
-):
+def test_zoom_text_only_from_settings(driver: Firefox, web_page: GenericPage,
+                                      reject_consent_page):
     """
     C545733.1: Verify that ticking the zoom text only box would only affect the scale of text.
     Verify setting the default zoom level applies the chosen zoom level to all websites.
@@ -124,9 +123,8 @@ def test_zoom_text_only_from_settings(
     about_prefs.click_on("zoom-text-only")
 
 
-def test_zoom_text_only_after_restart(
-    driver: Firefox, web_page: GenericPage, reject_consent_page
-):
+def test_zoom_text_only_after_restart(driver: Firefox, web_page: GenericPage,
+                                      reject_consent_page):
     """
     C545733.2: Verify that the zoom text only option works after restart
 
@@ -162,16 +160,15 @@ def save_original_data(driver, web_page):
     Saves the original positions and sizes for comparison.
     """
     driver.switch_to.window(driver.window_handles[0])
-    original_website1_image_position = web_page.get_element("yahoo-logo").location["x"]
+    original_website1_image_position = web_page.get_element(
+        "yahoo-logo").location["x"]
     original_website1_text_position = web_page.get_element(
-        "yahoo-login-button"
-    ).location["x"]
+        "yahoo-login-button").location["x"]
 
     driver.switch_to.window(driver.window_handles[1])
     original_website2_image_size = web_page.get_element("duckduckgo-logo").size
     original_website2_text_position = web_page.get_element(
-        "duckduckgo-tagline"
-    ).location["x"]
+        "duckduckgo-tagline").location["x"]
 
     return (
         original_website1_image_position,
@@ -195,7 +192,8 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_data):
     # Verify Yahoo: image position unchanged, text position changed
     driver.switch_to.window(driver.window_handles[0])
     new_image_position = web_page.get_element("yahoo-logo").location["x"]
-    new_text_position = web_page.get_element("yahoo-login-button").location["x"]
+    new_text_position = web_page.get_element(
+        "yahoo-login-button").location["x"]
     assert new_image_position == original_website1_image_position
     assert new_text_position < original_website1_text_position
 
@@ -207,24 +205,20 @@ def zoom_text_only_functionality_test(driver, nav, web_page, original_data):
 
     # Verify that zoom level badge is correct
     with driver.context(driver.CONTEXT_CHROME):
-        nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
+        nav.expect_element_attribute_contains("toolbar-zoom-level", "label",
+                                              "90%")
 
     # Verify Yahoo at 90%: image position still unchanged, text position changed
-    assert (
-        web_page.get_element("yahoo-logo").location["x"]
-        == original_website1_image_position
-    )
-    assert (
-        web_page.get_element("yahoo-login-button").location["x"]
-        > original_website1_text_position
-    )
+    assert (web_page.get_element("yahoo-logo").location["x"] ==
+            original_website1_image_position)
+    assert (web_page.get_element("yahoo-login-button").location["x"]
+            > original_website1_text_position)
 
     # Verify DuckDuckGo: image SIZE unchanged, text position changed
     driver.switch_to.window(driver.window_handles[1])
-    assert (
-        web_page.get_element("duckduckgo-logo").size == original_website2_image_size
-    ), "DuckDuckGo image size should not change (text-only zoom)"
-    assert (
-        web_page.get_element("duckduckgo-tagline").location["x"]
-        < original_website2_text_position
-    )
+    assert (web_page.get_element(
+        "duckduckgo-logo").size == original_website2_image_size
+            ), "DuckDuckGo image size should not change (text-only zoom)"
+    assert (web_page.get_element("duckduckgo-tagline").location["x"]
+            < original_website2_text_position)
+

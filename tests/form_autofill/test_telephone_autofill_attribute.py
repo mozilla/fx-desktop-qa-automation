@@ -11,7 +11,6 @@ def test_case():
     return "122361"
 
 
-@pytest.mark.ci
 def test_telephone_attribute_autofill(
     driver: Firefox,
     address_autofill: AddressFill,
@@ -44,14 +43,16 @@ def test_telephone_attribute_autofill(
 
     # Get the first element from the autocomplete dropdown
     first_item = autofill_popup.get_nth_element(1)
-    actual_value = autofill_popup.hover(first_item).get_primary_value(first_item)
+    actual_value = autofill_popup.hover(first_item).get_primary_value(
+        first_item)
 
     # normalize phone number
     actual_value = util.normalize_phone_number(actual_value)
 
     # Get the primary value (telephone) from the first item in the dropdown and assert that the actual value
     # matches the expected value
-    expected_telephone = util.normalize_phone_number(autofill_sample_data.telephone)
+    expected_telephone = util.normalize_phone_number(
+        autofill_sample_data.telephone)
     assert expected_telephone == actual_value, (
-        f"Expected {expected_telephone}, but got {actual_value}"
-    )
+        f"Expected {expected_telephone}, but got {actual_value}")
+

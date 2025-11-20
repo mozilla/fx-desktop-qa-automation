@@ -27,7 +27,6 @@ HTTP_SITE = "http://http.badssl.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
-@pytest.mark.ci
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 
@@ -40,12 +39,12 @@ def test_http_site(driver: Firefox):
 
     # Basic functionality
     prefs.open()
-    prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_DISABLED)
+    prefs.select_https_only_setting(
+        prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_DISABLED)
     panel_ui.open_and_switch_to_new_window("tab")
     driver.get(HTTP_SITE)
-    nav.expect_element_attribute_contains(
-        "lock-icon", "tooltiptext", CONNECTION_NOT_SECURE
-    )
+    nav.expect_element_attribute_contains("lock-icon", "tooltiptext",
+                                          CONNECTION_NOT_SECURE)
 
     # Blocking
     driver.switch_to.window(driver.window_handles[0])
@@ -62,9 +61,8 @@ def test_http_site(driver: Firefox):
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE)
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
-    nav.expect_element_attribute_contains(
-        "lock-icon", "tooltiptext", CONNECTION_NOT_SECURE
-    )
+    nav.expect_element_attribute_contains("lock-icon", "tooltiptext",
+                                          CONNECTION_NOT_SECURE)
 
     # Private browsing - blocked
     panel_ui.open_and_switch_to_new_window("private")
