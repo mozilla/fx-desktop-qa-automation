@@ -49,11 +49,9 @@ def test_google_search_counts_us(driver: Firefox):
                 sleep(2)
                 continue
             else:
-                pytest.fail(
-                    "CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
+                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
 
-        provider_ok = utils.assert_json_value(
-            json_data, SEARCH_PROVIDER_PATH, 1)
+        provider_ok = utils.assert_json_value(json_data, SEARCH_PROVIDER_PATH, 1)
         tag_ok = utils.assert_json_value(json_data, SEARCH_TAG_PATH, 1)
 
         if provider_ok and tag_ok:

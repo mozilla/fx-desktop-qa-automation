@@ -31,11 +31,9 @@ def wait_for_geolocation_data(web_page, timeout=20):
     web_page.custom_wait(timeout=timeout).until(
         lambda _: all(
             [
-                web_page.find_element(
-                    By.ID, "latitude").get_attribute("data-raw")
+                web_page.find_element(By.ID, "latitude").get_attribute("data-raw")
                 is not None,
-                web_page.find_element(
-                    By.ID, "longitude").get_attribute("data-raw")
+                web_page.find_element(By.ID, "longitude").get_attribute("data-raw")
                 is not None,
             ]
         )

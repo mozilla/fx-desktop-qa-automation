@@ -7,6 +7,8 @@ from subprocess import check_output
 import yaml
 
 CI_MANIFEST = "manifests/ci.yaml"
+MANIFEST_KEY = "manifests/key.yaml"
+SUPPORTED_OSES = ["mac", "win", "linux"]
 HEADED_MARK = "@pytest.mark.headed"
 MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
@@ -111,38 +113,41 @@ def sysname():
 
 def convert_manifest_to_list(manifest_loc):
     manifest = yaml.safe_load(open(manifest_loc))
+    mkey = yaml.safe_load(open(MANIFEST_KEY))
     toplevel = [".", "tests"]
     tests = []
     if manifest:
         print(f"Reading {manifest_loc}")
     for suite in manifest:
         print(suite)
-        if suite == "add_manifest":
-            for linked_manifest in manifest[suite]:
-                tests.extend(
-                    convert_manifest_to_list(SLASH.join(["manifests", linked_manifest]))
-                )
-        for test in manifest[suite]:
-            # print(f"   {test}")
+        if suite not in mkey:
+            print(f"{suite} not in {MANIFEST_KEY}")
+            continue
+
+        for testfile in manifest[suite]:
+            print(f"   {testfile}")
             addtest = False
-            test_name = f"{test}.py"
-            if manifest[suite][test] == "pass":
+            test_name = f"{testfile}.py"
+            if testfile not in mkey[suite]:
+                print(f"{suite}/{testfile} not in {MANIFEST_KEY}::{suite}")
+                continue
+            if mkey[suite][testfile] == "pass":
                 addtest = True
-            elif isinstance(manifest[suite][test], dict):
-                # print(f"==={manifest[suite][test].get(sysname())}===")
-                if manifest[suite][test].get(sysname()) == "pass":
-                    addtest = True
+            elif isinstance(mkey[suite][testfile], dict):
+                if any([x in mkey[suite][testfile] for x in SUPPORTED_OSES]):
+                    if mkey[suite][testfile][sysname()] == "pass":
+                        addtest = True
                 else:
-                    for subtest in manifest[suite][test]:
-                        if subtest in ["mac", "win", "linux"]:
-                            continue
-                        # print(f"        {subtest}")
-                        test_name = f"{test}.py::{subtest}"
-                        if isinstance(manifest[suite][test][subtest], dict):
-                            if manifest[suite][test][subtest].get(sysname()) == "pass":
-                                addtest = True
-                        elif manifest[suite][test][subtest] == "pass":
+                    for subtest in mkey[suite][testfile]:
+                        if mkey[suite][testfile][subtest] == "pass":
+                            test_name = f"{test_name}::{subtest}"
                             addtest = True
+                        elif isinstance(mkey[suite][testfile][subtest], dict):
+                            if sysname() in mkey[suite][testfile][subtest]:
+                                if mkey[suite][testfile][subtest][sysname()] == "pass":
+                                    test_name = f"{test_name}::{subtest}"
+                                    addtest = True
+
             if addtest:
                 test_to_add = SLASH.join(toplevel + [suite, test_name])
                 assert os.path.exists(test_to_add.split("::")[0]), (

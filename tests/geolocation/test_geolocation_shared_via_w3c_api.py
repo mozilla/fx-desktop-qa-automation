@@ -78,8 +78,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selec
 
     # Click the 'Try It' button and Allow the location sharing while choose the option Remember this decision
     web_page.click_on("geolocation-button-selector")
-    nav.handle_geolocation_prompt(
-        button_type="primary", remember_this_decision=True)
+    nav.handle_geolocation_prompt(button_type="primary", remember_this_decision=True)
 
     # Check that the location marker is displayed
     # if map is displayed, style attribute will be available
@@ -122,8 +121,7 @@ def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox, temp_selec
     # Click the 'Try It' button and Block the location sharing while choose the option Remember this decision
     tabs.open_single_page_in_new_tab(web_page, num_tabs=2)
     web_page.click_on("geolocation-button-selector")
-    nav.handle_geolocation_prompt(
-        button_type="secondary", remember_this_decision=True)
+    nav.handle_geolocation_prompt(button_type="secondary", remember_this_decision=True)
 
     # Check that the location marker is displayed
     # if map is not displayed, style attribute will not be available

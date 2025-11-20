@@ -46,8 +46,7 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors):
     web_page.click_on("camera-only")
 
     # Verify that the notification is displayed
-    nav.expect_element_attribute_contains(
-        "popup-notification", "label", "Allow ")
+    nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
     nav.expect_element_attribute_contains(
         "popup-notification", "name", "mozilla.github.io"
     )

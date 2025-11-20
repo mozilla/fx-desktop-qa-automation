@@ -1,54 +1,33 @@
 address_bar_and_search:
-  test_default_search_provider_change_awesome_bar:
-    test_default_search_provider_change_awesome_bar: pass
+  - test_default_search_provider_change_awesome_bar
 bookmarks_and_history:
-  test_bookmark_website_via_star_button:
-    test_bookmark_website_via_star: pass
+  - test_bookmark_website_via_star_button
 downloads:
-  test_set_always_ask_file_type:
-    test_set_always_ask_file_type: pass
+  - test_set_always_ask_file_type
 find_toolbar:
-  test_find_toolbar_search:
-    test_find_toolbar_search: pass
+  - test_find_toolbar_search
 form_autofill:
-  test_telephone_autofill_attribute:
-    test_telephone_attribute_autofill: pass
+  - test_telephone_autofill_attribute
 menus:
-  test_copy_paste_actions:
-    test_login_form_copy_paste: pass
-  test_image_context_menu_actions:
-    test_save_image_as: pass
+    - test_copy_paste_actions
+    - test_image_context_menu_actions
 networking:
-  test_http_site:
-    test_http_site: pass
+  - test_http_site
 notifications:
-  test_notifications_displayed:
-    test_notifications_displayed: pass
+  - test_notifications_displayed
 password_manager:
-  test_about_logins_navigation_from_context_menu:
-    test_about_logins_navigation_from_login_form_context_menu: pass
+  - test_about_logins_navigation_from_context_menu
 pdf_viewer:
-  test_pdf_data_can_be_cleared:
-    test_pdf_data_can_be_cleared: pass
+  - test_pdf_data_can_be_cleared
 printing_ui:
-  test_print_preview:
-    test_print_preview_keys: pass
+  - test_print_preview
 reader_view:
-  test_improved_type_control_panel:
-    test_type_control_panel_font[sans-serif]: pass
-  test_improved_type_control_panel:
-    test_type_control_panel_font[serif]: pass
-  test_improved_type_control_panel:
-    test_type_control_panel_font[monospace]: pass
+  - test_improved_type_control_panel
 scrolling_panning_zooming:
-  test_zoom_text_only:
-    test_zoom_text_only_from_settings: pass
+  - test_zoom_text_only
 security_and_privacy:
-  test_cross_site_tracking_cookies_blocked:
-    test_cross_site_tracking_cookies_blocked: pass
+  - test_cross_site_tracking_cookies_blocked
 tabs:
-  test_active_tab:
-    test_active_tab: pass
+  - test_active_tab
 theme_and_toolbar:
-  test_customize_themes_and_redirect:
-    test_redirect_to_addons: pass
+  - test_customize_themes_and_redirect

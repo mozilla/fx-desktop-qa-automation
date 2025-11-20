@@ -51,8 +51,7 @@ def test_mouse_wheel_zoom(driver: Firefox):
     # Switch to chrome context to check zoom level in the toolbar
     with driver.context(driver.CONTEXT_CHROME):
         zoom_button = nav.get_element("toolbar-zoom-level")
-        zoom_level = nav.get_element(
-            "toolbar-zoom-level").get_attribute("label")
+        zoom_level = nav.get_element("toolbar-zoom-level").get_attribute("label")
         logging.info(f"Zoom level after zoom-in: {zoom_level}")
 
         # Assert that the zoom level label is "110%" after zooming in
@@ -68,8 +67,7 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # **Step 2**: Reset zoom to 100% using the keyboard shortcut (Ctrl + 0)
     with driver.context(driver.CONTEXT_CHROME):
-        actions.key_down(Keys.CONTROL).send_keys(
-            "0").key_up(Keys.CONTROL).perform()
+        actions.key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
     time.sleep(1)  # Allow time for reset effect to take place
     reset_position = driver.find_element(By.TAG_NAME, "div").location["x"]
     logging.info(f"X position of div after zoom-reset: {reset_position}")
@@ -109,6 +107,5 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # Reset the zoom level back to 100%
     with driver.context(driver.CONTEXT_CHROME):
-        actions.key_down(Keys.CONTROL).send_keys(
-            "0").key_up(Keys.CONTROL).perform()
+        actions.key_down(Keys.CONTROL).send_keys("0").key_up(Keys.CONTROL).perform()
     time.sleep(1)  # Allow time for reset effect to take place

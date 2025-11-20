@@ -1,199 +1,159 @@
----
 address_bar_and_search:
-  test_add_engine_address_bar: pass
-  test_addon_suggestion:
-    win: unstable
-    linux: pass
-    mac: unstable
-  test_default_search_provider_change_awesome_bar: unstable
-  test_google_search_counts_us:
-    win: pass
-    linux: pass
-    mac: unstable
-  test_google_withads_url_bar_us:
-    win: pass
-    linux: pass
-    mac: unstable
-  test_sap_google_adclick: unstable
-  test_search_code_google_non_us: pass
-  test_search_code_google_us: pass
-  test_search_engine_selector: pass
-  test_search_suggestions: unstable
-  test_search_term_persists: pass
-  test_server_not_found_error: pass
-  test_suggestion_engine_selection: pass
+- test_add_engine_address_bar
+- test_addon_suggestion
+- test_default_search_provider_change_awesome_bar
+- test_google_search_counts_us
+- test_google_withads_url_bar_us
+- test_sap_google_adclick
+- test_search_code_google_non_us
+- test_search_code_google_us
+- test_search_engine_selector
+- test_search_suggestions
+- test_search_term_persists
+- test_server_not_found_error
+- test_suggestion_engine_selection
 audio_video:
-  test_allow_audio_video_functionality:
-    win: unstable
-    mac: pass
-    linux: unstable
-  test_block_audio_video_functionality: pass
-  test_users_actions_saved_on_reload: pass
+- test_allow_audio_video_functionality
+- test_block_audio_video_functionality
+- test_users_actions_saved_on_reload
 bookmarks_and_history:
-  test_add_new_other_bookmark: pass
-  test_bookmark_via_bookmark_menu: pass
-  test_bookmark_website_via_star_button: pass
-  test_clear_all_history: pass
-  test_clear_recent_history_displayed: pass
-  test_delete_bookmarks_from_toolbar: pass
-  test_delete_other_bookmarks: pass
-  test_deleted_page_not_remembered: pass
-  test_open_bookmark_in_new_window_via_toolbar_context_menu: pass
-  test_open_bookmark_in_private_window_via_toolbar_context_menu: pass
-  test_open_bookmarks_from_toolbar: pass
-  test_open_websites_from_history: pass
-  test_private_window_website_not_in_history: pass
-  test_toggle_bookmarks_toolbar: pass
-  test_user_can_forget_history: pass
+- test_add_new_other_bookmark
+- test_bookmark_via_bookmark_menu
+- test_bookmark_website_via_star_button
+- test_clear_all_history
+- test_clear_recent_history_displayed
+- test_delete_bookmarks_from_toolbar
+- test_delete_other_bookmarks
+- test_deleted_page_not_remembered
+- test_open_bookmark_in_new_window_via_toolbar_context_menu
+- test_open_bookmark_in_private_window_via_toolbar_context_menu
+- test_open_bookmarks_from_toolbar
+- test_open_websites_from_history
+- test_private_window_website_not_in_history
+- test_toggle_bookmarks_toolbar
+- test_user_can_forget_history
 downloads:
-  test_add_zip_type:
-    win: pass
-    mac: pass
-    linux: unstable
-  test_download_pdf: pass
-  test_download_pdf_from_context_menu: unstable
+- test_add_zip_type
+- test_download_pdf
+- test_download_pdf_from_context_menu
 drag_and_drop:
-  test_copy_entire_row_column: pass
+- test_copy_entire_row_column
 find_toolbar:
-  test_find_in_pdf: pass
-  test_find_toolbar_nav: pass
-  test_find_toolbar_search: pass
+- test_find_in_pdf
+- test_find_toolbar_nav
+- test_find_toolbar_search
 form_autofill:
-  test_address_autofill_attribute: pass
-  test_autofill_cc_cvv: pass
-  test_autofill_credit_card: pass
-  test_autofill_credit_card_doorhanger: pass
-  test_autofill_credit_card_enable: pass
-  test_autofill_credit_card_four_fields: pass
-  test_cc_clear_form: pass
-  test_clear_form: pass
-  test_create_new_cc_profile: pass
-  test_create_profile_autofill: pass
-  test_delete_cc_profile: pass
-  test_enable_disable_autofill: pass
-  test_form_autofill_suggestions: pass
-  test_name_autofill_attribute: pass
-  test_private_mode_info_not_saved: pass
-  test_telephone_autofill_attribute: pass
-  test_updating_address: pass
+- test_address_autofill_attribute
+- test_autofill_cc_cvv
+- test_autofill_credit_card
+- test_autofill_credit_card_doorhanger
+- test_autofill_credit_card_enable
+- test_autofill_credit_card_four_fields
+- test_cc_clear_form
+- test_clear_form
+- test_create_new_cc_profile
+- test_create_profile_autofill
+- test_delete_cc_profile
+- test_enable_disable_autofill
+- test_form_autofill_suggestions
+- test_name_autofill_attribute
+- test_private_mode_info_not_saved
+- test_telephone_autofill_attribute
+- test_updating_address
 geolocation:
-  test_geolocation_shared_via_html5:
-    win: unstable
-    mac: pass
-    linux: pass
-  test_geolocation_shared_via_w3c_api:
-    win: unstable
-    mac: pass
-    linux: pass
+- test_geolocation_shared_via_html5
+- test_geolocation_shared_via_w3c_api
 language_packs:
-  test_language_pack_install_addons: pass
-  test_language_pack_install_preferences: pass
+- test_language_pack_install_addons
+- test_language_pack_install_preferences
 menus:
-  test_frequently_used_context_menu:
-    win: unstable
-    mac: pass
-    linux: pass
-  test_hyperlink_context_menu: pass
-  test_tab_context_menu_actions: pass
-  test_tab_context_menu_close: pass
+- test_frequently_used_context_menu
+- test_hyperlink_context_menu
+- test_tab_context_menu_actions
+- test_tab_context_menu_close
 networking:
-  test_default_dns_protection: pass
-  test_http_site: pass
+- test_default_dns_protection
+- test_http_site
 notifications:
-  test_audio_video_permissions_notification:
-    win: pass
-    mac: unstable
-    linux: pass
-  test_camera_permissions_notification:
-    win: pass
-    mac: unstable
-    linux: pass
-  test_deny_geolocation: pass
-  test_deny_screen_capture: pass
-  test_geolocation_prompt_presence: pass
-  test_microphone_permissions_notification:
-    win: pass
-    mac: unstable
-    linux: pass
-  test_notifications_displayed: pass
-  test_screen_share_permission_prompt: pass
-  test_webextension_completed_installation_successfully_displayed: pass
+- test_audio_video_permissions_notification
+- test_camera_permissions_notification
+- test_deny_geolocation
+- test_deny_screen_capture
+- test_geolocation_prompt_presence
+- test_microphone_permissions_notification
+- test_notifications_displayed
+- test_screen_share_permission_prompt
+- test_webextension_completed_installation_successfully_displayed
 password_manager:
-  test_add_password_non_ascii_chars: pass
-  test_add_password_save_valid_data: pass
-  test_auto_saved_generated_password_context_menu: pass
-  test_can_view_password_when_PP_enabled: pass
-  test_changes_made_in_edit_mode_are_saved: pass
-  test_delete_login: pass
-  test_multiple_saved_logins: pass
-  test_never_save_login_via_doorhanger: pass
-  test_primary_password_triggered_on_about_logins_access: pass
-  test_save_login_via_doorhanger: pass
-  test_update_login_via_doorhanger: pass
+- test_add_password_non_ascii_chars
+- test_add_password_save_valid_data
+- test_auto_saved_generated_password_context_menu
+- test_can_view_password_when_PP_enabled
+- test_changes_made_in_edit_mode_are_saved
+- test_delete_login
+- test_multiple_saved_logins
+- test_never_save_login_via_doorhanger
+- test_primary_password_triggered_on_about_logins_access
+- test_save_login_via_doorhanger
+- test_update_login_via_doorhanger
 pdf_viewer:
-  test_download_pdf_with_form_fields: pass
-  test_download_triggered_on_content_disposition_attachment: pass
-  test_open_pdf_in_FF: pass
-  test_pdf_navigation: pass
-  test_zoom_pdf_viewer: pass
+- test_download_pdf_with_form_fields
+- test_download_triggered_on_content_disposition_attachment
+- test_open_pdf_in_FF
+- test_pdf_navigation
+- test_zoom_pdf_viewer
 preferences:
-  test_check_for_updates: pass
-  test_clear_cookie_data:
-    win: unstable
-    mac: pass
-    linux: pass
-  test_firefox_home_new_tabs: pass
-  test_firefox_home_on_launch: pass
-  test_lang_pack_changed_from_about_prefs: pass
-  test_never_remember_history: pass
-  test_notifications_change_set: pass
+- test_check_for_updates
+- test_clear_cookie_data
+- test_firefox_home_new_tabs
+- test_firefox_home_on_launch
+- test_lang_pack_changed_from_about_prefs
+- test_never_remember_history
+- test_notifications_change_set
 printing_ui:
-  test_print_preview: pass
+- test_print_preview
 profile:
-  test_set_default_profile: pass
+- test_set_default_profile
 reader_view:
-  test_improved_type_control_panel: pass
-  test_reader_view_location_bar: pass
+- test_improved_type_control_panel
+- test_reader_view_location_bar
 scrolling_panning_zooming:
-  test_default_zoom_persists: pass
-  test_mouse_wheel_zoom:
-    win: pass
-    mac: unstable
-    linux: pass
-  test_zoom_text_only: pass
+- test_default_zoom_persists
+- test_mouse_wheel_zoom
+- test_zoom_text_only
 security_and_privacy:
-  test_blocking_cryptominers: pass
-  test_blocking_fingerprinters: pass
-  test_blocking_social_media_trackers: unstable
-  test_cookies_not_saved_private_browsing: pass
-  test_cross_site_tracking_cookies_blocked: pass
-  test_cryptominers_blocked_and_shown_in_info_panel: pass
-  test_detected_blocked_trackers_found: pass
-  test_downloads_from_private_not_leaked: pass
-  test_https_enabled_private_browsing: pass
-  test_never_remember_browsing_history: pass
-  test_no_trackers_detected: pass
-  test_open_link_in_private_window: pass
-  test_phishing_and_malware_warnings: pass
-  test_private_browser_password_doorhanger: pass
-  test_private_session_awesome_bar_exclusion: pass
-  test_private_session_history_exclusion: pass
-  test_private_window_from_panelui: pass
-  test_third_party_content_blocked_private_browsing: pass
-  test_tls_v1_2_protocol: pass
-  test_trackers_crypto_fingerprint_blocked: pass
-  test_tracking_content_custom_mode: pass
-  test_undo_close_tab_private_browsing: pass
+- test_blocking_cryptominers
+- test_blocking_fingerprinters
+- test_blocking_social_media_trackers
+- test_cookies_not_saved_private_browsing
+- test_cross_site_tracking_cookies_blocked
+- test_cryptominers_blocked_and_shown_in_info_panel
+- test_detected_blocked_trackers_found
+- test_downloads_from_private_not_leaked
+- test_https_enabled_private_browsing
+- test_never_remember_browsing_history
+- test_no_trackers_detected
+- test_open_link_in_private_window
+- test_phishing_and_malware_warnings
+- test_private_browser_password_doorhanger
+- test_private_session_awesome_bar_exclusion
+- test_private_session_history_exclusion
+- test_private_window_from_panelui
+- test_third_party_content_blocked_private_browsing
+- test_tls_v1_2_protocol
+- test_trackers_crypto_fingerprint_blocked
+- test_tracking_content_custom_mode
+- test_undo_close_tab_private_browsing
 tabs:
-  test_active_tab: pass
-  test_navigation_multiple_tabs: pass
-  test_open_bookmark_in_new_tab: pass
-  test_open_new_tab: pass
-  test_open_new_tab_keys: pass
-  test_open_new_tab_via_hyperlink: pass
-  test_pin_tab: pass
-  test_reopen_tab_through_context_menu: pass
-  test_reopen_tab_through_history_menu: pass
-  test_reopen_tabs_through_keys: pass
+- test_active_tab
+- test_navigation_multiple_tabs
+- test_open_bookmark_in_new_tab
+- test_open_new_tab
+- test_open_new_tab_keys
+- test_open_new_tab_via_hyperlink
+- test_pin_tab
+- test_reopen_tab_through_context_menu
+- test_reopen_tab_through_history_menu
+- test_reopen_tabs_through_keys
 theme_and_toolbar:
-  test_customize_themes_and_redirect: pass
+- test_customize_themes_and_redirect

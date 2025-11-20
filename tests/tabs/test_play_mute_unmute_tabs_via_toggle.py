@@ -48,8 +48,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     # Locate and open 2 latest videos in new tabs
     video_selector = "ytd-rich-item-renderer a#video-title-link"
     video_links = wait.until(
-        EC.visibility_of_all_elements_located(
-            (By.CSS_SELECTOR, video_selector))
+        EC.visibility_of_all_elements_located((By.CSS_SELECTOR, video_selector))
     )
 
     for i in range(2):
@@ -126,8 +125,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
         for i in [2, 3]:
             tabs.expect_tab_sound_status(i, tabs.MEDIA_STATUS.MUTED)
             tab = tabs.get_tab(i)
-            assert tab.get_attribute(
-                "muted") is not None, f"Tab {i} should be muted"
+            assert tab.get_attribute("muted") is not None, f"Tab {i} should be muted"
 
         # Click Unmute button
         click_multi_tab_audio_button()

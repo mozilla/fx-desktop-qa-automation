@@ -36,8 +36,7 @@ def test_password_csv_export(
     keyboard.tap(Key.enter)
 
     # Verify the exported csv file is present in the target folder
-    csv_file = about_logins.verify_csv_export(
-        downloads_folder, "passwords.csv")
+    csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
     assert os.path.exists(csv_file)
 
     # Delete the password.csv created

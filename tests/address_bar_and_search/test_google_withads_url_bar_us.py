@@ -42,8 +42,7 @@ def test_google_withads_url_bar_us(driver):
                 sleep(2)
                 continue
             else:
-                pytest.fail(
-                    "CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
+                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
 
         about_telemetry = AboutTelemetry(driver).open()
         sleep(5)
