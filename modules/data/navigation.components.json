@@ -651,6 +651,12 @@
         "selectorData": "label.searchmode-switcher-title",
         "strategy": "css",
         "groups": []
-}
+    },
+
+    "history-button-search-mode": {
+        "selectorData": "search-button-history",
+        "strategy": "id",
+        "groups": []
+    }
 
 }
