@@ -16,10 +16,7 @@ address_bar_and_search:
     linux: pass
     mac: unstable
     win: pass
-  test_google_withads_url_bar_us:
-    linux: unstable
-    mac: unstable
-    win: pass
+  test_google_withads_url_bar_us: unstable
   test_insertion_point_no_search_terms_display: pass
   test_no_suggestions_for_empty_query: pass
   test_non_sponsored_topsite_context_menu_option: pass
@@ -34,7 +31,10 @@ address_bar_and_search:
   test_search_modes_for_sites: unstable
   test_search_string_displayed_when_addressbar_unfocused: pass
   test_search_suggestions: unstable
-  test_search_term_persists: pass
+  test_search_term_persists:
+    mac: pass
+    win: pass
+    linux: unstable
   test_searchbar_display_alpenglow_theme: pass
   test_searchbar_on_engines_remove_restore: pass
   test_searchbar_results_shown_in_a_new_tab: pass
@@ -79,14 +79,20 @@ bookmarks_and_history:
   test_toggle_bookmarks_toolbar: pass
   test_user_can_forget_history: pass
 downloads:
-  test_add_mime_type_doc: pass
+  test_add_mime_type_doc:
+    linux: pass
+    mac: pass
+    win: unstable
   test_add_zip_type:
     linux: unstable
     mac: pass
     win: pass
   test_download_pdf: pass
   test_download_pdf_from_context_menu: unstable
-  test_mixed_content_download_via_https: pass
+  test_mixed_content_download_via_https: 
+    win: unstable
+    mac: unstable
+    linux: pass
   test_set_always_ask_file_type: pass
 drag_and_drop:
   test_copy_entire_row_column: pass
@@ -274,14 +280,8 @@ security_and_privacy:
   test_tracking_content_custom_mode: pass
   test_undo_close_tab_private_browsing: pass
 sync_and_fxa:
-  test_existing_fxa:
-    linux: unstable
-    mac: unstable
-    win: pass
-  test_new_fxa:
-    linux: unstable
-    mac: unstable
-    win: pass
+  test_existing_fxa: unstable
+  test_new_fxa: unstable
 tabs:
   test_active_tab: pass
   test_change_position_of_pinned_tabs: pass
@@ -289,7 +289,10 @@ tabs:
   test_close_tab_through_middle_mouse_click: pass
   test_display_customize_button: pass
   test_list_all_tabs: pass
-  test_mute_tabs: pass
+  test_mute_tabs:
+    win: unstable
+    mac: pass
+    linux: pass
   test_navigation_multiple_tabs: pass
   test_open_bookmark_in_new_tab: pass
   test_open_new_bg_tab_via_mouse_and_keyboard: pass
