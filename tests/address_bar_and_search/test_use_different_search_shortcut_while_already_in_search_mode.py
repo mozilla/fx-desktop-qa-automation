@@ -26,7 +26,7 @@ def test_use_search_shortcut_for_a_different_search_engine_while_already_in_sear
 
     # Enter search mode for the desired search engine in a new tab
     nav.open_and_switch_to_new_window("tab")
-    nav.open_usb_and_select_engine(SEARCH_ENGINE)
+    nav.open_usb_and_select_option(SEARCH_ENGINE)
 
     # Verify search mode is entered for the corresponding engine
     nav.verify_search_mode_is_visible()
