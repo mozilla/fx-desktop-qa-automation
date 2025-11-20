@@ -21,6 +21,9 @@ def test_case():
 
 
 def test_disable_websearch_from_awesome_bar(driver):
+    """
+    3028804 - Test that the websearch can be disabled from the preference but can be done via de USB
+    """
     nav = Navigation(driver)
     tabs = TabBar(driver)
     error_page = ErrorPage(driver)
@@ -46,9 +49,9 @@ def test_disable_websearch_from_awesome_bar(driver):
     # Perform a normal search
     nav.search(SEARCH_TERM)
 
-    # Wait for Wikipedia page to load — using driver.title for reliability
+    # Wait for Wikipedia page to load — use URL for reliability
     wait = WebDriverWait(driver, 10)
-    wait.until(lambda d: "wikipedia" in d.title.lower())
+    wait.until(lambda d: "wikipedia" in d.current_url.lower())
 
     # Address bar contains "wikipedia"
     assert "wikipedia" in nav.get_awesome_bar_text().lower()
