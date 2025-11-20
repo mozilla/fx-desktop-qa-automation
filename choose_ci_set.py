@@ -47,8 +47,9 @@ def localify(path: str) -> str:
     return path.replace(SCRIPT_DIR, ".")
 
 
-def get_tests_by_model(model_name: str, test_paths_and_contents: dict,
-                       run_list: list) -> list:
+def get_tests_by_model(
+    model_name: str, test_paths_and_contents: dict, run_list: list
+) -> list:
     """
     Given a model name, a dict of paths and their file contents, and the
     list of existing tests/dirs to check, return matches by local paths
@@ -73,8 +74,11 @@ def dedupe(run_list: list) -> list:
     removes = []
 
     for i, entry in enumerate(run_list):
-        if (not entry.startswith(".") and not entry.startswith("\\")
-                and not entry.startswith("/")):
+        if (
+            not entry.startswith(".")
+            and not entry.startswith("\\")
+            and not entry.startswith("/")
+        ):
             dotslashes.append(i)
 
     for dotslash in dotslashes:
@@ -138,15 +142,15 @@ def convert_manifest_to_list(manifest_loc):
                             addtest = True
                         elif isinstance(mkey[suite][testfile][subtest], dict):
                             if sysname() in mkey[suite][testfile][subtest]:
-                                if mkey[suite][testfile][subtest][
-                                        sysname()] == "pass":
+                                if mkey[suite][testfile][subtest][sysname()] == "pass":
                                     test_name = f"{test_name}::{subtest}"
                                     addtest = True
 
             if addtest:
                 test_to_add = SLASH.join(toplevel + [suite, test_name])
                 assert os.path.exists(test_to_add.split("::")[0]), (
-                    f"{test_to_add} could not be found")
+                    f"{test_to_add} could not be found"
+                )
                 tests.append(test_to_add)
                 addtest = False
     return tests
@@ -192,9 +196,12 @@ if __name__ == "__main__":
 
     run_list = []
     check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
-    committed_files = (check_output(
-        ["git", "--no-pager", "diff", "--name-only",
-         "origin/main"]).decode().replace("/", SLASH).splitlines())
+    committed_files = (
+        check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
+        .decode()
+        .replace("/", SLASH)
+        .splitlines()
+    )
 
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
@@ -212,8 +219,7 @@ if __name__ == "__main__":
     for root, _, files in os.walk(os.path.join(SCRIPT_DIR, "tests")):
         for f in files:
             this_file = os.path.join(root, f)
-            if re_obj.get("test_re").search(
-                    this_file) and "__pycache" not in this_file:
+            if re_obj.get("test_re").search(this_file) and "__pycache" not in this_file:
                 all_tests.append(os.path.join(this_file))
                 with open(this_file, encoding="utf-8") as fh:
                     lines = fh.readlines()
@@ -228,9 +234,7 @@ if __name__ == "__main__":
     changed_models = [
         f for f in committed_files if re_obj.get("object_model_re").match(f)
     ]
-    changed_tests = [
-        f for f in committed_files if re_obj.get("test_re").match(f)
-    ]
+    changed_tests = [f for f in committed_files if re_obj.get("test_re").match(f)]
 
     if changed_suite_conftests:
         run_list = [
@@ -242,9 +246,9 @@ if __name__ == "__main__":
         for selector_file in changed_selectors:
             (_, filename) = os.path.split(selector_file)
             model_name = pascalify(filename.split(".")[0])
-            for test_name in get_tests_by_model(model_name,
-                                                test_paths_and_contents,
-                                                run_list):
+            for test_name in get_tests_by_model(
+                model_name, test_paths_and_contents, run_list
+            ):
                 run_list.append(test_name)
 
     if changed_models:
@@ -252,9 +256,9 @@ if __name__ == "__main__":
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:
-                for test_name in get_tests_by_model(model_name,
-                                                    test_paths_and_contents,
-                                                    run_list):
+                for test_name in get_tests_by_model(
+                    model_name, test_paths_and_contents, run_list
+                ):
                     run_list.append(test_name)
 
     if changed_tests:
@@ -286,8 +290,6 @@ if __name__ == "__main__":
     if SLASH == "\\":
         run_list = [entry.replace("/", SLASH) for entry in run_list]
     run_list = dedupe(run_list)
-    run_list = [
-        entry for entry in run_list if os.path.exists(entry.split("::")[0])
-    ]
+    run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
     with open(OUTPUT_FILE, "w") as fh:
         fh.write("\n".join(run_list))

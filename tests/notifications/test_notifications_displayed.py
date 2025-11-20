@@ -40,11 +40,7 @@ def temp_selectors():
             "strategy": "id",
             "groups": [],
         },
-        "notification-log": {
-            "selectorData": "log",
-            "strategy": "id",
-            "groups": []
-        },
+        "notification-log": {"selectorData": "log", "strategy": "id", "groups": []},
     }
 
 

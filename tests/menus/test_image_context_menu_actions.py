@@ -20,7 +20,8 @@ def delete_files_regex_string():
 
 
 LINK_IMAGE_URL = (
-    "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg")
+    "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
+)
 LOADED_IMAGE_URL = r"https://upload\.wikimedia\.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019\.svg/\d+px-Firefox_logo%2C_2019\.svg\.png"
 SAVED_FILENAME = "Firefox_logo,_2019.svg.png"
 
@@ -42,8 +43,7 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.context_click(image_logo)
 
     # open in a new tab
-    image_context_menu.click_and_hide_menu(
-        "context-menu-open-image-in-new-tab")
+    image_context_menu.click_and_hide_menu("context-menu-open-image-in-new-tab")
 
     # switch to the second tab and verify the URL
     tabs.wait_for_num_tabs(2)

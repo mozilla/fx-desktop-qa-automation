@@ -16,7 +16,8 @@ def delete_files_regex_string():
 
 
 CONTENT_DISPOSITION_ATTACHMENT_URL = (
-    "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf")
+    "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf"
+)
 
 
 def test_set_always_ask_file_type(driver: Firefox, delete_files):

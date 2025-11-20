@@ -27,8 +27,9 @@ def are_lists_different(a: int, b: int) -> bool:
     return abs(a - b) > TOLERANCE
 
 
-def test_find_toolbar_search(driver: Firefox, find_toolbar: FindToolbar,
-                             browser_actions: BrowserActions):
+def test_find_toolbar_search(
+    driver: Firefox, find_toolbar: FindToolbar, browser_actions: BrowserActions
+):
     """
     C127239: Perform a search (using the Find Toolbar)
 
