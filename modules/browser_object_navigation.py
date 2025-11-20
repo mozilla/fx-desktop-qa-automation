@@ -2,6 +2,7 @@ import logging
 import re
 import time
 from typing import Literal
+from urllib.parse import urlparse
 
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
@@ -405,6 +406,28 @@ class Navigation(BasePage):
     def verify_search_mode_is_not_visible(self):
         """Ensure the search mode is cleared from URLbar"""
         self.element_not_visible("search-mode-chicklet")
+        return self
+
+    @BasePage.context_chrome
+    def verify_search_mode_label(self, engine_name: str):
+        """Verify that the search mode chicklet displays the correct engine."""
+        chicklet = self.get_element("search-mode-chicklet")
+        chip_text = (
+            chicklet.text or chicklet.get_attribute("aria-label") or ""
+        ).lower()
+        assert engine_name.lower() in chip_text, (
+            f"Expected search mode engine '{engine_name}', got '{chip_text}'"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_plain_text_in_input_awesome_bar(self, expected_text: str):
+        """Verify the awesomebar input contains the exact literal text."""
+        input_el = self.get_element("awesome-bar")
+        value = input_el.get_attribute("value")
+        assert value == expected_text, (
+            f"Expected input '{expected_text}', got '{value}'"
+        )
         return self
 
     def click_first_suggestion_row(self):
@@ -918,6 +941,27 @@ class Navigation(BasePage):
         actual_url = self.get_status_panel_url()
         assert expected_url in actual_url, (
             f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
+        )
+
+    @BasePage.context_content
+    def verify_domain(self, expected_domain: str) -> None:
+        """
+        Verify that the current URL's domain matches the expected domain using urlparse.
+        This explicitly checks the domain (netloc) rather than just a substring match.
+        Uses content context to get the actual page URL.
+
+        Argument:
+            expected_domain: The expected domain (e.g., "wikipedia.org", "google.com")
+        """
+
+        def _domain_matches(_):
+            parsed = urlparse(self.driver.current_url)
+            return expected_domain in parsed.netloc
+
+        self.custom_wait(timeout=15).until(_domain_matches)
+        parsed_url = urlparse(self.driver.current_url)
+        assert expected_domain in parsed_url.netloc, (
+            f"Expected '{expected_domain}' domain, got '{parsed_url.netloc}'"
         )
 
     @BasePage.context_chrome
