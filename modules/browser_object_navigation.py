@@ -90,15 +90,6 @@ class Navigation(BasePage):
         self.awesome_bar.send_keys(term)
         return self
 
-    @BasePage.context_chrome
-    def press_ctrl_enter(self) -> BasePage:
-        """Press Ctrl/Cmd + Enter in Awesome Bar."""
-        if self.sys_platform() == "Darwin":
-            self.perform_key_combo(Keys.COMMAND, Keys.ENTER)
-        else:
-            self.perform_key_combo(Keys.CONTROL, Keys.ENTER)
-        return self
-
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
         """
         Given a `mode`, set the Awesome Bar search mode. Returns self.
