@@ -26,9 +26,9 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
+# This test is unstable in Windows GHA for now
 @pytest.mark.audio
 @pytest.mark.headed
-@pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
 def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     """
     C246981 - Verify that play/mute/unmute tabs via toggle audio works

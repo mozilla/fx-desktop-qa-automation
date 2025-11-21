@@ -1,5 +1,4 @@
 import logging
-import platform
 import time
 
 import pytest
@@ -19,11 +18,7 @@ def test_case():
 TEST_PAGE = "https://www.example.com"
 
 
-# Skip this test if running on macOS
-@pytest.mark.skipif(
-    platform.system() == "Darwin",
-    reason="Test skipped on macOS due to incompatible zoom controls",
-)
+# This test is not compatible with MacOS wheel controls
 def test_mouse_wheel_zoom(driver: Firefox):
     """
     This test verifies that the X-coordinate of a <div> element's position
@@ -38,7 +33,8 @@ def test_mouse_wheel_zoom(driver: Firefox):
 
     # Locate the main <div> element on the page
     div = driver.find_element(By.TAG_NAME, "div")
-    initial_position = div.location["x"]  # Get the initial X position of the div
+    # Get the initial X position of the div
+    initial_position = div.location["x"]
     logging.info(f"Initial X position of div: {initial_position}")
 
     # Initialize ActionChains for zooming with Ctrl + Mouse Wheel

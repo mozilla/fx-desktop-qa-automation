@@ -17,7 +17,8 @@ def test_case():
     return "3028754"
 
 
-@pytest.mark.unstable(reason="Google re-captcha and manual tagged this test as removed")
+# Google recaptcha makes this test unstable for now
+# Test has been removed from main TestRail suites
 @pytest.mark.parametrize("search_engine, prefix, url", SEARCH_MODES)
 def test_search_modes_for_sites(
     driver: Firefox, search_engine: str, prefix: str, url: str

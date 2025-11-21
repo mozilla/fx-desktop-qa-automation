@@ -1,6 +1,5 @@
 import logging
 import os
-from platform import system
 
 import pytest
 from selenium.webdriver import Firefox
@@ -45,10 +44,7 @@ def file_is_somewhere():
     return False
 
 
-@pytest.mark.skipif(
-    system().lower().startswith("win") or system().lower().startswith("linux"),
-    reason="Bug 1974011",
-)
+# Test is unstable in Windows GHA and Linux Taskcluster for now: Bug 1974011
 @pytest.mark.headed
 def test_print_to_pdf(
     driver: Firefox,

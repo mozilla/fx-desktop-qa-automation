@@ -55,7 +55,6 @@ def _css_int(util: Utilities, element, prop: str) -> int:
     return int(util.remove_all_non_numbers(element.value_of_css_property(prop)))
 
 
-@pytest.mark.ci
 @pytest.mark.parametrize("font", FONTS)
 def test_type_control_panel_font(
     driver: Firefox, font: Literal["sans-serif", "serif", "monospace"]

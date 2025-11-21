@@ -1,5 +1,4 @@
 from pathlib import Path
-from platform import system
 from time import sleep
 
 import pytest
@@ -33,7 +32,7 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 1983852")
+# This test is unstable in Linux (all CI) for now: Bug 1983852
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_add_image_pdf(driver: Firefox, sys_platform, pdf_viewer: GenericPdf):

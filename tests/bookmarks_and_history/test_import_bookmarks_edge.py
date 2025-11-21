@@ -1,5 +1,4 @@
 import os
-import sys
 from shutil import copyfile
 
 import pytest
@@ -46,15 +45,7 @@ def edge_bookmarks(sys_platform, home_folder):
     return target
 
 
-@pytest.mark.skipif(
-    sys.platform.lower().startswith("linux"),
-    reason="Only testing Edge on Win and MacOS",
-)
-@pytest.mark.skipif(
-    os.environ.get("GITHUB_ACTIONS") == "true"
-    and not sys.platform.lower().startswith("win"),
-    reason="No Edge on GHA Mac",
-)
+# Test should only be run on Windows machines.
 def test_edge_bookmarks_imported(driver: Firefox, edge_bookmarks, sys_platform):
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()

@@ -19,7 +19,6 @@ def test_print_preview_menu(driver: Firefox):
     print_preview.open()
 
 
-@pytest.mark.ci
 def test_print_preview_keys(driver: Firefox):
     """C965139 - Check for print preview modal (Key Combo)"""
     driver.get(TEST_PAGE)

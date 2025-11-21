@@ -21,7 +21,7 @@ MIXED_CONTENT_DOWNLOAD_URL = (
 MAX_CHECKS = 30
 
 
-@pytest.mark.unstable(reason="Unstable in CI environment")
+# This test has been found to be unstable in CI
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS

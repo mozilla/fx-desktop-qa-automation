@@ -61,7 +61,6 @@ def colors_match(a: str, b: str, tolerance: float = 0.14) -> bool:
     return True
 
 
-@pytest.mark.ci
 def test_redirect_to_addons(driver: Firefox) -> None:
     """
     C118173: Ensure the user is redirected to about:addons via the UI panel.

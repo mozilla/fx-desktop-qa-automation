@@ -15,7 +15,6 @@ BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_TITLE = "Internet for people"
 
 
-@pytest.mark.ci
 def test_bookmark_website_via_star(driver: Firefox):
     """
     C2084539: Verify that the Websites can be bookmarked via star-shaped button

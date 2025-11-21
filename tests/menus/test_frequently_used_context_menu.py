@@ -1,6 +1,5 @@
 import os
 import platform
-import sys
 from time import sleep
 
 import pytest
@@ -16,10 +15,7 @@ def test_case():
     return "2637623"
 
 
-WIN_GHA = os.environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
-
-
-@pytest.mark.skipif(WIN_GHA, reason="Test unstable in Windows Github Actions")
+# Test is unstable in Windows GHA for now
 @pytest.mark.headed
 def test_save_page_as(driver: Firefox):
     """

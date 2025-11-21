@@ -24,7 +24,7 @@ FIRST_RESULT = "https://www.google.com/search?client=firefox-b-1-d&q=cheetah"
 SECOND_SEARCH = "lion"
 
 
-@pytest.mark.unstable
+# Google re-captcha makes this test unstable for now
 def test_search_term_persists(driver: Firefox):
     """
     C2153943 - Persist search term basic functionality

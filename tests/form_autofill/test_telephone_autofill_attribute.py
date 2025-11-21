@@ -11,7 +11,6 @@ def test_case():
     return "122361"
 
 
-@pytest.mark.ci
 def test_telephone_attribute_autofill(
     driver: Firefox,
     address_autofill: AddressFill,

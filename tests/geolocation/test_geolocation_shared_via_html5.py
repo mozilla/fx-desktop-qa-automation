@@ -1,6 +1,3 @@
-import sys
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -28,8 +25,6 @@ def add_to_prefs_list():
 
 TEST_URL = "https://browserleaks.com/geo"
 
-WIN_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("win")
-
 
 def wait_for_geolocation_data(web_page, timeout=20):
     """Wait until both latitude and longitude data are available."""
@@ -45,7 +40,7 @@ def wait_for_geolocation_data(web_page, timeout=20):
     )
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Recent permission changes at their side")
+# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_allow_permission_on_geolocation_via_html5(driver: Firefox):
     """
     C15189 - Verify that geolocation is successfully shared when the user allows permission via the HTML5 Geolocation API
@@ -77,7 +72,7 @@ def test_allow_permission_on_geolocation_via_html5(driver: Firefox):
         assert permission_icon.is_displayed()
 
 
-@pytest.mark.skipif(WIN_GHA, reason="Recent permission changes at their side")
+# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_block_permission_on_geolocation_via_w3c_api(driver: Firefox):
     """
     C15189 - Verify that geolocation is not shared when the user blocks permission via the HTML5 Geolocation API

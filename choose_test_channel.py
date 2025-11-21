@@ -3,7 +3,7 @@ import re
 import sys
 from subprocess import check_output
 
-ALL_CHANNELS = ["smoke", "l10n"]
+ALL_CHANNELS = ["smoke", "l10n", "functional"]
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 
@@ -28,6 +28,10 @@ l10n_module_patterns = set(
         for val in l10n_module_patterns
     ]
 )
+
+if len(sys.argv) > 1:
+    print(sys.argv[1:])
+    sys.exit(0)
 
 check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
 
