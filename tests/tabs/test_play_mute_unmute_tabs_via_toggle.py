@@ -1,4 +1,5 @@
 from os import environ
+from platform import system
 from time import sleep
 
 import pytest
@@ -29,6 +30,7 @@ def add_to_prefs_list():
 @pytest.mark.audio
 @pytest.mark.headed
 @pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
+@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 2001204")
 def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     """
     C246981 - Verify that play/mute/unmute tabs via toggle audio works
