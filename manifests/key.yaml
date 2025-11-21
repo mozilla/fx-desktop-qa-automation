@@ -31,10 +31,7 @@ address_bar_and_search:
   test_search_modes_for_sites: unstable
   test_search_string_displayed_when_addressbar_unfocused: pass
   test_search_suggestions: unstable
-  test_search_term_persists:
-    mac: pass
-    win: unstable
-    linux: unstable
+  test_search_term_persists: unstable
   test_searchbar_display_alpenglow_theme: pass
   test_searchbar_on_engines_remove_restore: pass
   test_searchbar_results_shown_in_a_new_tab: pass
