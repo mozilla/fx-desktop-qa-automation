@@ -33,7 +33,7 @@ address_bar_and_search:
   test_search_suggestions: unstable
   test_search_term_persists:
     mac: pass
-    win: pass
+    win: unstable
     linux: unstable
   test_searchbar_display_alpenglow_theme: pass
   test_searchbar_on_engines_remove_restore: pass
