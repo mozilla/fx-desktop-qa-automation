@@ -25,7 +25,7 @@ def test_paste_and_go_opens_correct_url(driver: Firefox):
     # Copy the link from the clipboard
     page.open()
     page.click_on("url-to-copy")
-    page.perform_key_combo(Keys.COMMAND, "a")
+    page.perform_key_combo(Keys.CONTROL, "a")
     page.copy()
 
     # Open a new tab and right click in the Address bar and choose Paste and Go
