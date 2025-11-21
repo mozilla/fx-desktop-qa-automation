@@ -657,6 +657,12 @@
         "selectorData": "search-button-history",
         "strategy": "id",
         "groups": []
+    },
+
+    "exit-button-searchmode": {
+        "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
+        "strategy": "css",
+        "groups": []
     }
 
 }

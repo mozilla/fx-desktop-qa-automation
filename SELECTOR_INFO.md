@@ -3287,6 +3287,13 @@ Description: Histroy button search mode
 Location: Search mode
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: exit-button-searchmode
+Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
+Description: Exit button searchmode
+Location: Address bar searchmode
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
