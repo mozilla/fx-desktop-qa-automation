@@ -23,8 +23,7 @@ def test_search_mode_exits_correctly(driver: Firefox):
 
     # In a new tab, focus the urlbar, type some text and choose an engine from the USB
     nav.type_in_awesome_bar(TEXT)
-    nav.click_search_mode_switcher()
-    nav.set_search_mode("Bing")
+    nav.open_usb_and_select_option(SEARCH_ENGINE)
 
     # Check that the search engine is shown
     nav.verify_engine_returned(SEARCH_ENGINE)
