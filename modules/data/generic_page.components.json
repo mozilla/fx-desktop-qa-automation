@@ -76,5 +76,11 @@
         "selectorData": "//button[@aria-label='Sign in']",
         "strategy": "xpath",
         "groups": []
+    },
+
+    "url-to-copy": {
+        "selectorData": "p[contenteditable]",
+        "strategy": "css",
+        "groups": []
     }
 }
