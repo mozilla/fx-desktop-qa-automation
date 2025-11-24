@@ -2330,6 +2330,13 @@ Description: bsky website sign in button
 Location: Bsky website
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: url-to-copy
+Selector Data: "p[contenteditable]"
+Description: Clipboard page to copy url
+Location: Clipboard test page
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
