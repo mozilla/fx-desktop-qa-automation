@@ -100,7 +100,7 @@ jobs:
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
       - name: Select Test Set
-        if: ${{ inputs.test_set }}
+        if: ${{ inputs.test_set != null }}
         run: |
           $env_contents = @"
           STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
@@ -182,7 +182,7 @@ jobs:
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Select Test Set
-        if: ${{ inputs.test_set }}
+        if: ${{ inputs.test_set != null }}
         run: echo "STARFOX_MANIFEST=${{ inputs.test_set }}" >> "$GITHUB_ENV"
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
