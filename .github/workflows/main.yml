@@ -1,5 +1,5 @@
 ---
-name: Smoke Test Execution
+name: Fx Test Execution
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
@@ -17,6 +17,10 @@ on:
         description: "Is this a PR?"
         default: false
         type: boolean
+      test_set:
+        description: "Test set to run"
+        default: null
+        required: false
   workflow_dispatch:
     inputs:
       win_installer_link:
@@ -39,8 +43,8 @@ env:
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
 
 jobs:
-  Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || inputs.win_installer_link }}
+  Test-Windows:
+    if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -58,7 +62,7 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running smoke tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' && inputs.is_pull_request == false}}
+        if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.is_pull_request == false}}
         run: |
           $env_contents = @"
           TESTRAIL_REPORT='true'
@@ -85,11 +89,22 @@ jobs:
       - name: Download Beta
         if: ${{ !inputs.win_installer_link }}
         run: |
+          $env_contents = @"
+          STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
+          "@
+          New-Item -Name .env -Value $env_contents -ItemType File -Force
           $fx_url = (pipenv run python collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
+      - name: Select Test Set
+        if: ${{ inputs.test_set }}
+        run: |
+          $env_contents = @"
+          STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
+          "@
+          New-Item -Name .env -Value $env_contents -ItemType File -Force
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
@@ -105,7 +120,7 @@ jobs:
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
         shell: pwsh
-      - name: Run Smoke Tests in Win
+      - name: Run Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -116,7 +131,7 @@ jobs:
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
-      - name: Run Smoke Tests in Win (Headed)
+      - name: Run Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           REPORTABLE: true
@@ -165,6 +180,9 @@ jobs:
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
+      - name: Select Test Set
+        if: ${{ inputs.test_set }}
+        run: echo "STARFOX_MANIFEST=${{ inputs.test_set }}" >> "$GITHUB_ENV"
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
