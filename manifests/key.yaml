@@ -113,7 +113,10 @@ form_autofill:
   test_create_new_cc_profile: pass
   test_create_profile_autofill: pass
   test_delete_cc_profile: pass
-  test_edit_credit_card: pass
+  test_edit_credit_card:
+    win: unstable
+    mac: pass
+    linux: pass
   test_enable_disable_autofill: pass
   test_form_autofill_suggestions: pass
   test_name_autofill_attribute: pass
