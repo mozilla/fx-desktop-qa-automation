@@ -162,7 +162,7 @@ jobs:
           name: artifacts-win-smoke
           path: artifacts-win
   Test-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Checkout repository
