@@ -93,6 +93,10 @@ jobs:
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
+          $env_contents = @"
+          STARFOX_MANIFEST='.\manifests\incident.yaml'
+          "@
+          New-Item -Name .env -Value $env_contents -ItemType File -Force
           Invoke-WebRequest -Uri ${{ inputs.win_installer_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
@@ -108,7 +112,7 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -121,7 +125,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -165,6 +169,7 @@ jobs:
         if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "STARFOX_MANIFEST=manifests/incident.yaml" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
@@ -228,6 +233,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "STARFOX_MANIFEST=manifests/incident.yaml" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;

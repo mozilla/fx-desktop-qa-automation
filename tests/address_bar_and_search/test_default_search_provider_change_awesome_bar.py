@@ -13,7 +13,6 @@ def test_case():
     return "3028795"
 
 
-@pytest.mark.ci
 def test_default_search_provider_change_awesome_bar(driver: Firefox):
     """
     C2860208 - Verify that changing the default search provider updates the address bar placeholder.

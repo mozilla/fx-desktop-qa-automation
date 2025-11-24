@@ -85,7 +85,6 @@ def reject_consent_page(web_page: GenericPage):
 
 
 @pytest.mark.skip(reason="Tracked in bug 1991139")
-@pytest.mark.ci
 @pytest.mark.noxvfb
 def test_zoom_text_only_from_settings(
     driver: Firefox, web_page: GenericPage, reject_consent_page
