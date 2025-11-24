@@ -21,6 +21,7 @@ on:
         description: "Test set to run"
         default: null
         required: false
+        type: string
   workflow_dispatch:
     inputs:
       win_installer_link:
