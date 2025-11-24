@@ -203,7 +203,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
-      - name: Run Smoke Tests in MacOS
+      - name: Run Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
@@ -213,7 +213,7 @@ jobs:
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
-      - name: Run Smoke Tests in MacOS (Headed)
+      - name: Run Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
