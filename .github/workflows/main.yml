@@ -289,8 +289,8 @@ jobs:
     if: ${{ github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     needs:
-      - Smoke-Windows
-      - Smoke-MacOS
+      - Test-Windows
+      - Test-MacOS
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
