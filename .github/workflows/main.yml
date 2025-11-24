@@ -71,6 +71,15 @@ jobs:
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"
           Write-Host "$env:TESTRAIL_USERNAME"
+      - name: Select Test Set
+        if: ${{ inputs.test_set != null }}
+        run: |
+          Write-Output ${{ inputs.test_set }}
+          $env_contents = @"
+          STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
+          "@
+          New-Item -Name .env -Value $env_contents -ItemType File -Force
+        shell: pwsh
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -98,14 +107,6 @@ jobs:
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
-        shell: pwsh
-      - name: Select Test Set
-        if: ${{ inputs.test_set != null }}
-        run: |
-          $env_contents = @"
-          STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
-          "@
-          New-Item -Name .env -Value $env_contents -ItemType File -Force
         shell: pwsh
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
