@@ -166,7 +166,8 @@ suite_name_d:
 - test_name_e
 ```
 
-We currently do not assume ma
+We currently do not assume that test lists need to identify individual test functions inside test
+files ("subtests"), as TestRail reporting is on the testfile level.
 
 ### Manual Execution of Smoke Tests
 
