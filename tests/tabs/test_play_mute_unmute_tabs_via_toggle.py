@@ -1,4 +1,3 @@
-from os import environ
 from time import sleep
 
 import pytest
@@ -12,8 +11,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules.browser_object import ContextMenu
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
-
-GHA = environ.get("GITHUB_ACTIONS") == "true"
 
 
 @pytest.fixture()

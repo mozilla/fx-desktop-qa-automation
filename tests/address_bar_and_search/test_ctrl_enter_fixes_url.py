@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation
 from modules.browser_object_tabbar import TabBar
@@ -24,15 +25,13 @@ def test_ctrl_enter_fixes_url(driver: Firefox, domain, expected_url: str):
 
     # Instantiate objects
     nav = Navigation(driver)
-    tabs = TabBar(driver)
 
     # Open a new tab
-    tabs.new_tab_by_button()
-    tabs.switch_to_new_tab()
+    nav.open_and_switch_to_new_window("tab")
 
     # Type a domain in the address bar and press Ctrl/Cmd + Enter
     nav.type_in_awesome_bar(domain)
-    nav.press_ctrl_enter()
+    nav.perform_key_combo_chrome(Keys.CONTROL, Keys.ENTER)
 
     # Verify navigation to the expected URL
     nav.url_contains(expected_url)
