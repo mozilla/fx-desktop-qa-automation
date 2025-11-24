@@ -1066,6 +1066,3 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("exit-button-searchmode").click()
-
-    def type_without_resetting_cursor(self, text: str):
-        self.awesome_bar.send_keys(text)
