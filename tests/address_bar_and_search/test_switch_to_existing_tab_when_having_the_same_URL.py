@@ -10,13 +10,13 @@ SITE_HOST = "example.com"
 
 @pytest.fixture()
 def test_case():
-    return "3028769"
+    return "3028949"
 
 
 @pytest.mark.functional
 def test_address_bar_suggests_open_site_in_other_tab(driver: Firefox):
     """
-    3028769 - Handle switch to tab functionality
+    3028949 - Handle switch to tab functionality
     """
     nav = Navigation(driver)
     tabs = TabBar(driver)
