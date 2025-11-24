@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object_navigation import Navigation
 
-
 ENGINE_KEYWORD = "@bing"
 TEXT = "QA"
 ENGINE = "Bing"
