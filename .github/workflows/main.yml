@@ -74,7 +74,6 @@ jobs:
       - name: Select Test Set
         if: ${{ inputs.test_set != null }}
         run: |
-          Write-Output ${{ inputs.test_set }}
           $env_contents = @"
           STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
           "@
@@ -99,10 +98,6 @@ jobs:
       - name: Download Beta
         if: ${{ !inputs.win_installer_link }}
         run: |
-          $env_contents = @"
-          STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
-          "@
-          New-Item -Name .env -Value $env_contents -ItemType File -Force
           $fx_url = (pipenv run python collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
