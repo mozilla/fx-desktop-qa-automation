@@ -3294,6 +3294,13 @@ Description: Exit button searchmode
 Location: Address bar searchmode
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: switch-to-tab
+Selector Data: div.urlbarView-row[type='switchtab']
+Description: Switch to tab from awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
