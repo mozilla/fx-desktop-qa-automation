@@ -106,6 +106,7 @@ jobs:
           STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
           "@
           New-Item -Name .env -Value $env_contents -ItemType File -Force
+        shell: pwsh
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
