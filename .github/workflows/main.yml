@@ -161,7 +161,7 @@ jobs:
         with:
           name: artifacts-win-smoke
           path: artifacts-win
-  Smoke-MacOS:
+  Test-MacOS:
     if: ${{ inputs.job_to_run == 'Smoke-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
