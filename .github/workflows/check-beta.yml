@@ -36,15 +36,17 @@ jobs:
   Run-Win-Smoke:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
-    uses: ./.github/workflows/smoke.yml
+    uses: ./.github/workflows/main.yml
     with:
-      job_to_run: Smoke-Windows
+      job_to_run: Test-Windows
+      test_set: smoke
     secrets: inherit
 
   Run-Mac-Smoke:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
-    uses: ./.github/workflows/smoke.yml
+    uses: ./.github/workflows/main.yml
     with:
-      job_to_run: Smoke-MacOS
+      job_to_run: Test-MacOS
+      test_set: smoke
     secrets: inherit
