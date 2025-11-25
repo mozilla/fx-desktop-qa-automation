@@ -174,13 +174,13 @@ jobs:
           exit $?
           echo "Triggered by event: ${{ github.event_name }}"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' && inputs.is_pull_request == false}}
+        if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false}}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
       - name: Select Test Set
         if: ${{ inputs.test_set != null }}
-        run: echo "STARFOX_MANIFEST=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+        run: echo "STARFOX_MANIFEST=./manifests/${{ inputs.test_set }}.yaml" >> "$GITHUB_ENV"
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
