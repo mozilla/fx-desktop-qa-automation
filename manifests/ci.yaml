@@ -1,0 +1,33 @@
+address_bar_and_search:
+  - test_default_search_provider_change_awesome_bar
+bookmarks_and_history:
+  - test_bookmark_website_via_star_button
+downloads:
+  - test_set_always_ask_file_type
+find_toolbar:
+  - test_find_toolbar_search
+form_autofill:
+  - test_telephone_autofill_attribute
+menus:
+    - test_copy_paste_actions
+    - test_image_context_menu_actions
+networking:
+  - test_http_site
+notifications:
+  - test_notifications_displayed
+password_manager:
+  - test_about_logins_navigation_from_context_menu
+pdf_viewer:
+  - test_pdf_data_can_be_cleared
+printing_ui:
+  - test_print_preview
+reader_view:
+  - test_improved_type_control_panel
+scrolling_panning_zooming:
+  - test_zoom_text_only
+security_and_privacy:
+  - test_cross_site_tracking_cookies_blocked
+tabs:
+  - test_active_tab
+theme_and_toolbar:
+  - test_customize_themes_and_redirect
