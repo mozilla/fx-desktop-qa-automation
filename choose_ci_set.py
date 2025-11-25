@@ -159,10 +159,8 @@ def convert_manifest_to_list(manifest_loc):
         run_list = []
         for suite, tests in manifest.items():
             for test_name in tests:
-                test_to_add = SLASH.join(toplevel + [suite, test_name])
-                assert os.path.exists(test_to_add.split("::")[0] + ".py"), (
-                    f"{test_to_add} could not be found"
-                )
+                test_to_add = SLASH.join(toplevel + [suite, test_name]) + ".py"
+                assert os.path.exists(test_to_add), f"{test_to_add} could not be found"
                 run_list.append(test_to_add)
     run_list = filter_non_pass(run_list)
     return run_list
