@@ -113,9 +113,6 @@ menus:
 - test_image_context_menu_actions
 - test_tab_context_menu_actions
 - test_tab_context_menu_close
-meta:
-- test_selectors
-- test_version
 networking:
 - test_default_dns_protection
 - test_http_site
@@ -207,9 +204,6 @@ security_and_privacy:
 - test_trackers_crypto_fingerprint_blocked
 - test_tracking_content_custom_mode
 - test_undo_close_tab_private_browsing
-sync_and_fxa:
-- test_existing_fxa
-- test_new_fxa
 tabs:
 - test_active_tab
 - test_list_all_tabs
