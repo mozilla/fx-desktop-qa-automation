@@ -1,5 +1,3 @@
-from os import environ
-from platform import system
 from time import sleep
 
 import pytest
@@ -14,8 +12,6 @@ from modules.browser_object import ContextMenu
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
 
-GHA = environ.get("GITHUB_ACTIONS") == "true"
-
 
 @pytest.fixture()
 def test_case():
@@ -27,10 +23,9 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
+# This test is unstable in Windows GHA for now
 @pytest.mark.audio
 @pytest.mark.headed
-@pytest.mark.skipif(GHA, reason="Test unstable in Github Actions")
-@pytest.mark.skipif(system().lower().startswith("linux"), reason="Bug 2001204")
 def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     """
     C246981 - Verify that play/mute/unmute tabs via toggle audio works

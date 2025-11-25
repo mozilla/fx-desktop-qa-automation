@@ -27,7 +27,6 @@ def file_name():
     return "i-9.pdf"
 
 
-@pytest.mark.ci
 def test_pdf_data_can_be_cleared(
     driver: Firefox,
     pdf_viewer: GenericPdf,

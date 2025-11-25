@@ -17,7 +17,7 @@ def test_case():
     return "3029662"
 
 
-@pytest.mark.unstable(reason="Google re-captcha")
+# Google recaptcha makes this test unstable for now
 def test_sap_google_adclick(driver: Firefox):
     """
     C1365108 - Verify Google ad click from URL bar is recorded in telemetry (US region).

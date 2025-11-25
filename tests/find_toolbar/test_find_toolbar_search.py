@@ -27,7 +27,6 @@ def are_lists_different(a: int, b: int) -> bool:
     return abs(a - b) > TOLERANCE
 
 
-@pytest.mark.ci
 def test_find_toolbar_search(
     driver: Firefox, find_toolbar: FindToolbar, browser_actions: BrowserActions
 ):

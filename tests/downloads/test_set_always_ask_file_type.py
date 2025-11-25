@@ -20,7 +20,6 @@ CONTENT_DISPOSITION_ATTACHMENT_URL = (
 )
 
 
-@pytest.mark.ci
 def test_set_always_ask_file_type(driver: Firefox, delete_files):
     """
     C1756752 - Ensure that the Always ask option in Firefox Applications settings
