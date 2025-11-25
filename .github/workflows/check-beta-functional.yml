@@ -1,8 +1,8 @@
-name: Check new beta version - Smoke
+name: Check new beta version - Functional
 
 on:
   schedule:
-    - cron: "40 */1 * * *"
+    - cron: "55 1/5 * * *"
 env:
   LATEST: ""
 permissions:
@@ -23,6 +23,7 @@ jobs:
       - name: Check if the run is reportable
         id: reportable
         env:
+          TESTRAIL_FUNCTIONAL_SPLIT: 1
           TESTRAIL_REPORT: true
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -39,7 +40,7 @@ jobs:
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
-      test_set: smoke
+      test_set: functional
     secrets: inherit
 
   Run-Mac-Smoke:
@@ -48,5 +49,5 @@ jobs:
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS
-      test_set: smoke
+      test_set: functional
     secrets: inherit
