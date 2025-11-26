@@ -57,27 +57,18 @@ jobs:
       - name: Set Environment (Manual)
         if: ${{ inputs.win_installer_link }}
         run: |
-          $env_contents = @"
-          MANUAL='true'
-          "@
-          New-item -Name .env -Value $env_contents -ItemType File -Force
+          echo "MANUAL=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Running smoke tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.is_pull_request == false}}
         run: |
-          $env_contents = @"
-          TESTRAIL_REPORT='true'
-          "@
-          New-item -Name .env -Value $env_contents -ItemType File -Force
+          echo "TESTRAIL_REPORT=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Running report for most recent Beta on Windows"
           Write-Host "$env:TESTRAIL_REPORT"
       - name: Select Test Set
         if: ${{ inputs.test_set != null }}
         run: |
-          $env_contents = @"
-          STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
-          "@
-          New-Item -Name .env -Value $env_contents -ItemType File -Force
+          echo "STARFOX_MANIFEST=.\manifests\${{ inputs.test_set }}.yaml" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "$env:TESTRAIL_REPORT"
         shell: pwsh
       - name: Set Functional Split
