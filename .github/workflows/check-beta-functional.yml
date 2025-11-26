@@ -34,7 +34,7 @@ jobs:
           echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
           echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
 
-  Run-Win-Smoke:
+  Run-Win-Functional:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
     uses: ./.github/workflows/main.yml
@@ -43,7 +43,7 @@ jobs:
       test_set: functional
     secrets: inherit
 
-  Run-Mac-Smoke:
+  Run-Mac-Functional:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
     uses: ./.github/workflows/main.yml
