@@ -116,9 +116,13 @@ def is_addable(test_name, result):
     test_name = test_name.replace(".py", "")
     if "::" in test_name:
         test, subtest = test_name.split("::")
+        if test not in pointer:
+            raise ValueError(f"{test} not in key.yaml")
         pointer = pointer[test]
         pointer = pointer[subtest]
     else:
+        if test_name not in pointer:
+            raise ValueError(f"{test_name} not in key.yaml")
         pointer = pointer[test_name]
 
     if pointer == "pass":
