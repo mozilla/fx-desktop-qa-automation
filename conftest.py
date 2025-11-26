@@ -504,7 +504,7 @@ def driver(
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        displayed_version, _ = _get_version(driver).split(" ")
+        displayed_version = _get_version(driver).split(" ")[0]
         if displayed_version not in version:
             raise ValueError(
                 f"Mismatch between displayed version {displayed_version}"
