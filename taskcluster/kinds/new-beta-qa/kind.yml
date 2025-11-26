@@ -15,6 +15,7 @@ task-defaults:
         type: directory
     env:
       TESTRAIL_REPORT: "true"
+      STARFOX_MANIFEST: "./manifests/smoke.yaml"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
