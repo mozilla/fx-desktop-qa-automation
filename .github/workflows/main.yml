@@ -78,6 +78,7 @@ jobs:
           STARFOX_MANIFEST='.\manifests\${{ inputs.test_set }}.yaml'
           "@
           New-Item -Name .env -Value $env_contents -ItemType File -Force
+          Write-Host "$env:TESTRAIL_REPORT"
         shell: pwsh
       - name: Install dependencies
         run: |
