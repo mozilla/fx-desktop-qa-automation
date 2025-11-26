@@ -172,22 +172,6 @@ def convert_manifest_to_list(manifest_loc):
 
 if __name__ == "__main__":
     print("Selecting test set...")
-    if os.path.exists(".env"):
-        with open(".env") as fh:
-            contents = fh.read()
-            if "TESTRAIL_REPORT='true'" in contents:
-                os.environ["TESTRAIL_REPORT"] = "true"
-            if "RUN_ALL='true'" in contents:
-                os.environ["MANUAL"] = "true"
-
-    if os.environ.get("TESTRAIL_REPORT"):
-        # Run all tests if this is a scheduled run
-        run_list = convert_manifest_to_list("manifests/smoke.yaml")
-        run_list = dedupe(run_list)
-        with open(OUTPUT_FILE, "w") as fh:
-            fh.write("\n".join(run_list))
-            sys.exit(0)
-
     if os.environ.get("STARFOX_MANIFEST"):
         run_list = convert_manifest_to_list(os.environ["STARFOX_MANIFEST"])
         run_list = dedupe(run_list)

@@ -16,7 +16,7 @@ task-defaults:
     env:
       TESTRAIL_REPORT: "true"
       STARFOX_MANIFEST: "./manifests/functional.yaml"
-      TESTRAIL_FUNCTIONAL_SPLIT: 1
+      TESTRAIL_FUNCTIONAL_SPLIT: "1"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
