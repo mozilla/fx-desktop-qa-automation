@@ -80,6 +80,15 @@ jobs:
           New-Item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "$env:TESTRAIL_REPORT"
         shell: pwsh
+      - name: Set Functional Split
+        if: ${{ inputs.test_set == 'functional' }}
+        run: |
+          $env_contents = @"
+          TESTRAIL_FUNCTIONAL_SPLIT=1
+          "@
+          New-Item -Name .env -Value $env_contents -ItemType File -Force
+          Write-Host "$env:TESTRAIL_REPORT"
+          Write-Host "$env:STARFOX_MANIFEST"
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -182,6 +191,9 @@ jobs:
       - name: Select Test Set
         if: ${{ inputs.test_set != null }}
         run: echo "STARFOX_MANIFEST=./manifests/${{ inputs.test_set }}.yaml" >> "$GITHUB_ENV"
+      - name: Set Functional Split
+        if: ${{ inputs.test_set == 'functional' }}
+        run: echo "TESTRAIL_FUNCTIONAL_SPLIT=1" >> "$GITHUB_ENV"
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
