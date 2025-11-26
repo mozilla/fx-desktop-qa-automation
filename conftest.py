@@ -504,7 +504,13 @@ def driver(
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        json_metadata["fx_version"] = _get_version(driver)
+        displayed_version = _get_version(driver).split(" ")[0]
+        if displayed_version not in version:
+            raise ValueError(
+                f"Mismatch between displayed version {displayed_version}"
+                f" and actual version {version}"
+            )
+        json_metadata["fx_version"] = version
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = suite_id
         json_metadata["test_case"] = test_case

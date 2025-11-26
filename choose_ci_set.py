@@ -111,49 +111,59 @@ def sysname():
     raise OSError("Unsupported system.")
 
 
+def is_addable(test_name, result):
+    pointer = result
+    test_name = test_name.replace(".py", "")
+    if "::" in test_name:
+        test, subtest = test_name.split("::")
+        pointer = pointer[test]
+        pointer = pointer[subtest]
+    else:
+        pointer = pointer[test_name]
+
+    if pointer == "pass":
+        return True
+    if isinstance(pointer, str):
+        return False
+    else:
+        os_result = pointer.get(sysname())
+        if not os_result:
+            raise ValueError(f"No result for {sysname()} in key for {test_name}")
+        if os_result == "pass":
+            return True
+    return False
+
+
+def filter_non_pass(run_list):
+    print("Removing tests not expected to pass...")
+    toplevel = [".", "tests"]
+    mkey = yaml.safe_load(open(MANIFEST_KEY))
+    out_list = []
+    for test in run_list:
+        path_parts = test.split(SLASH)
+        pointer = mkey
+        for part in path_parts[:-1]:
+            if part in toplevel:
+                continue
+            pointer = pointer[part]
+        if is_addable(path_parts[-1], pointer):
+            out_list.append(test)
+    return out_list
+
+
 def convert_manifest_to_list(manifest_loc):
     manifest = yaml.safe_load(open(manifest_loc))
-    mkey = yaml.safe_load(open(MANIFEST_KEY))
     toplevel = [".", "tests"]
-    tests = []
     if manifest:
         print(f"Reading {manifest_loc}")
-    for suite in manifest:
-        if suite not in mkey:
-            print(f"{suite} not in {MANIFEST_KEY}")
-            continue
-
-        for testfile in manifest[suite]:
-            addtest = False
-            test_name = f"{testfile}.py"
-            if testfile not in mkey[suite]:
-                print(f"{suite}/{testfile} not in {MANIFEST_KEY}::{suite}")
-                continue
-            if mkey[suite][testfile] == "pass":
-                addtest = True
-            elif isinstance(mkey[suite][testfile], dict):
-                if any([x in mkey[suite][testfile] for x in SUPPORTED_OSES]):
-                    if mkey[suite][testfile][sysname()] == "pass":
-                        addtest = True
-                else:
-                    for subtest in mkey[suite][testfile]:
-                        if mkey[suite][testfile][subtest] == "pass":
-                            test_name = f"{test_name}::{subtest}"
-                            addtest = True
-                        elif isinstance(mkey[suite][testfile][subtest], dict):
-                            if sysname() in mkey[suite][testfile][subtest]:
-                                if mkey[suite][testfile][subtest][sysname()] == "pass":
-                                    test_name = f"{test_name}::{subtest}"
-                                    addtest = True
-
-            if addtest:
-                test_to_add = SLASH.join(toplevel + [suite, test_name])
-                assert os.path.exists(test_to_add.split("::")[0]), (
-                    f"{test_to_add} could not be found"
-                )
-                tests.append(test_to_add)
-                addtest = False
-    return tests
+        run_list = []
+        for suite, tests in manifest.items():
+            for test_name in tests:
+                test_to_add = SLASH.join(toplevel + [suite, test_name]) + ".py"
+                assert os.path.exists(test_to_add), f"{test_to_add} could not be found"
+                run_list.append(test_to_add)
+    run_list = filter_non_pass(run_list)
+    return run_list
 
 
 if __name__ == "__main__":
@@ -289,6 +299,7 @@ if __name__ == "__main__":
     # Dedupe just in case
     if SLASH == "\\":
         run_list = [entry.replace("/", SLASH) for entry in run_list]
+    run_list = filter_non_pass(run_list)
     run_list = dedupe(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
     with open(OUTPUT_FILE, "w") as fh:

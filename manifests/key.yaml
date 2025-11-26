@@ -147,10 +147,7 @@ menus:
   test_tab_context_menu_actions: pass
   test_tab_context_menu_close: pass
 meta:
-  test_selectors:
-    test_a_selector: pass
-  test_version:
-    test_version: pass
+  test_version: pass
 networking:
   test_default_dns_protection: pass
   test_http_site: pass

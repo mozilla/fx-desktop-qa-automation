@@ -25,18 +25,18 @@ jobs:
   Run-Smoke-Win:
     needs: Select-Channels
     if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'smoke')
-    uses: ./.github/workflows/smoke.yml
+    uses: ./.github/workflows/main.yml
     with:
-      job_to_run: Smoke-Windows
+      job_to_run: Test-Windows
       is_pull_request: true
     secrets: inherit
 
   Run-Smoke-Mac:
     needs: Select-Channels
     if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'smoke')
-    uses: ./.github/workflows/smoke.yml
+    uses: ./.github/workflows/main.yml
     with:
-      job_to_run: Smoke-MacOS
+      job_to_run: Test-MacOS
       is_pull_request: true
     secrets: inherit
 

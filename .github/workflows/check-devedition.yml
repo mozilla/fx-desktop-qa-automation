@@ -33,17 +33,19 @@ jobs:
   Run-Win-Smoke:
     needs: Check-DevEdition-Version
     if: ${{ needs.Check-DevEdition-Version.outputs.win_reportable == 'True' }}
-    uses: ./.github/workflows/smoke.yml
+    uses: ./.github/workflows/main.yml
     with:
       channel: "devedition"
-      job_to_run: Smoke-Windows
+      job_to_run: Test-Windows
+      test_set: smoke
     secrets: inherit
 
   Run-Mac-Smoke:
     needs: Check-DevEdition-Version
     if: ${{ needs.Check-DevEdition-Version.outputs.mac_reportable == 'True' }}
-    uses: ./.github/workflows/smoke.yml
+    uses: ./.github/workflows/main.yml
     with:
       channel: "devedition"
-      job_to_run: Smoke-MacOS
+      job_to_run: Test-MacOS
+      test_set: smoke
     secrets: inherit
