@@ -2,7 +2,7 @@ name: Check new beta version - Smoke
 
 on:
   schedule:
-    - cron: "40 */1 * * *"
+    - cron: "05 */1 * * *"
 env:
   LATEST: ""
 permissions:
