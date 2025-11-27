@@ -9,9 +9,11 @@ address_bar_and_search:
   test_addressbar_bookmarks_when_history_disabled: pass
   test_addressbar_search_engine_keywords: pass
   test_copied_url_contains_https: pass
+  test_ctrl_enter_completes_link_and_can_refresh: pass
   test_ctrl_enter_fixes_url: pass
   test_default_search_provider_change_awesome_bar: unstable
   test_default_search_provider_change_legacy_search_bar: deprecated
+  test_disable_websearch_from_awesome_bar: pass
   test_dont_show_search_suggestions_in_private_window: pass
   test_google_search_counts_us:
     linux: pass
@@ -21,6 +23,7 @@ address_bar_and_search:
   test_insertion_point_no_search_terms_display: pass
   test_no_suggestions_for_empty_query: pass
   test_non_sponsored_topsite_context_menu_option: pass
+  test_paste_and_go_opens_correct_url: pass
   test_refresh_firefox_dialog: pass
   test_sap_google_adclick: unstable
   test_seach_suggestions_can_be_disabled: pass
@@ -28,6 +31,7 @@ address_bar_and_search:
   test_search_code_google_us: pass
   test_search_engine_selector: pass
   test_search_mode_appears_after_input: pass
+  test_search_mode_exits_correctly: pass
   test_search_mode_persists_mixed_with_bing: pass
   test_search_modes_for_sites: unstable
   test_search_string_displayed_when_addressbar_unfocused: pass
@@ -37,10 +41,13 @@ address_bar_and_search:
   test_searchbar_on_engines_remove_restore: pass
   test_searchbar_results_shown_in_a_new_tab: pass
   test_searchmode_change_tab: pass
+  test_searchmode_cleared_on_engine_removal: pass
   test_server_not_found_error: pass
   test_server_not_found_error_pb: pass
   test_suggestion_engine_selection: pass
   test_tile_menu_options: pass
+  test_use_different_search_shortcut_while_already_in_search_mode: pass
+  test_verify_url_after_tab_switch_with_search_mode: pass
 audio_video:
   test_allow_audio_video_functionality:
     linux: unstable

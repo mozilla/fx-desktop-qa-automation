@@ -549,6 +549,7 @@ class Navigation(BasePage):
         """Open search settings from searchmode switcher in awesome bar"""
         self.click_on("searchmode-switcher")
         self.click_on("searchmode-switcher-settings")
+        self.switch_to_new_tab()
         return self
 
     @BasePage.context_chrome

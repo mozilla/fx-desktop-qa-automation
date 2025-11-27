@@ -284,7 +284,7 @@ def reportable(platform_to_test=None):
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
         )
-        return covered_suites < num_suites
+        return covered_suites + 1 < num_suites
 
 
 def testrail_init() -> TestRail:

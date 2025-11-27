@@ -8,7 +8,6 @@
     "postal_code": "a95979b5-b91b-423f-825d-48112c1c27ec",
     "telephone": "443642dc-9c22-4601-926e-35377961b5fc"
   },
-
   "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
   "fields": [
     "b885db87-1444-4b2b-b89b-0b54d68d996f",
@@ -18,7 +17,7 @@
     "a95979b5-b91b-423f-825d-48112c1c27ec",
     "443642dc-9c22-4601-926e-35377961b5fc"
   ],
-    "skipped": [
+  "skipped": [
     "test_demo_ad_2a_preview_name_org_fields.py",
     "test_demo_ad_2b_preview_address_fields.py",
     "test_demo_ad_2c_preview_phone_email_fields.py",
