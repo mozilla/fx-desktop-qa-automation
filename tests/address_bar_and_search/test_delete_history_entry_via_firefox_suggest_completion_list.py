@@ -38,6 +38,12 @@ def test_delete_history_from_url_bar_completion_list(driver: Firefox):
     # Select the suggestion and delete using Shift+Backspace
     nav.perform_key_combo_chrome(Keys.ARROW_DOWN)
     nav.perform_key_combo_chrome(Keys.SHIFT, Keys.BACKSPACE)
+    
+    # Wait for the deleted suggestion to be removed from the list
+    nav.wait(
+        lambda d: HISTORY_ENTRY not in
+        [el.text for el in nav.get_elements("suggestion-titles")]
+    )
 
     # Verify the entry is removed from History menu
     panel.verify_history_item_not_exists(HISTORY_ENTRY)

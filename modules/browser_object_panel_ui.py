@@ -290,6 +290,7 @@ class PanelUi(BasePage):
             item_title (str): The title text to look for in the history item (can be partial match)
         """
         self.open_history_menu()
+        self.element_visible("panel-ui-history-view")
         self.get_all_history()
         self.element_visible("bookmark-by-title", labels=[item_title])
         return self
@@ -306,6 +307,7 @@ class PanelUi(BasePage):
             item_title (str): The title text to look for in the history item (can be partial match)
         """
         self.open_history_menu()
+        self.element_visible("panel-ui-history-view")
         self.get_all_history()
         self.element_not_visible("bookmark-by-title", labels=[item_title])
         return self
