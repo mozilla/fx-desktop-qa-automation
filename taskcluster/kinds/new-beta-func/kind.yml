@@ -3,8 +3,8 @@ transforms:
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Test New Beta Version"
-  description: "Checks for new betas, tests them, reports to TestRail and Slack"
+  label: "Test New Beta Version - Functional"
+  description: "Checks for new betas, runs functional tests, reports to TestRail and Slack"
   worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
@@ -15,7 +15,8 @@ task-defaults:
         type: directory
     env:
       TESTRAIL_REPORT: "true"
-      STARFOX_MANIFEST: "./manifests/smoke.yaml"
+      STARFOX_MANIFEST: "./manifests/functional.yaml"
+      TESTRAIL_FUNCTIONAL_SPLIT: "1"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -26,7 +27,7 @@ task-defaults:
 tasks:
   linux:
     attributes:
-      beta-qa: true
+      beta-func: true
     run-on-tasks-for: []
     run:
       using: run-task
