@@ -6,6 +6,7 @@ address_bar_and_search:
   test_add_engine_address_bar: pass
   test_added_open_search_engine_default: pass
   test_addon_suggestion: unstable
+  test_addressbar_bookmarks_when_history_disabled: pass
   test_addressbar_search_engine_keywords: pass
   test_copied_url_contains_https: pass
   test_ctrl_enter_fixes_url: pass

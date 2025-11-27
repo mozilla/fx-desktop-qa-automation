@@ -6,6 +6,7 @@ address_bar_and_search:
 - test_ctrl_enter_completes_link_and_can_refresh
 - test_disable_websearch_from_awesome_bar
 - test_searchmode_cleared_on_engine_removal
+- test_addressbar_bookmarks_when_history_disabled
 tabs:
 - test_change_position_of_pinned_tabs
 - test_close_pinned_tab_via_mouse
