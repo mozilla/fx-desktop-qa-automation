@@ -12,6 +12,7 @@ address_bar_and_search:
   test_ctrl_enter_fixes_url: pass
   test_default_search_provider_change_awesome_bar: unstable
   test_default_search_provider_change_legacy_search_bar: deprecated
+  test_delete_history_entry_via_firefox_suggest_completion_list: pass
   test_disable_websearch_from_awesome_bar: pass
   test_dont_show_search_suggestions_in_private_window: pass
   test_google_search_counts_us:
