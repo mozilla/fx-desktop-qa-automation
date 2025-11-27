@@ -26,6 +26,7 @@ address_bar_and_search:
 - test_disable_websearch_from_awesome_bar
 - test_adaptive_history_autofill
 - test_suggestion_engine_selection
+- test_address_bar_suggests_open_site_in_other_tab
 - test_searchbar_results_shown_in_a_new_tab
 - test_dont_show_search_suggestions_in_private_window
 - test_search_mode_appears_after_input
