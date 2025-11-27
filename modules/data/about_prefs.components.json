@@ -612,6 +612,10 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "history-suggestion": {
+    "selectorData": "historySuggestion",
+    "strategy": "id",
+    "groups": []
   }
-
 }

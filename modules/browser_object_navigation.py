@@ -1056,3 +1056,45 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("exit-button-searchmode").click()
+
+    @BasePage.context_chrome
+    def type_verify_and_click(self, input_text: str, expected_text: str) -> bool:
+        """
+        Type `input_text` in the awesome bar, verify `expected_text` appears in
+        the suggestions, and click it if found.
+        """
+        self.clear_awesome_bar()
+        self.type_in_awesome_bar(input_text)
+
+        # Polling lambda: keeps fetching fresh suggestions until the expected text is found
+        get_suggestions = lambda: [s for s in self.get_all_children("results-dropdown") if expected_text in s.text]
+
+        while True:
+            try:
+                matching = get_suggestions()
+                if matching:
+                    matching[0].click()
+                    return True
+            except Exception:
+                # stale element or refreshed DOM, skip
+                continue
+
+    @BasePage.context_chrome
+    def verify_result_position(self, expected_text: str, poll=lambda f: f(), attempts: int = 20) -> int:
+        """
+        Returns the 0-based position of `expected_text` in the results-dropdown.
+        Returns -1 if not found after `attempts` polls.
+        """
+        for _ in range(attempts):
+            try:
+                # Use lambda to fetch suggestions dynamically
+                suggestions = poll(lambda: self.get_all_children("results-dropdown"))
+                for index, s in enumerate(suggestions):
+                    try:
+                        if expected_text in s.text:
+                            return index + 0  # 0-based
+                    except StaleElementReferenceException:
+                        continue
+            except Exception:
+                continue
+        return -1
