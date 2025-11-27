@@ -156,6 +156,7 @@ menus:
   test_tab_context_menu_close: pass
 meta:
   test_version: pass
+  test_selector: unstable
 networking:
   test_default_dns_protection: pass
   test_http_site: pass
