@@ -21,14 +21,14 @@ HISTORY_ENTRY = "Kirby9"
 
 def test_delete_history_from_url_bar_completion_list(driver: Firefox):
     """
-    C3028901
-    Verify that deleting an entry from the Firefox Suggest completion list
-    also removes the same entry from the History menu.
+    C3028901 Verify that deleting an entry from the Firefox Suggest completion list also removes the same entry from
+    the History menu.
     """
+    # Initialize page objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
 
-    # Ensure the targeted entry is already visible in History UI
+    # Ensure the targeted entry is visible in History menu
     panel.verify_history_item_exists(HISTORY_ENTRY)
 
     # Type into the URL bar to trigger suggestions
