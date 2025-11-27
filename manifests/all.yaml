@@ -14,6 +14,7 @@ address_bar_and_search:
 - test_google_search_counts_us
 - test_search_term_persists
 - test_addressbar_search_engine_keywords
+- test_address_bar_suggests_open_site_in_other_tab
 - test_added_open_search_engine_default
 - test_insertion_point_no_search_terms_display
 - test_searchbar_display_alpenglow_theme
@@ -26,7 +27,6 @@ address_bar_and_search:
 - test_disable_websearch_from_awesome_bar
 - test_adaptive_history_autofill
 - test_suggestion_engine_selection
-- test_address_bar_suggests_open_site_in_other_tab
 - test_searchbar_results_shown_in_a_new_tab
 - test_dont_show_search_suggestions_in_private_window
 - test_search_mode_appears_after_input

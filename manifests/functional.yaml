@@ -1,4 +1,5 @@
 address_bar_and_search:
+- test_address_bar_suggests_open_site_in_other_tab
 - test_search_mode_exits_correctly
 - test_use_different_search_shortcut_while_already_in_search_mode
 - test_paste_and_go_opens_correct_url

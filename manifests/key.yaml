@@ -7,6 +7,7 @@ address_bar_and_search:
   test_added_open_search_engine_default: pass
   test_addon_suggestion: unstable
   test_addressbar_search_engine_keywords: pass
+  test_address_bar_suggests_open_site_in_other_tab: pass
   test_copied_url_contains_https: pass
   test_ctrl_enter_completes_link_and_can_refresh: pass
   test_ctrl_enter_fixes_url: pass
@@ -44,7 +45,6 @@ address_bar_and_search:
   test_server_not_found_error: pass
   test_server_not_found_error_pb: pass
   test_suggestion_engine_selection: pass
-  test_address_bar_suggests_open_site_in_other_tab: pass
   test_tile_menu_options: pass
   test_use_different_search_shortcut_while_already_in_search_mode: pass
   test_verify_url_after_tab_switch_with_search_mode: pass
