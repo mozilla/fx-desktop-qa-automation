@@ -14,7 +14,6 @@ address_bar_and_search:
 - test_google_search_counts_us
 - test_search_term_persists
 - test_addressbar_search_engine_keywords
-- test_address_bar_suggests_open_site_in_other_tab
 - test_added_open_search_engine_default
 - test_insertion_point_no_search_terms_display
 - test_searchbar_display_alpenglow_theme
@@ -41,6 +40,7 @@ address_bar_and_search:
 - test_addon_suggestion
 - test_search_code_google_us
 - test_searchmode_cleared_on_engine_removal
+- test_switch_to_existing_tab_when_having_the_same_URL
 - test_search_suggestions
 audio_video:
 - test_block_audio_video_functionality

@@ -1,5 +1,4 @@
 address_bar_and_search:
-- test_address_bar_suggests_open_site_in_other_tab
 - test_search_mode_exits_correctly
 - test_use_different_search_shortcut_while_already_in_search_mode
 - test_paste_and_go_opens_correct_url
@@ -7,6 +6,7 @@ address_bar_and_search:
 - test_ctrl_enter_completes_link_and_can_refresh
 - test_disable_websearch_from_awesome_bar
 - test_searchmode_cleared_on_engine_removal
+- test_switch_to_existing_tab_when_having_the_same_URL
 tabs:
 - test_change_position_of_pinned_tabs
 - test_close_pinned_tab_via_mouse
