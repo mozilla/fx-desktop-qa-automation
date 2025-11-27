@@ -14,7 +14,7 @@ def test_case():
 
 
 @pytest.mark.functional
-def test_address_bar_suggests_open_site_in_other_tab(driver: Firefox):
+def test_switch_to_existing_tab_when_having_the_same_URL(driver: Firefox):
     """
     3028949 - Handle switch to tab functionality
     """
