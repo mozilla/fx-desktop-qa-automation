@@ -1,8 +1,8 @@
-name: Check new beta version - Smoke
+name: Check new beta version - Functional
 
 on:
   schedule:
-    - cron: "20 */1 * * *"
+    - cron: "55 1/5 1 * *"
 env:
   LATEST: ""
 permissions:
@@ -23,6 +23,7 @@ jobs:
       - name: Check if the run is reportable
         id: reportable
         env:
+          TESTRAIL_FUNCTIONAL_SPLIT: 1
           TESTRAIL_REPORT: true
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -33,20 +34,20 @@ jobs:
           echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
           echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
 
-  Run-Win-Smoke:
+  Run-Win-Functional:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
-      test_set: smoke
+      test_set: functional
     secrets: inherit
 
-  Run-Mac-Smoke:
+  Run-Mac-Functional:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS
-      test_set: smoke
+      test_set: functional
     secrets: inherit
