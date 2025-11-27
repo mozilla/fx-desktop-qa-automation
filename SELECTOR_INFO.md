@@ -1243,6 +1243,13 @@ Description: The Restore Default Search Engines button under Search shortcuts ta
 Location: about:preferences#search Search Shortcuts subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: Browsing History
+Selector Data: history-suggestion
+Description: Browsing History / History Suggestion under Address bar section
+Location: about:preferences#search 
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container

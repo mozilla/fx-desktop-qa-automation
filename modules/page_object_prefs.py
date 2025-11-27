@@ -805,6 +805,14 @@ class AboutPrefs(BasePage):
         BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
         return self
 
+    def uncheck_history_suggestion(self):
+        """
+        Uncheck the 'historySuggestion' checkbox if it's currently checked.
+        """
+        checkbox = self.get_element("history-suggestion")
+        if checkbox.is_selected():
+            checkbox.click()
+
 
 class AboutAddons(BasePage):
     """
