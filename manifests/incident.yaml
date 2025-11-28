@@ -12,7 +12,6 @@ address_bar_and_search:
 - test_search_term_persists
 - test_server_not_found_error
 - test_suggestion_engine_selection
-- test_switch_to_existing_tab_when_having_the_same_URL
 audio_video:
 - test_allow_audio_video_functionality
 - test_block_audio_video_functionality

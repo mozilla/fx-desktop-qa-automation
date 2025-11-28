@@ -33,7 +33,6 @@ address_bar_and_search:
 - test_server_not_found_error
 - test_server_not_found_error_pb
 - test_suggestion_engine_selection
-- test_switch_to_existing_tab_when_having_the_same_URL
 - test_tile_menu_options
 audio_video:
 - test_allow_audio_video_functionality
