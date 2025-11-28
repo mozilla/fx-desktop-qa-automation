@@ -133,14 +133,13 @@ class Navigation(BasePage):
         when at least one element is found.
         """
 
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            # Wait until at least one switch-to-tab result is present
-            switch_items = self.wait.until(
-                lambda d: self.get_elements("switch-to-tab") or None
-            )
+        # Wait until at least one switch-to-tab result is present
+        switch_items = self.wait.until(
+            lambda d: self.get_elements("switch-to-tab") or None
+        )
 
-            # Click the first matching row
-            switch_items[0].click()
+        # Click the first matching row
+        switch_items[0].click()
 
     @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
