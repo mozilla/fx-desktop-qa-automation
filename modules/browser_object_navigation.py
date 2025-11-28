@@ -123,6 +123,7 @@ class Navigation(BasePage):
         """Click the Firefox suggested result."""
         self.get_element("firefox-suggest").click()
 
+    @BasePage.context_chrome
     def click_switch_to_tab(self) -> None:
         """
         Clicks the 'Switch to Tab' suggestion in the URL bar results.
