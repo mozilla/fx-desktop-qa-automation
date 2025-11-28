@@ -34,11 +34,9 @@ def test_switch_to_existing_tab_when_having_the_same_URL(driver: Firefox):
 
     # Step 4: Click "Switch to Tab" suggestion
     nav.click_switch_to_tab()
-
-    # Step 5: Wait until only one tab remains
     tabs.wait_for_num_tabs(1)
 
-    # Step 6: Reattach driver to the remaining tab
+    # Step 5: Reattach driver to the remaining tab
     handle = driver.window_handles[0]
     driver.switch_to.window(handle)
 
