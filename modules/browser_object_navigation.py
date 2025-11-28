@@ -124,6 +124,24 @@ class Navigation(BasePage):
         self.get_element("firefox-suggest").click()
 
     @BasePage.context_chrome
+    def click_switch_to_tab(self) -> None:
+        """
+        Clicks the 'Switch to Tab' suggestion in the URL bar results.
+        Assumes the caller already typed into the awesome bar.
+
+        This uses a minimal wait that returns the list of matches only
+        when at least one element is found.
+        """
+
+        # Wait until at least one switch-to-tab result is present
+        switch_items = self.wait.until(
+            lambda d: self.get_elements("switch-to-tab") or None
+        )
+
+        # Click the first matching row
+        switch_items[0].click()
+
+    @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.

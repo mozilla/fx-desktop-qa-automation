@@ -663,6 +663,12 @@
         "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
         "strategy": "css",
         "groups": []
+    },
+
+    "switch-to-tab": {
+        "selectorData": "div.urlbarView-row[type='switchtab']",
+        "strategy": "css",
+        "groups": ["doNotCache"]
     }
 
 }
