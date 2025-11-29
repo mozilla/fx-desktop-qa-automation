@@ -1888,6 +1888,20 @@ Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-move-tab-to-end
+Selector Data: menuitem[data-l10n-id='move-to-end']
+Description: Context menu option to move a tab to the end of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-to-new-window
+Selector Data: menuitem[data-l10n-id='move-to-new-window']
+Description: Context menu option to move a tab to a new window.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-bookmark-link
 Selector Data: context-bookmarklink
 Description: Context menu option to bookmark a link
@@ -1899,8 +1913,8 @@ Selector Name: context-menu-search-select
 Selector Data: coontext-searchselect
 Description: Context menu option to search selected text with the engine set as default
 Location: Context menu - topsite context menu
-Path to .json: modules/data/context_menu.components.json
 ```
+
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -3243,62 +3257,6 @@ Selector Name: status-panel-label
 Selector Data: statuspanel-label
 Description: Status panel URL label
 Location: newtab page bottom left corner on link hover
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: searchmode-engine
-Selector Data: toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']
-Description: Searchmode engine label
-Location: Address bar searchmode engine label
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: selected_searchbar-search-engine
-Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
-Description: Searchbar-search-engine
-Location: Selected search bar search engine 
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: searchbar-suggestions
-Selector Data: hbox.search-one-offs
-Description: Searchbar suggestions
-Location: Searchbar results 
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: searchbar-magnifying-glass-button
-Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
-Description: Searchbar magnifying glass button
-Location: Searchbar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: searchbar-search-engine
-Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'
-Description: Searchbar search engine button
-Location: Searchbar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: search-mode-chicklet
-Selector Data: label.searchmode-switcher-title
-Description: Search mode chicklet
-Location: Address bar search mode
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: history-button-search-mode
-Selector Data: search-button-history
-Description: Histroy button search mode
-Location: Search mode
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: exit-button-searchmode
-Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
-Description: Exit button searchmode
-Location: Address bar searchmode
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
