@@ -5,6 +5,7 @@ from copy import deepcopy
 import yaml
 
 NUM_FUNCTIONAL_SPLITS = 1
+MAX_DEPTH = 5
 
 
 def sysname():
@@ -19,12 +20,16 @@ def sysname():
 
 
 def test_expected_to_pass(entry: dict) -> bool:
-    if entry["result"] == "pass":
+    ptr = entry
+    for _ in range(MAX_DEPTH):
+        if "result" not in ptr:
+            ptr = ptr[list(ptr.keys())[0]]
+    if ptr["result"] == "pass":
         return True
-    elif isinstance(entry["result"], str):
+    elif isinstance(ptr["result"], str):
         return False
     else:
-        if entry[sysname()]["result"] == "pass":
+        if ptr["result"][sysname()] == "pass":
             return True
     return False
 
@@ -79,6 +84,15 @@ class TestKey:
             filename = filename + "::" + subtest
         return filename
 
+    def filter_filenames_by_pass(self, filenames: list) -> list:
+        passes = []
+        for filename in filenames:
+            full_entry = self.get_entry_from_filename(filename)
+            if test_expected_to_pass(full_entry):
+                passes.append(filename)
+
+        return passes
+
     def get_entry_from_filename(self, filename) -> dict:
         segments = filename.split(os.path.sep)
         i = 0
@@ -95,7 +109,8 @@ class TestKey:
             testfile, subtest = segments[-1].split("::")
             segments[-1] = testfile
             segments.append(subtest)
-        for segment in segments[i + 1 : -1]:
+        i += 1
+        for segment in segments[i:-1]:
             if segment not in manifest_ptr:
                 print(f"Test file not in manifest: {filename}")
             entry_ptr[segment] = {}
@@ -124,8 +139,9 @@ class TestKey:
                     splitnum = j
             entry = self.get_entry_from_filename(test_filename)
             ptr = entry
-            while "splits" not in ptr:
-                ptr = entry[list(entry.keys())[0]]
+            for _ in range(MAX_DEPTH):
+                if "splits" not in ptr:
+                    ptr = entry[list(entry.keys())[0]]
             if f"functional{splitnum + 1}" in ptr["splits"]:
                 continue
             for split_ in ptr["splits"]:
@@ -190,28 +206,46 @@ class TestKey:
                     if ask_question(f"Found suite {suite}. Add it to key? "):
                         newkey[suite] = {}
 
+                resplit = False
                 if testfile not in newkey[suite]:
                     if not testfile.startswith("test_"):
                         continue
                     if ask_question(f"Found test {suite}/{testfile}. Add it to key? "):
                         newkey[suite][testfile] = {"result": "pass"}
 
-                        split = ask_open_question(
-                            "What split is this test assigned to? (One only) "
-                        )
-                        newkey[suite][testfile]["splits"] = [split]
+                    resplit = True
 
-                        if ask_question(
-                            "Should this test run in a Scheduled Functional split? "
-                            "(Say no if unsure.) "
-                        ):
-                            self.rebalance_functionals()
+                old_style = (
+                    isinstance(newkey[suite][testfile], str)
+                    or not any(
+                        [k.startswith("test_") for k in newkey[suite][testfile].keys()]
+                    )
+                ) and "result" not in newkey[suite][testfile]
+                if old_style:
+                    print(
+                        f"The test at {suite}/{testfile} is mis-keyed, fixing automatically..."
+                    )
+                    newkey[suite][testfile] = {"result": newkey[suite][testfile]}
+                    resplit = True
 
-                        print(
-                            f"Test will be added to {split} in {self.manifest_file}. "
-                            "Consider modifying that file if the test is unstable in any OS, "
-                            "or if subtests need to be tracked separately."
-                        )
+                if resplit:
+                    split = ask_open_question(
+                        "What split is this test assigned to? (One only) "
+                    )
+                    newkey[suite][testfile]["splits"] = [split]
+
+                    if ask_question(
+                        "Should this test run in a Scheduled Functional split? "
+                        "(Say no if unsure.) "
+                    ):
+                        newkey[suite][testfile]["splits"].append("functional1")
+                        self.rebalance_functionals()
+
+                    print(
+                        f"Test will be added to {split} in {self.manifest_file}. "
+                        "Consider modifying that file if the test is unstable in any OS, "
+                        "or if subtests need to be tracked separately."
+                    )
 
         self.manifest = newkey
         self.write()

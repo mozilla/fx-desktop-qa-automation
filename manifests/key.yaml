@@ -1,55 +1,204 @@
 address_bar_and_search:
   test_adaptive_history_autofill:
-    linux: unstable
-    mac: unstable
-    win: pass
-  test_add_engine_address_bar: pass
-  test_added_open_search_engine_default: pass
-  test_addon_suggestion: unstable
-  test_addressbar_search_engine_keywords: pass
-  test_copied_url_contains_https: pass
-  test_ctrl_enter_completes_link_and_can_refresh: pass
-  test_ctrl_enter_fixes_url: pass
-  test_default_search_provider_change_awesome_bar: unstable
-  test_default_search_provider_change_legacy_search_bar: deprecated
-  test_delete_history_entry_via_firefox_suggest_completion_list: pass
-  test_disable_websearch_from_awesome_bar: pass
-  test_dont_show_search_suggestions_in_private_window: pass
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+  test_add_engine_address_bar:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_added_open_search_engine_default:
+    result: pass
+    splits:
+    - functional1
+  test_addon_suggestion:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_addressbar_search_engine_keywords:
+    result: pass
+    splits:
+    - functional1
+  test_copied_url_contains_https:
+    result: pass
+    splits:
+    - functional1
+  test_ctrl_enter_completes_link_and_can_refresh:
+    result: pass
+    splits:
+    - functional1
+  test_ctrl_enter_fixes_url:
+    result: pass
+    splits:
+    - functional1
+  test_default_search_provider_change_awesome_bar:
+    result: unstable
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_default_search_provider_change_legacy_search_bar:
+    result: deprecated
+    splits:
+    - smoke
+  test_delete_history_entry_via_firefox_suggest_completion_list:
+    result: pass
+    splits:
+    - functional1
+  test_disable_websearch_from_awesome_bar:
+    result: pass
+    splits:
+    - functional1
+  test_dont_show_search_suggestions_in_private_window:
+    result: pass
+    splits:
+    - functional1
   test_google_search_counts_us:
-    linux: pass
-    mac: unstable
-    win: pass
-  test_google_withads_url_bar_us: unstable
-  test_insertion_point_no_search_terms_display: pass
-  test_no_suggestions_for_empty_query: pass
-  test_non_sponsored_topsite_context_menu_option: pass
-  test_paste_and_go_opens_correct_url: pass
-  test_refresh_firefox_dialog: pass
-  test_sap_google_adclick: unstable
-  test_seach_suggestions_can_be_disabled: pass
-  test_search_code_google_non_us: pass
-  test_search_code_google_us: pass
-  test_search_engine_selector: pass
-  test_search_mode_appears_after_input: pass
-  test_search_mode_exits_correctly: pass
-  test_search_mode_persists_mixed_with_bing: pass
-  test_search_modes_for_sites: unstable
-  test_search_string_displayed_when_addressbar_unfocused: pass
-  test_search_suggestions: unstable
-  test_search_term_persists: unstable
-  test_searchbar_display_alpenglow_theme: pass
-  test_searchbar_on_engines_remove_restore: pass
-  test_searchbar_results_shown_in_a_new_tab: pass
-  test_searchmode_change_tab: pass
-  test_searchmode_cleared_on_engine_removal: pass
-  test_searchmode_update_on_alias_prefix : pass
-  test_server_not_found_error: pass
-  test_server_not_found_error_pb: pass
-  test_suggestion_engine_selection: pass
-  test_switch_to_existing_tab_when_having_the_same_URL: pass
-  test_tile_menu_options: pass
-  test_use_different_search_shortcut_while_already_in_search_mode: pass
-  test_verify_url_after_tab_switch_with_search_mode: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_google_withads_url_bar_us:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_insertion_point_no_search_terms_display:
+    result: pass
+    splits:
+    - functional1
+  test_no_suggestions_for_empty_query:
+    result: pass
+    splits:
+    - functional1
+  test_non_sponsored_topsite_context_menu_option:
+    result: pass
+    splits:
+    - functional1
+  test_paste_and_go_opens_correct_url:
+    result: pass
+    splits:
+    - functional1
+  test_refresh_firefox_dialog:
+    result: pass
+    splits:
+    - functional1
+  test_sap_google_adclick:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_seach_suggestions_can_be_disabled:
+    result: pass
+    splits:
+    - functional1
+  test_search_code_google_non_us:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_search_code_google_us:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_search_engine_selector:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_search_mode_appears_after_input:
+    result: pass
+    splits:
+    - functional1
+  test_search_mode_exits_correctly:
+    result: pass
+    splits:
+    - functional1
+  test_search_mode_persists_mixed_with_bing:
+    result: pass
+    splits:
+    - functional1
+  test_search_modes_for_sites:
+    result: unstable
+    splits:
+    - smoke
+  test_search_string_displayed_when_addressbar_unfocused:
+    result: pass
+    splits:
+    - functional1
+  test_search_suggestions:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_search_term_persists:
+    result: unstable
+    splits:
+    - functional1
+    - ci-extended
+  test_searchbar_display_alpenglow_theme:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_on_engines_remove_restore:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_results_shown_in_a_new_tab:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_change_tab:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_cleared_on_engine_removal:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_update_on_alias_prefix:
+    result: pass
+    splits:
+    - functional1
+  test_server_not_found_error:
+    result: pass
+    splits:
+    - functional1
+    - ci-extended
+  test_server_not_found_error_pb:
+    result: pass
+    splits:
+    - functional1
+  test_suggestion_engine_selection:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_switch_to_existing_tab_when_having_the_same_URL:
+    result: pass
+    splits:
+    - functional1
+  test_tile_menu_options:
+    result: pass
+    splits:
+    - functional1
+  test_use_different_search_shortcut_while_already_in_search_mode:
+    result: pass
+    splits:
+    - functional1
+  test_verify_url_after_tab_switch_with_search_mode:
+    result: pass
+    splits:
+    - functional1
 audio_video:
   test_allow_audio_video_functionality:
     result:
@@ -423,8 +572,13 @@ menus:
     - smoke
     - ci-extended
 meta:
-  test_version: pass
-  test_selectors: unstable
+  test_selectors:
+    result: unstable
+    splits: []
+  test_version:
+    result: pass
+    splits:
+    - ci-extended
 networking:
   test_default_dns_protection:
     result: pass
