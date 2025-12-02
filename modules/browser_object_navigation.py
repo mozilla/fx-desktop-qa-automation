@@ -1075,3 +1075,45 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("exit-button-searchmode").click()
+
+    @BasePage.context_chrome
+    def get_autofill_adaptive_element(self) -> WebElement:
+        """Get the adaptive history autofill element from the address bar results."""
+        return self.get_element("search-result-autofill-adaptive-element")
+
+    @BasePage.context_chrome
+    def get_autofill_adaptive_elements(self) -> list[WebElement]:
+        """Get all adaptive history autofill elements from the address bar results."""
+        return self.get_elements("search-result-autofill-adaptive-element")
+
+    @BasePage.context_chrome
+    def verify_autofill_adaptive_element(
+        self, expected_type: str, expected_url: str
+    ) -> BasePage:
+        """
+        Verify that the adaptive history autofill element has the expected type and URL text.
+        This method handles chrome context switching internally.
+        Arguments:
+            expected_type: Expected type attribute value
+            expected_url: Expected URL fragment to be contained in the element text
+        """
+        autofill_element = self.get_autofill_adaptive_element()
+        actual_type = autofill_element.get_attribute("type")
+        actual_text = autofill_element.text
+
+        assert actual_type == expected_type
+        assert expected_url in actual_text
+
+        return self
+
+    @BasePage.context_chrome
+    def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        autofill_elements = self.get_autofill_adaptive_elements()
+        if autofill_elements:
+            logging.warning(
+                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
+            )
+        assert len(autofill_elements) == 0, (
+            "Adaptive history autofill suggestion was not removed after deletion."
+        )
+        return self
