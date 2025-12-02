@@ -1,7 +1,7 @@
 from time import sleep
 
+import autopy
 import pytest
-from pynput.mouse import Button, Controller
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -32,7 +32,6 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     """
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
-    mouse = Controller()
     wait = WebDriverWait(driver, 10)
     DELAY = 2
     POSITION_DELAY = 0.3
@@ -99,9 +98,9 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
                 + chrome_height
             )
             # Offset to click on the audio control area (left side of tab)
-            mouse.position = (element_x - 75, element_y)
+            autopy.mouse.smooth_move(element_x - 75, element_y)
             sleep(POSITION_DELAY)  # Small delay for mouse positioning
-            mouse.click(Button.left, 1)
+            autopy.mouse.click(autopy.mouse.Button.LEFT)
             sleep(DELAY)  # Wait for action to take effect
 
         # Click Play button
