@@ -45,6 +45,7 @@ address_bar_and_search:
   test_server_not_found_error: pass
   test_server_not_found_error_pb: pass
   test_suggestion_engine_selection: pass
+  test_switch_to_existing_tab_when_having_the_same_URL: pass
   test_tile_menu_options: pass
   test_use_different_search_shortcut_while_already_in_search_mode: pass
   test_verify_url_after_tab_switch_with_search_mode: pass
