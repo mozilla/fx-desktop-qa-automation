@@ -42,6 +42,7 @@ address_bar_and_search:
 - test_searchmode_cleared_on_engine_removal
 - test_switch_to_existing_tab_when_having_the_same_URL
 - test_search_suggestions
+- test_delete_history_entry_via_firefox_suggest_completion_list
 audio_video:
 - test_block_audio_video_functionality
 - test_allow_audio_video_functionality
