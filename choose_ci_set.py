@@ -207,9 +207,9 @@ if __name__ == "__main__":
             if not found:
                 run_list.append(changed_test)
 
+    ci_paths = manifest.gather_split("ci")
+    ci_paths = dedupe(ci_paths)
     if not run_list:
-        ci_paths = manifest.gather_split("ci")
-        ci_paths = dedupe(ci_paths)
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(ci_paths))
         sys.exit(0)
