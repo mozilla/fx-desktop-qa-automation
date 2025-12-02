@@ -27,7 +27,6 @@ address_bar_and_search:
   test_bing_search_codes:
     result: pass
     splits:
-    - smoke
     - functional1
   test_copied_url_contains_https:
     result: pass
