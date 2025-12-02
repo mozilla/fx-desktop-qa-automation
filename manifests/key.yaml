@@ -42,6 +42,7 @@ address_bar_and_search:
   test_searchbar_results_shown_in_a_new_tab: pass
   test_searchmode_change_tab: pass
   test_searchmode_cleared_on_engine_removal: pass
+  test_searchmode_update_on_alias_prefix : pass
   test_server_not_found_error: pass
   test_server_not_found_error_pb: pass
   test_suggestion_engine_selection: pass
