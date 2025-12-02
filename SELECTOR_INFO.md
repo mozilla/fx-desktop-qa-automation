@@ -3308,6 +3308,13 @@ Description: Exit button searchmode
 Location: Address bar searchmode
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: switch-to-tab
+Selector Data: div.urlbarView-row[type='switchtab']
+Description: Switch to tab from awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3497,10 +3504,9 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector name: bookmark-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
-Description: Bookmark item
-Location: On the hamburger menu > Bookmarks
+Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
+Location: On the hamburger menu > Bookmarks or History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```

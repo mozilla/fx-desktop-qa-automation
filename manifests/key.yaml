@@ -13,6 +13,7 @@ address_bar_and_search:
   test_ctrl_enter_fixes_url: pass
   test_default_search_provider_change_awesome_bar: unstable
   test_default_search_provider_change_legacy_search_bar: deprecated
+  test_delete_history_entry_via_firefox_suggest_completion_list: pass
   test_disable_websearch_from_awesome_bar: pass
   test_dont_show_search_suggestions_in_private_window: pass
   test_google_search_counts_us:
@@ -45,6 +46,7 @@ address_bar_and_search:
   test_server_not_found_error: pass
   test_server_not_found_error_pb: pass
   test_suggestion_engine_selection: pass
+  test_switch_to_existing_tab_when_having_the_same_URL: pass
   test_tile_menu_options: pass
   test_use_different_search_shortcut_while_already_in_search_mode: pass
   test_verify_url_after_tab_switch_with_search_mode: pass
@@ -156,6 +158,7 @@ menus:
   test_tab_context_menu_close: pass
 meta:
   test_version: pass
+  test_selectors: unstable
 networking:
   test_default_dns_protection: pass
   test_http_site: pass
