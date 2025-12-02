@@ -58,8 +58,9 @@ if ! python run_commit_tests.py; then
 fi
 
 # Lint and format with ruff
-ruff check --select I
-ruff format
+ruff check --select I --fix
+ruff format .
+python addtests.py
 git add -u
 
 # if ruff check  doesn't work, we need to fail

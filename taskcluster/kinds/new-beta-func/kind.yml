@@ -15,8 +15,7 @@ task-defaults:
         type: directory
     env:
       TESTRAIL_REPORT: "true"
-      STARFOX_MANIFEST: "./manifests/functional.yaml"
-      TESTRAIL_FUNCTIONAL_SPLIT: "1"
+      STARFOX_SPLIT: "functional"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -33,6 +32,7 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
+        export STARFOX_SPLIT="${STARFOX_SPLIT}1"
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';

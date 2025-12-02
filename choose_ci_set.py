@@ -1,12 +1,10 @@
 import os
-import platform
 import re
 import sys
 from subprocess import check_output
 
-import yaml
+from manifests.testkey import TestKey
 
-CI_MANIFEST = "manifests/ci.yaml"
 MANIFEST_KEY = "manifests/key.yaml"
 SUPPORTED_OSES = ["mac", "win", "linux"]
 HEADED_MARK = "@pytest.mark.headed"
@@ -100,80 +98,12 @@ def dedupe(run_list: list) -> list:
     return run_list
 
 
-def sysname():
-    sys_platform = platform.system().lower()
-    if sys_platform.startswith("darwin"):
-        return "mac"
-    elif sys_platform.startswith("win"):
-        return "win"
-    elif sys_platform.startswith("linux"):
-        return "linux"
-    raise OSError("Unsupported system.")
-
-
-def is_addable(test_name, result):
-    pointer = result
-    test_name = test_name.replace(".py", "")
-    if "::" in test_name:
-        test, subtest = test_name.split("::")
-        if test not in pointer:
-            raise ValueError(f"{test} not in key.yaml")
-        pointer = pointer[test]
-        pointer = pointer[subtest]
-    else:
-        if test_name not in pointer:
-            raise ValueError(f"{test_name} not in key.yaml")
-        pointer = pointer[test_name]
-
-    if pointer == "pass":
-        return True
-    if isinstance(pointer, str):
-        return False
-    else:
-        os_result = pointer.get(sysname())
-        if not os_result:
-            raise ValueError(f"No result for {sysname()} in key for {test_name}")
-        if os_result == "pass":
-            return True
-    return False
-
-
-def filter_non_pass(run_list):
-    print("Removing tests not expected to pass...")
-    toplevel = [".", "tests"]
-    mkey = yaml.safe_load(open(MANIFEST_KEY))
-    out_list = []
-    for test in run_list:
-        path_parts = test.split(SLASH)
-        pointer = mkey
-        for part in path_parts[:-1]:
-            if part in toplevel:
-                continue
-            pointer = pointer[part]
-        if is_addable(path_parts[-1], pointer):
-            out_list.append(test)
-    return out_list
-
-
-def convert_manifest_to_list(manifest_loc):
-    manifest = yaml.safe_load(open(manifest_loc))
-    toplevel = [".", "tests"]
-    if manifest:
-        print(f"Reading {manifest_loc}")
-        run_list = []
-        for suite, tests in manifest.items():
-            for test_name in tests:
-                test_to_add = SLASH.join(toplevel + [suite, test_name]) + ".py"
-                assert os.path.exists(test_to_add), f"{test_to_add} could not be found"
-                run_list.append(test_to_add)
-    run_list = filter_non_pass(run_list)
-    return run_list
-
-
 if __name__ == "__main__":
     print("Selecting test set...")
-    if os.environ.get("STARFOX_MANIFEST"):
-        run_list = convert_manifest_to_list(os.environ["STARFOX_MANIFEST"])
+    manifest = TestKey(MANIFEST_KEY)
+    if os.environ.get("STARFOX_SPLIT"):
+        print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
+        run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
@@ -201,12 +131,15 @@ if __name__ == "__main__":
         .splitlines()
     )
 
+    print("Committed files:\n\t", end="")
+    print("\n\t".join(committed_files))
+
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run smoke tests if main conftest or basepage changed
-        run_list = convert_manifest_to_list("manifests/smoke.yaml")
+        run_list = manifest.gather_split("smoke")
         run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
@@ -275,7 +208,7 @@ if __name__ == "__main__":
                 run_list.append(changed_test)
 
     if not run_list:
-        ci_paths = convert_manifest_to_list(CI_MANIFEST)
+        ci_paths = manifest.gather_split("ci")
         ci_paths = dedupe(ci_paths)
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(ci_paths))
@@ -287,7 +220,7 @@ if __name__ == "__main__":
     # Dedupe just in case
     if SLASH == "\\":
         run_list = [entry.replace("/", SLASH) for entry in run_list]
-    run_list = filter_non_pass(run_list)
+    run_list = manifest.filter_filenames_by_pass(run_list)
     run_list = dedupe(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
     with open(OUTPUT_FILE, "w") as fh:
