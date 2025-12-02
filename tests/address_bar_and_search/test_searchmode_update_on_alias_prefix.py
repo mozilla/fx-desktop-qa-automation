@@ -18,7 +18,7 @@ def test_searchmode_update_on_alias_prefix(driver: Firefox):
     C3028841 - Search mode is updated after typing a keyword/alias at the beginning of a non-empty search string
     """
 
-    # Instantiate objects
+    # Instantiate object
     nav = Navigation(driver)
 
     # TODO: Go to about:preferences#search and set a keyword for bing, for example: bang
