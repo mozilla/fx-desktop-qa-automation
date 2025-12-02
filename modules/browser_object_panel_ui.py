@@ -295,7 +295,7 @@ class PanelUi(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_history_item_does_not_exis(self, item_title: str) -> BasePage:
+    def verify_history_item_does_not_exist(self, item_title: str) -> BasePage:
         """
         Verify that a history item with the specified title exists in the history menu.
         Note:

@@ -45,4 +45,4 @@ def test_delete_history_from_url_bar_completion_list(driver: Firefox):
     nav.perform_key_combo_chrome(Keys.SHIFT, Keys.BACKSPACE)
 
     # Verify the entry is removed from History menu
-    panel.verify_history_item_not_exists(HISTORY_ENTRY)
+    panel.verify_history_item_does_not_exist(HISTORY_ENTRY)
