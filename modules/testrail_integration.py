@@ -144,6 +144,9 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
+    functional_split = os.environ.get("TESTRAIL_FUNCTIONAL_SPLIT")
+    if functional_split:
+        plan_title = f"{plan_title} - Functional (Split {functional_split})"
     return plan_title
 
 
@@ -281,7 +284,7 @@ def reportable(platform_to_test=None):
         logging.warning(
             f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
         )
-        return covered_suites < num_suites
+        return covered_suites + 1 < num_suites
 
 
 def testrail_init() -> TestRail:

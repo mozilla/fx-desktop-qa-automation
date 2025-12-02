@@ -1,6 +1,3 @@
-import sys
-from os import environ
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,15 +9,11 @@ def test_case():
     return "118174"
 
 
-MAC_GHA: bool = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith(
-    "darwin"
-)
-
 AMO_HOST: str = "addons.mozilla.org"
 AMO_THEMES_PATH: str = "firefox/themes"
 
 
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
+# Test is unstable in MacOS GHA for now
 def test_find_more_themes(driver: Firefox) -> None:
     """
     C118174 (part 1): From about:addons > Themes, 'Find more themes' opens AMO in a new tab.
@@ -37,7 +30,7 @@ def test_find_more_themes(driver: Firefox) -> None:
     base.url_contains(AMO_THEMES_PATH)
 
 
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
+# Test is unstable in MacOS GHA for now
 def test_installed_theme_enabled(driver: Firefox) -> None:
     """
     C118174 (part 2): Install a recommended theme from AMO and ensure it becomes enabled immediately.

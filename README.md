@@ -127,6 +127,48 @@ You may find that if you are re-running all previously executed test runs that y
 "Session is not reportable." If you wish to overwrite a previously reported session, add
 `REPORTABLE=true` to your environment.
 
+### Marking Tests For Skipping
+
+The file `manifests/key.yaml` is the single source of truth for whether a test exists, and whether it
+should or should not be skipped. The other files in `manifests/` are test lists. The schema for the key
+file is:
+
+```yaml
+suite_name_which_is_the_folder_under_tests:
+  test_file_without_the_dot_py: pass
+address_bar_and_search:
+  test_thing_does_stuff:
+    test_a_subtest_inside_this_file: pass
+  test_another_thing:
+    mac: pass
+    win: unstable
+    linux: pass
+tabs:
+  test_tab_says_hi:
+    test_clever_subtest_name:
+      mac: unstable
+      win: pass
+      linux: pass
+```
+
+Any value other than `pass` will skip the test or subtest (for the given OS if applicable). It is good
+practice to keep non-pass values limited. Good values are `unstable`, `deprecated`, `out-of-scope` etc.
+**Do not use `fail` for tests you wish to see pass again one day.** Future work will include testing
+items marked `fail` as xfail, and may implement `strict_xfail`, which will throw if tests pass.
+
+The test lists in `manifests/` have the following schema:
+
+```yaml
+suite_name_a:
+- test_name_b
+- test_name_c
+suite_name_d:
+- test_name_e
+```
+
+We currently do not assume that test lists need to identify individual test functions inside test
+files ("subtests"), as TestRail reporting is on the testfile level.
+
 ### Manual Execution of Smoke Tests
 
 To run the smoke tests manually against an arbitrary version of Firefox **where the installer or (for Linux)

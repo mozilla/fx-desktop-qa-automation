@@ -1,5 +1,5 @@
 ---
-name: Smoke Test Execution
+name: Fx Test Execution
 
 run-name: ${{ github.actor }} is running smoke tests
 on:
@@ -17,6 +17,11 @@ on:
         description: "Is this a PR?"
         default: false
         type: boolean
+      test_set:
+        description: "Test set to run"
+        default: null
+        required: false
+        type: string
   workflow_dispatch:
     inputs:
       win_installer_link:
@@ -39,8 +44,8 @@ env:
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
 
 jobs:
-  Smoke-Windows:
-    if: ${{ inputs.job_to_run == 'Smoke-Windows' || inputs.win_installer_link }}
+  Test-Windows:
+    if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -52,20 +57,22 @@ jobs:
       - name: Set Environment (Manual)
         if: ${{ inputs.win_installer_link }}
         run: |
-          $env_contents = @"
-          MANUAL='true'
-          "@
-          New-item -Name .env -Value $env_contents -ItemType File -Force
+          echo "MANUAL=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Write-Host "Running smoke tests on supplied executable"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-Windows' && inputs.is_pull_request == false}}
+        if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.is_pull_request == false}}
         run: |
-          $env_contents = @"
-          TESTRAIL_REPORT='true'
-          "@
-          New-item -Name .env -Value $env_contents -ItemType File -Force
+          echo "TESTRAIL_REPORT=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Write-Host "Running report for most recent Beta on Windows"
-          Write-Host "$env:TESTRAIL_USERNAME"
+      - name: Select Test Set
+        if: ${{ inputs.test_set != null }}
+        run: |
+          echo "STARFOX_MANIFEST=.\manifests\${{ inputs.test_set }}.yaml" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+        shell: pwsh
+      - name: Set Functional Split
+        if: ${{ inputs.test_set == 'functional' }}
+        run: |
+          echo "TESTRAIL_FUNCTIONAL_SPLIT=1" | Out-File -FilePath .env -Encoding utf8 -Append -Force
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -93,6 +100,7 @@ jobs:
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
+          echo "STARFOX_MANIFEST='.\manifests\incident.yaml'" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Invoke-WebRequest -Uri ${{ inputs.win_installer_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
@@ -101,18 +109,18 @@ jobs:
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
         shell: pwsh
-      - name: Run Smoke Tests in Win
+      - name: Run Tests in Win
         if: steps.setup.conclusion == 'success'
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
-      - name: Run Smoke Tests in Win (Headed)
+      - name: Run Tests in Win (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           REPORTABLE: true
@@ -121,7 +129,7 @@ jobs:
           mv ./ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run python choose_ci_set.py
-          pipenv run pytest $(cat selected_tests)
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -141,8 +149,8 @@ jobs:
         with:
           name: artifacts-win-smoke
           path: artifacts-win
-  Smoke-MacOS:
-    if: ${{ inputs.job_to_run == 'Smoke-MacOS' || inputs.mac_installer_link }}
+  Test-MacOS:
+    if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -157,14 +165,21 @@ jobs:
           exit $?
           echo "Triggered by event: ${{ github.event_name }}"
       - name: Set Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Smoke-MacOS' && inputs.is_pull_request == false}}
+        if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false}}
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
+      - name: Select Test Set
+        if: ${{ inputs.test_set != null }}
+        run: echo "STARFOX_MANIFEST=./manifests/${{ inputs.test_set }}.yaml" >> .env
+      - name: Set Functional Split
+        if: ${{ inputs.test_set == 'functional' }}
+        run: echo "TESTRAIL_FUNCTIONAL_SPLIT=1" >> .env
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "STARFOX_MANIFEST=manifests/incident.yaml" >> .env
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
@@ -180,7 +195,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
           echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT"
-      - name: Run Smoke Tests in MacOS
+      - name: Run Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
@@ -190,7 +205,7 @@ jobs:
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
-      - name: Run Smoke Tests in MacOS (Headed)
+      - name: Run Tests in MacOS (Headed)
         if: steps.setup.conclusion == 'success' && always()
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
@@ -228,6 +243,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "STARFOX_MANIFEST=manifests/incident.yaml" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;
@@ -264,8 +280,8 @@ jobs:
     if: ${{ github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     needs:
-      - Smoke-Windows
-      - Smoke-MacOS
+      - Test-Windows
+      - Test-MacOS
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
