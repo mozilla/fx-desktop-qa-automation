@@ -24,6 +24,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_bing_search_codes:
+    result: pass
+    splits:
+    - functional1
   test_copied_url_contains_https:
     result: pass
     splits:
@@ -748,10 +752,7 @@ password_manager:
     - ci-extended
 pdf_viewer:
   test_add_image_pdf:
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_pdf_with_form_fields:
