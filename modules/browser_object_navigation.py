@@ -1077,56 +1077,46 @@ class Navigation(BasePage):
         self.get_element("exit-button-searchmode").click()
 
     @BasePage.context_chrome
-    def type_verify_and_click(self, input_text: str, expected_text: str, timeout: float = 5.0) -> bool:
+    def type_and_verify(
+            self,
+            input_text: str,
+            expected_text: str,
+            timeout: float = 5.0,
+            click: bool = True,  # If True: click match; else: return index
+    ) -> int | bool:
         """
-        Type `input_text` in the awesome bar, verify `expected_text` appears in
-        the suggestions, and click it if found.
+        Types into the awesome bar, waits for a suggestion containing `expected_text`.
+
+        If `click=True` (default):
+            - Click the matching element and return True
+            - Raises if not found (test fails)
+
+        If `click=False`:
+            - Return the 0-based index of the matching element
+            - Raises if not found (test fails)
         """
+
         # Reset + type
         self.clear_awesome_bar()
         self.type_in_awesome_bar(input_text)
 
-        def find_matching_suggestion(driver):
-            # Always fetch fresh children to avoid stale DOM
-            suggestions = self.get_all_children("results-dropdown")
-
-            for s in suggestions:
-                try:
-                    if expected_text in s.text:
-                        return s  # WebDriverWait treats a non-False return as success
-                except StaleElementReferenceException:
-                    continue
-
-            return False  # Not found yet → keep waiting
-
-        try:
-            element = self.custom_wait(timeout=timeout).until(find_matching_suggestion)
-            element.click()
-            return True
-
-        except Exception:
-            return False
-
-    @BasePage.context_chrome
-    def verify_result_position(self, expected_text: str, timeout: float = 5.0) -> int:
-        """
-        Returns the 0-based position of `expected_text` in the results-dropdown.
-        Returns -1 if not found within the timeout.
-        """
-        def find_position(driver):
+        def find_match(driver):
             suggestions = self.get_all_children("results-dropdown")
 
             for index, s in enumerate(suggestions):
                 try:
                     if expected_text in s.text:
-                        return index  # return the 0-based position
+                        return (s, index)
                 except StaleElementReferenceException:
-                    continue  # element got refreshed → retry polling
+                    continue
 
-            return False  # WebDriverWait will keep polling
+            return False  # keep polling
 
-        try:
-            return self.custom_wait(timeout=timeout).until(find_position)
+        # No try/except here — failure = real failure
+        element, index = self.custom_wait(timeout=timeout).until(find_match)
 
-        except Exception:
-            return -1
+        if click:
+            element.click()
+            return True
+
+        return index

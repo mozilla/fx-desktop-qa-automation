@@ -22,16 +22,15 @@ def test_addressbar_bookmarks_when_history_disabled(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="search")
 
     # In addressbar press z and pick "Get Involved" page
-    nav.type_verify_and_click("z", "Get Involved")
+    nav.type_and_verify("z", "Get Involved", click=True)
 
     # Repeat step from above
     tabs.new_tab_by_button()
-    nav.type_verify_and_click("z", "Get Involved")
+    nav.type_and_verify("z", "Get Involved", click=True)
 
     # On z press check "Get Involved" page is shown as the first result
     tabs.new_tab_by_button()
-    nav.type_in_awesome_bar("z")
-    position = nav.verify_result_position("Get Involved")
+    position = nav.type_and_verify("z", "Get Involved", click=False)
     assert position == 1
 
     # Navigate to about:preferences and uncheck Browsing History
@@ -42,8 +41,7 @@ def test_addressbar_bookmarks_when_history_disabled(driver: Firefox):
 
     # Open a new tab and press z
     tabs.new_tab_by_button()
-    nav.type_in_awesome_bar("z")
 
     # Check "Get Involved" page is shown as the first result
-    position = nav.verify_result_position("Get Involved")
+    position = nav.type_and_verify("z", "Get Involved", click=False)
     assert position == 1
