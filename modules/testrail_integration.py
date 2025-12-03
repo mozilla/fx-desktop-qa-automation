@@ -144,8 +144,8 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
-    functional_split = os.environ.get("TESTRAIL_FUNCTIONAL_SPLIT")
-    if functional_split:
+    if os.environ.get("STARFOX_SPLIT").startswith("functional"):
+        functional_split = os.environ["STARFOX_SPLIT"].split("functional")[-1]
         plan_title = f"{plan_title} - Functional (Split {functional_split})"
     return plan_title
 
