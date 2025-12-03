@@ -130,25 +130,40 @@ You may find that if you are re-running all previously executed test runs that y
 ### Marking Tests For Skipping
 
 The file `manifests/key.yaml` is the single source of truth for whether a test exists, and whether it
-should or should not be skipped. The other files in `manifests/` are test lists. The schema for the key
-file is:
+should or should not be skipped. The value of `"result"` is either `pass`, another string, or a dict
+indicating whether the test passes for a given os. The value of `"splits"` is a list of splits, or
+test list names / tags.
 
 ```yaml
 suite_name_which_is_the_folder_under_tests:
-  test_file_without_the_dot_py: pass
+  test_file_without_the_dot_py:
+    result: pass
+    splits:
+    - smoke
+    - ci
 address_bar_and_search:
   test_thing_does_stuff:
-    test_a_subtest_inside_this_file: pass
+    test_a_subtest_inside_this_file:
+      result: skip
+      splits:
+      - functional1
   test_another_thing:
-    mac: pass
-    win: unstable
-    linux: pass
+    result:
+      mac: pass
+      win: unstable
+      linux: pass
+    splits:
+    - ci
 tabs:
   test_tab_says_hi:
     test_clever_subtest_name:
-      mac: unstable
-      win: pass
-      linux: pass
+      result:
+        mac: unstable
+        win: pass
+        linux: pass
+      splits:
+      - ci
+      - smoke
 ```
 
 Any value other than `pass` will skip the test or subtest (for the given OS if applicable). It is good
@@ -156,18 +171,14 @@ practice to keep non-pass values limited. Good values are `unstable`, `deprecate
 **Do not use `fail` for tests you wish to see pass again one day.** Future work will include testing
 items marked `fail` as xfail, and may implement `strict_xfail`, which will throw if tests pass.
 
-The test lists in `manifests/` have the following schema:
-
-```yaml
-suite_name_a:
-- test_name_b
-- test_name_c
-suite_name_d:
-- test_name_e
-```
-
 We currently do not assume that test lists need to identify individual test functions inside test
-files ("subtests"), as TestRail reporting is on the testfile level.
+files ("subtests"), as TestRail reporting is on the testfile level. Subtest support is not guaranteed.
+
+Support for manifests is coded into `manifests/testkey.py`, including automating balancing of the list
+of functional splits.
+
+When you create a new test, run `python addtests.py` to add your test to the key via CLI. This script
+will be run on commit, if you have updated your git hooks by running `./devsetup.sh` recently.
 
 ### Manual Execution of Smoke Tests
 

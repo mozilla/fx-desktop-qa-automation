@@ -84,10 +84,20 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def type_in_awesome_bar(self, term: str) -> BasePage:
-        """Enter text into the Awesome Bar. You probably want self.search()"""
-        self.set_awesome_bar()
-        self.awesome_bar.click()
+    def type_in_awesome_bar(self, term: str, reset=True) -> BasePage:
+        """
+        Type text into the Awesome Bar.
+
+        reset=True (default): refocuses and clicks the Awesome Bar before typing,
+        which moves the cursor to the end.
+
+        reset=False: keeps the current cursor position (useful when tests manually
+        move the caret with arrow keys).
+        """
+        if reset:
+            self.set_awesome_bar()
+            self.awesome_bar.click()
+
         self.awesome_bar.send_keys(term)
         return self
 
