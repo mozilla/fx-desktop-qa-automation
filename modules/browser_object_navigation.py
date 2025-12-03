@@ -716,14 +716,18 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def delete_bookmark_from_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+    def delete_panel_menu_item_by_title(self, item_title: str) -> BasePage:
         """
-        Delete bookmark from bookmarks toolbar via context menu
+        Delete a panel menu item (bookmark or history entry) via context menu.
+
+        This method works for both bookmarks and history items in the panel menu (hamburger menu),
+        as Firefox uses the same UI structure for both. The caller should ensure the appropriate
+        panel menu is open (e.g., History menu or Bookmarks menu) before calling this method.
 
         Argument:
-        bookmark_name: The display name of the bookmark to delete
+            item_title: The display name/title of the item to delete (works for both bookmarks and history entries)
         """
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[item_title])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
         return self
 
@@ -750,7 +754,9 @@ class Navigation(BasePage):
         """
         Verify bookmark exists in the bookmarks toolbar
         """
-        self.panel_ui.element_visible("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.element_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome
@@ -774,7 +780,9 @@ class Navigation(BasePage):
         self, bookmark_name: str
     ) -> BasePage:
         """Verify bookmark does not exist in the bookmarks toolbar"""
-        self.panel_ui.element_not_visible("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome
@@ -826,8 +834,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.click_on("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.click_on("panel-menu-item-by-title", labels=[bookmark_title])
         return self
 
     @BasePage.context_chrome
@@ -841,8 +851,10 @@ class Navigation(BasePage):
             bookmark_title: The title of the bookmark to open
         """
         # Right-click the bookmark and open it in new tabe via context menu item
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-tab")
 
         return self
@@ -857,8 +869,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-window")
         return self
 
@@ -872,8 +886,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
         return self
 

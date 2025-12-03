@@ -1,13 +1,12 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object import Navigation
 from modules.browser_object_tabbar import TabBar
 
 TEST_URL = "https://www.nationalgeographic.com/science/"
 EXPECTED_IN_TITLE = "Science"
+TYPED_TEXT = "nat"
 EXPECTED_TYPE = "autofill_adaptive"
 EXPECTED_URL = "nationalgeographic.com/science"
 
@@ -26,10 +25,11 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     """
     C1814373 - Verify adaptive history autofill triggers from address bar input.
     """
+    # Instantiate objects
     nav = Navigation(driver)
     tabs = TabBar(driver)
 
-    # Visit the test site and verify tab title
+    # Visit the test site and verify title
     nav.search(TEST_URL)
     tabs.expect_title_contains(EXPECTED_IN_TITLE)
 
@@ -39,12 +39,12 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     tabs.close_first_tab_by_icon()
 
     # Type in address bar, then click adaptive suggestion
-    nav.type_in_awesome_bar("nat")
+    nav.type_in_awesome_bar(TYPED_TEXT)
     nav.click_firefox_suggest()
     nav.url_contains(TEST_URL)
 
     # Open new tab and check for autofill suggestion
     tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
-    nav.type_in_awesome_bar("nat")
+    nav.type_in_awesome_bar(TYPED_TEXT)
     nav.verify_autofill_adaptive_element(EXPECTED_TYPE, EXPECTED_URL)

@@ -3497,6 +3497,7 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
 Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
 Location: On the hamburger menu > Bookmarks or History

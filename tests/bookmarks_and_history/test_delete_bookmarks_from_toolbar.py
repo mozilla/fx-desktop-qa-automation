@@ -30,7 +30,7 @@ def test_delete_bookmarks_from_toolbar(driver: Firefox):
     nav.verify_bookmark_exists_in_bookmarks_toolbar("Internet for people")
 
     # Delete the bookmark from toolbar
-    nav.delete_bookmark_from_bookmarks_toolbar("Internet for people")
+    nav.delete_panel_menu_item_by_title("Internet for people")
 
     # Verify bookmark was deleted
     nav.verify_bookmark_does_not_exist_in_bookmarks_toolbar("Internet for people")

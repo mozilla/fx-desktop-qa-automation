@@ -180,6 +180,12 @@
         "groups": []
     },
 
+    "panel-menu-item-by-title": {
+        "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
+        "strategy": "css",
+        "groups": []
+    },
+
     "bookmark-by-title": {
         "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
         "strategy": "css",
