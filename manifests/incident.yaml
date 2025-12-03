@@ -116,7 +116,6 @@ profile:
 - test_set_default_profile
 reader_view:
 - test_improved_type_control_panel
-- test_reader_view_location_bar
 scrolling_panning_zooming:
 - test_default_zoom_persists
 - test_mouse_wheel_zoom
