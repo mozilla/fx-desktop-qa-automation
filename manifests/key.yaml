@@ -6,6 +6,10 @@ address_bar_and_search:
       win: pass
     splits:
     - smoke
+  test_adaptive_history_removal:
+    result: pass
+    splits:
+    - functional1
   test_add_engine_address_bar:
     result: pass
     splits:
