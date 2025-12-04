@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
 from modules.browser_object_context_menu import ContextMenu
+from modules.browser_object_navigation import Navigation
 from modules.page_object_newtab import AboutNewtab
 from modules.page_object_prefs import AboutPrefs
 
@@ -56,6 +56,6 @@ def test_clipboard_pref_flip(driver: Firefox):
     nav.url_contains(copied_url)
     assert copied_url in nav.get_awesome_bar_text()
 
-    # Step 6: Go to About:preferences#search and check the pref is enabled
+    # Step 6: Go to about:preferences#search and check the pref is enabled
     driver.get("about:preferences#search")
     prefs.verify_clipboard_suggestion_enabled()

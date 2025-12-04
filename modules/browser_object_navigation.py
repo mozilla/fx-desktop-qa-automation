@@ -1099,11 +1099,11 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def type_and_verify(
-            self,
-            input_text: str,
-            expected_text: str,
-            timeout: float = 5.0,
-            click: bool = True,  # If True: click match; else: return index
+        self,
+        input_text: str,
+        expected_text: str,
+        timeout: float = 5.0,
+        click: bool = True,  # If True: click match; else: return index
     ) -> int | bool:
         """
         Types into the awesome bar, waits for a suggestion containing `expected_text`.
