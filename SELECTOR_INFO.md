@@ -1216,6 +1216,13 @@ Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard 
+Location: about:preferences#search 
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-shortcuts-group
 Selector Data: oneClickSearchProvidersGroup
 Description: The Search shortcuts table
@@ -3312,6 +3319,13 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: switch-to-tab
 Selector Data: div.urlbarView-row[type='switchtab']
 Description: Switch to tab from awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
