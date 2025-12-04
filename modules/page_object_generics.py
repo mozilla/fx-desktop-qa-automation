@@ -170,27 +170,24 @@ class GenericPdf(BasePage):
         self.get_element("toolbar-add-image").click()
         self.get_element("toolbar-add-image-confirm").click()
         sleep(1.5)
-        from pynput.keyboard import Controller, Key
+        import autopy
 
-        keyboard = Controller()
         if sys_platform == "Darwin" or sys_platform == "Linux":
-            keyboard.type("/")
+            autopy.key.tap("/")
             sleep(1.5)
-            keyboard.type(image_path.lstrip("/"))
+            autopy.key.type_string(image_path.lstrip("/"), wpm=90)
         else:
             sleep(1.5)
-            keyboard.type(image_path)
+            autopy.key.type_string(image_path, wpm=50)
         sleep(1)
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        autopy.key.tap(autopy.key.Code.RETURN)
         sleep(1)
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        autopy.key.tap(autopy.key.Code.RETURN)
         sleep(1.5)
         for _ in range(3):
-            keyboard.tap(Key.tab)
+            autopy.key.tap(autopy.key.Code.TAB)
         sleep(0.5)
-        keyboard.tap(Key.enter)
+        autopy.key.tap(autopy.key.Code.RETURN)
         sleep(1)
         return self
 

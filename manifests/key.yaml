@@ -756,10 +756,7 @@ password_manager:
     - ci-extended
 pdf_viewer:
   test_add_image_pdf:
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_pdf_with_form_fields:
