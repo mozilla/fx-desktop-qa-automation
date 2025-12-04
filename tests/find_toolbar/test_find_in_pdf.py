@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_base import BasePage
 from modules.browser_object import FindToolbar
+from modules.page_base import BasePage
 from modules.page_object import GenericPdf
 
 
