@@ -1085,3 +1085,48 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("exit-button-searchmode").click()
+
+    @BasePage.context_chrome
+    def type_and_verify(
+            self,
+            input_text: str,
+            expected_text: str,
+            timeout: float = 5.0,
+            click: bool = True,  # If True: click match; else: return index
+    ) -> int | bool:
+        """
+        Types into the awesome bar, waits for a suggestion containing `expected_text`.
+
+        If `click=True` (default):
+            - Click the matching element and return True
+            - Raises if not found (test fails)
+
+        If `click=False`:
+            - Return the 0-based index of the matching element
+            - Raises if not found (test fails)
+        """
+
+        # Reset + type
+        self.clear_awesome_bar()
+        self.type_in_awesome_bar(input_text)
+
+        def find_match(driver):
+            suggestions = self.get_all_children("results-dropdown")
+
+            for index, s in enumerate(suggestions):
+                try:
+                    if expected_text in s.text:
+                        return (s, index)
+                except StaleElementReferenceException:
+                    continue
+
+            return False  # keep polling
+
+        # No try/except here — failure = real failure
+        element, index = self.custom_wait(timeout=timeout).until(find_match)
+
+        if click:
+            element.click()
+            return True
+
+        return index
