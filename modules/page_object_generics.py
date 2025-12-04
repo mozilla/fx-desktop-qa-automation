@@ -178,7 +178,7 @@ class GenericPdf(BasePage):
             autopy.key.type_string(image_path.lstrip("/"), wpm=90)
         else:
             sleep(1.5)
-            autopy.key.type_string(image_path, wpm=90)
+            autopy.key.type_string(image_path, wpm=50)
         sleep(1)
         autopy.key.tap(autopy.key.Code.RETURN)
         sleep(1)
