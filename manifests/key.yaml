@@ -1156,7 +1156,7 @@ tabs:
     splits:
     - smoke
     - ci-extended
-  test_ungrouping_tabs:
+  test_ungroup_tabs:
     result: pass
     splits:
     - functional1
