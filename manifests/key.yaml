@@ -6,6 +6,10 @@ address_bar_and_search:
       win: pass
     splits:
     - smoke
+  test_adaptive_history_removal:
+    result: pass
+    splits:
+    - functional1
   test_add_engine_address_bar:
     result: pass
     splits:
@@ -36,6 +40,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_clipboard_pref_flip:
+    result: pass
+    splits:
+      - functional1
   test_ctrl_enter_completes_link_and_can_refresh:
     result: pass
     splits:
@@ -88,6 +96,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
+    result: pass
+    splits:
+    - functional1
+  test_open_link_in_new_container_tab:
     result: pass
     splits:
     - functional1

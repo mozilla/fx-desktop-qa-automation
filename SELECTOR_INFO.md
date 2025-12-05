@@ -1216,6 +1216,13 @@ Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-shortcuts-group
 Selector Data: oneClickSearchProvidersGroup
 Description: The Search shortcuts table
@@ -1247,7 +1254,7 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: Browsing History
 Selector Data: history-suggestion
 Description: Browsing History / History Suggestion under Address bar section
-Location: about:preferences#search 
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -1906,6 +1913,20 @@ Selector Name: context-menu-search-select
 Selector Data: coontext-searchselect
 Description: Context menu option to search selected text with the engine set as default
 Location: Context menu - topsite context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-new_container_tab
+Selector Data: context-openlinkinusercontext-menu"
+Description: Open  linkin new container tab context menu item
+Location: Newpage topsites tile context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-container-work
+Selector Data: menuitem[data-l10n-id='user-context-work']"
+Description: Open link in container "Work" context submenu item
+Location: Newpage topsites tile submenu context menu, secodn option
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -3315,6 +3336,20 @@ Description: Switch to tab from awesome bar
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: tab-container-label
+Selector Data: "userContext-label"
+Description:  Tab container label
+Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3504,6 +3539,7 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
 Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
 Location: On the hamburger menu > Bookmarks or History
