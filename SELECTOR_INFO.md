@@ -1915,6 +1915,20 @@ Description: Context menu option to search selected text with the engine set as 
 Location: Context menu - topsite context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-open-link-in-new_container_tab
+Selector Data: context-openlinkinusercontext-menu"
+Description: Open  linkin new container tab context menu item
+Location: Newpage topsites tile context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-container-work
+Selector Data: menuitem[data-l10n-id='user-context-work']"
+Description: Open link in container "Work" context submenu item
+Location: Newpage topsites tile submenu context menu, secodn option
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -3327,6 +3341,13 @@ Selector Name: switch-to-cliboard
 Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
 Description: Switch to clipboard
 Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: tab-container-label
+Selector Data: "userContext-label"
+Description:  Tab container label
+Location: URL bar when a tab container is active
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

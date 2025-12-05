@@ -671,7 +671,7 @@
         "groups": ["doNotCache"]
     },
 
-    "userContext-label": {
+    "tab-container-label": {
         "selectorData": "userContext-label",
         "strategy": "id",
         "groups": []
