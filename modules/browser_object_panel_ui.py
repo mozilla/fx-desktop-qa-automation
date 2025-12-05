@@ -282,32 +282,26 @@ class PanelUi(BasePage):
     def verify_history_item_exists(self, item_title: str) -> BasePage:
         """
         Verify that a history item with the specified title exists in the history menu.
-        Note:
-            This method uses the "bookmark-by-title" selector, which works for both
-            bookmarks and history items because Firefox uses the same CSS class "bookmark-item"
-            for both in the hamburger menu UI. This is intentional design in Firefox's UI.
+
         Argument:
             item_title (str): The title text to look for in the history item (can be partial match)
         """
         self.open_history_menu()
         self.get_all_history()
-        self.element_visible("bookmark-by-title", labels=[item_title])
+        self.element_visible("panel-menu-item-by-title", labels=[item_title])
         return self
 
     @BasePage.context_chrome
     def verify_history_item_does_not_exist(self, item_title: str) -> BasePage:
         """
-        Verify that a history item with the specified title exists in the history menu.
-        Note:
-            This method uses the "bookmark-by-title" selector, which works for both
-            bookmarks and history items because Firefox uses the same CSS class "bookmark-item"
-            for both in the hamburger menu UI. This is intentional design in Firefox's UI.
+        Verify that a history item with the specified title does not exist in the history menu.
+
         Argument:
             item_title (str): The title text to look for in the history item (can be partial match)
         """
         self.open_history_menu()
         self.get_all_history()
-        self.element_not_visible("bookmark-by-title", labels=[item_title])
+        self.element_not_visible("panel-menu-item-by-title", labels=[item_title])
         return self
 
     # Bookmarks section
@@ -338,7 +332,7 @@ class PanelUi(BasePage):
         Arguments:
             bookmark_title (str): The title text to look for in the bookmark
         """
-        self.element_visible("bookmark-by-title", labels=[bookmark_title])
+        self.element_visible("panel-menu-item-by-title", labels=[bookmark_title])
         return self
 
     @BasePage.context_chrome

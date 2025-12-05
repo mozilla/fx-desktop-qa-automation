@@ -1216,6 +1216,13 @@ Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-shortcuts-group
 Selector Data: oneClickSearchProvidersGroup
 Description: The Search shortcuts table
@@ -1241,6 +1248,13 @@ Selector Name: restore-default-search-engines-button
 Selector Data: restoreDefaultSearchEngines
 Description: The Restore Default Search Engines button under Search shortcuts tabel
 Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: Browsing History
+Selector Data: history-suggestion
+Description: Browsing History / History Suggestion under Address bar section
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -3306,6 +3320,20 @@ Selector Name: switch-to-tab
 Selector Data: div.urlbarView-row[type='switchtab']
 Description: Switch to tab from awesome bar
 Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: tab-container-label
+Selector Data: "userContext-label"
+Description:  Tab container label
+Location: URL bar when a tab container is active
 Path to .json: modules/data/navigation.components.json
 ```
 ```

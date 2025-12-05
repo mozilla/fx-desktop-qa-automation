@@ -160,6 +160,12 @@ class AboutPrefs(BasePage):
         self.click_on("restore-default-search-engines-button")
         return self
 
+    @BasePage.context_content
+    def verify_clipboard_suggestion_enabled(self) -> None:
+        checkbox = self.get_element("clipboard-suggestion-checkbox")
+        is_checked = checkbox.get_attribute("checked") in ("true", "checked", "")
+        assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
+
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
         self.get_element("language-set-alternative-button").click()
@@ -804,6 +810,14 @@ class AboutPrefs(BasePage):
         )
         BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
         return self
+
+    def uncheck_history_suggestion(self):
+        """
+        Uncheck the 'historySuggestion' checkbox if it's currently checked.
+        """
+        checkbox = self.get_element("history-suggestion")
+        if checkbox.is_selected():
+            checkbox.click()
 
 
 class AboutAddons(BasePage):
