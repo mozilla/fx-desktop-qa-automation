@@ -1218,8 +1218,8 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: clipboard-suggestion-checkbox
 Selector Data: #clipboardSuggestion"
-Description: The checkbox for Clipboard 
-Location: about:preferences#search 
+Description: The checkbox for Clipboard
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1254,7 +1254,7 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: Browsing History
 Selector Data: history-suggestion
 Description: Browsing History / History Suggestion under Address bar section
-Location: about:preferences#search 
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -3518,6 +3518,7 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
 Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
 Location: On the hamburger menu > Bookmarks or History

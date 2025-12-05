@@ -26,8 +26,7 @@ def test_deleted_page_not_remembered(driver: Firefox, sys_platform):
 
     # Open history menu and right-click on a specific history entry and delete it
     panel.open_history_menu()
-    panel.context_click("bookmark-by-title", labels=["Firefox Privacy Notice"])
-    context_menu.click_and_hide_menu("context-menu-delete-page")
+    nav.delete_panel_menu_item_by_title("Firefox Privacy Notice")
 
     # Type the deleted page name in the URL bar and verify the deleted page is not suggested
     nav.type_in_awesome_bar("Firefox Privacy Notice")
