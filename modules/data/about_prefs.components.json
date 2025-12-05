@@ -605,6 +605,11 @@
     "strategy": "css",
     "groups": []
   },
+  "clipboard-suggestion-checkbox": {
+    "selectorData": "#clipboardSuggestion",
+    "strategy": "css",
+    "groups": ["doNotCache"]
+  },
 
   "unknown-content-type-dialog": {
     "selectorData": "unknownContentTypeWindow",
@@ -612,6 +617,10 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "history-suggestion": {
+    "selectorData": "historySuggestion",
+    "strategy": "id",
+    "groups": []
   }
-
 }

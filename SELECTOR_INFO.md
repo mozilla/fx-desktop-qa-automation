@@ -1216,6 +1216,13 @@ Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-shortcuts-group
 Selector Data: oneClickSearchProvidersGroup
 Description: The Search shortcuts table
@@ -1241,6 +1248,13 @@ Selector Name: restore-default-search-engines-button
 Selector Data: restoreDefaultSearchEngines
 Description: The Restore Default Search Engines button under Search shortcuts tabel
 Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: Browsing History
+Selector Data: history-suggestion
+Description: Browsing History / History Suggestion under Address bar section
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -3308,6 +3322,13 @@ Description: Switch to tab from awesome bar
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3497,6 +3518,7 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
 Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
 Location: On the hamburger menu > Bookmarks or History
