@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -27,25 +25,23 @@ EXPECTED_CONTAINER = "Work"
 
 def test_open_link_in_new_container_tab(driver: Firefox) -> None:
     """
-    C3029117 -
+    C3029117 - Verify that a link opened from the context menu in a new container tab opens
+    in the correct container and URL.
     """
     tabs = TabBar(driver)
-    newtab = AboutNewtab(driver)
+    new_tab = AboutNewtab(driver)
     context_menu = ContextMenu(driver)
     nav = Navigation(driver)
     page = GenericPage(driver, url="about:newtab")
 
-    # Open about:newtab and hover over the desired TOPSITE_TITLE tile and verify status panel URL (bottom-left)
+    # Open about:newtab and right-click to open context menu
     page.open()
-
-    # Right-click to open context menu
-    newtab.open_topsite_context_menu_by_title(TOPSITE_TITLE)
+    new_tab.open_topsite_context_menu_by_title(TOPSITE_TITLE)
 
     # Click first option and verify link opens in new tab
-    context_menu.click_context_item("context-menu-open-link-in-new_container_tab")
-    context_menu.click_on("context-menu-open-link-in-container-work")
+    context_menu.open_link_in_container()
+
+    # Switch to new tab and verify URL and container
     tabs.switch_to_new_tab()
     nav.url_contains(TOPSITE_URL)
-    nav.set_chrome_context()
-    assert nav.get_element("userContext-label").text == EXPECTED_CONTAINER
-    # time.sleep(10)
+    nav.expect_container_label(EXPECTED_CONTAINER)

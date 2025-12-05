@@ -25,6 +25,13 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
+    def open_link_in_container(self) -> BasePage:
+        """Open a link from the context menu in a specific container tab."""
+        self.click_context_item("context-menu-open-link-in-new_container_tab")
+        self.click_context_item("context-menu-open-link-in-container-work")
+        return self
+
+    @BasePage.context_chrome
     def verify_topsites_tile_context_menu_options(
         self,
         static_items: Dict[str, str],

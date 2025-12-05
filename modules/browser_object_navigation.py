@@ -1120,6 +1120,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        """Verify that no adaptive history autofill elements are present."""
         autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
         if autofill_elements:
             logging.warning(
@@ -1129,3 +1130,13 @@ class Navigation(BasePage):
             "Adaptive history autofill suggestion was not removed after deletion."
         )
         return self
+
+    @BasePage.context_chrome
+    def expect_container_label(self, label_expected: str):
+        """
+        Verify the container label for user context (container tabs).
+        Argument:
+            label_expected: The expected label text for the user context container.
+        """
+        actual_label = self.get_element("userContext-label").text
+        assert actual_label == label_expected
