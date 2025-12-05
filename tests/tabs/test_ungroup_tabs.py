@@ -22,9 +22,12 @@ def add_to_prefs_list():
     ]
 
 
-def test_ungrouping_tab(driver: Firefox):
+def test_ungroup_tab(driver: Firefox):
     """
     C2796550, verify that grouped tab can be ungrouped.
+             Since in the step2 a tab group still remains
+             it is executed after step3 to avoid tests
+             dependency
     """
 
     """
@@ -37,7 +40,6 @@ def test_ungrouping_tab(driver: Firefox):
     tab_context_menu = ContextMenu(driver)
 
     # Create a tab group
-    tabs.set_chrome_context()
     tabs.create_tab_group(NUM_TABS, GROUP_NAME[0], tab_context_menu)
 
     # Remove first tab from the tab group
@@ -55,16 +57,12 @@ def test_ungrouping_tab(driver: Firefox):
                      tabs are no longer part of any group.
     """
 
-    tabs = TabBar(driver)
-    tab_context_menu = ContextMenu(driver)
-
     # Create a tab group
-    tabs.set_chrome_context()
     tabs.create_tab_group(NUM_TABS, GROUP_NAME[2], tab_context_menu)
 
     # Right-click on the group and select Ungroup Tabs.
     tabs.context_click("tabgroup-label")
-    tabs.click_on("tabgroup-ungroup-tabs")
+    tabs.click_and_hide_menu("tabgroup-ungroup-tabs")
 
     # Verify tab group is no longer there
     tabs.element_not_visible("tabgroup-label")
@@ -75,19 +73,13 @@ def test_ungrouping_tab(driver: Firefox):
      Verification:   The selected tab is no longer part of that Tab group.
     """
 
-    tabs = TabBar(driver)
-    tab_context_menu = ContextMenu(driver)
-
     # Create a tab group
     tabs.set_chrome_context()
     tabs.create_tab_group(NUM_TABS, GROUP_NAME[1], tab_context_menu)
 
-    # Create an ActionChains object
-    actions = ActionChains(driver)
-
     # Click the first tab, hold, move by offset, and then release
     first_tab = tabs.get_tab(1)
-    actions.click_and_hold(first_tab).move_by_offset(120, 0).release().perform()
+    tabs.actions.click_and_hold(first_tab).move_by_offset(120, 0).release().perform()
 
     # Verify tab is removed from the tab group
     tabs.element_not_visible("tabgroup-overflow-count")
