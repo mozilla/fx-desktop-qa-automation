@@ -220,6 +220,7 @@ if __name__ == "__main__":
     # Dedupe just in case
     if SLASH == "\\":
         run_list = [entry.replace("/", SLASH) for entry in run_list]
+    run_list = [entry for entry in run_list if os.path.exists(entry)]
     run_list = manifest.filter_filenames_by_pass(run_list)
     run_list = dedupe(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
