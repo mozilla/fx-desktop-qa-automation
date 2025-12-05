@@ -24,6 +24,10 @@ address_bar_and_search:
     splits:
     - smoke
     - ci-extended
+  test_addressbar_bookmarks_when_history_disabled:
+    result: pass
+    splits:
+      - functional1
   test_addressbar_search_engine_keywords:
     result: pass
     splits:
