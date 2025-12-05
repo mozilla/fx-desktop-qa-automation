@@ -1189,3 +1189,46 @@ class Navigation(BasePage):
             "Adaptive history autofill suggestion was not removed after deletion."
         )
         return self
+
+    @BasePage.context_chrome
+    def verify_autofill_adaptive_element(
+        self, expected_type: str, expected_url: str
+    ) -> BasePage:
+        """
+        Verify that the adaptive history autofill element has the expected type and URL text.
+        This method handles chrome context switching internally.
+        Arguments:
+            expected_type: Expected type attribute value
+            expected_url: Expected URL fragment to be contained in the element text
+        """
+        autofill_element = self.get_element("search-result-autofill-adaptive-element")
+        actual_type = autofill_element.get_attribute("type")
+        actual_text = autofill_element.text
+
+        assert actual_type == expected_type
+        assert expected_url in actual_text
+
+        return self
+
+    @BasePage.context_chrome
+    def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        """Verify that no adaptive history autofill elements are present."""
+        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
+        if autofill_elements:
+            logging.warning(
+                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
+            )
+        assert len(autofill_elements) == 0, (
+            "Adaptive history autofill suggestion was not removed after deletion."
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_container_label(self, label_expected: str):
+        """
+        Verify the container label for user context (container tabs).
+        Argument:
+            label_expected: The expected label text for the user context container.
+        """
+        actual_label = self.get_element("tab-container-label").text
+        assert actual_label == label_expected

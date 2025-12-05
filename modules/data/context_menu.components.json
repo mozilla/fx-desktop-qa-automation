@@ -121,6 +121,12 @@
         "groups": []
     },
 
+    "context-menu-open-link-in-new_container_tab": {
+        "selectorData": "context-openlinkinusercontext-menu",
+        "strategy": "id",
+        "groups": []
+    },
+
     "context-menu-toolbar-open-in-new-tab": {
         "selectorData": "placesContext_open:newtab",
         "strategy": "id",
@@ -233,6 +239,12 @@
         "selectorData": "context-searchselect",
         "strategy": "id",
         "groups": []
-    }
+    },
+
+    "context-menu-open-link-in-container-work": {
+        "selectorData": "menuitem[data-l10n-id='user-context-work']",
+        "strategy": "css",
+        "groups": []
+}
 
 }
