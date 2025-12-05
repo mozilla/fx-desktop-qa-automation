@@ -152,6 +152,17 @@ class Navigation(BasePage):
         switch_items[0].click()
 
     @BasePage.context_chrome
+    def click_on_clipboard_suggestion(self) -> None:
+        """
+        Click the 'Visit from clipboard' suggestion in the URL bar.
+        Requires:
+          - browser.urlbar.clipboard.featureGate = true
+          - Clipboard suggestion already visible
+        """
+        row = self.wait.until(lambda d: self.get_element("clipboard-suggestion"))
+        row.click()
+
+    @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
         """
         Search using the Awesome Bar, optionally setting the search mode first. Returns self.
@@ -1088,11 +1099,11 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def type_and_verify(
-            self,
-            input_text: str,
-            expected_text: str,
-            timeout: float = 5.0,
-            click: bool = True,  # If True: click match; else: return index
+        self,
+        input_text: str,
+        expected_text: str,
+        timeout: float = 5.0,
+        click: bool = True,  # If True: click match; else: return index
     ) -> int | bool:
         """
         Types into the awesome bar, waits for a suggestion containing `expected_text`.

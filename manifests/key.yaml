@@ -36,6 +36,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_clipboard_pref_flip:
+    result: pass
+    splits:
+      - functional1
   test_ctrl_enter_completes_link_and_can_refresh:
     result: pass
     splits:
