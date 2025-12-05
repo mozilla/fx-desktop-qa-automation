@@ -1230,5 +1230,5 @@ class Navigation(BasePage):
         Argument:
             label_expected: The expected label text for the user context container.
         """
-        actual_label = self.get_element("userContext-label").text
+        actual_label = self.get_element("tab-container-label").text
         assert actual_label == label_expected
