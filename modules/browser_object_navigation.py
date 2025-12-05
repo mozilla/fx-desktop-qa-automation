@@ -1085,3 +1085,15 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("exit-button-searchmode").click()
+
+    @BasePage.context_chrome
+    def click_back_button(self) -> None:
+        """
+        Click the 'Back' button.
+        Waits until the button is visible and clickable before performing the click.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(lambda _: self.get_element("back-button").is_displayed())
+
+        # Click the button
+        self.get_element("back-button").click()

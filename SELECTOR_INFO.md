@@ -3308,6 +3308,13 @@ Description: Switch to tab from awesome bar
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: back-button
+Selector Data: back-button
+Description: Back button from the toolbar
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

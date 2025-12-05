@@ -669,6 +669,14 @@
         "selectorData": "div.urlbarView-row[type='switchtab']",
         "strategy": "css",
         "groups": ["doNotCache"]
+    },
+
+    "back-button": {
+        "selectorData": "back-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
     }
 
 }
