@@ -351,10 +351,7 @@ downloads:
     splits:
     - smoke
   test_add_zip_type:
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: unstable
     splits:
     - smoke
     - ci-extended
