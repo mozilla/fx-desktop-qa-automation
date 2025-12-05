@@ -669,6 +669,11 @@
         "selectorData": "div.urlbarView-row[type='switchtab']",
         "strategy": "css",
         "groups": ["doNotCache"]
-    }
+    },
 
+    "clipboard-suggestion": {
+        "selectorData": "#urlbar-results > div.urlbarView-row[type='clipboard']",
+        "strategy": "css",
+        "groups": ["doNotCache"]
+    }
 }
