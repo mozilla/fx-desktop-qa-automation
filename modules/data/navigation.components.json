@@ -669,6 +669,12 @@
         "selectorData": "div.urlbarView-row[type='switchtab']",
         "strategy": "css",
         "groups": ["doNotCache"]
+    },
+
+    "userContext-label": {
+        "selectorData": "userContext-label",
+        "strategy": "id",
+        "groups": []
     }
 
 }
