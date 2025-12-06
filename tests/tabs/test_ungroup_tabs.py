@@ -22,7 +22,7 @@ def add_to_prefs_list():
     ]
 
 
-def test_ungroup_tab(driver: Firefox):
+def test_ungroup_tabs(driver: Firefox):
     """
     C2796550, verify that grouped tab can be ungrouped.
              Since in the step2 a tab group still remains
