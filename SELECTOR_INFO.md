@@ -1706,6 +1706,27 @@ Location: Any history item in the Hamburger history list
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-move-tab-to-new-group
+Selector Data: "context_moveTabToNewGroup"
+Description: Tab context click option "Add Tab to New Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-move-tab-to-group
+Selector Data: "context_moveTabToGroup"
+Description: Tab context click option "Add Tab to Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-remove-tab-from-group
+Selector Data: "context_ungroupTab"
+Description: Tab context click option "Remove from Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-pin-tab
 Selector Data: "context_pinTab"
 Description: Tab context click option "Pin Tab"
@@ -4059,7 +4080,62 @@ Description: A tab's Close (X) button
 Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```
-
+```
+Selector name: tabgroup-menu
+Selector Data: "tab-group-editor"
+Description: Adding tabs to a group menu
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-input
+Selector Data: "[data-l10n-id='tab-group-editor-name-field']"
+Description: Name field
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-create-button
+Selector Data: "tab-group-editor-button-create"
+Description: Create button
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-label
+Selector Data: "tab-group-label"
+Description: The label of tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-menuitem
+Selector Data: "tab-group-icon"
+Description: Icon related to tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-overflow-count
+Selector Data: "tab-group-overflow-count"
+Description: Numbers of tabs in tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-line
+Selector Data: "tab-group-line"
+Description: Line indicator of tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-ungroup-tabs
+Selector Data: "tabGroupEditor_ungroupTabs"
+Description: Ungroup the tab group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
