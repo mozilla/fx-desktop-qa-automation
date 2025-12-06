@@ -36,9 +36,7 @@ def test_google_search_counts_us(driver: Firefox):
 
         telemetry = AboutTelemetry(driver).open()
         sleep(WAIT_TELEMETRY_LOAD)
-        telemetry.get_element("category-raw").click()
-        telemetry.switch_to_new_tab()
-        telemetry.get_element("rawdata-tab").click()
+        telemetry.open_raw_json_data()
 
         json_data = utils.decode_url(driver)
 

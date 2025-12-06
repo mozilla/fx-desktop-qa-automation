@@ -173,10 +173,14 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_searchbar_results_shown_in_a_new_tab:
+  test_searchengine_result_page_load_on_reload_or_back:
     result: pass
     splits:
     - functional1
+  test_searchbar_results_shown_in_a_new_tab:
+    result: pass
+    splits:
+      - functional1
   test_searchmode_change_tab:
     result: pass
     splits:

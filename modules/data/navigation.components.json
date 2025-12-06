@@ -681,5 +681,14 @@
         "selectorData": "#urlbar-results > div.urlbarView-row[type='clipboard']",
         "strategy": "css",
         "groups": ["doNotCache"]
+    },
+
+    "back-button": {
+        "selectorData": "back-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
     }
+
 }

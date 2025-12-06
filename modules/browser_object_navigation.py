@@ -1232,3 +1232,15 @@ class Navigation(BasePage):
         """
         actual_label = self.get_element("tab-container-label").text
         assert actual_label == label_expected
+
+    @BasePage.context_chrome
+    def click_back_button(self) -> None:
+        """
+        Click the 'Back' button.
+        Waits until the button is visible and clickable before performing the click.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(lambda _: self.get_element("back-button").is_displayed())
+
+        # Click the button
+        self.get_element("back-button").click()
