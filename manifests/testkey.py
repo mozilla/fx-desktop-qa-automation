@@ -1,11 +1,14 @@
 import os
 import platform
+import re
+import sys
 from copy import deepcopy
 
 import yaml
 
 NUM_FUNCTIONAL_SPLITS = 1
 MAX_DEPTH = 5
+SUITE_TUPLE_RE = re.compile(r'\s+return \("S(\d+)", ?".*"\)')
 
 
 def sysname():
@@ -196,20 +199,54 @@ class TestKey:
 
         return test_filenames
 
-    def addtests(self):
+    def get_valid_suites_in_split(self, split, suite_numbers=False):
+        filenames = self.gather_split(split)
+        suite_dirs = []
+        for filename in filenames:
+            suite_dir = filename.split(os.path.sep)[1]
+            if suite_dir not in suite_dirs:
+                suite_dirs.append(suite_dir)
+
+        if not suite_numbers:
+            return suite_dirs
+        else:
+            suite_nums = []
+            for suite_dir in suite_dirs:
+                with open(os.path.join("tests", suite_dir, "conftest.py")) as fh:
+                    lines = fh.readlines()
+                suite_flag = False
+                for line in lines:
+                    if suite_flag:
+                        m = SUITE_TUPLE_RE.search(line)
+                        if m and len(m.groups()) > 0:
+                            suite_num = m.group(1)
+                        if suite_num not in suite_nums:
+                            suite_nums.append(suite_num)
+                        break
+            return suite_nums
+
+    def addtests(self, interactive=True):
         newkey = deepcopy(self.manifest)
         for root, _, files in os.walk(self.test_root):
             for f in files:
                 suite = root.split(os.path.sep)[1]
+                if not (f.startswith("test_") and f.endswith(".py")):
+                    continue
                 testfile = f.replace(".py", "")
                 if suite not in newkey:
+                    if not interactive:
+                        sys.exit(
+                            "Please run `python addtests.py` from your command prompt."
+                        )
                     if ask_question(f"Found suite {suite}. Add it to key? "):
                         newkey[suite] = {}
 
                 resplit = False
                 if testfile not in newkey[suite]:
-                    if not testfile.startswith("test_"):
-                        continue
+                    if not interactive:
+                        sys.exit(
+                            "Please run `python addtests.py` from your command prompt."
+                        )
                     if ask_question(f"Found test {suite}/{testfile}. Add it to key? "):
                         newkey[suite][testfile] = {"result": "pass"}
 
@@ -229,17 +266,17 @@ class TestKey:
                     resplit = True
 
                 if resplit:
-                    split = ask_open_question(
-                        "What split is this test assigned to? (One only) "
-                    )
-                    newkey[suite][testfile]["splits"] = [split]
-
                     if ask_question(
                         "Should this test run in a Scheduled Functional split? "
                         "(Say no if unsure.) "
                     ):
-                        newkey[suite][testfile]["splits"].append("functional1")
+                        newkey[suite][testfile]["splits"] = ["functional1"]
                         self.rebalance_functionals()
+                    else:
+                        split = ask_open_question(
+                            "What split is this test assigned to? (One only) "
+                        )
+                        newkey[suite][testfile]["splits"] = [split]
 
                     print(
                         f"Test will be added to {split} in {self.manifest_file}. "

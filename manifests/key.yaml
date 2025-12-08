@@ -27,7 +27,7 @@ address_bar_and_search:
   test_addressbar_bookmarks_when_history_disabled:
     result: pass
     splits:
-      - functional1
+    - functional1
   test_addressbar_search_engine_keywords:
     result: pass
     splits:
@@ -367,10 +367,7 @@ downloads:
     splits:
     - smoke
   test_add_zip_type:
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: unstable
     splits:
     - smoke
     - ci-extended
