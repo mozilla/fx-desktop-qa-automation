@@ -363,7 +363,7 @@ downloads:
     splits:
     - smoke
   test_add_zip_type:
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci-extended
