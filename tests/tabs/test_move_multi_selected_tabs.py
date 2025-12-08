@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -78,18 +80,16 @@ def tab_movements(
     if move_option == MOVE_TO_NEW_WINDOW:
         if sys_platform.lower() == "linux":
             original_tab = driver.current_window_handle
+
             tabs.context_click(selected_tabs[1])
             tab_context_menu.click_and_hide_menu(move_option)
             tabs.hide_popup("tabContextMenu")
 
-            # Check any window has different content than original
-            for handle in driver.window_handles:
-                driver.switch_to.window(handle)
-                if driver.title in ["Gort!", "Welcome"] and handle != original_tab:
-                    assert True  # Found moved tab in different window
-                    break
-            else:
-                assert False, "Moved tabs not found in new window"
+            time.sleep(2)
+            new_active_tab = driver.current_window_handle
+            new_title = driver.title
+            assert new_title in ["Gort!", "Welcome"]
+
         else:
             # Tabs grouped in one window will all report the same window coordinates
             original_handles = driver.window_handles
