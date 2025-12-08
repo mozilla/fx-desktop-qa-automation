@@ -74,11 +74,11 @@ def test_ungroup_tabs(driver: Firefox):
     """
 
     # Create a tab group
-    tabs.set_chrome_context()
     tabs.create_tab_group(NUM_TABS, GROUP_NAME[1], tab_context_menu)
 
     # Click the first tab, hold, move by offset, and then release
     first_tab = tabs.get_tab(1)
+    tabs.set_chrome_context()
     tabs.actions.click_and_hold(first_tab).move_by_offset(120, 0).release().perform()
 
     # Verify tab is removed from the tab group
