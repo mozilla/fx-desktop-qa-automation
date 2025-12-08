@@ -2,6 +2,7 @@ from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
@@ -41,6 +42,11 @@ def test_searchengine_result_page_load_on_reload_or_back(driver: Firefox):
     # Go to about:telemetry -> Raw JSON -> Raw data
     telemetry.open()
     telemetry.open_raw_json_data()
+
+    # Wait for raw JSON to be decodable
+    WebDriverWait(driver, 5).until(
+        lambda d: utils.decode_url(d) is not None
+    )
 
     # Verify "browser.search.content.searchbar": { "google:tagged:firefox-b-d": 1}*
     json_data = utils.decode_url(driver)
