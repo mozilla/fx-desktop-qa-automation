@@ -26,8 +26,7 @@ def delete_files_regex_string():
 def temp_selectors():
     return {
         "github-code-button": {
-            "selectorData": "/html/body/div[1]/div[4]/div/main/turbo-frame/div/div/div/div/div["
-            "1]/react-partial/div/div/div[2]/div[2]/button",
+            "selectorData": "//span[@class='prc-Button-Label-pTQ3x' and text()='Code']",
             "strategy": "xpath",
             "groups": [],
         },
