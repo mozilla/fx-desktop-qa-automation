@@ -1156,6 +1156,10 @@ tabs:
     splits:
     - smoke
     - ci-extended
+  test_ungroup_tabs:
+    result: pass
+    splits:
+    - functional1
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass

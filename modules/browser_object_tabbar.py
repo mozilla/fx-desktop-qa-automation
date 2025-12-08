@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
+from modules.browser_object import ContextMenu
 from modules.page_base import BasePage
 
 
@@ -419,3 +420,35 @@ class TabBar(BasePage):
             self.perform_key_combo(extra_key)
         else:
             raise ValueError("You must provide extra_key to perform reload.")
+
+    @BasePage.context_chrome
+    def create_tab_group(
+        self, num_tabs: int, group_name: str, tab_context_menu: ContextMenu
+    ) -> BasePage:
+        """Create a new tab group"""
+
+        # Open few tabs
+        for i in range(num_tabs):
+            self.new_tab_by_button()
+
+        # Add the first tab into a New Group
+        first_tab = self.get_tab(1)
+        self.context_click(first_tab)
+        tab_context_menu.click_and_hide_menu("context-move-tab-to-new-group")
+
+        # Wait for tab group menu to open
+        self.element_visible("tabgroup-input")
+
+        # Enter a group Name and create group
+        self.fill("tabgroup-input", group_name, clear_first=False)
+
+        # Make sure the group is created
+        self.element_visible("tabgroup-label")
+
+        # Add the second tab into existing Group
+        second_tab = self.get_tab(2)
+        self.context_click(second_tab)
+        tab_context_menu.click_on("context-move-tab-to-group")
+        self.click_and_hide_menu("tabgroup-menuitem")
+
+        return self
