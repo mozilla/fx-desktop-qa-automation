@@ -84,10 +84,20 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def type_in_awesome_bar(self, term: str) -> BasePage:
-        """Enter text into the Awesome Bar. You probably want self.search()"""
-        self.set_awesome_bar()
-        self.awesome_bar.click()
+    def type_in_awesome_bar(self, term: str, reset=True) -> BasePage:
+        """
+        Type text into the Awesome Bar.
+
+        reset=True (default): refocuses and clicks the Awesome Bar before typing,
+        which moves the cursor to the end.
+
+        reset=False: keeps the current cursor position (useful when tests manually
+        move the caret with arrow keys).
+        """
+        if reset:
+            self.set_awesome_bar()
+            self.awesome_bar.click()
+
         self.awesome_bar.send_keys(term)
         return self
 
@@ -122,6 +132,35 @@ class Navigation(BasePage):
     def click_firefox_suggest(self) -> None:
         """Click the Firefox suggested result."""
         self.get_element("firefox-suggest").click()
+
+    @BasePage.context_chrome
+    def click_switch_to_tab(self) -> None:
+        """
+        Clicks the 'Switch to Tab' suggestion in the URL bar results.
+        Assumes the caller already typed into the awesome bar.
+
+        This uses a minimal wait that returns the list of matches only
+        when at least one element is found.
+        """
+
+        # Wait until at least one switch-to-tab result is present
+        switch_items = self.wait.until(
+            lambda d: self.get_elements("switch-to-tab") or None
+        )
+
+        # Click the first matching row
+        switch_items[0].click()
+
+    @BasePage.context_chrome
+    def click_on_clipboard_suggestion(self) -> None:
+        """
+        Click the 'Visit from clipboard' suggestion in the URL bar.
+        Requires:
+          - browser.urlbar.clipboard.featureGate = true
+          - Clipboard suggestion already visible
+        """
+        row = self.wait.until(lambda d: self.get_element("clipboard-suggestion"))
+        row.click()
 
     @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
@@ -688,14 +727,18 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def delete_bookmark_from_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+    def delete_panel_menu_item_by_title(self, item_title: str) -> BasePage:
         """
-        Delete bookmark from bookmarks toolbar via context menu
+        Delete a panel menu item (bookmark or history entry) via context menu.
+
+        This method works for both bookmarks and history items in the panel menu (hamburger menu),
+        as Firefox uses the same UI structure for both. The caller should ensure the appropriate
+        panel menu is open (e.g., History menu or Bookmarks menu) before calling this method.
 
         Argument:
-        bookmark_name: The display name of the bookmark to delete
+            item_title: The display name/title of the item to delete (works for both bookmarks and history entries)
         """
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[item_title])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
         return self
 
@@ -722,7 +765,9 @@ class Navigation(BasePage):
         """
         Verify bookmark exists in the bookmarks toolbar
         """
-        self.panel_ui.element_visible("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.element_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome
@@ -746,7 +791,9 @@ class Navigation(BasePage):
         self, bookmark_name: str
     ) -> BasePage:
         """Verify bookmark does not exist in the bookmarks toolbar"""
-        self.panel_ui.element_not_visible("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome
@@ -798,8 +845,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.click_on("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.click_on("panel-menu-item-by-title", labels=[bookmark_title])
         return self
 
     @BasePage.context_chrome
@@ -813,8 +862,10 @@ class Navigation(BasePage):
             bookmark_title: The title of the bookmark to open
         """
         # Right-click the bookmark and open it in new tabe via context menu item
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-tab")
 
         return self
@@ -829,8 +880,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-window")
         return self
 
@@ -844,8 +897,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
         return self
 
@@ -1057,3 +1112,123 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("exit-button-searchmode").click()
+
+    @BasePage.context_chrome
+    def type_and_verify(
+        self,
+        input_text: str,
+        expected_text: str,
+        timeout: float = 5.0,
+        click: bool = True,  # If True: click match; else: return index
+    ) -> int | bool:
+        """
+        Types into the awesome bar, waits for a suggestion containing `expected_text`.
+
+        If `click=True` (default):
+            - Click the matching element and return True
+            - Raises if not found (test fails)
+
+        If `click=False`:
+            - Return the 0-based index of the matching element
+            - Raises if not found (test fails)
+        """
+
+        # Reset + type
+        self.clear_awesome_bar()
+        self.type_in_awesome_bar(input_text)
+
+        def find_match(driver):
+            suggestions = self.get_all_children("results-dropdown")
+
+            for index, s in enumerate(suggestions):
+                try:
+                    if expected_text in s.text:
+                        return (s, index)
+                except StaleElementReferenceException:
+                    continue
+
+            return False  # keep polling
+
+        # No try/except here — failure = real failure
+        element, index = self.custom_wait(timeout=timeout).until(find_match)
+
+        if click:
+            element.click()
+            return True
+
+        return index
+
+    @BasePage.context_chrome
+    def verify_autofill_adaptive_element(
+        self, expected_type: str, expected_url: str
+    ) -> BasePage:
+        """
+        Verify that the adaptive history autofill element has the expected type and URL text.
+        This method handles chrome context switching internally.
+        Arguments:
+            expected_type: Expected type attribute value
+            expected_url: Expected URL fragment to be contained in the element text
+        """
+        autofill_element = self.get_element("search-result-autofill-adaptive-element")
+        actual_type = autofill_element.get_attribute("type")
+        actual_text = autofill_element.text
+
+        assert actual_type == expected_type
+        assert expected_url in actual_text
+
+        return self
+
+    @BasePage.context_chrome
+    def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
+        if autofill_elements:
+            logging.warning(
+                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
+            )
+        assert len(autofill_elements) == 0, (
+            "Adaptive history autofill suggestion was not removed after deletion."
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_autofill_adaptive_element(
+        self, expected_type: str, expected_url: str
+    ) -> BasePage:
+        """
+        Verify that the adaptive history autofill element has the expected type and URL text.
+        This method handles chrome context switching internally.
+        Arguments:
+            expected_type: Expected type attribute value
+            expected_url: Expected URL fragment to be contained in the element text
+        """
+        autofill_element = self.get_element("search-result-autofill-adaptive-element")
+        actual_type = autofill_element.get_attribute("type")
+        actual_text = autofill_element.text
+
+        assert actual_type == expected_type
+        assert expected_url in actual_text
+
+        return self
+
+    @BasePage.context_chrome
+    def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        """Verify that no adaptive history autofill elements are present."""
+        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
+        if autofill_elements:
+            logging.warning(
+                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
+            )
+        assert len(autofill_elements) == 0, (
+            "Adaptive history autofill suggestion was not removed after deletion."
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_container_label(self, label_expected: str):
+        """
+        Verify the container label for user context (container tabs).
+        Argument:
+            label_expected: The expected label text for the user context container.
+        """
+        actual_label = self.get_element("tab-container-label").text
+        assert actual_label == label_expected

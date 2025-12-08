@@ -67,12 +67,12 @@ jobs:
       - name: Select Test Set
         if: ${{ inputs.test_set != null }}
         run: |
-          echo "STARFOX_MANIFEST=.\manifests\${{ inputs.test_set }}.yaml" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "STARFOX_SPLIT=${{ inputs.test_set }}" | Out-File -FilePath .env -Encoding utf8 -Append -Force
         shell: pwsh
       - name: Set Functional Split
         if: ${{ inputs.test_set == 'functional' }}
         run: |
-          echo "TESTRAIL_FUNCTIONAL_SPLIT=1" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "STARFOX_SPLIT=${{ inputs.test_set }}1" | Out-File -FilePath .env -Encoding utf8 -Append -Force
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -100,7 +100,7 @@ jobs:
       - name: Download Executable
         if: ${{ inputs.win_installer_link }}
         run: |
-          echo "STARFOX_MANIFEST='.\manifests\incident.yaml'" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "STARFOX_SPLIT=ci-extended" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Invoke-WebRequest -Uri ${{ inputs.win_installer_link }} -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
@@ -171,15 +171,15 @@ jobs:
           echo "Running report for most recent Beta on MacOS";
       - name: Select Test Set
         if: ${{ inputs.test_set != null }}
-        run: echo "STARFOX_MANIFEST=./manifests/${{ inputs.test_set }}.yaml" >> .env
+        run: echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> .env
       - name: Set Functional Split
         if: ${{ inputs.test_set == 'functional' }}
-        run: echo "TESTRAIL_FUNCTIONAL_SPLIT=1" >> .env
+        run: echo "STARFOX_SPLIT=${{ inputs.test_set }}1" >> .env
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "STARFOX_MANIFEST=manifests/incident.yaml" >> .env
+          echo "STARFOX_SPLIT=ci-extended" >> .env
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
@@ -243,7 +243,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "STARFOX_MANIFEST=manifests/incident.yaml" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=ci-extended" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;

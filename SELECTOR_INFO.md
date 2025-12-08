@@ -1216,6 +1216,13 @@ Location: about:preferences#general Applications subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-shortcuts-group
 Selector Data: oneClickSearchProvidersGroup
 Description: The Search shortcuts table
@@ -1241,6 +1248,13 @@ Selector Name: restore-default-search-engines-button
 Selector Data: restoreDefaultSearchEngines
 Description: The Restore Default Search Engines button under Search shortcuts tabel
 Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: Browsing History
+Selector Data: history-suggestion
+Description: Browsing History / History Suggestion under Address bar section
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -1914,7 +1928,20 @@ Selector Data: coontext-searchselect
 Description: Context menu option to search selected text with the engine set as default
 Location: Context menu - topsite context menu
 ```
-
+```
+Selector Name: context-menu-open-link-in-new_container_tab
+Selector Data: context-openlinkinusercontext-menu"
+Description: Open  linkin new container tab context menu item
+Location: Newpage topsites tile context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-container-work
+Selector Data: menuitem[data-l10n-id='user-context-work']"
+Description: Open link in container "Work" context submenu item
+Location: Newpage topsites tile submenu context menu, secodn option
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -3259,6 +3286,83 @@ Description: Status panel URL label
 Location: newtab page bottom left corner on link hover
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: searchmode-engine
+Selector Data: toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']
+Description: Searchmode engine label
+Location: Address bar searchmode engine label
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: selected_searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
+Description: Searchbar-search-engine
+Location: Selected search bar search engine
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-suggestions
+Selector Data: hbox.search-one-offs
+Description: Searchbar suggestions
+Location: Searchbar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-magnifying-glass-button
+Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
+Description: Searchbar magnifying glass button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'
+Description: Searchbar search engine button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-chicklet
+Selector Data: label.searchmode-switcher-title
+Description: Search mode chicklet
+Location: Address bar search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: history-button-search-mode
+Selector Data: search-button-history
+Description: Histroy button search mode
+Location: Search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: exit-button-searchmode
+Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
+Description: Exit button searchmode
+Location: Address bar searchmode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-tab
+Selector Data: div.urlbarView-row[type='switchtab']
+Description: Switch to tab from awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: tab-container-label
+Selector Data: "userContext-label"
+Description:  Tab container label
+Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3448,10 +3552,10 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector name: bookmark-by-title
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
-Description: Bookmark item
-Location: On the hamburger menu > Bookmarks
+Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
+Location: On the hamburger menu > Bookmarks or History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
