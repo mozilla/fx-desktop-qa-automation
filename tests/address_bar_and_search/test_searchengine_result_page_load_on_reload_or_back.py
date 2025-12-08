@@ -2,9 +2,6 @@ from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
@@ -47,10 +44,6 @@ def test_searchengine_result_page_load_on_reload_or_back(driver: Firefox):
     telemetry.open()
     telemetry.open_raw_json_data()
 
-    # Wait for Raw JSON preload
-    WebDriverWait(driver, 15).until(
-        EC.presence_of_element_located((By.ID, "raw-payload-data"))
-    )
     # Verify "browser.search.content.searchbar": { "google:tagged:firefox-b-d": 1}*
     json_data = utils.decode_url(driver)
     searchbar_ping = utils.assert_json_value(json_data, SEARCHBAR_PATH, 1)
