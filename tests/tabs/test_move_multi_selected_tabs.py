@@ -76,7 +76,7 @@ def tab_movements(
     )
 
     if move_option == MOVE_TO_NEW_WINDOW:
-        if sys_platform == "linux":
+        if sys_platform.lower() == "linux":
             original_tab = driver.current_window_handle
             tabs.context_click(selected_tabs[1])
             tab_context_menu.click_and_hide_menu(move_option)
