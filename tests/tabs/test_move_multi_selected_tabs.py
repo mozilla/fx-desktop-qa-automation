@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,7 +14,7 @@ MOVE_TO_END = "context-menu-move-tab-to-end"
 MOVE_TO_START = "context-menu-move-tab-to-start"
 MOVE_TO_NEW_WINDOW = "context-menu-move-to-new-window"
 
-# Expected Positions (4 tabs in total)
+# Tab Positions (4 tabs in total)
 FIRST_TAB_POSITION = 0
 SECOND_TAB_POSITION = 1
 THIRD_TAB_POSITION = 2
@@ -37,7 +39,11 @@ def test_case():
             (EXPECTED_ROBOT_TITLE, EXPECTED_WELCOME_TITLE),
             (FIRST_TAB_POSITION, SECOND_TAB_POSITION),
         ),
-        (MOVE_TO_NEW_WINDOW, None, None),
+        (
+            MOVE_TO_NEW_WINDOW,
+            (None),
+            (None),
+        ),
     ],
 )
 def test_move_multi_selected_tabs(
@@ -76,44 +82,24 @@ def tab_movements(
     )
 
     if move_option == MOVE_TO_NEW_WINDOW:
-        # if sys_platform.lower() == "linux":
-        #     original_tab = driver.current_window_handle
-
-        #     tabs.context_click(selected_tabs[1])
-        #     tab_context_menu.click_and_hide_menu(move_option)
-        #     tabs.hide_popup("tabContextMenu")
-
-        #     time.sleep(2)
-        #     new_active_tab = driver.current_window_handle
-        #     new_title = driver.title
-        #     assert new_title in ["Gort!", "Welcome"]
-
-        # else:
-        # Tabs grouped in one window will all report the same window coordinates
-        original_handles = driver.window_handles
-        positions_before = set()
-
-        for handle in original_handles:
+        windows_pos = set()
+        for handle in driver.window_handles:
             driver.switch_to.window(handle)
             rect = driver.get_window_rect()
-            positions_before.add((rect["x"], rect["y"]))
+            windows_pos.add((rect["width"], rect["height"]))
 
         tabs.context_click(selected_tabs[1])
         tab_context_menu.click_and_hide_menu(move_option)
         tabs.hide_popup("tabContextMenu")
 
-        # Tabs that have been moved to a new window will report different coordinates
-        positions_after = set()
+        time.sleep(2)
+
         for handle in driver.window_handles:
             driver.switch_to.window(handle)
             rect = driver.get_window_rect()
-            positions_after.add((rect["x"], rect["y"]))
+            windows_pos.add((rect["width"], rect["height"]))
 
-            # print(f"Unique positions before: {len(positions_before)}")
-            # print(f"Unique positions after: {len(positions_after)}")
-
-            # assert len(positions_before) == 1
-            # assert len(positions_after) > 1
+        assert len(windows_pos) > 1
 
     elif move_option in (MOVE_TO_END, MOVE_TO_START):
         assert expected_positions is not None
