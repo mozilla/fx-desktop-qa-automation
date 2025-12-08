@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -41,8 +39,8 @@ def test_case():
         ),
         (
             MOVE_TO_NEW_WINDOW,
-            (None),
-            (None),
+            None,
+            None,
         ),
     ],
 )
@@ -60,7 +58,6 @@ def tab_movements(
 ):
     tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
-    original_windows = None
 
     tab_titles = []
     url_list = ["about:logo", "about:robots", "about:welcome", "https://mozilla.org"]
@@ -82,24 +79,15 @@ def tab_movements(
     )
 
     if move_option == MOVE_TO_NEW_WINDOW:
-        windows_pos = set()
-        for handle in driver.window_handles:
-            driver.switch_to.window(handle)
-            rect = driver.get_window_rect()
-            windows_pos.add((rect["width"], rect["height"]))
-
         tabs.context_click(selected_tabs[1])
         tab_context_menu.click_and_hide_menu(move_option)
-        tabs.hide_popup("tabContextMenu")
 
-        time.sleep(2)
+        driver.switch_to.window(driver.window_handles[-1])
+        new_window_tab_title = driver.title
 
-        for handle in driver.window_handles:
-            driver.switch_to.window(handle)
-            rect = driver.get_window_rect()
-            windows_pos.add((rect["width"], rect["height"]))
-
-        assert len(windows_pos) > 1
+        assert EXPECTED_ROBOT_TITLE in new_window_tab_title, (
+            "Robot should now be a new window"
+        )
 
     elif move_option in (MOVE_TO_END, MOVE_TO_START):
         assert expected_positions is not None
