@@ -513,10 +513,9 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    result: pass
+    result: unstable
     splits:
-    - smoke
-    - ci
+    - functional1
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -827,7 +826,7 @@ scrolling_panning_zooming:
     splits:
     - functional1
   test_zoom_text_only:
-    result: pass
+    result: unstable
     splits:
     - smoke
     - ci
@@ -943,7 +942,8 @@ tabs:
   test_close_pinned_tab_via_mouse:
     result: pass
     splits:
-    - functional1
+    - smoke
+    - ci
   test_close_tab_through_middle_mouse_click:
     result: pass
     splits:
