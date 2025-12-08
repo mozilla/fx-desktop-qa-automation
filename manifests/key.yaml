@@ -293,6 +293,7 @@ tabs:
   test_close_tab_through_middle_mouse_click: pass
   test_display_customize_button: pass
   test_list_all_tabs: pass
+  test_move_multi_selected_tabs: pass
   test_mute_tabs:
     win: unstable
     mac: pass
