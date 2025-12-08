@@ -81,6 +81,7 @@ def tab_movements(
     if move_option == MOVE_TO_NEW_WINDOW:
         tabs.context_click(selected_tabs[1])
         tab_context_menu.click_and_hide_menu(move_option)
+        tabs.hide_popup("tabContextMenu")
 
         driver.switch_to.window(driver.window_handles[-1])
         new_window_tab_title = driver.title
@@ -93,7 +94,7 @@ def tab_movements(
         assert expected_positions is not None
         assert expected_titles is not None
 
-        # move-to-___
+        # Move-to-end/start
         tabs.context_click(selected_tabs[1])
         tab_context_menu.click_and_hide_menu(move_option)
         tabs.hide_popup("tabContextMenu")
