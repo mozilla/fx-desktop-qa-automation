@@ -10,7 +10,9 @@ from modules.page_object_about_pages import AboutTelemetry
 from modules.util import Utilities
 
 TEXT = "Firefox"
-SEARCHBAR_PATH = '$..["browser.search.content.searchbar"].["google:tagged:firefox-b-1-d"]'
+SEARCHBAR_PATH = (
+    '$..["browser.search.content.searchbar"].["google:tagged:firefox-b-1-d"]'
+)
 
 
 @pytest.fixture()
@@ -44,9 +46,7 @@ def test_searchengine_result_page_load_on_reload_or_back(driver: Firefox):
     telemetry.open_raw_json_data()
 
     # Wait for raw JSON to be decodable
-    WebDriverWait(driver, 5).until(
-        lambda d: utils.decode_url(d) is not None
-    )
+    WebDriverWait(driver, 5).until(lambda d: utils.decode_url(d) is not None)
 
     # Verify "browser.search.content.searchbar": { "google:tagged:firefox-b-d": 1}*
     json_data = utils.decode_url(driver)
