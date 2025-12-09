@@ -279,7 +279,7 @@ def reportable(platform_to_test=None):
 
         if not os.environ.get("STARFOX_SPLIT"):
             sys.exit("No split selected")
-        manifest = TestKey()
+        manifest = TestKey(TEST_KEY_LOCATION)
         expected_suites = manifest.get_valid_suites_in_split(
             os.environ["STARFOX_SPLIT"]
         )
