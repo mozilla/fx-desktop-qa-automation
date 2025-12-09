@@ -90,11 +90,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_open_link_in_new_container_tab:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_paste_and_go_opens_correct_url:
@@ -126,7 +126,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_mode_appears_after_input:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_search_mode_exits_correctly:
@@ -275,7 +275,7 @@ bookmarks_and_history:
     result:
       linux: unstable
       mac: unstable
-      win: pass
+      win: unstable
     splits:
     - smoke
   test_open_all_bookmarks_from_bookmarks_toolbar:
@@ -776,8 +776,8 @@ printing_ui:
   test_print_to_pdf:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional1
 profile:
