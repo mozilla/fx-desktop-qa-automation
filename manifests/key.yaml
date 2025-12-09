@@ -38,6 +38,10 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
+  test_clipboard_pref_flip:
+    result: pass
+    splits:
+    - functional1
   test_copied_url_contains_https:
     result: pass
     splits:
@@ -942,6 +946,10 @@ tabs:
     splits:
     - functional1
   test_display_customize_button:
+    result: pass
+    splits:
+    - functional1
+  test_group_tabs:
     result: pass
     splits:
     - functional1
