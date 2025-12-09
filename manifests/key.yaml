@@ -331,7 +331,7 @@ downloads:
     splits:
     - functional1
   test_add_zip_type:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_pdf:
@@ -946,6 +946,10 @@ tabs:
     splits:
     - functional1
   test_list_all_tabs:
+    result: pass
+    splits:
+    - functional1
+  test_move_multi_selected_tabs:
     result: pass
     splits:
     - functional1
