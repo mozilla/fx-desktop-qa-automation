@@ -35,10 +35,6 @@ address_bar_and_search:
     splits:
     - functional1
   test_clipboard_pref_flip:
-    result: unstable
-    splits:
-    - functional1
-  test_clipboard_pref_flip:
     result: pass
     splits:
     - functional1
@@ -1021,6 +1017,10 @@ tabs:
     splits:
     - functional1
   test_reopen_tabs_through_keys:
+    result: pass
+    splits:
+    - functional1
+  test_ungroup_tabs:
     result: pass
     splits:
     - functional1
