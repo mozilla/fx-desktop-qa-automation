@@ -99,7 +99,7 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
-  test_open_link_in_new_container_tab:`
+  test_open_link_in_new_container_tab:
     result: unstable
     splits:
     - functional1
