@@ -8,12 +8,10 @@
     "selectorData": "defaultEngineNormal",
     "strategy": "id",
     "groups": [
-      "requiredForPage",
       "dropdownRoot",
       "searchEngineDropdown"
     ]
   },
-
   "custom-tracker-options-parent": {
     "selectorData": "contentBlockingOptionCustom",
     "strategy": "id",
@@ -85,13 +83,11 @@
     "strategy": "id",
     "groups": []
   },
-
   "remove-search-engine-button": {
     "selectorData": "removeEngineButton",
     "strategy": "id",
     "groups": []
   },
-
   "restore-default-search-engines-button": {
     "selectorData": "restoreDefaultSearchEngines",
     "strategy": "id",
@@ -404,7 +400,7 @@
     "strategy": "id",
     "groups": []
   },
-    "search-suggestion-in-private-windows": {
+  "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindows",
     "strategy": "id",
     "groups": []
@@ -608,9 +604,10 @@
   "clipboard-suggestion-checkbox": {
     "selectorData": "#clipboardSuggestion",
     "strategy": "css",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
-
   "unknown-content-type-dialog": {
     "selectorData": "unknownContentTypeWindow",
     "strategy": "id",

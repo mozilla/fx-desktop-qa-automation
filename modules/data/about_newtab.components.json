@@ -1,22 +1,26 @@
 {
+    "newtab-main": {
+        "selectorData": "newtab-main",
+        "strategy": "class",
+        "groups": [
+            "requiredForPage"
+        ]
+    },
     "incontent-search-input": {
         "selectorData": "fake-editable",
         "strategy": "class",
         "groups": []
     },
-
     "card-by-index": {
         "selectorData": "article-ds-card",
         "strategy": "css",
         "groups": []
     },
-
     "loaded-image-by-index": {
         "selectorData": "article.ds-card:nth-child({index}) > div.img-wrapper > picture.loaded",
         "strategy": "css",
         "groups": []
     },
-
     "sponsored-site-card": {
         "selectorData": "top-site-outer",
         "strategy": "class",
@@ -25,13 +29,11 @@
             "doNotCache"
         ]
     },
-
     "top-site-image-by-index": {
         "selectorData": ".top-sites-list li:nth-of-type({index}) .top-site-icon.rich-icon",
         "strategy": "css",
         "groups": []
     },
-
     "sponsored-site-card-menu-button": {
         "selectorData": "button[class='context-menu-button icon']",
         "strategy": "css",
@@ -39,44 +41,36 @@
             "doNotCache"
         ]
     },
-
-
     "top-sites-list": {
         "selectorData": "top-sites-list",
         "strategy": "class",
         "groups": []
     },
-
     "recommended-by-pocket-list": {
         "selectorData": "ds-card-grid-include-descriptions",
         "strategy": "class",
         "groups": []
     },
-
     "story-sponsored-footer": {
         "selectorData": "article.ds-card > div > div > p.story-sponsored-label",
         "strategy": "css",
         "groups": []
     },
-
     "popular-topics-list": {
         "selectorData": ".ds-navigation > ul",
         "strategy": "css",
         "groups": []
     },
-
     "recent-activity-section": {
         "selectorData": "discovery-stream",
         "strategy": "class",
         "groups": []
     },
-
     "recent-activity-list": {
         "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
         "strategy": "xpath",
         "groups": []
     },
-
     "sponsored-site-context-menu-list": {
         "selectorData": "ul[class=\"context-menu-list\"]",
         "strategy": "css",
@@ -84,13 +78,11 @@
             "doNotCache"
         ]
     },
-
     "body-logo": {
         "selectorData": "logo",
         "strategy": "class",
         "groups": []
     },
-
     "top-site-by-title": {
         "selectorData": "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/..",
         "strategy": "xpath",

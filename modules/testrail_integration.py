@@ -277,20 +277,23 @@ def reportable(platform_to_test=None):
                 if run_.get("config") and platform in run_.get("config"):
                     covered_suites.append(str(run_.get("suite_id")))
 
+        if not covered_suites:
+            print("No coverage found for this platform, running tests and report...")
+            return True
+
         if not os.environ.get("STARFOX_SPLIT"):
             sys.exit("No split selected")
         manifest = TestKey(TEST_KEY_LOCATION)
         expected_suites = manifest.get_valid_suites_in_split(
-            os.environ["STARFOX_SPLIT"]
+            os.environ["STARFOX_SPLIT"], suite_numbers=True
         )
 
         uncovered_suites = set(expected_suites) - set(covered_suites)
         if len(uncovered_suites):
-            suite_names = [
-                s.get("name")
-                for s in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ)
-                if str(s.get("id")) in uncovered_suites
-            ]
+            suite_names = []
+            for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ):
+                if str(suite.get("id")) in uncovered_suites:
+                    suite_names.append(suite.get("name"))
             print("Coverage not found for the following suites:")
             print("\t-" + "\n\t-".join(suite_names))
 
