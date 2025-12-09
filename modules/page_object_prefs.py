@@ -238,6 +238,17 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("history_menulist")
 
+    def set_history_option(self, option: str):
+        """
+        Set the history option in about:preferences.
+        """
+        history_menulist = self.get_history_menulist()
+        self.driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
+        sleep(1)
+        menulist_popup = Select(self.get_element("history-option-select"))
+        menulist_popup.select_by_value(option)
+        return self
+
     # Payment and Address Management
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase

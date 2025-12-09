@@ -622,5 +622,12 @@
     "selectorData": "historySuggestion",
     "strategy": "id",
     "groups": []
+  },
+  "history-option-select": {
+    "selectorData": "select[id='input']",
+    "strategy": "css",
+    "shadowParent": "history_menulist",
+    "groups": [
+    ]
   }
 }
