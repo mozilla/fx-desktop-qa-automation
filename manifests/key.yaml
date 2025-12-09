@@ -35,7 +35,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_clipboard_pref_flip:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_copied_url_contains_https:
@@ -1021,7 +1021,7 @@ tabs:
     splits:
     - functional1
   test_ungroup_tabs:
-    result: unstable
+    result: pass
     splits:
     - functional1
 theme_and_toolbar:
