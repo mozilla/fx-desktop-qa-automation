@@ -1,6 +1,7 @@
 from time import sleep
 
 from selenium.common import NoAlertPresentException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object_panel_ui import PanelUi
@@ -54,16 +55,14 @@ class PrintPreview(BasePage):
             )
         return self
 
-    def start_print(self, secondary_confirm=True) -> BasePage:
-        """Press Enter in Print"""
+    @BasePage.context_content
+    def start_print(self) -> BasePage:
+        """Press Enter in Print Preview Page."""
         from pynput.keyboard import Controller, Key
 
         self.switch_to_preview_window()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.actions.send_keys_to_element(
-                self.get_element("print-settings-browser"), Keys.TAB + Keys.ENTER
-            ).perform()
-            sleep(2)
-            keyboard = Controller()
-            keyboard.tap(Key.enter)
+        self.get_element("print-button").click()
+        sleep(2)
+        keyboard = Controller()
+        keyboard.tap(Key.enter)
         return self

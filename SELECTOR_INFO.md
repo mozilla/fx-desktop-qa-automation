@@ -1923,6 +1923,20 @@ Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-move-tab-to-end
+Selector Data: menuitem[data-l10n-id='move-to-end']
+Description: Context menu option to move a tab to the end of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-to-new-window
+Selector Data: menuitem[data-l10n-id='move-to-new-window']
+Description: Context menu option to move a tab to a new window.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-bookmark-link
 Selector Data: context-bookmarklink
 Description: Context menu option to bookmark a link
@@ -1934,7 +1948,6 @@ Selector Name: context-menu-search-select
 Selector Data: coontext-searchselect
 Description: Context menu option to search selected text with the engine set as default
 Location: Context menu - topsite context menu
-Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-open-link-in-new_container_tab
@@ -3305,14 +3318,14 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: selected_searchbar-search-engine
 Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
 Description: Searchbar-search-engine
-Location: Selected search bar search engine 
+Location: Selected search bar search engine
 Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchbar-suggestions
 Selector Data: hbox.search-one-offs
 Description: Searchbar suggestions
-Location: Searchbar results 
+Location: Searchbar results
 Path to .json: modules/data/navigation.components.json
 ```
 ```

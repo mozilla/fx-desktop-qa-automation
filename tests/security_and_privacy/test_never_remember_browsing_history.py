@@ -49,7 +49,8 @@ def test_never_remember_browsing_history_settings(driver: Firefox):
     login_exceptions = about_prefs.get_element("logins-exceptions")
     assert login_exceptions.get_attribute("disabled") == "true"
 
-    about_prefs.element_has_text("history-privacy-label", HISTORY_LABEL_TEXT)
+    history_mode_description = about_prefs.get_element("history-privacy-label")
+    assert history_mode_description.get_attribute("description") == HISTORY_LABEL_TEXT
 
 
 def test_never_remember_browsing_history_from_panel(driver: Firefox):
