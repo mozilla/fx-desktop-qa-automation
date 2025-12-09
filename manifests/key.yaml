@@ -1084,6 +1084,10 @@ tabs:
     result: pass
     splits:
     - smoke
+  test_move_multi_selected_tabs:
+    result: pass
+    splits:
+    - functional1
   test_mute_tabs:
     result:
       linux: pass
