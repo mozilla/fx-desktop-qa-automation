@@ -5,7 +5,7 @@
     "groups": []
   },
   "search-engine-dropdown-root": {
-    "selectorData": "defaultEngine",
+    "selectorData": "defaultEngineNormal",
     "strategy": "id",
     "groups": [
       "dropdownRoot",

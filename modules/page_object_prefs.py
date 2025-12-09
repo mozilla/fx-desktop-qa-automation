@@ -68,6 +68,7 @@ class AboutPrefs(BasePage):
 
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
+        self.get_element("search-engine-dropdown-root")
         return Dropdown(
             self, self.driver, root=self.get_element("search-engine-dropdown-root")
         )

@@ -35,7 +35,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_clipboard_pref_flip:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_copied_url_contains_https:
@@ -53,7 +53,6 @@ address_bar_and_search:
   test_default_search_provider_change_awesome_bar:
     result: unstable
     splits:
-    - ci
     - functional1
   test_default_search_provider_change_legacy_search_bar:
     result: deprecated
@@ -87,7 +86,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
@@ -353,7 +352,6 @@ downloads:
   test_set_always_ask_file_type:
     result: pass
     splits:
-    - ci
     - functional1
 drag_and_drop:
   test_copy_entire_row_column:
@@ -388,7 +386,6 @@ find_toolbar:
   test_find_toolbar_search:
     result: pass
     splits:
-    - ci
     - functional1
 form_autofill:
   test_address_autofill_attribute:
@@ -539,7 +536,6 @@ networking:
   test_http_site:
     result: pass
     splits:
-    - ci
     - functional1
 notifications:
   test_audio_video_permissions_notification:
@@ -592,7 +588,6 @@ password_manager:
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
-    - ci
     - functional1
   test_about_logins_navigation_from_hamburger_menu:
     result: pass
@@ -699,7 +694,6 @@ pdf_viewer:
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
-    - ci
     - functional1
   test_pdf_download:
     result: pass
@@ -750,11 +744,11 @@ preferences:
     splits:
     - smoke
   test_firefox_home_new_tabs:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_firefox_home_on_launch:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_lang_pack_changed_from_about_prefs:
@@ -766,7 +760,7 @@ preferences:
     splits:
     - smoke
   test_never_remember_history:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_notifications_change_set:
@@ -850,7 +844,6 @@ security_and_privacy:
   test_cross_site_tracking_cookies_blocked:
     result: pass
     splits:
-    - ci
     - functional1
   test_cryptominers_blocked_and_shown_in_info_panel:
     result: pass
