@@ -2,7 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
-from modules.page_object import AboutPrefs, GoogleSearch
+from modules.browser_object_navigation import Navigation
+from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
 
@@ -18,17 +19,14 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     # Instantiate objs
     about_prefs = AboutPrefs(driver, category="privacy")
     panel_ui = PanelUi(driver)
-    google_search = GoogleSearch(driver)
+    nav = Navigation(driver)
     ba = BrowserActions(driver)
 
     # Open new private window
     panel_ui.open_and_switch_to_new_window("private")
 
     # Open the Google page and perform a search
-    google_search.open()
-    google_search.type_in_search_bar("hello")
-    google_search.press_enter_search_bar()
-    google_search.wait_for_page_to_load()
+    nav.search("hello")
 
     # Close the page and switch to first tab
     driver.close()

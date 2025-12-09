@@ -16,5 +16,20 @@
         "selectorData": "browser.printSettingsBrowser",
         "strategy": "css",
         "groups": []
+    },
+    "footer-button-group": {
+      "selectorData": "button-container",
+      "strategy": "id",
+      "groups": []
+    },
+    "print-button": {
+        "selectorData": "print-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "cancel-button": {
+        "selectorData": "cancel-button",
+        "strategy": "id",
+        "groups": []
     }
 }

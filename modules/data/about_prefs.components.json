@@ -108,7 +108,7 @@
     "groups": []
   },
   "import-browser-data": {
-    "selectorData": "button[id='data-migration']",
+    "selectorData": "moz-box-button[id='data-migration']",
     "strategy": "css",
     "groups": []
   },
@@ -370,7 +370,7 @@
     "groups": []
   },
   "history-privacy-label": {
-    "selectorData": "historyPane",
+    "selectorData": "historyMode",
     "strategy": "id",
     "groups": []
   },
