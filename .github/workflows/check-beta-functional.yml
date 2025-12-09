@@ -23,7 +23,7 @@ jobs:
       - name: Check if the run is reportable
         id: reportable
         env:
-          TESTRAIL_FUNCTIONAL_SPLIT: 1
+          STARFOX_SPLIT: functional1
           TESTRAIL_REPORT: true
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
