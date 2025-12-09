@@ -68,9 +68,7 @@ class AboutPrefs(BasePage):
 
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
-        return Dropdown(
-            self, self.driver, root=self.get_element("search-engine-dropdown-root")
-        )
+        return Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
