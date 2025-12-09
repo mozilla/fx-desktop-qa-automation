@@ -89,5 +89,11 @@
         "selectorData": "logo",
         "strategy": "class",
         "groups": []
+    },
+
+    "top-site-by-title": {
+        "selectorData": "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/..",
+        "strategy": "xpath",
+        "groups": []
     }
 }

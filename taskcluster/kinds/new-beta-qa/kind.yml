@@ -15,6 +15,7 @@ task-defaults:
         type: directory
     env:
       TESTRAIL_REPORT: "true"
+      STARFOX_SPLIT: "smoke"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -34,7 +35,6 @@ tasks:
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
-        pip3 install 'ruff>=0.4.8,<0.5';
         mv ./ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         export FX_CHANNEL="beta";
@@ -43,11 +43,12 @@ tasks:
         pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./keyring-unlock.sh
-        pipenv run pytest --fx-executable $FX_EXECUTABLE -n 4 tests;
+        pipenv run python choose_ci_set.py;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
         mv ./ci_pyproject_headed.toml ./pyproject.toml;
         export REPORTABLE=1;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE tests;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

@@ -5,6 +5,7 @@ import subprocess
 import sys
 
 from choose_l10n_ci_set import select_l10n_mappings
+from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
@@ -17,6 +18,7 @@ TESTRAIL_RUN_FMT = (
     "[{channel} {major}] {plan}Automated testing {major}.{minor}b{beta}-build{build}"
 )
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
+TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
 TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
@@ -144,6 +146,11 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
+    if os.environ.get("STARFOX_SPLIT") and os.environ.get("STARFOX_SPLIT").startswith(
+        "functional"
+    ):
+        functional_split = os.environ["STARFOX_SPLIT"].split("functional")[-1]
+        plan_title = f"{plan_title} - Functional (Split {functional_split})"
     return plan_title
 
 
@@ -264,24 +271,30 @@ def reportable(platform_to_test=None):
         # Only report when there is a new beta without a reported plan or if the selected split is not completely reported.
         return covered_mappings < expected_mappings
     else:
-        covered_suites = 0
+        covered_suites = []
         for entry in plan_entries:
             for run_ in entry.get("runs"):
                 if run_.get("config") and platform in run_.get("config"):
-                    covered_suites += 1
+                    covered_suites.append(str(run_.get("suite_id")))
 
-        num_suites = 0
-        for test_dir_name in os.listdir("tests"):
-            test_dir = os.path.join("tests", test_dir_name)
-            if os.path.isdir(test_dir) and not os.path.exists(
-                os.path.join(test_dir, "skip_reporting")
-            ):
-                num_suites += 1
-
-        logging.warning(
-            f"Potentially matching run found for {platform}, may be reportable. ({covered_suites} out of {num_suites} suites already reported.)"
+        if not os.environ.get("STARFOX_SPLIT"):
+            sys.exit("No split selected")
+        manifest = TestKey(TEST_KEY_LOCATION)
+        expected_suites = manifest.get_valid_suites_in_split(
+            os.environ["STARFOX_SPLIT"]
         )
-        return covered_suites < num_suites
+
+        uncovered_suites = set(expected_suites) - set(covered_suites)
+        if len(uncovered_suites):
+            suite_names = [
+                s.get("name")
+                for s in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ)
+                if str(s.get("id")) in uncovered_suites
+            ]
+            print("Coverage not found for the following suites:")
+            print("\t-" + "\n\t-".join(suite_names))
+
+        return not uncovered_suites
 
 
 def testrail_init() -> TestRail:

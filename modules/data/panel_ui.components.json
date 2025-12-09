@@ -180,7 +180,7 @@
         "groups": []
     },
 
-    "bookmark-by-title": {
+    "panel-menu-item-by-title": {
         "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
         "strategy": "css",
         "groups": []
@@ -338,6 +338,12 @@
 
     "edit-bookmark-panel": {
         "selectorData": "editBMPanel_namePicker",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "toolbarspring": {
+        "selectorData": "customizableui-special-spring2",
         "strategy": "id",
         "groups": []
     }

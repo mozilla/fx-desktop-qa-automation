@@ -1,5 +1,4 @@
 import logging
-from platform import system
 
 import pytest
 from selenium.webdriver import Firefox
@@ -26,9 +25,7 @@ LINK_SET = set(LINKS)
 NUM_TABS = 6
 
 
-@pytest.mark.skipif(
-    system().lower().startswith("linux"), reason="Currently unstable in linux"
-)
+# This test is unstable in Linux Taskcluster for now
 def test_reopen_tab_through_history_menu(driver: Firefox):
     """C134650 - Verify that the recently closed tab can be reopened from the history menu"""
 

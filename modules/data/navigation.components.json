@@ -29,6 +29,12 @@
         "groups": []
     },
 
+    "legacy-search-mode-suggestion-container": {
+      "selectorData": "richlistbox[class='autocomplete-richlistbox search-panel-tree']",
+      "strategy": "css",
+      "groups": []
+    },
+
     "overflow-item": {
         "selectorData": "[class='urlbarView-title urlbarView-overflowable']",
         "strategy": "css",
@@ -603,5 +609,77 @@
         "selectorData": "developer-button",
         "strategy": "id",
         "groups": []
+    },
+
+    "status-panel-label": {
+        "selectorData": "statuspanel-label",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "searchmode-engine": {
+        "selectorData": "toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "selected_searchbar-search-engine": {
+        "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "searchbar-suggestions": {
+        "selectorData": "hbox.search-one-offs",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "searchbar-magnifying-glass-button": {
+        "selectorData": "hbox.searchbar-search-button[data-l10n-id='searchbar-icon']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "searchbar-search-engine": {
+        "selectorData": "button.searchbar-engine-one-off-item[tooltiptext='{engine}']",
+        "strategy": "css",
+        "groups": ["doNotCache"]
+    },
+
+    "search-mode-chicklet": {
+        "selectorData": "label.searchmode-switcher-title",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "history-button-search-mode": {
+        "selectorData": "search-button-history",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "exit-button-searchmode": {
+        "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "switch-to-tab": {
+        "selectorData": "div.urlbarView-row[type='switchtab']",
+        "strategy": "css",
+        "groups": ["doNotCache"]
+    },
+
+    "tab-container-label": {
+        "selectorData": "userContext-label",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "clipboard-suggestion": {
+        "selectorData": "#urlbar-results > div.urlbarView-row[type='clipboard']",
+        "strategy": "css",
+        "groups": ["doNotCache"]
     }
 }

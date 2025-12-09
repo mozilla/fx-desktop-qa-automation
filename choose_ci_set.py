@@ -3,22 +3,15 @@ import re
 import sys
 from subprocess import check_output
 
-import pytest
+from manifests.testkey import TestKey
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-CI_MARK = "@pytest.mark.ci"
+MANIFEST_KEY = "manifests/key.yaml"
+SUPPORTED_OSES = ["mac", "win", "linux"]
 HEADED_MARK = "@pytest.mark.headed"
+MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
-
-
-class CollectionPlugin:
-    """Mini plugin to get test names"""
-
-    def __init__(self):
-        self.tests = []
-
-    def pytest_report_collectionfinish(self, items):
-        self.tests = [item.nodeid for item in items]
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 
 
 def snakify(pascal: str) -> str:
@@ -72,7 +65,7 @@ def get_tests_by_model(
     return matching_tests
 
 
-def dedupe(run_list: list, slash: str) -> list:
+def dedupe(run_list: list) -> list:
     """For a run list, remove entries that are covered by more general entries."""
     run_list = list(set(run_list))
     dotslashes = []
@@ -87,7 +80,7 @@ def dedupe(run_list: list, slash: str) -> list:
             dotslashes.append(i)
 
     for dotslash in dotslashes:
-        run_list[dotslash] = f".{slash}{run_list[dotslash]}"
+        run_list[dotslash] = f".{SLASH}{run_list[dotslash]}"
 
     for i, entry_a in enumerate(run_list):
         for j, entry_b in enumerate(run_list):
@@ -106,21 +99,15 @@ def dedupe(run_list: list, slash: str) -> list:
 
 
 if __name__ == "__main__":
-    if os.path.exists(".env"):
-        with open(".env") as fh:
-            contents = fh.read()
-            if "TESTRAIL_REPORT='true'" in contents:
-                os.environ["TESTRAIL_REPORT"] = "true"
-            if "RUN_ALL='true'" in contents:
-                os.environ["MANUAL"] = "true"
-
-    if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
-        # Run all tests if this is a scheduled beta or a manual run
+    print("Selecting test set...")
+    manifest = TestKey(MANIFEST_KEY)
+    if os.environ.get("STARFOX_SPLIT"):
+        print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
+        run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
+        run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
-            fh.write("tests")
+            fh.write("\n".join(run_list))
             sys.exit(0)
-
-    slash = "/" if "/" in SCRIPT_DIR else "\\"
 
     re_obj = {
         "test_re_string": r".*/.*/test_.*\.py",
@@ -130,7 +117,7 @@ if __name__ == "__main__":
         "class_re_string": r"\s*class (\w+)[(A-Za-z0-9_)]*:",
     }
     for k in list(re_obj.keys()):
-        if slash == "\\":
+        if SLASH == "\\":
             re_obj[k] = re_obj.get(k).replace("/", r"\\")
         short_name = "_".join(k.split("_")[:-1])
         re_obj[short_name] = re.compile(re_obj.get(k))
@@ -140,17 +127,22 @@ if __name__ == "__main__":
     committed_files = (
         check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
         .decode()
-        .replace("/", slash)
+        .replace("/", SLASH)
         .splitlines()
     )
+
+    print("Committed files:\n\t", end="")
+    print("\n\t".join(committed_files))
 
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
 
     if main_conftest in committed_files or base_page in committed_files:
-        # Run all the tests (no files as arguments) if main conftest or basepage changed
+        # Run smoke tests if main conftest or basepage changed
+        run_list = manifest.gather_split("smoke")
+        run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
-            fh.write("tests")
+            fh.write("\n".join(run_list))
         sys.exit(0)
 
     all_tests = []
@@ -163,13 +155,6 @@ if __name__ == "__main__":
                 with open(this_file, encoding="utf-8") as fh:
                     lines = fh.readlines()
                     test_paths_and_contents[this_file] = "".join(lines)
-
-    p = CollectionPlugin()
-    pytest.main(["--collect-only", "-m", "ci", "-s"], plugins=[p])
-    ci_paths = [f".{slash}{test}" for test in p.tests]
-
-    # Dedupe just in case
-    ci_paths = list(set(ci_paths))
 
     changed_suite_conftests = [
         f for f in committed_files if re_obj.get("suite_conftest_re").match(f)
@@ -184,7 +169,7 @@ if __name__ == "__main__":
 
     if changed_suite_conftests:
         run_list = [
-            "." + slash + os.path.join(*suite.split(slash)[-3:-1])
+            "." + SLASH + os.path.join(*suite.split(SLASH)[-3:-1])
             for suite in changed_suite_conftests
         ]
 
@@ -212,7 +197,7 @@ if __name__ == "__main__":
             found = False
             for file in run_list:
                 # Don't add if already exists in suite changes
-                pieces = file.split(slash)
+                pieces = file.split(SLASH)
                 if len(pieces) == 3 and pieces[-1] in changed_test:
                     found = True
 
@@ -222,16 +207,22 @@ if __name__ == "__main__":
             if not found:
                 run_list.append(changed_test)
 
+    ci_paths = manifest.gather_split("ci")
+    ci_paths = dedupe(ci_paths)
     if not run_list:
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(ci_paths))
-    else:
+        sys.exit(0)
+
+    if len(run_list) < MIN_RUN_SIZE:
         run_list.extend(ci_paths)
 
-        # Dedupe just in case
-        if slash == "\\":
-            run_list = [entry.replace("/", slash) for entry in run_list]
-        run_list = dedupe(run_list, slash)
-        run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
-        with open(OUTPUT_FILE, "w") as fh:
-            fh.write("\n".join(run_list))
+    # Dedupe just in case
+    if SLASH == "\\":
+        run_list = [entry.replace("/", SLASH) for entry in run_list]
+    run_list = [entry for entry in run_list if os.path.exists(entry)]
+    run_list = manifest.filter_filenames_by_pass(run_list)
+    run_list = dedupe(run_list)
+    run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
+    with open(OUTPUT_FILE, "w") as fh:
+        fh.write("\n".join(run_list))

@@ -13,6 +13,7 @@
       "searchEngineDropdown"
     ]
   },
+
   "custom-tracker-options-parent": {
     "selectorData": "contentBlockingOptionCustom",
     "strategy": "id",
@@ -71,6 +72,28 @@
   },
   "clear-site-data-button": {
     "selectorData": "clearSiteDataButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "search-shortcuts-group": {
+    "selectorData": "oneClickSearchProvidersGroup",
+    "strategy": "id",
+    "groups": []
+  },
+  "search-engine-list": {
+    "selectorData": "engineList",
+    "strategy": "id",
+    "groups": []
+  },
+
+  "remove-search-engine-button": {
+    "selectorData": "removeEngineButton",
+    "strategy": "id",
+    "groups": []
+  },
+
+  "restore-default-search-engines-button": {
+    "selectorData": "restoreDefaultSearchEngines",
     "strategy": "id",
     "groups": []
   },
@@ -168,13 +191,23 @@
     "strategy": "css",
     "groups": []
   },
-  "firefox-suggest-nonsponsored": {
-    "selectorData": "firefoxSuggestNonsponsored",
+  "show-suggestions-in-address-bar": {
+    "selectorData": "showSearchSuggestionsFirstCheckbox",
     "strategy": "id",
     "groups": []
   },
-  "firefox-suggest-sponsored": {
-    "selectorData": "firefoxSuggestSponsored",
+  "show-suggestions-awesomebar": {
+    "selectorData": "urlBarSuggestion",
+    "strategy": "id",
+    "groups": []
+  },
+  "firefox-suggestions": {
+    "selectorData": "showSearchSuggestionsFirstCheckbox",
+    "strategy": "id",
+    "groups": []
+  },
+  "firefox-trending-suggestions": {
+    "selectorData": "showTrendingSuggestions",
     "strategy": "id",
     "groups": []
   },
@@ -368,6 +401,11 @@
   },
   "language-settings-dialog": {
     "selectorData": "BrowserLanguagesDialog",
+    "strategy": "id",
+    "groups": []
+  },
+    "search-suggestion-in-private-windows": {
+    "selectorData": "showSearchSuggestionsPrivateWindows",
     "strategy": "id",
     "groups": []
   },
@@ -567,12 +605,22 @@
     "strategy": "css",
     "groups": []
   },
+  "clipboard-suggestion-checkbox": {
+    "selectorData": "#clipboardSuggestion",
+    "strategy": "css",
+    "groups": ["doNotCache"]
+  },
 
-    "unknown-content-type-dialog": {
-        "selectorData": "unknownContentTypeWindow",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    }
+  "unknown-content-type-dialog": {
+    "selectorData": "unknownContentTypeWindow",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "history-suggestion": {
+    "selectorData": "historySuggestion",
+    "strategy": "id",
+    "groups": []
+  }
 }

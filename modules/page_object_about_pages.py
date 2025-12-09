@@ -10,8 +10,10 @@ from selenium.common.exceptions import (
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
+from modules.page_object_generics import GenericPage
 from modules.util import BrowserActions
 
 
@@ -193,11 +195,72 @@ class AboutLogins(BasePage):
             if delete_files_regex.match(file):
                 os.remove(passwords_csv)
 
-    def verify_csv_export(self, downloads_folder: str, filename: str):
-        """Wait until the exported CSV file is present in the target folder."""
+    def verify_csv_export(
+        self, downloads_folder: str, filename: str, timeout: int = 20
+    ):
+        """
+        Wait until the exported CSV file is present, non-empty, and readable.
+        """
         csv_file = os.path.join(downloads_folder, filename)
-        self.wait.until(lambda _: os.path.exists(csv_file))
+
+        def file_ready(_):
+            # Check if the file path exists. If not, continue
+            if not os.path.exists(csv_file):
+                return False
+            try:
+                # Verify that the file isn't empty
+                if os.path.getsize(csv_file) == 0:
+                    return False
+
+                # Attempt to read a few bytes to ensure the file is unlocked
+                # and readable (handles cases where the OS is still writing).
+                with open(csv_file, "r", encoding="utf-8") as f:
+                    f.read(10)
+                return True
+
+            except (OSError, PermissionError) as e:
+                # Log and retry until timeout instead of failing immediately
+                logging.debug(f"[verify_csv_export] File not ready yet: {e}")
+                return False
+
+        WebDriverWait(self.driver, timeout).until(file_ready)
         return csv_file
+
+    def add_login(self, origin: str, username: str, password: str):
+        """
+        Adds a new saved login entry.
+
+        Args:
+            origin (str): The site URL (e.g., https://example.com)
+            username (str): The username to save
+            password (str): The password to save
+        """
+        self.click_add_login_button()
+        self.create_new_login(
+            {
+                "origin": origin,
+                "username": username,
+                "password": password,
+            }
+        )
+
+    def export_passwords_csv(self, downloads_folder: str, filename: str):
+        """
+        Export passwords to a CSV file and navigate the save dialog to the target location.
+
+        Args:
+            downloads_folder (str): The folder where the CSV should be saved.
+            filename (str): The name of the CSV file.
+        """
+        # Open about:logins and click export buttons
+        self.open()
+        self.click_on("menu-button")
+        self.click_on("export-passwords-button")
+        self.click_on("continue-export-button")
+
+        # Wait for export dialog and navigate to folder
+        page = GenericPage(self.driver)
+        page.navigate_dialog_to_location(downloads_folder, filename)
 
 
 class AboutPrivatebrowsing(BasePage):

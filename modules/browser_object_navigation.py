@@ -1,6 +1,8 @@
 import logging
 import re
+import time
 from typing import Literal
+from urllib.parse import urlparse
 
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import ActionChains, Firefox
@@ -13,6 +15,7 @@ from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_panel_ui import PanelUi
 from modules.classes.bookmark import Bookmark
 from modules.page_base import BasePage
+from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.util import BrowserActions
 
 
@@ -33,7 +36,7 @@ class Navigation(BasePage):
         "Bing",
         "DuckDuckGo",
         "Wikipedia (en)",
-        "Firefox Add-ons"
+        "Firefox Add-ons",
     }
 
     def __init__(self, driver: Firefox, **kwargs):
@@ -44,6 +47,7 @@ class Navigation(BasePage):
         self.bookmarks_toolbar = "bookmarks-toolbar"
         self.context_menu = ContextMenu(self.driver)
         self.panel_ui = PanelUi(self.driver)
+        self.customize = CustomizeFirefox(self.driver)
 
     @BasePage.context_content
     def expect_in_content(self, condition) -> BasePage:
@@ -80,20 +84,21 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def type_in_awesome_bar(self, term: str) -> BasePage:
-        """Enter text into the Awesome Bar. You probably want self.search()"""
-        self.set_awesome_bar()
-        self.awesome_bar.click()
-        self.awesome_bar.send_keys(term)
-        return self
+    def type_in_awesome_bar(self, term: str, reset=True) -> BasePage:
+        """
+        Type text into the Awesome Bar.
 
-    @BasePage.context_chrome
-    def press_ctrl_enter(self) -> BasePage:
-        """Press Ctrl/Cmd + Enter in Awesome Bar."""
-        if self.sys_platform() == "Darwin":
-            self.perform_key_combo(Keys.COMMAND, Keys.ENTER)
-        else:
-            self.perform_key_combo(Keys.CONTROL, Keys.ENTER)
+        reset=True (default): refocuses and clicks the Awesome Bar before typing,
+        which moves the cursor to the end.
+
+        reset=False: keeps the current cursor position (useful when tests manually
+        move the caret with arrow keys).
+        """
+        if reset:
+            self.set_awesome_bar()
+            self.awesome_bar.click()
+
+        self.awesome_bar.send_keys(term)
         return self
 
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
@@ -127,6 +132,35 @@ class Navigation(BasePage):
     def click_firefox_suggest(self) -> None:
         """Click the Firefox suggested result."""
         self.get_element("firefox-suggest").click()
+
+    @BasePage.context_chrome
+    def click_switch_to_tab(self) -> None:
+        """
+        Clicks the 'Switch to Tab' suggestion in the URL bar results.
+        Assumes the caller already typed into the awesome bar.
+
+        This uses a minimal wait that returns the list of matches only
+        when at least one element is found.
+        """
+
+        # Wait until at least one switch-to-tab result is present
+        switch_items = self.wait.until(
+            lambda d: self.get_elements("switch-to-tab") or None
+        )
+
+        # Click the first matching row
+        switch_items[0].click()
+
+    @BasePage.context_chrome
+    def click_on_clipboard_suggestion(self) -> None:
+        """
+        Click the 'Visit from clipboard' suggestion in the URL bar.
+        Requires:
+          - browser.urlbar.clipboard.featureGate = true
+          - Clipboard suggestion already visible
+        """
+        row = self.wait.until(lambda d: self.get_element("clipboard-suggestion"))
+        row.click()
 
     @BasePage.context_chrome
     def search(self, term: str, mode=None) -> BasePage:
@@ -291,6 +325,173 @@ class Navigation(BasePage):
         self.get_element("shield-icon").click()
         return self
 
+    def search_and_check_if_suggestions_are_present(
+        self, text, search_mode: str = "awesome", min_suggestions=1
+    ):
+        """
+        Search in the given address bar and check if suggestions are present.
+
+        Args:
+            text (str): Text to search for in the suggestions.
+            search_mode(str): Search mode to use. Can be 'awesome' or 'search'. Defaults to 'awesome'.
+            min_suggestions (int): Minimum number of suggestions to collect.
+        """
+        if search_mode == "awesome":
+            self.clear_awesome_bar()
+            self.type_in_awesome_bar(text)
+            time.sleep(0.5)
+            return self.awesome_bar_has_suggestions(min_suggestions)
+        elif search_mode == "search":
+            self.set_search_bar()
+            self.type_in_search_bar(text)
+            return self.search_bar_has_suggestions(min_suggestions)
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
+
+    @BasePage.context_chrome
+    def awesome_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
+        """Check if the awesome bar has any suggestions."""
+        self.wait_for_suggestions_present(min_suggestions)
+        suggestion_container = self.get_element("results-dropdown")
+        has_children = self.driver.execute_script(
+            f"return arguments[0].children.length > {min_suggestions};",
+            suggestion_container,
+        )
+        return has_children
+
+    def verify_no_external_suggestions(
+        self,
+        text: str | None = None,
+        search_mode: str = "awesome",
+        max_rows: int = 3,
+        type_delay: float = 0.3,
+    ) -> bool:
+        if search_mode == "awesome":
+            if text is not None:
+                self.clear_awesome_bar()
+                self.type_in_awesome_bar(text)
+                time.sleep(type_delay)  # allow dropdown to update
+
+            suggestions = self.get_all_children("results-dropdown")
+            return len(suggestions) <= max_rows
+
+        elif search_mode == "search":
+            if text is not None:
+                self.set_search_bar()
+                self.type_in_search_bar(text)
+            return not self.search_bar_has_suggestions(min_suggestions=1)
+
+        else:
+            raise ValueError("search_mode must be either 'awesome' or 'search'")
+
+    @BasePage.context_chrome
+    def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
+        """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
+        suggestion_container = self.get_element(
+            "legacy-search-mode-suggestion-container"
+        )
+        if min_suggestions > 2:
+            return (
+                suggestion_container.find_element(By.XPATH, "./*[1]").tag_name
+                == "richlistitem"
+            )
+        else:
+            has_children = self.driver.execute_script(
+                "return arguments[0].children.length > 0;", suggestion_container
+            )
+            return has_children
+
+    def wait_for_suggestions_present(self, at_least: int = 1):
+        """Wait until the suggestion list has at least one visible item."""
+        self.set_chrome_context()
+        self.expect(lambda _: len(self.get_elements("suggestion-titles")) >= at_least)
+        return self
+
+    def wait_for_suggestions_absent(self):
+        """Wait for the suggestions list to disappear (for non-general engines)."""
+        self.set_chrome_context()
+        self.element_not_visible("suggestion-titles")
+        return self
+
+    @BasePage.context_chrome
+    def open_usb_and_select_option(self, option_title: str):
+        """Click the USB icon and select an option by its title."""
+        self.get_element("searchmode-switcher").click()
+        self.get_element("search-mode-switcher-option", labels=[option_title]).click()
+        return self
+
+    def assert_search_mode_chip_visible(self):
+        """Ensure the search mode indicator (chip) is visible on the left."""
+        self.set_chrome_context()
+        self.get_element("search-mode-span")
+        return self
+
+    @BasePage.context_chrome
+    def verify_search_mode_is_visible(self):
+        """Ensure the search mode is visible in URLbar"""
+        self.element_visible("search-mode-chicklet")
+        return self
+
+    @BasePage.context_chrome
+    def verify_search_mode_is_not_visible(self):
+        """Ensure the search mode is cleared from URLbar"""
+        self.element_not_visible("search-mode-chicklet")
+        return self
+
+    @BasePage.context_chrome
+    def verify_search_mode_label(self, engine_name: str):
+        """Verify that the search mode chicklet displays the correct engine."""
+        chicklet = self.get_element("search-mode-chicklet")
+        chip_text = (
+            chicklet.text or chicklet.get_attribute("aria-label") or ""
+        ).lower()
+        assert engine_name.lower() in chip_text, (
+            f"Expected search mode engine '{engine_name}', got '{chip_text}'"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_plain_text_in_input_awesome_bar(self, expected_text: str):
+        """Verify the awesomebar input contains the exact literal text."""
+        input_el = self.get_element("awesome-bar")
+        value = input_el.get_attribute("value")
+        assert value == expected_text, (
+            f"Expected input '{expected_text}', got '{value}'"
+        )
+        return self
+
+    def click_first_suggestion_row(self):
+        """
+        Clicks the first visible suggestion row in the list, using robust scrolling and fallback.
+        """
+        from selenium.webdriver.common.action_chains import ActionChains
+        from selenium.webdriver.common.by import By
+
+        self.set_chrome_context()
+        driver = self.driver
+
+        try:
+            # Prefer Firefox Suggest row if present
+            row = self.get_element("firefox-suggest")
+        except Exception:
+            titles = self.get_elements("suggestion-titles")
+            assert titles, "No visible suggestion items found."
+            target = next((t for t in titles if t.is_displayed()), titles[0])
+            try:
+                row = target.find_element(
+                    By.XPATH, "ancestor::*[contains(@class,'urlbarView-row')][1]"
+                )
+            except Exception:
+                row = target
+
+        driver.execute_script("arguments[0].scrollIntoView({block:'center'});", row)
+        try:
+            ActionChains(driver).move_to_element(row).click().perform()
+        except Exception:
+            driver.execute_script("arguments[0].click();", row)
+
+        return self
+
     @BasePage.context_chrome
     def click_file_download_warning_panel(self) -> BasePage:
         """exit file download warning panel if present"""
@@ -328,7 +529,6 @@ class Navigation(BasePage):
         Argument:
             expected_pattern: Regex pattern to match against download name
         """
-        self.element_visible("download-target-element")
         download_name = self.get_element("download-target-element")
         download_value = download_name.get_attribute("value")
         assert re.match(expected_pattern, download_value), (
@@ -388,6 +588,7 @@ class Navigation(BasePage):
         """Open search settings from searchmode switcher in awesome bar"""
         self.click_on("searchmode-switcher")
         self.click_on("searchmode-switcher-settings")
+        self.switch_to_new_tab()
         return self
 
     @BasePage.context_chrome
@@ -526,14 +727,18 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def delete_bookmark_from_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+    def delete_panel_menu_item_by_title(self, item_title: str) -> BasePage:
         """
-        Delete bookmark from bookmarks toolbar via context menu
+        Delete a panel menu item (bookmark or history entry) via context menu.
+
+        This method works for both bookmarks and history items in the panel menu (hamburger menu),
+        as Firefox uses the same UI structure for both. The caller should ensure the appropriate
+        panel menu is open (e.g., History menu or Bookmarks menu) before calling this method.
 
         Argument:
-        bookmark_name: The display name of the bookmark to delete
+            item_title: The display name/title of the item to delete (works for both bookmarks and history entries)
         """
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[item_title])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
         return self
 
@@ -560,7 +765,9 @@ class Navigation(BasePage):
         """
         Verify bookmark exists in the bookmarks toolbar
         """
-        self.panel_ui.element_visible("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.element_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome
@@ -584,7 +791,9 @@ class Navigation(BasePage):
         self, bookmark_name: str
     ) -> BasePage:
         """Verify bookmark does not exist in the bookmarks toolbar"""
-        self.panel_ui.element_not_visible("bookmark-by-title", labels=[bookmark_name])
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
         return self
 
     @BasePage.context_chrome
@@ -636,8 +845,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.click_on("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.click_on("panel-menu-item-by-title", labels=[bookmark_title])
         return self
 
     @BasePage.context_chrome
@@ -651,8 +862,10 @@ class Navigation(BasePage):
             bookmark_title: The title of the bookmark to open
         """
         # Right-click the bookmark and open it in new tabe via context menu item
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-tab")
 
         return self
@@ -667,8 +880,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-window")
         return self
 
@@ -682,8 +897,10 @@ class Navigation(BasePage):
         Argument:
             bookmark_title: The title of the bookmark to open
         """
-        self.panel_ui.element_clickable("bookmark-by-title", labels=[bookmark_title])
-        self.panel_ui.context_click("bookmark-by-title", labels=[bookmark_title])
+        self.panel_ui.element_clickable(
+            "panel-menu-item-by-title", labels=[bookmark_title]
+        )
+        self.panel_ui.context_click("panel-menu-item-by-title", labels=[bookmark_title])
         self.context_menu.click_on("context-menu-toolbar-open-in-new-private-window")
         return self
 
@@ -751,3 +968,267 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
+
+    @BasePage.context_chrome
+    def get_status_panel_url(self) -> str:
+        """
+        Gets the URL displayed in the status panel at the bottom left of the browser.
+        """
+        self.element_visible("status-panel-label")
+        status_label = self.get_element("status-panel-label")
+        url = status_label.get_attribute("value")
+        return url
+
+    def verify_status_panel_url(self, expected_url: str):
+        """
+        Verify that the browser status panel (browser's bottom-left) contains the expected URL.
+        Argument:
+            expected_url: The expected URL substring to be found in the status panel
+        """
+        actual_url = self.get_status_panel_url()
+        assert expected_url in actual_url, (
+            f"Expected '{expected_url}' in status panel URL, got '{actual_url}'"
+        )
+
+    @BasePage.context_content
+    def verify_domain(self, expected_domain: str) -> None:
+        """
+        Verify that the current URL's domain matches the expected domain using urlparse.
+        This explicitly checks the domain (netloc) rather than just a substring match.
+        Uses content context to get the actual page URL.
+
+        Argument:
+            expected_domain: The expected domain (e.g., "wikipedia.org", "google.com")
+        """
+
+        def _domain_matches(_):
+            parsed = urlparse(self.driver.current_url)
+            return expected_domain in parsed.netloc
+
+        self.custom_wait(timeout=15).until(_domain_matches)
+        parsed_url = urlparse(self.driver.current_url)
+        assert expected_domain in parsed_url.netloc, (
+            f"Expected '{expected_domain}' domain, got '{parsed_url.netloc}'"
+        )
+
+    @BasePage.context_chrome
+    def verify_engine_returned(self, engine: str) -> None:
+        """
+        Verify that the given search engine is visible in the search mode switcher.
+        """
+        engine_locator = self.elements["searchmode-engine"]["selectorData"].format(
+            engine=engine
+        )
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
+        )
+
+    @BasePage.context_chrome
+    def verify_https_hidden_in_address_bar(self) -> None:
+        """
+        Wait until the HTTPS prefix is hidden in the address bar display.
+        """
+        self.wait.until(
+            lambda d: "https"
+            not in self.get_element("awesome-bar").get_attribute("value")
+        )
+
+    @BasePage.context_chrome
+    def verify_address_bar_value_prefix(self, prefix: str) -> None:
+        """
+        Wait until the value in the address bar starts with the given prefix.
+
+        Args:
+            prefix (str): Expected starting string (e.g., "https://").
+        """
+        self.wait.until(
+            lambda d: self.get_element("awesome-bar")
+            .get_attribute("value")
+            .startswith(prefix)
+        )
+
+    @BasePage.context_chrome
+    def verify_searchbar_engine_is_focused(self, engine: str) -> None:
+        """
+        Verify that the given search engine button is focused (has 'selected' attribute)
+        using the dynamic 'searchbar-search-engine' locator.
+        """
+        engine_locator = self.elements["selected_searchbar-search-engine"][
+            "selectorData"
+        ].format(engine=engine)
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator)),
+            message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible.",
+        )
+
+    @BasePage.context_chrome
+    def wait_for_searchbar_suggestions(self) -> None:
+        """Wait until the search suggestions dropdown is visible."""
+        locator = self.elements["searchbar-suggestions"]["selectorData"]
+        self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, locator)),
+            message="Search suggestions did not appear in time.",
+        )
+
+    @BasePage.context_chrome
+    def verify_engine_visibility_in_searchbar_suggestion(
+        self,
+        term: str,
+        engine_name: str,
+        expected_state: Literal["visible", "not_visible"],
+    ):
+        """
+        Type into the search bar and verify if a search engine suggestion is shown or not.
+        Arguments:
+            term: Search term to type in the search bar.
+            engine_name: The search engine to check (e.g., "DuckDuckGo").
+            expected_state: Expected visibility state of the engine ("visible" or "not_visible")
+        """
+        self.type_in_search_bar(term)
+        if expected_state == "visible":
+            self.element_visible("searchbar-search-engine", labels=[engine_name])
+        else:
+            self.element_not_visible("searchbar-search-engine", labels=[engine_name])
+
+    @BasePage.context_chrome
+    def add_search_bar_to_toolbar(self) -> BasePage:
+        """
+        Add the search bar to the toolbar via customize mode.
+        """
+
+        self.panel_ui.open_panel_menu()
+        self.panel_ui.navigate_to_customize_toolbar()
+        self.customize.add_widget_to_toolbar("search-bar")
+        return self
+
+    @BasePage.context_chrome
+    def click_exit_button_searchmode(self) -> None:
+        """
+        Click the 'Exit' button in the search mode.
+        Waits until the button is visible and clickable before performing the click.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(lambda _: self.get_element("exit-button-searchmode").is_displayed())
+
+        # Click the button
+        self.get_element("exit-button-searchmode").click()
+
+    @BasePage.context_chrome
+    def type_and_verify(
+        self,
+        input_text: str,
+        expected_text: str,
+        timeout: float = 5.0,
+        click: bool = True,  # If True: click match; else: return index
+    ) -> int | bool:
+        """
+        Types into the awesome bar, waits for a suggestion containing `expected_text`.
+
+        If `click=True` (default):
+            - Click the matching element and return True
+            - Raises if not found (test fails)
+
+        If `click=False`:
+            - Return the 0-based index of the matching element
+            - Raises if not found (test fails)
+        """
+
+        # Reset + type
+        self.clear_awesome_bar()
+        self.type_in_awesome_bar(input_text)
+
+        def find_match(driver):
+            suggestions = self.get_all_children("results-dropdown")
+
+            for index, s in enumerate(suggestions):
+                try:
+                    if expected_text in s.text:
+                        return (s, index)
+                except StaleElementReferenceException:
+                    continue
+
+            return False  # keep polling
+
+        # No try/except here — failure = real failure
+        element, index = self.custom_wait(timeout=timeout).until(find_match)
+
+        if click:
+            element.click()
+            return True
+
+        return index
+
+    @BasePage.context_chrome
+    def verify_autofill_adaptive_element(
+        self, expected_type: str, expected_url: str
+    ) -> BasePage:
+        """
+        Verify that the adaptive history autofill element has the expected type and URL text.
+        This method handles chrome context switching internally.
+        Arguments:
+            expected_type: Expected type attribute value
+            expected_url: Expected URL fragment to be contained in the element text
+        """
+        autofill_element = self.get_element("search-result-autofill-adaptive-element")
+        actual_type = autofill_element.get_attribute("type")
+        actual_text = autofill_element.text
+
+        assert actual_type == expected_type
+        assert expected_url in actual_text
+
+        return self
+
+    @BasePage.context_chrome
+    def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
+        if autofill_elements:
+            logging.warning(
+                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
+            )
+        assert len(autofill_elements) == 0, (
+            "Adaptive history autofill suggestion was not removed after deletion."
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_autofill_adaptive_element(
+        self, expected_type: str, expected_url: str
+    ) -> BasePage:
+        """
+        Verify that the adaptive history autofill element has the expected type and URL text.
+        This method handles chrome context switching internally.
+        Arguments:
+            expected_type: Expected type attribute value
+            expected_url: Expected URL fragment to be contained in the element text
+        """
+        autofill_element = self.get_element("search-result-autofill-adaptive-element")
+        actual_type = autofill_element.get_attribute("type")
+        actual_text = autofill_element.text
+
+        assert actual_type == expected_type
+        assert expected_url in actual_text
+
+        return self
+
+    @BasePage.context_chrome
+    def verify_no_autofill_adaptive_elements(self) -> BasePage:
+        """Verify that no adaptive history autofill elements are present."""
+        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
+        if autofill_elements:
+            logging.warning(
+                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
+            )
+        assert len(autofill_elements) == 0, (
+            "Adaptive history autofill suggestion was not removed after deletion."
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_container_label(self, label_expected: str):
+        """
+        Verify the container label for user context (container tabs).
+        Argument:
+            label_expected: The expected label text for the user context container.
+        """
+        actual_label = self.get_element("tab-container-label").text
+        assert actual_label == label_expected

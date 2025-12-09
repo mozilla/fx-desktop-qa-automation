@@ -21,7 +21,7 @@ MIXED_CONTENT_DOWNLOAD_URL = (
 MAX_CHECKS = 30
 
 
-@pytest.mark.unstable(reason="Unstable in CI environment")
+# This test has been found to be unstable in CI
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
@@ -32,7 +32,7 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
 
     # Wait for the test website to wake up and download the content
     web_page.open()
-    web_page.wait.until(lambda _: web_page.title_contains("File Examples"))
+    web_page.wait.until(lambda _: nav.element_visible("download-target-element"))
 
     # Verify download name matches expected pattern
     nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")

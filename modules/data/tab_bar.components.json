@@ -113,6 +113,66 @@
         "groups": [
             "doNotCache"
         ]
+    },
+
+    "tabgroup-menu": {
+      "selectorData": "tab-group-editor",
+      "strategy": "id",
+      "groups": [
+            "doNotCache"
+        ]
+    },
+
+    "tabgroup-input": {
+      "selectorData": "[data-l10n-id='tab-group-editor-name-field']",
+      "strategy": "css",
+      "groups": [
+        "doNotCache"
+      ]
+    },
+
+    "tabgroup-create-button": {
+      "selectorData": "tab-group-editor-button-create",
+      "strategy": "id",
+      "groups": []
+    },
+
+    "tabgroup-label": {
+      "selectorData": "tab-group-label",
+      "strategy": "class",
+      "groups": [
+        "doNotCache"
+      ]
+    },
+
+    "tabgroup-menuitem": {
+      "selectorData": "tab-group-icon",
+      "strategy": "class",
+      "groups": [
+        "doNotCache"
+      ]
+    },
+
+    "tabgroup-overflow-count": {
+      "selectorData": "tab-group-overflow-count",
+      "strategy": "class",
+      "groups": [
+        "doNotCache"
+      ]
+    },
+
+    "tabgroup-line": {
+      "selectorData": "tab-group-line",
+      "strategy": "class",
+      "groups": [
+        "doNotCache"
+      ]
+    },
+
+    "tabgroup-ungroup-tabs": {
+      "selectorData": "tabGroupEditor_ungroupTabs",
+      "strategy": "id",
+      "groups": []
     }
 
 }

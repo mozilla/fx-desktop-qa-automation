@@ -45,34 +45,13 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     keyboard = Controller()
     autofill_popup = AutofillPopup(driver)
 
-    # Save 3 sets of credentials for facebook
+    # Save 3 sets of credentials for Saucedemo
     about_logins.open()
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": SAUCEDEMO_URL,
-            "username": USERNAME,
-            "password": PASSWORD,
-        }
-    )
+    about_logins.add_login(SAUCEDEMO_URL, USERNAME, PASSWORD)
     time.sleep(0.8)
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": SAUCEDEMO_URL,
-            "username": USERNAME2,
-            "password": PASSWORD2,
-        }
-    )
+    about_logins.add_login(SAUCEDEMO_URL, USERNAME2, PASSWORD2)
     time.sleep(0.8)
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": SAUCEDEMO_URL,
-            "username": USERNAME3,
-            "password": PASSWORD3,
-        }
-    )
+    about_logins.add_login(SAUCEDEMO_URL, USERNAME3, PASSWORD3)
 
     # Open saucedemo.com
     web_page = GenericPage(driver, url=SAUCEDEMO_URL).open()

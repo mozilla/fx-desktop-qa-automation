@@ -24,7 +24,6 @@ def delete_files_regex_string():
 PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 
-@pytest.mark.xfail(reason="1994389")
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,
@@ -34,7 +33,7 @@ def test_download_pdf_from_context_menu(
     delete_files,
 ):
     """
-    C1756790: Verify that Telemetry is Recorded when Saving a PDF from the Context menu
+    C1756790: Verify that Telemetry is recorded when Saving a PDF from the Context menu
 
      Notes:
         - Firefox is launched with a new profile that has default download settings.

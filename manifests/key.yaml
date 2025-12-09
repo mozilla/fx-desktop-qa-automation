@@ -1,0 +1,1173 @@
+address_bar_and_search:
+  test_adaptive_history_autofill:
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+  test_adaptive_history_removal:
+    result: pass
+    splits:
+    - functional1
+  test_add_engine_address_bar:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_added_open_search_engine_default:
+    result: pass
+    splits:
+    - functional1
+  test_addon_suggestion:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_addressbar_bookmarks_when_history_disabled:
+    result: pass
+    splits:
+    - functional1
+  test_addressbar_search_engine_keywords:
+    result: pass
+    splits:
+    - functional1
+  test_bing_search_codes:
+    result: pass
+    splits:
+    - functional1
+  test_clipboard_pref_flip:
+    result: pass
+    splits:
+    - functional1
+  test_copied_url_contains_https:
+    result: pass
+    splits:
+    - functional1
+  test_ctrl_enter_completes_link_and_can_refresh:
+    result: pass
+    splits:
+    - functional1
+  test_ctrl_enter_fixes_url:
+    result: pass
+    splits:
+    - functional1
+  test_default_search_provider_change_awesome_bar:
+    result: unstable
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_default_search_provider_change_legacy_search_bar:
+    result: deprecated
+    splits:
+    - smoke
+  test_delete_history_entry_via_firefox_suggest_completion_list:
+    result: pass
+    splits:
+    - functional1
+  test_disable_websearch_from_awesome_bar:
+    result: pass
+    splits:
+    - functional1
+  test_dont_show_search_suggestions_in_private_window:
+    result: pass
+    splits:
+    - functional1
+  test_google_search_counts_us:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_google_withads_url_bar_us:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_insertion_point_no_search_terms_display:
+    result: pass
+    splits:
+    - functional1
+  test_no_suggestions_for_empty_query:
+    result: pass
+    splits:
+    - functional1
+  test_non_sponsored_topsite_context_menu_option:
+    result: pass
+    splits:
+    - functional1
+  test_open_link_in_new_container_tab:
+    result: pass
+    splits:
+    - functional1
+  test_paste_and_go_opens_correct_url:
+    result: pass
+    splits:
+    - functional1
+  test_refresh_firefox_dialog:
+    result: pass
+    splits:
+    - functional1
+  test_sap_google_adclick:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_seach_suggestions_can_be_disabled:
+    result: pass
+    splits:
+    - functional1
+  test_search_code_google_non_us:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_search_code_google_us:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_search_engine_selector:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_search_mode_appears_after_input:
+    result: pass
+    splits:
+    - functional1
+  test_search_mode_exits_correctly:
+    result: pass
+    splits:
+    - functional1
+  test_search_mode_persists_mixed_with_bing:
+    result: pass
+    splits:
+    - functional1
+  test_search_modes_for_sites:
+    result: unstable
+    splits:
+    - smoke
+  test_search_string_displayed_when_addressbar_unfocused:
+    result: pass
+    splits:
+    - functional1
+  test_search_suggestions:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_search_term_persists:
+    result: unstable
+    splits:
+    - functional1
+    - ci-extended
+  test_searchbar_display_alpenglow_theme:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_on_engines_remove_restore:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_results_shown_in_a_new_tab:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_change_tab:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_cleared_on_engine_removal:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_update_on_alias_prefix:
+    result: pass
+    splits:
+    - functional1
+  test_server_not_found_error:
+    result: pass
+    splits:
+    - functional1
+    - ci-extended
+  test_server_not_found_error_pb:
+    result: pass
+    splits:
+    - functional1
+  test_suggestion_engine_selection:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_switch_to_existing_tab_when_having_the_same_URL:
+    result: pass
+    splits:
+    - functional1
+  test_tile_menu_options:
+    result: pass
+    splits:
+    - functional1
+  test_use_different_search_shortcut_while_already_in_search_mode:
+    result: pass
+    splits:
+    - functional1
+  test_verify_url_after_tab_switch_with_search_mode:
+    result: pass
+    splits:
+    - functional1
+audio_video:
+  test_allow_audio_video_functionality:
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_block_audio_video_functionality:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_users_actions_saved_on_reload:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+bookmarks_and_history:
+  test_add_new_other_bookmark:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_bookmark_via_bookmark_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_bookmark_website_via_star_button:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_clear_all_history:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_clear_recent_history_displayed:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_delete_bookmarks_from_toolbar:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_delete_other_bookmarks:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_deleted_page_not_remembered:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_edit_bookmark_from_bookmark_menu:
+    result: pass
+    splits:
+    - smoke
+  test_edit_bookmark_via_star_button:
+    result: pass
+    splits:
+    - smoke
+  test_history_menu_from_different_places:
+    result: pass
+    splits:
+    - smoke
+  test_import_bookmarks_chrome:
+    result: pass
+    splits:
+    - smoke
+  test_import_bookmarks_edge:
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+  test_open_all_bookmarks_from_bookmarks_toolbar:
+    result: pass
+    splits:
+    - smoke
+  test_open_bookmark_in_new_window_via_toolbar_context_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_bookmark_in_private_window_via_toolbar_context_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_bookmarks_from_toolbar:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_websites_from_history:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_opened_website_in_new_tab_present_in_hamburger_history_menu:
+    result: pass
+    splits:
+    - smoke
+  test_opened_website_in_new_window_present_in_hamburger_history_menu:
+    result: pass
+    splits:
+    - smoke
+  test_opened_website_present_in_hamburger_history_menu:
+    result: pass
+    splits:
+    - smoke
+  test_private_window_website_not_in_history:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_toggle_bookmarks_toolbar:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_user_can_forget_history:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+downloads:
+  test_add_mime_type_doc:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+  test_add_zip_type:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_download_pdf:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_download_pdf_from_context_menu:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_mixed_content_download_via_https:
+    result:
+      linux: pass
+      mac: unstable
+      win: unstable
+    splits:
+    - smoke
+  test_set_always_ask_file_type:
+    result: pass
+    splits:
+    - smoke
+    - ci
+drag_and_drop:
+  test_copy_entire_row_column:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_copy_from_an_editor_paste_in_another:
+    result: pass
+    splits:
+    - smoke
+  test_copy_hyperlink_table:
+    result: pass
+    splits:
+    - smoke
+  test_copy_table_header:
+    result: pass
+    splits:
+    - smoke
+  test_paste_image_text:
+    result: pass
+    splits:
+    - smoke
+find_toolbar:
+  test_find_in_pdf:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_find_toolbar_nav:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_find_toolbar_search:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+form_autofill:
+  test_address_autofill_attribute:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_autofill_cc_cvv:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_autofill_credit_card:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_autofill_credit_card_doorhanger:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_autofill_credit_card_enable:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_autofill_credit_card_four_fields:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_cc_clear_form:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_clear_form:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_create_new_cc_profile:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_create_profile_autofill:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_delete_cc_profile:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_edit_credit_card:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+  test_enable_disable_autofill:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_form_autofill_suggestions:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_name_autofill_attribute:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_private_mode_info_not_saved:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_telephone_autofill_attribute:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_updating_address:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_updating_credit_card:
+    result: pass
+    splits:
+    - smoke
+geolocation:
+  test_geolocation_shared_via_html5:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_geolocation_shared_via_w3c_api:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+    - ci-extended
+language_packs:
+  test_language_pack_install_addons:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_language_pack_install_preferences:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+menus:
+  test_copy_paste_actions:
+    result: pass
+    splits:
+    - smoke
+    - ci
+  test_frequently_used_context_menu:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_hyperlink_context_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_image_context_menu_actions:
+    result: pass
+    splits:
+    - smoke
+    - ci
+  test_tab_context_menu_actions:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_tab_context_menu_close:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+meta:
+  test_selectors:
+    result: unstable
+    splits: []
+  test_version:
+    result: pass
+    splits:
+    - ci-extended
+networking:
+  test_default_dns_protection:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_http_site:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+notifications:
+  test_audio_video_permissions_notification:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_camera_permissions_notification:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_deny_geolocation:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_deny_screen_capture:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_geolocation_prompt_presence:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_microphone_permissions_notification:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_notifications_displayed:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_screen_share_permission_prompt:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_webextension_completed_installation_successfully_displayed:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+password_manager:
+  test_about_logins_navigation_from_context_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci
+  test_about_logins_navigation_from_hamburger_menu:
+    result: pass
+    splits:
+    - smoke
+  test_about_logins_search_username:
+    result: pass
+    splits:
+    - smoke
+  test_about_logins_search_website:
+    result: pass
+    splits:
+    - smoke
+  test_add_password_non_ascii_chars:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_add_password_save_valid_data:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_add_primary_password:
+    result: pass
+    splits:
+    - smoke
+  test_auto_saved_generated_password_context_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
+    result: pass
+    splits:
+    - smoke
+  test_can_view_password_when_PP_enabled:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_changes_made_in_edit_mode_are_saved:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_delete_login:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_multiple_saved_logins:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_never_save_login_via_doorhanger:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_password_csv_correctness:
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
+    splits:
+    - smoke
+  test_password_csv_export:
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
+    splits:
+    - smoke
+  test_primary_password_triggered_on_about_logins_access:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_save_login_via_doorhanger:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_saved_hyperlink_redirects_to_corresponding_page:
+    result: pass
+    splits:
+    - smoke
+  test_update_login_via_doorhanger:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+pdf_viewer:
+  test_add_image_pdf:
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
+    splits:
+    - smoke
+  test_download_pdf_with_form_fields:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_download_triggered_on_content_disposition_attachment:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_pdf_in_FF:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_pdf_data_can_be_cleared:
+    result: pass
+    splits:
+    - smoke
+    - ci
+  test_pdf_download:
+    result: pass
+    splits:
+    - smoke
+  test_pdf_input_numbers:
+    result: pass
+    splits:
+    - smoke
+  test_pdf_navigation:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_zoom_pdf_viewer:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+pocket:
+  test_basic_de:
+    test_localized_pocket_layout_DE:
+      result: deprecated
+      splits: []
+  test_basic_fr:
+    test_localized_pocket_layout_FR:
+      result: deprecated
+      splits: []
+  test_basic_gb:
+    test_localized_pocket_layout_GB:
+      result: deprecated
+      splits: []
+  test_basic_us:
+    test_localized_pocket_layout_US:
+      result: deprecated
+      splits: []
+    test_new_tab_about_blank:
+      result: pass
+      splits: []
+preferences:
+  test_check_for_updates:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_clear_cookie_data:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_firefox_home_new_tabs:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_firefox_home_on_launch:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_lang_pack_changed_from_about_prefs:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_manage_cookie_data:
+    result: pass
+    splits:
+    - smoke
+  test_never_remember_history:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_notifications_change_set:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+printing_ui:
+  test_print_preview:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_print_to_pdf:
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
+    splits:
+    - smoke
+profile:
+  test_set_default_profile:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+reader_view:
+  test_improved_type_control_panel:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_reader_view_close_sidebar:
+    result: pass
+    splits:
+    - smoke
+  test_reader_view_location_bar:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+scrolling_panning_zooming:
+  test_default_zoom_persists:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_mouse_wheel_zoom:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_zoom_from_menu_bar:
+    result: pass
+    splits:
+    - smoke
+  test_zoom_menu_correlation:
+    result: pass
+    splits:
+    - smoke
+  test_zoom_text_only:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+security_and_privacy:
+  test_blocking_cryptominers:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_blocking_fingerprinters:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_blocking_social_media_trackers:
+    result: unstable
+    splits:
+    - smoke
+    - ci-extended
+  test_cookies_not_saved_private_browsing:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_cross_site_tracking_cookies_blocked:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_cryptominers_blocked_and_shown_in_info_panel:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_detected_blocked_trackers_found:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_downloads_from_private_not_leaked:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_https_enabled_private_browsing:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_never_remember_browsing_history:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_no_trackers_detected:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_link_in_private_window:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_phishing_and_malware_warnings:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_private_browser_password_doorhanger:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_private_session_awesome_bar_exclusion:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_private_session_history_exclusion:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_private_window_from_panelui:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_third_party_content_blocked_private_browsing:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_tls_v1_2_protocol:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_trackers_crypto_fingerprint_blocked:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_tracking_content_custom_mode:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_undo_close_tab_private_browsing:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+sync_and_fxa:
+  test_existing_fxa:
+    result: unstable
+    splits:
+    - functional1
+  test_new_fxa:
+    result: unstable
+    splits:
+    - functional1
+tabs:
+  test_active_tab:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_change_position_of_pinned_tabs:
+    result: pass
+    splits:
+    - functional1
+  test_close_pinned_tab_via_mouse:
+    result: pass
+    splits:
+    - functional1
+  test_close_tab_through_middle_mouse_click:
+    result: pass
+    splits:
+    - functional1
+  test_display_customize_button:
+    result: pass
+    splits:
+    - functional1
+  test_list_all_tabs:
+    result: pass
+    splits:
+    - smoke
+  test_mute_tabs:
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
+    splits:
+    - smoke
+  test_navigation_multiple_tabs:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_bookmark_in_new_tab:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_new_bg_tab_via_mouse_and_keyboard:
+    result: pass
+    splits:
+    - functional1
+  test_open_new_tab:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_new_tab_keys:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_open_new_tab_via_hyperlink:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_pin_tab:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_pin_unpin_selected_tabs:
+    result: pass
+    splits:
+    - functional1
+  test_play_mute_unmute_tabs_via_toggle:
+    result: unstable
+    splits:
+    - functional1
+  test_reload_overiding_cache_keys:
+    result: pass
+    splits:
+    - functional1
+  test_reload_tab_via_keyboard:
+    result: pass
+    splits:
+    - functional1
+  test_reopen_tab_through_context_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_reopen_tab_through_history_menu:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_reopen_tabs_through_keys:
+    result: pass
+    splits:
+    - smoke
+    - ci-extended
+  test_ungroup_tabs:
+    result: pass
+    splits:
+    - functional1
+theme_and_toolbar:
+  test_customize_themes_and_redirect:
+    result: pass
+    splits:
+    - smoke
+    - ci
+    - ci-extended
+  test_installed_theme_enabled:
+    result: pass
+    splits:
+    - smoke

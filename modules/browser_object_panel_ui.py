@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -277,6 +278,32 @@ class PanelUi(BasePage):
             "recent-history-content", "value", "(Empty)"
         )
 
+    @BasePage.context_chrome
+    def verify_history_item_exists(self, item_title: str) -> BasePage:
+        """
+        Verify that a history item with the specified title exists in the history menu.
+
+        Argument:
+            item_title (str): The title text to look for in the history item (can be partial match)
+        """
+        self.open_history_menu()
+        self.get_all_history()
+        self.element_visible("panel-menu-item-by-title", labels=[item_title])
+        return self
+
+    @BasePage.context_chrome
+    def verify_history_item_does_not_exist(self, item_title: str) -> BasePage:
+        """
+        Verify that a history item with the specified title does not exist in the history menu.
+
+        Argument:
+            item_title (str): The title text to look for in the history item (can be partial match)
+        """
+        self.open_history_menu()
+        self.get_all_history()
+        self.element_not_visible("panel-menu-item-by-title", labels=[item_title])
+        return self
+
     # Bookmarks section
 
     @BasePage.context_chrome
@@ -305,7 +332,7 @@ class PanelUi(BasePage):
         Arguments:
             bookmark_title (str): The title text to look for in the bookmark
         """
-        self.element_visible("bookmark-by-title", labels=[bookmark_title])
+        self.element_visible("panel-menu-item-by-title", labels=[bookmark_title])
         return self
 
     @BasePage.context_chrome
@@ -351,3 +378,18 @@ class PanelUi(BasePage):
             )
             for tag in tags
         ]
+
+    @BasePage.context_chrome
+    def unfocus_address_bar(self) -> None:
+        """
+        Click away from the address bar by clicking in the new tab page content area.
+        """
+        locator = self.elements["toolbarspring"]["selectorData"]
+
+        # Wait until the element is visible and clickable
+        element = self.wait.until(
+            EC.visibility_of_element_located((By.ID, locator)),
+            message="New tab page content area not clickable.",
+        )
+        # Click to unfocus the address bar
+        element.click()

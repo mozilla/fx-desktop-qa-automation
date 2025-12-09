@@ -1,0 +1,113 @@
+transforms:
+  - fx_desktop_qa_automation_taskgraph.transforms.new_beta_qa:transforms
+  - taskgraph.transforms.notify:transforms
+
+task-defaults:
+  label: "Test New Beta Version - Functional"
+  description: "Checks for new betas, runs functional tests, reports to TestRail and Slack"
+  worker-type: t-linux-wayland
+  worker:
+    taskcluster-proxy: true
+    max-run-time: 3600
+    artifacts:
+      - name: public/results
+        path: checkouts/vcs/artifacts
+        type: directory
+    env:
+      TESTRAIL_REPORT: "true"
+      STARFOX_SPLIT: "functional"
+  routes:
+    - notify.slack-channel.C07AHPJ525V.on-resolved
+  scopes:
+    - secrets:get:project/mozilla/fx-desktop-qa-automation/level-3/*
+    - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
+    - notify:slack-channel:C07AHPJ525V
+
+tasks:
+  linux:
+    attributes:
+      beta-func: true
+    run-on-tasks-for: []
+    run:
+      using: run-task
+      cwd: "{checkout}"
+      command: |-
+        export STARFOX_SPLIT="${STARFOX_SPLIT}1"
+        export PATH=$HOME/.local/bin:$PWD:$PATH
+        mkdir -p artifacts;
+        pip3 install 'pipenv==2023.11.15';
+        mv ./ci_pyproject.toml ./pyproject.toml;
+        pipenv install;
+        export FX_CHANNEL="beta";
+        ./collect_executables.sh;
+        export FX_EXECUTABLE=./firefox/firefox;
+        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
+        $FX_EXECUTABLE --version;
+        . ./keyring-unlock.sh
+        pipenv run python choose_ci_set.py;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
+        export FAILURE=${?};
+        mv ./ci_pyproject_headed.toml ./pyproject.toml;
+        export REPORTABLE=1;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
+        exit $((${?} | ${FAILURE}))
+    notify:
+      recipients:
+        - type: slack-channel
+          channel-id: C07AHPJ525V
+          status-type: on-defined
+      content:
+        slack:
+          blocks: [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "firefox-desktop :firefox: ${task.metadata.name} Linux\n "
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Owner*: ${task.metadata.owner}"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Commit*: <${task.metadata.source}>"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Test Summary*: <https://firefoxci.taskcluster-artifacts.net/${status.taskId}/0/public/results/report.html?sort=result> :debug:"
+              }
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":testops-notify: created by Desktop QA Test Engineering"
+                }
+              ]
+            }
+          ]
+          text: "Cron {task[name]} with id $taskId has finished!"

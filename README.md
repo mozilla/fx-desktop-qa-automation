@@ -127,6 +127,59 @@ You may find that if you are re-running all previously executed test runs that y
 "Session is not reportable." If you wish to overwrite a previously reported session, add
 `REPORTABLE=true` to your environment.
 
+### Marking Tests For Skipping
+
+The file `manifests/key.yaml` is the single source of truth for whether a test exists, and whether it
+should or should not be skipped. The value of `"result"` is either `pass`, another string, or a dict
+indicating whether the test passes for a given os. The value of `"splits"` is a list of splits, or
+test list names / tags.
+
+```yaml
+suite_name_which_is_the_folder_under_tests:
+  test_file_without_the_dot_py:
+    result: pass
+    splits:
+    - smoke
+    - ci
+address_bar_and_search:
+  test_thing_does_stuff:
+    test_a_subtest_inside_this_file:
+      result: skip
+      splits:
+      - functional1
+  test_another_thing:
+    result:
+      mac: pass
+      win: unstable
+      linux: pass
+    splits:
+    - ci
+tabs:
+  test_tab_says_hi:
+    test_clever_subtest_name:
+      result:
+        mac: unstable
+        win: pass
+        linux: pass
+      splits:
+      - ci
+      - smoke
+```
+
+Any value other than `pass` will skip the test or subtest (for the given OS if applicable). It is good
+practice to keep non-pass values limited. Good values are `unstable`, `deprecated`, `out-of-scope` etc.
+**Do not use `fail` for tests you wish to see pass again one day.** Future work will include testing
+items marked `fail` as xfail, and may implement `strict_xfail`, which will throw if tests pass.
+
+We currently do not assume that test lists need to identify individual test functions inside test
+files ("subtests"), as TestRail reporting is on the testfile level. Subtest support is not guaranteed.
+
+Support for manifests is coded into `manifests/testkey.py`, including automating balancing of the list
+of functional splits.
+
+When you create a new test, run `python addtests.py` to add your test to the key via CLI. This script
+will be run on commit, if you have updated your git hooks by running `./devsetup.sh` recently.
+
 ### Manual Execution of Smoke Tests
 
 To run the smoke tests manually against an arbitrary version of Firefox **where the installer or (for Linux)

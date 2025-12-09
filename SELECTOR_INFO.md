@@ -443,11 +443,33 @@ Description: The Firefox logo
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```
+```
+Selector Name: top-site-by-title
+Selector Data: "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/.."
+Description: Topsite tile by title
+Location: The about:newtab page (middle section)
+Path to .json: modules/data/about_newtab.components.json
+```
+
 #### about_prefs
 ```
 Selector Name: search-engine-dropdown-root
 Selector Data: defaultEngine
 Description: The element containing the search engine options list (is a shadow root)
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-suggestions-in-address-bar
+Selector Data: showSearchSuggestionsFirstCheckbox
+Description: Parent Checkbox element to show suggestions in search
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-suggestions-awesomebar
+Selector Data: urlBarSuggestion
+Description: Checkbox element to show suggestions in the Awesomebar
 Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -641,16 +663,16 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: firefox-suggest-nonsponsored
-Selector Data: "firefoxSuggestNonsponsored"
+Selector Name: firefox-suggestions
+Selector Data: showSearchSuggestionsFirstCheckbox
 Description: The Suggestions from Firefox check-box
 Location: about:preferences#search > Address Bar - Firefox Suggest
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: firefox-suggest-sponsored
-Selector Data: "firefoxSuggestSponsored"
-Description: The Suggestions from sponsors check-box
+Selector Name: firefox-trending-suggestions
+Selector Data: showTrendingSuggestions
+Description: Trending search suggestions check-box
 Location: about:preferences#search > Address Bar - Firefox Suggest
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -935,6 +957,13 @@ Location: about:preferences#general Language subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: search-suggestion-in-private-windows
+Selector Data: "showSearchSuggestionsPrivateWindows"
+Description: Show search suggestions in Private Windows
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: language-settings-search
 Selector Data: "menuitem[value='search']"
 Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
@@ -1184,6 +1213,48 @@ Selector Name: unknown-content-type-dialog
 Selector Data: unknownContentTypeWindo
 Description: The unknown content type dialog
 Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-shortcuts-group
+Selector Data: oneClickSearchProvidersGroup
+Description: The Search shortcuts table
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-engine-list
+Selector Data: engineList
+Description: The Search shortcuts options list
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-search-engine-button
+Selector Data: removeEngineButton
+Description: The Remove button under Search shortcuts tabel
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: restore-default-search-engines-button
+Selector Data: restoreDefaultSearchEngines
+Description: The Restore Default Search Engines button under Search shortcuts tabel
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: Browsing History
+Selector Data: history-suggestion
+Description: Browsing History / History Suggestion under Address bar section
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -1635,6 +1706,27 @@ Location: Any history item in the Hamburger history list
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-move-tab-to-new-group
+Selector Data: "context_moveTabToNewGroup"
+Description: Tab context click option "Add Tab to New Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-move-tab-to-group
+Selector Data: "context_moveTabToGroup"
+Description: Tab context click option "Add Tab to Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-remove-tab-from-group
+Selector Data: "context_ungroupTab"
+Description: Tab context click option "Remove from Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-pin-tab
 Selector Data: "context_pinTab"
 Description: Tab context click option "Pin Tab"
@@ -1830,6 +1922,34 @@ Description: Context menu option to move a tab to the start of the tab bar.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-bookmark-link
+Selector Data: context-bookmarklink
+Description: Context menu option to bookmark a link
+Location: Context menu - topsite context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-search-select
+Selector Data: coontext-searchselect
+Description: Context menu option to search selected text with the engine set as default
+Location: Context menu - topsite context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-new_container_tab
+Selector Data: context-openlinkinusercontext-menu"
+Description: Open  linkin new container tab context menu item
+Location: Newpage topsites tile context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-container-work
+Selector Data: menuitem[data-l10n-id='user-context-work']"
+Description: Open link in container "Work" context submenu item
+Location: Newpage topsites tile submenu context menu, secodn option
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -1872,6 +1992,20 @@ Path to .json: modules/data/exemple_page.components.json
 Selector Name: forget
 Selector Data: "wrapper-panic-button"
 Description: The forget option button from the customizing options
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: nav-searchbar
+Selector Data: "search-container"
+Description: the search container element
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: done-button
+Selector Data: "customization-done-button"
+Description: The done button in the customizd toolbar
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
@@ -2245,6 +2379,13 @@ Description: bsky website sign in button
 Location: Bsky website
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: url-to-copy
+Selector Data: "p[contenteditable]"
+Description: Clipboard page to copy url
+Location: Clipboard test page
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
@@ -2526,6 +2667,13 @@ Path to .json: modules/data/login_autofill.components.json
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
 Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Location: bsky page load
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: facebook-credentials
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
+Description: Autocomplete dropdown is toggled for focused login fields on facebook page load
 Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
@@ -2534,6 +2682,13 @@ Path to .json: modules/data/login_autofill.components.json
 Selector name: awesome-bar
 Selector Data: urlbar-input
 Description: Awesome bar / URL bar
+Location: Any clickable area on the awesome bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: legacy-search-mode-suggestion-container
+Selector Data: richlistbox[class='autocomplete-richlistbox search-panel-tree']
+Description: Legacy search container
 Location: Any clickable area on the awesome bar
 Path to .json: modules/data/navigation.components.json
 ```
@@ -3132,6 +3287,90 @@ Description: Developer tool icon
 Location: Navigation bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: status-panel-label
+Selector Data: statuspanel-label
+Description: Status panel URL label
+Location: newtab page bottom left corner on link hover
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-engine
+Selector Data: toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']
+Description: Searchmode engine label
+Location: Address bar searchmode engine label
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: selected_searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
+Description: Searchbar-search-engine
+Location: Selected search bar search engine 
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-suggestions
+Selector Data: hbox.search-one-offs
+Description: Searchbar suggestions
+Location: Searchbar results 
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-magnifying-glass-button
+Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
+Description: Searchbar magnifying glass button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'
+Description: Searchbar search engine button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-chicklet
+Selector Data: label.searchmode-switcher-title
+Description: Search mode chicklet
+Location: Address bar search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: history-button-search-mode
+Selector Data: search-button-history
+Description: Histroy button search mode
+Location: Search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: exit-button-searchmode
+Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
+Description: Exit button searchmode
+Location: Address bar searchmode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-tab
+Selector Data: div.urlbarView-row[type='switchtab']
+Description: Switch to tab from awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: tab-container-label
+Selector Data: "userContext-label"
+Description:  Tab container label
+Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3321,10 +3560,10 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector name: bookmark-by-title
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
-Description: Bookmark item
-Location: On the hamburger menu > Bookmarks
+Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
+Location: On the hamburger menu > Bookmarks or History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
@@ -3509,6 +3748,12 @@ Description: Edit bookmark panel
 Location: Bookmark panel
 Path to .json: modules/data/pane_ui.components.json
 ```
+```
+Selector Name: toolbarspring
+Selector Data: ustomizableui-special-spring2
+Description: toolbarspring
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
 ```
 #### print_preview
 ```
@@ -3835,7 +4080,62 @@ Description: A tab's Close (X) button
 Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```
-
+```
+Selector name: tabgroup-menu
+Selector Data: "tab-group-editor"
+Description: Adding tabs to a group menu
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-input
+Selector Data: "[data-l10n-id='tab-group-editor-name-field']"
+Description: Name field
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-create-button
+Selector Data: "tab-group-editor-button-create"
+Description: Create button
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-label
+Selector Data: "tab-group-label"
+Description: The label of tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-menuitem
+Selector Data: "tab-group-icon"
+Description: Icon related to tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-overflow-count
+Selector Data: "tab-group-overflow-count"
+Description: Numbers of tabs in tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-line
+Selector Data: "tab-group-line"
+Description: Line indicator of tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-ungroup-tabs
+Selector Data: "tabGroupEditor_ungroupTabs"
+Description: Ungroup the tab group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
