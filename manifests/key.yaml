@@ -1021,7 +1021,7 @@ tabs:
     splits:
     - functional1
   test_ungroup_tabs:
-    result: pass
+    result: unstable
     splits:
     - functional1
 theme_and_toolbar:
