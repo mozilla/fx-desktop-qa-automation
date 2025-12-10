@@ -49,7 +49,6 @@ def edge_bookmarks(sys_platform, home_folder):
 def test_edge_bookmarks_imported(driver: Firefox, edge_bookmarks, sys_platform):
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
-    about_prefs.click_on("import-browser-data")
     about_prefs.import_bookmarks("Edge", sys_platform)
     nav = Navigation(driver)
     nav.confirm_bookmark_exists(NEWS_ARTICLE_TITLE)
