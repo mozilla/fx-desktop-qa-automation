@@ -70,7 +70,6 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
             os.rename(bookmarks_target, tmp_path / "Bookmarks")
         copyfile(bookmarks_source, bookmarks_target)
         logging.warning("Bookmarks copied!")
-
         yield bookmarks_target
 
     except (FileNotFoundError, NotADirectoryError, PermissionError) as e:

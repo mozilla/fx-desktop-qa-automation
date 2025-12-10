@@ -268,14 +268,11 @@ bookmarks_and_history:
     splits:
     - functional1
   test_import_bookmarks_chrome:
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_import_bookmarks_edge:
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: unstable
     splits:
     - smoke
   test_open_all_bookmarks_from_bookmarks_toolbar:
@@ -760,7 +757,7 @@ preferences:
     splits:
     - smoke
   test_never_remember_history:
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_notifications_change_set:
@@ -862,7 +859,7 @@ security_and_privacy:
     splits:
     - smoke
   test_never_remember_browsing_history:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_no_trackers_detected:

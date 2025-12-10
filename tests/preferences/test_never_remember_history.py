@@ -24,7 +24,6 @@ def test_never_remember_history(driver: Firefox, sys_platform: str):
     """
     C143604: Make sure to set the pref via about:preferences, then check in about:config that the pref has been changed
     """
-
     about_prefs = AboutPrefs(driver, category="privacy").open()
 
     # Change the settings to not remember the browser history
