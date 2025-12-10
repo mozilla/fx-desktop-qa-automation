@@ -68,9 +68,7 @@ class AboutPrefs(BasePage):
 
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
-        return Dropdown(
-            self, self.driver, root=self.get_element("search-engine-dropdown-root")
-        )
+        return Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
@@ -239,6 +237,17 @@ class AboutPrefs(BasePage):
         Gets the web element for the list of history items that appear in about:preferences
         """
         return self.get_element("history_menulist")
+
+    def set_history_option(self, option: str):
+        """
+        Set the history option in about:preferences.
+        """
+        history_menulist = self.get_history_menulist()
+        self.driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
+        sleep(1)
+        menulist_popup = Select(self.get_element("history-option-select"))
+        menulist_popup.select_by_value(option)
+        return self
 
     # Payment and Address Management
     def verify_cc_json(

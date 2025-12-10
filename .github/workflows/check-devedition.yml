@@ -25,6 +25,7 @@ jobs:
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           FX_CHANNEL: "devedition"
+          STARFOX_SPLIT: smoke
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
