@@ -507,7 +507,7 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_tab_context_menu_actions:

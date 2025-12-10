@@ -30,7 +30,6 @@ def test_open_image_in_new_tab(driver: Firefox):
     """
     C2637622.1: open an image in a new tab
     """
-
     # create objs
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL).open()
     image_context_menu = ContextMenu(driver)
@@ -58,7 +57,6 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     """
     C2637622.2: save image as
     """
-
     try:
         from pynput.keyboard import Controller
     except ModuleNotFoundError:
