@@ -272,7 +272,7 @@ bookmarks_and_history:
     splits:
     - smoke
   test_import_bookmarks_edge:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_open_all_bookmarks_from_bookmarks_toolbar:
