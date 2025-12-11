@@ -16,6 +16,7 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     """
     C101677: ensure that cookies are not saved after using private browsing
     """
+
     # Instantiate objs
     about_prefs = AboutPrefs(driver, category="privacy")
     panel_ui = PanelUi(driver)
