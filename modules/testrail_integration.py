@@ -298,7 +298,7 @@ def reportable(platform_to_test=None):
             os.environ["STARFOX_SPLIT"], suite_numbers=True
         )
 
-        uncovered_suites = set(expected_suites) - set(covered_suites)
+        uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
             suite_names = []
             for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ):
@@ -308,7 +308,8 @@ def reportable(platform_to_test=None):
             logging.warning("\t-" + "\n\t-".join(suite_names))
         else:
             logging.warning("All suites covered, not reporting.")
-        return not uncovered_suites
+            logging.warning(uncovered_suites)
+        return bool(uncovered_suites)
 
 
 def testrail_init() -> TestRail:
