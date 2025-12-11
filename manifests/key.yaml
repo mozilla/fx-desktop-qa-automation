@@ -1017,6 +1017,10 @@ tabs:
     result: pass
     splits:
     - functional1
+  test_save_and_close_a_tab_group:
+    result: pass
+    splits:
+    - functional1
   test_ungroup_tabs:
     result: pass
     splits:
