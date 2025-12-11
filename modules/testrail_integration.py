@@ -308,7 +308,6 @@ def reportable(platform_to_test=None):
             logging.warning("\t-" + "\n\t-".join(suite_names))
         else:
             logging.warning("All suites covered, not reporting.")
-            logging.warning(uncovered_suites)
         return bool(uncovered_suites)
 
 
