@@ -3,12 +3,12 @@ import re
 import sys
 from subprocess import check_output
 
-ALL_CHANNELS = ["smoke", "l10n", "functional"]
+ALL_CHANNELS = ["starfox", "l10n"]
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 
 file_subsets = {
-    "smoke": ["modules/data", "modules/page", "modules/browser", "tests/"],
+    "starfox": ["modules/data", "modules/page", "modules/browser", "tests/"],
     "l10n": ["l10n_CM/"],
 }
 
@@ -44,7 +44,7 @@ committed_files = (
 main_conftest = "conftest.py"
 base_page = os.path.join("modules", "page_base.py")
 
-channels = []
+channels = set()
 
 if main_conftest in committed_files or base_page in committed_files:
     print(ALL_CHANNELS)
@@ -55,11 +55,11 @@ for f in committed_files:
         print(ALL_CHANNELS)
         sys.exit()
 
-    for test_channel in file_subsets:
-        for subset in file_subsets[test_channel]:
-            if subset in f and test_channel not in channels:
-                channels.append(test_channel)
+    for test_channel, subset in file_subsets.items():
+        if any(s in c for s in subset for c in committed_files):
+            channels.add(test_channel)
 
 if not channels:
-    channels = ["smoke"]
-print(channels)
+    channels = {"starfox"}
+
+print(list(channels))
