@@ -174,6 +174,8 @@ def reportable(platform_to_test=None):
     """Return true if we should report to TestRail"""
     import platform
 
+    logging.warning("Checking to see if run is reportable...")
+
     if not os.environ.get("TESTRAIL_REPORT"):
         logging.warning("TESTRAIL_REPORT not set, session not reportable.")
         return False
@@ -230,7 +232,7 @@ def reportable(platform_to_test=None):
             return False
 
     plan_title = get_plan_title(version, channel)
-    logging.warning(f"Plan title: {plan_title}")
+    logging.warning(f"Checking plan title: {plan_title}")
     this_plan = tr_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
@@ -246,6 +248,7 @@ def reportable(platform_to_test=None):
 
     plan_entries = this_plan.get("entries")
     if os.environ.get("FX_L10N"):
+        logging.warning(f"Getting reportability for L10n in {platform}...")
         beta_version = int(minor_num.split("b")[-1])
         distributed_mappings = select_l10n_mappings(beta_version)
         expected_mappings = sum(map(lambda x: len(x), distributed_mappings.values()))
@@ -271,30 +274,41 @@ def reportable(platform_to_test=None):
         # Only report when there is a new beta without a reported plan or if the selected split is not completely reported.
         return covered_mappings < expected_mappings
     else:
+        logging.warning(f"Getting reportability for STARfox in {platform}...")
         covered_suites = []
         for entry in plan_entries:
             for run_ in entry.get("runs"):
                 if run_.get("config") and platform in run_.get("config"):
                     covered_suites.append(str(run_.get("suite_id")))
 
+        if not covered_suites:
+            logging.warning(
+                "No coverage found for this platform, running tests and report..."
+            )
+            return True
+        else:
+            logging.warning(
+                f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
+            )
+
         if not os.environ.get("STARFOX_SPLIT"):
             sys.exit("No split selected")
         manifest = TestKey(TEST_KEY_LOCATION)
         expected_suites = manifest.get_valid_suites_in_split(
-            os.environ["STARFOX_SPLIT"]
+            os.environ["STARFOX_SPLIT"], suite_numbers=True
         )
 
-        uncovered_suites = set(expected_suites) - set(covered_suites)
+        uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
-            suite_names = [
-                s.get("name")
-                for s in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ)
-                if str(s.get("id")) in uncovered_suites
-            ]
-            print("Coverage not found for the following suites:")
-            print("\t-" + "\n\t-".join(suite_names))
-
-        return not uncovered_suites
+            suite_names = []
+            for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ):
+                if str(suite.get("id")) in uncovered_suites:
+                    suite_names.append(suite.get("name"))
+            logging.warning("Coverage not found for the following suites:")
+            logging.warning("\t-" + "\n\t-".join(suite_names))
+        else:
+            logging.warning("All suites covered, not reporting.")
+        return bool(uncovered_suites)
 
 
 def testrail_init() -> TestRail:

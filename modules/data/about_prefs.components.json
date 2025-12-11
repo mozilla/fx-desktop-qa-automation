@@ -5,15 +5,13 @@
     "groups": []
   },
   "search-engine-dropdown-root": {
-    "selectorData": "defaultEngine",
+    "selectorData": "defaultEngineNormal",
     "strategy": "id",
     "groups": [
-      "requiredForPage",
       "dropdownRoot",
       "searchEngineDropdown"
     ]
   },
-
   "custom-tracker-options-parent": {
     "selectorData": "contentBlockingOptionCustom",
     "strategy": "id",
@@ -85,13 +83,11 @@
     "strategy": "id",
     "groups": []
   },
-
   "remove-search-engine-button": {
     "selectorData": "removeEngineButton",
     "strategy": "id",
     "groups": []
   },
-
   "restore-default-search-engines-button": {
     "selectorData": "restoreDefaultSearchEngines",
     "strategy": "id",
@@ -108,7 +104,7 @@
     "groups": []
   },
   "import-browser-data": {
-    "selectorData": "button[id='data-migration']",
+    "selectorData": "moz-box-button[id='data-migration']",
     "strategy": "css",
     "groups": []
   },
@@ -370,7 +366,7 @@
     "groups": []
   },
   "history-privacy-label": {
-    "selectorData": "historyPane",
+    "selectorData": "historyMode",
     "strategy": "id",
     "groups": []
   },
@@ -404,7 +400,7 @@
     "strategy": "id",
     "groups": []
   },
-    "search-suggestion-in-private-windows": {
+  "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindows",
     "strategy": "id",
     "groups": []
@@ -608,9 +604,10 @@
   "clipboard-suggestion-checkbox": {
     "selectorData": "#clipboardSuggestion",
     "strategy": "css",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
-
   "unknown-content-type-dialog": {
     "selectorData": "unknownContentTypeWindow",
     "strategy": "id",
@@ -622,5 +619,12 @@
     "selectorData": "historySuggestion",
     "strategy": "id",
     "groups": []
+  },
+  "history-option-select": {
+    "selectorData": "select[id='input']",
+    "strategy": "css",
+    "shadowParent": "history_menulist",
+    "groups": [
+    ]
   }
 }

@@ -70,7 +70,6 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
             os.rename(bookmarks_target, tmp_path / "Bookmarks")
         copyfile(bookmarks_source, bookmarks_target)
         logging.warning("Bookmarks copied!")
-
         yield bookmarks_target
 
     except (FileNotFoundError, NotADirectoryError, PermissionError) as e:
@@ -96,7 +95,6 @@ def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox, sys_platfo
         pytest.skip("Google Chrome not installed or directory could not be created")
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
-    about_prefs.click_on("import-browser-data")
     about_prefs.import_bookmarks("Chrome", sys_platform)
     toolbar = Navigation(driver)
     toolbar.confirm_bookmark_exists(TEST_PAGE_TITLE)

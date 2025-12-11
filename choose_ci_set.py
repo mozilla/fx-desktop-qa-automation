@@ -214,8 +214,7 @@ if __name__ == "__main__":
             fh.write("\n".join(ci_paths))
         sys.exit(0)
 
-    if len(run_list) < MIN_RUN_SIZE:
-        run_list.extend(ci_paths)
+    run_list.extend(ci_paths)
 
     # Dedupe just in case
     if SLASH == "\\":

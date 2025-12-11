@@ -103,7 +103,7 @@ jobs:
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         run: |
-          echo "STARFOX_SPLIT=ci-extended" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "STARFOX_SPLIT=smoke" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Invoke-WebRequest -Uri $WIN_INSTALLER_LINK -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
@@ -182,7 +182,7 @@ jobs:
         if: ${{ inputs.mac_installer_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "STARFOX_SPLIT=ci-extended" >> .env
+          echo "STARFOX_SPLIT=smoke" >> .env
           echo "Running smoke tests on supplied executable";
       - name: Install dependencies
         run: |
@@ -246,7 +246,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "STARFOX_SPLIT=ci-extended" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=smoke" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;
