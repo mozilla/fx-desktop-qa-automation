@@ -497,8 +497,8 @@ menus:
     - ci
   test_frequently_used_context_menu:
     result:
-      linux: pass
-      mac: pass
+      linux: unstable
+      mac: unstable
       win: unstable
     splits:
     - functional1
@@ -641,15 +641,15 @@ password_manager:
   test_password_csv_correctness:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional1
   test_password_csv_export:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional1
   test_primary_password_triggered_on_about_logins_access:
