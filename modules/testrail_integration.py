@@ -248,6 +248,7 @@ def reportable(platform_to_test=None):
 
     plan_entries = this_plan.get("entries")
     if os.environ.get("FX_L10N"):
+        logging.warning("Getting reportability for L10n...")
         beta_version = int(minor_num.split("b")[-1])
         distributed_mappings = select_l10n_mappings(beta_version)
         expected_mappings = sum(map(lambda x: len(x), distributed_mappings.values()))
@@ -273,6 +274,7 @@ def reportable(platform_to_test=None):
         # Only report when there is a new beta without a reported plan or if the selected split is not completely reported.
         return covered_mappings < expected_mappings
     else:
+        logging.warning("Getting reportability for STARfox...")
         covered_suites = []
         for entry in plan_entries:
             for run_ in entry.get("runs"):
