@@ -146,7 +146,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_search_term_persists:
