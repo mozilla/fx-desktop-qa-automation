@@ -3,12 +3,12 @@ import re
 import sys
 from subprocess import check_output
 
-ALL_CHANNELS = ["smoke", "l10n", "functional"]
+ALL_CHANNELS = ["starfox", "l10n"]
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 
 file_subsets = {
-    "smoke": ["modules/data", "modules/page", "modules/browser", "tests/"],
+    "starfox": ["modules/data", "modules/page", "modules/browser", "tests/"],
     "l10n": ["l10n_CM/"],
 }
 
@@ -60,6 +60,6 @@ for f in committed_files:
             channels.add(test_channel)
 
 if not channels:
-    channels = {"smoke"}
+    channels = {"starfox"}
 
 print(list(channels))
