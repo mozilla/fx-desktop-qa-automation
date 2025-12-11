@@ -681,5 +681,11 @@
         "selectorData": "#urlbar-results > div.urlbarView-row[type='clipboard']",
         "strategy": "css",
         "groups": ["doNotCache"]
+    },
+
+    "toolbar-blank-space": {
+        "selectorData": "customizableui-special-spring1",
+        "strategy": "id",
+        "groups": []
     }
 }
