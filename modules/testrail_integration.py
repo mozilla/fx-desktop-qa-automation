@@ -282,10 +282,14 @@ def reportable(platform_to_test=None):
                     covered_suites.append(str(run_.get("suite_id")))
 
         if not covered_suites:
-            print("No coverage found for this platform, running tests and report...")
+            logging.warning(
+                "No coverage found for this platform, running tests and report..."
+            )
             return True
         else:
-            print(f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}")
+            logging.warning(
+                f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
+            )
 
         if not os.environ.get("STARFOX_SPLIT"):
             sys.exit("No split selected")
@@ -300,8 +304,8 @@ def reportable(platform_to_test=None):
             for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ):
                 if str(suite.get("id")) in uncovered_suites:
                     suite_names.append(suite.get("name"))
-            print("Coverage not found for the following suites:")
-            print("\t-" + "\n\t-".join(suite_names))
+            logging.warning("Coverage not found for the following suites:")
+            logging.warning("\t-" + "\n\t-".join(suite_names))
         else:
             logging.warning("All suites covered, not reporting.")
         return not uncovered_suites
