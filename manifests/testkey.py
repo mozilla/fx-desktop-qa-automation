@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import yaml
 
-NUM_FUNCTIONAL_SPLITS = 1
+NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S(\d+)", ?".*"\)')
 
@@ -125,7 +125,9 @@ class TestKey:
     def rebalance_functionals(self):
         all_functs = []
         for splitnum in range(NUM_FUNCTIONAL_SPLITS):
-            all_functs.extend(self.gather_split(f"functional{splitnum}"))
+            all_functs.extend(
+                self.gather_split(f"functional{splitnum}", pass_only=False)
+            )
         total_functs = len(all_functs)
         functs_per_split = total_functs // NUM_FUNCTIONAL_SPLITS
         remainder = total_functs % NUM_FUNCTIONAL_SPLITS
@@ -139,19 +141,25 @@ class TestKey:
             splitnum = 0
             for j in range(NUM_FUNCTIONAL_SPLITS):
                 if i > split_cutoffs[j]:
-                    splitnum = j
+                    splitnum = j + 1
             entry = self.get_entry_from_filename(test_filename)
-            ptr = entry
+            suite = list(entry.keys())[0]
+            ptr = entry[suite]
             for _ in range(MAX_DEPTH):
                 if "splits" not in ptr:
-                    ptr = entry[list(entry.keys())[0]]
+                    ptr = ptr[list(ptr.keys())[0]]
+                else:
+                    break
+            actual_test = list(ptr.keys())[0]
             if f"functional{splitnum + 1}" in ptr["splits"]:
+                print(f"Keeping {actual_test} in functional split {splitnum + 1}")
                 continue
             for split_ in ptr["splits"]:
                 if split_.startswith("functional"):
                     ptr["splits"].remove(split_)
+            print(f"Moving {actual_test} to functional split {splitnum + 1}")
             ptr["splits"].append(f"functional{splitnum + 1}")
-            self.manifest |= entry
+            self.manifest[suite] |= entry[suite]
 
     def gather_split(self, split_name, pass_only=True):
         # Given a split name, return the pytest locations of the tests in that split

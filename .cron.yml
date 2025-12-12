@@ -39,3 +39,34 @@ jobs:
     when:
       - { hour: 11, minute: 15 }
       - { hour: 23, minute: 15 }
+
+  - name: new-beta-func
+    job:
+      type: decision-task
+      treeherder-symbol: STARb-func
+      target-tasks-method: new_beta_func
+    when:
+      - { hour: 0, minute: 45 }
+      - { hour: 1, minute: 45 }
+      - { hour: 2, minute: 45 }
+      - { hour: 3, minute: 45 }
+      - { hour: 4, minute: 45 }
+      - { hour: 5, minute: 45 }
+      - { hour: 6, minute: 45 }
+      - { hour: 7, minute: 45 }
+      - { hour: 8, minute: 45 }
+      - { hour: 9, minute: 45 }
+      - { hour: 10, minute: 45 }
+      - { hour: 11, minute: 45 }
+      - { hour: 12, minute: 45 }
+      - { hour: 13, minute: 45 }
+      - { hour: 14, minute: 45 }
+      - { hour: 15, minute: 45 }
+      - { hour: 16, minute: 45 }
+      - { hour: 17, minute: 45 }
+      - { hour: 18, minute: 45 }
+      - { hour: 19, minute: 45 }
+      - { hour: 20, minute: 45 }
+      - { hour: 21, minute: 45 }
+      - { hour: 22, minute: 45 }
+      - { hour: 23, minute: 45 }
