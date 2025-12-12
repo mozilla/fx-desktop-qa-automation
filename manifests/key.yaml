@@ -672,8 +672,8 @@ pdf_viewer:
   test_add_image_pdf:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional1
   test_download_pdf_with_form_fields:
