@@ -22,18 +22,18 @@ jobs:
           echo channels=$(python3 choose_test_channel.py) >> "$GITHUB_OUTPUT"
 
 
-  Run-Smoke-Win:
+  Run-Starfox-Win:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'smoke')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox')
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
       is_pull_request: true
     secrets: inherit
 
-  Run-Smoke-Mac:
+  Run-Starfox-Mac:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'smoke')
+    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox')
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS

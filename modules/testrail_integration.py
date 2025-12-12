@@ -248,7 +248,7 @@ def reportable(platform_to_test=None):
 
     plan_entries = this_plan.get("entries")
     if os.environ.get("FX_L10N"):
-        logging.warning("Getting reportability for L10n...")
+        logging.warning(f"Getting reportability for L10n in {platform}...")
         beta_version = int(minor_num.split("b")[-1])
         distributed_mappings = select_l10n_mappings(beta_version)
         expected_mappings = sum(map(lambda x: len(x), distributed_mappings.values()))
@@ -274,7 +274,7 @@ def reportable(platform_to_test=None):
         # Only report when there is a new beta without a reported plan or if the selected split is not completely reported.
         return covered_mappings < expected_mappings
     else:
-        logging.warning("Getting reportability for STARfox...")
+        logging.warning(f"Getting reportability for STARfox in {platform}...")
         covered_suites = []
         for entry in plan_entries:
             for run_ in entry.get("runs"):
@@ -298,7 +298,7 @@ def reportable(platform_to_test=None):
             os.environ["STARFOX_SPLIT"], suite_numbers=True
         )
 
-        uncovered_suites = set(expected_suites) - set(covered_suites)
+        uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
             suite_names = []
             for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ):
@@ -308,7 +308,7 @@ def reportable(platform_to_test=None):
             logging.warning("\t-" + "\n\t-".join(suite_names))
         else:
             logging.warning("All suites covered, not reporting.")
-        return not uncovered_suites
+        return bool(uncovered_suites)
 
 
 def testrail_init() -> TestRail:

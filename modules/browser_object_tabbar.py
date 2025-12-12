@@ -452,3 +452,13 @@ class TabBar(BasePage):
         self.click_and_hide_menu("tabgroup-menuitem")
 
         return self
+
+    @BasePage.context_chrome
+    def save_and_close_tab_group(self) -> BasePage:
+        """
+        Right-click the Tab Group label and select Save and Close Group.
+        This closes all tabs in the group and removes the group label.
+        """
+        self.context_click("tabgroup-label")
+        self.click_on("tabgroup-save-and-close-group")
+        return self
