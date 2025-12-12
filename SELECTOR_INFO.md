@@ -3770,7 +3770,7 @@ Path to .json: modules/data/pane_ui.components.json
 ```
 ```
 Selector Name: toolbarspring
-Selector Data: ustomizableui-special-spring2
+Selector Data: customizableui-special-spring2
 Description: toolbarspring
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
