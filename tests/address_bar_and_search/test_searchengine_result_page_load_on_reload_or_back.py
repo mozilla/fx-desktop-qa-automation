@@ -35,7 +35,7 @@ def test_searchengine_result_page_load_on_reload_or_back(driver: Firefox):
 
     # Using the search bar perform a search
     nav.search_bar_search(TEXT)
-    sleep(3)
+    sleep(5)
 
     # Press back button from the browser menu
     nav.click_back_button()
