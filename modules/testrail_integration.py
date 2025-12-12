@@ -299,6 +299,7 @@ def reportable(platform_to_test=None):
         )
         if not expected_suites:
             logging.warning("This split is empty, not running or reporting.")
+            return False
 
         uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
