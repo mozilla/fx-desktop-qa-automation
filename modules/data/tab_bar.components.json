@@ -173,6 +173,12 @@
       "selectorData": "tabGroupEditor_ungroupTabs",
       "strategy": "id",
       "groups": []
+    },
+
+    "tabgroup-save-and-close-group": {
+      "selectorData": "tabGroupEditor_saveAndCloseGroup",
+      "strategy": "id",
+      "groups": []
     }
 
 }

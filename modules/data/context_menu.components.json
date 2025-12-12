@@ -145,7 +145,6 @@
         "groups": []
     },
 
-
     "context-menu-open-link-in-tab": {
         "selectorData": "context-openlinkintab",
         "strategy": "id",
@@ -276,6 +275,11 @@
         "selectorData": "menuitem[data-l10n-id='user-context-work']",
         "strategy": "css",
         "groups": []
-}
+    },
 
+    "context-menu-vertical-tabs": {
+        "selectorData": "toolbar-context-toggle-vertical-tabs",
+        "strategy": "id",
+        "groups": []
+    }
 }

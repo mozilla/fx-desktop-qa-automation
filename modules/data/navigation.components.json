@@ -683,6 +683,12 @@
         "groups": ["doNotCache"]
     },
 
+    "toolbar-blank-space": {
+        "selectorData": "customizableui-special-spring1",
+        "strategy": "id",
+        "groups": []
+    },
+
     "back-button": {
         "selectorData": "back-button",
         "strategy": "id",
@@ -690,5 +696,4 @@
             "doNotCache"
         ]
     }
-
 }

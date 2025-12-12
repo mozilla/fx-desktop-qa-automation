@@ -1949,6 +1949,27 @@ Selector Data: coontext-searchselect
 Description: Context menu option to search selected text with the engine set as default
 Location: Context menu - topsite context menu
 ```
+```
+Selector Name: context-menu-open-link-in-new_container_tab
+Selector Data: context-openlinkinusercontext-menu"
+Description: Open  linkin new container tab context menu item
+Location: Newpage topsites tile context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-container-work
+Selector Data: menuitem[data-l10n-id='user-context-work']"
+Description: Open link in container "Work" context submenu item
+Location: Newpage topsites tile submenu context menu, secodn option
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-vertical-tabs
+Selector Data: toolbar-context-toggle-vertical-tabs
+Description: Vertical Tabs context menu option
+Location: Toolbar context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -3370,13 +3391,6 @@ Description:  Tab container label
 Location: URL bar when a tab container is active
 Path to .json: modules/data/navigation.components.json
 ```
-```
-Selector Name: back-button
-Selector Data: back-button
-Description: Back button from the toolbar
-Location: Toolbar
-Path to .json: modules/data/navigation.components.json
-```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3566,6 +3580,7 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
 Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
 Location: On the hamburger menu > Bookmarks or History

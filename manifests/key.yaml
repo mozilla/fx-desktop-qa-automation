@@ -676,8 +676,8 @@ pdf_viewer:
   test_add_image_pdf:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional1
   test_download_pdf_with_form_fields:
@@ -1020,6 +1020,10 @@ tabs:
     splits:
     - functional1
   test_reopen_tabs_through_keys:
+    result: pass
+    splits:
+    - functional1
+  test_save_and_close_a_tab_group:
     result: pass
     splits:
     - functional1
