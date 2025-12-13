@@ -18,6 +18,14 @@
         ]
     },
 
+    "tabgroup": {
+        "selectorData": "tab-group",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+
     "newtab-button": {
         "selectorData": "tabs-newtab-button",
         "strategy": "id",
@@ -171,6 +179,24 @@
 
     "tabgroup-ungroup-tabs": {
       "selectorData": "tabGroupEditor_ungroupTabs",
+      "strategy": "id",
+      "groups": []
+    },
+
+    "tabgroup-name-input": {
+      "selectorData": "tab-group-name",
+      "strategy": "id",
+      "groups": []
+    },
+
+    "tabgroup-color-swatch": {
+      "selectorData": "tab-group-editor-swatch-{color}",
+      "strategy": "id",
+      "groups": []
+    },
+
+    "tabgroup-add-new-tab": {
+      "selectorData": "tabGroupEditor_addNewTabInGroup",
       "strategy": "id",
       "groups": []
     }
