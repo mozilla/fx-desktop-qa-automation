@@ -948,7 +948,7 @@ tabs:
     result: pass
     splits:
     - functional1
-  test_edit_tab_group_panel:
+  test_edit_tab_groups:
     result: pass
     splits:
     - functional1
