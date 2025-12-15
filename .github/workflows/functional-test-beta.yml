@@ -2,14 +2,23 @@ name: Check new beta version - Functional
 
 on:
   schedule:
-    - cron: "55 1/5 1 * *"
+    - cron: "55 * * * *"
 env:
   LATEST: ""
 permissions:
   contents: "write"
 
 jobs:
+  Get-Functional-Split:
+    runs-on: ubuntu-latest
+    outputs: ${{ steps.getsplit.outputs.split }}
+    steps:
+      - name: Get Split Based On Time
+        id: getsplit
+        run: echo "split=functional$(date +%H)" >> "$GITHUB_OUTPUT"
+
   Check-Beta-Version:
+    needs: Get-Functional-Split
     runs-on: ubuntu-latest
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
@@ -23,7 +32,7 @@ jobs:
       - name: Check if the run is reportable
         id: reportable
         env:
-          STARFOX_SPLIT: functional1
+          STARFOX_SPLIT: ${{ steps.getsplit.outputs.split }}
           TESTRAIL_REPORT: true
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -40,7 +49,7 @@ jobs:
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
-      test_set: functional
+      test_set: ${{ steps.getsplit.outputs.split }}
     secrets: inherit
 
   Run-Mac-Functional:
@@ -49,5 +58,5 @@ jobs:
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS
-      test_set: functional
+      test_set: ${{ steps.getsplit.outputs.split }}
     secrets: inherit
