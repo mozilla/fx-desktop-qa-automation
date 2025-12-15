@@ -197,6 +197,8 @@
 
     "tabgroup-add-new-tab": {
       "selectorData": "tabGroupEditor_addNewTabInGroup",
+    "tabgroup-save-and-close-group": {
+      "selectorData": "tabGroupEditor_saveAndCloseGroup",
       "strategy": "id",
       "groups": []
     }

@@ -31,7 +31,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_bing_search_codes:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -47,6 +47,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_ctrl_enter_fixes_url:
+    result: pass
+    splits:
+    - functional1
+  test_ddg_search_codes:
     result: pass
     splits:
     - functional1
@@ -672,8 +676,8 @@ pdf_viewer:
   test_add_image_pdf:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional1
   test_download_pdf_with_form_fields:
@@ -1020,6 +1024,10 @@ tabs:
     splits:
     - functional1
   test_reopen_tabs_through_keys:
+    result: pass
+    splits:
+    - functional1
+  test_save_and_close_a_tab_group:
     result: pass
     splits:
     - functional1

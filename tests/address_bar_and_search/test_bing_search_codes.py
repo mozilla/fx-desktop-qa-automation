@@ -20,13 +20,13 @@ def test_bing_search_codes(driver: Firefox):
     C3029767 - Verify that Search Code Testing: Bing - US is correctly displayed and functional.
     """
     nav = Navigation(driver)
-    prefs = AboutPrefs(driver)
+    prefs = AboutPrefs(driver, category="search")
     tab = TabBar(driver)
 
     # Go to search engine settings
     nav.open_searchmode_switcher_settings()
 
-    # Change the default search engine
+    # Set Bing as default search engine
     prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
 
     # Open a tab and verify Bing search code
