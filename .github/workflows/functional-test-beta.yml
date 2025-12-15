@@ -56,7 +56,9 @@ jobs:
     secrets: inherit
 
   Run-Mac-Functional:
-    needs: Check-Beta-Version
+    needs:
+      - Check-Beta-Version
+      - Get-Functional-Split
     if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
     uses: ./.github/workflows/main.yml
     with:
