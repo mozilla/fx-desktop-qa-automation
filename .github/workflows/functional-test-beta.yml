@@ -2,7 +2,7 @@ name: Check new beta version - Functional
 
 on:
   schedule:
-    - cron: "35 * * * *"
+    - cron: "15 * * * *"
 env:
   LATEST: ""
 permissions:
