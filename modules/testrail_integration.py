@@ -275,6 +275,17 @@ def reportable(platform_to_test=None):
         return covered_mappings < expected_mappings
     else:
         logging.warning(f"Getting reportability for STARfox in {platform}...")
+        if not os.environ.get("STARFOX_SPLIT"):
+            logging.warning("No split selected")
+            return False
+        manifest = TestKey(TEST_KEY_LOCATION)
+        expected_suites = manifest.get_valid_suites_in_split(
+            os.environ["STARFOX_SPLIT"], suite_numbers=True
+        )
+        if not expected_suites:
+            logging.warning("This split is empty, not running or reporting.")
+            return False
+
         covered_suites = []
         for entry in plan_entries:
             for run_ in entry.get("runs"):
@@ -290,17 +301,6 @@ def reportable(platform_to_test=None):
             logging.warning(
                 f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
             )
-
-        if not os.environ.get("STARFOX_SPLIT"):
-            logging.warning("No split selected")
-            return False
-        manifest = TestKey(TEST_KEY_LOCATION)
-        expected_suites = manifest.get_valid_suites_in_split(
-            os.environ["STARFOX_SPLIT"], suite_numbers=True
-        )
-        if not expected_suites:
-            logging.warning("This split is empty, not running or reporting.")
-            return False
 
         uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
