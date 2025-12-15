@@ -197,6 +197,10 @@
 
     "tabgroup-add-new-tab": {
       "selectorData": "tabGroupEditor_addNewTabInGroup",
+      "strategy": "id",
+      "groups": []
+    },
+
     "tabgroup-save-and-close-group": {
       "selectorData": "tabGroupEditor_saveAndCloseGroup",
       "strategy": "id",
