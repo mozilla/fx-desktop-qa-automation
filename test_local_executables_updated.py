@@ -10,7 +10,7 @@ GD_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 
 @pytest.fixture()
 def prefs_list():
-    prefs = []
+    prefs = [("app.update.disabledForTesting", False)]
     return prefs
 
 
