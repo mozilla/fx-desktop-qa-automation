@@ -245,6 +245,15 @@ def reportable(platform_to_test=None):
         )
         return True
 
+    manifest = TestKey(TEST_KEY_LOCATION)
+    expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
+    if not expected_suites:
+        logging.warning("This split is empty, not running or reporting.")
+        return False
+    elif not this_plan and functional:
+        logging.warning("New functional run on valid split, running...")
+        return True
+
     if platform_to_test:
         sys_platform = platform_to_test
     platform = "MacOS" if sys_platform == "Darwin" else sys_platform
@@ -280,11 +289,6 @@ def reportable(platform_to_test=None):
         logging.warning(f"Getting reportability for STARfox in {platform}...")
         if not split_:
             logging.warning("No split selected")
-            return False
-        manifest = TestKey(TEST_KEY_LOCATION)
-        expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
-        if not expected_suites:
-            logging.warning("This split is empty, not running or reporting.")
             return False
 
         covered_suites = []
