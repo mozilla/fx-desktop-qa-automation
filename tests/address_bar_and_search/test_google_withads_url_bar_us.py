@@ -46,9 +46,7 @@ def test_google_withads_url_bar_us(driver):
 
         about_telemetry = AboutTelemetry(driver).open()
         sleep(5)
-        about_telemetry.get_element("category-raw").click()
-        about_telemetry.switch_to_new_tab()
-        about_telemetry.get_element("rawdata-tab").click()
+        about_telemetry.open_raw_json_data()
 
         json_data = util.decode_url(driver)
         if util.assert_json_value(json_data, path, 1):

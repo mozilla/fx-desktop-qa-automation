@@ -687,5 +687,13 @@
         "selectorData": "customizableui-special-spring1",
         "strategy": "id",
         "groups": []
+    },
+
+    "back-button": {
+        "selectorData": "back-button",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }

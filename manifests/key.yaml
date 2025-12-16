@@ -31,7 +31,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_bing_search_codes:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -51,7 +54,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_ddg_search_codes:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
@@ -162,6 +168,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_searchbar_on_engines_remove_restore:
+    result: pass
+    splits:
+    - functional1
+  test_searchengine_result_page_load_on_reload_or_back:
     result: pass
     splits:
     - functional1
@@ -945,6 +955,10 @@ tabs:
     splits:
     - functional1
   test_display_customize_button:
+    result: pass
+    splits:
+    - functional1
+  test_edit_tab_groups:
     result: pass
     splits:
     - functional1

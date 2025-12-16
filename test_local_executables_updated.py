@@ -10,7 +10,7 @@ GD_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 
 @pytest.fixture()
 def prefs_list():
-    prefs = []
+    prefs = [("app.update.disabledForTesting", False)]
     return prefs
 
 
@@ -24,15 +24,8 @@ def test_local_executables_updated(driver: Firefox, version):
     Test if the local firefox and geckodriver version are up-to-date.
     """
     # Check firefox version
-    latest_fx_ver = subprocess.check_output(
-        [sys.executable, "./collect_executables.py", "-n"], text=True
-    ).split("-")[0]
-    local_fx_ver = version[16:]
-    if latest_fx_ver != local_fx_ver and not local_fx_ver.endswith(".0"):
-        print("You are not running the latest firefox version!!!")
-        raise RuntimeError(
-            f"Latest fx version is {latest_fx_ver} but you are running {local_fx_ver}"
-        )
+    driver.get("chrome://browser/content/aboutDialog.xhtml")
+    driver.find_element("id", "noUpdatesFound")
 
     # Check geckodriver version
     latest_gd_ver = get_latest_geckodriver_version()
