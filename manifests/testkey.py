@@ -168,7 +168,7 @@ class TestKey:
                     ptr = ptr[list(ptr.keys())[0]]
                 else:
                     break
-            actual_test = list(ptr.keys())[0]
+            actual_test = list(entry[suite].keys())[0]
             if f"functional{splitnum + 1}" in ptr["splits"]:
                 print(f"Keeping {actual_test} in functional split {splitnum + 1}")
                 continue
