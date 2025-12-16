@@ -46,9 +46,15 @@ class Dropdown(Region):
             self.root.click()
 
         if self.is_search_dropdown:
-            panel_element = next(
-                el for el in self.shadow_elements if el.tag_name == "panel-list"
-            )
+            # Wait for dropdown to be fully open and panel-list to exist since is created dynamically)
+            def wait_for_panel_list(_):
+                self.shadow_elements = self.utils.get_shadow_content(self.root)
+                return next(
+                    (el for el in self.shadow_elements if el.tag_name == "panel-list"),
+                    None,
+                )
+
+            panel_element = self.wait.until(wait_for_panel_list)
             matching_menuitems = [
                 el
                 for el in panel_element.find_elements(By.TAG_NAME, "panel-item")
