@@ -3769,9 +3769,9 @@ Location: Bookmark panel
 Path to .json: modules/data/pane_ui.components.json
 ```
 ```
-Selector Name: toolbar-blank-space
-Selector Data: customizableui-special-spring1
-Description: Blank space in the toolbar
+Selector Name: toolbarspring
+Selector Data: customizableui-special-spring2
+Description: toolbarspring
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
@@ -4156,7 +4156,7 @@ Description: Ungroup the tab group
 Location: Menu that opens when right click on the tab group label
 Path to .json: modules/data/tab_bar.components.json
 ```
-```
+
 Selector Name: tabgroup-name-input
 Selector Data: "tab-group-name"
 Description: Name input field in the tab group editor

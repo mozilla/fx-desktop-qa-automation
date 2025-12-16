@@ -38,7 +38,7 @@ on:
         type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
-  TEST_SET: ${{ inputs.test_set }}
+  STARFOX_SPLIT: ${{ inputs.test_set }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
@@ -65,15 +65,6 @@ jobs:
         run: |
           echo "TESTRAIL_REPORT=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Write-Host "Running report for most recent Beta on Windows"
-      - name: Select Test Set
-        if: ${{ inputs.test_set != null }}
-        run: |
-          echo "STARFOX_SPLIT=$TEST_SET" | Out-File -FilePath .env -Encoding utf8 -Append -Force
-        shell: pwsh
-      - name: Set Functional Split
-        if: ${{ inputs.test_set == 'functional' }}
-        run: |
-          echo "STARFOX_SPLIT=$TEST_SET1" | Out-File -FilePath .env -Encoding utf8 -Append -Force
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
@@ -172,12 +163,6 @@ jobs:
         run: |
           echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
-      - name: Select Test Set
-        if: ${{ inputs.test_set != null }}
-        run: echo "STARFOX_SPLIT=$TEST_SET" >> .env
-      - name: Set Functional Split
-        if: ${{ inputs.test_set == 'functional' }}
-        run: echo "STARFOX_SPLIT=$TEST_SET1" >> .env
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link }}
         run: |
