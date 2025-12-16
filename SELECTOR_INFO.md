@@ -4156,7 +4156,7 @@ Description: Ungroup the tab group
 Location: Menu that opens when right click on the tab group label
 Path to .json: modules/data/tab_bar.components.json
 ```
-
+```
 Selector Name: tabgroup-name-input
 Selector Data: "tab-group-name"
 Description: Name input field in the tab group editor
@@ -4183,6 +4183,7 @@ Selector Data: "tab-group"
 Description: Tab group container element (has color attribute)
 Location: In the tabbed browser
 Path to .json: modules/data/tab_bar.components.json
+```
 ```
 Selector Name: tabgroup-save-and-close-group
 Selector Data: "tabGroupEditor_saveAndCloseGroup"
