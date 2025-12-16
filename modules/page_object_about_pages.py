@@ -286,6 +286,11 @@ class AboutTelemetry(BasePage):
 
     URL_TEMPLATE = "about:telemetry"
 
+    def open(self):
+        """Load about:telemetry and wait for page to be interactive."""
+        self.driver.get(self.URL_TEMPLATE)
+        return self
+
     def open_raw_json_data(self):
         """
         Opens the Raw JSON telemetry view:
