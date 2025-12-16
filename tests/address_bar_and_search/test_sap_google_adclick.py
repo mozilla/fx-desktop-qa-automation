@@ -34,9 +34,7 @@ def test_sap_google_adclick(driver: Firefox):
 
     telemetry = AboutTelemetry(driver).open()
     sleep(SLEEP_BEFORE_VERIFICATION)
-    telemetry.get_element("category-raw").click()
-    telemetry.switch_to_new_tab()
-    telemetry.get_element("rawdata-tab").click()
+    telemetry.open_raw_json()
 
     json_data = utils.decode_url(driver)
     assert utils.assert_json_value(

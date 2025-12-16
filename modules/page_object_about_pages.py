@@ -286,6 +286,20 @@ class AboutTelemetry(BasePage):
 
     URL_TEMPLATE = "about:telemetry"
 
+    def open(self):
+        """Load about:telemetry and wait for page to be interactive."""
+        self.driver.get(self.URL_TEMPLATE)
+        return self
+
+    def open_raw_json(self):
+        """
+        Open the Raw Data → Raw JSON view.
+        Matches the interaction pattern used in Google telemetry tests.
+        """
+        self.get_element("category-raw").click()
+        self.switch_to_new_tab()
+        self.get_element("rawdata-tab").click()
+        return self
 
 class AboutNetworking(BasePage):
     """
