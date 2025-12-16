@@ -462,3 +462,52 @@ class TabBar(BasePage):
         self.context_click("tabgroup-label")
         self.click_on("tabgroup-save-and-close-group")
         return self
+
+    def open_new_tab_with_url(self, url: str):
+        # Open new tab in chrome context
+        self.new_tab_by_button()
+
+        # Switch to the newly opened tab
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+        # TEMPORARILY switch to CONTENT context
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.get(url)
+
+    @BasePage.context_chrome
+    def create_tab_group_website(
+            self,
+            group_name: str,
+            tab_context_menu: ContextMenu,
+            urls: list[str],
+    ) -> BasePage:
+        """Create a new tab group with tabs opened to specific URLs"""
+
+        assert len(urls) >= 2, "At least 2 URLs are required to create a tab group"
+
+        # Open tabs with URLs
+        for url in urls:
+            self.open_new_tab_with_url(url)
+
+        # Add the first tab into a New Group
+        first_tab = self.get_tab(1)
+        self.context_click(first_tab)
+        tab_context_menu.click_and_hide_menu("context-move-tab-to-new-group")
+
+        # Wait for tab group menu to open
+        self.element_visible("tabgroup-input")
+
+        # Enter group name
+        self.fill("tabgroup-input", group_name, clear_first=False)
+
+        # Make sure the group is created
+        self.element_visible("tabgroup-label")
+
+        # Add remaining tabs to the group
+        for i in range(2, len(urls) + 1):
+            tab = self.get_tab(i)
+            self.context_click(tab)
+            tab_context_menu.click_on("context-move-tab-to-group")
+            self.click_and_hide_menu("tabgroup-menuitem")
+
+        return self
