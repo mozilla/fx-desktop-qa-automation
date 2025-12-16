@@ -23,6 +23,10 @@ def sysname():
 
 
 def test_expected_to_pass(entry: dict) -> bool:
+    """
+    Return True if the test is marked 'pass' in the manifest.
+    Else return False.
+    """
     ptr = entry
     for _ in range(MAX_DEPTH):
         if "result" not in ptr:
@@ -38,7 +42,7 @@ def test_expected_to_pass(entry: dict) -> bool:
 
 
 def clean_prompt(prompt: str) -> str:
-    # Clean up prompts
+    """Clean up prompts"""
     if prompt[0].islower():
         prompt[0] = prompt[0].upper()
     if "?" not in prompt:
@@ -49,7 +53,7 @@ def clean_prompt(prompt: str) -> str:
 
 
 def ask_question(prompt: str) -> bool:
-    # Ask a question, return True for yeslike strs, False for nolike.
+    """Ask a question, return True for yeslike strs, False for nolike."""
     prompt = clean_prompt(prompt)
     while True:
         resp = input(prompt)
@@ -61,7 +65,7 @@ def ask_question(prompt: str) -> bool:
 
 
 def ask_open_question(prompt: str) -> str:
-    # Asks an open question, only accepts non-empty string answers.
+    """Asks an open question, only accepts non-empty string answers."""
     prompt = clean_prompt(prompt)
     while True:
         resp = input(prompt)
@@ -78,6 +82,9 @@ class TestKey:
         self.test_root = test_root
 
     def write(self):
+        """
+        Dump the manifest to the filename passed at initialization.
+        """
         with open(self.manifest_file, "w") as fh:
             yaml.safe_dump(self.manifest, fh)
 
@@ -88,6 +95,9 @@ class TestKey:
         return filename
 
     def filter_filenames_by_pass(self, filenames: list) -> list:
+        """
+        Given a list of filenames, return only the ones marked 'pass'
+        """
         passes = []
         for filename in filenames:
             full_entry = self.get_entry_from_filename(filename)
@@ -97,6 +107,10 @@ class TestKey:
         return passes
 
     def get_entry_from_filename(self, filename) -> dict:
+        """
+        Given a filename, get a partial dict that represents
+        the test's location in the manifest
+        """
         segments = filename.split(os.path.sep)
         i = 0
         if segments[i] == ".":
@@ -123,6 +137,10 @@ class TestKey:
         return entry
 
     def rebalance_functionals(self):
+        """
+        Reassign tests to a functional split, based on what number is set in
+        NUM_FUNCTIONAL_SPLITS. Currently, the function may split suites.
+        """
         all_functs = []
         for splitnum in range(NUM_FUNCTIONAL_SPLITS):
             all_functs.extend(
@@ -150,7 +168,7 @@ class TestKey:
                     ptr = ptr[list(ptr.keys())[0]]
                 else:
                     break
-            actual_test = list(ptr.keys())[0]
+            actual_test = list(entry[suite].keys())[0]
             if f"functional{splitnum + 1}" in ptr["splits"]:
                 print(f"Keeping {actual_test} in functional split {splitnum + 1}")
                 continue
@@ -162,8 +180,10 @@ class TestKey:
             self.manifest[suite] |= entry[suite]
 
     def gather_split(self, split_name, pass_only=True):
-        # Given a split name, return the pytest locations of the tests in that split
-        # Default to only returning tests expected to pass
+        """
+        Given a split name, return the pytest locations of the tests in that split.
+        Default to only returning tests expected to pass
+        """
         test_filenames = []
         for suite in self.manifest:
             for testfile in self.manifest[suite]:
@@ -207,7 +227,12 @@ class TestKey:
 
         return test_filenames
 
-    def get_valid_suites_in_split(self, split, suite_numbers=False):
+    def get_valid_suites_in_split(self, split, suite_numbers=False) -> list:
+        """
+        Given a split name, return the subdirectory names corresponding to
+        valid suites with member tests in the split. If suite_numbers is True,
+        return the TestRail suite id instead.
+        """
         filenames = self.gather_split(split)
         suite_dirs = []
         for filename in filenames:
@@ -234,6 +259,12 @@ class TestKey:
             return suite_nums
 
     def addtests(self, interactive=True):
+        """
+        If a test in the directory is not in the manifest, ask questions
+        to determine where the tests should go in the manifest, then add it
+        and write the manifest. If interactive is False, exit with an error
+        code if a test is not in the manifest.
+        """
         newkey = deepcopy(self.manifest)
         for root, _, files in os.walk(self.test_root):
             for f in files:
