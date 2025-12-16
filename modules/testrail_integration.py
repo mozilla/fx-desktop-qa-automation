@@ -232,26 +232,22 @@ def reportable(platform_to_test=None):
             return False
 
     split_ = os.environ.get("STARFOX_SPLIT")
-    functional = split_ and split_.startswith("functional")
+    manifest = TestKey(TEST_KEY_LOCATION)
+    expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
+    if not expected_suites and not os.environ.get("FX_L10N"):
+        # If suite is empty, never report (unless in l10n-land).
+        logging.warning("This split is empty, not running or reporting.")
+        return False
 
     plan_title = get_plan_title(version, channel)
     logging.warning(f"Checking plan title: {plan_title}")
     this_plan = tr_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
-    if not this_plan and not functional:
+    if not this_plan:
         logging.warning(
             f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
         )
-        return True
-
-    manifest = TestKey(TEST_KEY_LOCATION)
-    expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
-    if not expected_suites:
-        logging.warning("This split is empty, not running or reporting.")
-        return False
-    elif not this_plan and functional:
-        logging.warning("New functional run on valid split, running...")
         return True
 
     if platform_to_test:
