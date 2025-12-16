@@ -83,7 +83,7 @@ class TestKey:
 
     def write(self):
         """
-        Dump the manifest to the filename you passed when initializing.
+        Dump the manifest to the filename passed at initialization.
         """
         with open(self.manifest_file, "w") as fh:
             yaml.safe_dump(self.manifest, fh)
