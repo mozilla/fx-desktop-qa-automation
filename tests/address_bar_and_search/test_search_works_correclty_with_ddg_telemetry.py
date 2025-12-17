@@ -67,6 +67,7 @@ def test_search_works_correctly_with_ddg_telemetry(driver):
     nav.set_search_mode(SEARCH_ENGINE)
     nav.search(SEARCH_TERM2)
     time.sleep(1)
+    # Click on the first search result. No need to save this object
     results = driver.find_elements(By.CSS_SELECTOR, 'a[data-testid="result-title-a"]')
     results[0].click()
     nav.click_back_button()
