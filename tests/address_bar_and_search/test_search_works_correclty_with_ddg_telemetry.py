@@ -1,5 +1,6 @@
 import time
 
+import pytest
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation
@@ -11,6 +12,11 @@ SEARCH_TERM = "buy stocks"
 SEARCH_TERM2 = "mozilla wikipedia"
 SEARCH_ENGINE = "DuckDuckGo"
 WEBSITE_ADDRESS = "https://mozilla.org"
+
+
+@pytest.fixture()
+def test_case():
+    return "3029250"
 
 
 def test_search_works_correctly_with_ddg_telemetry(driver):
