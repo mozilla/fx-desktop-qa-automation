@@ -519,6 +519,18 @@ class TabBar(BasePage):
             self.driver.get(url)
 
     @BasePage.context_chrome
+    def load_url_in_current_tab(self, url: str) -> BasePage:
+        """Load a URL in the current tab without opening a new blank tab"""
+        # Switch to the current tab
+        self.driver.switch_to.window(self.driver.current_window_handle)
+
+        # Temporarily switch to CONTENT context to load the page
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.get(url)
+
+        return self
+
+    @BasePage.context_chrome
     def create_tab_group_website(
             self,
             group_name: str,
@@ -529,12 +541,20 @@ class TabBar(BasePage):
 
         assert len(urls) >= 2, "At least 2 URLs are required to create a tab group"
 
-        # Open tabs with URLs
-        for url in urls:
-            self.open_new_tab_with_url(url)
+        # Track indices of opened tabs (1-based)
+        tab_indices = []
 
-        # Add the first tab into a New Group
-        first_tab = self.get_tab(1)
+        # Open the first URL in the current tab
+        self.load_url_in_current_tab(urls[0])
+        tab_indices.append(1)
+
+        # Open the remaining URLs in new tabs
+        for i, url in enumerate(urls[1:], start=2):
+            self.open_new_tab_with_url(url)
+            tab_indices.append(i)
+
+        # Add the first tab into a new group
+        first_tab = self.get_tab(tab_indices[0])
         self.context_click(first_tab)
         tab_context_menu.click_and_hide_menu("context-move-tab-to-new-group")
 
@@ -547,9 +567,9 @@ class TabBar(BasePage):
         # Make sure the group is created
         self.element_visible("tabgroup-label")
 
-        # Add remaining tabs to the group
-        for i in range(2, len(urls) + 1):
-            tab = self.get_tab(i)
+        # Add the remaining tabs to the group
+        for idx in tab_indices[1:]:
+            tab = self.get_tab(idx)
             self.context_click(tab)
             tab_context_menu.click_on("context-move-tab-to-group")
             self.click_and_hide_menu("tabgroup-menuitem")
