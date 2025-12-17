@@ -259,6 +259,10 @@ class TestKey:
             return suite_nums
 
     def find_all_splits(self):
+        """
+        Iterate through the manifest file and return a list of
+        unique splits.
+        """
         splits = set()
         data = self.manifest
         for folder, files in data.items():
