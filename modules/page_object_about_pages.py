@@ -123,6 +123,143 @@ class AboutGlean(BasePage):
         self.get_element("ping-submit-button").click()
         return self
 
+    def enable_metrics_table(self) -> Page:
+        """
+        Enable experimental features and open the Metrics Table category.
+        """
+        self.element_clickable("enable-new-features")
+        self.click_on("enable-new-features")
+        self.element_clickable("metrics-table-category")
+        self.click_on("metrics-table-category")
+        return self
+
+    def filter_metrics(self, filter_term: str) -> Page:
+        """
+        Filter metrics in the Metrics Table by the given term.
+        """
+        filter_input = self.get_element("filter-metrics-input")
+        filter_input.clear()
+        filter_input.send_keys(filter_term)
+        return self
+
+    def load_metric(self, metric_name: str) -> Page:
+        """
+        Click the load button for a specific metric row.
+        """
+        self.element_clickable("metric-row-load-button", labels=[metric_name])
+        self.click_on("metric-row-load-button", labels=[metric_name])
+        return self
+
+    def get_metric_timeline_events(self, metric_name: str, timeout: int = 30) -> list:
+        """
+        Get all timeline event elements for a specific metric.
+        Returns a list of event <g> elements from the SVG timeline.
+
+        Args:
+            metric_name: The metric identifier (e.g., "serp.impression")
+            timeout: Max seconds to wait for events to appear (default 30)
+        """
+        self.custom_wait(timeout=timeout).until(
+            lambda _: len(
+                self.get_elements("metric-timeline-events", labels=[metric_name])
+            )
+            > 0
+        )
+        return self.get_elements("metric-timeline-events", labels=[metric_name])
+
+    def get_metric_value_text(self, metric_name: str) -> str:
+        """
+        Get the text content from the value cell of a metric row.
+        Waits until JSON-like content is present.
+        """
+
+        def value_contains_json(_):
+            el = self.get_element("metric-value-cell", labels=[metric_name])
+            txt = el.text.strip()
+            return txt if ("{" in txt and "}" in txt) else None
+
+        return self.wait.until(value_contains_json)
+
+    def get_metric_event_count(self, metric_name: str) -> int:
+        """
+        Get the current number of timeline events for a metric.
+        Returns 0 if no events are found.
+        """
+        try:
+            events = self.get_elements("metric-timeline-events", labels=[metric_name])
+            return len(events) if events else 0
+        except Exception:
+            return 0
+
+    def click_newest_metric_event(self, metric_name: str) -> Page:
+        """
+        Click the newest (last) event dot in the metric's timeline.
+        Clicks the circle inside the <g> element to avoid SVG click flakiness.
+        """
+        from selenium.webdriver.common.by import By
+
+        events = self.get_metric_timeline_events(metric_name)
+        newest_event = events[-1]
+        newest_event.find_element(By.CSS_SELECTOR, "circle").click()
+        return self
+
+    def wait_for_new_metric_event(
+        self, metric_name: str, previous_count: int, timeout: int = 15
+    ) -> Page:
+        """
+        Wait until the metric has more events than the previous count.
+        """
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_metric_event_count(metric_name) > previous_count
+        )
+        return self
+
+    def get_metric_payload(self, metric_name: str) -> dict:
+        """
+        Get the parsed JSON payload from a metric's value cell.
+
+        Returns:
+            dict: The parsed JSON payload.
+
+        Raises:
+            ValueError: If JSON cannot be extracted or parsed from the cell.
+        """
+        import json
+
+        raw_text = self.get_metric_value_text(metric_name)
+
+        start = raw_text.find("{")
+        end = raw_text.rfind("}")
+
+        if start == -1 or end == -1 or end <= start:
+            raise ValueError(
+                f"Could not find JSON object in metric value cell. Got: {raw_text}"
+            )
+
+        json_str = raw_text[start : end + 1]
+
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"Failed to parse JSON from metric value cell: {e}. Raw: {json_str}"
+            )
+
+    @staticmethod
+    def normalize_glean_boolean(value) -> bool:
+        """
+        Normalize a boolean value from about:glean.
+        about:glean often renders booleans as strings ("true"/"false").
+
+        Returns:
+            bool: The normalized boolean value.
+        """
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            return value.lower() == "true"
+        return bool(value)
+
 
 class AboutLogins(BasePage):
     """

@@ -21,9 +21,45 @@
         "groups": []
     },
 
-    "manual-testing":{
+    "manual-testing": {
         "selectorData": "category-manual-testing",
         "strategy": "id",
+        "groups": []
+    },
+
+    "enable-new-features": {
+        "selectorData": "enable-new-features",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "metrics-table-category": {
+        "selectorData": "category-metrics-table",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "filter-metrics-input": {
+        "selectorData": "filter-metrics",
+        "strategy": "id",
+        "groups": []
+    },
+
+    "metric-row-load-button": {
+        "selectorData": "tr.metric-row[data-d3-row=\"{metric_name}\"] button[data-l10n-id=\"about-glean-button-load-value\"]",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "metric-timeline-events": {
+        "selectorData": "svg.timeline[data-d3-datum=\"{metric_name}\"] g.event",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "metric-value-cell": {
+        "selectorData": "tr.metric-row[data-d3-row=\"{metric_name}\"] td[data-d3-cell=\"value\"]",
+        "strategy": "css",
         "groups": []
     }
 }
