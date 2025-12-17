@@ -8,7 +8,7 @@ import yaml
 
 NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
-SUITE_TUPLE_RE = re.compile(r'\s+return \("S(\d+)", ?".*"\)')
+SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
 
 
 def sysname():
@@ -255,7 +255,12 @@ class TestKey:
                             suite_num = m.group(1)
                         if suite_num not in suite_nums:
                             suite_nums.append(suite_num)
+                        suite_flag = False
                         break
+                    else:
+                        if "def suite_id" in line:
+                            suite_flag = True
+
             return suite_nums
 
     def addtests(self, interactive=True):
