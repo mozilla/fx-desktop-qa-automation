@@ -232,6 +232,7 @@ def reportable(platform_to_test=None):
             return False
 
     split_ = os.environ.get("STARFOX_SPLIT")
+    logging.warning(f"Testing against split {split_}...")
     manifest = TestKey(TEST_KEY_LOCATION)
     expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
     if not expected_suites and not os.environ.get("FX_L10N"):

@@ -8,7 +8,7 @@ import yaml
 
 NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
-SUITE_TUPLE_RE = re.compile(r'\s+return \("S(\d+)", ?".*"\)')
+SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
 
 
 def sysname():
@@ -142,9 +142,9 @@ class TestKey:
         NUM_FUNCTIONAL_SPLITS. Currently, the function may split suites.
         """
         all_functs = []
-        for splitnum in range(NUM_FUNCTIONAL_SPLITS):
+        for splitnum in range(NUM_FUNCTIONAL_SPLITS + 1):
             all_functs.extend(
-                self.gather_split(f"functional{splitnum}", pass_only=False)
+                self.gather_split(f"functional{splitnum:02}", pass_only=False)
             )
         total_functs = len(all_functs)
         functs_per_split = total_functs // NUM_FUNCTIONAL_SPLITS
@@ -169,14 +169,14 @@ class TestKey:
                 else:
                     break
             actual_test = list(entry[suite].keys())[0]
-            if f"functional{splitnum + 1}" in ptr["splits"]:
-                print(f"Keeping {actual_test} in functional split {splitnum + 1}")
+            if f"functional{(splitnum + 1):02}" in ptr["splits"]:
+                print(f"Keeping {actual_test} in functional split {(splitnum + 1):02}")
                 continue
             for split_ in ptr["splits"]:
                 if split_.startswith("functional"):
                     ptr["splits"].remove(split_)
-            print(f"Moving {actual_test} to functional split {splitnum + 1}")
-            ptr["splits"].append(f"functional{splitnum + 1}")
+            print(f"Moving {actual_test} to functional split {(splitnum + 1):02}")
+            ptr["splits"].append(f"functional{(splitnum + 1):02}")
             self.manifest[suite] |= entry[suite]
 
     def gather_split(self, split_name, pass_only=True):
@@ -255,7 +255,12 @@ class TestKey:
                             suite_num = m.group(1)
                         if suite_num not in suite_nums:
                             suite_nums.append(suite_num)
+                        suite_flag = False
                         break
+                    else:
+                        if "def suite_id" in line:
+                            suite_flag = True
+
             return suite_nums
 
     def addtests(self, interactive=True):
