@@ -1,12 +1,12 @@
 import logging
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import ContextMenu
-from modules.page_object import GoogleSearch
-from modules.page_object_autofill import LoginAutofill, TextAreaFormAutofill
+from modules.page_object import GoogleSearch, LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
 
 
@@ -16,71 +16,101 @@ def test_case():
 
 
 def test_login_form_copy_paste(driver: Firefox):
-    """C2264626 - Verify that copy and paste actions are displayed in the context menu and work as expected"""
+    """
+    C2264626 - Verify that copy and paste actions are displayed
+    in the context menu and work as expected
+    """
     # Instantiate objects
-    login_fill = LoginAutofill(driver).open()
+    login_fill = LoginAutofill(driver)
+    login_fill.elements["input-field"]["groups"].append("doNotCache")
+    login_fill.open()
     context_menu = ContextMenu(driver)
     util = Utilities()
-    random_text = util.generate_random_text("sentence")
+    random_text = util.generate_random_text("word")
+    random_other_text = util.generate_random_text("word")
 
-    # Get the field and send text
-    password_field = login_fill.get_element("input-field", labels=["current-password"])
-    password_field.send_keys(random_text)
-    logging.info(f"Sent the text {random_text} to the textarea.")
-
-    # Triple click and copy text
-    login_fill.triple_click("input-field", labels=["current-password"])
-    login_fill.context_click(password_field)
+    # Paste in the clear
+    login_fill.fill("username-field", random_text, press_enter=False)
+    login_fill.triple_click("username-field")
+    login_fill.context_click("username-field")
     context_menu.click_and_hide_menu("context-menu-copy")
+    login_fill.fill("username-field", random_other_text, press_enter=False)
+    login_fill.triple_click("username-field")
+    login_fill.context_click("username-field")
+    context_menu.click_and_hide_menu("context-menu-paste")
+    login_fill.expect_element_attribute_contains("username-field", "value", random_text)
+
+    # Paste to password
+    login_fill.context_click("input-field", labels=["current-password"])
+    context_menu.click_and_hide_menu("context-menu-paste")
+    login_fill.context_click("input-field", labels=["current-password"])
+    context_menu.click_and_hide_menu("context-menu-reveal-password")
+    login_fill.expect_element_attribute_contains(
+        "input-field", "value", random_text, labels=["current-password"]
+    )
+
+    # Triple click and attempt to copy text from protected input
+    login_fill.fill(
+        "input-field", random_other_text, labels=["current-password"], press_enter=False
+    )
+    login_fill.triple_click("input-field", labels=["current-password"])
+    login_fill.context_click("input-field", labels=["current-password"])
+    context_menu.click_and_hide_menu("context-menu-copy")
+    login_fill.triple_click("username-field")
+    login_fill.context_click("username-field")
+    context_menu.click_and_hide_menu("context-menu-paste")
+    # Text in clipboard should not have updated to random_other_text
+    login_fill.expect_element_attribute_contains("username-field", "value", random_text)
 
     # Delete all text
-    password_field.send_keys(Keys.BACK_SPACE)
-    assert password_field.get_attribute("value") == ""
-
-    login_fill.context_click(password_field)
-    context_menu.click_and_hide_menu("context-menu-paste")
-
-    # Final assertion
-    assert password_field.get_attribute("value") != random_text
+    login_fill.triple_click("username-field")
+    login_fill.get_element("username-field").send_keys(Keys.BACK_SPACE)
+    login_fill.expect_element_attribute_contains(
+        name="username-field",
+        attr_name="value",
+        attr_value="",
+    )
 
 
 def test_text_area_copy_paste(driver: Firefox):
     # Initialize objects
-    text_area_fill = TextAreaFormAutofill(driver).open()
+    text_area_fill = TextAreaFormAutofill(driver)
+    text_area_fill.open()
     util = Utilities()
     context_menu = ContextMenu(driver)
-    text_area = text_area_fill.get_element("street-address-textarea")
 
     # Send the text
     random_text = util.generate_random_text("sentence")
-    text_area.send_keys(random_text)
+    text_area_fill.fill("street-address-textarea", random_text, press_enter=False)
     logging.info(f"Sent the text {random_text} to the textarea.")
 
     # Copy the text
     text_area_fill.triple_click("street-address-textarea")
-    text_area_fill.context_click(text_area)
+    text_area_fill.context_click("street-address-textarea")
     context_menu.click_and_hide_menu("context-menu-copy")
 
     # Delete all the text and paste
-    text_area.send_keys(Keys.BACK_SPACE)
-    assert text_area.get_attribute("value") == ""
+    text_area_fill.get_element("street-address-textarea").send_keys(Keys.BACK_SPACE)
+    text_area_fill.expect_element_attribute_contains(
+        "street-address-textarea", "value", ""
+    )
 
-    text_area_fill.context_click(text_area)
+    text_area_fill.context_click("street-address-textarea")
     context_menu.click_and_hide_menu("context-menu-paste")
-
-    # Check value
-    assert text_area.get_attribute("value") == random_text
+    text_area_fill.expect_element_attribute_contains(
+        "street-address-textarea", "value", random_text
+    )
 
 
 def test_search_field_copy_paste(driver: Firefox):
     context_menu = ContextMenu(driver)
-    google_search = GoogleSearch(driver).open()
+    google_search = GoogleSearch(driver)
+    google_search.open()
     util = Utilities()
 
     # Send the text
     random_text = util.generate_random_text("sentence")
-    search_bar = google_search.get_search_bar_element()
-    search_bar.send_keys(random_text)
+    google_search.fill("search-bar-textarea", random_text, press_enter=False)
     logging.info(f"Sent the text {random_text} to the search bar.")
 
     # Triple click the text to select all
@@ -88,16 +118,16 @@ def test_search_field_copy_paste(driver: Firefox):
     google_search.triple_click("search-bar-textarea")
 
     # Context click
-    google_search.context_click(search_bar)
+    google_search.context_click("search-bar-textarea")
     context_menu.click_and_hide_menu("context-menu-copy")
 
     # Delete the current text
-    search_bar.send_keys(Keys.BACK_SPACE)
-    assert search_bar.get_attribute("value") == ""
+    google_search.get_element("search-bar-textarea").send_keys(Keys.BACK_SPACE)
+    google_search.expect_element_attribute_contains("search-bar-textarea", "value", "")
 
     # Context click and paste the text back
-    google_search.context_click(search_bar)
+    google_search.context_click("search-bar-textarea")
     context_menu.click_and_hide_menu("context-menu-paste")
-
-    # Assert the value is correct
-    assert search_bar.get_attribute("value") == random_text
+    google_search.expect_element_attribute_contains(
+        "search-bar-textarea", "value", random_text
+    )
