@@ -3775,6 +3775,13 @@ Description: toolbarspring
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: reopen-all-closed-tabs-button
+Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
+Description: Reopen all closed tabs buttonutton
+Location: On the hamburger menu > History > Recently closed tabs
+Path to .json: modules/data/panel_ui.components.json
+```
 #### print_preview
 ```
 Selector name: print-preview-browser

@@ -507,71 +507,31 @@ class TabBar(BasePage):
         self.click_on("tabgroup-save-and-close-group")
         return self
 
-    def open_new_tab_with_url(self, url: str):
-        # Open new tab in chrome context
-        self.new_tab_by_button()
-
-        # Switch to the newly opened tab
-        self.driver.switch_to.window(self.driver.window_handles[-1])
-
-        # TEMPORARILY switch to CONTENT context
-        with self.driver.context(self.driver.CONTEXT_CONTENT):
-            self.driver.get(url)
-
     @BasePage.context_chrome
-    def load_url_in_current_tab(self, url: str) -> BasePage:
-        """Load a URL in the current tab without opening a new blank tab"""
-        # Switch to the current tab
-        self.driver.switch_to.window(self.driver.current_window_handle)
+    def open_websites_in_tabs(self, urls: list[str]) -> BasePage:
+        """
+        Open a list of websites, each in its own tab.
 
-        # Temporarily switch to CONTENT context to load the page
-        with self.driver.context(self.driver.CONTEXT_CONTENT):
-            self.driver.get(url)
-
-        return self
-
-    @BasePage.context_chrome
-    def create_tab_group_website(
-            self,
-            group_name: str,
-            tab_context_menu: ContextMenu,
-            urls: list[str],
-    ) -> BasePage:
-        """Create a new tab group with tabs opened to specific URLs"""
-
-        assert len(urls) >= 2, "At least 2 URLs are required to create a tab group"
-
-        # Track indices of opened tabs (1-based)
-        tab_indices = []
+        Args:
+            urls: List of website URLs to open.
+        """
+        if not urls:
+            return self
 
         # Open the first URL in the current tab
-        self.load_url_in_current_tab(urls[0])
-        tab_indices.append(1)
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.get(urls[0])
 
-        # Open the remaining URLs in new tabs
-        for i, url in enumerate(urls[1:], start=2):
-            self.open_new_tab_with_url(url)
-            tab_indices.append(i)
+        # Open remaining URLs in new tabs
+        for url in urls[1:]:
+            # Open a new tab using the button
+            self.new_tab_by_button()
 
-        # Add the first tab into a new group
-        first_tab = self.get_tab(tab_indices[0])
-        self.context_click(first_tab)
-        tab_context_menu.click_and_hide_menu("context-move-tab-to-new-group")
+            # Switch to the newly opened tab
+            self.driver.switch_to.window(self.driver.window_handles[-1])
 
-        # Wait for tab group menu to open
-        self.element_visible("tabgroup-input")
-
-        # Enter group name
-        self.fill("tabgroup-input", group_name, clear_first=False)
-
-        # Make sure the group is created
-        self.element_visible("tabgroup-label")
-
-        # Add the remaining tabs to the group
-        for idx in tab_indices[1:]:
-            tab = self.get_tab(idx)
-            self.context_click(tab)
-            tab_context_menu.click_on("context-move-tab-to-group")
-            self.click_and_hide_menu("tabgroup-menuitem")
+            # Load the URL in the new tab
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                self.driver.get(url)
 
         return self
