@@ -3769,9 +3769,9 @@ Location: Bookmark panel
 Path to .json: modules/data/pane_ui.components.json
 ```
 ```
-Selector Name: toolbar-blank-space
-Selector Data: customizableui-special-spring1
-Description: Blank space in the toolbar
+Selector Name: toolbarspring
+Selector Data: customizableui-special-spring2
+Description: toolbarspring
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
@@ -4154,6 +4154,34 @@ Selector Name: tabgroup-ungroup-tabs
 Selector Data: "tabGroupEditor_ungroupTabs"
 Description: Ungroup the tab group
 Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-name-input
+Selector Data: "tab-group-name"
+Description: Name input field in the tab group editor
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-color-swatch
+Selector Data: "tab-group-editor-swatch-{color}"
+Description: Color swatch button in the tab group editor (use labels parameter for color)
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-add-new-tab
+Selector Data: "tabGroupEditor_addNewTabInGroup"
+Description: Button to add a new tab in the group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup
+Selector Data: "tab-group"
+Description: Tab group container element (has color attribute)
+Location: In the tabbed browser
 Path to .json: modules/data/tab_bar.components.json
 ```
 ```

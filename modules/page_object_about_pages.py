@@ -436,6 +436,23 @@ class AboutTelemetry(BasePage):
 
     URL_TEMPLATE = "about:telemetry"
 
+    def open_raw_json_data(self):
+        """
+        Opens the Raw JSON telemetry view:
+          - Click Raw category
+          - Switch to the new tab
+          - Click the Raw Data tab
+        """
+
+        # Click "Raw" category
+        self.get_element("category-raw").click()
+
+        # Switching to the new tab opened by Raw
+        self.switch_to_new_tab()
+
+        # Click "Raw Data" tab
+        self.get_element("rawdata-tab").click()
+
 
 class AboutNetworking(BasePage):
     """
