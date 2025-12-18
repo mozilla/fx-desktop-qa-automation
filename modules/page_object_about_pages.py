@@ -219,10 +219,7 @@ class AboutGlean(BasePage):
         Get the parsed JSON payload from a metric's value cell.
 
         Returns:
-            dict: The parsed JSON payload.
-
-        Raises:
-            ValueError: If JSON cannot be extracted or parsed from the cell.
+            dict: The parsed JSON payload, or empty dict if parsing fails.
         """
         import json
 
@@ -232,18 +229,10 @@ class AboutGlean(BasePage):
         end = raw_text.rfind("}")
 
         if start == -1 or end == -1 or end <= start:
-            raise ValueError(
-                f"Could not find JSON object in metric value cell. Got: {raw_text}"
-            )
+            return {}
 
         json_str = raw_text[start : end + 1]
-
-        try:
-            return json.loads(json_str)
-        except json.JSONDecodeError as e:
-            raise ValueError(
-                f"Failed to parse JSON from metric value cell: {e}. Raw: {json_str}"
-            )
+        return json.loads(json_str)
 
     @staticmethod
     def normalize_glean_boolean(value) -> bool:
@@ -259,6 +248,45 @@ class AboutGlean(BasePage):
         if isinstance(value, str):
             return value.lower() == "true"
         return bool(value)
+
+    def poll_glean_metric(
+        self, metric_path: str, timeout: int = 15, poll_interval: float = 0.5
+    ) -> list:
+        """
+        Poll a Glean metric via JS API until data is available.
+
+        Args:
+            metric_path: Dot-separated path like "serp.impression"
+            timeout: Max seconds to wait
+            poll_interval: Seconds between polls
+
+        Returns:
+            list: The metric events/values from testGetValue()
+        """
+        import time
+
+        js_code = f"""
+            try {{
+                let parts = "{metric_path}".split(".");
+                let obj = Glean;
+                for (let p of parts) {{
+                    obj = obj[p];
+                }}
+                return obj.testGetValue() || [];
+            }} catch(e) {{
+                return [];
+            }}
+        """
+
+        end_time = time.time() + timeout
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            while time.time() < end_time:
+                result = self.driver.execute_script(js_code)
+                if result and len(result) > 0:
+                    return result
+                time.sleep(poll_interval)
+
+        return []
 
 
 class AboutLogins(BasePage):

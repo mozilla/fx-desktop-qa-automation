@@ -1,16 +1,14 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TabBar
+from modules.browser_object import Navigation
 from modules.page_object import AboutGlean, AboutPrefs
 from modules.page_object_generics import GenericPage
 
+# Test constants
 SEARCH_TERM = "test"
 SEARCH_ENGINE = "Ecosia"
-METRIC_NAME = "serp.impression"
-METRIC_FILTER = "serp"
+GLEAN_METRIC_PATH = "serp.impression"
 
 # Expected payload values
 EXPECTED_PROVIDER = "ecosia"
@@ -20,7 +18,7 @@ EXPECTED_PARTNER_CODE = "mzl"
 
 @pytest.fixture()
 def test_case():
-    return "GLEAN_SERP_TEST"
+    return "GLEAN_SERP_TEST_JS_API"
 
 
 @pytest.fixture()
@@ -30,13 +28,13 @@ def add_to_prefs_list():
     ]
 
 
-def test_glean_serp_impression(driver: Firefox):
+def test_glean_serp_impression_js_api(driver: Firefox):
     """
-    Test to verify Glean SERP impression data via about:glean.
+    Test to verify Glean SERP impression data via Glean JS API (browser console).
+    Uses Glean.serp.impression.testGetValue() instead of about:glean UI.
     """
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
-    tabs = TabBar(driver)
     glean = AboutGlean(driver)
     page = GenericPage(driver, url="about:newtab")
 
@@ -48,22 +46,13 @@ def test_glean_serp_impression(driver: Firefox):
     page.open()
     nav.search(SEARCH_TERM)
 
-    # Buffer for telemetry event to be recorded before opening about:glean
-    sleep(2)
+    # Poll Glean JS API until impression event is recorded (no UI needed)
+    events = glean.poll_glean_metric(GLEAN_METRIC_PATH, timeout=15)
+    assert len(events) > 0, "No serp.impression events recorded"
 
-    # Open about:glean in a new tab
-    tabs.new_tab_by_button()
-    tabs.switch_to_new_tab()
-    glean.open()
-
-    # Enable Metrics Table and filter to serp
-    glean.enable_metrics_table()
-    glean.filter_metrics(METRIC_FILTER)
-    glean.load_metric(METRIC_NAME)
-
-    # Select newest event and verify payload
-    glean.click_newest_metric_event(METRIC_NAME)
-    payload = glean.get_metric_payload(METRIC_NAME)
+    # Get the newest event payload
+    event = events[-1]
+    payload = event.get("extra", {})
 
     # Assertions
     assert payload.get("provider") == EXPECTED_PROVIDER, payload
