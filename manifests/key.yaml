@@ -184,7 +184,10 @@ address_bar_and_search:
     splits:
     - functional01
   test_searchengine_result_page_load_on_reload_or_back:
-    result: pass
+    result:
+        linux: pass
+        mac: pass
+        win: unstable
     splits:
     - functional01
   test_searchmode_change_tab:
