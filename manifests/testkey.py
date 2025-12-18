@@ -260,8 +260,8 @@ class TestKey:
 
     def find_all_splits(self):
         """
-        Iterate through the manifest file and return a list of
-        unique splits.
+        Iterate through the manifest file and return a set
+         including unique splits.
         """
         splits = set()
         data = self.manifest
@@ -334,9 +334,11 @@ class TestKey:
                         self.rebalance_functionals()
                     else:
                         all_splits = self.find_all_splits()
+                        output = "\n".join(f"{item}" for item in all_splits)
+
                         split = ask_open_question(
-                            f"What split is this test assigned to? "
-                            f"(available splits are: {all_splits}. Please choose one only) "
+                            f"What split is this test assigned to? Please choose one "
+                            f"from available splits:\n {output}. "
                         )
                         newkey[suite][testfile]["splits"] = [split]
 
