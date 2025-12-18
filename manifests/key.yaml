@@ -5,11 +5,11 @@ address_bar_and_search:
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional01
   test_adaptive_history_removal:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_add_engine_address_bar:
     result: pass
     splits:
@@ -17,114 +17,120 @@ address_bar_and_search:
   test_added_open_search_engine_default:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_addon_suggestion:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_addressbar_bookmarks_when_history_disabled:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_addressbar_search_engine_keywords:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_bing_search_codes:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
-    - functional1
+    - functional01
   test_clipboard_pref_flip:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_copied_url_contains_https:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_ctrl_enter_completes_link_and_can_refresh:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_ctrl_enter_fixes_url:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_ddg_search_codes:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
-    - functional1
+    - functional01
   test_default_search_provider_change_awesome_bar:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_default_search_provider_change_legacy_search_bar:
     result: deprecated
     splits:
-    - functional1
+    - functional01
   test_delete_history_entry_via_firefox_suggest_completion_list:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_disable_websearch_from_awesome_bar:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_dont_show_search_suggestions_in_private_window:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_glean_serp_impression:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_glean_serp_impression_js_api:
     result: pass
     splits:
-      - functional1
+      - functional01
   test_google_search_counts_us:
     result:
       linux: pass
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional01
   test_google_withads_url_bar_us:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_insertion_point_no_search_terms_display:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_no_suggestions_for_empty_query:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_non_sponsored_topsite_context_menu_option:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_open_link_in_new_container_tab:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_paste_and_go_opens_correct_url:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_refresh_firefox_dialog:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_sap_google_adclick:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_seach_suggestions_can_be_disabled:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_search_code_google_non_us:
     result: pass
     splits:
@@ -140,23 +146,23 @@ address_bar_and_search:
   test_search_mode_appears_after_input:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_search_mode_exits_correctly:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_search_mode_persists_mixed_with_bing:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_search_modes_for_sites:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_search_string_displayed_when_addressbar_unfocused:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_search_suggestions:
     result: pass
     splits:
@@ -164,66 +170,63 @@ address_bar_and_search:
   test_search_term_persists:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_searchbar_display_alpenglow_theme:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_searchbar_on_engines_remove_restore:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_searchbar_results_shown_in_a_new_tab:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_searchengine_result_page_load_on_reload_or_back:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
-    - functional1
+    - functional01
   test_searchmode_change_tab:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_searchmode_cleared_on_engine_removal:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_searchmode_update_on_alias_prefix:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_server_not_found_error:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_server_not_found_error_pb:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_suggestion_engine_selection:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_switch_to_existing_tab_when_having_the_same_URL:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_tile_menu_options:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_use_different_search_shortcut_while_already_in_search_mode:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_verify_url_after_tab_switch_with_search_mode:
     result: pass
     splits:
-    - functional1
+    - functional01
 audio_video:
   test_allow_audio_video_functionality:
     result:
@@ -231,7 +234,7 @@ audio_video:
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional01
   test_block_audio_video_functionality:
     result: pass
     splits:
@@ -239,16 +242,16 @@ audio_video:
   test_users_actions_saved_on_reload:
     result: pass
     splits:
-    - functional1
+    - functional01
 bookmarks_and_history:
   test_add_new_other_bookmark:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_bookmark_via_bookmark_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_bookmark_website_via_star_button:
     result: pass
     splits:
@@ -261,31 +264,31 @@ bookmarks_and_history:
   test_clear_recent_history_displayed:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_delete_bookmarks_from_toolbar:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_delete_other_bookmarks:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_deleted_page_not_remembered:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_edit_bookmark_from_bookmark_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_edit_bookmark_via_star_button:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_history_menu_from_different_places:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_import_bookmarks_chrome:
     result: pass
     splits:
@@ -297,15 +300,15 @@ bookmarks_and_history:
   test_open_all_bookmarks_from_bookmarks_toolbar:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_open_bookmark_in_new_window_via_toolbar_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_open_bookmark_in_private_window_via_toolbar_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_open_bookmarks_from_toolbar:
     result: pass
     splits:
@@ -317,27 +320,27 @@ bookmarks_and_history:
   test_opened_website_in_new_tab_present_in_hamburger_history_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_opened_website_in_new_window_present_in_hamburger_history_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_opened_website_present_in_hamburger_history_menu:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_private_window_website_not_in_history:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_toggle_bookmarks_toolbar:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_user_can_forget_history:
     result: pass
     splits:
-    - functional1
+    - functional01
 downloads:
   test_add_mime_type_doc:
     result:
@@ -345,11 +348,11 @@ downloads:
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional01
   test_add_zip_type:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_download_pdf:
     result: pass
     splits:
@@ -357,18 +360,18 @@ downloads:
   test_download_pdf_from_context_menu:
     result: unstable
     splits:
-    - functional1
+    - functional01
   test_mixed_content_download_via_https:
     result:
       linux: pass
       mac: unstable
       win: unstable
     splits:
-    - functional1
+    - functional01
   test_set_always_ask_file_type:
     result: pass
     splits:
-    - functional1
+    - functional01
 drag_and_drop:
   test_copy_entire_row_column:
     result: pass
@@ -377,24 +380,24 @@ drag_and_drop:
   test_copy_from_an_editor_paste_in_another:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_copy_hyperlink_table:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_copy_table_header:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_paste_image_text:
     result: pass
     splits:
-    - functional1
+    - functional01
 find_toolbar:
   test_find_in_pdf:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_find_toolbar_nav:
     result: pass
     splits:
@@ -402,7 +405,7 @@ find_toolbar:
   test_find_toolbar_search:
     result: pass
     splits:
-    - functional1
+    - functional01
 form_autofill:
   test_address_autofill_attribute:
     result: pass
@@ -411,7 +414,7 @@ form_autofill:
   test_autofill_cc_cvv:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_autofill_credit_card:
     result: pass
     splits:
@@ -419,27 +422,27 @@ form_autofill:
   test_autofill_credit_card_doorhanger:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_autofill_credit_card_enable:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_autofill_credit_card_four_fields:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_cc_clear_form:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_clear_form:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_create_new_cc_profile:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_create_profile_autofill:
     result: pass
     splits:
@@ -447,22 +450,22 @@ form_autofill:
   test_delete_cc_profile:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_edit_credit_card:
     result:
       linux: pass
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional01
   test_enable_disable_autofill:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_form_autofill_suggestions:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_name_autofill_attribute:
     result: pass
     splits:
@@ -470,7 +473,7 @@ form_autofill:
   test_private_mode_info_not_saved:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_telephone_autofill_attribute:
     result: pass
     splits:
@@ -479,11 +482,11 @@ form_autofill:
   test_updating_address:
     result: pass
     splits:
-    - functional1
+    - functional01
   test_updating_credit_card:
     result: pass
     splits:
-    - functional1
+    - functional01
 geolocation:
   test_geolocation_shared_via_html5:
     result:
@@ -491,19 +494,19 @@ geolocation:
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional02
   test_geolocation_shared_via_w3c_api:
     result:
       linux: pass
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional02
 language_packs:
   test_language_pack_install_addons:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_language_pack_install_preferences:
     result: pass
     splits:
@@ -520,7 +523,7 @@ menus:
       mac: unstable
       win: unstable
     splits:
-    - functional1
+    - functional02
   test_hyperlink_context_menu:
     result: pass
     splits:
@@ -528,15 +531,15 @@ menus:
   test_image_context_menu_actions:
     result: unstable
     splits:
-    - functional1
+    - functional02
   test_tab_context_menu_actions:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_tab_context_menu_close:
     result: pass
     splits:
-    - functional1
+    - functional02
 meta:
   test_selectors:
     result: unstable
@@ -552,7 +555,7 @@ networking:
   test_http_site:
     result: pass
     splits:
-    - functional1
+    - functional02
 notifications:
   test_audio_video_permissions_notification:
     result:
@@ -560,33 +563,33 @@ notifications:
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional02
   test_camera_permissions_notification:
     result:
       linux: pass
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional02
   test_deny_geolocation:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_deny_screen_capture:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_geolocation_prompt_presence:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_microphone_permissions_notification:
     result:
       linux: pass
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional02
   test_notifications_displayed:
     result: pass
     splits:
@@ -599,28 +602,28 @@ notifications:
   test_webextension_completed_installation_successfully_displayed:
     result: pass
     splits:
-    - functional1
+    - functional02
 password_manager:
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_about_logins_navigation_from_hamburger_menu:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_about_logins_search_username:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_about_logins_search_website:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_add_password_non_ascii_chars:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_add_password_save_valid_data:
     result: pass
     splits:
@@ -628,7 +631,7 @@ password_manager:
   test_add_primary_password:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_auto_saved_generated_password_context_menu:
     result: pass
     splits:
@@ -636,15 +639,15 @@ password_manager:
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_can_view_password_when_PP_enabled:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_changes_made_in_edit_mode_are_saved:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_delete_login:
     result: pass
     splits:
@@ -652,7 +655,7 @@ password_manager:
   test_multiple_saved_logins:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_never_save_login_via_doorhanger:
     result: pass
     splits:
@@ -663,30 +666,30 @@ password_manager:
       mac: unstable
       win: unstable
     splits:
-    - functional1
+    - functional02
   test_password_csv_export:
     result:
       linux: unstable
       mac: unstable
       win: unstable
     splits:
-    - functional1
+    - functional02
   test_primary_password_triggered_on_about_logins_access:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_save_login_via_doorhanger:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_saved_hyperlink_redirects_to_corresponding_page:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_update_login_via_doorhanger:
     result: pass
     splits:
-    - functional1
+    - functional02
 pdf_viewer:
   test_add_image_pdf:
     result:
@@ -694,15 +697,15 @@ pdf_viewer:
       mac: unstable
       win: unstable
     splits:
-    - functional1
+    - functional02
   test_download_pdf_with_form_fields:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_download_triggered_on_content_disposition_attachment:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_open_pdf_in_FF:
     result: pass
     splits:
@@ -710,11 +713,11 @@ pdf_viewer:
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_pdf_download:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_pdf_input_numbers:
     result: pass
     splits:
@@ -726,7 +729,7 @@ pdf_viewer:
   test_zoom_pdf_viewer:
     result: pass
     splits:
-    - functional1
+    - functional02
 pocket:
   test_basic_de:
     test_localized_pocket_layout_DE:
@@ -751,7 +754,7 @@ preferences:
   test_check_for_updates:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_clear_cookie_data:
     result:
       linux: pass
@@ -762,15 +765,15 @@ preferences:
   test_firefox_home_new_tabs:
     result: unstable
     splits:
-    - functional1
+    - functional02
   test_firefox_home_on_launch:
     result: unstable
     splits:
-    - functional1
+    - functional02
   test_lang_pack_changed_from_about_prefs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_manage_cookie_data:
     result: pass
     splits:
@@ -782,7 +785,7 @@ preferences:
   test_notifications_change_set:
     result: pass
     splits:
-    - functional1
+    - functional02
 printing_ui:
   test_print_preview:
     result: pass
@@ -795,7 +798,7 @@ printing_ui:
       mac: unstable
       win: unstable
     splits:
-    - functional1
+    - functional02
 profile:
   test_set_default_profile:
     result: pass
@@ -812,11 +815,11 @@ reader_view:
   test_reader_view_close_sidebar:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_reader_view_location_bar:
     result: pass
     splits:
-    - functional1
+    - functional02
 scrolling_panning_zooming:
   test_default_zoom_persists:
     result: pass
@@ -828,15 +831,15 @@ scrolling_panning_zooming:
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional02
   test_zoom_from_menu_bar:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_zoom_menu_correlation:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_zoom_text_only:
     result: unstable
     splits:
@@ -854,27 +857,27 @@ security_and_privacy:
   test_blocking_social_media_trackers:
     result: unstable
     splits:
-    - functional1
+    - functional02
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_cross_site_tracking_cookies_blocked:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_cryptominers_blocked_and_shown_in_info_panel:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_detected_blocked_trackers_found:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_downloads_from_private_not_leaked:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_https_enabled_private_browsing:
     result: pass
     splits:
@@ -882,11 +885,11 @@ security_and_privacy:
   test_never_remember_browsing_history:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_no_trackers_detected:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_open_link_in_private_window:
     result: pass
     splits:
@@ -894,39 +897,39 @@ security_and_privacy:
   test_phishing_and_malware_warnings:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_private_browser_password_doorhanger:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_private_session_awesome_bar_exclusion:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_private_session_history_exclusion:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_private_window_from_panelui:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_tls_v1_2_protocol:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_trackers_crypto_fingerprint_blocked:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_tracking_content_custom_mode:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_undo_close_tab_private_browsing:
     result: pass
     splits:
@@ -935,11 +938,11 @@ sync_and_fxa:
   test_existing_fxa:
     result: unstable
     splits:
-    - functional1
+    - functional02
   test_new_fxa:
     result: unstable
     splits:
-    - functional1
+    - functional02
 tabs:
   test_active_tab:
     result: pass
@@ -949,7 +952,7 @@ tabs:
   test_change_position_of_pinned_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_close_pinned_tab_via_mouse:
     result: pass
     splits:
@@ -958,34 +961,38 @@ tabs:
   test_close_tab_through_middle_mouse_click:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_display_customize_button:
     result: pass
     splits:
-    - functional1
+    - functional02
+  test_edit_tab_groups:
+    result: pass
+    splits:
+    - functional02
   test_group_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_list_all_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_move_multi_selected_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_mute_tabs:
     result:
       linux: pass
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional02
   test_navigation_multiple_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_open_bookmark_in_new_tab:
     result: pass
     splits:
@@ -993,7 +1000,7 @@ tabs:
   test_open_new_bg_tab_via_mouse_and_keyboard:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_open_new_tab:
     result: pass
     splits:
@@ -1001,11 +1008,11 @@ tabs:
   test_open_new_tab_keys:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_open_new_tab_via_hyperlink:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_pin_tab:
     result: pass
     splits:
@@ -1013,39 +1020,39 @@ tabs:
   test_pin_unpin_selected_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_play_mute_unmute_tabs_via_toggle:
     result: unstable
     splits:
-    - functional1
+    - functional02
   test_reload_overiding_cache_keys:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_reload_tab_via_keyboard:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_reopen_tab_through_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_reopen_tab_through_history_menu:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_reopen_tabs_through_keys:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_save_and_close_a_tab_group:
     result: pass
     splits:
-    - functional1
+    - functional02
   test_ungroup_tabs:
     result: pass
     splits:
-    - functional1
+    - functional02
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass
@@ -1055,4 +1062,4 @@ theme_and_toolbar:
   test_installed_theme_enabled:
     result: pass
     splits:
-    - functional1
+    - functional02

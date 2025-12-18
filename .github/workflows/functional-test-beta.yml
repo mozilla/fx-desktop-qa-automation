@@ -2,7 +2,7 @@ name: Check new beta version - Functional
 
 on:
   schedule:
-    - cron: "35 * * * *"
+    - cron: "30 * * * *"
 env:
   LATEST: ""
 permissions:
@@ -11,7 +11,8 @@ permissions:
 jobs:
   Get-Functional-Split:
     runs-on: ubuntu-latest
-    outputs: ${{ steps.getsplit.outputs.split }}
+    outputs:
+        split: ${{ steps.getsplit.outputs.split }}
     steps:
       - name: Get Split Based On Time
         id: getsplit
@@ -55,7 +56,9 @@ jobs:
     secrets: inherit
 
   Run-Mac-Functional:
-    needs: Check-Beta-Version
+    needs:
+      - Check-Beta-Version
+      - Get-Functional-Split
     if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
     uses: ./.github/workflows/main.yml
     with:
