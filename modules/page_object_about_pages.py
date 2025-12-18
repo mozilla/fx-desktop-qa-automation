@@ -234,21 +234,6 @@ class AboutGlean(BasePage):
         json_str = raw_text[start : end + 1]
         return json.loads(json_str)
 
-    @staticmethod
-    def normalize_glean_boolean(value) -> bool:
-        """
-        Normalize a boolean value from about:glean.
-        about:glean often renders booleans as strings ("true"/"false").
-
-        Returns:
-            bool: The normalized boolean value.
-        """
-        if isinstance(value, bool):
-            return value
-        if isinstance(value, str):
-            return value.lower() == "true"
-        return bool(value)
-
     def poll_glean_metric(
         self, metric_path: str, timeout: int = 15, poll_interval: float = 0.5
     ) -> list:

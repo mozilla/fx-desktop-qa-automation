@@ -14,6 +14,7 @@ GLEAN_METRIC_PATH = "serp.impression"
 EXPECTED_PROVIDER = "ecosia"
 EXPECTED_SOURCE = "urlbar"
 EXPECTED_PARTNER_CODE = "mzl"
+EXPECTED_TAGGED = "true"
 
 
 @pytest.fixture()
@@ -35,8 +36,8 @@ def test_glean_serp_impression_js_api(driver: Firefox):
     """
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
-    glean = AboutGlean(driver)
     page = GenericPage(driver, url="about:newtab")
+    glean = AboutGlean(driver)
 
     # Set Ecosia as default search engine
     prefs.open()
@@ -58,6 +59,4 @@ def test_glean_serp_impression_js_api(driver: Firefox):
     assert payload.get("provider") == EXPECTED_PROVIDER, payload
     assert payload.get("source") == EXPECTED_SOURCE, payload
     assert payload.get("partner_code") == EXPECTED_PARTNER_CODE, payload
-
-    tagged = AboutGlean.normalize_glean_boolean(payload.get("tagged"))
-    assert tagged is True, payload
+    assert payload.get("tagged") == EXPECTED_TAGGED, payload

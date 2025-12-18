@@ -16,6 +16,7 @@ METRIC_FILTER = "serp"
 EXPECTED_PROVIDER = "ecosia"
 EXPECTED_SOURCE = "urlbar"
 EXPECTED_PARTNER_CODE = "mzl"
+EXPECTED_TAGGED = "true"
 
 
 @pytest.fixture()
@@ -36,9 +37,9 @@ def test_glean_serp_impression(driver: Firefox):
     """
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
+    page = GenericPage(driver, url="about:newtab")
     tabs = TabBar(driver)
     glean = AboutGlean(driver)
-    page = GenericPage(driver, url="about:newtab")
 
     # Set Ecosia as default search engine
     prefs.open()
@@ -48,8 +49,8 @@ def test_glean_serp_impression(driver: Firefox):
     page.open()
     nav.search(SEARCH_TERM)
 
-    # Buffer for telemetry event to be recorded before opening about:glean
-    sleep(2)
+    # Buffer for the event to be recorded before opening about:glean
+    sleep(3)
 
     # Open about:glean in a new tab
     tabs.new_tab_by_button()
@@ -69,6 +70,4 @@ def test_glean_serp_impression(driver: Firefox):
     assert payload.get("provider") == EXPECTED_PROVIDER, payload
     assert payload.get("source") == EXPECTED_SOURCE, payload
     assert payload.get("partner_code") == EXPECTED_PARTNER_CODE, payload
-
-    tagged = AboutGlean.normalize_glean_boolean(payload.get("tagged"))
-    assert tagged is True, payload
+    assert payload.get("tagged") == EXPECTED_TAGGED, payload
