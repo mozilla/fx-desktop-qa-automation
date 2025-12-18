@@ -450,6 +450,50 @@ class TabBar(BasePage):
         self.context_click(second_tab)
         tab_context_menu.click_on("context-move-tab-to-group")
         self.click_and_hide_menu("tabgroup-menuitem")
+        self.hide_popup("tabContextMenu")
+
+        return self
+
+    @BasePage.context_chrome
+    def get_tab_group_color(self) -> str:
+        """Return the color attribute of the first tab group"""
+        return self.get_element("tabgroup").get_attribute("color")
+
+    @BasePage.context_chrome
+    def get_tab_group_label(self) -> str:
+        """Return the text of the tab group label"""
+        return self.get_element("tabgroup-label").text
+
+    @BasePage.context_chrome
+    def edit_tab_group(
+        self, new_name: str = None, new_color: str = None, add_new_tab: bool = False
+    ) -> "TabBar":
+        """
+        Edit an existing tab group's name, color, and/or add a new tab.
+        Arguments:
+            new_name: New name for the tab group (optional)
+            new_color: New color for the tab group (optional) - e.g. "purple", "blue", "red"
+            add_new_tab: Whether to add a new tab to the group (default False)
+        """
+        # Open the editor panel
+        self.context_click("tabgroup-label")
+        self.element_visible("tabgroup-menu")
+
+        # Edit the name if provided
+        if new_name:
+            self.triple_click("tabgroup-name-input")
+            self.fill(
+                "tabgroup-name-input", new_name, clear_first=False, press_enter=False
+            )
+
+        # Change the color if provided (use JS click as the label element is not directly clickable)
+        if new_color:
+            color_swatch = self.get_element("tabgroup-color-swatch", labels=[new_color])
+            self.driver.execute_script("arguments[0].click();", color_swatch)
+
+        # Add a new tab if requested
+        if add_new_tab:
+            self.click_on("tabgroup-add-new-tab")
 
         return self
 

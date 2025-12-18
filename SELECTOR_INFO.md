@@ -4156,6 +4156,41 @@ Description: Ungroup the tab group
 Location: Menu that opens when right click on the tab group label
 Path to .json: modules/data/tab_bar.components.json
 ```
+```
+Selector Name: tabgroup-name-input
+Selector Data: "tab-group-name"
+Description: Name input field in the tab group editor
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-color-swatch
+Selector Data: "tab-group-editor-swatch-{color}"
+Description: Color swatch button in the tab group editor (use labels parameter for color)
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-add-new-tab
+Selector Data: "tabGroupEditor_addNewTabInGroup"
+Description: Button to add a new tab in the group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup
+Selector Data: "tab-group"
+Description: Tab group container element (has color attribute)
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-save-and-close-group
+Selector Data: "tabGroupEditor_saveAndCloseGroup"
+Description: Save and close the tab group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
