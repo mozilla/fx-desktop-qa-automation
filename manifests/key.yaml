@@ -1055,3 +1055,8 @@ theme_and_toolbar:
     result: pass
     splits:
     - functional2
+  test_restore_closed_tabs_previous_groups:
+    result: pass
+    splits:
+      - functional2
+
