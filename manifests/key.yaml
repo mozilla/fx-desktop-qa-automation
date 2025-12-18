@@ -74,6 +74,14 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_glean_serp_impression:
+    result: pass
+    splits:
+    - functional1
+  test_glean_serp_impression_js_api:
+    result: pass
+    splits:
+      - functional1
   test_google_search_counts_us:
     result:
       linux: pass
