@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -91,10 +93,12 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
 
     # Open the Recently closed tabs menu and restore the previously closed tab
     panel.reopen_recently_closed_tabs()
-    panel.click_on("reopen-all-closed-tabs")
+    panel.click_on("reopen-all-closed-tabs-button")
 
     # Check that the Tab is restore to the same Tab group as before in the same position
-    # tabs.get_tab(4)
+    # Wait for all tabs to be restored
+    # tabs.click_tab_by_title("Welcome to Python.org")
+    # tabs.element_visible("tabgroup-label")
     # assert tabs.get_tab_group_label() == SECOND_GROUP
 
     # Close a tab from each Tab group
@@ -106,7 +110,7 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
 
     # Open the Recently closed tabs menu and restore all previously closed tabs
     panel.reopen_recently_closed_tabs()
-    panel.click_on("reopen-all-closed-tabs")
+    panel.click_on("reopen-all-closed-tabs-button")
 
     # Both tabs are restored to their respective Groups in the same position as before
     # tabs.get_tab(1)
