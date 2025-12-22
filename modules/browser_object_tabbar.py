@@ -552,7 +552,7 @@ class TabBar(BasePage):
 
         # Map tab index to group label
         # This assumes tabs are added to groups in order, matching your test setup
-        if selected_index < 2:  # first group
+        if selected_index < 2:
             return group_labels[0]
         else:  # second group
             return group_labels[1]
