@@ -505,7 +505,8 @@ def driver(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
         displayed_version = _get_version(driver).split(" ")[0]
-        if displayed_version not in version:
+        if displayed_version not in version and not os.environ.get("MANUAL"):
+            # Manual flows may test older versions, automatic flows should not
             raise ValueError(
                 f"Mismatch between displayed version {displayed_version}"
                 f" and actual version {version}"

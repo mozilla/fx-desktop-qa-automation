@@ -263,6 +263,27 @@ class TestKey:
 
             return suite_nums
 
+    def find_all_splits(self):
+        """
+        Iterate through the manifest file and return a set
+         including unique splits.
+        """
+        splits = set()
+        data = self.manifest
+        for folder, files in data.items():
+            if not isinstance(files, dict):
+                continue
+
+            for file_name, file_data in files.items():
+                if not isinstance(file_data, dict):
+                    continue
+
+                file_splits = file_data.get("splits", [])
+                if isinstance(file_splits, list):
+                    splits.update(file_splits)
+
+        return sorted(splits)
+
     def addtests(self, interactive=True):
         """
         If a test in the directory is not in the manifest, ask questions
@@ -317,8 +338,12 @@ class TestKey:
                         newkey[suite][testfile]["splits"] = ["functional1"]
                         self.rebalance_functionals()
                     else:
+                        all_splits = self.find_all_splits()
+                        output = "\n".join(f"{item}" for item in all_splits)
+
                         split = ask_open_question(
-                            "What split is this test assigned to? (One only) "
+                            f"What split is this test assigned to? Please choose one "
+                            f"from available splits:\n {output}. "
                         )
                         newkey[suite][testfile]["splits"] = [split]
 
