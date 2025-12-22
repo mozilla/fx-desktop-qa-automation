@@ -122,5 +122,4 @@ def test_copy_image_link(driver: Firefox):
     nav.click_and_hide_menu("context-menu-paste-and-go")
 
     wiki_image_page.wait_for_page_to_load()
-    with driver.context(driver.CONTEXT_CONTENT):
-        wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
+    wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)

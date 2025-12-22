@@ -510,20 +510,35 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
-    splits:
-    - functional02
+    test_inspect:
+      result: pass
+      splits:
+      - functional02
+    test_save_page_as:
+      result: unstable
+      splits:
+      - functional02
+    test_take_screenshot:
+      result: pass
+      splits:
+      - functional02
   test_hyperlink_context_menu:
     result: pass
     splits:
     - smoke
   test_image_context_menu_actions:
-    result: unstable
-    splits:
-    - functional02
+    test_copy_image_link:
+      result: pass
+      splits:
+      - functional02
+    test_open_image_in_new_tab:
+      result: pass
+      splits:
+      - functional02
+    test_save_image_as:
+      result: unstable
+      splits:
+      - functional02
   test_tab_context_menu_actions:
     result: pass
     splits:
