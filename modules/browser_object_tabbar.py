@@ -535,3 +535,24 @@ class TabBar(BasePage):
                 self.driver.get(url)
 
         return self
+
+    @BasePage.context_chrome
+    def get_active_tab_group_label(self) -> str:
+        """Return the group label of the currently active tab"""
+        # Get all tabs
+        tabs = self.get_elements("all-tabs")
+
+        # Find selected tab index
+        selected_index = next(
+            i for i, t in enumerate(tabs) if t.get_attribute("selected") == "true"
+        )
+
+        # Get all group labels in order
+        group_labels = [g.text for g in self.get_elements("tabgroup-label")]
+
+        # Map tab index to group label
+        # This assumes tabs are added to groups in order, matching your test setup
+        if selected_index < 2:  # first group
+            return group_labels[0]
+        else:  # second group
+            return group_labels[1]

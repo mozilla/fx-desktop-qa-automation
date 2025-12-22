@@ -205,6 +205,17 @@
       "selectorData": "tabGroupEditor_saveAndCloseGroup",
       "strategy": "id",
       "groups": []
-    }
+    },
 
+      "selected-tab": {
+        "selectorData": "tab.tabbrowser-tab[selected='true']",
+        "strategy": "css",
+        "groups": []
+    },
+
+    "all-tabs": {
+          "selectorData": "tabbrowser-tab",
+          "strategy": "class",
+          "groups": []
+      }
 }

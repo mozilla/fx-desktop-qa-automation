@@ -1,11 +1,7 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_context_menu import ContextMenu
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
+from modules.browser_object import ContextMenu, PanelUi, TabBar
 
 
 urls = [
@@ -97,9 +93,8 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
 
     # Check that the Tab is restore to the same Tab group as before in the same position
     # Wait for all tabs to be restored
-    # tabs.click_tab_by_title("Welcome to Python.org")
-    # tabs.element_visible("tabgroup-label")
-    # assert tabs.get_tab_group_label() == SECOND_GROUP
+    tabs.click_tab_by_title("Welcome to Python.org")
+    assert tabs.get_active_tab_group_label() == SECOND_GROUP
 
     # Close a tab from each Tab group
     tabs.context_click(first_tab)
@@ -113,8 +108,8 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
     panel.click_on("reopen-all-closed-tabs-button")
 
     # Both tabs are restored to their respective Groups in the same position as before
-    # tabs.get_tab(1)
-    # assert tabs.get_tab_group_label() == FIRST_GROUP
+    tabs.click_tab_by_title("Wikipedia")
+    assert tabs.get_active_tab_group_label() == SECOND_GROUP
 
-    # tabs.get_tab(3)
-    # assert tabs.get_tab_group_label() == SECOND_GROUP
+    tabs.click_tab_by_title("Example Domain")
+    assert tabs.get_active_tab_group_label() == FIRST_GROUP

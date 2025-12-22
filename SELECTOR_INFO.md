@@ -4198,6 +4198,20 @@ Description: Save and close the tab group
 Location: Menu that opens when right click on the tab group label
 Path to .json: modules/data/tab_bar.components.json
 ```
+```
+Selector Name: selected-tab
+Selector Data: "tab.tabbrowser-tab[selected='true']"
+Description: Selected tab locator
+Location: Selected tab in the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: all-tabs
+Selector Data: tabbrowser-tab
+Description: All tabs locator
+Location: All tabs from the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
