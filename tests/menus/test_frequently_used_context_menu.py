@@ -15,7 +15,7 @@ def test_case():
     return "2637623"
 
 
-# Test is unstable in Windows GHA for now
+# Test is unstable for now
 @pytest.mark.headed
 def test_save_page_as(driver: Firefox, sys_platform):
     """
