@@ -20,6 +20,7 @@ def test_login_form_copy_paste(driver: Firefox):
     C2264626 - Verify that copy and paste actions are displayed
     in the context menu and work as expected
     """
+
     # Instantiate objects
     login_fill = LoginAutofill(driver)
     login_fill.elements["input-field"]["groups"].append("doNotCache")
@@ -29,15 +30,17 @@ def test_login_form_copy_paste(driver: Firefox):
     random_text = util.generate_random_text("word")
     random_other_text = util.generate_random_text("word")
 
+    # Quick method for copy/paste
+    def context_action(element_name, action="copy", labels=[]):
+        login_fill.triple_click(element_name, labels=labels)
+        login_fill.context_click(element_name, labels=labels)
+        context_menu.click_and_hide_menu(f"context-menu-{action}")
+
     # Paste in the clear
     login_fill.fill("username-field", random_text, press_enter=False)
-    login_fill.triple_click("username-field")
-    login_fill.context_click("username-field")
-    context_menu.click_and_hide_menu("context-menu-copy")
+    context_action("username-field")
     login_fill.fill("username-field", random_other_text, press_enter=False)
-    login_fill.triple_click("username-field")
-    login_fill.context_click("username-field")
-    context_menu.click_and_hide_menu("context-menu-paste")
+    context_action("username-field", "paste")
     login_fill.expect_element_attribute_contains("username-field", "value", random_text)
 
     # Paste to password
@@ -53,12 +56,8 @@ def test_login_form_copy_paste(driver: Firefox):
     login_fill.fill(
         "input-field", random_other_text, labels=["current-password"], press_enter=False
     )
-    login_fill.triple_click("input-field", labels=["current-password"])
-    login_fill.context_click("input-field", labels=["current-password"])
-    context_menu.click_and_hide_menu("context-menu-copy")
-    login_fill.triple_click("username-field")
-    login_fill.context_click("username-field")
-    context_menu.click_and_hide_menu("context-menu-paste")
+    context_action("input-field", labels=["current-password"])
+    context_action("username-field", "paste")
     # Text in clipboard should not have updated to random_other_text
     login_fill.expect_element_attribute_contains("username-field", "value", random_text)
 
