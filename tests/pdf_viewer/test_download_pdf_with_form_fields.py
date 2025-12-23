@@ -57,15 +57,16 @@ def test_download_pdf_with_form_fields(
     sys_platform,
     delete_files,
     downloads_folder: str,
+    delete_files_regex_string,
 ):
     """
     C1020326 Download pdf with form fields
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: instance of GenericPdf with correct path.
-        downloads_folder: downloads folder path
-        delete_files: fixture to remove the files after the test finishes
+        pdf_viewer: Fixture returning instance of GenericPdf with correct path.
+        downloads_folder: Fixture returning downloads folder path
+        delete_files: Fixture to remove the files after the test finishes
     """
     keyboard = Controller()
 

@@ -15,7 +15,7 @@ DATA_DIR = Path("data")
 
 @pytest.fixture()
 def hard_quit():
-    """Ensure the browser session is force-quit after the test run."""
+    """Overwriting the hard quit fixture in parent conftest.py"""
     return True
 
 
@@ -39,31 +39,22 @@ def image_path() -> Path:
     return (DATA_DIR / IMAGE_FILE_NAME).resolve()
 
 
-@pytest.fixture()
-def context_menu(driver: Firefox) -> ContextMenu:
-    """Context menu browser object model."""
-    return ContextMenu(driver)
-
-
 # This test is unstable in Linux (all CI) for now: Bug 1983852
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_add_image_pdf(
-    driver: Firefox,
-    sys_platform,
-    pdf_viewer: GenericPdf,
-    context_menu: ContextMenu,
-    image_path: Path,
+    driver: Firefox, sys_platform, pdf_viewer: GenericPdf, image_path: Path, hard_quit
 ):
     """
     C2228202: Verify that the user is able to add an image to a PDF file.
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: Instance of GenericPdf with correct path.
-        context_menu: Context menu object model.
+        pdf_viewer: Fixture returning instance of GenericPdf with correct path.
         image_path: Absolute path to the image file used in this test.
     """
+    context_menu = ContextMenu(driver)
+
     # Add image
     pdf_viewer.add_image(str(image_path), sys_platform)
 
