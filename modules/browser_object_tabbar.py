@@ -556,3 +556,29 @@ class TabBar(BasePage):
             return group_labels[0]
         else:  # second group
             return group_labels[1]
+
+    def create_websites_tab_group(
+            self,
+            context_menu: ContextMenu,
+            group_name: str,
+            first_tab_index: int,
+            additional_tab_indexes: list[int],
+    ) -> None:
+        """Create a tab group and add tabs to it"""
+
+        # Create the group with the first tab
+        first_tab = self.get_tab(first_tab_index)
+        self.context_click(first_tab)
+        context_menu.click_and_hide_menu("context-move-tab-to-new-group")
+
+        self.element_visible("tabgroup-input")
+        self.fill("tabgroup-input", group_name, clear_first=False)
+        self.element_visible("tabgroup-label")
+
+        # Add remaining tabs to the group
+        for index in additional_tab_indexes:
+            tab = self.get_tab(index)
+            self.context_click(tab)
+            context_menu.click_on("context-move-tab-to-group")
+            self.click_and_hide_menu("tabgroup-menuitem")
+            self.hide_popup("tabContextMenu")

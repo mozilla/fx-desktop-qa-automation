@@ -41,55 +41,29 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
     # Open 4 websites
     tabs.open_websites_in_tabs(urls)
 
-    # Add first tab to group 1
-    first_tab = tabs.get_tab(1)
-    tabs.context_click(first_tab)
-    context_menu.click_and_hide_menu("context-move-tab-to-new-group")
+    # Create Group 1 with tabs 1 and 2
+    tabs.create_websites_tab_group(
+        context_menu=context_menu,
+        group_name=FIRST_GROUP,
+        first_tab_index=1,
+        additional_tab_indexes=[2],
+    )
 
-    # Wait for tab group menu to open
-    tabs.element_visible("tabgroup-input")
-
-    # Enter a group Name and create group
-    tabs.fill("tabgroup-input", FIRST_GROUP, clear_first=False)
-
-    # Make sure the group is created
-    tabs.element_visible("tabgroup-label")
-
-    # Add second tab to group 1
-    second_tab = tabs.get_tab(2)
-    tabs.context_click(second_tab)
-    context_menu.click_on("context-move-tab-to-group")
-    tabs.click_and_hide_menu("tabgroup-menuitem")
-    tabs.hide_popup("tabContextMenu")
-
-    # Add third tab to group 2
-    third_tab = tabs.get_tab(3)
-    tabs.context_click(third_tab)
-    context_menu.click_and_hide_menu("context-move-tab-to-new-group")
-
-    # Wait for tab group menu to open
-    tabs.element_visible("tabgroup-input")
-
-    # Enter a group Name and create group
-    tabs.fill("tabgroup-input", SECOND_GROUP, clear_first=False)
-
-    # Make sure the group is created
-    tabs.element_visible("tabgroup-label")
-
-    # Add fourth tab to group 2
-    fourth_tab = tabs.get_tab(4)
-    tabs.context_click(fourth_tab)
-    context_menu.click_on("context-move-tab-to-group")
-    tabs.click_and_hide_menu("tabgroup-menuitem")
-    tabs.hide_popup("tabContextMenu")
+    # Create Group 2 with tabs 3 and 4
+    tabs.create_websites_tab_group(
+        context_menu=context_menu,
+        group_name=SECOND_GROUP,
+        first_tab_index=3,
+        additional_tab_indexes=[4],
+    )
 
     # Close a tab from the 2nd Group
+    fourth_tab = tabs.get_tab(4)
     tabs.context_click(fourth_tab)
     context_menu.click_and_hide_menu("context-menu-close-tab")
 
     # Open the Recently closed tabs menu and restore the previously closed tab
-    panel.reopen_recently_closed_tabs()
-    panel.click_on("reopen-all-closed-tabs-button")
+    panel.reopen_all_recently_closed_tabs()
 
     # Check that the Tab is restore to the same Tab group as before in the same position
     # Wait for all tabs to be restored
@@ -97,15 +71,16 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
     assert tabs.get_active_tab_group_label() == SECOND_GROUP
 
     # Close a tab from each Tab group
+    first_tab = tabs.get_tab(1)
     tabs.context_click(first_tab)
     context_menu.click_and_hide_menu("context-menu-close-tab")
 
+    third_tab = tabs.get_tab(3)
     tabs.context_click(third_tab)
     context_menu.click_and_hide_menu("context-menu-close-tab")
 
     # Open the Recently closed tabs menu and restore all previously closed tabs
-    panel.reopen_recently_closed_tabs()
-    panel.click_on("reopen-all-closed-tabs-button")
+    panel.reopen_all_recently_closed_tabs()
 
     # Both tabs are restored to their respective Groups in the same position as before
     tabs.click_tab_by_title("Wikipedia")
