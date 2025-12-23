@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, PanelUi, TabBar
 
-
 urls = [
     "https://example.com",
     "https://www.mozilla.org",
