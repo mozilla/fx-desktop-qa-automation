@@ -393,3 +393,10 @@ class PanelUi(BasePage):
         )
         # Click to unfocus the address bar
         element.click()
+
+    @BasePage.context_chrome
+    def reopen_all_recently_closed_tabs(self) -> BasePage:
+        """Reopen all recently closed tabs"""
+        self.reopen_recently_closed_tabs()
+        self.click_on("reopen-all-closed-tabs-button")
+        return self
