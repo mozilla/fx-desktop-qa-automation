@@ -12,12 +12,12 @@ def test_case():
     return "3927"
 
 
-def move_pdf(pdf_viewer: GenericPdf, key: str | int) -> int:
+def _move_pdf_and_get_delta(pdf_viewer: GenericPdf, key: str | int) -> int:
     """
-    Move pdf according to direction and key press.
+    Move the PDF view using a key/command and return the absolute delta in Y position.
 
     Arguments:
-        pdf_viewer: Instance of generic pdf class
+        pdf_viewer: Fixture returning instance of GenericPdf with correct path
         key: which key is pressed on the pdf body
 
     Returns:
@@ -52,28 +52,28 @@ def test_navigation_keys(driver: Firefox, pdf_viewer: GenericPdf):
         pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
     # scroll down using arrow down key
-    down_key_difference = move_pdf(pdf_viewer, Keys.DOWN)
+    down_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.DOWN)
 
     # scroll down using right key
-    right_key_difference = move_pdf(pdf_viewer, Keys.RIGHT)
+    right_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.RIGHT)
     # assert right key moves more than down key
     assert right_key_difference > down_key_difference
 
     # scroll down using end key
-    end_key_difference = move_pdf(pdf_viewer, Keys.END)
+    end_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.END)
     # assert end key moves more than right key
     assert end_key_difference > right_key_difference
 
     # scroll up using Up key
-    up_key_difference = move_pdf(pdf_viewer, Keys.UP)
+    up_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.UP)
 
     # scroll up using left key
-    left_key_difference = move_pdf(pdf_viewer, Keys.LEFT)
+    left_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.LEFT)
     # assert left key moves more than up key
     assert left_key_difference > up_key_difference
 
     # scroll using home key
-    home_key_difference = move_pdf(pdf_viewer, Keys.HOME)
+    home_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.HOME)
     # assert home key moves more than left key
     assert home_key_difference > left_key_difference
 
@@ -86,9 +86,9 @@ def test_navigation_next_prev(driver: Firefox, pdf_viewer: GenericPdf):
         pdf_viewer: instance of generic pdf with given pdf_file_path.
     """
     # go to next page.
-    move_pdf(pdf_viewer, "next")
+    _move_pdf_and_get_delta(pdf_viewer, "next")
     # go back to original page.
-    move_pdf(pdf_viewer, "prev")
+    _move_pdf_and_get_delta(pdf_viewer, "prev")
 
 
 def test_navigation_page_numbers(driver: Firefox, pdf_viewer: GenericPdf):
@@ -103,10 +103,10 @@ def test_navigation_page_numbers(driver: Firefox, pdf_viewer: GenericPdf):
     original_position = page_one_item.location["y"]
 
     # jump to the second page and measure the delta
-    one_page_delta = move_pdf(pdf_viewer, 2)
+    one_page_delta = _move_pdf_and_get_delta(pdf_viewer, 2)
 
     # jump to fourth page and measure the delta
-    two_page_delta = move_pdf(pdf_viewer, 4)
+    two_page_delta = _move_pdf_and_get_delta(pdf_viewer, 4)
 
     # ensure that the jump for two pages was twice of the one page jump
     assert (2 * one_page_delta) - 10 <= two_page_delta <= (2 * one_page_delta) + 10
