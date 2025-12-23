@@ -155,6 +155,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional01
+  test_search_works_correctly_with_ddg_telemetry:
+    result: pass
+    splits:
+    - functional01
   test_search_suggestions:
     result: pass
     splits:
