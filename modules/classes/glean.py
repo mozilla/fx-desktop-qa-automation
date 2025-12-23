@@ -2,6 +2,11 @@ class GleanAssertionError(AssertionError):
     """Custom error for Glean assertion failures with detailed diff output."""
 
     def __init__(self, message: str, expected: dict, actual: dict | None):
+        if not isinstance(expected, dict):
+            raise TypeError("expected must be a dict")
+        if actual is not None and not isinstance(actual, dict):
+            raise TypeError("actual must be a dict")
+
         self.expected = expected or {}
         self.actual = actual or {}
 
@@ -42,7 +47,7 @@ class GleanAsserts:
         """
         Assert that a Glean event payload contains expected values (subset match).
 
-        Args:
+        Arguments:
             metric: Metric name (for error messages)
             events: List of Glean events from poll_glean_metric()
             expected: Dict of expected key-value pairs
@@ -58,7 +63,7 @@ class GleanAsserts:
         if not events:
             raise AssertionError(f"No {metric} events recorded")
 
-        if abs(index) > len(events):
+        if not (-len(events) <= index < len(events)):
             raise AssertionError(
                 f"{metric}: event index {index} out of range (have {len(events)} events)"
             )

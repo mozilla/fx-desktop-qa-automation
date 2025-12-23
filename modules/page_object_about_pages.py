@@ -108,7 +108,7 @@ class AboutGlean(BasePage):
 
     URL_TEMPLATE = "about:glean"
 
-    def change_ping_id(self, ping_id: str) -> Page:
+    def change_ping_id(self, ping_id: str) -> "AboutGlean":
         """
         Change the Glean ping id to the given string.
         """
@@ -124,9 +124,34 @@ class AboutGlean(BasePage):
         self.get_element("ping-submit-button").click()
         return self
 
+    def _build_poll_js(self, metric_path: str) -> str:
+        """
+        Build the JS code for polling a Glean metric.
+
+        Both awaits are required:
+        - testFlushAllChildren() ensures child processes flush Glean data to parent
+        - testGetValue() may return a Promise; without await we'd get Promise{pending}
+        """
+        return f"""
+            const callback = arguments[arguments.length - 1];
+            (async () => {{
+                try {{
+                    await Services.fog.testFlushAllChildren();
+                    let obj = Glean;
+                    for (let p of "{metric_path}".split(".")) {{
+                        obj = obj[p];
+                    }}
+                    const value = await obj.testGetValue();
+                    callback(value || []);
+                }} catch(e) {{
+                    callback({{ error: String(e) }});
+                }}
+            }})();
+        """
+
     @BasePage.context_chrome
     def poll_glean_metric(
-        self, metric_path: str, timeout: int = 15, poll_interval: float = 1.0
+        self, metric_path: str, timeout: int = 15, poll_interval: float = 0.5
     ) -> list:
         """
         Poll a Glean metric via JS API until data is available. Calls Services.fog.testFlushAllChildren() before each
@@ -137,32 +162,10 @@ class AboutGlean(BasePage):
             poll_interval: Seconds between polls
         Returns:
             list: The metric events/values from testGetValue()
+        Raises:
+            TimeoutError: If no events are recorded within the timeout period
         """
-
-        # Both awaits are required:
-        # 1. testFlushAllChildren() - ensures child processes flush Glean data to parent
-        # 2. testGetValue() - may return a Promise; without await we'd get Promise{pending}
-        js_code = (
-            """
-            const callback = arguments[arguments.length - 1];
-            (async () => {
-                try {
-                    await Services.fog.testFlushAllChildren();
-                    let parts = "%s".split(".");
-                    let obj = Glean;
-                    for (let p of parts) {
-                        obj = obj[p];
-                    }
-                    const value = await obj.testGetValue();
-                    callback(value || []);
-                } catch(e) {
-                    callback({ error: String(e) });
-                }
-            })();
-        """
-            % metric_path
-        )
-
+        js_code = self._build_poll_js(metric_path)
         end_time = time.time() + timeout
         while time.time() < end_time:
             result = self.driver.execute_async_script(js_code)
@@ -172,13 +175,15 @@ class AboutGlean(BasePage):
                 return result
             time.sleep(poll_interval)
 
-        return []
+        raise TimeoutError(
+            f"Glean metric '{metric_path}' had no events after {timeout}s"
+        )
 
     def get_event_payload(self, events: list, index: int = -1) -> dict:
         """
         Extract the 'extra' payload from an event at the given index.
 
-        Args:
+        Arguments:
             events: List of Glean events from poll_glean_metric()
             index: Event index (-1 for latest, 0 for first, etc.)
 
