@@ -3775,6 +3775,13 @@ Description: toolbarspring
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: reopen-all-closed-tabs-button
+Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
+Description: Reopen all closed tabs buttonutton
+Location: On the hamburger menu > History > Recently closed tabs
+Path to .json: modules/data/panel_ui.components.json
+```
 #### print_preview
 ```
 Selector name: print-preview-browser
@@ -4189,6 +4196,20 @@ Selector Name: tabgroup-save-and-close-group
 Selector Data: "tabGroupEditor_saveAndCloseGroup"
 Description: Save and close the tab group
 Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: selected-tab
+Selector Data: "tab.tabbrowser-tab[selected='true']"
+Description: Selected tab locator
+Location: Selected tab in the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: all-tabs
+Selector Data: tabbrowser-tab
+Description: All tabs locator
+Location: All tabs from the tabs bar
 Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill

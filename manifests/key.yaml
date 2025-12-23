@@ -80,6 +80,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional01
+  test_glean_serp_impression_js_api:
+    result: pass
+    splits:
+    - functional01
   test_google_search_counts_us:
     result:
       linux: pass
@@ -152,6 +156,10 @@ address_bar_and_search:
     splits:
     - functional01
   test_search_string_displayed_when_addressbar_unfocused:
+    result: pass
+    splits:
+    - functional01
+  test_search_works_correctly_with_ddg_telemetry:
     result: pass
     splits:
     - functional01
@@ -1045,6 +1053,10 @@ tabs:
     result: pass
     splits:
     - functional02
+  test_restore_closed_tabs_previous_groups:
+    result: pass
+    splits:
+      - functional02
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass

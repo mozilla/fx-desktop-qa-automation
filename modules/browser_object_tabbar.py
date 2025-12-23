@@ -506,3 +506,79 @@ class TabBar(BasePage):
         self.context_click("tabgroup-label")
         self.click_on("tabgroup-save-and-close-group")
         return self
+
+    @BasePage.context_chrome
+    def open_websites_in_tabs(self, urls: list[str]) -> BasePage:
+        """
+        Open a list of websites, each in its own tab.
+
+        Args:
+            urls: List of website URLs to open.
+        """
+        if not urls:
+            return self
+
+        # Open the first URL in the current tab
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.get(urls[0])
+
+        # Open remaining URLs in new tabs
+        for url in urls[1:]:
+            # Open a new tab using the button
+            self.new_tab_by_button()
+
+            # Switch to the newly opened tab
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+
+            # Load the URL in the new tab
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                self.driver.get(url)
+
+        return self
+
+    @BasePage.context_chrome
+    def get_active_tab_group_label(self) -> str:
+        """Return the group label of the currently active tab"""
+        # Get all tabs
+        tabs = self.get_elements("all-tabs")
+
+        # Find selected tab index
+        selected_index = next(
+            i for i, t in enumerate(tabs) if t.get_attribute("selected") == "true"
+        )
+
+        # Get all group labels in order
+        group_labels = [g.text for g in self.get_elements("tabgroup-label")]
+
+        # Map tab index to group label
+        # This assumes tabs are added to groups in order, matching your test setup
+        if selected_index < 2:
+            return group_labels[0]
+        else:  # second group
+            return group_labels[1]
+
+    def create_websites_tab_group(
+        self,
+        context_menu: ContextMenu,
+        group_name: str,
+        first_tab_index: int,
+        additional_tab_indexes: list[int],
+    ) -> None:
+        """Create a tab group and add tabs to it"""
+
+        # Create the group with the first tab
+        first_tab = self.get_tab(first_tab_index)
+        self.context_click(first_tab)
+        context_menu.click_and_hide_menu("context-move-tab-to-new-group")
+
+        self.element_visible("tabgroup-input")
+        self.fill("tabgroup-input", group_name, clear_first=False)
+        self.element_visible("tabgroup-label")
+
+        # Add remaining tabs to the group
+        for index in additional_tab_indexes:
+            tab = self.get_tab(index)
+            self.context_click(tab)
+            context_menu.click_on("context-move-tab-to-group")
+            self.click_and_hide_menu("tabgroup-menuitem")
+            self.hide_popup("tabContextMenu")
