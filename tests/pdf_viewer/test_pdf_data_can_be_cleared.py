@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 
 from modules.page_object import GenericPdf
 
+PDF_FILE_NAME = "i-9.pdf"
+DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
 TEST_NAME = "John Doe"
 
 
@@ -14,7 +16,7 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"i-9.*\.pdf"
+    return DOWNLOADED_PDF_REGEX
 
 
 @pytest.fixture()
@@ -24,7 +26,7 @@ def hard_quit():
 
 @pytest.fixture()
 def file_name():
-    return "i-9.pdf"
+    return PDF_FILE_NAME
 
 
 def test_pdf_data_can_be_cleared(
@@ -33,28 +35,27 @@ def test_pdf_data_can_be_cleared(
     downloads_folder: str,
     sys_platform,
     delete_files,
+    delete_files_regex_string,
+    hard_quit,
 ):
     """
     C1017495 :Check if data can be cleared
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: instance of GenericPdf with correct path.
-        downloads_folder: downloads folder path
-        delete_files: fixture to remove the files after the test finishes
+        pdf_viewer: Fixture returning instance of GenericPdf with correct path.
+        downloads_folder: Fixture returning downloads folder path
+        delete_files: Fixture to remove the files after the test finishes
     """
     # Step 1: Click and type inside the text field for the name section
-
     pdf_viewer.fill("first-name-field", TEST_NAME)
     pdf_viewer.expect_element_attribute_contains("first-name-field", "value", TEST_NAME)
 
     # Step 2: Click over any checkbox and assert the status is updated
-
     checkbox = pdf_viewer.select_and_return_checkbox("first-checkbox")
     pdf_viewer.element_selected("first-checkbox")
 
     # Step 3: Select an option from a dropdown and verify the selection
-
     dropdown_option = pdf_viewer.select_and_return_dropdown_option(
         "state-dropdown-field", By.XPATH, "//option[@value='CA']"
     )
