@@ -5,6 +5,8 @@ from selenium.webdriver.common.keys import Keys
 from modules.page_object import GenericPdf
 
 TEST_VALUE = "12345"
+PDF_FILE_NAME = "i-9.pdf"
+DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
 
 
 @pytest.fixture()
@@ -14,7 +16,7 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"i-9.*\.pdf"
+    return DOWNLOADED_PDF_REGEX
 
 
 @pytest.fixture()
@@ -24,7 +26,7 @@ def hard_quit():
 
 @pytest.fixture()
 def file_name():
-    return "i-9.pdf"
+    return PDF_FILE_NAME
 
 
 def test_pdf_input_numbers(
@@ -33,15 +35,16 @@ def test_pdf_input_numbers(
     downloads_folder: str,
     sys_platform,
     delete_files,
+    delete_files_regex_string,
 ):
     """
     C1017528: Input data in numeric fields
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: instance of GenericPdf with correct path.
-        downloads_folder: downloads folder path
-        delete_files: fixture to remove the files after the test finishes
+        pdf_viewer: Fixture returning instance of GenericPdf with correct path
+        downloads_folder: Fixture returning downloads folder path
+        delete_files: Fixture to remove the files after the test finishes
     """
 
     # Clear the field and enter the test value
