@@ -558,11 +558,11 @@ class TabBar(BasePage):
             return group_labels[1]
 
     def create_websites_tab_group(
-            self,
-            context_menu: ContextMenu,
-            group_name: str,
-            first_tab_index: int,
-            additional_tab_indexes: list[int],
+        self,
+        context_menu: ContextMenu,
+        group_name: str,
+        first_tab_index: int,
+        additional_tab_indexes: list[int],
     ) -> None:
         """Create a tab group and add tabs to it"""
 
