@@ -159,16 +159,16 @@ address_bar_and_search:
     result: pass
     splits:
     - functional01
-  test_search_works_correctly_with_ddg_telemetry:
-    result: pass
-    splits:
-    - functional01
   test_search_suggestions:
     result: pass
     splits:
     - smoke
   test_search_term_persists:
     result: unstable
+    splits:
+    - functional01
+  test_search_works_correctly_with_ddg_telemetry:
+    result: pass
     splits:
     - functional01
   test_searchbar_display_alpenglow_theme:
@@ -1045,6 +1045,10 @@ tabs:
     result: pass
     splits:
     - functional02
+  test_restore_closed_tabs_previous_groups:
+    result: pass
+    splits:
+    - functional02
   test_save_and_close_a_tab_group:
     result: pass
     splits:
@@ -1053,10 +1057,6 @@ tabs:
     result: pass
     splits:
     - functional02
-  test_restore_closed_tabs_previous_groups:
-    result: pass
-    splits:
-      - functional02
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass
