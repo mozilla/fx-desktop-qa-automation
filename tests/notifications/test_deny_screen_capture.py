@@ -4,6 +4,8 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation
 from modules.page_object_generics import GenericPage
 
+TEST_URL = "https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html"
+
 
 @pytest.fixture()
 def test_case():
@@ -22,17 +24,19 @@ def temp_selectors():
     }
 
 
-TEST_URL = "https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html"
+@pytest.fixture()
+def web_page(driver: Firefox, temp_selectors):
+    page = GenericPage(driver, url=TEST_URL).open()
+    page.elements |= temp_selectors
+    return page
 
 
-def test_deny_screen_capture(driver: Firefox, temp_selectors):
+def test_deny_screen_capture(driver: Firefox, web_page):
     """
     C122534 - Verify that denying screen capture permissions prevents website from accessing the screen
     """
     # Instatiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
 
     # Trigger the popup notification asking for camera permissions
     web_page.click_on("start-capture")
