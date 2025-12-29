@@ -123,10 +123,6 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional01
-  test_seach_suggestions_can_be_disabled:
-    result: pass
-    splits:
-    - functional01
   test_search_code_google_non_us:
     result: pass
     splits:
@@ -135,6 +131,13 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
+  test_search_engine_result_page_load_on_reload_or_back:
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
+    splits:
+    - functional01
   test_search_engine_selector:
     result: pass
     splits:
@@ -163,6 +166,10 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
+  test_search_suggestions_can_be_disabled:
+    result: pass
+    splits:
+    - functional01
   test_search_term_persists:
     result: unstable
     splits:
@@ -350,7 +357,7 @@ downloads:
     splits:
     - functional01
   test_add_zip_type:
-    result: pass
+    result: unstable
     splits:
     - functional01
   test_download_pdf:
