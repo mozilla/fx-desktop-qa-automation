@@ -41,6 +41,28 @@ def test_expected_to_pass(entry: dict) -> bool:
     return False
 
 
+def has_subtests(entry: dict) -> bool:
+    """Given an entry, does it have subtests?"""
+    suite = entry[list(entry.keys())[0]]
+    test = suite[list(suite.keys())[0]]
+    return test.keys() and "result" not in test.keys()
+
+
+def get_subtests(entry: dict) -> list:
+    """Return a list of entries where each entry represents a subtest of a given test entry"""
+    if not has_subtests(entry):
+        return []
+    suite = list(entry.keys())[0]
+    testfile = list(entry[suite].keys())[0]
+    subtests = []
+    for subtest_name in entry[suite][testfile].keys():
+        subtests.append(
+            {suite: {testfile: {subtest_name: entry[suite][testfile][subtest_name]}}}
+        )
+    print(subtests)
+    return subtests
+
+
 def clean_prompt(prompt: str) -> str:
     """Clean up prompts"""
     if prompt[0].islower():
@@ -101,6 +123,25 @@ class TestKey:
         passes = []
         for filename in filenames:
             full_entry = self.get_entry_from_filename(filename)
+            if has_subtests(full_entry):
+                subtests = get_subtests(full_entry)
+                print(subtests)
+                subresults = [test_expected_to_pass(subtest) for subtest in subtests]
+                if all(subresults):
+                    passes.append(filename)
+                elif any(subresults):
+                    for i, subtest in enumerate(subtests):
+                        if subresults[i]:
+                            suite = list(subtest.keys())[0]
+                            testfile = list(subtest[suite].keys())[0]
+                            subtest_name = list(subtest[suite][testfile].keys())[0]
+                            print(f"normalizing {suite} {testfile}, {subtest_name}")
+                            passes.append(
+                                self.normalize_test_filename(
+                                    suite, testfile, subtest_name
+                                )
+                            )
+                continue
             if test_expected_to_pass(full_entry):
                 passes.append(filename)
 
