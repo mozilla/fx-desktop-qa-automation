@@ -7,6 +7,16 @@ from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 
+DOWNLOADED_PDF_REGEX = r"pdf-example-bookmarks\.pdf"
+
+CONTENT_DISPOSITION_ATTACHMENT_URL = (
+    "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf"
+)
+
+
+OPEN_OPTION_TIMEOUT_SEC = 15.0
+POLL_INTERVAL_SEC = 0.25
+
 
 @pytest.fixture()
 def test_case():
@@ -15,23 +25,18 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"pdf-example-bookmarks.pdf"
-
-
-CONTENT_DISPOSITION_ATTACHMENT_URL = (
-    "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf"
-)
+    return DOWNLOADED_PDF_REGEX
 
 
 def test_download_panel_triggered_on_content_disposition_attachment(
-    driver: Firefox, delete_files
+    driver: Firefox, delete_files, delete_files_regex_string
 ):
     """
     C936502: Ensure that the Always ask option in Firefox Applications settings
     triggers the download panel for PDFs with Content-Disposition: attachment.
 
     Arguments:
-        delete_files: fixture to remove the files after the test finishes
+        delete_files: Fixture to remove the files after the test finishes
     """
 
     # Instantiate object models
@@ -54,7 +59,7 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     sleep(3)
     browser_actions.select_file_opening_option()
 
+    # Verify PDF opens in a new tab
     tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()
-
     nav.url_contains(".pdf")

@@ -3,9 +3,13 @@ import os
 from time import sleep
 
 import pytest
+from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
+
+PDF_FILE_NAME = "i-9.pdf"
+DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
 
 
 @pytest.fixture()
@@ -15,12 +19,12 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"i-9.*\.pdf"
+    return DOWNLOADED_PDF_REGEX
 
 
 @pytest.fixture()
 def file_name():
-    return "i-9.pdf"
+    return PDF_FILE_NAME
 
 
 @pytest.mark.headed
@@ -31,6 +35,7 @@ def test_pdf_download(
     sys_platform,
     delete_files,
     file_name,
+    delete_files_regex_string,
 ):
     """
     C3932: PDF files can be successfully downloaded via pdf.js
@@ -38,20 +43,21 @@ def test_pdf_download(
 
     Arguments:
         sys_platform: Current System Platform Type
-        pdf_viewer: instance of GenericPdf with correct path.
-        downloads_folder: downloads folder path
-        delete_files: fixture to remove the files after the test finishes
+        pdf_viewer: Fixture returning instance of GenericPdf with correct path.
+        downloads_folder: Fixture returning downloads folder path
+        delete_files: Fixture to remove the files after the test finishes
         file_name: pdf file name
     """
-    from pynput.keyboard import Controller
 
     keyboard = Controller()
 
     # Click the download button
     pdf_viewer.click_download_button()
 
-    # Allow time for the download dialog m to appear and pressing enter to download
+    # Allow time for the download dialog to appear and pressing enter to download
     sleep(2)
+
+    # Handle OS download prompt
     pdf_viewer.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Set the expected download path and the expected PDF name
