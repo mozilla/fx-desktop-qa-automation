@@ -66,14 +66,14 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
-          mv ./ci_pyproject.toml ./pyproject.toml;
+          mv ./config/ci_pyproject.toml ./pyproject.toml;
           pipenv install;
       - name: Install Fx
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
-          echo app_name=$(bash ./collect_executables.sh | xargs -0 ./parse_executables.sh) >> "$GITHUB_OUTPUT";
+          echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT";
       - name: Run L10N Tests in MacOS
         if: steps.setup.conclusion == 'success'
         env:
@@ -81,7 +81,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
-          pipenv run python choose_l10n_ci_set.py;
+          pipenv run python scripts/choose_l10n_ci_set.py;
           while IFS= read -r line; do
             echo "Running tests for: $line";
             pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
@@ -125,9 +125,9 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
-          mv ./ci_xvfb_pyproject.toml ./pyproject.toml;
+          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
           pipenv install;
-          ./collect_executables.sh;
+          ./scripts/collect_executables.sh;
           ./firefox/firefox --version;
       - name: Run L10N Tests in Ubuntu
         if: steps.setup.conclusion == 'success'
@@ -136,7 +136,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
-          pipenv run python choose_l10n_ci_set.py;
+          pipenv run python scripts/choose_l10n_ci_set.py;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
           while IFS= read -r line; do
             echo "Running tests for: $line";
@@ -187,11 +187,11 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
-          mv ./ci_pyproject.toml ./pyproject.toml;
+          mv ./config/ci_pyproject.toml ./pyproject.toml;
           pipenv install;
       - name: Download Geckodriver
         run: |
-          $gecko_url = (pipenv run python collect_executables.py -g) -join "`n"
+          $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
           echo $gecko_url
           Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
@@ -200,7 +200,7 @@ jobs:
       - name: Download Beta
         if: ${{ !inputs.win_installer_link }}
         run: |
-          $fx_url = (pipenv run python collect_executables.py) -join "`n"
+          $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
@@ -224,7 +224,7 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run python choose_l10n_ci_set.py
+          pipenv run python scripts/choose_l10n_ci_set.py
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
           Get-Content "selected_l10n_mappings" | ForEach-Object {
@@ -297,4 +297,4 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
-          pipenv run python notifier.py
+          pipenv run python scripts/notifier.py
