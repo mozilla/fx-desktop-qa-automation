@@ -101,6 +101,15 @@ class Navigation(BasePage):
         self.awesome_bar.send_keys(term)
         return self
 
+    @BasePage.context_chrome
+    def verify_result_term(self, url):
+        """
+        Verify the result url and action term after typing in the Awesome Bar.
+        """
+        url_element = self.get_element("search-result-url")
+        action_element = self.get_element("search-result-action-term")
+        self.expect(lambda _: (url_element.text, action_element.text) == (url, "Visit"))
+
     def set_search_mode_via_awesome_bar(self, mode: str) -> BasePage:
         """
         Given a `mode`, set the Awesome Bar search mode. Returns self.
@@ -324,6 +333,26 @@ class Navigation(BasePage):
         """
         self.get_element("shield-icon").click()
         return self
+
+    @BasePage.context_chrome
+    def assert_blocked_trackers(self, *blocked_trackers) -> BasePage:
+        """
+        Given a list of blocked trackers, assert that they are present in the blocked list.
+        """
+        self.open_tracker_panel()
+        if blocked_trackers:
+            for tracker in blocked_trackers:
+                self.element_visible(tracker)
+        else:
+            self.get_element("no-trackers-detected").is_displayed()
+
+    @BasePage.context_chrome
+    def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):
+        """
+        Verify that the list of cross-site trackers is as expected.
+        """
+        for val in cross_site_trackers:
+            self.expect(lambda _: val in allowed_cookies)
 
     def search_and_check_if_suggestions_are_present(
         self, text, search_mode: str = "awesome", min_suggestions=1

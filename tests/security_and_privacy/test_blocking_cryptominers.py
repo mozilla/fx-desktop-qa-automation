@@ -13,24 +13,24 @@ def test_case():
 CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
 
 
-def test_blocking_cryptominers(driver: Firefox):
-    """C446403 - Cryptominers are blocked and shown in Standard mode in the Information panel"""
+def test_blocking_cryptominers(
+    driver: Firefox,
+    nav: Navigation,
+    about_prefs_privacy: AboutPrefs,
+    tracker_panel: TrackerPanel,
+):
+    """
+    C446403 - Cryptominers are blocked and shown in Standard mode in the Information panel
+    """
     # instantiate objects
-    nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-    tracker_panel = TrackerPanel(driver)
     tracking_page = GenericPage(driver, url=CRYPTOMINERS_URL)
 
+    about_prefs_privacy.open()
+
     # Select custom option and keep just cryptominers checked
-    about_prefs.get_element("custom-radio").click()
-    about_prefs.get_element("cookies-checkbox").click()
-    about_prefs.get_element("tracking-checkbox").click()
-    about_prefs.get_element("known-fingerprints-checkbox").click()
-    about_prefs.get_element("suspected-fingerprints-checkbox").click()
+    about_prefs_privacy.select_trackers_to_block("cryptominers-checkbox")
 
     # Access url and click on the shield icon and verify that cryptominers are blocked
     tracking_page.open()
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracking_page)
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("shield-icon").click()
-        assert nav.get_element("cryptominers").is_displayed()
+    nav.assert_blocked_trackers("cryptominers")

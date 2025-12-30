@@ -66,6 +66,7 @@ class TabBar(BasePage):
             ).perform()
         return self
 
+    @BasePage.context_chrome
     def reopen_closed_tab_by_keys(self, sys_platform: str) -> BasePage:
         """Use keyboard shortcut to reopen a last closed tab"""
         if sys_platform == "Darwin":
@@ -77,6 +78,15 @@ class TabBar(BasePage):
                 "t"
             ).key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
         return self
+
+    @BasePage.context_chrome
+    def wait_and_switch_to_new_tab(self, num_tabs: int = 0):
+        """
+        wait till a new tab is opened and switch to it.
+        """
+        if num_tabs:
+            self.wait_for_num_tabs(num_tabs)
+        self.switch_to_new_tab()
 
     @BasePage.context_chrome
     def close_first_tab_by_icon(self) -> None:

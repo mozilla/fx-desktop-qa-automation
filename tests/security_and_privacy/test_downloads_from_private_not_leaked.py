@@ -30,23 +30,23 @@ def delete_files_regex_string():
 
 @pytest.mark.slow
 @pytest.mark.audio
-def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
+def test_downloads_from_private_not_leaked(
+    driver: Firefox, delete_files, screenshot, panel_ui: PanelUi, nav: Navigation
+):
     """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
+
+    about_downloads = AboutDownloads(driver)
+    opm_forms = GenericPage(driver, url=TEST_URL)
 
     # We've deleted relevant downloads_file just to be safe
     non_private_window = driver.current_window_handle
-    panel_ui = PanelUi(driver)
-    nav = Navigation(driver)
-
     panel_ui.open_and_switch_to_new_window("private")
 
-    about_downloads = AboutDownloads(driver)
     about_downloads.open()
     if not about_downloads.is_empty():
         screenshot("about_downloads_not_empty")
         logging.warning("About:Downloads is not registering as empty")
 
-    opm_forms = GenericPage(driver, url=TEST_URL)
     opm_forms.open()
 
     # Get all links to pdfs on the page
