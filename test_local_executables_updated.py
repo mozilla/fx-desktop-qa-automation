@@ -1,9 +1,8 @@
-import subprocess
-import sys
-
 import pytest
 import requests
 from selenium.webdriver import Firefox
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 GD_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 
@@ -25,8 +24,9 @@ def test_local_executables_updated(driver: Firefox, version):
     """
     # Check firefox version
     driver.get("chrome://browser/content/aboutDialog.xhtml")
-    driver.find_element("id", "noUpdatesFound")
-
+    WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located(("id", "noUpdatesFound"))
+    )
     # Check geckodriver version
     latest_gd_ver = get_latest_geckodriver_version()
     local_gd_ver = driver.capabilities["moz:geckodriverVersion"]
