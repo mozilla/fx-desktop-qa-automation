@@ -44,6 +44,13 @@ def temp_selectors():
     }
 
 
+def _permission_was_requested(page: GenericPage) -> bool:
+    """
+    Returns True if the page log indicates that a notification permission request is in progress.
+    """
+    return "requesting" in page.get_element("notification-log").text
+
+
 def test_notifications_displayed(driver: Firefox, temp_page, temp_selectors):
     """
     This test does not (and SHOULD not) test that the OS displays web notifications
@@ -54,16 +61,16 @@ def test_notifications_displayed(driver: Firefox, temp_page, temp_selectors):
     test_page.open()
     test_page.elements |= temp_selectors
 
-    test_page.fill("notification-text-input", TEST_PHRASE, press_enter=False)
+    nav = Navigation(driver)
 
+    test_page.fill("notification-text-input", TEST_PHRASE, press_enter=False)
     test_page.click_on("send-notification-button")
 
     # All requests are logged with a message that contains the word 'permission'
     test_page.element_has_text("notification-log", "permission")
 
     # Grant permission if we need to
-    if "requesting" in test_page.get_element("notification-log").text:
-        nav = Navigation(driver)
+    if _permission_was_requested(test_page):
         nav.click_on("popup-notification-primary-button")
 
     test_page.element_has_text("notification-log", TEST_PHRASE)
