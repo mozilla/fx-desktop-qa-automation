@@ -5,38 +5,34 @@
         "strategy": "id",
         "groups": []
     },
-
     "history": {
         "selectorData": "wrapper-history-panelmenu",
         "strategy": "id",
         "groups": []
     },
-
-     "library": {
-         "selectorData": "wrapper-library-button",
-         "strategy": "id",
-         "groups": []
-     },
-
+    "library": {
+        "selectorData": "wrapper-library-button",
+        "strategy": "id",
+        "groups": []
+    },
     "search-bar": {
         "selectorData": "wrapper-search-container",
         "strategy": "id",
         "groups": []
     },
-
     "customize-page": {
         "selectorData": "customization-container",
         "strategy": "id",
         "groups": []
     },
     "nav-searchbar": {
-      "selectorData": "search-container",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "search-container",
+        "strategy": "id",
+        "groups": []
     },
     "done-button": {
-      "selectorData": "customization-done-button",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "customization-done-button",
+        "strategy": "id",
+        "groups": []
     }
 }

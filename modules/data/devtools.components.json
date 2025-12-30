@@ -5,7 +5,6 @@
         "strategy": "class",
         "groups": []
     },
-
     "devtools-browser": {
         "selectorData": "browser[aria-label='Developer Tools']",
         "strategy": "css",
@@ -13,5 +12,4 @@
             "requiredForPage"
         ]
     }
-
 }

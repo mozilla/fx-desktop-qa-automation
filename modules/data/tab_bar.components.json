@@ -8,7 +8,6 @@
             "tabSelector"
         ]
     },
-
     "tab-by-index": {
         "selectorData": "tab[linkedpanel$='-{index}']",
         "strategy": "css",
@@ -17,7 +16,6 @@
             "tabSelector"
         ]
     },
-
     "tabgroup": {
         "selectorData": "tab-group",
         "strategy": "css",
@@ -25,7 +23,6 @@
             "doNotCache"
         ]
     },
-
     "newtab-button": {
         "selectorData": "tabs-newtab-button",
         "strategy": "id",
@@ -33,13 +30,11 @@
             "requiredForPage"
         ]
     },
-
     "tab-icon-overlay": {
         "selectorData": "tab-icon-overlay",
         "strategy": "class",
         "groups": []
     },
-
     "tab-title": {
         "selectorData": "tab-text",
         "strategy": "class",
@@ -47,7 +42,6 @@
             "subTabOnly"
         ]
     },
-
     "list-all-tabs-button": {
         "selectorData": "alltabs-button",
         "strategy": "id",
@@ -56,7 +50,6 @@
             "doNotCache"
         ]
     },
-
     "all-tabs-menu": {
         "selectorData": "allTabsMenu-allTabsView",
         "strategy": "id",
@@ -64,7 +57,6 @@
             "allTabsMenu"
         ]
     },
-
     "all-tabs-menu-scrollbar": {
         "selectorData": "#alltabs-popup scrollbox",
         "strategy": "css",
@@ -72,7 +64,6 @@
             "allTabsMenu"
         ]
     },
-
     "all-tabs-entry": {
         "selectorData": "all-tabs-item",
         "strategy": "class",
@@ -80,7 +71,6 @@
             "allTabsMenu"
         ]
     },
-
     "all-tabs-entry-selected": {
         "selectorData": "toolbaritem.all-tabs-item[selected='true']",
         "strategy": "css",
@@ -88,33 +78,28 @@
             "allTabsMenu"
         ]
     },
-
     "tab-scrollbox": {
         "selectorData": "tabbrowser-arrowscrollbox",
         "strategy": "id",
         "groups": []
     },
-
     "tab-scrollbox-left-button": {
         "selectorData": "scrollbutton-up",
         "strategy": "id",
         "shadowParent": "tab-scrollbox",
         "groups": []
     },
-
     "tab-scrollbox-right-button": {
         "selectorData": "scrollbutton-down",
         "strategy": "id",
         "shadowParent": "tab-scrollbox",
         "groups": []
     },
-
     "tab-icon": {
         "selectorData": "tab-icon-image",
         "strategy": "class",
         "groups": []
     },
-
     "tab-x-icon": {
         "selectorData": "image[class='tab-close-button close-icon']",
         "strategy": "css",
@@ -122,100 +107,86 @@
             "doNotCache"
         ]
     },
-
     "tabgroup-menu": {
-      "selectorData": "tab-group-editor",
-      "strategy": "id",
-      "groups": [
+        "selectorData": "tab-group-editor",
+        "strategy": "id",
+        "groups": [
             "doNotCache"
         ]
     },
-
     "tabgroup-input": {
-      "selectorData": "[data-l10n-id='tab-group-editor-name-field']",
-      "strategy": "css",
-      "groups": [
-        "doNotCache"
-      ]
+        "selectorData": "[data-l10n-id='tab-group-editor-name-field']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
-
     "tabgroup-create-button": {
-      "selectorData": "tab-group-editor-button-create",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "tab-group-editor-button-create",
+        "strategy": "id",
+        "groups": []
     },
-
     "tabgroup-label": {
-      "selectorData": "tab-group-label",
-      "strategy": "class",
-      "groups": [
-        "doNotCache"
-      ]
+        "selectorData": "tab-group-label",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
     },
-
     "tabgroup-menuitem": {
-      "selectorData": "tab-group-icon",
-      "strategy": "class",
-      "groups": [
-        "doNotCache"
-      ]
+        "selectorData": "tab-group-icon",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
     },
-
     "tabgroup-overflow-count": {
-      "selectorData": "tab-group-overflow-count",
-      "strategy": "class",
-      "groups": [
-        "doNotCache"
-      ]
+        "selectorData": "tab-group-overflow-count",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
     },
-
     "tabgroup-line": {
-      "selectorData": "tab-group-line",
-      "strategy": "class",
-      "groups": [
-        "doNotCache"
-      ]
+        "selectorData": "tab-group-line",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
     },
-
     "tabgroup-ungroup-tabs": {
-      "selectorData": "tabGroupEditor_ungroupTabs",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "tabGroupEditor_ungroupTabs",
+        "strategy": "id",
+        "groups": []
     },
-
     "tabgroup-name-input": {
-      "selectorData": "tab-group-name",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "tab-group-name",
+        "strategy": "id",
+        "groups": []
     },
-
     "tabgroup-color-swatch": {
-      "selectorData": "tab-group-editor-swatch-{color}",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "tab-group-editor-swatch-{color}",
+        "strategy": "id",
+        "groups": []
     },
-
     "tabgroup-add-new-tab": {
-      "selectorData": "tabGroupEditor_addNewTabInGroup",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "tabGroupEditor_addNewTabInGroup",
+        "strategy": "id",
+        "groups": []
     },
-
     "tabgroup-save-and-close-group": {
-      "selectorData": "tabGroupEditor_saveAndCloseGroup",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "tabGroupEditor_saveAndCloseGroup",
+        "strategy": "id",
+        "groups": []
     },
-
-      "selected-tab": {
+    "selected-tab": {
         "selectorData": "tab.tabbrowser-tab[selected='true']",
         "strategy": "css",
         "groups": []
     },
-
     "all-tabs": {
-          "selectorData": "tabbrowser-tab",
-          "strategy": "class",
-          "groups": []
-      }
+        "selectorData": "tabbrowser-tab",
+        "strategy": "class",
+        "groups": []
+    }
 }
