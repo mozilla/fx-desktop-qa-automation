@@ -559,7 +559,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.find_in_settings("pay")
+        self.find_in_settings("manage add")
         self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
