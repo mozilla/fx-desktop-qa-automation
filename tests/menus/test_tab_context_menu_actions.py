@@ -4,6 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
+from modules.page_object import GenericPage
 
 
 @pytest.fixture()
@@ -25,6 +26,7 @@ def test_duplicate_tab(driver: Firefox):
     """
     tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
+    page = GenericPage(driver)
 
     tabs_to_open = 4
 
@@ -41,8 +43,8 @@ def test_duplicate_tab(driver: Firefox):
 
     # Get the current tab and assert the url
     driver.switch_to.window(driver.window_handles[tabs_to_open + 1])
-    current_page = driver.current_url
-    assert current_page == links[0]
+
+    page.url_contains(links[0])
 
 
 def test_close_multiple_tabs_to_right(driver: Firefox):

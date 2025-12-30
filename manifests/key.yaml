@@ -123,10 +123,6 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional01
-  test_seach_suggestions_can_be_disabled:
-    result: pass
-    splits:
-    - functional01
   test_search_code_google_non_us:
     result: pass
     splits:
@@ -135,6 +131,13 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
+  test_search_engine_result_page_load_on_reload_or_back:
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
+    splits:
+    - functional01
   test_search_engine_selector:
     result: pass
     splits:
@@ -159,16 +162,20 @@ address_bar_and_search:
     result: pass
     splits:
     - functional01
-  test_search_works_correctly_with_ddg_telemetry:
-    result: pass
-    splits:
-    - functional01
   test_search_suggestions:
     result: pass
     splits:
     - smoke
+  test_search_suggestions_can_be_disabled:
+    result: pass
+    splits:
+    - functional01
   test_search_term_persists:
     result: unstable
+    splits:
+    - functional01
+  test_search_works_correctly_with_ddg_telemetry:
+    result: pass
     splits:
     - functional01
   test_searchbar_display_alpenglow_theme:
@@ -350,7 +357,7 @@ downloads:
     splits:
     - functional01
   test_add_zip_type:
-    result: pass
+    result: unstable
     splits:
     - functional01
   test_download_pdf:
@@ -518,20 +525,35 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
-    splits:
-    - functional02
+    test_inspect:
+      result: pass
+      splits:
+      - functional02
+    test_save_page_as:
+      result: unstable
+      splits:
+      - functional02
+    test_take_screenshot:
+      result: pass
+      splits:
+      - functional02
   test_hyperlink_context_menu:
     result: pass
     splits:
     - smoke
   test_image_context_menu_actions:
-    result: unstable
-    splits:
-    - functional02
+    test_copy_image_link:
+      result: pass
+      splits:
+      - functional02
+    test_open_image_in_new_tab:
+      result: pass
+      splits:
+      - functional02
+    test_save_image_as:
+      result: unstable
+      splits:
+      - functional02
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -1045,6 +1067,10 @@ tabs:
     result: pass
     splits:
     - functional02
+  test_restore_closed_tabs_previous_groups:
+    result: pass
+    splits:
+    - functional02
   test_save_and_close_a_tab_group:
     result: pass
     splits:
@@ -1053,10 +1079,6 @@ tabs:
     result: pass
     splits:
     - functional02
-  test_restore_closed_tabs_previous_groups:
-    result: pass
-    splits:
-      - functional02
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass

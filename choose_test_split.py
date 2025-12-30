@@ -95,6 +95,7 @@ def dedupe(run_list: list) -> list:
     for remove in removes:
         del run_list[remove]
 
+    run_list.sort()
     return run_list
 
 
