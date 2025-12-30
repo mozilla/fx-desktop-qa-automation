@@ -8,31 +8,26 @@
             "requiredForPage"
         ]
     },
-
     "panel-main-view": {
         "selectorData": "appMenu-mainView",
         "strategy": "id",
         "groups": []
     },
-
     "sync-user-button": {
         "selectorData": "toolbarbutton[id='fxa-toolbar-menu-button']",
         "strategy": "css",
         "groups": []
     },
-
     "fxa-manage-account-button": {
         "selectorData": "fxa-manage-account-button",
         "strategy": "id",
         "groups": []
     },
-
     "sync-fxa": {
         "selectorData": "appMenu-fxa-status2",
         "strategy": "id",
         "groups": []
     },
-
     "fxa-sign-in": {
         "selectorData": "#appMenu-fxa-status2 toolbarbutton",
         "strategy": "css",
@@ -43,39 +38,31 @@
         "strategy": "id",
         "groups": []
     },
-
     "fxa-sync-label": {
         "selectorData": "syncnow-label",
         "strategy": "class",
         "groups": []
     },
-
     "new-private-window-option": {
         "selectorData": "appMenu-new-private-window-button2",
         "strategy": "id",
         "groups": []
     },
-
     "more-tools": {
         "selectorData": "appMenu-more-button2",
         "strategy": "id",
         "groups": []
     },
-
-
-
     "customize-toolbar": {
         "selectorData": "overflowMenu-customize-button",
         "strategy": "id",
         "groups": []
     },
-
     "manage-themes": {
         "selectorData": "customization-lwtheme-link",
         "strategy": "id",
         "groups": []
     },
-
     "zoom-reduce": {
         "selectorData": "appMenu-zoomReduce-button2",
         "strategy": "id",
@@ -83,7 +70,6 @@
             "menuItem"
         ]
     },
-
     "zoom-enlarge": {
         "selectorData": "appMenu-zoomEnlarge-button2",
         "strategy": "id",
@@ -91,7 +77,6 @@
             "menuItem"
         ]
     },
-
     "zoom-reset": {
         "selectorData": "appMenu-zoomReset-button2",
         "strategy": "id",
@@ -99,7 +84,6 @@
             "menuItem"
         ]
     },
-
     "find-in-page": {
         "selectorData": "appMenu-find-button2",
         "strategy": "id",
@@ -107,247 +91,206 @@
             "menuItem"
         ]
     },
-
     "panel-ui-new-window": {
         "selectorData": "appMenu-new-window-button2",
         "strategy": "id",
         "groups": []
     },
-
     "panel-ui-history": {
         "selectorData": "appMenu-history-button",
         "strategy": "id",
         "groups": []
     },
-
     "panel-ui-history-view": {
         "selectorData": "PanelUI-history",
         "strategy": "id",
         "groups": []
     },
-
     "panel-ui-history-recently-closed": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
         "groups": []
     },
-
     "panel-ui-history-recently-closed-reopen-tabs": {
         "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']",
         "strategy": "css",
         "groups": []
     },
-
     "panel-ui-new-private-window": {
         "selectorData": "appMenu-new-private-window-button2",
         "strategy": "id",
         "groups": []
     },
-
     "recent-history-content": {
         "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
         "strategy": "css",
         "groups": []
     },
-
     "bookmark-item": {
         "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']",
         "strategy": "css",
-        "groups":[]
+        "groups": []
     },
-
     "clear-recent-history": {
-        "selectorData" :"appMenuClearRecentHistory",
+        "selectorData": "appMenuClearRecentHistory",
         "strategy": "id",
         "groups": []
     },
-
     "panel-ui-history-recent-history-container": {
         "selectorData": "appMenu_historyMenu",
         "strategy": "id",
         "groups": []
     },
-
     "panel-ui-history-recent-history-item": {
         "selectorData": "toolbarbutton",
         "strategy": "tag",
         "groups": []
     },
-
     "panel-ui-bookmarks": {
         "selectorData": "appMenu-bookmarks-button",
         "strategy": "id",
         "groups": []
     },
-
     "panel-menu-item-by-title": {
         "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
         "strategy": "css",
         "groups": []
     },
-
     "bookmark-current-tab": {
         "selectorData": "panelMenuBookmarkThisPage",
         "strategy": "id",
         "groups": []
     },
-
     "iframe": {
         "selectorData": "dialogFrame",
         "strategy": "class",
         "groups": []
     },
-
     "clear-history-dropdown": {
         "selectorData": "sanitizeDurationPopup",
         "strategy": "id",
         "groups": []
     },
-
     "all-history-warning": {
         "selectorData": "sanitizeEverythingWarningBox",
         "strategy": "id",
         "groups": []
     },
-
     "bookmark-location": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
         "groups": []
     },
-
     "other-bookmarks": {
         "selectorData": "editBMPanel_unfiledRootItem",
         "strategy": "id",
         "groups": []
     },
-
     "show-editor-when-saving-checkbox": {
         "selectorData": "editBookmarkPanel_showForNewBookmarks",
         "strategy": "id",
         "groups": []
     },
-
     "other-bookmarks-by-title": {
         "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
         "strategy": "css",
         "groups": []
     },
-
     "history-back-button": {
         "selectorData": "toolbarbutton.subviewbutton-back > image.toolbarbutton-icon",
         "strategy": "css",
         "groups": []
     },
-
     "history_title": {
         "selectorData": "//*[@id='PanelUI-history']//*[text()='History']",
         "strategy": "xpath",
         "groups": []
     },
-
     "recently_closed_tabs": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
         "groups": []
     },
-
     "recently_closed_windows": {
         "selectorData": "appMenuRecentlyClosedWindows",
         "strategy": "id",
         "groups": []
     },
-
     "search_history": {
         "selectorData": "appMenuSearchHistory",
         "strategy": "id",
         "groups": []
     },
-
     "recent_history": {
         "selectorData": "panelMenu_recentHistory",
         "strategy": "id",
         "groups": []
     },
-
     "manage_history": {
         "selectorData": "PanelUI-historyMore",
         "strategy": "id",
         "groups": []
     },
-
     "bookmark-tags": {
         "selectorData": "editBMPanel_tagsField",
         "strategy": "id",
         "groups": []
     },
-
     "extend-bookmark-tags": {
         "selectorData": "editBMPanel_tagsSelectorExpander",
         "strategy": "id",
         "groups": []
     },
-
     "work-tag": {
         "selectorData": "label[value='Work']",
         "strategy": "css",
         "groups": []
     },
-
     "todo-tag": {
         "selectorData": "label[value='To do']",
         "strategy": "css",
         "groups": []
     },
-
     "password-button": {
         "selectorData": "appMenu-passwords-button",
         "strategy": "id",
         "groups": []
     },
-
     "print-option": {
         "selectorData": "appMenu-print-button2",
         "strategy": "id",
         "groups": []
     },
-
     "bookmarks-toolbar": {
         "selectorData": "PlacesToolbar",
         "strategy": "id",
         "groups": []
     },
-
     "bookmarks-type-dropdown": {
         "selectorData": "editBMPanel_folderMenuList",
         "strategy": "id",
         "groups": []
     },
-
     "bookmarks-type-dropdown-other": {
         "selectorData": "editBMPanel_unfiledRootItem",
         "strategy": "id",
         "groups": []
     },
-
     "save-bookmark-button": {
         "selectorData": "editBookmarkPanelDoneButton",
         "strategy": "id",
         "groups": []
     },
-
     "edit-bookmark-panel": {
         "selectorData": "editBMPanel_namePicker",
         "strategy": "id",
         "groups": []
     },
-
     "toolbarspring": {
         "selectorData": "customizableui-special-spring2",
         "strategy": "id",
         "groups": []
     },
-
     "reopen-all-closed-tabs-button": {
         "selectorData": "toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']",
         "strategy": "css",

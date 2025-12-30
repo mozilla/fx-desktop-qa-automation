@@ -5,7 +5,6 @@
         "strategy": "css",
         "groups": []
     },
-
     "submit-button": {
         "selectorData": "input[type='{name}']",
         "strategy": "css",

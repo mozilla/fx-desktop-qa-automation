@@ -5,89 +5,74 @@
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-checkbox": {
         "selectorData": "toggle_toolbar-menubar",
         "strategy": "id",
         "groups": []
     },
-
     "history-menu-button": {
         "selectorData": "history-menu",
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-show-all-history": {
         "selectorData": "menu_showAllHistory",
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-clear-recent-history": {
         "selectorData": "sanitizeItem",
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-restore-previous-session": {
         "selectorData": "historyRestoreLastSession",
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-search-history": {
         "selectorData": "menu_searchHistory",
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-recently-closed-tabs": {
         "selectorData": "historyUndoMenu",
         "strategy": "id",
         "groups": []
     },
-
     "menu-bar-recently-closed-windows": {
         "selectorData": "historyUndoWindowMenu",
         "strategy": "id",
         "groups": []
     },
-
-     "view-menu-button": {
+    "view-menu-button": {
         "selectorData": "view-menu",
         "strategy": "id",
         "groups": []
     },
-
-     "menu-bar-zoom": {
+    "menu-bar-zoom": {
         "selectorData": "viewFullZoomMenu",
         "strategy": "id",
         "groups": []
     },
-
-     "menu-bar-zoom-enlarge": {
+    "menu-bar-zoom-enlarge": {
         "selectorData": "menu_zoomEnlarge",
         "strategy": "id",
         "groups": []
     },
-
-     "menu-bar-zoom-reduce": {
+    "menu-bar-zoom-reduce": {
         "selectorData": "menu_zoomReduce",
         "strategy": "id",
         "groups": []
     },
-
-     "menu-bar-zoom-reset": {
+    "menu-bar-zoom-reset": {
         "selectorData": "menu_zoomReset",
         "strategy": "id",
         "groups": []
     },
-
-      "menu-bar-zoom-text-only": {
+    "menu-bar-zoom-text-only": {
         "selectorData": "toggle_zoom",
         "strategy": "id",
         "groups": []
     }
-
 }

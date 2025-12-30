@@ -6,155 +6,129 @@
             "doNotCache"
         ]
     },
-
     "pdf-text-layer": {
         "selectorData": "textLayer",
         "strategy": "class",
         "groups": []
     },
-
     "html-body": {
         "selectorData": "html",
         "strategy": "tag",
         "groups": []
     },
-
     "pdf-body": {
         "selectorData": "viewer",
         "strategy": "id",
         "groups": []
     },
-
     "zoom-out": {
         "selectorData": "zoomOutButton",
         "strategy": "id",
         "groups": []
     },
-
     "zoom-in": {
         "selectorData": "zoomInButton",
         "strategy": "id",
         "groups": []
     },
-
     "download-button": {
         "selectorData": "downloadButton",
         "strategy": "id",
         "groups": []
     },
-
     "zipcode-field": {
         "selectorData": "input[name='ZIP Code']",
         "strategy": "css",
         "groups": []
     },
-
     "scroll-next": {
         "selectorData": "next",
         "strategy": "id",
         "groups": []
     },
-
     "scroll-prev": {
         "selectorData": "previous",
         "strategy": "id",
         "groups": []
     },
-
     "pdf-page": {
         "selectorData": "div[data-page-number='{number}']",
         "strategy": "css",
         "groups": []
     },
-
     "page-one-item": {
         "selectorData": "/html/body/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/span[13]",
         "strategy": "xpath",
         "groups": []
     },
-
     "page-input": {
         "selectorData": "pageNumber",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-toggle": {
         "selectorData": "secondaryToolbarToggle",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-container": {
         "selectorData": "secondaryToolbarButtonContainer",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-hand-tool": {
         "selectorData": "cursorHandTool",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-select-tool": {
         "selectorData": "cursorSelectTool",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-rotate-cw": {
         "selectorData": "pageRotateCw",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-rotate-ccw": {
         "selectorData": "pageRotateCcw",
         "strategy": "id",
         "groups": []
     },
-
     "first-name-field": {
         "selectorData": "input[name='First Name Given Name']",
         "strategy": "css",
         "groups": []
     },
-
     "first-checkbox": {
         "selectorData": "input[name='CB_1']",
         "strategy": "css",
         "groups": []
     },
-
     "state-dropdown-field": {
         "selectorData": "select[name='State']",
         "strategy": "css",
         "groups": []
     },
-
     "edited-name-field": {
         "selectorData": "input[name='First Name Given Name'][value='Mark']",
         "strategy": "css",
         "groups": []
     },
-
     "toolbar-add-image": {
         "selectorData": "editorStamp",
         "strategy": "id",
         "groups": []
     },
-
     "toolbar-add-image-confirm": {
         "selectorData": "editorStampAddImage",
         "strategy": "id",
         "groups": []
     },
-
     "added-goomy-image": {
         "selectorData": "[data-l10n-id='pdfjs-editor-stamp-editor'][aria-description='goomy.png']",
         "strategy": "css",
         "groups": []
     }
-
 }

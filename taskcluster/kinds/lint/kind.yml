@@ -15,7 +15,7 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         pip3 install 'pipenv==2023.11.15';
-        mv ./dev_pyproject.toml ./pyproject.toml;
+        mv ./config/dev_pyproject.toml ./pyproject.toml;
         pipenv install;
         pipenv run python3 -m ruff format --check;
         export EXIT_CODE=$?;

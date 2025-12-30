@@ -4,12 +4,11 @@ import mimetypes
 import os
 from typing import List
 
+from blocks import return_slack_blocks
 from google.cloud import storage
 from google.oauth2 import service_account
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-
-from blocks import return_slack_blocks
 
 
 def send_slack_message(report_file: str):

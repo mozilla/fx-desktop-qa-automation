@@ -4,8 +4,6 @@
         "strategy": "tag",
         "groups": []
     },
-
-
     "take-screenshot-box": {
         "selectorData": "screenshotsPagePanel",
         "strategy": "id",
@@ -13,7 +11,6 @@
             "doNotCache"
         ]
     },
-
     "learn-more": {
         "selectorData": "Learn more",
         "strategy": "link_text",

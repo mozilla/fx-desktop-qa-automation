@@ -1,6 +1,5 @@
 {
-    "login-list":
-    {
+    "login-list": {
         "selectorData": "login-list",
         "strategy": "css",
         "groups": [
@@ -8,9 +7,7 @@
             "doNotCache"
         ]
     },
-
-    "login-count":
-    {
+    "login-count": {
         "selectorData": "count",
         "strategy": "class",
         "shadowParent": "login-list",
@@ -18,9 +15,7 @@
             "doNotCache"
         ]
     },
-
-    "create-login-button":
-    {
+    "create-login-button": {
         "selectorData": "create-login-button",
         "strategy": "css",
         "shadowParent": "login-list",
@@ -29,9 +24,7 @@
             "doNotCache"
         ]
     },
-
-    "login-filter":
-    {
+    "login-filter": {
         "selectorData": "login-filter",
         "strategy": "css",
         "shadowParent": "login-list",
@@ -39,9 +32,7 @@
             "requiredForPage"
         ]
     },
-
-    "login-filter-input":
-    {
+    "login-filter-input": {
         "selectorData": "filter",
         "strategy": "class",
         "shadowParent": "login-filter",
@@ -49,167 +40,136 @@
             "doNotCache"
         ]
     },
-
-    "login-item":
-    {
+    "login-item": {
         "selectorData": "login-item",
         "strategy": "css",
         "groups": []
     },
-
-    "login-item-type":
-    {
+    "login-item-type": {
         "selectorData": "{name}",
         "strategy": "name",
         "shadowParent": "login-item",
         "groups": []
     },
-
-    "form-actions-row":
-    {
+    "form-actions-row": {
         "selectorData": "form-actions-row",
         "strategy": "class",
         "groups": []
     },
-
-    "save-changes-button":
-    {
+    "save-changes-button": {
         "selectorData": "save-changes-button",
         "strategy": "class",
         "shadowParent": "form-actions-row",
         "groups": []
     },
-
     "website-address": {
         "selectorData": ".origin-input",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
-
     "about-logins-page-username-field": {
         "selectorData": ".detail-row input[name='username']",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
-
     "about-logins-page-password-hidden": {
         "selectorData": ".detail-row .reveal-password-wrapper .password-display",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
-
     "about-logins-page-password-revealed": {
         "selectorData": ".detail-row .reveal-password-wrapper input[name='password']",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
-
-
-    "login-sort":
-    {
+    "login-sort": {
         "selectorData": "login-sort",
         "strategy": "id",
         "shadowParent": "login-list",
         "groups": []
     },
-
-    "password-count":
-    {
+    "password-count": {
         "selectorData": "count",
         "strategy": "class",
         "shadowParent": "login-list",
         "groups": []
     },
-
     "login-list-item": {
         "selectorData": "list-item",
         "strategy": "class",
         "shadowParent": "login-list",
-        "groups": ["doNotCache"]
+        "groups": [
+            "doNotCache"
+        ]
     },
-
-    "menu-button":
-    {
+    "menu-button": {
         "selectorData": "menu-button",
         "strategy": "css",
         "groups": []
     },
-
-    "export-passwords-button":
-    {
+    "export-passwords-button": {
         "selectorData": "button.menuitem-button:nth-child(3)",
         "strategy": "css",
         "shadowParent": "menu-button",
         "groups": []
     },
-
-    "confirmation-dialog":
-    {
+    "confirmation-dialog": {
         "selectorData": "confirmation-dialog",
         "strategy": "css",
         "groups": []
     },
-
-    "continue-export-button":
-    {
+    "continue-export-button": {
         "selectorData": ".confirm-button.primary.danger-button",
         "strategy": "css",
         "shadowParent": "confirmation-dialog",
         "groups": []
     },
-  
     "remove-login-button-main-page": {
         "selectorData": "delete-button",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
-
     "remove-login-confirmation-dialog": {
         "selectorData": "confirmation-dialog",
         "strategy": "css",
         "groups": []
     },
-
     "remove-login-button-confirmation-dialog": {
         "selectorData": "confirm-button",
         "strategy": "class",
         "shadowParent": "remove-login-confirmation-dialog",
         "groups": []
     },
-
     "show-password-checkbox": {
-       "selectorData": "input.reveal-password-checkbox",
-       "strategy": "css",
-       "shadowParent": "login-item",
-       "groups": []
-   },
-
+        "selectorData": "input.reveal-password-checkbox",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
     "primary-password-prompt": {
-       "selectorData": "commonDialogWindow",
-       "strategy": "id",
-       "groups": ["doNotCache"]
-   },
-
+        "selectorData": "commonDialogWindow",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "primary-password-dialog-input-field": {
-       "selectorData": "password1Textbox",
-       "strategy": "id",
-       "groups": []
-   },
-
+        "selectorData": "password1Textbox",
+        "strategy": "id",
+        "groups": []
+    },
     "edit-login": {
         "selectorData": "edit-button",
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
     },
-
-    "save-edited-login":
-    {
+    "save-edited-login": {
         "selectorData": "save-changes-button",
         "strategy": "class",
         "shadowParent": "login-item",
