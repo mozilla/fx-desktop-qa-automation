@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -36,7 +34,6 @@ def test_blocked_tracking_content(
     """
     C446405.1: Ensure that ETP Custom mode with option Tracking Content -> In all windows set blocks tracking content
     """
-
     about_prefs_privacy.open()
     about_prefs_privacy.select_trackers_to_block(
         "tracking-checkbox", "tracking-in-all-windows"
