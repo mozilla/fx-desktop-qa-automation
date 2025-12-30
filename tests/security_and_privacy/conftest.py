@@ -1,7 +1,15 @@
 import pytest
 
+from modules.browser_object import TabBar
 from modules.browser_object_navigation import Navigation
+from modules.browser_object_panel_ui import PanelUi
+from modules.browser_object_tracker_panel import TrackerPanel
 from modules.page_object_prefs import AboutPrefs
+from modules.util import BrowserActions
+
+YOUTUBE_URL = "https://www.youtube.com/"
+FACEBOOK_URL = "https://www.facebook.com/"
+AMAZON_URL = "https://www.amazon.com/"
 
 
 @pytest.fixture()
@@ -30,3 +38,28 @@ def nav(driver):
 @pytest.fixture()
 def about_prefs_privacy(driver):
     return AboutPrefs(driver, category="privacy")
+
+
+@pytest.fixture()
+def tracker_panel(driver):
+    return TrackerPanel(driver)
+
+
+@pytest.fixture()
+def panel_ui(driver):
+    return PanelUi(driver)
+
+
+@pytest.fixture()
+def tabs(driver):
+    return TabBar(driver)
+
+
+@pytest.fixture()
+def ba(driver):
+    return BrowserActions(driver)
+
+
+@pytest.fixture()
+def websites():
+    return [YOUTUBE_URL, FACEBOOK_URL, AMAZON_URL]

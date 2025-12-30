@@ -12,12 +12,11 @@ def test_case():
     return "101662"
 
 
-def test_open_link_in_private_window(driver: Firefox):
+def test_open_link_in_private_window(driver: Firefox, nav: Navigation):
     """C101662 - Links can be successfully opened in a Private Browsing session"""
     example = ExamplePage(driver)
-    example.open()
     context_menu = ContextMenu(driver)
-    nav = Navigation(driver)
+    example.open()
 
     sleep(1)
     example.context_click("learn-more")
@@ -26,7 +25,6 @@ def test_open_link_in_private_window(driver: Firefox):
 
     nav.switch_to_new_window()
     sleep(1)
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.title_contains("Private Browsing")
+    nav.is_private()
     example.title_contains(example.MORE_INFO_TITLE)
     example.url_contains(example.MORE_INFO_URL)

@@ -27,47 +27,45 @@ def add_to_prefs_list():
     ]
 
 
-def test_blocked_tracking_content(driver: Firefox):
+def test_blocked_tracking_content(
+    driver: Firefox,
+    nav: Navigation,
+    tracker_panel: TrackerPanel,
+    about_prefs_privacy: AboutPrefs,
+):
     """
     C446405.1: Ensure that ETP Custom mode with option Tracking Content -> In all windows set blocks tracking content
     """
 
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-    about_prefs.get_element("tracking-checkbox").click()
-    about_prefs.get_element("tracking-in-all-windows").click()
-    sleep(2)
-
+    about_prefs_privacy.open()
+    about_prefs_privacy.select_trackers_to_block(
+        "tracking-checkbox", "tracking-in-all-windows"
+    )
     driver.get(Tracker_URL)
+
     nav.open_tracker_panel()
-
-    driver.set_context(driver.CONTEXT_CHROME)
-
-    tracker_panel.get_element("tracker-tracking-content").click()
-    tracker_subview_title = tracker_panel.get_element("tracking-subview")
-    assert tracker_subview_title.get_attribute("title") == "Tracking Content Blocked"
+    tracker_panel.verify_tracker_subview_title(
+        "tracker-tracking-content", "tracking-subview", "Tracking Content Blocked"
+    )
 
 
-def test_allowed_tracking_content(driver: Firefox):
+def test_allowed_tracking_content(
+    driver: Firefox,
+    nav: Navigation,
+    tracker_panel: TrackerPanel,
+    about_prefs_privacy: AboutPrefs,
+):
     """
     C446405.2: Ensure that ETP Custom mode with option Tracking Content -> Only in Private Windows set allows
     tracking content
     """
 
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-    about_prefs.get_element("tracking-checkbox").click()
-    sleep(2)
+    about_prefs_privacy.open()
+    about_prefs_privacy.select_trackers_to_block("tracking-checkbox")
 
     driver.get(Tracker_URL)
+
     nav.open_tracker_panel()
-
-    driver.set_context(driver.CONTEXT_CHROME)
-
-    tracker_panel.get_element("tracker-tracking-content").click()
-    tracker_subview_title = tracker_panel.get_element("tracking-subview")
-    assert (
-        tracker_subview_title.get_attribute("title") == "Not Blocking Tracking Content"
+    tracker_panel.verify_tracker_subview_title(
+        "tracker-tracking-content", "tracking-subview", "Not Blocking Tracking Content"
     )

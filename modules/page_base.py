@@ -145,7 +145,12 @@ class BasePage(Page):
     def is_private(self):
         """Determine if current browsing context is private"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            return "Private Browsing" in self.driver.title
+            self.expect(lambda _: "Private Browsing" in self.driver.title)
+
+    def is_not_private(self):
+        """Determine if current browsing context is not private"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.expect(lambda _: "Private Browsing" not in self.driver.title)
 
     def custom_wait(self, **kwargs) -> WebDriverWait:
         """

@@ -28,27 +28,24 @@ def add_to_prefs_list():
 
 
 @pytest.mark.skip(reason="Blocked by bug 1866005. Tracked in bug 1940516.")
-def test_blocking_social_media_trackers(driver: Firefox):
+def test_blocking_social_media_trackers(
+    driver: Firefox,
+    nav: Navigation,
+    tracker_panel: TrackerPanel,
+    about_prefs_privacy: AboutPrefs,
+):
     """
     C446406: Ensure that ETP Custom mode with the option "Cross-site tracking cookies, and isolate other
     cross-site cookies" set in the Cookies section blocks social media trackers.
     """
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
-    about_prefs = AboutPrefs(driver, category="privacy").open()
-
-    about_prefs.get_element("cookies-checkbox")
-    about_prefs.get_element("cookies-isolate-social-media-option").click()
-    sleep(3)
+    about_prefs_privacy.open()
+    about_prefs_privacy.select_trackers_to_block("cookies-isolate-social-media-option")
 
     driver.get(SOCIAL_MEDIA_TRACKERS_URL)
+
     nav.open_tracker_panel()
-
-    driver.set_context(driver.CONTEXT_CHROME)
-
-    tracker_panel.element_clickable("social-media-tracker-content")
-    social_media_subview_title = tracker_panel.get_element("social-media-subview")
-    assert (
-        social_media_subview_title.get_attribute("title")
-        == "Social Media Trackers Blocked"
+    tracker_panel.verify_tracker_subview_title(
+        "social-media-tracker-content",
+        "social-media-subview",
+        "Social Media Trackers Blocked",
     )

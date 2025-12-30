@@ -25,7 +25,7 @@ def test_cryptominers_blocked_and_shown_in_info_panel(driver: Firefox):
     tracking_page.open()
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracking_page)
 
-    # Click on the shield icon and verify that cryptominers are blocked
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("shield-icon").click()
-        assert nav.get_element("cryptominers").is_displayed()
+    # Access url and click on the shield icon and verify that cryptominers are blocked
+    tracking_page.open()
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracking_page)
+    nav.assert_blocked_trackers("cryptominers")

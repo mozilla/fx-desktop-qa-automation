@@ -27,15 +27,14 @@ FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pa
 SECOND_TRACKER_WEBSITE = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
-def test_third_party_content_blocked_private_browsing_cross_site(driver: Firefox):
+def test_third_party_content_blocked_private_browsing_cross_site(
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation, tracker_panel: TrackerPanel
+):
     """
     C446323.1: Ensure that third party content is blocked correctly
     """
     # Instantiate objects
-    panel_ui = PanelUi(driver)
     panel_ui.open()
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE)
 
     # Open a private window
@@ -46,37 +45,27 @@ def test_third_party_content_blocked_private_browsing_cross_site(driver: Firefox
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
     # Verify the indicator
-    driver.set_context(driver.CONTEXT_CHROME)
     tracker_panel.verify_tracker_shield_indicator(nav)
     nav.open_tracker_panel()
 
     # verify the panel title
-    tracker_panel_title = tracker_panel.get_element("tracker-title")
-    assert (
-        tracker_panel_title.get_attribute("innerHTML")
-        == "Protections for senglehardt.com"
-    )
+    tracker_panel.verify_tracker_panel_title("Protections for senglehardt.com")
 
     # Fetch the items in the cross site trackers
     cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
 
     # Ensure that the correct blocked site is listed
-    found_tracker = False
-    for item in cross_site_trackers:
-        if item.get_attribute("value") == BLOCKED_TRACKER_URL:
-            found_tracker = True
-    assert found_tracker
+    assert any(BLOCKED_TRACKER_URL == val for val in cross_site_trackers)
 
 
-def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: Firefox):
+def test_third_party_content_blocked_private_browsing_allowed_tracking(
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation, tracker_panel: TrackerPanel
+):
     """
     C446323.2: Ensure that some third party content is allowed
     """
     # Instantiate objects
-    panel_ui = PanelUi(driver)
     panel_ui.open()
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE)
 
     # Open a private window
@@ -87,34 +76,27 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(driver: F
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
     # Verify the indicator
-    driver.set_context(driver.CONTEXT_CHROME)
     tracker_panel.verify_tracker_shield_indicator(nav)
 
     # Open the panel and verify the title
     nav.open_tracker_panel()
-    tracker_panel_title = tracker_panel.get_element("tracker-title")
-    assert (
-        tracker_panel_title.get_attribute("innerHTML")
-        == "Protections for senglehardt.com"
-    )
+    tracker_panel.verify_tracker_panel_title("Protections for senglehardt.com")
 
     # Fetch allowed trackers
     allowed_trackers = tracker_panel.open_and_return_allowed_trackers()
 
     # Verify the correct ones are allowed
-    for item in allowed_trackers:
-        assert item.get_attribute("value") in ALLOWED_TRACKING_URLS
+    assert any(item in ALLOWED_TRACKING_URLS for item in allowed_trackers)
 
 
-def test_third_party_content_private_browsing_tracking_statuses(driver: Firefox):
+def test_third_party_content_private_browsing_tracking_statuses(
+    driver: Firefox, nav: Navigation, panel_ui: PanelUi, tracker_panel: TrackerPanel
+):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
     """
     # Instantiate objects
-    panel_ui = PanelUi(driver)
     panel_ui.open()
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=SECOND_TRACKER_WEBSITE)
 
     # Open a private window
