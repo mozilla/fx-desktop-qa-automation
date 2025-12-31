@@ -32,6 +32,20 @@ def add_to_prefs_list():
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 
+def _verify_microphone_permission_prompt(driver: Firefox, nav: Navigation) -> None:
+    """
+    Verifies the microphone permission prompt is visible and contains expected copy/host.
+    """
+    nav.element_visible("popup-notification")
+    nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
+    nav.expect_element_attribute_contains(
+        "popup-notification", "name", "mozilla.github.io"
+    )
+    nav.expect_element_attribute_contains(
+        "popup-notification", "endlabel", " to use your microphone?"
+    )
+
+
 # Test is unstable in MacOS GHA for now
 def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
     """
@@ -46,14 +60,6 @@ def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
     web_page.click_on("microphone-only")
 
     # Verify that the notification is displayed
-    nav.element_visible("popup-notification")
-    nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
-    nav.expect_element_attribute_contains(
-        "popup-notification", "name", "mozilla.github.io"
-    )
-    nav.expect_element_attribute_contains(
-        "popup-notification", "endlabel", " to use your microphone?"
-    )
+    _verify_microphone_permission_prompt(driver, nav)
 
-    sleep(1.5)
     nav.click_on("popup-notification-secondary-button")

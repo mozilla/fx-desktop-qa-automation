@@ -15,17 +15,22 @@ def temp_selectors():
     return {"not-allowed": {"selectorData": "geo-warn", "strategy": "id", "groups": []}}
 
 
+@pytest.fixture()
+def web_page(driver: Firefox, temp_selectors):
+    page = GenericPage(driver, url=TEST_URL).open()
+    page.elements |= temp_selectors
+    return page
+
+
 TEST_URL = "https://browserleaks.com/geo"
 
 
-def test_deny_geolocation(driver: Firefox, temp_selectors):
+def test_deny_geolocation(driver: Firefox, web_page):
     """
     C122613 - Verify that denying geolocation permissions prevents website from accessing the location
     """
     # Instatiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
 
     # Block geolocation sharing for this website
     nav.element_clickable("popup-notification-secondary-button")

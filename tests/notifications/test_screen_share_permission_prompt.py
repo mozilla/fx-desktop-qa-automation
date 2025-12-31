@@ -34,7 +34,7 @@ def test_screen_share_permission_prompt(driver: Firefox, temp_selectors):
     web_page = GenericPage(driver, url=TEST_URL).open()
     web_page.elements |= temp_selectors
 
-    # Step 1: Trigger the popup notification asking for screen sharing permissions
+    # Trigger the popup notification asking for screen sharing permissions
     web_page.click_on("start-capture")
 
     # Determine Screen Share permission prompt is successfully displayed

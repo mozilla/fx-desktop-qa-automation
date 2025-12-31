@@ -24,6 +24,13 @@ def temp_selectors():
 
 
 @pytest.fixture()
+def web_page(driver: Firefox, temp_selectors):
+    page = GenericPage(driver, url=TEST_URL).open()
+    page.elements |= temp_selectors
+    return page
+
+
+@pytest.fixture()
 def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [("media.navigator.streams.fake", True)]
@@ -33,16 +40,12 @@ TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 
 # Test is unstable in MacOS GHA for now
-def test_camera_and_microphone_permissions_notification(
-    driver: Firefox, temp_selectors
-):
+def test_camera_and_microphone_permissions_notification(driver: Firefox, web_page):
     """
     C122542 - Verify that the Microphone and Camera permissions prompt is successfully displayed when the website asks for their permissions
     """
     # Instatiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
 
     # Trigger the popup notification asking for camera permissions
     web_page.click_on("camera-and-microphone")
@@ -57,5 +60,5 @@ def test_camera_and_microphone_permissions_notification(
         "popup-notification", "endlabel", " to use your camera and microphone?"
     )
 
-    sleep(1.5)
+    nav.element_visible("popup-notification-secondary-button")
     nav.click_on("popup-notification-secondary-button")
