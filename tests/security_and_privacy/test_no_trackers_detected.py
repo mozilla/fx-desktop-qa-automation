@@ -12,15 +12,12 @@ def test_case():
 NOTRACKERS_URL = "http://example.com/"
 
 
-def test_no_trackers_detected(driver: Firefox):
+def test_no_trackers_detected(driver: Firefox, nav: Navigation):
     """
     C446391 No trackers are detected
     """
-    # instantiate object and access url
-    nav = Navigation(driver)
+    # access url
     driver.get(NOTRACKERS_URL)
-
-    # Click on the shield icon and verify that trackers are detected
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.get_element("shield-icon").click()
-        assert nav.get_element("no-trackers-detected").is_displayed()
+    # verify that no trackers are detected
+    # no list of trackers is displayed
+    nav.assert_blocked_trackers()

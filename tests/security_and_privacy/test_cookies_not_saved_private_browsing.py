@@ -12,16 +12,16 @@ def test_case():
     return "101677"
 
 
-def test_cookies_not_saved_private_browsing(driver: Firefox):
+def test_cookies_not_saved_private_browsing(
+    driver: Firefox,
+    about_prefs_privacy: AboutPrefs,
+    nav: Navigation,
+    panel_ui: PanelUi,
+    ba: BrowserActions,
+):
     """
     C101677: ensure that cookies are not saved after using private browsing
     """
-
-    # Instantiate objs
-    about_prefs = AboutPrefs(driver, category="privacy")
-    panel_ui = PanelUi(driver)
-    nav = Navigation(driver)
-    ba = BrowserActions(driver)
 
     # Open new private window
     panel_ui.open_and_switch_to_new_window("private")
@@ -34,10 +34,9 @@ def test_cookies_not_saved_private_browsing(driver: Firefox):
     driver.switch_to.window(driver.window_handles[0])
 
     # Get the cookies
-    about_prefs.open()
-    about_prefs.get_element("cookies-manage-data").click()
-    iframe = about_prefs.get_iframe()
-    ba.switch_to_iframe_context(iframe)
+    about_prefs_privacy.open()
+    about_prefs_privacy.get_element("cookies-manage-data").click()
+    ba.switch_to_iframe_context(about_prefs_privacy.get_iframe())
 
     # Wait for no children listed in the cookies menu
-    about_prefs.wait_for_no_children("cookies-manage-data-sitelist")
+    about_prefs_privacy.wait_for_no_children("cookies-manage-data-sitelist")

@@ -29,40 +29,40 @@ def add_to_prefs_list():
     return [("browser.privatebrowsing.autostart", True)]
 
 
-def test_never_remember_browsing_history_settings(driver: Firefox):
+def test_never_remember_browsing_history_settings(
+    driver: Firefox, about_prefs_privacy: AboutPrefs
+):
     """
     C102381.1: Ensure that setting the browser to never remember history has the correct configurations in about:preferences
     """
 
     # instantiate objs
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs_privacy.open()
 
     # perform all about:preferences#privacy assertions according to testrail
-    cookies_label = about_prefs.get_element("cookies-privacy-label")
+    cookies_label = about_prefs_privacy.get_element("cookies-privacy-label")
     assert cookies_label.get_attribute("message") == COOKIE_LABEL_TEXT
 
-    delete_cookies_checkbox = about_prefs.get_element("cookies-delete-on-close")
+    delete_cookies_checkbox = about_prefs_privacy.get_element("cookies-delete-on-close")
     assert delete_cookies_checkbox.get_attribute("checked") == "true"
 
-    save_password = about_prefs.get_element("logins-ask-to-save-password")
+    save_password = about_prefs_privacy.get_element("logins-ask-to-save-password")
     assert save_password.get_attribute("checked") is None
 
-    login_exceptions = about_prefs.get_element("logins-exceptions")
+    login_exceptions = about_prefs_privacy.get_element("logins-exceptions")
     assert login_exceptions.get_attribute("disabled") == "true"
 
-    history_mode_description = about_prefs.get_element("history-privacy-label")
+    history_mode_description = about_prefs_privacy.get_element("history-privacy-label")
     assert history_mode_description.get_attribute("description") == HISTORY_LABEL_TEXT
 
 
-def test_never_remember_browsing_history_from_panel(driver: Firefox):
+def test_never_remember_browsing_history_from_panel(
+    driver: Firefox, panel_ui: PanelUi, tabs: TabBar
+):
     """
     C102381.2: Ensure that setting the browser to never remember history does not actually save any history
     """
-
-    panel_ui = PanelUi(driver)
     panel_ui.open()
-    tabs = TabBar(driver)
-    # util = Utilities()
 
     num_tabs = 6
 

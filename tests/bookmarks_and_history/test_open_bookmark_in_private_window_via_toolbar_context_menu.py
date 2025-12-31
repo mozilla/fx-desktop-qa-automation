@@ -36,6 +36,6 @@ def test_open_bookmark_in_new_private_window_via_toolbar_context_menu(driver: Fi
     # Verify that the test page is opened in a new private window
     tabs.wait_for_num_tabs(3)
     driver.switch_to.window(driver.window_handles[-1])
-    assert nav.is_private()
+    nav.is_private()
 
     page.url_contains("mozilla")

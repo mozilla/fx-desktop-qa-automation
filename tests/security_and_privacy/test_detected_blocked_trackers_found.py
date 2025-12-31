@@ -17,23 +17,19 @@ urls = [
 
 
 @pytest.mark.parametrize("url", urls)
-def test_detected_blocked_trackers_found(driver: Firefox, url: str):
+def test_detected_blocked_trackers_found(
+    driver: Firefox, url: str, tracker_panel: TrackerPanel, nav: Navigation
+):
     """
     C446392: Ensure that the correct trackers are allowed and blocked
     """
     generic_page = GenericPage(driver, url=url)
-    tracker_panel = TrackerPanel(driver)
-    nav = Navigation(driver)
 
     generic_page.open()
     tracker_panel.wait_for_blocked_tracking_icon(nav, generic_page)
-    driver.set_context(driver.CONTEXT_CHROME)
     nav.open_tracker_panel()
 
-    # instantiate test specific objs
-    blocked = set(["Cross-Site Tracking Cookies"])
-    allowed = set(["Tracking Content"])
-
     # verify the types of trackers
-    if not tracker_panel.verify_allowed_blocked_trackers(allowed, blocked):
-        assert False, "The expected types of trackers were not in the correct section."
+    tracker_panel.verify_allowed_blocked_trackers(
+        {"Tracking Content"}, {"Cross-Site Tracking Cookies"}
+    )

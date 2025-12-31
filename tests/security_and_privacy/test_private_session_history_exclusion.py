@@ -9,12 +9,9 @@ def test_case():
     return "101663"
 
 
-YOUTUBE_URL = "https://www.youtube.com/"
-FACEBOOK_URL = "https://www.facebook.com/"
-AMAZON_URL = "https://www.amazon.com/"
-
-
-def test_websites_visited_in_private_browser_not_displayed_in_history(driver: Firefox):
+def test_websites_visited_in_private_browser_not_displayed_in_history(
+    driver: Firefox, panel_ui: PanelUi, websites
+):
     """
     C101663 - Verify the visited websites from the Private Browsing session are not displayed inside the normal session
     History menu
@@ -22,21 +19,10 @@ def test_websites_visited_in_private_browser_not_displayed_in_history(driver: Fi
 
     initial_window_handle = driver.current_window_handle
 
-    panel_ui = PanelUi(driver)
     panel_ui.open()
     panel_ui.open_and_switch_to_new_window("private")
 
-    driver.get(YOUTUBE_URL)
-    driver.get(FACEBOOK_URL)
-    driver.get(AMAZON_URL)
-
+    for url in websites:
+        driver.get(url)
     driver.switch_to.window(initial_window_handle)
-
-    panel_ui.open_history_menu()
-    with panel_ui.driver.context(panel_ui.driver.CONTEXT_CHROME):
-        empty_label = panel_ui.get_element("recent-history-content").get_attribute(
-            "value"
-        )
-        assert empty_label == "(Empty)", (
-            f"Expected history to be empty, but found '{empty_label}'"
-        )
+    panel_ui.confirm_history_clear()

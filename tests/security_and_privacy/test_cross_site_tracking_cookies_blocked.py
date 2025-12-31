@@ -30,20 +30,18 @@ def add_to_prefs_list():
     ]
 
 
-def test_cross_site_tracking_cookies_blocked(driver: Firefox):
+def test_cross_site_tracking_cookies_blocked(
+    driver: Firefox, nav: Navigation, tracker_panel: TrackerPanel
+):
     """
     C446402: Ensures the cross tracking cookies are displayed in the tracker panel
     """
     # instantiate objects
-    nav = Navigation(driver)
-    tracker_panel = TrackerPanel(driver)
     tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE).open()
     tracker_panel.wait_for_trackers(nav, tracker_website)
 
-    driver.set_context(driver.CONTEXT_CHROME)
     nav.open_tracker_panel()
 
     # fetch the items in the cross site trackers and verify
     cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
-    for item in cross_site_trackers:
-        assert item.get_attribute("value") in ALLOWED_COOKIES
+    nav.verify_cross_site_trackers(cross_site_trackers, ALLOWED_COOKIES)

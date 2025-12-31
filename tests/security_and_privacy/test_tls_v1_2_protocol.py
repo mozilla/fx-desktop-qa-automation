@@ -15,11 +15,10 @@ def test_case():
 TLS_URL = "https://tls-v1-2.badssl.com:1012/"
 
 
-def test_tls_v1_2_protocol(driver: Firefox):
+def test_tls_v1_2_protocol(driver: Firefox, nav: Navigation):
     """
     C192739 - TLS v1.2 protocol is handled correctly and returns the proper information
     """
-    nav = Navigation(driver)
     driver.get(TLS_URL)
 
     tls_content = WebDriverWait(driver, 10).until(

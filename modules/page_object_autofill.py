@@ -777,6 +777,13 @@ class LoginAutofill(Autofill):
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
 
+    @BasePage.context_chrome
+    def verify_login_panel_not_open(self):
+        self.wait.until(
+            lambda d: self.get_element("save-login-popup").get_attribute("panelopen")
+            is None
+        )
+
     class LoginForm:
         """
         Subclass of the Login Autofill Form where you can interact with the Login Form
