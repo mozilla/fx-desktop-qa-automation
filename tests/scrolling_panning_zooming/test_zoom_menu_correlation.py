@@ -14,6 +14,17 @@ def test_case():
     return "165064"
 
 
+def _get_div_x_position(driver: Firefox) -> int:
+    """
+    Returns the X location of the first <div> element on the page.
+    """
+    div = driver.find_element(By.TAG_NAME, "div")
+    return int(div.location["x"])
+
+
+EXPECTED_ZOOM_IN_LABEL = "110%"
+EXPECTED_ZOOM_OUT_LABEL = "90%"
+
 TEST_PAGE = "https://www.example.com"
 
 
@@ -24,34 +35,34 @@ def test_zoom_level_div_position(driver: Firefox):
     Additionally, it checks that the zoom level indicator updates correctly.
     """
 
-    # Initialize the page and open the target URL
+    # Open the test page and record the initial position of the <div>
     page = GenericPage(driver, url=TEST_PAGE)
     page.open()
-    nav = Navigation(driver)
 
     # Locate the main <div> element on the page
-    div = driver.find_element(By.TAG_NAME, "div")
-    initial_position = div.location["x"]  # Get the initial X position of the div
+    initial_position = _get_div_x_position(driver)
     logging.info(f"Initial X position of div: {initial_position}")
 
     # Open the Firefox Menu panel
     panel = PanelUi(driver)
     panel.open_panel_menu()
 
-    # **Step 1**: Zoom in using the "zoom-enlarge" control
+    # Zoom in using the "zoom-enlarge" control
     panel.click_on("zoom-enlarge")
-    zoomed_in_position = driver.find_element(By.TAG_NAME, "div").location["x"]
+    zoomed_in_position = _get_div_x_position(driver)
     logging.info(f"X position of div after zoom-in: {zoomed_in_position}")
 
     # Switch to chrome context to check zoom level in the toolbar
+    nav = Navigation(driver)
+
     with driver.context(driver.CONTEXT_CHROME):
         zoom_button = nav.get_element("toolbar-zoom-level")
         zoom_level = nav.get_element("toolbar-zoom-level").get_attribute("label")
         logging.info(f"Zoom level after zoom-in: {zoom_level}")
 
         # Assert that the zoom level label is "110%" after zooming in
-        assert zoom_level == "110%", (
-            f"Expected zoom level to be '110%' after zoom-in, but got '{zoom_level}'"
+        assert zoom_level == EXPECTED_ZOOM_IN_LABEL, (
+            f"Expected zoom level to be '{EXPECTED_ZOOM_IN_LABEL}' after zoom-in, but got '{zoom_level}'"
         )
 
     # Assert that the X-coordinate increases after zooming in
@@ -60,9 +71,9 @@ def test_zoom_level_div_position(driver: Firefox):
         f"but got {zoomed_in_position}"
     )
 
-    # **Step 2**: Reset zoom to 100% using the "zoom-reset" control
+    # Reset zoom to 100% using the "zoom-reset" control
     panel.click_on("zoom-reset")
-    reset_position = driver.find_element(By.TAG_NAME, "div").location["x"]
+    reset_position = _get_div_x_position(driver)
     logging.info(f"X position of div after zoom-reset: {reset_position}")
 
     # Assert that the X-coordinate after reset is back to the initial value
@@ -70,9 +81,9 @@ def test_zoom_level_div_position(driver: Firefox):
         f"Expected X position after zoom-reset to be {initial_position}, but got {reset_position}"
     )
 
-    # **Step 3**: Zoom out using the "zoom-reduce" control
+    # Zoom out using the "zoom-reduce" control
     panel.click_on("zoom-reduce")
-    zoomed_out_position = driver.find_element(By.TAG_NAME, "div").location["x"]
+    zoomed_out_position = _get_div_x_position(driver)
     logging.info(f"X position of div after zoom-out: {zoomed_out_position}")
 
     # Switch to chrome context to check zoom level in the toolbar
@@ -81,8 +92,8 @@ def test_zoom_level_div_position(driver: Firefox):
         logging.info(f"Zoom level after zoom-out: {zoom_level}")
 
         # Assert that the zoom level label is "90%" after zooming out
-        assert zoom_level == "90%", (
-            f"Expected zoom level to be '90%' after zoom-out, but got '{zoom_level}'"
+        assert zoom_level == EXPECTED_ZOOM_OUT_LABEL, (
+            f"Expected zoom level to be '{EXPECTED_ZOOM_OUT_LABEL}' after zoom-out, but got '{zoom_level}'"
         )
 
     # Assert that the X-coordinate decreases after zooming out
