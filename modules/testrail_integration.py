@@ -190,7 +190,9 @@ def reportable(platform_to_test=None):
     if platform_to_test:
         os.environ["FX_PLATFORM"] = platform_to_test
     version = (
-        subprocess.check_output([sys.executable, "./collect_executables.py", "-n"])
+        subprocess.check_output(
+            [sys.executable, "./scripts/collect_executables.py", "-n"]
+        )
         .strip()
         .decode()
     )
