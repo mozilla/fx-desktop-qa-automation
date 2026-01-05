@@ -1,5 +1,5 @@
 import pytest
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
@@ -14,6 +14,33 @@ def test_case():
 
 TEST_URL = "https://www.w3schools.com/html/html5_geolocation.asp"
 
+COOKIE_ACCEPT_BUTTON = (By.ID, "accept-choices")
+
+TRY_IT_BUTTON = (
+    By.CSS_SELECTOR,
+    "button.w3-btn.w3-blue.w3-round[onclick='getLocation()']",
+)
+
+
+def _switch_to_latest_window(driver: Firefox) -> None:
+    """
+    Switches WebDriver focus to the most recently opened window/tab.
+    """
+    handles = driver.window_handles
+    if handles:
+        driver.switch_to.window(handles[-1])
+
+
+def _dismiss_cookie_banner_if_present(driver: Firefox, page: GenericPage) -> None:
+    """
+    Dismisses the cookie banner if present. No-ops if not found.
+    """
+    _switch_to_latest_window(driver)
+    try:
+        page.find_element(*COOKIE_ACCEPT_BUTTON).click()
+    except NoSuchElementException:
+        return
+
 
 def test_geolocation_prompt_is_triggered_on_request_location_on_a_website(
     driver: Firefox,
@@ -22,24 +49,10 @@ def test_geolocation_prompt_is_triggered_on_request_location_on_a_website(
     C122611 - Verify that geolocation prompt is present when accessing a website that requests location
     """
 
-    # Instantiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
+    page = GenericPage(driver, url=TEST_URL).open()
 
-    # Wait for the page to fully load and manually address the cookie banner if appears, as the cookie banner
-    # dismissal preference is not effective in this context
-    nav.wait_for_page_to_load()
-    try:
-        driver.switch_to.window(driver.window_handles[-1])
-        web_page.find_element(By.ID, "accept-choices").click()
-    except NoSuchElementException:
-        # If the banner is not triggered, just continue to the next line
-        pass
+    _dismiss_cookie_banner_if_present(driver, page)
+    page.find_element(*TRY_IT_BUTTON).click()
 
-    # Click the 'Try It' button to trigger the geolocation prompt
-    web_page.find_element(
-        By.CSS_SELECTOR, "button.w3-btn.w3-blue.w3-round[onclick='getLocation()']"
-    ).click()
-
-    # Verify that the geolocation prompt is present
     nav.wait.until(lambda _: nav.element_visible("geolocation-notification-container"))
