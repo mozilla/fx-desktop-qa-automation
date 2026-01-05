@@ -24,29 +24,23 @@ def temp_selectors():
     }
 
 
-@pytest.fixture()
-def web_page(driver: Firefox, temp_selectors):
-    page = GenericPage(driver, url=TEST_URL).open()
-    page.elements |= temp_selectors
-    return page
-
-
 def test_deny_screen_capture(driver: Firefox, web_page):
     """
     C122534 - Verify that denying screen capture permissions prevents website from accessing the screen
     """
-    # Instatiate Objects
+    # Instantiate Objects
     nav = Navigation(driver)
+    page = web_page(TEST_URL)
 
     # Trigger the popup notification asking for camera permissions
-    web_page.click_on("start-capture")
+    page.click_on("start-capture")
 
     # Block screen sharing for this website
     nav.element_clickable("popup-notification-secondary-button")
     nav.click_on("popup-notification-secondary-button")
 
     # Check that the website cannot access the screen
-    web_page.element_has_text(
+    page.element_has_text(
         "not-allowed",
         "Error: NotAllowedError: The request is not allowed by the user agent or the platform in the current context.",
     )

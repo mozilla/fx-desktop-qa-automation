@@ -1,10 +1,7 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -47,17 +44,16 @@ def _verify_microphone_permission_prompt(driver: Firefox, nav: Navigation) -> No
 
 
 # Test is unstable in MacOS GHA for now
-def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
+def test_microphone_permissions_notification(driver: Firefox, web_page):
     """
     C122539 - Verify that Microphone only permission prompt is successfully displayed when the website asks for microphone permissions
     """
-    # Instatiate Objects
+    # Instantiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
+    page = web_page(TEST_URL)
 
     # Trigger the popup notification asking for camera permissions
-    web_page.click_on("microphone-only")
+    page.click_on("microphone-only")
 
     # Verify that the notification is displayed
     _verify_microphone_permission_prompt(driver, nav)

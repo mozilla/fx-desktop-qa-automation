@@ -51,26 +51,24 @@ def _permission_was_requested(page: GenericPage) -> bool:
     return "requesting" in page.get_element("notification-log").text
 
 
-def test_notifications_displayed(driver: Firefox, temp_page, temp_selectors):
+def test_notifications_displayed(driver: Firefox, temp_page, web_page):
     """
     This test does not (and SHOULD not) test that the OS displays web notifications
     correctly. The only thing being examined is that the notification is sent.
     This is done by having our own test page where we know logging only happens
     after the send operation (should fail with an error before logging if failure)."""
-    test_page = GenericPage(driver, url=f"file://{temp_page}")
-    test_page.open()
-    test_page.elements |= temp_selectors
 
     nav = Navigation(driver)
+    page = web_page(url=f"file://{temp_page}")
 
-    test_page.fill("notification-text-input", TEST_PHRASE, press_enter=False)
-    test_page.click_on("send-notification-button")
+    page.fill("notification-text-input", TEST_PHRASE, press_enter=False)
+    page.click_on("send-notification-button")
 
     # All requests are logged with a message that contains the word 'permission'
-    test_page.element_has_text("notification-log", "permission")
+    page.element_has_text("notification-log", "permission")
 
     # Grant permission if we need to
-    if _permission_was_requested(test_page):
+    if _permission_was_requested(page):
         nav.click_on("popup-notification-primary-button")
 
-    test_page.element_has_text("notification-log", TEST_PHRASE)
+    page.element_has_text("notification-log", TEST_PHRASE)

@@ -24,13 +24,6 @@ def temp_selectors():
 
 
 @pytest.fixture()
-def web_page(driver: Firefox, temp_selectors):
-    page = GenericPage(driver, url=TEST_URL).open()
-    page.elements |= temp_selectors
-    return page
-
-
-@pytest.fixture()
 def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [("media.navigator.streams.fake", True)]
@@ -44,11 +37,12 @@ def test_camera_permissions_notification(driver: Firefox, web_page):
     """
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
     """
-    # Instatiate Objects
+    # Instantiate Objects
     nav = Navigation(driver)
+    page = web_page(TEST_URL)
 
     # Trigger the popup notification asking for camera permissions
-    web_page.click_on("camera-only")
+    page.click_on("camera-only")
 
     # Verify that the notification is displayed
     nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")

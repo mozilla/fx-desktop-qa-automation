@@ -24,13 +24,6 @@ def temp_selectors():
 
 
 @pytest.fixture()
-def web_page(driver: Firefox, temp_selectors):
-    page = GenericPage(driver, url=TEST_URL).open()
-    page.elements |= temp_selectors
-    return page
-
-
-@pytest.fixture()
 def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [("media.navigator.streams.fake", True)]
@@ -44,11 +37,12 @@ def test_camera_and_microphone_permissions_notification(driver: Firefox, web_pag
     """
     C122542 - Verify that the Microphone and Camera permissions prompt is successfully displayed when the website asks for their permissions
     """
-    # Instatiate Objects
+    # Instantiate Objects
     nav = Navigation(driver)
+    page = web_page(TEST_URL)
 
     # Trigger the popup notification asking for camera permissions
-    web_page.click_on("camera-and-microphone")
+    page.click_on("camera-and-microphone")
 
     # Verify that the notification is displayed
     nav.element_visible("popup-notification")
