@@ -9,7 +9,8 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from json import load
 
 import requests
-from choose_l10n_ci_set import valid_l10n_mappings
+
+from scripts.choose_l10n_ci_set import valid_l10n_mappings
 
 current_dir = os.path.dirname(__file__)
 valid_flags = {
