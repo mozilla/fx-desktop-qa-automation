@@ -43,7 +43,7 @@ tasks:
         pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
-        pipenv run python scripts/choose_test_split.py;
+        pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;

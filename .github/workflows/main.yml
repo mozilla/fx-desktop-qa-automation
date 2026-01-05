@@ -109,7 +109,7 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run python scripts/choose_test_split.py
+          pipenv run python -m scripts.choose_test_split
           pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -122,7 +122,7 @@ jobs:
           rm ./pyproject.toml;
           mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run python scripts/choose_test_split.py
+          pipenv run python -m scripts.choose_test_split
           pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
@@ -189,7 +189,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run python scripts/choose_test_split.py
+          pipenv run python -m scripts.choose_test_split
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
@@ -200,7 +200,7 @@ jobs:
           REPORTABLE: true
         run: |
           mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run python scripts/choose_test_split.py
+          pipenv run python -m scripts.choose_test_split
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
@@ -250,7 +250,7 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           "$FX_EXECUTABLE" --version;
-          pipenv run python scripts/choose_test_split.py;
+          pipenv run python -m scripts.choose_test_split
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
@@ -260,7 +260,7 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml;
-          pipenv run python choose_test_split.py
+          pipenv run python -m scripts.choose_test_split
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
