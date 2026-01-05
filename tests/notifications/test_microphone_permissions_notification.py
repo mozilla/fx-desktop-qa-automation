@@ -1,10 +1,7 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -32,20 +29,10 @@ def add_to_prefs_list():
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 
-# Test is unstable in MacOS GHA for now
-def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
+def _verify_microphone_permission_prompt(driver: Firefox, nav: Navigation) -> None:
     """
-    C122539 - Verify that Microphone only permission prompt is successfully displayed when the website asks for microphone permissions
+    Verifies the microphone permission prompt is visible and contains expected copy/host.
     """
-    # Instatiate Objects
-    nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
-
-    # Trigger the popup notification asking for camera permissions
-    web_page.click_on("microphone-only")
-
-    # Verify that the notification is displayed
     nav.element_visible("popup-notification")
     nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
     nav.expect_element_attribute_contains(
@@ -55,5 +42,20 @@ def test_microphone_permissions_notification(driver: Firefox, temp_selectors):
         "popup-notification", "endlabel", " to use your microphone?"
     )
 
-    sleep(1.5)
+
+# Test is unstable in MacOS GHA for now
+def test_microphone_permissions_notification(driver: Firefox, web_page):
+    """
+    C122539 - Verify that Microphone only permission prompt is successfully displayed when the website asks for microphone permissions
+    """
+    # Instantiate Objects
+    nav = Navigation(driver)
+    page = web_page(TEST_URL)
+
+    # Trigger the popup notification asking for camera permissions
+    page.click_on("microphone-only")
+
+    # Verify that the notification is displayed
+    _verify_microphone_permission_prompt(driver, nav)
+
     nav.click_on("popup-notification-secondary-button")

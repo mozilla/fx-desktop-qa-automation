@@ -33,17 +33,16 @@ TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
 
 
 # Test is unstable in MacOS GHA for now
-def test_camera_permissions_notification(driver: Firefox, temp_selectors):
+def test_camera_permissions_notification(driver: Firefox, web_page):
     """
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
     """
-    # Instatiate Objects
+    # Instantiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
+    page = web_page(TEST_URL)
 
     # Trigger the popup notification asking for camera permissions
-    web_page.click_on("camera-only")
+    page.click_on("camera-only")
 
     # Verify that the notification is displayed
     nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
@@ -54,5 +53,5 @@ def test_camera_permissions_notification(driver: Firefox, temp_selectors):
         "popup-notification", "endlabel", " to use your camera?"
     )
 
-    sleep(1.5)
+    nav.element_visible("popup-notification-secondary-button")
     nav.click_on("popup-notification-secondary-button")

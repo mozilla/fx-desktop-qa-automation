@@ -307,7 +307,7 @@ def reportable(platform_to_test=None):
         uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
             suite_names = []
-            for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ):
+            for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ).get("suites"):
                 if str(suite.get("id")) in uncovered_suites:
                     suite_names.append(suite.get("name"))
             logging.warning("Coverage not found for the following suites:")
