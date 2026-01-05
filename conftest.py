@@ -303,17 +303,9 @@ def use_profile():
 
 
 @pytest.fixture(scope="session")
-def version(fx_executable: str, opt_ci):
+def version(fx_executable: str):
     """Return the Firefox version string"""
-    if opt_ci:
-        version = (
-            check_output([sys.executable, "./collect_executables.py", "-n"])
-            .strip()
-            .decode()
-        )
-    else:
-        version = check_output([fx_executable, "--version"]).strip().decode()
-    return version
+    return check_output([fx_executable, "--version"]).strip().decode()
 
 
 @pytest.fixture()
