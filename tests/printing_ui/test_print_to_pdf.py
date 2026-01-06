@@ -51,6 +51,7 @@ def test_print_to_pdf(
     downloads_folder: str,
     sys_platform,
     delete_files,
+    print_preview: PrintPreview,
 ):
     """
     C965142 - Verify that the user can print a webpage to PDF
@@ -59,7 +60,6 @@ def test_print_to_pdf(
     driver.get(TEST_PAGE)
 
     # Select Print option from Hamburger Menu in order to trigger the silent printing
-    print_preview = PrintPreview(driver)
     print_preview.open()
     print_preview.start_print()
 
