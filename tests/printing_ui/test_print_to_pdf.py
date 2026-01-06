@@ -60,7 +60,7 @@ def test_print_to_pdf(
     driver.get(TEST_PAGE)
 
     # Select Print option from Hamburger Menu in order to trigger the silent printing
-    print_preview.open()
+    print_preview.open_and_load_print_from_panelui()
     print_preview.start_print()
 
     print_preview.expect(lambda _: file_is_somewhere())
