@@ -46,11 +46,8 @@ def test_http_site(
     driver.switch_to.window(driver.window_handles[0])
     prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_ALL)
     driver.switch_to.window(driver.window_handles[1])
-    try:
+    with pytest.raises(WebDriverException):
         driver.refresh()
-        assert False, "Site should be blocked"
-    except (TimeoutException, WebDriverException):
-        pass
 
     # Unblocking - non-private only
     driver.switch_to.window(driver.window_handles[0])
@@ -65,6 +62,8 @@ def test_http_site(
     # Private browsing - blocked
     panel_ui.open_and_switch_to_new_window("private")
 
+    with pytest.raises(WebDriverException):
+        driver.get(HTTP_SITE)
     try:
         driver.get(HTTP_SITE)
         assert "badssl" not in driver.current_url, "Site should not be displayed"
