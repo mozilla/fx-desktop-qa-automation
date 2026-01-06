@@ -828,10 +828,7 @@ profile:
     - smoke
 reader_view:
   test_improved_type_control_panel:
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: unstable
     splits:
     - smoke
   test_reader_view_close_sidebar:

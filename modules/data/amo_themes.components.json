@@ -4,13 +4,11 @@
         "strategy": "css",
         "groups": []
     },
-
     "theme-title": {
         "selectorData": "AddonTitle",
         "strategy": "class",
         "groups": []
     },
-
     "install-button": {
         "selectorData": "AMInstallButton-button",
         "strategy": "class",

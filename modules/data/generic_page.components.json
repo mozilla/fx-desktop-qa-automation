@@ -1,73 +1,73 @@
 {
-  "page-body": {
-    "selectorData": "body",
-    "strategy": "tag",
-    "groups": []
-  },
-  "container-div": {
-    "selectorData": "container",
-    "strategy": "class",
-    "groups": []
-  },
-  "authorize-notifications-button": {
-    "selectorData": "button[onclick='notify.authorize()']",
-    "strategy": "css",
-    "groups": []
-  },
-  "mediawiki-image": {
-    "selectorData": "mw-mmv-image",
-    "strategy": "class",
-    "groups": []
-  },
-  "wiki-search-bar": {
-    "selectorData": "cdx-text-input__input",
-    "strategy": "class",
-    "groups": []
-  },
-  "wiki-search-button": {
-    "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
-    "strategy": "css",
-    "groups": []
-  },
-  "simulated-tracker-block-status": {
-    "selectorData": "blacklisted-blocked",
-    "strategy": "id",
-    "groups": []
-  },
-  "simulated-tracker-load-status": {
-    "selectorData": "whitelisted-loaded",
-    "strategy": "id",
-    "groups": []
-  },
-  "simulated-tracker-dnt-status": {
-    "selectorData": "dnt-off",
-    "strategy": "id",
-    "groups": []
-  },
-  "clear-history-button-box": {
-    "selectorData": "dialog",
-    "strategy": "tag",
-    "groups": []
-  },
-  "clear-history-button": {
-    "selectorData": "button[dlgtype='accept']",
-    "strategy": "css",
-    "shadowParent": "clear-history-button-box",
-    "groups": []
-  },
-  "sample-doc-download": {
-    "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
-    "strategy": "css",
-    "groups": []
-  },
-  "bsky-signin-button": {
-    "selectorData": "//button[@aria-label='Sign in']",
-    "strategy": "xpath",
-    "groups": []
-  },
-  "url-to-copy": {
-    "selectorData": "p[contenteditable]",
-    "strategy": "css",
-    "groups": []
-  }
+    "page-body": {
+        "selectorData": "body",
+        "strategy": "tag",
+        "groups": []
+    },
+    "container-div": {
+        "selectorData": "container",
+        "strategy": "class",
+        "groups": []
+    },
+    "authorize-notifications-button": {
+        "selectorData": "button[onclick='notify.authorize()']",
+        "strategy": "css",
+        "groups": []
+    },
+    "mediawiki-image": {
+        "selectorData": "mw-mmv-image",
+        "strategy": "class",
+        "groups": []
+    },
+    "wiki-search-bar": {
+        "selectorData": "cdx-text-input__input",
+        "strategy": "class",
+        "groups": []
+    },
+    "wiki-search-button": {
+        "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
+        "strategy": "css",
+        "groups": []
+    },
+    "simulated-tracker-block-status": {
+        "selectorData": "blacklisted-blocked",
+        "strategy": "id",
+        "groups": []
+    },
+    "simulated-tracker-load-status": {
+        "selectorData": "whitelisted-loaded",
+        "strategy": "id",
+        "groups": []
+    },
+    "simulated-tracker-dnt-status": {
+        "selectorData": "dnt-off",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-history-button-box": {
+        "selectorData": "dialog",
+        "strategy": "tag",
+        "groups": []
+    },
+    "clear-history-button": {
+        "selectorData": "button[dlgtype='accept']",
+        "strategy": "css",
+        "shadowParent": "clear-history-button-box",
+        "groups": []
+    },
+    "sample-doc-download": {
+        "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
+        "strategy": "css",
+        "groups": []
+    },
+    "bsky-signin-button": {
+        "selectorData": "//button[@aria-label='Sign in']",
+        "strategy": "xpath",
+        "groups": []
+    },
+    "url-to-copy": {
+        "selectorData": "p[contenteditable]",
+        "strategy": "css",
+        "groups": []
+    }
 }
