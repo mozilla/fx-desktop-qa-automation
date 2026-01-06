@@ -56,6 +56,12 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def expect_in_chrome(self, condition) -> BasePage:
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CHROME"""
+        self.wait.until(condition)
+        return self
+
+    @BasePage.context_chrome
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
         self.awesome_bar = self.get_element("awesome-bar")
