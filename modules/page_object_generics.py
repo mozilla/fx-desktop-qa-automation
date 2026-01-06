@@ -107,6 +107,19 @@ class GenericPage(BasePage):
             assert actual == text, f"Expected field value '{text}', but got '{actual}'"
         return field
 
+    def wait_for_geolocation_data(self, timeout=20):
+        """Wait until both latitude and longitude data are available."""
+        self.custom_wait(timeout=timeout).until(
+            lambda _: all(
+                [
+                    self.find_element(By.ID, "latitude").get_attribute("data-raw")
+                    is not None,
+                    self.find_element(By.ID, "longitude").get_attribute("data-raw")
+                    is not None,
+                ]
+            )
+        )
+
 
 class GenericPdf(BasePage):
     """
