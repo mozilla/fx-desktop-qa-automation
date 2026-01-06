@@ -129,6 +129,15 @@ class BasePage(Page):
 
         return wrapper
 
+    def expect_in_content(self, condition):
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
+        self.wait.until(condition)
+
+    def expect_in_chrome(self, condition):
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CHROME"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.wait.until(condition)
+
     def set_content_context(self):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
         if self._xul_source_snippet in self.driver.page_source:
@@ -458,6 +467,23 @@ class BasePage(Page):
             lambda _: self.get_element(name, labels=labels)
             and str(attr_value)
             in self.get_element(name, labels=labels).get_attribute(attr_name)
+        )
+        return self
+
+    def expect_attribute_in_element(self, element: str, attr: str):
+        """Expect helper: check to see if attribute exists in element."""
+        return self.expect(
+            lambda _: EC.element_attribute_to_include(self.get_element(element), attr)
+        )
+
+    def expect_element_attribute_is(
+        self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
+    ):
+        """Expect helper: wait until element attribute is a certain value"""
+        self.expect(
+            lambda _: self.get_element(name, labels=labels)
+            and str(attr_value)
+            == self.get_element(name, labels=labels).get_attribute(attr_name)
         )
         return self
 

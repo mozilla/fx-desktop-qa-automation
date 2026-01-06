@@ -25,17 +25,16 @@ def temp_selectors():
 TEST_URL = "https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html"
 
 
-def test_screen_share_permission_prompt(driver: Firefox, temp_selectors):
+def test_screen_share_permission_prompt(driver: Firefox, web_page):
     """
     C122532 - Verify that the screen share permission prompt is successfully displayed
     """
 
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
+    page = web_page(TEST_URL)
 
-    # Step 1: Trigger the popup notification asking for screen sharing permissions
-    web_page.click_on("start-capture")
+    # Trigger the popup notification asking for screen sharing permissions
+    page.click_on("start-capture")
 
     # Determine Screen Share permission prompt is successfully displayed
     assert nav.element_visible("popup-notification")

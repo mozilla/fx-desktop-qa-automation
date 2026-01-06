@@ -25,18 +25,17 @@ TEST_URL = "https://addons.mozilla.org/en-US/firefox/addon/popup-blocker/"
 
 
 def test_webextension_completed_installation_successfully_displayed(
-    driver: Firefox, temp_selectors
+    driver: Firefox, web_page
 ):
     """
     C122933 - Verify that WebExtension completed installation is successfully displayed
     """
     # Instantiate object
     nav = Navigation(driver)
-    test_page = GenericPage(driver, url=TEST_URL).open()
-    test_page.elements |= temp_selectors
+    page = web_page(TEST_URL)
 
     # Click add to Firefox
-    test_page.click_on("add-to-firefox")
+    page.click_on("add-to-firefox")
 
     # Click the Add button
     nav.element_clickable("popup-notification-add")
