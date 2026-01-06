@@ -567,6 +567,16 @@ class TabBar(BasePage):
         else:  # second group
             return group_labels[1]
 
+    def open_and_switch_to_new_tab(self) -> BasePage:
+        """
+        Opens a new tab then switches to it.
+        """
+        cur_tabs = len(self.driver.window_handles)
+        self.new_tab_by_button()
+        self.wait_for_num_tabs(cur_tabs + 1)
+        self.switch_to_new_tab()
+        return self
+
     def create_websites_tab_group(
         self,
         context_menu: ContextMenu,
