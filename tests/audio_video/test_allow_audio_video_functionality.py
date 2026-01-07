@@ -11,7 +11,7 @@ def test_case():
     return "330155"
 
 
-TEST_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
+TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
 
 
 # Test is unstable in Windows GHA because audio playback is not allowed

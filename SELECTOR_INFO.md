@@ -1104,6 +1104,13 @@ Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: block-audio
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-block']
+Description: Block audio option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: autoplay-settings-button
 Selector Data: autoplaySettingsButton
 Description: Autoplay settings button
@@ -1113,7 +1120,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: autoplay-settings
 Selector Data: #setAutoplayPref > menulist[label='Block Audio']
-Description: Default autpplay settings for all websites button
+Description: Default autoplay settings for all websites button
 Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```

@@ -242,6 +242,10 @@ audio_video:
       win: unstable
     splits:
     - functional01
+  test_autoplay_permission_settings_displayed:
+    result: pass
+    splits:
+    - functional01
   test_block_audio_video_functionality:
     result: pass
     splits:
