@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import json
 from subprocess import check_output
 
 ALL_CHANNELS = ["starfox", "l10n"]
@@ -62,4 +63,4 @@ for f in committed_files:
 if not channels:
     channels = {"starfox"}
 
-print(list(channels))
+print(json.dumps(list(channels)))
