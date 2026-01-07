@@ -142,8 +142,7 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     panel.click_on("zoom-reduce")
 
     # Verify that zoom level badge is correct
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
+    nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
 
     # Verify Yahoo at 90%: image position still unchanged, text position changed
     web_page.expect(
@@ -153,7 +152,7 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
 
     web_page.expect(
         lambda _: web_page.get_element("yahoo-login-button").location["x"]
-         > original_website1_text_position
+        > original_website1_text_position
     )
 
     # Verify DuckDuckGo: image SIZE unchanged, text position changed
@@ -162,12 +161,13 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     web_page.expect(
         lambda _: web_page.get_element("duckduckgo-logo").size
         == original_website2_image_size
-     )
+    )
 
     web_page.expect(
         lambda _: web_page.get_element("duckduckgo-tagline").location["x"]
-         < original_website2_text_position
+        < original_website2_text_position
     )
+
 
 def _set_default_zoom(driver: Firefox, zoom_percent: int) -> AboutPrefs:
     """

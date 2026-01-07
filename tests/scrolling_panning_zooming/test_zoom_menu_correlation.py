@@ -52,15 +52,14 @@ def test_zoom_level_div_position(driver: Firefox):
     zoomed_in_position = _get_div_x_position(driver)
     logging.info(f"X position of div after zoom-in: {zoomed_in_position}")
 
-    # Switch to chrome context to check zoom level in the toolbar
+    # Check zoom level in the toolbar
     nav = Navigation(driver)
 
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.expect_element_attribute_contains(
-            name="toolbar-zoom-level",
-            attr_name="label",
-            attr_value=EXPECTED_ZOOM_IN_LABEL,
-        )
+    nav.expect_element_attribute_contains(
+        name="toolbar-zoom-level",
+        attr_name="label",
+        attr_value=EXPECTED_ZOOM_IN_LABEL,
+    )
 
     # Assert that the X-coordinate increases after zooming in
     assert zoomed_in_position < initial_position, (
@@ -83,13 +82,12 @@ def test_zoom_level_div_position(driver: Firefox):
     zoomed_out_position = _get_div_x_position(driver)
     logging.info(f"X position of div after zoom-out: {zoomed_out_position}")
 
-    # Switch to chrome context to check zoom level in the toolbar
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.expect_element_attribute_contains(
-            name="toolbar-zoom-level",
-            attr_name="label",
-            attr_value=EXPECTED_ZOOM_OUT_LABEL,
-        )
+    # Check zoom level in the toolbar
+    nav.expect_element_attribute_contains(
+        name="toolbar-zoom-level",
+        attr_name="label",
+        attr_value=EXPECTED_ZOOM_OUT_LABEL,
+    )
 
     # Assert that the X-coordinate decreases after zooming out
     assert zoomed_out_position > initial_position, (
