@@ -402,7 +402,8 @@ class AboutNetworking(BasePage):
         self.get_element("networking-sidebar-category", labels=[option]).click()
 
     def get_all_dns_rows(self):
-        """Get all DNS rows with there TRR status in the DNS table"""
+        """Get all DNS rows with their TRR status in the DNS table"""
+        self.element_visible("dns-content")
         names = self.find_elements(
             By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=1]"
         )
