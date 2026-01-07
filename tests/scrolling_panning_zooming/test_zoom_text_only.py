@@ -124,10 +124,16 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
 
     # Verify Yahoo: image position unchanged, text position changed
     driver.switch_to.window(driver.window_handles[0])
-    new_image_position = web_page.get_element("yahoo-logo").location["x"]
-    new_text_position = web_page.get_element("yahoo-login-button").location["x"]
-    assert new_image_position == original_website1_image_position
-    assert new_text_position < original_website1_text_position
+
+    web_page.expect(
+        lambda _: web_page.get_element("yahoo-logo").location["x"]
+        == original_website1_image_position
+    )
+
+    web_page.expect(
+        lambda _: web_page.get_element("yahoo-login-button").location["x"]
+        < original_website1_text_position
+    )
 
     # Zoom out to 90% using panel controls
     panel = PanelUi(driver)
@@ -140,25 +146,28 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
         nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
 
     # Verify Yahoo at 90%: image position still unchanged, text position changed
-    assert (
-        web_page.get_element("yahoo-logo").location["x"]
+    web_page.expect(
+        lambda _: web_page.get_element("yahoo-logo").location["x"]
         == original_website1_image_position
     )
-    assert (
-        web_page.get_element("yahoo-login-button").location["x"]
-        > original_website1_text_position
+
+    web_page.expect(
+        lambda _: web_page.get_element("yahoo-login-button").location["x"]
+         > original_website1_text_position
     )
 
     # Verify DuckDuckGo: image SIZE unchanged, text position changed
     driver.switch_to.window(driver.window_handles[1])
-    assert (
-        web_page.get_element("duckduckgo-logo").size == original_website2_image_size
-    ), "DuckDuckGo image size should not change (text-only zoom)"
-    assert (
-        web_page.get_element("duckduckgo-tagline").location["x"]
-        < original_website2_text_position
-    )
 
+    web_page.expect(
+        lambda _: web_page.get_element("duckduckgo-logo").size
+        == original_website2_image_size
+     )
+
+    web_page.expect(
+        lambda _: web_page.get_element("duckduckgo-tagline").location["x"]
+         < original_website2_text_position
+    )
 
 def _set_default_zoom(driver: Firefox, zoom_percent: int) -> AboutPrefs:
     """
@@ -199,7 +208,7 @@ def test_zoom_text_only_from_settings(
     # Save the original sizes and positions for comparison
     panel_ui.open_and_switch_to_new_window("tab")
     nav.search(WEBSITE_2)
-    web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
+    web_page.title_contains("DuckDuckGo")
     original_data = _capture_original_data(driver, web_page)
 
     # Set the pref to zoom text only
@@ -233,7 +242,7 @@ def test_zoom_text_only_after_restart(
     # Save the original sizes and positions for comparison
     panel_ui.open_and_switch_to_new_window("tab")
     nav.search(WEBSITE_2)
-    web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
+    web_page.title_contains("DuckDuckGo")
     original_data = _capture_original_data(driver, web_page)
 
     # Set default zoom level
