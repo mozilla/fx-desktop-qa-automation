@@ -1,7 +1,7 @@
+import json
 import os
 import re
 import sys
-import json
 from subprocess import check_output
 
 ALL_CHANNELS = ["starfox", "l10n"]
