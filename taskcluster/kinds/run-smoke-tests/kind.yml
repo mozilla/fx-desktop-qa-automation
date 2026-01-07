@@ -28,18 +28,18 @@ tasks:
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
-        mv ./ci_pyproject.toml ./pyproject.toml;
+        mv ./config/ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        ./collect_executables.sh;
+        ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
-        . ./keyring-unlock.sh
-        if [[ ! $(python3 choose_test_channel.py) =~ "starfox" ]]; then exit 0; fi
-        pipenv run python3 choose_test_split.py
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests)
-        export FAILURE=${?}
-        mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run python3 choose_test_split.py
-        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests)
+        . ./scripts/keyring-unlock.sh
+        if [[ ! $(python3 scripts/choose_test_channel.py) =~ "starfox" ]]; then exit 0; fi;
+        pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests);
+        export FAILURE=${?};
+        mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+        pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

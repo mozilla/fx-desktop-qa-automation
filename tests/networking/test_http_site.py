@@ -30,8 +30,6 @@ CONNECTION_NOT_SECURE = "Connection is not secure"
 def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
 
-    # Instantiate objects
-
     # Basic functionality
     prefs = AboutPrefs(driver, category="privacy")
     nav = Navigation(driver)

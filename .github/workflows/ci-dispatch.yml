@@ -18,8 +18,8 @@ jobs:
       - name: Select test channels
         id: dispatch
         run: |
-          python3 choose_test_channel.py
-          echo channels=$(python3 choose_test_channel.py) >> "$GITHUB_OUTPUT"
+          python3 scripts/choose_test_channel.py
+          echo channels=$(python3 scripts/choose_test_channel.py) >> "$GITHUB_OUTPUT"
 
 
   Run-Starfox-Win:
