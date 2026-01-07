@@ -3,24 +3,24 @@
     "print-preview-browser": {
         "selectorData": "browser[class='printPreviewBrowser']",
         "strategy": "css",
-        "groups": ["requiredForPage"]
+        "groups": [
+            "requiredForPage"
+        ]
     },
-
     "print-preview-loading": {
         "selectorData": "print-pending-label",
         "strategy": "class",
         "groups": []
     },
-
     "print-settings-browser": {
         "selectorData": "browser.printSettingsBrowser",
         "strategy": "css",
         "groups": []
     },
     "footer-button-group": {
-      "selectorData": "button-container",
-      "strategy": "id",
-      "groups": []
+        "selectorData": "button-container",
+        "strategy": "id",
+        "groups": []
     },
     "print-button": {
         "selectorData": "print-button",

@@ -52,7 +52,7 @@ EOF
 fi
 
 # Check new tests in pytest
-if ! python run_commit_tests.py; then
+if ! python scripts/run_commit_tests.py; then
     echo "New test failed to pass!"
     exit 1
 fi
@@ -73,7 +73,7 @@ if ! ruff format -q; then
     exit 1
 fi
 
-if ! python addtests.py -q; then
+if ! python scripts/addtests.py -q; then
     echo "Manifest missing tests!"
     exit 1
 fi
