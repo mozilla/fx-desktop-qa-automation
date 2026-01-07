@@ -6,7 +6,6 @@
             "doNotCache"
         ]
     },
-
     "username-field": {
         "selectorData": "input[placeholder='username']",
         "strategy": "css",
@@ -14,7 +13,6 @@
             "doNotCache"
         ]
     },
-
     "submit-form": {
         "selectorData": "input[value='Log In']",
         "strategy": "css",
@@ -22,7 +20,6 @@
             "doNotCache"
         ]
     },
-
     "save-login-popup": {
         "selectorData": "notification-popup",
         "strategy": "id",
@@ -30,13 +27,11 @@
             "doNotCache"
         ]
     },
-
     "facebook-credentials": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
         "strategy": "css",
         "groups": []
     },
-
     "username-login-field": {
         "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='username']",
         "strategy": "xpath",
@@ -44,7 +39,6 @@
             "doNotCache"
         ]
     },
-
     "password-login-field": {
         "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='current-password']",
         "strategy": "xpath",
@@ -52,7 +46,6 @@
             "doNotCache"
         ]
     },
-
     "submit-button-login": {
         "selectorData": "/html/body/div[1]/form[2]/input[3]",
         "strategy": "xpath",
@@ -60,13 +53,11 @@
             "doNotCache"
         ]
     },
-
-     "generated-securely-password": {
+    "generated-securely-password": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
         "strategy": "css",
         "groups": []
     },
-
     "bsky-credentials": {
         "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
         "strategy": "css",

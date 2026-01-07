@@ -4,11 +4,11 @@ import re
 import subprocess
 import sys
 
-from choose_l10n_ci_set import select_l10n_mappings
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
+from scripts.choose_l10n_ci_set import select_l10n_mappings
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
 FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
@@ -190,7 +190,9 @@ def reportable(platform_to_test=None):
     if platform_to_test:
         os.environ["FX_PLATFORM"] = platform_to_test
     version = (
-        subprocess.check_output([sys.executable, "./collect_executables.py", "-n"])
+        subprocess.check_output(
+            [sys.executable, "./scripts/collect_executables.py", "-n"]
+        )
         .strip()
         .decode()
     )

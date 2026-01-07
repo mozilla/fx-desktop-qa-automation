@@ -1,5 +1,8 @@
 import pytest
 
+from modules.browser_object import Navigation, TabBar
+from modules.page_object import GenericPage
+
 
 @pytest.fixture()
 def suite_id():
@@ -17,3 +20,23 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def nav(driver):
+    return Navigation(driver)
+
+
+@pytest.fixture()
+def tabs(driver):
+    return TabBar(driver)
+
+
+@pytest.fixture()
+def test_url(driver):
+    return driver.current_url
+
+
+@pytest.fixture()
+def generic_page(driver, test_url):
+    return GenericPage(driver, url=test_url)
