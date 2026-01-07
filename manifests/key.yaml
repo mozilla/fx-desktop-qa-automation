@@ -827,7 +827,9 @@ printing_ui:
     - functional02
 profile:
   test_set_default_profile:
-    result: pass
+    linux: unstable
+    mac: pass
+    win: pass
     splits:
     - smoke
 reader_view:
