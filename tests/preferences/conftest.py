@@ -1,8 +1,9 @@
 import pytest
 
-from modules.browser_object import TabBar
+from modules.browser_object import TabBar, PanelUi
+from modules.browser_object_navigation import Navigation
 from modules.components.dropdown import Dropdown
-from modules.page_object import AboutNewtab, AboutPrefs
+from modules.page_object import AboutNewtab, AboutPrefs, GenericPage
 from modules.util import BrowserActions
 
 
@@ -58,3 +59,23 @@ def drop_down_root(about_prefs: AboutPrefs):
 @pytest.fixture()
 def dropdown(driver, about_prefs, drop_down_root):
     return Dropdown(page=about_prefs, root=drop_down_root)
+
+
+@pytest.fixture()
+def panel_ui(driver):
+    return PanelUi(driver)
+
+
+@pytest.fixture()
+def nav(driver):
+    return Navigation(driver)
+
+
+@pytest.fixture()
+def test_url(driver):
+    return driver.current_url
+
+
+@pytest.fixture()
+def generic_page(driver, test_url):
+    return GenericPage(driver, url=test_url)

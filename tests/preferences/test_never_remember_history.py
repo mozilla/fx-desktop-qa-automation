@@ -20,11 +20,18 @@ def add_to_prefs_list():
     return [("browser.privatebrowsing.autostart", False)]
 
 
-def test_never_remember_history(driver: Firefox, sys_platform: str):
+@pytest.fixture()
+def about_prefs_category():
+    return "privacy"
+
+
+def test_never_remember_history(
+    driver: Firefox, sys_platform: str, about_prefs: AboutPrefs
+):
     """
     C143604: Make sure to set the pref via about:preferences, then check in about:config that the pref has been changed
     """
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs.open()
 
     # Change the settings to not remember the browser history
     about_prefs.set_history_option("dontremember")

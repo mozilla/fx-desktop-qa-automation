@@ -761,15 +761,19 @@ class BasePage(Page):
         return self
 
     def get_all_children(
-        self, reference: Union[str, tuple, WebElement], labels=[]
+        self,
+        reference: Union[str, tuple, WebElement],
+        locator: str = "./*",
+        labels: list[str] = None,
     ) -> List[WebElement]:
         """
         Gets all the children of a webelement
+        if locator is not specified, defaults to "./*".
         """
         children = None
         with self.driver.context(self.context_id):
             element = self.fetch(reference, labels)
-            children = element.find_elements(By.XPATH, "./*")
+            children = element.find_elements(By.XPATH, locator)
         return children
 
     def wait_for_no_children(

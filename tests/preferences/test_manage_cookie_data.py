@@ -5,7 +5,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -21,14 +20,17 @@ TEST_SITES = [
 ]
 
 
+@pytest.fixture()
+def about_prefs_category():
+    return "privacy"
+
+
 @pytest.mark.noxvfb
-def test_manage_cookie_data(driver: Firefox):
+def test_manage_cookie_data(driver: Firefox, about_prefs: AboutPrefs):
     """
     C143633 - Cookies and Site Data can be managed via the "Managed Cookies and Site Data" panel.
     """
     # Initialize objects
-    about_prefs = AboutPrefs(driver, category="privacy")
-    ba = BrowserActions(driver)
 
     # Visit some sites to add cookies
     for site in TEST_SITES:
@@ -39,22 +41,13 @@ def test_manage_cookie_data(driver: Firefox):
     about_prefs.open_manage_cookies_data_dialog()
 
     # Select and remove one cookie
-    cookie_item = about_prefs.get_manage_data_site_element(COOKIE_SITE)
-    cookie_item.click()
-    assert cookie_item.get_attribute("selected") == "true"
-
-    about_prefs.get_element("remove-selected-cookie-button").click()
-    about_prefs.element_does_not_exist("manage-cookies-site", labels=[COOKIE_SITE])
+    about_prefs.remote_cookie_site_data(COOKIE_SITE)
 
     # Remove all cookies
-    about_prefs.get_element("remove-all-button").click()
-    sleep(1)
-    cookie_list = about_prefs.get_elements("cookies-manage-data-sitelist")
-    assert len(cookie_list) == 1
+    about_prefs.remote_cookie_site_data(all_sites=True)
 
     # Save changes and handle confirmation alert
-    about_prefs.get_element("manage-data-save-changes-button").click()
-    sleep(1)
+    about_prefs.click_on("manage-data-save-changes-button")
 
     try:
         alert = about_prefs.get_alert()
@@ -64,8 +57,7 @@ def test_manage_cookie_data(driver: Firefox):
     except Exception as e:
         logging.warning(f"No alert appeared or failed to handle: {e}")
 
-    ba.switch_to_content_context()
-    sleep(1)
+    about_prefs.switch_to_default_frame()
 
     # Reopen and confirm cookies cleared
     about_prefs.open_manage_cookies_data_dialog()

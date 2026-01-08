@@ -593,6 +593,12 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("browser-popup")
 
+    def get_and_switch_iframe(self):
+        """Gets the webelement for the iframe that commonly appears in about:preferences and switches to it."""
+        iframe = self.get_iframe()
+        self.switch_to_iframe_context(iframe)
+        return self
+
     def get_password_exceptions_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the Password Exceptions dialog panel in the popup.
@@ -666,6 +672,26 @@ class AboutPrefs(BasePage):
         """
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
+
+    def remote_cookie_site_data(
+        self, cookie_site: str = "", all_sites: bool = False
+    ) -> BasePage:
+        """
+        Removes a given site from the manage site data popup
+        If all_sites is True, removes all sites from the manage site data popup and check that "cookies-manage-data-sitelist" only has one row.
+        """
+        sites = self.get_elements("children-host-elements")
+        if all_sites:
+            self.click_on("remove-all-button")
+            self.element_exists("cookies-manage-data-sitelist")
+            sites = self.get_elements("children-host-elements")
+            self.expect(lambda _: len(sites) == 0)
+        else:
+            cookie_item = self.get_manage_data_site_element(cookie_site)
+            cookie_item.click()
+            self.click_on("remove-selected-cookie-button")
+            new_sites = self.get_elements("children-host-elements")
+            self.expect(lambda _: len(new_sites) == len(sites) - 1)
 
     def open_autoplay_modal(self) -> BasePage:
         """
