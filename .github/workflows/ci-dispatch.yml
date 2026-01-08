@@ -83,45 +83,62 @@ jobs:
 
   Run-Starfox-Win:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox')
+    # skip this job in preview_only mode
+    if: ${{ contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox') &&
+      !(github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true')
+    }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
       is_pull_request: true
+      # pass the value of dry_run down the pipeline
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
     secrets: inherit
 
   Run-Starfox-Mac:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox')
+    if: ${{ contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox') &&
+      !(github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true')
+    }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS
       is_pull_request: true
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
     secrets: inherit
 
   Run-L10n-Win:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n')
+    if: ${{ contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n') &&
+      !(github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true')
+    }}
     uses: ./.github/workflows/main-l10n.yml
     with:
       job_to_run: L10n-Windows
       is_pull_request: true
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
     secrets: inherit
 
   Run-L10n-Mac:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n')
+    if: ${{ contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n') &&
+      !(github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true')
+    }}
     uses: ./.github/workflows/main-l10n.yml
     with:
       job_to_run: L10n-MacOS
       is_pull_request: true
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
     secrets: inherit
 
   Run-L10n-Linux:
     needs: Select-Channels
-    if: contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n')
+    if: ${{ contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n') &&
+      !(github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true')
+    }}
     uses: ./.github/workflows/main-l10n.yml
     with:
       job_to_run: L10n-Linux
       is_pull_request: true
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
     secrets: inherit
