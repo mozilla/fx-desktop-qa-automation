@@ -9,6 +9,7 @@ from selenium.common.exceptions import (
     WebDriverException,
 )
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -399,3 +400,14 @@ class AboutNetworking(BasePage):
         """
         # Use dynamic ID based on the option name
         self.get_element("networking-sidebar-category", labels=[option]).click()
+
+    def get_all_dns_rows(self):
+        """Get all DNS rows with their TRR status in the DNS table"""
+        self.element_visible("dns-content")
+        names = self.find_elements(
+            By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=1]"
+        )
+        trr = self.find_elements(
+            By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=3]"
+        )
+        return list(zip(names, trr))
