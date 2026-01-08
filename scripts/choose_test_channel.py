@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -62,4 +63,4 @@ for f in committed_files:
 if not channels:
     channels = {"starfox"}
 
-print(list(channels))
+print(json.dumps(list(channels)))
