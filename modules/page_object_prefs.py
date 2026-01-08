@@ -550,10 +550,9 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup after pressing the clear site data button.
         """
-        self.element_clickable("clear-site-data-button")
+        self.scroll_to_element("clear-site-data-button")
         self.click_on("clear-site-data-button")
-        iframe = self.get_element("browser-popup")
-        return iframe
+        return self.get_element("browser-popup")
 
     def get_saved_addresses_popup_iframe(self) -> WebElement:
         """
@@ -645,7 +644,7 @@ class AboutPrefs(BasePage):
         self.get_element("save-button").click()
         return self
 
-    def get_clear_cookie_data_value(self) -> int | None:
+    def get_cookie_site_data_value(self) -> int | None:
         """
         With the 'Clear browsing data and cookies' popup open,
         returns the <memory used> value of the option for 'Cookies and site data (<memory used>)'.
@@ -653,25 +652,13 @@ class AboutPrefs(BasePage):
         """
         # Find the dialog option elements containing the checkbox label
         self.element_exists("clear-data-dialog-options")
-        options = self.get_elements("clear-data-dialog-options")
-
-        # Extract the text from the label the second option
-        print(f"All options: {options}")
-        self.expect(lambda _: len(options) > 1)
-        second_option = options[1]
-        label_text = second_option.text
-        print(f"The text of the option is: {label_text}")
-
-        # Use a regular expression to find the memory usage
-        match = re.search(r"\d+", label_text)
-
-        if match:
-            number_str = match.group()  # Extract the matched number as a string
-            number = int(number_str)  # Convert the number to an integer
-            print(f"The extracted value is: {number}")
-            return number
-        else:
-            print("No number found in the string")
+        cookies_checkbox = self.get_element("cookies-data-checkbox")
+        self.expect_attribute_in_element(cookies_checkbox, "data-l10n-args")
+        cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
+        # dictionary holding the cookies amount and unit
+        # {amount: "1234", unit: "MB"}
+        cookies_amount = json.loads(cookies_object)
+        return int(cookies_amount.get("amount"))
 
     def get_manage_data_site_element(self, site: str) -> WebElement:
         """
@@ -827,6 +814,40 @@ class AboutPrefs(BasePage):
         checkbox = self.get_element("history-suggestion")
         if checkbox.is_selected():
             checkbox.click()
+
+    def verify_element_is_interactable(
+        self, locator: str, text_value: str = None
+    ) -> BasePage:
+        """Verify that the element with the given locator is interactable."""
+        element = self.get_element(locator)
+        if element.is_displayed():
+            self.scroll_to_element(locator)
+            self.element_clickable(locator)
+            if text_value:
+                self.element_has_text(locator, text_value)
+        return self
+
+    def open_clear_cookie_site_and_get_data(self):
+        """
+        Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
+        wait for its option container to be present, read the value, then switch back.
+        """
+        self.open()
+        iframe = self.clear_cookies_and_get_dialog_iframe()
+        self.switch_to_iframe_context(iframe)
+        val = self.get_cookie_site_data_value()
+        self.switch_to_default_frame()
+        self.close_dialog_box()
+        return val
+
+    def open_clear_cookie_site_and_clear_data(self):
+        """
+        Open about:preferences#privacy and clear cookies and site data.
+        """
+        iframe = self.clear_cookies_and_get_dialog_iframe()
+        self.switch_to_iframe_context(iframe)
+        self.click_on("clear-data-accept-button")
+        self.switch_to_default_frame()
 
 
 class AboutAddons(BasePage):

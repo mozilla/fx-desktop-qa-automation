@@ -355,6 +355,11 @@
     "strategy": "id",
     "groups": []
   },
+  "cookies-data-checkbox": {
+    "selectorData": "cookiesAndStorage",
+    "strategy": "id",
+    "groups": ["doNotCache"]
+  },
   "up_to_date_button": {
     "selectorData": "checkForUpdatesButton3",
     "strategy": "id",
