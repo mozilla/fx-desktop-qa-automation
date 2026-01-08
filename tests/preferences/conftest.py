@@ -1,10 +1,9 @@
 import pytest
 
-from modules.browser_object import TabBar, PanelUi
+from modules.browser_object import PanelUi, TabBar
 from modules.browser_object_navigation import Navigation
 from modules.components.dropdown import Dropdown
 from modules.page_object import AboutNewtab, AboutPrefs, GenericPage
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -33,11 +32,6 @@ def about_prefs_category():
 @pytest.fixture()
 def about_prefs(driver, about_prefs_category: str):
     return AboutPrefs(driver, category=about_prefs_category)
-
-
-@pytest.fixture()
-def ba(driver):
-    return BrowserActions(driver)
 
 
 @pytest.fixture()
