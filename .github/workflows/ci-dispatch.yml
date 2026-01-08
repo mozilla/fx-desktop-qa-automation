@@ -4,6 +4,30 @@ name: DTE Automation Dispatch
 run-name: CI tests kicked off by ${{ github.actor }}
 on:
   pull_request:
+
+  workflow_dispatch:
+    inputs:
+      preview_only:
+        description: "If true, only show which jobs would run (no reusable workflows called)"
+        required: false
+        default: "true"
+      dry_run:
+        description: "If true, downstream workflows should avoid side-effects (publish/deploy)"
+        required: false
+        default: "true"
+      win_installer_link:
+        description: "Optional Windows installer link to forward to the test workflow"
+        required: false
+        type: string
+      mac_installer_link:
+        description: "Optional macOS installer link to forward to the test workflow"
+        required: false
+        type: string
+      linux_tarball_link:
+        description: "Optional Linux tarball link to forward to the test workflow"
+        required: false
+        type: string
+
 permissions:
   contents: "write"
 
