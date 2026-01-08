@@ -9,10 +9,32 @@ from modules.browser_object import TabBar
 from modules.page_object import AboutPrefs
 from modules.page_object_generics import GenericPage
 
+TEST_URL = "https://www.example.com"
+DEFAULT_ZOOM_PERCENT = 150
+TAB_COUNT = 3
+
 
 @pytest.fixture()
 def test_case():
     return "545730"
+
+
+def _get_div_x_position(driver: Firefox) -> int:
+    """
+    Returns the X location of the first <div> element on the page.
+    """
+    div = driver.find_element(By.TAG_NAME, "div")
+    return int(div.location["x"])
+
+
+def _set_default_zoom(driver: Firefox, zoom_percent: int) -> None:
+    """
+    Sets the default zoom level in about:preferences.
+
+    Args:
+        zoom_percent: Zoom percentage (e.g., 150).
+    """
+    AboutPrefs(driver, category="general").open().set_default_zoom_level(zoom_percent)
 
 
 def test_default_zoom_across_tabs(driver: Firefox):
@@ -22,17 +44,14 @@ def test_default_zoom_across_tabs(driver: Firefox):
     """
 
     # Step 1: Open the test page and record the initial position of the <div>
-    test_url = "https://www.example.com"
-    page = GenericPage(driver, url=test_url)
+    page = GenericPage(driver, url=TEST_URL)
     page.open()
 
-    div = driver.find_element(By.TAG_NAME, "div")
-    initial_position = div.location["x"]
+    initial_position = _get_div_x_position(driver)
     logging.info(f"Initial X position of div before setting zoom: {initial_position}")
 
     # Step 2: Open the browser preferences and set the default zoom level to 150%
-    about_prefs = AboutPrefs(driver, category="general").open()
-    about_prefs.set_default_zoom_level(150)
+    _set_default_zoom(driver, DEFAULT_ZOOM_PERCENT)
 
     # Step 3: Open three tabs, load the test URL, and verify the <div>'s position
     tabs = TabBar(driver)
@@ -40,7 +59,7 @@ def test_default_zoom_across_tabs(driver: Firefox):
     # Store the first tab's position after zoom change for consistency checks
     zoomed_position = None
 
-    for index in range(3):
+    for index in range(1, TAB_COUNT + 1):
         # Open a new tab if not the first iteration
         if index > 0:
             tabs.new_tab_by_button()
@@ -49,13 +68,10 @@ def test_default_zoom_across_tabs(driver: Firefox):
             )  # Switch to the newly opened tab
 
         # Load the test URL in the current tab
-        page = GenericPage(driver, url=test_url)
+        page = GenericPage(driver, url=TEST_URL)
         page.open()
-        time.sleep(1)  # Allow time for the page to load
 
-        # Locate the main <div> element and get its X position
-        div = driver.find_element(By.TAG_NAME, "div")
-        current_position = div.location["x"]
+        current_position = _get_div_x_position(driver)
         logging.info(f"X position of div in tab {index + 1}: {current_position}")
 
         # Assert that the current position is different from the initial position
