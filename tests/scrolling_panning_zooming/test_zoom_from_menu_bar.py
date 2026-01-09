@@ -86,7 +86,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
     nav = Navigation(driver)
 
     nav.element_attribute_contains(
-        name="toolbar-zoom-level",
+        "toolbar-zoom-level",
         attr_name="label",
         attr_value=EXPECTED_ZOOM_IN_LABEL,
     )
@@ -126,7 +126,7 @@ def test_zoom_from_menu_bar(driver: Firefox):
 
     # Check zoom level in the toolbar
     nav.element_attribute_contains(
-        name="toolbar-zoom-level",
+        "toolbar-zoom-level",
         attr_name="label",
         attr_value=EXPECTED_ZOOM_OUT_LABEL,
     )

@@ -65,7 +65,7 @@ def test_login_form_copy_paste(driver: Firefox):
     login_fill.triple_click("username-field")
     login_fill.get_element("username-field").send_keys(Keys.BACK_SPACE)
     login_fill.element_attribute_contains(
-        name="username-field",
+        "username-field",
         attr_name="value",
         attr_value="",
     )
