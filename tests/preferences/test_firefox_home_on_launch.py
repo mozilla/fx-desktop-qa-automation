@@ -51,7 +51,9 @@ def test_firefox_home_on_launch(
     dropdown.select_option("Firefox Home (Default)", double_click=True)
 
     # make sure that the option was selected correctly
-    about_prefs.expect_element_attribute_is("home-new-window-dropdown", "label", "Firefox Home (Default)")
+    about_prefs.expect_element_attribute_is(
+        "home-new-window-dropdown", "label", "Firefox Home (Default)"
+    )
 
     # wait for the number of tabs and switch
     panel_ui.open_and_switch_to_new_window("window")

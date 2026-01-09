@@ -673,9 +673,7 @@ class AboutPrefs(BasePage):
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
 
-    def remove_cookie_site_data(
-        self, cookie_site: str = "", all_sites: bool = False
-    ):
+    def remove_cookie_site_data(self, cookie_site: str = "", all_sites: bool = False):
         """
         Removes a given site from the manage site data popup
         If all_sites is True, removes all sites from the manage site data popup and check that "cookies-manage-data-sitelist" only has one row.
