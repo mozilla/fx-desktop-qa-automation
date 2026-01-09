@@ -274,7 +274,7 @@ class PanelUi(BasePage):
         Confirm that the history is empty
         """
         self.open_history_menu()
-        self.expect_element_attribute_contains(
+        self.element_attribute_contains(
             "recent-history-content", "value", "(Empty)"
         )
 

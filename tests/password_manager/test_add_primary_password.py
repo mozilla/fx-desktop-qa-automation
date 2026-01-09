@@ -33,7 +33,7 @@ def test_add_primary_password(driver: Firefox):
     ba.switch_to_iframe_context(primary_pw_popup)
 
     # Current password field is empty and cannot be changed
-    about_prefs.expect_element_attribute_contains(
+    about_prefs.element_attribute_contains(
         "current-password", "disabled", "true"
     )
 

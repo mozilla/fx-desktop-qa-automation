@@ -38,7 +38,7 @@ def test_http_site(
     panel_ui.open_and_switch_to_new_window("tab")
 
     driver.get(HTTP_SITE)
-    nav.expect_element_attribute_contains(
+    nav.element_attribute_contains(
         "lock-icon", "tooltiptext", CONNECTION_NOT_SECURE
     )
 
@@ -55,7 +55,7 @@ def test_http_site(
     driver.switch_to.window(driver.window_handles[1])
 
     driver.refresh()
-    nav.expect_element_attribute_contains(
+    nav.element_attribute_contains(
         "lock-icon", "tooltiptext", CONNECTION_NOT_SECURE
     )
 

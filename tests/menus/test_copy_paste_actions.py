@@ -41,14 +41,14 @@ def test_login_form_copy_paste(driver: Firefox):
     context_action("username-field")
     login_fill.fill("username-field", random_other_text, press_enter=False)
     context_action("username-field", "paste")
-    login_fill.expect_element_attribute_contains("username-field", "value", random_text)
+    login_fill.element_attribute_contains("username-field", "value", random_text)
 
     # Paste to password
     login_fill.context_click("input-field", labels=["current-password"])
     context_menu.click_and_hide_menu("context-menu-paste")
     login_fill.context_click("input-field", labels=["current-password"])
     context_menu.click_and_hide_menu("context-menu-reveal-password")
-    login_fill.expect_element_attribute_contains(
+    login_fill.element_attribute_contains(
         "input-field", "value", random_text, labels=["current-password"]
     )
 
@@ -59,12 +59,12 @@ def test_login_form_copy_paste(driver: Firefox):
     context_action("input-field", labels=["current-password"])
     context_action("username-field", "paste")
     # Text in clipboard should not have updated to random_other_text
-    login_fill.expect_element_attribute_contains("username-field", "value", random_text)
+    login_fill.element_attribute_contains("username-field", "value", random_text)
 
     # Delete all text
     login_fill.triple_click("username-field")
     login_fill.get_element("username-field").send_keys(Keys.BACK_SPACE)
-    login_fill.expect_element_attribute_contains(
+    login_fill.element_attribute_contains(
         name="username-field",
         attr_name="value",
         attr_value="",
@@ -90,13 +90,13 @@ def test_text_area_copy_paste(driver: Firefox):
 
     # Delete all the text and paste
     text_area_fill.get_element("street-address-textarea").send_keys(Keys.BACK_SPACE)
-    text_area_fill.expect_element_attribute_contains(
+    text_area_fill.element_attribute_contains(
         "street-address-textarea", "value", ""
     )
 
     text_area_fill.context_click("street-address-textarea")
     context_menu.click_and_hide_menu("context-menu-paste")
-    text_area_fill.expect_element_attribute_contains(
+    text_area_fill.element_attribute_contains(
         "street-address-textarea", "value", random_text
     )
 
@@ -122,11 +122,11 @@ def test_search_field_copy_paste(driver: Firefox):
 
     # Delete the current text
     google_search.get_element("search-bar-textarea").send_keys(Keys.BACK_SPACE)
-    google_search.expect_element_attribute_contains("search-bar-textarea", "value", "")
+    google_search.element_attribute_contains("search-bar-textarea", "value", "")
 
     # Context click and paste the text back
     google_search.context_click("search-bar-textarea")
     context_menu.click_and_hide_menu("context-menu-paste")
-    google_search.expect_element_attribute_contains(
+    google_search.element_attribute_contains(
         "search-bar-textarea", "value", random_text
     )
