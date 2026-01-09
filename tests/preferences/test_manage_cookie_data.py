@@ -41,10 +41,10 @@ def test_manage_cookie_data(driver: Firefox, about_prefs: AboutPrefs):
     about_prefs.open_manage_cookies_data_dialog()
 
     # Select and remove one cookie
-    about_prefs.remote_cookie_site_data(COOKIE_SITE)
+    about_prefs.remove_cookie_site_data(COOKIE_SITE)
 
     # Remove all cookies
-    about_prefs.remote_cookie_site_data(all_sites=True)
+    about_prefs.remove_cookie_site_data(all_sites=True)
 
     # Save changes and handle confirmation alert
     about_prefs.click_on("manage-data-save-changes-button")

@@ -28,11 +28,11 @@ def test_firefox_home_new_tab(
     """
 
     # click the dropdown
-    drop_down = about_prefs.get_element("home-new-tabs-dropdown")
     dropdown.select_option("Firefox Home (Default)")
 
     # make sure that the option was selected correctly
-    assert drop_down.get_attribute("label") == "Firefox Home (Default)"
+    about_prefs.expect_element_attribute_is("home-new-window-dropdown", "label", "Firefox Home (Default)")
+
 
     # wait for the number of tabs and switch
     tabs.open_and_switch_to_new_tab()
