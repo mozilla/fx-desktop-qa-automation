@@ -46,9 +46,7 @@ def test_webextension_completed_installation_successfully_displayed(
     nav.element_attribute_contains(
         "popup-notification-panel", "name", "Popup Blocker (strict)"
     )
-    nav.element_attribute_contains(
-        "popup-notification-primary-button", "label", "OK"
-    )
+    nav.element_attribute_contains("popup-notification-primary-button", "label", "OK")
     nav.element_attribute_contains(
         "popup-notification-panel", "endlabel", " was added."
     )

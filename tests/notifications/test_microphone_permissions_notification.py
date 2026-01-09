@@ -35,9 +35,7 @@ def _verify_microphone_permission_prompt(driver: Firefox, nav: Navigation) -> No
     """
     nav.element_visible("popup-notification")
     nav.element_attribute_contains("popup-notification", "label", "Allow ")
-    nav.element_attribute_contains(
-        "popup-notification", "name", "mozilla.github.io"
-    )
+    nav.element_attribute_contains("popup-notification", "name", "mozilla.github.io")
     nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your microphone?"
     )

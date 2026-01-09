@@ -90,9 +90,7 @@ def test_text_area_copy_paste(driver: Firefox):
 
     # Delete all the text and paste
     text_area_fill.get_element("street-address-textarea").send_keys(Keys.BACK_SPACE)
-    text_area_fill.element_attribute_contains(
-        "street-address-textarea", "value", ""
-    )
+    text_area_fill.element_attribute_contains("street-address-textarea", "value", "")
 
     text_area_fill.context_click("street-address-textarea")
     context_menu.click_and_hide_menu("context-menu-paste")

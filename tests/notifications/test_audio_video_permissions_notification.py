@@ -47,9 +47,7 @@ def test_camera_and_microphone_permissions_notification(driver: Firefox, web_pag
     # Verify that the notification is displayed
     nav.element_visible("popup-notification")
     nav.element_attribute_contains("popup-notification", "label", "Allow ")
-    nav.element_attribute_contains(
-        "popup-notification", "name", "mozilla.github.io"
-    )
+    nav.element_attribute_contains("popup-notification", "name", "mozilla.github.io")
     nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your camera and microphone?"
     )

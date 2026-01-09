@@ -44,9 +44,7 @@ def test_auto_saved_generated_password_context_menu(driver: Firefox):
     about_logins.open()
 
     # Verify the website address saves the correct value
-    about_logins.element_attribute_contains(
-        "website-address", "href", TEST_WEBSITE
-    )
+    about_logins.element_attribute_contains("website-address", "href", TEST_WEBSITE)
 
     # Verify the username field has no value
     about_logins.element_attribute_contains(

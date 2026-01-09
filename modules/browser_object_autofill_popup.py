@@ -33,9 +33,7 @@ class AutofillPopup(BasePage):
         self.element_exists("pop-up-component")
         popup_component = self.get_element("pop-up-component")
         if len(popup_component.get_attribute("innerHTML")) > 1:
-            self.element_attribute_contains(
-                "pop-up-component-box", "style", "0px;"
-            )
+            self.element_attribute_contains("pop-up-component-box", "style", "0px;")
         else:
             self.element_attribute_contains("pop-up-component", "hidden", "true")
         return self
