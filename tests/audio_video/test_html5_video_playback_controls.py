@@ -42,4 +42,4 @@ def test_html5_video_playback_controls(driver: Firefox):
 
     # Check volume
     page.click_on("vjs-volume")
-    page.element_visible("verify-volume")
+    page.verify_volume_level(50)

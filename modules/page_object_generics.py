@@ -120,6 +120,24 @@ class GenericPage(BasePage):
             )
         )
 
+    def verify_volume_level(self, expected_width_percent: int):
+        """
+        Verify that the HTML5 video volume level has the expected width percentage.
+
+        :param expected_width_percent: The expected volume width (0-100)
+        """
+        # Get the volume element using the declared locator
+        volume_el = self.get_element("verify-volume")
+
+        # Read the 'style' attribute
+        style = volume_el.get_attribute("style")  # e.g., "width: 50%;"
+
+        # Assert the expected width is in the style
+        expected_str = f"width: {expected_width_percent}%"
+        assert expected_str in style, f"Expected volume width '{expected_str}' not found in '{style}'"
+
+        return self
+
 
 class GenericPdf(BasePage):
     """
