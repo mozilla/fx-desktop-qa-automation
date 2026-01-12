@@ -69,5 +69,20 @@
         "selectorData": "p[contenteditable]",
         "strategy": "css",
         "groups": []
+    },
+    "vjs-play-button": {
+        "selectorData": "vjs-big-play-button",
+        "strategy": "class",
+        "groups": []
+    },
+    "vjs-pause-button": {
+        "selectorData": "button[type='button'][title='Pause']",
+        "strategy": "css",
+        "groups": []
+    },
+    "vjs-full-screen-button": {
+        "selectorData": "button[type='button'][title='Fullscreen']",
+        "strategy": "css",
+        "groups": []
     }
 }
