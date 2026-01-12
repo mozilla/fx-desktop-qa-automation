@@ -80,8 +80,28 @@
         "strategy": "css",
         "groups": []
     },
-    "vjs-full-screen-button": {
+    "vjs-fullscreen": {
         "selectorData": "button[type='button'][title='Fullscreen']",
+        "strategy": "css",
+        "groups": []
+    },
+    "vjs-exit-fullscreen": {
+        "selectorData": "button[type='button'][title='Exit Fullscreen']",
+        "strategy": "css",
+        "groups": []
+    },
+    "vjs-play": {
+        "selectorData": "button[type='button'][title='Play']",
+        "strategy": "css",
+        "groups": []
+    },
+    "vjs-volume": {
+        "selectorData": "vjs-volume-level",
+        "strategy": "class",
+        "groups": []
+    },
+    "verify-volume": {
+        "selectorData": "div.vjs-volume-level[style='width: 50%;']",
         "strategy": "css",
         "groups": []
     }

@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -28,11 +26,20 @@ def test_html5_video_playback_controls(driver: Firefox):
     page.open()
 
     # Use all available controls on the video player
+    # Check play/pause buttons
     page.click_on("vjs-play-button")
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
     page.click_on("vjs-pause-button")
-
-    # Check volume
+    page.element_visible("vjs-play")
 
     # Check full screen
-    page.click_on("vjs-full-screen-button")
+    page.click_on("vjs-fullscreen")
+    page.element_visible("vjs-exit-fullscreen")
+
+    # Check exit full screen
+    page.click_on("vjs-exit-fullscreen")
+    page.element_visible("vjs-fullscreen")
+
+    # Check volume
+    page.click_on("vjs-volume")
+    page.element_visible("verify-volume")
