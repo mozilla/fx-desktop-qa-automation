@@ -10,11 +10,11 @@ on:
       preview_only:
         description: "If true, only show which jobs would run (no reusable workflows called)"
         required: false
-        default: "true"
+        default: "false"
       dry_run:
         description: "If true, downstream workflows should avoid side-effects (publish/deploy)"
         required: false
-        default: "true"
+        default: "false"
       win_installer_link:
         description: "Optional Windows installer link to forward to the test workflow"
         required: false
@@ -46,40 +46,22 @@ jobs:
           echo channels=$(python3 scripts/choose_test_channel.py) >> "$GITHUB_OUTPUT"
 
   Preview-Plan:
-    # Only run preview when triggered manually via workflow_dispatch and preview_only set to true
-    needs: Select-Channels
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true' }}
-    steps:
-      - name: Show selected channels
-        run: |
-          echo "selected channels are: ${{ needs.Select-Channels.outputs.channels }}"
-      - name: Print planned jobs
-        run: |
-          python3 - <<'PY'
-          import json, os
-          raw = os.environ.get('SELECT_CHANNELS', '${{ needs.Select-Channels.outputs.channels }}')
-          # The output is expected to be JSON array or stringified JSON; try to parse
-          try:
-              channels = json.loads(raw)
-          except Exception:
-              # fallback: try to evaluate simple comma separated string
-              channels = [x.strip() for x in raw.strip("[] \n'\"").split(",") if x.strip()]
-          print("Channels:", channels)
-          planned = []
-          if any('starfox' in str(c) for c in channels):
-              planned += ["Run-Starfox-Win (Test-Windows)", "Run-Starfox-Mac (Test-MacOS)"]
-          if any('l10n' in str(c) for c in channels):
-              planned += ["Run-L10n-Win (L10n-Windows)", "Run-L10n-Mac (L10n-MacOS)", "Run-L10n-Linux (L10n-Linux)"]
-          if not planned:
-              print("No jobs selected by channels.")
-          else:
-              print("Planned jobs (no workflows executed):")
-              for p in planned:
-                  print(" -", p)
-          PY
-                  env:
-                    SELECT_CHANNELS: ${{ needs.Select-Channels.outputs.channels }}
+      needs: Select-Channels
+      runs-on: ubuntu-latest
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preview_only == 'true' }}
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Show selected channels
+          run: |
+            echo "selected channels are: ${{ needs.Select-Channels.outputs.channels }}"
+
+        - name: Print planned jobs
+          env:
+            SELECT_CHANNELS: ${{ needs.Select-Channels.outputs.channels }}
+          run: |
+            python3 scripts/preview_plan.py
 
   Run-Starfox-Win:
     needs: Select-Channels
