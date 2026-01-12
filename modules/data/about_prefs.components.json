@@ -282,7 +282,7 @@
   "cookies-manage-data-sitelist": {
     "selectorData": "sitesList",
     "strategy": "id",
-    "groups": []
+    "groups": ["doNotCache"]
   },
   "manage-cookies-site": {
     "selectorData": "richlistitem[host='{name}']",
@@ -354,6 +354,11 @@
     "selectorData": "updateButton",
     "strategy": "id",
     "groups": []
+  },
+  "cookies-data-checkbox": {
+    "selectorData": "cookiesAndStorage",
+    "strategy": "id",
+    "groups": ["doNotCache"]
   },
   "up_to_date_button": {
     "selectorData": "checkForUpdatesButton3",
@@ -474,6 +479,11 @@
   "exceptions-item": {
     "selectorData": "//*[@id='permissionsBox']//*[@origin]",
     "strategy": "xpath",
+    "groups": []
+  },
+  "children-host-elements": {
+    "selectorData": "richlistitem",
+    "strategy": "tag",
     "groups": []
   },
   "use-primary-password": {
