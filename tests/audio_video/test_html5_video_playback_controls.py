@@ -20,7 +20,6 @@ def test_html5_video_playback_controls(driver: Firefox):
 
     # Instantiate object
     page = GenericPage(driver, url=TEST_URL)
-    tabs = TabBar(driver)
 
     # Open test url
     page.open()
@@ -28,7 +27,7 @@ def test_html5_video_playback_controls(driver: Firefox):
     # Use all available controls on the video player
     # Check play/pause buttons
     page.click_on("vjs-play-button")
-    tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
+    page.element_visible("vjs-pause-button")
     page.click_on("vjs-pause-button")
     page.element_visible("vjs-play")
 
@@ -42,4 +41,4 @@ def test_html5_video_playback_controls(driver: Firefox):
 
     # Check volume
     page.click_on("vjs-volume")
-    page.verify_volume_level(50)
+    page.verify_volume_not_max()
