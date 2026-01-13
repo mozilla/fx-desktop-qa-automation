@@ -99,10 +99,5 @@
         "selectorData": "vjs-volume-level",
         "strategy": "class",
         "groups": []
-    },
-    "verify-volume": {
-        "selectorData": "div.vjs-volume-level[style='width: 50%;']",
-        "strategy": "css",
-        "groups": []
     }
 }

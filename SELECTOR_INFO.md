@@ -2455,13 +2455,6 @@ Description: videojs website media player volume button
 Location: videojs website player
 Path to .json: modules/data/generic_page.components.json
 ```
-```
-Selector Name: verify-volume
-Selector Data: "div.vjs-volume-level[style='width: 50%;']"
-Description: verify volume
-Location: videojs website player
-Path to .json: modules/data/generic_page.components.json
-```
 #### generic_pdf
 ```
 Selector Name: highlighted-text

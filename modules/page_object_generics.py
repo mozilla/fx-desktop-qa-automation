@@ -125,7 +125,7 @@ class GenericPage(BasePage):
         Verify that the HTML5 video volume level is below 100%.
         """
         # Get the volume element using the declared locator
-        volume_el = self.get_element("verify-volume")
+        volume_el = self.get_element("vjs-volume")
 
         # Read the 'style' attribute (e.g., "width: 50%;")
         style = volume_el.get_attribute("style")
