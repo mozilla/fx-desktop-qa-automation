@@ -134,7 +134,9 @@ class GenericPage(BasePage):
 
         # Assert the expected width is in the style
         expected_str = f"width: {expected_width_percent}%"
-        assert expected_str in style, f"Expected volume width '{expected_str}' not found in '{style}'"
+        assert expected_str in style, (
+            f"Expected volume width '{expected_str}' not found in '{style}'"
+        )
 
         return self
 
