@@ -164,9 +164,9 @@ address_bar_and_search:
     - functional01
   test_search_suggestions:
     result:
+      linux: pass
       mac: pass
       win: unstable
-      linux: pass
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
