@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 from typing import Union
 
 from selenium.common.exceptions import NoSuchElementException
@@ -401,9 +402,11 @@ class TabBar(BasePage):
         else:
             self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).perform()
 
-        # Press 'T' multiple times to reopen tabs
+        # Press "T" multiple times to reopen tabs
         for _ in range(count):
             self.actions.send_keys("t").perform()
+            # Pause a moment to let each tab to reopen
+            sleep(0.2)
 
         # Release modifier keys
         if sys_platform == "Darwin":
