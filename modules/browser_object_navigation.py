@@ -993,7 +993,7 @@ class Navigation(BasePage):
             self.element_visible("autoplay-icon-blocked")
 
     @BasePage.context_chrome
-    def expect_autoplay_blocked_icon(self, visible: bool = True)  -> BasePage:
+    def expect_autoplay_blocked_icon(self, visible: bool = True) -> BasePage:
         """
         Wait for the autoplay blocked icon in the URL bar to be visible/hidden.
         Argument:
