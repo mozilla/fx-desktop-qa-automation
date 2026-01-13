@@ -124,20 +124,15 @@ class GenericPage(BasePage):
         """
         Verify that the HTML5 video volume level is below 100%.
         """
-        # Get the volume element using the declared locator
         volume_el = self.get_element("vjs-volume")
-
-        # Read the 'style' attribute (e.g., "width: 50%;")
         style = volume_el.get_attribute("style")
 
-        # Extract the width percentage
         prefix = "width:"
         assert prefix in style, f"Volume style does not contain width: '{style}'"
 
         width_str = style.split(prefix)[1].strip().rstrip(";").rstrip("%")
-        width_percent = int(width_str)
+        width_percent = float(width_str)
 
-        # Assert volume is under 100%
         assert width_percent < 100, (
             f"Expected volume to be under 100%, but got {width_percent}%"
         )
