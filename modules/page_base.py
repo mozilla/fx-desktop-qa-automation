@@ -812,7 +812,7 @@ class BasePage(Page):
 
     def get_all_children(
         self,
-        reference: str | tuple | WebElement, labels=[],
+        reference: str | tuple | WebElement,
         locator: str = "./*",
         labels: list[str] = None,
     ) -> List[WebElement]:
