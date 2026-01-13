@@ -120,22 +120,15 @@ class GenericPage(BasePage):
             )
         )
 
-    def verify_volume_level(self, expected_width_percent: int):
-        """
-        Verify that the HTML5 video volume level has the expected width percentage.
-
-        :param expected_width_percent: The expected volume width (0-100)
-        """
-        # Get the volume element using the declared locator
+    def verify_volume_level(self, expected_percent: int):
+        """Verify the video volume level matches the expected percentage."""
         volume_el = self.get_element("verify-volume")
+        style = volume_el.get_attribute("style")
 
-        # Read the 'style' attribute
-        style = volume_el.get_attribute("style")  # e.g., "width: 50%;"
+        assert style, "Volume level style attribute is missing"
 
-        # Assert the expected width is in the style
-        expected_str = f"width: {expected_width_percent}%"
-        assert expected_str in style, (
-            f"Expected volume width '{expected_str}' not found in '{style}'"
+        assert f"width: {expected_percent}%" in style, (
+            f"Expected volume width '{expected_percent}%', got '{style}'"
         )
 
         return self
