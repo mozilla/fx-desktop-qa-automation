@@ -811,15 +811,19 @@ class BasePage(Page):
         return self
 
     def get_all_children(
-        self, reference: str | tuple | WebElement, labels=[]
+        self,
+        reference: str | tuple | WebElement, labels=[],
+        locator: str = "./*",
+        labels: list[str] = None,
     ) -> List[WebElement]:
         """
         Gets all the children of a webelement
+        if locator is not specified, defaults to "./*".
         """
         children = None
         with self.driver.context(self.context_id):
             element = self.fetch(reference, labels)
-            children = element.find_elements(By.XPATH, "./*")
+            children = element.find_elements(By.XPATH, locator)
         return children
 
     def wait_for_no_children(self, parent: str | tuple | WebElement, labels=[]) -> Page:
@@ -854,6 +858,12 @@ class BasePage(Page):
         """Switch to frame of given index"""
         self.driver.switch_to.frame(index)
         return self
+
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
 
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
