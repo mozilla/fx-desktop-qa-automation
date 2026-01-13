@@ -42,8 +42,8 @@ jobs:
       - name: Select test channels
         id: dispatch
         run: |
-          python3 scripts/choose_test_channel.py
-          echo channels=$(python3 scripts/choose_test_channel.py) >> "$GITHUB_OUTPUT"
+          channels="$(python3 scripts/choose_test_channel.py)"
+          echo "channels=$channels" >> "$GITHUB_OUTPUT"
 
   Preview-Plan:
       needs: Select-Channels

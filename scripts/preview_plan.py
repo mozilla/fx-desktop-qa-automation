@@ -8,7 +8,9 @@ def parse_channels(raw: str) -> list[str]:
 
     channels = json.loads(raw)
     if not isinstance(channels, list):
-        raise ValueError(f"Expected JSON array for channels, got {type(channels).__name__}")
+        raise ValueError(
+            f"Expected JSON array for channels, got {type(channels).__name__}"
+        )
 
     return [str(c) for c in channels]
 
