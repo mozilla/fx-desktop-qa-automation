@@ -470,11 +470,11 @@ class BasePage(Page):
         )
         return self
 
-    def expect_attribute_in_element(self, element: str, attr: str):
+    def expect_attribute_in_element(self, element: str | WebElement, attr: str):
         """Expect helper: check to see if attribute exists in element."""
-        return self.expect(
-            lambda _: EC.element_attribute_to_include(self.get_element(element), attr)
-        )
+        if isinstance(element, str):
+            element = self.get_element(element)
+        return self.expect(lambda _: EC.element_attribute_to_include(element, attr))
 
     def expect_element_attribute_is(
         self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
@@ -761,15 +761,19 @@ class BasePage(Page):
         return self
 
     def get_all_children(
-        self, reference: Union[str, tuple, WebElement], labels=[]
+        self,
+        reference: Union[str, tuple, WebElement],
+        locator: str = "./*",
+        labels: list[str] = None,
     ) -> List[WebElement]:
         """
         Gets all the children of a webelement
+        if locator is not specified, defaults to "./*".
         """
         children = None
         with self.driver.context(self.context_id):
             element = self.fetch(reference, labels)
-            children = element.find_elements(By.XPATH, "./*")
+            children = element.find_elements(By.XPATH, locator)
         return children
 
     def wait_for_no_children(
@@ -806,6 +810,12 @@ class BasePage(Page):
         """Switch to frame of given index"""
         self.driver.switch_to.frame(index)
         return self
+
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
 
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
