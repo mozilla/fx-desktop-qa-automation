@@ -3259,6 +3259,13 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: autoplay-blocked-icon
+Selector Data: "image.blocked-permission-icon.autoplay-media-icon[showing='{state}']"
+Description: Autoplay blocked icon in the URL bar that indicates when autoplay media is blocked
+Location: Address bar / URL bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: search-settings
 Selector Data: urlbar-anon-search-settings
 Description: Search settings button in awesome bar
@@ -4217,6 +4224,13 @@ Selector Name: all-tabs
 Selector Data: tabbrowser-tab
 Description: All tabs locator
 Location: All tabs from the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: play-tab-button
+Selector Data: "moz-button.tab-audio-button[activemedia-blocked='{state}']"
+Description: Play tab button that appears on tabs when autoplay is blocked in background tabs
+Location: Tab bar, on tabs with blocked autoplay media
 Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill
