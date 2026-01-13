@@ -25,6 +25,9 @@ LANGUAGES = [
 )
 def test_language_pack_install_from_addons(
     driver: Firefox,
+    amo_languages: AmoLanguages,
+    about_addons: AboutAddons,
+    about_prefs: AboutPrefs,
     drop_down_name: str,
     language_label: str,
     shortform: str,
@@ -33,46 +36,33 @@ def test_language_pack_install_from_addons(
     """
     C1549408: verify that installing a language pack from about:addons will correctly change the locale
     """
-    # instantiate objects
-    amo_languages = AmoLanguages(driver).open()
+    amo_languages.open()
 
     # ensuring the page was loaded
     amo_languages.wait_for_language_page_to_load()
 
     # grab the appropriate link and wait until the page is loaded
     amo_languages.find_language_row_and_navigate(language_label)
-    amo_languages.get_element("language-addons-subpage-add-to-firefox").click()
+    amo_languages.click_on("language-addons-subpage-add-to-firefox")
 
-    with driver.context(driver.CONTEXT_CHROME):
-        # click one for "Add"
-        amo_languages.get_element("language-install-popup-add").click()
-        # click second time for "Okay", the button is not cached which allows for two different buttons to be different
-        amo_languages.get_element("language-install-popup-add").click()
+    amo_languages.confirm_language_install_popup()
 
     # ensure that the about:addons has the language listed
-    about_addons = AboutAddons(driver).open()
+    about_addons.open()
     about_addons.choose_sidebar_option("locale")
-    addon_list_parent = about_addons.get_element("languages-addon-list")
-    addon_language_cards = about_addons.get_element(
-        "languages-addon-list-card", multiple=True, parent_element=addon_list_parent
-    )
+    addon_language_cards = about_addons.get_language_addon_list()
 
     # making sure that 1 language was installed
     assert len(addon_language_cards) == 1
 
     # perform language changing and assertions in about_prefs
-    about_prefs = AboutPrefs(driver, category="general").open()
+    about_prefs.open()
     language_dropdown = about_prefs.get_element("language-dropdown")
+
     dropdown = Dropdown(page=about_prefs, root=language_dropdown)
     dropdown.select_option(drop_down_name, double_click=True, wait_for_selection=False)
 
-    about_prefs.custom_wait(timeout=15).until(
-        lambda _: about_prefs.get_element("prefs-html-root").get_attribute("lang")
-        == shortform
-    )
-    assert (
-        about_prefs.get_element("language-set-alternative-button").get_attribute(
-            "label"
-        )
-        == localized_text
+    about_prefs.expect_element_attribute_is("prefs-html-root", "lang", shortform)
+    about_prefs.expect_element_attribute_is(
+        "language-set-alternative-button", "label", localized_text
     )
