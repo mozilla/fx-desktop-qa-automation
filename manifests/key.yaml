@@ -248,9 +248,9 @@ audio_video:
     - functional01
   test_autoplay_sound_blocking_background_tab:
     result:
-        linux: unstable
-        mac: unstable
-        win: unstable
+      linux: unstable
+      mac: unstable
+      win: unstable
     splits:
     - functional01
   test_block_audio_video_functionality:
@@ -260,7 +260,7 @@ audio_video:
   test_html5_video_playback_controls:
     result: pass
     splits:
-      - functional01
+    - functional01
   test_users_actions_saved_on_reload:
     result: pass
     splits:
