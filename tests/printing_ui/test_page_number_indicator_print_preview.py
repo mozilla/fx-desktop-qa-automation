@@ -24,10 +24,11 @@ def test_page_number_indicator_print_preview(driver: Firefox):
     # Open Print Preview
     print_preview.open_with_key_combo()
     print_preview.wait_for_preview_ready()
-    print_preview.hover_preview()
 
-    # Indicator displayed
-    assert "of" in print_preview.get_sheet_indicator_text()
+    # Verify indicator values
+    current, total = print_preview.get_sheet_indicator_values()
+    assert total >= 1, "Sheet count should be at least 1"
+    assert 1 <= current <= total, "Current page should be within valid range"
 
     # Navigation between pages
     print_preview.go_to_last_page()

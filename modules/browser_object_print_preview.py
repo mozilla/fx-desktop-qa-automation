@@ -1,7 +1,4 @@
-from time import sleep
-
 from selenium.common import NoAlertPresentException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object_panel_ui import PanelUi
@@ -47,16 +44,12 @@ class PrintPreview(BasePage):
         return self
 
     def switch_to_preview_window(self) -> BasePage:
-        """Switch to the iframe holding the Print Preview"""
+        """Switch to the iframe holding the Print Preview settings."""
         ba = BrowserActions(self.driver)
-        sleep(3)
         with self.driver.context(self.driver.CONTEXT_CHROME):
             ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
-            self.expect(
-                lambda _: self.driver.execute_script(
-                    'return document.readyState === "complete";'
-                )
-            )
+            # Wait for print button to be present as indicator of readiness
+            self.element_exists("print-button")
         return self
 
     @BasePage.context_content
@@ -66,7 +59,8 @@ class PrintPreview(BasePage):
 
         self.switch_to_preview_window()
         self.get_element("print-button").click()
-        sleep(2)
+        # Wait for print dialog to appear
+        self.custom_wait(timeout=5).until(lambda d: _get_alert(d))
         keyboard = Controller()
         keyboard.tap(Key.enter)
         return self
@@ -74,123 +68,125 @@ class PrintPreview(BasePage):
     @BasePage.context_chrome
     def hover_preview(self) -> BasePage:
         """Hover over the print preview to reveal the page indicator toolbar."""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            preview_browser = self.get_element("print-preview-browser")
-            self.actions.move_to_element(preview_browser).perform()
-            sleep(0.5)
+        preview_browser = self.get_element("print-preview-browser")
+        self.actions.move_to_element(preview_browser).perform()
+        # Wait for pagination to become visible
+        self.element_visible("print-preview-pagination")
         return self
 
     @BasePage.context_chrome
     def wait_for_preview_ready(self, timeout: int = 20) -> BasePage:
-        """Wait until Print Preview is loaded with page count."""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            # Wait for sheet-count attribute to be present and > 0
-            self.custom_wait(timeout=timeout).until(
-                lambda _: self.get_element("print-preview-browser").get_attribute(
-                    "sheet-count"
-                )
-            )
+        """Wait until Print Preview has current-page and sheet-count >= 1."""
 
-    def get_sheet_indicator_text(self) -> str:
-        """Return the text from the page indicator, for example: '1 of 5'."""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
+        def _ready(_):
             preview_browser = self.get_element("print-preview-browser")
             current_page = preview_browser.get_attribute("current-page")
             sheet_count = preview_browser.get_attribute("sheet-count")
-            return f"{current_page} of {sheet_count}"
+            # Return False if attributes not yet present
+            if current_page is None or sheet_count is None:
+                return False
+            return int(sheet_count) >= 1 and int(current_page) >= 1
 
-    def _parse_sheet_indicator(self) -> tuple[int, int]:
-        """
-        Parse 'X of Y' into (X, Y).
-        Returns (current, total). Raises AssertionError if format is unexpected.
-        """
-        text = self.get_sheet_indicator_text().strip()
+        self.custom_wait(timeout=timeout).until(_ready)
+        return self
 
-        # Expected format is localized, but for en-US it's "1 of 5".
-        # If l10n changes, you can fall back to data-l10n-args instead.
-        if " of " not in text:
-            raise AssertionError(f"Unexpected sheet indicator format: '{text}'")
+    @BasePage.context_chrome
+    def get_sheet_indicator_values(self) -> tuple[int, int]:
+        """Return (current_page, sheet_count) from print-preview-browser attributes."""
+        preview_browser = self.get_element("print-preview-browser")
+        current_page = preview_browser.get_attribute("current-page")
+        sheet_count = preview_browser.get_attribute("sheet-count")
 
-        left, right = text.split(" of ", 1)
-        current = int(left.strip())
-        total = int(right.strip())
-        return current, total
+        assert current_page is not None, (
+            "Missing 'current-page' attribute on print-preview-browser"
+        )
+        assert sheet_count is not None, (
+            "Missing 'sheet-count' attribute on print-preview-browser"
+        )
 
-    def debug_pagination_shadow_dom(self) -> str:
-        """Debug helper: returns the innerHTML of pagination shadow DOM."""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            pagination = self.get_element("print-preview-pagination")
-            return self.driver.execute_script(
-                "return arguments[0].shadowRoot.innerHTML", pagination
-            )
+        return int(current_page), int(sheet_count)
 
+    @BasePage.context_chrome
+    def get_sheet_indicator_text(self) -> str:
+        """Return a display-friendly string, e.g. '1 of 5' (derived from attributes)."""
+        current, total = self.get_sheet_indicator_values()
+        return f"{current} of {total}"
+
+    @BasePage.context_chrome
+    def _wait_for_current_page(self, expected: int, timeout: int = 15) -> None:
+        """Wait until current-page equals expected."""
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_sheet_indicator_values()[0] == expected
+        )
+
+    @BasePage.context_chrome
     def _click_pagination_button(self, button_name: str) -> None:
         """
         Click a navigation button in the print preview pagination toolbar.
         button_name: 'navigateHome', 'navigatePrevious', 'navigateNext', 'navigateEnd'
         """
         self.hover_preview()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            pagination = self.get_element("print-preview-pagination")
-            # Access shadow root via JavaScript and click button
-            self.driver.execute_script(
-                f"arguments[0].shadowRoot.getElementById('{button_name}').click()",
-                pagination,
-            )
-            sleep(0.5)
+        pagination = self.get_element("print-preview-pagination")
+        # Access shadow root via JavaScript and click button (parameterized for safety)
+        self.driver.execute_script(
+            "arguments[0].shadowRoot.getElementById(arguments[1]).click()",
+            pagination,
+            button_name,
+        )
 
+    @BasePage.context_chrome
     def go_to_first_page(self) -> BasePage:
         """Click << (navigateHome) and verify we reached page 1."""
         self.wait_for_preview_ready()
-        current, _total = self._parse_sheet_indicator()
+        current, _total = self.get_sheet_indicator_values()
 
-        if current > 1:
+        if current != 1:
             self._click_pagination_button("navigateHome")
+            self._wait_for_current_page(expected=1)
 
-        current, _total = self._parse_sheet_indicator()
+        current, _total = self.get_sheet_indicator_values()
         assert current == 1, "Failed to navigate to first page in Print Preview"
         return self
 
+    @BasePage.context_chrome
     def go_to_previous_page(self) -> BasePage:
         """Click < (navigatePrevious) and verify page decremented when possible."""
         self.wait_for_preview_ready()
-        before_current, _total = self._parse_sheet_indicator()
+        before, _total = self.get_sheet_indicator_values()
 
         self._click_pagination_button("navigatePrevious")
 
-        current, _total = self._parse_sheet_indicator()
-        if before_current > 1:
-            assert current == before_current - 1, "Failed to go to previous page"
-        else:
-            assert current == 1, "Page should stay at 1 when already on first page"
+        expected = max(1, before - 1)
+        self._wait_for_current_page(expected=expected)
 
+        current, _total = self.get_sheet_indicator_values()
+        assert current == expected, "Failed to go to previous page"
         return self
 
+    @BasePage.context_chrome
     def go_to_next_page(self) -> BasePage:
         """Click > (navigateNext) and verify page incremented when possible."""
         self.wait_for_preview_ready()
-        before_current, total = self._parse_sheet_indicator()
+        before, total = self.get_sheet_indicator_values()
 
         self._click_pagination_button("navigateNext")
 
-        current, _total = self._parse_sheet_indicator()
-        if before_current < total:
-            assert current == before_current + 1, "Failed to go to next page"
-        else:
-            assert current == total, (
-                "Page should stay at last when already on last page"
-            )
+        expected = min(total, before + 1)
+        self._wait_for_current_page(expected=expected)
 
+        current, _total = self.get_sheet_indicator_values()
+        assert current == expected, "Failed to go to next page"
         return self
 
+    @BasePage.context_chrome
     def go_to_last_page(self) -> BasePage:
         """Click >> (navigateEnd) and verify we reached the last page."""
         self.wait_for_preview_ready()
-        current, total = self._parse_sheet_indicator()
+        _current, total = self.get_sheet_indicator_values()
 
-        if current < total:
-            self._click_pagination_button("navigateEnd")
+        self._click_pagination_button("navigateEnd")
+        self._wait_for_current_page(expected=total)
 
-        current, total = self._parse_sheet_indicator()
+        current, _total = self.get_sheet_indicator_values()
         assert current == total, "Failed to navigate to last page in Print Preview"
         return self
