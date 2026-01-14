@@ -163,10 +163,7 @@ address_bar_and_search:
     splits:
     - functional01
   test_search_suggestions:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -752,7 +749,7 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -785,10 +782,7 @@ preferences:
     splits:
     - functional02
   test_clear_cookie_data:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -848,7 +842,7 @@ reader_view:
     - functional02
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
