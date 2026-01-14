@@ -6,7 +6,7 @@ from modules.browser_object import TabBar
 
 @pytest.fixture()
 def test_case():
-    return "134640"
+    return "2186610"
 
 
 URLS = [
