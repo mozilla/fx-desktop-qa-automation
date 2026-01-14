@@ -34,15 +34,16 @@ class PrintPreview(BasePage):
         self.wait_for_page_to_load()
         return self
 
+    @BasePage.context_chrome
     def open_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + P to open the Print Preview, wait for load"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            if self.sys_platform() == "Darwin":
-                mod_key = Keys.COMMAND
-            else:
-                mod_key = Keys.CONTROL
-            self.perform_key_combo(mod_key, "p")
-            self.wait_for_page_to_load()
+
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.perform_key_combo(mod_key, "p")
+        self.wait_for_page_to_load()
         return self
 
     def switch_to_preview_window(self) -> BasePage:
@@ -70,6 +71,7 @@ class PrintPreview(BasePage):
         keyboard.tap(Key.enter)
         return self
 
+    @BasePage.context_chrome
     def hover_preview(self) -> BasePage:
         """Hover over the print preview to reveal the page indicator toolbar."""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -78,6 +80,7 @@ class PrintPreview(BasePage):
             sleep(0.5)
         return self
 
+    @BasePage.context_chrome
     def wait_for_preview_ready(self, timeout: int = 20) -> BasePage:
         """Wait until Print Preview is loaded with page count."""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -87,9 +90,6 @@ class PrintPreview(BasePage):
                     "sheet-count"
                 )
             )
-        # Hover to reveal navigation
-        self.hover_preview()
-        return self
 
     def get_sheet_indicator_text(self) -> str:
         """Return the text from the page indicator, for example: '1 of 5'."""
