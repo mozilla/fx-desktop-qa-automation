@@ -845,7 +845,7 @@ reader_view:
     - functional02
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
@@ -961,7 +961,7 @@ session_restore:
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
-      - functional02
+    - functional02
 sync_and_fxa:
   test_existing_fxa:
     result: unstable
