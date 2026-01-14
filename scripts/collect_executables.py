@@ -15,7 +15,6 @@ from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 BACKSTOP = "146.0b9"
-NUMBER_ONLY = False
 
 
 def get_fx_platform():
@@ -69,6 +68,7 @@ def get_gd_platform():
 
 
 def main(args):
+    number_only = False
     output = ""
     if "-g" in args:
         gecko_rs_obj = requests.get(GECKO_API_URL).json()
@@ -99,7 +99,7 @@ def main(args):
 
     else:
         if "-n" in args:
-            NUMBER_ONLY = True
+            number_only = True
         channel = environ.get("FX_CHANNEL")
         # if channel doesn't exist use beta, if blank leave blank (for Release)
         # ...otherwise prepend hyphen
@@ -222,7 +222,7 @@ def main(args):
                 executable_name = line.getText().replace(" ", "%20")
 
         fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
-        if NUMBER_ONLY:
+        if number_only:
             if channel == "-devedition":
                 output = devedition_version
             else:
