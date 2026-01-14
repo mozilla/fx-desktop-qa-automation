@@ -257,6 +257,10 @@ audio_video:
     result: pass
     splits:
     - smoke
+  test_html5_video_playback_controls:
+    result: pass
+    splits:
+      - functional01
   test_users_actions_saved_on_reload:
     result: pass
     splits:

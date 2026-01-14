@@ -120,6 +120,25 @@ class GenericPage(BasePage):
             )
         )
 
+    def verify_volume_not_max(self):
+        """
+        Verify that the HTML5 video volume level is below 100%.
+        """
+        volume_el = self.get_element("vjs-volume")
+        style = volume_el.get_attribute("style")
+
+        prefix = "width:"
+        assert prefix in style, f"Volume style does not contain width: '{style}'"
+
+        width_str = style.split(prefix)[1].strip().rstrip(";").rstrip("%")
+        width_percent = float(width_str)
+
+        assert width_percent < 100, (
+            f"Expected volume to be under 100%, but got {width_percent}%"
+        )
+
+        return self
+
 
 class GenericPdf(BasePage):
     """
