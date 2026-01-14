@@ -246,6 +246,13 @@ audio_video:
     result: pass
     splits:
     - functional01
+  test_autoplay_sound_blocking_background_tab:
+    result:
+        linux: unstable
+        mac: unstable
+        win: unstable
+    splits:
+    - functional01
   test_block_audio_video_functionality:
     result: pass
     splits:

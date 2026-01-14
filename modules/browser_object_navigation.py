@@ -993,6 +993,16 @@ class Navigation(BasePage):
             self.element_visible("autoplay-icon-blocked")
 
     @BasePage.context_chrome
+    def expect_autoplay_blocked_icon(self, visible: bool = True) -> BasePage:
+        """
+        Wait for the autoplay blocked icon in the URL bar to be visible/hidden.
+        Argument:
+            visible: True to expect icon visible, False to expect hidden
+        """
+        self.element_visible("autoplay-blocked-icon", labels=[str(visible).lower()])
+        return self
+
+    @BasePage.context_chrome
     def get_status_panel_url(self) -> str:
         """
         Gets the URL displayed in the status panel at the bottom left of the browser.
