@@ -34,22 +34,22 @@ jobs:
           echo "channels=$channels" >> "$GITHUB_OUTPUT"
 
   Preview-Plan:
-      needs: Select-Channels
-      runs-on: ubuntu-latest
-      if: ${{ github.event.inputs.preview_only == 'true' }}
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+    needs: Select-Channels
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.preview_only == 'true' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: Show selected channels
-          run: |
-            echo "selected channels are: ${{ needs.Select-Channels.outputs.channels }}"
+      - name: Show selected channels
+        run: |
+          echo "selected channels are: ${{ needs.Select-Channels.outputs.channels }}"
 
-        - name: Print planned jobs
-          env:
-            SELECT_CHANNELS: ${{ needs.Select-Channels.outputs.channels }}
-          run: |
-            python3 scripts/preview_plan.py
+      - name: Print planned jobs
+        env:
+          SELECT_CHANNELS: ${{ needs.Select-Channels.outputs.channels }}
+        run: |
+          python3 scripts/preview_plan.py
 
   Run-Starfox-Win:
     needs: Select-Channels
