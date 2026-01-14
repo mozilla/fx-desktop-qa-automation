@@ -957,6 +957,11 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+session_restore:
+  test_restore_last_closed_tabs_shortcut:
+    result: pass
+    splits:
+      - functional02
 sync_and_fxa:
   test_existing_fxa:
     result: unstable
