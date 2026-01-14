@@ -760,7 +760,9 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: unstable
+    linux: unstable
+    mac: pass
+    win: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -965,6 +967,11 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+session_restore:
+  test_restore_last_closed_tabs_shortcut:
+    result: pass
+    splits:
+    - functional02
 sync_and_fxa:
   test_existing_fxa:
     result: unstable
