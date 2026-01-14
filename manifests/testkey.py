@@ -372,6 +372,10 @@ class TestKey:
                     resplit = True
 
                 if resplit:
+                    if not interactive:
+                        sys.exit(
+                            "Cannot auto-add without user input. Please run python scripts/addtests.py"
+                        )
                     if ask_question(
                         "Should this test run in a Scheduled Functional split? "
                         "(Say no if unsure.) "
@@ -384,7 +388,7 @@ class TestKey:
 
                         split = ask_open_question(
                             f"What split is this test assigned to? Please choose one "
-                            f"from available splits:\n {output}. "
+                            f"from available splits:\n {output}\n>"
                         )
                         newkey[suite][testfile]["splits"] = [split]
 

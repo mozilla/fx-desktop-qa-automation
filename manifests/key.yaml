@@ -760,9 +760,12 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    linux: unstable
-    mac: pass
-    win: pass
+    result:
+      linux: unstable
+      mac: pass
+      splits:
+      - smoke
+      win: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
