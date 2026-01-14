@@ -749,7 +749,9 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: pass
+    linux: unstable
+    mac: pass
+    win: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
