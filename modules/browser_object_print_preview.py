@@ -43,13 +43,13 @@ class PrintPreview(BasePage):
         self.wait_for_page_to_load()
         return self
 
+    @BasePage.context_chrome
     def switch_to_preview_window(self) -> BasePage:
         """Switch to the iframe holding the Print Preview settings."""
         ba = BrowserActions(self.driver)
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
-            # Wait for print button to be present as indicator of readiness
-            self.element_exists("print-button")
+        ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
+        # Wait for print button to be present as indicator of readiness
+        self.element_exists("print-button")
         return self
 
     @BasePage.context_content
