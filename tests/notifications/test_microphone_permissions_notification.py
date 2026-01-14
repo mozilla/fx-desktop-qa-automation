@@ -34,11 +34,9 @@ def _verify_microphone_permission_prompt(driver: Firefox, nav: Navigation) -> No
     Verifies the microphone permission prompt is visible and contains expected copy/host.
     """
     nav.element_visible("popup-notification")
-    nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
-    nav.expect_element_attribute_contains(
-        "popup-notification", "name", "mozilla.github.io"
-    )
-    nav.expect_element_attribute_contains(
+    nav.element_attribute_contains("popup-notification", "label", "Allow ")
+    nav.element_attribute_contains("popup-notification", "name", "mozilla.github.io")
+    nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your microphone?"
     )
 

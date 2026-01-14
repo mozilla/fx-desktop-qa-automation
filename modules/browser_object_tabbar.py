@@ -107,8 +107,10 @@ class TabBar(BasePage):
 
     @BasePage.context_chrome
     def click_tab_by_index(self, index: int) -> BasePage:
-        """Given a tab index (int), click the corresponding tab"""
-        self.get_element("tab-by-index", labels=[str(index)]).click()
+        """Given a tab index (int), click the corresponding tab and wait for it to be selected"""
+        tab = self.get_element("tab-by-index", labels=[str(index)])
+        tab.click()
+        self.expect(lambda _: tab.get_attribute("selected") == "true")
         return self
 
     @BasePage.context_chrome
@@ -547,6 +549,19 @@ class TabBar(BasePage):
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 self.driver.get(url)
 
+        return self
+
+    @BasePage.context_chrome
+    def expect_play_tab_button(self, visible: bool = True) -> BasePage:
+        """
+        Wait for the 'Play Tab' button to be visible/hidden on the tab.
+        Argument:
+            visible: True to expect button visible, False to expect hidden
+        """
+        if visible:
+            self.element_visible("play-tab-button", labels=["true"])
+        else:
+            assert self.get_elements("play-tab-button", labels=["true"]) == []
         return self
 
     @BasePage.context_chrome

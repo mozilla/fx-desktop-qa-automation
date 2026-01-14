@@ -274,9 +274,7 @@ class PanelUi(BasePage):
         Confirm that the history is empty
         """
         self.open_history_menu()
-        self.expect_element_attribute_contains(
-            "recent-history-content", "value", "(Empty)"
-        )
+        self.element_attribute_contains("recent-history-content", "value", "(Empty)")
 
     @BasePage.context_chrome
     def verify_history_item_exists(self, item_title: str) -> BasePage:

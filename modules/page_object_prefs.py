@@ -1,6 +1,5 @@
 import datetime
 import json
-import re
 from time import sleep
 from typing import List, Literal
 
@@ -181,7 +180,7 @@ class AboutPrefs(BasePage):
         self.get_element("language-option-by-code", labels=[lang_code]).click()
         select_language.click()
         self.get_element("language-settings-add-button").click()
-        self.expect_element_attribute_contains(
+        self.element_attribute_contains(
             "language-added-list", "last-selected", f"locale-{lang_code}"
         )
 
@@ -195,7 +194,7 @@ class AboutPrefs(BasePage):
         self.find_in_settings("HTTPS")
         self.element_clickable(str(option_id))
         self.click_on(str(option_id))
-        self.expect_element_attribute_contains(str(option_id), "checked", "")
+        self.element_attribute_contains(str(option_id), "checked", "")
         return self
 
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
@@ -892,6 +891,13 @@ class AboutAddons(BasePage):
         """
         self.element_clickable("sidebar-options", labels=[option])
         self.click_on("sidebar-options", labels=[option])
+
+    def get_language_addon_list(self):
+        """Gets the cards from the about:addons page"""
+        addon_list_parent = self.get_element("languages-addon-list")
+        return self.get_element(
+            "languages-addon-list-card", multiple=True, parent_element=addon_list_parent
+        )
 
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True

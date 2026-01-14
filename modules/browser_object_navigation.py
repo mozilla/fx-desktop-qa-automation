@@ -948,7 +948,7 @@ class Navigation(BasePage):
         """
 
         expected_value = "false" if expected else "true"
-        self.expect_element_attribute_contains(
+        self.element_attribute_contains(
             self.bookmarks_toolbar, "collapsed", expected_value
         )
 
@@ -991,6 +991,16 @@ class Navigation(BasePage):
         else:
             self.element_visible("permission-popup-audio-video-blocked")
             self.element_visible("autoplay-icon-blocked")
+
+    @BasePage.context_chrome
+    def expect_autoplay_blocked_icon(self, visible: bool = True) -> BasePage:
+        """
+        Wait for the autoplay blocked icon in the URL bar to be visible/hidden.
+        Argument:
+            visible: True to expect icon visible, False to expect hidden
+        """
+        self.element_visible("autoplay-blocked-icon", labels=[str(visible).lower()])
+        return self
 
     @BasePage.context_chrome
     def get_status_panel_url(self) -> str:
