@@ -113,80 +113,63 @@ class PrintPreview(BasePage):
         return f"{current} of {total}"
 
     @BasePage.context_chrome
-    def _wait_for_current_page(self, expected: int, timeout: int = 15) -> None:
+    def _wait_for_current_page(self, expected: int, timeout: int = 20):
         """Wait until current-page equals expected."""
         self.custom_wait(timeout=timeout).until(
             lambda _: self.get_sheet_indicator_values()[0] == expected
         )
 
     @BasePage.context_chrome
-    def _click_pagination_button(self, button_name: str) -> None:
+    def _click_pagination_button(self, button_id: str):
         """
         Click a navigation button in the print preview pagination toolbar.
-        button_name: 'navigateHome', 'navigatePrevious', 'navigateNext', 'navigateEnd'
+        button_id: 'navigateHome', 'navigatePrevious', 'navigateNext', 'navigateEnd'
+
+        Note: Uses JavaScript to access shadow DOM because the buttons are nested
+        deep within the shadow root. The framework's find_shadow_element only
+        searches direct children, but shadowRoot.getElementById() finds at any depth.
         """
         self.hover_preview()
         pagination = self.get_element("print-preview-pagination")
-        # Access shadow root via JavaScript and click button (parameterized for safety)
         self.driver.execute_script(
             "arguments[0].shadowRoot.getElementById(arguments[1]).click()",
             pagination,
-            button_name,
+            button_id,
         )
 
     @BasePage.context_chrome
     def go_to_first_page(self) -> BasePage:
-        """Click << (navigateHome) and verify we reached page 1."""
+        """Click << (navigateHome) and wait until we reach page 1."""
         self.wait_for_preview_ready()
         current, _total = self.get_sheet_indicator_values()
-
         if current != 1:
             self._click_pagination_button("navigateHome")
             self._wait_for_current_page(expected=1)
-
-        current, _total = self.get_sheet_indicator_values()
-        assert current == 1, "Failed to navigate to first page in Print Preview"
         return self
 
     @BasePage.context_chrome
     def go_to_previous_page(self) -> BasePage:
-        """Click < (navigatePrevious) and verify page decremented when possible."""
+        """Click < (navigatePrevious) and wait for page to decrement."""
         self.wait_for_preview_ready()
         before, _total = self.get_sheet_indicator_values()
-
         self._click_pagination_button("navigatePrevious")
-
-        expected = max(1, before - 1)
-        self._wait_for_current_page(expected=expected)
-
-        current, _total = self.get_sheet_indicator_values()
-        assert current == expected, "Failed to go to previous page"
+        self._wait_for_current_page(expected=max(1, before - 1))
         return self
 
     @BasePage.context_chrome
     def go_to_next_page(self) -> BasePage:
-        """Click > (navigateNext) and verify page incremented when possible."""
+        """Click > (navigateNext) and wait for page to increment."""
         self.wait_for_preview_ready()
         before, total = self.get_sheet_indicator_values()
-
         self._click_pagination_button("navigateNext")
-
-        expected = min(total, before + 1)
-        self._wait_for_current_page(expected=expected)
-
-        current, _total = self.get_sheet_indicator_values()
-        assert current == expected, "Failed to go to next page"
+        self._wait_for_current_page(expected=min(total, before + 1))
         return self
 
     @BasePage.context_chrome
     def go_to_last_page(self) -> BasePage:
-        """Click >> (navigateEnd) and verify we reached the last page."""
+        """Click >> (navigateEnd) and wait until we reach the last page."""
         self.wait_for_preview_ready()
         _current, total = self.get_sheet_indicator_values()
-
         self._click_pagination_button("navigateEnd")
         self._wait_for_current_page(expected=total)
-
-        current, _total = self.get_sheet_indicator_values()
-        assert current == total, "Failed to navigate to last page in Print Preview"
         return self

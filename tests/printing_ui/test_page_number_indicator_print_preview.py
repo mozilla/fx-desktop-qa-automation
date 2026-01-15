@@ -33,8 +33,18 @@ def test_page_number_indicator_print_preview(driver: Firefox):
     assert total >= 1, "Sheet count should be at least 1"
     assert 1 <= current <= total, "Current page should be within valid range"
 
-    # Navigation between pages
+    # Navigate to last page
     print_preview.go_to_last_page()
+    assert print_preview.get_sheet_indicator_values() == (total, total)
+
+    # Navigate to previous page
     print_preview.go_to_previous_page()
+    assert print_preview.get_sheet_indicator_values() == (total - 1, total)
+
+    # Navigate to first page
     print_preview.go_to_first_page()
+    assert print_preview.get_sheet_indicator_values() == (1, total)
+
+    # Navigate to next page
     print_preview.go_to_next_page()
+    assert print_preview.get_sheet_indicator_values() == (2, total)
