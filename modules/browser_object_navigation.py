@@ -1267,3 +1267,18 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("back-button").click()
+
+    @BasePage.context_chrome
+    def delete_download_while_in_progress(self) -> BasePage:
+        """
+        From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
+        """
+        downloads_button = self.get_download_button()
+        downloads_button.click()
+
+        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
+        download_item = self.get_element("download-panel-item")
+        self.context_click(download_item)
+        # self.context_menu.get_element("context-menu-delete-page").click()
+
+        return self

@@ -69,5 +69,10 @@
         "selectorData": "p[contenteditable]",
         "strategy": "css",
         "groups": []
+    },
+    "sample-bin-download": {
+        "selectorData": "a[href='1GB.bin']",
+        "strategy": "css",
+        "groups": []
     }
 }

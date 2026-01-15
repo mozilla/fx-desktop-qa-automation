@@ -2413,6 +2413,13 @@ Description: Clipboard page to copy url
 Location: Clipboard test page
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: sample-bin-download
+Selector Data: "a[href='10GB.bin']"
+Description: Sample download
+Location: ash-speed.hetzner website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
