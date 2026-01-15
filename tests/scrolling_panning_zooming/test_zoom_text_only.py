@@ -142,7 +142,7 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     panel.click_on("zoom-reduce")
 
     # Verify that zoom level badge is correct
-    nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
+    nav.element_attribute_contains("toolbar-zoom-level", "label", "90%")
 
     # Verify Yahoo at 90%: image position still unchanged, text position changed
     web_page.expect(

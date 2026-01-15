@@ -948,7 +948,7 @@ class Navigation(BasePage):
         """
 
         expected_value = "false" if expected else "true"
-        self.expect_element_attribute_contains(
+        self.element_attribute_contains(
             self.bookmarks_toolbar, "collapsed", expected_value
         )
 

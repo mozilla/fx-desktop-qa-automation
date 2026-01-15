@@ -43,12 +43,10 @@ def test_webextension_completed_installation_successfully_displayed(
 
     # The WebExtension completed installation panel is successfully displayed
     nav.element_visible("popup-notification-panel")
-    nav.expect_element_attribute_contains(
+    nav.element_attribute_contains(
         "popup-notification-panel", "name", "Popup Blocker (strict)"
     )
-    nav.expect_element_attribute_contains(
-        "popup-notification-primary-button", "label", "OK"
-    )
-    nav.expect_element_attribute_contains(
+    nav.element_attribute_contains("popup-notification-primary-button", "label", "OK")
+    nav.element_attribute_contains(
         "popup-notification-panel", "endlabel", " was added."
     )
