@@ -81,7 +81,6 @@ jobs:
           Write-Host "Running report for most recent Beta on Windows"
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -220,7 +219,6 @@ jobs:
           echo "Running smoke tests on supplied executable";
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';

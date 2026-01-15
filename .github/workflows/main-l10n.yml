@@ -76,7 +76,6 @@ jobs:
           echo "Running l10n tests on supplied executable";
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts/;
           pip3 install 'pipenv==2023.11.15';
@@ -157,7 +156,6 @@ jobs:
           echo "Running report for most recent Beta on Linux";
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
@@ -252,7 +250,6 @@ jobs:
           Write-Host "$env:TESTRAIL_USERNAME"
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
