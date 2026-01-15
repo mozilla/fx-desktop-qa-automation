@@ -3,7 +3,6 @@ import logging
 import os
 import platform
 import re
-import sys
 from shutil import unpack_archive
 from subprocess import check_output, run
 from typing import Callable, List, Tuple, Union
@@ -22,6 +21,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
+from scripts import collect_executables
 
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
@@ -308,6 +308,12 @@ def version(fx_executable: str):
     return check_output([fx_executable, "--version"]).strip().decode()
 
 
+@pytest.fixture(scope="session")
+def build_version():
+    """Collect executables, but just the version number for Fx"""
+    return collect_executables.main("-n")
+
+
 @pytest.fixture()
 def machine_config():
     """Return the os type, version, and architecture for the machine"""
@@ -419,7 +425,7 @@ def driver(
     env_prep,
     tmp_path,
     request,
-    version,
+    build_version,
     json_metadata,
     hard_quit,
     create_profiles,
@@ -454,8 +460,8 @@ def driver(
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
 
-    version: str
-        The result of calling the Fx executable with `--version`.
+    build_version: str
+        The result of calling collect_executables with "-n".
 
     env_prep: None
         Fixture that does other environment work, like set logging levels.
@@ -497,13 +503,13 @@ def driver(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
         displayed_version = _get_version(driver).split(" ")[0]
-        if displayed_version not in version and not os.environ.get("MANUAL"):
+        if displayed_version not in build_version and not os.environ.get("MANUAL"):
             # Manual flows may test older versions, automatic flows should not
             raise ValueError(
                 f"Mismatch between displayed version {displayed_version}"
-                f" and actual version {version}"
+                f" and actual version {build_version}"
             )
-        json_metadata["fx_version"] = version
+        json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = suite_id
         json_metadata["test_case"] = test_case

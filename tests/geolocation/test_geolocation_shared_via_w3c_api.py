@@ -84,7 +84,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(
 
     # Check that the location marker is displayed
     # if map is displayed, style attribute will be available
-    generic_page.expect_attribute_in_element("location-marker", "style")
+    generic_page.element_has_attribute("location-marker", "style")
 
     # Open a new tab, because refresh will keep the allow state of the location for one hour or until the tab is closed
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=2)
@@ -95,7 +95,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(
 
     # Check that the location marker is displayed
     # if map is displayed, style attribute will be available
-    generic_page.expect_attribute_in_element("location-marker", "style")
+    generic_page.element_has_attribute("location-marker", "style")
 
     # Assert that the permission icon is displayed in address bar when in a new tab
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=3)
@@ -135,7 +135,7 @@ def test_block_permission_on_geolocation_via_w3c_api(
 
     # Check that the location marker is displayed
     # if map is not displayed, style attribute will be empty
-    generic_page.expect_element_attribute_is("location-marker", "style", "")
+    generic_page.element_attribute_is("location-marker", "style", "")
 
     # Click the 'Try It' button and Block the location sharing while choose the option Remember this decision
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=2)
@@ -144,7 +144,7 @@ def test_block_permission_on_geolocation_via_w3c_api(
 
     # Check that the location marker is displayed
     # if map is not displayed, style attribute will empty
-    generic_page.expect_element_attribute_is("location-marker", "style", "")
+    generic_page.element_attribute_is("location-marker", "style", "")
 
     # Assert that the permission icon is displayed in address bar when in a new tab
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=3)

@@ -56,3 +56,12 @@ class AmoLanguages(BasePage):
             lambda _: self.get_element("language-addons-subpage-header") is not None
         )
         return self
+
+    @BasePage.context_chrome
+    def confirm_language_install_popup(self):
+        """Confirms the language install popup"""
+        # click one for "Add"
+        # click second time for "Okay", the button is not cached which allows for two different buttons to be different
+        for _ in range(2):
+            self.get_element("language-install-popup-add").click()
+        return self

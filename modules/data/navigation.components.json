@@ -597,5 +597,10 @@
         "groups": [
             "doNotCache"
         ]
+    },
+    "autoplay-blocked-icon": {
+        "selectorData": "image.blocked-permission-icon.autoplay-media-icon[showing='{state}']",
+        "strategy": "css",
+        "groups": []
     }
 }

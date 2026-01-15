@@ -2414,6 +2414,48 @@ Location: Clipboard test page
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
+Selector Name: vjs-play-button
+Selector Data: "vjs-big-play-button"
+Description: videojs website play button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-pause-button
+Selector Data: "button[type='button'][title='Pause']"
+Description: videojs website mute button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-fullscreen
+Selector Data: "button[type='button'][title='Fullscreen']"
+Description: videojs website fullscreen button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-exit-fullscreen
+Selector Data: "button[type='button'][title='Exit Fullscreen']"
+Description: videojs website exit fullscreen button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-play
+Selector Data: "button[type='button'][title='Play']"
+Description: videojs website media player play button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-volume
+Selector Data: "vjs-volume-level"
+Description: videojs website media player volume button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
 Selector Name: sample-bin-download
 Selector Data: "a[href='10GB.bin']"
 Description: Sample download
