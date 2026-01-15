@@ -94,12 +94,11 @@ jobs:
           echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT";
 
       - name: Select Tests (macOS)
-        if: ${{ steps.setup.conclusion == 'success' }}
         run: |
           pipenv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (macOS)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         run: |
           echo "Selected tests: "
           if [ -f selected_l10n_mappings ]; then
@@ -110,7 +109,7 @@ jobs:
           fi
 
       - name: Run L10N Tests in MacOS
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
@@ -176,12 +175,11 @@ jobs:
           ./firefox/firefox --version;
 
       - name: Select Tests (Linux)
-        if: ${{ steps.setup.conclusion == 'success' }}
         run: |
           pipenv run python scripts/choose_l10n_ci_set.py;
 
       - name: Dry Run - Print Selected Tests (Linux)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         run: |
           echo "Selected tests: "
           if [ -f selected_l10n_mappings ]; then
@@ -192,7 +190,7 @@ jobs:
           fi
 
       - name: Run L10N Tests in Ubuntu
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
@@ -299,13 +297,12 @@ jobs:
         shell: pwsh
 
       - name: Select Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' }}
         shell: pwsh
         run: |
           pipenv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         shell: pwsh
         run: |
           Write-Host "Selected tests: "
@@ -316,7 +313,7 @@ jobs:
           }
 
       - name: Run L10N Tests in Win
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ inputs.dry_run != true }}
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
