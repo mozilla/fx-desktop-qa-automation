@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Get Split Based On Time
         id: getsplit
-        run: echo "split=functional$(date +%H)" >> "$GITHUB_OUTPUT"
+        run: echo "split=functional$(($(date +%I) % 6 + 1))" >> "$GITHUB_OUTPUT"
 
   Check-Beta-Version:
     needs: Get-Functional-Split

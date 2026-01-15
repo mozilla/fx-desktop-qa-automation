@@ -188,5 +188,10 @@
         "selectorData": "tabbrowser-tab",
         "strategy": "class",
         "groups": []
+    },
+    "play-tab-button": {
+        "selectorData": "moz-button.tab-audio-button[activemedia-blocked='{state}']",
+        "strategy": "css",
+        "groups": []
     }
 }

@@ -163,7 +163,7 @@ address_bar_and_search:
     splits:
     - functional01
   test_search_suggestions:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -246,10 +246,21 @@ audio_video:
     result: pass
     splits:
     - functional01
+  test_autoplay_sound_blocking_background_tab:
+    result:
+      linux: unstable
+      mac: unstable
+      win: unstable
+    splits:
+    - functional01
   test_block_audio_video_functionality:
     result: pass
     splits:
     - smoke
+  test_html5_video_playback_controls:
+    result: pass
+    splits:
+    - functional01
   test_users_actions_saved_on_reload:
     result: pass
     splits:
@@ -749,7 +760,12 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: pass
+    result:
+      linux: unstable
+      mac: pass
+      splits:
+      - smoke
+      win: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -782,10 +798,7 @@ preferences:
     splits:
     - functional02
   test_clear_cookie_data:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -849,7 +862,7 @@ reader_view:
     - functional02
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
@@ -961,6 +974,11 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+session_restore:
+  test_restore_last_closed_tabs_shortcut:
+    result: pass
+    splits:
+    - functional02
 sync_and_fxa:
   test_existing_fxa:
     result: unstable

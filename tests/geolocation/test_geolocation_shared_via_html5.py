@@ -95,7 +95,7 @@ def test_block_permission_on_geolocation_via_w3c_api(
     nav.handle_geolocation_prompt(button_type="secondary")
 
     # Check that the location is not shared, a warning message is displayed
-    generic_page.expect_element_attribute_contains(
+    generic_page.element_attribute_contains(
         "geo-warn", "innerHTML", "PERMISSION_DENIED – User denied Geolocation"
     )
 
@@ -105,7 +105,7 @@ def test_block_permission_on_geolocation_via_w3c_api(
     nav.handle_geolocation_prompt(button_type="secondary")
 
     # Check that the location is not shared, a warning message is displayed
-    generic_page.expect_element_attribute_contains(
+    generic_page.element_attribute_contains(
         "geo-warn", "innerHTML", "PERMISSION_DENIED – User denied Geolocation"
     )
 
