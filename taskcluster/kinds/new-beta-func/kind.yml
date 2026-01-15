@@ -32,7 +32,7 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        export STARFOX_SPLIT="${STARFOX_SPLIT}$(date +%H)"
+        export STARFOX_SPLIT="${STARFOX_SPLIT}0$(($(date +%H) % 6 + 1))"
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
