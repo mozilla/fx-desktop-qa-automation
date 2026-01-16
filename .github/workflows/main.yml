@@ -140,7 +140,7 @@ jobs:
 
       # --- REAL RUN: actually execute tests ---
       - name: Run Tests in Win
-        if: ${{ inputs.dry_run != true }}
+        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -246,7 +246,7 @@ jobs:
           cat selected_tests
 
       - name: Run Tests in MacOS
-        if: ${{ inputs.dry_run != true }}
+        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
