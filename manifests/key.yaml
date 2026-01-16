@@ -826,6 +826,10 @@ preferences:
     splits:
     - functional2
 printing_ui:
+  test_page_number_indicator_print_preview:
+    result: pass
+    splits:
+    - functional02
   test_print_preview:
     result: pass
     splits:
