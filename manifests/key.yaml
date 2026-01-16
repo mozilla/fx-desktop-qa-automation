@@ -982,7 +982,7 @@ session_restore:
   test_restore_multiple_closed_tabs_at_once:
     result: pass
     splits:
-      - functional2
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
     result: unstable
