@@ -62,7 +62,7 @@ def test_add_zip_type(
     web_page.click_on("github-download-button")
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
-    nav.set_always_open_similar_files()
+    nav.perform_download_context_action("context-menu-always-open-similar-files")
 
     # Open about:preferences and check that zip mime type is present in the application list
     about_prefs.open()

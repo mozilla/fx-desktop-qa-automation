@@ -294,21 +294,6 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def set_always_open_similar_files(self) -> BasePage:
-        """
-        From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
-        """
-        downloads_button = self.get_download_button()
-        downloads_button.click()
-
-        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
-        download_item = self.get_element("download-panel-item")
-        self.context_click(download_item)
-        self.context_menu.get_element("context-menu-always-open-similar-files").click()
-
-        return self
-
-    @BasePage.context_chrome
     def wait_for_download_animation_finish(self) -> BasePage:
         """Waits for the download button to finish playing the animation"""
         try:
@@ -1279,16 +1264,21 @@ class Navigation(BasePage):
         self.get_element("back-button").click()
 
     @BasePage.context_chrome
-    def delete_download_while_in_progress(self) -> BasePage:
+    def perform_download_context_action(self, action_name: str) -> BasePage:
         """
-        From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
+        From the downloads panel, right-click the latest download and perform a context menu action.
+
+        :param action_name: The key for the context menu action, e.g.,
+            "context-menu-delete" or "context-menu-always-open-similar-files"
         """
         downloads_button = self.get_download_button()
         downloads_button.click()
 
-        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
+        # Locate the latest download item
         download_item = self.get_element("download-panel-item")
+
+        # Right-click and select the desired action
         self.context_click(download_item)
-        # self.context_menu.get_element("context-menu-delete-page").click()
+        self.context_menu.get_element(action_name).click()
 
         return self

@@ -138,6 +138,13 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-delete
+Selector Data: "downloadDeleteFileMenuItem"
+Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input
@@ -3445,6 +3452,13 @@ Selector Name: tab-container-label
 Selector Data: "userContext-label"
 Description:  Tab container label
 Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-deleted-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='File deleted']"
+Description: "File Deleted" status for a deleted download
+Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

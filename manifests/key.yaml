@@ -375,6 +375,10 @@ downloads:
     result: unstable
     splits:
     - functional01
+  test_delete_download_while_in_progress:
+    result: pass
+    splits:
+      - functional01
   test_download_pdf:
     result: pass
     splits:

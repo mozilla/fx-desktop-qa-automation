@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -21,9 +23,12 @@ def test_delete_download_while_in_progress(driver: Firefox):
     page = GenericPage(driver, url=TEST_URL)
     nav = Navigation(driver)
 
-    # Open test url
+    # Open test url and download a file
     page.open()
     page.click_on("sample-bin-download")
 
-    # Wait for the test website to wake up and download the content
-    nav.delete_download_while_in_progress()
+    # While download is in progress, right-click on the download item from the Downloads Panel and select delete
+    nav.perform_download_context_action("context-menu-delete")
+
+    # Verify that the "File deleted" message is displayed
+    nav.element_visible("download-deleted-message")

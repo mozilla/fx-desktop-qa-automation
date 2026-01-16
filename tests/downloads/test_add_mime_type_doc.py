@@ -42,7 +42,7 @@ def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_
     page.click_on("sample-doc-download")
 
     # Download the file and set 'Always Open Similar Files'
-    nav.set_always_open_similar_files()
+    nav.perform_download_context_action("context-menu-always-open-similar-files")
 
     # Verify the MIME type entry exists and default app matches expectation
     about_prefs.open()
