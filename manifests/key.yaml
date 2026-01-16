@@ -760,12 +760,7 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result:
-      linux: unstable
-      mac: pass
-      splits:
-      - smoke
-      win: pass
+    result: unstable
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -826,6 +821,10 @@ preferences:
     splits:
     - functional2
 printing_ui:
+  test_page_number_indicator_print_preview:
+    result: pass
+    splits:
+    - functional02
   test_print_preview:
     result: pass
     splits:
@@ -972,6 +971,10 @@ security_and_privacy:
     - smoke
 session_restore:
   test_restore_last_closed_tabs_shortcut:
+    result: pass
+    splits:
+    - functional2
+  test_restore_multiple_closed_tabs_at_once:
     result: pass
     splits:
     - functional2

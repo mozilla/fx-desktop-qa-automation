@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       preview_only:
-        description: "If true, only show which jobs would run (no reusable workflows called)"
+        description: "Preview Only - If true, only show which jobs would run (no reusable workflows called)"
         required: false
         default: "false"
       dry_run:
-        description: "If true, downstream workflows should avoid side-effects (publish/deploy)"
+        description: "Dry-Run - If true, downstream workflows should avoid side-effects (publish/deploy)"
         required: false
         default: "false"
 

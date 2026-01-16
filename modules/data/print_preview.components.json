@@ -31,5 +31,10 @@
         "selectorData": "cancel-button",
         "strategy": "id",
         "groups": []
+    },
+    "print-preview-pagination": {
+        "selectorData": "printPreviewNavigation",
+        "strategy": "class",
+        "groups": []
     }
 }

@@ -3860,6 +3860,13 @@ Description: Print Settings bar in Print Preview
 Location: Right sidebar in Print Preview
 Path to .json: modules/data/print_preview.components.json
 ```
+```
+Selector name: print-preview-pagination
+Selector Data: "printPreviewNavigation"
+Description: Pagination toolbar for navigating pages
+Location: Over the Print Preview page thumbnail/preview
+Path to .json: modules/data/print_preview.components.json
+```
 #### reader_view
 ```
 Selector name: reader-view-button
