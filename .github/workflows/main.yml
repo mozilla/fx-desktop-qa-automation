@@ -81,7 +81,6 @@ jobs:
           Write-Host "Running report for most recent Beta on Windows"
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -127,14 +126,13 @@ jobs:
         shell: pwsh
 
       - name: Select Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' }}
         shell: pwsh
         run: |
           pipenv run python -m scripts.choose_test_split
 
       # --- DRY RUN: only show what would run ---
       - name: Dry Run - Print Selected Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         shell: pwsh
         run: |
           Write-Host "Selected tests: "
@@ -221,7 +219,6 @@ jobs:
           echo "Running smoke tests on supplied executable";
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -239,12 +236,11 @@ jobs:
           echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT"
 
       - name: Select Tests (MacOS)
-        if: ${{ steps.setup.conclusion == 'success' }}
         run: |
           pipenv run python -m scripts.choose_test_split
 
       - name: Dry Run - Print Selected Tests (MacOS)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         run: |
           echo "Selected tests: "
           cat selected_tests
