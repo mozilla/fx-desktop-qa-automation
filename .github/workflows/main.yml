@@ -126,6 +126,8 @@ jobs:
         shell: pwsh
 
       - name: Select Tests (Win)
+        if: ${{ steps.setup.conclusion == 'success' }}
+        id: select
         shell: pwsh
         run: |
           pipenv run python -m scripts.choose_test_split
@@ -140,7 +142,12 @@ jobs:
 
       # --- REAL RUN: actually execute tests ---
       - name: Run Tests in Win
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success' &&
+            inputs.dry_run != true
+          }}
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -236,17 +243,23 @@ jobs:
           echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT"
 
       - name: Select Tests (MacOS)
+        id: select
         run: |
           pipenv run python -m scripts.choose_test_split
 
       - name: Dry Run - Print Selected Tests (MacOS)
-        if: ${{ inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true  && steps.select.conclusion == 'success'}}
         run: |
           echo "Selected tests: "
           cat selected_tests
 
       - name: Run Tests in MacOS
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success' &&
+            inputs.dry_run != true
+          }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
@@ -313,11 +326,12 @@ jobs:
 
       - name: Select Tests (Linux)
         if: ${{ steps.setup.conclusion == 'success' }}
+        id: select
         run: |
           pipenv run python -m scripts.choose_test_split
 
       - name: Run Smoke Tests in Ubuntu
-        if: ${{ steps.setup.conclusion == 'success' }}
+        if: ${{ steps.select.conclusion == 'success' }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
