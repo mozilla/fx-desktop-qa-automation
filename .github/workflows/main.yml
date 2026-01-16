@@ -126,7 +126,6 @@ jobs:
         shell: pwsh
 
       - name: Select Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' }}
         id: select
         shell: pwsh
         run: |
