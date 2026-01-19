@@ -31,13 +31,13 @@ def test_reopen_tabs_through_keys(driver: Firefox, sys_platform: str):
         tabs.new_tab_by_button()
         driver.switch_to.window(driver.window_handles[-1])
         driver.get(URLS[i])
-    assert len(driver.window_handles) == 5
+    tabs.wait_for_num_tabs(5)
 
     # Close 4 tabs
     for i in range(4):
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
-    assert len(driver.window_handles) == 1
+    tabs.wait_for_num_tabs(1)
 
     # Use the refactored method to reopen tabs with shortcut
     tabs.reopen_tabs_with_shortcut(sys_platform, count=4)

@@ -76,7 +76,6 @@ jobs:
           echo "Running l10n tests on supplied executable";
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts/;
           pip3 install 'pipenv==2023.11.15';
@@ -94,12 +93,11 @@ jobs:
           echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT";
 
       - name: Select Tests (macOS)
-        if: ${{ steps.setup.conclusion == 'success' }}
         run: |
           pipenv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (macOS)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         run: |
           echo "Selected tests: "
           if [ -f selected_l10n_mappings ]; then
@@ -158,7 +156,6 @@ jobs:
           echo "Running report for most recent Beta on Linux";
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
@@ -176,12 +173,11 @@ jobs:
           ./firefox/firefox --version;
 
       - name: Select Tests (Linux)
-        if: ${{ steps.setup.conclusion == 'success' }}
         run: |
           pipenv run python scripts/choose_l10n_ci_set.py;
 
       - name: Dry Run - Print Selected Tests (Linux)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         run: |
           echo "Selected tests: "
           if [ -f selected_l10n_mappings ]; then
@@ -254,7 +250,6 @@ jobs:
           Write-Host "$env:TESTRAIL_USERNAME"
 
       - name: Install dependencies
-        if: ${{ inputs.dry_run != true }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -299,13 +294,12 @@ jobs:
         shell: pwsh
 
       - name: Select Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' }}
         shell: pwsh
         run: |
           pipenv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (Win)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run == true }}
+        if: ${{ inputs.dry_run == true }}
         shell: pwsh
         run: |
           Write-Host "Selected tests: "
