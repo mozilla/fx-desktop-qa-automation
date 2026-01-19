@@ -970,6 +970,10 @@ security_and_privacy:
     splits:
     - smoke
 session_restore:
+  test_fx_view_closed_tabs_from_multiple_windows_shown_in_recently_closed_section:
+    result: pass
+    splits:
+    - functional2
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
