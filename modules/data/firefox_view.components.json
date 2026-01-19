@@ -1,0 +1,21 @@
+{
+    "context": "content",
+    "fxview-named-deck": {
+        "selectorData": "named-deck",
+        "strategy": "css",
+        "groups": []
+    },
+    "fxview-tab-list": {
+        "selectorData": "fxview-tab-list",
+        "strategy": "css",
+        "groups": []
+    },
+    "fxview-tab-row": {
+        "selectorData": "fxview-tab-row",
+        "strategy": "css",
+        "shadowParent": "fxview-tab-list",
+        "groups": [
+            "doNotCache"
+        ]
+    }
+}
