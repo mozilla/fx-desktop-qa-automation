@@ -970,7 +970,7 @@ security_and_privacy:
     splits:
     - smoke
 session_restore:
-  test_fx_view_closed_tabs_from_multiple_windows_shown_in_recently_closed_section:
+  test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
     - functional2
