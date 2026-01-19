@@ -186,7 +186,7 @@ if __name__ == "__main__":
     if changed_models:
         for model_file in changed_models:
             # When we remove a file, it appears in the git diff, but not in real life
-            if not os.exists(model_file):
+            if not os.path.exists(model_file):
                 continue
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)

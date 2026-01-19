@@ -13,14 +13,14 @@ def test_case():
 @pytest.mark.headed
 def test_close_tab_through_middle_mouse_click(driver: Firefox):
     """
-    C134645 - Verify that middle clicking a tab will close it
+    C134645 - Verify that middle click on a tab will close it
     """
 
     # Instantiate objects
     example = ExamplePage(driver)
     tabs = TabBar(driver)
 
-    # Open 2 mnew tabs for a total of 3
+    # Open 2 new tabs for a total of 3
     example.open()
     for _ in range(2):
         tabs.new_tab_by_button()
