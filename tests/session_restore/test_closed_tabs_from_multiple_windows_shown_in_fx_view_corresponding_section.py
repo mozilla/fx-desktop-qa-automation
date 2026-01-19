@@ -10,21 +10,35 @@ def test_case():
     return "2333476"
 
 
-WINDOW_1_URLS = [
-    "about:about",
-    "about:mozilla",
-    "about:robots",
-]
+WINDOW_1_URLS = ["about:about", "about:mozilla", "about:robots"]
+WINDOW_2_URLS = ["about:logo", "about:license"]
+WINDOW_3_URLS = ["about:buildconfig", "about:credits"]
 
-WINDOW_2_URLS = [
-    "about:logo",
-    "about:license",
-]
 
-WINDOW_3_URLS = [
-    "about:buildconfig",
-    "about:credits",
-]
+def close_tabs_from_end(tabs: TabBar, total_tabs: int, count: int) -> None:
+    """Close `count` tabs starting from the last tab (by index).
+
+    Arguments:
+        tabs: TabBar instance
+        total_tabs: Total number of tabs currently open in the window
+        count: Number of tabs to close from the end
+    """
+    for offset in range(count):
+        tab_index = total_tabs - offset
+        tab = tabs.get_tab(tab_index)
+        assert tab is not None, f"Tab not found at index {tab_index}"
+        tabs.close_tab(tab)
+
+
+def assert_recently_closed_contains(
+    fx_view: FirefoxView, driver, first_window: str, expected: set[str]
+) -> None:
+    """Switch to first window, open Firefox View, and verify expected URLs are in Recently Closed."""
+    driver.switch_to.window(first_window)
+    fx_view.open_recently_closed_section()
+    fx_view.wait_for_recently_closed_contains(expected)
+    actual = set(fx_view.get_recently_closed_tab_urls())
+    assert expected.issubset(actual), f"Expected {expected} not found in {actual}"
 
 
 def test_fx_view_closed_tabs_from_multiple_windows_shown_in_recently_closed_section(
@@ -37,76 +51,37 @@ def test_fx_view_closed_tabs_from_multiple_windows_shown_in_recently_closed_sect
     fx_view = FirefoxView(driver)
     first_window = driver.current_window_handle
 
-    # Open a few random web pages in different tabs
+    # Open web pages in tabs and close the last two
     tabs.open_multiple_tabs_with_pages(WINDOW_1_URLS)
+    close_tabs_from_end(tabs, total_tabs=1 + len(WINDOW_1_URLS), count=2)
 
-    # Close the last two tabs
-    num_tabs = len(driver.window_handles)
-    for i in range(2):
-        tab = tabs.get_tab(num_tabs - i)
-        assert tab is not None
-        tabs.close_tab(tab)
-
-    # Switch to the first window handle
-    driver.switch_to.window(first_window)
-
-    # Navigate to Firefox View Recently Closed section
-    fx_view.open_recently_closed_section()
-
-    # Verify that closed tabs are shown in Recently Closed section
-    expected_closed_urls = set(WINDOW_1_URLS[-2:])
-    fx_view.wait.until(
-        lambda _: set(fx_view.get_recently_closed_tab_urls()) == expected_closed_urls
+    # Verify closed tabs are shown in Recently Closed
+    assert_recently_closed_contains(
+        fx_view, driver, first_window, expected=set(WINDOW_1_URLS[-2:])
     )
-    actual_closed_urls = set(fx_view.get_recently_closed_tab_urls())
-    assert actual_closed_urls == expected_closed_urls
 
-    # Open another Firefox window with some random web pages in different tabs
+    # Open second window with web pages and close them
     tabs.open_and_switch_to_new_window("window")
     tabs_window_2 = TabBar(driver)
     tabs_window_2.open_multiple_tabs_with_pages(WINDOW_2_URLS)
-
-    # Close some tabs in the new Firefox window and navigate to Firefox View in the first window
-    num_tabs_window_2 = len(WINDOW_2_URLS) + 1  # +1 for the initial blank tab
-    for i in range(len(WINDOW_2_URLS)):
-        tab = tabs_window_2.get_tab(num_tabs_window_2 - i)
-        tabs_window_2.close_tab(tab)
-
-    # Switch to first window and navigate to Firefox View
-    driver.switch_to.window(first_window)
-    fx_view.open_recently_closed_section()
-
-    # Verify closed tabs from the new Firefox window are shown in Recently Closed
-    expected_window_2_urls = set(WINDOW_2_URLS)
-    fx_view.wait.until(
-        lambda _: expected_window_2_urls.issubset(
-            set(fx_view.get_recently_closed_tab_urls())
-        )
+    close_tabs_from_end(
+        tabs_window_2, total_tabs=1 + len(WINDOW_2_URLS), count=len(WINDOW_2_URLS)
     )
-    actual_closed_urls = set(fx_view.get_recently_closed_tab_urls())
-    assert expected_window_2_urls.issubset(actual_closed_urls)
 
-    # Open another Firefox window with some random web pages and close those tabs
+    # Verify closed tabs from window 2 are shown in Recently Closed
+    assert_recently_closed_contains(
+        fx_view, driver, first_window, expected=set(WINDOW_2_URLS)
+    )
+
+    # Open third window with web pages and close them
     tabs.open_and_switch_to_new_window("window")
     tabs_window_3 = TabBar(driver)
     tabs_window_3.open_multiple_tabs_with_pages(WINDOW_3_URLS)
-
-    # Close the tabs in window 3
-    num_tabs_window_3 = len(WINDOW_3_URLS) + 1
-    for i in range(len(WINDOW_3_URLS)):
-        tab = tabs_window_3.get_tab(num_tabs_window_3 - i)
-        tabs_window_3.close_tab(tab)
-
-    # Switch to first window and navigate to Firefox View
-    driver.switch_to.window(first_window)
-    fx_view.open_recently_closed_section()
-
-    # Verify closed tabs from the third Firefox window are shown in Recently Closed
-    expected_window_3_urls = set(WINDOW_3_URLS)
-    fx_view.wait.until(
-        lambda _: expected_window_3_urls.issubset(
-            set(fx_view.get_recently_closed_tab_urls())
-        )
+    close_tabs_from_end(
+        tabs_window_3, total_tabs=1 + len(WINDOW_3_URLS), count=len(WINDOW_3_URLS)
     )
-    actual_closed_urls = set(fx_view.get_recently_closed_tab_urls())
-    assert expected_window_3_urls.issubset(actual_closed_urls)
+
+    # Verify closed tabs from window 3 are shown in Recently Closed
+    assert_recently_closed_contains(
+        fx_view, driver, first_window, expected=set(WINDOW_3_URLS)
+    )
