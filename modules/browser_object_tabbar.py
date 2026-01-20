@@ -319,7 +319,6 @@ class TabBar(BasePage):
     def close_last_n_tabs(self, total_tabs: int, count: int) -> "TabBar":
         """
         Close the last N tabs in the current window, starting from the rightmost tab.
-
         Arguments:
             total_tabs: Total number of tabs currently open in the window
             count: Number of tabs to close from the end
@@ -349,7 +348,6 @@ class TabBar(BasePage):
     ) -> "TabBar":
         """
         Opens URLs in tabs. By default, opens a new tab for each URL.
-
         Arguments:
             urls: List of URLs to open in tabs
             open_first_in_current_tab: If True, opens first URL in current tab instead of new tab
@@ -540,7 +538,6 @@ class TabBar(BasePage):
         self.context_click("tabgroup-label")
         self.click_on("tabgroup-save-and-close-group")
         return self
-
 
     @BasePage.context_chrome
     def expect_play_tab_button(self, visible: bool = True) -> BasePage:

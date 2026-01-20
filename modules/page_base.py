@@ -148,10 +148,10 @@ class BasePage(Page):
                 logging.info(f"adding do-not-cache to {key}")
                 self.elements[key]["groups"].append("doNotCache")
 
-    def clear_cache(self) -> "BasePage":
+    def clear_cache(self) -> Page:
         """
         Clear cached Selenium objects to avoid stale element references.
-        Use this after switching windows instead of reinstantiating the page object.
+        Useful after switching windows, page reloads, or significant DOM changes.
         """
         for name in self.elements:
             if "seleniumObject" in self.elements[name]:
