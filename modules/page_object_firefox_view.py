@@ -14,7 +14,7 @@ class FirefoxView(BasePage):
 
     URL_TEMPLATE = "about:firefoxview"
 
-    def open_recently_closed_section(self) -> "FirefoxView":
+    def open_recently_closed(self) -> "FirefoxView":
         """Navigate to the Recently Closed section in Firefox View."""
         self.driver.get(f"{self.URL_TEMPLATE}#recentlyclosed")
         self.wait.until(lambda _: self._is_recently_closed_selected())
@@ -31,7 +31,7 @@ class FirefoxView(BasePage):
             )
         )
 
-    def get_recently_closed_tab_urls(self) -> list[str]:
+    def get_closed_tab_urls(self) -> list[str]:
         """Return the list of URLs shown in the Recently Closed tab rows."""
         urls = self.driver.execute_script(
             """
@@ -56,8 +56,8 @@ class FirefoxView(BasePage):
         )
         return cast(list[str], urls)
 
-    def wait_for_recently_closed_contains(self, expected_urls: set[str]) -> None:
+    def wait_for_closed_tabs_with_urls(self, expected_urls: set[str]) -> None:
         """Wait until the expected URLs appear in the Recently Closed section."""
         self.wait.until(
-            lambda _: expected_urls.issubset(set(self.get_recently_closed_tab_urls()))
+            lambda _: expected_urls.issubset(set(self.get_closed_tab_urls()))
         )
