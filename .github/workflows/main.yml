@@ -131,9 +131,8 @@ jobs:
         run: |
           pipenv run python -m scripts.choose_test_split
 
-      # --- DRY RUN: only show what would run ---
-      - name: Dry Run - Print Selected Tests (Win)
-        if: ${{ inputs.dry_run == true }}
+      - name: Print Selected Tests (Win)
+        if: ${{steps.select.conclusion == 'success'}}
         shell: pwsh
         run: |
           Write-Host "Selected tests: "
@@ -246,8 +245,8 @@ jobs:
         run: |
           pipenv run python -m scripts.choose_test_split
 
-      - name: Dry Run - Print Selected Tests (MacOS)
-        if: ${{ inputs.dry_run == true  && steps.select.conclusion == 'success'}}
+      - name: Print Selected Tests (MacOS)
+        if: ${{steps.select.conclusion == 'success'}}
         run: |
           echo "Selected tests: "
           cat selected_tests
