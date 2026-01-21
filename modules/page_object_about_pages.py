@@ -6,7 +6,6 @@ import time
 from pypom import Page
 from selenium.common.exceptions import (
     StaleElementReferenceException,
-    TimeoutException,
     WebDriverException,
 )
 from selenium.webdriver import Firefox
