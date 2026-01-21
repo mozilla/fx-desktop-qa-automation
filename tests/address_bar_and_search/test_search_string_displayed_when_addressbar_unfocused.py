@@ -12,7 +12,7 @@ def test_case():
     return "3028954"
 
 
-def test_address_bar_and_search_string_displayed_when_addressbar_unfocused(
+def test_address_bar_and_search_string_displayed_when_address_bar_unfocused(
     driver: Firefox,
 ):
     """
