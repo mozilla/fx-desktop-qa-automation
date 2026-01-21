@@ -4,7 +4,7 @@ import time
 from typing import Literal
 from urllib.parse import urlparse
 
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, JavascriptException
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -572,6 +572,16 @@ class Navigation(BasePage):
 
         self.wait.until(_download_complete)
         return self
+
+    @BasePage.context_chrome
+    def attempt_close_window(self):
+        """
+        Focus the window header/tab strip first, then attempt to close the window.
+        This makes the close prompt deterministic in situations like downloads-in-progress.
+        """
+
+        self.get_element("tab-strip").click()
+        self.get_element("window-close-button").click()
 
     @BasePage.context_chrome
     def refresh_page(self) -> BasePage:
