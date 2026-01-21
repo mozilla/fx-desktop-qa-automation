@@ -193,5 +193,10 @@
         "selectorData": "moz-button.tab-audio-button[activemedia-blocked='{state}']",
         "strategy": "css",
         "groups": []
+    },
+    "firefox-view-button": {
+        "selectorData": "firefox-view-button",
+        "strategy": "id",
+        "groups": []
     }
 }
