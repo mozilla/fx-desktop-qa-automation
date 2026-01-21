@@ -19,7 +19,7 @@ EXPECT_VISIBLE: Literal["visible"] = "visible"
 EXPECT_NOT_VISIBLE: Literal["not_visible"] = "not_visible"
 
 
-def test_searchbar_engine_remove_restore_affects_both_windows(driver):
+def test_search_bar_engine_remove_restore_affects_both_windows(driver):
     """
     C3028770 - Verify that removing and restoring search engines reflects in searchbar engine suggestion,
     both regular and private windows.
