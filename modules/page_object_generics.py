@@ -139,24 +139,6 @@ class GenericPage(BasePage):
 
         return self
 
-    def download_gdoc_as_pdf(self) -> None:
-        """
-        Opens a Google Doc file and downloads it as a PDF.
-
-        Steps:
-        1. Click on the Google Doc file
-        2. Open File -> Download
-        3. Select PDF Document (.pdf)
-        """
-        # Click the Google Doc file
-        self.click_on("gdoc-file")
-
-        # Click File menu -> Download
-        self.click_on("gdoc-file-download")
-
-        # Click PDF Document (.pdf)
-        self.click_on("gdoc-file-download-pdf")
-
 
 class GenericPdf(BasePage):
     """

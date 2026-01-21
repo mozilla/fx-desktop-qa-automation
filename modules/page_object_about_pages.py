@@ -362,65 +362,29 @@ class AboutTelemetry(BasePage):
         """
         Opens the Raw JSON telemetry view (against bnVsbA== / null payload timing).
         """
-        # Click "Raw JSON" from categories on the left
-        WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable(self.get_selector("category-raw"))
-        )
+        # Click "Raw" category
         self.get_element("category-raw").click()
 
         # Switching to the new tab opened by Raw
         self.switch_to_new_tab()
 
         # Wait for Raw Data tab to be clickable, then click it
-        WebDriverWait(self.driver, 30).until(
+        WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(self.get_selector("rawdata-tab"))
         )
         self.get_element("rawdata-tab").click()
 
         # Wait for data URL
-        WebDriverWait(self.driver, 30).until(
+        WebDriverWait(self.driver, 10).until(
             lambda d: d.current_url.startswith("data:application/json;base64,")
         )
 
         # Wait until it's not the "null" payload (bnVsbA==)
-        WebDriverWait(self.driver, 30).until(
+        WebDriverWait(self.driver, 10).until(
             lambda d: "base64,bnVsbA==" not in d.current_url
         )
 
         return self
-
-    def is_telemetry_entry_present(
-        self, table_selector_key: str, expected_telemetry_data
-    ) -> bool:
-        """
-        Generic method to check if a telemetry row exists in a given table.
-        """
-
-        # Wait for the table to exist in DOM
-        self.get_element(table_selector_key)
-
-        # Retrieve all rows from the telemetry table
-        rows = self.get_elements(table_selector_key)
-
-        # Iterate from newest to oldest entries
-        for row in reversed(rows):
-            cells = [cell.text.strip() for cell in row.find_elements(By.TAG_NAME, "td")]
-
-            # Verify all expected values are present in the row
-            if all(value in cells for value in expected_telemetry_data):
-                return True
-
-        return False
-
-    def is_telemetry_scalars_entry_present(self, expected_data):
-        return self.is_telemetry_entry_present(
-            "telemetry-scalars-table-rows", expected_data
-        )
-
-    def is_telemetry_events_entry_present(self, expected_data):
-        return self.is_telemetry_entry_present(
-            "telemetry-events-table-rows", expected_data
-        )
 
 
 class AboutNetworking(BasePage):

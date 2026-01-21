@@ -12,14 +12,6 @@ def test_case():
 
 
 @pytest.fixture()
-def add_to_prefs_list():
-    """Add to list of prefs to set"""
-    return [
-        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", "true")
-    ]
-
-
-@pytest.fixture()
 def about_prefs_category():
     return "home"
 
@@ -39,12 +31,12 @@ def test_firefox_home_new_tab(
     dropdown.select_option("Firefox Home (Default)")
 
     # make sure that the option was selected correctly
-    about_prefs.element_attribute_is(
-        "home-new-tabs-dropdown", "label", "Firefox Home (Default)"
+    about_prefs.expect_element_attribute_is(
+        "home-new-window-dropdown", "label", "Firefox Home (Default)"
     )
 
-    # open a new tab
+    # wait for the number of tabs and switch
     tabs.open_and_switch_to_new_tab()
 
     # make sure we are on the correct new tab page
-    about_new_tab.element_exists("body-logo")
+    assert about_new_tab.get_element("body-logo") is not None

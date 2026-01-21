@@ -271,11 +271,9 @@
         "groups": []
     },
     "library-history-submenu-button": {
-        "selectorData": "//*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "doNotCache"
-        ]
+        "selectorData": "appMenu-library-history-button",
+        "strategy": "id",
+        "groups": []
     },
     "other-bookmarks-toolbar": {
         "selectorData": "OtherBookmarks",
@@ -389,18 +387,9 @@
         "groups": []
     },
     "toolbar-history-recently-closed-tabs": {
-        "selectorData": "//*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "library-recently-closed-tabs-items": {
-        "selectorData": "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "doNotCache"
-        ]
+        "selectorData": "appMenuRecentlyClosedTabs",
+        "strategy": "id",
+        "groups": []
     },
     "toolbar-history-recently-closed-windows": {
         "selectorData": "appMenuRecentlyClosedWindows",
@@ -613,10 +602,5 @@
         "selectorData": "image.blocked-permission-icon.autoplay-media-icon[showing='{state}']",
         "strategy": "css",
         "groups": []
-    },
-    "download-deleted-message": {
-          "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
-          "strategy": "css",
-          "groups": []
     }
 }

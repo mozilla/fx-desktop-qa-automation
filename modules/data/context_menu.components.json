@@ -237,10 +237,5 @@
         "selectorData": "toolbar-context-toggle-vertical-tabs",
         "strategy": "id",
         "groups": []
-    },
-    "context-menu-delete": {
-        "selectorData": "downloadDeleteFileMenuItem",
-        "strategy": "class",
-        "groups": []
     }
 }

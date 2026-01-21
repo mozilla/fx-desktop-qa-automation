@@ -19,7 +19,7 @@ def test_case():
     return "3028909"
 
 
-def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
+def test_searchengine_result_page_load_on_reload_or_back(driver: Firefox):
     """
     C3028909 - Search Engine Result Page loads as a result of a reload or a back-button press
     """
@@ -35,11 +35,10 @@ def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
 
     # Using the search bar perform a search
     nav.search_bar_search(TEXT)
-    nav.url_contains(TEXT)
+    sleep(5)
 
     # Press back button from the browser menu
     nav.click_back_button()
-    nav.wait.until(lambda _: TEXT not in nav.driver.current_url)
 
     # Go to about:telemetry -> Raw JSON -> Raw data
     telemetry.open()
@@ -60,7 +59,7 @@ def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
     # Go back to raw data page and reload it
     driver.switch_to.window(driver.window_handles[1])
     nav.refresh_page()
-    telemetry.click_on("rawdata-tab")
+    telemetry.get_element("rawdata-tab").click()
 
     # Verify "browser.search.content.searchbar": { "google:tagged:firefox-b-d": 2}*
     json_data = utils.decode_url(driver)

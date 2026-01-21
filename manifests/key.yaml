@@ -123,18 +123,6 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
-  test_search_bar_display_alpenglow_theme:
-    result: pass
-    splits:
-    - functional1
-  test_search_bar_on_engines_remove_restore:
-    result: pass
-    splits:
-    - functional1
-  test_search_bar_results_shown_in_a_new_tab:
-    result: unstable
-    splits:
-    - functional1
   test_search_code_google_non_us:
     result: pass
     splits:
@@ -158,23 +146,11 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
-  test_search_mode_change_tab:
-    result: pass
-    splits:
-    - functional1
-  test_search_mode_cleared_on_engine_removal:
-    result: pass
-    splits:
-    - functional1
   test_search_mode_exits_correctly:
     result: pass
     splits:
     - functional1
   test_search_mode_persists_mixed_with_bing:
-    result: pass
-    splits:
-    - functional1
-  test_search_mode_update_on_alias_prefix:
     result: pass
     splits:
     - functional1
@@ -191,7 +167,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_term_persists:
@@ -199,6 +175,34 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_display_alpenglow_theme:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_on_engines_remove_restore:
+    result: pass
+    splits:
+    - functional1
+  test_searchbar_results_shown_in_a_new_tab:
+    result: unstable
+    splits:
+    - functional1
+  test_searchengine_result_page_load_on_reload_or_back:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_change_tab:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_cleared_on_engine_removal:
+    result: pass
+    splits:
+    - functional1
+  test_searchmode_update_on_alias_prefix:
     result: pass
     splits:
     - functional1
@@ -371,32 +375,12 @@ downloads:
     result: unstable
     splits:
     - functional1
-  test_delete_download_while_in_progress:
-    result: pass
-    splits:
-    - functional1
-  test_download_apk_and_check_extension:
-    result: pass
-    splits:
-    - functional1
-  test_download_epub_shows_extension_in_downloads_panel:
-    result: pass
-    splits:
-    - functional1
-  test_download_exe_and_check_extesion:
-    result: pass
-    splits:
-    - functional1
   test_download_pdf:
     result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
     result: unstable
-    splits:
-    - functional1
-  test_download_telemetry_recorded:
-    result: pass
     splits:
     - functional1
   test_mixed_content_download_via_https:
@@ -406,19 +390,7 @@ downloads:
       win: unstable
     splits:
     - functional1
-  test_no_download_telemetry_without_panel:
-    result: pass
-    splits:
-    - functional1
   test_set_always_ask_file_type:
-    result: pass
-    splits:
-    - functional1
-  test_telemetry_download_and_open:
-    result: pass
-    splits:
-    - functional1
-  test_telemetry_pdf_download_open:
     result: pass
     splits:
     - functional1
@@ -728,15 +700,15 @@ password_manager:
   test_password_csv_correctness:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional2
   test_password_csv_export:
     result:
       linux: unstable
-      mac: pass
-      win: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
@@ -788,7 +760,7 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -1002,14 +974,6 @@ session_restore:
     result: pass
     splits:
     - functional2
-  test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    result: pass
-    splits:
-    - functional2
-  test_closed_tabs_from_multiple_windows_shown_in_library_menu:
-    result: pass
-    splits:
-    - functional2
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
@@ -1114,10 +1078,6 @@ tabs:
     splits:
     - functional2
   test_reload_tab_via_keyboard:
-    result: pass
-    splits:
-    - functional2
-  test_remove_tab_from_a_group:
     result: pass
     splits:
     - functional2

@@ -13,7 +13,7 @@ def test_case():
     return "2241521"
 
 
-# This test is unstable on Ubuntu: Bug 2004938
+# This test is unstable for now: Bug 1996005
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_export(

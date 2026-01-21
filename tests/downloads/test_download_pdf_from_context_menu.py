@@ -3,6 +3,7 @@ from time import sleep
 import pytest
 from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu
 from modules.browser_object_navigation import Navigation
@@ -71,4 +72,16 @@ def test_download_pdf_from_context_menu(
     about_telemetry.click_on("events-tab")
 
     # Verify telemetry
-    assert about_telemetry.is_telemetry_events_entry_present(PDF_TELEMETRY_DATA)
+    all_rows = driver.find_elements(By.CSS_SELECTOR, "#events-section table tr")
+
+    pdf_telemetry_row = None
+    for row in reversed(all_rows):
+        cells = row.find_elements(By.TAG_NAME, "td")
+        if len(cells) > 1:
+            cell_texts = [cell.text.strip() for cell in cells[1:]]
+            if cell_texts == PDF_TELEMETRY_DATA:
+                pdf_telemetry_row = cells
+                break
+
+    cell_texts = [cell.text.strip() for cell in pdf_telemetry_row[1:]]
+    assert PDF_TELEMETRY_DATA == cell_texts

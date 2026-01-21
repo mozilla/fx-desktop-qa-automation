@@ -23,7 +23,6 @@ from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 from scripts import collect_executables
 
-ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
@@ -202,18 +201,11 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
 
 
 def _get_version(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
+    driver.get("chrome://browser/content/aboutDialog.xhtml")
     version_el = driver.find_element(By.ID, "version")
     version = version_el.text
     driver.get("about:blank")
     return version
-
-
-def _fx_up_to_date(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    WebDriverWait(driver, 20).until(
-        EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
-    )
 
 
 @pytest.fixture()
@@ -474,34 +466,27 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
-
     try:
         options = Options()
         options.add_argument("--remote-allow-system-access")
         if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
-
         if use_profile:
             profile_path = tmp_path / use_profile
             unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
             options.profile = profile_path
-
-        options.set_preference("app.update.disabledForTesting", False)
         for opt, value in prefs_list:
             options.set_preference(opt, value)
-
         if geckodriver:
             service = Service(executable_path=geckodriver)
             driver = Firefox(service=service, options=options)
         else:
             driver = Firefox(options=options)
-
         # Uncomment below to find Fx process info
         # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
-
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
@@ -512,39 +497,29 @@ def driver(
                 separator = " "
         winsize = [int(s) for s in opt_window_size.split(separator)]
         driver.set_window_size(*winsize)
-
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-
         displayed_version = _get_version(driver).split(" ")[0]
-        if opt_ci:
-            if displayed_version not in build_version and not os.environ.get("MANUAL"):
-                # Manual flows may test older versions, automatic flows should not
-                raise ValueError(
-                    f"Mismatch between displayed version {displayed_version}"
-                    f" and actual version {build_version}"
-                )
-        else:
-            _fx_up_to_date(driver)
-
+        if displayed_version not in build_version and not os.environ.get("MANUAL"):
+            # Manual flows may test older versions, automatic flows should not
+            raise ValueError(
+                f"Mismatch between displayed version {displayed_version}"
+                f" and actual version {build_version}"
+            )
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = suite_id
         json_metadata["test_case"] = test_case
-
         yield driver
-        if hard_quit:
-            return
-
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
-        raise
-
     finally:
-        if not hard_quit and ("driver" in locals() or "driver" in globals()) and driver:
+        if hard_quit:
+            return
+        if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 
