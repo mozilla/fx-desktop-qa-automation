@@ -11,7 +11,7 @@ def test_case():
     return "3028773"
 
 
-def test_search_suggestions_pref_affects_urlbar_and_searchbar(driver):
+def test_search_suggestions_pref_affects_urlbar_and_search_bar(driver):
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
 

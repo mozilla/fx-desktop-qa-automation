@@ -178,31 +178,31 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_searchbar_display_alpenglow_theme:
+  test_search_bar_display_alpenglow_theme:
     result: pass
     splits:
     - functional1
-  test_searchbar_on_engines_remove_restore:
+  test_search_bar_on_engines_remove_restore:
     result: pass
     splits:
     - functional1
-  test_searchbar_results_shown_in_a_new_tab:
+  test_search_bar_results_shown_in_a_new_tab:
     result: unstable
     splits:
     - functional1
-  test_searchengine_result_page_load_on_reload_or_back:
+  test_search_engine_result_page_load_on_reload_or_back:
     result: pass
     splits:
     - functional1
-  test_searchmode_change_tab:
+  test_search_mode_change_tab:
     result: pass
     splits:
     - functional1
-  test_searchmode_cleared_on_engine_removal:
+  test_search_mode_cleared_on_engine_removal:
     result: pass
     splits:
     - functional1
-  test_searchmode_update_on_alias_prefix:
+  test_search_mode_update_on_alias_prefix:
     result: pass
     splits:
     - functional1
