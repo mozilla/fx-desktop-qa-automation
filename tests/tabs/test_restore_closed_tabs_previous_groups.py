@@ -38,7 +38,7 @@ def test_restore_closed_tabs_previous_groups(driver: Firefox):
     panel = PanelUi(driver)
 
     # Open 4 websites
-    tabs.open_websites_in_tabs(urls)
+    tabs.open_urls_in_tabs(urls, open_first_in_current_tab=True)
 
     # Create Group 1 with tabs 1 and 2
     tabs.create_websites_tab_group(

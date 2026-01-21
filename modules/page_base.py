@@ -148,6 +148,16 @@ class BasePage(Page):
                 logging.info(f"adding do-not-cache to {key}")
                 self.elements[key]["groups"].append("doNotCache")
 
+    def clear_cache(self) -> Page:
+        """
+        Clear cached Selenium objects to avoid stale element references.
+        Useful after switching windows, page reloads, or significant DOM changes.
+        """
+        for name in self.elements:
+            if "seleniumObject" in self.elements[name]:
+                del self.elements[name]["seleniumObject"]
+        return self
+
     @staticmethod
     def context_chrome(func):
         """Decorator to switch to CONTEXT_CHROME"""

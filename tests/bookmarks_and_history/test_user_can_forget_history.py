@@ -35,7 +35,7 @@ def test_user_can_forget_history(driver: Firefox):
     customize_firefox.add_widget_to_toolbar("forget")
 
     # Create history
-    tabs.open_multiple_tabs_with_pages(ABOUT_PAGES)
+    tabs.open_urls_in_tabs(ABOUT_PAGES)
 
     # Use Forget button to clear the last 5 minutes of history
     nav.open_forget_panel()
