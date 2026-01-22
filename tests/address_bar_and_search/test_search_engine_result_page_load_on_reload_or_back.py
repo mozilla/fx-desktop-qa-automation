@@ -39,7 +39,7 @@ def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
 
     # Press back button from the browser menu
     nav.click_back_button()
-    nav.url_contains("")
+    nav.wait.until(lambda _: TEXT not in nav.driver.current_url)
 
     # Go to about:telemetry -> Raw JSON -> Raw data
     telemetry.open()
