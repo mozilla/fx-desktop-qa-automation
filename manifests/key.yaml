@@ -696,15 +696,15 @@ password_manager:
   test_password_csv_correctness:
     result:
       linux: unstable
-      mac: unstable
-      win: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_password_csv_export:
     result:
       linux: unstable
-      mac: unstable
-      win: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
