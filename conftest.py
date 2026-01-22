@@ -23,6 +23,7 @@ from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 from scripts import collect_executables
 
+ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
@@ -201,11 +202,18 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
 
 
 def _get_version(driver: Firefox):
-    driver.get("chrome://browser/content/aboutDialog.xhtml")
+    driver.get(ABOUT_FIREFOX)
     version_el = driver.find_element(By.ID, "version")
     version = version_el.text
     driver.get("about:blank")
     return version
+
+
+def _fx_up_to_date(driver: Firefox):
+    driver.get(ABOUT_FIREFOX)
+    WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
+    )
 
 
 @pytest.fixture()
@@ -503,12 +511,15 @@ def driver(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
         displayed_version = _get_version(driver).split(" ")[0]
-        if displayed_version not in build_version and not os.environ.get("MANUAL"):
-            # Manual flows may test older versions, automatic flows should not
-            raise ValueError(
-                f"Mismatch between displayed version {displayed_version}"
-                f" and actual version {build_version}"
-            )
+        if opt_ci:
+            if displayed_version not in build_version and not os.environ.get("MANUAL"):
+                # Manual flows may test older versions, automatic flows should not
+                raise ValueError(
+                    f"Mismatch between displayed version {displayed_version}"
+                    f" and actual version {build_version}"
+                )
+        else:
+            _fx_up_to_date(driver)
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = suite_id
