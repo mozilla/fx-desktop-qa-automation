@@ -211,7 +211,7 @@ def _get_version(driver: Firefox):
 
 def _fx_up_to_date(driver: Firefox):
     driver.get(ABOUT_FIREFOX)
-    WebDriverWait(driver, 30).until(
+    WebDriverWait(driver, 20).until(
         EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
     )
 
