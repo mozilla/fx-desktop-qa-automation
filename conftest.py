@@ -484,6 +484,7 @@ def driver(
             profile_path = tmp_path / use_profile
             unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
             options.profile = profile_path
+        options.set_preference("app.update.disabledForTesting", False)
         for opt, value in prefs_list:
             options.set_preference(opt, value)
         if geckodriver:

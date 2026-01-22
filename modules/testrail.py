@@ -240,7 +240,9 @@ class TestRail:
         return None
 
     def matching_submilestone(self, milestone, submile_name):
-        """Given a milestone object and a submilestone name, return the submile object that matches"""
+        """
+        Given a milestone object and a submilestone name, return the submile object that matches
+        """
         for submile in milestone["milestones"]:
             if submile_name == submile["name"]:
                 return submile
@@ -251,7 +253,7 @@ class TestRail:
         return the plan object that matches"""
         plans = self._get_plans_in_milestone(testrail_project_id, milestone_id)
         for plan in plans:
-            if plan_name in plan["name"]:
+            if plan_name == plan["name"]:
                 return self._get_full_plan(plan.get("id"))
         return None
 
