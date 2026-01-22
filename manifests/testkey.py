@@ -334,8 +334,10 @@ class TestKey:
         """
         newkey = deepcopy(self.manifest)
         for root, _, files in os.walk(self.test_root):
+            if root == self.test_root:
+                continue
+            suite = root.split(os.path.sep)[1]
             for f in files:
-                suite = root.split(os.path.sep)[1]
                 if not (f.startswith("test_") and f.endswith(".py")):
                     continue
                 testfile = f.replace(".py", "")
