@@ -474,28 +474,34 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
+
     try:
         options = Options()
         options.add_argument("--remote-allow-system-access")
         if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
+
         if use_profile:
             profile_path = tmp_path / use_profile
             unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
             options.profile = profile_path
+
         options.set_preference("app.update.disabledForTesting", False)
         for opt, value in prefs_list:
             options.set_preference(opt, value)
+
         if geckodriver:
             service = Service(executable_path=geckodriver)
             driver = Firefox(service=service, options=options)
         else:
             driver = Firefox(options=options)
+
         # Uncomment below to find Fx process info
         # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
+
         separator = "x"
         if separator not in opt_window_size:
             if "by" in opt_window_size:
@@ -506,11 +512,13 @@ def driver(
                 separator = " "
         winsize = [int(s) for s in opt_window_size.split(separator)]
         driver.set_window_size(*winsize)
+
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
+
         displayed_version = _get_version(driver).split(" ")[0]
         if opt_ci:
             if displayed_version not in build_version and not os.environ.get("MANUAL"):
@@ -521,17 +529,20 @@ def driver(
                 )
         else:
             _fx_up_to_date(driver)
+
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = suite_id
         json_metadata["test_case"] = test_case
+
         yield driver
+
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
+        raise
+
     finally:
-        if hard_quit:
-            return
-        if ("driver" in locals() or "driver" in globals()) and driver:
+        if not hard_quit and ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 
