@@ -83,6 +83,10 @@ def dedupe(run_list: list) -> list:
         run_list[dotslash] = f".{SLASH}{run_list[dotslash]}"
 
     for i, entry_a in enumerate(run_list):
+        if not os.path.exists(entry_a):
+            print(f"Removing {entry_a}: path does not exist")
+            removes.append(i)
+            continue
         for j, entry_b in enumerate(run_list):
             if i == j:
                 continue
