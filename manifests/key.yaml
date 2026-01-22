@@ -147,7 +147,7 @@ address_bar_and_search:
     result:
       linux: unstable
       mac: pass
-      win: unstable
+      win: pass
     splits:
     - functional1
   test_search_engine_selector:
