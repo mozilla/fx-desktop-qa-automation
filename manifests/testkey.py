@@ -376,7 +376,8 @@ class TestKey:
                 if resplit:
                     if not interactive:
                         sys.exit(
-                            "Cannot auto-add without user input. Please run python scripts/addtests.py"
+                            "Cannot auto-add without user input. "
+                            "Please run python scripts/addtests.py"
                         )
                     if ask_question(
                         "Should this test run in a Scheduled Functional split? "

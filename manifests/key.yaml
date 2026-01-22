@@ -145,9 +145,9 @@ address_bar_and_search:
     - smoke
   test_search_engine_result_page_load_on_reload_or_back:
     result:
-      win: unstable
-      mac: pass
       linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_search_engine_selector:
