@@ -123,6 +123,18 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
+  test_search_bar_display_alpenglow_theme:
+    result: pass
+    splits:
+    - functional1
+  test_search_bar_on_engines_remove_restore:
+    result: pass
+    splits:
+    - functional1
+  test_search_bar_results_shown_in_a_new_tab:
+    result: unstable
+    splits:
+    - functional1
   test_search_code_google_non_us:
     result: pass
     splits:
@@ -146,11 +158,23 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
+  test_search_mode_change_tab:
+    result: pass
+    splits:
+    - functional1
+  test_search_mode_cleared_on_engine_removal:
+    result: pass
+    splits:
+    - functional1
   test_search_mode_exits_correctly:
     result: pass
     splits:
     - functional1
   test_search_mode_persists_mixed_with_bing:
+    result: pass
+    splits:
+    - functional1
+  test_search_mode_update_on_alias_prefix:
     result: pass
     splits:
     - functional1
@@ -167,7 +191,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_search_term_persists:
@@ -175,34 +199,6 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
-    result: pass
-    splits:
-    - functional1
-  test_searchbar_display_alpenglow_theme:
-    result: pass
-    splits:
-    - functional1
-  test_searchbar_on_engines_remove_restore:
-    result: pass
-    splits:
-    - functional1
-  test_searchbar_results_shown_in_a_new_tab:
-    result: unstable
-    splits:
-    - functional1
-  test_searchengine_result_page_load_on_reload_or_back:
-    result: pass
-    splits:
-    - functional1
-  test_searchmode_change_tab:
-    result: pass
-    splits:
-    - functional1
-  test_searchmode_cleared_on_engine_removal:
-    result: pass
-    splits:
-    - functional1
-  test_searchmode_update_on_alias_prefix:
     result: pass
     splits:
     - functional1
@@ -373,6 +369,10 @@ downloads:
     - functional1
   test_add_zip_type:
     result: unstable
+    splits:
+    - functional1
+  test_delete_download_while_in_progress:
+    result: pass
     splits:
     - functional1
   test_download_pdf:
@@ -704,15 +704,15 @@ password_manager:
   test_password_csv_correctness:
     result:
       linux: unstable
-      mac: unstable
-      win: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_password_csv_export:
     result:
       linux: unstable
-      mac: unstable
-      win: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
@@ -974,6 +974,10 @@ security_and_privacy:
     splits:
     - smoke
 session_restore:
+  test_closed_tabs_from_multiple_windows_shown_history_menu-bar:
+    result: pass
+    splits:
+    - functional2
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
