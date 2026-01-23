@@ -44,6 +44,7 @@ def _move_pdf_and_get_delta(pdf_viewer: GenericPdf, key: str | int) -> int:
     return abs(page_one_item.location["y"] - initial_location)
 
 
+@pytest.mark.skip(reason="see bug 2010352")
 def test_navigation_keys(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.1: ensure that you can navigate through a PDF using keys
@@ -64,7 +65,7 @@ def test_navigation_keys(driver: Firefox, pdf_viewer: GenericPdf):
     # assert end key moves more than right key
     assert end_key_difference > right_key_difference
 
-    # scroll up using Up key
+    # scroll up using the Up key
     up_key_difference = _move_pdf_and_get_delta(pdf_viewer, Keys.UP)
 
     # scroll up using left key
@@ -78,6 +79,7 @@ def test_navigation_keys(driver: Firefox, pdf_viewer: GenericPdf):
     assert home_key_difference > left_key_difference
 
 
+@pytest.mark.skip(reason="see bug 2010352")
 def test_navigation_next_prev(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.2: ensure that you can navigate through a PDF using next and previous keys
@@ -91,6 +93,7 @@ def test_navigation_next_prev(driver: Firefox, pdf_viewer: GenericPdf):
     _move_pdf_and_get_delta(pdf_viewer, "prev")
 
 
+@pytest.mark.skip(reason="see bug 2010352")
 def test_navigation_page_numbers(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C3927.3: Ensure that you can navigate through a PDF using the numbers at the top.
