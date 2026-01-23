@@ -13,7 +13,7 @@ def test_case():
 
 
 @pytest.mark.parametrize("engine1, engine2", [("Bing", "DuckDuckGo")])
-def test_searchmode_change_tab(driver: Firefox, engine1, engine2):
+def test_search_mode_change_tab(driver: Firefox, engine1, engine2):
     """
     C3028732 - Verify that searchmode with change tab works correctly
     """

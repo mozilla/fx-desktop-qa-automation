@@ -4445,3 +4445,10 @@ Description: Reset Zoom option from Menu Bar
 Location: Menu bar
 Path to .json: modules/data/menu_bar.components.json
 ```
+```
+Selector Name: menu-bar-recently-closed-tabs-items
+Selector Data: "menuitem.bookmark-item"
+Description: Individual closed tab items in the Recently Closed Tabs submenu
+Location: History menu > Recently Closed Tabs submenu
+Path to .json: modules/data/menu_bar.components.json
+```
