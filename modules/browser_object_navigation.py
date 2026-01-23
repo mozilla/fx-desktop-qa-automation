@@ -1280,5 +1280,6 @@ class Navigation(BasePage):
         # Right-click and select the desired action
         self.context_click(download_item)
         self.context_menu.get_element(action_name).click()
+        self.context_menu.hide_popup_by_child_node(action_name)
 
         return self
