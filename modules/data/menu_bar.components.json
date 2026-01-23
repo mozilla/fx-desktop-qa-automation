@@ -45,6 +45,11 @@
         "strategy": "id",
         "groups": []
     },
+    "menu-bar-recently-closed-tabs-items": {
+        "selectorData": "menuitem.bookmark-item",
+        "strategy": "css",
+        "groups": []
+    },
     "view-menu-button": {
         "selectorData": "view-menu",
         "strategy": "id",
