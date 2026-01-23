@@ -65,6 +65,6 @@ def test_notifications_allow(
     )
     assert len(website_permissions) == 1
 
-    about_prefs.expect_element_attribute_is(
+    about_prefs.element_attribute_is(
         "permissions-notifications-popup-websites-item-status", "label", button_text
     )
