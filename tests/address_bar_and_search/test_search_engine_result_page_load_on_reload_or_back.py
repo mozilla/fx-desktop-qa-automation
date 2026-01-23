@@ -35,10 +35,11 @@ def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
 
     # Using the search bar perform a search
     nav.search_bar_search(TEXT)
-    sleep(5)
+    nav.url_contains(TEXT)
 
     # Press back button from the browser menu
     nav.click_back_button()
+    nav.wait.until(lambda _: TEXT not in nav.driver.current_url)
 
     # Go to about:telemetry -> Raw JSON -> Raw data
     telemetry.open()
@@ -59,7 +60,7 @@ def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
     # Go back to raw data page and reload it
     driver.switch_to.window(driver.window_handles[1])
     nav.refresh_page()
-    telemetry.get_element("rawdata-tab").click()
+    telemetry.click_on("rawdata-tab")
 
     # Verify "browser.search.content.searchbar": { "google:tagged:firefox-b-d": 2}*
     json_data = utils.decode_url(driver)

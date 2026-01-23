@@ -145,9 +145,9 @@ address_bar_and_search:
     - smoke
   test_search_engine_result_page_load_on_reload_or_back:
     result:
-      win: unstable
-      mac: pass
       linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional1
   test_search_engine_selector:
@@ -966,6 +966,10 @@ security_and_privacy:
     splits:
     - smoke
 session_restore:
+  test_closed_tabs_from_multiple_windows_shown_history_menu-bar:
+    result: pass
+    splits:
+    - functional2
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
