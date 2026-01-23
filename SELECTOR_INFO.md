@@ -2455,6 +2455,13 @@ Description: videojs website media player volume button
 Location: videojs website player
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: sample-bin-download-100mb
+Selector Data: "a[href='100MB.bin']"
+Description: Sample download
+Location: ash-speed.hetzner website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
