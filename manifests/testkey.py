@@ -385,6 +385,11 @@ class TestKey:
                     ):
                         newkey[suite][testfile]["splits"] = ["functional1"]
                         self.rebalance_functionals()
+
+                        print(
+                            f"Test has been added to the functional suite in {self.manifest_file} "
+                            "and the functional splits have been rebalanced."
+                        )
                     else:
                         all_splits = self.find_all_splits()
                         output = "\n".join(f"{item}" for item in all_splits)
@@ -395,11 +400,11 @@ class TestKey:
                         )
                         newkey[suite][testfile]["splits"] = [split]
 
-                    print(
-                        f"Test will be added to {split} in {self.manifest_file}. "
-                        "Consider modifying that file if the test is unstable in any OS, "
-                        "or if subtests need to be tracked separately."
-                    )
+                        print(
+                            f"Test will be added to {split} in {self.manifest_file}. "
+                            "Consider modifying that file if the test is unstable in any OS, "
+                            "or if subtests need to be tracked separately."
+                        )
 
         self.manifest = newkey
         self.write()

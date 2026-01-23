@@ -138,6 +138,13 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-delete
+Selector Data: "downloadDeleteFileMenuItem"
+Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input
@@ -2455,6 +2462,13 @@ Description: videojs website media player volume button
 Location: videojs website player
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: sample-bin-download
+Selector Data: "a[href='10GB.bin']"
+Description: Sample download
+Location: ash-speed.hetzner website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
@@ -3301,13 +3315,6 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: autoplay-blocked-icon
-Selector Data: "image.blocked-permission-icon.autoplay-media-icon[showing='{state}']"
-Description: Autoplay blocked icon in the URL bar that indicates when autoplay media is blocked
-Location: Address bar / URL bar
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector Name: search-settings
 Selector Data: urlbar-anon-search-settings
 Description: Search settings button in awesome bar
@@ -3445,6 +3452,13 @@ Selector Name: tab-container-label
 Selector Data: "userContext-label"
 Description:  Tab container label
 Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-deleted-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='File deleted']"
+Description: "File Deleted" status for a deleted download
+Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
@@ -4273,13 +4287,6 @@ Selector Name: all-tabs
 Selector Data: tabbrowser-tab
 Description: All tabs locator
 Location: All tabs from the tabs bar
-Path to .json: modules/data/tab_bar.components.json
-```
-```
-Selector Name: play-tab-button
-Selector Data: "moz-button.tab-audio-button[activemedia-blocked='{state}']"
-Description: Play tab button that appears on tabs when autoplay is blocked in background tabs
-Location: Tab bar, on tabs with blocked autoplay media
 Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill
