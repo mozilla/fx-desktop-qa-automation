@@ -2,7 +2,7 @@ import time
 
 import pytest
 from pynput.keyboard import Controller
-from selenium.common import TimeoutException
+from selenium.common import ElementClickInterceptedException, TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -53,12 +53,24 @@ def test_download_apk_shows_extension_in_downloads_panel(
     page.elements |= temp_selectors
 
     page.open()
-    # Accept cookie consent IF it appears within 3 seconds
+    # Accept cookie consent IF it appears within 5 seconds
     try:
-        WebDriverWait(driver, 3).until(
+        cookie_btn = WebDriverWait(driver, 5).until(
             lambda _: page.get_element("apkmirror-accept-cookies")
         )
-        page.click_on("apkmirror-accept-cookies")
+
+        # Ensure it is in view
+        driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", cookie_btn
+        )
+
+        # Try normal click first (best)
+        try:
+            cookie_btn.click()
+        except ElementClickInterceptedException:
+            # Fallback: JS click if some overlay steals the pointer
+            driver.execute_script("arguments[0].click();", cookie_btn)
+
     except TimeoutException:
         pass
 
