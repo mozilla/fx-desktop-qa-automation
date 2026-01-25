@@ -268,12 +268,17 @@
     "library-button": {
         "selectorData": "library-button",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "chrome"
+        ]
     },
     "library-history-submenu-button": {
         "selectorData": "appMenu-library-history-button",
         "strategy": "id",
-        "groups": []
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "other-bookmarks-toolbar": {
         "selectorData": "OtherBookmarks",
@@ -389,6 +394,11 @@
     "toolbar-history-recently-closed-tabs": {
         "selectorData": "appMenuRecentlyClosedTabs",
         "strategy": "id",
+        "groups": []
+    },
+    "library-recently-closed-tabs-items": {
+        "selectorData": "toolbarbutton.subviewbutton-iconic.bookmark-item",
+        "strategy": "css",
         "groups": []
     },
     "toolbar-history-recently-closed-windows": {

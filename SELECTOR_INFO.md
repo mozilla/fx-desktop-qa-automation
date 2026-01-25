@@ -3119,6 +3119,13 @@ Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: library-recently-closed-tabs-items
+Selector Data: toolbarbutton.subviewbutton-iconic.bookmark-item
+Description: Individual closed tab items in the Library History Recently Closed Tabs panel
+Location: Library > History > Recently Closed Tabs
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: other-bookmarks-toolbar
 Selector Data: OtherBookmarks
 Description: Other bookmarks folder

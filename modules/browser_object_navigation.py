@@ -4,7 +4,11 @@ import time
 from typing import Literal
 from urllib.parse import urlparse
 
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    TimeoutException,
+)
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -1277,3 +1281,73 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("back-button").click()
+
+    @BasePage.context_chrome
+    def get_library_recently_closed_urls(self, history_open: bool = False) -> set[str]:
+        """
+        Returns recently closed tab URLs for the current window using Firefox's SessionStore API.
+
+        Opens the Library > History submenu first (unless history_open=True) to verify
+        the UI is accessible, then queries SessionStore directly for the closed tabs data.
+        """
+        if not history_open:
+            self.open_library_history_submenu()
+
+        urls = self.driver.execute_script(
+            """
+            const { SessionStore } = ChromeUtils.importESModule(
+                "resource:///modules/sessionstore/SessionStore.sys.mjs"
+            );
+            const closedTabs = SessionStore.getClosedTabDataForWindow(window);
+            return closedTabs.map(tab => tab.state.entries[tab.state.index - 1]?.url || '').filter(u => u);
+            """
+        )
+        self.actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+        return set(urls)
+
+    def _find_visible_panel_element(self, element_id: str):
+        return self.driver.execute_script(
+            """
+            const id = arguments[0];
+            const direct = document.getElementById(id);
+            if (direct) {
+                const panelview = direct.closest("panelview");
+                if (panelview && panelview.getAttribute("visible") === "true") {
+                    return direct;
+                }
+            }
+
+            const panel = document.querySelector("panel#customizationui-widget-panel");
+            if (!panel || !panel.shadowRoot) {
+                return null;
+            }
+            const shadowEl = panel.shadowRoot.getElementById(id);
+            if (!shadowEl) {
+                return null;
+            }
+            const shadowPanelview = shadowEl.closest("panelview");
+            if (shadowPanelview && shadowPanelview.getAttribute("visible") === "true") {
+                return shadowEl;
+            }
+            return null;
+            """,
+            element_id,
+        )
+
+    @BasePage.context_chrome
+    def open_library_history_submenu(self) -> BasePage:
+        """
+        Open Library > History from the toolbar menu, targeting the visible panel.
+        """
+        self.click_on("library-button")
+        history_button = self.wait.until(
+            lambda _: self._find_visible_panel_element("appMenu-library-history-button")
+        )
+        try:
+            ActionChains(self.driver).move_to_element(history_button).click().perform()
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", history_button)
+        self.wait.until(
+            lambda _: self._find_visible_panel_element("appMenuRecentlyClosedTabs")
+        )
+        return self
