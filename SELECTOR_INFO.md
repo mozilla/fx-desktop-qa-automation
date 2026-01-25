@@ -3113,14 +3113,21 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: library-history-submenu-button
-Selector Data: appMenu-library-history-button
+Selector Data: //*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Library history submenu button
 Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: toolbar-history-recently-closed-tabs
+Selector Data: //*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Recently closed tabs button in the Library History view
+Location: Library > History
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: library-recently-closed-tabs-items
-Selector Data: toolbarbutton.subviewbutton-iconic.bookmark-item
+Selector Data: //*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Individual closed tab items in the Library History Recently Closed Tabs panel
 Location: Library > History > Recently Closed Tabs
 Path to .json: modules/data/navigation.components.json
