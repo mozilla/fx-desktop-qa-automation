@@ -268,15 +268,12 @@
     "library-button": {
         "selectorData": "library-button",
         "strategy": "id",
-        "groups": [
-            "chrome"
-        ]
+        "groups": []
     },
     "library-history-submenu-button": {
         "selectorData": "//*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
         "strategy": "xpath",
         "groups": [
-            "chrome",
             "doNotCache"
         ]
     },
