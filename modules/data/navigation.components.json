@@ -273,8 +273,8 @@
         ]
     },
     "library-history-submenu-button": {
-        "selectorData": "appMenu-library-history-button",
-        "strategy": "id",
+        "selectorData": "//*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
         "groups": [
             "chrome",
             "doNotCache"
@@ -392,39 +392,60 @@
         "groups": []
     },
     "toolbar-history-recently-closed-tabs": {
-        "selectorData": "appMenuRecentlyClosedTabs",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "library-recently-closed-tabs-items": {
-        "selectorData": "toolbarbutton.subviewbutton-iconic.bookmark-item",
-        "strategy": "css",
-        "groups": []
+        "selectorData": "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "toolbar-history-recently-closed-windows": {
-        "selectorData": "appMenuRecentlyClosedWindows",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@id='appMenuRecentlyClosedWindows' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "toolbar-history-search-history": {
-        "selectorData": "appMenuSearchHistory",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@id='appMenuSearchHistory' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "toolbar-history-clear-recent-history": {
-        "selectorData": "appMenuClearRecentHistory",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@id='appMenuClearRecentHistory' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "toolbar-history-recent_history": {
-        "selectorData": "panelMenu_recentHistory",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@id='panelMenu_recentHistory' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "toolbar-history-manage_history": {
-        "selectorData": "PanelUI-historyMore",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@id='PanelUI-historyMore' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "chrome",
+            "doNotCache"
+        ]
     },
     "bookmark-about-robots": {
         "selectorData": "menuitem[label='Gort! Klaatu barada nikto!']",

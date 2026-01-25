@@ -38,5 +38,4 @@ def test_library_menu(
 
     # Verify closed tabs from Window 2 appear in Library History section
     nav.open_library_history_submenu()
-    time.sleep(10)
-    # nav.get_library_recently_closed_urls()
+    nav.get_library_recently_closed_urls()
