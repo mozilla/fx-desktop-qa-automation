@@ -394,12 +394,16 @@
     "toolbar-history-recently-closed-tabs": {
         "selectorData": "//*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
         "strategy": "xpath",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "library-recently-closed-tabs-items": {
         "selectorData": "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
         "strategy": "xpath",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "toolbar-history-recently-closed-windows": {
         "selectorData": "//*[@id='appMenuRecentlyClosedWindows' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
