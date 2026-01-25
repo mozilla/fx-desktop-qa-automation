@@ -1311,50 +1311,9 @@ class Navigation(BasePage):
                 "and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
             )
         )
-        opened = self.driver.find_elements(
-            By.XPATH,
-            "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']",
-        )
-        print(f"[debug] recentlyClosedTabs view opened count: {len(opened)}")
-        container = self.driver.find_element(
-            By.ID, "appMenu-library-recentlyClosedTabs"
-        )
-        print(
-            f"[debug] recentlyClosedTabs container displayed: {container.is_displayed()}"
-        )
-        container_html = container.get_attribute("outerHTML") or ""
-        print(
-            "[debug] recentlyClosedTabs container outerHTML (first 800): "
-            f"{container_html[:800]}"
-        )
-        first_entry = self.driver.find_elements(
-            By.XPATH,
-            "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']"
-            "//*[contains(concat(' ', normalize-space(@class), ' '), ' panel-subview-body ')]"
-            "//*[@targetURI]",
-        )
-        if first_entry:
-            entry = first_entry[0]
-            for attr in [
-                "label",
-                "targetURI",
-                "targeturl",
-                "uri",
-                "value",
-                "oncommand",
-                "data-l10n-id",
-            ]:
-                print(f"[debug] item {attr}: {entry.get_attribute(attr)}")
         items = self.wait.until(
             lambda d: self.get_elements("library-recently-closed-tabs-items") or None
         )
-        source_ids = {
-            item.get_attribute("source-window-id")
-            for item in items
-            if item.get_attribute("source-window-id")
-        }
-        if source_ids:
-            print(f"[debug] source-window-ids: {source_ids}")
         urls = []
         for item in items:
             uri = item.get_attribute("targetURI")
@@ -1367,31 +1326,6 @@ class Navigation(BasePage):
         self.actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
         return set(urls)
 
-    def _debug_library_panel(self) -> None:
-        panels = self.driver.find_elements(By.XPATH, "//*[@panelopen='true']")
-        print(f"[debug] open panels count: {len(panels)}")
-        for panel in panels:
-            print(f"[debug] open panel id: {panel.get_attribute('id')}")
-
-        any_history = self.driver.find_elements(By.ID, "appMenu-library-history-button")
-        print(f"[debug] history by ID count: {len(any_history)}")
-
-        if any_history:
-            el = any_history[0]
-            print(
-                f"[debug] history displayed: {el.is_displayed()} enabled: {el.is_enabled()}"
-            )
-            html = el.get_attribute("outerHTML") or ""
-            print(f"[debug] history outerHTML (first 300): {html[:300]}")
-
-        roots = self.driver.find_elements(By.ID, "customizationui-widget-panel")
-        print(f"[debug] customizationui-widget-panel count: {len(roots)}")
-        if roots:
-            print(
-                "[debug] customizationui-widget-panel panelopen: "
-                f"{roots[0].get_attribute('panelopen')}"
-            )
-
     @BasePage.context_chrome
     def open_library_history_submenu(self) -> BasePage:
         """
@@ -1399,7 +1333,6 @@ class Navigation(BasePage):
         """
         self.click_on("library-button")
         self.wait.until(lambda d: d.find_elements(By.XPATH, "//*[@panelopen='true']"))
-        self._debug_library_panel()
         self.element_clickable("library-history-submenu-button")
         history_button = self.get_element("library-history-submenu-button")
         history_button.click()
@@ -1415,19 +1348,6 @@ class Navigation(BasePage):
                 By.XPATH,
                 "//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
             )
-        )
-        recent_any = self.driver.find_elements(By.ID, "appMenuRecentlyClosedTabs")
-        print(f"[debug] recently closed tabs by ID count: {len(recent_any)}")
-        if recent_any:
-            el = recent_any[0]
-            print(f"[debug] recently closed tabs displayed: {el.is_displayed()}")
-            html = el.get_attribute("outerHTML") or ""
-            print(f"[debug] recently closed tabs outerHTML (first 200): {html[:200]}")
-        recent_open = self.driver.find_elements(
-            By.XPATH, "//*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs']"
-        )
-        print(
-            f"[debug] recently closed tabs under open panel count: {len(recent_open)}"
         )
         self.element_visible("toolbar-history-recently-closed-tabs")
         return self
