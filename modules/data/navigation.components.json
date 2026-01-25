@@ -406,44 +406,29 @@
         ]
     },
     "toolbar-history-recently-closed-windows": {
-        "selectorData": "//*[@id='appMenuRecentlyClosedWindows' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "chrome",
-            "doNotCache"
-        ]
+        "selectorData": "appMenuRecentlyClosedWindows",
+        "strategy": "id",
+        "groups": []
     },
     "toolbar-history-search-history": {
-        "selectorData": "//*[@id='appMenuSearchHistory' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "chrome",
-            "doNotCache"
-        ]
+        "selectorData": "appMenuSearchHistory",
+        "strategy": "id",
+        "groups": []
     },
     "toolbar-history-clear-recent-history": {
-        "selectorData": "//*[@id='appMenuClearRecentHistory' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "chrome",
-            "doNotCache"
-        ]
+        "selectorData": "appMenuClearRecentHistory",
+        "strategy": "id",
+        "groups": []
     },
     "toolbar-history-recent_history": {
-        "selectorData": "//*[@id='panelMenu_recentHistory' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "chrome",
-            "doNotCache"
-        ]
+        "selectorData": "panelMenu_recentHistory",
+        "strategy": "id",
+        "groups": []
     },
     "toolbar-history-manage_history": {
-        "selectorData": "//*[@id='PanelUI-historyMore' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
-        "strategy": "xpath",
-        "groups": [
-            "chrome",
-            "doNotCache"
-        ]
+        "selectorData": "PanelUI-historyMore",
+        "strategy": "id",
+        "groups": []
     },
     "bookmark-about-robots": {
         "selectorData": "menuitem[label='Gort! Klaatu barada nikto!']",
