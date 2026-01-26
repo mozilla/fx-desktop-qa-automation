@@ -375,6 +375,10 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_download_apk_and_check_extension:
+    result: pass
+    splits:
+    - functional1
   test_download_pdf:
     result: pass
     splits:
