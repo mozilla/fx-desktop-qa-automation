@@ -389,7 +389,6 @@ class AboutTelemetry(BasePage):
 
         return self
 
-
     def is_telemetry_entry_present(self, expected_telemetry_data) -> bool:
         all_rows = self.find_elements(By.CSS_SELECTOR, "#events-section table tr")
 
