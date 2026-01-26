@@ -10,7 +10,7 @@ APK_NAME_REGEX = r".*\.apk(\s\(\d+\))?$"
 
 @pytest.fixture()
 def test_case():
-    return "1836830"
+    return "1836831"
 
 
 @pytest.mark.headed
