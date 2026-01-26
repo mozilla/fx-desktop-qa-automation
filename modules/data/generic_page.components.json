@@ -99,5 +99,15 @@
         "selectorData": "vjs-volume-level",
         "strategy": "class",
         "groups": []
+    },
+    "sample-bin-download-100mb": {
+        "selectorData": "a[href='100MB.bin']",
+        "strategy": "css",
+        "groups": []
+    },
+    "sample-bin-download": {
+        "selectorData": "a[href='1GB.bin']",
+        "strategy": "css",
+        "groups": []
     }
 }

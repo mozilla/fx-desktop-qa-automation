@@ -613,5 +613,10 @@
         "selectorData": "image.blocked-permission-icon.autoplay-media-icon[showing='{state}']",
         "strategy": "css",
         "groups": []
+    },
+    "download-deleted-message": {
+          "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
+          "strategy": "css",
+          "groups": []
     }
 }

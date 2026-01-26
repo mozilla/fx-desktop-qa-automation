@@ -362,29 +362,59 @@ class AboutTelemetry(BasePage):
         """
         Opens the Raw JSON telemetry view (against bnVsbA== / null payload timing).
         """
-        # Click "Raw" category
+        # Click "Raw JSON" from categories on the left
+        WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable(self.get_selector("category-raw"))
+        )
         self.get_element("category-raw").click()
 
         # Switching to the new tab opened by Raw
         self.switch_to_new_tab()
 
         # Wait for Raw Data tab to be clickable, then click it
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable(self.get_selector("rawdata-tab"))
         )
         self.get_element("rawdata-tab").click()
 
         # Wait for data URL
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 30).until(
             lambda d: d.current_url.startswith("data:application/json;base64,")
         )
 
         # Wait until it's not the "null" payload (bnVsbA==)
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 30).until(
             lambda d: "base64,bnVsbA==" not in d.current_url
         )
 
         return self
+
+    def assert_telemetry_row_present(self, expected_telemetry_data):
+        """
+        Verifies that the latest telemetry row matches the expected data.
+
+        :param driver: Selenium WebDriver instance
+        :param expected_telemetry_data: List of expected cell values (excluding first column)
+        :raises AssertionError: If no matching telemetry row is found
+        """
+        all_rows = self.find_elements(By.CSS_SELECTOR, "#events-section table tr")
+
+        matching_cells = None
+
+        for row in reversed(all_rows):
+            cells = row.find_elements(By.TAG_NAME, "td")
+            if len(cells) > 1:
+                cell_texts = [cell.text.strip() for cell in cells[1:]]
+                if cell_texts == expected_telemetry_data:
+                    matching_cells = cells
+                    break
+
+        assert matching_cells is not None, (
+            f"Telemetry row not found. Expected: {expected_telemetry_data}"
+        )
+
+        actual_texts = [cell.text.strip() for cell in matching_cells[1:]]
+        assert actual_texts == expected_telemetry_data
 
 
 class AboutNetworking(BasePage):

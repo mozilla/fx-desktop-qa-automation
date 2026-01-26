@@ -145,9 +145,9 @@ address_bar_and_search:
     - smoke
   test_search_engine_result_page_load_on_reload_or_back:
     result:
-      win: unstable
-      mac: pass
       linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_search_engine_selector:
@@ -371,12 +371,24 @@ downloads:
     result: unstable
     splits:
     - functional1
+  test_delete_download_while_in_progress:
+    result: pass
+    splits:
+    - functional1
+  test_download_apk_and_check_extension:
+    result: pass
+    splits:
+    - functional1
   test_download_pdf:
     result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
     result: unstable
+    splits:
+    - functional1
+  test_download_telemetry_recorded:
+    result: pass
     splits:
     - functional1
   test_mixed_content_download_via_https:
@@ -696,15 +708,15 @@ password_manager:
   test_password_csv_correctness:
     result:
       linux: unstable
-      mac: unstable
-      win: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_password_csv_export:
     result:
       linux: unstable
-      mac: unstable
-      win: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
@@ -756,7 +768,7 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:

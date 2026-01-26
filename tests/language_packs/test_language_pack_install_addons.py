@@ -62,7 +62,7 @@ def test_language_pack_install_from_addons(
     dropdown = Dropdown(page=about_prefs, root=language_dropdown)
     dropdown.select_option(drop_down_name, double_click=True, wait_for_selection=False)
 
-    about_prefs.expect_element_attribute_is("prefs-html-root", "lang", shortform)
-    about_prefs.expect_element_attribute_is(
+    about_prefs.element_attribute_is("prefs-html-root", "lang", shortform)
+    about_prefs.element_attribute_is(
         "language-set-alternative-button", "label", localized_text
     )
