@@ -1399,6 +1399,7 @@ class Navigation(BasePage):
         html = el.get_attribute("outerHTML") or ""
         match = self._TARGET_URI_RE.search(html)
         return match.group(1) if match else None
+
     def perform_download_context_action(self, action_name: str) -> BasePage:
         """
         From the downloads panel, right-click the latest download and perform a context menu action.
