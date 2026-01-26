@@ -383,6 +383,10 @@ downloads:
     result: unstable
     splits:
     - functional1
+  test_download_telemetry_recorded:
+    result: pass
+    splits:
+    - functional1
   test_mixed_content_download_via_https:
     result:
       linux: pass
