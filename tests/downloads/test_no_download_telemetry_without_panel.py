@@ -6,7 +6,7 @@ from modules.page_object_about_pages import AboutTelemetry
 from modules.page_object_generics import GenericPage
 
 TEST_URL = "https://ash-speed.hetzner.com/"
-DOWNLOADS_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "bin"]
+DOWNLOADS_TELEMETRY_DATA = ["downloads.panel_shown"]
 
 
 @pytest.fixture()
@@ -19,9 +19,14 @@ def test_case():
     return "1756775"
 
 
-def test_download_telemetry_recorded(driver: Firefox):
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("browser.download.alwaysOpenPanel", False)]
+
+
+def test_no_download_telemetry_without_panel(driver: Firefox):
     """
-    C1756775 - Verify that Telemetry is recorded for Downloading a file
+    C1756778 - Verify that no Telemetry is recorded if the Download panel never opens on downloads
     """
 
     # Instantiate objects
@@ -38,7 +43,7 @@ def test_download_telemetry_recorded(driver: Firefox):
 
     # Open about:telemetry and go to the Events tab
     telemetry.open()
-    telemetry.click_on("events-tab")
+    telemetry.click_on("scalars-tab")
 
     # Verify telemetry
-    assert telemetry.is_telemetry_entry_present(DOWNLOADS_TELEMETRY_DATA)
+    assert not telemetry.is_telemetry_entry_present(DOWNLOADS_TELEMETRY_DATA)

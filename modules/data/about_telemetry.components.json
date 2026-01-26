@@ -13,5 +13,10 @@
     "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='events-section']",
     "strategy": "css",
     "groups": []
+  },
+  "scalars-tab": {
+    "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']",
+    "strategy": "css",
+    "groups": []
   }
 }
