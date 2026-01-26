@@ -51,6 +51,17 @@ class ReaderView(BasePage):
         self.wait_for_reader_view_closed()
         return self
 
+    @BasePage.context_content
+    def close_reader_view_x(self) -> BasePage:
+        """
+        Closes the reader view using the toolbar [X] button
+        """
+        before_page_source = self.driver.page_source
+        self.get_element("reader-close-button").click()
+        self.wait.until(lambda _: self.driver.page_source != before_page_source)
+        self.wait_for_reader_view_closed()
+        return self
+
     def close_reader_view_keys(self) -> BasePage:
         """
         Closes the reader view using keys

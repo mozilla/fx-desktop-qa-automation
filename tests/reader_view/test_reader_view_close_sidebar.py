@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,4 +26,4 @@ def test_reader_view_close_from_sidebar(driver: Firefox):
 
     wiki_page.open()
     reader_view.open_reader_view_searchbar()
-    reader_view.close_reader_view_searchbar()
+    reader_view.close_reader_view_x()
