@@ -5,9 +5,8 @@ from typing import Callable, Literal, cast
 from urllib.parse import urlparse
 
 from selenium.common.exceptions import (
-    ElementClickInterceptedException,
-    ElementNotInteractableException,
-    NoSuchElementException,
+    InvalidSessionIdException,
+    NoSuchWindowException,
     StaleElementReferenceException,
     TimeoutException,
     WebDriverException,
@@ -1396,12 +1395,9 @@ class Navigation(BasePage):
                 else:
                     el.send_keys(Keys.ENTER)
                 return
-            except (
-                ElementClickInterceptedException,
-                ElementNotInteractableException,
-                StaleElementReferenceException,
-                WebDriverException,
-            ) as exc:
+            except (InvalidSessionIdException, NoSuchWindowException):
+                raise
+            except WebDriverException as exc:
                 last_exc = exc
         raise last_exc or RuntimeError(f"Failed to click {name}")
 
