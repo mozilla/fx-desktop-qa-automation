@@ -2463,8 +2463,8 @@ Location: videojs website player
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
-Selector Name: sample-bin-download
-Selector Data: "a[href='10GB.bin']"
+Selector Name: sample-bin-download-100mb
+Selector Data: "a[href='100MB.bin']"
 Description: Sample download
 Location: ash-speed.hetzner website
 Path to .json: modules/data/generic_page.components.json
