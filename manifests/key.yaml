@@ -982,7 +982,7 @@ session_restore:
     result: pass
     splits:
     - functional2
-  test_closed_tabs_from_multiple_windows_shown_in_history_menu-bar:
+  test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
     result: pass
     splits:
       - functional2

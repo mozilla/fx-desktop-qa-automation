@@ -1,7 +1,7 @@
 import logging
 import re
 import time
-from typing import Callable, Literal, cast
+from typing import Callable, Literal
 from urllib.parse import urlparse
 
 from selenium.common.exceptions import (
@@ -29,6 +29,20 @@ class Navigation(BasePage):
     """Page Object Model for nav buttons, AwesomeBar and toolbar"""
 
     URL_TEMPLATE = "about:blank"
+
+    # XPath selectors for Firefox's PanelMultiView widget system. The Library menu is a stack of nested subviews.
+    # When you navigate deeper, Firefox keeps the previous views in the DOM and just marks them as offscreen. These
+    # XPaths help us target the currently active/visible view. They live here (not in the JSON selectors) because
+    # they're "state" checks for panel transitions, not a single element we interact with.
+    XPATH_LIBRARY_RECENTLY_CLOSED_TABS_VIEW_VISIBLE = (
+        "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true' "
+        "and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]"
+    )
+    XPATH_PANEL_OPEN = "//*[@panelopen='true']"
+    XPATH_RECENTLY_CLOSED_TABS_NOT_OFFSCREEN = (
+        "//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space("
+        "@class), ' '), ' offscreen ')])]"
+    )
     BROWSER_MODES = {
         "Bookmarks": "*",
         "Tabs": "%",
@@ -1285,9 +1299,7 @@ class Navigation(BasePage):
 
         # Click "Recently Closed Tabs" to open the third-level submenu.
         self._click_with_fallbacks(
-            lambda: cast(
-                WebElement, self.get_element("toolbar-history-recently-closed-tabs")
-            ),
+            lambda: self.get_element("toolbar-history-recently-closed-tabs"),
             name="Recently closed tabs button",
         )
 
@@ -1296,14 +1308,13 @@ class Navigation(BasePage):
         self.wait.until(
             lambda d: d.find_elements(
                 By.XPATH,
-                "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true' "
-                "and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+                self.XPATH_LIBRARY_RECENTLY_CLOSED_TABS_VIEW_VISIBLE,
             )
         )
 
         # Extract closed tab items - each has a targetURI attribute with the page URL
         items = self.wait.until(
-            lambda d: self.get_elements("library-recently-closed-tabs-items") or None
+            lambda d: self.get_elements("library-recently-closed-tabs-items")
         )
         urls = {
             uri for item in items if (uri := self._get_target_uri(item)) is not None
@@ -1330,14 +1341,12 @@ class Navigation(BasePage):
         self.click_on("library-button")
 
         # Wait for any panel to be marked open (panelopen='true' is set on the panel element)
-        self.wait.until(lambda d: d.find_elements(By.XPATH, "//*[@panelopen='true']"))
+        self.wait.until(lambda d: d.find_elements(By.XPATH, self.XPATH_PANEL_OPEN))
 
         # Navigate to History subview within the Library panel
         self.element_clickable("library-history-submenu-button")
         self._click_with_fallbacks(
-            lambda: cast(
-                WebElement, self.get_element("library-history-submenu-button")
-            ),
+            lambda: self.get_element("library-history-submenu-button"),
             name="Library history submenu",
         )
 
@@ -1346,8 +1355,7 @@ class Navigation(BasePage):
         self.wait.until(
             lambda d: d.find_elements(
                 By.XPATH,
-                "//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space("
-                "@class), ' '), ' offscreen ')])]",
+                self.XPATH_RECENTLY_CLOSED_TABS_NOT_OFFSCREEN,
             )
         )
         self.element_visible("toolbar-history-recently-closed-tabs")
