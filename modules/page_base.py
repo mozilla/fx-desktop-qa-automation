@@ -765,14 +765,16 @@ class BasePage(Page):
         self, keyboard, reference: str | tuple | WebElement, labels=[]
     ) -> Page:
         """Copy from the given element using right click (pynput)"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            pyautogui.press("down")
+            pyautogui.press("down")
+            pyautogui.press("down")
+            pyautogui.press("enter")
             time.sleep(0.5)
         return self
 
@@ -780,12 +782,14 @@ class BasePage(Page):
         self, keyboard, reference: str | tuple | WebElement, labels=[]
     ) -> Page:
         """Copy from the current selection using right click (pynput)"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            pyautogui.press("down")
+            pyautogui.press("enter")
             time.sleep(0.5)
         return self
 
@@ -979,27 +983,19 @@ class BasePage(Page):
         This function handles the keyboard shortcuts. If on Linux, it simulates switching
         to OK. On other platforms, it directly presses enter.
         """
-        if sys_platform == "Linux":
-            # Perform the series of ALT+TAB key presses on Linux
-            keyboard.press(Key.alt)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.release(Key.alt)
-            time.sleep(1)
-            keyboard.press(Key.alt)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.release(Key.alt)
-            time.sleep(1)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            time.sleep(1)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
+        import pyautogui
 
-        # Press enter to confirm the download on all platforms
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        os_name = (
+            self.sys_platform().lower()
+            if "Darwin" not in self.sys_platform()
+            else "mac"
+        )
+
+        button_img = os.path.join("data", f"{os_name}_save_button.png")
+        time.sleep(1.5)
+        b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+        logging.info(f"Button: ({b_x}, {b_y})")
+        pyautogui.click(b_x, b_y)
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=[], retry=False
