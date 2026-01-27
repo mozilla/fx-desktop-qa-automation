@@ -3911,6 +3911,13 @@ Location: In page, when in Reader View mode.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```
+Selector name: reader-close-button
+Selector Data: "button[class='close-button toolbar-button']"
+Description: The Reader View toolbar close [X] button
+Location: In page, when in Reader View mode.
+Path to .json: modules/data/reader_view.components.json
+```
+```
 Selector name: toolbar-font-selector
 Selector Data: "font-type-selector"
 Description: The Font options dropdown
