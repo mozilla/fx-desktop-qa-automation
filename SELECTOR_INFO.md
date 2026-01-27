@@ -1343,6 +1343,13 @@ Description: Scalars option
 Location: about:telemetry Sidebar option
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: telemetry-table-rows
+Selector Data: "#events-section table tr"
+Description: Telemetry table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field

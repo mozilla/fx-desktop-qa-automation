@@ -390,9 +390,12 @@ class AboutTelemetry(BasePage):
         return self
 
     def is_telemetry_entry_present(self, expected_telemetry_data) -> bool:
-        all_rows = self.find_elements(By.CSS_SELECTOR, "#events-section table tr")
+        # Ensure the telemetry table exists in the DOM first
+        self.get_element("telemetry-table-rows")
 
-        for row in reversed(all_rows):
+        rows = self.get_elements("telemetry-table-rows")
+
+        for row in reversed(rows):
             cells = row.find_elements(By.TAG_NAME, "td")
             if len(cells) > 1:
                 cell_texts = [cell.text.strip() for cell in cells[1:]]

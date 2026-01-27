@@ -18,5 +18,10 @@
     "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']",
     "strategy": "css",
     "groups": []
+  },
+  "telemetry-table-rows": {
+    "selectorData": "#events-section table tr",
+    "strategy": "css",
+    "groups": []
   }
 }
