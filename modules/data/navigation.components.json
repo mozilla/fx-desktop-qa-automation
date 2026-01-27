@@ -271,9 +271,11 @@
         "groups": []
     },
     "library-history-submenu-button": {
-        "selectorData": "appMenu-library-history-button",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "other-bookmarks-toolbar": {
         "selectorData": "OtherBookmarks",
@@ -387,9 +389,18 @@
         "groups": []
     },
     "toolbar-history-recently-closed-tabs": {
-        "selectorData": "appMenuRecentlyClosedTabs",
-        "strategy": "id",
-        "groups": []
+        "selectorData": "//*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "library-recently-closed-tabs-items": {
+        "selectorData": "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]",
+        "strategy": "xpath",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "toolbar-history-recently-closed-windows": {
         "selectorData": "appMenuRecentlyClosedWindows",

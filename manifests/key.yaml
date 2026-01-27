@@ -978,14 +978,18 @@ security_and_privacy:
     splits:
     - smoke
 session_restore:
-  test_closed_tabs_from_multiple_windows_shown_history_menu-bar:
-    result: pass
-    splits:
-    - functional2
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
     - functional2
+  test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
+    result: pass
+    splits:
+      - functional2
+  test_closed_tabs_from_multiple_windows_shown_in_library_menu:
+    result: pass
+    splits:
+      - functional2
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
