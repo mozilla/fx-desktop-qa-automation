@@ -52,7 +52,7 @@ class ReaderView(BasePage):
         return self
 
     @BasePage.context_content
-    def close_reader_view_x(self) -> BasePage:
+    def close_reader_view_by_x_button(self) -> BasePage:
         """
         Closes the reader view using the toolbar [X] button
         """

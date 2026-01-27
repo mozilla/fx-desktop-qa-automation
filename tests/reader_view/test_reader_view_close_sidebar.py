@@ -24,4 +24,4 @@ def test_reader_view_close_from_sidebar(driver: Firefox):
 
     wiki_page.open()
     reader_view.open_reader_view_searchbar()
-    reader_view.close_reader_view_x()
+    reader_view.close_reader_view_by_x_button()
