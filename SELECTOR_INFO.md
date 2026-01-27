@@ -1336,6 +1336,27 @@ Description: Events option
 Location: about:telemetry Sidebar option
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']"
+Description: Scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-events-table-rows
+Selector Data: "#events-section table tr"
+Description: Telemetry events table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-scalars-table-rows
+Selector Data: "#scalars-section table tr"
+Description: Telemetry scalars table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
