@@ -71,4 +71,4 @@ def test_download_pdf_from_context_menu(
     about_telemetry.click_on("events-tab")
 
     # Verify telemetry
-    assert about_telemetry.is_telemetry_entry_present(PDF_TELEMETRY_DATA)
+    assert about_telemetry.is_telemetry_events_entry_present(PDF_TELEMETRY_DATA)

@@ -5,7 +5,7 @@ from modules.browser_object_navigation import Navigation
 from modules.page_object_about_pages import AboutTelemetry
 from modules.page_object_generics import GenericPage
 
-TEST_URL = "https://ash-speed.hetzner.com/"
+TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
 DOWNLOADS_TELEMETRY_DATA = ["downloads.panel_shown"]
 
 
@@ -32,18 +32,14 @@ def test_no_download_telemetry_without_panel(driver: Firefox):
     # Instantiate objects
     page = GenericPage(driver, url=TEST_URL)
     telemetry = AboutTelemetry(driver)
-    nav = Navigation(driver)
 
     # Open test url and download a file
     page.open()
-    page.click_on("sample-bin-download-100mb")
-
-    # Wait for download completion
-    nav.wait_for_download_animation_finish()
+    page.click_on("sample-doc-download")
 
     # Open about:telemetry and go to the Events tab
     telemetry.open()
     telemetry.click_on("scalars-tab")
 
     # Verify telemetry
-    assert not telemetry.is_telemetry_entry_present(DOWNLOADS_TELEMETRY_DATA)
+    assert not telemetry.is_telemetry_scalars_entry_present(DOWNLOADS_TELEMETRY_DATA)

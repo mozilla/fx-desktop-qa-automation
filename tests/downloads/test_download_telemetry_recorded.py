@@ -41,4 +41,4 @@ def test_download_telemetry_recorded(driver: Firefox):
     telemetry.click_on("events-tab")
 
     # Verify telemetry
-    assert telemetry.is_telemetry_entry_present(DOWNLOADS_TELEMETRY_DATA)
+    assert telemetry.is_telemetry_events_entry_present(DOWNLOADS_TELEMETRY_DATA)
