@@ -407,7 +407,6 @@ class AboutTelemetry(BasePage):
 
         return False
 
-    # Optional convenience wrappers
     def is_telemetry_scalars_entry_present(self, expected_data):
         return self.is_telemetry_entry_present("telemetry-scalars-table-rows", expected_data)
 
