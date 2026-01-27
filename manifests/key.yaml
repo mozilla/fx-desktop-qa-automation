@@ -401,7 +401,7 @@ downloads:
   test_no_download_telemetry_without_panel:
     result: pass
     splits:
-      - functional1
+    - functional1
   test_set_always_ask_file_type:
     result: pass
     splits:

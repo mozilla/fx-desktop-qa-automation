@@ -11,7 +11,7 @@ DOWNLOADS_TELEMETRY_DATA = ["downloads.panel_shown"]
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"100MB.BIN"
+    return r"sample2.doc"
 
 
 @pytest.fixture()
