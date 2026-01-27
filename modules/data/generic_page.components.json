@@ -109,5 +109,10 @@
         "selectorData": "a[href='1GB.bin']",
         "strategy": "css",
         "groups": []
+    },
+    "sample-small-download": {
+        "selectorData": "a[href='http://ipv4.download.thinkbroadband.com/20MB.zip']",
+        "strategy": "css",
+        "groups": []
     }
 }

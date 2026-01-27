@@ -389,32 +389,35 @@ class AboutTelemetry(BasePage):
 
         return self
 
-    def assert_telemetry_row_present(self, expected_telemetry_data):
+    def is_telemetry_entry_present(
+        self, table_selector_key: str, expected_telemetry_data
+    ) -> bool:
         """
-        Verifies that the latest telemetry row matches the expected data.
-
-        :param driver: Selenium WebDriver instance
-        :param expected_telemetry_data: List of expected cell values (excluding first column)
-        :raises AssertionError: If no matching telemetry row is found
+        Generic method to check if a telemetry row exists in a given table.
         """
-        all_rows = self.find_elements(By.CSS_SELECTOR, "#events-section table tr")
+        # Wait for the table to exist in DOM
+        self.get_element(table_selector_key)
 
-        matching_cells = None
+        rows = self.get_elements(table_selector_key)
 
-        for row in reversed(all_rows):
+        for row in reversed(rows):
             cells = row.find_elements(By.TAG_NAME, "td")
             if len(cells) > 1:
                 cell_texts = [cell.text.strip() for cell in cells[1:]]
                 if cell_texts == expected_telemetry_data:
-                    matching_cells = cells
-                    break
+                    return True
 
-        assert matching_cells is not None, (
-            f"Telemetry row not found. Expected: {expected_telemetry_data}"
+        return False
+
+    def is_telemetry_scalars_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present(
+            "telemetry-scalars-table-rows", expected_data
         )
 
-        actual_texts = [cell.text.strip() for cell in matching_cells[1:]]
-        assert actual_texts == expected_telemetry_data
+    def is_telemetry_events_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present(
+            "telemetry-events-table-rows", expected_data
+        )
 
 
 class AboutNetworking(BasePage):
