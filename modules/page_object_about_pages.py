@@ -389,7 +389,9 @@ class AboutTelemetry(BasePage):
 
         return self
 
-    def is_telemetry_entry_present(self, table_selector_key: str, expected_telemetry_data) -> bool:
+    def is_telemetry_entry_present(
+        self, table_selector_key: str, expected_telemetry_data
+    ) -> bool:
         """
         Generic method to check if a telemetry row exists in a given table.
         """
@@ -408,10 +410,14 @@ class AboutTelemetry(BasePage):
         return False
 
     def is_telemetry_scalars_entry_present(self, expected_data):
-        return self.is_telemetry_entry_present("telemetry-scalars-table-rows", expected_data)
+        return self.is_telemetry_entry_present(
+            "telemetry-scalars-table-rows", expected_data
+        )
 
     def is_telemetry_events_entry_present(self, expected_data):
-        return self.is_telemetry_entry_present("telemetry-events-table-rows", expected_data)
+        return self.is_telemetry_entry_present(
+            "telemetry-events-table-rows", expected_data
+        )
 
 
 class AboutNetworking(BasePage):
