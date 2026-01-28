@@ -375,6 +375,14 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_download_apk_and_check_extension:
+    result: pass
+    splits:
+    - functional1
+  test_download_epub_shows_extension_in_downloads_panel:
+    result: pass
+    splits:
+    - functional1
   test_download_pdf:
     result: pass
     splits:
@@ -383,11 +391,19 @@ downloads:
     result: unstable
     splits:
     - functional1
+  test_download_telemetry_recorded:
+    result: pass
+    splits:
+    - functional1
   test_mixed_content_download_via_https:
     result:
       linux: pass
       mac: unstable
       win: unstable
+    splits:
+    - functional1
+  test_no_download_telemetry_without_panel:
+    result: pass
     splits:
     - functional1
   test_set_always_ask_file_type:
@@ -760,7 +776,7 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -970,14 +986,18 @@ security_and_privacy:
     splits:
     - smoke
 session_restore:
-  test_closed_tabs_from_multiple_windows_shown_history_menu-bar:
-    result: pass
-    splits:
-    - functional2
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
     - functional2
+  test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
+    result: pass
+    splits:
+      - functional2
+  test_closed_tabs_from_multiple_windows_shown_in_library_menu:
+    result: pass
+    splits:
+      - functional2
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:

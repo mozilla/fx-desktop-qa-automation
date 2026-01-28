@@ -1336,6 +1336,27 @@ Description: Events option
 Location: about:telemetry Sidebar option
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']"
+Description: Scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-events-table-rows
+Selector Data: "#events-section table tr"
+Description: Telemetry events table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-scalars-table-rows
+Selector Data: "#scalars-section table tr"
+Description: Telemetry scalars table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
@@ -2463,8 +2484,8 @@ Location: videojs website player
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
-Selector Name: sample-bin-download
-Selector Data: "a[href='10GB.bin']"
+Selector Name: sample-bin-download-100mb
+Selector Data: "a[href='100MB.bin']"
 Description: Sample download
 Location: ash-speed.hetzner website
 Path to .json: modules/data/generic_page.components.json
@@ -3127,9 +3148,23 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: library-history-submenu-button
-Selector Data: appMenu-library-history-button
+Selector Data: //*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Library history submenu button
 Location: Inside the library button in the toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: toolbar-history-recently-closed-tabs
+Selector Data: //*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Recently closed tabs button in the Library History view
+Location: Library > History
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: library-recently-closed-tabs-items
+Selector Data: //*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Individual closed tab items in the Library History Recently Closed Tabs panel
+Location: Library > History > Recently Closed Tabs
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -3893,6 +3928,13 @@ Path to .json: modules/data/reader_view.components.json
 Selector name: reader-toolbar
 Selector Data: "div[class='toolbar reader-toolbar']"
 Description: The Reader View toolbar
+Location: In page, when in Reader View mode.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-close-button
+Selector Data: "button[class='close-button toolbar-button']"
+Description: The Reader View toolbar close [X] button
 Location: In page, when in Reader View mode.
 Path to .json: modules/data/reader_view.components.json
 ```

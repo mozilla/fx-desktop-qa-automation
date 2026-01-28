@@ -9,6 +9,11 @@
         "strategy": "css",
         "groups": []
     },
+    "reader-close-button": {
+        "selectorData": "button[class='close-button toolbar-button']",
+        "strategy": "css",
+        "groups": []
+    },
     "toolbar-font-selector": {
         "selectorData": "font-type-selector",
         "strategy": "id",
