@@ -9,6 +9,7 @@ import yaml
 NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
+DEFAULT_FUNCTIONAL_SPLIT = "functional1"
 
 
 def sysname():
@@ -383,8 +384,7 @@ class TestKey:
                         "Should this test run in a Scheduled Functional split? "
                         "(Say no if unsure.) "
                     ):
-                        split = "functional1"
-                        newkey[suite][testfile]["splits"] = [split]
+                        newkey[suite][testfile]["splits"] = [DEFAULT_FUNCTIONAL_SPLIT]
                         self.rebalance_functionals()
 
                         print(
