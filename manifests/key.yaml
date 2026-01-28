@@ -402,6 +402,10 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_verify_telemetry_downloads_panel_open:
+    result: pass
+    splits:
+      - functional1
 drag_and_drop:
   test_copy_entire_row_column:
     result: pass

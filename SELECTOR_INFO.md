@@ -1336,6 +1336,13 @@ Description: Events option
 Location: about:telemetry Sidebar option
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: keyed-scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']"
+Description: Keyed scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field

@@ -417,6 +417,32 @@ class AboutTelemetry(BasePage):
         assert actual_texts == expected_telemetry_data
 
 
+    def is_telemetry_entry_present(self, table_selector_key: str, expected_telemetry_data) -> bool:
+        """
+        Generic method to check if a telemetry row exists in a given table.
+        """
+        # Wait for the table to exist in DOM
+        self.get_element(table_selector_key)
+
+        rows = self.get_elements(table_selector_key)
+
+        for row in reversed(rows):
+            cells = row.find_elements(By.TAG_NAME, "td")
+            if len(cells) > 1:
+                cell_texts = [cell.text.strip() for cell in cells[1:]]
+                if cell_texts == expected_telemetry_data:
+                    return True
+
+        return False
+
+    # Optional convenience wrappers
+    def is_telemetry_scalars_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present("telemetry-scalars-table-rows", expected_data)
+
+    def is_telemetry_events_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present("telemetry-events-table-rows", expected_data)
+
+
 class AboutNetworking(BasePage):
     """
     POM for about:networking page
