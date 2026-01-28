@@ -1,12 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.remote.webelement import WebElement
 
 from modules.browser_object import PanelUi, TabBar
 from modules.components.dropdown import Dropdown
 from modules.page_object import AboutNewtab, AboutPrefs
-
-import time
 
 
 @pytest.fixture()
@@ -49,7 +46,6 @@ def test_firefox_home_on_launch(
 
     # click the dropdown
     dropdown.select_option("Firefox Home (Default)")
-    #dropdown.select_option("Firefox Home (Default)", double_click=True)
 
     # make sure that the option was selected correctly
     about_prefs.element_attribute_is(
