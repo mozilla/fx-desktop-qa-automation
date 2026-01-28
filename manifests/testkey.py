@@ -9,6 +9,7 @@ import yaml
 NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
+DEFAULT_FUNCTIONAL_SPLIT = "functional1"
 
 
 def sysname():
@@ -66,7 +67,7 @@ def get_subtests(entry: dict) -> list:
 def clean_prompt(prompt: str) -> str:
     """Clean up prompts"""
     if prompt[0].islower():
-        prompt[0] = prompt[0].upper()
+        prompt = prompt[0].upper() + prompt[1:]
     if "?" not in prompt:
         prompt = prompt.strip() + "? "
     if not prompt.endswith(" "):
@@ -383,7 +384,7 @@ class TestKey:
                         "Should this test run in a Scheduled Functional split? "
                         "(Say no if unsure.) "
                     ):
-                        newkey[suite][testfile]["splits"] = ["functional1"]
+                        newkey[suite][testfile]["splits"] = [DEFAULT_FUNCTIONAL_SPLIT]
                         self.rebalance_functionals()
 
                         print(
