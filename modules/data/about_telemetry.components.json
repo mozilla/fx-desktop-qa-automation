@@ -14,11 +14,6 @@
     "strategy": "css",
     "groups": []
   },
-  "keyed-scalars-tab": {
-    "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']",
-    "strategy": "css",
-    "groups": []
-  },
   "scalars-tab": {
     "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']",
     "strategy": "css",
@@ -30,7 +25,12 @@
     "groups": []
   },
   "telemetry-scalars-table-rows": {
-    "selectorData": "#scalars-section table tr",
+    "selectorData": "#scalars-section-parent table tr",
+    "strategy": "css",
+    "groups": []
+  },
+  "keyed-scalars-tab": {
+    "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']",
     "strategy": "css",
     "groups": []
   }

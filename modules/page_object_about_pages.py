@@ -389,35 +389,9 @@ class AboutTelemetry(BasePage):
 
         return self
 
-    def assert_telemetry_row_present(self, expected_telemetry_data):
-        """
-        Verifies that the latest telemetry row matches the expected data.
-
-        :param driver: Selenium WebDriver instance
-        :param expected_telemetry_data: List of expected cell values (excluding first column)
-        :raises AssertionError: If no matching telemetry row is found
-        """
-        all_rows = self.find_elements(By.CSS_SELECTOR, "#events-section table tr")
-
-        matching_cells = None
-
-        for row in reversed(all_rows):
-            cells = row.find_elements(By.TAG_NAME, "td")
-            if len(cells) > 1:
-                cell_texts = [cell.text.strip() for cell in cells[1:]]
-                if cell_texts == expected_telemetry_data:
-                    matching_cells = cells
-                    break
-
-        assert matching_cells is not None, (
-            f"Telemetry row not found. Expected: {expected_telemetry_data}"
-        )
-
-        actual_texts = [cell.text.strip() for cell in matching_cells[1:]]
-        assert actual_texts == expected_telemetry_data
-
-
-    def is_telemetry_entry_present(self, table_selector_key: str, expected_telemetry_data) -> bool:
+    def is_telemetry_entry_present(
+        self, table_selector_key: str, expected_telemetry_data
+    ) -> bool:
         """
         Generic method to check if a telemetry row exists in a given table.
         """
@@ -435,12 +409,15 @@ class AboutTelemetry(BasePage):
 
         return False
 
-    # Optional convenience wrappers
     def is_telemetry_scalars_entry_present(self, expected_data):
-        return self.is_telemetry_entry_present("telemetry-scalars-table-rows", expected_data)
+        return self.is_telemetry_entry_present(
+            "telemetry-scalars-table-rows", expected_data
+        )
 
     def is_telemetry_events_entry_present(self, expected_data):
-        return self.is_telemetry_entry_present("telemetry-events-table-rows", expected_data)
+        return self.is_telemetry_entry_present(
+            "telemetry-events-table-rows", expected_data
+        )
 
 
 class AboutNetworking(BasePage):

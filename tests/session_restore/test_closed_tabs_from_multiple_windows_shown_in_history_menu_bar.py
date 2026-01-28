@@ -43,14 +43,14 @@ def test_fx_view_closed_tabs_from_multiple_windows_shown_in_history_menu(
     fx_view.open_recently_closed()
     fx_view.wait_for_closed_tabs_with_urls(set(WINDOW_1_URLS[-2:]))
 
-    # Window 2 - Open new window with tabs
+    # Window 2 - Open new window with tabs and close them
     tabs.open_and_switch_to_new_window("window")
     tabs.clear_cache()
     menu_bar.clear_cache()
     tabs.open_urls_in_tabs(WINDOW_2_URLS)
-
-    # Close tabs and verify in History menu
     tabs.close_last_n_tabs(total_tabs=1 + len(WINDOW_2_URLS), count=len(WINDOW_2_URLS))
+
+    # Verify closed tabs from Window 2 appear History menu
     urls = menu_bar.get_recently_closed_urls()
     assert set(WINDOW_2_URLS).issubset(urls), (
         f"Window 2 URLs {WINDOW_2_URLS} not found in {urls}"
@@ -64,7 +64,7 @@ def test_fx_view_closed_tabs_from_multiple_windows_shown_in_history_menu(
     tabs.open_urls_in_tabs(WINDOW_3_URLS)
     tabs.close_last_n_tabs(total_tabs=1 + len(WINDOW_3_URLS), count=len(WINDOW_3_URLS))
 
-    # Verify closed tabs from Window 3 appear in History menu
+    # Verify closed tabs from Window 3 appear History menu
     urls = menu_bar.get_recently_closed_urls()
     assert set(WINDOW_3_URLS).issubset(urls), (
         f"Window 3 URLs {WINDOW_3_URLS} not found in {urls}"
