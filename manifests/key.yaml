@@ -379,6 +379,10 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_download_epub_shows_extension_in_downloads_panel:
+    result: pass
+    splits:
+    - functional1
   test_download_pdf:
     result: pass
     splits:
