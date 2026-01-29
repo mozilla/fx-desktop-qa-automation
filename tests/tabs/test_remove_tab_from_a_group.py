@@ -23,8 +23,8 @@ def add_to_prefs_list():
 
 def test_remove_tab_from_a_group(driver: Firefox):
     """
-    C2793052 - Verify that a tab can be removed from a Tab Group via context menu.
-    The removed tab should be displayed at the end of the group in the tab strip.
+    C2793052 - Verify that a tab can be removed from a Tab Group via context menu. The removed tab should be
+    displayed at the end of the group in the tab strip.
     """
 
     tabs = TabBar(driver)
@@ -45,5 +45,5 @@ def test_remove_tab_from_a_group(driver: Firefox):
     tabs.verify_tab_group_visible()
     tabs.verify_tab_group_has_multiple_tabs()
 
-    # Verify the removed tab is displayed after the group in the tab strip
-    tabs.verify_tab_after_group(1)
+    # Verify the removed tab is not in the group
+    tabs.verify_removed_tab_displayed_after_group(1)

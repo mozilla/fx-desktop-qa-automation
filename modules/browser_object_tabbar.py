@@ -643,31 +643,33 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_tab_group_visible(self) -> "TabBar":
+    def verify_tab_group_visible(self):
         """Verify that a tab group label is visible."""
         self.element_visible("tabgroup-label")
         return self
 
     @BasePage.context_chrome
-    def verify_tab_group_has_multiple_tabs(self) -> "TabBar":
+    def verify_tab_group_has_multiple_tabs(self):
         """Verify that the tab group has multiple tabs (overflow count visible)."""
         self.element_exists("tabgroup-overflow-count")
         return self
 
     @BasePage.context_chrome
-    def get_tab_position(self, tab_index: int) -> int:
+    def get_tab_position(self, tab_index: int):
         """
         Get the visual position of a tab in the tab strip.
         Returns the x-coordinate of the tab.
+        Argument:
+            tab_index: The index of the tab to get the position of
         """
         tab = self.get_tab(tab_index)
         return tab.location["x"]
 
     @BasePage.context_chrome
-    def verify_tab_after_group(self, tab_index: int) -> "TabBar":
+    def verify_removed_tab_displayed_after_group(self, tab_index: int):
         """
         Verify that a tab is positioned after the tab group in the tab strip.
-        Arguments:
+        Argument:
             tab_index: The index of the tab to verify
         """
         tab_position = self.get_tab_position(tab_index)
