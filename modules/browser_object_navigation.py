@@ -302,7 +302,6 @@ class Navigation(BasePage):
         actions.context_click(self.awesome_bar).perform()
         return self
 
-    @BasePage.context_chrome
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement
@@ -310,6 +309,7 @@ class Navigation(BasePage):
         downloads_button = self.get_element("downloads-button")
         return downloads_button
 
+    @BasePage.context_chrome
     def click_download_button(self) -> BasePage:
         self.get_download_button().click()
         return self
@@ -1426,4 +1426,12 @@ class Navigation(BasePage):
         self.context_menu.get_element(action_name).click()
         self.context_menu.hide_popup_by_child_node(action_name)
 
+        return self
+
+    @BasePage.context_chrome
+    def open_downloads(self):
+        """
+        Open the FxA account toolbar.
+        """
+        self.click_on("downloads-button")
         return self

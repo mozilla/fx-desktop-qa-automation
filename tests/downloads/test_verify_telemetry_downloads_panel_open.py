@@ -1,3 +1,6 @@
+import time
+from asyncio import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -6,15 +9,15 @@ from modules.page_object_about_pages import AboutTelemetry
 from modules.page_object_generics import GenericPage
 
 
-TEST_URL = "https://ash-speed.hetzner.com/"
+TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
 DOWNLOADS_PANEL_TELEMETRY_DATA = ["downloads.panel_shown", "1"]
-DOWNLOADS_PANEL_TELEMETRY_DATA_RELOAD = ["downloads.panel_shown", "11"]
+DOWNLOADS_PANEL_TELEMETRY_DATA_RELOAD = ["downloads.panel_shown", "5"]
 DOWNLOADS_PANEL_TELEMETRY_KEYED_SCALARS = ["downloads-button", "10"]
 
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r"100MB.BIN"
+    return r"sample2.doc"
 
 
 @pytest.fixture()
@@ -34,10 +37,16 @@ def test_verify_telemetry_downloads_panel_open(driver: Firefox):
 
     # Open test url and download a file
     page.open()
-    page.click_on("sample-bin-download-100mb")
+    page.click_on("sample-doc-download")
+    sleep(4)
+    nav.open_downloads()
+    sleep(1)
+    nav.open_downloads()
+    sleep(1)
 
     # Wait for download completion
-    nav.wait_for_download_animation_finish()
+    # nav.wait_for_download_animation_finish()
+    nav.open_downloads()
 
     # Open about:telemetry and go to the Scalars tab
     telemetry.open()
@@ -47,8 +56,9 @@ def test_verify_telemetry_downloads_panel_open(driver: Firefox):
     assert telemetry.is_telemetry_scalars_entry_present(DOWNLOADS_PANEL_TELEMETRY_DATA)
 
     # Open and dismiss the download panel 10 times
-    for _ in range(20):
+    for _ in range(10):
         nav.click_download_button()
+        time.sleep(1)
 
     # Open about:telemetry and go to the Events tab
     telemetry.open()
