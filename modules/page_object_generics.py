@@ -156,7 +156,7 @@ class GenericPage(BasePage):
 
         # Click PDF Document (.pdf)
         self.click_on("gdoc-file-download-pdf")
-        sleep(1)
+        sleep(1.5)
 
 
 class GenericPdf(BasePage):

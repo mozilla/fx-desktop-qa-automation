@@ -15,7 +15,7 @@ def delete_files_regex_string():
 
 @pytest.fixture()
 def test_case():
-    return "1756776"
+    return "1756779"
 
 
 def test_telemetry_pdf_download_open(driver: Firefox):
