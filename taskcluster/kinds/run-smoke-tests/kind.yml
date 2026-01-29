@@ -25,7 +25,7 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        apt install scrot python3-tk python3-dev
+        sudo apt install scrot python3-tk python3-dev
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
