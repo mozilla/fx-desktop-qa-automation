@@ -536,6 +536,8 @@ def driver(
         json_metadata["test_case"] = test_case
 
         yield driver
+        if hard_quit:
+            return
 
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
