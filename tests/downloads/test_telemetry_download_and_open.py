@@ -11,6 +11,11 @@ REOPEN_DOWNLOADS_TELEMETRY_DATA = ["downloads.file_opened", "2"]
 
 
 @pytest.fixture()
+def delete_files_regex_string():
+    return r"sample2.doc"
+
+
+@pytest.fixture()
 def test_case():
     return "1756776"
 
