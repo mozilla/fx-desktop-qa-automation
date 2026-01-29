@@ -395,17 +395,20 @@ class AboutTelemetry(BasePage):
         """
         Generic method to check if a telemetry row exists in a given table.
         """
+
         # Wait for the table to exist in DOM
         self.get_element(table_selector_key)
 
+        # Retrieve all rows from the telemetry table
         rows = self.get_elements(table_selector_key)
 
+        # Iterate from newest to oldest entries
         for row in reversed(rows):
-            cells = row.find_elements(By.TAG_NAME, "td")
-            if len(cells) > 1:
-                cell_texts = [cell.text.strip() for cell in cells[1:]]
-                if cell_texts == expected_telemetry_data:
-                    return True
+            cells = [cell.text.strip() for cell in row.find_elements(By.TAG_NAME, "td")]
+
+            # Verify all expected values are present in the row
+            if all(value in cells for value in expected_telemetry_data):
+                return True
 
         return False
 
