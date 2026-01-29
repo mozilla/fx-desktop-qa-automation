@@ -608,3 +608,73 @@ class TabBar(BasePage):
             context_menu.click_on("context-move-tab-to-group")
             self.click_and_hide_menu("tabgroup-menuitem")
             self.hide_popup("tabContextMenu")
+
+    @BasePage.context_chrome
+    def add_tab_to_existing_group(
+        self, tab_index: int, context_menu: ContextMenu
+    ) -> "TabBar":
+        """
+        Add a tab to an existing tab group.
+        Arguments:
+            tab_index: The index of the tab to add to the group
+            context_menu: ContextMenu instance
+        """
+        tab = self.get_tab(tab_index)
+        self.context_click(tab)
+        context_menu.click_on("context-move-tab-to-group")
+        self.click_and_hide_menu("tabgroup-menuitem")
+        self.hide_popup("tabContextMenu")
+        return self
+
+    @BasePage.context_chrome
+    def remove_tab_from_group(
+        self, tab_index: int, context_menu: ContextMenu
+    ) -> "TabBar":
+        """
+        Remove a tab from its group via context menu.
+        Arguments:
+            tab_index: The index of the tab to remove from the group
+            context_menu: ContextMenu instance
+        """
+        tab = self.get_tab(tab_index)
+        self.context_click(tab)
+        context_menu.click_and_hide_menu("context-remove-tab-from-group")
+        self.hide_popup("tabContextMenu")
+        return self
+
+    @BasePage.context_chrome
+    def verify_tab_group_visible(self) -> "TabBar":
+        """Verify that a tab group label is visible."""
+        self.element_visible("tabgroup-label")
+        return self
+
+    @BasePage.context_chrome
+    def verify_tab_group_has_multiple_tabs(self) -> "TabBar":
+        """Verify that the tab group has multiple tabs (overflow count visible)."""
+        self.element_exists("tabgroup-overflow-count")
+        return self
+
+    @BasePage.context_chrome
+    def get_tab_position(self, tab_index: int) -> int:
+        """
+        Get the visual position of a tab in the tab strip.
+        Returns the x-coordinate of the tab.
+        """
+        tab = self.get_tab(tab_index)
+        return tab.location["x"]
+
+    @BasePage.context_chrome
+    def verify_tab_after_group(self, tab_index: int) -> "TabBar":
+        """
+        Verify that a tab is positioned after the tab group in the tab strip.
+        Arguments:
+            tab_index: The index of the tab to verify
+        """
+        tab_position = self.get_tab_position(tab_index)
+        group = self.get_element("tabgroup")
+        group_end_position = group.location["x"] + group.size["width"]
+        assert tab_position >= group_end_position, (
+            f"Expected tab to be after the group. "
+            f"Tab position: {tab_position}, Group end: {group_end_position}"
+        )
+        return self
