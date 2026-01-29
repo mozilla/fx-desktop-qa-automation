@@ -1105,6 +1105,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_remove_tab_from_a_group:
+    result: pass
+    splits:
+    - functional2
   test_reopen_tab_through_context_menu:
     result: pass
     splits:
