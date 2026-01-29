@@ -16,8 +16,8 @@ def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [
         ("browser.startup.homepage", "about:home"),
-        ("browser.startup.blankWindow", "false"),
-        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", "true")
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", "true"),
+        ("browser.startup.page", 1)
     ]
 
 
