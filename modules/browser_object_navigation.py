@@ -1427,3 +1427,16 @@ class Navigation(BasePage):
         self.context_menu.hide_popup_by_child_node(action_name)
 
         return self
+
+    @BasePage.context_chrome
+    def open_downloaded_file(self) -> None:
+        """
+        Opens the most recently downloaded file from the Downloads panel.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(
+            lambda _: self.get_element("download-target-element").is_displayed()
+        )
+
+        # Click the button
+        self.get_element("download-target-element").click()
