@@ -1165,6 +1165,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_hover_tab_preview:
+    result: pass
+    splits:
+    - functional2
   test_list_all_tabs:
     result: pass
     splits:
