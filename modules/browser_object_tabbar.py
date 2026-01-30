@@ -610,9 +610,7 @@ class TabBar(BasePage):
             self.hide_popup("tabContextMenu")
 
     @BasePage.context_chrome
-    def add_tab_to_existing_group(
-        self, tab_index: int, context_menu: ContextMenu
-    ) -> "TabBar":
+    def add_tab_to_existing_group(self, tab_index: int, context_menu: ContextMenu):
         """
         Add a tab to an existing tab group.
         Arguments:
@@ -627,9 +625,7 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def remove_tab_from_group(
-        self, tab_index: int, context_menu: ContextMenu
-    ) -> "TabBar":
+    def remove_tab_from_group(self, tab_index: int, context_menu: ContextMenu):
         """
         Remove a tab from its group via context menu.
         Arguments:
@@ -643,22 +639,9 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_tab_group_visible(self):
-        """Verify that a tab group label is visible."""
-        self.element_visible("tabgroup-label")
-        return self
-
-    @BasePage.context_chrome
-    def verify_tab_group_has_multiple_tabs(self):
-        """Verify that the tab group has multiple tabs (overflow count visible)."""
-        self.element_exists("tabgroup-overflow-count")
-        return self
-
-    @BasePage.context_chrome
     def get_tab_position(self, tab_index: int):
         """
-        Get the visual position of a tab in the tab strip.
-        Returns the x-coordinate of the tab.
+        Get the visual position of a tab in the tab strip. Returns the x-coordinate of the tab.
         Argument:
             tab_index: The index of the tab to get the position of
         """

@@ -26,7 +26,7 @@ def test_remove_tab_from_a_group(driver: Firefox):
     C2793052 - Verify that a tab can be removed from a Tab Group via context menu. The removed tab should be
     displayed at the end of the group in the tab strip.
     """
-
+    # Instantiate objects
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
 
@@ -35,15 +35,15 @@ def test_remove_tab_from_a_group(driver: Firefox):
     tabs.add_tab_to_existing_group(3, context_menu)
 
     # Verify the group is created with multiple tabs
-    tabs.verify_tab_group_visible()
-    tabs.verify_tab_group_has_multiple_tabs()
+    tabs.element_visible("tabgroup-label")
+    tabs.element_exists("tabgroup-overflow-count")
 
     # Remove the first tab from the group
     tabs.remove_tab_from_group(1, context_menu)
 
     # Verify the tab group still exists with remaining tabs
-    tabs.verify_tab_group_visible()
-    tabs.verify_tab_group_has_multiple_tabs()
+    tabs.element_visible("tabgroup-label")
+    tabs.element_exists("tabgroup-overflow-count")
 
-    # Verify the removed tab is not in the group
+    # Verify the removed tab is positioned after the group
     tabs.verify_removed_tab_displayed_after_group(1)
