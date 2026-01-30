@@ -2490,6 +2490,27 @@ Description: Sample download
 Location: ash-speed.hetzner website
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: gdoc-file
+Selector Data: "docs-file-menu"
+Description: Gdoc file menu
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file-download
+Selector Data: "span.goog-menuitem-label[aria-label^='Download']"
+Description: Gdoc file menu -> download
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file-download-pdf
+Selector Data: "span.goog-menuitem-label[aria-label^='PDF Document']"
+Description: Gdoc file menu -> download -> PDF Document (.pdf)
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
