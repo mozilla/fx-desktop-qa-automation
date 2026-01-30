@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.browser_object_navigation import Navigation
 from modules.page_object_about_pages import AboutTelemetry
 from modules.page_object_generics import GenericPage
 
@@ -27,10 +28,12 @@ def test_telemetry_pdf_download_open(driver: Firefox):
     # Instantiate objects
     page = GenericPage(driver, url=TEST_URL)
     telemetry = AboutTelemetry(driver)
+    nav = Navigation(driver)
 
     # Open gdoc and download as a pdf document
     page.open()
     page.download_gdoc_as_pdf()
+    nav.wait_for_download_animation_finish()
 
     # Switch to first tab
     driver.switch_to.window(driver.window_handles[0])
