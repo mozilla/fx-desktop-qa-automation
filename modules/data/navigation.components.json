@@ -633,5 +633,10 @@
         "selectorData": "#downloadsPanel-blockedSubview-unblockButton[label='Allow download']",
         "strategy": "css",
         "groups": []
+    },
+    "remove-download": {
+        "selectorData": "#downloadsPanel-blockedSubview-deleteButton[label='Remove file']",
+        "strategy": "css",
+        "groups": []
     }
 }

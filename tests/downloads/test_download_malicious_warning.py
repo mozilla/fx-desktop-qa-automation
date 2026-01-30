@@ -16,7 +16,10 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("browser.safebrowsing.malware.enabled", True)]
+    return [
+        ("browser.safebrowsing.malware.enabled", True),
+        ("browser.safebrowsing.downloads.enabled", True)
+    ]
 
 
 def test_download_malicious_warning(driver: Firefox):
@@ -33,10 +36,21 @@ def test_download_malicious_warning(driver: Firefox):
     page.click_on("download-malicious-warning")
 
     # Verify that the "Malicious" message is displayed
-    nav.element_visible("malicious-deleted-message")
+    nav.element_visible("download-malicious-message")
 
     # Click on the More Details button (>)
     nav.click_on("download-details-button")
 
     # Click on Allow download
     nav.click_on("allow-download")
+
+    # Repeat steps 1-4 and click on Remove file
+    page.click_on("download-malicious-warning")
+    nav.click_on("download-details-button")
+    nav.click_on("remove-download")
+
+    # check the file is deleted from the Panel
+
+    # Set browser.download.alwaysOpenPanel to False and repeat step 2
+
+    # Check the Download Panel is not opened and the red warning is displayed on toolbar Downloads icon
