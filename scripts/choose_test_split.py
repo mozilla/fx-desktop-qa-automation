@@ -83,6 +83,10 @@ def dedupe(run_list: list) -> list:
         run_list[dotslash] = f".{SLASH}{run_list[dotslash]}"
 
     for i, entry_a in enumerate(run_list):
+        if not os.path.exists(entry_a):
+            print(f"Removing {entry_a}: path does not exist")
+            removes.append(i)
+            continue
         for j, entry_b in enumerate(run_list):
             if i == j:
                 continue
@@ -185,6 +189,9 @@ if __name__ == "__main__":
 
     if changed_models:
         for model_file in changed_models:
+            # When we remove a file, it appears in the git diff, but not in real life
+            if not os.path.exists(model_file):
+                continue
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:

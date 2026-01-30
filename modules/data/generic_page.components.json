@@ -100,8 +100,33 @@
         "strategy": "class",
         "groups": []
     },
+    "sample-bin-download-100mb": {
+        "selectorData": "a[href='100MB.bin']",
+        "strategy": "css",
+        "groups": []
+    },
     "sample-bin-download": {
         "selectorData": "a[href='1GB.bin']",
+        "strategy": "css",
+        "groups": []
+    },
+    "sample-small-download": {
+        "selectorData": "a[href='http://ipv4.download.thinkbroadband.com/20MB.zip']",
+        "strategy": "css",
+        "groups": []
+    },
+    "gdoc-file": {
+        "selectorData": "docs-file-menu",
+        "strategy": "id",
+        "groups": []
+    },
+    "gdoc-file-download": {
+        "selectorData": "span.goog-menuitem-label[aria-label^='Download']",
+        "strategy": "css",
+        "groups": []
+    },
+    "gdoc-file-download-pdf": {
+        "selectorData": "span.goog-menuitem-label[aria-label^='PDF Document']",
         "strategy": "css",
         "groups": []
     }

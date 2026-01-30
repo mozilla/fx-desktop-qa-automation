@@ -315,6 +315,21 @@ class TabBar(BasePage):
         self.get_element("tab-x-icon", parent_element=tab).click()
         return self
 
+    @BasePage.context_chrome
+    def close_last_n_tabs(self, total_tabs: int, count: int) -> "TabBar":
+        """
+        Close the last N tabs in the current window, starting from the rightmost tab.
+        Arguments:
+            total_tabs: Total number of tabs currently open in the window
+            count: Number of tabs to close from the end
+        """
+        for offset in range(count):
+            tab_index = total_tabs - offset
+            tab = self.get_tab(tab_index)
+            if tab:
+                self.close_tab(tab)
+        return self
+
     def open_single_page_in_new_tab(self, page: BasePage, num_tabs: int) -> BasePage:
         """
         Opens a new tab, switches the driver context to the new tab, and opens the given webpage
@@ -328,22 +343,24 @@ class TabBar(BasePage):
         page.open()
         return self
 
-    def open_multiple_tabs_with_pages(self, pages: list) -> "TabBar":
+    def open_urls_in_tabs(
+        self, urls: list, open_first_in_current_tab: bool = False
+    ) -> "TabBar":
         """
-        Opens multiple new tabs and navigates to different pages in each tab.
-
-        Argument:
-            pages: List of page objects or URLs to open in separate tabs
+        Opens URLs in tabs. By default, opens a new tab for each URL.
+        Arguments:
+            urls: List of URLs to open in tabs
+            open_first_in_current_tab: If True, opens first URL in current tab instead of new tab
         """
-        for page in pages:
-            self.new_tab_by_button()
-            self.wait_for_num_tabs(len(self.driver.window_handles))
-            self.driver.switch_to.window(self.driver.window_handles[-1])
-
-            if isinstance(page, str):
-                self.driver.get(page)
+        for i, url in enumerate(urls):
+            if i == 0 and open_first_in_current_tab:
+                with self.driver.context(self.driver.CONTEXT_CONTENT):
+                    self.driver.get(url)
             else:
-                page.open()
+                self.new_tab_by_button()
+                self.wait_for_num_tabs(len(self.driver.window_handles))
+                self.driver.switch_to.window(self.driver.window_handles[-1])
+                self.driver.get(url)
         return self
 
     @BasePage.context_chrome
@@ -523,35 +540,6 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def open_websites_in_tabs(self, urls: list[str]) -> BasePage:
-        """
-        Open a list of websites, each in its own tab.
-
-        Args:
-            urls: List of website URLs to open.
-        """
-        if not urls:
-            return self
-
-        # Open the first URL in the current tab
-        with self.driver.context(self.driver.CONTEXT_CONTENT):
-            self.driver.get(urls[0])
-
-        # Open remaining URLs in new tabs
-        for url in urls[1:]:
-            # Open a new tab using the button
-            self.new_tab_by_button()
-
-            # Switch to the newly opened tab
-            self.driver.switch_to.window(self.driver.window_handles[-1])
-
-            # Load the URL in the new tab
-            with self.driver.context(self.driver.CONTEXT_CONTENT):
-                self.driver.get(url)
-
-        return self
-
-    @BasePage.context_chrome
     def expect_play_tab_button(self, visible: bool = True) -> BasePage:
         """
         Wait for the 'Play Tab' button to be visible/hidden on the tab.
@@ -620,3 +608,58 @@ class TabBar(BasePage):
             context_menu.click_on("context-move-tab-to-group")
             self.click_and_hide_menu("tabgroup-menuitem")
             self.hide_popup("tabContextMenu")
+
+    @BasePage.context_chrome
+    def add_tab_to_existing_group(self, tab_index: int, context_menu: ContextMenu):
+        """
+        Add a tab to an existing tab group.
+        Arguments:
+            tab_index: The index of the tab to add to the group
+            context_menu: ContextMenu instance
+        """
+        tab = self.get_tab(tab_index)
+        self.context_click(tab)
+        context_menu.click_on("context-move-tab-to-group")
+        self.click_and_hide_menu("tabgroup-menuitem")
+        self.hide_popup("tabContextMenu")
+        return self
+
+    @BasePage.context_chrome
+    def remove_tab_from_group(self, tab_index: int, context_menu: ContextMenu):
+        """
+        Remove a tab from its group via context menu.
+        Arguments:
+            tab_index: The index of the tab to remove from the group
+            context_menu: ContextMenu instance
+        """
+        tab = self.get_tab(tab_index)
+        self.context_click(tab)
+        context_menu.click_and_hide_menu("context-remove-tab-from-group")
+        self.hide_popup("tabContextMenu")
+        return self
+
+    @BasePage.context_chrome
+    def get_tab_position(self, tab_index: int):
+        """
+        Get the visual position of a tab in the tab strip. Returns the x-coordinate of the tab.
+        Argument:
+            tab_index: The index of the tab to get the position of
+        """
+        tab = self.get_tab(tab_index)
+        return tab.location["x"]
+
+    @BasePage.context_chrome
+    def verify_removed_tab_displayed_after_group(self, tab_index: int):
+        """
+        Verify that a tab is positioned after the tab group in the tab strip.
+        Argument:
+            tab_index: The index of the tab to verify
+        """
+        tab_position = self.get_tab_position(tab_index)
+        group = self.get_element("tabgroup")
+        group_end_position = group.location["x"] + group.size["width"]
+        assert tab_position >= group_end_position, (
+            f"Expected tab to be after the group. "
+            f"Tab position: {tab_position}, Group end: {group_end_position}"
+        )
+        return self

@@ -12,7 +12,7 @@ def test_case():
     return "3028997"
 
 
-def test_searchbar_display_alpenglow_theme(driver: Firefox):
+def test_search_bar_display_alpenglow_theme(driver: Firefox):
     """
     C3028997 - Search bar is correctly displayed on Alpenglow theme
     """

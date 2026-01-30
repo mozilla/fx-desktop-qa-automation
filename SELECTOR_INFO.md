@@ -138,6 +138,13 @@ Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-delete
+Selector Data: "downloadDeleteFileMenuItem"
+Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input
@@ -1329,6 +1336,27 @@ Description: Events option
 Location: about:telemetry Sidebar option
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']"
+Description: Scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-events-table-rows
+Selector Data: "#events-section table tr"
+Description: Telemetry events table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-scalars-table-rows
+Selector Data: "#scalars-section table tr"
+Description: Telemetry scalars table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
@@ -2455,6 +2483,34 @@ Description: videojs website media player volume button
 Location: videojs website player
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: sample-bin-download-100mb
+Selector Data: "a[href='100MB.bin']"
+Description: Sample download
+Location: ash-speed.hetzner website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file
+Selector Data: "docs-file-menu"
+Description: Gdoc file menu
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file-download
+Selector Data: "span.goog-menuitem-label[aria-label^='Download']"
+Description: Gdoc file menu -> download
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file-download-pdf
+Selector Data: "span.goog-menuitem-label[aria-label^='PDF Document']"
+Description: Gdoc file menu -> download -> PDF Document (.pdf)
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
@@ -3113,9 +3169,23 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: library-history-submenu-button
-Selector Data: appMenu-library-history-button
+Selector Data: //*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Library history submenu button
 Location: Inside the library button in the toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: toolbar-history-recently-closed-tabs
+Selector Data: //*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Recently closed tabs button in the Library History view
+Location: Library > History
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: library-recently-closed-tabs-items
+Selector Data: //*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Individual closed tab items in the Library History Recently Closed Tabs panel
+Location: Library > History > Recently Closed Tabs
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -3301,13 +3371,6 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: autoplay-blocked-icon
-Selector Data: "image.blocked-permission-icon.autoplay-media-icon[showing='{state}']"
-Description: Autoplay blocked icon in the URL bar that indicates when autoplay media is blocked
-Location: Address bar / URL bar
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector Name: search-settings
 Selector Data: urlbar-anon-search-settings
 Description: Search settings button in awesome bar
@@ -3445,6 +3508,13 @@ Selector Name: tab-container-label
 Selector Data: "userContext-label"
 Description:  Tab container label
 Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-deleted-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='File deleted']"
+Description: "File Deleted" status for a deleted download
+Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
@@ -3860,6 +3930,13 @@ Description: Print Settings bar in Print Preview
 Location: Right sidebar in Print Preview
 Path to .json: modules/data/print_preview.components.json
 ```
+```
+Selector name: print-preview-pagination
+Selector Data: "printPreviewNavigation"
+Description: Pagination toolbar for navigating pages
+Location: Over the Print Preview page thumbnail/preview
+Path to .json: modules/data/print_preview.components.json
+```
 #### reader_view
 ```
 Selector name: reader-view-button
@@ -3872,6 +3949,13 @@ Path to .json: modules/data/reader_view.components.json
 Selector name: reader-toolbar
 Selector Data: "div[class='toolbar reader-toolbar']"
 Description: The Reader View toolbar
+Location: In page, when in Reader View mode.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-close-button
+Selector Data: "button[class='close-button toolbar-button']"
+Description: The Reader View toolbar close [X] button
 Location: In page, when in Reader View mode.
 Path to .json: modules/data/reader_view.components.json
 ```
@@ -4268,13 +4352,6 @@ Description: All tabs locator
 Location: All tabs from the tabs bar
 Path to .json: modules/data/tab_bar.components.json
 ```
-```
-Selector Name: play-tab-button
-Selector Data: "moz-button.tab-audio-button[activemedia-blocked='{state}']"
-Description: Play tab button that appears on tabs when autoplay is blocked in background tabs
-Location: Tab bar, on tabs with blocked autoplay media
-Path to .json: modules/data/tab_bar.components.json
-```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
@@ -4429,5 +4506,12 @@ Selector Name: menu-bar-zoom-reset
 Selector Data: "menu_zoomReset"
 Description: Reset Zoom option from Menu Bar
 Location: Menu bar
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-recently-closed-tabs-items
+Selector Data: "menuitem.bookmark-item"
+Description: Individual closed tab items in the Recently Closed Tabs submenu
+Location: History menu > Recently Closed Tabs submenu
 Path to .json: modules/data/menu_bar.components.json
 ```

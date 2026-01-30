@@ -589,6 +589,10 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
     logging.info(f"config runs {config_runs}")
+    logging.warning(
+        f"plan_id: {plan_id} -- entry_id: {entry.get('id')} -- "
+        f"config_ids: [{config_id}] -- case_ids: {cases_in_suite}"
+    )
     if not config_runs:
         expected_plan = testrail_session.create_test_run_on_plan_entry(
             plan_id,

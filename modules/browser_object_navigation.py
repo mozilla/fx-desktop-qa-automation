@@ -1,10 +1,16 @@
 import logging
 import re
 import time
-from typing import Literal
+from typing import Callable, Literal
 from urllib.parse import urlparse
 
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, JavascriptException
+from selenium.common.exceptions import (
+    InvalidSessionIdException,
+    NoSuchWindowException,
+    StaleElementReferenceException,
+    TimeoutException,
+    WebDriverException,
+)
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -23,6 +29,20 @@ class Navigation(BasePage):
     """Page Object Model for nav buttons, AwesomeBar and toolbar"""
 
     URL_TEMPLATE = "about:blank"
+
+    # XPath selectors for Firefox's PanelMultiView widget system. The Library menu is a stack of nested subviews.
+    # When you navigate deeper, Firefox keeps the previous views in the DOM and just marks them as offscreen. These
+    # XPaths help us target the currently active/visible view. They live here (not in the JSON selectors) because
+    # they're "state" checks for panel transitions, not a single element we interact with.
+    XPATH_LIBRARY_RECENTLY_CLOSED_TABS_VIEW_VISIBLE = (
+        "//*[@id='appMenu-library-recentlyClosedTabs' and @visible='true' "
+        "and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]"
+    )
+    XPATH_PANEL_OPEN = "//*[@panelopen='true']"
+    XPATH_RECENTLY_CLOSED_TABS_NOT_OFFSCREEN = (
+        "//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space("
+        "@class), ' '), ' offscreen ')])]"
+    )
     BROWSER_MODES = {
         "Bookmarks": "*",
         "Tabs": "%",
@@ -38,6 +58,7 @@ class Navigation(BasePage):
         "Wikipedia (en)",
         "Firefox Add-ons",
     }
+    _TARGET_URI_RE = re.compile(r'targetURI="([^"]+)"', re.IGNORECASE)
 
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
@@ -291,21 +312,6 @@ class Navigation(BasePage):
 
     def click_download_button(self) -> BasePage:
         self.get_download_button().click()
-        return self
-
-    @BasePage.context_chrome
-    def set_always_open_similar_files(self) -> BasePage:
-        """
-        From the downloads panel, right-click the most recent download and set 'Always Open Similar Files'.
-        """
-        downloads_button = self.get_download_button()
-        downloads_button.click()
-
-        # Locate the latest downloaded file in the panel, open context menu and choose 'Always Open Similar Files'
-        download_item = self.get_element("download-panel-item")
-        self.context_click(download_item)
-        self.context_menu.get_element("context-menu-always-open-similar-files").click()
-
         return self
 
     @BasePage.context_chrome
@@ -1287,3 +1293,160 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("back-button").click()
+
+    @BasePage.context_chrome
+    def get_library_recently_closed_urls(self, history_open: bool = False):
+        """
+        Navigate through Library > History > Recently Closed Tabs and extract URLs. This navigates a chain of nested
+        XUL panel submenus. Each submenu transition updates a 'visible' attribute on the target panelview,
+        but the DOM elements persist (they're just marked offscreen). We must wait for the correct panel state and
+        exclude offscreen duplicates when querying.
+        Argument:
+            history_open: If True, assumes Library > History is already open.
+        """
+        if not history_open:
+            self.open_library_history_submenu()
+
+        # Click "Recently Closed Tabs" to open the third-level submenu.
+        self._click_with_fallbacks(
+            lambda: self.get_element("toolbar-history-recently-closed-tabs"),
+            name="Recently closed tabs button",
+        )
+
+        # Wait for the recentlyClosedTabs panel to become visible.
+        # Firefox sets visible='true' on the active panelview; previous panels stay in DOM but are marked offscreen.
+        self.wait.until(
+            lambda d: d.find_elements(
+                By.XPATH,
+                self.XPATH_LIBRARY_RECENTLY_CLOSED_TABS_VIEW_VISIBLE,
+            )
+        )
+
+        # Extract closed tab items - each has a targetURI attribute with the page URL
+        items = self.wait.until(
+            lambda d: self.get_elements("library-recently-closed-tabs-items")
+        )
+        urls = {
+            uri for item in items if (uri := self._get_target_uri(item)) is not None
+        }
+
+        # Close the panel chain (two ESC presses to exit nested submenus)
+        self.actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+        return urls
+
+    @BasePage.context_chrome
+    def open_library_history_submenu(self) -> BasePage:
+        """
+        Open the Library > History submenu from the toolbar.
+
+        The Library button (when added to toolbar) opens a widget panel that uses
+        Firefox's PanelMultiView system. Clicking "History" navigates to a subview
+        (PanelUI-history) within the same panel container.
+
+        XUL panel elements don't always respond to standard Selenium clicks due to
+        how Firefox handles focus and event dispatch in chrome UI. We use fallback
+        click methods and wait for specific panel states rather than simple visibility.
+        """
+        # Open the Library panel - this creates/shows the panel container
+        self.click_on("library-button")
+
+        # Wait for any panel to be marked open (panelopen='true' is set on the panel element)
+        self.wait.until(lambda d: d.find_elements(By.XPATH, self.XPATH_PANEL_OPEN))
+
+        # Navigate to History subview within the Library panel
+        self.element_clickable("library-history-submenu-button")
+        self._click_with_fallbacks(
+            lambda: self.get_element("library-history-submenu-button"),
+            name="Library history submenu",
+        )
+
+        # Wait for the History panel content to be available (not just visible, but not offscreen).
+        # Firefox keeps previous panel content in DOM but marks ancestors with 'offscreen' class.
+        self.wait.until(
+            lambda d: d.find_elements(
+                By.XPATH,
+                self.XPATH_RECENTLY_CLOSED_TABS_NOT_OFFSCREEN,
+            )
+        )
+        self.element_visible("toolbar-history-recently-closed-tabs")
+        return self
+
+    def _click_with_fallbacks(
+        self, get_el: Callable[[], WebElement], *, name: str = "element"
+    ):
+        """
+        Attempt to click an element using multiple strategies.
+        XUL toolbar buttons in Firefox chrome UI don't always respond to standard
+        click events due to focus handling and event dispatch differences. This tries:
+          1. ActionChains move + click (works when element needs focus first)
+          2. Direct element.click() (standard approach)
+          3. Send ENTER key (keyboard activation fallback)
+        Argumnets:
+            get_el: Callable that returns the WebElement to click (called fresh each
+                    attempt in case of stale element issues).
+            name: Human-readable name for error messages.
+        """
+        last_exc = None
+        attempts = ("actionchains", "direct_click", "enter_key")
+        for attempt in attempts:
+            try:
+                el = get_el()
+                if attempt == "actionchains":
+                    ActionChains(self.driver).move_to_element(el).click().perform()
+                elif attempt == "direct_click":
+                    el.click()
+                else:
+                    el.send_keys(Keys.ENTER)
+                return
+            except (InvalidSessionIdException, NoSuchWindowException):
+                raise
+            except WebDriverException as exc:
+                last_exc = exc
+        raise last_exc or RuntimeError(f"Failed to click {name}")
+
+    def _get_target_uri(self, el: WebElement):
+        """
+        Extract the targetURI attribute from a closed tab list item.
+
+        Tries standard attribute access first, falls back to regex on outerHTML
+        if the attribute isn't directly accessible (can happen with XUL elements).
+        """
+        uri = el.get_attribute("targetURI") or el.get_attribute("targeturi")
+        if uri:
+            return uri
+        html = el.get_attribute("outerHTML") or ""
+        match = self._TARGET_URI_RE.search(html)
+        return match.group(1) if match else None
+
+    def perform_download_context_action(self, action_name: str) -> BasePage:
+        """
+        From the downloads panel, right-click the latest download and perform a context menu action.
+
+        :param action_name: The key for the context menu action, e.g.,
+            "context-menu-delete" or "context-menu-always-open-similar-files"
+        """
+        downloads_button = self.get_download_button()
+        downloads_button.click()
+
+        # Locate the latest download item
+        download_item = self.get_element("download-panel-item")
+
+        # Right-click and select the desired action
+        self.context_click(download_item)
+        self.context_menu.get_element(action_name).click()
+        self.context_menu.hide_popup_by_child_node(action_name)
+
+        return self
+
+    @BasePage.context_chrome
+    def open_downloaded_file(self) -> None:
+        """
+        Opens the most recently downloaded file from the Downloads panel.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(
+            lambda _: self.get_element("download-target-element").is_displayed()
+        )
+
+        # Click the button
+        self.get_element("download-target-element").click()

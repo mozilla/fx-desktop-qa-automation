@@ -185,7 +185,7 @@ class TestKey:
         all_functs = []
         for splitnum in range(NUM_FUNCTIONAL_SPLITS + 1):
             all_functs.extend(
-                self.gather_split(f"functional{splitnum:02}", pass_only=False)
+                self.gather_split(f"functional{splitnum}", pass_only=False)
             )
         total_functs = len(all_functs)
         functs_per_split = total_functs // NUM_FUNCTIONAL_SPLITS
@@ -210,14 +210,14 @@ class TestKey:
                 else:
                     break
             actual_test = list(entry[suite].keys())[0]
-            if f"functional{(splitnum + 1):02}" in ptr["splits"]:
-                print(f"Keeping {actual_test} in functional split {(splitnum + 1):02}")
+            if f"functional{(splitnum + 1)}" in ptr["splits"]:
+                print(f"Keeping {actual_test} in functional split {(splitnum + 1)}")
                 continue
             for split_ in ptr["splits"]:
                 if split_.startswith("functional"):
                     ptr["splits"].remove(split_)
-            print(f"Moving {actual_test} to functional split {(splitnum + 1):02}")
-            ptr["splits"].append(f"functional{(splitnum + 1):02}")
+            print(f"Moving {actual_test} to functional split {(splitnum + 1)}")
+            ptr["splits"].append(f"functional{(splitnum + 1)}")
             self.manifest[suite] |= entry[suite]
 
     def gather_split(self, split_name, pass_only=True):
@@ -334,8 +334,10 @@ class TestKey:
         """
         newkey = deepcopy(self.manifest)
         for root, _, files in os.walk(self.test_root):
+            if root == self.test_root:
+                continue
+            suite = root.split(os.path.sep)[1]
             for f in files:
-                suite = root.split(os.path.sep)[1]
                 if not (f.startswith("test_") and f.endswith(".py")):
                     continue
                 testfile = f.replace(".py", "")
@@ -374,7 +376,8 @@ class TestKey:
                 if resplit:
                     if not interactive:
                         sys.exit(
-                            "Cannot auto-add without user input. Please run python scripts/addtests.py"
+                            "Cannot auto-add without user input. "
+                            "Please run python scripts/addtests.py"
                         )
                     if ask_question(
                         "Should this test run in a Scheduled Functional split? "
@@ -382,6 +385,11 @@ class TestKey:
                     ):
                         newkey[suite][testfile]["splits"] = ["functional1"]
                         self.rebalance_functionals()
+
+                        print(
+                            f"Test has been added to the functional suite in {self.manifest_file} "
+                            "and the functional splits have been rebalanced."
+                        )
                     else:
                         all_splits = self.find_all_splits()
                         output = "\n".join(f"{item}" for item in all_splits)
@@ -392,11 +400,11 @@ class TestKey:
                         )
                         newkey[suite][testfile]["splits"] = [split]
 
-                    print(
-                        f"Test will be added to {split} in {self.manifest_file}. "
-                        "Consider modifying that file if the test is unstable in any OS, "
-                        "or if subtests need to be tracked separately."
-                    )
+                        print(
+                            f"Test will be added to {split} in {self.manifest_file}. "
+                            "Consider modifying that file if the test is unstable in any OS, "
+                            "or if subtests need to be tracked separately."
+                        )
 
         self.manifest = newkey
         self.write()
