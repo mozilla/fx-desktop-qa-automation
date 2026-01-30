@@ -15,6 +15,11 @@ def test_case():
     return "122406"
 
 
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 fields = ["cc-name", "cc-exp-month", "cc-exp-year", "cc-number"]
 
 
