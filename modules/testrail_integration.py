@@ -176,7 +176,7 @@ def reportable(platform_to_test=None, preview: bool = False):
 
        If preview=True:
         - Do NOT call TestRail
-        - Print a JSON preview (version, split, expected suites / expected l10n mappings).
+        - Print a JSON preview (version, split, etc.)
     """
     import platform
 
