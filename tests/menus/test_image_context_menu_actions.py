@@ -56,6 +56,7 @@ def test_open_image_in_new_tab(driver: Firefox):
 def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     """
     C2637622.2: save image as
+    attempting pyautogui
     """
     try:
         from pynput.keyboard import Controller
