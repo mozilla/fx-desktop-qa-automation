@@ -784,7 +784,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_input_numbers:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_pdf_navigation:

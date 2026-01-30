@@ -6,6 +6,7 @@ from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import AddressFill, CreditCardFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities
+
 # bump
 
 
