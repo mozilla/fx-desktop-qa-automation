@@ -171,7 +171,6 @@ if __name__ == "__main__":
     changed_tests = [f for f in committed_files if re_obj.get("test_re").match(f)]
 
     if changed_suite_conftests:
-        print(f"changed suites by ct: {changed_suite_conftests}")
         run_list.extend(
             [
                 "." + SLASH + os.path.join(*suite.split(SLASH)[-3:-1])

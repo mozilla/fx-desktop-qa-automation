@@ -7,8 +7,6 @@ from modules.page_object_autofill import AddressFill, CreditCardFill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities
 
-# bump
-
 
 @pytest.fixture()
 def suite_id():
