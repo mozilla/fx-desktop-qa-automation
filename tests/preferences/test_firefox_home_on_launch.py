@@ -17,7 +17,7 @@ def add_to_prefs_list():
     return [
         ("browser.startup.homepage", "about:home"),
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", "true"),
-        ("browser.startup.page", 1)
+        ("browser.startup.page", 1),
     ]
 
 
