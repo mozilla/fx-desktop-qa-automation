@@ -57,8 +57,8 @@
         "groups": []
     },
     "page-one-item": {
-        "selectorData": "/html/body/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/span[13]",
-        "strategy": "xpath",
+        "selectorData": "div[data-page-number='1'] > .textLayer > span:nth-child(9)",
+        "strategy": "css",
         "groups": []
     },
     "page-input": {
