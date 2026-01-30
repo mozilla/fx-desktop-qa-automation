@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import re
@@ -170,39 +171,44 @@ def tc_reportable():
         sys.exit(100)
 
 
-def reportable(platform_to_test=None):
-    """Return true if we should report to TestRail"""
+def reportable(platform_to_test=None, preview: bool = False):
+    """Return true if we should report to TestRail.
+
+       If preview=True:
+        - Do NOT call TestRail
+        - Print a JSON preview (version, split, expected suites / expected l10n mappings).
+    """
     import platform
 
     logging.warning("Checking to see if run is reportable...")
 
-    if not os.environ.get("TESTRAIL_REPORT"):
+    if not os.environ.get("TESTRAIL_REPORT") and not preview:
         logging.warning("TESTRAIL_REPORT not set, session not reportable.")
         return False
 
     # If we ask for reporting, we can force a report
     if os.environ.get("REPORTABLE"):
         logging.warning("REPORTABLE=true; we will report this session.")
-        return True
+        return True if not preview else {"reportable": True, "preview":  True}
 
     # Find the correct test plan
     sys_platform = platform_to_test or platform.system()
     if platform_to_test:
         os.environ["FX_PLATFORM"] = platform_to_test
+
     version = (
-        subprocess.check_output(
-            [sys.executable, "./scripts/collect_executables.py", "-n"]
-        )
+        subprocess.check_output([sys.executable, "./scripts/collect_executables.py", "-n"])
         .strip()
         .decode()
     )
     logging.warning(f"Got version from collect_executable.py! {version}")
-    tr_session = testrail_init()
+
     major_number, second_half = version.split(".")
     if "-" in second_half:
         minor_num, _ = second_half.split("-")
     else:
         minor_num = second_half
+
     channel = os.environ.get("FX_CHANNEL") or "beta"
     channel = channel.title()
     if not channel:
@@ -210,6 +216,29 @@ def reportable(platform_to_test=None):
             channel = "Beta"
         else:
             channel = "Release"
+
+    split_ = os.environ.get("STARFOX_SPLIT")
+    manifest = TestKey(TEST_KEY_LOCATION)
+    expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
+
+    platform_label = "MacOS" if sys_platform == "Darwin" else sys_platform
+
+    if preview:
+        preview_info = {
+            "platform": platform_label,
+            "channel": channel,
+            "version": version,
+            "split": split_,
+            "fx_l10n": bool(os.environ.get("FX_L10N")),
+        }
+
+        payload = {"reportable": None, "preview": preview_info}
+        # print JSON to stdout
+        print(json.dumps(payload))
+        return payload
+
+    # this part is executed if preview is not True
+    tr_session = testrail_init()
 
     major_version = f"Firefox {major_number}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
@@ -233,10 +262,8 @@ def reportable(platform_to_test=None):
             )
             return False
 
-    split_ = os.environ.get("STARFOX_SPLIT")
     logging.warning(f"Testing against split {split_}...")
-    manifest = TestKey(TEST_KEY_LOCATION)
-    expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
+
     if not expected_suites and not os.environ.get("FX_L10N"):
         # If suite is empty, never report (unless in l10n-land).
         logging.warning("This split is empty, not running or reporting.")
@@ -244,6 +271,7 @@ def reportable(platform_to_test=None):
 
     plan_title = get_plan_title(version, channel)
     logging.warning(f"Checking plan title: {plan_title}")
+
     this_plan = tr_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
@@ -253,17 +281,15 @@ def reportable(platform_to_test=None):
         )
         return True
 
-    if platform_to_test:
-        sys_platform = platform_to_test
-    platform = "MacOS" if sys_platform == "Darwin" else sys_platform
-
     plan_entries = this_plan.get("entries")
+
     if os.environ.get("FX_L10N"):
-        logging.warning(f"Getting reportability for L10n in {platform}...")
+        logging.warning(f"Getting reportability for L10n in {platform_label}...")
         beta_version = int(minor_num.split("b")[-1])
         distributed_mappings = select_l10n_mappings(beta_version)
         expected_mappings = sum(map(lambda x: len(x), distributed_mappings.values()))
         covered_mappings = 0
+
         # keeping this logic to still see how many mappings are reported.
         for entry in plan_entries:
             if entry.get("name") in distributed_mappings:
@@ -273,19 +299,21 @@ def reportable(platform_to_test=None):
                         run_region, run_platform = run_.get("config").split("-")
                         if (
                             run_region in distributed_mappings[site]
-                            and platform in run_platform
+                            and platform_label in run_platform
                         ):
                             logging.warning(
                                 f"Already reported: {site} {run_region},{run_platform}"
                             )
                             covered_mappings += 1
+
         logging.warning(
-            f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
+            f"Potentially matching run found for {platform_label}, may be reportable. (Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
         )
         # Only report when there is a new beta without a reported plan or if the selected split is not completely reported.
         return covered_mappings < expected_mappings
+
     else:
-        logging.warning(f"Getting reportability for STARfox in {platform}...")
+        logging.warning(f"Getting reportability for STARfox in {platform_label}...")
         if not split_:
             logging.warning("No split selected")
             return False
@@ -297,14 +325,11 @@ def reportable(platform_to_test=None):
                     covered_suites.append(str(run_.get("suite_id")))
 
         if not covered_suites:
-            logging.warning(
-                "No coverage found for this platform, running tests and report..."
-            )
+            logging.warning("No coverage found for this platform, running tests and report...")
             return True
+
         else:
-            logging.warning(
-                f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
-            )
+            logging.warning(f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}")
 
         uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
