@@ -114,5 +114,10 @@
         "selectorData": "a[href='http://ipv4.download.thinkbroadband.com/20MB.zip']",
         "strategy": "css",
         "groups": []
+    },
+    "download-malicious-warning": {
+        "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
+        "strategy": "css",
+        "groups": []
     }
 }

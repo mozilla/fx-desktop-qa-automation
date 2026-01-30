@@ -618,5 +618,20 @@
           "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
           "strategy": "css",
           "groups": []
+    },
+    "download-malicious-message": {
+        "selectorData": ".downloadDetails.downloadDetailsNormal[value='This file contains a virus or malware.']",
+        "strategy": "css",
+        "groups": []
+    },
+    "download-details-button": {
+        "selectorData": ".downloadButton.downloadIconSubviewArrow[aria-label='Open or Remove File']",
+        "strategy": "css",
+        "groups": []
+    },
+    "allow-download": {
+        "selectorData": "#downloadsPanel-blockedSubview-unblockButton[label='Allow download']",
+        "strategy": "css",
+        "groups": []
     }
 }
