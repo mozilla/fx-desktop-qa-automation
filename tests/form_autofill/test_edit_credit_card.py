@@ -31,7 +31,6 @@ def test_edit_credit_card_profile(
     autofill_popup: AutofillPopup,
     field: str,
     region: str,
-    hard_quit,
 ):
     """
     C122390, ensures that editing a credit card profile in the about:prefs

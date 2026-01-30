@@ -141,14 +141,12 @@ if __name__ == "__main__":
 
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
+    run_list = []
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run smoke tests if main conftest or basepage changed
-        run_list = manifest.gather_split("smoke")
+        run_list.extend(manifest.gather_split("smoke"))
         run_list = dedupe(run_list)
-        with open(OUTPUT_FILE, "w") as fh:
-            fh.write("\n".join(run_list))
-        sys.exit(0)
 
     all_tests = []
     test_paths_and_contents = {}
@@ -173,10 +171,12 @@ if __name__ == "__main__":
     changed_tests = [f for f in committed_files if re_obj.get("test_re").match(f)]
 
     if changed_suite_conftests:
-        run_list = [
-            "." + SLASH + os.path.join(*suite.split(SLASH)[-3:-1])
-            for suite in changed_suite_conftests
-        ]
+        run_list.extend(
+            [
+                "." + SLASH + os.path.join(*suite.split(SLASH)[-3:-1])
+                for suite in changed_suite_conftests
+            ]
+        )
 
     if changed_selectors:
         for selector_file in changed_selectors:
