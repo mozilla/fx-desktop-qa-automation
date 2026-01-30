@@ -115,6 +115,21 @@
         "strategy": "css",
         "groups": []
     },
+    "gdoc-file": {
+        "selectorData": "docs-file-menu",
+        "strategy": "id",
+        "groups": []
+    },
+    "gdoc-file-download": {
+        "selectorData": "span.goog-menuitem-label[aria-label^='Download']",
+        "strategy": "css",
+        "groups": []
+    },
+    "gdoc-file-download-pdf": {
+        "selectorData": "span.goog-menuitem-label[aria-label^='PDF Document']",
+        "strategy": "css",
+        "groups": []
+    },
     "download-malicious-warning": {
         "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
         "strategy": "css",
