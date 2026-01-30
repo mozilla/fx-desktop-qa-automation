@@ -36,7 +36,11 @@ address_bar_and_search:
       mac: pass
       win: unstable
     splits:
-    - functional1
+     - functional1
+  test_close_browser_when_downloading_private_session:
+    result: pass
+    splits:
+      - functional1
   test_clipboard_pref_flip:
     result: unstable
     splits:

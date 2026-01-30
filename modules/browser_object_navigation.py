@@ -580,6 +580,16 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def attempt_close_window(self):
+        """
+        Focus the window header/tab strip first, then attempt to close the window.
+        This makes the close prompt deterministic in situations like downloads-in-progress.
+        """
+
+        self.get_element("tab-strip").click()
+        self.get_element("window-close-button").click()
+
+    @BasePage.context_chrome
     def refresh_page(self) -> BasePage:
         """
         Refreshes the current page by clicking the refresh button in the browser.
