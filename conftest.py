@@ -542,7 +542,7 @@ def driver(
         raise
 
     finally:
-        if not hard_quit and ("driver" in locals() or "driver" in globals()) and driver:
+        if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 
