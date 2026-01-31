@@ -48,11 +48,52 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          DRY_RUN: ${{ env.DRY_RUN }}
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
-          echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
-          echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
+          
+          if [ "${DRY_RUN}" = "true" ]; then
+            echo "Dry run enabled: generating preview plan (no TestRail calls)."
+          
+            WIN_JSON=$(pipenv run python - <<'PY'
+            from modules import testrail_integration as tri
+            tri.reportable("Windows", preview=True)
+            PY
+            )
+
+            MAC_JSON=$(pipenv run python - <<'PY'
+            from modules import testrail_integration as tri
+            tri.reportable("Darwin", preview=True)
+            PY
+            )
+          
+            echo "win=Preview" >> "$GITHUB_OUTPUT"
+            echo "mac=Preview" >> "$GITHUB_OUTPUT"
+          
+            # Write preview to summary
+            {
+              echo "## Reportability preview (dry run)"
+              echo ""
+              echo "### Windows preview"
+              echo '```json'
+              echo "${WIN_JSON}"
+              echo '```'
+              echo ""
+              echo "### macOS preview"
+              echo '```json'
+              echo "${MAC_JSON}"
+              echo '```'
+              echo ""
+              echo "> Dry run enabled: downstream workflows should be skipped."
+            } >> "$GITHUB_STEP_SUMMARY"
+
+          else
+            echo "Normal run: checking reportability against TestRail."          
+          
+            echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
+            echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
+          fi
 
   Preview-Plan:
     needs:
