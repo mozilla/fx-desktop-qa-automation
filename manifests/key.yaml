@@ -1141,6 +1141,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_move_single_tab_via_context_menu:
+    result: pass
+    splits:
+    - functional2
   test_ungroup_tabs:
     result: pass
     splits:

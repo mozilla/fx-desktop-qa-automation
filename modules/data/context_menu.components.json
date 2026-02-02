@@ -106,19 +106,24 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-move-tab": {
+        "selectorData": "context_moveTabOptions",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-move-tab-to-start": {
-        "selectorData": "menuitem[data-l10n-id='move-to-start']",
-        "strategy": "css",
+        "selectorData": "context_moveToStart",
+        "strategy": "id",
         "groups": []
     },
     "context-menu-move-tab-to-end": {
-        "selectorData": "menuitem[data-l10n-id='move-to-end']",
-        "strategy": "css",
+        "selectorData": "context_moveToEnd",
+        "strategy": "id",
         "groups": []
     },
     "context-menu-move-to-new-window": {
-        "selectorData": "menuitem[data-l10n-id='move-to-new-window']",
-        "strategy": "css",
+        "selectorData": "context_openTabInWindow",
+        "strategy": "id",
         "groups": []
     },
     "context-menu-open-link-in-tab": {
