@@ -2,6 +2,11 @@ import pytest
 
 
 @pytest.fixture()
+def hard_quit():
+    return True
+
+
+@pytest.fixture()
 def suite_id():
     return ("1997", "Theme and Toolbar")
 
