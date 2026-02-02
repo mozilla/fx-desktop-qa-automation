@@ -663,3 +663,14 @@ class TabBar(BasePage):
             f"Tab position: {tab_position}, Group end: {group_end_position}"
         )
         return self
+
+    def get_all_window_urls(self) -> set[str]:
+        """Get URLs from all open windows/tabs.
+        Iterates through all window handles and collects current URLs
+        """
+        urls = set()
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            for handle in self.driver.window_handles:
+                self.driver.switch_to.window(handle)
+                urls.add(self.driver.current_url)
+        return urls
