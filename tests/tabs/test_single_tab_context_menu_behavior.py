@@ -24,7 +24,9 @@ def test_case():
     "move_option", [MOVE_TO_START, MOVE_TO_END, MOVE_TO_NEW_WINDOW]
 )
 def test_move_single_tab_via_context_menu(driver: Firefox, move_option: str):
-    """C246991 - Test tab repositioning via Move Tab context menu options."""
+    """
+    C246991 - Test tab repositioning via Move Tab context menu options.
+    """
     # Instantiate objects
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
