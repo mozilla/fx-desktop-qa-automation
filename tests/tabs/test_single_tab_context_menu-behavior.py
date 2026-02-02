@@ -17,14 +17,15 @@ MOVE_TAB_MENU = "context-menu-move-tab"
 
 @pytest.fixture()
 def test_case():
-    return "C1234567"
+    return "246991"
 
 
 @pytest.mark.parametrize(
     "move_option", [MOVE_TO_START, MOVE_TO_END, MOVE_TO_NEW_WINDOW]
 )
-def test_move_single_tab(driver: Firefox, move_option: str):
-    """Test tab repositioning via Move Tab context menu options."""
+def test_move_single_tab_via_context_menu(driver: Firefox, move_option: str):
+    """C246991 - Test tab repositioning via Move Tab context menu options."""
+    # Instantiate objects
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
 
