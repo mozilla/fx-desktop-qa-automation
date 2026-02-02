@@ -397,22 +397,9 @@ class PanelUi(BasePage):
         return self
 
     @BasePage.context_chrome
-    def open_recently_closed_tabs_view(self) -> BasePage:
-        """Navigate to Hamburger > History > Recently Closed > Recently closed tabs view.
-        This enters the subview that lists individual closed tabs.
-        """
-        self.open_panel_menu()
-        self.click_on("panel-ui-history")
-        self.element_visible("panel-ui-history-recently-closed")
-        self.click_on("panel-ui-history-recently-closed")
-        self.element_visible("panel-ui-history-recently-closed-reopen-tabs")
-        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
-        return self
-
-    @BasePage.context_chrome
     def get_recently_closed_tab_urls(self):
         """Get URLs/labels of recently closed tabs from the Hamburger menu."""
-        self.open_recently_closed_tabs_view()
+        self.reopen_recently_closed_tabs()
         items = self.get_elements("bookmark-item")
         urls = []
         for item in items:
@@ -422,7 +409,7 @@ class PanelUi(BasePage):
         return urls
 
     @BasePage.context_chrome
-    def verify_urls_not_in_recently_closed(self, urls: set[str]) -> BasePage:
+    def verify_urls_not_in_recently_closed(self, urls: set[str]):
         """Verify that the specified URLs are not in the recently closed tabs list."""
         recently_closed = set(self.get_recently_closed_tab_urls())
         found = urls.intersection(recently_closed)
