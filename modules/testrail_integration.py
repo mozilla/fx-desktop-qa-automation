@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import sys
+import json
 
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
@@ -168,6 +169,119 @@ def tc_reportable():
         sys.exit(0)
     else:
         sys.exit(100)
+
+
+def _common_reportable_context(platform_to_test=None) -> dict:
+    """
+    Compute local context shared by reportable() and preview_reportable().
+    IMPORTANT: This function does NOT call TestRail, only local computations.
+
+    Returns a dict with:
+      - platform/system normalization
+      - TESTRAIL_REPORT / REPORTABLE flags
+      - version string from scripts/collect_executables.py -n
+      - parsed major/minor/beta version info
+      - channel + plan_title
+      - STARFOX_SPLIT + expected suites
+      - FX_L10N info + expected mappings (from select_l10n_mappings)
+    """
+    import platform as _platform
+
+    ctx = {
+        "testrail_report_requested": bool(os.environ.get("TESTRAIL_REPORT")),
+        "forced_reportable": bool(os.environ.get("REPORTABLE")),
+        "split": os.environ.get("STARFOX_SPLIT"),
+        "is_l10n": bool(os.environ.get("FX_L10N")),
+        "platform_system": None,   # "Darwin", etc
+        "platform_name": None,     # "MacOS", etc
+        "version": "",
+        "major_number": None,
+        "minor_num": None,
+        "beta_version": 0,
+        "channel": None,
+        "plan_title": None,
+        "expected_suites": [],
+        "distributed_mappings": None,
+        "expected_mappings": None
+    }
+
+    # Determine platform
+    sys_platform = platform_to_test or _platform.system()
+    ctx["platform_system"] = sys_platform
+    ctx["platform_name"] = "MacOS" if sys_platform == "Darwin" else sys_platform
+
+    if platform_to_test:
+        os.environ["FX_PLATFORM"] = platform_to_test
+
+    # Get version
+    try:
+        ctx["version"] = (
+            subprocess.check_output([sys.executable, "./scripts/collect_executables.py", "-n"])
+            .strip()
+            .decode()
+        )
+    except Exception as e:
+        logging.warning(f"Could not determine version: {e}")
+        ctx["version"] = ""
+
+    # Parse major/minor/beta
+    try:
+        major_number, second_half = ctx["version"].split(".")
+        ctx["major_number"] = major_number
+
+        if "-" in second_half:
+            minor_num, _ = second_half.split("-")
+        else:
+            minor_num = second_half
+
+        ctx["minor_num"] = minor_num
+
+        if "b" in minor_num:
+            ctx["beta_version"] = int(minor_num.split("b")[-1])
+        else:
+            ctx["beta_version"] = 0
+    except Exception:
+        # leave defaults if parsing fails
+        pass
+
+    # Determine channel
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
+    if not channel:
+        if ctx["minor_num"] and "b" in ctx["minor_num"]:
+            channel = "Beta"
+        else:
+            channel = "Release"
+    ctx["channel"] = channel
+
+    # Plan title
+    if ctx["version"]:
+        try:
+            ctx["plan_title"] = get_plan_title(ctx["version"], ctx["channel"])
+        except Exception as e:
+            logging.warning(f"get_plan_title failed: {e}")
+            ctx["plan_title"] = None
+
+    # Expected suites
+    try:
+        manifest = TestKey(TEST_KEY_LOCATION)
+        expected_suites = manifest.get_valid_suites_in_split(ctx["split"], suite_numbers=True)
+        ctx["expected_suites"] = expected_suites
+    except Exception as e:
+        logging.warning(f"Could not compute expected suites: {e}")
+        ctx["expected_suites"] = []
+
+    # L10N mappings expectation
+    if ctx["is_l10n"]:
+        try:
+            ctx["distributed_mappings"] = select_l10n_mappings(ctx["beta_version"])
+            ctx["expected_mappings"] = sum(map(lambda x: len(x), ctx["distributed_mappings"].values()))
+        except Exception as e:
+            logging.warning(f"Could not compute l10n mappings: {e}")
+            ctx["distributed_mappings"] = {}
+            ctx["expected_mappings"] = 0
+
+    return ctx
 
 
 def reportable(platform_to_test=None):
