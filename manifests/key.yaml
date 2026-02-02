@@ -994,6 +994,10 @@ session_restore:
     result: pass
     splits:
     - functional2
+  test_restored_closed_tabs_removed_from_all_history_entries:
+    result: pass
+    splits:
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
     result: unstable
