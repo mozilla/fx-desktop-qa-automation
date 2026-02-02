@@ -14,9 +14,13 @@ jobs:
     outputs:
         split: ${{ steps.getsplit.outputs.split }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Get Split Based On Time
         id: getsplit
-        run: echo "split=functional$(($(date +%-I) % 6 + 1))" >> "$GITHUB_OUTPUT"
+        run: |
+          MAX_SPLITS=$(grep 'functional.' manifests/key.yaml | tail -1 | grep -o '[0-9]')
+          echo "split=functional$(($(date +%-I) % $MAX_SPLITS + 1))" >> "$GITHUB_OUTPUT"
 
   Check-Beta-Version:
     needs: Get-Functional-Split
@@ -28,8 +32,6 @@ jobs:
       win_l10n_reportable: ${{ steps.l10n-reportable.outputs.win_l10n }}
       linux_l10n_reportable: ${{ steps.l10n-reportable.outputs.linux_l10n }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Check if the run is reportable
         id: reportable
         env:
