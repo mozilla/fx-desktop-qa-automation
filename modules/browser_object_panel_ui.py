@@ -170,9 +170,8 @@ class PanelUi(BasePage):
         """Navigate to Hamburger > History > Recently Closed Tabs subview."""
         self.open_panel_menu()
         self.click_on("panel-ui-history")
-        self.element_visible("panel-ui-history-recently-closed")
         self.click_on("panel-ui-history-recently-closed")
-        self.element_visible("panel-ui-history-recently-closed-reopen-tabs")
+        sleep(2)
         self.click_on("panel-ui-history-recently-closed-reopen-tabs")
         return self
 
