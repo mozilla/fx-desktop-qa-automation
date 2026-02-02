@@ -174,9 +174,9 @@ def tc_reportable():
 def reportable(platform_to_test=None, preview: bool = False):
     """Return true if we should report to TestRail.
 
-       If preview=True:
-        - Do NOT call TestRail
-        - Print a JSON preview (version, split, etc.)
+    If preview=True:
+     - Do NOT call TestRail
+     - Print a JSON preview (version, split, etc.)
     """
     import platform
 
@@ -189,7 +189,7 @@ def reportable(platform_to_test=None, preview: bool = False):
     # If we ask for reporting, we can force a report
     if os.environ.get("REPORTABLE"):
         logging.warning("REPORTABLE=true; we will report this session.")
-        return True if not preview else {"reportable": True, "preview":  True}
+        return True if not preview else {"reportable": True, "preview": True}
 
     # Find the correct test plan
     sys_platform = platform_to_test or platform.system()
@@ -197,7 +197,9 @@ def reportable(platform_to_test=None, preview: bool = False):
         os.environ["FX_PLATFORM"] = platform_to_test
 
     version = (
-        subprocess.check_output([sys.executable, "./scripts/collect_executables.py", "-n"])
+        subprocess.check_output(
+            [sys.executable, "./scripts/collect_executables.py", "-n"]
+        )
         .strip()
         .decode()
     )
@@ -325,11 +327,15 @@ def reportable(platform_to_test=None, preview: bool = False):
                     covered_suites.append(str(run_.get("suite_id")))
 
         if not covered_suites:
-            logging.warning("No coverage found for this platform, running tests and report...")
+            logging.warning(
+                "No coverage found for this platform, running tests and report..."
+            )
             return True
 
         else:
-            logging.warning(f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}")
+            logging.warning(
+                f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
+            )
 
         uncovered_suites = list(set(expected_suites) - set(covered_suites))
         if len(uncovered_suites):
