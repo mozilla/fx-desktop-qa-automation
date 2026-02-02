@@ -167,16 +167,13 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def reopen_recently_closed_tabs(self) -> BasePage:
-        """Reopen all recently closed tabs"""
+        """Navigate to Hamburger > History > Recently Closed Tabs subview."""
         self.open_panel_menu()
         self.click_on("panel-ui-history")
-
+        self.element_visible("panel-ui-history-recently-closed")
         self.click_on("panel-ui-history-recently-closed")
-        if self.sys_platform() in ("Linux", "Darwin"):
-            sleep(2)
-
+        self.element_visible("panel-ui-history-recently-closed-reopen-tabs")
         self.click_on("panel-ui-history-recently-closed-reopen-tabs")
-
         return self
 
     # History
@@ -394,7 +391,42 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def reopen_all_recently_closed_tabs(self) -> BasePage:
-        """Reopen all recently closed tabs"""
+        """Reopen all recently closed tabs via Hamburger > History > Recently Closed."""
         self.reopen_recently_closed_tabs()
+        self.element_visible("reopen-all-closed-tabs-button")
         self.click_on("reopen-all-closed-tabs-button")
         return self
+
+    @BasePage.context_chrome
+    def open_recently_closed_tabs_view(self) -> BasePage:
+        """Navigate to Hamburger > History > Recently Closed > Recently closed tabs view.
+        This enters the subview that lists individual closed tabs.
+        """
+        self.open_panel_menu()
+        self.click_on("panel-ui-history")
+        self.element_visible("panel-ui-history-recently-closed")
+        self.click_on("panel-ui-history-recently-closed")
+        self.element_visible("panel-ui-history-recently-closed-reopen-tabs")
+        self.click_on("panel-ui-history-recently-closed-reopen-tabs")
+        return self
+
+    @BasePage.context_chrome
+    def get_recently_closed_tab_urls(self):
+        """Get URLs/labels of recently closed tabs from the Hamburger menu."""
+        self.open_recently_closed_tabs_view()
+        items = self.get_elements("bookmark-item")
+        urls = []
+        for item in items:
+            if item.is_displayed():
+                label = item.get_attribute("label") or ""
+                urls.append(label)
+        return urls
+
+    @BasePage.context_chrome
+    def verify_urls_not_in_recently_closed(self, urls: set[str]) -> BasePage:
+        """Verify that the specified URLs are not in the recently closed tabs list."""
+        recently_closed = set(self.get_recently_closed_tab_urls())
+        found = urls.intersection(recently_closed)
+        assert len(found) == 0, (
+            f"Expected URLs to be removed from recently closed, but found: {found}"
+        )

@@ -608,3 +608,14 @@ class TabBar(BasePage):
             context_menu.click_on("context-move-tab-to-group")
             self.click_and_hide_menu("tabgroup-menuitem")
             self.hide_popup("tabContextMenu")
+
+    def get_all_window_urls(self) -> set[str]:
+        """Get URLs from all open windows/tabs.
+        Iterates through all window handles and collects current URLs
+        """
+        urls = set()
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            for handle in self.driver.window_handles:
+                self.driver.switch_to.window(handle)
+                urls.add(self.driver.current_url)
+        return urls

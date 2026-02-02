@@ -292,7 +292,7 @@
         "groups": []
     },
     "reopen-all-closed-tabs-button": {
-        "selectorData": "toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']",
+        "selectorData": "toolbarbutton.restoreallitem[label='Reopen all tabs']",
         "strategy": "css",
         "groups": []
     }
