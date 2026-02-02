@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
-from modules.page_object_generics import GenericPage
 
 URLS = [
     "about:about",
@@ -29,23 +28,18 @@ def test_move_single_tab(driver: Firefox, move_option: str):
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
 
-    GenericPage(driver, url=URLS[0]).open()
-    first_title = driver.title
-
-    tabs.new_tab_by_button()
-    driver.switch_to.window(driver.window_handles[-1])
-    GenericPage(driver, url=URLS[1]).open()
-
-    tabs.new_tab_by_button()
-    driver.switch_to.window(driver.window_handles[-1])
-    GenericPage(driver, url=URLS[2]).open()
-    third_title = driver.title
+    # Open all URLs in tabs and collect titles
+    tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
+    titles = []
+    for handle in driver.window_handles:
+        driver.switch_to.window(handle)
+        titles.append(driver.title)
 
     if move_option == MOVE_TO_END:
         driver.switch_to.window(driver.window_handles[0])
-        expected_title = first_title
+        expected_title = titles[0]
     else:
-        expected_title = third_title
+        expected_title = titles[-1]
 
     tabs.context_click("selected-tab")
     context_menu.hover(MOVE_TAB_MENU)
