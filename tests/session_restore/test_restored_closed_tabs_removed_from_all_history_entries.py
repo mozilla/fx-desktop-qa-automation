@@ -54,7 +54,7 @@ def test_restored_closed_tabs_removed_from_all_history_entries(driver: Firefox):
     fx_view.wait_for_closed_tabs_with_urls(ALL_CLOSED_URLS)
 
     # Restore all closed tabs via Panel UI (must navigate away from Firefox View first)
-    tabs.open()
+    driver.get("about:blank")
     panel.clear_cache()
     panel.reopen_all_recently_closed_tabs()
     tabs.custom_wait(timeout=30).until(
