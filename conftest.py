@@ -537,6 +537,8 @@ def driver(
 
         yield driver
         if hard_quit:
+            if hasattr(driver, "service") and driver.service is not None:
+                driver.service.stop()
             return
 
     except (WebDriverException, TimeoutException) as e:
