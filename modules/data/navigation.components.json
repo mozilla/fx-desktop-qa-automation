@@ -120,8 +120,8 @@
         "groups": []
     },
     "downloads-button": {
-        "selectorData": "toolbarbutton[id='downloads-button']",
-        "strategy": "css",
+        "selectorData": "downloads-button",
+        "strategy": "id",
         "groups": [
             ""
         ]

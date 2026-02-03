@@ -37,6 +37,8 @@
   "telemetry-keyed-scalars-table-rows": {
     "selectorData": "#keyed-scalars-section-parent table tr",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   }
 }
