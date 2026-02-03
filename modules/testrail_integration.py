@@ -202,7 +202,8 @@ def _common_reportable_context(platform_to_test=None) -> dict:
         "plan_title": None,
         "expected_suites": [],
         "distributed_mappings": None,
-        "expected_mappings": None
+        "expected_mappings": None,
+        "mappings_per_site": None
     }
 
     # Determine platform
@@ -274,14 +275,50 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     # L10N mappings expectation
     if ctx["is_l10n"]:
         try:
-            ctx["distributed_mappings"] = select_l10n_mappings(ctx["beta_version"])
-            ctx["expected_mappings"] = sum(map(lambda x: len(x), ctx["distributed_mappings"].values()))
+            distributed_mappings = select_l10n_mappings(ctx["beta_version"])
+            ctx["distributed_mappings"] = distributed_mappings
+            ctx["mappings_per_site"] = {k: len(v) for k, v in distributed_mappings.items()}
+            ctx["expected_mappings"] = sum(map(lambda x: len(x), distributed_mappings.values()))
         except Exception as e:
             logging.warning(f"Could not compute l10n mappings: {e}")
             ctx["distributed_mappings"] = {}
+            ctx["mappings_per_site"] = {}
             ctx["expected_mappings"] = 0
 
     return ctx
+
+
+def preview_reportable(platform_to_test=None) -> dict:
+    """
+    Preview plan for dry-run.
+    Calls _common_reportable_context() and returns JSON structured data.
+    DOES NOT call TestRail.
+    """
+    ctx = _common_reportable_context(platform_to_test)
+
+    preview = {
+        "mode": "preview",
+        "platform": ctx["platform_name"],
+        "platform_system": ctx["platform_system"],
+        "split": ctx["split"],
+        "version": ctx["version"],
+        "channel": ctx["channel"],
+        "plan_title": ctx["plan_title"],
+        "testrail_report_requested": ctx["testrail_report_requested"],
+        "forced_reportable": ctx["forced_reportable"],
+        "is_l10n": ctx["is_l10n"],
+        "expected_suites": ctx["expected_suites"],
+        "expected_suites_count": len(ctx["expected_suites"]),
+        "expected_mappings": ctx["expected_mappings"],
+        "mappings_per_site": ctx["mappings_per_site"],
+        "reportable": None,
+        "note": "Preview only: reportable is unknown because TestRail is not queried.",
+    }
+
+    # print JSON
+    json.dumps(preview)
+
+    return preview
 
 
 def reportable(platform_to_test=None):
