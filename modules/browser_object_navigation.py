@@ -1440,3 +1440,10 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("download-target-element").click()
+
+    def open_download_panel(self):
+        """
+        Open the FxA account toolbar.
+        """
+        self.click_on("downloads-button")
+        return self

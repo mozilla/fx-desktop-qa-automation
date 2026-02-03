@@ -1364,6 +1364,13 @@ Description: Keyed scalars option
 Location: about:telemetry Sidebar option
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: telemetry-keyed-scalars-table-rows
+Selector Data: "#keyed-scalars-section-parent table tr"
+Description: Telemetry keyed scalars table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
