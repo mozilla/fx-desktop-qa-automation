@@ -1440,3 +1440,14 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("download-target-element").click()
+
+    @BasePage.context_chrome
+    def is_download_button_visible(self) -> bool:
+        """
+        Returns True if the Downloads button is visible, False otherwise.
+        """
+        try:
+            return self.get_element("downloads-button").is_displayed()
+        except Exception:
+            # Element not found or not accessible
+            return False

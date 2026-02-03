@@ -638,5 +638,10 @@
         "selectorData": "#downloadsPanel-blockedSubview-deleteButton[label='Remove file']",
         "strategy": "css",
         "groups": []
+    },
+    "download-completed": {
+        "selectorData": ".downloadDetails.downloadDetailsNormal[value^='Completed']",
+        "strategy": "css",
+        "groups": []
     }
 }

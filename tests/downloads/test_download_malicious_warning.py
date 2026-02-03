@@ -50,6 +50,7 @@ def test_download_malicious_warning(driver: Firefox):
     nav.click_on("remove-download")
 
     # check the file is deleted from the Panel
+    # assert nav.is_download_button_visible()
 
     # Set browser.download.alwaysOpenPanel to False and repeat step 2
 
