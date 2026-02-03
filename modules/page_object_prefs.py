@@ -248,6 +248,26 @@ class AboutPrefs(BasePage):
         menulist_popup.select_by_value(option)
         return self
 
+    def set_ai_blocking(self, block: bool) -> BasePage:
+        """
+        Set the global AI blocking (killswitch) toggle in AI Controls.
+
+        Arguments:
+            block: True to block AI enhancements, False to allow them.
+        """
+        # Ensure the AI Controls pane is visible
+        try:
+            # Use the find-in-settings box to reveal the control if needed
+            self.find_in_settings("AI")
+        except Exception:
+            pass
+
+        toggle = self.get_element("ai-controls-toggle")
+        checked = toggle.get_attribute("checked") in ("true", "checked", "")
+        if block != checked:
+            toggle.click()
+        return self
+
     # Payment and Address Management
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
