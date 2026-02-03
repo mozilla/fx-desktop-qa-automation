@@ -62,3 +62,8 @@ class FirefoxView(BasePage):
             lambda _: expected_urls.issubset(set(self.get_closed_tab_urls()))
         )
         return self
+
+    def wait_for_no_closed_tabs(self) -> BasePage:
+        """Wait until the Recently Closed section has no tab entries."""
+        self.wait.until(lambda _: len(self.get_closed_tab_urls()) == 0)
+        return self

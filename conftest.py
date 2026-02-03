@@ -536,13 +536,17 @@ def driver(
         json_metadata["test_case"] = test_case
 
         yield driver
+        if hard_quit:
+            if hasattr(driver, "service") and driver.service is not None:
+                driver.service.stop()
+            return
 
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
         raise
 
     finally:
-        if not hard_quit and ("driver" in locals() or "driver" in globals()) and driver:
+        if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 

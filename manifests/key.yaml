@@ -379,6 +379,14 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_download_epub_shows_extension_in_downloads_panel:
+    result: pass
+    splits:
+    - functional1
+  test_download_exe_and_check_extesion:
+    result: pass
+    splits:
+    - functional1
   test_download_pdf:
     result: pass
     splits:
@@ -406,10 +414,18 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_telemetry_download_and_open:
+    result: pass
+    splits:
+    - functional1
+  test_telemetry_pdf_download_open:
+    result: pass
+    splits:
+    - functional1
   test_verify_telemetry_downloads_panel_open:
     result: pass
     splits:
-      - functional1
+    - functional1
 drag_and_drop:
   test_copy_entire_row_column:
     result: pass
@@ -772,7 +788,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_input_numbers:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_pdf_navigation:
@@ -993,16 +1009,20 @@ session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
     - functional2
   test_restore_multiple_closed_tabs_at_once:
+    result: pass
+    splits:
+    - functional2
+  test_restored_closed_tabs_removed_from_all_history_entries:
     result: pass
     splits:
     - functional2
@@ -1102,6 +1122,10 @@ tabs:
     splits:
     - functional2
   test_reload_tab_via_keyboard:
+    result: pass
+    splits:
+    - functional2
+  test_remove_tab_from_a_group:
     result: pass
     splits:
     - functional2

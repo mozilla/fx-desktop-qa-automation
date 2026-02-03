@@ -302,6 +302,7 @@ class Navigation(BasePage):
         actions.context_click(self.awesome_bar).perform()
         return self
 
+    @BasePage.context_chrome
     def get_download_button(self) -> WebElement:
         """
         Gets the download button WebElement
@@ -309,7 +310,6 @@ class Navigation(BasePage):
         downloads_button = self.get_element("downloads-button")
         return downloads_button
 
-    @BasePage.context_chrome
     def click_download_button(self) -> BasePage:
         self.get_download_button().click()
         return self
@@ -1429,9 +1429,14 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def open_downloads(self):
+    def open_downloaded_file(self) -> None:
         """
-        Open the FxA account toolbar.
+        Opens the most recently downloaded file from the Downloads panel.
         """
-        self.click_on("downloads-button")
-        return self
+        # Wait until the element is visible and clickable
+        self.expect(
+            lambda _: self.get_element("download-target-element").is_displayed()
+        )
+
+        # Click the button
+        self.get_element("download-target-element").click()
