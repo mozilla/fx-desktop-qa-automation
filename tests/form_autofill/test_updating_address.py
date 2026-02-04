@@ -12,11 +12,6 @@ def test_case():
     return "122354"
 
 
-@pytest.fixture()
-def hard_quit():
-    return True
-
-
 def test_update_address(
     driver: Firefox,
     about_prefs_privacy: AboutPrefs,
