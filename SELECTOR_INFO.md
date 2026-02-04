@@ -1357,6 +1357,20 @@ Description: Telemetry scalars table rows
 Location: about:telemetry events or scalars table rows info
 Path to .json: modules/data/about_telemetry.components.json
 ```
+```
+Selector Name: keyed-scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']"
+Description: Keyed scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-keyed-scalars-table-rows
+Selector Data: "#keyed-scalars-section-parent table tr"
+Description: Telemetry keyed scalars table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
 #### address_fill
 ```
 Selector Name: form-field
@@ -3175,6 +3189,13 @@ Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: other-bookmarks-toolbar
+Selector Data: OtherBookmarks
+Description: Other bookmarks folder
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: toolbar-history-recently-closed-tabs
 Selector Data: //*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Recently closed tabs button in the Library History view
@@ -3186,13 +3207,6 @@ Selector name: library-recently-closed-tabs-items
 Selector Data: //*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Individual closed tab items in the Library History Recently Closed Tabs panel
 Location: Library > History > Recently Closed Tabs
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: other-bookmarks-toolbar
-Selector Data: OtherBookmarks
-Description: Other bookmarks folder
-Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -3514,6 +3528,13 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: download-deleted-message
 Selector Data: ".downloadDetails.downloadDetailsNormal[value='File deleted']"
 Description: "File Deleted" status for a deleted download
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: xpi-download-target-element
+Selector Data: ".downloadTarget[value='tomato_clock-6.0.2.xpi']"
+Description: xpi addon download panel
 Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
@@ -3953,17 +3974,17 @@ Location: In page, when in Reader View mode.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```
-Selector name: reader-close-button
-Selector Data: "button[class='close-button toolbar-button']"
-Description: The Reader View toolbar close [X] button
-Location: In page, when in Reader View mode.
-Path to .json: modules/data/reader_view.components.json
-```
-```
 Selector name: toolbar-font-selector
 Selector Data: "font-type-selector"
 Description: The Font options dropdown
 Location: In the Reader View Toolbar Text options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-close-button
+Selector Data: "button[class='close-button toolbar-button']"
+Description: The Reader View toolbar close [X] button
+Location: In page, when in Reader View mode.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```

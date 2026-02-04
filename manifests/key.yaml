@@ -376,7 +376,7 @@ downloads:
     splits:
     - functional1
   test_delete_download_while_in_progress:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_download_apk_and_check_extension:
@@ -384,6 +384,14 @@ downloads:
     splits:
     - functional1
   test_download_epub_shows_extension_in_downloads_panel:
+    result: pass
+    splits:
+    - functional1
+  test_download_exe_and_check_extesion:
+    result: pass
+    splits:
+    - functional1
+  test_download_mp3_and_check_extension:
     result: pass
     splits:
     - functional1
@@ -396,6 +404,10 @@ downloads:
     splits:
     - functional1
   test_download_telemetry_recorded:
+    result: pass
+    splits:
+    - functional1
+  test_install_unsigned_addons:
     result: pass
     splits:
     - functional1
@@ -419,6 +431,10 @@ downloads:
     splits:
     - functional1
   test_telemetry_pdf_download_open:
+    result: pass
+    splits:
+    - functional1
+  test_verify_telemetry_downloads_panel_open:
     result: pass
     splits:
     - functional1
@@ -784,7 +800,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_input_numbers:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_pdf_navigation:
@@ -1015,6 +1031,10 @@ session_restore:
     splits:
     - functional2
   test_restore_multiple_closed_tabs_at_once:
+    result: pass
+    splits:
+    - functional2
+  test_restored_closed_tabs_removed_from_all_history_entries:
     result: pass
     splits:
     - functional2

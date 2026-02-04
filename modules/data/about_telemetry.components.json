@@ -28,5 +28,17 @@
     "selectorData": "#scalars-section-parent table tr",
     "strategy": "css",
     "groups": []
+  },
+  "keyed-scalars-tab": {
+    "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']",
+    "strategy": "css",
+    "groups": []
+  },
+  "telemetry-keyed-scalars-table-rows": {
+    "selectorData": "#keyed-scalars-section-parent table tr",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
   }
 }
