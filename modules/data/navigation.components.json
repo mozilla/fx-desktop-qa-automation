@@ -618,5 +618,10 @@
           "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
           "strategy": "css",
           "groups": []
+    },
+    "xpi-download-target-element": {
+        "selectorData": ".downloadTarget[value='tomato_clock-6.0.2.xpi']",
+        "strategy": "css",
+        "groups": []
     }
 }

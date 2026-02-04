@@ -129,5 +129,10 @@
         "selectorData": "span.goog-menuitem-label[aria-label^='PDF Document']",
         "strategy": "css",
         "groups": []
+    },
+    "gdoc-download-addon": {
+        "selectorData": "div[aria-label='Download']",
+        "strategy": "css",
+        "groups": []
     }
 }
