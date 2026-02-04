@@ -648,5 +648,10 @@
         "selectorData": ".downloadDetails.downloadDetailsNormal[value^='Completed']",
         "strategy": "css",
         "groups": []
+    },
+     "download-button-warning": {
+        "selectorData": "#download-button label.toolbarbutton-badge",
+        "strategy": "css",
+        "groups": []
     }
 }
