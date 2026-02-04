@@ -3904,6 +3904,13 @@ Location: In the Reader View Toolbar Text options dialog.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```
+Selector name: reader-close-button
+Selector Data: "button[class='close-button toolbar-button']"
+Description: The Reader View toolbar close [X] button
+Location: In page, when in Reader View mode.
+Path to .json: modules/data/reader_view.components.json
+```
+```
 Selector name: reader-toolbar-panel-serif
 Selector Data: "serif-button"
 Description: The Serif text option
