@@ -1440,3 +1440,11 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("download-target-element").click()
+
+    @BasePage.context_chrome
+    def open_download_panel(self):
+        """
+        Open the download panel.
+        """
+        self.click_on("downloads-button")
+        return self
