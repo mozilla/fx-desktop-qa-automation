@@ -151,6 +151,7 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
+          pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
           pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -262,6 +263,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
