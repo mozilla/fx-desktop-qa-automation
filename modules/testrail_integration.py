@@ -1,17 +1,16 @@
+import json
 import logging
 import os
+import platform as _platform
 import re
 import subprocess
 import sys
-import json
 
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
 from scripts.choose_l10n_ci_set import select_l10n_mappings
-import platform as _platform
-
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
 FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
@@ -192,8 +191,8 @@ def _common_reportable_context(platform_to_test=None) -> dict:
         "forced_reportable": bool(os.environ.get("REPORTABLE")),
         "split": os.environ.get("STARFOX_SPLIT"),
         "is_l10n": bool(os.environ.get("FX_L10N")),
-        "platform_system": None,   # "Darwin", etc
-        "platform_name": None,     # "MacOS", etc
+        "platform_system": None,  # "Darwin", etc
+        "platform_name": None,  # "MacOS", etc
         "version": "",
         "major_number": None,
         "minor_num": None,
@@ -203,7 +202,6 @@ def _common_reportable_context(platform_to_test=None) -> dict:
         "expected_suites": [],
         "distributed_mappings": None,
         "expected_mappings": None,
-        "mappings_per_site": None
     }
 
     # Determine platform
@@ -217,7 +215,9 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     # Get version
     try:
         ctx["version"] = (
-            subprocess.check_output([sys.executable, "./scripts/collect_executables.py", "-n"])
+            subprocess.check_output(
+                [sys.executable, "./scripts/collect_executables.py", "-n"]
+            )
             .strip()
             .decode()
         )
@@ -266,7 +266,9 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     # Expected suites
     try:
         manifest = TestKey(TEST_KEY_LOCATION)
-        expected_suites = manifest.get_valid_suites_in_split(ctx["split"], suite_numbers=True)
+        expected_suites = manifest.get_valid_suites_in_split(
+            ctx["split"], suite_numbers=True
+        )
         ctx["expected_suites"] = expected_suites
     except Exception as e:
         logging.warning(f"Could not compute expected suites: {e}")
@@ -277,12 +279,12 @@ def _common_reportable_context(platform_to_test=None) -> dict:
         try:
             distributed_mappings = select_l10n_mappings(ctx["beta_version"])
             ctx["distributed_mappings"] = distributed_mappings
-            ctx["mappings_per_site"] = {k: len(v) for k, v in distributed_mappings.items()}
-            ctx["expected_mappings"] = sum(map(lambda x: len(x), distributed_mappings.values()))
+            ctx["expected_mappings"] = sum(
+                map(lambda x: len(x), distributed_mappings.values())
+            )
         except Exception as e:
             logging.warning(f"Could not compute l10n mappings: {e}")
             ctx["distributed_mappings"] = {}
-            ctx["mappings_per_site"] = {}
             ctx["expected_mappings"] = 0
 
     return ctx
@@ -310,7 +312,6 @@ def preview_reportable(platform_to_test=None) -> dict:
         "expected_suites": ctx["expected_suites"],
         "expected_suites_count": len(ctx["expected_suites"]),
         "expected_mappings": ctx["expected_mappings"],
-        "mappings_per_site": ctx["mappings_per_site"],
         "reportable": None,
         "note": "Preview only: reportable is unknown because TestRail is not queried.",
     }
@@ -348,7 +349,9 @@ def reportable(platform_to_test=None):
     major_version = f"Firefox {ctx['major_number']}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
     if not major_milestone:
-        logging.warning(f"Not reporting: Could not find matching milestone: {major_version}")
+        logging.warning(
+            f"Not reporting: Could not find matching milestone: {major_version}"
+        )
         return False
 
     channel = ctx["channel"] or "Beta"
@@ -361,7 +364,7 @@ def reportable(platform_to_test=None):
         )
     if not channel_milestone:
         logging.warning(
-            f"Not reporting: Could not find matching submilestone for {channel} {ctx['major_number']}"
+            f"Not reporting: Could not find matching sub-milestone for {channel} {ctx['major_number']}"
         )
         return False
 
@@ -417,6 +420,8 @@ def reportable(platform_to_test=None):
             f"Potentially matching run found for {platform_name}, may be reportable. "
             f"(Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
         )
+        # Only report when there is a new beta without a reported plan or
+        # if the selected split is not completely reported.
         return covered_mappings < expected_mappings
 
     # STARfox logic

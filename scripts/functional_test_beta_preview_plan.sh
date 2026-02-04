@@ -7,11 +7,13 @@
 #   MAC_REPORTABLE
 #   PREVIEW_JSON
 
+# Logs
 echo "DRY_RUN=${DRY_RUN}"
 echo "Split=${SPLIT}"
 echo "Windows reportable=${WIN_REPORTABLE}"
 echo "macOS reportable=${MAC_REPORTABLE}"
 
+# Job Summary
 {
   echo "## Functional plan"
   echo ""

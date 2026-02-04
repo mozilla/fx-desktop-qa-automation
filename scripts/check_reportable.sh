@@ -8,8 +8,8 @@
 pip3 install 'pipenv==2023.11.15'
 pipenv install
 
-if [ "${DRY_RUN:-false}" = "true" ]; then
-  echo "Dry run enabled: using preview_reportable() (no TestRail calls)"
+if [ "${DRY_RUN}" = "true" ]; then
+  echo "Dry run enabled: generating preview plan - using preview_reportable() (no TestRail calls)"
 
   PREVIEW_JSON=$(pipenv run python - <<'PY'
   import json

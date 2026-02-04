@@ -71,8 +71,11 @@ jobs:
     needs:
       - Check-Beta-Version
       - Get-Functional-Split
-      - Preview-Plan
-    if: ${{ env.DRY_RUN != 'true' && needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
+    if: |
+      ${{
+        needs.Check-Beta-Version.outputs.win_reportable == 'True' &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
@@ -83,8 +86,11 @@ jobs:
     needs:
       - Check-Beta-Version
       - Get-Functional-Split
-      - Preview-Plan
-    if: ${{ env.DRY_RUN != 'true' && needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
+    if: |
+      ${{
+        needs.Check-Beta-Version.outputs.mac_reportable == 'True' &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS
