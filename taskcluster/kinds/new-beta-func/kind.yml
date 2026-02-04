@@ -45,6 +45,7 @@ tasks:
         $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
         pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE tests/meta/test_version.py;
         pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;

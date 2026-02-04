@@ -310,6 +310,7 @@ class Navigation(BasePage):
         downloads_button = self.get_element("downloads-button")
         return downloads_button
 
+    @BasePage.context_chrome
     def click_download_button(self) -> BasePage:
         self.get_download_button().click()
         return self
@@ -1408,6 +1409,7 @@ class Navigation(BasePage):
         match = self._TARGET_URI_RE.search(html)
         return match.group(1) if match else None
 
+    @BasePage.context_chrome
     def perform_download_context_action(self, action_name: str) -> BasePage:
         """
         From the downloads panel, right-click the latest download and perform a context menu action.
@@ -1440,3 +1442,11 @@ class Navigation(BasePage):
 
         # Click the button
         self.get_element("download-target-element").click()
+
+    @BasePage.context_chrome
+    def open_download_panel(self):
+        """
+        Open the download panel.
+        """
+        self.click_on("downloads-button")
+        return self
