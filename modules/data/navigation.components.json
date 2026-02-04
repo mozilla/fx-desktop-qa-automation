@@ -619,6 +619,11 @@
           "strategy": "css",
           "groups": []
     },
+    "xpi-download-target-element": {
+        "selectorData": ".downloadTarget[value='tomato_clock-6.0.2.xpi']",
+        "strategy": "css",
+        "groups": []
+    },
     "download-malicious-message": {
         "selectorData": ".downloadDetails.downloadDetailsNormal[value='This file contains a virus or malware.']",
         "strategy": "css",
