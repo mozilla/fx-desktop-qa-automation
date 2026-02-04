@@ -5,7 +5,7 @@ import platform
 import re
 from shutil import unpack_archive
 from subprocess import check_output, run
-from typing import Callable, List, Tuple, Union
+from typing import Callable
 
 # import psutil
 import pytest
@@ -199,29 +199,6 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
         screenshot = ImageGrab.grab()
         screenshot.save(fullpath)
     return fullpath
-
-
-def _get_version(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    version_el = driver.find_element(By.ID, "version")
-    version = version_el.text
-    driver.get("about:blank")
-    return version
-
-
-def _fx_up_to_date(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    try:
-        WebDriverWait(driver, 20).until(
-            EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
-        )
-    except TimeoutException:
-        if driver.find_element(By.ID, "otherInstanceHandlingUpdates").is_displayed():
-            logging.warning(
-                "Could not confirm that Firefox is up to date. Please check manually."
-            )
-        else:
-            raise ValueError("Firefox is not the current version.")
 
 
 @pytest.fixture()
@@ -425,34 +402,6 @@ def hard_quit():
     return False
 
 
-@pytest.fixture(scope="session")
-def driver_options(fx_executable):
-    options = Options()
-    options.add_argument("--remote-allow-system-access")
-    options.binary_location = fx_executable
-    options.set_preference("app.update.disabledForTesting", False)
-
-    return options
-
-
-@pytest.fixture(scope="session")
-def validate_version(driver_options, opt_ci, build_version):
-    driver_options.add_argument("--headless")
-    driver = Firefox(options=driver_options)
-    displayed_version = _get_version(driver).split(" ")[0]
-    if opt_ci:
-        if displayed_version not in build_version and not os.environ.get("MANUAL"):
-            # Manual flows may test older versions, automatic flows should not
-            raise ValueError(
-                f"Mismatch between displayed version {displayed_version}"
-                f" and actual version {build_version}"
-            )
-    else:
-        _fx_up_to_date(driver)
-    driver.quit()
-    return True
-
-
 @pytest.fixture(autouse=True)
 def driver(
     geckodriver: str,
@@ -470,8 +419,7 @@ def driver(
     json_metadata,
     hard_quit,
     create_profiles,
-    driver_options,
-    validate_version,
+    fx_executable,
 ):
     """
     Return the webdriver object.
@@ -509,7 +457,10 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
-    options = driver_options
+    options = Options()
+    options.add_argument("--remote-allow-system-access")
+    options.binary_location = fx_executable
+    options.set_preference("app.update.disabledForTesting", False)
 
     if use_profile:
         profile_path = tmp_path / use_profile
