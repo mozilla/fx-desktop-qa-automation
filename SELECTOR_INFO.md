@@ -3461,6 +3461,13 @@ Description: "File Deleted" status for a deleted download
 Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: xpi-download-target-element
+Selector Data: ".downloadTarget[value='tomato_clock-6.0.2.xpi']"
+Description: xpi addon download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

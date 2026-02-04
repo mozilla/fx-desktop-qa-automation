@@ -391,6 +391,10 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_install_unsigned_addons:
+    result: pass
+    splits:
+    - functional1
   test_mixed_content_download_via_https:
     result:
       linux: pass
