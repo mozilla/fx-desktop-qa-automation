@@ -195,7 +195,7 @@ def _common_reportable_context(platform_to_test=None) -> dict:
         "platform_name": None,  # "MacOS", etc
         "version": "",
         "major_number": None,
-        "minor_num": None,
+        "minor_number": None,
         "beta_version": 0,
         "channel": None,
         "plan_title": None,
@@ -231,14 +231,14 @@ def _common_reportable_context(platform_to_test=None) -> dict:
         ctx["major_number"] = major_number
 
         if "-" in second_half:
-            minor_num, _ = second_half.split("-")
+            minor_number, _ = second_half.split("-")
         else:
-            minor_num = second_half
+            minor_number = second_half
 
-        ctx["minor_num"] = minor_num
+        ctx["minor_number"] = minor_number
 
-        if "b" in minor_num:
-            ctx["beta_version"] = int(minor_num.split("b")[-1])
+        if "b" in minor_number:
+            ctx["beta_version"] = int(minor_number.split("b")[-1])
         else:
             ctx["beta_version"] = 0
     except Exception:
@@ -249,7 +249,7 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     channel = os.environ.get("FX_CHANNEL") or "beta"
     channel = channel.title()
     if not channel:
-        if ctx["minor_num"] and "b" in ctx["minor_num"]:
+        if ctx["minor_number"] and "b" in ctx["minor_number"]:
             channel = "Beta"
         else:
             channel = "Release"
