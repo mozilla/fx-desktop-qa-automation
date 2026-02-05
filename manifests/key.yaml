@@ -387,6 +387,10 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_download_malicious_warning:
+    result: pass
+    splits:
+    - functional1
   test_download_mp3_and_check_extension:
     result: pass
     splits:
