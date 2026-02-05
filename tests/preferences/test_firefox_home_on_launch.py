@@ -2,9 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.browser_object import PanelUi, TabBar
-from modules.components.dropdown import Dropdown
-from modules.page_object import AboutNewtab, AboutPrefs
+from modules.page_object import AboutNewtab
 
 
 @pytest.fixture()
@@ -19,17 +17,6 @@ def add_to_prefs_list():
         ("browser.startup.homepage", "about:home"),
         ("browser.startup.blankWindow", "false"),
     ]
-
-
-@pytest.fixture()
-def about_prefs_category():
-    return "home"
-
-
-@pytest.fixture()
-def drop_down_root(about_prefs: AboutPrefs):
-    about_prefs.open()
-    return about_prefs.get_element("home-new-window-dropdown")
 
 
 def test_firefox_home_on_launch(

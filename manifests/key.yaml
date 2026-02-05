@@ -809,11 +809,11 @@ preferences:
     splits:
     - smoke
   test_firefox_home_new_tabs:
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_firefox_home_on_launch:
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_lang_pack_changed_from_about_prefs:
