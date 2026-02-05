@@ -3468,6 +3468,41 @@ Description: xpi addon download panel
 Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: download-malicious-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='This file contains a virus or malware.']"
+Description: A message when downloading a malicious file
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-details-button
+Selector Data: ".downloadButton.downloadIconSubviewArrow[aria-label='Open or Remove File']"
+Description: Download panel more Details button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: remove-download
+Selector Data: "#downloadsPanel-blockedSubview-deleteButton[label='Remove file']"
+Description: Download detils remove button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: allow-download
+Selector Data: "#downloadsPanel-blockedSubview-unblockButton[label='Allow download']"
+Description: Download detils allow button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-button-warning
+Selector Data: "#downloads-button[attention='severe']"
+Description: Download button warning dot
+Location: Download button
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

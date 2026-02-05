@@ -51,7 +51,7 @@ class AboutConfig(BasePage):
         toggle_tf_button.click()
         return self
 
-    def change_config_value(self, term: str, value) -> BasePage:
+    def edit_config_value(self, term: str, value) -> BasePage:
         """
         Main method to change a config's value in about:config
         Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
@@ -62,6 +62,17 @@ class AboutConfig(BasePage):
         pref_edit_button.click()
         pref_edit = self.get_element("value-edit-field")
         pref_edit.send_keys(value)
+        pref_edit_button.click()
+        return self
+
+    def toggle_config_value(self, term: str, value) -> BasePage:
+        """
+        Main method to toggle a config's value in about:config
+        Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py or use add_to_prefs_list fixture in the test itself
+        """
+        self.search_pref(term)
+        pref_edit_button = self.get_element("value-edit-button")
         pref_edit_button.click()
         return self
 
