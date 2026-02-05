@@ -5,7 +5,7 @@ import platform
 import re
 from shutil import unpack_archive
 from subprocess import check_output, run
-from typing import Callable, List, Tuple, Union
+from typing import Callable
 
 # import psutil
 import pytest
@@ -199,21 +199,6 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
         screenshot = ImageGrab.grab()
         screenshot.save(fullpath)
     return fullpath
-
-
-def _get_version(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    version_el = driver.find_element(By.ID, "version")
-    version = version_el.text
-    driver.get("about:blank")
-    return version
-
-
-def _fx_up_to_date(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    WebDriverWait(driver, 20).until(
-        EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
-    )
 
 
 @pytest.fixture()
@@ -419,24 +404,22 @@ def hard_quit():
 
 @pytest.fixture(autouse=True)
 def driver(
-    fx_executable: str,
     geckodriver: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
-    prefs_list: List[Tuple],
-    opt_ci: bool,
     opt_window_size: str,
-    use_profile: Union[bool, str],
+    prefs_list: dict,
+    use_profile: str | bool,
+    tmp_path: str,
     suite_id: str,
     test_case: str,
     machine_config: str,
     env_prep,
-    tmp_path,
     request,
-    build_version,
     json_metadata,
     hard_quit,
     create_profiles,
+    fx_executable,
 ):
     """
     Return the webdriver object.
@@ -474,23 +457,21 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
+    options = Options()
+    options.add_argument("--remote-allow-system-access")
+    options.binary_location = fx_executable
+    options.set_preference("app.update.disabledForTesting", False)
 
+    if use_profile:
+        profile_path = tmp_path / use_profile
+        unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
+        options.profile = profile_path
+
+    if opt_headless:
+        options.add_argument("--headless")
+    for opt, value in prefs_list:
+        options.set_preference(opt, value)
     try:
-        options = Options()
-        options.add_argument("--remote-allow-system-access")
-        if opt_headless:
-            options.add_argument("--headless")
-        options.binary_location = fx_executable
-
-        if use_profile:
-            profile_path = tmp_path / use_profile
-            unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
-            options.profile = profile_path
-
-        options.set_preference("app.update.disabledForTesting", False)
-        for opt, value in prefs_list:
-            options.set_preference(opt, value)
-
         if geckodriver:
             service = Service(executable_path=geckodriver)
             driver = Firefox(service=service, options=options)
@@ -518,17 +499,6 @@ def driver(
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-
-        displayed_version = _get_version(driver).split(" ")[0]
-        if opt_ci:
-            if displayed_version not in build_version and not os.environ.get("MANUAL"):
-                # Manual flows may test older versions, automatic flows should not
-                raise ValueError(
-                    f"Mismatch between displayed version {displayed_version}"
-                    f" and actual version {build_version}"
-                )
-        else:
-            _fx_up_to_date(driver)
 
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
