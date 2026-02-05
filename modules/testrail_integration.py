@@ -13,7 +13,6 @@ from modules.testrail import TestRail
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 
-
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
 FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
 FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
