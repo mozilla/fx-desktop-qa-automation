@@ -10,7 +10,7 @@ TEST_URL = "http://testsafebrowsing.appspot.com/"
 
 @pytest.fixture()
 def test_case():
-    return "1756779"
+    return "1756697"
 
 
 @pytest.fixture()
