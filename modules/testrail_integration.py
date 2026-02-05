@@ -11,6 +11,8 @@ from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
 from scripts.choose_l10n_ci_set import select_l10n_mappings
+from scripts.collect_executables import get_fx_version
+
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
 FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
@@ -214,13 +216,7 @@ def _common_reportable_context(platform_to_test=None) -> dict:
 
     # Get version
     try:
-        ctx["version"] = (
-            subprocess.check_output(
-                [sys.executable, "./scripts/collect_executables.py", "-n"]
-            )
-            .strip()
-            .decode()
-        )
+        ctx["version"] = get_fx_version().strip()
     except Exception as e:
         logging.warning(f"Could not determine version: {e}")
         ctx["version"] = ""
