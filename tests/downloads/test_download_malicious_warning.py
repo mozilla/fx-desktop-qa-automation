@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -20,7 +18,7 @@ def add_to_prefs_list():
     return [
         ("browser.safebrowsing.malware.enabled", True),
         ("browser.safebrowsing.downloads.enabled", True),
-        ("browser.aboutConfig.showWarning", False)
+        ("browser.aboutConfig.showWarning", False),
     ]
 
 
@@ -62,5 +60,4 @@ def test_download_malicious_warning(driver: Firefox):
     # Check the Download Panel is not opened and the red warning is displayed on toolbar Downloads icon
     page.open()
     page.click_on("download-malicious-warning")
-    sleep(2)
-    assert nav.is_download_warning_button_visible()
+    nav.element_visible("download-button-warning")

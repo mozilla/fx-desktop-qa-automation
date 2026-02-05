@@ -1461,14 +1461,3 @@ class Navigation(BasePage):
         except Exception:
             # Element not found or not accessible
             return False
-
-    @BasePage.context_chrome
-    def is_download_warning_button_visible(self) -> bool:
-        """
-        Returns True if the Downloads button is visible, False otherwise.
-        """
-        try:
-            return self.get_element("download-button-warning").is_displayed()
-        except Exception:
-            # Element not found or not accessible
-            return False

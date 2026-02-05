@@ -644,13 +644,8 @@
         "strategy": "css",
         "groups": []
     },
-    "download-completed": {
-        "selectorData": ".downloadDetails.downloadDetailsNormal[value^='Completed']",
-        "strategy": "css",
-        "groups": []
-    },
      "download-button-warning": {
-        "selectorData": "#download-button label.toolbarbutton-badge",
+        "selectorData": "#downloads-button[attention='severe']",
         "strategy": "css",
         "groups": []
     }
