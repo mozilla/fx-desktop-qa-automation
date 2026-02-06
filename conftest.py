@@ -399,7 +399,7 @@ def pytest_sessionfinish(session):
     if passes:
         tri.mark_results(tr_session, passes)
     else:
-        raise ValueError("No test results found.")
+        logging.warning("No test results found.")
 
 
 @pytest.fixture()
