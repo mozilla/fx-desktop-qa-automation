@@ -864,7 +864,7 @@ def collect_changes(testrail_session: TestRail, report):
         last_description = suite_description
 
     # We do need to run this again because we will always have one last suite.
-    cases_in_suite = list(results_by_suite[last_suite_id].keys())
+    cases_in_suite = list(results_by_suite.get(last_suite_id, {}).keys())
     suite_info = {
         "id": last_suite_id,
         "description": last_description,
