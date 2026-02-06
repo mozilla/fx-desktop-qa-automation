@@ -689,7 +689,7 @@ def collect_changes(testrail_session: TestRail, report):
             break
 
     if not metadata:
-        logging.error("No metadata collected. Exiting without report.")
+        logging.warning("No metadata collected. Exiting without report.")
         return False
 
     version_str = metadata.get("fx_version")
