@@ -507,7 +507,7 @@ def driver(
 
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
-        json_metadata["suite_id"] = suite_id
+        json_metadata["suite_id"] = list(suite_id)
         json_metadata["test_case"] = test_case
 
         yield driver
