@@ -409,22 +409,23 @@ def hard_quit():
 
 @pytest.fixture(autouse=True)
 def driver(
+    build_version,
+    create_profiles,
+    env_prep,
+    fx_executable,
     geckodriver: str,
+    hard_quit,
+    json_metadata,
+    machine_config: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
     opt_window_size: str,
     prefs_list: dict,
-    use_profile: str | bool,
-    tmp_path: str,
+    request,
     suite_id: str,
     test_case: str,
-    machine_config: str,
-    env_prep,
-    request,
-    json_metadata,
-    hard_quit,
-    create_profiles,
-    fx_executable,
+    tmp_path: str,
+    use_profile: str | bool,
 ):
     """
     Return the webdriver object.
