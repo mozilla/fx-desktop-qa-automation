@@ -361,6 +361,8 @@ def pytest_sessionfinish(session):
                     proc.kill()
             except (ProcessLookupError, psutil.NoSuchProcess):
                 logging.warning("Failed to kill process.")
+                if psutil.pid_exists(proc.pid):
+                    logging.warning(f"And process {proc.pid} is still alive.")
                 pass
 
     # TestRail reporting
@@ -394,7 +396,10 @@ def pytest_sessionfinish(session):
 
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)
-    tri.mark_results(tr_session, passes)
+    if passes:
+        tri.mark_results(tr_session, passes)
+    else:
+        logging.warning("No test results found.")
 
 
 @pytest.fixture()
@@ -404,22 +409,23 @@ def hard_quit():
 
 @pytest.fixture(autouse=True)
 def driver(
+    build_version,
+    create_profiles,
+    env_prep,
+    fx_executable,
     geckodriver: str,
+    hard_quit,
+    json_metadata,
+    machine_config: str,
     opt_headless: bool,
     opt_implicit_timeout: int,
     opt_window_size: str,
     prefs_list: dict,
-    use_profile: str | bool,
-    tmp_path: str,
+    request,
     suite_id: str,
     test_case: str,
-    machine_config: str,
-    env_prep,
-    request,
-    json_metadata,
-    hard_quit,
-    create_profiles,
-    fx_executable,
+    tmp_path: str,
+    use_profile: str | bool,
 ):
     """
     Return the webdriver object.
@@ -502,7 +508,7 @@ def driver(
 
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
-        json_metadata["suite_id"] = suite_id
+        json_metadata["suite_id"] = list(suite_id)
         json_metadata["test_case"] = test_case
 
         yield driver
