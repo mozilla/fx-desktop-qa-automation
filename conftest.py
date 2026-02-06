@@ -361,6 +361,8 @@ def pytest_sessionfinish(session):
                     proc.kill()
             except (ProcessLookupError, psutil.NoSuchProcess):
                 logging.warning("Failed to kill process.")
+                if proc.pid_exists():
+                    logging.warning(f"And process {proc.pid} is still alive.")
                 pass
 
     # TestRail reporting
@@ -394,7 +396,10 @@ def pytest_sessionfinish(session):
 
     tr_session = tri.testrail_init()
     passes = tri.collect_changes(tr_session, report)
-    tri.mark_results(tr_session, passes)
+    if passes:
+        tri.mark_results(tr_session, passes)
+    else:
+        raise ValueError("No test results found.")
 
 
 @pytest.fixture()
