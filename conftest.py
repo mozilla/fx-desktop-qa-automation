@@ -361,7 +361,7 @@ def pytest_sessionfinish(session):
                     proc.kill()
             except (ProcessLookupError, psutil.NoSuchProcess):
                 logging.warning("Failed to kill process.")
-                if proc.pid_exists():
+                if psutil.pid_exists(proc.pid):
                     logging.warning(f"And process {proc.pid} is still alive.")
                 pass
 

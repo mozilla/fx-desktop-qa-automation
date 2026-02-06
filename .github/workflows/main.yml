@@ -147,6 +147,7 @@ jobs:
           }}
         env:
           TESTRAIL_REPORT: false
+          REPORTABLE: true
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -274,6 +275,7 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           TESTRAIL_REPORT: false
+          REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
