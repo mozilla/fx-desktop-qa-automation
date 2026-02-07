@@ -25,7 +25,6 @@ jobs:
       win_reportable: ${{ steps.reportable.outputs.win }}
       mac_reportable: ${{ steps.reportable.outputs.mac }}
       preview_json: ${{ steps.reportable.outputs.preview_json }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
