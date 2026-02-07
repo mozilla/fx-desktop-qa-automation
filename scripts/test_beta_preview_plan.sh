@@ -15,7 +15,7 @@ echo "macOS reportable=${MAC_REPORTABLE}"
 
 # Job Summary
 {
-  echo "## Functional plan"
+  echo "## Plan"
   echo ""
   echo "DRY_RUN: ${DRY_RUN}"
   echo "Split: ${SPLIT}"

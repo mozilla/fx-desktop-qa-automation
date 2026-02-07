@@ -65,7 +65,7 @@ jobs:
           MAC_REPORTABLE: ${{ needs.Check-Beta-Version.outputs.mac_reportable }}
           PREVIEW_JSON: ${{ needs.Check-Beta-Version.outputs.preview_json }}
         run:
-          bash ./scripts/functional_test_beta_preview_plan.sh
+          bash ./scripts/test_beta_preview_plan.sh
 
   Run-Win-Functional:
     needs:
