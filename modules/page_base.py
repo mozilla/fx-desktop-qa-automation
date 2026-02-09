@@ -249,9 +249,13 @@ class BasePage(Page):
         try:
             if isinstance(reference, str):
                 # Use len(...) to avoid any truthiness quirks from wrappers
-                self.instawait.until_not(lambda _: len(self.get_elements(reference, labels=labels)) > 0)
+                self.instawait.until_not(
+                    lambda _: len(self.get_elements(reference, labels=labels)) > 0
+                )
             else:
-                self.instawait.until_not(lambda _: len(self.driver.find_elements(*reference)) > 0)
+                self.instawait.until_not(
+                    lambda _: len(self.driver.find_elements(*reference)) > 0
+                )
         finally:
             self.driver.implicitly_wait(original)
 
@@ -286,14 +290,18 @@ class BasePage(Page):
         return self
 
     @context_of_model
-    def element_clickable(self, reference: str | tuple | WebElement, labels=None) -> Page:
+    def element_clickable(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
         """Expect helper: wait until element is clickable or timeout"""
         self.element_visible(reference, labels=labels)
         self.expect(lambda _: self.fetch(reference, labels=labels).is_enabled())
         return self
 
     @context_of_model
-    def element_selected(self, reference: str | tuple | WebElement, labels=None) -> Page:
+    def element_selected(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
         """Expect helper: wait until element is selected or timeout"""
         self.expect(
             lambda _: self.fetch(reference, labels=labels)
@@ -847,7 +855,9 @@ class BasePage(Page):
             children = element.find_elements(By.XPATH, locator)
         return children
 
-    def wait_for_no_children(self, parent: str | tuple | WebElement, labels=None) -> Page:
+    def wait_for_no_children(
+        self, parent: str | tuple | WebElement, labels=None
+    ) -> Page:
         """
         Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
         """
