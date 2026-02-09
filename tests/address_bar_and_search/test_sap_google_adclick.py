@@ -26,7 +26,7 @@ def test_sap_google_adclick(driver: Firefox):
     about_config = AboutConfig(driver)
     utils = Utilities()
 
-    about_config.change_config_value("cookiebanners.service.mode", 1)
+    about_config.edit_config_value("cookiebanners.service.mode", 1)
 
     nav.search(SEARCH_TERM)
     nav.get_element("search-result").click()
