@@ -28,4 +28,4 @@ jobs:
       - name: Select test channels
         id: splits
         run: |
-          python3 choose_l10n_beta_split.py
+          python3 scripts/choose_l10n_beta_split.py
