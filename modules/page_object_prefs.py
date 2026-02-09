@@ -72,7 +72,7 @@ class AboutPrefs(BasePage):
 
     def select_default_search_engine_by_key(self, option: str) -> BasePage:
         """Open the Default Search Engine dropdown directly and use keys to choose"""
-        for i in range(12):
+        for i in range(self.OPTIONS_MAX):
             self.click_on("default-engine-dropdown")
             for _ in range(i):
                 self.actions.send_keys(Keys.DOWN)
