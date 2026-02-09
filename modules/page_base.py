@@ -18,7 +18,7 @@ from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
     NoSuchElementException,
     NoSuchWindowException,
-    TimeoutException
+    TimeoutException,
 )
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
