@@ -1461,3 +1461,12 @@ class Navigation(BasePage):
         except Exception:
             # Element not found or not accessible
             return False
+
+    @BasePage.context_chrome
+    def add_folder_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and add folder via context menu
+        """
+        self.context_click("bookmarks-toolbar")
+        self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
+        return self

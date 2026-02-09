@@ -242,5 +242,10 @@
         "selectorData": "downloadDeleteFileMenuItem",
         "strategy": "class",
         "groups": []
+    },
+    "context-menu-toolbar-add-folder": {
+        "selectorData": "placesContext_new:folder",
+        "strategy": "id",
+        "groups": []
     }
 }
