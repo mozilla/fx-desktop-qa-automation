@@ -1965,23 +1965,37 @@ Location: Context menu - Toolbar
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-move-tab
+Selector Data: context_moveTabOptions
+Description: Context menu submenu for tab move options (Move to Start, Move to End, Move to New Window).
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-move-tab-to-start
-Selector Data: menuitem[data-l10n-id='move-to-start']
+Selector Data: context_moveToStart
 Description: Context menu option to move a tab to the start of the tab bar.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-move-tab-to-end
-Selector Data: menuitem[data-l10n-id='move-to-end']
+Selector Data: context_moveToEnd
 Description: Context menu option to move a tab to the end of the tab bar.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-move-to-new-window
-Selector Data: menuitem[data-l10n-id='move-to-new-window']
+Selector Data: context_openTabInWindow
 Description: Context menu option to move a tab to a new window.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu_reload-tab
+Selector Data: context_reloadTab
+Description: Context menu option to reload a tab.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
