@@ -623,5 +623,30 @@
         "selectorData": ".downloadTarget[value='tomato_clock-6.0.2.xpi']",
         "strategy": "css",
         "groups": []
+    },
+    "download-malicious-message": {
+        "selectorData": ".downloadDetails.downloadDetailsNormal[value='This file contains a virus or malware.']",
+        "strategy": "css",
+        "groups": []
+    },
+    "download-details-button": {
+        "selectorData": ".downloadButton.downloadIconSubviewArrow[aria-label='Open or Remove File']",
+        "strategy": "css",
+        "groups": []
+    },
+    "allow-download": {
+        "selectorData": "#downloadsPanel-blockedSubview-unblockButton[label='Allow download']",
+        "strategy": "css",
+        "groups": []
+    },
+    "remove-download": {
+        "selectorData": "#downloadsPanel-blockedSubview-deleteButton[label='Remove file']",
+        "strategy": "css",
+        "groups": []
+    },
+     "download-button-warning": {
+        "selectorData": "#downloads-button[attention='severe']",
+        "strategy": "css",
+        "groups": []
     }
 }

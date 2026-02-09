@@ -26,7 +26,9 @@ jobs:
     steps:
       - name: Get Split Based On Time
         id: getsplit
-        run: echo "split=functional$(($(date +%-I) % 6 + 1))" >> "$GITHUB_OUTPUT"
+        run: |
+          MAX_SPLITS=$(grep 'functional.' manifests/key.yaml | tail -1 | grep -o '[0-9]')
+          echo "split=functional$(($(date +%-I) % $MAX_SPLITS + 1))" >> "$GITHUB_OUTPUT"
 
   Check-Beta-Version:
     needs: Get-Functional-Split
