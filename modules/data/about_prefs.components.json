@@ -30,27 +30,10 @@
     "strategy": "id",
     "groups": []
   },
-  "shadow-panel-list": {
-    "selectorData": ".content-wrapper panel-list",
-    "strategy": "css",
-    "shadowParent": "default-engine-dropdown",
-    "groups": []
-  },
   "select-wrapper-button": {
     "selectorData": ".select-wrapper button",
     "strategy": "css",
     "shadowParent": "default-engine-dropdown",
-    "groups": []
-  },
-  "dropdown-item": {
-    "selectorData": ".list slot panel-item",
-    "strategy": "css",
-    "shadowParent": "shadow-panel-list",
-    "groups": []
-  },
-  "dropdown-item2": {
-    "selectorData": "panel-item[role='presentation']",
-    "strategy": "css",
     "groups": []
   },
   "find-in-settings": {
