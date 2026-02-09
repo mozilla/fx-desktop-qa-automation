@@ -14,7 +14,6 @@ MOVE_TO_END = "context-menu-move-tab-to-end"
 MOVE_TO_NEW_WINDOW = "context-menu-move-to-new-window"
 MOVE_TAB_MENU = "context-menu-move-tab"
 
-# Close Multiple Tabs submenu locators (to be updated)
 CLOSE_MULTIPLE_TABS_MENU = "context-menu-close-multiple-tabs"
 CLOSE_TABS_TO_RIGHT = "context-menu-close-multiple-tabs-to-right"
 CLOSE_OTHER_TABS = "context-menu-close-multiple-tabs-other-tabs"
