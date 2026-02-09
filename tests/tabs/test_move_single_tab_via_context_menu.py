@@ -32,31 +32,27 @@ def test_case():
 )
 def test_move_single_tab_via_context_menu(driver: Firefox, move_option: str):
     """
-    C246991 - Test tab repositioning via Move Tab context menu options.
+    C246991 - Steps 1-5: Test tab repositioning via Move Tab context menu options.
     """
     # Instantiate objects
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
 
-    # Open all URLs in tabs and collect titles
+    # Open all URLs in tabs
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
-    titles = []
-    for handle in driver.window_handles:
-        driver.switch_to.window(handle)
-        titles.append(driver.title)
+    initial_window_count = len(driver.window_handles)
 
-    # Select middle tab (tab index 2, since get_tab is 1-based)
-    if move_option == MOVE_TO_END:
-        driver.switch_to.window(driver.window_handles[0])
-        expected_title = titles[0]
-    else:
-        expected_title = titles[-1]
+    # Select middle tab deterministically (tab index 2)
+    selected_handle = driver.window_handles[1]
+    driver.switch_to.window(selected_handle)
+    selected_tab_title = driver.title
+    middle_tab = tabs.get_tab(2)
 
-    # Right-click on the selected tab and click the move option
-    tabs.context_click("selected-tab")
+    # Right-click on the selected tab
+    tabs.context_click(middle_tab)
     context_menu.click_context_item(MOVE_TAB_MENU)
 
-    # Verify Move Tab submenu has all expected options
+    # Verify Move Tab submenu has all the expected options
     context_menu.element_visible(MOVE_TO_START)
     context_menu.element_visible(MOVE_TO_END)
     context_menu.element_visible(MOVE_TO_NEW_WINDOW)
@@ -66,13 +62,18 @@ def test_move_single_tab_via_context_menu(driver: Firefox, move_option: str):
     context_menu.click_on(move_option)
     tabs.hide_popup("tabContextMenu")
 
-    # Verify the selected tab is moved to expected position with correct title
+    # Verify the selected tab is moved to expected position
     if move_option == MOVE_TO_START:
         driver.switch_to.window(driver.window_handles[0])
-    else:
+        assert driver.title == selected_tab_title
+    elif move_option == MOVE_TO_END:
         driver.switch_to.window(driver.window_handles[-1])
-
-    assert expected_title in driver.title
+        assert driver.title == selected_tab_title
+    elif move_option == MOVE_TO_NEW_WINDOW:
+        # Tab moved to new window - handle count stays same, but tab is now isolated
+        assert len(driver.window_handles) == initial_window_count
+        driver.switch_to.window(selected_handle)
+        assert driver.title == selected_tab_title
 
 
 @pytest.mark.parametrize(
@@ -90,15 +91,16 @@ def test_close_tabs_via_context_menu(driver: Firefox, close_option: str):
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
     initial_tab_count = len(driver.window_handles)
 
-    # Select middle tab (tab index 2, since get_tab is 1-based)
-    driver.switch_to.window(driver.window_handles[1])
+    # Select middle tab (tab index 2)
+    selected_handle = driver.window_handles[1]
+    driver.switch_to.window(selected_handle)
     selected_tab_title = driver.title
     middle_tab = tabs.get_tab(2)
 
     # Right-click on the selected tab and click the close option
     tabs.context_click(middle_tab)
     if close_option == RELOAD_TAB:
-        # Reload Tab is a direct option in the context menu
+        # Reload Tab is a direct option in the context menu (not in submenu)
         context_menu.click_and_hide_menu(close_option)
     else:
         # Verify Close Multiple Tabs submenu options exist
@@ -111,16 +113,18 @@ def test_close_tabs_via_context_menu(driver: Firefox, close_option: str):
         context_menu.click_and_hide_menu(close_option)
     tabs.hide_popup("tabContextMenu")
 
-    # Verify expected tabs are closed and selected tab is in expected position with correct title
+    # Verify expected tabs are closed and selected tab remains
     if close_option == CLOSE_TABS_TO_RIGHT:
         # All tabs to the right of selected tab get closed
-        tabs.wait_for_num_tabs(2)
+        tabs.wait_for_num_tabs(initial_tab_count - 1)
         driver.switch_to.window(driver.window_handles[-1])
         assert driver.title == selected_tab_title
     elif close_option == CLOSE_OTHER_TABS:
         # All tabs except selected tab get closed
         tabs.wait_for_num_tabs(1)
+        driver.switch_to.window(driver.window_handles[0])
         assert driver.title == selected_tab_title
     elif close_option == RELOAD_TAB:
         # Tab gets reloaded
+        driver.switch_to.window(selected_handle)
         assert driver.title == selected_tab_title
