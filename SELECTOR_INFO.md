@@ -488,6 +488,20 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: default-engine-dropdown
+Selector Data: defaultEngineNormal
+Description: Button that opens the search engine options list (like above)
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: select-wrapper-button
+Selector Data: .select-wrapper button
+Description: Option inside the search engine options list
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: form-container
 Selector Data: "form"
 Description: Form to to fill in saved addresses data

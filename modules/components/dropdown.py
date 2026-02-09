@@ -1,3 +1,5 @@
+import logging
+
 from pypom import Region
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,12 +21,16 @@ class Dropdown(Region):
         )
         if require_shadow:
             self.shadow_elements = self.utils.get_shadow_content(self.root)
-            self.dropmarker = next(
-                el
-                for el in self.shadow_elements
-                if el.tag_name == "dropmarker"
-                or el.get_attribute("class") == "select-wrapper with-icon"
-            )
+            try:
+                self.dropmarker = next(
+                    el
+                    for el in self.shadow_elements
+                    if el.tag_name == "dropmarker"
+                    or el.get_attribute("class") == "select-wrapper with-icon"
+                )
+            except StopIteration:
+                logging.warning("Proceeding without dropmarker...")
+                self.dropmarker = None
 
     @property
     def loaded(self):
@@ -46,7 +52,7 @@ class Dropdown(Region):
             self.root.click()
 
         if self.is_search_dropdown:
-            # Wait for dropdown to be fully open and panel-list to exist since is created dynamically)
+            # Wait for dropdown to be fully open and panel-list to exist, created dynamically
             def wait_for_panel_list(_):
                 self.shadow_elements = self.utils.get_shadow_content(self.root)
                 return next(
