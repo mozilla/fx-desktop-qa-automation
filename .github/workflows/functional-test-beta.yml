@@ -3,8 +3,18 @@ name: Check new beta version - Functional
 on:
   schedule:
     - cron: "12 * * * *"
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-Run - If true, only report the plan; do not trigger downstream workflows."
+        required: false
+        default: "false"
+
 env:
   LATEST: ""
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+
 permissions:
   contents: "write"
 
@@ -26,13 +36,12 @@ jobs:
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
       mac_reportable: ${{ steps.reportable.outputs.mac }}
-      mac_l10n_reportable: ${{ steps.l10n-reportable.outputs.mac_l10n }}
-      win_l10n_reportable: ${{ steps.l10n-reportable.outputs.win_l10n }}
-      linux_l10n_reportable: ${{ steps.l10n-reportable.outputs.linux_l10n }}
+      preview_json: ${{ steps.reportable.outputs.preview_json }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Check if the run is reportable
+
+      - name: Check if the run is reportable (or preview)
         id: reportable
         env:
           STARFOX_SPLIT: ${{ needs.Get-Functional-Split.outputs.split }}
@@ -40,17 +49,35 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          DRY_RUN: ${{ env.DRY_RUN }}
         run: |
-          pip3 install 'pipenv==2023.11.15';
-          pipenv install
-          echo win=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))') >> "$GITHUB_OUTPUT"
-          echo mac=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))') >> "$GITHUB_OUTPUT"
+          bash ./scripts/check_reportable.sh
+
+  Preview-Plan:
+    needs:
+      - Get-Functional-Split
+      - Check-Beta-Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print plan and job summary
+        env:
+          DRY_RUN: ${{ env.DRY_RUN }}
+          SPLIT: ${{ needs.Get-Functional-Split.outputs.split }}
+          WIN_REPORTABLE: ${{ needs.Check-Beta-Version.outputs.win_reportable }}
+          MAC_REPORTABLE: ${{ needs.Check-Beta-Version.outputs.mac_reportable }}
+          PREVIEW_JSON: ${{ needs.Check-Beta-Version.outputs.preview_json }}
+        run:
+          bash ./scripts/test_beta_preview_plan.sh
 
   Run-Win-Functional:
     needs:
       - Check-Beta-Version
       - Get-Functional-Split
-    if: ${{ needs.Check-Beta-Version.outputs.win_reportable == 'True' }}
+    if: |
+      ${{
+        needs.Check-Beta-Version.outputs.win_reportable == 'True' &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
@@ -61,7 +88,11 @@ jobs:
     needs:
       - Check-Beta-Version
       - Get-Functional-Split
-    if: ${{ needs.Check-Beta-Version.outputs.mac_reportable == 'True' }}
+    if: |
+      ${{
+        needs.Check-Beta-Version.outputs.mac_reportable == 'True' &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-MacOS
