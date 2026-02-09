@@ -65,15 +65,7 @@ def test_bing_search_codes(driver: Firefox, added_selectors: dict):
     nav.open_searchmode_switcher_settings()
 
     # Set Bing as default search engine
-    # prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
-    for i in range(12):
-        prefs.click_on("default-engine-dropdown")
-        for _ in range(i):
-            prefs.actions.send_keys(Keys.DOWN)
-        prefs.actions.send_keys(Keys.ENTER).perform()
-        if prefs.get_element("select-wrapper-button").text == SEARCH_ENGINE:
-            break
-    assert prefs.get_element("select-wrapper-button").text == SEARCH_ENGINE
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Open a tab and verify Bing search code
     driver.get("about:newtab")

@@ -25,6 +25,34 @@
       "searchEngineDropdown"
     ]
   },
+  "default-engine-dropdown": {
+    "selectorData": "defaultEngineNormal",
+    "strategy": "id",
+    "groups": []
+  },
+  "shadow-panel-list": {
+    "selectorData": ".content-wrapper panel-list",
+    "strategy": "css",
+    "shadowParent": "default-engine-dropdown",
+    "groups": []
+  },
+  "select-wrapper-button": {
+    "selectorData": ".select-wrapper button",
+    "strategy": "css",
+    "shadowParent": "default-engine-dropdown",
+    "groups": []
+  },
+  "dropdown-item": {
+    "selectorData": ".list slot panel-item",
+    "strategy": "css",
+    "shadowParent": "shadow-panel-list",
+    "groups": []
+  },
+  "dropdown-item2": {
+    "selectorData": "panel-item[role='presentation']",
+    "strategy": "css",
+    "groups": []
+  },
   "find-in-settings": {
     "selectorData": "searchInput",
     "strategy": "id",
@@ -282,7 +310,9 @@
   "cookies-manage-data-sitelist": {
     "selectorData": "sitesList",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "manage-cookies-site": {
     "selectorData": "richlistitem[host='{name}']",
@@ -358,7 +388,9 @@
   "cookies-data-checkbox": {
     "selectorData": "cookiesAndStorage",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "up_to_date_button": {
     "selectorData": "checkForUpdatesButton3",
@@ -639,7 +671,6 @@
     "selectorData": "select[id='input']",
     "strategy": "css",
     "shadowParent": "history_menulist",
-    "groups": [
-    ]
+    "groups": []
   }
 }
