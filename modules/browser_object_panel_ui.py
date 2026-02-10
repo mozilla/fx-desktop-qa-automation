@@ -420,7 +420,7 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def edit_folder_name_via_toolbar(
-            self, folder_name: str, ba: BrowserActions
+        self, folder_name: str, ba: BrowserActions
     ) -> BasePage:
         """
         Edit the name of a new Bookmark Folder in the Bookmarks Toolbar panel.
