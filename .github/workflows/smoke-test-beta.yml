@@ -46,6 +46,9 @@ jobs:
       - Check-Beta-Version
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Print plan and job summary
         env:
           DRY_RUN: ${{ env.DRY_RUN }}
