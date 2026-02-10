@@ -20,43 +20,43 @@ permissions:
   contents: "write"
 
 jobs:
-  Select-Channels:
+  Select-Test-Type:
     runs-on: ubuntu-latest
     outputs:
-      channels: ${{ steps.dispatch.outputs.channels }}
+      test_types: ${{ steps.dispatch.outputs.test_types }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Select test channels
+      - name: Select test types
         id: dispatch
         run: |
-          channels="$(python3 scripts/choose_test_channel.py)"
-          echo "channels=$channels" >> "$GITHUB_OUTPUT"
+          test_types="$(python3 scripts/choose_test_type.py)"
+          echo "test_types=$test_types" >> "$GITHUB_OUTPUT"
 
   Preview-Plan:
-    needs: Select-Channels
+    needs: Select-Test-Type
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.preview_only == 'true' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show selected channels
+      - name: Show selected test types
         run: |
-          echo "selected channels are: ${{ needs.Select-Channels.outputs.channels }}"
+          echo "selected test types are: ${{ needs.Select-Test-Type.outputs.test_types }}"
 
       - name: Print planned jobs
         env:
-          SELECT_CHANNELS: ${{ needs.Select-Channels.outputs.channels }}
+          SELECT_TEST_TYPES: ${{ needs.Select-Select-Test-Type.outputs.test_types }}
         run: |
           python3 scripts/preview_plan.py
 
   Run-Starfox-Win:
-    needs: Select-Channels
+    needs: Select-Test-Type
     # skip this job in preview_only mode
     if: |
       ${{
-        contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox') &&
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
         !( github.event.inputs.preview_only == 'true' )
       }}
     uses: ./.github/workflows/main.yml
@@ -68,10 +68,10 @@ jobs:
     secrets: inherit
 
   Run-Starfox-Mac:
-    needs: Select-Channels
+    needs: Select-Test-Type
     if: |
       ${{
-        contains(fromJSON(needs.Select-Channels.outputs.channels), 'starfox') &&
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
         !( github.event.inputs.preview_only == 'true' )
       }}
     uses: ./.github/workflows/main.yml
@@ -82,10 +82,10 @@ jobs:
     secrets: inherit
 
   Run-L10n-Win:
-    needs: Select-Channels
+    needs: Select-Test-Type
     if: |
       ${{
-        contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n') &&
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
         !( github.event.inputs.preview_only == 'true' )
       }}
     uses: ./.github/workflows/main-l10n.yml
@@ -96,10 +96,10 @@ jobs:
     secrets: inherit
 
   Run-L10n-Mac:
-    needs: Select-Channels
+    needs: Select-Test-Type
     if: |
       ${{
-        contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n') &&
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
         !( github.event.inputs.preview_only == 'true' )
       }}
     uses: ./.github/workflows/main-l10n.yml
@@ -110,10 +110,10 @@ jobs:
     secrets: inherit
 
   Run-L10n-Linux:
-    needs: Select-Channels
+    needs: Select-Test-Type
     if: |
       ${{
-        contains(fromJSON(needs.Select-Channels.outputs.channels), 'l10n') &&
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
         !( github.event.inputs.preview_only == 'true' )
       }}
     uses: ./.github/workflows/main-l10n.yml
