@@ -379,6 +379,22 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_download_epub_shows_extension_in_downloads_panel:
+    result: pass
+    splits:
+    - functional1
+  test_download_exe_and_check_extesion:
+    result: pass
+    splits:
+    - functional1
+  test_download_malicious_warning:
+    result: pass
+    splits:
+    - functional1
+  test_download_mp3_and_check_extension:
+    result: pass
+    splits:
+    - functional1
   test_download_pdf:
     result: pass
     splits:
@@ -402,7 +418,23 @@ downloads:
       win: unstable
     splits:
     - functional1
+  test_no_download_telemetry_without_panel:
+    result: pass
+    splits:
+    - functional1
   test_set_always_ask_file_type:
+    result: pass
+    splits:
+    - functional1
+  test_telemetry_download_and_open:
+    result: pass
+    splits:
+    - functional1
+  test_telemetry_pdf_download_open:
+    result: pass
+    splits:
+    - functional1
+  test_verify_telemetry_downloads_panel_open:
     result: pass
     splits:
     - functional1
@@ -990,6 +1022,14 @@ session_restore:
     result: pass
     splits:
     - functional2
+  test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
+    result: pass
+    splits:
+    - functional1
+  test_closed_tabs_from_multiple_windows_shown_in_library_menu:
+    result: pass
+    splits:
+    - functional1
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
@@ -1050,6 +1090,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_move_single_tab_via_context_menu:
+    result: pass
+    splits:
+    - functional2
   test_mute_tabs:
     result:
       linux: pass
@@ -1101,6 +1145,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_remove_tab_from_a_group:
+    result: pass
+    splits:
+    - functional1
   test_reopen_tab_through_context_menu:
     result: pass
     splits:
@@ -1118,10 +1166,6 @@ tabs:
     splits:
     - functional2
   test_save_and_close_a_tab_group:
-    result: pass
-    splits:
-    - functional2
-  test_move_single_tab_via_context_menu:
     result: pass
     splits:
     - functional2
