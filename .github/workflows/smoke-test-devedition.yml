@@ -28,6 +28,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Check if the run is reportable
         id: reportable
         env:
