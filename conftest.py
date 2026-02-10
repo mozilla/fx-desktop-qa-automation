@@ -183,17 +183,18 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
         artifacts_loc = "artifacts"
     fullpath = os.path.join(artifacts_loc, filename)
     screenshot = None
-    if platform.system() == "Darwin":
-        screenshot = ImageGrab.grab()
-        screenshot.save(fullpath)
-
-        # compress the image (OSX generates large screenshots)
-        image = Image.open(fullpath)
-        width, height = image.size
-        new_size = (width // 2, height // 2)
-        resized_image = image.resize(new_size)
-        resized_image.save(fullpath, optimize=True, quality=50)
-    elif platform.system() == "Linux":
+    # if platform.system() == "Darwin":
+    #     screenshot = ImageGrab.grab()
+    #     screenshot.save(fullpath)
+    #
+    #     # compress the image (OSX generates large screenshots)
+    #     image = Image.open(fullpath)
+    #     width, height = image.size
+    #     new_size = (width // 2, height // 2)
+    #     resized_image = image.resize(new_size)
+    #     resized_image.save(fullpath, optimize=True, quality=50)
+    # elif platform.system() == "Linux":
+    if platform.system() == "Linux":
         check_output(["gnome-screenshot", f"--file={fullpath}"])
     else:
         screenshot = ImageGrab.grab()
