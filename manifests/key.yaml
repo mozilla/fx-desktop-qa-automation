@@ -34,7 +34,7 @@ address_bar_and_search:
     result:
       linux: pass
       mac: pass
-      win: unstable
+      win: pass
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -57,7 +57,7 @@ address_bar_and_search:
     result:
       linux: pass
       mac: pass
-      win: unstable
+      win: pass
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
