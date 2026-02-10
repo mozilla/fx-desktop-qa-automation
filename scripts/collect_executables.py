@@ -234,5 +234,9 @@ def main(args):
     return output
 
 
+def get_fx_version():
+    return main(["-n"])
+
+
 if __name__ == "__main__":
     print(main(argv))
