@@ -262,6 +262,10 @@ audio_video:
     splits:
     - functional1
 bookmarks_and_history:
+  test_add_bookmark_folder_via_toolbar_not_saving_realtime:
+    result: pass
+    splits:
+    - functional1
   test_add_new_other_bookmark:
     result: pass
     splits:
