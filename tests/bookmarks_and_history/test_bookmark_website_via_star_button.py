@@ -29,6 +29,7 @@ def test_bookmark_website_via_star(driver: Firefox):
     nav.add_bookmark_via_star_icon()
     nav.verify_star_button_is_blue()
 
+    assert False
     # Verify bookmark appears in Hamburger Menu, Bookmarks section
     panel.open_bookmarks_panel_from_hamburger_menu()
     panel.verify_bookmark_exists_in_hamburger_menu(BOOKMARK_TITLE)
