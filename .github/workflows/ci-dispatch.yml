@@ -70,7 +70,7 @@ jobs:
       is_pull_request: true
       # pass the value of dry_run down the pipeline
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
-      split: ${{ github.event.inputs.split }}
+      test_set: ${{ github.event.inputs.split }}
     secrets: inherit
 
   Run-Starfox-Mac:
@@ -85,7 +85,7 @@ jobs:
       job_to_run: Test-MacOS
       is_pull_request: true
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
-      split: ${{ github.event.inputs.split }}
+      test_set: ${{ github.event.inputs.split }}
     secrets: inherit
 
   Run-L10n-Win:
@@ -100,7 +100,6 @@ jobs:
       job_to_run: L10n-Windows
       is_pull_request: true
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
-      split: ${{ github.event.inputs.split }}
     secrets: inherit
 
   Run-L10n-Mac:
@@ -115,7 +114,6 @@ jobs:
       job_to_run: L10n-MacOS
       is_pull_request: true
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
-      split: ${{ github.event.inputs.split }}
     secrets: inherit
 
   Run-L10n-Linux:
@@ -130,5 +128,4 @@ jobs:
       job_to_run: L10n-Linux
       is_pull_request: true
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
-      split: ${{ github.event.inputs.split }}
     secrets: inherit
