@@ -214,6 +214,10 @@ jobs:
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
+
+    env:
+      STARFOX_SPLIT: ${{ inputs.split }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -327,6 +331,10 @@ jobs:
   Smoke-Linux:
     if: ${{ inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
+
+    env:
+      STARFOX_SPLIT: ${{ inputs.split }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
