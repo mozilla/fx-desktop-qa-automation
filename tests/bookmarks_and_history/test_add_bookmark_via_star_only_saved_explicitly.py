@@ -29,7 +29,7 @@ def test_add_bookmark_via_star_save_button_explicitly(driver: Firefox):
 
     # Start creating a bookmark using the star button and edit the bookmark star dialog fields
     nav.edit_bookmark_via_star_button(
-         new_name=BOOKMARK_NAME, location=BOOKMARK_LOCATION, save_bookmark=False
+        new_name=BOOKMARK_NAME, location=BOOKMARK_LOCATION, save_bookmark=False
     )
 
     # Click away from the field inside the dialog
