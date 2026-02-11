@@ -198,5 +198,33 @@
         "selectorData": "firefox-view-button",
         "strategy": "id",
         "groups": []
+    },
+    "tab-preview-panel": {
+        "selectorData": "tab-preview-panel",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "tab-preview-title": {
+        "selectorData": "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "tab-preview-uri": {
+        "selectorData": "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "tab-preview-thumbnail-container": {
+        "selectorData": "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }
