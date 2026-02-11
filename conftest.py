@@ -89,7 +89,8 @@ def sanitize_filename(filename):
 
 def pytest_exception_interact(node, call, report):
     """
-    Method that wraps all test execution, on any exception/failure an artifact with the information about the failure is kept.
+    Method that wraps all test execution, on any exception/failure an artifact
+    with information about the failure is kept.
     """
     if report.failed:
         try:
@@ -102,6 +103,7 @@ def pytest_exception_interact(node, call, report):
                 )
                 driver = node.funcargs.get("driver")
                 opt_ci = node.funcargs.get("opt_ci")
+                logging.warning(f"driver {bool(driver)} ci {bool(opt_ci)}")
                 if driver and opt_ci:
                     logging.info("Writing artifacts...")
                     log_content(opt_ci, driver, test_name)
