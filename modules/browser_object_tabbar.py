@@ -663,9 +663,7 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_hover_preview(
-        self, total_tabs: int, expect_thumbnail: bool = True
-    ) -> "TabBar":
+    def verify_hover_preview(self, total_tabs: int, expect_thumbnail: bool = True):
         """
         Hover over each tab and verify the hover preview panel is displayed.
         Arguments:
