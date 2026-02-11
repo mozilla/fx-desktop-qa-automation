@@ -18,7 +18,7 @@ BOOKMARK_LOCATION = "Bookmarks Toolbar"
 
 def test_add_bookmark_via_star_save_button_explicitly(driver: Firefox):
     """
-    C2090394: Verify that adding a Bookmark from the Star button is not saved in real time
+    C2090394: Verify adding a Bookmark from the Star button is not saved in real time
     """
     # Instantiate objects
     nav = Navigation(driver)
