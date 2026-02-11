@@ -8,7 +8,6 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
@@ -433,12 +432,8 @@ class PanelUi(BasePage):
         folder_name : str : The name to set for the folder
         ba : BrowserActions : Utility for switching context to the bookmark panel iframe
         """
-
-        # Wait for the bookmark iframe to be present
-        iframe = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "browser[class='dialogFrame']")),
-            message="Bookmark iframe not found"
-        )
+        # Switch to the iframe containing the Add Folder panel
+        iframe = self.get_element("bookmark-iframe")
         ba.switch_to_iframe_context(iframe)
 
         # Type the folder name into the Name field
