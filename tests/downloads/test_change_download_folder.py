@@ -53,7 +53,9 @@ def _wait_for_file_in_dir(dir_path: str, filename_regex: str, timeout: int = 30)
         except FileNotFoundError:
             pass
         time.sleep(0.25)
-    raise AssertionError(f"No downloaded file matched /{filename_regex}/ in: {dir_path}")
+    raise AssertionError(
+        f"No downloaded file matched /{filename_regex}/ in: {dir_path}"
+    )
 
 
 def _set_download_dir(driver: Firefox, path: str) -> None:
