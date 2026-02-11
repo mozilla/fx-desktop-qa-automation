@@ -1165,6 +1165,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_tab_hover_different_content_type:
+    result: pass
+    splits:
+    - functional2
   test_ungroup_tabs:
     result: pass
     splits:
