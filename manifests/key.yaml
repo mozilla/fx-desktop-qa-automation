@@ -262,6 +262,10 @@ audio_video:
     splits:
     - functional1
 bookmarks_and_history:
+  test_add_bookmark_via_star_only_saved_explicitly:
+    result: pass
+    splits:
+      - functional1
   test_add_new_other_bookmark:
     result: pass
     splits:
