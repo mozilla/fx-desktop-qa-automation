@@ -683,7 +683,7 @@ class TabBar(BasePage):
 
             # Move away to dismiss the preview before hovering the next tab
             self.hover("newtab-button")
-            self.element_not_visible("tab-preview-panel")
+            sleep(0.5)
         return self
 
     def get_all_window_urls(self) -> set[str]:
