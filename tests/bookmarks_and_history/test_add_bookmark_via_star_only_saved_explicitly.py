@@ -1,6 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-from selenium.webdriver import ActionChains
+
+from selenium.webdriver import Firefox, ActionChains
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
