@@ -27,6 +27,11 @@ on:
         required: false
         type: boolean
         default: false
+      # optional split input forwarded from ci-dispatch.yml
+      split:
+        required: false
+        type: string
+        default: ''
 
   workflow_dispatch:
     inputs:
@@ -54,6 +59,11 @@ jobs:
   Test-Windows:
     if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
+
+    # pass the input into the job as env so scripts.choose_test_split.py sees STARFOX_SPLIT
+    env:
+      STARFOX_SPLIT: ${{ inputs.split }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
