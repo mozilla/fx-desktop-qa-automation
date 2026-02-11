@@ -648,5 +648,10 @@
         "selectorData": "#downloads-button[attention='severe']",
         "strategy": "css",
         "groups": []
+    },
+    "bookmarks-toolbar-context": {
+        "selectorData": "PlacesToolbarItems",
+        "strategy": "id",
+        "groups": []
     }
 }

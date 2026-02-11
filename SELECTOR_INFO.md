@@ -3615,6 +3615,13 @@ Description: Download button warning dot
 Location: Download button
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: bookmarks-toolbar-context
+Selector Data: "PlacesToolbarItems"
+Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

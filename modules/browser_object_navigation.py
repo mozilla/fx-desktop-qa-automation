@@ -1467,6 +1467,6 @@ class Navigation(BasePage):
         """
         Right-clicks on bookmarks toolbar and add folder via context menu
         """
-        self.context_click("bookmarks-toolbar")
+        self.context_click("bookmarks-toolbar-context")
         self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
         return self
