@@ -1090,6 +1090,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_move_single_tab_via_context_menu:
+    result: pass
+    splits:
+    - functional2
   test_mute_tabs:
     result:
       linux: pass
@@ -1162,10 +1166,6 @@ tabs:
     splits:
     - functional2
   test_save_and_close_a_tab_group:
-    result: pass
-    splits:
-    - functional2
-  test_move_single_tab_via_context_menu:
     result: pass
     splits:
     - functional2
