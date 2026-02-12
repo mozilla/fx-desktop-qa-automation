@@ -34,7 +34,7 @@ address_bar_and_search:
     result:
       linux: pass
       mac: pass
-      win: unstable
+      win: pass
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -57,7 +57,7 @@ address_bar_and_search:
     result:
       linux: pass
       mac: pass
-      win: unstable
+      win: pass
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
@@ -262,6 +262,10 @@ audio_video:
     splits:
     - functional1
 bookmarks_and_history:
+  test_add_bookmark_via_star_only_saved_explicitly:
+    result: pass
+    splits:
+      - functional1
   test_add_new_other_bookmark:
     result: pass
     splits:
@@ -1083,6 +1087,10 @@ tabs:
     splits:
     - functional2
   test_move_multi_selected_tabs:
+    result: pass
+    splits:
+    - functional2
+  test_move_single_tab_via_context_menu:
     result: pass
     splits:
     - functional2

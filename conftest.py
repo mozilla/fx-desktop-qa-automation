@@ -417,6 +417,7 @@ def driver(
     hard_quit,
     json_metadata,
     machine_config: str,
+    opt_ci: bool,
     opt_headless: bool,
     opt_implicit_timeout: int,
     opt_window_size: str,
