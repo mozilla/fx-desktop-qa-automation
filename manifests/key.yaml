@@ -977,6 +977,10 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_open_private_browsing_via_keyboard:
+    result: pass
+    splits:
+    - functional2
   test_phishing_and_malware_warnings:
     result: pass
     splits:
@@ -1166,10 +1170,6 @@ tabs:
     splits:
     - functional2
   test_save_and_close_a_tab_group:
-    result: pass
-    splits:
-    - functional2
-  test_move_single_tab_via_context_menu:
     result: pass
     splits:
     - functional2
