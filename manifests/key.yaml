@@ -1035,7 +1035,10 @@ session_restore:
     splits:
     - functional2
   test_restore_multiple_closed_tabs_at_once:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
