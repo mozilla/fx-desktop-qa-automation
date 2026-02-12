@@ -19,7 +19,7 @@ on:
         type: boolean
       test_set:
         description: "Test set to run"
-        default: null
+        default: ''
         required: false
         type: string
       dry_run:
@@ -43,8 +43,9 @@ on:
         required: false
         type: string
 env:
-  FX_CHANNEL: ${{ inputs.channel }}
+  # Set the split input as env so scripts.choose_test_split.py sees STARFOX_SPLIT
   STARFOX_SPLIT: ${{ inputs.test_set }}
+  FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
@@ -54,6 +55,7 @@ jobs:
   Test-Windows:
     if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -138,6 +140,23 @@ jobs:
           Write-Host "Selected tests: "
           Get-Content selected_tests
 
+      - name: Test Fx Version (Win)
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success' &&
+            inputs.dry_run != true
+          }}
+        env:
+          TESTRAIL_REPORT: false
+          REPORTABLE: true
+        shell: pwsh
+        run: |
+          pipenv run python -c "import sys; print(sys.platform)"
+          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
+          pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
+
       # --- REAL RUN: actually execute tests ---
       - name: Run Tests in Win
         if: |
@@ -148,9 +167,6 @@ jobs:
           }}
         shell: pwsh
         run: |
-          pipenv run python -c "import sys; print(sys.platform)"
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -190,6 +206,7 @@ jobs:
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -251,6 +268,21 @@ jobs:
           echo "Selected tests: "
           cat selected_tests
 
+      - name: Test Fx Version (MacOS)
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success' &&
+            inputs.dry_run != true
+          }}
+        env:
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          TESTRAIL_REPORT: false
+          REPORTABLE: true
+        run: |
+          "$FX_EXECUTABLE" --version
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+
       - name: Run Tests in MacOS
         if: |
           ${{
@@ -262,6 +294,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
@@ -287,6 +320,7 @@ jobs:
   Smoke-Linux:
     if: ${{ inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

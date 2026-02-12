@@ -1,10 +1,7 @@
 import os
-import time
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
 
 from modules.page_object import AboutPrefs
 

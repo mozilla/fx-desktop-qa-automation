@@ -343,9 +343,7 @@ class TabBar(BasePage):
         page.open()
         return self
 
-    def open_urls_in_tabs(
-        self, urls: list, open_first_in_current_tab: bool = False
-    ) -> "TabBar":
+    def open_urls_in_tabs(self, urls: list, open_first_in_current_tab: bool = False):
         """
         Opens URLs in tabs. By default, opens a new tab for each URL.
         Arguments:
@@ -662,6 +660,26 @@ class TabBar(BasePage):
             f"Expected tab to be after the group. "
             f"Tab position: {tab_position}, Group end: {group_end_position}"
         )
+        return self
+
+    @BasePage.context_chrome
+    def verify_hover_preview(self, total_tabs: int, expect_thumbnail: bool = True):
+        """
+        Hover over each tab and verify the hover preview panel is displayed.
+        Arguments:
+            total_tabs: Total number of tabs to hover over
+            expect_thumbnail: If True, verify panel with Name and URL.
+                              If False, also assert thumbnail container is not visible.
+        """
+        for i in range(1, total_tabs + 1):
+            tab = self.get_tab(i)
+            self.hover(tab)
+            self.element_visible("tab-preview-panel")
+            self.element_visible("tab-preview-title")
+            self.element_visible("tab-preview-uri")
+
+            if not expect_thumbnail:
+                self.element_not_visible("tab-preview-thumbnail-container")
         return self
 
     def get_all_window_urls(self) -> set[str]:

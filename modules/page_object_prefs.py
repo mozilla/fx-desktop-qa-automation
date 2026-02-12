@@ -29,6 +29,7 @@ class AboutPrefs(BasePage):
     """
 
     URL_TEMPLATE = "about:preferences#{category}"
+    OPTIONS_MAX = 12
     iframe = None
 
     def __init__(self, driver: Firefox, **kwargs):
@@ -68,6 +69,18 @@ class AboutPrefs(BasePage):
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
+
+    def select_default_search_engine_by_key(self, option: str) -> BasePage:
+        """Open the Default Search Engine dropdown directly and use keys to choose"""
+        for i in range(self.OPTIONS_MAX):
+            self.click_on("default-engine-dropdown")
+            for _ in range(i):
+                self.actions.send_keys(Keys.DOWN)
+            self.actions.send_keys(Keys.ENTER).perform()
+            if self.get_element("select-wrapper-button").text == option:
+                break
+        assert self.get_element("select-wrapper-button").text == option
+        return self
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""

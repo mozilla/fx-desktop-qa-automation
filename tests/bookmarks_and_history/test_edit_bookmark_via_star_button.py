@@ -31,7 +31,7 @@ def test_edit_bookmark_via_star_button(driver: Firefox):
 
     # Open the edit bookmark panel via star button and change bookmark name and location
     nav.edit_bookmark_via_star_button(
-        new_name=BOOKMARK_NAME, location=BOOKMARK_LOCATION
+        new_name=BOOKMARK_NAME, location=BOOKMARK_LOCATION, save_bookmark=True
     )
 
     # Check bookmark name and location are changed in the bookmarks toolbar

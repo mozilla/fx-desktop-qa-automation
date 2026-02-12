@@ -11,7 +11,6 @@ from tests.preferences.test_clear_cookie_data import WEBSITE_ADDRESS
 SEARCH_TERM = "buy stocks"
 SEARCH_TERM2 = "mozilla wikipedia"
 SEARCH_ENGINE = "DuckDuckGo"
-WEBSITE_ADDRESS = "https://mozilla.org"
 
 
 @pytest.fixture()

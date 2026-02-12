@@ -23,6 +23,28 @@ Description: Takes the name of the intended theme to use
 Location: Theme cards on about:addons page
 Path to .json: modules/data/about_addons.components.json
 ```
+#### about_cache
+```
+Selector Name: disk-cache-link
+Selector Data: "a[href=\"about:cache?storage=disk\"]"
+Description: The "List Cache Entries" link for the disk storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: memory-cache-link
+Selector Data: "a[href=\"about:cache?storage=memory\"]"
+Description: The "List Cache Entries" link for the memory storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: entries-table
+Selector Data: "entries"
+Description: The table containing cache entry rows
+Location: about:cache?storage=disk or about:cache?storage=memory page
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button
@@ -488,6 +510,20 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: default-engine-dropdown
+Selector Data: defaultEngineNormal
+Description: Button that opens the search engine options list (like above)
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: select-wrapper-button
+Selector Data: .select-wrapper button
+Description: Option inside the search engine options list
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: form-container
 Selector Data: "form"
 Description: Form to to fill in saved addresses data
@@ -513,6 +549,13 @@ Selector Name: find-in-settings-input
 Selector Data: "input[placeholder='Find in Settings']"
 Description: Find in Settings input field
 Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: tab-hover-preview-checkbox
+Selector Data: tabPreviewShowThumbnails
+Description: Checkbox to toggle "Show an image preview when you hover on a tab"
+Location: about:preferences#general
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1965,23 +2008,37 @@ Location: Context menu - Toolbar
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-move-tab
+Selector Data: context_moveTabOptions
+Description: Context menu submenu for tab move options (Move to Start, Move to End, Move to New Window).
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-move-tab-to-start
-Selector Data: menuitem[data-l10n-id='move-to-start']
+Selector Data: context_moveToStart
 Description: Context menu option to move a tab to the start of the tab bar.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-move-tab-to-end
-Selector Data: menuitem[data-l10n-id='move-to-end']
+Selector Data: context_moveToEnd
 Description: Context menu option to move a tab to the end of the tab bar.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
 Selector Name: context-menu-move-to-new-window
-Selector Data: menuitem[data-l10n-id='move-to-new-window']
+Selector Data: context_openTabInWindow
 Description: Context menu option to move a tab to a new window.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu_reload-tab
+Selector Data: context_reloadTab
+Description: Context menu option to reload a tab.
 Location: Context menu - Tab
 Path to .json: modules/data/context_menu.components.json
 ```
@@ -2523,6 +2580,13 @@ Selector Name: gdoc-file-download-pdf
 Selector Data: "span.goog-menuitem-label[aria-label^='PDF Document']"
 Description: Gdoc file menu -> download -> PDF Document (.pdf)
 Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: download-malicious-warning
+Selector Data: "a[href='https://testsafebrowsing.appspot.com/s/content.exe']"
+Description: A link to download a file with malicious warning
+Location: testsafebrowsing website
 Path to .json: modules/data/generic_page.components.json
 ```
 #### generic_pdf
@@ -3538,6 +3602,41 @@ Description: xpi addon download panel
 Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: download-malicious-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='This file contains a virus or malware.']"
+Description: A message when downloading a malicious file
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-details-button
+Selector Data: ".downloadButton.downloadIconSubviewArrow[aria-label='Open or Remove File']"
+Description: Download panel more Details button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: remove-download
+Selector Data: "#downloadsPanel-blockedSubview-deleteButton[label='Remove file']"
+Description: Download detils remove button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: allow-download
+Selector Data: "#downloadsPanel-blockedSubview-unblockButton[label='Allow download']"
+Description: Download detils allow button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-button-warning
+Selector Data: "#downloads-button[attention='severe']"
+Description: Download button warning dot
+Location: Download button
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -4371,6 +4470,34 @@ Selector Name: all-tabs
 Selector Data: tabbrowser-tab
 Description: All tabs locator
 Location: All tabs from the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-panel
+Selector Data: tab-preview-panel
+Description: Tab hover preview panel container
+Location: In the tabbed browser (shown when hovering a tab)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-title
+Selector Data: "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title"
+Description: Title text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-uri
+Selector Data: "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri"
+Description: URL text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-thumbnail-container
+Selector Data: "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container"
+Description: Thumbnail container inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
 Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill

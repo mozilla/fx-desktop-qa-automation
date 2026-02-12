@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, PanelUi
+from modules.browser_object import Navigation, PanelUi
 
 
 @pytest.fixture()
@@ -17,12 +17,12 @@ def use_profile():
 @pytest.mark.headed
 def test_deleted_page_not_remembered(driver: Firefox, sys_platform):
     """
-    C216273: Verify that the deleted page from the Hamburger History submenu is not remembered or autofilled in the URL bar
+    C216273: Verify that the deleted page from the Hamburger History
+    submenu is not remembered or autofilled in the URL bar
     """
     # Instantiate objects
     panel = PanelUi(driver)
     nav = Navigation(driver)
-    context_menu = ContextMenu(driver)
 
     # Open history menu and right-click on a specific history entry and delete it
     panel.open_history_menu()
