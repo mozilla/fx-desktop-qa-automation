@@ -73,10 +73,10 @@ def _set_download_dir(driver: Firefox, path: str) -> None:
 
 @pytest.mark.headed
 def test_change_download_folder(
-        driver: Firefox,
-        downloads_folder: str,
-        tmp_path,
-        delete_files,
+    driver: Firefox,
+    downloads_folder: str,
+    tmp_path,
+    delete_files,
 ):
     """
     C1756713: Verify that the user can change the Download folder
