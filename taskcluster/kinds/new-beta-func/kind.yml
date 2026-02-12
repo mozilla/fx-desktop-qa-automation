@@ -36,7 +36,6 @@ tasks:
         export STARFOX_SPLIT="${STARFOX_SPLIT}$(($(date +%-I) % $MAX_SPLITS + 1))"
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install python-dev-tools tk
         pip3 install 'pipenv==2023.11.15';
         mv ./config/ci_pyproject.toml ./pyproject.toml;
         pipenv install;
