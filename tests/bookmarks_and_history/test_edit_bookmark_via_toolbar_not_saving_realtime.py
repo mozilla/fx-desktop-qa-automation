@@ -3,6 +3,10 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPage
+
+
+BOOKMARK_URL = "https://www.mozilla.org/"
 
 
 @pytest.fixture()
@@ -23,5 +27,19 @@ def test_edit_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
     # Instantiate objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
+    page = GenericPage(driver, url=BOOKMARK_URL)
 
     # Have at Least 1 Bookmark saved on the Bookmarks toolbar
+    page.open()
+    nav.add_bookmark_via_star_icon()
+
+    # Right Click any Bookmark from the Bookmarks Toolbar and select the Edit Bookmark option
+
+    # Edit the Name into something with more characters
+
+    # The modified name is not updated in real time.
+    # THe Bookmarks toolbar still shows the old Bookmark name
+
+    # Click the Save button.
+
+    # The new edited name is now displayed on the Bookmarks Toolbar
