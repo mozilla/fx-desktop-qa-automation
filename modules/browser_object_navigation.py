@@ -1461,3 +1461,11 @@ class Navigation(BasePage):
         except Exception:
             # Element not found or not accessible
             return False
+
+    def edit_bookmark_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on a bookmark from toolbar and edit it via context menu
+        """
+        self.context_click("bookmark-in-toolbar")
+        self.context_menu.click_and_hide_menu("context-menu-edit-bookmark")
+        return self
