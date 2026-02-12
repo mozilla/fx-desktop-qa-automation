@@ -827,25 +827,35 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def edit_bookmark_via_star_button(self, new_name: str, location: str) -> BasePage:
+    def edit_bookmark_via_star_button(
+        self, new_name: str, location: str, save_bookmark: True
+    ) -> BasePage:
         """
         Edit bookmark details by opening the edit bookmark panel via the star button
 
         Arguments:
         new_name : The new name/title to assign to the bookmark
         location : The folder location where the bookmark should be saved
+        action_complete:
         """
         self.click_on("star-button")
-        self.panel_ui.get_element("edit-bookmark-panel").send_keys(new_name)
+        # Wait a moment for the panel edit field to gain focus then delete the contents,
+        # otherwise new_name text can be appended to the original name instead of replacing it
+        time.sleep(0.5)
+        self.panel_ui.get_element("edit-bookmark-panel").send_keys(
+            Keys.DELETE + new_name
+        )
         if location == "Other Bookmarks":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("other-bookmarks")
         elif location == "Bookmarks Toolbar":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("bookmarks-toolbar")
-        # for else add Bookmark Menu option if needed in the future
-        self.panel_ui.click_on("save-bookmark-button")
-        return self
+        if not save_bookmark:
+            return self
+        else:
+            self.panel_ui.click_on("save-bookmark-button")
+            return self
 
     @BasePage.context_chrome
     def toggle_show_editor_when_saving(self) -> BasePage:
@@ -1069,8 +1079,9 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https"
-            not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: (
+                "https" not in self.get_element("awesome-bar").get_attribute("value")
+            )
         )
 
     @BasePage.context_chrome
@@ -1082,9 +1093,11 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar")
-            .get_attribute("value")
-            .startswith(prefix)
+            lambda d: (
+                self.get_element("awesome-bar")
+                .get_attribute("value")
+                .startswith(prefix)
+            )
         )
 
     @BasePage.context_chrome

@@ -10,10 +10,10 @@ permissions:
   contents: "write"
 
 jobs:
-  Select-Channels:
+  Select-Sites-Regions:
     runs-on: ubuntu-latest
     outputs:
-      channels: ${{ steps.splits.outputs.channels }}
+      sites_regions: ${{ steps.splits.outputs.sites_regions }}
     steps:
       - name: Create app token
         uses: actions/create-github-app-token@v1
@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
-      - name: Select test channels
+      - name: Select Sites and Regions
         id: splits
         run: |
           python3 scripts/choose_l10n_beta_split.py
