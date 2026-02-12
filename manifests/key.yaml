@@ -265,7 +265,7 @@ bookmarks_and_history:
   test_add_bookmark_via_star_only_saved_explicitly:
     result: pass
     splits:
-      - functional1
+    - functional1
   test_add_new_other_bookmark:
     result: pass
     splits:
@@ -664,6 +664,10 @@ notifications:
     result: pass
     splits:
     - functional2
+  test_geolocation_allow_browserleaks:
+    result: pass
+    splits:
+    - functional1
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -1166,10 +1170,6 @@ tabs:
     splits:
     - functional2
   test_save_and_close_a_tab_group:
-    result: pass
-    splits:
-    - functional2
-  test_move_single_tab_via_context_menu:
     result: pass
     splits:
     - functional2
