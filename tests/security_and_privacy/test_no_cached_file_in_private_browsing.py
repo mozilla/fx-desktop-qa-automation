@@ -13,6 +13,7 @@ def test_no_cached_file_in_private_browsing(driver: Firefox, panel_ui, websites)
     """
     C101678: Verify that no cached files are stored when browsing in a Private Window.
     """
+    # Instantiate objects
     about_cache = AboutCache(driver)
 
     # Open a private window and switch to it
