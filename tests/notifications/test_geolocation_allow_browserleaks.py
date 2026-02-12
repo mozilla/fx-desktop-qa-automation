@@ -9,7 +9,7 @@ TEST_URL = "https://browserleaks.com/geo"
 
 @pytest.fixture()
 def test_case():
-    return "1756775"
+    return "122612"
 
 
 def _dismiss_system_location_dialog_if_present(driver) -> bool:
@@ -28,7 +28,7 @@ def _dismiss_system_location_dialog_if_present(driver) -> bool:
 
 def test_geolocation_allow_browserleaks(driver):
     """
-    C1756775 - Verify geolocation prompt is displayed on BrowserLeaks and Allow grants permission.
+    122612 - Verify geolocation prompt is displayed on BrowserLeaks and Allow grants permission.
     Skips if OS/system location permission blocks Firefox.
     """
     nav = Navigation(driver)
