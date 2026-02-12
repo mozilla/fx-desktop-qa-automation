@@ -2,7 +2,6 @@ import logging
 from typing import List, Optional, Set
 
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.remote.webelement import WebElement
 
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage

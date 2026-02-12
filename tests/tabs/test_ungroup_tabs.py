@@ -1,6 +1,5 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.action_chains import ActionChains
 
 from modules.browser_object import ContextMenu, TabBar
 
