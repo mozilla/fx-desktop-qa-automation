@@ -1,9 +1,8 @@
 import pytest
-from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
+from selenium.common.exceptions import TimeoutException, UnexpectedAlertPresentException
 
 from modules.browser_object import Navigation
 from modules.page_object import GenericPage
-
 
 TEST_URL = "https://browserleaks.com/geo"
 
@@ -40,7 +39,9 @@ def test_geolocation_allow_browserleaks(driver):
 
     # Click Allow; handle possible OS-level confirmEx dialog
     try:
-        nav.handle_geolocation_prompt(button_type="primary", remember_this_decision=False)
+        nav.handle_geolocation_prompt(
+            button_type="primary", remember_this_decision=False
+        )
     except UnexpectedAlertPresentException:
         handled = _dismiss_system_location_dialog_if_present(driver)
         pytest.skip(
