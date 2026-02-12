@@ -827,7 +827,9 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def edit_bookmark_via_star_button(self, new_name: str, location: str, save_bookmark: True) -> BasePage:
+    def edit_bookmark_via_star_button(
+        self, new_name: str, location: str, save_bookmark: True
+    ) -> BasePage:
         """
         Edit bookmark details by opening the edit bookmark panel via the star button
 
@@ -840,7 +842,9 @@ class Navigation(BasePage):
         # Wait a moment for the panel edit field to gain focus then delete the contents,
         # otherwise new_name text can be appended to the original name instead of replacing it
         time.sleep(0.5)
-        self.panel_ui.get_element("edit-bookmark-panel").send_keys(Keys.DELETE + new_name)
+        self.panel_ui.get_element("edit-bookmark-panel").send_keys(
+            Keys.DELETE + new_name
+        )
         if location == "Other Bookmarks":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("other-bookmarks")

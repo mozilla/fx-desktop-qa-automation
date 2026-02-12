@@ -4,7 +4,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs, GenericPage
-from modules.util import BrowserActions, Utilities
 
 
 @pytest.fixture()
