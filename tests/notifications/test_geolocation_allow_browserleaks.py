@@ -3,7 +3,6 @@ import pytest
 from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
-
 TEST_URL = "https://browserleaks.com/geo"
 
 
@@ -27,4 +26,6 @@ def test_geolocation_allow_browserleaks(driver):
     nav.handle_geolocation_prompt(button_type="primary", remember_this_decision=False)
 
     # Permission indicator is shown in the address bar
-    nav.expect_in_chrome(lambda _: nav.get_element("permissions-location-icon").is_displayed())
+    nav.expect_in_chrome(
+        lambda _: nav.get_element("permissions-location-icon").is_displayed()
+    )
