@@ -530,6 +530,13 @@ Location: about:preferences
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: tab-hover-preview-checkbox
+Selector Data: tabPreviewShowThumbnails
+Description: Checkbox to toggle "Show an image preview when you hover on a tab"
+Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: h2-enhanced-tracking-protection
 Selector Data: h2[data-l10n-id='content-blocking-enhanced-tracking-protection']"
 Description: Enhance Tracking Protection sub-header
@@ -4441,6 +4448,34 @@ Selector Name: all-tabs
 Selector Data: tabbrowser-tab
 Description: All tabs locator
 Location: All tabs from the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-panel
+Selector Data: tab-preview-panel
+Description: Tab hover preview panel container
+Location: In the tabbed browser (shown when hovering a tab)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-title
+Selector Data: "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title"
+Description: Title text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-uri
+Selector Data: "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri"
+Description: URL text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-thumbnail-container
+Selector Data: "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container"
+Description: Thumbnail container inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
 Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill
