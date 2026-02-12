@@ -87,40 +87,8 @@ def sanitize_filename(filename):
     return sanitized[:200]
 
 
-def pytest_exception_interact(node, call, report):
-    """
-    Method that wraps all test execution, on any exception/failure an artifact with the information about the failure is kept.
-    """
-    if report.failed:
-        try:
-            test_name = node.name
-            test_name = sanitize_filename(test_name)
-            logging.info(f"Handling exception for test: {test_name}")
-            if hasattr(node, "funcargs"):
-                logging.info(
-                    f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
-                )
-                driver = node.funcargs.get("driver")
-                opt_ci = node.funcargs.get("opt_ci")
-                if driver and opt_ci:
-                    logging.info("Writing artifacts...")
-                    log_content(opt_ci, driver, test_name)
-                    screenshot_content(driver, opt_ci, test_name)
-            else:
-                logging.error("Error occurred during collection.")
-        except Exception:
-            logging.error("Something went wrong with the exception catching.")
-
-
 def pytest_addoption(parser):
     """Set custom command-line options"""
-    parser.addoption(
-        "--ci",
-        action="store_true",
-        default=False,
-        help="Is this running in a CI environment?",
-    )
-
     parser.addoption(
         "--fx-channel",
         action="store",
@@ -163,6 +131,42 @@ def pytest_addoption(parser):
         help="Size for Fx window, default is '1152x864'",
     )
 
+    parser.addoption(
+        "--ci",
+        action="store_true",
+        default=False,
+        help="Is this running in a CI environment?",
+    )
+
+
+def pytest_exception_interact(node, call, report):
+    """
+    Method that wraps all test execution, on any exception/failure an artifact
+    with information about the failure is kept.
+    """
+    logging.warning("Exception hook====")
+    if report.failed:
+        try:
+            test_name = node.name
+            test_name = sanitize_filename(test_name)
+            logging.info(f"Handling exception for test: {test_name}")
+            if hasattr(node, "funcargs"):
+                logging.info(
+                    f"NODE LOGS HERE {node.funcargs}\n THE FAILED TEST: {test_name}"
+                )
+                driver = node.funcargs.get("driver")
+                opt_ci = node.funcargs.get("opt_ci")
+                logging.warning(f"driver {type(driver)} ci {type(opt_ci)}")
+                logging.warning(f"driver {bool(driver)} ci {bool(opt_ci)}")
+                if driver and opt_ci:
+                    logging.info("Writing artifacts...")
+                    log_content(opt_ci, driver, test_name)
+                    screenshot_content(driver, opt_ci, test_name)
+            else:
+                logging.error("Error occurred during collection.")
+        except Exception:
+            logging.error("Something went wrong with the exception catching.")
+
 
 def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
     if not filename.endswith(".png"):
@@ -190,8 +194,11 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
         # compress the image (OSX generates large screenshots)
         image = Image.open(fullpath)
         width, height = image.size
-        new_size = (width // 2, height // 2)
-        resized_image = image.resize(new_size)
+        # new_size = (width // 2, height // 2)
+        # resized_image = image.resize(new_size)
+        resized_image = image.crop(
+            (width // 4, height // 4, width * 3 // 4, height * 3 // 4)
+        )
         resized_image.save(fullpath, optimize=True, quality=50)
     elif platform.system() == "Linux":
         check_output(["gnome-screenshot", f"--file={fullpath}"])
@@ -203,6 +210,8 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
 
 @pytest.fixture()
 def opt_headless(request):
+    logging.warning("hedles")
+    logging.warning(request.config.getoption("--run-headless"))
     return request.config.getoption("--run-headless")
 
 
@@ -213,6 +222,7 @@ def opt_implicit_timeout(request):
 
 @pytest.fixture(scope="session")
 def opt_ci(request):
+    logging.warning(f"set ci {request.config.getoption('--ci')}")
     return request.config.getoption("--ci")
 
 
@@ -223,11 +233,14 @@ def opt_window_size(request):
 
 @pytest.fixture(scope="session")
 def sys_platform():
+    logging.warning("plat")
     return platform.system()
 
 
 @pytest.fixture(scope="session")
 def geckodriver(request):
+    logging.warning("gc")
+    logging.warning(request.config.getoption("--geckodriver"))
     return request.config.getoption("--geckodriver")
 
 
@@ -464,6 +477,7 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
+    logging.warning(f"ci: {opt_ci}")
     options = Options()
     options.add_argument("--remote-allow-system-access")
     options.binary_location = fx_executable
