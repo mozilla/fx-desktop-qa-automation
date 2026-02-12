@@ -4,7 +4,7 @@ import re
 import sys
 from subprocess import check_output
 
-ALL_CHANNELS = ["starfox", "l10n"]
+ALL_TEST_TYPES = ["starfox", "l10n"]
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 
@@ -45,22 +45,22 @@ committed_files = (
 main_conftest = "conftest.py"
 base_page = os.path.join("modules", "page_base.py")
 
-channels = set()
+test_types = set()
 
 if main_conftest in committed_files or base_page in committed_files:
-    print(ALL_CHANNELS)
+    print(ALL_TEST_TYPES)
     sys.exit()
 
 for f in committed_files:
     if any([r.match(f) for r in l10n_module_patterns]):
-        print(ALL_CHANNELS)
+        print(ALL_TEST_TYPES)
         sys.exit()
 
-    for test_channel, subset in file_subsets.items():
+    for test_type, subset in file_subsets.items():
         if any(s in c for s in subset for c in committed_files):
-            channels.add(test_channel)
+            test_types.add(test_type)
 
-if not channels:
-    channels = {"starfox"}
+if not test_types:
+    test_types = {"starfox"}
 
-print(json.dumps(list(channels)))
+print(json.dumps(list(test_types)))
