@@ -1,0 +1,17 @@
+{
+    "disk-cache-link": {
+        "selectorData": "a[href=\"about:cache?storage=disk\"]",
+        "strategy": "css",
+        "groups": []
+    },
+    "memory-cache-link": {
+        "selectorData": "a[href=\"about:cache?storage=memory\"]",
+        "strategy": "css",
+        "groups": []
+    },
+    "entries-table": {
+        "selectorData": "entries",
+        "strategy": "id",
+        "groups": []
+    }
+}

@@ -1079,8 +1079,9 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https"
-            not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: (
+                "https" not in self.get_element("awesome-bar").get_attribute("value")
+            )
         )
 
     @BasePage.context_chrome
@@ -1092,9 +1093,11 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar")
-            .get_attribute("value")
-            .startswith(prefix)
+            lambda d: (
+                self.get_element("awesome-bar")
+                .get_attribute("value")
+                .startswith(prefix)
+            )
         )
 
     @BasePage.context_chrome
@@ -1207,38 +1210,6 @@ class Navigation(BasePage):
             return True
 
         return index
-
-    @BasePage.context_chrome
-    def verify_autofill_adaptive_element(
-        self, expected_type: str, expected_url: str
-    ) -> BasePage:
-        """
-        Verify that the adaptive history autofill element has the expected type and URL text.
-        This method handles chrome context switching internally.
-        Arguments:
-            expected_type: Expected type attribute value
-            expected_url: Expected URL fragment to be contained in the element text
-        """
-        autofill_element = self.get_element("search-result-autofill-adaptive-element")
-        actual_type = autofill_element.get_attribute("type")
-        actual_text = autofill_element.text
-
-        assert actual_type == expected_type
-        assert expected_url in actual_text
-
-        return self
-
-    @BasePage.context_chrome
-    def verify_no_autofill_adaptive_elements(self) -> BasePage:
-        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
-        if autofill_elements:
-            logging.warning(
-                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
-            )
-        assert len(autofill_elements) == 0, (
-            "Adaptive history autofill suggestion was not removed after deletion."
-        )
-        return self
 
     @BasePage.context_chrome
     def verify_autofill_adaptive_element(
