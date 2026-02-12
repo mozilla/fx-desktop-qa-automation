@@ -1,5 +1,4 @@
 import pytest
-
 from selenium.webdriver import ActionChains, Firefox
 
 from modules.browser_object_navigation import Navigation
