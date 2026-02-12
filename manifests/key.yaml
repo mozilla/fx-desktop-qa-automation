@@ -969,6 +969,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_no_cached_file_in_private_browsing:
+    result: pass
+    splits:
+    - functional2
   test_no_trackers_detected:
     result: pass
     splits:

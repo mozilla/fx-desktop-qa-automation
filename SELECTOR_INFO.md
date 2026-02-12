@@ -23,6 +23,28 @@ Description: Takes the name of the intended theme to use
 Location: Theme cards on about:addons page
 Path to .json: modules/data/about_addons.components.json
 ```
+#### about_cache
+```
+Selector Name: disk-cache-link
+Selector Data: "a[href=\"about:cache?storage=disk\"]"
+Description: The "List Cache Entries" link for the disk storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: memory-cache-link
+Selector Data: "a[href=\"about:cache?storage=memory\"]"
+Description: The "List Cache Entries" link for the memory storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: entries-table
+Selector Data: "entries"
+Description: The table containing cache entry rows
+Location: about:cache?storage=disk or about:cache?storage=memory page
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button

@@ -19,6 +19,27 @@ from modules.page_object_generics import GenericPage
 from modules.util import BrowserActions
 
 
+class AboutCache(BasePage):
+    """
+    POM for the about:cache page
+    """
+
+    URL_TEMPLATE = "about:cache"
+
+    def open_disk_or_memory_cache_entries(self, storage: str = "disk"):
+        """
+        Open the cache entries list for the given storage type.
+
+        Argument:
+            storage: 'disk' or 'memory'
+        """
+        self.click_on(f"{storage}-cache-link")
+
+    def get_entries_text(self):
+        """Return the full text content of the cache entries table, lowercased."""
+        return self.get_element("entries-table").text.lower()
+
+
 class AboutConfig(BasePage):
     """
     The POM for the about:config page
@@ -240,10 +261,10 @@ class AboutLogins(BasePage):
                 self.fill("login-item-type", value, labels=[item_type])
             logging.info("Clicking submit...")
             self.wait.until(
-                lambda _: self.get_element("create-login-button").get_attribute(
-                    "disabled"
+                lambda _: (
+                    self.get_element("create-login-button").get_attribute("disabled")
+                    is None
                 )
-                is None
             )
             logging.info("Submitted.")
         except (WebDriverException, StaleElementReferenceException):
