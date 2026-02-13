@@ -88,8 +88,10 @@ class TrackerPanel(BasePage):
         verify the title of the tracker panel.
         """
         self.expect(
-            lambda _: self.get_element("tracker-title").get_attribute("innerHTML")
-            == "Protections for senglehardt.com"
+            lambda _: (
+                self.get_element("tracker-title").get_attribute("innerHTML")
+                == "Protections for senglehardt.com"
+            )
         )
 
     def wait_for_blocked_tracking_icon(
