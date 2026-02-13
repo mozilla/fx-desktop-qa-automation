@@ -419,7 +419,7 @@ class PanelUi(BasePage):
         )
 
     @BasePage.context_chrome
-    def edit_folder_name_via_toolbar(
+    def edit_bookmark_via_toolbar(
         self, folder_name: str, ba: BrowserActions
     ) -> BasePage:
         """
@@ -476,25 +476,3 @@ class PanelUi(BasePage):
         """
         panel = self.get_element("bookmark-iframe")  # or panel container
         return panel.is_displayed()
-
-    @BasePage.context_chrome
-    def edit_bookmark_name_via_toolbar(
-            self, folder_name: str, ba: BrowserActions
-    ) -> BasePage:
-        """
-        Edit the name of a new Bookmark Folder in the Bookmarks Toolbar panel.
-
-        This simulates typing into the Name field of the Add Folder panel
-        without saving the folder yet. Useful for testing "unsaved" behavior.
-
-        Arguments:
-        folder_name : str : The name to set for the folder
-        ba : BrowserActions : Utility for switching context to the bookmark panel iframe
-        """
-        # Switch to the iframe containing the Add Folder panel
-        iframe = self.get_element("bookmark-iframe")
-        ba.switch_to_iframe_context(iframe)
-
-        # Type the folder name into the Name field
-        self.actions.send_keys(folder_name).perform()
-        return self

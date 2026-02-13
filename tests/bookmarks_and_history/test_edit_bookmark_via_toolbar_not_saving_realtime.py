@@ -8,6 +8,7 @@ from modules.util import BrowserActions
 
 BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_NAME = "New bookmark"
+OLD_BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"
 
 
 @pytest.fixture()
@@ -39,11 +40,13 @@ def test_edit_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
     nav.edit_bookmark_via_context_menu()
 
     # Edit the Name into something with more characters
-    panel.edit_bookmark_name_via_toolbar(BOOKMARK_NAME, ba)
+    panel.edit_bookmark_via_toolbar(BOOKMARK_NAME, ba)
 
-    # The modified name is not updated in real time.
-    # THe Bookmarks toolbar still shows the old Bookmark name
+    # The modified name is not updated in real time, The Bookmarks toolbar still shows the old Bookmark name
+    nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)
 
-    # Click the Save button.
+    # Click the Save button
+    panel.save_folder_via_toolbar()
 
     # The new edited name is now displayed on the Bookmarks Toolbar
+    nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)
