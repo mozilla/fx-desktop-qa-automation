@@ -827,25 +827,35 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def edit_bookmark_via_star_button(self, new_name: str, location: str) -> BasePage:
+    def edit_bookmark_via_star_button(
+        self, new_name: str, location: str, save_bookmark: True
+    ) -> BasePage:
         """
         Edit bookmark details by opening the edit bookmark panel via the star button
 
         Arguments:
         new_name : The new name/title to assign to the bookmark
         location : The folder location where the bookmark should be saved
+        action_complete:
         """
         self.click_on("star-button")
-        self.panel_ui.get_element("edit-bookmark-panel").send_keys(new_name)
+        # Wait a moment for the panel edit field to gain focus then delete the contents,
+        # otherwise new_name text can be appended to the original name instead of replacing it
+        time.sleep(0.5)
+        self.panel_ui.get_element("edit-bookmark-panel").send_keys(
+            Keys.DELETE + new_name
+        )
         if location == "Other Bookmarks":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("other-bookmarks")
         elif location == "Bookmarks Toolbar":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("bookmarks-toolbar")
-        # for else add Bookmark Menu option if needed in the future
-        self.panel_ui.click_on("save-bookmark-button")
-        return self
+        if not save_bookmark:
+            return self
+        else:
+            self.panel_ui.click_on("save-bookmark-button")
+            return self
 
     @BasePage.context_chrome
     def toggle_show_editor_when_saving(self) -> BasePage:
@@ -1069,8 +1079,9 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https"
-            not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: (
+                "https" not in self.get_element("awesome-bar").get_attribute("value")
+            )
         )
 
     @BasePage.context_chrome
@@ -1082,9 +1093,11 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar")
-            .get_attribute("value")
-            .startswith(prefix)
+            lambda d: (
+                self.get_element("awesome-bar")
+                .get_attribute("value")
+                .startswith(prefix)
+            )
         )
 
     @BasePage.context_chrome
@@ -1197,38 +1210,6 @@ class Navigation(BasePage):
             return True
 
         return index
-
-    @BasePage.context_chrome
-    def verify_autofill_adaptive_element(
-        self, expected_type: str, expected_url: str
-    ) -> BasePage:
-        """
-        Verify that the adaptive history autofill element has the expected type and URL text.
-        This method handles chrome context switching internally.
-        Arguments:
-            expected_type: Expected type attribute value
-            expected_url: Expected URL fragment to be contained in the element text
-        """
-        autofill_element = self.get_element("search-result-autofill-adaptive-element")
-        actual_type = autofill_element.get_attribute("type")
-        actual_text = autofill_element.text
-
-        assert actual_type == expected_type
-        assert expected_url in actual_text
-
-        return self
-
-    @BasePage.context_chrome
-    def verify_no_autofill_adaptive_elements(self) -> BasePage:
-        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
-        if autofill_elements:
-            logging.warning(
-                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
-            )
-        assert len(autofill_elements) == 0, (
-            "Adaptive history autofill suggestion was not removed after deletion."
-        )
-        return self
 
     @BasePage.context_chrome
     def verify_autofill_adaptive_element(
@@ -1461,6 +1442,15 @@ class Navigation(BasePage):
         except Exception:
             # Element not found or not accessible
             return False
+
+    @BasePage.context_chrome
+    def add_folder_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and add folder via context menu
+        """
+        self.context_click("bookmarks-toolbar-context")
+        self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
+        return self
 
     def edit_bookmark_via_context_menu(self) -> BasePage:
         """

@@ -649,6 +649,11 @@
         "strategy": "css",
         "groups": []
     },
+    "bookmarks-toolbar-context": {
+        "selectorData": "PlacesToolbarItems",
+        "strategy": "id",
+        "groups": []
+    },
     "bookmark-in-toolbar": {
         "selectorData": "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']",
         "strategy": "css",

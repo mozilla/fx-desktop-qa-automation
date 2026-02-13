@@ -23,6 +23,28 @@ Description: Takes the name of the intended theme to use
 Location: Theme cards on about:addons page
 Path to .json: modules/data/about_addons.components.json
 ```
+#### about_cache
+```
+Selector Name: disk-cache-link
+Selector Data: "a[href=\"about:cache?storage=disk\"]"
+Description: The "List Cache Entries" link for the disk storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: memory-cache-link
+Selector Data: "a[href=\"about:cache?storage=memory\"]"
+Description: The "List Cache Entries" link for the memory storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: entries-table
+Selector Data: "entries"
+Description: The table containing cache entry rows
+Location: about:cache?storage=disk or about:cache?storage=memory page
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button
@@ -142,6 +164,13 @@ Path to .json: modules/data/about_downloads_context_menu.components.json
 Selector Name: context-menu-delete
 Selector Data: "downloadDeleteFileMenuItem"
 Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: context-menu-toolbar-add-folder
+Selector Data: placesContext_new:folder
+Description: Downloads context menu option "New folder"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
@@ -527,6 +556,13 @@ Selector Name: find-in-settings-input
 Selector Data: "input[placeholder='Find in Settings']"
 Description: Find in Settings input field
 Location: about:preferences
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: tab-hover-preview-checkbox
+Selector Data: tabPreviewShowThumbnails
+Description: Checkbox to toggle "Show an image preview when you hover on a tab"
+Location: about:preferences#general
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -3608,6 +3644,13 @@ Description: Download button warning dot
 Location: Download button
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: bookmarks-toolbar-context
+Selector Data: "PlacesToolbarItems"
+Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -3997,6 +4040,20 @@ Selector Name: reopen-all-closed-tabs-button
 Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
 Description: Reopen all closed tabs buttonutton
 Location: On the hamburger menu > History > Recently closed tabs
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-iframe
+Selector Data: browser[class='dialogFrame']
+Description: Add bookmark folder
+Location: Add bookmark folder from bookmarks toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: tabs-toolbar
+Selector Data: TabsToolbar
+Description: Click outside the Add Folder panel to simulate cancelling or clicking away
+Location: Add bookmark folder
 Path to .json: modules/data/panel_ui.components.json
 ```
 #### print_preview
@@ -4441,6 +4498,34 @@ Selector Name: all-tabs
 Selector Data: tabbrowser-tab
 Description: All tabs locator
 Location: All tabs from the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-panel
+Selector Data: tab-preview-panel
+Description: Tab hover preview panel container
+Location: In the tabbed browser (shown when hovering a tab)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-title
+Selector Data: "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title"
+Description: Title text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-uri
+Selector Data: "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri"
+Description: URL text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-thumbnail-container
+Selector Data: "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container"
+Description: Thumbnail container inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
 Path to .json: modules/data/tab_bar.components.json
 ```
 #### text_area_form_autofill

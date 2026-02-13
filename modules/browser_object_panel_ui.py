@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -416,6 +417,65 @@ class PanelUi(BasePage):
         assert len(found) == 0, (
             f"Expected URLs to be removed from recently closed, but found: {found}"
         )
+
+    @BasePage.context_chrome
+    def edit_folder_name_via_toolbar(
+        self, folder_name: str, ba: BrowserActions
+    ) -> BasePage:
+        """
+        Edit the name of a new Bookmark Folder in the Bookmarks Toolbar panel.
+
+        This simulates typing into the Name field of the Add Folder panel
+        without saving the folder yet. Useful for testing "unsaved" behavior.
+
+        Arguments:
+        folder_name : str : The name to set for the folder
+        ba : BrowserActions : Utility for switching context to the bookmark panel iframe
+        """
+        # Switch to the iframe containing the Add Folder panel
+        iframe = self.get_element("bookmark-iframe")
+        ba.switch_to_iframe_context(iframe)
+
+        # Type the folder name into the Name field
+        self.actions.send_keys(folder_name).perform()
+        return self
+
+    @BasePage.context_chrome
+    def click_outside_add_folder_panel(self) -> BasePage:
+        """
+        Click outside the Add Folder panel to simulate cancelling or clicking away.
+
+        This is used to test that editing the folder name alone does NOT create
+        the folder in the toolbar without explicitly saving it.
+
+        The 'tabs-toolbar' element is used as a safe area outside the panel.
+        """
+        outside = self.get_element("tabs-toolbar")
+        outside.click()
+        return self
+
+    @BasePage.context_chrome
+    def save_folder_via_toolbar(self) -> BasePage:
+        """
+        Save the Bookmark Folder after editing the Name field.
+
+        Presses Enter to confirm creation of the folder. In the UI, this is
+        equivalent to clicking the 'Save' button or pressing Enter while
+        focused on the Name field.
+        """
+        # Simulate pressing Enter to save the folder
+        self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
+    @BasePage.context_chrome
+    def is_add_folder_panel_open(self) -> bool:
+        """
+        Returns True if the Add Folder panel is still visible/open.
+
+        This can be used to verify that clicking outside did NOT dismiss the panel.
+        """
+        panel = self.get_element("bookmark-iframe")  # or panel container
+        return panel.is_displayed()
 
     @BasePage.context_chrome
     def edit_bookmark_name_via_toolbar(

@@ -144,10 +144,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_engine_result_page_load_on_reload_or_back:
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - functional1
   test_search_engine_selector:
@@ -262,6 +259,14 @@ audio_video:
     splits:
     - functional1
 bookmarks_and_history:
+  test_add_bookmark_folder_via_toolbar_not_saving_realtime:
+    result: pass
+    splits:
+    - functional1
+  test_add_bookmark_via_star_only_saved_explicitly:
+    result: pass
+    splits:
+    - functional1
   test_add_new_other_bookmark:
     result: pass
     splits:
@@ -660,6 +665,10 @@ notifications:
     result: pass
     splits:
     - functional2
+  test_geolocation_allow_browserleaks:
+    result: pass
+    splits:
+    - functional1
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -965,6 +974,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_no_cached_file_in_private_browsing:
+    result: pass
+    splits:
+    - functional2
   test_no_trackers_detected:
     result: pass
     splits:
@@ -973,6 +986,10 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_open_private_browsing_via_keyboard:
+    result: pass
+    splits:
+    - functional2
   test_phishing_and_malware_warnings:
     result: pass
     splits:
@@ -1086,6 +1103,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_move_single_tab_via_context_menu:
+    result: pass
+    splits:
+    - functional2
   test_mute_tabs:
     result:
       linux: pass
@@ -1161,7 +1182,7 @@ tabs:
     result: pass
     splits:
     - functional2
-  test_move_single_tab_via_context_menu:
+  test_tab_hover_different_content_type:
     result: pass
     splits:
     - functional2

@@ -300,5 +300,10 @@
         "selectorData": "browser[class='dialogFrame']",
         "strategy": "css",
         "groups": []
+    },
+    "tabs-toolbar": {
+        "selectorData": "TabsToolbar",
+        "strategy": "id",
+        "groups": []
     }
 }
