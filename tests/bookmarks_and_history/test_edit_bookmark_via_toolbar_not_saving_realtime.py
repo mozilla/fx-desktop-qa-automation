@@ -16,11 +16,6 @@ def test_case():
     return "2090396"
 
 
-@pytest.fixture()
-def add_to_prefs_list():
-    return [("browser.toolbars.bookmarks.visibility", "always")]
-
-
 def test_edit_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
     """
     C2090396 - Verify that Editing a Bookmark from the Bookmarks Toolbar will not save it in real time
