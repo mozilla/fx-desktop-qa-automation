@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_about_pages import AboutCache
 
 
@@ -9,15 +10,16 @@ def test_case():
     return "101678"
 
 
-def test_no_cached_file_in_private_browsing(driver: Firefox, panel_ui, websites):
+def test_no_cached_file_in_private_browsing(driver: Firefox, websites):
     """
-    C101678: Verify that no cached files are stored when browsing in a Private Window.
+    C101678 - Verify that no cached files are stored when browsing in a Private Window.
     """
     # Instantiate objects
     about_cache = AboutCache(driver)
+    panel = PanelUi(driver)
 
     # Open a private window and switch to it
-    panel_ui.open_and_switch_to_new_window("private")
+    panel.open_and_switch_to_new_window("private")
 
     # Visit several websites in Private Browsing
     for url in websites:
@@ -33,6 +35,4 @@ def test_no_cached_file_in_private_browsing(driver: Firefox, panel_ui, websites)
     entries_text = about_cache.get_entries_text()
 
     for url in websites:
-        assert url not in entries_text, (
-            f"Found private-browsing URL in cache entries: {url}"
-        )
+        assert url not in entries_text

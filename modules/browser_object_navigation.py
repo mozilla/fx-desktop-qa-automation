@@ -1444,6 +1444,13 @@ class Navigation(BasePage):
             return False
 
     @BasePage.context_chrome
+    def end_private_session(self) -> BasePage:
+        """Click 'End Private Session' toolbar button then confirm with 'Delete session data'."""
+        self.get_element("reset-pbm-toolbar-button").click()
+        self.get_element("reset-pbm-panel-confirm-button").click()
+        return self
+
+    @BasePage.context_chrome
     def add_folder_via_context_menu(self) -> BasePage:
         """
         Right-clicks on bookmarks toolbar and add folder via context menu

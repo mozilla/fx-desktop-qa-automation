@@ -942,6 +942,10 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_cache-is_cleared_via_clear_data_button:
+    result: pass
+    splits:
+    - functional2
   test_blocking_social_media_trackers:
     result: unstable
     splits:
@@ -974,7 +978,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_no_cached_file_in_private_browsing:
+  test_cache_is_cleared_via_end_private_session_button:
     result: pass
     splits:
     - functional2

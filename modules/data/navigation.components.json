@@ -653,5 +653,15 @@
         "selectorData": "PlacesToolbarItems",
         "strategy": "id",
         "groups": []
+    },
+    "reset-pbm-toolbar-button": {
+        "selectorData": "reset-pbm-toolbar-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "reset-pbm-panel-confirm-button": {
+        "selectorData": "reset-pbm-panel-confirm-button",
+        "strategy": "id",
+        "groups": []
     }
 }
