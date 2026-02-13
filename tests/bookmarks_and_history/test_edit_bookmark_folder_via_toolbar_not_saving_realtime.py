@@ -5,7 +5,6 @@ from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.util import BrowserActions
 
-
 FOLDER_NAME = "Test Folder"
 OLD_FOLDER_NAME = "New Folder"
 
