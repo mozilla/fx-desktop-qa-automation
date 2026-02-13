@@ -13,7 +13,7 @@ OLD_BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"
 
 @pytest.fixture()
 def test_case():
-    return "2090451"
+    return "2090396"
 
 
 @pytest.fixture()
