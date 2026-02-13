@@ -34,7 +34,7 @@ def test_add_bookmark_folder_via_toolbar_not_saving_realtime(driver: Firefox):
     nav.add_folder_via_context_menu()
 
     # Edit the name of the folder and click out-side of the panel
-    panel.edit_folder_name_via_toolbar(FOLDER_NAME, ba)
+    panel.edit_bookmark_via_toolbar(FOLDER_NAME, ba)
     panel.click_outside_add_folder_panel()
 
     # Add time sleep, the assert may always pass because the panel hasn’t had time to close yet

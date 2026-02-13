@@ -174,6 +174,13 @@ Description: Downloads context menu option "New folder"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-edit-bookmark
+Selector Data: placesContext_show_bookmark:info
+Description: Downloads context menu option "Edit bookmark"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input
@@ -3648,6 +3655,13 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: bookmarks-toolbar-context
 Selector Data: "PlacesToolbarItems"
 Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmark-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']"
+Description: Mozilla website bookmark in toolbar
 Location: Bookmarks toolbar
 Path to .json: modules/data/navigation.components.json
 ```
