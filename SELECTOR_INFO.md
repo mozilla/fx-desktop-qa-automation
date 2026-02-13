@@ -3246,14 +3246,14 @@ Location: Toolbar after adding it from customize
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: reset-pbm-toolbar-button
+Selector name: end-private-session-button
 Selector Data: reset-pbm-toolbar-button
 Description: "End Private Session" toolbar button (private browsing / PBM)
 Location: Toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: reset-pbm-panel-confirm-button
+Selector name: delete-session-data-button
 Selector Data: reset-pbm-panel-confirm-button
 Description: Confirmation button in the "End Private Session" panel ("Delete session data")
 Location: Confirmation panel after clicking "End Private Session"
