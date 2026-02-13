@@ -45,6 +45,13 @@ Description: The table containing cache entry rows
 Location: about:cache?storage=disk or about:cache?storage=memory page
 Path to .json: modules/data/about_cache.components.json
 ```
+```
+Selector Name: number-of-entries
+Selector Data: "//th[normalize-space()='Number of entries:']/following-sibling::td[1]"
+Description: The "Number of entries" value cell in the cache storage summary table
+Location: about:cache
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button
@@ -3236,6 +3243,20 @@ Selector name: forget-button
 Selector Data: panic-button
 Description: Forget button
 Location: Toolbar after adding it from customize
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: end-private-session-button
+Selector Data: reset-pbm-toolbar-button
+Description: "End Private Session" toolbar button (private browsing / PBM)
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: delete-session-data-button
+Selector Data: reset-pbm-panel-confirm-button
+Description: Confirmation button in the "End Private Session" panel ("Delete session data")
+Location: Confirmation panel after clicking "End Private Session"
 Path to .json: modules/data/navigation.components.json
 ```
 ```
