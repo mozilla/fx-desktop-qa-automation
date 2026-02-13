@@ -167,6 +167,13 @@ Description: Downloads context menu option "Delete"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-toolbar-add-folder
+Selector Data: placesContext_new:folder
+Description: Downloads context menu option "New folder"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input
@@ -3637,6 +3644,13 @@ Description: Download button warning dot
 Location: Download button
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: bookmarks-toolbar-context
+Selector Data: "PlacesToolbarItems"
+Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -4026,6 +4040,20 @@ Selector Name: reopen-all-closed-tabs-button
 Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
 Description: Reopen all closed tabs buttonutton
 Location: On the hamburger menu > History > Recently closed tabs
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-iframe
+Selector Data: browser[class='dialogFrame']
+Description: Add bookmark folder
+Location: Add bookmark folder from bookmarks toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: tabs-toolbar
+Selector Data: TabsToolbar
+Description: Click outside the Add Folder panel to simulate cancelling or clicking away
+Location: Add bookmark folder
 Path to .json: modules/data/panel_ui.components.json
 ```
 #### print_preview
