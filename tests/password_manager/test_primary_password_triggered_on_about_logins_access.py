@@ -91,6 +91,8 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
 
     # Verify that the saved login is visible and accessible in the login list
     about_logins.wait.until(
-        lambda _: about_logins.get_element("login-list-item").get_attribute("title")
-        == TEST_PAGE_URL
+        lambda _: (
+            about_logins.get_element("login-list-item").get_attribute("title")
+            == TEST_PAGE_URL
+        )
     )

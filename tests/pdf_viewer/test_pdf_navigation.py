@@ -35,9 +35,11 @@ def _move_pdf_and_get_delta(pdf_viewer: GenericPdf, key: str | int) -> int:
 
     # wait for scrolling down
     pdf_viewer.wait.until(
-        lambda _: page_one_item.location["y"] < initial_location
-        if key in DOWNWARD or isinstance(key, int)
-        else page_one_item.location["y"] > initial_location
+        lambda _: (
+            page_one_item.location["y"] < initial_location
+            if key in DOWNWARD or isinstance(key, int)
+            else page_one_item.location["y"] > initial_location
+        )
     )
 
     # scroll down using right key
