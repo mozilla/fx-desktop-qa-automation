@@ -43,7 +43,7 @@ def test_edit_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
     panel.edit_bookmark_via_toolbar(BOOKMARK_NAME, ba)
 
     # The modified name is not updated in real time, The Bookmarks toolbar still shows the old Bookmark name
-    nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)
+    nav.verify_bookmark_exists_in_bookmarks_toolbar(OLD_BOOKMARK_NAME)
 
     # Click the Save button
     panel.save_folder_via_toolbar()
