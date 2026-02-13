@@ -1446,8 +1446,8 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def end_private_session(self) -> BasePage:
         """Click 'End Private Session' toolbar button then confirm with 'Delete session data'."""
-        self.get_element("end-private-session-button").click()
-        self.get_element("delete-session-data-button").click()
+        self.click_on("end-private-session-button")
+        self.click_on("delete-session-data-button")
         return self
 
     @BasePage.context_chrome
