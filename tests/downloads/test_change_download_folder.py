@@ -1,6 +1,5 @@
 import os
 import re
-import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -40,22 +39,6 @@ def _trigger_download(driver: Firefox, url: str) -> None:
         url,
     )
 
-
-def _wait_for_file_in_dir(dir_path: str, filename_regex: str, timeout: int = 30) -> str:
-    """Wait until a filename matching filename_regex exists in dir_path; return the match."""
-    pattern = re.compile(filename_regex)
-    end = time.time() + timeout
-    while time.time() < end:
-        try:
-            for name in os.listdir(dir_path):
-                if pattern.match(name):
-                    return os.path.join(dir_path, name)
-        except FileNotFoundError:
-            pass
-        time.sleep(0.25)
-    raise AssertionError(
-        f"No downloaded file matched /{filename_regex}/ in: {dir_path}"
-    )
 
 
 def _set_download_dir(driver: Firefox, path: str) -> None:
@@ -98,7 +81,14 @@ def test_change_download_folder(
     nav.wait_for_download_completion()
     nav.verify_download_name(MP3_PANEL_NAME_REGEX)
 
-    _wait_for_file_in_dir(downloads_folder, FIRST_FILE_REGEX)
+    first_pattern = re.compile(FIRST_FILE_REGEX)
+
+    page.expect(
+        lambda _: any(
+            first_pattern.match(name)
+            for name in os.listdir(downloads_folder)
+        )
+    )
 
     # Go to about:preferences and search for "Downloads"
     prefs = AboutPrefs(driver, category="general")
@@ -123,4 +113,11 @@ def test_change_download_folder(
     nav.wait_for_download_completion()
     nav.verify_download_name(MP3_PANEL_NAME_REGEX)
 
-    _wait_for_file_in_dir(str(custom_dir), SECOND_FILE_REGEX)
+    second_pattern = re.compile(SECOND_FILE_REGEX)
+
+    page.expect(
+        lambda _: any(
+            second_pattern.match(name)
+            for name in os.listdir(custom_dir)
+        )
+    )
