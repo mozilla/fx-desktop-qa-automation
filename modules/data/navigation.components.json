@@ -653,5 +653,15 @@
         "selectorData": "PlacesToolbarItems",
         "strategy": "id",
         "groups": []
+    },
+    "end-private-session-button": {
+        "selectorData": "reset-pbm-toolbar-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "delete-session-data-button": {
+        "selectorData": "reset-pbm-panel-confirm-button",
+        "strategy": "id",
+        "groups": []
     }
 }
