@@ -946,6 +946,10 @@ security_and_privacy:
     result: unstable
     splits:
     - functional2
+  test_bookmarks_toolbar_present_in_private_browsing:
+    result: pass
+    splits:
+    - functional2
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
