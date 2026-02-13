@@ -661,6 +661,10 @@ notifications:
     result: pass
     splits:
     - functional2
+  test_geolocation_allow_browserleaks:
+    result: pass
+    splits:
+    - functional1
   test_geolocation_prompt_presence:
     result: pass
     splits:
