@@ -1452,7 +1452,9 @@ class Navigation(BasePage):
         self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
         return self
 
-    def edit_bookmark_or_folder_via_context_menu_via_toolbar(self, item_type: str) -> "BasePage":
+    def edit_bookmark_or_folder_via_context_menu_via_toolbar(
+        self, item_type: str
+    ) -> "BasePage":
         """
         Right-clicks on a bookmark or bookmark folder from toolbar and edits it via context menu.
 
@@ -1461,11 +1463,13 @@ class Navigation(BasePage):
         """
         element_map = {
             "bookmark": "bookmark-in-toolbar",
-            "folder": "bookmark-folder-in-toolbar"
+            "folder": "bookmark-folder-in-toolbar",
         }
 
         if item_type not in element_map:
-            raise ValueError(f"Invalid item_type: {item_type}. Must be 'bookmark' or 'folder'.")
+            raise ValueError(
+                f"Invalid item_type: {item_type}. Must be 'bookmark' or 'folder'."
+            )
 
         self.context_click(element_map[item_type])
         self.context_menu.click_and_hide_menu("context-menu-edit-bookmark")
