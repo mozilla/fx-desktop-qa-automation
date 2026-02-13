@@ -3651,6 +3651,13 @@ Description: Bookmarks toolbar fress space
 Location: Bookmarks toolbar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: bookmark-folder-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='New Folder']"
+Description: Bookmark folder in toolbar
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

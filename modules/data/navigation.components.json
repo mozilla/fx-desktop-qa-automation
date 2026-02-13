@@ -653,5 +653,11 @@
         "selectorData": "PlacesToolbarItems",
         "strategy": "id",
         "groups": []
+    },
+    "bookmark-folder-in-toolbar": {
+        "selectorData": "toolbarbutton.bookmark-item[label='New Folder']",
+        "strategy": "css",
+        "groups": []
     }
+
 }
