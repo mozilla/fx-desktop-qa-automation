@@ -37,7 +37,7 @@ def test_edit_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
     nav.add_bookmark_via_star_icon()
 
     # Right Click any Bookmark from the Bookmarks Toolbar and select the Edit Bookmark option
-    nav.edit_bookmark_via_context_menu()
+    nav.edit_bookmark_or_folder_via_context_menu_via_toolbar("bookmark")
 
     # Edit the Name into something with more characters
     panel.edit_bookmark_via_toolbar(BOOKMARK_NAME, ba)
