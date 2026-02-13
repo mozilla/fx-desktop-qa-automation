@@ -36,10 +36,10 @@ def test_edit_bookmark_folder_via_toolbar_not_saving_realtime(driver: Firefox):
     # Click the Save button
     panel.save_folder_via_toolbar()
 
-    # Right-click the Bookmarks Folder and select Edit Folder
+    # Right-click the bookmarks Folder and select Edit Folder
     nav.edit_bookmark_or_folder_via_context_menu_via_toolbar("folder")
 
-    # Change the Name of the folder and click outside of the panel
+    # Change the name of the folder and click outside of the panel
     panel.edit_folder_name_via_toolbar(FOLDER_NAME, ba)
 
     # The new modifications are not updated in real time on the Bookmarks Toolbar
