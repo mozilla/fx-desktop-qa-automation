@@ -40,7 +40,6 @@ def _trigger_download(driver: Firefox, url: str) -> None:
     )
 
 
-
 def _set_download_dir(driver: Firefox, path: str) -> None:
     """Set the download directory via prefs (chrome context)."""
     with driver.context(driver.CONTEXT_CHROME):
@@ -85,8 +84,7 @@ def test_change_download_folder(
 
     page.expect(
         lambda _: any(
-            first_pattern.match(name)
-            for name in os.listdir(downloads_folder)
+            first_pattern.match(name) for name in os.listdir(downloads_folder)
         )
     )
 
@@ -116,8 +114,5 @@ def test_change_download_folder(
     second_pattern = re.compile(SECOND_FILE_REGEX)
 
     page.expect(
-        lambda _: any(
-            second_pattern.match(name)
-            for name in os.listdir(custom_dir)
-        )
+        lambda _: any(second_pattern.match(name) for name in os.listdir(custom_dir))
     )
