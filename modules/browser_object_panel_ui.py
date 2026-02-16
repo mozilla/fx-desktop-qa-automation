@@ -476,3 +476,17 @@ class PanelUi(BasePage):
         """
         panel = self.get_element("bookmark-iframe")  # or panel container
         return panel.is_displayed()
+
+    @BasePage.context_chrome
+    def click_inside_bookmark_panel(self) -> BasePage:
+        """
+        Click inside the Add Folder panel to simulate cancelling or clicking away.
+
+        This is used to test that editing the folder name alone does NOT create
+        the folder in the toolbar without explicitly saving it.
+
+        The 'tabs-toolbar' element is used as a safe area inside the panel.
+        """
+        inside = self.get_element("bookmarks-panel-location-label")
+        inside.click()
+        return self
