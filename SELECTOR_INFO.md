@@ -3679,6 +3679,13 @@ Description: Bookmark folder in toolbar
 Location: Bookmarks toolbar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: bookmark-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']"
+Description: Mozilla website bookmark in toolbar
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button

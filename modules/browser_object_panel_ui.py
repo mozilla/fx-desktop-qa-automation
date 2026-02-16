@@ -419,7 +419,7 @@ class PanelUi(BasePage):
         )
 
     @BasePage.context_chrome
-    def edit_folder_name_via_toolbar(
+    def edit_bookmark_via_toolbar(
         self, folder_name: str, ba: BrowserActions
     ) -> BasePage:
         """
