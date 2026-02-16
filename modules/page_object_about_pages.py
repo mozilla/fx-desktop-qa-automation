@@ -39,6 +39,10 @@ class AboutCache(BasePage):
         """Return the full text content of the cache entries table, lowercased."""
         return self.get_element("entries-table").text.lower()
 
+    def get_number_of_entries(self):
+        """Return the 'Number of entries' value from the about:cache overview."""
+        return self.get_element("number-of-entries").text
+
 
 class AboutConfig(BasePage):
     """

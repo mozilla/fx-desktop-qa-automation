@@ -257,5 +257,10 @@
         "selectorData": "placesContext_new:folder",
         "strategy": "id",
         "groups": []
+    },
+    "context-menu-edit-bookmark": {
+        "selectorData": "placesContext_show_bookmark:info",
+        "strategy": "id",
+        "groups": []
     }
 }
