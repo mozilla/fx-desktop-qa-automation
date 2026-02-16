@@ -13,5 +13,10 @@
         "selectorData": "entries",
         "strategy": "id",
         "groups": []
+    },
+    "number-of-entries": {
+        "selectorData": "//th[normalize-space()='Number of entries:']/following-sibling::td[1]",
+        "strategy": "xpath",
+        "groups": []
     }
 }

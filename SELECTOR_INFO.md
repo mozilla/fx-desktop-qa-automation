@@ -45,6 +45,13 @@ Description: The table containing cache entry rows
 Location: about:cache?storage=disk or about:cache?storage=memory page
 Path to .json: modules/data/about_cache.components.json
 ```
+```
+Selector Name: number-of-entries
+Selector Data: "//th[normalize-space()='Number of entries:']/following-sibling::td[1]"
+Description: The "Number of entries" value cell in the cache storage summary table
+Location: about:cache
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button
@@ -171,13 +178,6 @@ Path to .json: modules/data/about_downloads_context_menu.components.json
 Selector Name: context-menu-toolbar-add-folder
 Selector Data: placesContext_new:folder
 Description: Downloads context menu option "New folder"
-Location: Downloaded file context menu
-Path to .json: modules/data/about_downloads_context_menu.components.json
-```
-```
-Selector Name: context-menu-edit-bookmark
-Selector Data: placesContext_show_bookmark:info
-Description: Downloads context menu option "Edit bookmark"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
@@ -3246,6 +3246,20 @@ Location: Toolbar after adding it from customize
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: end-private-session-button
+Selector Data: reset-pbm-toolbar-button
+Description: "End Private Session" toolbar button (private browsing / PBM)
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: delete-session-data-button
+Selector Data: reset-pbm-panel-confirm-button
+Description: Confirmation button in the "End Private Session" panel ("Delete session data")
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: history-button
 Selector Data: history-panelmenu
 Description: History button
@@ -3655,6 +3669,13 @@ Path to .json: modules/data/navigation.components.json
 Selector Name: bookmarks-toolbar-context
 Selector Data: "PlacesToolbarItems"
 Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmark-folder-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='New Folder']"
+Description: Bookmark folder in toolbar
 Location: Bookmarks toolbar
 Path to .json: modules/data/navigation.components.json
 ```

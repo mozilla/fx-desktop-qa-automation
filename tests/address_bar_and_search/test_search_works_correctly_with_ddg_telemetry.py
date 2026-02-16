@@ -6,7 +6,8 @@ from selenium.webdriver.common.by import By
 from modules.browser_object import Navigation
 from modules.page_object_about_pages import AboutTelemetry
 from modules.util import Utilities
-from tests.preferences.test_clear_cookie_data import WEBSITE_ADDRESS
+
+WEBSITE_ADDRESS = "https://www.mozilla.com"
 
 SEARCH_TERM = "buy stocks"
 SEARCH_TERM2 = "mozilla wikipedia"
