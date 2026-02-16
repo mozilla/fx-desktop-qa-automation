@@ -1493,9 +1493,7 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_bookmark_not_in_bookmarks_toolbar(
-            self, bookmark_name: str
-    ) -> BasePage:
+    def verify_bookmark_not_in_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
         """
         Verify bookmark does NOT exist in the bookmarks toolbar
         """
