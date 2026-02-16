@@ -19,12 +19,12 @@ def add_to_prefs_list():
     ]
 
 
-def test_end_private_session_button_can_be_removed_and_added_back_on_toolbar_via_customise_page(
+def test_end_private_session_button_can_be_removed_and_added_back_on_toolbar_via_customize_page(
     driver: Firefox,
 ):
     """
     C2359315 - Verify that "End Private Session" button can be removed and added back on the toolbar via the
-    Customise page in a Private Window
+    Customize page in a Private Window
     """
     # Instantiate objects
     nav = Navigation(driver)
@@ -39,7 +39,7 @@ def test_end_private_session_button_can_be_removed_and_added_back_on_toolbar_via
     panel.navigate_to_customize_toolbar()
 
     # Remove the End private session button and click Done
-    custom_page.remove_widget_from_toolbar("end-private-session-wrapper")
+    custom_page.remove_widget_from_toolbar("end-private-session")
     custom_page.submit_the_changes_via_done_button()
 
     # Verify the button is removed from the toolbar

@@ -40,7 +40,7 @@
         "strategy": "id",
         "groups": []
     },
-    "end-private-session-wrapper": {
+    "end-private-session": {
         "selectorData": "wrapper-reset-pbm-toolbar-button",
         "strategy": "id",
         "groups": []

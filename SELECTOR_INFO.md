@@ -2164,7 +2164,7 @@ Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
 ```
-Selector Name: end-private-session-wrapper
+Selector Name: end-private-session
 Selector Data: "wrapper-reset-pbm-toolbar-button"
 Description: The End Private Session button wrapper in the customize toolbar page
 Location: Customize firefox options in Context Chrome
