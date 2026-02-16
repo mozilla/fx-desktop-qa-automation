@@ -780,8 +780,9 @@ class LoginAutofill(Autofill):
     @BasePage.context_chrome
     def verify_login_panel_not_open(self):
         self.wait.until(
-            lambda d: self.get_element("save-login-popup").get_attribute("panelopen")
-            is None
+            lambda d: (
+                self.get_element("save-login-popup").get_attribute("panelopen") is None
+            )
         )
 
     class LoginForm:

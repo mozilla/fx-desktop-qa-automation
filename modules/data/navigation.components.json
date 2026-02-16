@@ -654,6 +654,11 @@
         "strategy": "id",
         "groups": []
     },
+    "bookmark-folder-in-toolbar": {
+        "selectorData": "toolbarbutton.bookmark-item[label='New Folder']",
+        "strategy": "css",
+        "groups": []
+    },
     "end-private-session-button": {
         "selectorData": "reset-pbm-toolbar-button",
         "strategy": "id",
@@ -664,4 +669,5 @@
         "strategy": "id",
         "groups": []
     }
+
 }
