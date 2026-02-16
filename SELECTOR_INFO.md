@@ -1791,6 +1791,13 @@ Location: Any item in the customize Firefox content
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: customize-widget-remove-from-toolbar
+Selector Data: "toolbar-context-remove-from-toolbar"
+Description: Customize window context click option "Remove from Toolbar"
+Location: Any item on the toolbar in the customize Firefox content
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-add-bookmark
 Selector Data: "placesContext_new:bookmark"
 Description: Bookmarks Toolbar context click option "Add Bookmark…"
@@ -2146,6 +2153,20 @@ Path to .json: modules/data/customize_firefox.components.json
 Selector Name: done-button
 Selector Data: "customization-done-button"
 Description: The done button in the customizd toolbar
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: restore-defaults-button
+Selector Data: "customization-reset-button"
+Description: The Restore Defaults button in the customize toolbar page
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: end-private-session-wrapper
+Selector Data: "wrapper-reset-pbm-toolbar-button"
+Description: The End Private Session button wrapper in the customize toolbar page
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
