@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 
-
 TEST_URL = "https://download.samplelib.com/mp3/sample-3s.mp3"
 
 
