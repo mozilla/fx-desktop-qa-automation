@@ -181,6 +181,13 @@ Description: Downloads context menu option "New folder"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-toolbar-add-bookmark
+Selector Data: context-menu-toolbar-add-bookmark
+Description: Downloads context menu option "New bookmark"
+Location: Toolbar bookmark context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input

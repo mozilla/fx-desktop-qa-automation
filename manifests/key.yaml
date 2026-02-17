@@ -267,6 +267,10 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+  test_add_bookmark_via_toolbar_not_saving_realtime:
+    result: pass
+    splits:
+    - functional1
   test_add_new_other_bookmark:
     result: pass
     splits:
