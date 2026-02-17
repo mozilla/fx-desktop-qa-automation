@@ -671,7 +671,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def add_bookmark_via_toolbar_other_bookmark_context_menu(
-        self, bookmark_data: Bookmark, ba: BrowserActions
+        self, bookmark_data: Bookmark, ba: BrowserActions, save: bool = True
     ) -> BasePage:
         """
         Add a bookmark via the toolbar's Other Bookmarks context menu.
@@ -693,8 +693,9 @@ class Navigation(BasePage):
         self.actions.send_keys(Keys.TAB).perform()
         # fill keywords
         self.actions.send_keys(bookmark_data.keyword).perform()
-        # save the bookmark
-        self.actions.send_keys(Keys.ENTER).perform()
+        # only save if requested
+        if save:
+            self.actions.send_keys(Keys.ENTER).perform()
         return self
 
     @BasePage.context_chrome
@@ -1442,3 +1443,72 @@ class Navigation(BasePage):
         except Exception:
             # Element not found or not accessible
             return False
+
+    @BasePage.context_chrome
+    def end_private_session(self) -> BasePage:
+        """Click 'End Private Session' toolbar button then confirm with 'Delete session data'."""
+        self.click_on("end-private-session-button")
+        self.click_on("delete-session-data-button")
+        return self
+
+    @BasePage.context_chrome
+    def add_folder_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and add folder via context menu
+        """
+        self.context_click("bookmarks-toolbar-context")
+        self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
+        return self
+
+    def edit_bookmark_or_folder_via_context_menu_via_toolbar(
+        self, item_type: str
+    ) -> "BasePage":
+        """
+        Right-clicks on a bookmark or bookmark folder from toolbar and edits it via context menu.
+
+        Args:
+            item_type (str): Either "bookmark" or "folder".
+        """
+        element_map = {
+            "bookmark": "bookmark-in-toolbar",
+            "folder": "bookmark-folder-in-toolbar",
+        }
+
+        if item_type not in element_map:
+            raise ValueError(
+                f"Invalid item_type: {item_type}. Must be 'bookmark' or 'folder'."
+            )
+
+        self.context_click(element_map[item_type])
+        self.context_menu.click_and_hide_menu("context-menu-edit-bookmark")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_not_in_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+        """
+        Verify bookmark does NOT exist in the bookmarks toolbar
+        """
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_bookmark_toolbar_context_menu_option(self, item_type: str) -> BasePage:
+        """
+        Right-clicks on the bookmarks toolbar and adds an item via context menu.
+
+        :param item_type: Type of item to add ("bookmark" or "folder")
+        """
+        self.context_click("bookmarks-toolbar-context")
+
+        menu_items = {
+            "bookmark": "context-menu-toolbar-add-bookmark",
+            "folder": "context-menu-toolbar-add-folder",
+        }
+
+        if item_type not in menu_items:
+            raise ValueError(f"Unsupported item_type: {item_type}")
+
+        self.context_menu.click_and_hide_menu(menu_items[item_type])
+        return self

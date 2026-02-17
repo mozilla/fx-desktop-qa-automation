@@ -45,6 +45,13 @@ Description: The table containing cache entry rows
 Location: about:cache?storage=disk or about:cache?storage=memory page
 Path to .json: modules/data/about_cache.components.json
 ```
+```
+Selector Name: number-of-entries
+Selector Data: "//th[normalize-space()='Number of entries:']/following-sibling::td[1]"
+Description: The "Number of entries" value cell in the cache storage summary table
+Location: about:cache
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button
@@ -165,6 +172,20 @@ Selector Name: context-menu-delete
 Selector Data: "downloadDeleteFileMenuItem"
 Description: Downloads context menu option "Delete"
 Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: context-menu-toolbar-add-folder
+Selector Data: placesContext_new:folder
+Description: Downloads context menu option "New folder"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: context-menu-toolbar-add-bookmark
+Selector Data: context-menu-toolbar-add-bookmark
+Description: Downloads context menu option "New bookmark"
+Location: Toolbar bookmark context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
 #### about_glean
@@ -1777,6 +1798,13 @@ Location: Any item in the customize Firefox content
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: customize-widget-remove-from-toolbar
+Selector Data: "toolbar-context-remove-from-toolbar"
+Description: Customize window context click option "Remove from Toolbar"
+Location: Any item on the toolbar in the customize Firefox content
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-add-bookmark
 Selector Data: "placesContext_new:bookmark"
 Description: Bookmarks Toolbar context click option "Add Bookmark…"
@@ -2132,6 +2160,20 @@ Path to .json: modules/data/customize_firefox.components.json
 Selector Name: done-button
 Selector Data: "customization-done-button"
 Description: The done button in the customizd toolbar
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: restore-defaults-button
+Selector Data: "customization-reset-button"
+Description: The Restore Defaults button in the customize toolbar page
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: end-private-session
+Selector Data: "wrapper-reset-pbm-toolbar-button"
+Description: The End Private Session button wrapper in the customize toolbar page
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
@@ -3232,6 +3274,20 @@ Location: Toolbar after adding it from customize
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: end-private-session-button
+Selector Data: reset-pbm-toolbar-button
+Description: "End Private Session" toolbar button (private browsing / PBM)
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: delete-session-data-button
+Selector Data: reset-pbm-panel-confirm-button
+Description: Confirmation button in the "End Private Session" panel ("Delete session data")
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: history-button
 Selector Data: history-panelmenu
 Description: History button
@@ -3637,6 +3693,27 @@ Description: Download button warning dot
 Location: Download button
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: bookmarks-toolbar-context
+Selector Data: "PlacesToolbarItems"
+Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmark-folder-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='New Folder']"
+Description: Bookmark folder in toolbar
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmark-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']"
+Description: Mozilla website bookmark in toolbar
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -4026,6 +4103,27 @@ Selector Name: reopen-all-closed-tabs-button
 Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
 Description: Reopen all closed tabs buttonutton
 Location: On the hamburger menu > History > Recently closed tabs
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-iframe
+Selector Data: browser[class='dialogFrame']
+Description: Add bookmark folder
+Location: Add bookmark folder from bookmarks toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: tabs-toolbar
+Selector Data: TabsToolbar
+Description: Click outside the Add Folder panel to simulate cancelling or clicking away
+Location: Add bookmark folder
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-panel-location-label
+Selector Data: "label.editBMPanel_folderRow.hideable[value='Location']",
+Description: Click inside the Add Folder panel to simulate cancelling or clicking away
+Location: Add/Edit bookmark folder
 Path to .json: modules/data/panel_ui.components.json
 ```
 #### print_preview
