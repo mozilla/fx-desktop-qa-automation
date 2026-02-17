@@ -305,5 +305,10 @@
         "selectorData": "TabsToolbar",
         "strategy": "id",
         "groups": []
+    },
+    "bookmarks-panel-location-label": {
+        "selectorData": "label.editBMPanel_folderRow.hideable[value='Location']",
+        "strategy": "css",
+        "groups": []
     }
 }

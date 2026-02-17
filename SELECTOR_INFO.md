@@ -4119,6 +4119,13 @@ Description: Click outside the Add Folder panel to simulate cancelling or clicki
 Location: Add bookmark folder
 Path to .json: modules/data/panel_ui.components.json
 ```
+```
+Selector name: bookmarks-panel-location-label
+Selector Data: "label.editBMPanel_folderRow.hideable[value='Location']",
+Description: Click inside the Add Folder panel to simulate cancelling or clicking away
+Location: Add/Edit bookmark folder
+Path to .json: modules/data/panel_ui.components.json
+```
 #### print_preview
 ```
 Selector name: print-preview-browser
