@@ -80,7 +80,6 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     # Save the image
     image_context_menu.click_and_hide_menu("context-menu-save-image-as")
 
-    # bump!
     # wait some time before interacting with the system dialog
     sleep(2)
     wiki_image_page.handle_os_download_confirmation(controller, sys_platform)
