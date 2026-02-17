@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from selenium.common.exceptions import NoAlertPresentException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -22,6 +24,11 @@ def extra_selectors():
             "groups": [],
         }
     }
+
+
+@pytest.fixture()
+def hard_quit():
+    return True
 
 
 @pytest.mark.headed
@@ -63,14 +70,17 @@ def test_close_browser_with_download_in_progress_shows_prompt(driver, extra_sele
     alert_text = WebDriverWait(driver, 10).until(alert_text_present)
     text = alert_text.lower()
 
+    logging.info("alert")
+
     assert "download will be canceled" in text
     assert "private browsing" in text
     assert ("leave private browsing" in text) or ("exit" in text)
 
-    panel.get_alert().accept()
+    # panel.get_alert().accept()
+    # logging.info("accept panel")
+    #
+    # # Step 6: Ensure we are attached to the remaining (non-private) window so teardown can quit
+    # WebDriverWait(driver, 10).until(lambda d: len(d.window_handles) >= 1)
+    # driver.switch_to.window(driver.window_handles[0])
 
-    # Step 6: Ensure we are attached to the remaining (non-private) window so teardown can quit
-    WebDriverWait(driver, 10).until(lambda d: len(d.window_handles) >= 1)
-    driver.switch_to.window(driver.window_handles[0])
-
-    driver.quit()
+    logging.info("end of test")
