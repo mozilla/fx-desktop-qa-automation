@@ -669,6 +669,10 @@ notifications:
       win: pass
     splits:
     - functional2
+  test_cancel_webextension:
+    result: pass
+    splits:
+    - functional1
   test_deny_geolocation:
     result: pass
     splits:
@@ -958,15 +962,15 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
-  test_cache_is_cleared_via_end_private_session_button:
-    result: pass
-    splits:
-    - functional2
   test_blocking_social_media_trackers:
     result: unstable
     splits:
     - functional2
   test_bookmarks_toolbar_present_in_private_browsing:
+    result: pass
+    splits:
+    - functional2
+  test_cache_is_cleared_via_end_private_session_button:
     result: pass
     splits:
     - functional2
