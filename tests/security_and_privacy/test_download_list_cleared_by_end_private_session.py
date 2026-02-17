@@ -13,7 +13,7 @@ DOWNLOAD_FILE_NAME = "sample2.doc"
 
 @pytest.fixture()
 def test_case():
-    return "2359320"
+    return "2359317"
 
 
 @pytest.fixture()
@@ -33,7 +33,7 @@ def test_download_list_is_cleared_by_end_private_session_button(
     driver: Firefox, delete_files
 ):
     """
-    C2359320 - Verify that download list is cleared when "End Private Session" is used in a Private Window
+    C2359317 - Verify that download list is cleared when "End Private Session" is used in a Private Window
     """
     # Instantiate objects
     nav = Navigation(driver)
