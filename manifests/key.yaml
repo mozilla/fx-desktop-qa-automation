@@ -259,7 +259,15 @@ audio_video:
     splits:
     - functional1
 bookmarks_and_history:
+  test_add_bookmark_folder_via_toolbar_not_saving_realtime:
+    result: pass
+    splits:
+    - functional1
   test_add_bookmark_via_star_only_saved_explicitly:
+    result: pass
+    splits:
+    - functional1
+  test_add_bookmark_via_toolbar_not_saving_realtime:
     result: pass
     splits:
     - functional1
@@ -296,11 +304,19 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+  test_edit_bookmark_folder_via_toolbar_not_saving_realtime:
+    result: pass
+    splits:
+    - functional1
   test_edit_bookmark_from_bookmark_menu:
     result: pass
     splits:
     - functional1
   test_edit_bookmark_via_star_button:
+    result: pass
+    splits:
+    - functional1
+  test_edit_bookmark_via_toolbar_not_saving_realtime:
     result: pass
     splits:
     - functional1
@@ -370,6 +386,10 @@ downloads:
     - functional1
   test_add_zip_type:
     result: unstable
+    splits:
+    - functional1
+  test_change_download_folder:
+    result: pass
     splits:
     - functional1
   test_delete_download_while_in_progress:
@@ -661,6 +681,14 @@ notifications:
     result: pass
     splits:
     - functional2
+  test_downloads_button_is_displayed:
+    result: pass
+    splits:
+    - functional1
+  test_geolocation_allow_browserleaks:
+    result: pass
+    splits:
+    - functional1
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -934,8 +962,16 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_cache_is_cleared_via_end_private_session_button:
+    result: pass
+    splits:
+    - functional2
   test_blocking_social_media_trackers:
     result: unstable
+    splits:
+    - functional2
+  test_bookmarks_toolbar_present_in_private_browsing:
+    result: pass
     splits:
     - functional2
   test_cookies_not_saved_private_browsing:
@@ -955,6 +991,10 @@ security_and_privacy:
     splits:
     - functional2
   test_downloads_from_private_not_leaked:
+    result: pass
+    splits:
+    - functional2
+  test_end_private_session_button_can_be_removed_or_added_on_toolbar:
     result: pass
     splits:
     - functional2

@@ -2,7 +2,6 @@ import logging
 from typing import List, Optional, Set
 
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.remote.webelement import WebElement
 
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
@@ -89,8 +88,10 @@ class TrackerPanel(BasePage):
         verify the title of the tracker panel.
         """
         self.expect(
-            lambda _: self.get_element("tracker-title").get_attribute("innerHTML")
-            == "Protections for senglehardt.com"
+            lambda _: (
+                self.get_element("tracker-title").get_attribute("innerHTML")
+                == "Protections for senglehardt.com"
+            )
         )
 
     def wait_for_blocked_tracking_icon(

@@ -265,8 +265,10 @@ class BasePage(Page):
     def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Expect helper: wait until element is visible or timeout"""
         self.expect(
-            lambda _: self.fetch(reference, labels=labels)
-            and self.fetch(reference, labels=labels).is_displayed()
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and self.fetch(reference, labels=labels).is_displayed()
+            )
         )
         return self
 
@@ -304,8 +306,10 @@ class BasePage(Page):
     ) -> Page:
         """Expect helper: wait until element is selected or timeout"""
         self.expect(
-            lambda _: self.fetch(reference, labels=labels)
-            and self.fetch(reference, labels=labels).is_selected()
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and self.fetch(reference, labels=labels).is_selected()
+            )
         )
         return self
 
@@ -327,9 +331,11 @@ class BasePage(Page):
     ) -> Page:
         """Expect helper: wait until element attribute contains certain value"""
         self.expect(
-            lambda _: self.fetch(reference, labels=labels)
-            and str(attr_value)
-            in self.fetch(reference, labels=labels).get_attribute(attr_name)
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and str(attr_value)
+                in self.fetch(reference, labels=labels).get_attribute(attr_name)
+            )
         )
         return self
 
@@ -343,9 +349,11 @@ class BasePage(Page):
     ):
         """Expect helper: wait until element attribute is a certain value"""
         self.expect(
-            lambda _: self.fetch(reference, labels=labels)
-            and str(attr_value)
-            == self.fetch(reference, labels=labels).get_attribute(attr_name)
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and str(attr_value)
+                == self.fetch(reference, labels=labels).get_attribute(attr_name)
+            )
         )
         return self
 

@@ -34,5 +34,15 @@
         "selectorData": "customization-done-button",
         "strategy": "id",
         "groups": []
+    },
+    "restore-defaults-button": {
+        "selectorData": "customization-reset-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "end-private-session": {
+        "selectorData": "wrapper-reset-pbm-toolbar-button",
+        "strategy": "id",
+        "groups": []
     }
 }

@@ -1,6 +1,3 @@
-import shutil
-from pathlib import Path
-
 import pytest
 from selenium.webdriver import Firefox
 

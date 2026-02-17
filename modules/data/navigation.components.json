@@ -648,5 +648,30 @@
         "selectorData": "#downloads-button[attention='severe']",
         "strategy": "css",
         "groups": []
+    },
+    "bookmarks-toolbar-context": {
+        "selectorData": "PlacesToolbarItems",
+        "strategy": "id",
+        "groups": []
+    },
+    "bookmark-folder-in-toolbar": {
+        "selectorData": "toolbarbutton.bookmark-item[label='New Folder']",
+        "strategy": "css",
+        "groups": []
+    },
+    "end-private-session-button": {
+        "selectorData": "reset-pbm-toolbar-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "delete-session-data-button": {
+        "selectorData": "reset-pbm-panel-confirm-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "bookmark-in-toolbar": {
+        "selectorData": "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']",
+        "strategy": "css",
+        "groups": []
     }
 }

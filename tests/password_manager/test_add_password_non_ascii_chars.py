@@ -29,8 +29,9 @@ def test_add_password_non_ascii_chars(driver: Firefox):
 
     # Check password added in the listbox
     about_logins.wait.until(
-        lambda _: len(about_logins.get_elements("login-list-item"))
-        > original_logins_amount
+        lambda _: (
+            len(about_logins.get_elements("login-list-item")) > original_logins_amount
+        )
     )
     logins = about_logins.get_elements("login-list-item")
 
