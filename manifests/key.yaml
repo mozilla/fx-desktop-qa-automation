@@ -313,9 +313,9 @@ bookmarks_and_history:
     splits:
     - functional1
   test_edit_bookmark_via_start_button_no_saving_realtime:
-  result: pass
-  splits:
-  - functional1
+    result: pass
+    splits:
+    - functional1
   test_edit_bookmark_via_toolbar_not_saving_realtime:
     result: pass
     splits:
