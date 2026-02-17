@@ -1484,15 +1484,6 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def add_bookmark_or_folder_via_context_menu_via_toolbar(self) -> BasePage:
-        """
-        Right-clicks on bookmarks toolbar and add folder via context menu
-        """
-        self.context_click("bookmarks-toolbar-context")
-        self.context_menu.click_and_hide_menu("context-menu-toolbar-add-bookmark")
-        return self
-
-    @BasePage.context_chrome
     def verify_bookmark_not_in_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
         """
         Verify bookmark does NOT exist in the bookmarks toolbar
@@ -1500,4 +1491,24 @@ class Navigation(BasePage):
         self.panel_ui.element_not_visible(
             "panel-menu-item-by-title", labels=[bookmark_name]
         )
+        return self
+
+    @BasePage.context_chrome
+    def select_bookmark_toolbar_context_menu_option(self, item_type: str) -> BasePage:
+        """
+        Right-clicks on the bookmarks toolbar and adds an item via context menu.
+
+        :param item_type: Type of item to add ("bookmark" or "folder")
+        """
+        self.context_click("bookmarks-toolbar-context")
+
+        menu_items = {
+            "bookmark": "context-menu-toolbar-add-bookmark",
+            "folder": "context-menu-toolbar-add-folder",
+        }
+
+        if item_type not in menu_items:
+            raise ValueError(f"Unsupported item_type: {item_type}")
+
+        self.context_menu.click_and_hide_menu(menu_items[item_type])
         return self

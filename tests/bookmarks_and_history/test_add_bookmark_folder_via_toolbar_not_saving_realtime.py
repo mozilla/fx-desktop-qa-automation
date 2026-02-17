@@ -31,7 +31,7 @@ def test_add_bookmark_folder_via_toolbar_not_saving_realtime(driver: Firefox):
     ba = BrowserActions(driver)
 
     # Right-click the Bookmarks toolbar and select Add Folder
-    nav.add_folder_via_context_menu()
+    nav.select_bookmark_toolbar_context_menu_option("folder")
 
     # Edit the name of the folder and click out-side of the panel
     panel.edit_bookmark_via_toolbar(FOLDER_NAME, ba)

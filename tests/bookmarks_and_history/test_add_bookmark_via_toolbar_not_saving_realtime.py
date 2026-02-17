@@ -29,7 +29,7 @@ def test_add_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
     panel = PanelUi(driver)
 
     # Right-click the Bookmarks Toolbar and select Add Bookmark
-    nav.add_bookmark_or_folder_via_context_menu_via_toolbar()
+    nav.select_bookmark_toolbar_context_menu_option("bookmark")
 
     # The New Bookmark is not displayed on the Bookmarks Toolbar
     nav.verify_bookmark_not_in_bookmarks_toolbar(BOOKMARK_DEFAULT_NAME)
@@ -48,9 +48,10 @@ def test_add_bookmark_via_toolbar_not_saving_realtime(driver: Firefox):
 
     # The New Bookmark is not displayed on the Bookmarks Toolbar
     nav.verify_bookmark_not_in_bookmarks_toolbar(BOOKMARK_DEFAULT_NAME)
+    nav.verify_bookmark_not_in_bookmarks_toolbar(BOOKMARK_NAME)
 
     # Click on save button
     panel.save_folder_via_toolbar()
 
-    # The bookmark is corectly created
+    # The bookmark is correctly created
     nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)
