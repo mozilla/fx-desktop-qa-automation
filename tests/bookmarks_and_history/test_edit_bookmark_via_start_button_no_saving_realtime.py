@@ -5,7 +5,6 @@ from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_generics import GenericPage
 
-
 BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_NAME = "Mozilla Firefox"
 OLD_BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"
