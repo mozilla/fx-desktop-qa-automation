@@ -193,29 +193,42 @@
     "strategy": "id",
     "groups": []
   },
-  "show-suggestions": {
-    "selectorData": "checkbox[data-l10n-id='search-show-suggestions-option']",
-    "strategy": "css",
-    "groups": []
-  },
-  "show-suggestions-in-address-bar": {
-    "selectorData": "showSearchSuggestionsFirstCheckbox",
-    "strategy": "id",
-    "groups": []
-  },
   "show-suggestions-awesomebar": {
     "selectorData": "urlBarSuggestion",
     "strategy": "id",
     "groups": []
   },
-  "firefox-suggestions": {
+  "show-suggestions-parent": {
+    "selectorData": "suggestionsInSearchFieldsCheckbox",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-suggestions-first-parent": {
     "selectorData": "showSearchSuggestionsFirstCheckbox",
     "strategy": "id",
     "groups": []
   },
-  "firefox-trending-suggestions": {
-    "selectorData": "showTrendingSuggestions",
+  "show-trending-parent": {
+    "selectorData": "showTrendingSuggestionsCheckbox",
     "strategy": "id",
+    "groups": []
+  },
+  "show-suggestions": {
+    "selectorData": "input",
+    "strategy": "css",
+    "shadowParent": "show-suggestions-parent",
+    "groups": []
+  },
+  "show-suggestions-first": {
+    "selectorData": "input",
+    "strategy": "css",
+    "shadowParent": "show-suggestions-first-parent",
+    "groups": []
+  },
+  "show-trending": {
+    "selectorData": "input",
+    "strategy": "css",
+    "shadowParent": "show-trending-parent",
     "groups": []
   },
   "prefs-html-root": {
