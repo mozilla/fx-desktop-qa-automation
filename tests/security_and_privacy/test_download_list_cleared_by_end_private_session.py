@@ -54,9 +54,7 @@ def test_download_list_is_cleared_by_end_private_session_button(
     # Go to about:downloads in a new tab and verify file is displayed
     tabs.new_tab_by_button()
     about_downloads.open()
-    about_downloads.wait_for_num_downloads(1)
-    downloads = about_downloads.get_downloads()
-    assert len(downloads) == 1
+    assert len(about_downloads.get_downloads()) == 1
 
     # Click end private session button and verify downloads are cleared
     nav.end_private_session()
