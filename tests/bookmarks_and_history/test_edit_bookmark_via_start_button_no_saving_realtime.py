@@ -9,6 +9,7 @@ from modules.page_object_generics import GenericPage
 BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_NAME = "Mozilla Firefox"
 OLD_BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"
+BOOKMARK_LOCATION = "Bookmarks Toolbar"
 
 
 @pytest.fixture()
@@ -16,7 +17,7 @@ def test_case():
     return "2090397"
 
 
-def edit_bookmark_via_start_button_no_saving_realtime(driver: Firefox):
+def test_edit_bookmark_via_start_button_no_saving_realtime(driver: Firefox):
     """
     C2090397 - Verify that Editing a Bookmark from the Star button will not update it in real time
     """
@@ -32,7 +33,7 @@ def edit_bookmark_via_start_button_no_saving_realtime(driver: Firefox):
 
     # Click the Star shaped button and edit bookmark
     nav.edit_bookmark_via_star_button(
-        new_name=BOOKMARK_NAME, save_bookmark=False
+        new_name=BOOKMARK_NAME, location=BOOKMARK_LOCATION, save_bookmark=False
     )
 
     # Click on the next field or somewhere inside the Edit Bookmarks panel
@@ -46,3 +47,9 @@ def edit_bookmark_via_start_button_no_saving_realtime(driver: Firefox):
 
     # The new Bookmark name is displayed on the Bookmarks toolbar
     nav.verify_bookmark_exists_in_bookmarks_toolbar(OLD_BOOKMARK_NAME)
+
+    # Click on save button
+    panel.click_on("save-bookmark-button")
+
+    # The bookmark is correctly edited
+    nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)
