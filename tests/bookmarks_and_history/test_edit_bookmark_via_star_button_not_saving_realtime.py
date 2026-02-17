@@ -16,7 +16,7 @@ def test_case():
     return "2090397"
 
 
-def test_edit_bookmark_via_star_button_no_saving_realtime(driver: Firefox):
+def test_edit_bookmark_via_star_button_not_saving_realtime(driver: Firefox):
     """
     C2090397 - Verify that Editing a Bookmark from the Star button will not update it in real time
     """
