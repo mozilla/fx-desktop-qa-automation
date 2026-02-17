@@ -316,7 +316,7 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
-  test_edit_bookmark_via_start_button_no_saving_realtime:
+  test_edit_bookmark_via_star_button_no_saving_realtime:
     result: pass
     splits:
     - functional1

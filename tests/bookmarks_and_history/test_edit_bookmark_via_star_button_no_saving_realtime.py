@@ -16,7 +16,7 @@ def test_case():
     return "2090397"
 
 
-def test_edit_bookmark_via_start_button_no_saving_realtime(driver: Firefox):
+def test_edit_bookmark_via_star_button_no_saving_realtime(driver: Firefox):
     """
     C2090397 - Verify that Editing a Bookmark from the Star button will not update it in real time
     """
@@ -44,7 +44,7 @@ def test_edit_bookmark_via_start_button_no_saving_realtime(driver: Firefox):
     # Click out-side of the Edit Bookmarks panel
     panel.click_outside_add_folder_panel()
 
-    # The new Bookmark name is displayed on the Bookmarks toolbar
+    # The new Bookmark name isn't displayed on the Bookmarks toolbar
     nav.verify_bookmark_exists_in_bookmarks_toolbar(OLD_BOOKMARK_NAME)
 
     # Click on save button

@@ -480,11 +480,7 @@ class PanelUi(BasePage):
     @BasePage.context_chrome
     def click_inside_bookmark_panel(self) -> BasePage:
         """
-        Click inside the Edit Bookmark panel (on the Location label)
-        to keep focus within the panel without saving changes.
-
-        This is used to verify that changes are not applied in real time
-        when switching between fields inside the panel.
+        Click inside the Edit Bookmark panel (on the Location label).
         """
         inside = self.get_element("bookmarks-panel-location-label")
         inside.click()
