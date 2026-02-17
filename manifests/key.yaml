@@ -986,7 +986,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_download_list_is_cleared_by_end_private_session_button:
+  test_download_list_cleared_by_end_private_session:
     result: pass
     splits:
     - functional2
