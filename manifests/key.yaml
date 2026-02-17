@@ -994,6 +994,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_end_private_session_button_can_be_removed_or_added_on_toolbar:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
