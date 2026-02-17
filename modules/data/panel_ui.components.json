@@ -295,5 +295,15 @@
         "selectorData": "toolbarbutton.restoreallitem[label='Reopen all tabs']",
         "strategy": "css",
         "groups": []
+    },
+    "bookmark-iframe": {
+        "selectorData": "browser[class='dialogFrame']",
+        "strategy": "css",
+        "groups": []
+    },
+    "tabs-toolbar": {
+        "selectorData": "TabsToolbar",
+        "strategy": "id",
+        "groups": []
     }
 }

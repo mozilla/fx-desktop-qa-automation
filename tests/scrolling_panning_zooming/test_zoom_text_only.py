@@ -126,13 +126,17 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     driver.switch_to.window(driver.window_handles[0])
 
     web_page.expect(
-        lambda _: web_page.get_element("yahoo-logo").location["x"]
-        == original_website1_image_position
+        lambda _: (
+            web_page.get_element("yahoo-logo").location["x"]
+            == original_website1_image_position
+        )
     )
 
     web_page.expect(
-        lambda _: web_page.get_element("yahoo-login-button").location["x"]
-        < original_website1_text_position
+        lambda _: (
+            web_page.get_element("yahoo-login-button").location["x"]
+            < original_website1_text_position
+        )
     )
 
     # Zoom out to 90% using panel controls
@@ -146,26 +150,33 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
 
     # Verify Yahoo at 90%: image position still unchanged, text position changed
     web_page.expect(
-        lambda _: web_page.get_element("yahoo-logo").location["x"]
-        == original_website1_image_position
+        lambda _: (
+            web_page.get_element("yahoo-logo").location["x"]
+            == original_website1_image_position
+        )
     )
 
     web_page.expect(
-        lambda _: web_page.get_element("yahoo-login-button").location["x"]
-        > original_website1_text_position
+        lambda _: (
+            web_page.get_element("yahoo-login-button").location["x"]
+            > original_website1_text_position
+        )
     )
 
     # Verify DuckDuckGo: image SIZE unchanged, text position changed
     driver.switch_to.window(driver.window_handles[1])
 
     web_page.expect(
-        lambda _: web_page.get_element("duckduckgo-logo").size
-        == original_website2_image_size
+        lambda _: (
+            web_page.get_element("duckduckgo-logo").size == original_website2_image_size
+        )
     )
 
     web_page.expect(
-        lambda _: web_page.get_element("duckduckgo-tagline").location["x"]
-        < original_website2_text_position
+        lambda _: (
+            web_page.get_element("duckduckgo-tagline").location["x"]
+            < original_website2_text_position
+        )
     )
 
 

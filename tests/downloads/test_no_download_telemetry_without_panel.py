@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
 from modules.page_object_about_pages import AboutTelemetry
 from modules.page_object_generics import GenericPage
 

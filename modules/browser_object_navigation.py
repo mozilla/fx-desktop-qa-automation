@@ -671,7 +671,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def add_bookmark_via_toolbar_other_bookmark_context_menu(
-        self, bookmark_data: Bookmark, ba: BrowserActions
+        self, bookmark_data: Bookmark, ba: BrowserActions, save: bool = True
     ) -> BasePage:
         """
         Add a bookmark via the toolbar's Other Bookmarks context menu.
@@ -693,8 +693,9 @@ class Navigation(BasePage):
         self.actions.send_keys(Keys.TAB).perform()
         # fill keywords
         self.actions.send_keys(bookmark_data.keyword).perform()
-        # save the bookmark
-        self.actions.send_keys(Keys.ENTER).perform()
+        # only save if requested
+        if save:
+            self.actions.send_keys(Keys.ENTER).perform()
         return self
 
     @BasePage.context_chrome
@@ -827,25 +828,35 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def edit_bookmark_via_star_button(self, new_name: str, location: str) -> BasePage:
+    def edit_bookmark_via_star_button(
+        self, new_name: str, location: str, save_bookmark: True
+    ) -> BasePage:
         """
         Edit bookmark details by opening the edit bookmark panel via the star button
 
         Arguments:
         new_name : The new name/title to assign to the bookmark
         location : The folder location where the bookmark should be saved
+        action_complete:
         """
         self.click_on("star-button")
-        self.panel_ui.get_element("edit-bookmark-panel").send_keys(new_name)
+        # Wait a moment for the panel edit field to gain focus then delete the contents,
+        # otherwise new_name text can be appended to the original name instead of replacing it
+        time.sleep(0.5)
+        self.panel_ui.get_element("edit-bookmark-panel").send_keys(
+            Keys.DELETE + new_name
+        )
         if location == "Other Bookmarks":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("other-bookmarks")
         elif location == "Bookmarks Toolbar":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("bookmarks-toolbar")
-        # for else add Bookmark Menu option if needed in the future
-        self.panel_ui.click_on("save-bookmark-button")
-        return self
+        if not save_bookmark:
+            return self
+        else:
+            self.panel_ui.click_on("save-bookmark-button")
+            return self
 
     @BasePage.context_chrome
     def toggle_show_editor_when_saving(self) -> BasePage:
@@ -1069,8 +1080,9 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https"
-            not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: (
+                "https" not in self.get_element("awesome-bar").get_attribute("value")
+            )
         )
 
     @BasePage.context_chrome
@@ -1082,9 +1094,11 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar")
-            .get_attribute("value")
-            .startswith(prefix)
+            lambda d: (
+                self.get_element("awesome-bar")
+                .get_attribute("value")
+                .startswith(prefix)
+            )
         )
 
     @BasePage.context_chrome
@@ -1197,38 +1211,6 @@ class Navigation(BasePage):
             return True
 
         return index
-
-    @BasePage.context_chrome
-    def verify_autofill_adaptive_element(
-        self, expected_type: str, expected_url: str
-    ) -> BasePage:
-        """
-        Verify that the adaptive history autofill element has the expected type and URL text.
-        This method handles chrome context switching internally.
-        Arguments:
-            expected_type: Expected type attribute value
-            expected_url: Expected URL fragment to be contained in the element text
-        """
-        autofill_element = self.get_element("search-result-autofill-adaptive-element")
-        actual_type = autofill_element.get_attribute("type")
-        actual_text = autofill_element.text
-
-        assert actual_type == expected_type
-        assert expected_url in actual_text
-
-        return self
-
-    @BasePage.context_chrome
-    def verify_no_autofill_adaptive_elements(self) -> BasePage:
-        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
-        if autofill_elements:
-            logging.warning(
-                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
-            )
-        assert len(autofill_elements) == 0, (
-            "Adaptive history autofill suggestion was not removed after deletion."
-        )
-        return self
 
     @BasePage.context_chrome
     def verify_autofill_adaptive_element(
@@ -1461,3 +1443,72 @@ class Navigation(BasePage):
         except Exception:
             # Element not found or not accessible
             return False
+
+    @BasePage.context_chrome
+    def end_private_session(self) -> BasePage:
+        """Click 'End Private Session' toolbar button then confirm with 'Delete session data'."""
+        self.click_on("end-private-session-button")
+        self.click_on("delete-session-data-button")
+        return self
+
+    @BasePage.context_chrome
+    def add_folder_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and add folder via context menu
+        """
+        self.context_click("bookmarks-toolbar-context")
+        self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
+        return self
+
+    def edit_bookmark_or_folder_via_context_menu_via_toolbar(
+        self, item_type: str
+    ) -> "BasePage":
+        """
+        Right-clicks on a bookmark or bookmark folder from toolbar and edits it via context menu.
+
+        Args:
+            item_type (str): Either "bookmark" or "folder".
+        """
+        element_map = {
+            "bookmark": "bookmark-in-toolbar",
+            "folder": "bookmark-folder-in-toolbar",
+        }
+
+        if item_type not in element_map:
+            raise ValueError(
+                f"Invalid item_type: {item_type}. Must be 'bookmark' or 'folder'."
+            )
+
+        self.context_click(element_map[item_type])
+        self.context_menu.click_and_hide_menu("context-menu-edit-bookmark")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_not_in_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+        """
+        Verify bookmark does NOT exist in the bookmarks toolbar
+        """
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_bookmark_toolbar_context_menu_option(self, item_type: str) -> BasePage:
+        """
+        Right-clicks on the bookmarks toolbar and adds an item via context menu.
+
+        :param item_type: Type of item to add ("bookmark" or "folder")
+        """
+        self.context_click("bookmarks-toolbar-context")
+
+        menu_items = {
+            "bookmark": "context-menu-toolbar-add-bookmark",
+            "folder": "context-menu-toolbar-add-folder",
+        }
+
+        if item_type not in menu_items:
+            raise ValueError(f"Unsupported item_type: {item_type}")
+
+        self.context_menu.click_and_hide_menu(menu_items[item_type])
+        return self
