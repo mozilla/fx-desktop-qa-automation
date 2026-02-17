@@ -671,7 +671,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def add_bookmark_via_toolbar_other_bookmark_context_menu(
-        self, bookmark_data: Bookmark, ba: BrowserActions
+        self, bookmark_data: Bookmark, ba: BrowserActions, save: bool = True
     ) -> BasePage:
         """
         Add a bookmark via the toolbar's Other Bookmarks context menu.
@@ -693,8 +693,9 @@ class Navigation(BasePage):
         self.actions.send_keys(Keys.TAB).perform()
         # fill keywords
         self.actions.send_keys(bookmark_data.keyword).perform()
-        # save the bookmark
-        self.actions.send_keys(Keys.ENTER).perform()
+        # only save if requested
+        if save:
+            self.actions.send_keys(Keys.ENTER).perform()
         return self
 
     @BasePage.context_chrome
@@ -1480,4 +1481,34 @@ class Navigation(BasePage):
 
         self.context_click(element_map[item_type])
         self.context_menu.click_and_hide_menu("context-menu-edit-bookmark")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_not_in_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+        """
+        Verify bookmark does NOT exist in the bookmarks toolbar
+        """
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_bookmark_toolbar_context_menu_option(self, item_type: str) -> BasePage:
+        """
+        Right-clicks on the bookmarks toolbar and adds an item via context menu.
+
+        :param item_type: Type of item to add ("bookmark" or "folder")
+        """
+        self.context_click("bookmarks-toolbar-context")
+
+        menu_items = {
+            "bookmark": "context-menu-toolbar-add-bookmark",
+            "folder": "context-menu-toolbar-add-folder",
+        }
+
+        if item_type not in menu_items:
+            raise ValueError(f"Unsupported item_type: {item_type}")
+
+        self.context_menu.click_and_hide_menu(menu_items[item_type])
         return self
