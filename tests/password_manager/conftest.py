@@ -5,7 +5,7 @@ from faker import Faker
 from faker.providers import internet, misc
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutLogins
+from modules.page_object import AboutLogins, AboutNewtab, AboutPrefs, GenericPage
 
 
 @pytest.fixture()
@@ -24,6 +24,16 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def about_prefs_category():
+    return "privacy"
+
+
+@pytest.fixture()
+def about_prefs(driver, about_prefs_category: str):
+    return AboutPrefs(driver, category=about_prefs_category)
 
 
 @pytest.fixture()
