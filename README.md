@@ -247,3 +247,9 @@ called `login`.
 **DO NOT PUSH UNENCRYPTED SECRETS.**
 
 **DO NOT ADD SECRETS UNNECESSARILY.**
+
+
+### CI Dry-Run
+In order to validate CI behavior for workflow / code changes while avoiding costly or side effecting actions:
+(downloads, installs, test execution, artifact uploads, publishing/deploying, etc) one could do so by running
+the CI with dry-run flag. For further details, please refer to [Dryn-Run Readme](dryrun.md)
