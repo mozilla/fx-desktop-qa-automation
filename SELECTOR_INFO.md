@@ -3442,6 +3442,13 @@ Location: Hangs from the Extensions button in toolbar once the extension is adde
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: popup-notification-cancel
+Selector Data: popup-notification-secondary-button
+Description: Popup notification cancel button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: popup-notification-panel
 Selector Data: appMenu-addon-installed-notification
 Description: Popup notification panel

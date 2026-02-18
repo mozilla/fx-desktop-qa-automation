@@ -677,6 +677,10 @@ notifications:
       win: pass
     splits:
     - functional2
+  test_cancel_webextension:
+    result: pass
+    splits:
+    - functional1
   test_deny_geolocation:
     result: pass
     splits:
@@ -991,6 +995,10 @@ security_and_privacy:
     splits:
     - functional2
   test_detected_blocked_trackers_found:
+    result: pass
+    splits:
+    - functional2
+  test_download_list_cleared_by_end_private_session:
     result: pass
     splits:
     - functional2
