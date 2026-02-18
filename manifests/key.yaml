@@ -1236,3 +1236,7 @@ theme_and_toolbar:
     result: pass
     splits:
     - functional2
+  test_about_logins_navigation_from_about_preferences:
+    result: pass
+    split:
+    - functional2
