@@ -885,7 +885,7 @@ class BasePage(Page):
             self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
         except TimeoutException:
             logging.warning(
-                "Timeout waiting for the number of windows to be:", num_tabs
+                f"Timeout waiting for the number of windows to be: {num_tabs}"
             )
         return self
 

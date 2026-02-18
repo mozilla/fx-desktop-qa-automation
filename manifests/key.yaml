@@ -722,6 +722,10 @@ notifications:
     splits:
     - functional2
 password_manager:
+  test_about_logins_navigation_from_about_preferences:
+    result: pass
+    splits:
+    - functional1
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
@@ -1235,6 +1239,10 @@ tabs:
     splits:
     - functional2
 theme_and_toolbar:
+  test_about_logins_navigation_from_about_preferences:
+    result: pass
+    split:
+    - functional2
   test_customize_themes_and_redirect:
     result: pass
     splits:
@@ -1243,8 +1251,4 @@ theme_and_toolbar:
   test_installed_theme_enabled:
     result: pass
     splits:
-    - functional2
-  test_about_logins_navigation_from_about_preferences:
-    result: pass
-    split:
     - functional2
