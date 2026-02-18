@@ -238,6 +238,7 @@ class TestKey:
                         continue
                     test_filenames.append(self.normalize_test_filename(suite, testfile))
                 else:
+                    print("digging into subtests")
                     if not any(
                         [k.startswith("test_") for k in self.manifest[suite][testfile]]
                     ):
@@ -257,7 +258,10 @@ class TestKey:
                                 "is malformed: no splits"
                             )
                             continue
-                        if split_name not in self.manifest[suite][testfile][subtest]:
+                        if (
+                            split_name
+                            not in self.manifest[suite][testfile][subtest]["splits"]
+                        ):
                             continue
                         if pass_only and not test_expected_to_pass(
                             self.manifest[suite][testfile][subtest]

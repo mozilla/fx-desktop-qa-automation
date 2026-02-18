@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -109,7 +110,10 @@ if __name__ == "__main__":
     if os.environ.get("STARFOX_SPLIT"):
         print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
+        print(json.dumps(run_list, indent=2))
         run_list = dedupe(run_list)
+        print("===")
+        print(json.dumps(run_list, indent=2))
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
             sys.exit(0)
