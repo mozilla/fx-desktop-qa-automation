@@ -131,7 +131,7 @@ jobs:
         id: select
         shell: pwsh
         run: |
-          echo "STARFOX_SPLIT=smoke" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "STARFOX_SPLIT=ci" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           pipenv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (Win)
@@ -261,7 +261,7 @@ jobs:
       - name: Select Tests (MacOS)
         id: select
         run: |
-          echo "STARFOX_SPLIT=smoke" >> .env
+          echo "STARFOX_SPLIT=ci" >> .env
           pipenv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (MacOS)
