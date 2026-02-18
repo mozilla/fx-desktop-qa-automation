@@ -257,7 +257,10 @@ class TestKey:
                                 "is malformed: no splits"
                             )
                             continue
-                        if split_name not in self.manifest[suite][testfile][subtest]:
+                        if (
+                            split_name
+                            not in self.manifest[suite][testfile][subtest]["splits"]
+                        ):
                             continue
                         if pass_only and not test_expected_to_pass(
                             self.manifest[suite][testfile][subtest]

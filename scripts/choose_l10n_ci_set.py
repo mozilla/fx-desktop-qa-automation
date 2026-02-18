@@ -143,6 +143,9 @@ if __name__ == "__main__":
     # choose split number
     l10n_mappings = select_l10n_mappings(beta_version)
     sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
+    for key in sample_mappings:
+        regions = sorted(list(sample_mappings[key]))
+        sample_mappings[key] = (regions[0], regions[-1])
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
         save_mappings(l10n_mappings)

@@ -393,7 +393,7 @@ class BasePage(Page):
 
     def perform_key_combo(self, *keys) -> Page:
         """
-        Use ActionChains to perform key combos. Modifier keys should come first in the function call.
+        Use ActionChains to perform key combos. Modifier keys should come first in the function call
         Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
         """
         if self.sys_platform() == "Darwin":
@@ -472,7 +472,8 @@ class BasePage(Page):
         with items from `labels`, in the order they are given. (Think Rust format macros.)
 
 
-        Note: This method currently does not support finding a child under a parent (given in the JSON) if it has a shadow parent.
+        Note: This method currently does not support finding a child under a parent
+        (given in the JSON) if it has a shadow parent.
         ...
 
         Arguments
@@ -485,7 +486,8 @@ class BasePage(Page):
             Do we expect a list of WebElements?
 
         parent_element: WebElement
-            The parent WebElement to search under to narrow the scope instead of searching the entire page
+            The parent WebElement to search under to narrow the scope instead of searching the
+            entire page
 
         labels: list[str]
             Strings that replace instances of {.*} in the "selectorData" subentry of
@@ -588,7 +590,8 @@ class BasePage(Page):
         self, reference: str | tuple | WebElement, labels=None
     ) -> WebElement:
         """
-        Given a name + labels, a WebElement, or a tuple, return the direct parent node of the element.
+        Given a name + labels, a WebElement, or a tuple, return the direct parent node of
+        the element.
         """
 
         child = self.fetch(reference, labels=labels)
@@ -867,7 +870,8 @@ class BasePage(Page):
         self, parent: str | tuple | WebElement, labels=None
     ) -> Page:
         """
-        Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
+        Waits for 0 children under the given parent, the wait is instant
+        (note, this changes the driver implicit wait and changes it back)
         """
         driver_wait = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
@@ -879,7 +883,8 @@ class BasePage(Page):
 
     def wait_for_num_tabs(self, num_tabs: int) -> Page:
         """
-        Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
+        Waits for the driver.window_handles to be updated accordingly
+        with the number of tabs requested
         """
         try:
             self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
@@ -887,6 +892,7 @@ class BasePage(Page):
             logging.warning(
                 f"Timeout waiting for the number of windows to be: {num_tabs}"
             )
+            raise TimeoutException
         return self
 
     def switch_to_default_frame(self) -> Page:
@@ -972,7 +978,8 @@ class BasePage(Page):
         """
         Given the ID of the context menu, it will dismiss the menu.
 
-        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be: tabs.hide_popup("tabContextMenu")
+        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be:
+          tabs.hide_popup("tabContextMenu")
         """
         script = f'document.querySelector("#{context_menu}").hidePopup();'
         if chrome:
