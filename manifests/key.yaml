@@ -677,6 +677,10 @@ notifications:
       win: pass
     splits:
     - functional2
+  test_cancel_webextension:
+    result: pass
+    splits:
+    - functional1
   test_deny_geolocation:
     result: pass
     splits:
