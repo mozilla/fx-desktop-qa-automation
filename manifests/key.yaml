@@ -1239,10 +1239,6 @@ tabs:
     splits:
     - functional2
 theme_and_toolbar:
-  test_about_logins_navigation_from_about_preferences:
-    result: pass
-    split:
-    - functional2
   test_customize_themes_and_redirect:
     result: pass
     splits:
