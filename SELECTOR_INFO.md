@@ -3435,6 +3435,13 @@ Location: Hangs from the Extensions button in toolbar once the extension is adde
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: popup-notification-cancel
+Selector Data: popup-notification-secondary-button
+Description: Popup notification cancel button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: popup-notification-panel
 Selector Data: appMenu-addon-installed-notification
 Description: Popup notification panel
@@ -4117,6 +4124,13 @@ Selector name: tabs-toolbar
 Selector Data: TabsToolbar
 Description: Click outside the Add Folder panel to simulate cancelling or clicking away
 Location: Add bookmark folder
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-panel-location-label
+Selector Data: "label.editBMPanel_folderRow.hideable[value='Location']",
+Description: Click inside the Add Folder panel to simulate cancelling or clicking away
+Location: Add/Edit bookmark folder
 Path to .json: modules/data/panel_ui.components.json
 ```
 #### print_preview

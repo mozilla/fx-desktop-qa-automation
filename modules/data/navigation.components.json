@@ -442,6 +442,11 @@
         "strategy": "class",
         "groups": []
     },
+    "popup-notification-cancel": {
+        "selectorData": "popup-notification-secondary-button",
+        "strategy": "class",
+        "groups": []
+    },
     "popup-notification-panel": {
         "selectorData": "appMenu-addon-installed-notification",
         "strategy": "id",

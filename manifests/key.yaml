@@ -184,7 +184,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -313,6 +313,10 @@ bookmarks_and_history:
     splits:
     - functional1
   test_edit_bookmark_via_star_button:
+    result: pass
+    splits:
+    - functional1
+  test_edit_bookmark_via_star_button_not_saving_realtime:
     result: pass
     splits:
     - functional1
@@ -673,6 +677,10 @@ notifications:
       win: pass
     splits:
     - functional2
+  test_cancel_webextension:
+    result: pass
+    splits:
+    - functional1
   test_deny_geolocation:
     result: pass
     splits:
@@ -962,15 +970,15 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
-  test_cache_is_cleared_via_end_private_session_button:
-    result: pass
-    splits:
-    - functional2
   test_blocking_social_media_trackers:
     result: unstable
     splits:
     - functional2
   test_bookmarks_toolbar_present_in_private_browsing:
+    result: pass
+    splits:
+    - functional2
+  test_cache_is_cleared_via_end_private_session_button:
     result: pass
     splits:
     - functional2
@@ -987,6 +995,10 @@ security_and_privacy:
     splits:
     - functional2
   test_detected_blocked_trackers_found:
+    result: pass
+    splits:
+    - functional2
+  test_download_list_cleared_by_end_private_session:
     result: pass
     splits:
     - functional2

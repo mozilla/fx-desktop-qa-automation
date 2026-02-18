@@ -18,7 +18,8 @@ def test_case():
 
 def test_search_suggests_enabled(driver: Firefox):
     """
-    C1618400: Firefox Suggest displays sponsored and non-sponsored suggestions when enabled in Preferences
+    C1618400: Firefox Suggest displays sponsored and non-sponsored
+    suggestions when enabled in Preferences
     """
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
@@ -31,15 +32,13 @@ def test_search_suggests_enabled(driver: Firefox):
     if not suggestions_checkbox.is_selected():
         suggestions_checkbox.click()
 
-    nonsponsored_checkbox = prefs.get_element("firefox-suggestions")
+    nonsponsored_checkbox = prefs.get_element("show-suggestions-first")
     assert nonsponsored_checkbox.is_selected(), (
-        "'firefox-suggestions' checkbox not checked"
+        "'show-suggestions-first' checkbox not checked"
     )
 
-    sponsored_checkbox = prefs.get_element("firefox-trending-suggestions")
-    assert sponsored_checkbox.is_selected(), (
-        "'firefox-trending-suggestions' checkbox not checked"
-    )
+    sponsored_checkbox = prefs.get_element("show-trending")
+    assert sponsored_checkbox.is_selected(), "'show-trending' checkbox not checked"
 
     # Check for sponsored suggestion
     found_sponsored = False
