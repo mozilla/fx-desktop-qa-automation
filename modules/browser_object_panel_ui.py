@@ -476,3 +476,12 @@ class PanelUi(BasePage):
         """
         panel = self.get_element("bookmark-iframe")  # or panel container
         return panel.is_displayed()
+
+    @BasePage.context_chrome
+    def click_inside_bookmark_panel(self) -> BasePage:
+        """
+        Click inside the Edit Bookmark panel (on the Location label).
+        """
+        inside = self.get_element("bookmarks-panel-location-label")
+        inside.click()
+        return self

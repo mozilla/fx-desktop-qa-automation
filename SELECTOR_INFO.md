@@ -181,6 +181,13 @@ Description: Downloads context menu option "New folder"
 Location: Downloaded file context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
+```
+Selector Name: context-menu-toolbar-add-bookmark
+Selector Data: context-menu-toolbar-add-bookmark
+Description: Downloads context menu option "New bookmark"
+Location: Toolbar bookmark context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
 #### about_glean
 ```
 Selector Name: ping-id-input
@@ -1791,6 +1798,13 @@ Location: Any item in the customize Firefox content
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: customize-widget-remove-from-toolbar
+Selector Data: "toolbar-context-remove-from-toolbar"
+Description: Customize window context click option "Remove from Toolbar"
+Location: Any item on the toolbar in the customize Firefox content
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-add-bookmark
 Selector Data: "placesContext_new:bookmark"
 Description: Bookmarks Toolbar context click option "Add Bookmark…"
@@ -2146,6 +2160,20 @@ Path to .json: modules/data/customize_firefox.components.json
 Selector Name: done-button
 Selector Data: "customization-done-button"
 Description: The done button in the customizd toolbar
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: restore-defaults-button
+Selector Data: "customization-reset-button"
+Description: The Restore Defaults button in the customize toolbar page
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: end-private-session
+Selector Data: "wrapper-reset-pbm-toolbar-button"
+Description: The End Private Session button wrapper in the customize toolbar page
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
@@ -3407,6 +3435,13 @@ Location: Hangs from the Extensions button in toolbar once the extension is adde
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: popup-notification-cancel
+Selector Data: popup-notification-secondary-button
+Description: Popup notification cancel button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: popup-notification-panel
 Selector Data: appMenu-addon-installed-notification
 Description: Popup notification panel
@@ -4089,6 +4124,13 @@ Selector name: tabs-toolbar
 Selector Data: TabsToolbar
 Description: Click outside the Add Folder panel to simulate cancelling or clicking away
 Location: Add bookmark folder
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-panel-location-label
+Selector Data: "label.editBMPanel_folderRow.hideable[value='Location']",
+Description: Click inside the Add Folder panel to simulate cancelling or clicking away
+Location: Add/Edit bookmark folder
 Path to .json: modules/data/panel_ui.components.json
 ```
 #### print_preview
