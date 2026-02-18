@@ -674,6 +674,16 @@
         "strategy": "id",
         "groups": []
     },
+    "cancel-session-data-button": {
+        "selectorData": "reset-pbm-panel-cancel-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "always-ask-pbm-checkbox": {
+        "selectorData": "reset-pbm-panel-checkbox",
+        "strategy": "id",
+        "groups": []
+    },
     "bookmark-in-toolbar": {
         "selectorData": "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']",
         "strategy": "css",
