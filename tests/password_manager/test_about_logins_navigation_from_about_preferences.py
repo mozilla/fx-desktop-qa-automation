@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
+
 from modules.browser_object import TabBar
 from modules.page_object_prefs import AboutPrefs
-
 
 ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 
