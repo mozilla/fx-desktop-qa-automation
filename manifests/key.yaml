@@ -997,7 +997,7 @@ security_and_privacy:
   test_data_clearance_from_private_window_can_be_canceled:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_detected_blocked_trackers_found:
     result: pass
     splits:
