@@ -413,11 +413,13 @@ class TabBar(BasePage):
         """Reopen closed tabs using keyboard shortcut Ctrl/Cmd + Shift + T."""
         for _ in range(count):
             if sys_platform == "Darwin":
-                self.actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).send_keys("t").key_down(Keys.SHIFT).key_up(
-                    Keys.COMMAND).perform()
+                self.actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).send_keys(
+                    "t"
+                ).key_down(Keys.SHIFT).key_up(Keys.COMMAND).perform()
             else:
-                self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys("t").key_down(Keys.SHIFT).key_up(
-                    Keys.CONTROL).perform()
+                self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys(
+                    "t"
+                ).key_down(Keys.SHIFT).key_up(Keys.CONTROL).perform()
             # Pause a moment to let each tab to reopen
             sleep(0.2)
 
