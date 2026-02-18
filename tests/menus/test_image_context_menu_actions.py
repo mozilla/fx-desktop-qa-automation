@@ -70,6 +70,7 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     image_context_menu = ContextMenu(driver)
     util = Utilities()
 
+    # Bump
     # Wait for page to load
     wiki_image_page.wait_for_page_to_load()
 
