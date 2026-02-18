@@ -635,9 +635,9 @@ menus:
       splits:
       - functional2
     test_save_image_as:
-      result: unstable
+      result: pass
       splits:
-      - functional2
+      - smoke
   test_tab_context_menu_actions:
     result: pass
     splits:
