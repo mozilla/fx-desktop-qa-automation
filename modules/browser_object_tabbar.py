@@ -536,11 +536,7 @@ class TabBar(BasePage):
         self.context_click("tabgroup-label")
         self.element_visible("tabgroup-menu")
         save_btn = self.get_element("tabgroup-save-and-close-group")
-        logging.info(
-            f"save_and_close_tab_group: button displayed={save_btn.is_displayed()}, enabled={save_btn.is_enabled()}"
-        )
-        self.driver.execute_script("arguments[0].click();", save_btn)
-        logging.info("save_and_close_tab_group: JS click executed")
+        self.click_on(save_btn)
         return self
 
     @BasePage.context_chrome
