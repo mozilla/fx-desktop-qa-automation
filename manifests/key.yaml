@@ -618,8 +618,8 @@ menus:
       - functional2
     test_save_page_as:
       result:
-        mac: pass
         linux: pass
+        mac: pass
         win: unstable
       splits:
       - functional2
