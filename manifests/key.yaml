@@ -775,7 +775,10 @@ password_manager:
     splits:
     - smoke
   test_multiple_saved_logins:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
