@@ -1012,32 +1012,26 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
-    def handle_os_download_confirmation(self, keyboard: Controller, sys_platform: str):
+    def handle_os_download_confirmation(self):
         """
         This function handles the keyboard shortcuts. If on Linux, it simulates switching
         to OK. On other platforms, it directly presses enter.
         """
-        if sys_platform == "Linux":
-            # Perform the series of ALT+TAB key presses on Linux
-            keyboard.press(Key.alt)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.release(Key.alt)
-            time.sleep(1)
-            keyboard.press(Key.alt)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.release(Key.alt)
-            time.sleep(1)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            time.sleep(1)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
+        import pyautogui
 
-        # Press enter to confirm the download on all platforms
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        os_name = (
+            self.sys_platform().lower()
+            if "Darwin" not in self.sys_platform()
+            else "mac"
+        )
+
+        button_img = os.path.join("data", f"{os_name}_save_button.png")
+        time.sleep(1.5)
+        b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.95)
+        logging.info(f"Button: ({b_x}, {b_y})")
+        pyautogui.click(b_x, b_y)
+        time.sleep(1)
+        pyautogui.click(b_x, b_y)
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False
