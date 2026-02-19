@@ -416,7 +416,6 @@ class TabBar(BasePage):
                 "t"
             ).key_down(Keys.SHIFT).key_up(modifier).perform()
 
-
     @BasePage.context_chrome
     def reload_tab(self, nav, mod_key=None, extra_key=None):
         """

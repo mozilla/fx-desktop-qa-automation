@@ -28,11 +28,11 @@ def test_restore_closed_tabs(driver: Firefox, tabs: TabBar, sys_platform: str):
     tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
     driver.get(URLS[3])
-    assert tabs.wait_for_num_tabs(2)
+    tabs.wait_for_num_tabs(2)
     driver.close()
-    assert tabs.wait_for_num_tabs(1)
+    tabs.wait_for_num_tabs(1)
     tabs.reopen_tabs_with_shortcut(sys_platform, count=1)
-    assert tabs.wait_for_num_tabs(2)
+    tabs.wait_for_num_tabs(2)
 
     # Clean up for next steps
     driver.switch_to.window(driver.window_handles[-1])
@@ -43,17 +43,17 @@ def test_restore_closed_tabs(driver: Firefox, tabs: TabBar, sys_platform: str):
         tabs.new_tab_by_button()
         driver.switch_to.window(driver.window_handles[-1])
         driver.get(URLS[i])
-    assert tabs.wait_for_num_tabs(5)
+    tabs.wait_for_num_tabs(5)
 
     # Close those 4 tabs
     for i in range(4):
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
-    assert tabs.wait_for_num_tabs(1)
+    tabs.wait_for_num_tabs(1)
 
     # Use the method to restore the closed tabs with shortcut
     tabs.reopen_tabs_with_shortcut(sys_platform, count=4)
-    assert tabs.wait_for_num_tabs(5)
+    tabs.wait_for_num_tabs(5)
 
     # Verify the page of each tab was restored
     open_urls = set()
