@@ -3288,6 +3288,20 @@ Location: Confirmation panel after clicking "End Private Session"
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: cancel-session-data-button
+Selector Data: reset-pbm-panel-cancel-button
+Description: Cancel button in the "End Private Session" confirmation panel
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: always-ask-pbm-checkbox
+Selector Data: reset-pbm-panel-checkbox
+Description: "Always ask me" checkbox in the "End Private Session" confirmation panel
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: history-button
 Selector Data: history-panelmenu
 Description: History button
