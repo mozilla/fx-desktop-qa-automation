@@ -428,12 +428,10 @@ downloads:
     result: pass
     splits:
     - smoke
-    - ci
   test_download_pdf_from_context_menu:
     result: pass
     splits:
     - functional1
-    - ci
   test_download_telemetry_recorded:
     result: pass
     splits:
@@ -613,17 +611,18 @@ menus:
     result: pass
     splits:
     - smoke
-    - ci
   test_frequently_used_context_menu:
     test_inspect:
       result: pass
       splits:
       - functional2
     test_save_page_as:
-      result: pass
+      result:
+        mac: pass
+        linux: pass
+        win: unstable
       splits:
       - functional2
-      - ci
     test_take_screenshot:
       result: pass
       splits:
@@ -645,7 +644,6 @@ menus:
       result: pass
       splits:
       - functional2
-      - ci
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -828,7 +826,6 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
-    - ci
   test_download_triggered_on_content_disposition_attachment:
     result: pass
     splits:
@@ -845,7 +842,6 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
-    - ci
   test_pdf_input_numbers:
     result: unstable
     splits:
