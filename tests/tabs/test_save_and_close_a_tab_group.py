@@ -44,12 +44,11 @@ def test_save_and_close_tab_group(
         nav.context_click("toolbar-blank-space")
         context_menu.click_on("context-menu-vertical-tabs")
 
-    # Open URLs in new tabs — keeps the initial tab alive outside the group
-    # so Firefox doesn't close when the group is saved and closed.
-    # Save and Close also requires tabs with bookmarkable URLs (not about:newtab).
+    # Open URLs in new tabs — keeps the initial tab outside the group so Firefox doesn't close when the group
+    # is saved and closed. Save and Close also requires tabs with bookmarkable URLs (not about:newtab).
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=False)
 
-    # Create a tab group from the URL-loaded tabs (tabs 2 and 3)
+    # Create a tab group from the URLs loaded tabs (tabs 2 and 3)
     tabs.create_websites_tab_group(
         context_menu=context_menu,
         group_name=group_name,
