@@ -76,11 +76,4 @@ def test_close_browser_with_download_in_progress_shows_prompt(driver, extra_sele
     assert "private browsing" in text
     assert ("leave private browsing" in text) or ("exit" in text)
 
-    # panel.get_alert().accept()
-    # logging.info("accept panel")
-    #
-    # # Step 6: Ensure we are attached to the remaining (non-private) window so teardown can quit
-    # WebDriverWait(driver, 10).until(lambda d: len(d.window_handles) >= 1)
-    # driver.switch_to.window(driver.window_handles[0])
-
     logging.info("end of test")
