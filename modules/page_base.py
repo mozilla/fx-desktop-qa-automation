@@ -1027,7 +1027,7 @@ class BasePage(Page):
 
         button_img = os.path.join("data", f"{os_name}_save_button.png")
         time.sleep(1.5)
-        b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.95)
+        b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
         logging.info(f"Button: ({b_x}, {b_y})")
         pyautogui.click(b_x, b_y)
         time.sleep(1)
