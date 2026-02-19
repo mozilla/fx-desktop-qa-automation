@@ -463,6 +463,11 @@ class AboutTelemetry(BasePage):
             "telemetry-keyed-scalars-table-rows", expected_data
         )
 
+    def is_telemetry_keyed_scalars_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present(
+            "telemetry-keyed-scalars-table-rows", expected_data
+        )
+
 
 class AboutNetworking(BasePage):
     """

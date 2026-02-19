@@ -238,6 +238,7 @@ class TestKey:
                         continue
                     test_filenames.append(self.normalize_test_filename(suite, testfile))
                 else:
+                    print("digging into subtests")
                     if not any(
                         [k.startswith("test_") for k in self.manifest[suite][testfile]]
                     ):

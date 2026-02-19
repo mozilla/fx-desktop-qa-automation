@@ -38,7 +38,7 @@ tasks:
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests);
         export FAILURE=${?};
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run python -m scripts.choose_test_split;
+        STARFOX_SPLIT=ci pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:

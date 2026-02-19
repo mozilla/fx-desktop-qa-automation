@@ -633,15 +633,15 @@ menus:
     test_copy_image_link:
       result: pass
       splits:
-      - functional2
+      - ci
     test_open_image_in_new_tab:
       result: pass
       splits:
-      - functional2
+      - ci
     test_save_image_as:
-      result: unstable
+      result: pass
       splits:
-      - functional2
+      - ci
   test_tab_context_menu_actions:
     result: pass
     splits:
