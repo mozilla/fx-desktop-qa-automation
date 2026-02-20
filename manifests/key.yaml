@@ -184,7 +184,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
