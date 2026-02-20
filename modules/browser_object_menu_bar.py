@@ -19,6 +19,19 @@ class MenuBar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def open_sidebar_panel_from_menu_bar(self, panel: str) -> BasePage:
+        """Opens the specified sidebar panel via MenuBar > View > Sidebar > {panel}. Not supported on macOS (native
+        menu bar is not accessible via WebDriver); callers should skip the test on macOS before calling this method.
+        Argument: panel: The sidebar panel label as shown in the menu, e.g. "History", "Bookmarks", "Synced Tabs",
+        "AI Chatbot", "Passwords". A matching "view-sidebar-{panel}" entry must exist in the components JSON.
+        """
+        self.activate_menu_bar()
+        self.open_menu("View")
+        self.click_on("view-sidebar-menu")
+        self.click_and_hide_menu(f"view-sidebar-{panel.lower().replace(' ', '-')}")
+        return self
+
+    @BasePage.context_chrome
     def get_recently_closed_urls(self):
         """Opens History > Recently Closed Tabs and returns the URLs as a set"""
         self.activate_menu_bar()

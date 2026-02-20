@@ -396,6 +396,10 @@ downloads:
     result: pass
     splits:
     - functional1
+  test_close_browser_with_download_in_progress_shows_prompt:
+    result: pass
+    splits:
+    - functional1
   test_delete_download_while_in_progress:
     result: unstable
     splits:
@@ -969,6 +973,10 @@ scrolling_panning_zooming:
     - smoke
     - ci
 security_and_privacy:
+  test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
+    result: pass
+    splits:
+    - functional2
   test_blocking_cryptominers:
     result: pass
     splits:
@@ -998,6 +1006,10 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
+    result: pass
+    splits:
+    - functional2
+  test_data_clearance_from_private_window_can_be_canceled:
     result: pass
     splits:
     - functional2
@@ -1058,6 +1070,10 @@ security_and_privacy:
     splits:
     - functional2
   test_private_window_from_panelui:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_removed_on_end_private_session:
     result: pass
     splits:
     - functional2
