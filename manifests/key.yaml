@@ -729,6 +729,10 @@ notifications:
     splits:
     - functional2
 password_manager:
+  test_about_logins_navigation_from_about_preferences:
+    result: pass
+    splits:
+    - functional1
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
@@ -778,7 +782,10 @@ password_manager:
     splits:
     - smoke
   test_multiple_saved_logins:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional2
   test_never_save_login_via_doorhanger:

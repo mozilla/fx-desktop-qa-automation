@@ -1335,6 +1335,13 @@ Description: Browsing History / History Suggestion under Address bar section
 Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: saved-passwords
+Selector Data: "showPasswords"
+Description: Saved passwords button in about:preferences#privacy
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
