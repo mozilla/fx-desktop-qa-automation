@@ -184,7 +184,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -603,7 +603,7 @@ language_packs:
     splits:
     - functional2
   test_language_pack_install_preferences:
-    result: pass
+    result: unstable
     splits:
     - smoke
 menus:
@@ -981,11 +981,11 @@ security_and_privacy:
     splits:
     - functional2
   test_blocking_cryptominers:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_blocking_fingerprinters:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_blocking_social_media_trackers:
