@@ -2,7 +2,6 @@ import os
 import time
 
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object_generics import GenericPdf
@@ -68,8 +67,6 @@ def test_download_pdf_with_form_fields(
         downloads_folder: Fixture returning downloads folder path
         delete_files: Fixture to remove the files after the test finishes
     """
-    keyboard = Controller()
-
     # Fill in the name field and trigger download
     pdf_viewer.fill_element("first-name-field", "Mark")
     pdf_viewer.click_download_button()
@@ -78,7 +75,7 @@ def test_download_pdf_with_form_fields(
     time.sleep(2)
 
     # Handle OS download prompt
-    pdf_viewer.handle_os_download_confirmation(keyboard, sys_platform)
+    pdf_viewer.handle_os_download_confirmation()
 
     # Set the expected download path and the expected PDF name
     saved_pdf_path = os.path.join(downloads_folder, PDF_FILE_NAME)

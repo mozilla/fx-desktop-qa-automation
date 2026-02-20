@@ -429,7 +429,7 @@ downloads:
     splits:
     - smoke
   test_download_pdf_from_context_menu:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_telemetry_recorded:
@@ -618,7 +618,10 @@ menus:
       splits:
       - functional2
     test_save_page_as:
-      result: unstable
+      result:
+        linux: pass
+        mac: pass
+        win: unstable
       splits:
       - functional2
     test_take_screenshot:
@@ -639,7 +642,7 @@ menus:
       splits:
       - functional2
     test_save_image_as:
-      result: unstable
+      result: pass
       splits:
       - functional2
   test_tab_context_menu_actions:

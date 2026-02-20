@@ -25,6 +25,11 @@ google-auth = "2.32.0"
 psutil = "<6.1"
 pytest-json-report = "==1.5.0"
 beautifulsoup4 = "4.12.3"
+pyautogui = "*"
+brotli = "*"
+opencv-python = "*"
+tk = "*"
+python-dev-tools = "*"
 
 [dev-packages]
 werkzeug = "==3.0.3"
