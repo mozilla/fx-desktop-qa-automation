@@ -519,7 +519,9 @@ class TabBar(BasePage):
         This closes all tabs in the group and removes the group label.
         """
         self.context_click("tabgroup-label")
-        self.click_on("tabgroup-save-and-close-group")
+        self.element_visible("tabgroup-menu")
+        save_btn = self.get_element("tabgroup-save-and-close-group")
+        self.click_on(save_btn)
         return self
 
     @BasePage.context_chrome
