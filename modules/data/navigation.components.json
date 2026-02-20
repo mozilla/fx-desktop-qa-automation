@@ -688,5 +688,10 @@
         "selectorData": "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']",
         "strategy": "css",
         "groups": []
+    },
+    "sidebar-box": {
+        "selectorData": "sidebar-box",
+        "strategy": "id",
+        "groups": []
     }
 }
