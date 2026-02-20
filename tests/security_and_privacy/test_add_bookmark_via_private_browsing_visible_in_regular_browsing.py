@@ -36,7 +36,7 @@ def test_add_bookmark_via_private_browsing_visible_in_regular_browsing(driver: F
     # Open a private window and switch to it
     panel.open_and_switch_to_new_window("private")
 
-    # Access several websites of your choice and bookmark them
+    # Access any websites bookmark it
     page.open()
     nav.add_bookmark_via_star_icon()
 
