@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TrustPanel
-from modules.page_object import AboutPrefs, GenericPage
+from modules.browser_object import Navigation, TrackerPanel
+from modules.page_object import GenericPage
 
 
 @pytest.fixture()
@@ -10,14 +10,13 @@ def test_case():
     return "446402"
 
 
-FIRST_TRACKER_WEBSITE = (
-    "https://senglehardt.com/test/trackingprotection/test_pages/"
-    "tracking_protection.html"
-)
-DETECTED_COOKIES = (
-    "https://ads-track-digest256.dummytracker.org",
-    "https://social-track-digest256.dummytracker.org",
-    "https://analytics-track-digest256.dummytracker.org",
+FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
+ALLOWED_COOKIES = set(
+    [
+        "https://ads-track-digest256.dummytracker.org",
+        "https://social-track-digest256.dummytracker.org",
+        "https://analytics-track-digest256.dummytracker.org",
+    ]
 )
 
 
@@ -32,21 +31,17 @@ def add_to_prefs_list():
 
 
 def test_cross_site_tracking_cookies_blocked(
-    driver: Firefox, about_prefs_privacy: AboutPrefs, trust_panel: TrustPanel
+    driver: Firefox, nav: Navigation, tracker_panel: TrackerPanel
 ):
     """
     C446402: Ensures the cross tracking cookies are displayed in the tracker panel
     """
     # instantiate objects
-    about_prefs_privacy.open()
-    about_prefs_privacy.select_trackers_to_block(
-        "cookies-checkbox", "cookies-isolate-social-media-option"
-    )
-    GenericPage(driver, url=FIRST_TRACKER_WEBSITE).open()
-    trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE).open()
+    tracker_panel.wait_for_trackers(nav, tracker_website)
 
-    trust_panel.trackers_blocked("tracking-cookies")
-    trust_panel.trackers_detected("tracking-content")
-    trust_panel.sites_blocked(DETECTED_COOKIES)
-    trust_panel.sites_detected(DETECTED_COOKIES)
+    nav.open_tracker_panel()
+
+    # fetch the items in the cross site trackers and verify
+    cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
+    nav.verify_cross_site_trackers(cross_site_trackers, ALLOWED_COOKIES)

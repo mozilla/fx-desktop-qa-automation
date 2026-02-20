@@ -143,9 +143,3 @@ class AutofillPopup(BasePage):
                 expected_text in self.get_element("password-update-doorhanger").text
             )
         )
-
-    @BasePage.context_chrome
-    def click_manage_passwords(self) -> BasePage:
-        # Clicks the "Manage Passwords" option from the autofill popup
-        self.click_on("manage-passwords")
-        return self

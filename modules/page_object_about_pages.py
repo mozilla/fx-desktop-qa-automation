@@ -8,7 +8,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -370,36 +370,6 @@ class AboutLogins(BasePage):
         page = GenericPage(self.driver)
         page.navigate_dialog_to_location(downloads_folder, filename)
 
-    def click_copy_username_button(self) -> Page:
-        """Click the copy username button"""
-        self.click_on("copy-username")
-        return self
-
-    def click_copy_password_button(self) -> Page:
-        """Click the copy password button"""
-        self.click_on("copy-password")
-        return self
-
-    def click_reveal_password_button(self) -> Page:
-        """Click the reveal password button"""
-        self.click_on("show-password-checkbox")
-        return self
-
-    def verify_reveal_button_cursor_pointer(self):
-        """
-        Verify that hovering over the Reveal/Hide password button
-        changes the mouse cursor to a hand pointer
-        """
-        element = self.get_element("show-password-checkbox")
-
-        # hover over element
-        ActionChains(self.driver).move_to_element(element).perform()
-
-        # read computed cursor style
-        cursor = element.value_of_css_property("cursor")
-
-        assert cursor == "pointer", f"Expected pointer cursor, got {cursor}"
-
 
 class AboutPrivatebrowsing(BasePage):
     """
@@ -417,14 +387,6 @@ class AboutProfiles(BasePage):
     URL_TEMPLATE = "about:profiles"
 
 
-class AboutProtections(BasePage):
-    """
-    POM for about:protections page
-    """
-
-    URL_TEMPLATE = "about:protections"
-
-
 class AboutTelemetry(BasePage):
     """
     The POM for the about:telemetry page
@@ -436,28 +398,28 @@ class AboutTelemetry(BasePage):
         """
         Opens the Raw JSON telemetry view (against bnVsbA== / null payload timing).
         """
-        existing_tabs = len(self.driver.window_handles)
-
         # Click "Raw JSON" from categories on the left
-        self.element_clickable("category-raw")
+        WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable(self.get_selector("category-raw"))
+        )
         self.get_element("category-raw").click()
 
-        # Wait for the new tab before switching
-        self.wait.until(lambda d: len(d.window_handles) == existing_tabs + 1)
+        # Switching to the new tab opened by Raw
         self.switch_to_new_tab()
-        self.clear_cache()
 
         # Wait for Raw Data tab to be clickable, then click it
-        self.element_clickable("rawdata-tab")
+        WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable(self.get_selector("rawdata-tab"))
+        )
         self.get_element("rawdata-tab").click()
 
         # Wait for data URL
-        self.wait.until(
+        WebDriverWait(self.driver, 30).until(
             lambda d: d.current_url.startswith("data:application/json;base64,")
         )
 
-        # Wait until it's not the "null" payload (bnVsbA==); telemetry can take time to flush
-        self.custom_wait(timeout=30).until(
+        # Wait until it's not the "null" payload (bnVsbA==)
+        WebDriverWait(self.driver, 30).until(
             lambda d: "base64,bnVsbA==" not in d.current_url
         )
 

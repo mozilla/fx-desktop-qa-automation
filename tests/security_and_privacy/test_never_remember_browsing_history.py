@@ -20,14 +20,8 @@ links = [
     "about:blank",
 ]
 
-COOKIE_LABEL_TEXT = (
-    "Based on your history settings, Firefox deletes cookies "
-    "and site data from your session when you close the browser."
-)
-HISTORY_LABEL_TEXT = (
-    "Firefox will use the same settings as private browsing, "
-    "and will not remember any history as you browse the Web."
-)
+COOKIE_LABEL_TEXT = "Based on your history settings, Firefox deletes cookies and site data from your session when you close the browser."
+HISTORY_LABEL_TEXT = "Firefox will use the same settings as private browsing, and will not remember any history as you browse the Web."
 
 
 @pytest.fixture()
@@ -39,8 +33,7 @@ def test_never_remember_browsing_history_settings(
     driver: Firefox, about_prefs_privacy: AboutPrefs
 ):
     """
-    C102381.1: Ensure that setting the browser to never remember history has the correct
-    configuration in about:preferences
+    C102381.1: Ensure that setting the browser to never remember history has the correct configurations in about:preferences
     """
 
     # instantiate objs
@@ -67,8 +60,7 @@ def test_never_remember_browsing_history_from_panel(
     driver: Firefox, panel_ui: PanelUi, tabs: TabBar
 ):
     """
-    C102381.2: Ensure that setting the browser to never remember history
-    does not actually save any history
+    C102381.2: Ensure that setting the browser to never remember history does not actually save any history
     """
     panel_ui.open()
 

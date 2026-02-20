@@ -65,21 +65,11 @@ def get_tests_by_model(
     return matching_tests
 
 
-def get_tests_in_suite(path: str):
-    """Get all the test paths in a suite dir"""
-    return [
-        SLASH.join([path, n])
-        for n in os.listdir(path)
-        if n.startswith("test_") and n.endswith(".py")
-    ]
-
-
 def dedupe(run_list: list) -> list:
     """For a run list, remove entries that are covered by more general entries."""
     run_list = list(set(run_list))
     dotslashes = []
     removes = []
-    adds = []
 
     for i, entry in enumerate(run_list):
         if (
@@ -97,11 +87,6 @@ def dedupe(run_list: list) -> list:
             print(f"Removing {entry_a}: path does not exist")
             removes.append(i)
             continue
-        elif os.path.isdir(entry_a):
-            print(f"Removing {entry_a}: is a directory, adding tests")
-            removes.append(i)
-            adds.extend(get_tests_in_suite(entry_a))
-            continue
         for j, entry_b in enumerate(run_list):
             if i == j:
                 continue
@@ -113,7 +98,6 @@ def dedupe(run_list: list) -> list:
     removes.sort(reverse=True)
     for remove in removes:
         del run_list[remove]
-    run_list.extend(adds)
 
     run_list.sort()
     return run_list
@@ -126,7 +110,6 @@ if __name__ == "__main__":
         print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
-        run_list = manifest.filter_filenames_by_pass(run_list)
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
             sys.exit(0)
@@ -245,8 +228,8 @@ if __name__ == "__main__":
     if SLASH == "\\":
         run_list = [entry.replace("/", SLASH) for entry in run_list]
     run_list = [entry for entry in run_list if os.path.exists(entry)]
-    run_list = dedupe(run_list)
     run_list = manifest.filter_filenames_by_pass(run_list)
+    run_list = dedupe(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
     with open(OUTPUT_FILE, "w") as fh:
         fh.write("\n".join(run_list))

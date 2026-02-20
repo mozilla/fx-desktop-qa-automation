@@ -3,7 +3,9 @@ import platform
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import MenuBar, Navigation, PanelUi
+from modules.browser_object_menu_bar import MenuBar
+from modules.browser_object_navigation import Navigation
+from modules.browser_object_panel_ui import PanelUi
 
 
 @pytest.fixture()
@@ -19,15 +21,17 @@ def add_to_prefs_list():
     ]
 
 
-def test_sidebar_removed_on_end_private_session(
-    driver: Firefox, menu_bar: MenuBar, nav: Navigation, panel_ui: PanelUi
-):
+def test_sidebar_removed_on_end_private_session(driver: Firefox):
     """
-    C2359316 - Verify that the Sidebar is removed when "End Private Session"
-    is used in a Private Window
+    C2359316 - Verify that the Sidebar is removed when "End Private Session" is used in a Private Window
     """
+    # Instantiate objects
+    nav = Navigation(driver)
+    panel = PanelUi(driver)
+    menu_bar = MenuBar(driver)
+
     # Open a private window and switch to it
-    panel_ui.open_and_switch_to_new_window("private")
+    panel.open_and_switch_to_new_window("private")
 
     # Activate the Sidebar via menu bar (native on macOS, not supported)
     if platform.system() == "Darwin":

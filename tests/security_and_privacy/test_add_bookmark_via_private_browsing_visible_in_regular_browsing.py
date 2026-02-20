@@ -1,8 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi
-from modules.page_object import GenericPage
+from modules.browser_object_navigation import Navigation
+from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPage
 
 BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"
@@ -22,18 +23,18 @@ def add_to_prefs_list():
     ]
 
 
-def test_add_bookmark_via_private_browsing_visible_in_regular_browsing(
-    driver: Firefox, panel_ui: PanelUi, nav: Navigation
-):
+def test_add_bookmark_via_private_browsing_visible_in_regular_browsing(driver: Firefox):
     """
     C101679 - Bookmarks created in Private Browsing are shown in regular sessions as well
     """
 
     # Instantiate objects
+    nav = Navigation(driver)
+    panel = PanelUi(driver)
     page = GenericPage(driver, url=BOOKMARK_URL)
 
     # Open a private window and switch to it
-    panel_ui.open_and_switch_to_new_window("private")
+    panel.open_and_switch_to_new_window("private")
 
     # Access any websites bookmark it
     page.open()
@@ -43,6 +44,5 @@ def test_add_bookmark_via_private_browsing_visible_in_regular_browsing(
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
 
-    # The created bookmarks inside the Private Browsing session are
-    # successfully displayed in normal browsing
+    # The created bookmarks inside the Private Browsing session are successfully displayed in normal browsing
     nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)

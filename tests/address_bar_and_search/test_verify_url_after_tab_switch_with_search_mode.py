@@ -4,9 +4,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
 
-TEST_WEBSITE = "https://www.wikipedia.org/"
+TEST_WEBSITE = "https://www.firefox.com/"
 OPTION = "History"
-TAB_TITLE = "Wikipedia"
+TAB_TITLE = "Get Firefox for desktop — Firefox (US)"
 
 
 @pytest.fixture()

@@ -1,7 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrustPanel
+from modules.browser_object_navigation import Navigation
+from modules.browser_object_tracker_panel import TrackerPanel
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -10,7 +11,7 @@ def test_case():
     return "446405"
 
 
-TRACKER_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
+Tracker_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 
 
 @pytest.fixture()
@@ -27,40 +28,41 @@ def add_to_prefs_list():
 def test_blocked_tracking_content(
     driver: Firefox,
     nav: Navigation,
-    trust_panel: TrustPanel,
+    tracker_panel: TrackerPanel,
     about_prefs_privacy: AboutPrefs,
 ):
     """
-    C446405.1: Ensure that ETP Custom mode with option Tracking Content -> In all windows set
-    blocks tracking content
+    C446405.1: Ensure that ETP Custom mode with option Tracking Content -> In all windows set blocks tracking content
     """
     about_prefs_privacy.open()
     about_prefs_privacy.select_trackers_to_block(
         "tracking-checkbox", "tracking-in-all-windows"
     )
-    driver.get(TRACKER_URL)
+    driver.get(Tracker_URL)
 
-    trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
-    trust_panel.trackers_blocked("tracking-content")
+    nav.open_tracker_panel()
+    tracker_panel.verify_tracker_subview_title(
+        "tracker-tracking-content", "tracking-subview", "Tracking Content Blocked"
+    )
 
 
 def test_allowed_tracking_content(
     driver: Firefox,
     nav: Navigation,
-    trust_panel: TrustPanel,
+    tracker_panel: TrackerPanel,
     about_prefs_privacy: AboutPrefs,
 ):
     """
-    C446405.2: Ensure that ETP Custom mode w/ option Tracking Content -> Only in Private Windows set
-    allows tracking content
+    C446405.2: Ensure that ETP Custom mode with option Tracking Content -> Only in Private Windows set allows
+    tracking content
     """
 
     about_prefs_privacy.open()
     about_prefs_privacy.select_trackers_to_block("tracking-checkbox")
 
-    driver.get(TRACKER_URL)
+    driver.get(Tracker_URL)
 
-    trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
-    trust_panel.trackers_detected("tracking-content")
+    nav.open_tracker_panel()
+    tracker_panel.verify_tracker_subview_title(
+        "tracker-tracking-content", "tracking-subview", "Not Blocking Tracking Content"
+    )

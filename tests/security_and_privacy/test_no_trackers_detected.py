@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TrustPanel
+from modules.browser_object_navigation import Navigation
 
 
 @pytest.fixture()
@@ -9,15 +9,15 @@ def test_case():
     return "446391"
 
 
-NOTRACKERS_URL = "https://example.com/"
+NOTRACKERS_URL = "http://example.com/"
 
 
-def test_no_trackers_detected(driver: Firefox, trust_panel: TrustPanel):
+def test_no_trackers_detected(driver: Firefox, nav: Navigation):
     """
     C446391 No trackers are detected
     """
     # access url
     driver.get(NOTRACKERS_URL)
     # verify that no trackers are detected
-    trust_panel.open_panel()
-    trust_panel.assert_no_trackers()
+    # no list of trackers is displayed
+    nav.assert_blocked_trackers()

@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi, TrustPanel
+from modules.browser_object import Navigation, PanelUi, TrackerPanel
 from modules.page_object import GenericPage
 
 
@@ -23,15 +23,12 @@ ALLOWED_TRACKING_URLS = {
 }
 BLOCKED_TRACKER_URL = "https://content-track-digest256.dummytracker.org"
 
-FIRST_TRACKER_WEBSITE = (
-    "https://senglehardt.com/test/trackingprotection/test_pages/"
-    "tracking_protection.html"
-)
+FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 SECOND_TRACKER_WEBSITE = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
 def test_third_party_content_blocked_private_browsing_cross_site(
-    driver: Firefox, panel_ui: PanelUi, nav: Navigation, trust_panel: TrustPanel
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation, tracker_panel: TrackerPanel
 ):
     """
     C446323.1: Ensure that third party content is blocked correctly
@@ -43,16 +40,26 @@ def test_third_party_content_blocked_private_browsing_cross_site(
     # Open a private window
     panel_ui.open_and_switch_to_new_window("private")
 
-    # Open the website, check for trackers
+    # Open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
-    trust_panel.sites_blocked(BLOCKED_TRACKER_URL)
+    # Verify the indicator
+    tracker_panel.verify_tracker_shield_indicator(nav)
+    nav.open_tracker_panel()
+
+    # verify the panel title
+    tracker_panel.verify_tracker_panel_title("Protections for senglehardt.com")
+
+    # Fetch the items in the cross site trackers
+    cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
+
+    # Ensure that the correct blocked site is listed
+    assert any(BLOCKED_TRACKER_URL == val for val in cross_site_trackers)
 
 
 def test_third_party_content_blocked_private_browsing_allowed_tracking(
-    driver: Firefox, panel_ui: PanelUi, nav: Navigation, trust_panel: TrustPanel
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation, tracker_panel: TrackerPanel
 ):
     """
     C446323.2: Ensure that some third party content is allowed
@@ -64,16 +71,26 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
     # Open a private window
     panel_ui.open_and_switch_to_new_window("private")
 
-    # Open the website, ensure the blocking is taking place by refreshing website until indicated
+    # Open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
 
-    trust_panel.sites_detected(ALLOWED_TRACKING_URLS)
+    # Verify the indicator
+    tracker_panel.verify_tracker_shield_indicator(nav)
+
+    # Open the panel and verify the title
+    nav.open_tracker_panel()
+    tracker_panel.verify_tracker_panel_title("Protections for senglehardt.com")
+
+    # Fetch allowed trackers
+    allowed_trackers = tracker_panel.open_and_return_allowed_trackers()
+
+    # Verify the correct ones are allowed
+    assert any(item in ALLOWED_TRACKING_URLS for item in allowed_trackers)
 
 
 def test_third_party_content_private_browsing_tracking_statuses(
-    driver: Firefox, nav: Navigation, panel_ui: PanelUi, trust_panel: TrustPanel
+    driver: Firefox, nav: Navigation, panel_ui: PanelUi, tracker_panel: TrackerPanel
 ):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
@@ -87,8 +104,10 @@ def test_third_party_content_private_browsing_tracking_statuses(
 
     # Open the tracker website
     tracker_website.open()
-    trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
+
+    # Verify the indicator
+    tracker_panel.verify_tracker_shield_indicator(nav)
 
     # Assert the various statuses, ensure that the correct one is displayed
     block_status = tracker_website.get_element("simulated-tracker-block-status")

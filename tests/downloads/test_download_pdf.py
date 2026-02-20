@@ -2,6 +2,7 @@ import os
 import time
 
 import pytest
+from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
@@ -47,6 +48,7 @@ def test_download_pdf(
 
     # Initialize objects
     pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url)
+    keyboard = Controller()
 
     # Click the download button
     pdf_page.open()
@@ -54,7 +56,7 @@ def test_download_pdf(
 
     # Allow time for the download dialog to appear and pressing handle the prompt
     time.sleep(2)
-    pdf_page.handle_os_download_confirmation()
+    pdf_page.handle_os_download_confirmation(keyboard, sys_platform)
 
     # Set the expected download path and the expected PDF name
     file_name = "i-9.pdf"

@@ -20,6 +20,13 @@ def test_save_page_as(driver: Firefox, sys_platform):
     """
     C2637623.1: save page as
     """
+    try:
+        from pynput.keyboard import Controller
+    except ModuleNotFoundError:
+        pytest.skip("Could not load pynput")
+
+    controller = Controller()
+
     # create objects
     context_menu = ContextMenu(driver)
     driver.get("https://example.com")
@@ -35,7 +42,7 @@ def test_save_page_as(driver: Firefox, sys_platform):
 
     # short sleep to ensure menu is shown
     sleep(2)
-    context_menu.handle_os_download_confirmation()
+    context_menu.handle_os_download_confirmation(controller, sys_platform)
 
     # Wait for the animation to complete
     nav.wait_for_download_animation_finish()

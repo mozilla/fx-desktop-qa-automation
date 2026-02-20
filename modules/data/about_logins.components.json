@@ -174,35 +174,5 @@
         "strategy": "class",
         "shadowParent": "login-item",
         "groups": []
-    },
-    "copy-username": {
-        "selectorData": "copy-username-button.copy-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "copy-password": {
-        "selectorData": "copy-password-button.copy-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "copied-button": {
-        "selectorData": "copy-password-button.copied-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "password-reveal": {
-        "selectorData": "input[type='text'][name='password']",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "password-hidden": {
-        "selectorData": "input.password-display[type='password']",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
     }
 }

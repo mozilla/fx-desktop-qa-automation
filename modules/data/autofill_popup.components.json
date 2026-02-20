@@ -153,10 +153,5 @@
     "selectorData": ".autocomplete-richlistbox richlistitem",
     "strategy": "css",
     "groups": []
-  },
-  "manage-passwords": {
-        "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
-        "strategy": "css",
-        "groups": []
-    }
+  }
 }

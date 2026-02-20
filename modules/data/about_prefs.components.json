@@ -291,16 +291,6 @@
     "strategy": "id",
     "groups": []
   },
-  "suspected-fingerprints-in-all-windows": {
-    "selectorData": "#fingerprintingProtectionMenu menuitem[value='always']",
-    "strategy": "css",
-    "groups": []
-  },
-  "suspected-fingerprints-only-in-private-windows": {
-    "selectorData": "#fingerprintingProtectionMenu menuitem[value='private']",
-    "strategy": "css",
-    "groups": []
-  },
   "cookies-shadow-root": {
     "selectorData": "dialog[buttons='accept,cancel']",
     "strategy": "css",
@@ -681,16 +671,6 @@
   },
   "tab-hover-preview-checkbox": {
     "selectorData": "tabPreviewShowThumbnails",
-    "strategy": "id",
-    "groups": []
-  },
-  "saved-passwords": {
-    "selectorData": "showPasswords",
-    "strategy": "id",
-    "groups": []
-  },
-  "show-sidebar-checkbox": {
-    "selectorData": "browserLayoutShowSidebar",
     "strategy": "id",
     "groups": []
   }
