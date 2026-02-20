@@ -1062,6 +1062,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_sidebar_removed_on_end_private_session:
+    result: pass
+    splits:
+    - functional2
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:
