@@ -3,7 +3,6 @@ import os
 from time import sleep
 
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
@@ -49,8 +48,6 @@ def test_pdf_download(
         file_name: pdf file name
     """
 
-    keyboard = Controller()
-
     # Click the download button
     pdf_viewer.click_download_button()
 
@@ -58,7 +55,7 @@ def test_pdf_download(
     sleep(2)
 
     # Handle OS download prompt
-    pdf_viewer.handle_os_download_confirmation(keyboard, sys_platform)
+    pdf_viewer.handle_os_download_confirmation()
 
     # Set the expected download path and the expected PDF name
     saved_pdf_location = os.path.join(downloads_folder, file_name)
@@ -70,5 +67,6 @@ def test_pdf_download(
     )
 
     logging.info(
-        f"Test passed: The file {file_name} has been downloaded and is present at {saved_pdf_location}."
+        f"Test passed: The file {file_name} has been"
+        f" downloaded and is present at {saved_pdf_location}."
     )

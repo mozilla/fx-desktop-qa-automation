@@ -1,7 +1,6 @@
 from time import sleep
 
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu
@@ -58,8 +57,7 @@ def test_download_pdf_from_context_menu(
     # Allow time for the save dialog to appear and handle prompt
     sleep(2)
     context_menu.hide_popup_by_child_node("context-menu-save-page-as")
-    keyboard = Controller()
-    pdf_page.handle_os_download_confirmation(keyboard, sys_platform)
+    pdf_page.handle_os_download_confirmation()
 
     # Allow time for the download to complete
     nav.wait_for_download_animation_finish()
