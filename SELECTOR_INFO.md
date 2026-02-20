@@ -3288,6 +3288,20 @@ Location: Confirmation panel after clicking "End Private Session"
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector name: cancel-session-data-button
+Selector Data: reset-pbm-panel-cancel-button
+Description: Cancel button in the "End Private Session" confirmation panel
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: always-ask-pbm-checkbox
+Selector Data: reset-pbm-panel-checkbox
+Description: "Always ask me" checkbox in the "End Private Session" confirmation panel
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector name: history-button
 Selector Data: history-panelmenu
 Description: History button
@@ -4767,4 +4781,25 @@ Selector Data: "menuitem.bookmark-item"
 Description: Individual closed tab items in the Recently Closed Tabs submenu
 Location: History menu > Recently Closed Tabs submenu
 Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: view-sidebar-menu
+Selector Data: "viewSidebarMenu"
+Description: Sidebar submenu under the View menu in the Menu Bar
+Location: View menu > Sidebar submenu
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: view-sidebar-history
+Selector Data: "menu_historySidebar"
+Description: History option in the View > Sidebar submenu, opens the History sidebar panel
+Location: View menu > Sidebar submenu > History
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: sidebar-box
+Selector Data: "sidebar-box"
+Description: Container element for the classic Firefox sidebar; visible when any sidebar panel is open, hidden when closed
+Location: Browser chrome
+Path to .json: modules/data/navigation.components.json
 ```
