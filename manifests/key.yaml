@@ -966,6 +966,10 @@ scrolling_panning_zooming:
     - smoke
     - ci
 security_and_privacy:
+  test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
+    result: pass
+    splits:
+    - functional2
   test_blocking_cryptominers:
     result: pass
     splits:
