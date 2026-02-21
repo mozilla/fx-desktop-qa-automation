@@ -729,6 +729,10 @@ notifications:
     splits:
     - functional2
 password_manager:
+  test_about_logins_direct_navigation:
+    result: pass
+    splits:
+    - functional1
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
