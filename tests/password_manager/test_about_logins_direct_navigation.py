@@ -12,9 +12,7 @@ def test_case():
     return "2241080"
 
 
-def test_about_logins_direct_navigation(
-    driver: Firefox, about_logins: AboutLogins
-):
+def test_about_logins_direct_navigation(driver: Firefox, about_logins: AboutLogins):
     """
     C2241080 - Verify direct navigation to about:logins
     """
