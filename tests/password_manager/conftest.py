@@ -37,6 +37,11 @@ def about_prefs(driver, about_prefs_category: str):
 
 
 @pytest.fixture()
+def about_logins(driver):
+    return AboutLogins(driver)
+
+
+@pytest.fixture()
 def origins():
     return [
         "facebook.com",
