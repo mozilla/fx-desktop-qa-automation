@@ -5,7 +5,7 @@ from faker import Faker
 from faker.providers import internet, misc
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutLogins, AboutPrefs
+from modules.page_object import AboutLogins, AboutPrefs, AboutProtections
 
 
 @pytest.fixture()
@@ -34,6 +34,11 @@ def about_prefs_category():
 @pytest.fixture()
 def about_prefs(driver, about_prefs_category: str):
     return AboutPrefs(driver, category=about_prefs_category)
+
+
+@pytest.fixture()
+def about_protections(driver):
+    return AboutProtections(driver)
 
 
 @pytest.fixture()

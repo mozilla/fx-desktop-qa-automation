@@ -3,10 +3,5 @@
     "selectorData": "save-passwords-button",
     "strategy": "id",
     "groups": []
-  },
-  "manage-privacy-security": {
-    "selectorData": "protection-settings",
-    "strategy": "id",
-    "groups": []
   }
 }
