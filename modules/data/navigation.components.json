@@ -188,6 +188,11 @@
         "strategy": "id",
         "groups": []
     },
+    "trustpanel-header": {
+        "selectorData": "trustpanel-header",
+        "strategy": "id",
+        "groups": []
+    },
     "lock-icon": {
         "selectorData": "identity-icon",
         "strategy": "id",

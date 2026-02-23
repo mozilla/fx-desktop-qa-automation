@@ -349,7 +349,7 @@ class Navigation(BasePage):
                 data = json.loads(raw_args)
                 assert data.get("count")
         else:
-            self.get_element("no-trackers-detected").is_displayed()
+            self.element_has_text("trustpanel-header", "on guard")
 
     @BasePage.context_chrome
     def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):

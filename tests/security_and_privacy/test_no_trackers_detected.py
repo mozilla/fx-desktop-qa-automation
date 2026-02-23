@@ -9,7 +9,7 @@ def test_case():
     return "446391"
 
 
-NOTRACKERS_URL = "http://example.com/"
+NOTRACKERS_URL = "https://example.com/"
 
 
 def test_no_trackers_detected(driver: Firefox, nav: Navigation):

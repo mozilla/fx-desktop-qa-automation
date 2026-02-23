@@ -732,11 +732,11 @@ password_manager:
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_about_logins_navigation_from_about_protections:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
