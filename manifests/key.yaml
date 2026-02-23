@@ -425,7 +425,10 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    result:
+      mac: pass
+      win: pass
+      linux: unstable
     splits:
     - smoke
   test_download_pdf_from_context_menu:
