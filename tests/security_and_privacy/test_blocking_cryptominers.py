@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -33,4 +35,5 @@ def test_blocking_cryptominers(
     # Access url and click on the shield icon and verify that cryptominers are blocked
     tracking_page.open()
     tracker_panel.wait_for_blocked_tracking_icon(nav, tracking_page)
+    # time.sleep(200)
     nav.assert_blocked_trackers("cryptominers")

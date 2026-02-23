@@ -172,14 +172,14 @@
         "groups": []
     },
     "shield-icon": {
-        "selectorData": "tracking-protection-icon-container",
+        "selectorData": "trust-icon-container",
         "strategy": "id",
         "groups": [
             "doNotCache"
         ]
     },
     "cryptominers": {
-        "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked",
+        "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
         "strategy": "css",
         "groups": []
     },
@@ -620,9 +620,9 @@
         "groups": []
     },
     "download-deleted-message": {
-          "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
-          "strategy": "css",
-          "groups": []
+        "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
+        "strategy": "css",
+        "groups": []
     },
     "xpi-download-target-element": {
         "selectorData": ".downloadTarget[value='tomato_clock-6.0.2.xpi']",
@@ -649,7 +649,7 @@
         "strategy": "css",
         "groups": []
     },
-     "download-button-warning": {
+    "download-button-warning": {
         "selectorData": "#downloads-button[attention='severe']",
         "strategy": "css",
         "groups": []

@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import time
@@ -343,7 +344,10 @@ class Navigation(BasePage):
         self.open_tracker_panel()
         if blocked_trackers:
             for tracker in blocked_trackers:
-                self.element_visible(tracker)
+                self.element_exists(tracker)
+                raw_args = self.fetch(tracker).get_attribute("data-l10n-args")
+                data = json.loads(raw_args)
+                assert data.get("count")
         else:
             self.get_element("no-trackers-detected").is_displayed()
 
