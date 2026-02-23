@@ -291,6 +291,11 @@
     "strategy": "id",
     "groups": []
   },
+  "suspected-fingerprints-in-all-windows": {
+    "selectorData": "#fingerprintingProtectionMenu menuitem[value='always']",
+    "strategy": "css",
+    "groups": []
+  },
   "cookies-shadow-root": {
     "selectorData": "dialog[buttons='accept,cancel']",
     "strategy": "css",
