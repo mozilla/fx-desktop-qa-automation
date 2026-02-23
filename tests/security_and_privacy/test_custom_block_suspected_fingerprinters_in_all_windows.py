@@ -2,8 +2,10 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import PanelUi, TabBar
-from modules.page_object import AboutPrefs, GenericPage
+from modules.browser_object_panel_ui import PanelUi
+from modules.browser_object_tabbar import TabBar
+from modules.page_object_generics import GenericPage
+from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()
@@ -24,16 +26,16 @@ def add_to_prefs_list():
 CANVAS_NOISE_URL = "https://arkenfox.github.io/TZP/tests/canvasnoise.html"
 
 
-def test_custom_block_suspected_fingerprinters_in_all_windows(
-    driver: Firefox, panel_ui: PanelUi, tabs: TabBar
-):
+def test_custom_block_suspected_fingerprinters_in_all_windows(driver: Firefox):
     """
     C2318652 - Verify canvas randomization protection is active in both normal and private
     windows when "Suspected fingerprinters" is set to "In all windows" in ETP Custom mode.
     Expected: 1st and 2nd reads match each other ([cached]) but not the Control ([matches] absent).
     """
     # Instantiate objects
+    panel = PanelUi(driver)
     about_prefs_privacy = AboutPrefs(driver, category="privacy")
+    tabs = TabBar(driver)
     canvas_page = GenericPage(driver, url=CANVAS_NOISE_URL)
 
     # Configure ETP Custom: Suspected fingerprinters blocked In all windows
@@ -51,7 +53,7 @@ def test_custom_block_suspected_fingerprinters_in_all_windows(
     assert "[matches]" not in canvas_page.find_element(By.ID, "readhash2").text
 
     # Private window: verify canvas randomization also applies
-    panel_ui.open_and_switch_to_new_window("private")
+    panel.open_and_switch_to_new_window("private")
     canvas_page.open()
     canvas_page.wait.until(
         lambda d: "[cached]" in d.find_element(By.ID, "readhash2").text

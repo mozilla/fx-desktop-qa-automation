@@ -1016,6 +1016,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_custom_block_suspected_fingerprinters_in_all_windows:
+    result: pass
+    splits:
+    - functional2
   test_data_clearance_from_private_window_can_be_canceled:
     result: pass
     splits:
