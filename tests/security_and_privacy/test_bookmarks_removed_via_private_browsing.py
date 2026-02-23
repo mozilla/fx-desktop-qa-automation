@@ -1,8 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi
-from modules.page_object import GenericPage
+from modules.browser_object_navigation import Navigation
+from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_generics import GenericPage
 
 BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"
@@ -22,18 +23,18 @@ def add_to_prefs_list():
     ]
 
 
-def test_bookmarks_removed_via_private_browsing(
-    driver: Firefox, panel_ui: PanelUi, nav: Navigation
-):
+def test_bookmarks_removed_via_private_browsing(driver: Firefox):
     """
     C101743: Bookmarks can be successfully removed via Private Browsing
     """
 
     # Instantiate objects
+    nav = Navigation(driver)
+    panel = PanelUi(driver)
     page = GenericPage(driver, url=BOOKMARK_URL)
 
     # Open a private window and switch to it
-    panel_ui.open_and_switch_to_new_window("private")
+    panel.open_and_switch_to_new_window("private")
 
     # Access any websites bookmark it
     page.open()
