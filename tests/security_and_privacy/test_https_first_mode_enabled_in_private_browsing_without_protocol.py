@@ -14,9 +14,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [
-        ("dom.security.https_first_pbm", True)
-    ]
+    return [("dom.security.https_first_pbm", True)]
 
 
 def test_https_first_mode_enabled_in_private_browsing_without_protocol(driver: Firefox):
