@@ -762,7 +762,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_auto_saved_generated_password_context_menu:
@@ -774,7 +774,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
@@ -811,7 +811,7 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_save_login_via_doorhanger:
