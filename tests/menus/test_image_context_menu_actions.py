@@ -57,13 +57,6 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     """
     C2637622.2: save image as
     """
-    try:
-        from pynput.keyboard import Controller
-    except ModuleNotFoundError:
-        pytest.skip("Could not load pynput")
-
-    controller = Controller()
-
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL)
     wiki_image_page.open()
     image_context_menu = ContextMenu(driver)
@@ -81,7 +74,7 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
 
     # wait some time before interacting with the system dialog
     sleep(2)
-    wiki_image_page.handle_os_download_confirmation(controller, sys_platform)
+    wiki_image_page.handle_os_download_confirmation()
 
     # Verify that the file exists
     sleep(2)

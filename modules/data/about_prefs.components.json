@@ -673,5 +673,10 @@
     "selectorData": "tabPreviewShowThumbnails",
     "strategy": "id",
     "groups": []
+  },
+    "saved-passwords": {
+    "selectorData": "showPasswords",
+    "strategy": "id",
+    "groups": []
   }
 }
