@@ -13,7 +13,7 @@ def test_case():
 
 
 def test_about_logins_navigation_from_about_protections(
-        driver: Firefox, about_protections: AboutProtections
+    driver: Firefox, about_protections: AboutProtections
 ):
     """
     C2241084: Verify the navigation to about:logins from about:protections
