@@ -1385,9 +1385,7 @@ Description: Element containing the profile table row
 Location: about:profiles
 Path to .json: modules/data/about_profiles.components.json
 ```
-
 #### about_protections
-
 ```
 Selector Name: about-protections-save-passwords-button
 Selector Data: "save-passwords-button"
