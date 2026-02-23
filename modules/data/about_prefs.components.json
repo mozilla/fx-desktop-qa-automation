@@ -679,7 +679,7 @@
     "strategy": "id",
     "groups": []
   },
-    "saved-passwords": {
+  "saved-passwords": {
     "selectorData": "showPasswords",
     "strategy": "id",
     "groups": []

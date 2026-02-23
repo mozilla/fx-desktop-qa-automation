@@ -387,6 +387,14 @@ class AboutProfiles(BasePage):
     URL_TEMPLATE = "about:profiles"
 
 
+class AboutProtections(BasePage):
+    """
+    POM for about:protections page
+    """
+
+    URL_TEMPLATE = "about:protections"
+
+
 class AboutTelemetry(BasePage):
     """
     The POM for the about:telemetry page

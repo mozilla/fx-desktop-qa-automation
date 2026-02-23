@@ -1,0 +1,7 @@
+{
+  "about-protections-save-passwords-button": {
+    "selectorData": "save-passwords-button",
+    "strategy": "id",
+    "groups": []
+  }
+}
