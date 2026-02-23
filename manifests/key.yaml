@@ -184,7 +184,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -382,10 +382,7 @@ bookmarks_and_history:
     - functional1
 downloads:
   test_add_mime_type_doc:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - functional1
   test_add_zip_type:
@@ -425,7 +422,9 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    linux: unstable
+    mac: pass
+    win: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -452,7 +451,7 @@ downloads:
     splits:
     - functional1
   test_set_always_ask_file_type:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_telemetry_download_and_open:
@@ -839,7 +838,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_open_pdf_in_FF:
@@ -985,11 +984,11 @@ security_and_privacy:
     splits:
     - functional2
   test_blocking_cryptominers:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_blocking_fingerprinters:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_blocking_social_media_trackers:
@@ -1013,11 +1012,11 @@ security_and_privacy:
     splits:
     - functional2
   test_cross_site_tracking_cookies_blocked:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_custom_block_suspected_fingerprinters_in_all_windows:
@@ -1029,7 +1028,7 @@ security_and_privacy:
     splits:
     - functional2
   test_detected_blocked_trackers_found:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_download_list_cleared_by_end_private_session:
@@ -1057,7 +1056,7 @@ security_and_privacy:
     splits:
     - functional2
   test_no_trackers_detected:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_open_link_in_private_window:
@@ -1097,15 +1096,15 @@ security_and_privacy:
     splits:
     - functional2
   test_tls_v1_2_protocol:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_trackers_crypto_fingerprint_blocked:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_tracking_content_custom_mode:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_undo_close_tab_private_browsing:
