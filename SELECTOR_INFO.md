@@ -4821,7 +4821,14 @@ Path to .json: modules/data/navigation.components.json
 ```
 Selector Name: suspected-fingerprints-in-all-windows
 Selector Data: "#fingerprintingProtectionMenu menuitem[value='always']"
-Description: "In all windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode. Scoped to fingerprintingProtectionMenu because the menuitem shares its data-l10n-id with the tracking protection "In all windows" option.
+Description: "In all windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
+Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: suspected-fingerprints-only-in-private-windows
+Selector Data: "#fingerprintingProtectionMenu menuitem[value='private']"
+Description: "Only in private windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
 Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
 Path to .json: modules/data/about_prefs.components.json
 ```
