@@ -422,9 +422,12 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    linux: unstable
-    mac: pass
-    win: pass
+    result:
+      linux: unstable
+      mac: pass
+      splits:
+      - smoke
+      win: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -739,11 +742,11 @@ password_manager:
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_about_logins_navigation_from_about_protections:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
@@ -930,7 +933,7 @@ printing_ui:
   test_page_number_indicator_print_preview:
     result: pass
     splits:
-    - functional02
+    - functional2
   test_print_preview:
     result: pass
     splits:
