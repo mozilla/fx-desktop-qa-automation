@@ -1055,6 +1055,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_end_private_session_clears_cookies:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
