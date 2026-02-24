@@ -699,6 +699,10 @@ notifications:
     result: pass
     splits:
     - functional1
+  test_downloads_finished_button_is_displayed:
+    result: pass
+    splits:
+    - functional1
   test_geolocation_allow_browserleaks:
     result: pass
     splits:

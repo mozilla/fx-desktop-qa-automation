@@ -54,7 +54,6 @@ def test_download_complete_icon_is_displayed(driver: Firefox, delete_files):
 
     # Completed state: "finish" indicator box is displayed in chrome UI
     nav.expect_in_chrome(
-        lambda _: (
-            nav.get_element("download-progress-element").get_attribute("value") == "100"
-        )
+        lambda _: nav.get_element("download-progress-element").get_attribute("value")
+        == "100"
     )

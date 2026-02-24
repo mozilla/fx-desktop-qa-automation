@@ -126,6 +126,11 @@
             "doNotCache"
         ]
     },
+    "downloads-indicator-finish-box": {
+        "selectorData": "#downloads-indicator-finish-box",
+        "strategy": "css",
+        "groups": ["doNotCache"]
+    },
     "search-results-container": {
         "selectorData": "urlbar-results",
         "strategy": "id",
