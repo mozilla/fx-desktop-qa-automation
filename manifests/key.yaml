@@ -422,11 +422,14 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    linux: unstable
-    mac: pass
-    win: pass
+    result:
+      linux: unstable
+      mac: pass
+      splits:
+      - smoke
+      win: pass
     splits:
-    - smoke
+    - functional1
   test_download_pdf_from_context_menu:
     result: pass
     splits:
@@ -739,11 +742,11 @@ password_manager:
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_about_logins_navigation_from_about_protections:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
@@ -792,6 +795,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_etdl-facebook-credentials:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
     result:
       linux: pass
