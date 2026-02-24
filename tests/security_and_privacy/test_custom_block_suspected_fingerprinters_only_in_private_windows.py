@@ -28,9 +28,10 @@ CANVAS_NOISE_URL = "https://arkenfox.github.io/TZP/tests/canvasnoise.html"
 
 def test_custom_block_suspected_fingerprinters_only_in_private_windows(driver: Firefox):
     """
-    C2318653 - Verify canvas randomization protection is active in both normal and private
-    windows when "Suspected fingerprinters" is set to "Only in private windows" in ETP Custom mode.
-    Expected: 1st and 2nd reads match each other ([cached]) but not the Control ([matches] absent).
+    C2318653 - Verify canvas randomization protection is active only in private windows
+    when "Suspected fingerprinters" is set to "Only in private windows" in ETP Custom mode.
+    Expected normal window: reads match the Control ([matches] present).
+    Expected private window: 1st and 2nd reads match each other ([cached]) but not the Control ([matches] absent).
     """
     # Instantiate objects
     panel = PanelUi(driver)
