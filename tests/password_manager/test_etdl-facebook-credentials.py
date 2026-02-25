@@ -170,7 +170,6 @@ def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
 
     if btn:
         page.driver.execute_script("arguments[0].click();", btn)
-        time.sleep(0.5)
 
 
 def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
