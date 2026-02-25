@@ -41,9 +41,6 @@ def test_blocking_social_media_trackers(
 
     driver.get(SOCIAL_MEDIA_TRACKERS_URL)
 
-    nav.open_tracker_panel()
-    tracker_panel.verify_tracker_subview_title(
-        "social-media-tracker-content",
-        "social-media-subview",
-        "Social Media Trackers Blocked",
-    )
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
+    tracker_panel.trackers_blocked("social-media-tracker")
