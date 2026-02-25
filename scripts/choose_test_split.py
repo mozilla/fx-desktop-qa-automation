@@ -120,8 +120,20 @@ def dedupe(run_list: list) -> list:
 
 
 if __name__ == "__main__":
-    print("Selecting test set...")
+
     manifest = TestKey(MANIFEST_KEY)
+
+    if os.environ.get("STARFOX_CATEGORY"):
+        category = os.environ["STARFOX_CATEGORY"]
+        split_name = os.environ["STARFOX_SPLIT"]
+        print(f"Gathering tests from split '{split_name}' with category '{category}'...")
+        run_list = manifest.gather_category(split_name, category)
+        run_list = dedupe(run_list)
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(run_list))
+        sys.exit(0)
+
+    print("Selecting test set...")
     if os.environ.get("STARFOX_SPLIT"):
         print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])

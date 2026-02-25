@@ -1,0 +1,52 @@
+---
+name: DTE Stability Test Monitoring
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform - default = all. Could be changed to win, mac, linux."
+        default: "all"
+        type: string
+        required: true
+      category:
+        description: "Category - default = pass. Could be changed to flaky or unstable."
+        default: "pass"
+        type: string
+        required: true
+      split:
+        description: "Split - default = all. Could be changed to functional1 or functional2, etc."
+        default: "all"
+        type: string
+        required: true
+
+permissions:
+  contents: "write"
+
+jobs:
+  Run-Starfox-Win:
+    if: |
+      ${{
+        contains(github.event.inputs.platform, 'win') || github.event.inputs.platform == 'all'
+      }}
+    uses: ./.github/workflows/main-stability.yml
+    with:
+      job_to_run: Test-Windows
+      test_category: ${{ github.event.inputs.category }}
+      test_set: ${{ github.event.inputs.split }}
+    secrets: inherit
+
+  Run-Starfox-Mac:
+    if: |
+      ${{
+        contains(github.event.inputs.platform, 'mac') || github.event.inputs.platform == 'all'
+      }}
+    uses: ./.github/workflows/main-stability.yml
+    with:
+      job_to_run: Test-MacOS
+      test_category: ${{ github.event.inputs.category }}
+      test_set: ${{ github.event.inputs.split }}
+    secrets: inherit

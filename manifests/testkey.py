@@ -272,6 +272,50 @@ class TestKey:
 
         return test_filenames
 
+    def gather_category(self, split_name, category="pass"):
+        """
+        Given a split name, return the pytest locations of the tests in that split.
+        Default to only returning tests expected to pass
+        For example, if category is set as "unstable", it will return all test that are unstable
+        within that given split, and same for "flaky".
+        Example:
+            gather_category("functional1", "unstable")
+        """
+
+        test_filenames = []
+
+        for suite in self.manifest:
+            for testfile in self.manifest[suite]:
+
+                entry = self.manifest[suite][testfile]
+
+                if "splits" in entry:
+                    if split_name != "all" and split_name not in entry.get("splits", []):
+                        continue
+
+                    if entry.get("result", "").lower() == category.lower():
+                        test_filenames.append(
+                            self.normalize_test_filename(suite, testfile)
+                        )
+
+                for key, subentry in entry.items():
+                    if not str(key).startswith("test_"):
+                        continue
+                    if not isinstance(subentry, dict):
+                        continue
+                    if "splits" not in subentry:
+                        continue
+
+                    if split_name != "all" and split_name not in subentry.get("splits", []):
+                        continue
+
+                    if subentry.get("result", "").lower() == category.lower():
+                        test_filenames.append(
+                            self.normalize_test_filename(suite, testfile, key)
+                        )
+
+        return test_filenames
+
     def get_valid_suites_in_split(self, split, suite_numbers=False) -> list:
         """
         Given a split name, return the subdirectory names corresponding to
