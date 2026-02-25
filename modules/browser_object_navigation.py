@@ -343,6 +343,7 @@ class Navigation(BasePage):
         """
         self.open_tracker_panel()
         if blocked_trackers:
+            self.click_on("see-blocked-trackers")
             for tracker in blocked_trackers:
                 self.element_exists(tracker)
                 raw_args = self.fetch(tracker).get_attribute("data-l10n-args")

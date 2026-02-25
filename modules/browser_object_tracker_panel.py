@@ -2,6 +2,7 @@ import logging
 from typing import List, Optional, Set
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.remote.webelement import WebElement
 
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
@@ -15,72 +16,34 @@ class TrackerPanel(BasePage):
     URL_TEMPLATE = ""
 
     @BasePage.context_chrome
-    def verify_allowed_blocked_trackers(
-        self, allowed: Optional[Set[str]] = None, blocked: Optional[Set[str]] = None
-    ) -> bool:
-        """
-        Given two sets of strings, one representing the allowed names of the type of trackers and one representing the blocked types of trackers,
-        this function will return True if the tracking panel matches all of the entries in the sets, False if otherwise.
-
-        Note: Strings in the set MUST be exactly the ones displayed in the tracker panel, otherwise this might fail.
-
-        Example usage:
-        blocked = set(["Cross-Site Tracking Cookies"])
-        allowed = set(["Tracking Content"])
-
-        assert tracker_panel.verify_allowed_blocked_trackers(allowed, blocked)
-        """
-        if allowed is None:
-            allowed = set()
-        if blocked is None:
-            blocked = set()
-
-        rm_blocked = False
-        rm_allowed = False
-
-        tracker_item_container = self.get_element("tracking-item-container")
-        all_tracking_items = self.get_all_children(tracker_item_container)
-
-        for item in all_tracking_items:
-            # encounter a header (everything after it is blocked/allowed in the list)
-            inner_html = item.get_attribute("innerHTML")
-            if "Blocked" in inner_html:
-                rm_blocked = True
-                continue
-            elif "Allowed" in inner_html:
-                rm_allowed = True
-                rm_blocked = False
-                continue
-
-            # assign a temp memory location, assign the set to it depending on the header seen earlier
-            rm_set = set()
-            to_rm_item = ""
-            if rm_blocked:
-                rm_set = blocked
-            elif rm_allowed:
-                rm_set = allowed
-
-            # go through the possible strings to look for, remove it if appropriate
-            for item in rm_set:
-                if item in inner_html:
-                    to_rm_item = item
-                    break
-            if to_rm_item != "":
-                rm_set.remove(to_rm_item)
-        self.expect(lambda _: len(blocked) == 0 and len(allowed) == 0)
+    def open_panel(self) -> BasePage:
+        self.click_on("shield-icon")
+        return self
 
     @BasePage.context_chrome
-    def verify_tracker_subview_title(
-        self, blocked_tracker, subview_locator, expected_title
-    ):
-        """
-        Verify the title of the subview that shows the blocked trackers.
-        """
-        self.click_on(blocked_tracker)
-        tracker_subview_title = self.get_element(subview_locator)
-        self.expect(
-            lambda _: tracker_subview_title.get_attribute("title") == expected_title
-        )
+    def item_in_block(self, item: str, block: WebElement) -> bool:
+        return block.text.endswith(item) or block.get_attribute(
+            "data-l10n-id"
+        ).endswith(item)
+
+    @BasePage.context_chrome
+    def trackers_in_category(self, category: str, *trackers) -> bool:
+        """Confirm that text or data-l10n-id for blocked items exists within blocked area"""
+        blocked = self.get_elements(f"{category}-items")
+        if trackers and not blocked:
+            return False
+        for tracker in trackers:
+            if not any([self.item_in_block(tracker, b) for b in blocked]):
+                return False
+        return True
+
+    @BasePage.context_chrome
+    def trackers_blocked(self, *trackers) -> bool:
+        return self.trackers_in_category("blocked", *trackers)
+
+    @BasePage.context_chrome
+    def trackers_detected(self, *trackers) -> bool:
+        return self.trackers_in_category("detected", *trackers)
 
     @BasePage.context_chrome
     def verify_tracker_panel_title(self, expected_title):
@@ -125,7 +88,7 @@ class TrackerPanel(BasePage):
                 self.wait.until(lambda _: shield_active())
         except TimeoutException:
             logging.warning(
-                "The shield icon was not active after refreshing mulitple times, the test has timed out."
+                "Shield icon not active after refreshing multiple times, the test has timed out."
             )
         return self
 

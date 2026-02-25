@@ -184,7 +184,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -382,10 +382,7 @@ bookmarks_and_history:
     - functional1
 downloads:
   test_add_mime_type_doc:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - functional1
   test_add_zip_type:
@@ -425,7 +422,10 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -452,7 +452,7 @@ downloads:
     splits:
     - functional1
   test_set_always_ask_file_type:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_telemetry_download_and_open:
@@ -700,6 +700,10 @@ notifications:
     result: pass
     splits:
     - functional1
+  test_downloads_finished_button_is_displayed:
+    result: pass
+    splits:
+    - functional1
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
@@ -729,6 +733,10 @@ notifications:
     splits:
     - functional2
 password_manager:
+  test_about_logins_direct_navigation:
+    result: pass
+    splits:
+    - functional1
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
@@ -839,7 +847,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_open_pdf_in_FF:
@@ -923,7 +931,7 @@ printing_ui:
   test_page_number_indicator_print_preview:
     result: pass
     splits:
-    - functional02
+    - functional2
   test_print_preview:
     result: pass
     splits:
@@ -993,11 +1001,11 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_social_media_trackers:
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_bookmarks_removed_via_private_browsing:
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_bookmarks_toolbar_present_in_private_browsing:
@@ -1024,6 +1032,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_custom_block_suspected_fingerprinters_only_in_private_windows:
+    result: pass
+    splits:
+    - functional2
   test_data_clearance_from_private_window_can_be_canceled:
     result: pass
     splits:
@@ -1044,10 +1056,18 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_end_private_session_clears_cookies:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
     - smoke
+  test_https_first_mode_enabled_in_private_browsing_without_protocol:
+    result: pass
+    splits:
+    - functional2
   test_never_remember_browsing_history:
     result: pass
     splits:

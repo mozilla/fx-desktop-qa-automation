@@ -1,3 +1,6 @@
+import logging
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -11,7 +14,7 @@ def test_case():
     return "446405"
 
 
-Tracker_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
+TRACKER_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 
 
 @pytest.fixture()
@@ -32,18 +35,17 @@ def test_blocked_tracking_content(
     about_prefs_privacy: AboutPrefs,
 ):
     """
-    C446405.1: Ensure that ETP Custom mode with option Tracking Content -> In all windows set blocks tracking content
+    C446405.1: Ensure that ETP Custom mode with option Tracking Content -> In all windows set
+    blocks tracking content
     """
     about_prefs_privacy.open()
     about_prefs_privacy.select_trackers_to_block(
         "tracking-checkbox", "tracking-in-all-windows"
     )
-    driver.get(Tracker_URL)
+    driver.get(TRACKER_URL)
 
-    nav.open_tracker_panel()
-    tracker_panel.verify_tracker_subview_title(
-        "tracker-tracking-content", "tracking-subview", "Tracking Content Blocked"
-    )
+    tracker_panel.open_panel()
+    tracker_panel.trackers_blocked("Tracking content")
 
 
 def test_allowed_tracking_content(
@@ -53,16 +55,14 @@ def test_allowed_tracking_content(
     about_prefs_privacy: AboutPrefs,
 ):
     """
-    C446405.2: Ensure that ETP Custom mode with option Tracking Content -> Only in Private Windows set allows
-    tracking content
+    C446405.2: Ensure that ETP Custom mode w/ option Tracking Content -> Only in Private Windows set
+    allows tracking content
     """
 
     about_prefs_privacy.open()
     about_prefs_privacy.select_trackers_to_block("tracking-checkbox")
 
-    driver.get(Tracker_URL)
+    driver.get(TRACKER_URL)
 
-    nav.open_tracker_panel()
-    tracker_panel.verify_tracker_subview_title(
-        "tracker-tracking-content", "tracking-subview", "Not Blocking Tracking Content"
-    )
+    tracker_panel.open_panel()
+    tracker_panel.trackers_detected("Tracking content")

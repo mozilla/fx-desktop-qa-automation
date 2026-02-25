@@ -178,6 +178,17 @@
             "doNotCache"
         ]
     },
+    "see-blocked-trackers-parent": {
+        "selectorData": "trustpanel-blocker-see-all",
+        "strategy": "id",
+        "groups": []
+    },
+    "see-blocked-trackers": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "see-blocked-trackers-parent"
+    },
     "cryptominers": {
         "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
         "strategy": "css",
