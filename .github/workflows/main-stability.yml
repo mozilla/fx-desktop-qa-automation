@@ -274,11 +274,11 @@ jobs:
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
-          - name: Upload junit (Mac)
-            uses: actions/upload-artifact@v4
-            with:
-              name: junit-mac
-              path: test-results/junit-mac.xml
+      - name: Upload junit (Mac)
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-mac
+          path: test-results/junit-mac.xml
 
       - name: Run Tests in MacOS (Headed)
         if: ${{ steps.setup.conclusion == 'success'}}
