@@ -1157,6 +1157,11 @@ session_restore:
     result: pass
     splits:
     - functional2
+sidebar:
+  test_toggle_sidebar_via_toolbar_button:
+    result: pass
+    splits:
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
     result: unstable

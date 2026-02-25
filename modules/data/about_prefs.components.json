@@ -688,5 +688,10 @@
     "selectorData": "showPasswords",
     "strategy": "id",
     "groups": []
+  },
+  "show-sidebar-checkbox": {
+    "selectorData": "browserLayoutShowSidebar",
+    "strategy": "id",
+    "groups": []
   }
 }
