@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import List, Optional, Set
 
@@ -46,6 +47,11 @@ class TrackerPanel(BasePage):
         return self.trackers_in_category("detected", *trackers)
 
     @BasePage.context_chrome
+    def get_element_args(self, reference: str | tuple | WebElement, labels=None):
+        raw_args = self.fetch(reference, labels).get_attribute("data-l10n-args")
+        return json.loads(raw_args)
+
+    @BasePage.context_chrome
     def verify_tracker_panel_title(self, expected_title):
         """
         verify the title of the tracker panel.
@@ -57,69 +63,25 @@ class TrackerPanel(BasePage):
             )
         )
 
-    def wait_for_blocked_tracking_icon(
-        self, nav: Navigation, page: BasePage
-    ) -> BasePage:
-        """
-        Waits for the shield icon to indicate that cookies/trackers are being blocked by continuously refreshing the page
+    def wait_for_trackers(self) -> BasePage:
+        """Open and close the trust panel until trackers appear"""
+        nav = Navigation(self.driver)
+        blocker_section = "trustpanel-blocker-section"
 
-        Remember to open the passed in page beforehand, this waits for the page to load.
-
-        Example Usage:
-        first_tracker_website.open()
-        tracker_panel.wait_for_blocked_tracking_icon(nav, first_tracker_website)
-        """
-
-        def shield_active() -> bool:
-            nav.get_element("refresh-button").click()
-            with self.driver.context(self.driver.CONTEXT_CONTENT):
-                page.open()
-                page.wait_for_page_to_load()
-            shield_icon = self.get_element("shield-icon")
-            if (
-                shield_icon.get_attribute("data-l10n-id")
-                == "tracking-protection-icon-active-container"
-            ):
+        def _check_trustpanel(driver):
+            args = self.get_element_args(blocker_section)
+            if args.get("count"):
                 return True
-            return False
 
-        try:
-            with self.driver.context(self.context_id):
-                self.wait.until(lambda _: shield_active())
-        except TimeoutException:
-            logging.warning(
-                "Shield icon not active after refreshing multiple times, the test has timed out."
-            )
-        return self
+            nav.click_on("refresh-button")
 
-    def wait_for_trackers(self, nav: Navigation, page: BasePage) -> BasePage:
-        """
-        Waits for trackers to appear
+            self.open_panel()
+            if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
+                return False
+            args = self.get_element_args(blocker_section)
+            return bool(args.get("count", False))
 
-        Remember to open the passed in page beforehand, this waits for the page to load.
-
-        Example Usage:
-        first_tracker_website.open()
-        tracker_panel.wait_for_blocked_tracking_icon(nav, first_tracker_website)
-        """
-
-        def message_not_present() -> bool:
-            nav.get_element("refresh-button").click()
-            with self.driver.context(self.driver.CONTEXT_CONTENT):
-                page.open()
-                page.wait_for_page_to_load()
-            self.get_element("shield-icon").click()
-            no_trackers_message = self.get_element("no-trackers-message")
-            if no_trackers_message.get_attribute("hidden") == "true":
-                return True
-            return False
-
-        try:
-            with self.driver.context(self.context_id):
-                self.wait.until(lambda _: message_not_present())
-        except TimeoutException:
-            logging.warning("No trackers were ever detected after the timeout period.")
-        return self
+        self.expect(_check_trustpanel)
 
     def verify_tracker_shield_indicator(self, nav: Navigation) -> BasePage:
         """

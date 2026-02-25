@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -23,13 +25,12 @@ def test_detected_blocked_trackers_found(
     """
     C446392: Ensure that the correct trackers are allowed and blocked
     """
-    generic_page = GenericPage(driver, url=url)
+    generic_page = GenericPage(driver)
 
-    generic_page.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, generic_page)
-    nav.open_tracker_panel()
+    generic_page.driver.get(url)
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
 
     # verify the types of trackers
-    tracker_panel.verify_allowed_blocked_trackers(
-        {"Tracking Content"}, {"Cross-Site Tracking Cookies"}
-    )
+    tracker_panel.trackers_detected("Tracking content")
+    tracker_panel.trackers_blocked("Cross-site tracking cookie")

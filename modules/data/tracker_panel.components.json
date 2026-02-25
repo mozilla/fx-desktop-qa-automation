@@ -7,6 +7,18 @@
             "doNotCache"
         ]
     },
+    "trustpanel-header": {
+        "selectorData": "trustpanel-header",
+        "strategy": "id",
+        "groups": []
+    },
+    "trustpanel-blocker-section": {
+        "selectorData": "trustpanel-blocker-section-header",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "blocked-list": {
         "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons",
         "strategy": "css",
