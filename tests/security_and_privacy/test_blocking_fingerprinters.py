@@ -35,13 +35,9 @@ def test_blocking_fingerprinter(
     # Select custom option and keep just known fingerprinters checked
     about_prefs_privacy.select_trackers_to_block("known-fingerprints-checkbox")
 
-    # Switch to and new tab and access url snd verify the shield icon
-    tabs.new_tab_by_button()
-    tabs.wait_for_num_tabs(2)
-    tabs.switch_to_new_tab()
-
     tracking_page.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracking_page)
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
 
     # Open the tracker panel and verify fingerprinters are visible
-    nav.assert_blocked_trackers("known-fingerprints")
+    tracker_panel.trackers_blocked("fingerprinter")

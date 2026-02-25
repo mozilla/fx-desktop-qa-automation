@@ -32,5 +32,5 @@ def test_detected_blocked_trackers_found(
     tracker_panel.wait_for_trackers()
 
     # verify the types of trackers
-    tracker_panel.trackers_detected("Tracking content")
-    tracker_panel.trackers_blocked("Cross-site tracking cookie")
+    tracker_panel.trackers_detected("tracking-content")
+    tracker_panel.trackers_blocked("tracking-cookies")

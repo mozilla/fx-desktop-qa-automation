@@ -23,28 +23,36 @@ class TrackerPanel(BasePage):
 
     @BasePage.context_chrome
     def item_in_block(self, item: str, block: WebElement) -> bool:
-        return block.text.endswith(item) or block.get_attribute(
-            "data-l10n-id"
-        ).endswith(item)
+        intext = block.text.endswith(item) or block.text.endswith(f"{item}s")
+        inattr = block.get_attribute("data-l10n-id").endswith(item)
+        return intext or inattr
 
     @BasePage.context_chrome
     def trackers_in_category(self, category: str, *trackers) -> bool:
         """Confirm that text or data-l10n-id for blocked items exists within blocked area"""
-        blocked = self.get_elements(f"{category}-items")
-        if trackers and not blocked:
+        spotted = self.get_elements(f"{category}-items")
+        if trackers and not spotted:
             return False
         for tracker in trackers:
-            if not any([self.item_in_block(tracker, b) for b in blocked]):
+            logging.warning(f"{tracker}:")
+            logging.warning([block.text for block in spotted])
+            logging.warning([block.get_attribute("data-l10n-id") for block in spotted])
+            logging.warning([self.item_in_block(tracker, block) for block in spotted])
+            if not any([self.item_in_block(tracker, block) for block in spotted]):
                 return False
         return True
 
     @BasePage.context_chrome
     def trackers_blocked(self, *trackers) -> bool:
-        return self.trackers_in_category("blocked", *trackers)
+        assert self.trackers_in_category("blocked", *trackers), (
+            f"Trackers {trackers} not blocked"
+        )
 
     @BasePage.context_chrome
     def trackers_detected(self, *trackers) -> bool:
-        return self.trackers_in_category("detected", *trackers)
+        assert self.trackers_in_category("detected", *trackers), (
+            f"Trackers {trackers} not detected"
+        )
 
     @BasePage.context_chrome
     def get_element_args(self, reference: str | tuple | WebElement, labels=None):
