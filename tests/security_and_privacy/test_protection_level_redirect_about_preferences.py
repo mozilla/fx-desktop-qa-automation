@@ -27,4 +27,4 @@ def test_protection_level_redirect_about_preferences(driver: Firefox):
     tabs.switch_to_new_tab()
 
     # You are redirected to the "about:preferences#privacy" page
-    protection.url_contains("about:preferences#privacyy")
+    protection.url_contains("about:preferences#privacy")
