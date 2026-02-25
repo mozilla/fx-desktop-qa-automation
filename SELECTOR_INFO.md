@@ -580,6 +580,13 @@ Location: about:preferences#general
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: show-sidebar-checkbox
+Selector Data: browserLayoutShowSidebar
+Description: Checkbox to toggle "Show sidebar"
+Location: about:preferences (Browser Layout)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: h2-enhanced-tracking-protection
 Selector Data: h2[data-l10n-id='content-blocking-enhanced-tracking-protection']"
 Description: Enhance Tracking Protection sub-header
@@ -4394,6 +4401,14 @@ Selector Data: "inputSlider"
 Description: The generic slider button
 Location: In the Reader View Toolbar Text and Layout options dialog.
 Path to .json: modules/data/reader_view.components.json
+```
+#### sidebar
+```
+Selector Name: sidebar-button
+Selector Data: sidebar-button
+Description: Sidebar toolbar button used to toggle the sidebar
+Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
 ```
 #### tab_bar
 ```

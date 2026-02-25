@@ -20,7 +20,7 @@ def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     C2639190 - Verify the sidebar can be opened and closed using the toolbar button after enabling Show Sidebar from
     about:preferences.
     """
-    # Instantiate objects
+    # Initialize page objects
     about_prefs = AboutPrefs(driver, category="general")
     sidebar = Sidebar(driver)
 
@@ -28,8 +28,8 @@ def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     about_prefs.open()
     about_prefs.enable_show_sidebar()
 
-    # Verify that the sidebar opened automatically after enabling Show Sidebar
-    sidebar.expect_sidebar_open()
+    # Verify that the Sidebar button is now present in the toolbar
+    sidebar.element_visible("sidebar-button")
 
     # Click the Sidebar button and verify that the sidebar is closed
     sidebar.click_sidebar_button()
