@@ -6,7 +6,6 @@ from modules.page_object import AboutPrefs
 
 TOTAL_TABS = 8
 PINNED_TABS = 3
-CONTENT_URL = "about:robots"
 
 
 @pytest.fixture()
@@ -22,22 +21,47 @@ def add_to_prefs_list():
 def _hover_over_tabs_and_verify_preview(
     tabs: TabBar,
     total_tabs: int,
-    probe_tab_index: int,
+    check_thumbnail: bool,
 ) -> None:
     """Hover each tab and verify hover preview panel appears.
 
-    Validates Title + URL on a single tab (probe_tab_index).
+    Validates Title + URL on every tab.
+    If check_thumbnail is True, validates thumbnail is visible.
+    If check_thumbnail is False, validates thumbnail is not visible.
     """
-    for i in range(1, total_tabs + 1):
+    tabs.click_tab_by_index(1)
+
+    for i in range(2, total_tabs + 1):
         tab = tabs.get_tab(i)
         assert tab is not None
 
         tabs.hover(tab)
         tabs.element_visible("tab-preview-panel")
+        tabs.element_visible("tab-preview-title")
+        tabs.element_visible("tab-preview-uri")
 
-        if i == probe_tab_index:
-            tabs.element_visible("tab-preview-title")
-            tabs.element_visible("tab-preview-uri")
+        if check_thumbnail:
+            tabs.element_visible("tab-preview-thumbnail-container")
+        else:
+            tabs.element_not_visible("tab-preview-thumbnail-container")
+
+    # Hover tab 1 while not active tab
+    tabs.click_tab_by_index(2)
+    tab = tabs.get_tab(1)
+    assert tab is not None
+
+    tabs.hover(tab)
+    tabs.element_visible("tab-preview-panel")
+    tabs.element_visible("tab-preview-title")
+    tabs.element_visible("tab-preview-uri")
+
+    if check_thumbnail:
+        tabs.element_visible("tab-preview-thumbnail-container")
+    else:
+        tabs.element_not_visible("tab-preview-thumbnail-container")
+
+    # Return to tab 1 to uncheck pref
+    tabs.click_tab_by_index(1)
 
 
 def test_hover_tab_preview(driver: Firefox):
@@ -53,7 +77,7 @@ def test_hover_tab_preview(driver: Firefox):
     tab_context_menu = ContextMenu(driver)
     about_prefs = AboutPrefs(driver, category="general")
 
-    # Pin the first few tabs while they're guaranteed to be in view.
+    # Pin the first few tabs
     for i in range(1, PINNED_TABS + 1):
         tab = tabs.get_tab(i)
         assert tab is not None
@@ -63,21 +87,12 @@ def test_hover_tab_preview(driver: Firefox):
         if i < PINNED_TABS:
             tabs.new_tab_by_button()
 
-    # Open remaining tabs without forcing tab overflow.
+    # Open remaining tabs without entering tab overflow
     for _ in range(TOTAL_TABS - PINNED_TABS):
         tabs.new_tab_by_button()
 
-    # Make one tab contentful (offline) so Title+URL are guaranteed.
-    probe_tab_index = TOTAL_TABS
-    tabs.click_tab_by_index(probe_tab_index)
-    with driver.context(driver.CONTEXT_CONTENT):
-        driver.get(CONTENT_URL)
-
-    # Hover previews may behave differently for the active tab; switch away.
-    tabs.click_tab_by_index(1)
-
     # Hover over tabs to check if preview exists
-    _hover_over_tabs_and_verify_preview(tabs, TOTAL_TABS, probe_tab_index)
+    _hover_over_tabs_and_verify_preview(tabs, TOTAL_TABS, check_thumbnail=True)
 
     # Uncheck image preview
     about_prefs.open()
@@ -87,5 +102,5 @@ def test_hover_tab_preview(driver: Firefox):
         checkbox = checkbox[0]
     checkbox.click()
 
-    # Hover over tabs again
-    _hover_over_tabs_and_verify_preview(tabs, TOTAL_TABS, probe_tab_index)
+    # Hover over tabs again without image preview
+    _hover_over_tabs_and_verify_preview(tabs, TOTAL_TABS, check_thumbnail=False)
