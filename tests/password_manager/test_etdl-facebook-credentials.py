@@ -1,6 +1,5 @@
 import json
 import sys
-import time
 from urllib.parse import urlparse
 
 import pytest
@@ -130,7 +129,6 @@ def _extract_secondary_label(ac_comment: str) -> str:
     except Exception:
         pass
 
-    # Last-resort fallback: keep original (helps diagnose unexpected format)
     return ac_comment
 
 
@@ -189,12 +187,10 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     # Seed saved logins via about:logins (with small pauses as used in existing tests)
     about_logins.open()
     about_logins.add_login(ETLD_PLUS_ONE_URL, ETLD_USERNAME, ETLD_PASSWORD)
-    time.sleep(0.8)
 
     for url in SUBDOMAIN_URLS:
         username, password = SUBDOMAIN_CREDENTIALS[url]
         about_logins.add_login(url, username, password)
-        time.sleep(0.8)
 
     # Open eTLD+1 and reload (step 3)
     web_page = GenericPage(driver, url=ETLD_PLUS_ONE_URL).open()
@@ -210,11 +206,15 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     with driver.context(driver.CONTEXT_CHROME):
         autofill_popup.click_on("select-form-option-by-value", labels=[ETLD_USERNAME])
 
-    web_page.element_attribute_contains(
-        "facebook-username-field", "value", ETLD_USERNAME
+    # Explicit wait for autofill to complete in content
+    web_page.expect(
+        lambda d: web_page.get_element("facebook-username-field").get_attribute("value")
+        == ETLD_USERNAME
     )
-    web_page.element_attribute_contains(
-        "facebook-password-field", "value", ETLD_PASSWORD
+
+    web_page.expect(
+        lambda d: web_page.get_element("facebook-password-field").get_attribute("value")
+        == ETLD_PASSWORD
     )
     _assert_password_masked(web_page.get_element("facebook-password-field"))
 
@@ -254,11 +254,13 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     with driver.context(driver.CONTEXT_CHROME):
         autofill_popup.click_on("select-form-option-by-value", labels=[chosen_username])
 
-    web_page.element_attribute_contains(
-        "facebook-username-field", "value", chosen_username
+    web_page.expect(
+        lambda d: web_page.get_element("facebook-username-field").get_attribute("value")
+        == chosen_username
     )
-    web_page.element_attribute_contains(
-        "facebook-password-field", "value", chosen_password
+    web_page.expect(
+        lambda d: web_page.get_element("facebook-password-field").get_attribute("value")
+        == chosen_password
     )
     _assert_password_masked(web_page.get_element("facebook-password-field"))
 
@@ -281,10 +283,12 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     with driver.context(driver.CONTEXT_CHROME):
         autofill_popup.click_on("select-form-option-by-value", labels=[chosen_username])
 
-    web_page.element_attribute_contains(
-        "facebook-username-field", "value", chosen_username
+    web_page.expect(
+        lambda d: web_page.get_element("facebook-username-field").get_attribute("value")
+        == chosen_username
     )
-    web_page.element_attribute_contains(
-        "facebook-password-field", "value", chosen_password
+    web_page.expect(
+        lambda d: web_page.get_element("facebook-password-field").get_attribute("value")
+        == chosen_password
     )
     _assert_password_masked(web_page.get_element("facebook-password-field"))
