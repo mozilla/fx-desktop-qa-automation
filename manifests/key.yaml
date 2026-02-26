@@ -1162,6 +1162,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_sidebar-button-always-displayed-on-a-fresh-profile:
+    result: pass
+    splits:
+    - functional2
   test_toggle_sidebar_via_toolbar_button:
     result: pass
     splits:
