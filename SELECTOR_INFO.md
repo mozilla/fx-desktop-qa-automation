@@ -1790,6 +1790,13 @@ Description: Save address doorhanger country section
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: manage-passwords
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']"
+Description: Login autofill manage passwords button
+Location: Login autofill
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
