@@ -12,6 +12,16 @@
         "strategy": "id",
         "groups": []
     },
+    "trustpanel-connect-button": {
+        "selectorData": "[data-l10n-id='trustpanel-connection-label-secure']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-connect-details-link": {
+        "selectorData": "[data-l10n-id='trustpanel-siteinformation-morelink']",
+        "strategy": "css",
+        "groups": []
+    },
     "trustpanel-blocker-section": {
         "selectorData": "trustpanel-blocker-section-header",
         "strategy": "id",

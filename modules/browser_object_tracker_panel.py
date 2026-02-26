@@ -60,6 +60,11 @@ class TrackerPanel(BasePage):
         return json.loads(raw_args)
 
     @BasePage.context_chrome
+    def assert_no_trackers(self) -> bool:
+        args = self.get_element_args("trustpanel-blocker-section")
+        assert args.get("count") == 0
+
+    @BasePage.context_chrome
     def sites_in_category(self, category, *sites) -> bool:
         def _inval(element: WebElement, val):
             return element.get_attribute("value").endswith(val)

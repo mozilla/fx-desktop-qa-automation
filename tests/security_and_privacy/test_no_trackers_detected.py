@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import TrackerPanel
 
 
 @pytest.fixture()
@@ -12,7 +12,7 @@ def test_case():
 NOTRACKERS_URL = "https://example.com/"
 
 
-def test_no_trackers_detected(driver: Firefox, nav: Navigation):
+def test_no_trackers_detected(driver: Firefox, tracker_panel: TrackerPanel):
     """
     C446391 No trackers are detected
     """
@@ -20,4 +20,5 @@ def test_no_trackers_detected(driver: Firefox, nav: Navigation):
     driver.get(NOTRACKERS_URL)
     # verify that no trackers are detected
     # no list of trackers is displayed
-    nav.assert_blocked_trackers()
+    tracker_panel.open_panel()
+    tracker_panel.assert_no_trackers()
