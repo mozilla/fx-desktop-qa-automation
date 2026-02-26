@@ -40,22 +40,12 @@ def test_third_party_content_blocked_private_browsing_cross_site(
     # Open a private window
     panel_ui.open_and_switch_to_new_window("private")
 
-    # Open the website, ensure the blocking is taking place by continuously refreshing website until indicated
+    # Open the website, check for trackers
     tracker_website.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
 
-    # Verify the indicator
-    tracker_panel.verify_tracker_shield_indicator(nav)
-    nav.open_tracker_panel()
-
-    # verify the panel title
-    tracker_panel.verify_tracker_panel_title("Protections for senglehardt.com")
-
-    # Fetch the items in the cross site trackers
-    cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
-
-    # Ensure that the correct blocked site is listed
-    assert any(BLOCKED_TRACKER_URL == val for val in cross_site_trackers)
+    tracker_panel.sites_blocked(BLOCKED_TRACKER_URL)
 
 
 def test_third_party_content_blocked_private_browsing_allowed_tracking(
@@ -73,20 +63,10 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
 
     # Open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
 
-    # Verify the indicator
-    tracker_panel.verify_tracker_shield_indicator(nav)
-
-    # Open the panel and verify the title
-    nav.open_tracker_panel()
-    tracker_panel.verify_tracker_panel_title("Protections for senglehardt.com")
-
-    # Fetch allowed trackers
-    allowed_trackers = tracker_panel.open_and_return_allowed_trackers()
-
-    # Verify the correct ones are allowed
-    assert any(item in ALLOWED_TRACKING_URLS for item in allowed_trackers)
+    tracker_panel.sites_detected(ALLOWED_TRACKING_URLS)
 
 
 def test_third_party_content_private_browsing_tracking_statuses(
@@ -104,10 +84,8 @@ def test_third_party_content_private_browsing_tracking_statuses(
 
     # Open the tracker website
     tracker_website.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_website)
-
-    # Verify the indicator
-    tracker_panel.verify_tracker_shield_indicator(nav)
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
 
     # Assert the various statuses, ensure that the correct one is displayed
     block_status = tracker_website.get_element("simulated-tracker-block-status")
