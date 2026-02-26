@@ -278,7 +278,7 @@ class TestKey:
         valid suites with member tests in the split. If suite_numbers is True,
         return the TestRail suite id instead.
         """
-        filenames = self.gather_split(split, pass_only=True)
+        filenames = self.gather_split(split)
         suite_dirs = []
         for filename in filenames:
             suite_dir = filename.split(os.path.sep)[1]
