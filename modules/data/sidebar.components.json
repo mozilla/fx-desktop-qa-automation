@@ -4,5 +4,20 @@
         "selectorData": "sidebar-button",
         "strategy": "id",
         "groups": []
+    },
+    "customize-sidebar-button": {
+        "selectorData": "moz-button[view='viewCustomizeSidebar']",
+        "strategy": "css",
+        "groups": []
+    },
+    "sidebar-extension-item": {
+        "selectorData": "moz-button[extensionId='{name}']",
+        "strategy": "css",
+        "groups": []
+    },
+    "manage-extensions-link": {
+        "selectorData": "a[data-l10n-id='sidebar-manage-extensions']",
+        "strategy": "css",
+        "groups": []
     }
 }
