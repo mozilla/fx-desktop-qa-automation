@@ -1400,6 +1400,13 @@ Description: Saved passwords button in about:protections
 Location: about:protections > Never forget a password again section
 Path to .json: modules/data/about_protections.components.json
 ```
+```
+Selector Name: manage-privacy-security
+Selector Data: "protection-settings"
+Description: Manage your privacy and security settings link in about:protections
+Location: about:protections page
+Path to .json: modules/data/about_protections.components.json
+```
 #### about_telemetry
 ```
 Selector Name: category-raw
