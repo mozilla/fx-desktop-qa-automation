@@ -13,7 +13,7 @@ def test_sidebar_button_always_displayed_on_fresh_profile(driver: Firefox):
     """
     C2639191 - Verify that the sidebar button is displayed in the toolbar on a fresh profile
     """
-    # Initialize page object
+    # Instantiate object
     sidebar = Sidebar(driver)
 
     # Verify that the Sidebar button is present in the toolbar
