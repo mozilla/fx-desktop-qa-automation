@@ -800,6 +800,10 @@ password_manager:
       win: pass
     splits:
     - functional2
+  test_navigation_to_about_logins_from_autocomplete:
+    result: pass
+    splits:
+    - functional2
   test_never_save_login_via_doorhanger:
     result: pass
     splits:
