@@ -9,7 +9,7 @@ ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 
 @pytest.fixture()
 def test_case():
-    return "22410814"
+    return "2241084"
 
 
 def test_about_logins_navigation_from_about_protections(
