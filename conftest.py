@@ -39,6 +39,10 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
     filename = f"{test_name}_{current_time}_image"
+
+    if not driver:
+        return
+
     try:
         _screenshot_whole_screen(f"{filename}_screen", driver, opt_ci)
     except Exception as e:
@@ -63,6 +67,9 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     fullpath_chrome = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
+
+    if not driver:
+        return
 
     try:
         # Save Chrome context page source
