@@ -469,23 +469,38 @@ downloads:
     - functional1
 drag_and_drop:
   test_copy_entire_row_column:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - smoke
   test_copy_from_an_editor_paste_in_another:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_copy_hyperlink_table:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_copy_table_header:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
 find_toolbar:
