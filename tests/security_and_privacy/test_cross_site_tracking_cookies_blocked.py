@@ -1,8 +1,10 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrackerPanel
-from modules.page_object import GenericPage
+from modules.browser_object import TrackerPanel
+from modules.page_object import AboutPrefs, GenericPage
 
 
 @pytest.fixture()
@@ -11,12 +13,10 @@ def test_case():
 
 
 FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
-ALLOWED_COOKIES = set(
-    [
-        "https://ads-track-digest256.dummytracker.org",
-        "https://social-track-digest256.dummytracker.org",
-        "https://analytics-track-digest256.dummytracker.org",
-    ]
+DETECTED_COOKIES = (
+    "https://ads-track-digest256.dummytracker.org",
+    "https://social-track-digest256.dummytracker.org",
+    "https://analytics-track-digest256.dummytracker.org",
 )
 
 
@@ -31,17 +31,21 @@ def add_to_prefs_list():
 
 
 def test_cross_site_tracking_cookies_blocked(
-    driver: Firefox, nav: Navigation, tracker_panel: TrackerPanel
+    driver: Firefox, about_prefs_privacy: AboutPrefs, tracker_panel: TrackerPanel
 ):
     """
     C446402: Ensures the cross tracking cookies are displayed in the tracker panel
     """
     # instantiate objects
-    tracker_website = GenericPage(driver, url=FIRST_TRACKER_WEBSITE).open()
-    tracker_panel.wait_for_trackers(nav, tracker_website)
+    about_prefs_privacy.open()
+    about_prefs_privacy.select_trackers_to_block(
+        "cookies-checkbox", "cookies-isolate-social-media-option"
+    )
+    GenericPage(driver, url=FIRST_TRACKER_WEBSITE).open()
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
 
-    nav.open_tracker_panel()
-
-    # fetch the items in the cross site trackers and verify
-    cross_site_trackers = tracker_panel.open_and_return_cross_site_trackers()
-    nav.verify_cross_site_trackers(cross_site_trackers, ALLOWED_COOKIES)
+    tracker_panel.trackers_blocked("tracking-cookies")
+    tracker_panel.trackers_detected("tracking-content")
+    tracker_panel.sites_blocked(DETECTED_COOKIES)
+    tracker_panel.sites_detected(DETECTED_COOKIES)

@@ -60,6 +60,27 @@ class TrackerPanel(BasePage):
         return json.loads(raw_args)
 
     @BasePage.context_chrome
+    def sites_in_category(self, category, *sites) -> bool:
+        def _inval(element: WebElement, val):
+            return element.get_attribute("value").endswith(val)
+
+        spotted = self.get_elements(f"{category}-site-entry")
+        if sites and not spotted:
+            return False
+        for site in sites:
+            if not any([_inval(entry, site) for entry in spotted]):
+                return False
+        return True
+
+    @BasePage.context_chrome
+    def sites_blocked(self, *sites) -> bool:
+        return self.sites_in_category("blocked")
+
+    @BasePage.context_chrome
+    def sites_detected(self, *sites) -> bool:
+        return self.sites_in_category("detected")
+
+    @BasePage.context_chrome
     def verify_tracker_panel_title(self, expected_title):
         """
         verify the title of the tracker panel.

@@ -33,8 +33,8 @@ def test_blocking_social_media_trackers(
     about_prefs_privacy: AboutPrefs,
 ):
     """
-    C446406: Ensure that ETP Custom mode with the option "Cross-site tracking cookies, and isolate other
-    cross-site cookies" set in the Cookies section blocks social media trackers.
+    C446406: Ensure that ETP Custom mode with the option "Cross-site tracking cookies,
+    and isolate other cross-site cookies" set in the Cookies section blocks social media trackers.
     """
     about_prefs_privacy.open()
     about_prefs_privacy.select_trackers_to_block("cookies-isolate-social-media-option")
@@ -43,4 +43,6 @@ def test_blocking_social_media_trackers(
 
     tracker_panel.open_panel()
     tracker_panel.wait_for_trackers()
-    tracker_panel.trackers_blocked("social-media-tracker")
+    tracker_panel.trackers_blocked(
+        "social-media-tracker"
+    )  # TODO: Test and update string after bugfix

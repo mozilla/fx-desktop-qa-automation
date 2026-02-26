@@ -337,22 +337,6 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def assert_blocked_trackers(self, *blocked_trackers) -> BasePage:
-        """
-        Given a list of blocked trackers, assert that they are present in the blocked list.
-        """
-        self.open_tracker_panel()
-        if blocked_trackers:
-            self.click_on("see-blocked-trackers")
-            for tracker in blocked_trackers:
-                self.element_exists(tracker)
-                raw_args = self.fetch(tracker).get_attribute("data-l10n-args")
-                data = json.loads(raw_args)
-                assert data.get("count")
-        else:
-            self.element_has_text("trustpanel-header", "on guard")
-
-    @BasePage.context_chrome
     def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):
         """
         Verify that the list of cross-site trackers is as expected.
