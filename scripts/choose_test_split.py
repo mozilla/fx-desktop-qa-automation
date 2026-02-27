@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     if os.environ.get("STARFOX_CATEGORY"):
         category = os.environ["STARFOX_CATEGORY"]
-        split_name = os.environ.get("STARFOX_SPLIT", "all")
+        split_name = os.environ["STARFOX_SPLIT"]
 
         # platform MUST be set by the job environment (win|mac|linux)
         platform = os.environ.get("STARFOX_PLATFORM")
@@ -136,7 +136,7 @@ if __name__ == "__main__":
         print(f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'...")
 
         # Call gather_category with platform explicitly
-        run_list = manifest.gather_category(split_name, platform, category=category)
+        run_list = manifest.gather_category(split_name=split_name, platform=platform, category=category)
         run_list = dedupe(run_list)
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
