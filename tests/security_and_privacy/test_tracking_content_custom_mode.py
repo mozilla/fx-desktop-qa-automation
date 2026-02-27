@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -45,7 +44,8 @@ def test_blocked_tracking_content(
     driver.get(TRACKER_URL)
 
     tracker_panel.open_panel()
-    tracker_panel.trackers_blocked("Tracking content")
+    tracker_panel.wait_for_trackers()
+    tracker_panel.trackers_blocked("tracking-content")
 
 
 def test_allowed_tracking_content(
@@ -65,4 +65,5 @@ def test_allowed_tracking_content(
     driver.get(TRACKER_URL)
 
     tracker_panel.open_panel()
-    tracker_panel.trackers_detected("Tracking content")
+    tracker_panel.wait_for_trackers()
+    tracker_panel.trackers_detected("tracking-content")

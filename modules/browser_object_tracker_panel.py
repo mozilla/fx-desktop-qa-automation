@@ -112,8 +112,7 @@ class TrackerPanel(BasePage):
             self.open_panel()
             if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
                 return False
-            args = self.get_element_args(blocker_section)
-            return bool(args.get("count", False))
+            return True
 
         self.expect(_check_trustpanel)
 

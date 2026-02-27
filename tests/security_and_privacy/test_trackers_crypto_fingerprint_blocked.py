@@ -24,13 +24,9 @@ def test_cross_site_trackrs_crypto_fingerprinter_blocked(
     # instantiate objs
     tracker_page = GenericPage(driver, url=TRACKER_URL)
 
-    # hard wait for fingerprinter blocker
-    sleep(4)
-
     # wait for the shield icon
     tracker_page.open()
-    tracker_panel.wait_for_blocked_tracking_icon(nav, tracker_page)
-    nav.open_tracker_panel()
-    tracker_panel.verify_allowed_blocked_trackers(
-        {"Tracking Content"}, {"Cross-Site Tracking Cookies", "Cryptominers"}
-    )
+    tracker_panel.open_panel()
+    tracker_panel.wait_for_trackers()
+    tracker_panel.trackers_detected("tracking-content")
+    tracker_panel.trackers_blocked("tracking-cookies", "cryptominer")
