@@ -1,9 +1,13 @@
 import json
 import logging
+from time import sleep
 from typing import List, Optional, Set
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
@@ -115,6 +119,23 @@ class TrackerPanel(BasePage):
             return True
 
         self.expect(_check_trustpanel)
+
+    @BasePage.context_chrome
+    def assert_connection_information(self, expected_technical_details):
+        self.element_clickable("trustpanel-connect-button")
+        self.click_on("trustpanel-connect-button")
+        link = self.fetch("trustpanel-connect-details-link")
+        self.driver.execute_script("arguments[0].click()", link)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+        technical_details = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "security-technical-shortform"))
+        )
+        sleep(0.5)
+        assert technical_details.get_attribute("value") == expected_technical_details, (
+            f"Expected '{expected_technical_details}' but found "
+            f"'{technical_details.get_attribute('value')}'"
+        )
 
     def verify_tracker_shield_indicator(self, nav: Navigation) -> BasePage:
         """

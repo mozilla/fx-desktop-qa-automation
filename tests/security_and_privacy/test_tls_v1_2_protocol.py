@@ -38,20 +38,4 @@ def test_tls_v1_2_protocol(driver: Firefox, tracker_panel: TrackerPanel):
 
     tracker_panel.open_panel()
     sleep(1)
-    tracker_panel.element_clickable("trustpanel-connect-button")
-    tracker_panel.click_on("trustpanel-connect-button")
-    with driver.context(driver.CONTEXT_CHROME):
-        link = tracker_panel.fetch("trustpanel-connect-details-link")
-        driver.execute_script("arguments[0].click()", link)
-        driver.switch_to.window(driver.window_handles[-1])
-        with open("connect-details.html", "w") as fh:
-            fh.write(driver.page_source)
-
-        technical_details = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "security-technical-shortform"))
-        )
-        sleep(0.5)
-        assert technical_details.get_attribute("value") == EXPECTED_TECHNICAL_DETAILS, (
-            f"Expected '{EXPECTED_TECHNICAL_DETAILS}' but found "
-            f"'{technical_details.get_attribute('value')}'"
-        )
+    tracker_panel.assert_connection_information(EXPECTED_TECHNICAL_DETAILS)
