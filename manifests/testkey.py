@@ -274,45 +274,71 @@ class TestKey:
 
     def gather_category(self, split_name, category="pass"):
         """
-        Given a split name, return the pytest locations of the tests in that split.
-        Default to only returning tests expected to pass
-        For example, if category is set as "unstable", it will return all test that are unstable
-        within that given split, and same for "flaky".
-        Example:
-            gather_category("functional1", "unstable")
+        Return pytest locations of tests in `split_name`
+        whose effective result equals `category`.
+
+        Rules:
+        - If any platform result is "unstable" → test is unstable
+        - Else if any platform result is "flaky" → test is flaky
+        - Else → pass
+        - If split_name == "all", include tests from all splits
         """
 
+        def effective_result(result_field):
+            """
+            Normalize result field into a single effective status.
+            """
+            if isinstance(result_field, str):
+                return result_field.lower()
+
+            if isinstance(result_field, dict):
+                values = [str(v).lower() for v in result_field.values()]
+
+                if "unstable" in values:
+                    return "unstable"
+                if "flaky" in values:
+                    return "flaky"
+                if all(v == "pass" for v in values):
+                    return "pass"
+
+            return None
+
+        category = category.lower()
         test_filenames = []
 
         for suite in self.manifest:
             for testfile in self.manifest[suite]:
-
                 entry = self.manifest[suite][testfile]
 
-                if "splits" in entry:
+                # FILE-LEVEL ENTRY
+                if isinstance(entry, dict) and "splits" in entry:
                     if split_name != "all" and split_name not in entry.get("splits", []):
-                        continue
+                        pass
+                    else:
+                        result = effective_result(entry.get("result"))
+                        if result == category:
+                            test_filenames.append(
+                                self.normalize_test_filename(suite, testfile)
+                            )
 
-                    if entry.get("result", "").lower() == category.lower():
-                        test_filenames.append(
-                            self.normalize_test_filename(suite, testfile)
-                        )
+                # SUBTEST-LEVEL ENTRY
+                if isinstance(entry, dict):
+                    for key, subentry in entry.items():
+                        if not str(key).startswith("test_"):
+                            continue
+                        if not isinstance(subentry, dict):
+                            continue
+                        if "splits" not in subentry:
+                            continue
 
-                for key, subentry in entry.items():
-                    if not str(key).startswith("test_"):
-                        continue
-                    if not isinstance(subentry, dict):
-                        continue
-                    if "splits" not in subentry:
-                        continue
+                        if split_name != "all" and split_name not in subentry.get("splits", []):
+                            continue
 
-                    if split_name != "all" and split_name not in subentry.get("splits", []):
-                        continue
-
-                    if subentry.get("result", "").lower() == category.lower():
-                        test_filenames.append(
-                            self.normalize_test_filename(suite, testfile, key)
-                        )
+                        result = effective_result(subentry.get("result"))
+                        if result == category:
+                            test_filenames.append(
+                                self.normalize_test_filename(suite, testfile, key)
+                            )
 
         return test_filenames
 

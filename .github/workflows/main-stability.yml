@@ -31,6 +31,8 @@ jobs:
   Test-Windows:
     if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
+    env:
+      STARFOX_PLATFORM: win
 
     steps:
       - name: Checkout repository
@@ -188,6 +190,8 @@ jobs:
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
+    env:
+      STARFOX_PLATFORM: mac
 
     steps:
       - name: Checkout repository
