@@ -3,7 +3,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrackerPanel
+from modules.browser_object import Navigation, TrustPanel
 from modules.page_object import GenericPage
 
 
@@ -16,7 +16,7 @@ TRACKER_URL = "https://senglehardt.com/test/trackingprotection/test_pages/finger
 
 
 def test_cross_site_trackrs_crypto_fingerprinter_blocked(
-    driver: Firefox, tracker_panel: TrackerPanel, nav: Navigation
+    driver: Firefox, trust_panel: TrustPanel, nav: Navigation
 ):
     """
     C446393: Ensures that some trackers are blocked on certain website
@@ -26,7 +26,7 @@ def test_cross_site_trackrs_crypto_fingerprinter_blocked(
 
     # wait for the shield icon
     tracker_page.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
-    tracker_panel.trackers_detected("tracking-content")
-    tracker_panel.trackers_blocked("tracking-cookies", "cryptominer")
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
+    trust_panel.trackers_detected("tracking-content")
+    trust_panel.trackers_blocked("tracking-cookies", "cryptominer")

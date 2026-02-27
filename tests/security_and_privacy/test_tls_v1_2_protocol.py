@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.browser_object import TrackerPanel
+from modules.browser_object import TrustPanel
 
 
 @pytest.fixture()
@@ -22,7 +22,7 @@ EXPECTED_TECHNICAL_DETAILS = (
 )
 
 
-def test_tls_v1_2_protocol(driver: Firefox, tracker_panel: TrackerPanel):
+def test_tls_v1_2_protocol(driver: Firefox, trust_panel: TrustPanel):
     """
     C192739 - TLS v1.2 protocol is handled correctly and returns the proper information
     """
@@ -36,6 +36,6 @@ def test_tls_v1_2_protocol(driver: Firefox, tracker_panel: TrackerPanel):
         f"Expected '{EXPECTED_CONTENT}' but found '{tls_content.text}' at {TLS_URL}"
     )
 
-    tracker_panel.open_panel()
+    trust_panel.open_panel()
     sleep(1)
-    tracker_panel.assert_connection_information(EXPECTED_TECHNICAL_DETAILS)
+    trust_panel.assert_connection_information(EXPECTED_TECHNICAL_DETAILS)

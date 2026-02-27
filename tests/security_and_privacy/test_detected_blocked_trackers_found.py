@@ -3,7 +3,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrackerPanel
+from modules.browser_object import Navigation, TrustPanel
 from modules.page_object import GenericPage
 
 
@@ -20,7 +20,7 @@ urls = [
 
 @pytest.mark.parametrize("url", urls)
 def test_detected_blocked_trackers_found(
-    driver: Firefox, url: str, tracker_panel: TrackerPanel, nav: Navigation
+    driver: Firefox, url: str, trust_panel: TrustPanel, nav: Navigation
 ):
     """
     C446392: Ensure that the correct trackers are allowed and blocked
@@ -28,9 +28,9 @@ def test_detected_blocked_trackers_found(
     generic_page = GenericPage(driver)
 
     generic_page.driver.get(url)
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
 
     # verify the types of trackers
-    tracker_panel.trackers_detected("tracking-content")
-    tracker_panel.trackers_blocked("tracking-cookies")
+    trust_panel.trackers_detected("tracking-content")
+    trust_panel.trackers_blocked("tracking-cookies")

@@ -3,7 +3,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TrackerPanel
+from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -31,7 +31,7 @@ def add_to_prefs_list():
 
 
 def test_cross_site_tracking_cookies_blocked(
-    driver: Firefox, about_prefs_privacy: AboutPrefs, tracker_panel: TrackerPanel
+    driver: Firefox, about_prefs_privacy: AboutPrefs, trust_panel: TrustPanel
 ):
     """
     C446402: Ensures the cross tracking cookies are displayed in the tracker panel
@@ -42,10 +42,10 @@ def test_cross_site_tracking_cookies_blocked(
         "cookies-checkbox", "cookies-isolate-social-media-option"
     )
     GenericPage(driver, url=FIRST_TRACKER_WEBSITE).open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
 
-    tracker_panel.trackers_blocked("tracking-cookies")
-    tracker_panel.trackers_detected("tracking-content")
-    tracker_panel.sites_blocked(DETECTED_COOKIES)
-    tracker_panel.sites_detected(DETECTED_COOKIES)
+    trust_panel.trackers_blocked("tracking-cookies")
+    trust_panel.trackers_detected("tracking-content")
+    trust_panel.sites_blocked(DETECTED_COOKIES)
+    trust_panel.sites_detected(DETECTED_COOKIES)

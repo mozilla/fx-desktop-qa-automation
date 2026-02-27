@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_tabbar import TabBar
-from modules.browser_object_tracker_panel import TrackerPanel
+from modules.browser_object_trust_panel import TrustPanel
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
 
@@ -22,7 +22,7 @@ def test_blocking_fingerprinter(
     driver: Firefox,
     nav: Navigation,
     about_prefs_privacy: AboutPrefs,
-    tracker_panel: TrackerPanel,
+    trust_panel: TrustPanel,
     tabs: TabBar,
 ):
     """
@@ -36,8 +36,8 @@ def test_blocking_fingerprinter(
     about_prefs_privacy.select_trackers_to_block("known-fingerprints-checkbox")
 
     tracking_page.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
 
     # Open the tracker panel and verify fingerprinters are visible
-    tracker_panel.trackers_blocked("fingerprinter")
+    trust_panel.trackers_blocked("fingerprinter")

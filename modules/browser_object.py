@@ -8,4 +8,4 @@ from modules.browser_object_panel_ui import *
 from modules.browser_object_print_preview import *
 from modules.browser_object_reader_view import *
 from modules.browser_object_tabbar import *
-from modules.browser_object_tracker_panel import *
+from modules.browser_object_trust_panel import *

@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi, TrackerPanel
+from modules.browser_object import Navigation, PanelUi, TrustPanel
 from modules.page_object import GenericPage
 
 
@@ -28,7 +28,7 @@ SECOND_TRACKER_WEBSITE = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
 def test_third_party_content_blocked_private_browsing_cross_site(
-    driver: Firefox, panel_ui: PanelUi, nav: Navigation, tracker_panel: TrackerPanel
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation, trust_panel: TrustPanel
 ):
     """
     C446323.1: Ensure that third party content is blocked correctly
@@ -42,14 +42,14 @@ def test_third_party_content_blocked_private_browsing_cross_site(
 
     # Open the website, check for trackers
     tracker_website.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
 
-    tracker_panel.sites_blocked(BLOCKED_TRACKER_URL)
+    trust_panel.sites_blocked(BLOCKED_TRACKER_URL)
 
 
 def test_third_party_content_blocked_private_browsing_allowed_tracking(
-    driver: Firefox, panel_ui: PanelUi, nav: Navigation, tracker_panel: TrackerPanel
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation, trust_panel: TrustPanel
 ):
     """
     C446323.2: Ensure that some third party content is allowed
@@ -63,14 +63,14 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
 
     # Open the website, ensure the blocking is taking place by continuously refreshing website until indicated
     tracker_website.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
 
-    tracker_panel.sites_detected(ALLOWED_TRACKING_URLS)
+    trust_panel.sites_detected(ALLOWED_TRACKING_URLS)
 
 
 def test_third_party_content_private_browsing_tracking_statuses(
-    driver: Firefox, nav: Navigation, panel_ui: PanelUi, tracker_panel: TrackerPanel
+    driver: Firefox, nav: Navigation, panel_ui: PanelUi, trust_panel: TrustPanel
 ):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
@@ -84,8 +84,8 @@ def test_third_party_content_private_browsing_tracking_statuses(
 
     # Open the tracker website
     tracker_website.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
 
     # Assert the various statuses, ensure that the correct one is displayed
     block_status = tracker_website.get_element("simulated-tracker-block-status")

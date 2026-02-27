@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrackerPanel
+from modules.browser_object import Navigation, TrustPanel
 from modules.page_object import GenericPage
 
 
@@ -14,13 +14,13 @@ CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/f
 
 
 def test_cryptominers_blocked_and_shown_in_info_panel(
-    driver: Firefox, tracker_panel: TrackerPanel
+    driver: Firefox, trust_panel: TrustPanel
 ):
     """
     C450232: Cryptominers are blocked and shown in Standard mode in the Information pannel
     """
     tracking_page = GenericPage(driver, url=CRYPTOMINERS_URL)
     tracking_page.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
-    tracker_panel.trackers_blocked("cryptominer")
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
+    trust_panel.trackers_blocked("cryptominer")

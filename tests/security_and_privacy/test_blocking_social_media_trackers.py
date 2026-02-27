@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
-from modules.browser_object_tracker_panel import TrackerPanel
+from modules.browser_object_trust_panel import TrustPanel
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -29,7 +29,7 @@ def add_to_prefs_list():
 def test_blocking_social_media_trackers(
     driver: Firefox,
     nav: Navigation,
-    tracker_panel: TrackerPanel,
+    trust_panel: TrustPanel,
     about_prefs_privacy: AboutPrefs,
 ):
     """
@@ -41,8 +41,8 @@ def test_blocking_social_media_trackers(
 
     driver.get(SOCIAL_MEDIA_TRACKERS_URL)
 
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
-    tracker_panel.trackers_blocked(
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
+    trust_panel.trackers_blocked(
         "social-media-tracker"
     )  # TODO: Test and update string after bugfix

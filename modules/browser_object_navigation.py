@@ -329,7 +329,7 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def open_tracker_panel(self) -> BasePage:
+    def open_trust_panel(self) -> BasePage:
         """
         Clicks the shield icon and opens the panel associated with it
         """

@@ -3,7 +3,7 @@ import time
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrackerPanel
+from modules.browser_object import Navigation, TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -19,7 +19,7 @@ def test_blocking_cryptominers(
     driver: Firefox,
     nav: Navigation,
     about_prefs_privacy: AboutPrefs,
-    tracker_panel: TrackerPanel,
+    trust_panel: TrustPanel,
 ):
     """
     C446403 - Cryptominers are blocked and shown in Standard mode in the Information panel
@@ -34,7 +34,7 @@ def test_blocking_cryptominers(
 
     # Access url and click on the shield icon and verify that cryptominers are blocked
     tracking_page.open()
-    tracker_panel.open_panel()
-    tracker_panel.wait_for_trackers()
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers()
     # time.sleep(200)
-    tracker_panel.trackers_blocked("cryptominer")
+    trust_panel.trackers_blocked("cryptominer")

@@ -3,7 +3,7 @@ import pytest
 from modules.browser_object import TabBar
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tracker_panel import TrackerPanel
+from modules.browser_object_trust_panel import TrustPanel
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
@@ -41,8 +41,8 @@ def about_prefs_privacy(driver):
 
 
 @pytest.fixture()
-def tracker_panel(driver):
-    return TrackerPanel(driver)
+def trust_panel(driver):
+    return TrustPanel(driver)
 
 
 @pytest.fixture()
