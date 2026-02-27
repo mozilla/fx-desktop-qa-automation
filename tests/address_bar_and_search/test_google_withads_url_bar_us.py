@@ -21,7 +21,7 @@ def add_to_prefs_list():
 # Mac GHA makes test unstable for now
 def test_google_withads_url_bar_us(driver):
     """
-    C1365070 - Retry up to 5 times if Google CAPTCHA blocks telemetry path.
+    C1365070 - Retry up to 5 times if Google reCAPTCHA blocks telemetry path.
     """
     max_attempts = 5
     search_term = "iphone"
