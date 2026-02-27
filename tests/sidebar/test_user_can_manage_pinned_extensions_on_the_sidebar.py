@@ -21,7 +21,6 @@ def test_user_can_manage_pinned_extensions_on_the_sidebar(driver: Firefox):
     C2652535 - Verify that extensions pinned to the sidebar are displayed in the Customize
     Sidebar panel and the Manage extensions link opens about:addons.
     """
-    # Instantiate objects
     nav = Navigation(driver)
     sidebar = Sidebar(driver)
     about_addons = AboutAddons(driver)
@@ -37,11 +36,10 @@ def test_user_can_manage_pinned_extensions_on_the_sidebar(driver: Firefox):
     # Verify the extension is pinned to the sidebar
     sidebar.expect_extension_pinned_to_sidebar(EXTENSION_ID)
 
-    # Click the Customize Sidebar button
+    # Open the Customize Sidebar panel and click Manage Extensions
     sidebar.click_customize_sidebar()
+    sidebar.click_manage_extensions()
 
-    # # Click the Manage Extensions link
-    # sidebar.click_manage_extensions()
-    #
-    # # Verify about:addons is opened
-    # about_addons.element_visible("sidebar-options", labels=["extension"])
+    # Verify about:addons is opened in the new tab
+    sidebar.switch_to_new_tab()
+    nav.url_contains("about:addons")

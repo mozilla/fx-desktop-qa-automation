@@ -67,22 +67,26 @@ class Sidebar(BasePage):
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 
-        The link lives inside sidebar-main's open shadow root (inside .sidebar-panel),
-        not in a separate contentDocument. JS pierces the shadow root directly.
+        The customize panel loads in <browser id="sidebar"> as sidebar-customize.html.
+        That page uses Lit web components with nested shadow roots. JS recursively
+        pierces all shadow roots in contentDocument to find and click the link.
+        Waits for the document to be fully loaded before searching.
+        The link opens about:addons in a new tab — call switch_to_new_tab() after
+        (inherited from BasePage).
         """
-        import logging
-
-        def _debug(_):
-            result = self.driver.execute_script(
-                "const browsers = Array.from(document.querySelectorAll('#sidebar-box browser'));"
-                "return browsers.map(b => ({"
-                "  id: b.id, hasCd: !!b.contentDocument,"
-                "  cdUrl: b.contentDocument?.URL,"
-                "  hasLink: !!b.contentDocument?.querySelector('a[data-l10n-id=\"sidebar-manage-extensions\"]')"
-                "}));"
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return null;"
+                "function search(root) {"
+                "  const el = root.querySelector('a[data-l10n-id=\"sidebar-manage-extensions\"]');"
+                "  if (el) { el.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot && search(host.shadowRoot)) return true;"
+                "  }"
+                "  return false;"
+                "}"
+                "return search(cd) || null;"
             )
-            logging.info(f"[manage-ext debug] {result}")
-            return any(r.get("hasLink") for r in (result or []))
-
-        self.custom_wait(timeout=15).until(_debug)
+        )
         return self
