@@ -386,6 +386,13 @@ Description: Save edited login
 Location: The about:login's main login page after editing a login
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: copy-username
+Selector Data: "copy-username-button.copy-button"
+Description: Copy username button
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_networking
 ```
 Selector Name: networking-sidebar-category
