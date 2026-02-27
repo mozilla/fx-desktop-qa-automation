@@ -776,6 +776,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_about_logins_username_copy_button:
+    result: pass
+    splits:
+    - functional2
   test_add_password_non_ascii_chars:
     result: pass
     splits:

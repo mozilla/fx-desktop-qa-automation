@@ -174,5 +174,11 @@
         "strategy": "class",
         "shadowParent": "login-item",
         "groups": []
+    },
+    "copy-username": {
+        "selectorData": "copy-username-button.copy-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
     }
 }
