@@ -393,6 +393,20 @@ Description: Copy username button
 Location: The about:login's main login page after selecting a login
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: copy-password
+Selector Data: "copy-password-button.copy-button"
+Description: Copy password button
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: copied-button
+Selector Data: "copy-password-button.copied-button"
+Description: Copy password button confirmation
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_networking
 ```
 Selector Name: networking-sidebar-category

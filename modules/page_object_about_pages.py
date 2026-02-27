@@ -375,6 +375,11 @@ class AboutLogins(BasePage):
         self.click_on("copy-username")
         return self
 
+    def click_copy_password_button(self) -> Page:
+        """Click the copy password button"""
+        self.click_on("copy-password")
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """
