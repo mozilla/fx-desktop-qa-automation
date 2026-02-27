@@ -1,10 +1,7 @@
 import pytest
 
-from modules.browser_object import TabBar
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import Navigation, PanelUi, TabBar, TrustPanel
+from modules.page_object import AboutCache, AboutDownloads, AboutPrefs
 from modules.util import BrowserActions
 
 YOUTUBE_URL = "https://www.youtube.com/"
@@ -53,6 +50,16 @@ def panel_ui(driver):
 @pytest.fixture()
 def tabs(driver):
     return TabBar(driver)
+
+
+@pytest.fixture()
+def about_cache(driver):
+    return AboutCache(driver)
+
+
+@pytest.fixture()
+def about_downloads(driver):
+    return AboutDownloads(driver)
 
 
 @pytest.fixture()

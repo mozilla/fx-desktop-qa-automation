@@ -24,18 +24,19 @@ URL = "https://edition.cnn.com/"
 EXPECTED_CACHE_DOMAIN = "cnn"
 
 
-def test_cache_is_cleared_via_end_private_session_button(driver: Firefox):
+def test_cache_is_cleared_via_end_private_session_button(
+    driver: Firefox,
+    about_cache: AboutCache,
+    nav: Navigation,
+    panel_ui: PanelUi,
+    tabs: TabBar,
+):
     """
     C2359320 - Verify that cache is cleared when "End Private Session" is used in a Private Window
     """
-    # Instantiate objects
-    about_cache = AboutCache(driver)
-    nav = Navigation(driver)
-    panel = PanelUi(driver)
-    tabs = TabBar(driver)
 
     # Open a private window and switch to it
-    panel.open_and_switch_to_new_window("private")
+    panel_ui.open_and_switch_to_new_window("private")
     driver.get(URL)
 
     # Open a new tab and go to about:cache?storage=memory
