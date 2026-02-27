@@ -272,56 +272,54 @@ class TestKey:
 
         return test_filenames
 
-    def gather_category(self, split_name, category="pass"):
+    def gather_category(self, split_name, platform, category="pass"):
         """
-        Return pytest locations of tests in `split_name`
-        whose effective result equals `category`.
+        Return pytest locations of tests in `split_name` whose status for `platform`
+        matches `category`.
 
-        Rules:
-        - If any platform result is "unstable" → test is unstable
-        - Else if any platform result is "flaky" → test is flaky
-        - Else → pass
-        - If split_name == "all", include tests from all splits
+        - platform: required, one of "win", "mac", "linux".
+        - category: "pass" (default), "flaky", "unstable", etc.
+        - If a manifest entry's result is a string (e.g. "pass"), that global status
+          applies to all platforms.
+        - If result is a dict, only the value for `platform` is considered.
+        - split_name == "all" means include tests from all splits.
         """
 
-        def effective_result(result_field):
-            """
-            Normalize result field into a single effective status.
-            """
+        category_lower = (category or "").lower()
+        platform_lower = (platform or "").lower()
+
+        if platform_lower not in ("win", "mac", "linux"):
+            raise ValueError(f"Unsupported platform: {platform}. Use 'win', 'mac' or 'linux'.")
+
+        def matches(result_field) -> bool:
+            # Global string result: applies to all platforms
             if isinstance(result_field, str):
-                return result_field.lower()
+                return result_field.lower() == category_lower
 
+            # Per-platform dict: only consider the requested platform key
             if isinstance(result_field, dict):
-                values = [str(v).lower() for v in result_field.values()]
+                pv = result_field.get(platform_lower)
+                return isinstance(pv, str) and pv.lower() == category_lower
 
-                if "unstable" in values:
-                    return "unstable"
-                if "flaky" in values:
-                    return "flaky"
-                if all(v == "pass" for v in values):
-                    return "pass"
+            return False
 
-            return None
+        def split_matches(splits_list) -> bool:
+            if split_name == "all":
+                return True
+            return split_name in (splits_list or [])
 
-        category = category.lower()
-        test_filenames = []
+        selected = []
 
         for suite in self.manifest:
             for testfile in self.manifest[suite]:
                 entry = self.manifest[suite][testfile]
 
-                # FILE-LEVEL ENTRY
+                # File-level entry (e.g., result: pass)
                 if isinstance(entry, dict) and "splits" in entry:
-                    if split_name != "all" and split_name not in entry.get("splits", []):
-                        pass
-                    else:
-                        result = effective_result(entry.get("result"))
-                        if result == category:
-                            test_filenames.append(
-                                self.normalize_test_filename(suite, testfile)
-                            )
+                    if split_matches(entry.get("splits", [])) and matches(entry.get("result")):
+                        selected.append(self.normalize_test_filename(suite, testfile))
 
-                # SUBTEST-LEVEL ENTRY
+                # Subtest-level entries
                 if isinstance(entry, dict):
                     for key, subentry in entry.items():
                         if not str(key).startswith("test_"):
@@ -330,17 +328,10 @@ class TestKey:
                             continue
                         if "splits" not in subentry:
                             continue
+                        if split_matches(subentry.get("splits", [])) and matches(subentry.get("result")):
+                            selected.append(self.normalize_test_filename(suite, testfile, key))
 
-                        if split_name != "all" and split_name not in subentry.get("splits", []):
-                            continue
-
-                        result = effective_result(subentry.get("result"))
-                        if result == category:
-                            test_filenames.append(
-                                self.normalize_test_filename(suite, testfile, key)
-                            )
-
-        return test_filenames
+        return selected
 
     def get_valid_suites_in_split(self, split, suite_numbers=False) -> list:
         """
