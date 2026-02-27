@@ -23,18 +23,18 @@ def add_to_prefs_list():
     ]
 
 
-def test_bookmarks_removed_via_private_browsing(driver: Firefox):
+def test_bookmarks_removed_via_private_browsing(
+    driver: Firefox, panel_ui: PanelUi, nav: Navigation
+):
     """
     C101743: Bookmarks can be successfully removed via Private Browsing
     """
 
     # Instantiate objects
-    nav = Navigation(driver)
-    panel = PanelUi(driver)
     page = GenericPage(driver, url=BOOKMARK_URL)
 
     # Open a private window and switch to it
-    panel.open_and_switch_to_new_window("private")
+    panel_ui.open_and_switch_to_new_window("private")
 
     # Access any websites bookmark it
     page.open()

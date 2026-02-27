@@ -11,7 +11,10 @@ def test_case():
     return "446406"
 
 
-SOCIAL_MEDIA_TRACKERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/social_tracking_protection.html"
+SOCIAL_MEDIA_TRACKERS_URL = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/"
+    "social_tracking_protection.html"
+)
 
 
 @pytest.fixture()

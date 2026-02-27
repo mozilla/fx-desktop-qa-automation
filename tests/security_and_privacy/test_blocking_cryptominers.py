@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,7 +10,10 @@ def test_case():
     return "446403"
 
 
-CRYPTOMINERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining.html"
+CRYPTOMINERS_URL = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/"
+    "fingerprinting_and_cryptomining.html"
+)
 
 
 def test_blocking_cryptominers(
@@ -36,5 +37,4 @@ def test_blocking_cryptominers(
     tracking_page.open()
     trust_panel.open_panel()
     trust_panel.wait_for_trackers()
-    # time.sleep(200)
     trust_panel.trackers_blocked("cryptominer")
