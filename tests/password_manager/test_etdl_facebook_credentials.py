@@ -1,5 +1,5 @@
 import json
-import sys
+import time
 from urllib.parse import urlparse
 
 import pytest
@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
+
 
 ETLD_PLUS_ONE_URL = "https://www.facebook.com/"
 
@@ -38,7 +39,6 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    """Add to list of prefs to set"""
     return [("signon.rememberSignons", True)]
 
 
@@ -58,7 +58,9 @@ def temp_selectors():
         },
         # Cookie consent modal (may or may not appear)
         "facebook-cookie-dialog": {
-            "selectorData": "//div[@role='dialog'][.//text()[contains(.,'cookies') or contains(.,'Cookies')]]",
+            "selectorData": (
+                "//div[@role='dialog'][.//text()[contains(.,'cookies') or contains(.,'Cookies')]]"
+            ),
             "strategy": "xpath",
             "groups": ["doNotCache"],
         },
@@ -85,19 +87,22 @@ def temp_selectors():
     }
 
 
-def _clear_field(el):
-    """
-    Cross-platform field clear:
-    - Windows/Linux: CTRL + A
-    - macOS: COMMAND + A
-    """
-    select_all_key = Keys.COMMAND if sys.platform == "darwin" else Keys.CONTROL
-    el.send_keys(select_all_key, "a")
+def _platform_select_all_key(driver: Firefox) -> str:
+
+    caps = driver.capabilities or {}
+    platform = (caps.get("platformName") or caps.get("platform") or "").lower()
+    if "mac" in platform or "darwin" in platform:
+        return Keys.COMMAND
+    return Keys.CONTROL
+
+
+def _clear_field(driver: Firefox, el) -> None:
+    select_all = _platform_select_all_key(driver)
+    el.send_keys(select_all, "a")
     el.send_keys(Keys.BACKSPACE)
 
 
-def _assert_password_masked(password_element):
-    # Masked == input type remains password (value may still be present in DOM)
+def _assert_password_masked(password_element) -> None:
     assert password_element.get_attribute("type") == "password"
 
 
@@ -105,56 +110,82 @@ def _host(url: str) -> str:
     return urlparse(url).netloc
 
 
-def _extract_secondary_label(ac_comment: str) -> str:
+def _parse_secondary_from_ac_comment(raw: str) -> str:
     """
-    On newer builds, Firefox stores JSON in ac-comment and the visible "secondary" label
-    (e.g. "From this website", "ro-ro.facebook.com") is stored under:
-      - data["secondary"] OR
-      - data["fillMessageData"]["secondary"]
-    Older builds may store plain text directly.
+    Some builds expose ac-comment as a plain string ("From this website").
+    Others expose a JSON string containing e.g. {"secondary":"From this website", ...}.
     """
-    if not ac_comment:
+    if not raw:
         return ""
-
-    # Older behavior: ac-comment is already the label
-    if ac_comment == FROM_THIS_WEBSITE_TEXT:
-        return ac_comment
-
-    try:
-        data = json.loads(ac_comment)
-        if isinstance(data, dict):
-            return data.get("secondary", "") or data.get("fillMessageData", {}).get(
-                "secondary", ""
-            )
-    except Exception:
-        pass
-
-    return ac_comment
+    raw = raw.strip()
+    if raw.startswith("{") and raw.endswith("}"):
+        try:
+            data = json.loads(raw)
+            # The string we want is usually at top-level "secondary"
+            sec = data.get("secondary")
+            if isinstance(sec, str):
+                return sec
+        except Exception:
+            pass
+    return raw
 
 
 def _get_dropdown_entries_by_username(
-    autofill_popup: AutofillPopup,
-    expected_usernames: set[str],
+    autofill_popup: AutofillPopup, expected_usernames: set[str]
 ) -> dict[str, str]:
     """
-    Returns: {username(ac-value): secondary_label} for entries that match expected_usernames.
+    Returns {username(ac-value): secondary_text} for entries that match expected_usernames.
     Must be called in chrome context.
     """
     entries: dict[str, str] = {}
     for item in autofill_popup.get_elements("select-form-option"):
         username = item.get_attribute("ac-value")
         if username in expected_usernames:
-            entries[username] = _extract_secondary_label(
-                item.get_attribute("ac-comment")
-            )
+            comment_raw = item.get_attribute("ac-comment")
+            entries[username] = _parse_secondary_from_ac_comment(comment_raw)
     return entries
 
 
+def _get_username_order_in_popup(autofill_popup: AutofillPopup) -> list[str]:
+    """
+    Must be called in chrome context.
+    Returns the ac-value list in the order displayed in the popup.
+    """
+    order: list[str] = []
+    for item in autofill_popup.get_elements("select-form-option"):
+        val = item.get_attribute("ac-value")
+        if val:  # ignore empty/footers
+            order.append(val)
+    return order
+
+
+def _choose_username_via_keyboard(
+    driver: Firefox,
+    web_page: GenericPage,
+    autofill_popup: AutofillPopup,
+    field_name: str,
+    desired_username: str,
+) -> None:
+
+    web_page.click_on(field_name)
+    autofill_popup.ensure_autofill_dropdown_visible()
+
+    with driver.context(driver.CONTEXT_CHROME):
+        order = _get_username_order_in_popup(autofill_popup)
+
+    assert desired_username in order, f"'{desired_username}' not found in popup. Order={order}"
+
+    idx = order.index(desired_username)
+
+    field_el = web_page.get_element(field_name)
+    # First ArrowDown highlights the first entry, so press ArrowDown idx+1 times.
+    for _ in range(idx + 1):
+        field_el.send_keys(Keys.ARROW_DOWN)
+        time.sleep(0.05)
+    field_el.send_keys(Keys.ENTER)
+
+
 def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
-    """
-    Facebook sometimes shows a cookie consent modal that blocks clicks on the login fields.
-    If present, dismiss it (prefer declining optional cookies).
-    """
     dialogs = page.get_elements("facebook-cookie-dialog")
     if not dialogs:
         return
@@ -162,14 +193,10 @@ def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
     decline_btns = page.get_elements("facebook-cookie-decline")
     allow_btns = page.get_elements("facebook-cookie-allow")
 
-    btn = None
-    if decline_btns:
-        btn = decline_btns[0]
-    elif allow_btns:
-        btn = allow_btns[0]
-
+    btn = decline_btns[0] if decline_btns else (allow_btns[0] if allow_btns else None)
     if btn:
         page.driver.execute_script("arguments[0].click();", btn)
+        time.sleep(0.5)
 
 
 def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
@@ -183,47 +210,34 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     about_logins = AboutLogins(driver)
     autofill_popup = AutofillPopup(driver)
 
-    # Seed saved logins via about:logins (with small pauses as used in existing tests)
+    # Seed saved logins via about:logins
     about_logins.open()
     about_logins.add_login(ETLD_PLUS_ONE_URL, ETLD_USERNAME, ETLD_PASSWORD)
+    time.sleep(0.8)
 
     for url in SUBDOMAIN_URLS:
         username, password = SUBDOMAIN_CREDENTIALS[url]
         about_logins.add_login(url, username, password)
+        time.sleep(0.8)
 
-    # Open eTLD+1 and reload (step 3)
     web_page = GenericPage(driver, url=ETLD_PLUS_ONE_URL).open()
     web_page.elements |= temp_selectors
 
     driver.refresh()
     _dismiss_facebook_cookies_if_present(web_page)
 
-    # Trigger autocomplete on username field and select the eTLD+1 credential
-    web_page.click_on("facebook-username-field")
+    # Step 3: select the eTLD+1 credential
+    _choose_username_via_keyboard(driver, web_page, autofill_popup, "facebook-username-field", ETLD_USERNAME)
 
-    autofill_popup.ensure_autofill_dropdown_visible()
-    with driver.context(driver.CONTEXT_CHROME):
-        autofill_popup.click_on("select-form-option-by-value", labels=[ETLD_USERNAME])
-
-    # Explicit wait for autofill to complete in content
-    web_page.expect(
-        lambda d: web_page.get_element("facebook-username-field").get_attribute("value")
-        == ETLD_USERNAME
-    )
-
-    web_page.expect(
-        lambda d: web_page.get_element("facebook-password-field").get_attribute("value")
-        == ETLD_PASSWORD
-    )
+    web_page.element_attribute_contains("facebook-username-field", "value", ETLD_USERNAME)
+    web_page.element_attribute_contains("facebook-password-field", "value", ETLD_PASSWORD)
     _assert_password_masked(web_page.get_element("facebook-password-field"))
 
-    expected_usernames = {ETLD_USERNAME} | {
-        u for (u, _) in SUBDOMAIN_CREDENTIALS.values()
-    }
+    expected_usernames = {ETLD_USERNAME} | {u for (u, _) in SUBDOMAIN_CREDENTIALS.values()}
 
-    # Step 4: delete username -> dropdown shows all logins with correct secondary text
+    # Step 4: clear username -> dropdown shows all logins + correct secondary text
     username_el = web_page.get_element("facebook-username-field")
-    _clear_field(username_el)
+    _clear_field(driver, username_el)
     web_page.click_on("facebook-username-field")
 
     autofill_popup.ensure_autofill_dropdown_visible()
@@ -233,61 +247,37 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     assert expected_usernames.issubset(set(entries.keys()))
     assert entries[ETLD_USERNAME] == FROM_THIS_WEBSITE_TEXT
 
-    assert entries[SUBDOMAIN_CREDENTIALS["https://ro-ro.facebook.com/"][0]] == _host(
-        "https://ro-ro.facebook.com/"
-    )
-    assert entries[SUBDOMAIN_CREDENTIALS["https://fr-fr.facebook.com/"][0]] == _host(
-        "https://fr-fr.facebook.com/"
-    )
-    assert entries[SUBDOMAIN_CREDENTIALS["https://www.prod.facebook.com/"][0]] == _host(
-        "https://www.prod.facebook.com/"
-    )
-    assert entries[SUBDOMAIN_CREDENTIALS["https://th-th.facebook.com/"][0]] == _host(
-        "https://th-th.facebook.com/"
-    )
+    assert _host("https://ro-ro.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://ro-ro.facebook.com/"][0]]
+    assert _host("https://fr-fr.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://fr-fr.facebook.com/"][0]]
+    assert _host("https://www.prod.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://www.prod.facebook.com/"][0]]
+    assert _host("https://th-th.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://th-th.facebook.com/"][0]]
 
     # Step 5: select any username entry -> username + password fill, password masked
     chosen_url = "https://fr-fr.facebook.com/"
     chosen_username, chosen_password = SUBDOMAIN_CREDENTIALS[chosen_url]
 
-    with driver.context(driver.CONTEXT_CHROME):
-        autofill_popup.click_on("select-form-option-by-value", labels=[chosen_username])
+    _choose_username_via_keyboard(driver, web_page, autofill_popup, "facebook-username-field", chosen_username)
 
-    web_page.expect(
-        lambda d: web_page.get_element("facebook-username-field").get_attribute("value")
-        == chosen_username
-    )
-    web_page.expect(
-        lambda d: web_page.get_element("facebook-password-field").get_attribute("value")
-        == chosen_password
-    )
+    web_page.element_attribute_contains("facebook-username-field", "value", chosen_username)
+    web_page.element_attribute_contains("facebook-password-field", "value", chosen_password)
     _assert_password_masked(web_page.get_element("facebook-password-field"))
 
-    # Step 6: delete password -> dropdown shows all logins again (same expectations)
-    password_el = web_page.get_element("facebook-password-field")
+    # Step 6: clear password -> dropdown shows all logins again (same expectations)
     web_page.click_on("facebook-password-field")
-    _clear_field(password_el)
+    password_el = web_page.get_element("facebook-password-field")
+    _clear_field(driver, password_el)
     web_page.click_on("facebook-password-field")
 
     autofill_popup.ensure_autofill_dropdown_visible()
     with driver.context(driver.CONTEXT_CHROME):
-        entries_pw = _get_dropdown_entries_by_username(
-            autofill_popup, expected_usernames
-        )
+        entries_pw = _get_dropdown_entries_by_username(autofill_popup, expected_usernames)
 
     assert expected_usernames.issubset(set(entries_pw.keys()))
     assert entries_pw[ETLD_USERNAME] == FROM_THIS_WEBSITE_TEXT
 
-    # Step 7: select any listed username from password dropdown -> only the masked password is auto-filled
-    with driver.context(driver.CONTEXT_CHROME):
-        autofill_popup.click_on("select-form-option-by-value", labels=[chosen_username])
+    # Step 7: select a username from password dropdown -> password fills (masked)
+    _choose_username_via_keyboard(driver, web_page, autofill_popup, "facebook-password-field", chosen_username)
 
-    web_page.expect(
-        lambda d: web_page.get_element("facebook-username-field").get_attribute("value")
-        == chosen_username
-    )
-    web_page.expect(
-        lambda d: web_page.get_element("facebook-password-field").get_attribute("value")
-        == chosen_password
-    )
+    web_page.element_attribute_contains("facebook-username-field", "value", chosen_username)
+    web_page.element_attribute_contains("facebook-password-field", "value", chosen_password)
     _assert_password_masked(web_page.get_element("facebook-password-field"))
