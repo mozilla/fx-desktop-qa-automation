@@ -33,7 +33,8 @@ def test_never_remember_browsing_history_settings(
     driver: Firefox, about_prefs_privacy: AboutPrefs
 ):
     """
-    C102381.1: Ensure that setting the browser to never remember history has the correct configurations in about:preferences
+    C102381.1: Ensure that setting the browser to never remember history has the correct
+    configuration in about:preferences
     """
 
     # instantiate objs

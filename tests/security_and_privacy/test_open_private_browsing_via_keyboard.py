@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import Navigation
 
 
 @pytest.fixture()
@@ -9,10 +9,10 @@ def test_case():
     return "101661"
 
 
-def test_open_private_browsing_via_keyboard(driver: Firefox):
+def test_open_private_browsing_via_keyboard(driver: Firefox, nav: Navigation):
     """
-    C101661: Verify that a Private Browsing session can be opened via keyboard shortcut (Ctrl+Shift+P on
-    Windows/Linux, Cmd+Shift+P on macOS) and the purple mask is displayed.
+    C101661: Verify that a Private Browsing session can be opened via keyboard shortcut
+    (Ctrl+Shift+P on Windows/Linux, Cmd+Shift+P on macOS) and the purple mask is displayed.
     """
     # Instantiate objects
     nav = Navigation(driver)
