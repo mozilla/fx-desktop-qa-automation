@@ -81,6 +81,7 @@ def temp_selectors():
                 "or contains(normalize-space(.),'Accept all cookies')]"
             ),
             "strategy": "xpath",
+
             "groups": ["doNotCache"],
         },
     }
