@@ -87,46 +87,6 @@
         "strategy": "id",
         "groups": []
     },
-    "tracker-cross-site-tracking": {
-        "selectorData": "protections-popup-category-cookies",
-        "strategy": "id",
-        "groups": []
-    },
-    "tracker-tracking-content": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-tracking-content']",
-        "strategy": "css",
-        "groups": []
-    },
-    "tracking-social-media": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-social-tracking']",
-        "strategy": "css",
-        "groups": []
-    },
-    "tracking-finger-prints": {
-        "selectorData": "protections-popup-category-fingerprinters",
-        "strategy": "id",
-        "groups": []
-    },
-    "tracking-crypto-miners": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
-        "strategy": "css",
-        "groups": []
-    },
-    "tracking-cross-site-tracking-items": {
-        "selectorData": "vbox[class='protections-popup-cookiesView-list-section']",
-        "strategy": "css",
-        "groups": []
-    },
-    "tracking-allowed-content-item": {
-        "selectorData": "protections-popup-list-host-label",
-        "strategy": "class",
-        "groups": []
-    },
-    "tracking-item-container": {
-        "selectorData": "protections-popup-category-list",
-        "strategy": "id",
-        "groups": []
-    },
     "shield-icon": {
         "selectorData": "trust-icon-container",
         "strategy": "id",
@@ -134,25 +94,5 @@
             "doNotCache",
             "requiredForPage"
         ]
-    },
-    "no-trackers-message": {
-        "selectorData": "protections-popup-no-trackers-found-description",
-        "strategy": "id",
-        "groups": []
-    },
-    "tracking-subview": {
-        "selectorData": "protections-popup-trackersView",
-        "strategy": "id",
-        "groups": []
-    },
-    "social-media-tracker-content": {
-        "selectorData": "protections-popup-category-socialblock",
-        "strategy": "id",
-        "groups": []
-    },
-    "social-media-subview": {
-        "selectorData": "protections-popup-socialblockView",
-        "strategy": "id",
-        "groups": []
     }
 }
