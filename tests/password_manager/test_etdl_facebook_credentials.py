@@ -9,7 +9,6 @@ from selenium.webdriver.common.keys import Keys
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
 
-
 ETLD_PLUS_ONE_URL = "https://www.facebook.com/"
 
 SUBDOMAIN_URLS = [
@@ -88,7 +87,6 @@ def temp_selectors():
 
 
 def _platform_select_all_key(driver: Firefox) -> str:
-
     caps = driver.capabilities or {}
     platform = (caps.get("platformName") or caps.get("platform") or "").lower()
     if "mac" in platform or "darwin" in platform:
@@ -166,14 +164,15 @@ def _choose_username_via_keyboard(
     field_name: str,
     desired_username: str,
 ) -> None:
-
     web_page.click_on(field_name)
     autofill_popup.ensure_autofill_dropdown_visible()
 
     with driver.context(driver.CONTEXT_CHROME):
         order = _get_username_order_in_popup(autofill_popup)
 
-    assert desired_username in order, f"'{desired_username}' not found in popup. Order={order}"
+    assert desired_username in order, (
+        f"'{desired_username}' not found in popup. Order={order}"
+    )
 
     idx = order.index(desired_username)
 
@@ -227,13 +226,21 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     _dismiss_facebook_cookies_if_present(web_page)
 
     # Step 3: select the eTLD+1 credential
-    _choose_username_via_keyboard(driver, web_page, autofill_popup, "facebook-username-field", ETLD_USERNAME)
+    _choose_username_via_keyboard(
+        driver, web_page, autofill_popup, "facebook-username-field", ETLD_USERNAME
+    )
 
-    web_page.element_attribute_contains("facebook-username-field", "value", ETLD_USERNAME)
-    web_page.element_attribute_contains("facebook-password-field", "value", ETLD_PASSWORD)
+    web_page.element_attribute_contains(
+        "facebook-username-field", "value", ETLD_USERNAME
+    )
+    web_page.element_attribute_contains(
+        "facebook-password-field", "value", ETLD_PASSWORD
+    )
     _assert_password_masked(web_page.get_element("facebook-password-field"))
 
-    expected_usernames = {ETLD_USERNAME} | {u for (u, _) in SUBDOMAIN_CREDENTIALS.values()}
+    expected_usernames = {ETLD_USERNAME} | {
+        u for (u, _) in SUBDOMAIN_CREDENTIALS.values()
+    }
 
     # Step 4: clear username -> dropdown shows all logins + correct secondary text
     username_el = web_page.get_element("facebook-username-field")
@@ -247,19 +254,37 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     assert expected_usernames.issubset(set(entries.keys()))
     assert entries[ETLD_USERNAME] == FROM_THIS_WEBSITE_TEXT
 
-    assert _host("https://ro-ro.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://ro-ro.facebook.com/"][0]]
-    assert _host("https://fr-fr.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://fr-fr.facebook.com/"][0]]
-    assert _host("https://www.prod.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://www.prod.facebook.com/"][0]]
-    assert _host("https://th-th.facebook.com/") in entries[SUBDOMAIN_CREDENTIALS["https://th-th.facebook.com/"][0]]
+    assert (
+        _host("https://ro-ro.facebook.com/")
+        in entries[SUBDOMAIN_CREDENTIALS["https://ro-ro.facebook.com/"][0]]
+    )
+    assert (
+        _host("https://fr-fr.facebook.com/")
+        in entries[SUBDOMAIN_CREDENTIALS["https://fr-fr.facebook.com/"][0]]
+    )
+    assert (
+        _host("https://www.prod.facebook.com/")
+        in entries[SUBDOMAIN_CREDENTIALS["https://www.prod.facebook.com/"][0]]
+    )
+    assert (
+        _host("https://th-th.facebook.com/")
+        in entries[SUBDOMAIN_CREDENTIALS["https://th-th.facebook.com/"][0]]
+    )
 
     # Step 5: select any username entry -> username + password fill, password masked
     chosen_url = "https://fr-fr.facebook.com/"
     chosen_username, chosen_password = SUBDOMAIN_CREDENTIALS[chosen_url]
 
-    _choose_username_via_keyboard(driver, web_page, autofill_popup, "facebook-username-field", chosen_username)
+    _choose_username_via_keyboard(
+        driver, web_page, autofill_popup, "facebook-username-field", chosen_username
+    )
 
-    web_page.element_attribute_contains("facebook-username-field", "value", chosen_username)
-    web_page.element_attribute_contains("facebook-password-field", "value", chosen_password)
+    web_page.element_attribute_contains(
+        "facebook-username-field", "value", chosen_username
+    )
+    web_page.element_attribute_contains(
+        "facebook-password-field", "value", chosen_password
+    )
     _assert_password_masked(web_page.get_element("facebook-password-field"))
 
     # Step 6: clear password -> dropdown shows all logins again (same expectations)
@@ -270,14 +295,22 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
 
     autofill_popup.ensure_autofill_dropdown_visible()
     with driver.context(driver.CONTEXT_CHROME):
-        entries_pw = _get_dropdown_entries_by_username(autofill_popup, expected_usernames)
+        entries_pw = _get_dropdown_entries_by_username(
+            autofill_popup, expected_usernames
+        )
 
     assert expected_usernames.issubset(set(entries_pw.keys()))
     assert entries_pw[ETLD_USERNAME] == FROM_THIS_WEBSITE_TEXT
 
     # Step 7: select a username from password dropdown -> password fills (masked)
-    _choose_username_via_keyboard(driver, web_page, autofill_popup, "facebook-password-field", chosen_username)
+    _choose_username_via_keyboard(
+        driver, web_page, autofill_popup, "facebook-password-field", chosen_username
+    )
 
-    web_page.element_attribute_contains("facebook-username-field", "value", chosen_username)
-    web_page.element_attribute_contains("facebook-password-field", "value", chosen_password)
+    web_page.element_attribute_contains(
+        "facebook-username-field", "value", chosen_username
+    )
+    web_page.element_attribute_contains(
+        "facebook-password-field", "value", chosen_password
+    )
     _assert_password_masked(web_page.get_element("facebook-password-field"))
