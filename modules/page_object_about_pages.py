@@ -370,6 +370,11 @@ class AboutLogins(BasePage):
         page = GenericPage(self.driver)
         page.navigate_dialog_to_location(downloads_folder, filename)
 
+    def click_copy_username_button(self) -> Page:
+        """Click the copy username button"""
+        self.click_on("copy-username")
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """
