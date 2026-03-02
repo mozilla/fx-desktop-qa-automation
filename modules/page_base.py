@@ -10,7 +10,7 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
-from pynput.keyboard import Controller, Key
+from pynput.keyboard import Key
 from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
 from pypom import Page
