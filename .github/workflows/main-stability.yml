@@ -61,7 +61,7 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
+          mv ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
           pipenv install;
 
       - name: Download Geckodriver
@@ -133,7 +133,7 @@ jobs:
         shell: pwsh
         run: |
           mkdir -p test-results
-          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --junitxml=test-results/junit-win.xml
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --junitxml=test-results/junit-win.xml --reruns 0
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -149,15 +149,15 @@ jobs:
         shell: pwsh
         run: |
           rm ./pyproject.toml;
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-          
+          mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
+
           # Ensure junit output directory exists
           New-Item -ItemType Directory -Force -Path test-results | Out-Null
 
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
 
           # Run pytest with JUnit output
-          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --junitxml=test-results/junit-win-headed.xml
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --junitxml=test-results/junit-win-headed.xml --reruns 0
 
           $env:TEST_EXIT_CODE = $LASTEXITCODE
 
@@ -227,7 +227,7 @@ jobs:
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
+          mv ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
           pipenv install
 
       - name: Install Fx
@@ -274,7 +274,7 @@ jobs:
           mkdir -p test-results
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --junitxml=test-results/junit-mac.xml || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --junitxml=test-results/junit-mac.xml --reruns 0 || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -293,10 +293,10 @@ jobs:
           # Ensure junit output directory exists
           mkdir -p test-results
 
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
 
           # Run pytest and write junit xml
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --junitxml=test-results/junit-mac-headed.xml || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --junitxml=test-results/junit-mac-headed.xml --reruns 0 || TEST_EXIT_CODE=$?
 
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
