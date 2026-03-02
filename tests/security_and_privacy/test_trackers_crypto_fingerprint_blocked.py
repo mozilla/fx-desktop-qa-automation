@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,10 +10,13 @@ def test_case():
     return "446393"
 
 
-TRACKER_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining_and_cookies.html"
+TRACKER_URL = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/"
+    "fingerprinting_and_cryptomining_and_cookies.html"
+)
 
 
-def test_cross_site_trackrs_crypto_fingerprinter_blocked(
+def test_cross_site_trackers_crypto_fingerprinter_blocked(
     driver: Firefox, trust_panel: TrustPanel, nav: Navigation
 ):
     """

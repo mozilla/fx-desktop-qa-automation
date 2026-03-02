@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from selenium.webdriver import Firefox
 

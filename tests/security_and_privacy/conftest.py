@@ -1,6 +1,6 @@
 import pytest
 
-from modules.browser_object import Navigation, PanelUi, TabBar, TrustPanel
+from modules.browser_object import MenuBar, Navigation, PanelUi, TabBar, TrustPanel
 from modules.page_object import AboutCache, AboutDownloads, AboutPrefs
 from modules.util import BrowserActions
 
@@ -60,6 +60,11 @@ def about_cache(driver):
 @pytest.fixture()
 def about_downloads(driver):
     return AboutDownloads(driver)
+
+
+@pytest.fixture()
+def menu_bar(driver):
+    return MenuBar(driver)
 
 
 @pytest.fixture()

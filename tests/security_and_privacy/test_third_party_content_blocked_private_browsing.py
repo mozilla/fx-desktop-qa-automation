@@ -23,7 +23,10 @@ ALLOWED_TRACKING_URLS = {
 }
 BLOCKED_TRACKER_URL = "https://content-track-digest256.dummytracker.org"
 
-FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
+FIRST_TRACKER_WEBSITE = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/"
+    "tracking_protection.html"
+)
 SECOND_TRACKER_WEBSITE = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
@@ -61,7 +64,7 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
     # Open a private window
     panel_ui.open_and_switch_to_new_window("private")
 
-    # Open the website, ensure the blocking is taking place by continuously refreshing website until indicated
+    # Open the website, ensure the blocking is taking place by refreshing website until indicated
     tracker_website.open()
     trust_panel.open_panel()
     trust_panel.wait_for_trackers()
