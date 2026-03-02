@@ -289,7 +289,9 @@ class TestKey:
         platform_lower = (platform or "").lower()
 
         if platform_lower not in ("win", "mac", "linux"):
-            raise ValueError(f"Unsupported platform: {platform}. Use 'win', 'mac' or 'linux'.")
+            raise ValueError(
+                f"Unsupported platform: {platform}. Use 'win', 'mac' or 'linux'."
+            )
 
         def matches(result_field) -> bool:
             # Global string result: applies to all platforms
@@ -316,7 +318,9 @@ class TestKey:
 
                 # File-level entry (e.g., result: pass)
                 if isinstance(entry, dict) and "splits" in entry:
-                    if split_matches(entry.get("splits", [])) and matches(entry.get("result")):
+                    if split_matches(entry.get("splits", [])) and matches(
+                        entry.get("result")
+                    ):
                         selected.append(self.normalize_test_filename(suite, testfile))
 
                 # Subtest-level entries
@@ -328,8 +332,12 @@ class TestKey:
                             continue
                         if "splits" not in subentry:
                             continue
-                        if split_matches(subentry.get("splits", [])) and matches(subentry.get("result")):
-                            selected.append(self.normalize_test_filename(suite, testfile, key))
+                        if split_matches(subentry.get("splits", [])) and matches(
+                            subentry.get("result")
+                        ):
+                            selected.append(
+                                self.normalize_test_filename(suite, testfile, key)
+                            )
 
         return selected
 
