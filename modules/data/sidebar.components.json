@@ -1,0 +1,8 @@
+{
+    "context": "chrome",
+    "sidebar-button": {
+        "selectorData": "sidebar-button",
+        "strategy": "id",
+        "groups": []
+    }
+}

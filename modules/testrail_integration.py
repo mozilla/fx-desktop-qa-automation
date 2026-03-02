@@ -24,7 +24,10 @@ PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
+TC_EXECUTION_TEMPLATE = (
+    "https://firefox-ci-tc.services.mozilla.com/tasks/"
+    "%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
+)
 
 
 def get_execution_link(os_name: str = None) -> str:
@@ -58,7 +61,8 @@ def get_execution_link(os_name: str = None) -> str:
         return link
 
     logging.warning(
-        f"Could not generate execution link for os_name={os_name}. Missing required environment variables."
+        f"Could not generate execution link for os_name={os_name}. "
+        "Missing required environment variables."
     )
     return ""
 
@@ -359,7 +363,8 @@ def reportable(platform_to_test=None):
         )
     if not channel_milestone:
         logging.warning(
-            f"Not reporting: Could not find matching sub-milestone for {channel} {ctx['major_number']}"
+            "Not reporting: Could not find matching sub-milestone "
+            f"for {channel} {ctx['major_number']}"
         )
         return False
 
@@ -382,7 +387,8 @@ def reportable(platform_to_test=None):
     )
     if not this_plan:
         logging.warning(
-            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+            f"Session reportable: could not find {plan_title} "
+            f"(milestone: {channel_milestone.get('id')})"
         )
         return True
 
@@ -413,7 +419,8 @@ def reportable(platform_to_test=None):
 
         logging.warning(
             f"Potentially matching run found for {platform_name}, may be reportable. "
-            f"(Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
+            f"(Found {covered_mappings} site/region mappings reported, "
+            f"expected {expected_mappings}.)"
         )
         # Only report when there is a new beta without a reported plan or
         # if the selected split is not completely reported.

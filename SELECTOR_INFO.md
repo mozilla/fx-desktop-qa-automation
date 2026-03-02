@@ -386,6 +386,27 @@ Description: Save edited login
 Location: The about:login's main login page after editing a login
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: copy-username
+Selector Data: "copy-username-button.copy-button"
+Description: Copy username button
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: copy-password
+Selector Data: "copy-password-button.copy-button"
+Description: Copy password button
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: copied-button
+Selector Data: "copy-password-button.copied-button"
+Description: Copy password button confirmation
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_networking
 ```
 Selector Name: networking-sidebar-category
@@ -577,6 +598,13 @@ Selector Name: tab-hover-preview-checkbox
 Selector Data: tabPreviewShowThumbnails
 Description: Checkbox to toggle "Show an image preview when you hover on a tab"
 Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-sidebar-checkbox
+Selector Data: browserLayoutShowSidebar
+Description: Checkbox to toggle "Show sidebar"
+Location: about:preferences (Browser Layout)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1393,6 +1421,13 @@ Description: Saved passwords button in about:protections
 Location: about:protections > Never forget a password again section
 Path to .json: modules/data/about_protections.components.json
 ```
+```
+Selector Name: manage-privacy-security
+Selector Data: "protection-settings"
+Description: Manage your privacy and security settings link in about:protections
+Location: about:protections page
+Path to .json: modules/data/about_protections.components.json
+```
 #### about_telemetry
 ```
 Selector Name: category-raw
@@ -1774,6 +1809,13 @@ Selector Name: address-doorhanger-country
 Selector Data: "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span"
 Description: Save address doorhanger country section
 Location: Address bar
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: manage-passwords
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']"
+Description: Login autofill manage passwords button
+Location: Login autofill
 Path to .json: modules/data/autofill_popup.components.json
 ```
 #### context_menu
@@ -4395,6 +4437,14 @@ Description: The generic slider button
 Location: In the Reader View Toolbar Text and Layout options dialog.
 Path to .json: modules/data/reader_view.components.json
 ```
+#### sidebar
+```
+Selector Name: sidebar-button
+Selector Data: sidebar-button
+Description: Sidebar toolbar button used to toggle the sidebar
+Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
+```
 #### tab_bar
 ```
 Selector name: tab-by-title
@@ -4754,4 +4804,18 @@ Selector Data: "trust-icon-container"
 Description: Address bar shield icon
 Location: Address bar
 Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: suspected-fingerprints-in-all-windows
+Selector Data: "#fingerprintingProtectionMenu menuitem[value='always']"
+Description: "In all windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
+Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: suspected-fingerprints-only-in-private-windows
+Selector Data: "#fingerprintingProtectionMenu menuitem[value='private']"
+Description: "Only in private windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
+Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
+Path to .json: modules/data/about_prefs.components.json
 ```

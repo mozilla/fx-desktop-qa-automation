@@ -21,7 +21,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_panel_ui import PanelUi
 from modules.classes.bookmark import Bookmark
-from modules.page_base import BasePage
+from modules.page_base import BasePage, Page
 from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.util import BrowserActions
 
@@ -1485,3 +1485,9 @@ class Navigation(BasePage):
 
         self.context_menu.click_and_hide_menu(menu_items[item_type])
         return self
+
+    @BasePage.context_chrome
+    def paste_in_awesome_bar(self) -> Page:
+        """Paste clipboard content into the awesome bar"""
+        self.click_on("awesome-bar")
+        return self.paste()

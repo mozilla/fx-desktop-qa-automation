@@ -296,6 +296,11 @@
     "strategy": "css",
     "groups": []
   },
+  "suspected-fingerprints-only-in-private-windows": {
+    "selectorData": "#fingerprintingProtectionMenu menuitem[value='private']",
+    "strategy": "css",
+    "groups": []
+  },
   "cookies-shadow-root": {
     "selectorData": "dialog[buttons='accept,cancel']",
     "strategy": "css",
@@ -681,6 +686,11 @@
   },
   "saved-passwords": {
     "selectorData": "showPasswords",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-sidebar-checkbox": {
+    "selectorData": "browserLayoutShowSidebar",
     "strategy": "id",
     "groups": []
   }

@@ -174,5 +174,23 @@
         "strategy": "class",
         "shadowParent": "login-item",
         "groups": []
+    },
+    "copy-username": {
+        "selectorData": "copy-username-button.copy-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+    "copy-password": {
+        "selectorData": "copy-password-button.copy-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+    "copied-button": {
+        "selectorData": "copy-password-button.copied-button",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
     }
 }

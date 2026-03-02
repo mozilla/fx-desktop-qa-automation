@@ -124,11 +124,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    result: pass
-    splits:
-    - functional1
-  test_search_bar_on_engines_remove_restore:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
@@ -469,23 +465,38 @@ downloads:
     - functional1
 drag_and_drop:
   test_copy_entire_row_column:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - smoke
   test_copy_from_an_editor_paste_in_another:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_copy_hyperlink_table:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_copy_table_header:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
 find_toolbar:
@@ -753,11 +764,19 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_about_logins_password_copy_button:
+    result: pass
+    splits:
+    - functional2
   test_about_logins_search_username:
     result: pass
     splits:
     - functional2
   test_about_logins_search_website:
+    result: pass
+    splits:
+    - functional2
+  test_about_logins_username_copy_button:
     result: pass
     splits:
     - functional2
@@ -798,6 +817,10 @@ password_manager:
       linux: pass
       mac: unstable
       win: pass
+    splits:
+    - functional2
+  test_navigation_to_about_logins_from_autocomplete:
+    result: pass
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
@@ -1108,6 +1131,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_protection_level_redirect_about_preferences:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_removed_on_end_private_session:
     result: pass
     splits:
@@ -1157,6 +1184,15 @@ session_restore:
     result: pass
     splits:
     - functional2
+sidebar:
+  test_sidebar-button-always-displayed-on-a-fresh-profile:
+    result: pass
+    splits:
+    - functional2
+  test_toggle_sidebar_via_toolbar_button:
+    result: pass
+    splits:
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
     result: unstable
@@ -1194,6 +1230,10 @@ tabs:
     splits:
     - functional2
   test_group_tabs:
+    result: pass
+    splits:
+    - functional2
+  test_hover_tab_preview:
     result: pass
     splits:
     - functional2

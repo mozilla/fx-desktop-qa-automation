@@ -42,6 +42,11 @@ def about_protections(driver):
 
 
 @pytest.fixture()
+def about_logins(driver):
+    return AboutLogins(driver)
+
+
+@pytest.fixture()
 def origins():
     return [
         "facebook.com",
