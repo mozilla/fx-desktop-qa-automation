@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # First-time setup
 ./devsetup.sh           # Sets up git hooks; re-run if hooks change
 
-# Run all tests
+# Runs all tests
 pytest
 
 # Run a single test file
