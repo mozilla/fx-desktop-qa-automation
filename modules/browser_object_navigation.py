@@ -328,22 +328,6 @@ class Navigation(BasePage):
             logging.warning("Animation did not finish or did not play.")
         return self
 
-    @BasePage.context_chrome
-    def open_trust_panel(self) -> BasePage:
-        """
-        Clicks the shield icon and opens the panel associated with it
-        """
-        self.get_element("shield-icon").click()
-        return self
-
-    @BasePage.context_chrome
-    def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):
-        """
-        Verify that the list of cross-site trackers is as expected.
-        """
-        for val in cross_site_trackers:
-            self.expect(lambda _: val in allowed_cookies)
-
     def search_and_check_if_suggestions_are_present(
         self, text, search_mode: str = "awesome", min_suggestions=1
     ):
