@@ -32,7 +32,9 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def trackers_in_category(self, category: str, *trackers) -> bool:
         """Confirm that text or data-l10n-id for blocked items exists within blocked area"""
+        sleep(1)
         spotted = self.get_elements(f"{category}-items")
+        logging.warning(f"{len(spotted)} trackers")
         if trackers and not spotted:
             return False
         for tracker in trackers:
@@ -81,11 +83,11 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def sites_blocked(self, *sites) -> bool:
-        return self.sites_in_category("blocked")
+        return self.sites_in_category("blocked", *sites)
 
     @BasePage.context_chrome
     def sites_detected(self, *sites) -> bool:
-        return self.sites_in_category("detected")
+        return self.sites_in_category("detected", *sites)
 
     @BasePage.context_chrome
     def verify_trust_panel_title(self, expected_title):

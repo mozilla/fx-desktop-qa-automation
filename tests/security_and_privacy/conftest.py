@@ -19,7 +19,6 @@ def prefs_list(add_to_prefs_list: dict):
     """List of prefs to send to main conftest.py driver fixture"""
     prefs = [
         ("browser.urlbar.scotchBonnet.enableOverride", True),
-        ("browser.urlbar.trustPanel.featureGate", False),
     ]
     prefs.extend(add_to_prefs_list)
     return prefs

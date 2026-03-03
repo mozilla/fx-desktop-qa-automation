@@ -12,7 +12,10 @@ def test_case():
     return "446402"
 
 
-FIRST_TRACKER_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
+FIRST_TRACKER_WEBSITE = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/"
+    "tracking_protection.html"
+)
 DETECTED_COOKIES = (
     "https://ads-track-digest256.dummytracker.org",
     "https://social-track-digest256.dummytracker.org",

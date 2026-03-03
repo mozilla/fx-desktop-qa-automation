@@ -91,8 +91,7 @@
         "selectorData": "trust-icon-container",
         "strategy": "id",
         "groups": [
-            "doNotCache",
-            "requiredForPage"
+            "doNotCache"
         ]
     }
 }
