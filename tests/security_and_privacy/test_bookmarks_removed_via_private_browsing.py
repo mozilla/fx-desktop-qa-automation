@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.page_object_generics import GenericPage
+from modules.browser_object import Navigation, PanelUi
+from modules.page_object import GenericPage
 
 BOOKMARK_URL = "https://www.mozilla.org/"
 BOOKMARK_NAME = "Mozilla - Internet for people, not profit (US)"

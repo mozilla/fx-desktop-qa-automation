@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import Navigation, TrustPanel
+from modules.page_object import AboutPrefs
 
 
 @pytest.fixture()

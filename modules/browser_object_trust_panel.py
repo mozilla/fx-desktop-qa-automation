@@ -32,16 +32,11 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def trackers_in_category(self, category: str, *trackers) -> bool:
         """Confirm that text or data-l10n-id for blocked items exists within blocked area"""
-        sleep(1)
+        sleep(0.5)  # Must hard-wait because trackers may not exist
         spotted = self.get_elements(f"{category}-items")
-        logging.warning(f"{len(spotted)} trackers")
         if trackers and not spotted:
             return False
         for tracker in trackers:
-            logging.warning(f"{tracker}:")
-            logging.warning([block.text for block in spotted])
-            logging.warning([block.get_attribute("data-l10n-id") for block in spotted])
-            logging.warning([self.item_in_block(tracker, block) for block in spotted])
             if not any([self.item_in_block(tracker, block) for block in spotted]):
                 return False
         return True
