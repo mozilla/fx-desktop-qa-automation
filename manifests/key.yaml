@@ -1185,6 +1185,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_hide_sidebar_behaviour:
+    result: pass
+    splits:
+    - functional2
   test_sidebar-button-always-displayed-on-a-fresh-profile:
     result: pass
     splits:
