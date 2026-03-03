@@ -4445,6 +4445,20 @@ Description: Sidebar toolbar button used to toggle the sidebar
 Location: Browser toolbar
 Path to .json: modules/data/sidebar.components.json
 ```
+```
+Selector Name: sidebar-main
+Selector Data: sidebar-main
+Description: Sidebar main element
+Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-hide-option
+Selector Data: sidebar-context-menu-hide-sidebar
+Description: Context menu option to hide the sidebar
+Location: Context menu of the sidebar
+Path to .json: modules/data/sidebar.components.json
+```
 #### tab_bar
 ```
 Selector name: tab-by-title
