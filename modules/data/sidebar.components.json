@@ -4,5 +4,15 @@
         "selectorData": "sidebar-button",
         "strategy": "id",
         "groups": []
+    },
+    "sidebar-main": {
+        "selectorData": "sidebar-main",
+        "strategy": "id",
+        "groups": []
+    },
+    "sidebar-hide-option": {
+        "selectorData": "sidebar-context-menu-hide-sidebar",
+        "strategy": "id",
+        "groups": []
     }
 }
