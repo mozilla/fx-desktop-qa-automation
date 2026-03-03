@@ -576,8 +576,8 @@
         "strategy": "css",
         "groups": []
     },
-    "urlbar-searchmode-button": {
-        "selectorData": "#search-container #urlbar-searchmode-button2",
+    "searchmode-button-searchbar": {
+        "selectorData": "urlbar-searchmode-switcher",
         "strategy": "css",
         "groups": []
     },

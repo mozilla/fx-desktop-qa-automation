@@ -1131,8 +1131,8 @@ class Navigation(BasePage):
         )
 
     def click_search_engine_button(self) -> BasePage:
-        """Click the search engine button in the URL bar to open the engine picker popup."""
-        self.click_on("urlbar-searchmode-button")
+        """Click the search engine button to open the engine picker popup."""
+        self.click_on("searchmode-button-searchbar")
         return self
 
     def verify_searchmode_engine_is_focused(self, engine: str) -> None:
