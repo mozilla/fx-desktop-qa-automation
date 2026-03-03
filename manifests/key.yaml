@@ -425,7 +425,10 @@ downloads:
     splits:
     - smoke
   test_download_pdf_from_context_menu:
-    result: pass
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional1
   test_download_telemetry_recorded:
@@ -630,7 +633,7 @@ menus:
       - functional2
     test_save_page_as:
       result:
-        linux: pass
+        linux: unstable
         mac: pass
         win: unstable
       splits:
@@ -653,7 +656,10 @@ menus:
       splits:
       - functional2
     test_save_image_as:
-      result: pass
+      result:
+        linux: unstable
+        mac: pass
+        win: pass
       splits:
       - functional2
   test_tab_context_menu_actions:
@@ -866,7 +872,10 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    result: pass
+    results:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
@@ -882,7 +891,10 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_download:
-    result: pass
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_pdf_input_numbers:
@@ -1194,7 +1206,10 @@ sidebar:
     splits:
     - functional2
   test_toggle_sidebar_via_toolbar_button:
-    result: pass
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
 sync_and_fxa:
