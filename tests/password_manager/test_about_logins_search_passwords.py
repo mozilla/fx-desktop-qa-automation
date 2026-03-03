@@ -41,8 +41,8 @@ def test_about_logins_search_passwords(driver: Firefox):
     results = about_logins.get_elements("login-list-item")
     results = [result for result in results if result.is_displayed()]
     assert (
-            about_logins.get_element("login-count").get_attribute("innerHTML")
-            == "1 of 3 passwords"
+        about_logins.get_element("login-count").get_attribute("innerHTML")
+        == "1 of 3 passwords"
     )
 
     # All saved logins containing the searched password are correctly displayed
