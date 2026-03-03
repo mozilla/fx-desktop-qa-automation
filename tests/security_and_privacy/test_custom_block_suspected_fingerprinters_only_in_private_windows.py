@@ -2,10 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import PanelUi, TabBar
+from modules.page_object import GenericPage, AboutPrefs
 
 
 @pytest.fixture()
@@ -31,7 +29,8 @@ def test_custom_block_suspected_fingerprinters_only_in_private_windows(driver: F
     C2318653 - Verify canvas randomization protection is active only in private windows
     when "Suspected fingerprinters" is set to "Only in private windows" in ETP Custom mode.
     Expected normal window: reads match the Control ([matches] present).
-    Expected private window: 1st and 2nd reads match each other ([cached]) but not the Control ([matches] absent).
+    Expected private window: 1st and 2nd reads match each other ([cached])
+    but not the Control ([matches] absent).
     """
     # Instantiate objects
     panel = PanelUi(driver)

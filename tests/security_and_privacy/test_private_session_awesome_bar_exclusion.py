@@ -13,8 +13,8 @@ def test_websites_visited_in_private_browser_not_displayed_in_awesome_bar(
     driver: Firefox, nav: Navigation, panel_ui: PanelUi, websites
 ):
     """
-    C101665 - Verify the visited websites from the Private Browsing session are not displayed inside the normal session
-    Awesome Bar
+    C101665 - Verify the visited websites from the Private Browsing session are
+    not displayed inside the normal session Awesome Bar
     """
 
     initial_window_handle = driver.current_window_handle

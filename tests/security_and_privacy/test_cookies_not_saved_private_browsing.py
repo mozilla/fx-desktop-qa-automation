@@ -1,8 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import PanelUi, Navigation
 from modules.page_object import AboutPrefs
 from modules.util import BrowserActions
 

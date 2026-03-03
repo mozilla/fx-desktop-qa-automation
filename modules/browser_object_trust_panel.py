@@ -85,18 +85,6 @@ class TrustPanel(BasePage):
         return self.sites_in_category("detected", *sites)
 
     @BasePage.context_chrome
-    def verify_trust_panel_title(self, expected_title):
-        """
-        verify the title of the tracker panel.
-        """
-        self.expect(
-            lambda _: (
-                self.get_element("tracker-title").get_attribute("innerHTML")
-                == "Protections for senglehardt.com"
-            )
-        )
-
-    @BasePage.context_chrome
     def wait_for_trackers(self) -> BasePage:
         """Open and close the trust panel until trackers appear"""
         nav = Navigation(self.driver)

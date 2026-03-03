@@ -13,8 +13,8 @@ def test_websites_visited_in_private_browser_not_displayed_in_history(
     driver: Firefox, panel_ui: PanelUi, websites
 ):
     """
-    C101663 - Verify the visited websites from the Private Browsing session are not displayed inside the normal session
-    History menu
+    C101663 - Verify the visited websites from the Private Browsing session are not
+    displayed inside the normal session History menu
     """
 
     initial_window_handle = driver.current_window_handle

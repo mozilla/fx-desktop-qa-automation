@@ -63,11 +63,6 @@
             "doNotCache"
         ]
     },
-    "tracking-site-entry": {
-        "selectorData": "protections-popup-list-host-label",
-        "strategy": "class",
-        "groups": []
-    },
     "detected-site-entry": {
         "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
         "strategy": "css",
@@ -81,11 +76,6 @@
         "groups": [
             "doNotCache"
         ]
-    },
-    "tracker-title": {
-        "selectorData": "protections-popup-mainView-panel-header-span",
-        "strategy": "id",
-        "groups": []
     },
     "shield-icon": {
         "selectorData": "trust-icon-container",
