@@ -576,16 +576,6 @@
         "strategy": "css",
         "groups": []
     },
-    "searchmode-button-searchbar": {
-        "selectorData": "urlbar-searchmode-switcher",
-        "strategy": "css",
-        "groups": []
-    },
-    "searchmode-popup-focused-engine": {
-        "selectorData": "menuitem.searchmode-switcher-installed[_moz-menuactive='true'][label='{engine}']",
-        "strategy": "css",
-        "groups": []
-    },
     "history-button-search-mode": {
         "selectorData": "search-button-history",
         "strategy": "id",
