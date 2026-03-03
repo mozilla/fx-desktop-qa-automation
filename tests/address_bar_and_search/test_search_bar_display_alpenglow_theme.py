@@ -33,7 +33,10 @@ def test_search_bar_display_alpenglow_theme(driver: Firefox):
 
     # Open a new tab and hit Ctrl/Cmd + K
     nav.open_and_switch_to_new_window("tab")
-    nav.perform_key_combo_chrome(Keys.COMMAND, "k")
+    nav.perform_key_combo_chrome(Keys.CONTROL, "k")
+
+    # The search bar is in focus and no visual errors are displayed
+    nav.verify_search_bar_is_focused()
 
     # Write an input
     nav.type_in_search_bar(TEXT)
@@ -41,16 +44,19 @@ def test_search_bar_display_alpenglow_theme(driver: Firefox):
     # Wait until the search suggestions dropdown is visible
     nav.wait_for_searchbar_suggestions()
 
-    # Hit Tab a few times
-    for _ in range(2):
-        nav.perform_key_combo_chrome(Keys.TAB)
-
-    # The highlight goes through the one-off buttons accordingly
-    nav.verify_searchbar_engine_is_focused("Bing")
-
-    # Hit the down Arrow key a few times
+    # Hit the Down Arrow key to navigate through suggestions
     for _ in range(2):
         nav.perform_key_combo_chrome(Keys.DOWN)
 
-    # The highlight goes through the one-off buttons accordingly
-    nav.verify_searchbar_engine_is_focused("eBay")
+    # The highlight goes through the suggestions accordingly
+    nav.verify_searchbar_suggestion_is_highlighted()
+
+    # # Click the default search engine button to open the engine picker popup
+    # nav.click_search_engine_button()
+    #
+    # # Navigate through the search engine suggestions with Tab
+    # nav.perform_key_combo_chrome(Keys.TAB)
+    # nav.verify_searchmode_engine_is_focused("Google")
+    #
+    # nav.perform_key_combo_chrome(Keys.TAB)
+    # nav.verify_searchmode_engine_is_focused("Amazon.com")

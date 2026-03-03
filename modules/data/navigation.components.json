@@ -550,7 +550,12 @@
         "groups": []
     },
     "searchbar-suggestions": {
-        "selectorData": "hbox.search-one-offs",
+        "selectorData": "div.urlbarView-row",
+        "strategy": "css",
+        "groups": []
+    },
+    "searchbar-highlighted-suggestion": {
+        "selectorData": "div.urlbarView-row[selected]",
         "strategy": "css",
         "groups": []
     },
@@ -568,6 +573,16 @@
     },
     "search-mode-chicklet": {
         "selectorData": "label.searchmode-switcher-title",
+        "strategy": "css",
+        "groups": []
+    },
+    "urlbar-searchmode-button": {
+        "selectorData": "#search-container #urlbar-searchmode-button2",
+        "strategy": "css",
+        "groups": []
+    },
+    "searchmode-popup-focused-engine": {
+        "selectorData": "menuitem.searchmode-switcher-installed[_moz-menuactive='true'][label='{engine}']",
         "strategy": "css",
         "groups": []
     },

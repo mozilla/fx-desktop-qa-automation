@@ -241,10 +241,25 @@ class Navigation(BasePage):
         term : str
             The search term
         """
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.find_element(
+            By.CSS_SELECTOR, "#search-container #urlbar-input"
+        )
         self.search_bar.click()
         self.search_bar.send_keys(term)
         return self
+
+    @BasePage.context_chrome
+    def verify_search_bar_is_focused(self) -> None:
+        search_input = self.find_element(
+            By.CSS_SELECTOR, "#search-container #urlbar-input"
+        )
+        self.wait.until(
+            lambda d: d.execute_script(
+                "return arguments[0].ownerDocument.activeElement === arguments[0]",
+                search_input,
+            ),
+            message="Expected Search Bar to be focused after Ctrl+K, but it was not.",
+        )
 
     def open_awesome_bar_settings(self):
         """Open search settings from the awesome bar"""
@@ -1115,6 +1130,15 @@ class Navigation(BasePage):
             message=f"Expected '{engine}' search engine to be focused (selected), but it was not found or visible.",
         )
 
+    def click_search_engine_button(self) -> BasePage:
+        """Click the search engine button in the URL bar to open the engine picker popup."""
+        self.click_on("urlbar-searchmode-button")
+        return self
+
+    def verify_searchmode_engine_is_focused(self, engine: str) -> None:
+        """Verify the given engine is focused (_moz-menuactive) in the searchmode switcher popup."""
+        self.element_visible("searchmode-popup-focused-engine", labels=[engine])
+
     @BasePage.context_chrome
     def wait_for_searchbar_suggestions(self) -> None:
         """Wait until the search suggestions dropdown is visible."""
@@ -1154,6 +1178,14 @@ class Navigation(BasePage):
         self.panel_ui.navigate_to_customize_toolbar()
         self.customize.add_widget_to_toolbar("search-bar")
         return self
+
+    def verify_searchbar_suggestion_is_highlighted(self):
+        """Verify that a suggestion item is highlighted in the search bar popup."""
+        self.element_visible("searchbar-highlighted-suggestion")
+
+    def verify_searchbar_input_is_focused(self):
+        """Verify the search bar input has focus (no suggestion row is selected)."""
+        self.element_not_visible("searchbar-highlighted-suggestion")
 
     @BasePage.context_chrome
     def click_exit_button_searchmode(self) -> None:
