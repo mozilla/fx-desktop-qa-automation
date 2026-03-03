@@ -549,6 +549,11 @@
         "strategy": "css",
         "groups": []
     },
+    "searchbar-input": {
+        "selectorData": "#search-container #urlbar-input",
+        "strategy": "css",
+        "groups": []
+    },
     "searchbar-suggestions": {
         "selectorData": "div.urlbarView-row",
         "strategy": "css",

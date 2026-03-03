@@ -3661,11 +3661,24 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchbar-suggestions
-Selector Data: hbox.search-one-offs
+Selector Data: div.urlbarView-row
 Description: Searchbar suggestions
 Location: Searchbar results
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: searchbar-suggestions
+Selector Data: div.urlbarView-row
+Description: Searchbar suggestions
+Location: Searchbar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-highlighted-suggestion
+Selector Data: div.urlbarView-row[selected
+Description: Searchbar suggestions
+Location: Searchbar results
+Path to .json: modules/data/navigation.components.json
 ```
 Selector Name: searchbar-magnifying-glass-button
 Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
