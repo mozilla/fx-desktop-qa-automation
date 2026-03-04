@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import time
@@ -340,34 +341,6 @@ class Navigation(BasePage):
         except TimeoutException:
             logging.warning("Animation did not finish or did not play.")
         return self
-
-    @BasePage.context_chrome
-    def open_tracker_panel(self) -> BasePage:
-        """
-        Clicks the shield icon and opens the panel associated with it
-        """
-        self.get_element("shield-icon").click()
-        return self
-
-    @BasePage.context_chrome
-    def assert_blocked_trackers(self, *blocked_trackers) -> BasePage:
-        """
-        Given a list of blocked trackers, assert that they are present in the blocked list.
-        """
-        self.open_tracker_panel()
-        if blocked_trackers:
-            for tracker in blocked_trackers:
-                self.element_visible(tracker)
-        else:
-            self.get_element("no-trackers-detected").is_displayed()
-
-    @BasePage.context_chrome
-    def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):
-        """
-        Verify that the list of cross-site trackers is as expected.
-        """
-        for val in cross_site_trackers:
-            self.expect(lambda _: val in allowed_cookies)
 
     def search_and_check_if_suggestions_are_present(
         self, text, search_mode: str = "awesome", min_suggestions=1
