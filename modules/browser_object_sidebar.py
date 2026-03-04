@@ -20,3 +20,9 @@ class Sidebar(BasePage):
         """Verify the sidebar is closed: button tooltiptext changes to 'Show sidebar'"""
         self.element_attribute_contains("sidebar-button", "tooltiptext", "Show sidebar")
         return self
+
+    def hide_sidebar_via_context_menu(self):
+        """Right-click the sidebar panel and select Hide Sidebar from the context menu"""
+        self.context_click("sidebar-main")
+        self.click_and_hide_menu("sidebar-hide-option")
+        return self

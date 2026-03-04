@@ -407,6 +407,20 @@ Description: Copy password button confirmation
 Location: The about:login's main login page after selecting a login
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: password-reveal
+Selector Data: "input[type='text'][name='password']"
+Description: Password revealed state
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: password-hidden
+Selector Data: "input.password-display[type='password']"
+Description: Password hidden state
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_networking
 ```
 Selector Name: networking-sidebar-category
@@ -4443,6 +4457,20 @@ Selector Name: sidebar-button
 Selector Data: sidebar-button
 Description: Sidebar toolbar button used to toggle the sidebar
 Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-main
+Selector Data: sidebar-main
+Description: Sidebar main element
+Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-hide-option
+Selector Data: sidebar-context-menu-hide-sidebar
+Description: Context menu option to hide the sidebar
+Location: Context menu of the sidebar
 Path to .json: modules/data/sidebar.components.json
 ```
 #### tab_bar
