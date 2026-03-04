@@ -1026,10 +1026,8 @@ class BasePage(Page):
         # Optional: reduce flakiness a bit
         pyautogui.FAILSAFE = False
 
-        # Give the dialog a moment to appear
         time.sleep(0.5)
 
-        # Your existing reference image path (as used in your stacktrace)
         button_img = os.path.join("data", "windows_save_button.png")
 
         # 1) Try image-based click (only if file exists)
