@@ -778,6 +778,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_about_logins_search_passwords:
+    result: pass
+    splits:
+    - functional2
   test_about_logins_search_username:
     result: pass
     splits:
