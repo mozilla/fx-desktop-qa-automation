@@ -192,5 +192,17 @@
         "strategy": "css",
         "shadowParent": "login-item",
         "groups": []
+    },
+    "password-reveal": {
+        "selectorData": "input[type='text'][name='password']",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
+    },
+    "password-hidden": {
+        "selectorData": "input.password-display[type='password']",
+        "strategy": "css",
+        "shadowParent": "login-item",
+        "groups": []
     }
 }
