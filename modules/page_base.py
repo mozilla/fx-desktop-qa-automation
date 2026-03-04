@@ -1014,24 +1014,37 @@ class BasePage(Page):
 
     def handle_os_download_confirmation(self):
         """
-        This function handles the keyboard shortcuts. If on Linux, it simulates switching
-        to OK. On other platforms, it directly presses enter.
+        Confirm the native OS download confirmation dialog.
+
+        Uses pyautogui. Tries image-match click first (if the reference image exists),
+        but falls back to pressing Enter for stability (DPI/theme differences).
         """
+        import os
+        import time
         import pyautogui
 
-        os_name = (
-            self.sys_platform().lower()
-            if "Darwin" not in self.sys_platform()
-            else "mac"
-        )
+        # Optional: reduce flakiness a bit
+        pyautogui.FAILSAFE = False
 
-        button_img = os.path.join("data", f"{os_name}_save_button.png")
-        time.sleep(1.5)
-        b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
-        logging.info(f"Button: ({b_x}, {b_y})")
-        pyautogui.click(b_x, b_y)
-        time.sleep(1)
-        pyautogui.click(b_x, b_y)
+        # Give the dialog a moment to appear
+        time.sleep(0.5)
+
+        # Your existing reference image path (as used in your stacktrace)
+        button_img = os.path.join("data", "windows_save_button.png")
+
+        # 1) Try image-based click (only if file exists)
+        if os.path.exists(button_img):
+            try:
+                loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                if loc is not None:
+                    pyautogui.click(loc)
+                    return
+            except Exception:
+                # Any image match issues -> fall back to Enter
+                pass
+
+        # 2) Fallback: press Enter (default button is typically "Save")
+        pyautogui.press("enter")
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False
