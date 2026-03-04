@@ -124,7 +124,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:

@@ -549,8 +549,18 @@
         "strategy": "css",
         "groups": []
     },
+    "searchbar-input": {
+        "selectorData": "#search-container #urlbar-input",
+        "strategy": "css",
+        "groups": []
+    },
     "searchbar-suggestions": {
-        "selectorData": "hbox.search-one-offs",
+        "selectorData": "div.urlbarView-row",
+        "strategy": "css",
+        "groups": []
+    },
+    "searchbar-highlighted-suggestion": {
+        "selectorData": "div.urlbarView-row[selected]",
         "strategy": "css",
         "groups": []
     },
