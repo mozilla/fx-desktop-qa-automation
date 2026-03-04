@@ -28,8 +28,8 @@ def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     about_prefs.open()
     about_prefs.enable_show_sidebar()
 
-    # Verify that the Sidebar button is now present in the toolbar
-    sidebar.element_visible("sidebar-button")
+    # Verify that the sidebar opened automatically after enabling Show Sidebar
+    sidebar.expect_sidebar_open()
 
     # Click the Sidebar button and verify that the sidebar is closed
     sidebar.click_sidebar_button()
@@ -38,5 +38,3 @@ def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     # Click the Sidebar button and verify that the sidebar is open
     sidebar.click_sidebar_button()
     sidebar.expect_sidebar_open()
-
-    # test
