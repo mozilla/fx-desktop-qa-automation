@@ -1,9 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
+from modules.browser_object import Navigation, PanelUi, TabBar
 
 
 @pytest.fixture()
@@ -19,18 +17,15 @@ def add_to_prefs_list():
     ]
 
 
-def test_bookmarks_toolbar_present_in_private_browsing(driver: Firefox):
+def test_bookmarks_toolbar_present_in_private_browsing(
+    driver: Firefox, nav: Navigation, panel_ui: PanelUi, tabs: TabBar
+):
     """
-    C2359323 - Verify that the Bookmarks toolbar is displayed in a Private Window, if the preference is set to "Show
-    in new tab"
+    C2359323 - Verify that the Bookmarks toolbar is displayed in a Private Window,
+    if the preference is set to "Show in new tab"
     """
-    # Instantiate objects
-    nav = Navigation(driver)
-    panel = PanelUi(driver)
-    tabs = TabBar(driver)
-
     # Open a Private Window
-    panel.open_and_switch_to_new_window("private")
+    panel_ui.open_and_switch_to_new_window("private")
 
     # Open a new tab and look for the Bookmark toolbar
     tabs.new_tab_by_button()
