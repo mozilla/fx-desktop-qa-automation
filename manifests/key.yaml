@@ -1,5 +1,6 @@
 address_bar_and_search:
   test_adaptive_history_autofill:
+    comment: ''
     result:
       linux: unstable
       mac: unstable
@@ -15,10 +16,12 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
+    comment: ''
     result: unstable
     splits:
     - functional1
   test_addon_suggestion:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -31,6 +34,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_bing_search_codes:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -38,6 +42,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_clipboard_pref_flip:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -54,6 +59,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_ddg_search_codes:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -61,10 +67,12 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
+    comment: ''
     result: unstable
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
+    comment: ''
     result: deprecated
     splits:
     - functional1
@@ -85,6 +93,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_search_counts_us:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -92,6 +101,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_withads_url_bar_us:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -100,14 +110,17 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
+    comment: ''
     result: unstable
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
+    comment: ''
     result: unstable
     splits:
     - functional1
   test_open_link_in_new_container_tab:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -120,6 +133,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_sap_google_adclick:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -128,6 +142,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -140,6 +155,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_engine_result_page_load_on_reload_or_back:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -148,6 +164,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_mode_appears_after_input:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -172,6 +189,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_modes_for_sites:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -180,14 +198,17 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
+    comment: ''
     result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
+    comment: ''
     result: unstable
     splits:
     - functional1
   test_search_term_persists:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -212,6 +233,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_tile_menu_options:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -225,6 +247,7 @@ address_bar_and_search:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
+    comment: ''
     result:
       linux: unstable
       mac: pass
@@ -236,6 +259,7 @@ audio_video:
     splits:
     - functional1
   test_autoplay_sound_blocking_background_tab:
+    comment: ''
     result:
       linux: unstable
       mac: unstable
@@ -329,6 +353,7 @@ bookmarks_and_history:
     splits:
     - smoke
   test_import_bookmarks_edge:
+    comment: ''
     result: unstable
     splits:
     - smoke
@@ -378,10 +403,12 @@ bookmarks_and_history:
     - functional1
 downloads:
   test_add_mime_type_doc:
+    comment: ''
     result: unstable
     splits:
     - functional1
   test_add_zip_type:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -394,6 +421,7 @@ downloads:
     splits:
     - functional1
   test_delete_download_while_in_progress:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -418,6 +446,7 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
+    comment: ''
     result:
       linux: unstable
       mac: pass
@@ -425,6 +454,7 @@ downloads:
     splits:
     - smoke
   test_download_pdf_from_context_menu:
+    comment: ''
     result:
       linux: unstable
       mac: pass
@@ -440,6 +470,7 @@ downloads:
     splits:
     - functional1
   test_mixed_content_download_via_https:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -451,6 +482,7 @@ downloads:
     splits:
     - functional1
   test_set_always_ask_file_type:
+    comment: ''
     result: unstable
     splits:
     - functional1
@@ -468,6 +500,7 @@ downloads:
     - functional1
 drag_and_drop:
   test_copy_entire_row_column:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -475,6 +508,7 @@ drag_and_drop:
     splits:
     - smoke
   test_copy_from_an_editor_paste_in_another:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -482,6 +516,7 @@ drag_and_drop:
     splits:
     - functional1
   test_copy_hyperlink_table:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -489,6 +524,7 @@ drag_and_drop:
     splits:
     - functional1
   test_copy_table_header:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -496,6 +532,7 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -561,6 +598,7 @@ form_autofill:
     splits:
     - functional1
   test_edit_credit_card:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -598,6 +636,7 @@ form_autofill:
     - functional1
 geolocation:
   test_geolocation_shared_via_html5:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -605,6 +644,7 @@ geolocation:
     splits:
     - functional2
   test_geolocation_shared_via_w3c_api:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -672,6 +712,7 @@ menus:
     - functional2
 meta:
   test_selectors:
+    comment: ''
     result: unstable
     splits: []
   test_version:
@@ -679,6 +720,7 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -691,6 +733,7 @@ networking:
     - functional2
 notifications:
   test_audio_video_permissions_notification:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -698,6 +741,7 @@ notifications:
     splits:
     - functional2
   test_camera_permissions_notification:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -733,6 +777,7 @@ notifications:
     splits:
     - functional2
   test_microphone_permissions_notification:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -806,6 +851,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
+    comment: ''
     result: unstable
     splits:
     - functional2
@@ -818,6 +864,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
+    comment: ''
     result: unstable
     splits:
     - functional2
@@ -830,6 +877,7 @@ password_manager:
     splits:
     - smoke
   test_multiple_saved_logins:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -845,6 +893,7 @@ password_manager:
     splits:
     - smoke
   test_password_csv_correctness:
+    comment: ''
     result:
       linux: unstable
       mac: pass
@@ -852,6 +901,7 @@ password_manager:
     splits:
     - functional2
   test_password_csv_export:
+    comment: ''
     result:
       linux: unstable
       mac: pass
@@ -859,6 +909,7 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
+    comment: ''
     result: unstable
     splits:
     - functional2
@@ -876,6 +927,7 @@ password_manager:
     - functional2
 pdf_viewer:
   test_add_image_pdf:
+    comment: ''
     result:
       linux: unstable
       mac: unstable
@@ -883,13 +935,15 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    results:
+    comment: ''
+    result:
       linux: unstable
       mac: pass
       win: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
+    comment: ''
     result: unstable
     splits:
     - functional2
@@ -902,6 +956,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_download:
+    comment: ''
     result:
       linux: unstable
       mac: pass
@@ -909,6 +964,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_input_numbers:
+    comment: ''
     result: unstable
     splits:
     - smoke
@@ -946,6 +1002,7 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
+    comment: ''
     result: unstable
     splits:
     - smoke
@@ -984,6 +1041,7 @@ printing_ui:
     - smoke
     - ci
   test_print_to_pdf:
+    comment: ''
     result:
       linux: unstable
       mac: unstable
@@ -997,6 +1055,7 @@ profile:
     - smoke
 reader_view:
   test_improved_type_control_panel:
+    comment: ''
     result: unstable
     splits:
     - smoke
@@ -1010,10 +1069,12 @@ reader_view:
     - functional2
 scrolling_panning_zooming:
   test_default_zoom_persists:
+    comment: ''
     result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
+    comment: ''
     result:
       linux: pass
       mac: unstable
@@ -1029,6 +1090,7 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_text_only:
+    comment: ''
     result: unstable
     splits:
     - smoke
@@ -1219,13 +1281,15 @@ sidebar:
   test_toggle_sidebar_via_toolbar_button:
     result: pass
     splits:
-      - functional2
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
+    comment: ''
     result: unstable
     splits:
     - functional2
   test_new_fxa:
+    comment: ''
     result: unstable
     splits:
     - functional2
@@ -1277,6 +1341,7 @@ tabs:
     splits:
     - functional2
   test_mute_tabs:
+    comment: ''
     result:
       linux: pass
       mac: pass
@@ -1316,6 +1381,7 @@ tabs:
     splits:
     - functional2
   test_play_mute_unmute_tabs_via_toggle:
+    comment: ''
     result: unstable
     splits:
     - functional2
