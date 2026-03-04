@@ -8,6 +8,7 @@ class Sidebar(BasePage):
 
     def click_sidebar_button(self):
         """Click the sidebar toolbar button to toggle the sidebar open or closed"""
+        self.element_clickable("sidebar-button")
         self.click_on("sidebar-button")
         return self
 
