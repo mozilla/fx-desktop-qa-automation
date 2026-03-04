@@ -674,9 +674,9 @@ meta:
 networking:
   test_default_dns_protection:
     result:
-      win: unstable
-      mac: pass
       linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_http_site:
