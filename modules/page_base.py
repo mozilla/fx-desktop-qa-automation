@@ -1021,6 +1021,7 @@ class BasePage(Page):
         """
         import os
         import time
+
         import pyautogui
 
         # Optional: reduce flakiness a bit
