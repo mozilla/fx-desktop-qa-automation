@@ -774,6 +774,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_about_logins_password_show_hide_button:
+    result: pass
+    splits:
+    - functional2
   test_about_logins_search_username:
     result: pass
     splits:
