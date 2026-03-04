@@ -38,3 +38,5 @@ def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     # Click the Sidebar button and verify that the sidebar is open
     sidebar.click_sidebar_button()
     sidebar.expect_sidebar_open()
+
+    # test
