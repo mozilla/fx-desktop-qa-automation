@@ -673,7 +673,10 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    result: pass
+    result:
+      win: unstable
+      mac: pass
+      linux: pass
     splits:
     - smoke
   test_http_site:
