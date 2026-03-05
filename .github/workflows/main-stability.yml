@@ -133,16 +133,16 @@ jobs:
         shell: pwsh
         run: |
           mkdir -p test-results
-          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --junitxml=test-results/junit-win.xml --reruns 0
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win.json --reruns 0
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
 
-      - name: Upload junit (Win)
+      - name: Upload JSON report (Win)
         uses: actions/upload-artifact@v4
         with:
-          name: junit-win
-          path: test-results/junit-win.xml
+          name: json-win
+          path: test-results/report-win.json
 
       - name: Run Tests in Win (Headed)
         if: ${{ steps.setup.conclusion == 'success' && always() }}
@@ -156,8 +156,7 @@ jobs:
 
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
 
-          # Run pytest with JUnit output
-          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --junitxml=test-results/junit-win-headed.xml --reruns 0
+          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win-headed.json --reruns 0
 
           $env:TEST_EXIT_CODE = $LASTEXITCODE
 
@@ -175,11 +174,11 @@ jobs:
           }
           exit $env:TEST_EXIT_CODE
 
-      - name: Upload junit (Win headed)
+      - name: Upload JSON report (Win headed)
         uses: actions/upload-artifact@v4
         with:
-          name: junit-win-headed
-          path: test-results/junit-win-headed.xml
+          name: json-win-headed
+          path: test-results/report-win-headed.json
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -274,15 +273,15 @@ jobs:
           mkdir -p test-results
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --junitxml=test-results/junit-mac.xml --reruns 0 || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --json-report --json-report-file=test-results/report-mac.json --reruns 0 --reruns 0 || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
-      - name: Upload junit (Mac)
+      - name: Upload JSON (Mac)
         uses: actions/upload-artifact@v4
         with:
-          name: junit-mac
-          path: test-results/junit-mac.xml
+          name: json-mac
+          path: test-results/report-mac.json
 
       - name: Run Tests in MacOS (Headed)
         if: ${{ steps.setup.conclusion == 'success'}}
@@ -296,16 +295,16 @@ jobs:
           mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
 
           # Run pytest and write junit xml
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --junitxml=test-results/junit-mac-headed.xml --reruns 0 || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 --reruns 0 || TEST_EXIT_CODE=$?
 
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
-      - name: Upload junit (Mac headed)
+      - name: Upload JSON (Mac headed)
         uses: actions/upload-artifact@v4
         with:
-          name: junit-mac-headed
-          path: test-results/junit-mac-headed.xml
+          name: json-mac-headed
+          path: test-results/json-mac-headed.json
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
