@@ -81,7 +81,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_disable_websearch_from_awesome_bar:
-    result: pass
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021411'
+    result: unstable
     splits:
     - functional1
   test_dont_show_search_suggestions_in_private_window:
@@ -217,11 +218,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error:
-    result: pass
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021411'
+    result: unstable
     splits:
     - functional1
   test_server_not_found_error_pb:
-    result: pass
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021411'
+    result: unstable
     splits:
     - functional1
   test_suggestion_engine_selection:
