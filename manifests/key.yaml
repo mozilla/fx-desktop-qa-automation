@@ -21,7 +21,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_addon_suggestion:
-    comment: ''
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018766'
     result: unstable
     splits:
     - functional1
@@ -34,11 +34,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_bing_search_codes:
-    comment: ''
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -59,11 +55,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_ddg_search_codes:
-    comment: ''
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
@@ -72,7 +64,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    comment: ''
+    comment: 'https://mozilla.testrail.io/index.php?/tests/view/8435692'
     result: deprecated
     splits:
     - functional1
@@ -94,7 +86,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_search_counts_us:
-    comment: ''
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
     result:
       linux: pass
       mac: unstable
@@ -102,7 +94,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_withads_url_bar_us:
-    comment: ''
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
     result: unstable
     splits:
     - functional1
@@ -134,7 +126,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_sap_google_adclick:
-    comment: ''
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
     result: unstable
     splits:
     - functional1
@@ -199,17 +191,17 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    comment: ''
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018766'
     result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
-    comment: ''
+    comment: 'test_search_suggestions_can_be_disabled'
     result: unstable
     splits:
     - functional1
   test_search_term_persists:
-    comment: ''
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
     result: unstable
     splits:
     - functional1
