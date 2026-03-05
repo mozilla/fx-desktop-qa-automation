@@ -1,0 +1,32 @@
+{
+  "Google": {
+    "prefs": [["browser.search.region", "US"]],
+    "provider": "google",
+    "partner_code": "firefox-b-1-d",
+    "tagged": "true"
+  },
+  "Bing": {
+    "prefs": [["browser.search.region", "US"]],
+    "provider": "bing",
+    "partner_code": "firefox-b-1-d",
+    "tagged": "true"
+  },
+  "DuckDuckGo": {
+    "prefs": [["browser.search.region", "US"]],
+    "provider": "ddg",
+    "partner_code": "",
+    "tagged": "true"
+  },
+  "Ecosia": {
+    "prefs": [["browser.search.region", "DE"]],
+    "provider": "ecosia",
+    "partner_code": "mzl",
+    "tagged": "true"
+  },
+  "Qwant": {
+    "prefs": [["browser.search.region", "FR"]],
+    "provider": "qwant",
+    "partner_code": "firefox-b-lm",
+    "tagged": "true"
+  }
+}
