@@ -263,10 +263,129 @@ class AboutPrefs(BasePage):
             pass
 
         toggle = self.get_element("ai-controls-toggle")
-        checked = toggle.get_attribute("checked") in ("true", "checked", "")
-        if block != checked:
-            toggle.click()
+        # moz-toggle uses the 'pressed' property
+        current_state = self.driver.execute_script(
+            "return arguments[0].pressed;",
+            toggle
+        )
+        
+        if block != current_state:
+            # Set the pressed property directly (clicking doesn't work on moz-toggle)
+            self.driver.execute_script(
+                "arguments[0].pressed = arguments[1];",
+                toggle,
+                block
+            )
+            from time import sleep
+            sleep(0.5)  # Give moz-toggle time to update the backend
         return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Get the current state of the AI killswitch toggle.
+        
+        Returns:
+            bool: True if AI features are blocked, False otherwise.
+        """
+        toggle = self.get_element("ai-controls-toggle")
+        # moz-toggle uses the 'pressed' property
+        return self.driver.execute_script(
+            "return arguments[0].pressed;",
+            toggle
+        )
+
+    def set_ai_translations(self, state: str) -> BasePage:
+        """
+        Set the AI Translations feature state.
+        
+        Arguments:
+            state: "enabled", "removed", or "blocked"
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        # moz-select doesn't work with Selenium's Select class, use direct property
+        self.driver.execute_script(
+            "arguments[0].value = arguments[1];",
+            select_elem,
+            state
+        )
+        # Trigger change event
+        self.driver.execute_script(
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            select_elem
+        )
+        return self
+
+    def get_ai_translations_state(self) -> str:
+        """
+        Get the current state of the AI Translations feature.
+        
+        Returns:
+            str: Current state ("enabled", "removed", or "blocked")
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        return self.driver.execute_script(
+            "return arguments[0].value;",
+            select_elem
+        )
+
+    def set_ai_chatbot_provider(self, provider: str) -> BasePage:
+        """
+        Set the AI Chatbot provider from the dropdown.
+        
+        Arguments:
+            provider: Provider name (e.g., "ChatGPT", "Claude", "Copilot")
+        """
+        select_elem = self.get_element("ai-control-sidebar-chatbot-select")
+        # moz-select: find option with matching text and set value
+        self.driver.execute_script(
+            """
+            const select = arguments[0];
+            const provider = arguments[1];
+            for (let option of select.options) {
+                if (option.text === provider) {
+                    select.value = option.value;
+                    break;
+                }
+            }
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            provider
+        )
+        return self
+
+    def get_ai_chatbot_provider(self) -> str:
+        """
+        Get the currently selected AI Chatbot provider.
+        
+        Returns:
+            str: Current provider name
+        """
+        select_elem = self.get_element("ai-control-sidebar-chatbot-select")
+        return self.driver.execute_script(
+            """
+            const select = arguments[0];
+            const selectedOption = select.options[select.selectedIndex];
+            return selectedOption ? selectedOption.text : '';
+            """,
+            select_elem
+        )
+
+    def verify_ai_controls_page_loaded(self) -> BasePage:
+        """
+        Verify that the AI Controls page has loaded successfully by checking for required elements.
+        """
+        self.element_exists("ai-controls-toggle")
+        self.element_exists("ai-control-translations-select")
+        self.element_exists("ai-control-sidebar-chatbot-select")
+        return self
+
+    def navigate_to_ai_controls(self) -> BasePage:
+        """
+        Navigate to the AI Controls preference page.
+        """
+        self.driver.get("about:preferences#ai")
+        return self.verify_ai_controls_page_loaded()
 
     # Payment and Address Management
     def verify_cc_json(
