@@ -1,5 +1,4 @@
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPage, Navigation
@@ -32,7 +31,9 @@ def temp_selectors():
         "drop-area": {"selectorData": "#droparea", "strategy": "css", "groups": []},
         "matching": {"selectorData": "matching", "strategy": "id", "groups": []},
         "image-to-copy": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img",
+            "selectorData": (
+                "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img"
+            ),
             "strategy": "xpath",
             "groups": [],
         },
@@ -64,7 +65,6 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     nav = Navigation(driver)
     web_page = GenericPage(driver, url=DEMO_URL).open()
     web_page.elements |= temp_selectors
-    keyboard = Controller()
 
     # Test pasting image data
     web_page.click_on("paste-image-data")
@@ -73,7 +73,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     driver.switch_to.new_window("tab")
     nav.search(COPY_URL)
     web_page.element_exists("image-to-copy")
-    web_page.copy_image_from_element(keyboard, "image-to-copy")
+    web_page.copy_image_from_element("image-to-copy")
 
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
@@ -91,7 +91,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     web_page.actions.click_and_hold(start_element).move_to_element(
         end_element
     ).release().perform()
-    web_page.copy_selection(keyboard, "paragraph1")
+    web_page.copy_selection("paragraph1")
 
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])

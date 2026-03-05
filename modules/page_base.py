@@ -10,9 +10,6 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
-from pynput.keyboard import Key
-from pynput.mouse import Button
-from pynput.mouse import Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -714,8 +711,9 @@ class BasePage(Page):
 
     def middle_click(self, reference: str | tuple | WebElement, labels=None):
         """Actions helper: Perform a middle mouse click on desired element"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
-            mouse = MouseController()
             element = self.fetch(reference, labels)
 
             element_location = element.location
@@ -737,11 +735,10 @@ class BasePage(Page):
                 + (element_size["height"] / 2)
                 + chrome_height
             )
-            mouse.position = (element_x, element_y)
+            pyautogui.moveTo(element_x, element_y, 0.5)
 
             # Need a short wait to ensure the mouse move completes, then middle click
-            time.sleep(0.5)
-            mouse.click(Button.middle, 1)
+            pyautogui.click(button="middle")
         return self
 
     def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
@@ -792,30 +789,31 @@ class BasePage(Page):
         return self
 
     def copy_image_from_element(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
+        self, reference: str | tuple | WebElement, labels=None
     ) -> Page:
-        """Copy from the given element using right click (pynput)"""
+        """Copy from the given element using right click (pyautogui)"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            for _ in range(3):
+                pyautogui.press("down")
+            pyautogui.press("enter")
             time.sleep(0.5)
         return self
 
-    def copy_selection(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
-    ) -> Page:
-        """Copy from the current selection using right click (pynput)"""
+    def copy_selection(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Copy from the current selection using right click (pyautogui)"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            pyautogui.press("down")
+            pyautogui.press("enter")
             time.sleep(0.5)
         return self
 

@@ -1,3 +1,5 @@
+from time import sleep
+
 from selenium.common import NoAlertPresentException
 from selenium.webdriver.common.keys import Keys
 
@@ -55,14 +57,14 @@ class PrintPreview(BasePage):
     @BasePage.context_content
     def start_print(self) -> BasePage:
         """Press Enter in Print Preview Page."""
-        from pynput.keyboard import Controller, Key
+        import pyautogui
 
         self.switch_to_preview_window()
         self.get_element("print-button").click()
         # Wait for print dialog to appear
         self.custom_wait(timeout=5).until(lambda d: _get_alert(d))
-        keyboard = Controller()
-        keyboard.tap(Key.enter)
+        sleep(1)
+        pyautogui.press("enter")
         return self
 
     @BasePage.context_chrome

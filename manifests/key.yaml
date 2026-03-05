@@ -876,14 +876,11 @@ password_manager:
     - functional2
 pdf_viewer:
   test_add_image_pdf:
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    results:
+    result:
       linux: unstable
       mac: pass
       win: pass
@@ -984,10 +981,7 @@ printing_ui:
     - smoke
     - ci
   test_print_to_pdf:
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: unstable
     splits:
     - functional2
 profile:
