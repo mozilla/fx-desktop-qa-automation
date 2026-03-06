@@ -37,7 +37,8 @@ def test_about_logins_menu_options(driver: Firefox):
     tabs.close_current_tab_and_switch_back()
 
     # Click on "Import from a file" button
-    # about_logins.click_menu_option("menuitem-import-from-file")
+    about_logins.click_menu_option("menuitem-import-from-file")
+    about_logins.confirm_and_click_cancel_import_dialog()
 
     # Click on "Export passwords" button
     about_logins.click_menu_option("menuitem-export-passwords")

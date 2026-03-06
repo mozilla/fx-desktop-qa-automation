@@ -1115,3 +1115,25 @@ class BasePage(Page):
 
         # Default return if neither zoom nor transform is set
         return 1.0
+
+    def confirm_and_click_cancel_import_dialog(self):
+        import pyautogui
+
+        os_name = (
+            self.sys_platform().lower()
+            if "Darwin" not in self.sys_platform()
+            else "mac"
+        )
+
+        button_img = os.path.join("data", f"{os_name}_cancel_import_button.png")
+
+        time.sleep(1.5)
+
+        location = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+
+        assert location is not None, "Import dialog not detected"
+
+        x, y = location
+        logging.info(f"Cancel button detected at ({x}, {y})")
+
+        pyautogui.click(x, y)
