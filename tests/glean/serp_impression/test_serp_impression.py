@@ -1,3 +1,4 @@
+import logging
 import pytest
 from selenium.webdriver import Firefox
 
@@ -40,4 +41,17 @@ def test_serp_impression(driver: Firefox, case: dict):
     run_action(driver, case.get("action"), params)
 
     events = glean.poll_glean_metric(METRIC)
-    GleanAsserts.assert_payload(METRIC, events, case["expected"])
+    expected = case["expected"]
+    # Log/print captured ping so we can verify the right payload was asserted
+    actual_payload = events[-1].get("extra", {}) if events else {}
+    logging.info(
+        "Glean %s: %d event(s), asserting payload (expected subset): %s",
+        METRIC,
+        len(events),
+        expected,
+    )
+    logging.info("Glean %s: actual payload (event used): %s", METRIC, actual_payload)
+    print(f"\n[Glean {METRIC}] events captured: {len(events)}")
+    print(f"[Glean {METRIC}] expected (subset): {expected}")
+    print(f"[Glean {METRIC}] actual payload:   {actual_payload}\n")
+    GleanAsserts.assert_payload(METRIC, events, expected)

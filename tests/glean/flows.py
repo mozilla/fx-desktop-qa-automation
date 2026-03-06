@@ -155,7 +155,7 @@ def _action_click_ad_from_searchbar(driver: Firefox, params: dict) -> None:
 # Public API
 # ---------------------------------------------------------------------------
 
-def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None) -> None:
+def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
     params = params or {}
     if entry == "unknown":
         pytest.skip("'unknown' source is not automatable")
@@ -164,7 +164,7 @@ def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None
     _ENTRIES[entry](driver, search_term, params)
 
 
-def run_action(driver: Firefox, action: str, params: dict = None) -> None:
+def run_action(driver: Firefox, action: str, params: dict = None):
     if action is None:
         return
     params = params or {}

@@ -31,8 +31,9 @@ def test_serp_abandonment(driver: Firefox, case: dict):
     glean = AboutGlean(driver)
     params = case.get("params", {})
 
-    prefs.open()
-    prefs.search_engine_dropdown().select_option(params["engine"])
+    if params.get("engine"):
+        prefs.open()
+        prefs.search_engine_dropdown().select_option(params["engine"])
 
     run_entry(driver, case["entry"], SEARCH_TERM, params)
     run_action(driver, case["action"], params)
