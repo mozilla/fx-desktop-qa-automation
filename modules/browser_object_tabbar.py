@@ -679,3 +679,10 @@ class TabBar(BasePage):
                 self.driver.switch_to.window(handle)
                 urls.add(self.driver.current_url)
         return urls
+
+    def close_current_tab_and_switch_back(self):
+        """
+        Close the current tab and switch back to the first tab.
+        """
+        self.driver.close()
+        self.driver.switch_to.window(self.driver.window_handles[0])

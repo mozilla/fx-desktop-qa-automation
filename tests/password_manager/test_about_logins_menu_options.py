@@ -34,8 +34,7 @@ def test_about_logins_menu_options(driver: Firefox):
     about_logins.url_contains("about:preferences#general-migrate")
 
     # Close tab and go back to about:logins page
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
+    tabs.close_current_tab_and_switch_back()
 
     # Click on "Import from a file" button
     # about_logins.click_menu_option("menuitem-import-from-file")
@@ -56,8 +55,7 @@ def test_about_logins_menu_options(driver: Firefox):
     about_logins.url_contains("about:preferences#privacy-logins")
 
     # Close tab and go back to about:logins page
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
+    tabs.close_current_tab_and_switch_back()
 
     # Click on "Help"
     about_logins.click_menu_option("menuitem-help")
