@@ -1,3 +1,4 @@
+import json
 import os
 import platform
 import re
@@ -60,7 +61,6 @@ def get_subtests(entry: dict) -> list:
         subtests.append(
             {suite: {testfile: {subtest_name: entry[suite][testfile][subtest_name]}}}
         )
-    print(subtests)
     return subtests
 
 
@@ -126,7 +126,6 @@ class TestKey:
             full_entry = self.get_entry_from_filename(filename)
             if has_subtests(full_entry):
                 subtests = get_subtests(full_entry)
-                print(subtests)
                 subresults = [test_expected_to_pass(subtest) for subtest in subtests]
                 if all(subresults):
                     passes.append(filename)
@@ -136,7 +135,6 @@ class TestKey:
                             suite = list(subtest.keys())[0]
                             testfile = list(subtest[suite].keys())[0]
                             subtest_name = list(subtest[suite][testfile].keys())[0]
-                            print(f"normalizing {suite} {testfile}, {subtest_name}")
                             passes.append(
                                 self.normalize_test_filename(
                                     suite, testfile, subtest_name
@@ -147,6 +145,27 @@ class TestKey:
                 passes.append(filename)
 
         return passes
+
+    def add_comments_to_fails(self):
+        """Add comment fields to tests or subtests that fail in at least one os"""
+        for suite in self.manifest:
+            for test in self.manifest.get(suite):
+                result = self.manifest[suite][test].get("result")
+                if result == "pass":
+                    pass
+                elif isinstance(result, (str, dict)):
+                    self.manifest[suite][test]["comment"] = (
+                        self.manifest[suite][test].get("comment") or ""
+                    )
+                else:
+                    for subtest in self.manifest[suite][test]:
+                        if result == "pass":
+                            pass
+                        elif isinstance(result, (str, dict)):
+                            self.manifest[suite][test][subtest]["comment"] = (
+                                self.manifest[suite][test][subtest].get("comment") or ""
+                            )
+        self.write()
 
     def get_entry_from_filename(self, filename) -> dict:
         """

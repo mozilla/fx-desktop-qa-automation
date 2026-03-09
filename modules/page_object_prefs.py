@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
@@ -233,6 +234,13 @@ class AboutPrefs(BasePage):
 
     def select_trackers_to_block(self, *options):
         """Select the trackers to block in the about:preferences page. Unchecks all first."""
+        self.elements |= {
+            "checkbox-by-label": {
+                "selectorData": "checkbox[label='{}']",
+                "strategy": "css",
+                "groups": ["doNotCache"],
+            }
+        }
         self.click_on("custom-radio")
         checkboxes = self.get_element("custom-tracker-options-parent").find_elements(
             By.TAG_NAME, "checkbox"
@@ -242,6 +250,13 @@ class AboutPrefs(BasePage):
                 checkbox.click()
         for option in options:
             self.click_on(option)
+            tag = self.get_element(option).tag_name
+            if tag == "checkbox":
+                self.element_has_attribute(option, "checked")
+            elif tag == "menuitem":
+                self.element_attribute_is(option, "selected", "true")
+
+        sleep(0.25)
         return self
 
     def get_history_menulist(self) -> WebElement:
@@ -886,6 +901,13 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(iframe)
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
+
+    def enable_show_sidebar(self):
+        """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
+        checkbox = self.get_element("show-sidebar-checkbox")
+        if not checkbox.is_selected():
+            self.click_on("show-sidebar-checkbox")
+        return self
 
 
 class AboutAddons(BasePage):
