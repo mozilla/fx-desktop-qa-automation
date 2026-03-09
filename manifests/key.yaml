@@ -858,6 +858,10 @@ password_manager:
       win: pass
     splits:
     - functional2
+  test_password_manager_key_icon_after_doorhanger_dismiss:
+    result: pass
+    splits:
+    - functional2
   test_primary_password_triggered_on_about_logins_access:
     result: unstable
     splits:
