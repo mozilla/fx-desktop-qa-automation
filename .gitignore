@@ -20,7 +20,7 @@ html_dump/
 Test*.html
 geckodriver.log
 env
-*.png
+./*.png
 *.dmg
 *.tar
 ./*.zip

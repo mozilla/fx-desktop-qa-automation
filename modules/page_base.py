@@ -38,6 +38,8 @@ STRATEGY_MAP = {
     "name": By.NAME,
 }
 
+OS_NAME_MAP = {"darwin": "mac", "windows": "win"}
+
 
 class BasePage(Page):
     """
@@ -1017,11 +1019,8 @@ class BasePage(Page):
         """
         import pyautogui
 
-        os_name = (
-            self.sys_platform().lower()
-            if "Darwin" not in self.sys_platform()
-            else "mac"
-        )
+        plat_lower = self.sys_platform().lower()
+        os_name = OS_NAME_MAP.get(plat_lower, plat_lower)
 
         # # MOST of the time, implicit timeout of 30 means we're in ci
         # implicit_timeout = self.driver.capabilities.get("timeouts").get("implicit")
