@@ -1514,3 +1514,8 @@ class Navigation(BasePage):
         """Paste clipboard content into the awesome bar"""
         self.click_on("awesome-bar")
         return self.paste()
+
+    @BasePage.context_chrome
+    def dismiss_password_doorhanger(self):
+        """Dismiss the Password Manager doorhanger using ESC."""
+        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
