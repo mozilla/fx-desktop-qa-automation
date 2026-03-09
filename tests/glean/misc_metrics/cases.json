@@ -1,22 +1,22 @@
 {
   "metric": null,
   "cases": [
-    {"id": "C3255544", "entry": "searchbar", "action": null,                    "params": {"engine": "Google"},     "prefs": [], "metric": "browserSearchWithads.searchbar",  "expected": {"google:tagged": 1}},
-    {"id": "C3255545", "entry": "searchbar", "action": null,                    "params": {"engine": "Bing"},       "prefs": [], "metric": "browserSearchWithads.searchbar",  "expected": {"bing:tagged": 1}},
-    {"id": "C3255546", "entry": "searchbar", "action": null,                    "params": {"engine": "DuckDuckGo"}, "prefs": [], "metric": "browserSearchWithads.searchbar",  "expected": {"DuckDuckGo:tagged": 1}},
+    {"id": "3255544", "entry": "searchbar", "action": null,                    "params": {"engine": "Google"},     "prefs": [], "metric": "browserSearchWithads.searchbar",  "expected": {"google:tagged": 1}},
+    {"id": "3255545", "entry": "searchbar", "action": null,                    "params": {"engine": "Bing"},       "prefs": [], "metric": "browserSearchWithads.searchbar",  "expected": {"bing:tagged": 1}},
+    {"id": "3255546", "entry": "searchbar", "action": null,                    "params": {"engine": "DuckDuckGo"}, "prefs": [], "metric": "browserSearchWithads.searchbar",  "expected": {"DuckDuckGo:tagged": 1}},
 
-    {"id": "C3255547", "entry": "searchbar", "action": "click_ad_from_searchbar", "params": {"engine": "Google"},     "prefs": [], "metric": "browserSearchAdclicks.searchbar", "expected": {"google:tagged": 1}},
-    {"id": "C3255548", "entry": "searchbar", "action": "click_ad_from_searchbar", "params": {"engine": "Bing"},       "prefs": [], "metric": "browserSearchAdclicks.searchbar", "expected": {"bing:tagged": 1}},
-    {"id": "C3255549", "entry": "searchbar", "action": "click_ad_from_searchbar", "params": {"engine": "DuckDuckGo"}, "prefs": [], "metric": "browserSearchAdclicks.searchbar", "expected": {"DuckDuckGo:tagged": 1}},
+    {"id": "3255547", "entry": "searchbar", "action": "click_ad_from_searchbar", "params": {"engine": "Google"},     "prefs": [], "metric": "browserSearchAdclicks.searchbar", "expected": {"google:tagged": 1}},
+    {"id": "3255548", "entry": "searchbar", "action": "click_ad_from_searchbar", "params": {"engine": "Bing"},       "prefs": [], "metric": "browserSearchAdclicks.searchbar", "expected": {"bing:tagged": 1}},
+    {"id": "3255549", "entry": "searchbar", "action": "click_ad_from_searchbar", "params": {"engine": "DuckDuckGo"}, "prefs": [], "metric": "browserSearchAdclicks.searchbar", "expected": {"DuckDuckGo:tagged": 1}},
 
-    {"id": "C3255550", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "US"]], "metric": "browserSearchContent.searchbar", "expected": {"google:tagged:firefox-b-1-d": 1}},
-    {"id": "C3255551", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "DE"]], "metric": "browserSearchContent.searchbar", "expected": {"google:tagged:firefox-b-d": 1}},
-    {"id": "C3255552", "entry": "searchbar", "action": null, "params": {"engine": "Bing"},   "prefs": [],                               "metric": "browserSearchContent.searchbar", "expected": {"bing:tagged:MOZI": 1}},
-    {"id": "C3255553", "entry": "searchbar", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [],                           "metric": "browserSearchContent.searchbar", "expected": {"duckduckgo:tagged:ffab": 1}},
-    {"id": "C3255554", "entry": "searchbar", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "metric": "browserSearchContent.searchbar", "expected": {"ecosia:tagged:mzl": 1}},
+    {"id": "3255550", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "US"]], "metric": "browserSearchContent.searchbar", "expected": {"google:tagged:firefox-b-1-d": 1}},
+    {"id": "3255551", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "DE"]], "metric": "browserSearchContent.searchbar", "expected": {"google:tagged:firefox-b-d": 1}},
+    {"id": "3255552", "entry": "searchbar", "action": null, "params": {"engine": "Bing"},   "prefs": [],                               "metric": "browserSearchContent.searchbar", "expected": {"bing:tagged:MOZI": 1}},
+    {"id": "3255553", "entry": "searchbar", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [],                           "metric": "browserSearchContent.searchbar", "expected": {"duckduckgo:tagged:ffab": 1}},
+    {"id": "3255554", "entry": "searchbar", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "metric": "browserSearchContent.searchbar", "expected": {"ecosia:tagged:mzl": 1}},
 
-    {"id": "C3255555", "entry": "searchbar", "action": null, "params": {"engine": null}, "prefs": [], "metric": "sap.searchFormCounts", "expected": {"provider_id": "bing", "source": "searchbar"}},
+    {"id": "3255555", "entry": "searchbar", "action": null, "params": {"engine": null}, "prefs": [], "metric": "sap.searchFormCounts", "expected": {"provider_id": "bing", "source": "searchbar"}},
 
-    {"id": "C3255556", "entry": "searchbar", "action": null, "params": {"engine": null}, "prefs": [], "metric": "serp.adImpression",    "expected": {"ads_hidden": "__present__", "ads_loaded": "__present__", "ads_visible": "__present__", "component": "__present__", "impression_id": "__present__"}}
+    {"id": "3255556", "entry": "searchbar", "action": null, "params": {"engine": null}, "prefs": [], "metric": "serp.adImpression",    "expected": {"ads_hidden": "__present__", "ads_loaded": "__present__", "ads_visible": "__present__", "component": "__present__", "impression_id": "__present__"}}
   ]
 }

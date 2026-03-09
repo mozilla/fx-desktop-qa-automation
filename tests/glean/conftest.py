@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture()
 def suite_id():
-    return ("TODO", "Glean SERP Telemetry")
+    return "S70197", "Glean Telemetry"
 
 
 @pytest.fixture()
