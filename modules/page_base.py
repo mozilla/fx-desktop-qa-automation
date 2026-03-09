@@ -1023,7 +1023,18 @@ class BasePage(Page):
             else "mac"
         )
 
-        button_img = os.path.join("data", f"{os_name}_save_button.png")
+        # # MOST of the time, implicit timeout of 30 means we're in ci
+        # implicit_timeout = self.driver.capabilities.get("timeouts").get("implicit")
+        # if implicit_timeout != 30000:
+        #     time.sleep(1)
+        #     if os_name == "mac":
+        #         self.get_alert()
+        #         pyautogui.hotkey("command", "s")
+        #     pyautogui.press("enter")
+        #     time.sleep(1)
+        #     return
+
+        button_img = os.path.join("data", "cv-assets", os_name, "save_button.png")
         time.sleep(1.5)
         b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
         logging.info(f"Button: ({b_x}, {b_y})")
