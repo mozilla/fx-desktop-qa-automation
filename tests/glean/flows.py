@@ -12,6 +12,7 @@ def _entry(name):
     def decorator(fn):
         _ENTRIES[name] = fn
         return fn
+
     return decorator
 
 
@@ -19,12 +20,14 @@ def _action(name):
     def decorator(fn):
         _ACTIONS[name] = fn
         return fn
+
     return decorator
 
 
 # ---------------------------------------------------------------------------
 # Entry flows — surfaces that open the SERP
 # ---------------------------------------------------------------------------
+
 
 @_entry("urlbar")
 def _entry_urlbar(driver: Firefox, search_term: str, params: dict) -> None:
@@ -64,7 +67,9 @@ def _entry_urlbar_persisted(driver: Firefox, search_term: str, params: dict) -> 
 
 @_entry("follow_on_from_refine_on_incontent_search")
 def _entry_follow_on_incontent(driver: Firefox, search_term: str, params: dict) -> None:
-    raise NotImplementedError("follow_on_from_refine_on_incontent_search entry not yet implemented")
+    raise NotImplementedError(
+        "follow_on_from_refine_on_incontent_search entry not yet implemented"
+    )
 
 
 @_entry("follow_on_from_refine_on_SERP")
@@ -95,6 +100,7 @@ def _entry_about_home(driver: Firefox, search_term: str, params: dict) -> None:
 # ---------------------------------------------------------------------------
 # Action flows — things that happen after the SERP is open
 # ---------------------------------------------------------------------------
+
 
 @_action("reload")
 def _action_reload(driver: Firefox, params: dict) -> None:
@@ -154,6 +160,7 @@ def _action_click_ad_from_searchbar(driver: Firefox, params: dict) -> None:
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
     params = params or {}

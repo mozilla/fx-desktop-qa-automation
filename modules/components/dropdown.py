@@ -99,7 +99,9 @@ class Dropdown(Region):
                         panel_trigger = None
                         for el in self.shadow_elements:
                             try:
-                                triggers = el.find_elements(By.CLASS_NAME, "panel-trigger")
+                                triggers = el.find_elements(
+                                    By.CLASS_NAME, "panel-trigger"
+                                )
                                 if triggers:
                                     panel_trigger = triggers[0]
                                     break
