@@ -10,6 +10,7 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
+import pyautogui
 from pynput.keyboard import Key
 from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
@@ -1016,34 +1017,48 @@ class BasePage(Page):
         """
         Confirm the native OS download confirmation dialog.
 
-        Uses pyautogui. Tries image-match click first (if the reference image exists),
-        but falls back to pressing Enter for stability (DPI/theme differences).
+        Uses pyautogui. Tries image-match click first, then falls back to pressing
+        Enter if the image is not found or if it still matches after the click.
         """
-        import os
-        import time
-
         import pyautogui
 
-        # Optional: reduce flakiness a bit
-        pyautogui.FAILSAFE = False
+        system = platform.system()
 
+        if system == "Windows":
+            button_img = os.path.join("data", "win_save_button.png")
+        elif system == "Darwin":
+            button_img = os.path.join("data", "mac_save_button.png")
+        else:
+            button_img = os.path.join("data", "linux_save_button.png")
+
+        pyautogui.FAILSAFE = False
         time.sleep(0.5)
 
-        button_img = os.path.join("data", "windows_save_button.png")
+        matched_before_click = False
+        should_fallback = True
 
-        # 1) Try image-based click (only if file exists)
-        if os.path.exists(button_img):
+        try:
             try:
                 loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
-                if loc is not None:
-                    pyautogui.click(loc)
-                    return
-            except Exception:
-                # Any image match issues -> fall back to Enter
-                pass
+            except pyautogui.ImageNotFoundException:
+                loc = None
 
-        # 2) Fallback: press Enter (default button is typically "Save")
-        pyautogui.press("enter")
+            if loc is not None:
+                matched_before_click = True
+                pyautogui.click(loc)
+                time.sleep(1)
+        finally:
+            if matched_before_click:
+                try:
+                    loc_after_click = pyautogui.locateCenterOnScreen(
+                        button_img, confidence=0.85
+                    )
+                    should_fallback = loc_after_click is not None
+                except pyautogui.ImageNotFoundException:
+                    should_fallback = False
+
+            if should_fallback:
+                pyautogui.press("enter")
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False
