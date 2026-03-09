@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_pages import AboutProtections
+from modules.browser_object import TabBar
+from modules.page_object import AboutProtections
 
 
 @pytest.fixture()

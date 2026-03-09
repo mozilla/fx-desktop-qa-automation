@@ -3,9 +3,7 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
-from modules.browser_object_context_menu import AboutDownloadsContextMenu
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import AboutDownloadsContextMenu, Navigation, PanelUi
 from modules.page_object import AboutDownloads, GenericPage
 
 
@@ -31,11 +29,18 @@ def delete_files_regex_string():
 @pytest.mark.slow
 @pytest.mark.audio
 def test_downloads_from_private_not_leaked(
-    driver: Firefox, delete_files, screenshot, panel_ui: PanelUi, nav: Navigation
+    driver: Firefox,
+    delete_files,
+    screenshot,
+    panel_ui: PanelUi,
+    nav: Navigation,
+    about_downloads: AboutDownloads,
 ):
-    """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
+    """
+    C101674 - Downloads initiated from a private window are not leaked to the
+    non-private window
+    """
 
-    about_downloads = AboutDownloads(driver)
     opm_forms = GenericPage(driver, url=TEST_URL)
 
     # We've deleted relevant downloads_file just to be safe

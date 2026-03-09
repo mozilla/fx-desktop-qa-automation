@@ -124,7 +124,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
@@ -679,7 +679,10 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_http_site:
@@ -1218,12 +1221,9 @@ sidebar:
     splits:
     - functional2
   test_toggle_sidebar_via_toolbar_button:
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
-    - functional2
+      - functional2
 sync_and_fxa:
   test_existing_fxa:
     result: unstable

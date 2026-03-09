@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import time
@@ -233,18 +234,32 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def type_in_search_bar(self, term: str) -> BasePage:
         """
-        Type in the *Old* Search Bar. Returns self.
-
-        Attributes
-        ----------
-
-        term : str
-            The search term
+        Type in search bar without hitting enter
+        Argument:
+            term: The search term
         """
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.search_bar.send_keys(term)
         return self
+
+    @BasePage.context_chrome
+    def verify_search_bar_is_focused(self):
+        """
+        Verify the toolbar Search Bar is focused.
+
+        Note: In Firefox chrome context, WebDriver's active element APIs (e.g. switch_to.active_element) are not
+        supported, and focus state is not reliably exposed via a stable DOM attribute that we can assert with a CSS
+        selector. We therefore use a small JS check against ownerDocument.activeElement to reliably confirm the input
+        is the focused element in the chrome document.Verify the search bar is focused by checking if it's the active
+        element."""
+        search_input = self.get_element("searchbar-input")
+        self.wait.until(
+            lambda d: d.execute_script(
+                "return arguments[0].ownerDocument.activeElement === arguments[0]",
+                search_input,
+            )
+        )
 
     def open_awesome_bar_settings(self):
         """Open search settings from the awesome bar"""
@@ -326,34 +341,6 @@ class Navigation(BasePage):
         except TimeoutException:
             logging.warning("Animation did not finish or did not play.")
         return self
-
-    @BasePage.context_chrome
-    def open_tracker_panel(self) -> BasePage:
-        """
-        Clicks the shield icon and opens the panel associated with it
-        """
-        self.get_element("shield-icon").click()
-        return self
-
-    @BasePage.context_chrome
-    def assert_blocked_trackers(self, *blocked_trackers) -> BasePage:
-        """
-        Given a list of blocked trackers, assert that they are present in the blocked list.
-        """
-        self.open_tracker_panel()
-        if blocked_trackers:
-            for tracker in blocked_trackers:
-                self.element_visible(tracker)
-        else:
-            self.get_element("no-trackers-detected").is_displayed()
-
-    @BasePage.context_chrome
-    def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):
-        """
-        Verify that the list of cross-site trackers is as expected.
-        """
-        for val in cross_site_trackers:
-            self.expect(lambda _: val in allowed_cookies)
 
     def search_and_check_if_suggestions_are_present(
         self, text, search_mode: str = "awesome", min_suggestions=1
@@ -1154,6 +1141,15 @@ class Navigation(BasePage):
         self.panel_ui.navigate_to_customize_toolbar()
         self.customize.add_widget_to_toolbar("search-bar")
         return self
+
+    def verify_searchbar_suggestion_is_highlighted(self):
+        """Verify that a suggestion item is highlighted in the search bar popup.
+
+        Uses a dedicated selector (div.urlbarView-row[selected]) rather than checking
+        the 'selected' attribute on the generic row selector, because fetch() returns
+        the first matching element — which may not be the highlighted one.
+        """
+        self.element_visible("searchbar-highlighted-suggestion")
 
     @BasePage.context_chrome
     def click_exit_button_searchmode(self) -> None:

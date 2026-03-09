@@ -258,6 +258,7 @@ def fx_executable(request, sys_platform):
     version = request.config.getoption("--fx-channel")
     location = request.config.getoption("--fx-executable")
     if location:
+        logging.warning(f"Using location: {location}")
         return location
 
     # Path to build location.  Use Custom by installing your incident build to the coinciding path.
@@ -472,9 +473,10 @@ def driver(
         Fixture that does other environment work, like set logging levels.
     """
     options = Options()
+    # options.log.level = "trace"
     options.add_argument("--remote-allow-system-access")
     options.binary_location = fx_executable
-    options.set_preference("app.update.disabledForTesting", False)
+    # options.set_preference("app.update.disabledForTesting", False)
 
     if use_profile:
         profile_path = tmp_path / use_profile
