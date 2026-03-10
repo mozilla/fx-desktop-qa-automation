@@ -263,12 +263,12 @@ class BasePage(Page):
     @context_of_model
     def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Expect helper: wait until element is visible or timeout"""
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and self.fetch(reference, labels=labels).is_displayed()
-            )
-        )
+
+        def _visible(_driver):
+            el = self.fetch(reference, labels=labels)
+            return el and el.is_displayed()
+
+        self.expect(_visible)
         return self
 
     @context_of_model

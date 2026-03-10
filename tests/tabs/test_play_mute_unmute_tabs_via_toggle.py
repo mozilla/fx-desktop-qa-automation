@@ -2,6 +2,7 @@ from time import sleep
 
 import pyautogui
 import pytest
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
@@ -57,11 +58,15 @@ def test_play_mute_unmute_tabs_via_toggle(
     )
 
     # Wait for element before getting all elements
-    playlist_page.get_element("video_selector")
+    playlist_page.element_clickable("video_selector")
     video_links = playlist_page.get_elements("video_selector")
 
     for i in range(2):
-        playlist_page.context_click(video_links[i])
+        try:
+            playlist_page.context_click(video_links[i])
+        except StaleElementReferenceException:
+            video_links = playlist_page.get_elements("video_selector")
+            playlist_page.context_click(video_links[i])
         context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
 
     # Verify correct number of tabs opened
