@@ -16,7 +16,7 @@ def test_case():
     return "3028909"
 
 
-def test_search_engine_result_page_load_on_reload_or_back(driver: Firefox):
+def test_search_engine_result_page_load_on_reload(driver: Firefox):
     """
     C3028909 - Search Engine Result Page loads as a result of a reload
     """
