@@ -19,7 +19,7 @@ def test_about_logins_menu_options(driver: Firefox):
     C2241463 - Verify that the options in the Settings menu responds correctly upon selection
     """
 
-    # Instantiate object
+    # Instantiate objects
     about_logins = AboutLogins(driver)
     tabs = TabBar(driver)
 
