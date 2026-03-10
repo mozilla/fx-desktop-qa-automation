@@ -62,11 +62,8 @@ def test_play_mute_unmute_tabs_via_toggle(
     video_links = playlist_page.get_elements("video_selector")
 
     for i in range(2):
-        try:
-            playlist_page.context_click(video_links[i])
-        except StaleElementReferenceException:
-            video_links = playlist_page.get_elements("video_selector")
-            playlist_page.context_click(video_links[i])
+        playlist_page.scroll_to_element(video_links[i])
+        playlist_page.context_click(video_links[i])
         context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
 
     # Verify correct number of tabs opened
