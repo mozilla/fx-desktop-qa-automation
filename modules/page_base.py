@@ -743,11 +743,12 @@ class BasePage(Page):
             pyautogui.click(button="middle")
         return self
 
+    @context_of_model
     def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Context (right-) click on an element"""
-        with self.driver.context(self.context_id):
-            el = self.fetch(reference, labels)
-            self.actions.context_click(el).perform()
+        el = self.fetch(reference, labels)
+        self.element_visible(reference, labels)
+        self.actions.context_click(el).perform()
         return self
 
     def copy(self) -> Page:

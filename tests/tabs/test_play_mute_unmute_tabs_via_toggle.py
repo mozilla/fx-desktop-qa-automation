@@ -3,10 +3,7 @@ from time import sleep
 import pyautogui
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import ContextMenu
 from modules.browser_object_tabbar import TabBar
@@ -23,16 +20,28 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
+@pytest.fixture
+def added_selectors() -> dict:
+    return {
+        "video_selector": {
+            "selectorData": "ytd-rich-item-renderer a#video-title-link",
+            "strategy": "css",
+            "groups": ["doNotCache"],
+        }
+    }
+
+
 # This test is unstable in Windows GHA for now
 @pytest.mark.audio
 @pytest.mark.headed
-def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
+def test_play_mute_unmute_tabs_via_toggle(
+    driver: Firefox, sys_platform: str, added_selectors: dict
+):
     """
     C246981 - Verify that play/mute/unmute tabs via toggle audio works
     """
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
-    wait = WebDriverWait(driver, 10)
     DELAY = 2
     POSITION_DELAY = 0.3
 
@@ -40,12 +49,16 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     playlist_url = "https://www.youtube.com/@Mozilla/videos"
     playlist_page = GenericPage(driver, url=playlist_url)
     playlist_page.open()
+    playlist_page.elements |= added_selectors
 
     # Locate and open 2 latest videos in new tabs
-    video_selector = "ytd-rich-item-renderer a#video-title-link"
-    video_links = wait.until(
-        EC.visibility_of_all_elements_located((By.CSS_SELECTOR, video_selector))
+    playlist_page.expect(
+        lambda _: len(playlist_page.get_elements("video_selector")) > 2
     )
+
+    # Wait for element before getting all elements
+    playlist_page.get_element("video_selector")
+    video_links = playlist_page.get_elements("video_selector")
 
     for i in range(2):
         playlist_page.context_click(video_links[i])

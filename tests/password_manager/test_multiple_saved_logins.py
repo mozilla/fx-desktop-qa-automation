@@ -80,9 +80,10 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         web_page.context_click("username-field")
         pyautogui.press("down")
         pyautogui.press("enter")
-        time.sleep(0.1)
+        time.sleep(0.2)
         pyautogui.press("down", presses=n - 1, interval=0.1)
         pyautogui.press("enter")
+        time.sleep(0.2)
 
     # Verify the all 3 credientials are correct when autofilling
     driver.switch_to.window(driver.window_handles[0])
