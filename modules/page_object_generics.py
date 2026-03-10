@@ -1,5 +1,6 @@
 from time import sleep
 
+import pyautogui
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -20,37 +21,33 @@ class GenericPage(BasePage):
         self, location: str, filename="test.txt"
     ) -> BasePage:
         sleep(1.5)
-        from pynput.keyboard import Controller, Key
 
-        keyboard = Controller()
         if self.sys_platform() == "Darwin":
-            keyboard.type("/")
+            pyautogui.press("/")
             sleep(1.5)
-            keyboard.type(location.lstrip("/"))
+            pyautogui.write(location.lstrip("/"), interval=0.03)
             sleep(1)
-            keyboard.press(Key.enter)
+            pyautogui.press("enter")
             sleep(1)
-            keyboard.press(Key.enter)
+            pyautogui.press("enter")
+            sleep(1)
         elif self.sys_platform().startswith("Win"):
-            keyboard.press(Key.ctrl)
-            keyboard.tap("l")
-            keyboard.release(Key.ctrl)
+            with pyautogui.hold("control"):
+                pyautogui.press("l")
             sleep(1.5)
-            keyboard.type(location)
+            pyautogui.write(location)
             sleep(1)
-            keyboard.tap(Key.enter)
+            pyautogui.press("enter")
             sleep(1)
-            keyboard.press(Key.alt)
-            keyboard.tap("s")
-            keyboard.release(Key.alt)
+            with pyautogui.hold("alt"):
+                pyautogui.press("s")
         else:
-            keyboard.press(Key.ctrl)
-            keyboard.tap("a")
-            keyboard.release(Key.ctrl)
+            with pyautogui.hold("control"):
+                pyautogui.press("a")
             sleep(1.5)
-            keyboard.type(f"{location}/{filename}")
+            pyautogui.write(f"{location}/{filename}")
             sleep(1)
-            keyboard.tap(Key.enter)
+            pyautogui.press("enter")
 
     def wait_for_reload_and_verify_empty_field(
         self, old_field, field_id: str, wait_time: int = 10
@@ -220,27 +217,24 @@ class GenericPdf(BasePage):
         self.get_element("toolbar-add-image").click()
         self.get_element("toolbar-add-image-confirm").click()
         sleep(1.5)
-        from pynput.keyboard import Controller, Key
+        import pyautogui
 
-        keyboard = Controller()
         if sys_platform == "Darwin" or sys_platform == "Linux":
-            keyboard.type("/")
+            pyautogui.press("/")
             sleep(1.5)
-            keyboard.type(image_path.lstrip("/"))
+            pyautogui.write(image_path.lstrip("/"))
         else:
             sleep(1.5)
-            keyboard.type(image_path)
+            pyautogui.write(image_path)
         sleep(1)
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        pyautogui.press("enter")
         sleep(1)
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        pyautogui.press("enter")
         sleep(1.5)
         for _ in range(3):
-            keyboard.tap(Key.tab)
+            pyautogui.press("tab")
         sleep(0.5)
-        keyboard.tap(Key.enter)
+        pyautogui.press("enter")
         sleep(1)
         return self
 

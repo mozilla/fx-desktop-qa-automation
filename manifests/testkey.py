@@ -172,6 +172,7 @@ class TestKey:
         Given a filename, get a partial dict that represents
         the test's location in the manifest
         """
+        print(filename)
         segments = filename.split(os.path.sep)
         i = 0
         if segments[i] == ".":
@@ -194,6 +195,7 @@ class TestKey:
             entry_ptr[segment] = {}
             entry_ptr = entry_ptr[segment]
             manifest_ptr = manifest_ptr[segment]
+        print(manifest_ptr.keys())
         entry_ptr[segments[-1]] = manifest_ptr[segments[-1]]
         return entry
 

@@ -10,9 +10,6 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
-from pynput.keyboard import Key
-from pynput.mouse import Button
-from pynput.mouse import Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -40,6 +37,8 @@ STRATEGY_MAP = {
     "tag": By.TAG_NAME,
     "name": By.NAME,
 }
+
+OS_NAME_MAP = {"darwin": "mac", "windows": "win"}
 
 
 class BasePage(Page):
@@ -264,12 +263,12 @@ class BasePage(Page):
     @context_of_model
     def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Expect helper: wait until element is visible or timeout"""
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and self.fetch(reference, labels=labels).is_displayed()
-            )
-        )
+
+        def _visible(_driver):
+            el = self.fetch(reference, labels=labels)
+            return el and el.is_displayed()
+
+        self.expect(_visible)
         return self
 
     @context_of_model
@@ -714,8 +713,9 @@ class BasePage(Page):
 
     def middle_click(self, reference: str | tuple | WebElement, labels=None):
         """Actions helper: Perform a middle mouse click on desired element"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
-            mouse = MouseController()
             element = self.fetch(reference, labels)
 
             element_location = element.location
@@ -737,18 +737,18 @@ class BasePage(Page):
                 + (element_size["height"] / 2)
                 + chrome_height
             )
-            mouse.position = (element_x, element_y)
+            pyautogui.moveTo(element_x, element_y, 0.5)
 
             # Need a short wait to ensure the mouse move completes, then middle click
-            time.sleep(0.5)
-            mouse.click(Button.middle, 1)
+            pyautogui.click(button="middle")
         return self
 
+    @context_of_model
     def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Context (right-) click on an element"""
-        with self.driver.context(self.context_id):
-            el = self.fetch(reference, labels)
-            self.actions.context_click(el).perform()
+        el = self.fetch(reference, labels)
+        self.element_visible(reference, labels)
+        self.actions.context_click(el).perform()
         return self
 
     def copy(self) -> Page:
@@ -792,30 +792,31 @@ class BasePage(Page):
         return self
 
     def copy_image_from_element(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
+        self, reference: str | tuple | WebElement, labels=None
     ) -> Page:
-        """Copy from the given element using right click (pynput)"""
+        """Copy from the given element using right click (pyautogui)"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            for _ in range(3):
+                pyautogui.press("down")
+            pyautogui.press("enter")
             time.sleep(0.5)
         return self
 
-    def copy_selection(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
-    ) -> Page:
-        """Copy from the current selection using right click (pynput)"""
+    def copy_selection(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Copy from the current selection using right click (pyautogui)"""
+        import pyautogui
+
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            pyautogui.press("down")
+            pyautogui.press("enter")
             time.sleep(0.5)
         return self
 
@@ -1019,13 +1020,21 @@ class BasePage(Page):
         """
         import pyautogui
 
-        os_name = (
-            self.sys_platform().lower()
-            if "Darwin" not in self.sys_platform()
-            else "mac"
-        )
+        plat_lower = self.sys_platform().lower()
+        os_name = OS_NAME_MAP.get(plat_lower, plat_lower)
 
-        button_img = os.path.join("data", f"{os_name}_save_button.png")
+        # # MOST of the time, implicit timeout of 30 means we're in ci
+        # implicit_timeout = self.driver.capabilities.get("timeouts").get("implicit")
+        # if implicit_timeout != 30000:
+        #     time.sleep(1)
+        #     if os_name == "mac":
+        #         self.get_alert()
+        #         pyautogui.hotkey("command", "s")
+        #     pyautogui.press("enter")
+        #     time.sleep(1)
+        #     return
+
+        button_img = os.path.join("data", "cv-assets", os_name, "save_button.png")
         time.sleep(1.5)
         b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
         logging.info(f"Button: ({b_x}, {b_y})")

@@ -1,7 +1,7 @@
 import time
 
+import pyautogui
 import pytest
-from pynput.keyboard import Controller, Key
 from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup
@@ -42,7 +42,6 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     """
     # Instantiate objects
     about_logins = AboutLogins(driver)
-    keyboard = Controller()
     autofill_popup = AutofillPopup(driver)
 
     # Save 3 sets of credentials for Saucedemo
@@ -68,9 +67,8 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
 
     # Check that "about:logins" is opened when clicking "Manage Password" in the Context Menu
     web_page.context_click("username-field")
-    keyboard.tap(Key.down)
-    keyboard.tap(Key.down)
-    keyboard.tap(Key.enter)
+    pyautogui.press("down", presses=2, interval=0.1)
+    pyautogui.press("enter")
     web_page.wait_for_num_tabs(2)
     web_page.switch_to_new_tab()
     web_page.url_contains("about:logins")
@@ -80,12 +78,12 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         Uses the n-th saved password within the context menu
         """
         web_page.context_click("username-field")
-        keyboard.tap(Key.down)
-        keyboard.tap(Key.enter)
-        time.sleep(0.1)
-        for _ in range(n - 1):
-            keyboard.tap(Key.down)
-        keyboard.tap(Key.enter)
+        pyautogui.press("down")
+        pyautogui.press("enter")
+        time.sleep(0.2)
+        pyautogui.press("down", presses=n - 1, interval=0.1)
+        pyautogui.press("enter")
+        time.sleep(0.2)
 
     # Verify the all 3 credientials are correct when autofilling
     driver.switch_to.window(driver.window_handles[0])
