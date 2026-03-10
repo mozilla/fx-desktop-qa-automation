@@ -436,14 +436,20 @@ class AboutTelemetry(BasePage):
         """
         Opens the Raw JSON telemetry view (against bnVsbA== / null payload timing).
         """
+        existing_tabs = len(self.driver.window_handles)
+
         # Click "Raw JSON" from categories on the left
         WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable(self.get_selector("category-raw"))
         )
         self.get_element("category-raw").click()
 
-        # Switching to the new tab opened by Raw
+        # Wait for the new tab before switching
+        WebDriverWait(self.driver, 30).until(
+            lambda d: len(d.window_handles) == existing_tabs + 1
+        )
         self.switch_to_new_tab()
+        self.clear_cache()
 
         # Wait for Raw Data tab to be clickable, then click it
         WebDriverWait(self.driver, 30).until(
