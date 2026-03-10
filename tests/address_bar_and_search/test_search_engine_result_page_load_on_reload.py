@@ -38,7 +38,7 @@ def test_search_engine_result_page_load_on_reload(driver: Firefox):
     telemetry.open()
     telemetry.open_raw_json_data()
 
-    # Verify "browser.search.content.searchbar": { "google:tagged:firefox-b-d": 1}*
+    # Verify the ping
     json_data = utils.decode_url(driver)
     searchbar_ping = utils.assert_json_value(json_data, SEARCHBAR_PATH, 1)
     assert searchbar_ping, f"Telemetry path not found: {SEARCHBAR_PATH}"
