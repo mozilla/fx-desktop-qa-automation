@@ -143,7 +143,7 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
-  test_search_engine_result_page_load_on_reload_or_back:
+  test_search_engine_result_page_load_on_reload:
     result: pass
     splits:
     - functional1
