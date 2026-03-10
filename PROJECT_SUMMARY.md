@@ -24,7 +24,7 @@ All Firefox UI elements are modeled as Python classes inheriting from `BasePage`
 
 ### Test Organization
 
-Tests live under `tests/`, grouped by Firefox feature area:
+Tests live under `tests/`, grouped by Firefox test suite:
 
 ```
 tests/
@@ -45,10 +45,10 @@ Each suite has its own `conftest.py` for suite-level fixtures and Firefox prefer
 |---|---|---|
 | Smoke tests | `tests/` | Quick sanity checks on beta/DevEdition builds |
 | Functional tests | `tests/` | Deeper per-feature coverage |
-| L10n / Credit Manager tests | `l10n_CM/` | Localization and autofill tests across many locales and e-commerce sites |
+| L10n /  Credential Management tests | `l10n_CM/` | Localization and autofill tests across many locales and e-commerce sites |
 | Stability tests | `tests/` | Reliability and flakiness monitoring |
 
-### L10n / Credit Manager Tests
+### L10n /  Credential Management Tests
 
 The `l10n_CM/` directory contains tests for address and credit card autofill across 50+ e-commerce sites in multiple locales (US, DE, FR, CA, GB, BE, etc.). Per-site configuration lives in `l10n_CM/constants/<site>/<locale>/`.
 
@@ -68,7 +68,7 @@ The `l10n_CM/` directory contains tests for address and credit card autofill acr
 
 ### Taskcluster (`taskcluster/`)
 
-Handles additional CI tasks such as linting (`kinds/lint/`) and scheduled Beta/DevEdition QA runs (`kinds/new-beta-qa/`, `kinds/new-devedition-qa/`).
+Handles additional CI tasks specifically for linting but also for all scheduled Linux runs.
 
 ## Integrations
 
