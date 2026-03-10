@@ -3694,6 +3694,7 @@ Description: Searchbar suggestions
 Location: Searchbar results
 Path to .json: modules/data/navigation.components.json
 ```
+```
 Selector Name: searchbar-magnifying-glass-button
 Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
 Description: Searchbar magnifying glass button
@@ -3817,6 +3818,20 @@ Selector Name: bookmark-in-toolbar
 Selector Data: "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']"
 Description: Mozilla website bookmark in toolbar
 Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-popup
+Selector Data: "password-notification"
+Description: Password notification popup
+Location: Password notification prompt in Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-username-field
+Selector Data: "password-notification-username"
+Description: Username field in the password notification popup
+Location: Username field in the password notification popup
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

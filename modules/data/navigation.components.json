@@ -724,5 +724,15 @@
         "selectorData": "sidebar-box",
         "strategy": "id",
         "groups": []
+    },
+    "password-notification-popup": {
+        "selectorData": "password-notification",
+        "strategy": "id",
+        "groups": []
+    },
+    "password-notification-username-field": {
+        "selectorData": "password-notification-username",
+        "strategy": "id",
+        "groups": []
     }
 }

@@ -881,6 +881,10 @@ password_manager:
       win: pass
     splits:
     - functional2
+  test_password_manager_key_icon_after_doorhanger_dismiss:
+    result: pass
+    splits:
+    - functional2
   test_primary_password_triggered_on_about_logins_access:
     comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018719'
     result: unstable
