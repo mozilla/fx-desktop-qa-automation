@@ -100,7 +100,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             # Offset to click on the audio control area (left side of tab)
             pyautogui.moveTo(element_x - 75, element_y)
             sleep(POSITION_DELAY)  # Small delay for mouse positioning
-            pyautogui.click("left")
+            pyautogui.click()
             sleep(DELAY)  # Wait for action to take effect
 
         # Click Play button

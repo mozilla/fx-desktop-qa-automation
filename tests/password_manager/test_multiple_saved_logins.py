@@ -67,8 +67,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
 
     # Check that "about:logins" is opened when clicking "Manage Password" in the Context Menu
     web_page.context_click("username-field")
-    pyautogui.press("down")
-    pyautogui.press("down")
+    pyautogui.press("down", presses=2, interval=0.1)
     pyautogui.press("enter")
     web_page.wait_for_num_tabs(2)
     web_page.switch_to_new_tab()
@@ -82,8 +81,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         pyautogui.press("down")
         pyautogui.press("enter")
         time.sleep(0.1)
-        for _ in range(n - 1):
-            pyautogui.press("down")
+        pyautogui.press("down", presses=n - 1, interval=0.1)
         pyautogui.press("enter")
 
     # Verify the all 3 credientials are correct when autofilling

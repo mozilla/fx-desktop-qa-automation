@@ -25,11 +25,12 @@ class GenericPage(BasePage):
         if self.sys_platform() == "Darwin":
             pyautogui.press("/")
             sleep(1.5)
-            pyautogui.write(location.lstrip("/"), interval=0.1)
+            pyautogui.write(location.lstrip("/"), interval=0.03)
             sleep(1)
             pyautogui.press("enter")
             sleep(1)
             pyautogui.press("enter")
+            sleep(1)
         elif self.sys_platform().startswith("Win"):
             with pyautogui.hold("control"):
                 pyautogui.press("l")
