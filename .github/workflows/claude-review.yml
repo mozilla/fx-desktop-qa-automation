@@ -37,7 +37,9 @@ jobs:
             - Potential bugs or issues
             - Security implications
             - Performance considerations
-
+            
+            Note: Please make feedbacks concise and brief. 
+            
             Note: The PR branch is already checked out in the current working directory.
 
             Use `gh pr comment` for top-level feedback.
