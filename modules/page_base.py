@@ -1023,7 +1023,6 @@ class BasePage(Page):
         import pyautogui
 
         system = platform.system()
-
         if system == "Windows":
             button_img = os.path.join("data", "win_save_button.png")
         elif system == "Darwin":
@@ -1031,29 +1030,38 @@ class BasePage(Page):
         else:
             button_img = os.path.join("data", "linux_save_button.png")
 
+        original_failsafe = pyautogui.FAILSAFE
         pyautogui.FAILSAFE = False
-        time.sleep(0.5)
 
         matched_before_click = False
         should_fallback = True
 
-        loc = None
         try:
-            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
-        except pyautogui.ImageNotFoundException:
-            pass
+            time.sleep(0.5)
 
-        if loc is not None:
-            pyautogui.click(loc)
-            time.sleep(1)
             try:
-                loc_after_click = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
-                if loc_after_click is not None:
-                    pyautogui.press("enter")
+                loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
             except pyautogui.ImageNotFoundException:
-                pass  # click succeeded, dialog dismissed
-        else:
-            pyautogui.press("enter")
+                loc = None
+
+            if loc is not None:
+                matched_before_click = True
+                pyautogui.click(loc)
+                time.sleep(1)
+        finally:
+            if matched_before_click:
+                try:
+                    loc_after_click = pyautogui.locateCenterOnScreen(
+                        button_img, confidence=0.85
+                    )
+                    should_fallback = loc_after_click is not None
+                except pyautogui.ImageNotFoundException:
+                    should_fallback = False
+
+            if should_fallback:
+                pyautogui.press("enter")
+
+            pyautogui.FAILSAFE = original_failsafe
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False
