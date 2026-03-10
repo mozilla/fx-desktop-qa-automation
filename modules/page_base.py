@@ -10,7 +10,6 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
-import pyautogui
 from pynput.keyboard import Key
 from pynput.mouse import Button
 from pynput.mouse import Controller as MouseController
