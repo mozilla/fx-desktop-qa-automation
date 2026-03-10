@@ -1037,28 +1037,23 @@ class BasePage(Page):
         matched_before_click = False
         should_fallback = True
 
+        loc = None
         try:
+            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+        except pyautogui.ImageNotFoundException:
+            pass
+
+        if loc is not None:
+            pyautogui.click(loc)
+            time.sleep(1)
             try:
-                loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                loc_after_click = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                if loc_after_click is not None:
+                    pyautogui.press("enter")
             except pyautogui.ImageNotFoundException:
-                loc = None
-
-            if loc is not None:
-                matched_before_click = True
-                pyautogui.click(loc)
-                time.sleep(1)
-        finally:
-            if matched_before_click:
-                try:
-                    loc_after_click = pyautogui.locateCenterOnScreen(
-                        button_img, confidence=0.85
-                    )
-                    should_fallback = loc_after_click is not None
-                except pyautogui.ImageNotFoundException:
-                    should_fallback = False
-
-            if should_fallback:
-                pyautogui.press("enter")
+                pass  # click succeeded, dialog dismissed
+        else:
+            pyautogui.press("enter")
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False
