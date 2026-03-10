@@ -1032,34 +1032,28 @@ class BasePage(Page):
         original_failsafe = pyautogui.FAILSAFE
         pyautogui.FAILSAFE = False
 
-        matched_before_click = False
-        should_fallback = True
-
         try:
             time.sleep(0.5)
 
+            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+            logging.info(f"OS dialog button found at {loc}, clicking")
+            pyautogui.click(loc)
+            time.sleep(1)
+
             try:
-                loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
-            except pyautogui.ImageNotFoundException:
-                loc = None
-
-            if loc is not None:
-                matched_before_click = True
-                pyautogui.click(loc)
-                time.sleep(1)
-        finally:
-            if matched_before_click:
-                try:
-                    loc_after_click = pyautogui.locateCenterOnScreen(
-                        button_img, confidence=0.85
-                    )
-                    should_fallback = loc_after_click is not None
-                except pyautogui.ImageNotFoundException:
-                    should_fallback = False
-
-            if should_fallback:
+                pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                logging.info(
+                    "Button still visible after click; pressing Enter as fallback"
+                )
                 pyautogui.press("enter")
+            except pyautogui.ImageNotFoundException:
+                pass  # dialog dismissed successfully
 
+        except pyautogui.ImageNotFoundException:
+            logging.info("OS dialog button image not found; pressing Enter as fallback")
+            pyautogui.press("enter")
+
+        finally:
             pyautogui.FAILSAFE = original_failsafe
 
     def hide_popup_by_child_node(
