@@ -312,7 +312,7 @@ class TestKey:
                 f"Unsupported platform: {platform}. Use 'win', 'mac' or 'linux'."
             )
 
-        def matches(result_field) -> bool:
+        def matches_category(result_field) -> bool:
             # Global string result: applies to all platforms
             if isinstance(result_field, str):
                 return result_field.lower() == category_lower
@@ -337,7 +337,7 @@ class TestKey:
 
                 # File-level entry (e.g., result: pass)
                 if isinstance(entry, dict) and "splits" in entry:
-                    if split_matches(entry.get("splits", [])) and matches(
+                    if split_matches(entry.get("splits", [])) and matches_category(
                         entry.get("result")
                     ):
                         selected.append(self.normalize_test_filename(suite, testfile))
@@ -351,7 +351,7 @@ class TestKey:
                             continue
                         if "splits" not in subentry:
                             continue
-                        if split_matches(subentry.get("splits", [])) and matches(
+                        if split_matches(subentry.get("splits", [])) and matches_category(
                             subentry.get("result")
                         ):
                             selected.append(
