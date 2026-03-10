@@ -41,7 +41,13 @@ def test_save_page_as(driver: Firefox, sys_platform):
     nav.wait_for_download_animation_finish()
 
     # verify and delete downloaded file
-    saved_image_location = util.get_saved_file_path("Example Domain.htm")
+    if sys_platform == "Windows":
+        saved_file_name = "Example Domain.htm"
+    else:
+        saved_file_name = "Example Domain.html"
+
+    saved_image_location = util.get_saved_file_path(saved_file_name)
+
     example_page.expect(lambda _: os.path.exists(saved_image_location))
     util.remove_file(saved_image_location)
 
