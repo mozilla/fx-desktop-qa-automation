@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_sidebar import Sidebar
 from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutAddons
 
 
 @pytest.fixture()
@@ -24,7 +23,6 @@ def test_user_can_manage_pinned_extensions_on_the_sidebar(driver: Firefox):
     # Instantiate objects
     nav = Navigation(driver)
     sidebar = Sidebar(driver)
-    about_addons = AboutAddons(driver)
     page = GenericPage(driver, url=TREE_STYLE_TAB_URL)
 
     # Navigate to the AMO page and install the desired extension
