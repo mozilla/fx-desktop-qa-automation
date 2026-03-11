@@ -30,7 +30,7 @@ jobs:
   Run-Starfox-Win:
     if: |
       ${{
-        contains(github.event.inputs.platform, 'win') || github.event.inputs.platform == 'all'
+        contains(github.event.inputs.platform, 'win') || github.event.inputs.platform == 'all' || github.event_name == 'schedule'
       }}
     uses: ./.github/workflows/main-stability.yml
     with:
@@ -42,7 +42,7 @@ jobs:
   Run-Starfox-Mac:
     if: |
       ${{
-        contains(github.event.inputs.platform, 'mac') || github.event.inputs.platform == 'all'
+        contains(github.event.inputs.platform, 'mac') || github.event.inputs.platform == 'all' || github.event_name == 'schedule'
       }}
     uses: ./.github/workflows/main-stability.yml
     with:

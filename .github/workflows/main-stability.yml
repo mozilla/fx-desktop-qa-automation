@@ -273,7 +273,7 @@ jobs:
           mkdir -p test-results
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --json-report --json-report-file=test-results/report-mac.json --reruns 0 --reruns 0 || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --json-report --json-report-file=test-results/report-mac.json --reruns 0 || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -295,7 +295,7 @@ jobs:
           mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
 
           # Run pytest and write junit xml
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 --reruns 0 || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 || TEST_EXIT_CODE=$?
 
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
@@ -304,7 +304,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: json-mac-headed
-          path: test-results/json-mac-headed.json
+          path: test-results/report-mac-headed.json
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
