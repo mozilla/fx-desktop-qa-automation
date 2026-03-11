@@ -66,8 +66,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
 
     # Select the previously saved credentials from the autocomplete dropdown
     login_form.select_saved_credentials(
-        "username-login-field",
-        "mozilla-github-credentials"
+        "username-login-field", "mozilla-github-credentials"
     )
 
     # Edit the password and click on "Log in"

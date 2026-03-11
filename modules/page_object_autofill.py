@@ -873,7 +873,9 @@ class LoginAutofill(Autofill):
                 )
             )
 
-        def select_saved_credentials(self, field_reference: str, credential_reference: str) -> None:
+        def select_saved_credentials(
+            self, field_reference: str, credential_reference: str
+        ) -> None:
             """Select credentials from the autocomplete dropdown."""
 
             # Open the autocomplete dropdown
