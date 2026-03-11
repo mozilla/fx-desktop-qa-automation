@@ -25,7 +25,7 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     nav.open_searchmode_switcher_settings()
 
     # Step 2: Change the default search engine
-    prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Step 3: Re-open new tab and verify placeholder
     driver.get("about:newtab")

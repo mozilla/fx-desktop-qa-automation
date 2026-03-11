@@ -15,7 +15,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_addon_suggestion:
@@ -61,7 +61,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
@@ -100,7 +100,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
@@ -128,7 +128,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_code_google_non_us:
