@@ -32,11 +32,10 @@ class Sidebar(BasePage):
     def expect_extension_pinned_to_sidebar(self, extension_id: str):
         """Verify the extension button is present in the sidebar strip.
 
-        JS pierces the open shadow root of <sidebar-main> and checks extensionId
-        entirely in the script. The label attribute is not set on these buttons —
-        identity is confirmed by extensionId alone. Python's get_attribute() on
-        chrome-context WebElements returned from JS returns None via GeckoDriver,
-        so the comparison must stay inside the JS call.
+        JS pierces the open shadow root of <sidebar-main> and checks extensionId entirely in the script. The label
+        attribute is not set on these buttons — identity is confirmed by extensionId alone. Python's get_attribute()
+        on chrome-context WebElements returned from JS returns None via GeckoDriver, so the comparison must stay
+        inside the JS call.
         """
 
         def _verify(_):
@@ -55,9 +54,8 @@ class Sidebar(BasePage):
     def click_customize_sidebar(self):
         """Click the Customize Sidebar button to open the customize panel.
 
-        JS pierces the open shadow root of <sidebar-main>, finds the moz-button
-        by view attribute, and clicks it — all within the script. See
-        expect_extension_pinned_to_sidebar for why attribute access must stay in JS.
+        JS pierces the open shadow root of <sidebar-main>, finds the moz-button by view attribute, and clicks it —
+        all within the script. See expect_extension_pinned_to_sidebar for why attribute access must stay in JS.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -74,12 +72,10 @@ class Sidebar(BasePage):
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 
-        The customize panel loads in <browser id="sidebar"> as sidebar-customize.html.
-        That page uses Lit web components with nested shadow roots. JS recursively
-        pierces all shadow roots in contentDocument to find and click the link.
-        Waits for the document to be fully loaded before searching.
-        The link opens about:addons in a new tab — call switch_to_new_tab() after
-        (inherited from BasePage).
+        The customize panel loads in <browser id="sidebar"> as sidebar-customize.html. That page uses Lit web
+        components with nested shadow roots. JS recursively pierces all shadow roots in contentDocument to find and
+        click the link. Waits for the document to be fully loaded before searching. The link opens about:addons in a
+        new tab.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(

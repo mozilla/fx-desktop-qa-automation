@@ -18,15 +18,17 @@ EXTENSION_ID = "treestyletab@piro.sakura.ne.jp"
 
 def test_user_can_manage_pinned_extensions_on_the_sidebar(driver: Firefox):
     """
-    C2652535 - Verify that extensions pinned to the sidebar are displayed in the Customize
-    Sidebar panel and the Manage extensions link opens about:addons.
+    C2652535 - Verify that extensions pinned to the sidebar are displayed in the Customize Sidebar panel and the
+    Manage extensions link opens about:addons.
     """
+    # Instantiate objects
     nav = Navigation(driver)
     sidebar = Sidebar(driver)
     about_addons = AboutAddons(driver)
+    page = GenericPage(driver, url=TREE_STYLE_TAB_URL)
 
-    # Navigate to the Tree Style Tab AMO page and install the extension
-    GenericPage(driver, url=TREE_STYLE_TAB_URL).open()
+    # Navigate to the AMO page and install the desired extension
+    page.open()
     about_addons.click_on("add-to-firefox")
 
     # Confirm the extension installation
