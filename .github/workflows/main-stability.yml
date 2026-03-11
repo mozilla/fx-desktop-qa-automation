@@ -183,7 +183,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts-win-smoke
+          name: artifacts-win
           path: artifacts-win
 
   Test-MacOS:
@@ -309,7 +309,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts-mac-smoke
+          name: artifacts-mac
           path: artifacts-mac
 
   Use-Artifacts:
@@ -339,7 +339,7 @@ jobs:
         with:
           name: artifacts-mac
           path: artifacts-mac
-      - name: List downloaded files
+      - name: List downloaded Win files
         run: ls artifacts-win/
       - name: List downloaded MacOS files
         run: ls artifacts-mac/
