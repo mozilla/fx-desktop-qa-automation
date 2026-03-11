@@ -3,10 +3,14 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
+from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 
 USERNAME = "testUser"
 PASSWORD = "testPassword"
+PASSWORD_EDIT = "12"
+PASSWORD_EDITED = "testPassword12"
+TEST_PAGE_URL = "mozilla.github.io"
 
 
 @pytest.fixture()
@@ -29,6 +33,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
     login_autofill = LoginAutofill(driver)
     nav = Navigation(driver)
     panel = PanelUi(driver)
+    about_logins = AboutLogins(driver)
 
     # Open a private window and switch to it
     panel.open_and_switch_to_new_window("private")
@@ -61,5 +66,31 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
     login_autofill.open()
 
     # Select the previously saved credentials from the autocomplete dropdown
-    login_autofill.click_on("username-field")
-    login_autofill.click_on("")
+    login_form.select_saved_credentials(
+        "username-login-field",
+        "mozilla-github-credentials"
+    )
+
+    # Edit the password and click on "Log in"
+    login_form = LoginAutofill.LoginForm(login_autofill)
+    login_form.fill_password(PASSWORD_EDIT)
+    login_form.submit()
+
+    # The "Update" doorhanger is displayed
+    nav.element_visible("password-notification-popup")
+
+    # Confirm the changes in the doorhanger
+    nav.click_on("password-notification-save-button")
+
+    # The credentials have the password updated correctly, check this in about:logins
+    about_logins.open()
+    # password_search = about_logins.get_element("login-filter-input")
+    # password_search.send_keys(PASSWORD_EDITED)
+    about_logins.click_copy_password_button()
+
+    # Paste the copied password in the URL bar and verify the results
+    nav.clear_awesome_bar()
+    nav.paste_in_awesome_bar()
+
+    # The password is correctly pasted
+    nav.verify_plain_text_in_input_awesome_bar(PASSWORD_EDITED)

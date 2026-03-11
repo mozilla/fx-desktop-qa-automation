@@ -873,6 +873,17 @@ class LoginAutofill(Autofill):
                 )
             )
 
+        def select_saved_credentials(self, field_reference: str, credential_reference: str) -> None:
+            """Select credentials from the autocomplete dropdown."""
+
+            # Open the autocomplete dropdown
+            self.parent.click_on(field_reference)
+
+            # Click the credential entry from the Firefox chrome autocomplete popup
+            with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):
+                credential = self.parent.get_element(credential_reference)
+                credential.click()
+
 
 class TextAreaFormAutofill(Autofill):
     """
