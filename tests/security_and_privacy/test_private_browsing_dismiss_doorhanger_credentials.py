@@ -46,7 +46,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
     login_form.fill_password(PASSWORD)
     login_form.submit()
 
-    # Check that there is no doorhanger displayed like in normal broswing mode
+    # Check that there is no doorhanger displayed like in normal browsing mode
     nav.element_not_visible("password-notification-popup")
 
     # Check that there is a grey key icon displayed on the left part of the address bar
