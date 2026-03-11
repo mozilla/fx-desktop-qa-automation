@@ -1,9 +1,4 @@
 {
-    "add-to-firefox": {
-        "selectorData": "AMInstallButton-button",
-        "strategy": "class",
-        "groups": []
-    },
     "sidebar-options": {
         "selectorData": "button.category[name='{name}']",
         "strategy": "css",

@@ -29,7 +29,7 @@ def test_user_can_manage_pinned_extensions_on_the_sidebar(driver: Firefox):
 
     # Navigate to the AMO page and install the desired extension
     page.open()
-    about_addons.click_on("add-to-firefox")
+    page.click_on("add-to-firefox")
 
     # Confirm the extension installation
     nav.element_clickable("popup-notification-add")

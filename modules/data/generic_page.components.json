@@ -139,5 +139,10 @@
         "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
         "strategy": "css",
         "groups": []
+    },
+    "add-to-firefox": {
+        "selectorData": "AMInstallButton-button",
+        "strategy": "class",
+        "groups": []
     }
 }
