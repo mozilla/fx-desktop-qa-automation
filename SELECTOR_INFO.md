@@ -2995,7 +2995,7 @@ Path to .json: modules/data/login_autofill.components.json
 ```
 ```
 Selector Name: mozilla-github-credentials
-Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='testUser']"
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='testUser']"
 Description: Autocomplete dropdown is toggled for focused login fields on Mozilla github page load
 Location: Mozilla Github page load
 Path to .json: modules/data/login_autofill.components.json

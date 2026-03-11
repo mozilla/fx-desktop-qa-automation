@@ -10,7 +10,6 @@ USERNAME = "testUser"
 PASSWORD = "testPassword"
 PASSWORD_EDIT = "12"
 PASSWORD_EDITED = "testPassword12"
-TEST_PAGE_URL = "mozilla.github.io"
 
 
 @pytest.fixture()
@@ -84,8 +83,6 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
 
     # The credentials have the password updated correctly, check this in about:logins
     about_logins.open()
-    # password_search = about_logins.get_element("login-filter-input")
-    # password_search.send_keys(PASSWORD_EDITED)
     about_logins.click_copy_password_button()
 
     # Paste the copied password in the URL bar and verify the results
