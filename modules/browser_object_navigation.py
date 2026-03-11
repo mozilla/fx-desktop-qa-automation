@@ -212,7 +212,7 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         return self
 
     @BasePage.context_chrome
@@ -226,7 +226,7 @@ class Navigation(BasePage):
         term : str
             The search term
         """
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.search_bar.send_keys(term + Keys.ENTER)
         return self
@@ -268,7 +268,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_on_change_search_settings_button(self) -> BasePage:
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.change_search_settings_button = self.find_element(
             By.ID, "searchbar-anon-search-settings"
