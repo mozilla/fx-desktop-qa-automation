@@ -3841,6 +3841,13 @@ Description: Username field in the password notification popup
 Location: Username field in the password notification popup
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: password-notification-save-button
+Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
+Description: Save button in the password notification popup
+Location: Save button in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
