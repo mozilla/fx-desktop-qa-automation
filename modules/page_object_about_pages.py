@@ -439,31 +439,25 @@ class AboutTelemetry(BasePage):
         existing_tabs = len(self.driver.window_handles)
 
         # Click "Raw JSON" from categories on the left
-        WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable(self.get_selector("category-raw"))
-        )
+        self.element_clickable("category-raw")
         self.get_element("category-raw").click()
 
         # Wait for the new tab before switching
-        WebDriverWait(self.driver, 30).until(
-            lambda d: len(d.window_handles) == existing_tabs + 1
-        )
+        self.wait.until(lambda d: len(d.window_handles) == existing_tabs + 1)
         self.switch_to_new_tab()
         self.clear_cache()
 
         # Wait for Raw Data tab to be clickable, then click it
-        WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable(self.get_selector("rawdata-tab"))
-        )
+        self.element_clickable("rawdata-tab")
         self.get_element("rawdata-tab").click()
 
         # Wait for data URL
-        WebDriverWait(self.driver, 30).until(
+        self.wait.until(
             lambda d: d.current_url.startswith("data:application/json;base64,")
         )
 
-        # Wait until it's not the "null" payload (bnVsbA==)
-        WebDriverWait(self.driver, 30).until(
+        # Wait until it's not the "null" payload (bnVsbA==); telemetry can take time to flush
+        self.custom_wait(timeout=30).until(
             lambda d: "base64,bnVsbA==" not in d.current_url
         )
 
