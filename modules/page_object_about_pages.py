@@ -8,7 +8,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -369,6 +369,36 @@ class AboutLogins(BasePage):
         # Wait for export dialog and navigate to folder
         page = GenericPage(self.driver)
         page.navigate_dialog_to_location(downloads_folder, filename)
+
+    def click_copy_username_button(self) -> Page:
+        """Click the copy username button"""
+        self.click_on("copy-username")
+        return self
+
+    def click_copy_password_button(self) -> Page:
+        """Click the copy password button"""
+        self.click_on("copy-password")
+        return self
+
+    def click_reveal_password_button(self) -> Page:
+        """Click the reveal password button"""
+        self.click_on("show-password-checkbox")
+        return self
+
+    def verify_reveal_button_cursor_pointer(self):
+        """
+        Verify that hovering over the Reveal/Hide password button
+        changes the mouse cursor to a hand pointer
+        """
+        element = self.get_element("show-password-checkbox")
+
+        # hover over element
+        ActionChains(self.driver).move_to_element(element).perform()
+
+        # read computed cursor style
+        cursor = element.value_of_css_property("cursor")
+
+        assert cursor == "pointer", f"Expected pointer cursor, got {cursor}"
 
 
 class AboutPrivatebrowsing(BasePage):

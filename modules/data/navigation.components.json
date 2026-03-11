@@ -177,19 +177,35 @@
         "groups": []
     },
     "shield-icon": {
-        "selectorData": "tracking-protection-icon-container",
+        "selectorData": "trust-icon-container",
         "strategy": "id",
         "groups": [
             "doNotCache"
         ]
     },
+    "see-blocked-trackers-parent": {
+        "selectorData": "trustpanel-blocker-see-all",
+        "strategy": "id",
+        "groups": []
+    },
+    "see-blocked-trackers": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "see-blocked-trackers-parent"
+    },
     "cryptominers": {
-        "selectorData": ".protections-popup-category.subviewbutton.subviewbutton-iconic.subviewbutton-nav.blocked",
+        "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
         "strategy": "css",
         "groups": []
     },
     "no-trackers-detected": {
         "selectorData": "protections-popup-no-trackers-found-description",
+        "strategy": "id",
+        "groups": []
+    },
+    "trustpanel-header": {
+        "selectorData": "trustpanel-header",
         "strategy": "id",
         "groups": []
     },
@@ -549,8 +565,18 @@
         "strategy": "css",
         "groups": []
     },
+    "searchbar-input": {
+        "selectorData": "#search-container #urlbar-input",
+        "strategy": "css",
+        "groups": []
+    },
     "searchbar-suggestions": {
-        "selectorData": "hbox.search-one-offs",
+        "selectorData": "div.urlbarView-row",
+        "strategy": "css",
+        "groups": []
+    },
+    "searchbar-highlighted-suggestion": {
+        "selectorData": "div.urlbarView-row[selected]",
         "strategy": "css",
         "groups": []
     },
@@ -625,9 +651,9 @@
         "groups": []
     },
     "download-deleted-message": {
-          "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
-          "strategy": "css",
-          "groups": []
+        "selectorData": ".downloadDetails.downloadDetailsHover[value='File deleted']",
+        "strategy": "css",
+        "groups": []
     },
     "xpi-download-target-element": {
         "selectorData": ".downloadTarget[value='tomato_clock-6.0.2.xpi']",
@@ -654,7 +680,7 @@
         "strategy": "css",
         "groups": []
     },
-     "download-button-warning": {
+    "download-button-warning": {
         "selectorData": "#downloads-button[attention='severe']",
         "strategy": "css",
         "groups": []
@@ -696,6 +722,16 @@
     },
     "sidebar-box": {
         "selectorData": "sidebar-box",
+        "strategy": "id",
+        "groups": []
+    },
+    "password-notification-popup": {
+        "selectorData": "password-notification",
+        "strategy": "id",
+        "groups": []
+    },
+    "password-notification-username-field": {
+        "selectorData": "password-notification-username",
         "strategy": "id",
         "groups": []
     }
