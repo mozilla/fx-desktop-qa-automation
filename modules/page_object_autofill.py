@@ -883,7 +883,11 @@ class LoginAutofill(Autofill):
 
             # Click the credential entry from the Firefox chrome autocomplete popup
             with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):
-                credential = self.parent.get_element(credential_reference)
+                credential = self.parent.wait.until(
+                    lambda d: self.parent.get_element(credential_reference)
+                    if self.parent.get_element(credential_reference).is_displayed()
+                    else False
+                )
                 credential.click()
 
 
