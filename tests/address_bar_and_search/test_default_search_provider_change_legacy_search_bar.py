@@ -17,7 +17,8 @@ def test_case():
 
 def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
     """
-    C1365245 - Verify that changing the default search provider is reflected in the legacy search bar.
+    C1365245 - Verify that changing the default search provider is reflected in
+    the legacy search bar.
     """
     nav = Navigation(driver)
     tabs = TabBar(driver)
@@ -43,7 +44,7 @@ def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
 
     # Step 4: Change the default search engine
     prefs.open()
-    prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Step 5: Perform another search and validate engine label (via decorated method)
     nav.type_in_search_bar(SEARCH_TERM)
