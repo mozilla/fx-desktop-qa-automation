@@ -2286,38 +2286,34 @@ Path to .json: modules/data/devtools.components.json
 ```
 #### error_page
 ```
+Selector Name: net-error-card
+Selector Data: "net-error-card"
+Description: The shadow host web component for the error page (Firefox 138+)
+Location: In the error page body
+Path to .json: modules/data/error_page.components.json
+```
+```
 Selector Name: error-title
-Selector Data: ".title-text[data-l10n-id='dnsNotFound-title']"
-Description: The error title name from the error page
-Location: In the error page
+Selector Data: "[data-l10n-id='neterror-dns-not-found-title']"
+Description: The main error title inside the net-error-card shadow DOM
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
 Selector Name: error-short-description
-Selector Data: "errorShortDesc"
-Description: The error short description from the error page
-Location: In the error page
+Selector Data: "netErrorIntro"
+Description: The short description paragraph inside the net-error-card shadow DOM; hostname is read from its data-l10n-args attribute
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
-Selector Name: error-suggestion-link
-Selector Data: "#errorShortDesc a[data-l10n-name='website']"
-Description: The link with the error suggestion
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-long-description-items
-Selector Data: "#errorLongDesc li"
-Description: The error long description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: try-again-button
-Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
-Description: The Try Again button from the error page
-Location: In the error page
+Selector Name: error-learn-more-link
+Selector Data: "neterror-learn-more-link"
+Description: The "Learn more" link inside the net-error-card shadow DOM
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 #### find_toolbar
