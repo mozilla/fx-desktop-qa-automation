@@ -61,7 +61,7 @@ address_bar_and_search:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
     comment: 'https://mozilla.testrail.io/index.php?/tests/view/8435692'
-    result: deprecated
+    result: pass
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:

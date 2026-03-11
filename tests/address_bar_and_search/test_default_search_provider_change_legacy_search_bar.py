@@ -4,9 +4,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutPrefs
 
+TEST_SITE = "https://example.com"
 SEARCH_TERM = "what is life?"
 SEARCH_ENGINE = "DuckDuckGo"
-EXPECTED_ENGINE_DISPLAY = "DuckDuckGo Search"
 SEARCH_SETTINGS_URL = "about:preferences#search"
 
 
@@ -35,10 +35,10 @@ def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
     assert driver.current_url == SEARCH_SETTINGS_URL
 
     # Step 3: Open site, repeat nav to settings (validates correct tab handling)
-    driver.get("https://9gag.com/")
+    driver.get(TEST_SITE)
     nav.type_in_search_bar(SEARCH_TERM)
     nav.click_on_change_search_settings_button()
-    assert driver.current_url == "https://9gag.com/"
+    nav.url_contains(TEST_SITE)
     driver.switch_to.window(driver.window_handles[2])
     assert driver.current_url == SEARCH_SETTINGS_URL
 
@@ -48,5 +48,4 @@ def test_default_search_provider_change_legacy_search_bar(driver: Firefox):
 
     # Step 5: Perform another search and validate engine label (via decorated method)
     nav.type_in_search_bar(SEARCH_TERM)
-    engine_label = nav.get_legacy_search_engine_label()
-    assert engine_label == EXPECTED_ENGINE_DISPLAY
+    nav.legacy_search_engine_matches(SEARCH_ENGINE)
