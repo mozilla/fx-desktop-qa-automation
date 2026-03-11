@@ -3611,6 +3611,20 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: legacy-searchbar-switcher-popup
+Selector Data: searchmode-switcher-popup
+Description: searchmode switcher toolbar popup
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: legacy-searchbar-search-settings
+Selector Data: searchmode-switcher-popup-search-settings-button
+Description: searchmode switcher toolbar button
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: searchmode-switcher-settings
 Selector Data: menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']
 Description: Search settings button in the searchmode switcher dropdown
