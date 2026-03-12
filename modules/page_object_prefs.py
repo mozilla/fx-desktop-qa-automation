@@ -13,7 +13,6 @@ from selenium.webdriver.support.select import Select
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
-from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
@@ -690,7 +689,7 @@ class AboutPrefs(BasePage):
         # Find the dialog option elements containing the checkbox label
         self.element_exists("clear-data-dialog-options")
         cookies_checkbox = self.get_element("cookies-data-checkbox")
-        self.expect_attribute_in_element(cookies_checkbox, "data-l10n-args")
+        self.element_has_attribute(cookies_checkbox, "data-l10n-args")
         cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
         # dictionary holding the cookies amount and unit
         # {amount: "1234", unit: "MB"}
