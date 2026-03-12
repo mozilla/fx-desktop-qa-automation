@@ -43,6 +43,7 @@ def test_search_mode_appears_and_suggestions_update(driver):
 
     # 5) Search mode chip appears
     nav.assert_search_mode_chip_visible()
+    nav.click_in_awesome_bar()
     nav.wait_for_suggestions_present()
 
     # 6–7) Click a visible suggestion
@@ -76,6 +77,7 @@ def test_private_mode_repeat_after_enabling_pref(driver):
         nav.wait_for_suggestions_present()
         nav.open_usb_and_select_option(GENERAL_ENGINE)
         nav.assert_search_mode_chip_visible()
+        nav.click_in_awesome_bar()
         nav.wait_for_suggestions_present()
 
         nav.click_first_suggestion_row()
