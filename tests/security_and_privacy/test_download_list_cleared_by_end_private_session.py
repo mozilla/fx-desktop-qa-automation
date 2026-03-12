@@ -1,11 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_pages import AboutDownloads
-from modules.page_object_generics import GenericPage
+from modules.browser_object import Navigation, PanelUi, TabBar
+from modules.page_object import AboutDownloads, GenericPage
 
 TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
 DOWNLOAD_FILE_NAME = "sample2.doc"
@@ -30,20 +27,22 @@ def delete_files_regex_string():
 
 
 def test_download_list_is_cleared_by_end_private_session_button(
-    driver: Firefox, delete_files
+    driver: Firefox,
+    panel_ui: PanelUi,
+    tabs: TabBar,
+    about_downloads: AboutDownloads,
+    nav: Navigation,
+    delete_files,
 ):
     """
-    C2359317 - Verify that download list is cleared when "End Private Session" is used in a Private Window
+    C2359317 - Verify that download list is cleared when "End Private Session"
+    is used in a Private Window
     """
     # Instantiate objects
-    nav = Navigation(driver)
-    panel = PanelUi(driver)
-    tabs = TabBar(driver)
     page = GenericPage(driver, url=TEST_URL)
-    about_downloads = AboutDownloads(driver)
 
     # Open a Private Window
-    panel.open_and_switch_to_new_window("private")
+    panel_ui.open_and_switch_to_new_window("private")
 
     # Download a file
     page.open()

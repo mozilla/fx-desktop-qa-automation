@@ -1,0 +1,87 @@
+{
+    "context": "chrome",
+    "trustpanel": {
+        "selectorData": "trustpanel-popup",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "trustpanel-header": {
+        "selectorData": "trustpanel-header",
+        "strategy": "id",
+        "groups": []
+    },
+    "trustpanel-connect-button": {
+        "selectorData": "[data-l10n-id='trustpanel-connection-label-secure']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-connect-details-link": {
+        "selectorData": "#trustpanel-siteinformation-morelink",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-blocker-section": {
+        "selectorData": "trustpanel-blocker-section-header",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "blocked-list": {
+        "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons",
+        "strategy": "css",
+        "groups": []
+    },
+    "detected-list": {
+        "selectorData": "#trustpanel-detected > .trustpanel-blocker-buttons",
+        "strategy": "css",
+        "groups": []
+    },
+    "blocked-items": {
+        "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav",
+        "strategy": "css",
+        "groups": []
+    },
+    "detected-items": {
+        "selectorData": "#trustpanel-detected > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav",
+        "strategy": "css",
+        "groups": []
+    },
+    "detected-sites-header": {
+        "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "blocked-sites-header": {
+        "selectorData": "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "detected-site-entry": {
+        "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "blocked-site-entry": {
+        "selectorData": "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "shield-icon": {
+        "selectorData": "trust-icon-container",
+        "strategy": "id",
+        "groups": [
+            "doNotCache"
+        ]
+    }
+}

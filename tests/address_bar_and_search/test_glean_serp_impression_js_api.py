@@ -43,7 +43,7 @@ def test_glean_serp_impression_js_api(driver: Firefox):
 
     # Set search engine
     prefs.open()
-    prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Perform search
     page.open()
