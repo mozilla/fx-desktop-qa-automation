@@ -1014,7 +1014,7 @@ profile:
 reader_view:
   test_improved_type_control_panel:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022007
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_reader_view_close_sidebar:
