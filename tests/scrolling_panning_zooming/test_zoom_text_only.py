@@ -121,15 +121,15 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
 
     web_page.expect(
         lambda _: (
-            web_page.get_element("yahoo-logo").location["x"]
-            == original_website1_image_position
+                web_page.get_element("yahoo-logo").location["x"]
+                == original_website1_image_position
         )
     )
 
     web_page.expect(
         lambda _: (
-            web_page.get_element("yahoo-login-button").location["x"]
-            < original_website1_text_position
+                web_page.get_element("yahoo-login-button").location["x"]
+                < original_website1_text_position
         )
     )
 
@@ -145,15 +145,15 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     # Verify Yahoo at 90%: image position still unchanged, text position changed
     web_page.expect(
         lambda _: (
-            web_page.get_element("yahoo-logo").location["x"]
-            == original_website1_image_position
+                web_page.get_element("yahoo-logo").location["x"]
+                == original_website1_image_position
         )
     )
 
     web_page.expect(
         lambda _: (
-            web_page.get_element("yahoo-login-button").location["x"]
-            > original_website1_text_position
+                web_page.get_element("yahoo-login-button").location["x"]
+                > original_website1_text_position
         )
     )
 
@@ -162,14 +162,14 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
 
     web_page.expect(
         lambda _: (
-            web_page.get_element("duckduckgo-logo").size == original_website2_image_size
+                web_page.get_element("duckduckgo-logo").size == original_website2_image_size
         )
     )
 
     web_page.expect(
         lambda _: (
-            web_page.get_element("duckduckgo-tagline").location["x"]
-            < original_website2_text_position
+                web_page.get_element("duckduckgo-tagline").location["x"]
+                < original_website2_text_position
         )
     )
 
@@ -197,7 +197,7 @@ def _reset_zoom_settings(driver: Firefox) -> None:
 
 @pytest.mark.noxvfb
 def test_zoom_text_only_from_settings(
-    driver: Firefox, web_page: GenericPage, reject_consent_page
+        driver: Firefox, web_page: GenericPage, reject_consent_page
 ):
     """
     C545733.1: Verify that ticking the zoom text only box would only affect the scale of text.
@@ -229,7 +229,6 @@ def test_zoom_text_only_from_settings(
 
     # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
     _reset_zoom_settings(driver)
-
 
 # def test_zoom_text_only_after_restart(
 #     driver: Firefox, web_page: GenericPage, reject_consent_page

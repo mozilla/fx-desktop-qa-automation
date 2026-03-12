@@ -4,6 +4,7 @@ from time import sleep
 from typing import List, Literal
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -218,17 +219,22 @@ class AboutPrefs(BasePage):
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
+        Focuses the inner <select> inside moz-select's shadow root,
+        then uses arrow keys to navigate to the target zoom level.
         """
+        zoom_levels = [30, 50, 67, 80, 90, 100, 110, 120, 133, 150, 170, 200, 240, 300, 400, 500]
         moz_select = self.get_element("default-zoom-dropdown")
-        self.driver.execute_script(
-            """
-            const select = arguments[0].shadowRoot.querySelector('select');
-            select.value = arguments[1];
-            select.dispatchEvent(new Event('change', {bubbles: true}));
-            """,
+        current_value = int(self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('select').value",
             moz_select,
-            str(zoom_percentage),
+        ))
+        steps = zoom_levels.index(zoom_percentage) - zoom_levels.index(current_value)
+        self.driver.execute_script(
+            "arguments[0].shadowRoot.querySelector('select').focus()",
+            moz_select,
         )
+        key = Keys.ARROW_DOWN if steps > 0 else Keys.ARROW_UP
+        ActionChains(self.driver).send_keys(key * abs(steps)).perform()
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
