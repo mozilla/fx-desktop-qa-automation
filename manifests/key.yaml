@@ -963,8 +963,7 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022005
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_firefox_home_new_tabs:
