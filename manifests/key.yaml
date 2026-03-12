@@ -1013,7 +1013,6 @@ profile:
     - smoke
 reader_view:
   test_improved_type_control_panel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022007
     result: pass
     splits:
     - smoke
