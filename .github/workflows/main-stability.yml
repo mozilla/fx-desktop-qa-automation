@@ -255,7 +255,7 @@ jobs:
           path: test-results/report-mac.json
 
       - name: Run Tests in MacOS (Headed)
-        if: ${{ steps.setup.conclusion == 'success'}}
+        if: ${{ steps.setup.conclusion == 'success' && always() }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
