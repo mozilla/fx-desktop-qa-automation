@@ -55,7 +55,6 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021912'
     result: pass
     splits:
     - functional1
