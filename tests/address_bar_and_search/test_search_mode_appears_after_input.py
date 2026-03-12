@@ -43,6 +43,8 @@ def test_search_mode_appears_and_suggestions_update(driver):
 
     # 5) Search mode chip appears
     nav.assert_search_mode_chip_visible()
+
+    # Re-focus bar to ensure suggestions populate after engine switch
     nav.click_in_awesome_bar()
     nav.wait_for_suggestions_present()
 

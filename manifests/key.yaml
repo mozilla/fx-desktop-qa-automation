@@ -152,8 +152,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_mode_appears_after_input:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021933'
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_change_tab:
