@@ -748,5 +748,10 @@
         "selectorData": "password-notification-username",
         "strategy": "id",
         "groups": []
+    },
+    "password-notification-save-button": {
+        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "strategy": "css",
+        "groups": []
     }
 }
