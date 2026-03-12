@@ -206,14 +206,29 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(str(option_id), "checked", "")
         return self
 
+    def click_zoom_text_only(self) -> BasePage:
+        """
+        Toggles the Zoom Text Only checkbox in about:preferences.
+        Uses JS to pierce the moz-checkbox shadow root.
+        """
+        moz_checkbox = self.get_element("zoom-text-only")
+        self.driver.execute_script("arguments[0].click()", moz_checkbox)
+        return self
+
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
         """
-        self.click_on("default-zoom-dropdown")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
-        self.click_on("default-zoom-dropdown")
+        moz_select = self.get_element("default-zoom-dropdown")
+        self.driver.execute_script(
+            """
+            const select = arguments[0].shadowRoot.querySelector('select');
+            select.value = arguments[1];
+            select.dispatchEvent(new Event('change', {bubbles: true}));
+            """,
+            moz_select,
+            str(zoom_percentage),
+        )
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:

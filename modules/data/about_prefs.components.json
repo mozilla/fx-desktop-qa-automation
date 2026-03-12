@@ -644,13 +644,19 @@
     "strategy": "id",
     "groups": []
   },
+  "zoom-text-only-input": {
+    "selectorData": "input[type='checkbox']",
+    "strategy": "css",
+    "shadowParent": "zoom-text-only",
+    "groups": []
+  },
   "default-zoom-dropdown": {
     "selectorData": "defaultZoom",
     "strategy": "id",
     "groups": []
   },
   "default-zoom-dropdown-value": {
-    "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
+    "selectorData": "menuitem[label='{.*}%']",
     "strategy": "css",
     "groups": []
   },

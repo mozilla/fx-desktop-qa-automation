@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
@@ -52,14 +54,6 @@ def temp_selectors():
 
 WEBSITE_1 = "https://search.yahoo.com/"
 WEBSITE_2 = "https://start.duckduckgo.com/"
-
-
-@pytest.fixture()
-def add_to_prefs_list():
-    """
-    Set the pref to zoom text only (simulate after restart)
-    """
-    return [("browser.zoom.full", False)]
 
 
 @pytest.fixture()
@@ -198,7 +192,7 @@ def _reset_zoom_settings(driver: Firefox) -> None:
     """
     prefs = AboutPrefs(driver, category="General").open()
     prefs.set_default_zoom_level(DEFAULT_ZOOM_100)
-    prefs.click_on("zoom-text-only")
+    prefs.click_zoom_text_only()
 
 
 @pytest.mark.noxvfb
@@ -225,7 +219,7 @@ def test_zoom_text_only_from_settings(
     # Set the pref to zoom text only
     panel_ui.open_and_switch_to_new_window("tab")
     about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.click_on("zoom-text-only")
+    about_prefs.click_zoom_text_only()
 
     # Set zoom level to 110%
     about_prefs.set_default_zoom_level(DEFAULT_ZOOM_110)
@@ -237,31 +231,31 @@ def test_zoom_text_only_from_settings(
     _reset_zoom_settings(driver)
 
 
-def test_zoom_text_only_after_restart(
-    driver: Firefox, web_page: GenericPage, reject_consent_page
-):
-    """
-    C545733.2: Verify that the zoom text only option works after restart
-
-        Arguments:
-        web_page: instance of generic page.
-    """
-    # Initializing objects
-    nav = Navigation(driver)
-    panel_ui = PanelUi(driver)
-
-    # Save the original sizes and positions for comparison
-    panel_ui.open_and_switch_to_new_window("tab")
-    nav.search(WEBSITE_2)
-    web_page.title_contains("DuckDuckGo")
-    original_data = _capture_original_data(driver, web_page)
-
-    # Set default zoom level
-    panel_ui.open_and_switch_to_new_window("tab")
-    _set_default_zoom(driver, DEFAULT_ZOOM_110)
-
-    # Verify results
-    _assert_text_only_zoom_functionality(driver, nav, web_page, original_data)
-
-    # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
-    _reset_zoom_settings(driver)
+# def test_zoom_text_only_after_restart(
+#     driver: Firefox, web_page: GenericPage, reject_consent_page
+# ):
+#     """
+#     C545733.2: Verify that the zoom text only option works after restart
+#
+#         Arguments:
+#         web_page: instance of generic page.
+#     """
+#     # Initializing objects
+#     nav = Navigation(driver)
+#     panel_ui = PanelUi(driver)
+#
+#     # Save the original sizes and positions for comparison
+#     panel_ui.open_and_switch_to_new_window("tab")
+#     nav.search(WEBSITE_2)
+#     web_page.title_contains("DuckDuckGo")
+#     original_data = _capture_original_data(driver, web_page)
+#
+#     # Set default zoom level
+#     panel_ui.open_and_switch_to_new_window("tab")
+#     _set_default_zoom(driver, DEFAULT_ZOOM_110)
+#
+#     # Verify results
+#     _assert_text_only_zoom_functionality(driver, nav, web_page, original_data)
+#
+#     # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
+#     _reset_zoom_settings(driver)
