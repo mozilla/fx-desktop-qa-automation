@@ -914,6 +914,12 @@ class AboutPrefs(BasePage):
             self.click_on("show-sidebar-checkbox")
         return self
 
+    def wait_for_default_search_engine(self, engine_name: str) -> None:
+        """Wait until the UI reflects the selected default search engine."""
+        self.wait.until(
+            lambda d: self.get_element("select-wrapper-button").text == engine_name
+        )
+
 
 class AboutAddons(BasePage):
     """

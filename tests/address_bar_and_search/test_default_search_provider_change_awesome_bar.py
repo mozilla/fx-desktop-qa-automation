@@ -27,6 +27,9 @@ def test_default_search_provider_change_awesome_bar(driver: Firefox):
     # Step 2: Change the default search engine
     prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
+    # Wait until the UI reflects the new search engine
+    prefs.wait_for_default_search_engine(SEARCH_ENGINE)
+
     # Step 3: Re-open new tab and verify placeholder
     driver.get("about:newtab")
     nav.element_attribute_contains("awesome-bar", "placeholder", EXPECTED_PLACEHOLDER)
