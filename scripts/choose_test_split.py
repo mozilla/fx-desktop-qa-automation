@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     if os.environ.get("STARFOX_CATEGORY"):
         category = os.environ["STARFOX_CATEGORY"]
-        split_name = os.environ["STARFOX_SPLIT"]
+        split_name = os.environ.get("STARFOX_SPLIT", all)
 
         # platform MUST be set by the job environment (win|mac|linux)
         platform = os.environ.get("STARFOX_PLATFORM")
