@@ -1248,6 +1248,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_user_can_manage_pinned_extensions_on_the_sidebar:
+    result: pass
+    splits:
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
     comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1938362'
