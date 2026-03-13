@@ -650,7 +650,7 @@
     "groups": []
   },
   "default-zoom-dropdown-value": {
-    "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
+    "selectorData": "menuitem[label='{.*}%']",
     "strategy": "css",
     "groups": []
   },
