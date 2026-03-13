@@ -432,8 +432,7 @@ downloads:
     splits:
     - smoke
   test_download_pdf_from_context_menu:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018768'
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result:
       linux: unstable
       mac: pass
@@ -631,7 +630,7 @@ menus:
       splits:
       - functional2
     test_save_page_as:
-      comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2020687'
+      comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
       result: pass
       splits:
       - functional2
@@ -653,7 +652,7 @@ menus:
       splits:
       - functional2
     test_save_image_as:
-      comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2020687'
+      comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
       result: pass
       splits:
       - functional2
