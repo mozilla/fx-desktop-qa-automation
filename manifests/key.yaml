@@ -12,12 +12,12 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021908'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021908
     result: pass
     splits:
     - functional1
   test_addon_suggestion:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018766'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
     splits:
     - functional1
@@ -34,7 +34,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_clipboard_pref_flip:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021910'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021910
     result: unstable
     splits:
     - functional1
@@ -55,12 +55,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021912'
     result: pass
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    comment: 'https://mozilla.testrail.io/index.php?/tests/view/8435692'
     result: pass
     splits:
     - functional1
@@ -69,7 +67,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_disable_websearch_from_awesome_bar:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021411'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
     result: unstable
     splits:
     - functional1
@@ -82,7 +80,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_search_counts_us:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result:
       linux: pass
       mac: unstable
@@ -90,7 +88,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_withads_url_bar_us:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result: unstable
     splits:
     - functional1
@@ -99,17 +97,16 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021908'
     result: pass
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021917'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021917
     result: unstable
     splits:
     - functional1
   test_open_link_in_new_container_tab:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021919'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021919
     result: unstable
     splits:
     - functional1
@@ -122,7 +119,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_sap_google_adclick:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result: unstable
     splits:
     - functional1
@@ -131,7 +128,6 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021908'
     result: pass
     splits:
     - functional1
@@ -152,7 +148,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_mode_appears_after_input:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021933'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021933
     result: unstable
     splits:
     - functional1
@@ -177,7 +173,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_modes_for_sites:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result: unstable
     splits:
     - functional1
@@ -186,17 +182,17 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018766'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018766'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
     splits:
     - functional1
   test_search_term_persists:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2002277'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result: unstable
     splits:
     - functional1
@@ -205,12 +201,12 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021411'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
     result: unstable
     splits:
     - functional1
   test_server_not_found_error_pb:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021411'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
     result: unstable
     splits:
     - functional1
@@ -223,7 +219,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_tile_menu_options:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021941'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021941
     result: unstable
     splits:
     - functional1
@@ -237,7 +233,7 @@ address_bar_and_search:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021943'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021943
     result:
       linux: unstable
       mac: pass
@@ -249,7 +245,7 @@ audio_video:
     splits:
     - functional1
   test_autoplay_sound_blocking_background_tab:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2010227'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2010227
     result: unstable
     splits:
     - functional1
@@ -340,7 +336,7 @@ bookmarks_and_history:
     splits:
     - smoke
   test_import_bookmarks_edge:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021978'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021978
     result: unstable
     splits:
     - smoke
@@ -390,12 +386,12 @@ bookmarks_and_history:
     - functional1
 downloads:
   test_add_mime_type_doc:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018772'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018772
     result: unstable
     splits:
     - functional1
   test_add_zip_type:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018772'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018772
     result: unstable
     splits:
     - functional1
@@ -438,6 +434,10 @@ downloads:
   test_download_pdf_from_context_menu:
     comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018768'
     result: pass
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -449,7 +449,7 @@ downloads:
     splits:
     - functional1
   test_mixed_content_download_via_https:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2004945'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004945
     result:
       linux: pass
       mac: unstable
@@ -461,7 +461,7 @@ downloads:
     splits:
     - functional1
   test_set_always_ask_file_type:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018770'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018770
     result: unstable
     splits:
     - functional1
@@ -495,11 +495,7 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021984'
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - functional1
 find_toolbar:
@@ -561,7 +557,7 @@ form_autofill:
     splits:
     - functional1
   test_edit_credit_card:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021986'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021986
     result:
       linux: pass
       mac: pass
@@ -599,7 +595,7 @@ form_autofill:
     - functional1
 geolocation:
   test_geolocation_shared_via_html5:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1990784'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
     result:
       linux: pass
       mac: pass
@@ -607,7 +603,7 @@ geolocation:
     splits:
     - functional2
   test_geolocation_shared_via_w3c_api:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1990784'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
     result:
       linux: pass
       mac: pass
@@ -671,7 +667,7 @@ menus:
     - functional2
 meta:
   test_selectors:
-    comment: 'Not part of feature functional test suites'
+    comment: Not part of feature functional test suites
     result: unstable
     splits: []
   test_version:
@@ -679,7 +675,7 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021989'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021989
     result:
       linux: pass
       mac: pass
@@ -692,7 +688,7 @@ networking:
     - functional2
 notifications:
   test_audio_video_permissions_notification:
-    comment: 'Issue with Mac GHA? trying pass to see what happens.'
+    comment: Issue with Mac GHA? trying pass to see what happens.
     result:
       linux: pass
       mac: pass
@@ -700,7 +696,7 @@ notifications:
     splits:
     - functional2
   test_camera_permissions_notification:
-    comment: 'Issue with Mac GHA? trying pass to see what happens.'
+    comment: Issue with Mac GHA? trying pass to see what happens.
     result:
       linux: pass
       mac: pass
@@ -736,7 +732,7 @@ notifications:
     splits:
     - functional2
   test_microphone_permissions_notification:
-    comment: 'Issue with Mac GHA? trying pass to see what happens.'
+    comment: Issue with Mac GHA? trying pass to see what happens.
     result:
       linux: pass
       mac: pass
@@ -810,7 +806,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018719'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018719
     result: unstable
     splits:
     - functional2
@@ -823,7 +819,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018719'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018719
     result: unstable
     splits:
     - functional2
@@ -836,7 +832,7 @@ password_manager:
     splits:
     - smoke
   test_multiple_saved_logins:
-    comment: 'Issue with Mac GHA? trying pass to see what happens.'
+    comment: Issue with Mac GHA? trying pass to see what happens.
     result:
       linux: pass
       mac: pass
@@ -852,7 +848,7 @@ password_manager:
     splits:
     - smoke
   test_password_csv_correctness:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1983843'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
       linux: unstable
       mac: pass
@@ -860,7 +856,7 @@ password_manager:
     splits:
     - functional2
   test_password_csv_export:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1983843'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
       linux: unstable
       mac: pass
@@ -872,7 +868,7 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018719'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018719
     result: unstable
     splits:
     - functional2
@@ -894,12 +890,12 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018768'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: unstable
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018765'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018765
     result: unstable
     splits:
     - functional2
@@ -912,7 +908,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_download:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2018768'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result:
       linux: unstable
       mac: pass
@@ -920,7 +916,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_input_numbers:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2022004'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022004
     result: unstable
     splits:
     - smoke
@@ -958,7 +954,7 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2022005'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022005
     result: unstable
     splits:
     - smoke
@@ -997,7 +993,7 @@ printing_ui:
     - smoke
     - ci
   test_print_to_pdf:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1974011'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974011
     result: unstable
     splits:
     - functional2
@@ -1008,7 +1004,7 @@ profile:
     - smoke
 reader_view:
   test_improved_type_control_panel:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2022007'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022007
     result: unstable
     splits:
     - smoke
@@ -1022,12 +1018,12 @@ reader_view:
     - functional2
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2010340'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2010340
     result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
-    comment: 'No support for testing this on MAc'
+    comment: No support for testing this on MAc
     result:
       linux: pass
       mac: unstable
@@ -1043,7 +1039,7 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_text_only:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2022011'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022011
     result: unstable
     splits:
     - smoke
@@ -1241,12 +1237,12 @@ sidebar:
     - functional2
 sync_and_fxa:
   test_existing_fxa:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1938362'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
     result: unstable
     splits:
     - functional2
   test_new_fxa:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=1938363'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938363
     result: unstable
     splits:
     - functional2
@@ -1298,7 +1294,7 @@ tabs:
     splits:
     - functional2
   test_mute_tabs:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2001204'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: pass
       mac: pass
@@ -1338,7 +1334,7 @@ tabs:
     splits:
     - functional2
   test_play_mute_unmute_tabs_via_toggle:
-    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2001204'
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: unstable
       mac: pass
