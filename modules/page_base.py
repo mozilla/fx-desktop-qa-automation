@@ -1014,24 +1014,47 @@ class BasePage(Page):
 
     def handle_os_download_confirmation(self):
         """
-        This function handles the keyboard shortcuts. If on Linux, it simulates switching
-        to OK. On other platforms, it directly presses enter.
+        Confirm the native OS download confirmation dialog.
+
+        Uses pyautogui. Tries image-match click first, then falls back to pressing
+        Enter if the image is not found or if it still matches after the click.
         """
         import pyautogui
 
-        os_name = (
-            self.sys_platform().lower()
-            if "Darwin" not in self.sys_platform()
-            else "mac"
-        )
+        system = platform.system()
+        if system == "Windows":
+            button_img = os.path.join("data", "win_save_button.png")
+        elif system == "Darwin":
+            button_img = os.path.join("data", "mac_save_button.png")
+        else:
+            button_img = os.path.join("data", "linux_save_button.png")
 
-        button_img = os.path.join("data", f"{os_name}_save_button.png")
-        time.sleep(1.5)
-        b_x, b_y = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
-        logging.info(f"Button: ({b_x}, {b_y})")
-        pyautogui.click(b_x, b_y)
-        time.sleep(1)
-        pyautogui.click(b_x, b_y)
+        original_failsafe = pyautogui.FAILSAFE
+        pyautogui.FAILSAFE = False
+
+        try:
+            time.sleep(0.5)
+
+            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+            logging.info(f"OS dialog button found at {loc}, clicking")
+            pyautogui.click(loc)
+            time.sleep(1)
+
+            try:
+                pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                logging.info(
+                    "Button still visible after click; pressing Enter as fallback"
+                )
+                pyautogui.press("enter")
+            except pyautogui.ImageNotFoundException:
+                pass  # dialog dismissed successfully
+
+        except pyautogui.ImageNotFoundException:
+            logging.info("OS dialog button image not found; pressing Enter as fallback")
+            pyautogui.press("enter")
+
+        finally:
+            pyautogui.FAILSAFE = original_failsafe
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False
