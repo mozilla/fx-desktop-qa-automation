@@ -351,9 +351,9 @@ class TestKey:
                             continue
                         if "splits" not in subentry:
                             continue
-                        if split_matches(subentry.get("splits", [])) and matches_category(
-                            subentry.get("result")
-                        ):
+                        if split_matches(
+                            subentry.get("splits", [])
+                        ) and matches_category(subentry.get("result")):
                             selected.append(
                                 self.normalize_test_filename(suite, testfile, key)
                             )
