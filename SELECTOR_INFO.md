@@ -1071,7 +1071,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: search-suggestion-in-private-windows
-Selector Data: "showSearchSuggestionsPrivateWindows"
+Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
