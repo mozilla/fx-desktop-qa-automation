@@ -36,7 +36,7 @@ def test_search_term_persists(driver: Firefox):
     prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     nav.search(FIRST_SEARCH)
-    tab.expect_title_contains("DuckDuckGo")
+    tab.expect_title_contains(SEARCH_ENGINE)
     address_bar_text = nav.get_awesome_bar_text()
     assert FIRST_SEARCH == address_bar_text
 
@@ -44,6 +44,6 @@ def test_search_term_persists(driver: Firefox):
     driver.get("about:robots")
 
     nav.search(SECOND_SEARCH)
-    tab.expect_title_contains("DuckDuckGo")
+    tab.expect_title_contains(SEARCH_ENGINE)
     address_bar_text = nav.get_awesome_bar_text()
     assert SECOND_SEARCH == address_bar_text
