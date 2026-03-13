@@ -560,11 +560,7 @@ form_autofill:
     splits:
     - functional1
   test_edit_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021986
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional1
   test_enable_disable_autofill:
