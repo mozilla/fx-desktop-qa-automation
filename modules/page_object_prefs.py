@@ -222,19 +222,47 @@ class AboutPrefs(BasePage):
         Focuses the inner <select> inside moz-select's shadow root,
         then uses arrow keys to navigate to the target zoom level.
         """
-        zoom_levels = [30, 50, 67, 80, 90, 100, 110, 120, 133, 150, 170, 200, 240, 300, 400, 500]
+        zoom_levels = [
+            30,
+            50,
+            67,
+            80,
+            90,
+            100,
+            110,
+            120,
+            133,
+            150,
+            170,
+            200,
+            240,
+            300,
+            400,
+            500,
+        ]
         moz_select = self.get_element("default-zoom-dropdown")
-        current_value = int(self.driver.execute_script(
-            "return arguments[0].shadowRoot.querySelector('select').value",
-            moz_select,
-        ))
-        steps = zoom_levels.index(zoom_percentage) - zoom_levels.index(current_value)
-        self.driver.execute_script(
-            "arguments[0].shadowRoot.querySelector('select').focus()",
-            moz_select,
+        current_value = int(
+            self.driver.execute_script(
+                "return arguments[0].shadowRoot.querySelector('select').value",
+                moz_select,
+            )
         )
+        steps = zoom_levels.index(zoom_percentage) - zoom_levels.index(current_value)
         key = Keys.ARROW_DOWN if steps > 0 else Keys.ARROW_UP
-        ActionChains(self.driver).send_keys(key * abs(steps)).perform()
+        for _ in range(3):
+            self.driver.execute_script(
+                "arguments[0].shadowRoot.querySelector('select').focus()",
+                moz_select,
+            )
+            ActionChains(self.driver).send_keys(key * abs(steps)).perform()
+            actual = int(
+                self.driver.execute_script(
+                    "return arguments[0].shadowRoot.querySelector('select').value",
+                    moz_select,
+                )
+            )
+            if actual == zoom_percentage:
+                break
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:

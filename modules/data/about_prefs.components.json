@@ -644,12 +644,6 @@
     "strategy": "id",
     "groups": []
   },
-  "zoom-text-only-input": {
-    "selectorData": "input[type='checkbox']",
-    "strategy": "css",
-    "shadowParent": "zoom-text-only",
-    "groups": []
-  },
   "default-zoom-dropdown": {
     "selectorData": "defaultZoom",
     "strategy": "id",
