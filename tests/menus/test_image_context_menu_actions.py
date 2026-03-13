@@ -25,6 +25,8 @@ LINK_IMAGE_URL = (
 LOADED_IMAGE_URL = r"https://upload\.wikimedia\.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019\.svg/\d+px-Firefox_logo%2C_2019\.svg\.png"
 SAVED_FILENAME = "Firefox_logo,_2019.svg.png"
 
+# force run test
+
 
 def test_open_image_in_new_tab(driver: Firefox):
     """
