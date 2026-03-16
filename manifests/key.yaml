@@ -192,7 +192,6 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_term_persists:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result: pass
     splits:
     - functional1
