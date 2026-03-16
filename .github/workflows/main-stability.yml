@@ -116,6 +116,9 @@ jobs:
             steps.select.conclusion == 'success'
           }}
         shell: pwsh
+        env:
+          TESTRAIL_REPORT: false
+          REPORTABLE: false
         run: |
           mkdir -p test-results
           pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win.json --reruns 0
@@ -132,7 +135,8 @@ jobs:
       - name: Run Tests in Win (Headed)
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         env:
-          REPORTABLE: true
+          TESTRAIL_REPORT: false
+          REPORTABLE: false
         shell: pwsh
         run: |
           rm ./pyproject.toml;
@@ -245,6 +249,7 @@ jobs:
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          TESTRAIL_REPORT: false
           REPORTABLE: false
         run: |
           mkdir -p test-results
@@ -264,6 +269,8 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          TESTRAIL_REPORT: false
+          REPORTABLE: false
         run: |
 
           # Ensure junit output directory exists
