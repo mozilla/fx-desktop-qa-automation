@@ -17,7 +17,7 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("privacy.userContext.enabled", True),
-        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True)
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
     ]
 
 
