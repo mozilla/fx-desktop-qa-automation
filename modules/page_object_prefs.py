@@ -1019,6 +1019,7 @@ class AboutAddons(BasePage):
             if a_vals[0].isnumeric():
                 a_nums = [float(n.strip()) for n in a_vals.split(",")]
             else:
+                # String contains (srgb n n n) or the like
                 tokens = a_vals.split()[1:]
                 a_nums = [float(n) for n in tokens]
             if b_vals[0].isnumeric():
