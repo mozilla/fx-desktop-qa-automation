@@ -533,6 +533,7 @@ class AboutNetworking(BasePage):
             lambda _: any(
                 row[0].text == host and row[1].text == trr
                 for row in self.get_all_dns_rows()
-            )
+            ),
+            message=f"DNS entry for host '{host}' with TRR='{trr}' did not appear",
         )
         return self
