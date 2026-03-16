@@ -232,11 +232,7 @@ address_bar_and_search:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021943
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional1
   test_autoplay_permission_settings_displayed:
