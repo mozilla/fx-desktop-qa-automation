@@ -428,11 +428,7 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -442,7 +438,7 @@ downloads:
       mac: pass
       win: pass
     splits:
-    - functional1
+    - smoke
   test_download_telemetry_recorded:
     result: pass
     splits:
@@ -635,10 +631,7 @@ menus:
       - functional2
     test_save_page_as:
       comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
-      result:
-        linux: unstable
-        mac: pass
-        win: unstable
+      result: pass
       splits:
       - functional2
     test_take_screenshot:
@@ -660,10 +653,7 @@ menus:
       - functional2
     test_save_image_as:
       comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
-      result:
-        linux: unstable
-        mac: pass
-        win: pass
+      result: pass
       splits:
       - functional2
   test_tab_context_menu_actions:
