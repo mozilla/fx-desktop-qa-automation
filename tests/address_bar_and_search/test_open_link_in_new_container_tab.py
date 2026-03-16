@@ -15,7 +15,10 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("privacy.userContext.enabled", True)]
+    return [
+        ("privacy.userContext.enabled", True),
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True)
+    ]
 
 
 TOPSITE_TITLE = "Wikipedia"
