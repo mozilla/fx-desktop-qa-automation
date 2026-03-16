@@ -25,9 +25,6 @@ env:
   STARFOX_SPLIT: ${{ inputs.test_set }}
   STARFOX_CATEGORY: ${{ inputs.test_category }}
   FX_CHANNEL: ${{ inputs.channel }}
-  TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
-  TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-  TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
 
 jobs:
@@ -102,6 +99,9 @@ jobs:
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success'
           }}
+        env:
+          TESTRAIL_REPORT: false
+          REPORTABLE: false
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -131,6 +131,8 @@ jobs:
 
       - name: Run Tests in Win (Headed)
         if: ${{ steps.setup.conclusion == 'success' && always() }}
+        env:
+          REPORTABLE: true
         shell: pwsh
         run: |
           rm ./pyproject.toml;
@@ -230,7 +232,7 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           TESTRAIL_REPORT: false
-          REPORTABLE: true
+          REPORTABLE: false
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
@@ -243,6 +245,7 @@ jobs:
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          REPORTABLE: false
         run: |
           mkdir -p test-results
           "$FX_EXECUTABLE" --version
