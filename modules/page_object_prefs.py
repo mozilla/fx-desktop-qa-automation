@@ -240,6 +240,7 @@ class AboutPrefs(BasePage):
             400,
             500,
         ]
+
         moz_select = self.get_element("default-zoom-dropdown")
         current_value = int(
             self.driver.execute_script(
