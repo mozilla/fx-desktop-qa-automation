@@ -45,8 +45,7 @@ jobs:
 
       - name: Set Environment (Stability Check)
         run: |
-          echo "TESTRAIL_REPORT=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
-          Write-Host "Running report for most recent Beta on Windows"
+          echo "TESTRAIL_REPORT=false" | Out-File -FilePath .env -Encoding utf8 -Append -Force
 
       - name: Install dependencies
         run: |
@@ -190,8 +189,7 @@ jobs:
 
       - name: Set Environment (Stability Check)
         run: |
-          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV";
-          echo "Running report for most recent Beta on MacOS";
+          echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV";
 
       - name: Install dependencies
         run: |
@@ -226,8 +224,6 @@ jobs:
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          TESTRAIL_REPORT: false
-          REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
