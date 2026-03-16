@@ -92,6 +92,7 @@ def test_alpenglow_theme(driver: Firefox) -> None:
         nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
     )
 
+    # Hi tolerance for Alpenglow in dark mode, it's just like that
     assert abt_addons.colors_match(
         current_bg, ALPENGLOW_MAP["light"]
     ) or abt_addons.colors_match(current_bg, ALPENGLOW_MAP["dark"], tolerance=0.18)
