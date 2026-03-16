@@ -3,6 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutAddons
+from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -50,7 +51,7 @@ def test_redirect_to_addons(driver: Firefox) -> None:
 
 @pytest.mark.parametrize("theme_name", list(THEMES.keys()))
 def test_activate_theme_background_matches_expected(
-    driver: Firefox, theme_name: str
+    driver: Firefox, theme_name: str, util: Utilities
 ) -> None:
     """
     C118173: Ensure that activating each theme in about:addons applies the expected
@@ -72,12 +73,12 @@ def test_activate_theme_background_matches_expected(
     current_bg = abt_addons.activate_theme(nav, theme_name, "", perform_assert=False)
 
     expected_list = THEMES[theme_name]
-    assert any(abt_addons.colors_match(current_bg, exp) for exp in expected_list), (
+    assert any(util.colors_match(current_bg, exp) for exp in expected_list), (
         f"Got {current_bg} for {theme_name}; expected one of {expected_list}"
     )
 
 
-def test_alpenglow_theme(driver: Firefox) -> None:
+def test_alpenglow_theme(driver: Firefox, util: Utilities) -> None:
     """
     C118173: Alpenglow theme can render two values depending on light / dark mode.
     Accept either using  the tolerance-based comparison.
@@ -93,6 +94,6 @@ def test_alpenglow_theme(driver: Firefox) -> None:
     )
 
     # Hi tolerance for Alpenglow in dark mode, it's just like that
-    assert abt_addons.colors_match(
-        current_bg, ALPENGLOW_MAP["light"]
-    ) or abt_addons.colors_match(current_bg, ALPENGLOW_MAP["dark"], tolerance=0.18)
+    assert util.colors_match(current_bg, ALPENGLOW_MAP["light"]) or util.colors_match(
+        current_bg, ALPENGLOW_MAP["dark"], tolerance=0.18
+    )

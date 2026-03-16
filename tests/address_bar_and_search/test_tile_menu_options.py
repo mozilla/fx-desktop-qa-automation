@@ -60,7 +60,7 @@ REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
 card_indices = [(4, False), (0, True)]
 
 
-def test_default_tile_hover_states(driver: Firefox):
+def test_default_tile_hover_states(driver: Firefox, util: Utilities):
     """
     C1533798.1: Ensure that hover states work correctly
     """
@@ -69,57 +69,43 @@ def test_default_tile_hover_states(driver: Firefox):
 
     top_card = newtab.get_element("sponsored-site-card")
 
-    # Color testing lives in AboutAddons because of theme tests
-    addons = AboutAddons(driver)
-
     # assert the hover state
     assert any(
-        [
-            addons.colors_match(top_card.value_of_css_property("background-color"), val)
-            for val in ALLOWED_RGB_BEFORE_VALUES_CARD
-        ]
+        util.colors_match(top_card.value_of_css_property("background-color"), val)
+        for val in ALLOWED_RGB_BEFORE_VALUES_CARD
     )
 
     newtab.hover(top_card)
     top_card = newtab.get_element("sponsored-site-card")
     assert any(
-        [
-            addons.colors_match(top_card.value_of_css_property("background-color"), val)
-            for val in ALLOWED_RGB_AFTER_VALUES_CARD
-        ]
+        util.colors_match(top_card.value_of_css_property("background-color"), val)
+        for val in ALLOWED_RGB_AFTER_VALUES_CARD
     )
 
     three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
     # assert the hover state again for the three dots
     assert any(
-        [
-            addons.colors_match(
-                three_dot_menu.value_of_css_property("background-color"), val
-            )
-            for val in ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS
-        ]
+        util.colors_match(three_dot_menu.value_of_css_property("background-color"), val)
+        for val in ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS
     )
     newtab.hover(three_dot_menu)
     three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
     assert any(
-        [
-            addons.colors_match(
-                three_dot_menu.value_of_css_property("background-color"), val
-            )
-            for val in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
-        ]
+        util.colors_match(three_dot_menu.value_of_css_property("background-color"), val)
+        for val in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
     )
 
 
 @pytest.mark.parametrize("index, sponsored", card_indices)
-def test_tile_context_menu_options(driver: Firefox, index: int, sponsored: bool):
+def test_tile_context_menu_options(
+    driver: Firefox, index: int, sponsored: bool, util: Utilities
+):
     """
     C1533798.2: Ensure that a website has the appropriate context menu actions in the tile.
     """
     # initialize objects
     newtab = AboutNewtab(driver).open()
     sleep(3)  # allow page to load, waiting for image isn't enough
-    util = Utilities()
 
     suggested_cards = newtab.get_elements("sponsored-site-card")
 
