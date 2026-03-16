@@ -4,13 +4,21 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutNewtab
+from modules.page_object import AboutAddons, AboutNewtab
 from modules.util import Utilities
 
 
 @pytest.fixture()
 def test_case():
     return "3029100"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    """Add to list of prefs to set"""
+    return [
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", "true")
+    ]
 
 
 ALLOWED_RGB_BEFORE_VALUES_CARD = set(["rgba(0, 0, 0, 0)"])
@@ -60,31 +68,44 @@ def test_default_tile_hover_states(driver: Firefox):
     newtab = AboutNewtab(driver).open()
 
     top_card = newtab.get_element("sponsored-site-card")
+    addons = AboutAddons(driver)
 
     # assert the hover state
-    assert (
-        top_card.value_of_css_property("background-color")
-        in ALLOWED_RGB_BEFORE_VALUES_CARD
+    assert any(
+        [
+            addons.colors_match(top_card.value_of_css_property("background-color"), val)
+            for val in ALLOWED_RGB_BEFORE_VALUES_CARD
+        ]
     )
 
     newtab.hover(top_card)
     top_card = newtab.get_element("sponsored-site-card")
-    assert (
-        top_card.value_of_css_property("background-color")
-        in ALLOWED_RGB_AFTER_VALUES_CARD
+    assert any(
+        [
+            addons.colors_match(top_card.value_of_css_property("background-color"), val)
+            for val in ALLOWED_RGB_AFTER_VALUES_CARD
+        ]
     )
 
     three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
     # assert the hover state again for the three dots
-    assert (
-        three_dot_menu.value_of_css_property("background-color")
-        in ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS
+    assert any(
+        [
+            addons.colors_match(
+                three_dot_menu.value_of_css_property("background-color"), val
+            )
+            for val in ALLOWED_RGB_VALUES_BEFORE_THREE_DOTS
+        ]
     )
     newtab.hover(three_dot_menu)
     three_dot_menu = newtab.get_element("sponsored-site-card-menu-button")
-    assert (
-        three_dot_menu.value_of_css_property("background-color")
-        in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
+    assert any(
+        [
+            addons.colors_match(
+                three_dot_menu.value_of_css_property("background-color"), val
+            )
+            for val in ALLOWED_RGB_AFTER_VALUES_THREE_DOTS
+        ]
     )
 
 

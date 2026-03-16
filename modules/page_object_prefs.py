@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
@@ -997,3 +998,50 @@ class AboutAddons(BasePage):
         """
         assert not self.enabled_theme_matches(original_theme)
         return self
+
+    def colors_match(self, a: str, b: str, tolerance: float = 0.14) -> bool:
+        """
+        Compare two CSS color strings and determine if they are close enough to be considered equal.
+
+        Args:
+            a (str): First CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+            b (str): Second CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+            tolerance (float, optional): Allowed relative difference between each color channel.
+                Defaults to 0.14. A higher value means colors can differ more and still match.
+
+        Returns:
+            bool: True if the two colors are considered a match within the given tolerance.
+                False if the color strings are invalid.
+        """
+        try:
+            a_vals = a.split("(")[1][:-1].split("/")[0].strip()
+            b_vals = b.split("(")[1][:-1].split("/")[0].strip()
+            if a_vals[0].isnumeric():
+                a_nums = [float(n.strip()) for n in a_vals.split(",")]
+            else:
+                tokens = a_vals.split()[1:]
+                a_nums = [float(n) for n in tokens]
+            if b_vals[0].isnumeric():
+                b_nums = [float(n.strip()) for n in b_vals.split(",")]
+            else:
+                tokens = b_vals.split()[1:]
+                b_nums = [float(n) for n in tokens]
+        except (IndexError, ValueError) as e:
+            # Raised if string doesn't contain expected format or non-numeric parts
+            logging.warning(str(e))
+            return False
+
+        # Compare up to the shortest length (rgb vs rgba)
+        for i in range(min(len(a_nums), len(b_nums))):
+            if a_nums[i] == b_nums[i]:
+                continue
+            base = b_nums[i] if b_nums[i] != 0 else 1.0
+            diff = abs((a_nums[i] / base) - 1.0)
+            if diff > tolerance:
+                logging.info(
+                    f"[Color match] failed: #{i}: {a_nums[i]} - {b_nums[i]} ({diff})"
+                )
+                return False
+
+        logging.info(f"[Color match] success: {a_nums} | {b_nums}")
+        return True

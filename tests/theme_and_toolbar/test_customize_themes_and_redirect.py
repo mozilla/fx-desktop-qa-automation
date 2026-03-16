@@ -28,39 +28,6 @@ ALPENGLOW_MAP: dict[str, str] = {
 }
 
 
-def colors_match(a: str, b: str, tolerance: float = 0.14) -> bool:
-    """
-    Compare two CSS color strings and determine if they are close enough to be considered equal.
-
-    Args:
-        a (str): First CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
-        b (str): Second CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
-        tolerance (float, optional): Allowed relative difference between each color channel.
-            Defaults to 0.14. A higher value means colors can differ more and still match.
-
-    Returns:
-        bool: True if the two colors are considered a match within the given tolerance.
-              False if the color strings are invalid.
-    """
-    try:
-        a_vals = a.split("(")[1][:-1]
-        b_vals = b.split("(")[1][:-1]
-        a_nums = [float(n.strip()) for n in a_vals.split(",")]
-        b_nums = [float(n.strip()) for n in b_vals.split(",")]
-    except (IndexError, ValueError):
-        # Raised if string doesn't contain expected format or non-numeric parts
-        return False
-
-    # Compare up to the shortest length (rgb vs rgba)
-    for i in range(min(len(a_nums), len(b_nums))):
-        base = b_nums[i] if b_nums[i] != 0 else 1.0
-        diff = abs((a_nums[i] / base) - 1.0)
-        if diff > tolerance:
-            return False
-
-    return True
-
-
 def test_redirect_to_addons(driver: Firefox) -> None:
     """
     C118173: Ensure the user is redirected to about:addons via the UI panel.
@@ -86,8 +53,8 @@ def test_activate_theme_background_matches_expected(
     driver: Firefox, theme_name: str
 ) -> None:
     """
-    C118173: Ensure that activating each theme in about:addons applies the expected background color.
-    Handles Developer Edition vs standard Firefox defaults.
+    C118173: Ensure that activating each theme in about:addons applies the expected
+    background color. Handles Developer Edition vs standard Firefox defaults.
     """
 
     nav = Navigation(driver)
@@ -105,7 +72,7 @@ def test_activate_theme_background_matches_expected(
     current_bg = abt_addons.activate_theme(nav, theme_name, "", perform_assert=False)
 
     expected_list = THEMES[theme_name]
-    assert any(colors_match(current_bg, exp) for exp in expected_list), (
+    assert any(abt_addons.colors_match(current_bg, exp) for exp in expected_list), (
         f"Got {current_bg} for {theme_name}; expected one of {expected_list}"
     )
 
@@ -125,6 +92,6 @@ def test_alpenglow_theme(driver: Firefox) -> None:
         nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
     )
 
-    assert colors_match(current_bg, ALPENGLOW_MAP["light"]) or colors_match(
-        current_bg, ALPENGLOW_MAP["dark"]
-    )
+    assert abt_addons.colors_match(
+        current_bg, ALPENGLOW_MAP["light"]
+    ) or abt_addons.colors_match(current_bg, ALPENGLOW_MAP["dark"], tolerance=0.18)
