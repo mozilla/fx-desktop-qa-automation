@@ -45,7 +45,7 @@ jobs:
 
       - name: Set Environment (Stability Check)
         run: |
-          echo "TESTRAIL_REPORT=false" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "TESTRAIL_REPORT=" | Out-File -FilePath .env -Encoding utf8 -Append -Force
 
       - name: Install dependencies
         run: |
@@ -98,8 +98,6 @@ jobs:
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success'
           }}
-        env:
-          REPORTABLE: false
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -114,8 +112,6 @@ jobs:
             steps.select.conclusion == 'success'
           }}
         shell: pwsh
-        env:
-          REPORTABLE: false
         run: |
           mkdir -p test-results
           pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win.json --reruns 0
@@ -131,8 +127,6 @@ jobs:
 
       - name: Run Tests in Win (Headed)
         if: ${{ steps.setup.conclusion == 'success' && always() }}
-        env:
-          REPORTABLE: false
         shell: pwsh
         run: |
           rm ./pyproject.toml;
@@ -195,7 +189,7 @@ jobs:
 
       - name: Set Environment (Stability Check)
         run: |
-          echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV";
+          echo "TESTRAIL_REPORT=" >> "$GITHUB_ENV";
 
       - name: Install dependencies
         run: |
@@ -230,7 +224,6 @@ jobs:
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: false
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
@@ -243,7 +236,6 @@ jobs:
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: false
         run: |
           mkdir -p test-results
           "$FX_EXECUTABLE" --version
@@ -262,7 +254,6 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
-          REPORTABLE: false
         run: |
 
           # Ensure junit output directory exists
