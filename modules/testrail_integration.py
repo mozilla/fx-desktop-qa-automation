@@ -337,8 +337,30 @@ def reportable(platform_to_test=None):
         logging.warning("REPORTABLE=true; we will report this session.")
         return True
 
+    # Make sure TestRail is actually configured before trying to init it
+    required = ["TESTRAIL_BASE_URL", "TESTRAIL_USERNAME", "TESTRAIL_API_KEY"]
+    missing = [name for name in required if not os.environ.get(name)]
+
+    if missing:
+        logging.warning(
+            "TestRail not configured; missing env vars: %s. Session not reportable.",
+            ", ".join(missing),
+        )
+        return False
+
     # Connect to TestRail — only in real mode
-    tr_session = testrail_init()
+    try:
+        tr_session = testrail_init()
+    except Exception as e:
+        logging.warning(
+            "Could not initialize TestRail session (%s). Session not reportable.",
+            e,
+        )
+        return False
+
+    if not tr_session:
+        logging.warning("TestRail session could not be created. Session not reportable.")
+        return False
 
     # Reuse parsed values from ctx
     if not ctx["major_number"]:
@@ -464,7 +486,18 @@ def reportable(platform_to_test=None):
 
 def testrail_init() -> TestRail:
     """Connect to a TestRail API session"""
-    local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
+    base_url = os.environ.get("TESTRAIL_BASE_URL")
+
+    if not base_url:
+        logging.warning("TESTRAIL_BASE_URL not set. Skipping TestRail.")
+        return None
+
+    try:
+        local = base_url.split("/")[2].startswith("127")
+    except Exception:
+        logging.warning(f"Invalid TESTRAIL_BASE_URL: {base_url}")
+        return None
+
     tr_session = tr.TestRail(
         os.environ.get("TESTRAIL_BASE_URL"),
         os.environ.get("TESTRAIL_USERNAME"),
