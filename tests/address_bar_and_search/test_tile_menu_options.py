@@ -68,6 +68,8 @@ def test_default_tile_hover_states(driver: Firefox):
     newtab = AboutNewtab(driver).open()
 
     top_card = newtab.get_element("sponsored-site-card")
+
+    # Color testing lives in AboutAddons because of theme tests
     addons = AboutAddons(driver)
 
     # assert the hover state
