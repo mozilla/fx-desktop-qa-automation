@@ -42,5 +42,4 @@ def test_doh_enforces_secure_dns_resolution(
     networking.select_network_category("dns")
 
     # Wait for rows in the DNS table to load
-    networking.get_all_dns_rows()
     networking.wait_for_dns_entry("www.wikipedia.org")

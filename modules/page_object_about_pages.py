@@ -535,3 +535,4 @@ class AboutNetworking(BasePage):
                 for row in self.get_all_dns_rows()
             )
         )
+        return self
