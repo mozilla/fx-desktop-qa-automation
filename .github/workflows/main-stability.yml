@@ -45,7 +45,7 @@ jobs:
 
       - name: Set Environment (Stability Check)
         run: |
-          echo "TESTRAIL_REPORT=" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "TESTRAIL_REPORT=false" | Out-File -FilePath .env -Encoding utf8 -Append -Force
 
       - name: Install dependencies
         run: |
@@ -189,7 +189,7 @@ jobs:
 
       - name: Set Environment (Stability Check)
         run: |
-          echo "TESTRAIL_REPORT=" >> "$GITHUB_ENV";
+          echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV";
 
       - name: Install dependencies
         run: |
