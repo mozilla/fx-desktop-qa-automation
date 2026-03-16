@@ -46,10 +46,8 @@ def test_search_suggests_enabled(driver: Firefox):
     while not found_sponsored and retries < RETRY_LIMIT:
         actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
         with driver.context(driver.CONTEXT_CHROME):
-            found_sponsored = any(
-                item.get_attribute("aria-label") == "Sponsored"
-                for item in nav.get_elements("sponsored-suggestion")
-            )
+            nav.wait_for_suggestions_present()
+            found_sponsored = len(nav.get_elements("sponsored-suggestion")) > 0
         retries += 1
     assert found_sponsored, (
         f"No sponsored suggestion found after {RETRY_LIMIT} retries."
@@ -67,7 +65,7 @@ def test_search_suggests_enabled(driver: Firefox):
                 found_non_sponsored = any("Wikipedia" in title.text for title in titles)
                 break
             finally:
-                retries = +1
+                retries += 1
                 continue
     assert found_non_sponsored, (
         f"Non-sponsored suggestion not found after {RETRY_LIMIT} retries."

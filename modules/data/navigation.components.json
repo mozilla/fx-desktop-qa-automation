@@ -164,9 +164,11 @@
     },
     "sponsored-suggestion": {
         "doNotCache": true,
-        "selectorData": "urlbarView-group-aria-label",
-        "strategy": "class",
-        "groups": []
+        "selectorData": "div.urlbarView-row[label='Sponsored']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "firefox-suggest": {
         "doNotCache": true,
