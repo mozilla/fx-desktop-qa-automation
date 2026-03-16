@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 from time import sleep
 from typing import List, Literal
 
