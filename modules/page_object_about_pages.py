@@ -526,3 +526,12 @@ class AboutNetworking(BasePage):
             By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=3]"
         )
         return list(zip(names, trr))
+
+    def wait_for_dns_entry(self, host: str, trr: str = "true"):
+        """Wait until a DNS entry for the given host appears in the table."""
+        self.wait.until(
+            lambda _: any(
+                row[0].text == host and row[1].text == trr
+                for row in self.get_all_dns_rows()
+            )
+        )

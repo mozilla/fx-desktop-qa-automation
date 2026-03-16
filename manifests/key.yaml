@@ -673,11 +673,7 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021989
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
   test_http_site:
