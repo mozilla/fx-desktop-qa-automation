@@ -914,8 +914,7 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_input_numbers:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022004
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_pdf_navigation:
