@@ -34,8 +34,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_clipboard_pref_flip:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021910
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_copied_url_contains_https:
