@@ -10,6 +10,7 @@ from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
+from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 
@@ -192,8 +193,8 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     """
 
     ctx = {
-        "testrail_report_requested": bool(os.environ.get("TESTRAIL_REPORT")),
-        "forced_reportable": bool(os.environ.get("REPORTABLE")),
+        "testrail_report_requested": env_true("TESTRAIL_REPORT"),
+        "forced_reportable": env_true("REPORTABLE"),
         "split": os.environ.get("STARFOX_SPLIT"),
         "is_l10n": bool(os.environ.get("FX_L10N")),
         "platform_system": None,  # "Darwin", etc

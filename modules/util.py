@@ -30,6 +30,11 @@ from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
 
+def env_true(name: str) -> bool:
+    """Return True if the environment variable is set to '1' or 'true' (case-insensitive)."""
+    return os.environ.get(name, "").strip().lower() in ("1", "true")
+
+
 class Utilities:
     """
     Methods that may be useful, that have nothing to do with Selenium.

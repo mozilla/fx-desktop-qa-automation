@@ -21,6 +21,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
+from modules.util import env_true
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
@@ -332,10 +333,6 @@ def test_case():
     return None
 
 
-def env_true(name: str) -> bool:
-    return os.environ.get(name, "").strip().lower() in ("1", "true")
-
-
 def pytest_configure(config):
     if not env_true("TESTRAIL_REPORT"):
         logging.warning("TESTRAIL_REPORT disabled; skipping TestRail integration.")
@@ -607,7 +604,7 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
     if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
+        level = 3 if env_true("TESTRAIL_REPORT") else 1
         os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
             "test-accts-key", level=level
         ).get("SVC_ACCT_DECRYPT")
