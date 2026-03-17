@@ -163,7 +163,6 @@
         ]
     },
     "sponsored-suggestion": {
-        "doNotCache": true,
         "selectorData": "div.urlbarView-row[label='Sponsored']",
         "strategy": "css",
         "groups": [
