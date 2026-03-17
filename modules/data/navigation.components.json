@@ -170,16 +170,18 @@
         ]
     },
     "firefox-suggest": {
-        "doNotCache": true,
         "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "suggestion-titles": {
-        "doNotCache": true,
         "selectorData": "urlbarView-title",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-result-autofill-adaptive-element": {
         "selectorData": ".//*[@type='autofill_adaptive']",

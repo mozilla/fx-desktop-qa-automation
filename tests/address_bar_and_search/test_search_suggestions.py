@@ -61,6 +61,7 @@ def test_search_suggests_enabled(driver: Firefox):
         actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
         with driver.context(driver.CONTEXT_CHROME):
             try:
+                nav.wait_for_suggestions_present()
                 nav.get_element("firefox-suggest")
                 titles = nav.get_elements("suggestion-titles")
                 found_non_sponsored = any("Wikipedia" in title.text for title in titles)
