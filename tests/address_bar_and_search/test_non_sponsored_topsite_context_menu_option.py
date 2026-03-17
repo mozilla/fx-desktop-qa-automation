@@ -17,7 +17,7 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("browser.startup.page", 1),
-        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", "true"),
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
     ]
 
 
