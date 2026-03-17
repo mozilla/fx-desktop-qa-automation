@@ -80,16 +80,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_google_search_counts_us:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - functional1
   test_google_withads_url_bar_us:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_insertion_point_no_search_terms_display:
@@ -119,8 +114,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_sap_google_adclick:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
