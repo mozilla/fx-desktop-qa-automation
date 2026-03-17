@@ -486,7 +486,7 @@ def reportable(platform_to_test=None):
     return bool(uncovered_suites)
 
 
-def testrail_init() -> TestRail:
+def testrail_init() -> TestRail | None :
     """Connect to a TestRail API session"""
     base_url = os.environ.get("TESTRAIL_BASE_URL")
 
