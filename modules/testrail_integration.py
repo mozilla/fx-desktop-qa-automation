@@ -497,7 +497,7 @@ def testrail_init() -> TestRail | None:
     try:
         local = base_url.split("/")[2].startswith("127")
     except Exception as e:
-        logging.warning("Invalid TESTRAIL_BASE_URL: %s - %s",base_url, e)
+        logging.warning("Invalid TESTRAIL_BASE_URL: %s - %s", base_url, e)
         return None
 
     tr_session = tr.TestRail(
