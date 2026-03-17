@@ -359,7 +359,9 @@ def reportable(platform_to_test=None):
         return False
 
     if not tr_session:
-        logging.warning("TestRail session could not be created. Session not reportable.")
+        logging.warning(
+            "TestRail session could not be created. Session not reportable."
+        )
         return False
 
     # Reuse parsed values from ctx
@@ -494,8 +496,8 @@ def testrail_init() -> TestRail:
 
     try:
         local = base_url.split("/")[2].startswith("127")
-    except Exception:
-        logging.warning(f"Invalid TESTRAIL_BASE_URL: {base_url}")
+    except Exception as e:
+        logging.warning(f"Invalid TESTRAIL_BASE_URL: {base_url} - {e}")
         return None
 
     tr_session = tr.TestRail(

@@ -381,7 +381,7 @@ def pytest_sessionfinish(session):
                 pass
 
     # TestRail reporting
-    if not os.environ.get("TESTRAIL_REPORT"):
+    if not env_true("TESTRAIL_REPORT"):
         logging.warning(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
