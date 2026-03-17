@@ -13,7 +13,7 @@ def test_case():
 
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
-REDIRECT_URL = "www.example.com"
+REDIRECT_URL = "https://www.example.com/"
 ERROR_TITLE = ["Server Not Found"]
 
 
@@ -31,7 +31,7 @@ def test_server_not_found_error(driver: Firefox):
     # Navigate to the desired site
     nav.search(CHECK_SITE)
 
-    # Wait until the tab title updates to "Server Not Found"
+    # Wait until the tab title updates to "Problem loading page"
     tabs.wait_for_tab_title("Problem loading page")
 
     # Verify title and short description on the error page
