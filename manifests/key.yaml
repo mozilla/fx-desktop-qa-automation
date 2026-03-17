@@ -105,8 +105,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_open_link_in_new_container_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021919
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_paste_and_go_opens_correct_url:
