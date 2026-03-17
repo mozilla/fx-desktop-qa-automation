@@ -3,6 +3,8 @@
 
 A Python Selenium based set of tests for smoke testing of Firefox, including Fx incident smoke testing.
 
+[Project Summary](./PROJECT_SUMMARY.md)
+
 ### Build under test
 Get the build to be smoke tested from the [candidates](https://ftp.mozilla.org/pub/firefox/candidates/) directory. Incident testing: Ask 
 the RelMan contact for the current Incident what the build versions is. 

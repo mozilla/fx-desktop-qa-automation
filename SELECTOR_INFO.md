@@ -1071,7 +1071,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: search-suggestion-in-private-windows
-Selector Data: "showSearchSuggestionsPrivateWindows"
+Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
@@ -3613,6 +3613,20 @@ Path to .json: modules/data/navigation.components.json
 ```
 Selector Name: searchmode-switcher
 Selector Data: urlbar-searchmode-switcher
+Description: searchmode switcher toolbar button
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: legacy-searchbar-switcher-popup
+Selector Data: searchmode-switcher-popup
+Description: searchmode switcher toolbar popup
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: legacy-searchbar-search-settings
+Selector Data: searchmode-switcher-popup-search-settings-button
 Description: searchmode switcher toolbar button
 Location: Address bar
 Path to .json: modules/data/navigation.components.json

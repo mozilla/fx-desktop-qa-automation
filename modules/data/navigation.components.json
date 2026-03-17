@@ -114,6 +114,18 @@
         "strategy": "id",
         "groups": []
     },
+    "legacy-searchbar-switcher-popup": {
+        "selectorData": "searchmode-switcher-popup",
+        "strategy": "class",
+        "groups": []
+    },
+    "legacy-searchbar-search-settings": {
+        "selectorData": "searchmode-switcher-popup-search-settings-button",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "search-mode-switcher-option": {
         "selectorData": "menuitem[label*='{title}']",
         "strategy": "css",
@@ -129,7 +141,9 @@
     "downloads-indicator-finish-box": {
         "selectorData": "#downloads-indicator-finish-box",
         "strategy": "css",
-        "groups": ["doNotCache"]
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-results-container": {
         "selectorData": "urlbar-results",
