@@ -104,7 +104,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
-    result: pass
+    comment: 'https://bugzilla.mozilla.org/show_bug.cgi?id=2021917'
+    result: unstable
     splits:
     - functional1
   test_open_link_in_new_container_tab:
