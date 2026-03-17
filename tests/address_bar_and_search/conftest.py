@@ -155,3 +155,6 @@ def google_telemetry_runner():
             )
 
     return _run
+
+def util():
+    return Utilities()
