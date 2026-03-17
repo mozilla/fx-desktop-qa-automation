@@ -527,7 +527,7 @@ class AboutNetworking(BasePage):
         )
         return list(zip(names, trr))
 
-    def wait_for_dns_entry(self, host: str, trr: str = "true"):
+    def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
         """Wait until a DNS entry for the given host appears in the table."""
         self.wait.until(
             lambda _: any(
