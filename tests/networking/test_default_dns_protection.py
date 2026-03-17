@@ -31,7 +31,6 @@ def test_doh_enforces_secure_dns_resolution(
     # Confirm the default DoH settings
     prefs.open()
     prefs.element_has_text("doh-status", "Status: Active")
-    print("Actual resolver text:", prefs.fetch("doh-resolver").text)
     prefs.element_has_text("doh-resolver", "Provider: Cloudflare")
 
     # Open the test site and subsequently the networking#dns page
