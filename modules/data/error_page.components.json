@@ -2,7 +2,7 @@
     "net-error-card": {
         "selectorData": "net-error-card",
         "strategy": "tag",
-        "groups": []
+        "groups": ["doNotCache"]
     },
     "error-title": {
         "selectorData": "[data-l10n-id='neterror-dns-not-found-title']",
