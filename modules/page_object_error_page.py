@@ -50,7 +50,9 @@ class ErrorPage(BasePage):
         title = self.get_error_title()
         desc = self.get_error_short_description()
         assert title in expected_titles, f"Title was: {title!r}"
-        assert short_site in desc, f"Expected {short_site!r} in description, got: {desc!r}"
+        assert short_site in desc, (
+            f"Expected {short_site!r} in description, got: {desc!r}"
+        )
 
     def click_learn_more_and_verify_redirect(self, redirect_url: str) -> "BasePage":
         """Wait for the 'Learn more' link to point to redirect_url, click it, and verify the redirect.
@@ -59,12 +61,9 @@ class ErrorPage(BasePage):
 
         def _get_learn_more(driver):
             el = self.get_element("error-learn-more-link")
-            return (el is not None
-                    and redirect_url in (el.get_attribute("href") or ""))
+            return el is not None and redirect_url in (el.get_attribute("href") or "")
 
-        WebDriverWait(self.driver, 10).until(
-            _get_learn_more
-        )
+        WebDriverWait(self.driver, 10).until(_get_learn_more)
         initial_window_count = len(self.driver.window_handles)
         self.get_element("error-learn-more-link").click()
         self.wait_for_num_tabs(initial_window_count + 1)
