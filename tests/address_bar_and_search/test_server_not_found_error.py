@@ -13,7 +13,7 @@ def test_case():
 
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
-REDIRECT_URL = "www.example.com"
+REDIRECT_URL = "https://www.example.com/"
 ERROR_TITLE = ["Server Not Found"]
 
 
