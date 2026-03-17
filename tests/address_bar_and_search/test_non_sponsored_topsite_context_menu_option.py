@@ -13,6 +13,14 @@ def test_case():
     return "3029116"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.startup.page", 1),
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
+    ]
+
+
 STATIC_CONTEXT_MENU_OPTIONS = {
     "context-menu-open-link-in-tab": "Open Link in New Tab",
     "context-menu-open-link-in-new-window": "Open Link in New Window",
