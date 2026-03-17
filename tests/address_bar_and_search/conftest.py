@@ -159,4 +159,3 @@ def google_telemetry_runner():
 @pytest.fixture()
 def util():
     return Utilities()
-    return Utilities()
