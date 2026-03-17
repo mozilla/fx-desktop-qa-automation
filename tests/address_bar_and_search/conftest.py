@@ -1,5 +1,7 @@
 import pytest
 
+from modules.util import Utilities
+
 
 @pytest.fixture()
 def suite_id():
@@ -48,3 +50,8 @@ def search_modes():
             (">", "Actions"),
         ],
     }
+
+
+@pytest.fixture()
+def util():
+    return Utilities()
