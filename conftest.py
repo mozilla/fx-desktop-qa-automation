@@ -407,6 +407,9 @@ def pytest_sessionfinish(session):
         raise OSError("Could not find TestRail credentials")
 
     tr_session = tri.testrail_init()
+    if tr_session is None:
+        logging.error("TestRail session could not be initialized.")
+        return
     passes = tri.collect_changes(tr_session, report)
     if passes:
         tri.mark_results(tr_session, passes)
