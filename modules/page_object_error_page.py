@@ -42,25 +42,32 @@ class ErrorPage(BasePage):
         """Get the 'Learn more' link element."""
         return self.get_element("error-learn-more-link")
 
-    def verify_error_header(self, expected_title: list[str], short_site: str) -> None:
+    def verify_error_header(self, expected_titles: list[str], short_site: str) -> None:
         """Verify the main title and that the site name appears in the error page description.
         Arguments:
-            expected_title: The valid header title for the error page.
+            expected_titles: The valid header title for the error page.
             short_site: The short version of the site URL (eg. "example" from "http://example")."""
         title = self.get_error_title()
         desc = self.get_error_short_description()
-        assert title in expected_title, f"Title was: {title!r}"
+        assert title in expected_titles, f"Title was: {title!r}"
         assert short_site in desc, f"Expected {short_site!r} in description, got: {desc!r}"
 
     def click_learn_more_and_verify_redirect(self, redirect_url: str) -> "BasePage":
         """Wait for the 'Learn more' link to point to redirect_url, click it, and verify the redirect.
         Arguments:
             redirect_url: The expected URL after clicking the learn more link."""
+
+        def _get_learn_more(driver):
+            el = self.get_element("error-learn-more-link")
+            return (el is not None
+                    and redirect_url in (el.get_attribute("href") or ""))
+
         WebDriverWait(self.driver, 10).until(
-            lambda _: self.get_element("error-learn-more-link") is not None
-            and redirect_url in (self.get_element("error-learn-more-link").get_attribute("href") or "")
+            _get_learn_more
         )
+        initial_window_count = len(self.driver.window_handles)
         self.get_element("error-learn-more-link").click()
+        self.wait_for_num_tabs(initial_window_count + 1)
         self.switch_to_new_tab()
         self.url_contains(redirect_url)
         return self
