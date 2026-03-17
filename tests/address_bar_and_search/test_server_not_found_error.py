@@ -14,7 +14,7 @@ def test_case():
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
 REDIRECT_URL = "https://www.example.com/"
-ERROR_TITLE = ["Server Not Found"]
+ERROR_TITLES = ["Server Not Found"]
 
 
 def test_server_not_found_error(driver: Firefox):
@@ -35,7 +35,7 @@ def test_server_not_found_error(driver: Firefox):
     tabs.wait_for_tab_title("Problem loading page")
 
     # Verify title and short description on the error page
-    error_page.verify_error_header(ERROR_TITLE, SHORT_SITE)
+    error_page.verify_error_header(ERROR_TITLES, SHORT_SITE)
 
     # Verify the "Learn more" link redirects correctly
     error_page.click_learn_more_and_verify_redirect(REDIRECT_URL)
