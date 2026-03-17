@@ -94,7 +94,8 @@ def google_telemetry_runner():
                     for path, expected_value in telemetry_expectations
                 ):
                     return True
-            except Exception:
+            except (IndexError, Exception):
+                pass  # path not yet in telemetry, retry
                 pass
 
             sleep(poll_interval)
