@@ -486,7 +486,7 @@ def reportable(platform_to_test=None):
     return bool(uncovered_suites)
 
 
-def testrail_init() -> TestRail | None :
+def testrail_init() -> TestRail | None:
     """Connect to a TestRail API session"""
     base_url = os.environ.get("TESTRAIL_BASE_URL")
 
@@ -497,7 +497,7 @@ def testrail_init() -> TestRail | None :
     try:
         local = base_url.split("/")[2].startswith("127")
     except Exception as e:
-        logging.warning(f"Invalid TESTRAIL_BASE_URL: {base_url} - {e}")
+        logging.warning("Invalid TESTRAIL_BASE_URL: %s - %s",base_url, e)
         return None
 
     tr_session = tr.TestRail(
