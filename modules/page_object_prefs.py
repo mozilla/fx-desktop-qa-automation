@@ -39,6 +39,24 @@ class AboutPrefs(BasePage):
     # Number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
+    ZOOM_LEVELS = [
+        30,
+        50,
+        67,
+        80,
+        90,
+        100,
+        110,
+        120,
+        133,
+        150,
+        170,
+        200,
+        240,
+        300,
+        400,
+        500,
+    ]
 
     class HttpsOnlyStatus:
         """Fake enum: return a string based on a constant name"""
@@ -221,25 +239,6 @@ class AboutPrefs(BasePage):
         Focuses the inner <select> inside moz-select's shadow root,
         then uses arrow keys to navigate to the target zoom level.
         """
-        zoom_levels = [
-            30,
-            50,
-            67,
-            80,
-            90,
-            100,
-            110,
-            120,
-            133,
-            150,
-            170,
-            200,
-            240,
-            300,
-            400,
-            500,
-        ]
-
         moz_select = self.get_element("default-zoom-dropdown")
         current_value = int(
             self.driver.execute_script(
@@ -247,8 +246,11 @@ class AboutPrefs(BasePage):
                 moz_select,
             )
         )
-        steps = zoom_levels.index(zoom_percentage) - zoom_levels.index(current_value)
+        steps = self.ZOOM_LEVELS.index(zoom_percentage) - self.ZOOM_LEVELS.index(
+            current_value
+        )
         key = Keys.ARROW_DOWN if steps > 0 else Keys.ARROW_UP
+        actual = current_value
         for _ in range(3):
             self.driver.execute_script(
                 "arguments[0].shadowRoot.querySelector('select').focus()",
@@ -263,6 +265,9 @@ class AboutPrefs(BasePage):
             )
             if actual == zoom_percentage:
                 break
+        assert actual == zoom_percentage, (
+            f"Failed to set zoom to {zoom_percentage}%, got {actual}%"
+        )
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
