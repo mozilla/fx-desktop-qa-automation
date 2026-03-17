@@ -37,7 +37,7 @@ def test_disable_websearch_from_awesome_bar(driver):
     # The Awesome Bar should still show exactly what was typed
     assert nav.get_awesome_bar_text() == KEYWORD
 
-    # Firefox 138+ shows: "Server Not Found"
+    # Firefox shows: "Server Not Found"
     assert "server not found" in error_page.get_error_title().lower()
 
     # Open a new tab and switch to it
