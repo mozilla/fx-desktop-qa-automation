@@ -1001,11 +1001,10 @@ def collect_changes(testrail_session: TestRail, report):
         # Tests reported as rerun are a problem -- we need to know pass/fail
         if outcome == "rerun":
             outcome = test.get("call").get("outcome")
-        duration = (
-            test["setup"]["duration"]
-            + test["call"]["duration"]
-            + test["teardown"]["duration"]
-        )
+        setup_dur = 0.0 if not test.get("setup") else test["setup"]["duration"]
+        call_dur = 0.0 if not test.get("call") else test["call"]["duration"]
+        teardown_dur = 0.0 if not test.get("teardown") else test["teardown"]["duration"]
+        duration = setup_dur + call_dur + teardown_dur
         logging.info(f"TC: {test_case}: {outcome} using {duration}s ")
 
         if not results_by_suite.get(suite_id):
