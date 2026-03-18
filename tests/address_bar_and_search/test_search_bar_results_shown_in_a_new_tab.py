@@ -31,20 +31,20 @@ def test_search_bar_results_shown_in_a_new_tab(driver: Firefox):
 
     # Set DuckDuckGo as default search engine
     prefs.open()
-    prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Add Search Bar to toolbar
-    tabs.new_tab_by_button()
     panel_ui.open_panel_menu()
     panel_ui.navigate_to_customize_toolbar()
     customize.add_widget_to_toolbar("search-bar")
 
-    # Open a random link in a new tab
-    tabs.new_tab_by_button()
     page.open()
+    page.url_contains(RANDOM_URL)
 
     # Perform a search from search bar and verify ALT+ENTER displays results in a new tab
     nav.type_in_search_bar(SEARCH_TERM)
+    # Searchbar must have focus to receive key combo
+    nav.click_on("searchbar-input")
     nav.perform_key_combo_chrome(Keys.ALT, Keys.ENTER)
     tabs.switch_to_new_tab()
     nav.url_contains(SEARCH_TERM)

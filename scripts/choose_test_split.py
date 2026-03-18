@@ -120,8 +120,34 @@ def dedupe(run_list: list) -> list:
 
 
 if __name__ == "__main__":
-    print("Selecting test set...")
     manifest = TestKey(MANIFEST_KEY)
+
+    if os.environ.get("STARFOX_CATEGORY"):
+        category = os.environ["STARFOX_CATEGORY"]
+        split_name = os.environ.get("STARFOX_SPLIT", "all")
+
+        # platform MUST be set by the job environment (win|mac|linux)
+        platform = os.environ.get("STARFOX_PLATFORM")
+        if not platform:
+            raise SystemExit(
+                "STARFOX_PLATFORM must be set to 'win', 'mac', or 'linux' when STARFOX_CATEGORY is used."
+            )
+
+        platform = platform.lower()
+        print(
+            f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'..."
+        )
+
+        # Call gather_category with platform explicitly
+        run_list = manifest.gather_category(
+            split_name=split_name, platform=platform, category=category
+        )
+        run_list = dedupe(run_list)
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(run_list))
+        sys.exit(0)
+
+    print("Selecting test set...")
     if os.environ.get("STARFOX_SPLIT"):
         print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])

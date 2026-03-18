@@ -212,7 +212,7 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         return self
 
     @BasePage.context_chrome
@@ -226,7 +226,7 @@ class Navigation(BasePage):
         term : str
             The search term
         """
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.search_bar.send_keys(term + Keys.ENTER)
         return self
@@ -268,12 +268,9 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_on_change_search_settings_button(self) -> BasePage:
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-        self.search_bar.click()
-        self.change_search_settings_button = self.find_element(
-            By.ID, "searchbar-anon-search-settings"
-        )
-        self.change_search_settings_button.click()
+        self.click_on("searchmode-switcher")
+        self.element_visible("legacy-searchbar-switcher-popup")
+        self.click_on("legacy-searchbar-search-settings")
         return self
 
     @BasePage.context_chrome
@@ -620,11 +617,9 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def get_legacy_search_engine_label(self) -> str:
-        """Return the displayed engine name from the legacy search bar."""
-        return self.driver.find_element(
-            By.CSS_SELECTOR, ".searchbar-engine-name"
-        ).get_attribute("value")
+    def legacy_search_engine_matches(self, engine: str):
+        """Test the displayed engine name from the legacy search bar."""
+        self.element_attribute_contains("searchmode-switcher", "data-l10n-args", engine)
 
     # Bookmark
 
@@ -1514,3 +1509,8 @@ class Navigation(BasePage):
         """Paste clipboard content into the awesome bar"""
         self.click_on("awesome-bar")
         return self.paste()
+
+    @BasePage.context_chrome
+    def dismiss_password_doorhanger(self):
+        """Dismiss the Password Manager doorhanger using ESC."""
+        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)

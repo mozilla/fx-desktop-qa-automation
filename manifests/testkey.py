@@ -60,7 +60,6 @@ def get_subtests(entry: dict) -> list:
         subtests.append(
             {suite: {testfile: {subtest_name: entry[suite][testfile][subtest_name]}}}
         )
-    print(subtests)
     return subtests
 
 
@@ -126,7 +125,6 @@ class TestKey:
             full_entry = self.get_entry_from_filename(filename)
             if has_subtests(full_entry):
                 subtests = get_subtests(full_entry)
-                print(subtests)
                 subresults = [test_expected_to_pass(subtest) for subtest in subtests]
                 if all(subresults):
                     passes.append(filename)
@@ -136,7 +134,6 @@ class TestKey:
                             suite = list(subtest.keys())[0]
                             testfile = list(subtest[suite].keys())[0]
                             subtest_name = list(subtest[suite][testfile].keys())[0]
-                            print(f"normalizing {suite} {testfile}, {subtest_name}")
                             passes.append(
                                 self.normalize_test_filename(
                                     suite, testfile, subtest_name
@@ -147,6 +144,27 @@ class TestKey:
                 passes.append(filename)
 
         return passes
+
+    def add_comments_to_fails(self):
+        """Add comment fields to tests or subtests that fail in at least one os"""
+        for suite in self.manifest:
+            for test in self.manifest.get(suite):
+                result = self.manifest[suite][test].get("result")
+                if result == "pass":
+                    pass
+                elif isinstance(result, (str, dict)):
+                    self.manifest[suite][test]["comment"] = (
+                        self.manifest[suite][test].get("comment") or ""
+                    )
+                else:
+                    for subtest in self.manifest[suite][test]:
+                        if result == "pass":
+                            pass
+                        elif isinstance(result, (str, dict)):
+                            self.manifest[suite][test][subtest]["comment"] = (
+                                self.manifest[suite][test][subtest].get("comment") or ""
+                            )
+        self.write()
 
     def get_entry_from_filename(self, filename) -> dict:
         """
@@ -271,6 +289,75 @@ class TestKey:
                         )
 
         return test_filenames
+
+    def gather_category(self, split_name, platform, category="pass"):
+        """
+        Return pytest locations of tests in `split_name` whose status for `platform`
+        matches `category`.
+
+        - platform: required, one of "win", "mac", "linux".
+        - category: "pass" (default), "flaky", "unstable", etc.
+        - If a manifest entry's result is a string (e.g. "pass"), that global status
+          applies to all platforms.
+        - If result is a dict, only the value for `platform` is considered.
+        - split_name == "all" means include tests from all splits.
+        """
+
+        category_lower = (category or "").lower()
+        platform_lower = (platform or "").lower()
+
+        if platform_lower not in ("win", "mac", "linux"):
+            raise ValueError(
+                f"Unsupported platform: {platform}. Use 'win', 'mac' or 'linux'."
+            )
+
+        def matches_category(result_field) -> bool:
+            # Global string result: applies to all platforms
+            if isinstance(result_field, str):
+                return result_field.lower() == category_lower
+
+            # Per-platform dict: only consider the requested platform key
+            if isinstance(result_field, dict):
+                pv = result_field.get(platform_lower)
+                return isinstance(pv, str) and pv.lower() == category_lower
+
+            return False
+
+        def split_matches(splits_list) -> bool:
+            if split_name == "all":
+                return True
+            return split_name in (splits_list or [])
+
+        selected = []
+
+        for suite in self.manifest:
+            for testfile in self.manifest[suite]:
+                entry = self.manifest[suite][testfile]
+
+                # File-level entry (e.g., result: pass)
+                if isinstance(entry, dict) and "splits" in entry:
+                    if split_matches(entry.get("splits", [])) and matches_category(
+                        entry.get("result")
+                    ):
+                        selected.append(self.normalize_test_filename(suite, testfile))
+
+                # Subtest-level entries
+                if isinstance(entry, dict):
+                    for key, subentry in entry.items():
+                        if not str(key).startswith("test_"):
+                            continue
+                        if not isinstance(subentry, dict):
+                            continue
+                        if "splits" not in subentry:
+                            continue
+                        if split_matches(
+                            subentry.get("splits", [])
+                        ) and matches_category(subentry.get("result")):
+                            selected.append(
+                                self.normalize_test_filename(suite, testfile, key)
+                            )
+
+        return selected
 
     def get_valid_suites_in_split(self, split, suite_numbers=False) -> list:
         """
