@@ -1198,6 +1198,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_enabled_in_private_window:
+    result: pass
+    splits:
+    - functional2
   test_sidebar-button-always-displayed-on-a-fresh-profile:
     result: pass
     splits:
