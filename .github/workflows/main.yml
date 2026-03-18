@@ -313,7 +313,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
-          rm ./pyproject.toml
+          rm -f ./pyproject.toml
           mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
@@ -389,7 +389,7 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
           REPORTABLE: true
         run: |
-          rm ./pyproject.toml
+          rm -f ./pyproject.toml
           mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml;
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
