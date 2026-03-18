@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -59,9 +57,9 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
 
     # The "Save" doorhanger is displayed upon clicking the grey icon
     nav.element_visible("password-notification-popup")
-    sleep(1)
 
     # Choose to save the credentials
+    nav.element_clickable("password-notification-save-button")
     nav.click_on("password-notification-save-button")
 
     # Re-load the form
