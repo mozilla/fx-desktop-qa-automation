@@ -25,11 +25,11 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
 
     # Instantiate objects
     login_autofill = LoginAutofill(driver)
-    login_form = LoginAutofill.LoginForm(login_autofill)
     nav = Navigation(driver)
 
     # Access a website that requires a username and password
     login_autofill.open()
+    login_form = LoginAutofill.LoginForm(login_autofill)
 
     # Fill in only the password field and focus out of the password field
     login_form.fill_password(PASSWORD)
@@ -37,7 +37,7 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
     # The grey key icon is displayed on the left side of the address bar (dismissed doorhanger)
     nav.element_visible("password-notification-key")
 
-    # Click the Passowrd Manager key icon
+    # Click the Password Manager key icon
     nav.click_on("password-notification-key")
 
     # The Password Manager dialog is displayed
@@ -53,5 +53,5 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
     # Click again on the grey key icon
     nav.click_on("password-notification-key")
 
-    # The dorhanger is displayed with
+    # The dorhanger is displayed again
     nav.element_visible("password-notification-popup")
