@@ -27,3 +27,4 @@ def test_sidebar_enabled_in_private_window(driver: Firefox):
 
     # Click the Sidebar button and verify that the sidebar is open
     sidebar.click_sidebar_button()
+    sidebar.expect_sidebar_open()
