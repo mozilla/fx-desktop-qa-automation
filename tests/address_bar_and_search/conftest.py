@@ -64,10 +64,8 @@ def google_telemetry_runner():
     def _assert_json_value(
         utils: Utilities, json_data, path: str, expected_value: int
     ) -> bool:
-        result = utils.assert_json_value(json_data, path, expected_value)
-        if isinstance(result, tuple):
-            return result[0]
-        return result
+        # Utilities.assert_json_value returns (bool, message)
+        return utils.assert_json_value(json_data, path, expected_value)[0]
 
     def _is_google_captcha_page(driver) -> bool:
         page_source = driver.page_source.lower()
@@ -86,12 +84,12 @@ def google_telemetry_runner():
         utils = Utilities()
         end_time = time() + telemetry_timeout
 
-        while time() < end_time:
-            telemetry = telemetry_cls(driver).open()
-            sleep(telemetry_load_wait)
-            telemetry.open_raw_json_data()
-            sleep(raw_json_wait)
+        telemetry = telemetry_cls(driver).open()
+        sleep(telemetry_load_wait)
+        telemetry.open_raw_json_data()
+        sleep(raw_json_wait)
 
+        while time() < end_time:
             try:
                 json_data = utils.decode_url(driver)
                 if all(
@@ -158,7 +156,9 @@ def google_telemetry_runner():
             formatted_paths = "\n".join(path for path, _ in telemetry_expectations)
             pytest.fail(
                 f"Telemetry paths were not recorded within {telemetry_timeout} "
-                f"seconds:\n{formatted_paths}"
+                f"seconds:\n{formatted_paths}\n"
+                "Note: No retry is performed here as telemetry delays are handled "
+                "via polling, and retries are reserved for CAPTCHA-only scenarios."
             )
 
     return _run
