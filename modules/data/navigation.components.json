@@ -750,7 +750,7 @@
         "groups": []
     },
     "password-notification-save-button": {
-        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+        "selectorData": "button.popup-notification-primary-button[label='Save']",
         "strategy": "css",
         "groups": []
     }
