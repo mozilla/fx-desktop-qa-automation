@@ -17,7 +17,7 @@ def httpserver_listen_address():
 
 
 @pytest.fixture()
-def prefs_list(add_to_prefs_list: dict):
+def prefs_list(add_to_prefs_list: list):
     """List of prefs to send to main conftest.py driver fixture"""
     prefs = [
         ("browser.aboutConfig.showWarning", False),
@@ -55,7 +55,7 @@ def search_modes():
 
 
 @pytest.fixture()
-def google_telemetry_runner():
+def telemetry_runner():
     def _assert_json_value(
         utils: Utilities, json_data, path: str, expected_value: int
     ) -> bool:
@@ -94,8 +94,7 @@ def google_telemetry_runner():
                     for path, expected_value in telemetry_expectations
                 ):
                     return True
-            except (IndexError, Exception):
-                pass  # path not yet in telemetry, retry
+            except Exception:
                 pass
 
             sleep(poll_interval)
