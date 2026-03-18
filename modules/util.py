@@ -32,6 +32,7 @@ from modules.classes.credit_card import CreditCardBase
 
 def env_true(name: str) -> bool:
     """Return True if the environment variable is set to '1' or 'true' (case-insensitive)."""
+    logging.warning(f"env: {name} set to {os.environ.get(name)}")
     return os.environ.get(name, "").strip().lower() in ("1", "true")
 
 
