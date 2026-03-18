@@ -1,8 +1,13 @@
+import json
+import logging
 from time import sleep, time
 
 import pytest
+from selenium.common.exceptions import WebDriverException
 
 from modules.util import Utilities
+
+LOGGER = logging.getLogger(__name__)
 
 
 @pytest.fixture()
@@ -55,7 +60,7 @@ def search_modes():
 
 
 @pytest.fixture()
-def telemetry_runner():
+def google_telemetry_runner():
     def _assert_json_value(
         utils: Utilities, json_data, path: str, expected_value: int
     ) -> bool:
@@ -94,8 +99,10 @@ def telemetry_runner():
                     for path, expected_value in telemetry_expectations
                 ):
                     return True
-            except Exception:
-                pass
+            except (json.JSONDecodeError, IndexError, TypeError, ValueError) as exc:
+                LOGGER.debug("Telemetry data not ready yet: %s", exc)
+            except WebDriverException as exc:
+                LOGGER.debug("WebDriver error while polling telemetry: %s", exc)
 
             sleep(poll_interval)
 
