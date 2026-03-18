@@ -788,8 +788,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018719
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_auto_saved_generated_password_context_menu:
@@ -801,8 +800,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018719
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
@@ -850,8 +848,7 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018719
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
