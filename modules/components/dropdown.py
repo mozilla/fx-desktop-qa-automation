@@ -52,23 +52,14 @@ class Dropdown(Region):
             self.root.click()
 
         if self.is_search_dropdown:
-            # Wait for dropdown to be fully open and panel-list to exist, created dynamically.
-            # get_shadow_content may return [shadow_root] (Selenium) or direct children (script);
-            # panel-list is a child of the shadow root, so search inside when not found at top level.
-            def wait_for_panel_list(_):
-                self.shadow_elements = self.utils.get_shadow_content(self.root)
-                for el in self.shadow_elements:
-                    if el.tag_name == "panel-list":
-                        return el
-                    try:
-                        panels = el.find_elements(By.TAG_NAME, "panel-list")
-                        if panels:
-                            return panels[0]
-                    except Exception:
-                        pass
-                return None
-
-            panel_element = self.wait.until(wait_for_panel_list)
+            # Wait for the panel-list to appear via a single JS query (faster than
+            # multi-step shadow DOM traversal via get_shadow_content).
+            panel_element = self.wait.until(
+                lambda _: self.page.driver.execute_script(
+                    "return arguments[0].shadowRoot.querySelector('panel-list')",
+                    self.root,
+                )
+            )
             matching_menuitems = [
                 el
                 for el in panel_element.find_elements(By.TAG_NAME, "panel-item")
@@ -89,28 +80,14 @@ class Dropdown(Region):
                 matching_menuitems[0].click()
             if wait_for_selection:
                 if self.is_search_dropdown:
-                    if self.dropmarker is not None:
-                        panel_trigger = self.dropmarker.find_element(
-                            By.CLASS_NAME, "panel-trigger"
+                    panel_trigger = self.page.driver.execute_script(
+                        "return arguments[0].shadowRoot.querySelector('.panel-trigger')",
+                        self.root,
+                    )
+                    if panel_trigger is None:
+                        raise ValueError(
+                            "Could not find panel-trigger in search dropdown shadow DOM"
                         )
-                    else:
-                        # dropmarker can be None when get_shadow_content returns [shadow_root]
-                        self.shadow_elements = self.utils.get_shadow_content(self.root)
-                        panel_trigger = None
-                        for el in self.shadow_elements:
-                            try:
-                                triggers = el.find_elements(
-                                    By.CLASS_NAME, "panel-trigger"
-                                )
-                                if triggers:
-                                    panel_trigger = triggers[0]
-                                    break
-                            except Exception:
-                                pass
-                        if panel_trigger is None:
-                            raise ValueError(
-                                "Could not find panel-trigger in search dropdown shadow DOM"
-                            )
                     self.wait.until(lambda _: panel_trigger.text == option_name)
                 else:
                     self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
