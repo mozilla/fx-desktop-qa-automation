@@ -31,7 +31,7 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
     login_autofill.open()
     login_form = LoginAutofill.LoginForm(login_autofill)
 
-    # Fill in only the password field and focus out of the password field
+    # Fill in only the password field
     login_form.fill_password(PASSWORD)
 
     # The grey key icon is displayed on the left side of the address bar (dismissed doorhanger)
@@ -53,5 +53,5 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
     # Click again on the grey key icon
     nav.click_on("password-notification-key")
 
-    # The dorhanger is displayed again
+    # The doorhanger is displayed again
     nav.element_visible("password-notification-popup")
