@@ -1317,7 +1317,7 @@ tabs:
     result:
       linux: unstable
       mac: pass
-      windows: unstable
+      win: unstable
     splits:
     - functional2
   test_reload_overiding_cache_keys:
