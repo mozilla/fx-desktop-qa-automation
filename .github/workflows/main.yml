@@ -1,49 +1,50 @@
----
 name: Fx Test Execution
 
 run-name: ${{ github.actor }} is running smoke tests
+
 on:
   workflow_call:
     inputs:
       channel:
         description: "Channel to run tests against"
         default: "beta"
-        type: string
         required: false
+        type: string
       job_to_run:
         required: true
         type: string
       is_pull_request:
         description: "Is this a PR?"
         default: false
+        required: false
         type: boolean
       test_set:
         description: "Test set to run"
-        default: ''
+        default: ""
         required: false
         type: string
       dry_run:
         description: "If true, skip downloads/installs/tests/uploads (safe dry run)"
+        default: false
         required: false
         type: boolean
-        default: false
 
   workflow_dispatch:
     inputs:
       win_installer_link:
-        description: 'The link to the Windows installer (win64) for the Fx under test'
+        description: "The link to the Windows installer (win64) for the Fx under test"
         required: false
         type: string
       mac_installer_link:
-        description: 'The link to the macOS installer for the Fx under test'
+        description: "The link to the macOS installer for the Fx under test"
         required: false
         type: string
       linux_tarball_link:
-        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
+        description: "The link to the Linux tarball (linux-x86_64) for the Fx under test"
         required: false
         type: string
+
 env:
-  # Set the split input as env so scripts.choose_test_split.py sees STARFOX_SPLIT
   STARFOX_SPLIT: ${{ inputs.test_set }}
   FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -62,6 +63,7 @@ jobs:
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
+        shell: pwsh
         run: |
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
@@ -72,72 +74,78 @@ jobs:
 
       - name: Set Environment (Manual)
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
+        shell: pwsh
         run: |
-          echo "MANUAL=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          "MANUAL=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          "STARFOX_SPLIT=smoke" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          "REPORTABLE=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Write-Host "Running smoke tests on supplied executable"
 
       - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.is_pull_request == false && inputs.dry_run != true }}
+        shell: pwsh
         run: |
-          echo "TESTRAIL_REPORT=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          "TESTRAIL_REPORT=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          "REPORTABLE=true" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Write-Host "Running report for most recent Beta on Windows"
 
       - name: Install dependencies
+        shell: pwsh
         run: |
-          mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
+          mkdir -p artifacts
+          pip3 install 'pipenv==2023.11.15'
+          pip3 install 'ruff>=0.4.8,<0.5'
+          rm ./pyproject.toml
+          mv ./config/ci_pyproject.toml ./pyproject.toml
+          pipenv install
 
       - name: Download Geckodriver
         if: ${{ inputs.dry_run != true }}
+        shell: pwsh
         run: |
           $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
           echo $gecko_url
           Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
           echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        shell: pwsh
 
       - name: Download Beta
         if: ${{ !inputs.win_installer_link && inputs.dry_run != true }}
+        shell: pwsh
         run: |
           $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
-        shell: pwsh
 
       - name: Download Executable
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+        shell: pwsh
         run: |
-          echo "STARFOX_SPLIT=smoke" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
-        shell: pwsh
 
       - name: Install Beta
         if: ${{ inputs.dry_run != true }}
         id: setup
+        shell: pwsh
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
-        shell: pwsh
 
       - name: Select Tests (Win)
+        if: ${{ inputs.dry_run != true }}
         id: select
         shell: pwsh
         run: |
           pipenv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (Win)
-        if: ${{steps.select.conclusion == 'success'}}
+        if: ${{ steps.select.conclusion == 'success' }}
         shell: pwsh
         run: |
-          Write-Host "Selected tests: "
+          Write-Host "Selected tests:"
           Get-Content selected_tests
 
       - name: Test Fx Version (Win)
@@ -157,7 +165,6 @@ jobs:
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
-      # --- REAL RUN: actually execute tests ---
       - name: Run Tests in Win
         if: |
           ${{
@@ -165,6 +172,8 @@ jobs:
             steps.select.conclusion == 'success' &&
             inputs.dry_run != true
           }}
+        env:
+          REPORTABLE: true
         shell: pwsh
         run: |
           pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
@@ -178,21 +187,21 @@ jobs:
           REPORTABLE: true
         shell: pwsh
         run: |
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          rm ./pyproject.toml
+          mv ./config/ci_pyproject_headed.toml ./pyproject.toml
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
-              $destPath = "artifacts-win\" + $_.Name
-              if (-not (Test-Path -Path $destPath)) {
-                  try {
-                      Move-Item -Path $_.FullName -Destination $destPath
-                  } catch {
-                      # Ignore errors and continue
-                  }
+            $destPath = "artifacts-win\" + $_.Name
+            if (-not (Test-Path -Path $destPath)) {
+              try {
+                Move-Item -Path $_.FullName -Destination $destPath
+              } catch {
+                # Ignore errors and continue
               }
+            }
           }
           exit $env:TEST_EXIT_CODE
 
@@ -200,7 +209,7 @@ jobs:
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts-win-smoke
+          name: artifacts-win
           path: artifacts-win
 
   Test-MacOS:
@@ -230,42 +239,45 @@ jobs:
       - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
-          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
-          echo "Running report for most recent Beta on MacOS";
+          echo "TESTRAIL_REPORT=true" >> .env
+          echo "REPORTABLE=true" >> .env
+          echo "Running report for most recent Beta on MacOS"
 
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link && inputs.dry_run != true }}
         run: |
-          echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "MANUAL=true" >> .env
           echo "STARFOX_SPLIT=smoke" >> .env
-          echo "Running smoke tests on supplied executable";
+          echo "REPORTABLE=true" >> .env
+          echo "Running smoke tests on supplied executable"
 
       - name: Install dependencies
         run: |
-          mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
+          mkdir -p artifacts
+          pip3 install 'pipenv==2023.11.15'
+          pip3 install 'ruff>=0.4.8,<0.5'
+          rm ./pyproject.toml
+          mv ./config/ci_pyproject.toml ./pyproject.toml
           pipenv install
 
       - name: Install Fx
-        id: setup
         if: ${{ inputs.dry_run != true }}
+        id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
-        run:
-          echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT"
+        run: |
+          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT"
 
       - name: Select Tests (MacOS)
+        if: ${{ inputs.dry_run != true }}
         id: select
         run: |
           pipenv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (MacOS)
-        if: ${{steps.select.conclusion == 'success'}}
+        if: ${{ steps.select.conclusion == 'success' }}
         run: |
-          echo "Selected tests: "
+          echo "Selected tests:"
           cat selected_tests
 
       - name: Test Fx Version (MacOS)
@@ -281,7 +293,7 @@ jobs:
           REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
         if: |
@@ -292,20 +304,22 @@ jobs:
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
       - name: Run Tests in MacOS (Headed)
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ steps.setup.conclusion == 'success' && always() && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          rm ./pyproject.toml
+          mv ./config/ci_pyproject_headed.toml ./pyproject.toml
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
@@ -314,7 +328,7 @@ jobs:
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts-mac-smoke
+          name: artifacts-mac
           path: artifacts-mac
 
   Smoke-Linux:
@@ -337,47 +351,51 @@ jobs:
           echo "Triggered by event: ${{ github.event_name }}"
 
       - name: Install dependencies
+        if: ${{ inputs.dry_run != true }}
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "STARFOX_SPLIT=smoke" >> "$GITHUB_ENV"
-          echo "Running smoke tests on supplied executable";
-          sudo apt install gnome-screenshot
-          uname -m;
-          mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
-          pipenv install;
+          echo "MANUAL=true" >> .env
+          echo "STARFOX_SPLIT=smoke" >> .env
+          echo "REPORTABLE=true" >> .env
+          echo "Running smoke tests on supplied executable"
+          sudo apt install -y gnome-screenshot
+          uname -m
+          mkdir -p artifacts
+          pip3 install 'pipenv==2023.11.15'
+          pip3 install 'ruff>=0.4.8,<0.5'
+          rm ./pyproject.toml
+          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml
+          pipenv install
           ./scripts/collect_executables.sh
-          ./firefox/firefox --version;
-          #. ./keyring-unlock.sh;
+          ./firefox/firefox --version
 
       - name: Select Tests (Linux)
-        if: ${{ steps.setup.conclusion == 'success' }}
+        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
         id: select
         run: |
           pipenv run python -m scripts.choose_test_split
 
       - name: Run Smoke Tests in Ubuntu
-        if: ${{ steps.select.conclusion == 'success' }}
+        if: ${{ steps.select.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
+          REPORTABLE: true
         run: |
-          "$FX_EXECUTABLE" --version;
+          "$FX_EXECUTABLE" --version
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
-        if: ${{ steps.setup.conclusion == 'success' && always() }}
+        if: ${{ steps.setup.conclusion == 'success' && always() && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
+          REPORTABLE: true
         run: |
-          mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml;
+          rm ./pyproject.toml
+          mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
@@ -387,31 +405,39 @@ jobs:
     needs:
       - Test-Windows
       - Test-MacOS
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Install dependencies
         run: |
           pip3 install 'pipenv==2023.11.15'
           pipenv install
+
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
           name: artifacts-win
           path: artifacts-win
+
       - name: Download MacOS artifact
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac
           path: artifacts-mac
-      - name: List downloaded files
+
+      - name: List downloaded Windows files
         run: ls artifacts-win/
+
       - name: List downloaded MacOS files
         run: ls artifacts-mac/
+
       - name: Run script with secret
         env:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
