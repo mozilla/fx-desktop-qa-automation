@@ -15,7 +15,10 @@ def test_case():
 @pytest.fixture()
 def add_to_prefs_list():
     # Required to expose "Visit from clipboard" suggestions
-    return [("browser.urlbar.clipboard.featureGate", True)]
+    return [
+        ("browser.urlbar.clipboard.featureGate", True),
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
+    ]
 
 
 TOPSITE_TITLE = "Wikipedia"

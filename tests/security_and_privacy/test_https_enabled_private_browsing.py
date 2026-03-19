@@ -30,5 +30,4 @@ def test_https_first_mode_in_private_browsing(
     driver.get(HTTP_SITE)
 
     # Wait for the URL to be redirected to HTTPS
-
     about_prefs_privacy.url_contains("https://")

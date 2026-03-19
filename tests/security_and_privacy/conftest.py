@@ -1,10 +1,7 @@
 import pytest
 
-from modules.browser_object import TabBar
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tracker_panel import TrackerPanel
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import MenuBar, Navigation, PanelUi, TabBar, TrustPanel
+from modules.page_object import AboutCache, AboutDownloads, AboutPrefs
 from modules.util import BrowserActions
 
 YOUTUBE_URL = "https://www.youtube.com/"
@@ -20,7 +17,9 @@ def suite_id():
 @pytest.fixture()
 def prefs_list(add_to_prefs_list: dict):
     """List of prefs to send to main conftest.py driver fixture"""
-    prefs = [("browser.urlbar.scotchBonnet.enableOverride", True)]
+    prefs = [
+        ("browser.urlbar.scotchBonnet.enableOverride", True),
+    ]
     prefs.extend(add_to_prefs_list)
     return prefs
 
@@ -41,8 +40,8 @@ def about_prefs_privacy(driver):
 
 
 @pytest.fixture()
-def tracker_panel(driver):
-    return TrackerPanel(driver)
+def trust_panel(driver):
+    return TrustPanel(driver)
 
 
 @pytest.fixture()
@@ -53,6 +52,21 @@ def panel_ui(driver):
 @pytest.fixture()
 def tabs(driver):
     return TabBar(driver)
+
+
+@pytest.fixture()
+def about_cache(driver):
+    return AboutCache(driver)
+
+
+@pytest.fixture()
+def about_downloads(driver):
+    return AboutDownloads(driver)
+
+
+@pytest.fixture()
+def menu_bar(driver):
+    return MenuBar(driver)
 
 
 @pytest.fixture()
