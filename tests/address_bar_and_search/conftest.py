@@ -27,8 +27,6 @@ def prefs_list(add_to_prefs_list: dict):
         ("browser.topsites.contile.enabled", True),
         ("browser.search.region", "US"),
         ("browser.urlbar.scotchBonnet.enableOverride", True),
-        ("browser.urlbar.quicksuggest.enabled", True),
-        ("browser.urlbar.suggest.quicksuggest.sponsored", True),
     ]
     prefs.extend(add_to_prefs_list)
     return prefs

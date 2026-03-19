@@ -17,6 +17,14 @@ def test_case():
     return "3029158"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.urlbar.quicksuggest.enabled", True),
+        ("browser.urlbar.suggest.quicksuggest.sponsored", True),
+    ]
+
+
 def test_search_suggests_enabled(driver: Firefox):
     """
     C1618400: Firefox Suggest displays sponsored and non-sponsored
