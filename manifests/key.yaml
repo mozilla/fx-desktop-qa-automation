@@ -843,6 +843,10 @@ password_manager:
       win: pass
     splits:
     - functional2
+  test_password_field_only_triggers_dismissed_doorhanger:
+    result: pass
+    splits:
+    - functional2
   test_password_manager_key_icon_after_doorhanger_dismiss:
     result: pass
     splits:
