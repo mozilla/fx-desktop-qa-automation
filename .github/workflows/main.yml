@@ -237,7 +237,6 @@ jobs:
         if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
           echo "TESTRAIL_REPORT=true" >> .env
-          echo "REPORTABLE=true" >> .env
           echo "Running report for most recent Beta on MacOS";
 
       - name: Set Environment (Manual)
@@ -245,7 +244,6 @@ jobs:
         run: |
           echo "MANUAL=true" >> .env
           echo "STARFOX_SPLIT=smoke" >> .env
-          echo "REPORTABLE=true" >> .env
           echo "Running smoke tests on supplied executable";
 
       - name: Install dependencies
