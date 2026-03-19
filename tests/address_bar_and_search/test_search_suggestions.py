@@ -1,5 +1,5 @@
 import pytest
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
@@ -51,7 +51,7 @@ def test_search_suggests_enabled(driver: Firefox):
             try:
                 nav.wait_for_suggestions_present()
                 found_sponsored = len(nav.get_elements("sponsored-suggestion")) > 0
-            except Exception:
+            except TimeoutException:
                 pass
 
         retries += 1
@@ -71,7 +71,7 @@ def test_search_suggests_enabled(driver: Firefox):
                 nav.get_element("firefox-suggest")
                 titles = nav.get_elements("suggestion-titles")
                 found_non_sponsored = any("Wikipedia" in title.text for title in titles)
-            except Exception:
+            except (NoSuchElementException, TimeoutException):
                 pass
 
         retries += 1
