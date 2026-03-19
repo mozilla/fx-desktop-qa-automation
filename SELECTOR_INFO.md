@@ -2989,6 +2989,13 @@ Description: Autocomplete dropdown is toggled for focused login fields on facebo
 Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
+```
+Selector Name: mozilla-github-credentials
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='testUser']"
+Description: Autocomplete dropdown is toggled for focused login fields on Mozilla github page load
+Location: Mozilla Github page load
+Path to .json: modules/data/login_autofill.components.json
+```
 #### navigation
 ```
 Selector name: awesome-bar
@@ -3842,6 +3849,13 @@ Selector Name: password-notification-username-field
 Selector Data: "password-notification-username"
 Description: Username field in the password notification popup
 Location: Username field in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-save-button
+Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
+Description: Save button in the password notification popup
+Location: Save button in the password notification popup
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

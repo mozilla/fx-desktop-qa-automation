@@ -1128,6 +1128,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_private_browsing_dismiss_doorhanger_credentials:
+    result: pass
+    splits:
+    - functional2
   test_private_session_awesome_bar_exclusion:
     result: pass
     splits:
