@@ -229,6 +229,9 @@ def main():
     logging.info(f"Base URL: {base_url}")
 
     tr = testrail_init()
+    if tr is None:
+        logging.error("TestRail session could not be initialized.")
+        return
 
     # Safe approach to not accidentally update cases
     dry_run = True

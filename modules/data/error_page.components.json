@@ -1,27 +1,25 @@
 {
+    "net-error-card": {
+        "selectorData": "net-error-card",
+        "strategy": "tag",
+        "groups": ["doNotCache"]
+    },
     "error-title": {
-        "selectorData": ".title-text[data-l10n-id='dnsNotFound-title']",
+        "selectorData": "[data-l10n-id='neterror-dns-not-found-title']",
         "strategy": "css",
-        "groups": []
+        "shadowParent": "net-error-card",
+        "groups": ["doNotCache"]
     },
     "error-short-description": {
-        "selectorData": "errorShortDesc",
+        "selectorData": "netErrorIntro",
         "strategy": "id",
-        "groups": []
+        "shadowParent": "net-error-card",
+        "groups": ["doNotCache"]
     },
-    "error-suggestion-link": {
-        "selectorData": "#errorShortDesc a[data-l10n-name='website']",
-        "strategy": "css",
-        "groups": []
-    },
-    "error-long-description-items": {
-        "selectorData": "#errorLongDesc li",
-        "strategy": "css",
-        "groups": []
-    },
-    "try-again-button": {
-        "selectorData": "#netErrorButtonContainer #neterrorTryAgainButton",
-        "strategy": "css",
-        "groups": []
+    "error-learn-more-link": {
+        "selectorData": "neterror-learn-more-link",
+        "strategy": "id",
+        "shadowParent": "net-error-card",
+        "groups": ["doNotCache"]
     }
 }

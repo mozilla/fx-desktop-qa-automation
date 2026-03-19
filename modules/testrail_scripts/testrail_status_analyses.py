@@ -419,6 +419,9 @@ def main():
 
     # Initialize TestRail connection
     tr = testrail_init()
+    if tr is None:
+        op_log.error("TestRail session could not be initialized.")
+        return
 
     # Analyze all suites in the project
     op_log.info(f" Starting analysis of project ID: {PROJECT_ID}...")
