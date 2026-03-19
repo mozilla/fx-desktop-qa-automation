@@ -4,7 +4,7 @@ import os
 d = {}
 count = 0
 # List all test suites
-test_suites = [d for d in os.listdir("./tests/")]
+test_suites = [d for d in os.listdir("./tests/") if os.path.isdir(d)]
 for test_suite in test_suites:
     for test in os.listdir(f"./tests/{test_suite}"):
         if test[0:4] != "test":
@@ -20,6 +20,8 @@ for test_suite in test_suites:
             test_case = line[ind:-1]
         if d.get(test_case):
             count += 1
+            if count > 1:
+                logging.warning(f"Test case {test_case} already exists!")
         else:
             d[test_case] = file_name
 
