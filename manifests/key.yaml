@@ -791,6 +791,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_add_username_via_doorhanger:
+    result: pass
+    splits:
+    - functional2
   test_auto_saved_generated_password_context_menu:
     result: pass
     splits:

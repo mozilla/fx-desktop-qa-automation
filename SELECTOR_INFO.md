@@ -1832,6 +1832,13 @@ Description: Login autofill manage passwords button
 Location: Login autofill
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: password-notification-username-field
+Selector Data: "password-notification-username"
+Description: Username field in the password notification popup
+Location: Username field in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
