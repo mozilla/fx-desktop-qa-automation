@@ -151,7 +151,7 @@ class AutofillPopup(BasePage):
         return self
 
     @BasePage.context_chrome
-    def type_username_in_password_doorhanger(self, username: str):
+    def type_username_in_password_doorhanger(self, username: str) -> BasePage:
         """Type a username into the Password Manager doorhanger."""
         field = self.get_element("password-notification-username-field")
         field.send_keys(username)
