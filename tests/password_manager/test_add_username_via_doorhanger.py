@@ -3,6 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.browser_object_navigation import Navigation
+from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 
 PASSWORD = "testPassword"
@@ -29,6 +30,7 @@ def test_add_username_via_doorhanger(driver: Firefox):
     login_autofill = LoginAutofill(driver)
     nav = Navigation(driver)
     autofill_popup_panel = AutofillPopup(driver)
+    about_logins = AboutLogins(driver)
 
     # Access a website that requires a username and password
     login_autofill.open()
@@ -49,3 +51,5 @@ def test_add_username_via_doorhanger(driver: Firefox):
 
     # The grey key icon is dimissed and the username is correctly added for the password -> check about:logins
     nav.element_not_visible("password-notification-key")
+    about_logins.open()
+    about_logins.assert_username_present(USERNAME)

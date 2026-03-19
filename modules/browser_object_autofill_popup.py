@@ -155,3 +155,4 @@ class AutofillPopup(BasePage):
         """Type a username into the Password Manager doorhanger."""
         field = self.get_element("password-notification-username-field")
         field.send_keys(username)
+        return self
