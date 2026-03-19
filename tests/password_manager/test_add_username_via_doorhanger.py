@@ -50,6 +50,7 @@ def test_add_username_via_doorhanger(driver: Firefox):
     autofill_popup_panel.click_doorhanger_button("save")
 
     # The grey key icon is dimissed and the username is correctly added for the password -> check about:logins
+    nav.element_not_visible("password-notification-popup")
     nav.element_not_visible("password-notification-key")
     about_logins.open()
     about_logins.assert_username_present(USERNAME)
