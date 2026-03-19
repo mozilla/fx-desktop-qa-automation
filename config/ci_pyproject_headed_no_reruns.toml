@@ -11,7 +11,7 @@ markers = [
     "locale_gb: tests run in GB locale versions",
     "noxvfb: tests that should not run in xvfb sessions"
 ]
-addopts = "-vs --ci -m 'headed' --html=artifacts/report_headed.html"
+addopts = "-vs --ci -m 'headed' --timeout=300 --html=artifacts/report_headed.html"
 
 [tool.ruff]
 target-version = "py310"
