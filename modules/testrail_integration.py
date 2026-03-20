@@ -133,7 +133,6 @@ def get_plan_title(version_str: str, channel: str) -> str:
         )
     elif channel == "Rc":
         logging.info(f"Release Candidate: {version_str}")
-        print(f"Release Candidate: {version_str}")
         version_match = FX_RC_VERSION_RE.match(version_str)
         (major, minor, build) = [version_match[n] for n in range(1, 4)]
         plan_title = (
