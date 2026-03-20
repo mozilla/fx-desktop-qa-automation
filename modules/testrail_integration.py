@@ -15,7 +15,7 @@ from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
-FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)-build(\d+)")
 FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
@@ -133,10 +133,16 @@ def get_plan_title(version_str: str, channel: str) -> str:
         )
     elif channel == "Rc":
         logging.info(f"Release Candidate: {version_str}")
+        print(f"Release Candidate: {version_str}")
         version_match = FX_RC_VERSION_RE.match(version_str)
-        (
-            major,
-            minor,
+        (major, minor, build) = [version_match[n] for n in range(1, 4)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
+            .replace("{minor}", minor)
+            .replace("b{beta}", "")
+            .replace("{build}", build)
         )
     elif version_match:
         logging.info(version_match)
