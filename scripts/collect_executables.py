@@ -158,6 +158,8 @@ def main(args):
                     "https://archive.mozilla.org/pub/firefox/candidates/"
                     f"{next_major}-candidates/"
                 )
+                if channel == "-rc":
+                    fx_download_dir_url = fx_download_dir_url.replace("b1", "")
                 rs = requests.get(fx_download_dir_url)
                 if rs.status_code < 300:
                     latest_beta_ver = next_major
@@ -169,26 +171,31 @@ def main(args):
                     "https://archive.mozilla.org/pub/firefox/candidates/"
                     f"{next_minor}-candidates/"
                 )
+                if channel == "-rc":
+                    fx_download_dir_url = fx_download_dir_url.replace("b1", "")
                 rs = requests.get(fx_download_dir_url)
                 if rs.status_code < 300:
                     latest_beta_ver = next_minor
                     this_beta = next_minor
                     continue
 
-                next_beta = f"{major}.{minor}b{beta + 1}"
-                fx_download_dir_url = (
-                    "https://archive.mozilla.org/pub/firefox/candidates/"
-                    f"{next_beta}-candidates/"
-                )
-                rs = requests.get(fx_download_dir_url)
-                if rs.status_code < 300:
-                    latest_beta_ver = next_beta
-                    this_beta = next_beta
-                    continue
+                if channel != "-rc":
+                    next_beta = f"{major}.{minor}b{beta + 1}"
+                    fx_download_dir_url = (
+                        "https://archive.mozilla.org/pub/firefox/candidates/"
+                        f"{next_beta}-candidates/"
+                    )
+                    rs = requests.get(fx_download_dir_url)
+                    if rs.status_code < 300:
+                        latest_beta_ver = next_beta
+                        this_beta = next_beta
+                        continue
 
                 candidate_exists = False
 
             # Look for the latest build
+            if channel == "-rc":
+                latest_beta_ver = latest_beta_ver.replace("b1", "")
             fx_download_dir_url = (
                 "https://archive.mozilla.org/pub/firefox/candidates/"
                 f"{latest_beta_ver}-candidates/"
