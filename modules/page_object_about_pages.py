@@ -535,3 +535,20 @@ class AboutNetworking(BasePage):
             By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=3]"
         )
         return list(zip(names, trr))
+
+    def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
+        """Wait until a DNS entry for the given host appears in the table."""
+
+        # Wait once for the table to be visible
+        self.element_visible("dns-content")
+
+        # Then poll for the specific row
+        self.wait.until(
+            lambda _: any(
+                name.text == host and trr_el.text == trr
+                for name, trr_el in self.get_all_dns_rows()
+            ),
+            message=f"DNS entry for host '{host}' with TRR='{trr}' did not appear",
+        )
+
+        return self

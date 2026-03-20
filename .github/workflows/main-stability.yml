@@ -120,6 +120,7 @@ jobs:
           exit $env:TEST_EXIT_CODE
 
       - name: Upload JSON report (Win)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: json-win
@@ -156,12 +157,14 @@ jobs:
           exit $env:TEST_EXIT_CODE
 
       - name: Upload JSON report (Win headed)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: json-win-headed
           path: test-results/report-win-headed.json
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win
@@ -245,6 +248,7 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Upload JSON (Mac)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: json-mac
@@ -268,12 +272,14 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Upload JSON (Mac headed)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: json-mac-headed
           path: test-results/report-mac-headed.json
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac
