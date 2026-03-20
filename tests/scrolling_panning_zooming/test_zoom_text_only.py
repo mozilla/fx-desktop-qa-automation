@@ -173,7 +173,7 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     web_page.expect(
         lambda _: (
             web_page.get_element("duckduckgo-tagline").location["x"]
-            != original_website2_text_position
+            < original_website2_text_position
         )
     )
 

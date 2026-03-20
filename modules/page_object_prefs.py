@@ -210,13 +210,8 @@ class AboutPrefs(BasePage):
     def click_zoom_text_only(self) -> BasePage:
         """
         Toggles the Zoom Text Only checkbox in about:preferences.
-        Uses JS to pierce the moz-checkbox shadow root and click the inner input directly.
         """
-        moz_checkbox = self.get_element("zoom-text-only")
-        self.driver.execute_script(
-            "arguments[0].shadowRoot.querySelector('input').click()",
-            moz_checkbox,
-        )
+        self.click_on("zoom-text-only")
         return self
 
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
