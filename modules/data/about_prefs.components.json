@@ -444,7 +444,7 @@
     "groups": []
   },
   "search-suggestion-in-private-windows": {
-    "selectorData": "showSearchSuggestionsPrivateWindows",
+    "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
     "groups": []
   },
