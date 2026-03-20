@@ -14,5 +14,10 @@
         "selectorData": "sidebar-context-menu-hide-sidebar",
         "strategy": "id",
         "groups": []
+    },
+    "confirmation-hint": {
+        "selectorData": "confirmation-hint",
+        "strategy": "id",
+        "groups": ["doNotCache"]
     }
 }
