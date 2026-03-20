@@ -12,7 +12,7 @@ markers = [
     "noxvfb: tests that should not run in xvfb sessions"
 ]
 
-addopts = "-vs --ci --run-headless -n auto -m 'not headed' --html=artifacts/report.html"
+addopts = "-vs --ci --run-headless -n 2 -m 'not headed' --timeout=300 --html=artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"

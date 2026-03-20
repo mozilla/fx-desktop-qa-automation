@@ -11,6 +11,19 @@ MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
 DEFAULT_FUNCTIONAL_SPLIT = "functional1"
 
+# Accepted aliases for canonical platform keys ("win", "mac", "linux")
+PLATFORM_ALIASES = {
+    "windows": "win",
+    "macos": "mac",
+    "darwin": "mac",
+    "osx": "mac",
+}
+
+
+def normalize_result_platforms(result: dict) -> dict:
+    """Return a copy of a per-platform result dict with keys normalized to canonical names."""
+    return {PLATFORM_ALIASES.get(k, k): v for k, v in result.items()}
+
 
 def sysname():
     sys_platform = platform.system().lower()
@@ -37,7 +50,8 @@ def test_expected_to_pass(entry: dict) -> bool:
     elif isinstance(ptr["result"], str):
         return False
     else:
-        if ptr["result"][sysname()] == "pass":
+        result = normalize_result_platforms(ptr["result"])
+        if result.get(sysname()) == "pass":
             return True
     return False
 
@@ -318,7 +332,7 @@ class TestKey:
 
             # Per-platform dict: only consider the requested platform key
             if isinstance(result_field, dict):
-                pv = result_field.get(platform_lower)
+                pv = normalize_result_platforms(result_field).get(platform_lower)
                 return isinstance(pv, str) and pv.lower() == category_lower
 
             return False
