@@ -14,7 +14,6 @@ from selenium.webdriver.support.select import Select
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
-from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
@@ -40,6 +39,24 @@ class AboutPrefs(BasePage):
     # Number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
+    ZOOM_LEVELS = [
+        30,
+        50,
+        67,
+        80,
+        90,
+        100,
+        110,
+        120,
+        133,
+        150,
+        170,
+        200,
+        240,
+        300,
+        400,
+        500,
+    ]
 
     class HttpsOnlyStatus:
         """Fake enum: return a string based on a constant name"""
@@ -217,47 +234,42 @@ class AboutPrefs(BasePage):
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
-        Accesses the inner <select> inside moz-select's shadow root via JS
-        and selects the target value using the Selenium Select class.
+        Focuses the inner <select> inside moz-select's shadow root,
+        then uses arrow keys to navigate to the target zoom level.
         """
-        zoom_levels = [
-            30,
-            50,
-            67,
-            80,
-            90,
-            100,
-            110,
-            120,
-            133,
-            150,
-            170,
-            200,
-            240,
-            300,
-            400,
-            500,
-        ]
-
-        if zoom_percentage not in zoom_levels:
+        if zoom_percentage not in self.ZOOM_LEVELS:
             raise ValueError(
-                f"Zoom level {zoom_percentage}% is not supported. Valid values: {zoom_levels}"
+                f"{zoom_percentage}% is not a valid zoom level. "
+                f"Valid values: {self.ZOOM_LEVELS}"
             )
-
         moz_select = self.get_element("default-zoom-dropdown")
-        inner_select = self.driver.execute_script(
-            "return arguments[0].shadowRoot.querySelector('select')",
-            moz_select,
-        )
-        Select(inner_select).select_by_value(str(zoom_percentage))
         actual = int(
-            self.driver.execute_script("return arguments[0].value", inner_select)
-        )
-        if actual != zoom_percentage:
-            raise RuntimeError(
-                f"Failed to set zoom level to {zoom_percentage}% (got {actual}%)"
+            self.driver.execute_script(
+                "return arguments[0].shadowRoot.querySelector('select').value",
+                moz_select,
             )
-
+        )
+        for _ in range(3):
+            steps = self.ZOOM_LEVELS.index(zoom_percentage) - self.ZOOM_LEVELS.index(
+                actual
+            )
+            if steps == 0:
+                break
+            key = Keys.ARROW_DOWN if steps > 0 else Keys.ARROW_UP
+            self.driver.execute_script(
+                "arguments[0].shadowRoot.querySelector('select').focus()",
+                moz_select,
+            )
+            ActionChains(self.driver).send_keys(key * abs(steps)).perform()
+            actual = int(
+                self.driver.execute_script(
+                    "return arguments[0].shadowRoot.querySelector('select').value",
+                    moz_select,
+                )
+            )
+        assert actual == zoom_percentage, (
+            f"Failed to set zoom to {zoom_percentage}%, got {actual}%"
+        )
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
@@ -734,7 +746,7 @@ class AboutPrefs(BasePage):
         # Find the dialog option elements containing the checkbox label
         self.element_exists("clear-data-dialog-options")
         cookies_checkbox = self.get_element("cookies-data-checkbox")
-        self.expect_attribute_in_element(cookies_checkbox, "data-l10n-args")
+        self.element_has_attribute(cookies_checkbox, "data-l10n-args")
         cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
         # dictionary holding the cookies amount and unit
         # {amount: "1234", unit: "MB"}
@@ -956,6 +968,13 @@ class AboutPrefs(BasePage):
         checkbox = self.get_element("show-sidebar-checkbox")
         if not checkbox.is_selected():
             self.click_on("show-sidebar-checkbox")
+        return self
+
+    def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
+        """Wait until the UI reflects the selected default search engine."""
+        self.wait.until(
+            lambda _: self.element_has_text("select-wrapper-button", engine_name)
+        )
         return self
 
 

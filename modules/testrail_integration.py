@@ -10,6 +10,7 @@ from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
+from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 
@@ -192,8 +193,8 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     """
 
     ctx = {
-        "testrail_report_requested": bool(os.environ.get("TESTRAIL_REPORT")),
-        "forced_reportable": bool(os.environ.get("REPORTABLE")),
+        "testrail_report_requested": env_true("TESTRAIL_REPORT"),
+        "forced_reportable": env_true("REPORTABLE"),
         "split": os.environ.get("STARFOX_SPLIT"),
         "is_l10n": bool(os.environ.get("FX_L10N")),
         "platform_system": None,  # "Darwin", etc
@@ -337,8 +338,32 @@ def reportable(platform_to_test=None):
         logging.warning("REPORTABLE=true; we will report this session.")
         return True
 
+    # Make sure TestRail is actually configured before trying to init it
+    required = ["TESTRAIL_BASE_URL", "TESTRAIL_USERNAME", "TESTRAIL_API_KEY"]
+    missing = [name for name in required if not os.environ.get(name)]
+
+    if missing:
+        logging.warning(
+            "TestRail not configured; missing env vars: %s. Session not reportable.",
+            ", ".join(missing),
+        )
+        return False
+
     # Connect to TestRail — only in real mode
-    tr_session = testrail_init()
+    try:
+        tr_session = testrail_init()
+    except Exception as e:
+        logging.warning(
+            "Could not initialize TestRail session (%s). Session not reportable.",
+            e,
+        )
+        return False
+
+    if not tr_session:
+        logging.warning(
+            "TestRail session could not be created. Session not reportable."
+        )
+        return False
 
     # Reuse parsed values from ctx
     if not ctx["major_number"]:
@@ -462,9 +487,20 @@ def reportable(platform_to_test=None):
     return bool(uncovered_suites)
 
 
-def testrail_init() -> TestRail:
+def testrail_init() -> TestRail | None:
     """Connect to a TestRail API session"""
-    local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
+    base_url = os.environ.get("TESTRAIL_BASE_URL")
+
+    if not base_url:
+        logging.warning("TESTRAIL_BASE_URL not set. Skipping TestRail.")
+        return None
+
+    try:
+        local = base_url.split("/")[2].startswith("127")
+    except Exception as e:
+        logging.warning("Invalid TESTRAIL_BASE_URL: %s - %s", base_url, e)
+        return None
+
     tr_session = tr.TestRail(
         os.environ.get("TESTRAIL_BASE_URL"),
         os.environ.get("TESTRAIL_USERNAME"),
@@ -965,11 +1001,10 @@ def collect_changes(testrail_session: TestRail, report):
         # Tests reported as rerun are a problem -- we need to know pass/fail
         if outcome == "rerun":
             outcome = test.get("call").get("outcome")
-        duration = (
-            test["setup"]["duration"]
-            + test["call"]["duration"]
-            + test["teardown"]["duration"]
-        )
+        setup_dur = 0.0 if not test.get("setup") else test["setup"]["duration"]
+        call_dur = 0.0 if not test.get("call") else test["call"]["duration"]
+        teardown_dur = 0.0 if not test.get("teardown") else test["teardown"]["duration"]
+        duration = setup_dur + call_dur + teardown_dur
         logging.info(f"TC: {test_case}: {outcome} using {duration}s ")
 
         if not results_by_suite.get(suite_id):

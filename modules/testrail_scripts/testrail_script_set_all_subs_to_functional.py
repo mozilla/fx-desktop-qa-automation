@@ -64,6 +64,9 @@ if __name__ == "__main__":
 
     # Initialize the TestRail API client
     tr = testrail_init()
+    if tr is None:
+        logging.error("TestRail session could not be initialized.")
+        return
 
     # Fetch suite IDs matching the given suite names
     suites = tr.get_suites(PROJECT_ID)

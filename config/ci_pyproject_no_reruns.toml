@@ -11,7 +11,8 @@ markers = [
     "locale_gb: tests run in GB locale versions",
     "noxvfb: tests that should not run in xvfb sessions"
 ]
-addopts = "-vs --ci --json-report --timeout=300 --json-report-file artifacts/report_headed.json -n auto --reruns 3 --reruns-delay 2 -m 'not noxvfb and headed' --html=artifacts/report_headed.html"
+
+addopts = "-vs --ci --run-headless -n 2 -m 'not headed' --timeout=300 --html=artifacts/report.html"
 
 [tool.ruff]
 target-version = "py310"

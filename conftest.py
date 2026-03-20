@@ -21,6 +21,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
+from modules.util import env_true
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
@@ -333,24 +334,27 @@ def test_case():
 
 
 def pytest_configure(config):
-    # Check if run is "reportable": if it is on a never-reported Fx version
-    if os.environ.get("TESTRAIL_REPORT"):
-        logging.warning("Checking to see if session would be reportable...")
-        if os.environ.get("TASKCLUSTER_ROOT_URL") and os.environ.get("FX_EXECUTABLE"):
-            logging.warning("Getting TC credentials...")
-            creds = get_tc_secret()
-            if creds:
-                os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
-                os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
-                os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
-            elif not os.environ.get("TESTRAIL_USERNAME"):
-                logging.error(
-                    "Attempted to log into TestRail, but could not find credentials."
-                )
-                raise OSError("Could not find TestRail credentials")
+    if not env_true("TESTRAIL_REPORT"):
+        logging.warning("TESTRAIL_REPORT disabled; skipping TestRail integration.")
+        return
 
-        if not tri.reportable():
-            pytest.exit("Test run is not reportable. Exiting.")
+    logging.warning("Checking to see if session would be reportable...")
+
+    if os.environ.get("TASKCLUSTER_ROOT_URL") and os.environ.get("FX_EXECUTABLE"):
+        logging.warning("Getting TC credentials...")
+        creds = get_tc_secret()
+        if creds:
+            os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+            os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+            os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
+        elif not os.environ.get("TESTRAIL_USERNAME"):
+            logging.error(
+                "Attempted to log into TestRail, but could not find credentials."
+            )
+            raise OSError("Could not find TestRail credentials")
+
+    if not tri.reportable():
+        pytest.exit("Test run is not reportable. Exiting.")
 
 
 def pytest_sessionfinish(session):
@@ -374,7 +378,7 @@ def pytest_sessionfinish(session):
                 pass
 
     # TestRail reporting
-    if not os.environ.get("TESTRAIL_REPORT"):
+    if not env_true("TESTRAIL_REPORT"):
         logging.warning(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
@@ -403,6 +407,9 @@ def pytest_sessionfinish(session):
         raise OSError("Could not find TestRail credentials")
 
     tr_session = tri.testrail_init()
+    if tr_session is None:
+        logging.error("TestRail session could not be initialized.")
+        return
     passes = tri.collect_changes(tr_session, report)
     if passes:
         tri.mark_results(tr_session, passes)
@@ -600,7 +607,7 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
     if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
+        level = 3 if env_true("TESTRAIL_REPORT") else 1
         os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
             "test-accts-key", level=level
         ).get("SVC_ACCT_DECRYPT")
