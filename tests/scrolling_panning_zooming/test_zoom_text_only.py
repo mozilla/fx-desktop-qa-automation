@@ -76,7 +76,7 @@ def web_page(driver: Firefox, temp_selectors):
 @pytest.fixture()
 def reject_consent_page(web_page: GenericPage):
     """
-    reject consent page. scroll to rejection button if necessary.
+    Reject the consent page on Yahoo if present.
     """
     try:
         if web_page.element_clickable("yahoo-consent-page-scroll"):
@@ -164,18 +164,18 @@ def _assert_text_only_zoom_functionality(driver, nav, web_page, original_data):
     )
 
     # Verify DuckDuckGo: image SIZE unchanged, text position changed
-    # driver.switch_to.window(driver.window_handles[1])
-    # web_page.expect(
-    #     lambda _: (
-    #             web_page.get_element("duckduckgo-logo").size == original_website2_image_size
-    #     )
-    # )
-    # web_page.expect(
-    #     lambda _: (
-    #             web_page.get_element("duckduckgo-tagline").location["x"]
-    #             != original_website2_text_position
-    #     )
-    # )
+    driver.switch_to.window(driver.window_handles[1])
+    web_page.expect(
+        lambda _: (
+            web_page.get_element("duckduckgo-logo").size == original_website2_image_size
+        )
+    )
+    web_page.expect(
+        lambda _: (
+            web_page.get_element("duckduckgo-tagline").location["x"]
+            != original_website2_text_position
+        )
+    )
 
 
 def _set_default_zoom(driver: Firefox, zoom_percent: int) -> AboutPrefs:
@@ -220,12 +220,9 @@ def test_zoom_text_only_from_settings(
     web_page.title_contains("DuckDuckGo")
     original_data = _capture_original_data(driver, web_page)
 
-    # Set the pref to zoom text only
+    # Set zoom level to 110%
     panel_ui.open_and_switch_to_new_window("tab")
     about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.click_zoom_text_only()
-
-    # Set zoom level to 110%
     about_prefs.set_default_zoom_level(DEFAULT_ZOOM_110)
 
     # Verify results

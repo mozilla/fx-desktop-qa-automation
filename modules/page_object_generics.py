@@ -16,6 +16,17 @@ class GenericPage(BasePage):
 
     URL_TEMPLATE = "{url}"
 
+    def click_page_body(self) -> "GenericPage":
+        """
+        Send focus to page content by clicking <body> and pressing Escape.
+        Useful for dismissing overlays or ensuring keyboard/scroll events
+        are directed at the page.
+        """
+        body = self.find_element(By.TAG_NAME, "body")
+        body.click()
+        body.send_keys(Keys.ESCAPE)
+        return self
+
     def navigate_dialog_to_location(
         self, location: str, filename="test.txt"
     ) -> BasePage:
