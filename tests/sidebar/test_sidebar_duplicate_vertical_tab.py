@@ -23,7 +23,7 @@ def test_sidebar_duplicate_vertical_tab(driver: Firefox):
     nav = Navigation(driver)
 
     # Enable vertical tabs via toolbar context menu
-    nav.enable_vertical_tabs()
+    nav.toggle_vertical_tabs()
 
     # Open the same URL in two tabs to create duplicates
     tabs.open_urls_in_tabs([URL, URL], open_first_in_current_tab=True)
@@ -36,9 +36,7 @@ def test_sidebar_duplicate_vertical_tab(driver: Firefox):
     # Verify "Close duplicate tabs" option is displayed in the context menu
     assert context_menu.element_visible("context-close-duplicate-tabs")
 
-    # Click "Close duplicate tabs" and verify the duplicate tab is closed
+    # Click "Close duplicate tabs" and immediately verify the confirmation toast
     context_menu.click_and_hide_menu("context-close-duplicate-tabs")
+    sidebar.element_visible("confirmation-hint")
     tabs.wait_for_num_tabs(1)
-
-    # Verify "Closed 1 tab" confirmation message is displayed
-    assert sidebar.element_visible("confirmation-hint")
