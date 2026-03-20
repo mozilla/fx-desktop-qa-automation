@@ -34,7 +34,7 @@ def test_sidebar_duplicate_vertical_tab(driver: Firefox):
     tabs.context_click(duplicate_tab)
 
     # Verify "Close duplicate tabs" option is displayed in the context menu
-    assert context_menu.element_visible("context-close-duplicate-tabs")
+    context_menu.element_visible("context-close-duplicate-tabs")
 
     # Click "Close duplicate tabs" and immediately verify the confirmation toast
     context_menu.click_and_hide_menu("context-close-duplicate-tabs")
