@@ -136,7 +136,7 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         shell: pwsh
         run: |
-          rm -f ./pyproject.toml;
+          Remove-Item -Path ./pyproject.toml -ErrorAction SilentlyContinue
           mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
 
           New-Item -ItemType Directory -Force -Path test-results | Out-Null
