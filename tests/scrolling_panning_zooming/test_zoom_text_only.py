@@ -4,7 +4,7 @@ from shutil import copyfile
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi, TabBar
+from modules.browser_object import Navigation, PanelUi
 from modules.page_base import BasePage
 from modules.page_object import AboutPrefs, GenericPage
 
@@ -113,7 +113,6 @@ def test_zoom_text_only_from_settings(
     # Initializing objects
     nav = Navigation(driver)
     panel_ui = PanelUi(driver)
-    tab = TabBar(driver)
 
     # Save the original sizes and positions for comparison
     original_layout = {}
