@@ -140,9 +140,7 @@ if __name__ == "__main__":
                 f"Unsupported STARFOX_PLATFORM: '{platform}'. Expected one of: {', '.join(SUPPORTED_OSES)}."
             )
 
-        print(
-                f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'..."
-            )
+        print(f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'...")
 
         # Call gather_category with platform explicitly
         run_list = manifest.gather_category(
