@@ -1,6 +1,5 @@
 from pathlib import Path
 from shutil import copyfile
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -75,7 +74,7 @@ def web_page(driver: Firefox, temp_selectors):
 
 
 def _capture_element_layout(page: BasePage, selector: str) -> dict:
-    el = page.get_element(selector, labels=[])
+    el = page.get_element(selector)
     return {"loc": tuple(el.location.values()), "size": tuple(el.size.values())}
 
 
@@ -150,13 +149,11 @@ def test_zoom_text_only_from_settings(
         index = f"site-2-{et}"
         original_layout[index] = _capture_element_layout(web_page, index)
 
-    tab.click_tab_by_index(2)  # prefs
-    driver.switch_to.window(driver.window_handles[1])
+    driver.switch_to.window(driver.window_handles[1])  # prefs
     about_prefs.set_default_zoom_level(DEFAULT_ZOOM_100)
 
     # Confirm that the text, not the image, zooms out to 100%, for both sites
-    tab.click_tab_by_index(1)
-    driver.switch_to.window(driver.window_handles[0])
+    driver.switch_to.window(driver.window_handles[0])  # wiki
     _confirm_element_size(
         web_page,
         "site-1-text",
@@ -164,8 +161,7 @@ def test_zoom_text_only_from_settings(
     )
     _confirm_element_size(web_page, "site-1-image", original_layout["site-1-image"])
 
-    tab.click_tab_by_index(3)  # local page
-    driver.switch_to.window(driver.window_handles[2])
+    driver.switch_to.window(driver.window_handles[2])  # local
     # Local page's "original" was after zoom default changed
     _confirm_element_size(
         web_page, "site-2-text", original_layout["site-2-text"], fail_on_change=False
