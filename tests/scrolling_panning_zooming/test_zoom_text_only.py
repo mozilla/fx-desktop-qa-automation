@@ -131,7 +131,6 @@ def test_zoom_text_only_from_settings(
     about_prefs.set_default_zoom_level(DEFAULT_ZOOM_110)
 
     # Confirm that text changes size but image does not
-    tab.click_tab_by_index(1)
     driver.switch_to.window(driver.window_handles[0])
     _confirm_element_size(
         web_page, "site-1-text", original_layout["site-1-text"], fail_on_change=False
