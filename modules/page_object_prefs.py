@@ -224,45 +224,27 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(str(option_id), "checked", "")
         return self
 
+    def click_zoom_text_only(self) -> BasePage:
+        """
+        Toggles the Zoom Text Only checkbox in about:preferences.
+        Uses JS to pierce the moz-checkbox shadow root.
+        """
+        moz_checkbox = self.get_element("zoom-text-only")
+        self.driver.execute_script("arguments[0].click()", moz_checkbox)
+        return self
+
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
-        Focuses the inner <select> inside moz-select's shadow root,
-        then uses arrow keys to navigate to the target zoom level.
+        Gets the inner <select> from moz-select's shadow root and uses
+        Selenium's Select class to choose the target zoom level.
         """
-        if zoom_percentage not in self.ZOOM_LEVELS:
-            raise ValueError(
-                f"{zoom_percentage}% is not a valid zoom level. "
-                f"Valid values: {self.ZOOM_LEVELS}"
-            )
         moz_select = self.get_element("default-zoom-dropdown")
-        actual = int(
-            self.driver.execute_script(
-                "return arguments[0].shadowRoot.querySelector('select').value",
-                moz_select,
-            )
+        inner_select = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('select')",
+            moz_select,
         )
-        for _ in range(3):
-            steps = self.ZOOM_LEVELS.index(zoom_percentage) - self.ZOOM_LEVELS.index(
-                actual
-            )
-            if steps == 0:
-                break
-            key = Keys.ARROW_DOWN if steps > 0 else Keys.ARROW_UP
-            self.driver.execute_script(
-                "arguments[0].shadowRoot.querySelector('select').focus()",
-                moz_select,
-            )
-            ActionChains(self.driver).send_keys(key * abs(steps)).perform()
-            actual = int(
-                self.driver.execute_script(
-                    "return arguments[0].shadowRoot.querySelector('select').value",
-                    moz_select,
-                )
-            )
-        assert actual == zoom_percentage, (
-            f"Failed to set zoom to {zoom_percentage}%, got {actual}%"
-        )
+        Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
