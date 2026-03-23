@@ -1207,6 +1207,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_vertical_tab_can_be_reloaded:
+    result: pass
+    splits:
+    - functional2
   test_toggle_sidebar_via_toolbar_button:
     result: pass
     splits:
