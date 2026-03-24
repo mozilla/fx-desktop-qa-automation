@@ -394,7 +394,7 @@ def reportable(platform_to_test=None):
     channel_milestone = tr_session.matching_submilestone(
         major_milestone, f"{channel} {ctx['major_number']}"
     )
-    if not channel_milestone and channel == "Devedition":
+    if not channel_milestone and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = tr_session.matching_submilestone(
             major_milestone, f"Beta {ctx['major_number']}"
         )
