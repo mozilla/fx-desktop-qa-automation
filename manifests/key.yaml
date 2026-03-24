@@ -1203,6 +1203,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_duplicate_vertical_tab:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_enabled_in_private_window:
     result: pass
     splits:
