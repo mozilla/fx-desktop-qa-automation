@@ -7,12 +7,12 @@ from modules.page_object import LoginAutofill
 
 @pytest.fixture()
 def test_case():
-    return "2009960"
+    return "2240903"
 
 
 def test_use_saved_password_not_in_context_menu_without_saved_logins(driver: Firefox):
     """
-    C2009960 - Verify that "Use Saved Password" option is not displayed in the context menu
+    C2240903 - Verify that "Use Saved Password" option is not displayed in the context menu
     when right-clicking the username field of the Login form with no saved logins for the page
     """
     # Instantiate objects
