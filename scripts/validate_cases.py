@@ -31,6 +31,7 @@ for test_suite in test_suites:
             continue
         if these_cases is None:
             print(f"No cases match {suite_id}.")
+            end_of_batch = True
             continue
         cases.extend(these_cases)
         if cases_info.get("size") == 250:
