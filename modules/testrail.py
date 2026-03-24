@@ -107,8 +107,11 @@ class APIClient:
                 requests.exceptions.HTTPError
             ):  # response.content not formatted as JSON
                 error = str(response.content)
+            sanitized_headers = {
+                k: v for k, v in headers.items() if not k.lower().startswith("auth")
+            }
             logging.warning(f"Broken call: {url}")
-            logging.warning(f" headers: {headers}")
+            logging.warning(f" headers: {sanitized_headers}")
             logging.warning(f" data: {data}")
             raise APIError(
                 "TestRail API returned HTTP %s (%s)" % (response.status_code, error)
