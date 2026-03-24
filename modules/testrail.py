@@ -107,6 +107,9 @@ class APIClient:
                 requests.exceptions.HTTPError
             ):  # response.content not formatted as JSON
                 error = str(response.content)
+            logging.warning(f"Broken call: {url}")
+            logging.warning(f" headers: {headers}")
+            logging.warning(f" data: {data}")
             raise APIError(
                 "TestRail API returned HTTP %s (%s)" % (response.status_code, error)
             )
@@ -159,6 +162,12 @@ class TestRail:
     def get_test_case(self, case_id):
         """Get a given Test Case"""
         return self.client.send_get(f"get_case/{case_id}")
+
+    def get_cases_in_suite(self, project_id, suite_id, offset=0):
+        """Given a project and a suite, get all test cases"""
+        return self.client.send_get(
+            f"get_cases/{project_id}&suite_id={suite_id}&offset={offset}"
+        )
 
     def get_suites(self, project_id):
         """Get all suites for project"""
