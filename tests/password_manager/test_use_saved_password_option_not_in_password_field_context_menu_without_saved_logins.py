@@ -24,6 +24,7 @@ def test_use_saved_password_not_in_context_menu_password_field_without_saved_log
     # Open the login autofill demo page and right-click the password field
     login.open()
     login.context_click("password-login-field")
+    context_menu.element_visible("context-menu-manage-passwords")
 
     # Verify that "Use Saved Password" is not displayed in the context menu
     context_menu.element_not_visible("context-menu-use-saved-password")
