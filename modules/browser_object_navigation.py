@@ -1519,5 +1519,5 @@ class Navigation(BasePage):
     def toggle_vertical_tabs(self) -> BasePage:
         """Toggle vertical tabs via the toolbar context menu."""
         self.context_click("toolbar-blank-space")
-        ContextMenu(self.driver).click_and_hide_menu("context-menu-vertical-tabs")
+        self.context_menu.click_and_hide_menu("context-menu-vertical-tabs")
         return self

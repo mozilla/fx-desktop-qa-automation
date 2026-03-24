@@ -21,7 +21,7 @@ def test_sidebar_vertical_tab_can_be_reloaded(driver: Firefox):
 
     nav.toggle_vertical_tabs()
     driver.get(URL)
-    tabs.wait_for_num_tabs(1)
+    nav.url_contains("robots")
 
     tab_title = tabs.get_tab_title(tabs.get_tab(1))
 
