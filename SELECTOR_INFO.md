@@ -2175,6 +2175,13 @@ Description: Vertical Tabs context menu option
 Location: Toolbar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-use-saved-password
+Selector Data: fill-login
+Description: Context menu option "Use Saved Password" shown on login form fields when saved credentials exist for the page
+Location: Context menu on a username or password field in a login form
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field

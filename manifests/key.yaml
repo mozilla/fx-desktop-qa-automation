@@ -860,6 +860,14 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_use_saved_password_not_in_context_menu_password_field_without_saved_logins:
+    result: pass
+    splits:
+    - functional2
+  test_use_saved_password_not_in_context_menu_without_saved_logins:
+    result: pass
+    splits:
+    - functional2
 pdf_viewer:
   test_add_image_pdf:
     result: pass
