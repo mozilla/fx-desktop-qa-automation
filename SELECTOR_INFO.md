@@ -2175,6 +2175,13 @@ Description: Vertical Tabs context menu option
 Location: Toolbar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-close-duplicate-tabs
+Selector Data: context_closeDuplicateTabs
+Description: Close Duplicate Tabs context menu option
+Location: Tab context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -2286,38 +2293,34 @@ Path to .json: modules/data/devtools.components.json
 ```
 #### error_page
 ```
+Selector Name: net-error-card
+Selector Data: "net-error-card"
+Description: The shadow host web component for the error page (Firefox 138+)
+Location: In the error page body
+Path to .json: modules/data/error_page.components.json
+```
+```
 Selector Name: error-title
-Selector Data: ".title-text[data-l10n-id='dnsNotFound-title']"
-Description: The error title name from the error page
-Location: In the error page
+Selector Data: "[data-l10n-id='neterror-dns-not-found-title']"
+Description: The main error title inside the net-error-card shadow DOM
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
 Selector Name: error-short-description
-Selector Data: "errorShortDesc"
-Description: The error short description from the error page
-Location: In the error page
+Selector Data: "netErrorIntro"
+Description: The short description paragraph inside the net-error-card shadow DOM; hostname is read from its data-l10n-args attribute
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
-Selector Name: error-suggestion-link
-Selector Data: "#errorShortDesc a[data-l10n-name='website']"
-Description: The link with the error suggestion
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-long-description-items
-Selector Data: "#errorLongDesc li"
-Description: The error long description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: try-again-button
-Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
-Description: The Try Again button from the error page
-Location: In the error page
+Selector Name: error-learn-more-link
+Selector Data: "neterror-learn-more-link"
+Description: The "Learn more" link inside the net-error-card shadow DOM
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 #### find_toolbar
@@ -2991,6 +2994,13 @@ Selector Name: facebook-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
 Description: Autocomplete dropdown is toggled for focused login fields on facebook page load
 Location: Facebook page load
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: mozilla-github-credentials
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='testUser']"
+Description: Autocomplete dropdown is toggled for focused login fields on Mozilla github page load
+Location: Mozilla Github page load
 Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
@@ -3848,6 +3858,13 @@ Description: Username field in the password notification popup
 Location: Username field in the password notification popup
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: password-notification-save-button
+Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
+Description: Save button in the password notification popup
+Location: Save button in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
@@ -4513,6 +4530,13 @@ Selector Name: sidebar-hide-option
 Selector Data: sidebar-context-menu-hide-sidebar
 Description: Context menu option to hide the sidebar
 Location: Context menu of the sidebar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: confirmation-hint
+Selector Data: confirmation-hint
+Description: The confirmation dialog when a tab is closed in the sidebar
+Location: Sidebar
 Path to .json: modules/data/sidebar.components.json
 ```
 #### tab_bar

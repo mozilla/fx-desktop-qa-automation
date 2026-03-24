@@ -4,6 +4,7 @@ from time import sleep
 from typing import List, Literal
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -38,6 +39,24 @@ class AboutPrefs(BasePage):
     # Number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
+    ZOOM_LEVELS = [
+        30,
+        50,
+        67,
+        80,
+        90,
+        100,
+        110,
+        120,
+        133,
+        150,
+        170,
+        200,
+        240,
+        300,
+        400,
+        500,
+    ]
 
     class HttpsOnlyStatus:
         """Fake enum: return a string based on a constant name"""
@@ -205,14 +224,27 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(str(option_id), "checked", "")
         return self
 
+    def click_zoom_text_only(self) -> BasePage:
+        """
+        Toggles the Zoom Text Only checkbox in about:preferences.
+        Uses JS to pierce the moz-checkbox shadow root.
+        """
+        moz_checkbox = self.get_element("zoom-text-only")
+        self.driver.execute_script("arguments[0].click()", moz_checkbox)
+        return self
+
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
+        Gets the inner <select> from moz-select's shadow root and uses
+        Selenium's Select class to choose the target zoom level.
         """
-        self.click_on("default-zoom-dropdown")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
-        self.click_on("default-zoom-dropdown")
+        moz_select = self.get_element("default-zoom-dropdown")
+        inner_select = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('select')",
+            moz_select,
+        )
+        Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
