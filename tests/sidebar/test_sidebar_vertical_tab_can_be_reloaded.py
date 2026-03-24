@@ -27,6 +27,6 @@ def test_sidebar_vertical_tab_can_be_reloaded(driver: Firefox):
 
     tabs.context_click(tabs.get_tab(1))
     context_menu.click_and_hide_menu("context-menu_reload-tab")
-    tabs.hide_popup("tabContextMenu")
 
+    # url title is stable across reload, the action is completed without errors
     tabs.wait_for_tab_title(tab_title, tab_index=1)
