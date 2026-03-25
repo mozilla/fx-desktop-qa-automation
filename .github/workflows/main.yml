@@ -372,8 +372,6 @@ jobs:
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          echo "MANUAL=true" >> .env
-          echo "STARFOX_SPLIT=smoke" >> .env
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;
