@@ -2176,6 +2176,13 @@ Location: Toolbar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-use-saved-password
+Selector Data: fill-login
+Description: Context menu option "Use Saved Password" shown on login form fields when saved credentials exist for the page
+Location: Context menu on a username or password field in a login form
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-close-duplicate-tabs
 Selector Data: context_closeDuplicateTabs
 Description: Close Duplicate Tabs context menu option
