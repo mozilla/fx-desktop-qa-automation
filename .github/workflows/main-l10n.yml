@@ -157,7 +157,7 @@ jobs:
         run: |
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
 
-      - name: Set Environment (Scheduled Beta)
+      - name: Set CI Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'L10N-Linux' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
           echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV";
