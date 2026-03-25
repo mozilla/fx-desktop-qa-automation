@@ -334,6 +334,9 @@ def test_case():
 
 
 def pytest_configure(config):
+    logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
+        logging.CRITICAL
+    )
     if not env_true("TESTRAIL_REPORT"):
         logging.warning("TESTRAIL_REPORT disabled; skipping TestRail integration.")
         return
