@@ -190,7 +190,7 @@ jobs:
           rm ./pyproject.toml;
           mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run pytest $(cat selected_tests) --geckodriver=geckodriver.exe
+          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -240,7 +240,6 @@ jobs:
         run: |
           python scripts/check_test_cases.py
           exit $?
-          echo "Triggered by event: ${{ github.event_name }}"
 
       - name: Set CI Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
@@ -358,7 +357,6 @@ jobs:
         run: |
           python scripts/check_test_cases.py
           exit $?
-          echo "Triggered by event: ${{ github.event_name }}"
 
       - name: Set CI Environment (Manual)
         if: ${{ inputs.linux_tarball_link && inputs.dry_run != true }}
