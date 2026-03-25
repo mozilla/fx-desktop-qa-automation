@@ -74,7 +74,6 @@ jobs:
         run: |
           "STARFOX_SPLIT=${{ inputs.test_set }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "REPORTABLE=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Set CI Environment (Manual)
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
@@ -82,7 +81,6 @@ jobs:
         run: |
           "MANUAL=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "STARFOX_SPLIT=smoke" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "REPORTABLE=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Running smoke tests on supplied executable"
 
       - name: Set Environment (Scheduled Beta)
@@ -90,7 +88,6 @@ jobs:
         shell: pwsh
         run: |
           "TESTRAIL_REPORT=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "REPORTABLE=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Running report for most recent Beta on Windows"
 
       - name: Install dependencies
@@ -162,7 +159,6 @@ jobs:
           }}
         env:
           TESTRAIL_REPORT: false
-          REPORTABLE: true
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
@@ -239,7 +235,6 @@ jobs:
         run: |
           echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
-          echo "REPORTABLE=false" >> "$GITHUB_ENV"
 
       - name: Check test case numbers
         run: |
@@ -251,7 +246,6 @@ jobs:
         if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
           echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV"
-          echo "REPORTABLE=true" >> "$GITHUB_ENV"
           echo "Running report for most recent Beta on MacOS"
 
       - name: Set CI Environment (Manual)
@@ -259,7 +253,6 @@ jobs:
         run: |
           echo "MANUAL=true" >> "$GITHUB_ENV"
           echo "STARFOX_SPLIT=smoke" >> "$GITHUB_ENV"
-          echo "REPORTABLE=true" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable"
 
       - name: Install dependencies
@@ -303,7 +296,6 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           TESTRAIL_REPORT: false
-          REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
@@ -361,7 +353,6 @@ jobs:
         run: |
           echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
-          echo "REPORTABLE=false" >> "$GITHUB_ENV"
 
       - name: Check test case numbers
         run: |
@@ -374,7 +365,6 @@ jobs:
         run: |
           echo "MANUAL=true" >> "$GITHUB_ENV"
           echo "STARFOX_SPLIT=smoke" >> "$GITHUB_ENV"
-          echo "REPORTABLE=true" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable"
 
       - name: Install dependencies
@@ -384,7 +374,6 @@ jobs:
         run: |
           echo "MANUAL=true" >> .env
           echo "STARFOX_SPLIT=smoke" >> .env
-          echo "REPORTABLE=true" >> .env
           echo "Running smoke tests on supplied executable";
           sudo apt install gnome-screenshot
           uname -m;
@@ -408,7 +397,6 @@ jobs:
         if: ${{ steps.select.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
-          REPORTABLE: true
         run: |
           "$FX_EXECUTABLE" --version;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
