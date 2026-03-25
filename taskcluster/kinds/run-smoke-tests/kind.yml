@@ -26,7 +26,7 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        sudo apt-get install python-tk python3-tk tk-dev;
+        apt-get update -y; apt-get install python-tk python3-tk tk-dev -y;
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
         mv ./config/ci_pyproject.toml ./pyproject.toml;
