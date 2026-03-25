@@ -10,7 +10,7 @@ from modules.util import Utilities
 
 
 @pytest.fixture()
-def test_case() -> str:
+def test_case():
     return "130919"
 
 

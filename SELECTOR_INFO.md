@@ -1323,7 +1323,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: default-zoom-dropdown-value
-Selector Data: menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']
+Selector Data: menuitem[label='{.*}%']
 Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
@@ -2173,6 +2173,13 @@ Selector Name: context-menu-vertical-tabs
 Selector Data: toolbar-context-toggle-vertical-tabs
 Description: Vertical Tabs context menu option
 Location: Toolbar context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-close-duplicate-tabs
+Selector Data: context_closeDuplicateTabs
+Description: Close Duplicate Tabs context menu option
+Location: Tab context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -4523,6 +4530,13 @@ Selector Name: sidebar-hide-option
 Selector Data: sidebar-context-menu-hide-sidebar
 Description: Context menu option to hide the sidebar
 Location: Context menu of the sidebar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: confirmation-hint
+Selector Data: confirmation-hint
+Description: The confirmation dialog when a tab is closed in the sidebar
+Location: Sidebar
 Path to .json: modules/data/sidebar.components.json
 ```
 #### tab_bar

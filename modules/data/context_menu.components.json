@@ -248,6 +248,11 @@
         "strategy": "css",
         "groups": []
     },
+    "context-close-duplicate-tabs": {
+        "selectorData": "context_closeDuplicateTabs",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-vertical-tabs": {
         "selectorData": "toolbar-context-toggle-vertical-tabs",
         "strategy": "id",

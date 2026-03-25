@@ -93,7 +93,7 @@ jobs:
         shell: pwsh
         run: |
           $testCount = (Get-Content selected_tests | Where-Object { $_.Trim() -ne "" }).Count
-          Write-Host "Total tests selected: $testCount"
+          Write-Host "Total test scripts selected: $testCount"
 
           Write-Host "Selected tests:"
           Get-Content selected_tests
@@ -224,7 +224,7 @@ jobs:
         if: ${{steps.select.conclusion == 'success'}}
         run: |
           test_count=$(grep -cve '^\s*$' selected_tests)
-          echo "Total tests selected: $test_count"
+          echo "Total test scripts selected: $test_count"
 
           echo "Selected tests:"
           cat selected_tests
