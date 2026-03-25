@@ -101,6 +101,7 @@ def main(args):
     else:
         if "-n" in args:
             number_only = True
+        logging.warning(f"env channel: {environ.get('FX_CHANNEL')}")
         channel = environ.get("FX_CHANNEL")
         # if channel doesn't exist use beta, if blank leave blank (for Release)
         # ...otherwise prepend hyphen
@@ -146,6 +147,7 @@ def main(args):
 
             candidate_exists = True
             this_beta = BACKSTOP
+            logging.warning(f"channel: {channel}")
             while candidate_exists:
                 (major, minor_beta) = this_beta.split(".")
                 (minor, beta) = minor_beta.split("b")

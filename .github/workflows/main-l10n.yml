@@ -66,13 +66,13 @@ jobs:
       - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'L10N-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
-          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
+          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on MacOS";
 
       - name: Set Environment (Manual)
         if: ${{ inputs.mac_installer_link && inputs.dry_run != true }}
         run: |
-          echo "MANUAL='true'" >> "$GITHUB_ENV";
+          echo "MANUAL=true" >> "$GITHUB_ENV";
           echo "Running l10n tests on supplied executable";
 
       - name: Install dependencies
@@ -152,7 +152,7 @@ jobs:
       - name: Set Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'L10N-Linux' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
-          echo "TESTRAIL_REPORT='true'" >> "$GITHUB_ENV";
+          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV";
           echo "Running report for most recent Beta on Linux";
 
       - name: Install dependencies
@@ -234,7 +234,7 @@ jobs:
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
         run: |
           $env_contents = @"
-          MANUAL='true'
+          MANUAL=true
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running l10n tests on supplied executable"
@@ -243,7 +243,7 @@ jobs:
         if: ${{ inputs.job_to_run == 'L10N-Windows' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
           $env_contents = @"
-          TESTRAIL_REPORT='true'
+          TESTRAIL_REPORT=true
           "@
           New-item -Name .env -Value $env_contents -ItemType File -Force
           Write-Host "Running report for most recent Beta on Windows"

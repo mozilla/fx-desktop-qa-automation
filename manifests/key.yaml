@@ -163,7 +163,7 @@ address_bar_and_search:
     - functional1
   test_search_modes_for_sites:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
-    result: unstable
+    result: deprecated
     splits:
     - functional1
   test_search_string_displayed_when_addressbar_unfocused:
@@ -848,6 +848,11 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_private_browsing_dismiss_doorhanger_credentials:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026018
+    result: unstable
+    splits:
+    - functional2
   test_save_login_via_doorhanger:
     result: pass
     splits:
@@ -1078,7 +1083,7 @@ security_and_privacy:
     splits:
     - functional2
   test_detected_blocked_trackers_found:
-    result: pass
+    result: deprecated
     splits:
     - functional2
   test_download_list_cleared_by_end_private_session:
@@ -1133,10 +1138,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_private_browsing_dismiss_doorhanger_credentials:
-    result: pass
-    splits:
-    - functional2
   test_private_session_awesome_bar_exclusion:
     result: pass
     splits:
@@ -1166,7 +1167,7 @@ security_and_privacy:
     splits:
     - functional2
   test_trackers_crypto_fingerprint_blocked:
-    result: pass
+    result: deprecated
     splits:
     - functional2
   test_tracking_content_custom_mode:
@@ -1211,7 +1212,15 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_duplicate_vertical_tab:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_enabled_in_private_window:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_move_options:
     result: pass
     splits:
     - functional2

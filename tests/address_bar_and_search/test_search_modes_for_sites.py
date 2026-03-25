@@ -14,7 +14,7 @@ SEARCH_MODES = [
 
 @pytest.fixture()
 def test_case():
-    return "3028754"
+    return "deprecated"
 
 
 # Google recaptcha makes this test unstable for now
