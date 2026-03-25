@@ -11,7 +11,7 @@ from modules.page_object import AboutPrefs, GenericPage
 DEFAULT_ZOOM_110 = 110
 DEFAULT_ZOOM_100 = 100
 WEBSITE_1 = "https://en.wikipedia.org/wiki/Mozilla"
-LOCAL_HTML = "text_test.html"
+LOCAL_HTML = "basic_webpage.html"
 
 
 @pytest.fixture()
