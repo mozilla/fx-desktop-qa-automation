@@ -1212,6 +1212,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_vertical_tab_can_be_reloaded:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tabs_move_options:
     result: pass
     splits:
