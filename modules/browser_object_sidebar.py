@@ -74,9 +74,8 @@ class Sidebar(BasePage):
         Shared boilerplate for all Vertical tabs checkbox interactions. Accesses browser#sidebar
         contentDocument, recursively pierces shadow roots, finds [data-l10n-id*="vertical-tab"], and
         evaluates js_on_element with el in scope. Returns null if the panel is not ready or the element
-        is not found; otherwise returns the result of js_on_element. Returning null on miss (rather than
-        false) lets callers distinguish "not found yet" from "found but condition is false", so wait.until
-        keeps retrying in both cases correctly.
+        is not found; otherwise returns the result of js_on_element. Both null and false are falsy, so
+        wait.until retries in either case — null on miss is a consistency choice, not a semantic one.
 
         Must be called from within a @BasePage.context_chrome method.
         """
