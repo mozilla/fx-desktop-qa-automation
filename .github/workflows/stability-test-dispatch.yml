@@ -47,6 +47,6 @@ jobs:
     uses: ./.github/workflows/main-stability.yml
     with:
       job_to_run: Test-MacOS
-      test_category: ${{ github.event.inputs.category }}
-      test_set: ${{ github.event.inputs.split }}
+      test_category: ${{ github.event.inputs.category || 'pass' }}
+      test_set: ${{ github.event.inputs.split || 'all' }}
     secrets: inherit
