@@ -623,8 +623,8 @@ menus:
       linux: unstable
       mac: pass
       win: pass
-      splits:
-      - functional2
+    splits:
+    - functional2
   test_hyperlink_context_menu:
     result: pass
     splits:
