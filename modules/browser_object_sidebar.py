@@ -68,51 +68,46 @@ class Sidebar(BasePage):
         )
         return self
 
+    def _exec_on_vertical_tab_element(self, js_on_element: str):
+        """Find the Vertical tabs checkbox in the customize panel and evaluate js_on_element on it.
+
+        Shared boilerplate for all Vertical tabs checkbox interactions. Accesses browser#sidebar
+        contentDocument, recursively pierces shadow roots, finds [data-l10n-id*="vertical-tab"], and
+        evaluates js_on_element with el in scope. Returns null if the panel is not ready or the element
+        is not found; otherwise returns the result of js_on_element. Returning null on miss (rather than
+        false) lets callers distinguish "not found yet" from "found but condition is false", so wait.until
+        keeps retrying in both cases correctly.
+
+        Must be called from within a @BasePage.context_chrome method.
+        """
+        return self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "if (!cd || cd.readyState !== 'complete') return null;"
+            "function search(root) {"
+            "  const el = root.querySelector('[data-l10n-id*=\"vertical-tab\"]');"
+            "  if (el) return " + js_on_element + ";"
+            "  for (const host of root.querySelectorAll('*')) {"
+            "    if (host.shadowRoot) {"
+            "      const r = search(host.shadowRoot);"
+            "      if (r !== null) return r;"
+            "    }"
+            "  }"
+            "  return null;"
+            "}"
+            "return search(cd);"
+        )
+
     @BasePage.context_chrome
     def expect_vertical_tabs_checkbox_visible(self):
-        """Verify that the Vertical tabs checkbox is displayed in the Sidebar settings section of the customize panel.
-
-        The customize panel loads in <browser id="sidebar"> as sidebar-customize.html. JS recursively pierces shadow
-        roots to find the checkbox element whose data-l10n-id contains "vertical-tab".
-        """
-        self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return null;"
-                "function search(root) {"
-                "  const el = root.querySelector('[data-l10n-id*=\"vertical-tab\"]');"
-                "  if (el) return true;"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot && search(host.shadowRoot)) return true;"
-                "  }"
-                "  return false;"
-                "}"
-                "return search(cd) || null;"
-            )
-        )
+        """Verify that the Vertical tabs checkbox is displayed in the Sidebar settings section of the customize panel."""
+        self.wait.until(lambda _: self._exec_on_vertical_tab_element("true"))
         return self
 
     @BasePage.context_chrome
     def click_vertical_tabs_checkbox(self):
-        """Click the Vertical tabs checkbox in the Sidebar settings section of the customize panel.
-
-        JS recursively pierces shadow roots in the customize panel contentDocument to find and click the
-        element whose data-l10n-id contains "vertical-tab".
-        """
+        """Click the Vertical tabs checkbox in the Sidebar settings section of the customize panel."""
         self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return null;"
-                "function search(root) {"
-                "  const el = root.querySelector('[data-l10n-id*=\"vertical-tab\"]');"
-                "  if (el) { el.click(); return true; }"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot && search(host.shadowRoot)) return true;"
-                "  }"
-                "  return false;"
-                "}"
-                "return search(cd) || null;"
-            )
+            lambda _: self._exec_on_vertical_tab_element("(el.click(), true)")
         )
         return self
 
@@ -124,22 +119,7 @@ class Sidebar(BasePage):
         are active. Mirrors expect_horizontal_tabs_active which verifies the unchecked state.
         """
         self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return null;"
-                "function search(root) {"
-                "  const el = root.querySelector('[data-l10n-id*=\"vertical-tab\"]');"
-                "  if (el) return el.checked === true;"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot) {"
-                "      const r = search(host.shadowRoot);"
-                "      if (r !== null) return r;"
-                "    }"
-                "  }"
-                "  return null;"
-                "}"
-                "return search(cd);"
-            )
+            lambda _: self._exec_on_vertical_tab_element("el.checked === true")
         )
         return self
 
@@ -147,27 +127,12 @@ class Sidebar(BasePage):
     def expect_horizontal_tabs_active(self):
         """Verify that horizontal tabs are active by checking that the Vertical tabs checkbox is unchecked.
 
-        There is no dedicated UI element for horizontal tabs — the mode is defined purely by the absence of vertical
-        tabs. The Vertical tabs checkbox remains visible in the panel at all times; when unchecked, horizontal tabs
-        are active.
+        There is no dedicated UI element for horizontal tabs — the mode is defined purely by the absence of
+        vertical tabs. The Vertical tabs checkbox remains visible in the panel at all times; when unchecked,
+        horizontal tabs are active.
         """
         self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return null;"
-                "function search(root) {"
-                "  const el = root.querySelector('[data-l10n-id*=\"vertical-tab\"]');"
-                "  if (el) return el.checked === false;"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot) {"
-                "      const r = search(host.shadowRoot);"
-                "      if (r !== null) return r;"
-                "    }"
-                "  }"
-                "  return null;"
-                "}"
-                "return search(cd);"
-            )
+            lambda _: self._exec_on_vertical_tab_element("el.checked === false")
         )
         return self
 
