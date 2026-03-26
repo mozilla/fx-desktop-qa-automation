@@ -635,6 +635,8 @@ menus:
       linux: unstable
       mac: pass
       win: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
