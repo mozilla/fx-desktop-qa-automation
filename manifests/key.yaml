@@ -635,6 +635,8 @@ menus:
       linux: unstable
       mac: pass
       win: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -658,8 +660,8 @@ networking:
     - smoke
   test_http_site:
     result: pass
-    splits:
-    - functional2
+  splits:
+  - functional2
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
