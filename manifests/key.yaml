@@ -189,11 +189,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
+    result: unstable
     splits:
     - functional1
   test_server_not_found_error_pb:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
+    result: unstable
     splits:
     - functional1
   test_suggestion_engine_selection:
@@ -236,7 +238,8 @@ audio_video:
     splits:
     - smoke
   test_html5_video_playback_controls:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026662
+    result: unstable
     splits:
     - functional1
   test_users_actions_saved_on_reload:
@@ -384,7 +387,8 @@ downloads:
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026665
+    result: unstable
     splits:
     - functional1
   test_delete_download_while_in_progress:
@@ -412,7 +416,11 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -548,7 +556,8 @@ form_autofill:
     splits:
     - functional1
   test_form_autofill_suggestions:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026652
+    result: unstable
     splits:
     - functional1
   test_name_autofill_attribute:
@@ -591,7 +600,11 @@ geolocation:
     - functional2
 language_packs:
   test_language_pack_install_addons:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026674
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional2
   test_language_pack_install_preferences:
@@ -605,17 +618,11 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    test_inspect:
-      result: pass
-      splits:
-      - functional2
-    test_save_page_as:
-      comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
-      result: pass
-      splits:
-      - functional2
-    test_take_screenshot:
-      result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026682
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
       splits:
       - functional2
   test_hyperlink_context_menu:
@@ -623,19 +630,11 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    test_copy_image_link:
-      result: pass
-      splits:
-      - functional2
-    test_open_image_in_new_tab:
-      result: pass
-      splits:
-      - functional2
-    test_save_image_as:
-      comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
-      result: pass
-      splits:
-      - functional2
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026680
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -875,7 +874,11 @@ password_manager:
     - functional2
 pdf_viewer:
   test_add_image_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
@@ -909,7 +912,11 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026644
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
@@ -1155,7 +1162,11 @@ security_and_privacy:
     splits:
     - functional2
   test_sidebar_removed_on_end_private_session:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026669
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_third_party_content_blocked_private_browsing:
@@ -1229,7 +1240,11 @@ sidebar:
     splits:
     - functional2
   test_toggle_sidebar_via_toolbar_button:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026677
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
