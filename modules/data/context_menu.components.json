@@ -213,6 +213,11 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-use-saved-password": {
+        "selectorData": "fill-login",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-reveal-password": {
         "selectorData": "context-reveal-password",
         "strategy": "id",

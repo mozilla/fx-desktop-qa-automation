@@ -919,7 +919,7 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
-    if (not channel_milestone) and channel == "Devedition":
+    if (not channel_milestone) and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = testrail_session.matching_submilestone(
             major_milestone, f"Beta {major}"
         )
