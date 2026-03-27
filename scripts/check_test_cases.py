@@ -4,7 +4,7 @@ import os
 d = {}
 count = 0
 # List all test suites
-test_suites = [d for d in os.listdir("./tests/")]
+test_suites = [d for d in os.listdir("./tests/") if os.path.isdir(f"tests/{d}")]
 for test_suite in test_suites:
     for test in os.listdir(f"./tests/{test_suite}"):
         if test[0:4] != "test":
@@ -18,8 +18,12 @@ for test_suite in test_suites:
             line = f.readline().strip()
             ind = line.find('"') + 1
             test_case = line[ind:-1]
+            if not test_case.isnumeric():
+                continue
         if d.get(test_case):
             count += 1
+            if count == 2:
+                logging.warning(test_case)
         else:
             d[test_case] = file_name
 

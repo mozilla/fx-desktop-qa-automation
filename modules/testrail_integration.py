@@ -10,11 +10,12 @@ from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
+from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
-FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)-build(\d+)")
 FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
@@ -24,7 +25,10 @@ PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
+TC_EXECUTION_TEMPLATE = (
+    "https://firefox-ci-tc.services.mozilla.com/tasks/"
+    "%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
+)
 
 
 def get_execution_link(os_name: str = None) -> str:
@@ -58,7 +62,8 @@ def get_execution_link(os_name: str = None) -> str:
         return link
 
     logging.warning(
-        f"Could not generate execution link for os_name={os_name}. Missing required environment variables."
+        f"Could not generate execution link for os_name={os_name}. "
+        "Missing required environment variables."
     )
     return ""
 
@@ -126,6 +131,18 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{beta}", beta)
             .split("-")[0]
         )
+    elif channel == "Rc":
+        logging.info(f"Release Candidate: {version_str}")
+        version_match = FX_RC_VERSION_RE.match(version_str)
+        (major, minor, build) = [version_match[n] for n in range(1, 4)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
+            .replace("{minor}", minor)
+            .replace("b{beta}", "")
+            .replace("{build}", build)
+        )
     elif version_match:
         logging.info(version_match)
         (major, minor, beta, build) = [version_match[n] for n in range(1, 5)]
@@ -188,8 +205,8 @@ def _common_reportable_context(platform_to_test=None) -> dict:
     """
 
     ctx = {
-        "testrail_report_requested": bool(os.environ.get("TESTRAIL_REPORT")),
-        "forced_reportable": bool(os.environ.get("REPORTABLE")),
+        "testrail_report_requested": env_true("TESTRAIL_REPORT"),
+        "forced_reportable": env_true("REPORTABLE"),
         "split": os.environ.get("STARFOX_SPLIT"),
         "is_l10n": bool(os.environ.get("FX_L10N")),
         "platform_system": None,  # "Darwin", etc
@@ -333,8 +350,32 @@ def reportable(platform_to_test=None):
         logging.warning("REPORTABLE=true; we will report this session.")
         return True
 
+    # Make sure TestRail is actually configured before trying to init it
+    required = ["TESTRAIL_BASE_URL", "TESTRAIL_USERNAME", "TESTRAIL_API_KEY"]
+    missing = [name for name in required if not os.environ.get(name)]
+
+    if missing:
+        logging.warning(
+            "TestRail not configured; missing env vars: %s. Session not reportable.",
+            ", ".join(missing),
+        )
+        return False
+
     # Connect to TestRail — only in real mode
-    tr_session = testrail_init()
+    try:
+        tr_session = testrail_init()
+    except Exception as e:
+        logging.warning(
+            "Could not initialize TestRail session (%s). Session not reportable.",
+            e,
+        )
+        return False
+
+    if not tr_session:
+        logging.warning(
+            "TestRail session could not be created. Session not reportable."
+        )
+        return False
 
     # Reuse parsed values from ctx
     if not ctx["major_number"]:
@@ -353,13 +394,14 @@ def reportable(platform_to_test=None):
     channel_milestone = tr_session.matching_submilestone(
         major_milestone, f"{channel} {ctx['major_number']}"
     )
-    if not channel_milestone and channel == "Devedition":
+    if not channel_milestone and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = tr_session.matching_submilestone(
             major_milestone, f"Beta {ctx['major_number']}"
         )
     if not channel_milestone:
         logging.warning(
-            f"Not reporting: Could not find matching sub-milestone for {channel} {ctx['major_number']}"
+            "Not reporting: Could not find matching sub-milestone "
+            f"for {channel} {ctx['major_number']}"
         )
         return False
 
@@ -382,7 +424,8 @@ def reportable(platform_to_test=None):
     )
     if not this_plan:
         logging.warning(
-            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+            f"Session reportable: could not find {plan_title} "
+            f"(milestone: {channel_milestone.get('id')})"
         )
         return True
 
@@ -413,7 +456,8 @@ def reportable(platform_to_test=None):
 
         logging.warning(
             f"Potentially matching run found for {platform_name}, may be reportable. "
-            f"(Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
+            f"(Found {covered_mappings} site/region mappings reported, "
+            f"expected {expected_mappings}.)"
         )
         # Only report when there is a new beta without a reported plan or
         # if the selected split is not completely reported.
@@ -455,9 +499,20 @@ def reportable(platform_to_test=None):
     return bool(uncovered_suites)
 
 
-def testrail_init() -> TestRail:
+def testrail_init() -> TestRail | None:
     """Connect to a TestRail API session"""
-    local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
+    base_url = os.environ.get("TESTRAIL_BASE_URL")
+
+    if not base_url:
+        logging.warning("TESTRAIL_BASE_URL not set. Skipping TestRail.")
+        return None
+
+    try:
+        local = base_url.split("/")[2].startswith("127")
+    except Exception as e:
+        logging.warning("Invalid TESTRAIL_BASE_URL: %s - %s", base_url, e)
+        return None
+
     tr_session = tr.TestRail(
         os.environ.get("TESTRAIL_BASE_URL"),
         os.environ.get("TESTRAIL_USERNAME"),
@@ -864,7 +919,7 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
-    if (not channel_milestone) and channel == "Devedition":
+    if (not channel_milestone) and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = testrail_session.matching_submilestone(
             major_milestone, f"Beta {major}"
         )
@@ -958,11 +1013,10 @@ def collect_changes(testrail_session: TestRail, report):
         # Tests reported as rerun are a problem -- we need to know pass/fail
         if outcome == "rerun":
             outcome = test.get("call").get("outcome")
-        duration = (
-            test["setup"]["duration"]
-            + test["call"]["duration"]
-            + test["teardown"]["duration"]
-        )
+        setup_dur = 0.0 if not test.get("setup") else test["setup"]["duration"]
+        call_dur = 0.0 if not test.get("call") else test["call"]["duration"]
+        teardown_dur = 0.0 if not test.get("teardown") else test["teardown"]["duration"]
+        duration = setup_dur + call_dur + teardown_dur
         logging.info(f"TC: {test_case}: {outcome} using {duration}s ")
 
         if not results_by_suite.get(suite_id):

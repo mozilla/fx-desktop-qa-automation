@@ -386,6 +386,41 @@ Description: Save edited login
 Location: The about:login's main login page after editing a login
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: copy-username
+Selector Data: "copy-username-button.copy-button"
+Description: Copy username button
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: copy-password
+Selector Data: "copy-password-button.copy-button"
+Description: Copy password button
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: copied-button
+Selector Data: "copy-password-button.copied-button"
+Description: Copy password button confirmation
+Location: The about:login's main login page after selecting a login
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: password-reveal
+Selector Data: "input[type='text'][name='password']"
+Description: Password revealed state
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: password-hidden
+Selector Data: "input.password-display[type='password']"
+Description: Password hidden state
+Location: Inside about:logins page, next to the password field
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_networking
 ```
 Selector Name: networking-sidebar-category
@@ -577,6 +612,13 @@ Selector Name: tab-hover-preview-checkbox
 Selector Data: tabPreviewShowThumbnails
 Description: Checkbox to toggle "Show an image preview when you hover on a tab"
 Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-sidebar-checkbox
+Selector Data: browserLayoutShowSidebar
+Description: Checkbox to toggle "Show sidebar"
+Location: about:preferences (Browser Layout)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1029,7 +1071,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: search-suggestion-in-private-windows
-Selector Data: "showSearchSuggestionsPrivateWindows"
+Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
@@ -1281,7 +1323,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: default-zoom-dropdown-value
-Selector Data: menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']
+Selector Data: menuitem[label='{.*}%']
 Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
@@ -1391,6 +1433,13 @@ Selector Name: about-protections-save-passwords-button
 Selector Data: "save-passwords-button"
 Description: Saved passwords button in about:protections
 Location: about:protections > Never forget a password again section
+Path to .json: modules/data/about_protections.components.json
+```
+```
+Selector Name: manage-privacy-security
+Selector Data: "protection-settings"
+Description: Manage your privacy and security settings link in about:protections
+Location: about:protections page
 Path to .json: modules/data/about_protections.components.json
 ```
 #### about_telemetry
@@ -1776,6 +1825,13 @@ Description: Save address doorhanger country section
 Location: Address bar
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: manage-passwords
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']"
+Description: Login autofill manage passwords button
+Location: Login autofill
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -2119,6 +2175,20 @@ Description: Vertical Tabs context menu option
 Location: Toolbar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-menu-use-saved-password
+Selector Data: fill-login
+Description: Context menu option "Use Saved Password" shown on login form fields when saved credentials exist for the page
+Location: Context menu on a username or password field in a login form
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-close-duplicate-tabs
+Selector Data: context_closeDuplicateTabs
+Description: Close Duplicate Tabs context menu option
+Location: Tab context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -2230,38 +2300,34 @@ Path to .json: modules/data/devtools.components.json
 ```
 #### error_page
 ```
+Selector Name: net-error-card
+Selector Data: "net-error-card"
+Description: The shadow host web component for the error page (Firefox 138+)
+Location: In the error page body
+Path to .json: modules/data/error_page.components.json
+```
+```
 Selector Name: error-title
-Selector Data: ".title-text[data-l10n-id='dnsNotFound-title']"
-Description: The error title name from the error page
-Location: In the error page
+Selector Data: "[data-l10n-id='neterror-dns-not-found-title']"
+Description: The main error title inside the net-error-card shadow DOM
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
 Selector Name: error-short-description
-Selector Data: "errorShortDesc"
-Description: The error short description from the error page
-Location: In the error page
+Selector Data: "netErrorIntro"
+Description: The short description paragraph inside the net-error-card shadow DOM; hostname is read from its data-l10n-args attribute
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
-Selector Name: error-suggestion-link
-Selector Data: "#errorShortDesc a[data-l10n-name='website']"
-Description: The link with the error suggestion
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: error-long-description-items
-Selector Data: "#errorLongDesc li"
-Description: The error long description from the error page
-Location: In the error page
-Path to .json: modules/data/error_page.components.json
-```
-```
-Selector Name: try-again-button
-Selector Data: "#netErrorButtonContainer #neterrorTryAgainButton"
-Description: The Try Again button from the error page
-Location: In the error page
+Selector Name: error-learn-more-link
+Selector Data: "neterror-learn-more-link"
+Description: The "Learn more" link inside the net-error-card shadow DOM
+Location: Inside the net-error-card shadow root
+Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 #### find_toolbar
@@ -2937,6 +3003,13 @@ Description: Autocomplete dropdown is toggled for focused login fields on facebo
 Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
+```
+Selector Name: mozilla-github-credentials
+Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='testUser']"
+Description: Autocomplete dropdown is toggled for focused login fields on Mozilla github page load
+Location: Mozilla Github page load
+Path to .json: modules/data/login_autofill.components.json
+```
 #### navigation
 ```
 Selector name: awesome-bar
@@ -3555,6 +3628,20 @@ Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: legacy-searchbar-switcher-popup
+Selector Data: searchmode-switcher-popup
+Description: searchmode switcher toolbar popup
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: legacy-searchbar-search-settings
+Selector Data: searchmode-switcher-popup-search-settings-button
+Description: searchmode switcher toolbar button
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: searchmode-switcher-settings
 Selector Data: menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']
 Description: Search settings button in the searchmode switcher dropdown
@@ -3619,7 +3706,21 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchbar-suggestions
-Selector Data: hbox.search-one-offs
+Selector Data: div.urlbarView-row
+Description: Searchbar suggestions
+Location: Searchbar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-suggestions
+Selector Data: div.urlbarView-row
+Description: Searchbar suggestions
+Location: Searchbar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-highlighted-suggestion
+Selector Data: div.urlbarView-row[selected
 Description: Searchbar suggestions
 Location: Searchbar results
 Path to .json: modules/data/navigation.components.json
@@ -3748,6 +3849,27 @@ Selector Name: bookmark-in-toolbar
 Selector Data: "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']"
 Description: Mozilla website bookmark in toolbar
 Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-popup
+Selector Data: "password-notification"
+Description: Password notification popup
+Location: Password notification prompt in Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-username-field
+Selector Data: "password-notification-username"
+Description: Username field in the password notification popup
+Location: Username field in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: password-notification-save-button
+Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
+Description: Save button in the password notification popup
+Location: Save button in the password notification popup
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
@@ -4395,6 +4517,35 @@ Description: The generic slider button
 Location: In the Reader View Toolbar Text and Layout options dialog.
 Path to .json: modules/data/reader_view.components.json
 ```
+#### sidebar
+```
+Selector Name: sidebar-button
+Selector Data: sidebar-button
+Description: Sidebar toolbar button used to toggle the sidebar
+Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-main
+Selector Data: sidebar-main
+Description: Sidebar main element
+Location: Browser toolbar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-hide-option
+Selector Data: sidebar-context-menu-hide-sidebar
+Description: Context menu option to hide the sidebar
+Location: Context menu of the sidebar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: confirmation-hint
+Selector Data: confirmation-hint
+Description: The confirmation dialog when a tab is closed in the sidebar
+Location: Sidebar
+Path to .json: modules/data/sidebar.components.json
+```
 #### tab_bar
 ```
 Selector name: tab-by-title
@@ -4642,181 +4793,118 @@ Description: Input field
 Location: Input field in the autofill textarea select demo page
 Path to .json: modules/data/text_area_form_autofill.components.json
 ```
-#### tracker_panel
+#### trust_panel
+```
+Selector Name: trustpanel
+Selector Data: "trustpanel-popup"
+Description: Trustpanel main body
+Location: trustpanel main
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-header
+Selector Data: "trustpanel-header"
+Description: Trustpanel header
+Location: trustpanel main
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connect-button
+Selector Data: "[data-l10n-id='trustpanel-connection-label-secure']"
+Description: Trustpanel connection security button
+Location: trustpanel main top right
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connect-details-link
+Selector Data: "#trustpanel-siteinformation-morelink"
+Description: Trustpanel connection security details link
+Location: trustpanel connection sec view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-blocker-section
+Selector Data: "trustpanel-blocker-section-header"
+Description: Trustpanel blockable items section header
+Location: trustpanel main
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: blocked-list
+Selector Data: "#trustpanel-blocked > .trustpanel-blocker-buttons"
+Description: Trustpanel blocked items list
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: detected-list
+Selector Data: "#trustpanel-detected > .trustpanel-blocker-buttons"
+Description: Trustpanel detected / allowed items list
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: blocked-items
+Selector Data: "#trustpanel-blocked > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav"
+Description: Trustpanel blocked items individual
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: detected-items
+Selector Data: "#trustpanel-detected > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav"
+Description: Trustpanel allowed items individual
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: detected-sites-header
+Selector Data: "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items"
+Description: Trustpanel blockable sites / cookies header
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: blocked-sites-header
+Selector Data: "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items"
+Description: Trustpanel blocked sites / cookies individual
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: tracking-site-entry
+Selector Data: "protections-popup-list-host-label"
+Description: Trustpanel tracking site label
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: detected-site-entry
+Selector Data: "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label"
+Description: Trustpanel detected / allowed cookie individual
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: blocked-site-entry
+Selector Data: "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label"
+Description: Trustpanel blocked cookie individual
+Location: trustpanel blockable items view
+Path to .json: modules/data/trust_panel.components.json
+```
 ```
 Selector Name: tracker-title
 Selector Data: "protections-popup-mainView-panel-header-span"
-Description: Title of the content tracker panel
-Location: Content tracker panel
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracker-cross-site-tracking
-Selector Data: "protections-popup-category-cookies"
-Description: The Protections popup Cross_site Tracking Cookies option
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracker-tracking-content
-Selector Data: "protections-popup-category-trackers"
-Description: The Protection popup Tracking Content option
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-social-media
-Selector Data: "protections-popup-category-socialblock"
-Description: The Protection popup Social Media Tackers option
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-finger-prints
-Selector Data: "protections-popup-category-fingerprinters"
-Description: The Protection popup Fingerprinters option
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-crypto-miners
-Selector Data: "protections-popup-category-cryptominers"
-Description: The Protection popup Cryptominers option
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-cross-site-tracking-items
-Selector Data: "vbox[class='protections-popup-cookiesView-list-section']"
-Description: A list of cookies blocked
-Location: The Cross-site tracking cookies blocked panel
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-cross-site-tracking-items
-Selector Data: "vbox[class='protections-popup-cookiesView-list-section']"
-Description: A list of cookies blocked
-Location: The Cross-site tracking cookies blocked panel
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-cross-site-tracking-item
-Selector Data: "protections-popup-list-host-label"
-Description: An item in the cookies blocked list
-Location: The Cross-site tracking cookies blocked panel
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-allowed-content-item
-Selector Data: "protections-popup-list-host-label"
-Description: An item in the cookies allowed list
-Location: The Not blocking tracking content panel
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-item-container
-Selector Data: "protections-popup-category-list"
-Description: Container of the Protections popup options
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
+Description: Main view header
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
 ```
 ```
 Selector Name: shield-icon
-Selector Data: "tracking-protection-icon-container"
-Description: Toolbar Shield icon
-Location: The browser URL bar
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: no-trackers-message
-Selector Data: "protections-popup-no-trackers-found-description"
-Description: No Trackers known… message
-Location: The Protections panel from the shield icon
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: tracking-subview
-Selector Data: "protections-popup-trackersView"
-Description: The Cross-site tracking cookies blocked panel
-Location:
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: social-media-tracker-content
-Selector Data: "protections-popup-category-socialblock"
-Description: The Social media trackers panel
-Location:
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: social-media-subview
-Selector Data: "protections-popup-socialblockView"
-Description: List of cookies blocked
-Location: The Social media trackers panel
-Path to .json: modules/data/tracker_panel.components.json
-```
-```
-Selector Name: view-menu-button
-Selector Data: "view-menu"
-Description: View option from Menu Bar
-Location: Menu bar
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: menu-bar-zoom
-Selector Data: "viewFullZoomMenu"
-Description: Zoom option from Menu Bar /View
-Location: Menu bar
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: menu-bar-zoom-enlarge
-Selector Data: "menu_zoomEnlarge"
-Description: Zoom in from Menu Bar
-Location: Menu bar
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: menu-bar-zoom-reduce
-Selector Data: "menu_zoomReduce"
-Description: View option from Menu Bar
-Location: Menu bar
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: menu-bar-zoom-reset
-Selector Data: "menu_zoomReset"
-Description: Reset Zoom option from Menu Bar
-Location: Menu bar
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: menu-bar-recently-closed-tabs-items
-Selector Data: "menuitem.bookmark-item"
-Description: Individual closed tab items in the Recently Closed Tabs submenu
-Location: History menu > Recently Closed Tabs submenu
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: view-sidebar-menu
-Selector Data: "viewSidebarMenu"
-Description: Sidebar submenu under the View menu in the Menu Bar
-Location: View menu > Sidebar submenu
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: view-sidebar-history
-Selector Data: "menu_historySidebar"
-Description: History option in the View > Sidebar submenu, opens the History sidebar panel
-Location: View menu > Sidebar submenu > History
-Path to .json: modules/data/menu_bar.components.json
-```
-```
-Selector Name: sidebar-box
-Selector Data: "sidebar-box"
-Description: Container element for the classic Firefox sidebar; visible when any sidebar panel is open, hidden when closed
-Location: Browser chrome
-Path to .json: modules/data/navigation.components.json
+Selector Data: "trust-icon-container"
+Description: Address bar shield icon
+Location: Address bar
+Path to .json: modules/data/trust_panel.components.json
 ```
 ```
 Selector Name: suspected-fingerprints-in-all-windows

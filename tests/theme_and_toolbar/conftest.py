@@ -1,5 +1,7 @@
 import pytest
 
+from modules.util import Utilities
+
 
 @pytest.fixture()
 def hard_quit():
@@ -22,3 +24,8 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def util():
+    return Utilities()

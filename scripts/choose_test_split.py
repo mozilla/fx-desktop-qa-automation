@@ -120,16 +120,50 @@ def dedupe(run_list: list) -> list:
 
 
 if __name__ == "__main__":
-    print("Selecting test set...")
     manifest = TestKey(MANIFEST_KEY)
+
+    category = os.environ.get("STARFOX_CATEGORY")
+    if category:
+        category = category.lower()
+        split_name = os.environ.get("STARFOX_SPLIT", "all")
+
+        # platform MUST be set by the job environment (win|mac|linux)
+        platform = os.environ.get("STARFOX_PLATFORM")
+        if not platform:
+            raise SystemExit(
+                "STARFOX_PLATFORM must be set to 'win', 'mac', or 'linux' when STARFOX_CATEGORY is used."
+            )
+
+        platform = platform.lower()
+        if platform not in SUPPORTED_OSES:
+            raise SystemExit(
+                f"Unsupported STARFOX_PLATFORM: '{platform}'. Expected one of: {', '.join(SUPPORTED_OSES)}."
+            )
+
+        print(
+            f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'..."
+        )
+
+        # Call gather_category with platform explicitly
+        run_list = manifest.gather_category(
+            split_name=split_name, platform=platform, category=category
+        )
+        run_list = dedupe(run_list)
+
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(run_list))
+        sys.exit(0)
+
+    print("Selecting test set...")
     if os.environ.get("STARFOX_SPLIT"):
         print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
-            sys.exit(0)
+        sys.exit(0)
 
     re_obj = {
         "test_re_string": r".*/.*/test_.*\.py",
