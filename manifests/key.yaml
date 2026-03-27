@@ -1253,6 +1253,10 @@ sidebar:
       win: pass
     splits:
     - functional2
+  test_switch_between_horizontal_vertical_tabs:
+    result: pass
+    splits:
+    - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
     result: pass
     splits:
