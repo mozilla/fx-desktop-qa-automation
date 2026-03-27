@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, PanelUi, Sidebar, TabBar
+from modules.browser_object import ContextMenu, Navigation, PanelUi, TabBar
 
 URL = "about:robots"
 BOOKMARK_TITLE = "Gort! Klaatu barada nikto!"
@@ -33,19 +33,7 @@ def test_sidebar_vertical_tabs_can_be_bookmarked(driver: Firefox):
     context_menu.element_visible("context-menu-bookmark-tab")
 
     # Click Bookmark Tab, close the context menu, then save via the Add Bookmark dialog.
-    # The dialog renders inside browser.dialogFrame > #document > dialog#bookmarkpropertiesdialog (shadow root),
-    # so JS is used to pierce through contentDocument and shadow DOM to click Save.
-    context_menu.click_context_item("context-menu-bookmark-tab")
-    tabs.hide_popup("tabContextMenu")
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.wait.until(
-            lambda _: driver.execute_script(
-                "const cd = document.querySelector('browser.dialogFrame')?.contentDocument;"
-                "const btn = cd?.querySelector('dialog#bookmarkpropertiesdialog')"
-                "?.shadowRoot?.querySelector('button[dlgtype=\"accept\"]');"
-                "if (btn) { btn.click(); return true; }"
-            )
-        )
+    context_menu.bookmark_tab_via_context_menu()
 
     # Verify the tab is bookmarked and present in the bookmarks list
     panel.open_bookmarks_panel_from_hamburger_menu()
