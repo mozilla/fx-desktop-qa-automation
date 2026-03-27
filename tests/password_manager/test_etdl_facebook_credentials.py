@@ -3,6 +3,7 @@ import time
 from urllib.parse import urlparse
 
 import pytest
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
@@ -119,7 +120,6 @@ def _parse_secondary_from_ac_comment(raw: str) -> str:
     if raw.startswith("{") and raw.endswith("}"):
         try:
             data = json.loads(raw)
-            # The string we want is usually at top-level "secondary"
             sec = data.get("secondary")
             if isinstance(sec, str):
                 return sec
@@ -152,36 +152,29 @@ def _get_username_order_in_popup(autofill_popup: AutofillPopup) -> list[str]:
     order: list[str] = []
     for item in autofill_popup.get_elements("select-form-option"):
         val = item.get_attribute("ac-value")
-        if val:  # ignore empty/footers
+        if val:
             order.append(val)
     return order
 
 
-def _choose_username_via_keyboard(
-    driver: Firefox,
+def _get_field_value(web_page: GenericPage, field_name: str) -> str:
+    return web_page.get_element(field_name).get_attribute("value") or ""
+
+
+def _field_value_equals(
     web_page: GenericPage,
-    autofill_popup: AutofillPopup,
     field_name: str,
-    desired_username: str,
+    expected_value: str,
+) -> bool:
+    return _get_field_value(web_page, field_name) == expected_value
+
+
+def _wait_for_field_value(
+    web_page: GenericPage,
+    field_name: str,
+    expected_value: str,
 ) -> None:
-    web_page.click_on(field_name)
-    autofill_popup.ensure_autofill_dropdown_visible()
-
-    with driver.context(driver.CONTEXT_CHROME):
-        order = _get_username_order_in_popup(autofill_popup)
-
-    assert desired_username in order, (
-        f"'{desired_username}' not found in popup. Order={order}"
-    )
-
-    idx = order.index(desired_username)
-
-    field_el = web_page.get_element(field_name)
-    # First ArrowDown highlights the first entry, so press ArrowDown idx+1 times.
-    for _ in range(idx + 1):
-        field_el.send_keys(Keys.ARROW_DOWN)
-        time.sleep(0.05)
-    field_el.send_keys(Keys.ENTER)
+    web_page.expect(lambda _: _field_value_equals(web_page, field_name, expected_value))
 
 
 def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
@@ -196,6 +189,68 @@ def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
     if btn:
         page.driver.execute_script("arguments[0].click();", btn)
         time.sleep(0.5)
+
+
+def _choose_username_via_keyboard(
+    driver: Firefox,
+    web_page: GenericPage,
+    autofill_popup: AutofillPopup,
+    field_name: str,
+    desired_username: str,
+) -> None:
+    web_page.click_on(field_name)
+
+    try:
+        autofill_popup.ensure_autofill_dropdown_visible()
+    except TimeoutException:
+        if _field_value_equals(web_page, field_name, desired_username):
+            return
+        raise AssertionError(
+            f"Autofill dropdown did not appear and field '{field_name}' "
+            f"did not autofill '{desired_username}'. Current value="
+            f"'{_get_field_value(web_page, field_name)}'"
+        )
+
+    with driver.context(driver.CONTEXT_CHROME):
+        order = _get_username_order_in_popup(autofill_popup)
+
+    assert desired_username in order, (
+        f"'{desired_username}' not found in popup. Order={order}"
+    )
+
+    field_el = web_page.get_element(field_name)
+
+    # Reset highlight deterministically by moving focus to the field again.
+    web_page.click_on(field_name)
+
+    max_moves = len(order) + 2
+    for _ in range(max_moves):
+        if _field_value_equals(web_page, field_name, desired_username):
+            return
+
+        field_el.send_keys(Keys.ARROW_DOWN)
+        time.sleep(0.05)
+        field_el.send_keys(Keys.ENTER)
+
+        try:
+            _wait_for_field_value(web_page, field_name, desired_username)
+            return
+        except TimeoutException:
+            pass
+
+        # Re-open dropdown if ENTER closed it without selecting the desired item.
+        web_page.click_on(field_name)
+        try:
+            autofill_popup.ensure_autofill_dropdown_visible()
+        except TimeoutException:
+            if _field_value_equals(web_page, field_name, desired_username):
+                return
+
+    raise AssertionError(
+        f"Could not select '{desired_username}' from autofill popup for field "
+        f"'{field_name}'. Final value='{_get_field_value(web_page, field_name)}', "
+        f"popup order={order}"
+    )
 
 
 def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
