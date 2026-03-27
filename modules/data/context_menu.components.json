@@ -282,5 +282,10 @@
         "selectorData": "placesContext_new:bookmark",
         "strategy": "id",
         "groups": []
+    },
+    "context-menu-bookmark-tab": {
+        "selectorData": "context_bookmarkTab",
+        "strategy": "id",
+        "groups": []
     }
 }
