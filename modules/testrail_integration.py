@@ -779,6 +779,23 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     entry = suite_entries[0]
     config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
+    # Sometimes, we get entries with null descriptions, not sure why
+    if not entry.get("description"):
+        logging.warning(f"Entry {entry.get('id')} is malformed, missing description")
+        testrail_session.update_plan_entry(
+            plan_id, entry.get("id"), description="Automation-generated test plan entry"
+        )
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+        entry = suite_entries[0]
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
     logging.info(f"config runs {config_runs}")
     logging.warning(
         f"plan_id: {plan_id} -- entry_id: {entry.get('id')} -- "
