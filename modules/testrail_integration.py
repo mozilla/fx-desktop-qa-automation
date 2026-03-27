@@ -785,6 +785,9 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         testrail_session.update_plan_entry(
             plan_id, entry.get("id"), description="Automation-generated test plan entry"
         )
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
         suite_entries = [
             entry
             for entry in expected_plan.get("entries")
