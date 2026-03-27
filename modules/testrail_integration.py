@@ -779,6 +779,12 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     entry = suite_entries[0]
     config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
+    if entry.get("description", None) is None:
+        logging.warning(f"Entry {entry.get('id')} is malformed, missing description")
+        testrail_session.update_plan_entry(
+            plan_id, entry.get("id"), "Automation-generated test plan entry"
+        )
+
     logging.info(f"config runs {config_runs}")
     logging.warning(
         f"plan_id: {plan_id} -- entry_id: {entry.get('id')} -- "
