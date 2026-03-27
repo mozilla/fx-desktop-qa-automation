@@ -1245,16 +1245,16 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_switch_between_horizontal_vertical_tabs:
+    result: pass
+    splits:
+    - functional2
   test_toggle_sidebar_via_toolbar_button:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026677
     result:
       linux: unstable
       mac: pass
       win: pass
-    splits:
-    - functional2
-  test_switch_between_horizontal_vertical_tabs:
-    result: pass
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
