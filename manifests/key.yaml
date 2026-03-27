@@ -422,7 +422,7 @@ downloads:
       mac: pass
       win: pass
     splits:
-    - functional1
+    - smoke
   test_download_pdf_from_context_menu:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result:
