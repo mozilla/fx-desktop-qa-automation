@@ -420,8 +420,6 @@ downloads:
     result:
       linux: unstable
       mac: pass
-      splits:
-      - smoke
       win: pass
     splits:
     - functional1

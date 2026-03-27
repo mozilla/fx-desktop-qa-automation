@@ -213,17 +213,16 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     # Seed saved logins via about:logins
     about_logins.open()
     about_logins.add_login(ETLD_PLUS_ONE_URL, ETLD_USERNAME, ETLD_PASSWORD)
-    time.sleep(0.8)
+    time.sleep(1)
 
     for url in SUBDOMAIN_URLS:
         username, password = SUBDOMAIN_CREDENTIALS[url]
         about_logins.add_login(url, username, password)
-        time.sleep(0.8)
+        time.sleep(1)
 
     web_page = GenericPage(driver, url=ETLD_PLUS_ONE_URL).open()
     web_page.elements |= temp_selectors
 
-    driver.refresh()
     _dismiss_facebook_cookies_if_present(web_page)
 
     # Step 3: select the eTLD+1 credential
