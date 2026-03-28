@@ -421,6 +421,62 @@ Description: Password hidden state
 Location: Inside about:logins page, next to the password field
 Path to .json: modules/data/about_logins.components.json
 ```
+```
+Selector Name: menuitem-import-from-another-browser
+Selector Data: ".menuitem-button.menuitem-import-browser.ghost-button"
+Description: about:logins menu item
+Location: about:logins page menu
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: menuitem-import-from-file
+Selector Data: ".menuitem-button.menuitem-import-file.ghost-button"
+Description: about:logins menu item
+Location: about:logins page menu
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: menuitem-remove-all-passwords
+Selector Data: ".menuitem-button.menuitem-remove-all-logins.ghost-button"
+Description: about:logins menu item
+Location: about:logins page menu
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: menuitem-preferences
+Selector Data: ".menuitem-button.menuitem-preferences.ghost-button"
+Description: about:logins menu item
+Location: about:logins page menu
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: menuitem-help
+Selector Data: ".menuitem-button.menuitem-help.ghost-button"
+Description: about:logins menu item
+Location: about:logins page menu
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: dismiss-export-button
+Selector Data: "dismiss-icon",
+Description: Dismiss export password dialog window
+Location: Export password dialog window
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: remove-logins-dialog
+Selector Data: "remove-logins-dialog"
+Description: Remove password dialog window
+Location: Remove password dialog window
+Path to .json: modules/data/about_logins.components.json
+```
+```
+Selector Name: dismiss-delete-passwords-button
+Selector Data: "dismiss-icon"
+Description: Dismiss delete passwords button
+Location: Remove password dialog window
+Path to .json: modules/data/about_logins.components.json
+```
 #### about_networking
 ```
 Selector Name: networking-sidebar-category

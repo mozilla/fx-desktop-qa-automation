@@ -733,6 +733,10 @@ password_manager:
     result: pass
     splits:
     - functional1
+  test_about_logins_menu_options:
+    result: pass
+    splits:
+    - functional1
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:

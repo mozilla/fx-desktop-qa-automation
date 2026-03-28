@@ -111,7 +111,7 @@
         "strategy": "css",
         "groups": []
     },
-    "export-passwords-button": {
+    "menuitem-export-passwords": {
         "selectorData": "button.menuitem-button:nth-child(3)",
         "strategy": "css",
         "shadowParent": "menu-button",
@@ -203,6 +203,53 @@
         "selectorData": "input.password-display[type='password']",
         "strategy": "css",
         "shadowParent": "login-item",
+        "groups": []
+    },
+    "menuitem-import-from-another-browser": {
+        "selectorData": ".menuitem-button.menuitem-import-browser.ghost-button",
+        "strategy": "css",
+        "shadowParent": "menu-button",
+        "groups": []
+    },
+    "menuitem-import-from-file": {
+        "selectorData": ".menuitem-button.menuitem-import-file.ghost-button",
+        "strategy": "css",
+        "shadowParent": "menu-button",
+        "groups": []
+    },
+    "dismiss-export-button": {
+        "selectorData": "dismiss-icon",
+        "strategy": "class",
+        "shadowParent": "confirmation-dialog",
+        "groups": []
+    },
+    "menuitem-remove-all-passwords": {
+        "selectorData": ".menuitem-button.menuitem-remove-all-logins.ghost-button",
+        "strategy": "css",
+        "shadowParent": "menu-button",
+        "groups": []
+    },
+    "remove-logins-dialog": {
+        "selectorData": "remove-logins-dialog",
+        "strategy": "css",
+        "groups": []
+    },
+    "dismiss-delete-passwords-button": {
+        "selectorData": "dismiss-icon",
+        "strategy": "class",
+        "shadowParent": "remove-logins-dialog",
+        "groups": []
+    },
+    "menuitem-preferences": {
+        "selectorData": ".menuitem-button.menuitem-preferences.ghost-button",
+        "strategy": "css",
+        "shadowParent": "menu-button",
+        "groups": []
+    },
+    "menuitem-help": {
+        "selectorData": ".menuitem-button.menuitem-help.ghost-button",
+        "strategy": "css",
+        "shadowParent": "menu-button",
         "groups": []
     }
 }

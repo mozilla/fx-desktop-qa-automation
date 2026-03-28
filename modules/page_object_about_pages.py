@@ -363,7 +363,7 @@ class AboutLogins(BasePage):
         # Open about:logins and click export buttons
         self.open()
         self.click_on("menu-button")
-        self.click_on("export-passwords-button")
+        self.click_on("menuitem-export-passwords")
         self.click_on("continue-export-button")
 
         # Wait for export dialog and navigate to folder
@@ -399,6 +399,13 @@ class AboutLogins(BasePage):
         cursor = element.value_of_css_property("cursor")
 
         assert cursor == "pointer", f"Expected pointer cursor, got {cursor}"
+
+    def click_menu_option(self, option_reference: str):
+        """
+        Opens the 3-dot menu and clicks the given menu option.
+        """
+        self.click_on("menu-button")
+        self.click_on(option_reference)
 
 
 class AboutPrivatebrowsing(BasePage):
