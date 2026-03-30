@@ -149,3 +149,14 @@ class AutofillPopup(BasePage):
         # Clicks the "Manage Passwords" option from the autofill popup
         self.click_on("manage-passwords")
         return self
+
+    @BasePage.context_chrome
+    def verify_username_value(
+            self, expected_username: str, field: str = "password-notification-username-field"
+    ):
+        """Wait until the username field contains the expected value."""
+        element = self.get_element(field)
+        self.wait.until(
+            lambda _: element.get_attribute("value") == expected_username
+        )
+        return element
