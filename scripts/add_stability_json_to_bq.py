@@ -17,7 +17,7 @@ TARGET_WORKFLOW_FILE = os.environ.get("TARGET_WORKFLOW_FILE", "main-stability.ym
 
 D_RUNS = int(os.environ.get("D_RUNS", "5"))
 PLATFORM = os.environ.get("PLATFORM", "all").lower()
-INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "true").lower() in ("1", "true", "yes")
+INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "true")
 
 BQ_PROJECT = os.environ["BQ_PROJECT"]
 BQ_DATASET = os.environ["BQ_DATASET"]
@@ -131,7 +131,9 @@ def artifact_is_headed(name: str) -> bool:
     return "headed" in name
 
 
-def already_ingested_run(client: bigquery.Client, table_id: str, run_id: int, artifact_name: str) -> bool:
+def already_ingested_run(
+    client: bigquery.Client, table_id: str, run_id: int, artifact_name: str
+) -> bool:
     query = f"""
     SELECT COUNT(1) AS c
     FROM `{table_id}`
