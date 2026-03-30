@@ -405,17 +405,10 @@ class AboutLogins(BasePage):
             lambda d: any(
                 r.get_attribute("username") == username
                 for r in self.get_elements("login-list-item")
-            )
+                if r.is_displayed()
+            ),
+            message=f"{username} not found in saved logins",
         )
-
-        results = self.get_elements("login-list-item")
-        usernames = [
-            r.get_attribute("username")
-            for r in results
-            if r.is_displayed()
-        ]
-
-        assert username in usernames, f"{username} not found in saved logins"
 
 
 class AboutPrivatebrowsing(BasePage):
