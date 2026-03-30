@@ -1,6 +1,3 @@
-import json
-from urllib.parse import parse_qs, urlparse
-
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -23,20 +20,14 @@ class ErrorPage(BasePage):
         return (el.get_attribute("innerText") or "").strip()
 
     def get_error_short_description(self) -> str:
-        """Get the short description text from the error page.
+        """Get the hostname from the error page description.
 
-        Reads the hostname from the data-l10n-args attribute on the description
-        element, falling back to innerText and then the 'd' URL parameter."""
+        Targets the <strong> element inside #error-intro in the net-error-card
+        shadow DOM, which contains just the hostname."""
         el = self.get_element("error-short-description")
         if el:
-            l10n_args = el.get_attribute("data-l10n-args")
-            if l10n_args:
-                return json.loads(l10n_args).get("hostname", "")
-            text = (el.get_attribute("innerText") or "").strip()
-            if text:
-                return text
-        params = parse_qs(urlparse(self.driver.current_url).query)
-        return params.get("d", [""])[0]
+            return (el.get_attribute("innerText") or "").strip()
+        return ""
 
     def get_error_learn_more_link(self) -> WebElement:
         """Get the 'Learn more' link element."""
