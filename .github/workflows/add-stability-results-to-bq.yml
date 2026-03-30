@@ -40,10 +40,6 @@ jobs:
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
-      - name: Install dependencies
-        run: |
-          pip install requests google-cloud-bigquery
-
       - name: Add JSON artifacts into BigQuery
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
