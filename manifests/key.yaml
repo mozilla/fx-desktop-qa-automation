@@ -805,7 +805,7 @@ password_manager:
     result: pass
     splits:
     - smoke
-  test_etdl_facebook_credentials:
+  test_etld_facebook_credentials:
     result: pass
     splits:
     - functional1
