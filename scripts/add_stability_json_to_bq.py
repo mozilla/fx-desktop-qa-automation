@@ -110,11 +110,11 @@ def download_artifact_zip(artifact_id: int) -> bytes:
 
 def parse_json_reports(zip_bytes: bytes) -> List[dict]:
     reports: List[dict] = []
-    zf = zipfile.ZipFile(io.BytesIO(zip_bytes))
-    for name in zf.namelist():
-        if name.lower().endswith(".json"):
-            raw = zf.read(name).decode("utf-8", errors="replace")
-            reports.append(json.loads(raw))
+    with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
+        for name in zf.namelist():
+            if name.lower().endswith(".json"):
+                raw = zf.read(name).decode("utf-8", errors="replace")
+                reports.append(json.loads(raw))
     return reports
 
 
