@@ -122,8 +122,9 @@ def dedupe(run_list: list) -> list:
 if __name__ == "__main__":
     manifest = TestKey(MANIFEST_KEY)
 
-    if os.environ.get("STARFOX_CATEGORY"):
-        category = os.environ["STARFOX_CATEGORY"]
+    category = os.environ.get("STARFOX_CATEGORY")
+    if category:
+        category = category.lower()
         split_name = os.environ.get("STARFOX_SPLIT", "all")
 
         # platform MUST be set by the job environment (win|mac|linux)
@@ -134,6 +135,11 @@ if __name__ == "__main__":
             )
 
         platform = platform.lower()
+        if platform not in SUPPORTED_OSES:
+            raise SystemExit(
+                f"Unsupported STARFOX_PLATFORM: '{platform}'. Expected one of: {', '.join(SUPPORTED_OSES)}."
+            )
+
         print(
             f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'..."
         )
@@ -143,6 +149,7 @@ if __name__ == "__main__":
             split_name=split_name, platform=platform, category=category
         )
         run_list = dedupe(run_list)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
         sys.exit(0)
@@ -153,9 +160,10 @@ if __name__ == "__main__":
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
-            sys.exit(0)
+        sys.exit(0)
 
     re_obj = {
         "test_re_string": r".*/.*/test_.*\.py",

@@ -1514,3 +1514,10 @@ class Navigation(BasePage):
     def dismiss_password_doorhanger(self):
         """Dismiss the Password Manager doorhanger using ESC."""
         self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
+
+    @BasePage.context_chrome
+    def toggle_vertical_tabs(self) -> BasePage:
+        """Toggle vertical tabs via the toolbar context menu."""
+        self.context_click("toolbar-blank-space")
+        self.context_menu.click_and_hide_menu("context-menu-vertical-tabs")
+        return self

@@ -66,6 +66,27 @@ class ContextMenu(BasePage):
                 f'Search term "{tile_title}" not found in label: "{label}"'
             )
 
+    @BasePage.context_chrome
+    def bookmark_tab_via_context_menu(self) -> BasePage:
+        """Click 'Bookmark Tab' in the tab context menu, dismiss the menu, then
+        confirm the Add Bookmark dialog by clicking its Save button via JS.
+
+        The dialog renders inside browser.dialogFrame > #document >
+        dialog#bookmarkpropertiesdialog (shadow root), so JS is used to pierce
+        through contentDocument and shadow DOM.
+        """
+        self.click_context_item("context-menu-bookmark-tab")
+        self.hide_popup("tabContextMenu")
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser.dialogFrame')?.contentDocument;"
+                "const btn = cd?.querySelector('dialog#bookmarkpropertiesdialog')"
+                "?.shadowRoot?.querySelector('button[dlgtype=\"accept\"]');"
+                "if (btn) { btn.click(); return true; }"
+            )
+        )
+        return self
+
 
 class AboutDownloadsContextMenu(ContextMenu):
     """

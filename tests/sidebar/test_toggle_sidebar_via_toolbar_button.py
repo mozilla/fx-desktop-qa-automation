@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_sidebar import Sidebar
+from modules.browser_object import Sidebar
 from modules.page_object_prefs import AboutPrefs
 
 

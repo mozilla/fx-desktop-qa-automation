@@ -7,7 +7,7 @@ from modules.page_object import GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "446392"
+    return "deprecated"
 
 
 urls = [

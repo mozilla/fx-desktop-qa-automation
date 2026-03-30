@@ -15,7 +15,7 @@ from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
-FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)-build(\d+)")
 FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
@@ -130,6 +130,18 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", beta)
             .split("-")[0]
+        )
+    elif channel == "Rc":
+        logging.info(f"Release Candidate: {version_str}")
+        version_match = FX_RC_VERSION_RE.match(version_str)
+        (major, minor, build) = [version_match[n] for n in range(1, 4)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
+            .replace("{minor}", minor)
+            .replace("b{beta}", "")
+            .replace("{build}", build)
         )
     elif version_match:
         logging.info(version_match)
@@ -382,7 +394,7 @@ def reportable(platform_to_test=None):
     channel_milestone = tr_session.matching_submilestone(
         major_milestone, f"{channel} {ctx['major_number']}"
     )
-    if not channel_milestone and channel == "Devedition":
+    if not channel_milestone and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = tr_session.matching_submilestone(
             major_milestone, f"Beta {ctx['major_number']}"
         )
@@ -767,6 +779,23 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     entry = suite_entries[0]
     config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
+    # Sometimes, we get entries with null descriptions, not sure why
+    if not entry.get("description"):
+        logging.warning(f"Entry {entry.get('id')} is malformed, missing description")
+        testrail_session.update_plan_entry(
+            plan_id, entry.get("id"), description="Automation-generated test plan entry"
+        )
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+        entry = suite_entries[0]
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
     logging.info(f"config runs {config_runs}")
     logging.warning(
         f"plan_id: {plan_id} -- entry_id: {entry.get('id')} -- "
@@ -907,7 +936,7 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
-    if (not channel_milestone) and channel == "Devedition":
+    if (not channel_milestone) and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = testrail_session.matching_submilestone(
             major_milestone, f"Beta {major}"
         )
