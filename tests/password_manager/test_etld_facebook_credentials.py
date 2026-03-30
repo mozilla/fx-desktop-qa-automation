@@ -174,7 +174,9 @@ def _wait_for_field_value(
     field_name: str,
     expected_value: str,
 ) -> None:
-    web_page.expect(lambda _: _field_value_equals(web_page, field_name, expected_value))
+    web_page.expect(
+        lambda _: _field_value_equals(web_page, field_name, expected_value)
+    )
 
 
 def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
