@@ -3,7 +3,6 @@ import time
 from urllib.parse import urlparse
 
 import pytest
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
@@ -44,7 +43,6 @@ def add_to_prefs_list():
 
 @pytest.fixture()
 def temp_selectors():
-    # Facebook login fields + cookie dialog controls (content DOM)
     return {
         "facebook-username-field": {
             "selectorData": "input[name='email']",
@@ -56,7 +54,6 @@ def temp_selectors():
             "strategy": "css",
             "groups": ["doNotCache"],
         },
-        # Cookie consent modal (may or may not appear)
         "facebook-cookie-dialog": {
             "selectorData": (
                 "//div[@role='dialog'][.//text()[contains(.,'cookies') or contains(.,'Cookies')]]"
@@ -157,25 +154,38 @@ def _get_username_order_in_popup(autofill_popup: AutofillPopup) -> list[str]:
     return order
 
 
-def _get_field_value(web_page: GenericPage, field_name: str) -> str:
-    return web_page.get_element(field_name).get_attribute("value") or ""
-
-
-def _field_value_equals(
+def _choose_username_from_popup(
+    driver: Firefox,
     web_page: GenericPage,
+    autofill_popup: AutofillPopup,
     field_name: str,
-    expected_value: str,
-) -> bool:
-    return _get_field_value(web_page, field_name) == expected_value
-
-
-def _wait_for_field_value(
-    web_page: GenericPage,
-    field_name: str,
-    expected_value: str,
+    desired_username: str,
 ) -> None:
+    web_page.click_on(field_name)
+    autofill_popup.ensure_autofill_dropdown_visible()
+
+    with driver.context(driver.CONTEXT_CHROME):
+        order = _get_username_order_in_popup(autofill_popup)
+
+        assert desired_username in order, (
+            f"'{desired_username}' not found in popup. Order={order}"
+        )
+
+        target_item = None
+        for item in autofill_popup.get_elements("select-form-option"):
+            if item.get_attribute("ac-value") == desired_username:
+                target_item = item
+                break
+
+        assert target_item is not None, (
+            f"Could not find popup item for '{desired_username}'. Order={order}"
+        )
+
+        driver.execute_script("arguments[0].click();", target_item)
+
     web_page.expect(
-        lambda _: _field_value_equals(web_page, field_name, expected_value)
+        lambda _: (web_page.get_element(field_name).get_attribute("value") or "")
+        == desired_username
     )
 
 
@@ -191,68 +201,6 @@ def _dismiss_facebook_cookies_if_present(page: GenericPage) -> None:
     if btn:
         page.driver.execute_script("arguments[0].click();", btn)
         time.sleep(0.5)
-
-
-def _choose_username_via_keyboard(
-    driver: Firefox,
-    web_page: GenericPage,
-    autofill_popup: AutofillPopup,
-    field_name: str,
-    desired_username: str,
-) -> None:
-    web_page.click_on(field_name)
-
-    try:
-        autofill_popup.ensure_autofill_dropdown_visible()
-    except TimeoutException:
-        if _field_value_equals(web_page, field_name, desired_username):
-            return
-        raise AssertionError(
-            f"Autofill dropdown did not appear and field '{field_name}' "
-            f"did not autofill '{desired_username}'. Current value="
-            f"'{_get_field_value(web_page, field_name)}'"
-        )
-
-    with driver.context(driver.CONTEXT_CHROME):
-        order = _get_username_order_in_popup(autofill_popup)
-
-    assert desired_username in order, (
-        f"'{desired_username}' not found in popup. Order={order}"
-    )
-
-    field_el = web_page.get_element(field_name)
-
-    # Reset highlight deterministically by moving focus to the field again.
-    web_page.click_on(field_name)
-
-    max_moves = len(order) + 2
-    for _ in range(max_moves):
-        if _field_value_equals(web_page, field_name, desired_username):
-            return
-
-        field_el.send_keys(Keys.ARROW_DOWN)
-        time.sleep(0.05)
-        field_el.send_keys(Keys.ENTER)
-
-        try:
-            _wait_for_field_value(web_page, field_name, desired_username)
-            return
-        except TimeoutException:
-            pass
-
-        # Re-open dropdown if ENTER closed it without selecting the desired item.
-        web_page.click_on(field_name)
-        try:
-            autofill_popup.ensure_autofill_dropdown_visible()
-        except TimeoutException:
-            if _field_value_equals(web_page, field_name, desired_username):
-                return
-
-    raise AssertionError(
-        f"Could not select '{desired_username}' from autofill popup for field "
-        f"'{field_name}'. Final value='{_get_field_value(web_page, field_name)}', "
-        f"popup order={order}"
-    )
 
 
 def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
@@ -282,7 +230,7 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     _dismiss_facebook_cookies_if_present(web_page)
 
     # Step 3: select the eTLD+1 credential
-    _choose_username_via_keyboard(
+    _choose_username_from_popup(
         driver, web_page, autofill_popup, "facebook-username-field", ETLD_USERNAME
     )
 
@@ -331,7 +279,7 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     chosen_url = "https://fr-fr.facebook.com/"
     chosen_username, chosen_password = SUBDOMAIN_CREDENTIALS[chosen_url]
 
-    _choose_username_via_keyboard(
+    _choose_username_from_popup(
         driver, web_page, autofill_popup, "facebook-username-field", chosen_username
     )
 
@@ -359,7 +307,7 @@ def test_logins_autocomplete_includes_etld_plus_one_and_subdomains(
     assert entries_pw[ETLD_USERNAME] == FROM_THIS_WEBSITE_TEXT
 
     # Step 7: select a username from password dropdown -> password fills (masked)
-    _choose_username_via_keyboard(
+    _choose_username_from_popup(
         driver, web_page, autofill_popup, "facebook-password-field", chosen_username
     )
 
