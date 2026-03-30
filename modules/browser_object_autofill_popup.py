@@ -1,6 +1,7 @@
 import time
 from typing import Union
 
+from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -153,6 +154,12 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def type_username_in_password_doorhanger(self, username: str) -> BasePage:
         """Type a username into the Password Manager doorhanger."""
+        self.element_clickable("password-notification-username-field")
         field = self.get_element("password-notification-username-field")
         field.send_keys(username)
         return self
+
+    @BasePage.context_chrome
+    def dismiss_password_doorhanger(self):
+        """Dismiss the Password Manager doorhanger using ESC."""
+        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)

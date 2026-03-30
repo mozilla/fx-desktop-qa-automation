@@ -401,13 +401,21 @@ class AboutLogins(BasePage):
         assert cursor == "pointer", f"Expected pointer cursor, got {cursor}"
 
     def assert_username_present(self, username: str):
-        """Verify that a username is present in the visible login list."""
+        self.wait.until(
+            lambda d: any(
+                r.get_attribute("username") == username
+                for r in self.get_elements("login-list-item")
+            )
+        )
+
         results = self.get_elements("login-list-item")
-        visible_results = [r for r in results if r.is_displayed()]
+        usernames = [
+            r.get_attribute("username")
+            for r in results
+            if r.is_displayed()
+        ]
 
-        usernames_in_ui = [r.get_attribute("username") for r in visible_results]
-
-        assert username in usernames_in_ui, f"{username} not found in saved logins"
+        assert username in usernames, f"{username} not found in saved logins"
 
 
 class AboutPrivatebrowsing(BasePage):

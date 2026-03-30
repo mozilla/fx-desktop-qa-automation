@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.browser_object_autofill_popup import AutofillPopup
 from modules.browser_object_navigation import Navigation
 from modules.page_object_autofill import LoginAutofill
 
@@ -26,6 +27,7 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
     # Instantiate objects
     login_autofill = LoginAutofill(driver)
     nav = Navigation(driver)
+    autofill_popup_panel = AutofillPopup(driver)
 
     # Access a website that requires a username and password
     login_autofill.open()
@@ -44,7 +46,7 @@ def test_password_field_only_triggers_dismissed_doorhanger(driver: Firefox):
     nav.element_visible("password-notification-popup")
 
     # Dismiss the doorhanger
-    nav.dismiss_password_doorhanger()
+    autofill_popup_panel.dismiss_password_doorhanger()
 
     # The doorhanger is closed and the grey key icon is still displayed
     nav.element_not_visible("password-notification-popup")
