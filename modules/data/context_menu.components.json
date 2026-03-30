@@ -287,5 +287,10 @@
         "selectorData": "context_bookmarkTab",
         "strategy": "id",
         "groups": []
+    },
+    "context-menu-toggle-mute-tab": {
+        "selectorData": "context_toggleMuteTab",
+        "strategy": "id",
+        "groups": []
     }
 }
