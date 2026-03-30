@@ -213,6 +213,11 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-use-saved-password": {
+        "selectorData": "fill-login",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-reveal-password": {
         "selectorData": "context-reveal-password",
         "strategy": "id",
@@ -248,6 +253,11 @@
         "strategy": "css",
         "groups": []
     },
+    "context-close-duplicate-tabs": {
+        "selectorData": "context_closeDuplicateTabs",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-vertical-tabs": {
         "selectorData": "toolbar-context-toggle-vertical-tabs",
         "strategy": "id",
@@ -270,6 +280,11 @@
     },
     "context-menu-toolbar-add-bookmark": {
         "selectorData": "placesContext_new:bookmark",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-bookmark-tab": {
+        "selectorData": "context_bookmarkTab",
         "strategy": "id",
         "groups": []
     }

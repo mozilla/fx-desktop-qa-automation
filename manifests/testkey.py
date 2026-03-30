@@ -26,7 +26,10 @@ def normalize_result_platforms(result: dict) -> dict:
 
 
 def sysname():
-    sys_platform = platform.system().lower()
+    if (env_sys := os.environ.get("FX_PLATFORM")) is not None:
+        sys_platform = env_sys.lower()
+    else:
+        sys_platform = platform.system().lower()
     if sys_platform.startswith("darwin"):
         return "mac"
     elif sys_platform.startswith("win"):

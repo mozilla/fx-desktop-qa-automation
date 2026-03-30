@@ -22,9 +22,8 @@ on:
         default: "pass"
         type: string
 env:
-  STARFOX_SPLIT: ${{ inputs.test_set }}
-  STARFOX_CATEGORY: ${{ inputs.test_category }}
   FX_CHANNEL: ${{ inputs.channel }}
+  STARFOX_CATEGORY: ${{ inputs.test_category }}
   SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
 
 jobs:
@@ -43,11 +42,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Set Environment (Stability Check)
+      - name: Set CI Environment (Stability Check)
+        shell: pwsh
         run: |
-          echo "TESTRAIL_REPORT=false" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          "STARFOX_SPLIT=${{ inputs.test_set }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "REPORTABLE=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Install dependencies
+        shell: pwsh
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -57,27 +60,27 @@ jobs:
           pipenv install;
 
       - name: Download Geckodriver
+        shell: pwsh
         run: |
           $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
           echo $gecko_url
           Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
           echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        shell: pwsh
 
       - name: Download Beta
+        shell: pwsh
         run: |
           $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
           echo $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
-        shell: pwsh
 
       - name: Install Beta
         id: setup
+        shell: pwsh
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
-        shell: pwsh
 
       - name: Select Tests (Win)
         id: select
@@ -89,7 +92,10 @@ jobs:
         if: ${{steps.select.conclusion == 'success'}}
         shell: pwsh
         run: |
-          Write-Host "Selected tests: "
+          $testCount = (Get-Content selected_tests | Where-Object { $_.Trim() -ne "" }).Count
+          Write-Host "Total test scripts selected: $testCount"
+
+          Write-Host "Selected tests:"
           Get-Content selected_tests
 
       - name: Test Fx Version (Win)
@@ -130,10 +136,9 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         shell: pwsh
         run: |
-          rm ./pyproject.toml;
+          Remove-Item -Path ./pyproject.toml -ErrorAction SilentlyContinue
           mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
 
-          # Ensure junit output directory exists
           New-Item -ItemType Directory -Force -Path test-results | Out-Null
 
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
@@ -185,21 +190,23 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set CI Environment (Stability Check)
+        run: |
+          echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+          echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
+          echo "REPORTABLE=false" >> "$GITHUB_ENV"
+
       - name: Check test case numbers
         run: |
           python scripts/check_test_cases.py
           exit $?
-
-      - name: Set Environment (Stability Check)
-        run: |
-          echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV";
 
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
+          rm -f ./pyproject.toml;
           mv ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
           pipenv install
 
@@ -216,7 +223,10 @@ jobs:
       - name: Print Selected Tests (MacOS)
         if: ${{steps.select.conclusion == 'success'}}
         run: |
-          echo "Selected tests: "
+          test_count=$(grep -cve '^\s*$' selected_tests)
+          echo "Total test scripts selected: $test_count"
+
+          echo "Selected tests:"
           cat selected_tests
 
       - name: Test Fx Version (MacOS)
@@ -247,7 +257,7 @@ jobs:
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
-      - name: Upload JSON (Mac)
+      - name: Upload JSON (MacOS)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -259,19 +269,14 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
-
-          # Ensure junit output directory exists
           mkdir -p test-results
-
+          rm -f ./pyproject.toml
           mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
-
-          # Run pytest and write junit xml
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 || TEST_EXIT_CODE=$?
-
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
-      - name: Upload JSON (Mac headed)
+      - name: Upload JSON (MacOS headed)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -310,7 +315,7 @@ jobs:
           name: artifacts-win
           path: artifacts-win
 
-      - name: List downloaded Win files
+      - name: List downloaded Windows files
         run: ls artifacts-win/
 
       - name: Run script with secret (Win)
@@ -353,7 +358,7 @@ jobs:
       - name: List downloaded MacOS files
         run: ls artifacts-mac/
 
-      - name: Run script with secret (Mac)
+      - name: Run script with secret (MacOS)
         env:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
           GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
