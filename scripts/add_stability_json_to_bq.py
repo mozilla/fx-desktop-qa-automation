@@ -10,7 +10,6 @@ from typing import Dict, List, Optional, Set
 import requests
 from google.cloud import bigquery
 
-
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 REPO = os.environ["REPO"]
 TARGET_WORKFLOW_FILE = os.environ.get("TARGET_WORKFLOW_FILE", "main-stability.yml")
