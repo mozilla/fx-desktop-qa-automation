@@ -1932,7 +1932,6 @@ Location: Any pinned browser tab
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
-```
 Selector Name: context-menu-toggle-mute-tab
 Selector Data: "context_toggleMuteTab"
 Description: Tab context click option "Mute Tab" / "Unmute Tab" — single toggle element whose label changes based on tab audio state
