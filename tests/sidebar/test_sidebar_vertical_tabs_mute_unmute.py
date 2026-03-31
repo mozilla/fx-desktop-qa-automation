@@ -19,6 +19,7 @@ def add_to_prefs_list():
     ]
 
 
+@pytest.mark.audio
 def test_sidebar_vertical_tabs_mute_unmute(driver: Firefox):
     """
     C2652383 - Verify that vertical tabs in the sidebar can be muted and unmuted via context menu option and keyboard
@@ -49,10 +50,10 @@ def test_sidebar_vertical_tabs_mute_unmute(driver: Firefox):
     tabs.hide_popup("tabContextMenu")
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
 
-    # Mute via CTRL+M (CMD+M on Mac) and verify
+    # Mute via CTRL+M and verify
     tabs.toggle_mute_shortcut()
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
 
-    # Unmute via CTRL+M (CMD+M on Mac) and verify
+    # Unmute via CTRL+M and verify
     tabs.toggle_mute_shortcut()
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
