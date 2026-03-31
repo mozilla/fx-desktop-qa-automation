@@ -11,14 +11,14 @@
         "groups": ["doNotCache"]
     },
     "error-short-description": {
-        "selectorData": "netErrorIntro",
-        "strategy": "id",
+        "selectorData": "#error-intro strong",
+        "strategy": "css",
         "shadowParent": "net-error-card",
         "groups": ["doNotCache"]
     },
     "error-learn-more-link": {
-        "selectorData": "neterror-learn-more-link",
-        "strategy": "id",
+        "selectorData": "#error-learn-more-link",
+        "strategy": "css",
         "shadowParent": "net-error-card",
         "groups": ["doNotCache"]
     }
