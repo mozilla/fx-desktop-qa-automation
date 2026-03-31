@@ -10,6 +10,7 @@ from time import sleep
 from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
+import Xlib.XK
 from faker import Faker
 from faker.config import AVAILABLE_LOCALES
 from faker.providers import internet, misc
@@ -25,6 +26,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
+from Xlib import X
+from Xlib.display import Display
+from Xlib.ext.xtest import fake_input
 
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
@@ -971,3 +975,8 @@ class PomUtils:
             if not matches:
                 logging.info("No matches found.")
             return matches
+
+
+class LinuxAuto:
+    def __init__(self):
+        self._display = Display(os.environ.get("DISPLAY"))

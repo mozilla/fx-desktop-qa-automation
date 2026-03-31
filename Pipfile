@@ -30,6 +30,7 @@ pyautogui = "*"
 brotli = "*"
 opencv-python = "*"
 python-dev-tools = "*"
+python3-xlib = "*"
 
 [dev-packages]
 werkzeug = "==3.0.3"

@@ -27,7 +27,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.util import PomUtils
+from modules.util import PomUtil
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {
@@ -1019,9 +1019,18 @@ class BasePage(Page):
         Uses pyautogui. Tries image-match click first, then falls back to pressing
         Enter if the image is not found or if it still matches after the click.
         """
-        import pyautogui
 
         system = platform.system()
+        if system == "Linux":
+            from modules.util import LinuxAuto
+
+            linux_auto = LinuxAuto()
+            linux_auto.press("Return")
+            time.sleep(1.5)
+            return
+
+        import pyautogui
+
         if system == "Windows":
             button_img = os.path.join("data", "win_save_button.png")
         elif system == "Darwin":
