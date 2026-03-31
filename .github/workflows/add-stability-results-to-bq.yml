@@ -9,7 +9,7 @@ on:
         default: "5"
         type: string
       platform:
-        description: "Platform that could be either all or win or mac"
+        description: "Platform to report, options: all, win, mac"
         required: true
         default: 'all'
         type: string
@@ -38,7 +38,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
           pipenv install;
 
       - name: Auth to Google Cloud
