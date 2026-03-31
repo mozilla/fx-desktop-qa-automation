@@ -7,6 +7,8 @@ from modules.page_object_autofill import LoginAutofill
 
 PASSWORD = "testPassword"
 USERNAME = "testUsername"
+EDIT_USERNAME = "12"
+EXPECTED_USERNAME = f"{USERNAME}{EDIT_USERNAME}"
 
 
 @pytest.fixture()
@@ -37,22 +39,24 @@ def test_username_edit_captured_in_dismissed_doorhanger(driver: Firefox):
     # Fill in only the password field
     login_form.fill_password(PASSWORD)
 
+    # Fill in the username field and click on the grey key icon from the address bar
+    login_form.fill_username(USERNAME)
+
     # Click the Password Manager key icon
     nav.click_on("password-notification-key")
 
-    # Check that only password is displayed in the doorhanger
+    # The previously filled username is also added in the doorhanger
     autofill_popup_panel.verify_username_value(USERNAME)
 
-    # Fill in the username field and click on the grey key icon from the address bar
-    login_form.fill_password(PASSWORD)
-
-    # Click the Password Manager key icon
-    nav.click_on("password-notification-key")
-
-    # The previously filled username is also added in the dismissed doorhanger
+    # Dismiss the doorhanger
+    nav.dismiss_password_doorhanger()
+    nav.element_not_visible("password-notification-popup")
 
     # Edit the username field from the login form several times
+    login_form.fill_username(EDIT_USERNAME)
 
     # Check if the edits are reflected in the dismissed doorhanger
+    nav.click_on("password-notification-key")
 
     # Username field edits are captured in the dismissed doorhanger
+    autofill_popup_panel.verify_username_value(EXPECTED_USERNAME)
