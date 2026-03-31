@@ -135,6 +135,22 @@ class TabBar(BasePage):
             assert False, "Error checking tab pinned status"
 
     @BasePage.context_chrome
+    def toggle_mute_shortcut(self) -> BasePage:
+        """Toggle mute on the current tab using the CTRL+M keyboard shortcut"""
+        self.actions.key_down(Keys.CONTROL).send_keys("m").key_up(
+            Keys.CONTROL
+        ).perform()
+        return self
+
+    @BasePage.context_chrome
+    def close_tab_shortcut(self) -> BasePage:
+        """Close the current tab using the CTRL+W keyboard shortcut"""
+        self.actions.key_down(Keys.CONTROL).send_keys("w").key_up(
+            Keys.CONTROL
+        ).perform()
+        return self
+
+    @BasePage.context_chrome
     def click_tab_mute_button(self, identifier: Union[str, int]) -> BasePage:
         """Click the tab icon overlay, no matter what's happening with media"""
         logging.info(f"toggling tab mute for {identifier}")

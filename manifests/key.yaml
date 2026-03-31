@@ -1241,7 +1241,15 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_vertical_tabs_closing_options:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tabs_move_options:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_mute_unmute:
     result: pass
     splits:
     - functional2
