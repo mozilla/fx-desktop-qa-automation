@@ -52,7 +52,7 @@ def test_username_edit_captured_in_dismissed_doorhanger(driver: Firefox):
     autofill_popup_panel.dismiss_password_doorhanger()
     nav.element_not_visible("password-notification-popup")
 
-    # Edit the username field from the login form several times
+    # Edit the username field from the login form
     login_form.fill_username(EDIT_USERNAME)
 
     # Check if the edits are reflected in the dismissed doorhanger
