@@ -158,10 +158,10 @@
     "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
     "strategy": "css",
     "groups": []
-    },
+  },
   "password-notification-username-field": {
     "selectorData": "password-notification-username",
     "strategy": "id",
     "groups": []
-    }
+  }
 }

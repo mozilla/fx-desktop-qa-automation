@@ -156,11 +156,10 @@ class AutofillPopup(BasePage):
         self, expected_username: str, field: str = "password-notification-username-field"
     ) -> WebElement:
         """Wait until the username field contains the expected value."""
-        element = self.get_element(field)
         self.wait.until(
-            lambda _: element.get_attribute("value") == expected_username
+            lambda _: self.get_element(field).get_attribute("value") == expected_username
         )
-        return element
+        return self.get_element(field)
 
     @BasePage.context_chrome
     def dismiss_password_doorhanger(self):
