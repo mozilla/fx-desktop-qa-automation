@@ -10,7 +10,6 @@ from time import sleep
 from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
-import Xlib.XK
 from faker import Faker
 from faker.config import AVAILABLE_LOCALES
 from faker.providers import internet, misc
@@ -26,12 +25,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
-from Xlib import X
-from Xlib.display import Display
-from Xlib.ext.xtest import fake_input
 
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
+
+if platform.system() == "Linux":
+    import Xlib.XK
+    from Xlib import X
+    from Xlib.display import Display
+    from Xlib.ext.xtest import fake_input
 
 
 def env_true(name: str) -> bool:

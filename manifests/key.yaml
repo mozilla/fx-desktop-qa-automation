@@ -677,7 +677,7 @@ notifications:
   test_cancel_webextension:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_deny_geolocation:
     result: pass
     splits:
@@ -689,15 +689,15 @@ notifications:
   test_downloads_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_downloads_finished_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -727,7 +727,7 @@ password_manager:
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
