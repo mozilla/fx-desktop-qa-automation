@@ -1,4 +1,5 @@
 import logging
+import platform
 from typing import Union
 
 from selenium.common.exceptions import NoSuchElementException
@@ -136,10 +137,9 @@ class TabBar(BasePage):
 
     @BasePage.context_chrome
     def toggle_mute_shortcut(self) -> BasePage:
-        """Toggle mute on the current tab using the CTRL+M keyboard shortcut"""
-        self.actions.key_down(Keys.CONTROL).send_keys("m").key_up(
-            Keys.CONTROL
-        ).perform()
+        """Toggle mute on the current tab using the CTRL+M / CMD+M keyboard shortcut"""
+        modifier = Keys.COMMAND if platform.system() == "Darwin" else Keys.CONTROL
+        self.actions.key_down(modifier).send_keys("m").key_up(modifier).perform()
         return self
 
     @BasePage.context_chrome

@@ -13,7 +13,10 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("browser.tabs.delayHidingAudioPlayingIconMS", "200")]
+    return [
+        ("sidebar.revamp", True),
+        ("browser.tabs.delayHidingAudioPlayingIconMS", "200"),
+    ]
 
 
 def test_sidebar_vertical_tabs_mute_unmute(driver: Firefox):
@@ -46,10 +49,10 @@ def test_sidebar_vertical_tabs_mute_unmute(driver: Firefox):
     tabs.hide_popup("tabContextMenu")
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
 
-    # Mute via CTRL+M and verify
+    # Mute via CTRL+M (CMD+M on Mac) and verify
     tabs.toggle_mute_shortcut()
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.MUTED)
 
-    # Unmute via CTRL+M and verify
+    # Unmute via CTRL+M (CMD+M on Mac) and verify
     tabs.toggle_mute_shortcut()
     tabs.expect_tab_sound_status(1, tabs.MEDIA_STATUS.PLAYING)
