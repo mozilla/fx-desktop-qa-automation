@@ -155,13 +155,13 @@
     "groups": []
   },
   "manage-passwords": {
-        "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
-        "strategy": "css",
-        "groups": []
+    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
+    "strategy": "css",
+    "groups": []
     },
   "password-notification-username-field": {
-        "selectorData": "password-notification-username",
-        "strategy": "id",
-        "groups": []
+    "selectorData": "password-notification-username",
+    "strategy": "id",
+    "groups": []
     }
 }

@@ -1,6 +1,7 @@
 import time
 from typing import Union
 
+from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -152,11 +153,16 @@ class AutofillPopup(BasePage):
 
     @BasePage.context_chrome
     def verify_username_value(
-            self, expected_username: str, field: str = "password-notification-username-field"
-    ):
+        self, expected_username: str, field: str = "password-notification-username-field"
+    ) -> WebElement:
         """Wait until the username field contains the expected value."""
         element = self.get_element(field)
         self.wait.until(
             lambda _: element.get_attribute("value") == expected_username
         )
         return element
+
+    @BasePage.context_chrome
+    def dismiss_password_doorhanger(self):
+        """Dismiss the Password Manager doorhanger using ESC."""
+        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)

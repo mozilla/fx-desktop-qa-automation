@@ -744,11 +744,6 @@
         "strategy": "id",
         "groups": []
     },
-    "password-notification-username-field": {
-        "selectorData": "password-notification-username",
-        "strategy": "id",
-        "groups": []
-    },
     "password-notification-save-button": {
         "selectorData": "button.popup-notification-primary-button[label='Save']",
         "strategy": "css",

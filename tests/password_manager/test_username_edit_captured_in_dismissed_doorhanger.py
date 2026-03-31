@@ -39,7 +39,7 @@ def test_username_edit_captured_in_dismissed_doorhanger(driver: Firefox):
     # Fill in only the password field
     login_form.fill_password(PASSWORD)
 
-    # Fill in the username field and click on the grey key icon from the address bar
+    # Fill in the username field
     login_form.fill_username(USERNAME)
 
     # Click the Password Manager key icon
@@ -49,7 +49,7 @@ def test_username_edit_captured_in_dismissed_doorhanger(driver: Firefox):
     autofill_popup_panel.verify_username_value(USERNAME)
 
     # Dismiss the doorhanger
-    nav.dismiss_password_doorhanger()
+    autofill_popup_panel.dismiss_password_doorhanger()
     nav.element_not_visible("password-notification-popup")
 
     # Edit the username field from the login form several times
