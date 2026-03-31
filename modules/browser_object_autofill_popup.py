@@ -153,11 +153,15 @@ class AutofillPopup(BasePage):
 
     @BasePage.context_chrome
     def verify_username_value(
-        self, expected_username: str, field: str = "password-notification-username-field"
+        self,
+        expected_username: str,
+        field: str = "password-notification-username-field",
     ) -> WebElement:
         """Wait until the username field contains the expected value."""
         self.wait.until(
-            lambda _: self.get_element(field).get_attribute("value") == expected_username
+            lambda _: (
+                self.get_element(field).get_attribute("value") == expected_username
+            )
         )
         return self.get_element(field)
 
