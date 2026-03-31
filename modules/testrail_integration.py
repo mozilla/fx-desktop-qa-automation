@@ -759,6 +759,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             name=suite_description,
             description="Automation-generated test plan entry",
             case_ids=cases_in_suite,
+            config_ids=[config_id],
         )
 
         expected_plan = testrail_session.matching_plan_in_milestone(
