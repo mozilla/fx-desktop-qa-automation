@@ -980,3 +980,8 @@ class PomUtils:
 class LinuxAuto:
     def __init__(self):
         self._display = Display(os.environ.get("DISPLAY"))
+
+    def press(self, key):
+        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(key))
+        fake_input(self._display, X.KeyPress, keycode)
+        self._display.sync()
