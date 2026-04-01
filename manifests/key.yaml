@@ -1249,10 +1249,6 @@ sidebar:
     result: pass
     splits:
     - functional2
-  test_sidebar_vertical_tabs_mute_unmute:
-    result: pass
-    splits:
-    - functional2
   test_switch_between_horizontal_vertical_tabs:
     result: pass
     splits:
