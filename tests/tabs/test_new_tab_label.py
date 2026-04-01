@@ -11,7 +11,7 @@ def test_case():
     return "1339887"
 
 def search_and_retrieve(driver:Firefox, alreadySearched):
-    if alreadySearched == False:
+    if not alreadySearched:
         searchBox = driver.find_element(By.ID, "search")
         searchBox.send_keys("context-openANewTab")
     else:
