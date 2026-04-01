@@ -1384,6 +1384,20 @@ Description: Saved passwords button in about:preferences#privacy
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: change-primary-password
+Selector Data: "changeMasterPassword"
+Description: Change primary password button in about:preferences#privacy
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-primary-password
+Selector Data: "oldpw"
+Description: Input for current password
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
