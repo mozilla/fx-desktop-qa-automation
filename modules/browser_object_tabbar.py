@@ -330,6 +330,16 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def close_tab_by_middle_click(self, identifier: Union[str, int]) -> BasePage:
+        """Close a tab by middle-clicking it using W3C pointer actions"""
+        tab = self.get_tab(identifier)
+        self.actions.move_to_element(tab).perform()
+        self.actions.w3c_actions.pointer_action.pointer_down(1)
+        self.actions.w3c_actions.pointer_action.pointer_up(1)
+        self.actions.perform()
+        return self
+
+    @BasePage.context_chrome
     def close_last_n_tabs(self, total_tabs: int, count: int) -> "TabBar":
         """
         Close the last N tabs in the current window, starting from the rightmost tab.
