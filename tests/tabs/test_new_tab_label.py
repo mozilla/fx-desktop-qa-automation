@@ -25,14 +25,14 @@ def search_and_retrieve(driver:Firefox, alreadySearched):
     return value
 
 #def step_3_search_and_retrieve(driver:Firefox):
-    driver.switch_to.window(driver.window_handles[1]) #switches to "about:telemetry"
-    #search 'context-openANewTab' will already cover 'toolbar-context-openANewTab' as well; just refresh
-    driver.refresh()
+    # driver.switch_to.window(driver.window_handles[1]) #switches to "about:telemetry"
+    # #search 'context-openANewTab' will already cover 'toolbar-context-openANewTab' as well; just refresh
+    # driver.refresh()
 
-    result = driver.find_element(By.XPATH, '//*[@id="toolbar-context-openANewTab"]')
-    # result.text returns "toolbar-context-openANewTab (value)"
-    value = result.text.split(" ")[-1]
-    return value
+    # result = driver.find_element(By.XPATH, '//*[@id="toolbar-context-openANewTab"]')
+    # # result.text returns "toolbar-context-openANewTab (value)"
+    # value = result.text.split(" ")[-1]
+    # return value
 
 
 def test_new_tab_label(driver:Firefox):
