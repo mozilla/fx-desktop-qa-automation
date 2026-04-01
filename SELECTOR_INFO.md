@@ -1394,8 +1394,8 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: current-primary-password
 Selector Data: "oldpw"
-Description: Input for current password
-Location: about:preferences#privacy
+Description: Input for current password in the Change Primary Password dialog
+Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles

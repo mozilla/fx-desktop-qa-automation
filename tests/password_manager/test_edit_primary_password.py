@@ -14,6 +14,11 @@ def test_case():
     return "2245180"
 
 
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 def test_edit_primary_password(driver: Firefox):
     """
     C2245180 - Verify that the Primary Password can be successfully changed

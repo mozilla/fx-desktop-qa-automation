@@ -697,11 +697,11 @@
   "change-primary-password": {
     "selectorData": "changeMasterPassword",
     "strategy": "id",
-    "groups": []
+    "groups": ["doNotCache"]
   },
   "current-primary-password": {
     "selectorData": "oldpw",
     "strategy": "id",
-    "groups": []
+    "groups": ["doNotCache"]
   }
 }
