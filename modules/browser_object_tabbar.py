@@ -1,4 +1,5 @@
 import logging
+import platform
 from typing import Union
 
 from selenium.common.exceptions import NoSuchElementException
@@ -136,10 +137,9 @@ class TabBar(BasePage):
 
     @BasePage.context_chrome
     def close_tab_shortcut(self) -> BasePage:
-        """Close the current tab using the CTRL+W keyboard shortcut"""
-        self.actions.key_down(Keys.CONTROL).send_keys("w").key_up(
-            Keys.CONTROL
-        ).perform()
+        """Close the current tab using the CTRL+W / CMD+W keyboard shortcut"""
+        modifier = Keys.COMMAND if platform.system() == "Darwin" else Keys.CONTROL
+        self.actions.key_down(modifier).send_keys("w").key_up(modifier).perform()
         return self
 
     @BasePage.context_chrome

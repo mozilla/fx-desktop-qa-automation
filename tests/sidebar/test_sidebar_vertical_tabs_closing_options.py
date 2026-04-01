@@ -32,7 +32,7 @@ def test_sidebar_vertical_tabs_closing_options(driver: Firefox):
     context_menu.click_and_hide_menu("context-menu-close-tab")
     tabs.wait_for_num_tabs(NUM_TABS - 1)
 
-    # Close a tab via CTRL+W
+    # Close a tab via CTRL+W (CMD+W on Mac)
     driver.switch_to.window(driver.window_handles[-1])
     tabs.close_tab_shortcut()
     tabs.wait_for_num_tabs(NUM_TABS - 2)
