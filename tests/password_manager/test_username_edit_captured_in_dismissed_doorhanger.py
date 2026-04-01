@@ -36,7 +36,7 @@ def test_username_edit_captured_in_dismissed_doorhanger(driver: Firefox):
     login_autofill.open()
     login_form = LoginAutofill.LoginForm(login_autofill)
 
-    # Fill in only the password field
+    # Fill in the password field
     login_form.fill_password(PASSWORD)
 
     # Fill in the username field
