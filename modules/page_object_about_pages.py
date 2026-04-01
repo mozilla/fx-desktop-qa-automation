@@ -402,7 +402,7 @@ class AboutLogins(BasePage):
 
     def assert_username_present(self, username: str):
         self.wait.until(
-            lambda d: any(
+            lambda _: any(
                 r.get_attribute("username") == username
                 for r in self.get_elements("login-list-item")
                 if r.is_displayed()
