@@ -20,7 +20,17 @@ def search_and_retrieve(driver:Firefox, alreadySearched):
         driver.refresh()
 
     result = driver.find_element(By.XPATH, '//*[@id="context-openANewTab"]')
-    # result.text returns "context-openANewTab 'value'"
+    # result.text returns "context-openANewTab (value)"
+    value = result.text.split(" ")[-1]
+    return value
+
+#def step_3_search_and_retrieve(driver:Firefox):
+    driver.switch_to.window(driver.window_handles[1]) #switches to "about:telemetry"
+    #search 'context-openANewTab' will already cover 'toolbar-context-openANewTab' as well; just refresh
+    driver.refresh()
+
+    result = driver.find_element(By.XPATH, '//*[@id="toolbar-context-openANewTab"]')
+    # result.text returns "toolbar-context-openANewTab (value)"
     value = result.text.split(" ")[-1]
     return value
 
@@ -51,17 +61,21 @@ def test_new_tab_label(driver:Firefox):
     result_2 = search_and_retrieve(driver, True)
     assert result_2 == "2", f"Expected 2 but got: {result_2}"
 
-    #Step 3
+    #Step 3: Modified
     tabs.context_click(second_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
     result_3 = search_and_retrieve(driver, True)
-
-    # Right clicking on tabBar updates "toolbar-context-openANewTab " instead of "context-openANewTab" in about:telemetry
-        # tabs.context_click_tabbar()
-        # tab_context_menu.click_and_hide_menu("toolbar-context-open-new-tab")
-        # result_3 = search_and_retrieve(driver, True)
-
     assert result_3 == "3", f"Expected 3 but got: {result_3}"
+
+    #Step 3: Original
+    # Right clicking on tabBar updates "toolbar-context-openANewTab" instead of "context-openANewTab" in about:telemetry
+
+    # tabs.context_click_tabbar()
+    # tab_context_menu.click_and_hide_menu("toolbar-context-open-new-tab")
+    # result_4 = step_3_search_and_retrieve(driver)
+    # assert result_4 == "1", f"Expected 1 but got: {result_4}"
+
+
 
 
 
