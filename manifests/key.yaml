@@ -420,10 +420,7 @@ downloads:
     - smoke
   test_download_pdf_from_context_menu:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -614,10 +611,7 @@ menus:
     - ci
   test_frequently_used_context_menu:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026682
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_hyperlink_context_menu:
@@ -626,10 +620,7 @@ menus:
     - smoke
   test_image_context_menu_actions:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026680
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_tab_context_menu_actions:
@@ -872,15 +863,12 @@ password_manager:
 pdf_viewer:
   test_add_image_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
