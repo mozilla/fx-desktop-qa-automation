@@ -90,11 +90,6 @@
         "strategy": "css",
         "groups": []
     },
-    "vjs-play": {
-        "selectorData": "button[aria-label='Play']",
-        "strategy": "css",
-        "groups": []
-    },
     "vjs-volume": {
         "selectorData": ".media-button--mute",
         "strategy": "css",

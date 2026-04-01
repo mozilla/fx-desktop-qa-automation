@@ -127,6 +127,9 @@ class GenericPage(BasePage):
         volume_el = self.get_element("vjs-volume")
         volume_level = volume_el.get_attribute("data-volume-level")
 
+        assert volume_level is not None, (
+            "Expected data-volume-level attribute to be present on volume button"
+        )
         assert volume_level != "high", (
             f"Expected volume to be below max, but data-volume-level is '{volume_level}'"
         )
