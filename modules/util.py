@@ -987,3 +987,5 @@ class LinuxAuto:
         keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(key))
         fake_input(self._display, X.KeyPress, keycode)
         self._display.sync()
+        fake_input(self._display, X.KeyRelease, keycode)
+        self._display.sync()
