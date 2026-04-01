@@ -12,7 +12,7 @@ def test_case():
     return "2652384"
 
 
-def test_sidebar_vertical_tabs_closing_options(driver: Firefox):
+def test_sidebar_vertical_tabs_closing_options(driver: Firefox, sys_platform: str):
     """
     C2652384 - Verify that vertical tabs in the sidebar can be closed via context menu, keyboard shortcut (CTRL+W),
     the X button, and middle mouse click.
@@ -34,7 +34,7 @@ def test_sidebar_vertical_tabs_closing_options(driver: Firefox):
 
     # Close a tab via CTRL+W (CMD+W on Mac)
     driver.switch_to.window(driver.window_handles[-1])
-    tabs.close_tab_shortcut()
+    tabs.close_tab_shortcut(sys_platform)
     tabs.wait_for_num_tabs(NUM_TABS - 2)
 
     # Close a tab via the X (Close) button
