@@ -59,4 +59,4 @@ jobs:
           BQ_DATASET: ${{ secrets.BQ_DATASET }}
           BQ_TABLE: ${{ secrets.BQ_TABLE }}
         run: |
-          python scripts/add_stability_json_to_bq.py
+          pipenv run python scripts/add_stability_json_to_bq.py
