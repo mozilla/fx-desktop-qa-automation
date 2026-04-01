@@ -384,7 +384,9 @@ def pytest_sessionfinish(session):
         )
         return None
 
-    if not hasattr(session.config, "_json_report"):
+    if not hasattr(session.config, "_json_report") or not hasattr(
+        session.config._json_report, "report"
+    ):
         logging.warning("No json_report in config, will try again with other workers.")
         return None
 
