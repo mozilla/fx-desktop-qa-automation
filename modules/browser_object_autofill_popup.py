@@ -159,9 +159,7 @@ class AutofillPopup(BasePage):
     ) -> WebElement:
         """Wait until the username field contains the expected value."""
         element = self.get_element(field)
-        self.wait.until(
-            lambda _: element.get_attribute("value") == expected_username
-        )
+        self.wait.until(lambda _: element.get_attribute("value") == expected_username)
         return element
 
     @BasePage.context_chrome
