@@ -43,7 +43,7 @@ jobs:
   - name: new-rc-qa
     job:
       type: decision-task
-      treeherder-symbol: STARd
+      treeherder-symbol: STARrc
       target-tasks-method: new_rc_qa
     when:
       - { hour: 08, minute: 15 }
