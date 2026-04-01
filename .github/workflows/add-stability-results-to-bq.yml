@@ -49,7 +49,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          TARGET_WORKFLOW_FILE: main-stability.yml
+          TARGET_WORKFLOW_FILE: stability-test-dispatch.yml
 
           D_RUNS: ${{ inputs.runs }}
           PLATFORM: ${{ inputs.platform }}
