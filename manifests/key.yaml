@@ -189,13 +189,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_server_not_found_error_pb:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021411
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_suggestion_engine_selection:
@@ -1238,6 +1236,10 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_bookmarked:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_closing_options:
     result: pass
     splits:
     - functional2
