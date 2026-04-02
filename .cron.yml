@@ -46,7 +46,7 @@ jobs:
       treeherder-symbol: STARrc
       target-tasks-method: new_rc_qa
     when:
-      - { hour: 08, minute: 15 }
+      - { hour: 8, minute: 15 }
       - { hour: 20, minute: 15 }
 
   - name: new-beta-func
