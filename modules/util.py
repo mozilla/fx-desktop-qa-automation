@@ -980,6 +980,8 @@ class PomUtils:
 
 
 class LinuxAuto:
+    """Automate some Linux keyboard interactions with X11"""
+
     def __init__(self):
         self._display = Display(os.environ.get("DISPLAY"))
 
