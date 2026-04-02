@@ -61,6 +61,9 @@ def temp_selectors():
         },
     }
 
+@pytest.fixture()
+def test_case():
+    return "2245425"
 
 def get_taobao_logins(about_logins: AboutLogins):
     return [
