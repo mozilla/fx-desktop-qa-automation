@@ -40,6 +40,15 @@ jobs:
       - { hour: 11, minute: 15 }
       - { hour: 23, minute: 15 }
 
+  - name: new-rc-qa
+    job:
+      type: decision-task
+      treeherder-symbol: STARrc
+      target-tasks-method: new_rc_qa
+    when:
+      - { hour: 08, minute: 15 }
+      - { hour: 20, minute: 15 }
+
   - name: new-beta-func
     job:
       type: decision-task
