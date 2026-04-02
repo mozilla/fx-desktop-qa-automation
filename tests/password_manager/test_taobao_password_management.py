@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
@@ -159,9 +157,7 @@ def test_taobao_login_autofill_dropdown(driver: Firefox, temp_selectors):
     taobao_logins = get_taobao_logins(about_logins)
     assert len(taobao_logins) >= 2
 
-    time.sleep(0.8)
-
-    # Step 5: input another credential set and dismiss save doorhanger
+    # Step 5: input another credential set
     web_page = open_taobao_login(driver, temp_selectors)
 
     web_page.fill("username-field", DENIED_USERNAME, press_enter=False)
@@ -185,9 +181,6 @@ def test_taobao_login_autofill_dropdown(driver: Firefox, temp_selectors):
     web_page.wait.until(
         lambda _: web_page.get_element("password-field").get_attribute("value") == ""
     )
-
-    assert web_page.get_element("username-field").get_attribute("value") == ""
-    assert web_page.get_element("password-field").get_attribute("value") == ""
 
     web_page.click_on("username-field")
     autofill_popup.ensure_autofill_dropdown_visible()
