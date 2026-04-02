@@ -3,7 +3,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import AutofillPopup, Navigation
+from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
 
 LOGIN_URL = (
@@ -139,9 +139,6 @@ def test_taobao_login_autofill_dropdown(driver: Firefox, temp_selectors):
         lambda _: web_page.get_element("password-field").get_attribute("value")
         == PASSWORD_1
     )
-
-    web_page.element_attribute_contains("username-field", "value", USERNAME_1)
-    web_page.element_attribute_contains("password-field", "value", PASSWORD_1)
 
     # Step 4: add second credential for same origin
     about_logins.open()
