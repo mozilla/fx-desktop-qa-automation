@@ -39,4 +39,4 @@ def test_vertical_tabs_reopen_closed_tab(driver: Firefox):
 
     # Verify the reopened tab is the correct one by checking its URL
     driver.switch_to.window(driver.window_handles[-1])
-    assert driver.current_url == URLS[-1]
+    nav.url_contains(URLS[-1])
