@@ -36,3 +36,7 @@ def test_vertical_tabs_reopen_closed_tab(driver: Firefox):
     tabs.context_click(tabs.get_tab(NUM_TABS - 1))
     context_menu.click_and_hide_menu("context-menu-reopen-closed-tab")
     tabs.wait_for_num_tabs(NUM_TABS)
+
+    # Verify the reopened tab is the correct one by checking its URL
+    driver.switch_to.window(driver.window_handles[-1])
+    assert driver.current_url == URLS[-1]
