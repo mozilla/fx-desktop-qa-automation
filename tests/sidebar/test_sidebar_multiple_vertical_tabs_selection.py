@@ -9,6 +9,9 @@ def test_case():
     return "2948255"
 
 
+URLS = ["about:robots", "about:logo", "about:mozilla", "about:blank"]
+
+
 @pytest.fixture()
 def add_to_prefs_list():
     return [
@@ -29,11 +32,8 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
 
     nav.toggle_vertical_tabs()
 
-    # === Sidebar on the left ===
-    tabs.open_urls_in_tabs(
-        ["about:robots", "about:logo", "about:mozilla", "about:blank"],
-        open_first_in_current_tab=True,
-    )
+    # Sidebar on the left
+    tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
     tabs.wait_for_num_tabs(4)
 
     # Multi-select tabs 2 and 3; pin and verify
@@ -68,10 +68,7 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     sidebar.move_sidebar_to_right()
 
     # Open 4 fresh tabs (indices 5, 6, 7, 8) for the right-side scenario
-    tabs.open_urls_in_tabs(
-        ["about:robots", "about:logo", "about:mozilla", "about:blank"],
-        open_first_in_current_tab=False,
-    )
+    tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=False)
     # tabs.wait_for_num_tabs(6)  # tabs 1, 2, 5, 6, 7, 8
 
     # Multi-select tabs 5 and 6; pin and verify
