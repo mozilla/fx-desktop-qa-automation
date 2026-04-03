@@ -794,6 +794,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_facebook_login_autofill_dropdown:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
     comment: Issue with Mac GHA? trying pass to see what happens.
     result:
