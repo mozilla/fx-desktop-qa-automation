@@ -794,6 +794,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_edit_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_multiple_saved_logins:
     comment: Issue with Mac GHA? trying pass to see what happens.
     result:
