@@ -135,6 +135,14 @@ class TabBar(BasePage):
             assert False, "Error checking tab pinned status"
 
     @BasePage.context_chrome
+    def toggle_mute_shortcut(self) -> BasePage:
+        """Toggle mute on the current tab using the CTRL+M keyboard shortcut"""
+        self.actions.key_down(Keys.CONTROL).send_keys("m").key_up(
+            Keys.CONTROL
+        ).perform()
+        return self
+
+    @BasePage.context_chrome
     def close_tab_shortcut(self, sys_platform: str) -> BasePage:
         """Close the current tab using the CTRL+W / CMD+W keyboard shortcut"""
         modifier = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
