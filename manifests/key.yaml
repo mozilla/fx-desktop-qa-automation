@@ -415,10 +415,7 @@ downloads:
     - functional1
   test_download_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -617,10 +614,7 @@ menus:
     - ci
   test_frequently_used_context_menu:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026682
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_hyperlink_context_menu:
@@ -629,10 +623,7 @@ menus:
     - smoke
   test_image_context_menu_actions:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026680
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_tab_context_menu_actions:
@@ -680,7 +671,7 @@ notifications:
   test_cancel_webextension:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_deny_geolocation:
     result: pass
     splits:
@@ -692,15 +683,15 @@ notifications:
   test_downloads_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_downloads_finished_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -730,7 +721,7 @@ password_manager:
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
@@ -807,6 +798,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_edit_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_multiple_saved_logins:
     comment: Issue with Mac GHA? trying pass to see what happens.
     result:
@@ -879,15 +874,12 @@ password_manager:
 pdf_viewer:
   test_add_image_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:

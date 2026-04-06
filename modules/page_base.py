@@ -1016,12 +1016,23 @@ class BasePage(Page):
         """
         Confirm the native OS download confirmation dialog.
 
-        Uses pyautogui. Tries image-match click first, then falls back to pressing
-        Enter if the image is not found or if it still matches after the click.
+        Uses pyautogui when possible. Tries image-match click first, then falls
+        back to pressing Enter if the image is not found or if it still matches
+        after the click.
         """
-        import pyautogui
 
         system = platform.system()
+        if system == "Linux":
+            # Workaround while we figure out if tkinter is possible for us
+            from modules.util import LinuxAuto
+
+            linux_auto = LinuxAuto()
+            linux_auto.press("Return")
+            time.sleep(1.5)
+            return
+
+        import pyautogui
+
         if system == "Windows":
             button_img = os.path.join("data", "win_save_button.png")
         elif system == "Darwin":
