@@ -44,9 +44,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     about_prefs.open_primary_password_popup(ba)
 
     # Set primary password
-    about_prefs.get_element("enter-new-password").send_keys(PASSWORD)
-    about_prefs.get_element("reenter-new-password").send_keys(PASSWORD)
-    about_prefs.click_on("submit-password")
+    about_prefs.set_primary_password(PASSWORD)
 
     # Dismiss the success message after setting the primary password
     about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)
