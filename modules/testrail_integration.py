@@ -757,7 +757,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
 
     suite_entries = [
         entry
-        for entry in expected_plan.get("entries")
+        for entry in expected_plan.get("entries", [])
         if entry.get("suite_id") == suite_id
     ]
 
