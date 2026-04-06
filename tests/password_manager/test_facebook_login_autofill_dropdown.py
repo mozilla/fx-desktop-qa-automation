@@ -115,7 +115,7 @@ def open_facebook_login(driver: Firefox, temp_selectors: dict) -> GenericPage:
 @pytest.mark.headed
 def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     """
-    2245426: Verify that:
+    2245445: Verify that:
     1. A single saved Facebook credential autofills on page load.
     2. Multiple saved Facebook credentials are stored in about:logins.
     3. Additional typed credentials are not saved.
