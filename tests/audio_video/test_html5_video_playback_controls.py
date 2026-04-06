@@ -28,7 +28,7 @@ def test_html5_video_playback_controls(driver: Firefox):
     page.click_on("vjs-play-button")
     page.element_visible("vjs-pause-button")
     page.click_on("vjs-pause-button")
-    page.element_visible("vjs-play")
+    page.element_visible("vjs-play-button")
 
     # Check full screen
     page.click_on("vjs-fullscreen")

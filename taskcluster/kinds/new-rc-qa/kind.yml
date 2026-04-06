@@ -1,10 +1,10 @@
 transforms:
-  - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
+  - fx_desktop_qa_automation_taskgraph.transforms.new_beta_qa:transforms
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "CI Smoke Tests"
-  description: "Runs CI Smoke Tests and Notifies Slack"
+  label: "Test New Release Candidate Version"
+  description: "Checks for new RC builds, tests them, reports to TestRail and Slack"
   worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
@@ -13,14 +13,21 @@ task-defaults:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
+    env:
+      TESTRAIL_REPORT: "true"
+      STARFOX_SPLIT: "smoke"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
+    - secrets:get:project/mozilla/fx-desktop-qa-automation/level-3/*
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
 
 tasks:
   linux:
+    attributes:
+      rc-qa: true
+    run-on-tasks-for: []
     run:
       using: run-task
       cwd: "{checkout}"
@@ -30,16 +37,18 @@ tasks:
         pip3 install 'pipenv==2023.11.15';
         mv ./config/ci_pyproject.toml ./pyproject.toml;
         pipenv install;
+        export FX_CHANNEL="rc";
         ./scripts/collect_executables.sh;
-        ./firefox/firefox --version;
+        export FX_EXECUTABLE=./firefox/firefox;
+        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
+        $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
-        if [[ ! $(python3 ./scripts/choose_test_type.py) =~ "starfox" ]]; then exit 0; fi;
         pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests);
+        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
+        export REPORTABLE=1;
+        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
@@ -100,4 +109,4 @@ tasks:
               ]
             }
           ]
-          text: "{task[name]} with id $taskId has finished!"
+          text: "Cron {task[name]} with id $taskId has finished!"

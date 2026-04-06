@@ -29,6 +29,12 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
+if platform.system() == "Linux":
+    import Xlib.XK
+    from Xlib import X
+    from Xlib.display import Display
+    from Xlib.ext.xtest import fake_input
+
 
 def env_true(name: str) -> bool:
     """Return True if the environment variable is set to '1' or 'true' (case-insensitive)."""
@@ -971,3 +977,17 @@ class PomUtils:
             if not matches:
                 logging.info("No matches found.")
             return matches
+
+
+class LinuxAuto:
+    """Automate some Linux keyboard interactions with X11"""
+
+    def __init__(self):
+        self._display = Display(os.environ.get("DISPLAY"))
+
+    def press(self, key):
+        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(key))
+        fake_input(self._display, X.KeyPress, keycode)
+        self._display.sync()
+        fake_input(self._display, X.KeyRelease, keycode)
+        self._display.sync()
