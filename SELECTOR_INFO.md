@@ -1398,6 +1398,27 @@ Description: Input for current password in the Change Primary Password dialog
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: remove-current-password
+Selector Data: "password"
+Description: Input for current password in the Remove Primary Password dialog
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-primary-password-box
+Selector Data: "removemp"
+Description: Shadow parent of the remove button
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-password
+Selector Data: "button[label^='Remove']"
+Description: Remove button to remove the primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container

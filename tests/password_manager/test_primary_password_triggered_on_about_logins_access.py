@@ -40,9 +40,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
 
     # Enable the setup for primary password
     about_prefs.open()
-    about_prefs.click_on("use-primary-password")
-    primary_pw_popup = about_prefs.get_element("browser-popup")
-    ba.switch_to_iframe_context(primary_pw_popup)
+    about_prefs.open_primary_password_popup(ba)
 
     # Set primary password
     about_prefs.get_element("enter-new-password").send_keys(PASSWORD)
