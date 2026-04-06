@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -42,6 +44,7 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     context_menu.click_and_hide_menu("context-menu-pin-selected-tabs")
     assert tabs.is_pinned(selected_tabs[0])
     assert tabs.is_pinned(selected_tabs[1])
+    tabs.deselect_all_tabs()
 
     # Unpin and verify
     selected_tabs = tabs.select_multiple_tabs_by_indices([2, 3], sys_platform)
@@ -49,27 +52,29 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     context_menu.click_and_hide_menu("context-menu-unpin-selected-tabs")
     assert not tabs.is_pinned(selected_tabs[0])
     assert not tabs.is_pinned(selected_tabs[1])
+    tabs.deselect_all_tabs()
 
-    # Move tabs 2 and 3 to start via multi-select
+    # Move tabs 2 and 3 to end via multi-select
     selected_tabs = tabs.select_multiple_tabs_by_indices([2, 3], sys_platform)
     tabs.context_click(selected_tabs[0])
     context_menu.click_context_item("context-menu-move-tab")
-    context_menu.click_and_hide_menu("context-menu-move-tab-to-start")
+    context_menu.click_and_hide_menu("context-menu-move-tab-to-end")
     tabs.wait_for_num_tabs(4)
+    tabs.deselect_all_tabs()
 
-    # Close tabs 3 and 4 via multi-select
-    selected_tabs = tabs.select_multiple_tabs_by_indices([3, 4], sys_platform)
+    # Close tabs 2 and 3 via multi-select
+    selected_tabs = tabs.select_multiple_tabs_by_indices([2, 3], sys_platform)
     tabs.context_click(selected_tabs[0])
-    context_menu.click_and_hide_menu("context-menu-close-tab")
-    tabs.wait_for_num_tabs(3)
+    context_menu.click_on("context-menu-close-tab")
+    tabs.wait_for_num_tabs(2)
 
-    # === Sidebar on the right ===
+    # # === Sidebar on the right ===
     driver.switch_to.window(driver.window_handles[0])
     sidebar.move_sidebar_to_right()
 
-    # Open 4 fresh tabs (indices 5, 6, 7, 8) for the right-side scenario
+    # Open 4 fresh tabs for the right-side scenario
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=False)
-    # tabs.wait_for_num_tabs(6)  # tabs 1, 2, 5, 6, 7, 8
+    tabs.wait_for_num_tabs(6)
 
     # Multi-select tabs 5 and 6; pin and verify
     selected_tabs = tabs.select_multiple_tabs_by_indices([5, 6], sys_platform)
@@ -77,6 +82,7 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     context_menu.click_and_hide_menu("context-menu-pin-selected-tabs")
     assert tabs.is_pinned(selected_tabs[0])
     assert tabs.is_pinned(selected_tabs[1])
+    tabs.deselect_all_tabs()
 
     # Unpin and verify
     selected_tabs = tabs.select_multiple_tabs_by_indices([5, 6], sys_platform)
@@ -84,16 +90,18 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     context_menu.click_and_hide_menu("context-menu-unpin-selected-tabs")
     assert not tabs.is_pinned(selected_tabs[0])
     assert not tabs.is_pinned(selected_tabs[1])
-
-    # Move tabs 5 and 6 to start via multi-select
+    tabs.deselect_all_tabs()
+    #
+    # Move tabs 5 and 6 to end via multi-select
     selected_tabs = tabs.select_multiple_tabs_by_indices([5, 6], sys_platform)
     tabs.context_click(selected_tabs[0])
     context_menu.click_context_item("context-menu-move-tab")
-    context_menu.click_and_hide_menu("context-menu-move-tab-to-start")
-    tabs.wait_for_num_tabs(7)
-
-    # Close tabs 7 and 8 via multi-select
-    selected_tabs = tabs.select_multiple_tabs_by_indices([7, 8], sys_platform)
-    tabs.context_click(selected_tabs[0])
-    context_menu.click_and_hide_menu("context-menu-close-tab")
+    context_menu.click_and_hide_menu("context-menu-move-tab-to-end")
     tabs.wait_for_num_tabs(6)
+    tabs.deselect_all_tabs()
+    #
+    # Close tabs 5 and 6 via multi-select
+    selected_tabs = tabs.select_multiple_tabs_by_indices([5, 6], sys_platform)
+    tabs.context_click(selected_tabs[0])
+    context_menu.click_on("context-menu-close-tab")
+    tabs.wait_for_num_tabs(4)
