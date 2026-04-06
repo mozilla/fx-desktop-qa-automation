@@ -9,7 +9,7 @@
 
 pytest tests/meta/test_version.py
 if [[ $? -ne 0 ]]; then
-  echo "Please update your firefox/geckodriver!"
+  echo "Please update your firefox/geckodriver, see test results for details!"
   exit 1
 fi
 

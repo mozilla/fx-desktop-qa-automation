@@ -1,6 +1,7 @@
 import logging
 import os
 
+import pytest
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -10,6 +11,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
 
 
+@pytest.fixture()
+def add_to_prefs_list(opt_ci):
+    # CI runs should be handled by prefs set elsewhere, local runs
+    # Should have updates enabled to check update server
+    return [] if opt_ci else [("app.update.disabledForTesting", False)]
+
+
 def _fx_up_to_date(driver: Firefox):
     driver.get(ABOUT_FIREFOX)
     try:
@@ -17,7 +25,12 @@ def _fx_up_to_date(driver: Firefox):
             EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
         )
     except TimeoutException:
-        if driver.find_element(By.ID, "otherInstanceHandlingUpdates").is_displayed():
+        with open("abt.html", "w") as fh:
+            fh.write(driver.page_source.replace("><", ">\n<"))
+        if (
+            driver.find_element(By.ID, "otherInstanceHandlingUpdates").is_displayed()
+            or driver.find_element(By.ID, "policyDisabled").is_displayed()
+        ):
             logging.warning(
                 "Could not confirm that Firefox is up to date. Please check manually."
             )
@@ -33,7 +46,7 @@ def _get_version(driver: Firefox):
     return version
 
 
-def test_version(driver, opt_ci, fx_executable, build_version):
+def test_fx_version(driver, opt_ci, fx_executable, build_version):
     """Get the Fx version"""
 
     displayed_version = _get_version(driver).split(" ")[0]
@@ -47,3 +60,15 @@ def test_version(driver, opt_ci, fx_executable, build_version):
     else:
         _fx_up_to_date(driver)
     driver.quit()
+
+
+def test_gecko_version(driver):
+    """Get the geckodriver version"""
+
+    driver.get("https://github.com/mozilla/geckodriver/releases/latest")
+    WebDriverWait(driver, 20).until(EC.url_contains("tag"))
+    url = driver.current_url
+    version = url[(url.find("/v") + 2) :]
+    assert version == driver.capabilities.get("moz:geckodriverVersion"), (
+        f"Geckodriver not updated, should be {version}"
+    )
