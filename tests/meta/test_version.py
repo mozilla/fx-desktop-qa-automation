@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
+LATEST_GECKO = "https://github.com/mozilla/geckodriver/releases/latest"
 
 
 @pytest.fixture()
@@ -21,12 +22,10 @@ def add_to_prefs_list(opt_ci):
 def _fx_up_to_date(driver: Firefox):
     driver.get(ABOUT_FIREFOX)
     try:
-        WebDriverWait(driver, 20).until(
+        WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
         )
     except TimeoutException:
-        with open("abt.html", "w") as fh:
-            fh.write(driver.page_source.replace("><", ">\n<"))
         if (
             driver.find_element(By.ID, "otherInstanceHandlingUpdates").is_displayed()
             or driver.find_element(By.ID, "policyDisabled").is_displayed()
@@ -65,7 +64,7 @@ def test_fx_version(driver, opt_ci, fx_executable, build_version):
 def test_gecko_version(driver):
     """Get the geckodriver version"""
 
-    driver.get("https://github.com/mozilla/geckodriver/releases/latest")
+    driver.get(LATEST_GECKO)
     WebDriverWait(driver, 20).until(EC.url_contains("tag"))
     url = driver.current_url
     version = url[(url.find("/v") + 2) :]
