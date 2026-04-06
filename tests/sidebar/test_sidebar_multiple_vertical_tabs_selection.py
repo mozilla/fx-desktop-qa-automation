@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,14 +10,6 @@ def test_case():
 
 
 URLS = ["about:robots", "about:logo", "about:mozilla", "about:blank"]
-
-
-@pytest.fixture()
-def add_to_prefs_list():
-    return [
-        ("sidebar.revamp", True),
-        ("sidebar.expandOnHover", True),
-    ]
 
 
 def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform: str):
@@ -68,7 +58,7 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     context_menu.click_on("context-menu-close-tab")
     tabs.wait_for_num_tabs(2)
 
-    # # === Sidebar on the right ===
+    # Move Sidebar on the right
     driver.switch_to.window(driver.window_handles[0])
     sidebar.move_sidebar_to_right()
 
@@ -91,7 +81,7 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     assert not tabs.is_pinned(selected_tabs[0])
     assert not tabs.is_pinned(selected_tabs[1])
     tabs.deselect_all_tabs()
-    #
+
     # Move tabs 5 and 6 to end via multi-select
     selected_tabs = tabs.select_multiple_tabs_by_indices([5, 6], sys_platform)
     tabs.context_click(selected_tabs[0])
@@ -99,7 +89,7 @@ def test_sidebar_multiple_vertical_tabs_selection(driver: Firefox, sys_platform:
     context_menu.click_and_hide_menu("context-menu-move-tab-to-end")
     tabs.wait_for_num_tabs(6)
     tabs.deselect_all_tabs()
-    #
+
     # Close tabs 5 and 6 via multi-select
     selected_tabs = tabs.select_multiple_tabs_by_indices([5, 6], sys_platform)
     tabs.context_click(selected_tabs[0])
