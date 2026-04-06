@@ -1263,6 +1263,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_vertical_tabs_reopen_closed_tab:
+    result: pass
+    splits:
+    - functional2
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
