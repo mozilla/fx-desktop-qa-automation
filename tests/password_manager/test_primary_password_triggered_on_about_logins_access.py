@@ -9,6 +9,7 @@ PRIMARY_PASSWORD = "securePassword1"
 TEST_PAGE_URL = "mozilla.org"
 PASSWORD = "password"
 USERNAME = "username"
+ALERT_MESSAGE = "Primary Password successfully changed."
 
 
 @pytest.fixture()
@@ -48,8 +49,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     about_prefs.click_on("submit-password")
 
     # Dismiss the success message after setting the primary password
-    alert = about_prefs.get_alert()
-    alert.accept()
+    about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)
 
     # Open about:logins page and create a login entry
     tabs.switch_to_new_tab()

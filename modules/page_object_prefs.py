@@ -960,7 +960,7 @@ class AboutPrefs(BasePage):
         self.click_on("use-primary-password")
         popup = self.get_element("browser-popup")
         browser_actions.switch_to_iframe_context(popup)
-        return popup
+        return self
 
     def set_primary_password(self, password):
         """
