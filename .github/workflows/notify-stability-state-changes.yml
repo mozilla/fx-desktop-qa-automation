@@ -51,7 +51,7 @@ jobs:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: ${{ secrets.BQ_DATASET }}
           BQ_TABLE: ${{ secrets.BQ_TABLE }}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           WORKFLOW_FILE: main-stability.yml
 
@@ -62,4 +62,4 @@ jobs:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
           SLACK_CHANNEL: ${{ vars.DTE_NOTIFIER_SLACK_CHANNEL }}
         run: |
-          python scripts/notify_stability_state_changes.py
+          pipenv run python scripts/notify_stability_state_changes.py
