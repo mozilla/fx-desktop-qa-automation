@@ -952,6 +952,33 @@ class AboutPrefs(BasePage):
         )
         return self
 
+    def open_primary_password_popup(self, browser_actions):
+        """
+        Opens the 'Change Primary Password' popup by checking the checkbox
+        and switches to the iframe context.
+        """
+        self.click_on("use-primary-password")
+        popup = self.get_element("browser-popup")
+        browser_actions.switch_to_iframe_context(popup)
+        return self
+
+    def set_primary_password(self, password):
+        """
+        Sets a new primary password.
+        """
+        self.get_element("enter-new-password").send_keys(password)
+        self.get_element("reenter-new-password").send_keys(password)
+        self.click_on("submit-password")
+        return self
+
+    def accept_alert_and_verify_text(self, expected_text: str):
+        """
+        Verifies alert text and accepts it.
+        """
+        alert = self.get_alert()
+        assert expected_text in alert.text
+        alert.accept()
+        return self
 
 class AboutAddons(BasePage):
     """
