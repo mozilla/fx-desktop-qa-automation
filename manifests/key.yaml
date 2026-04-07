@@ -863,6 +863,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_taobao_password_management:
+    result: pass
+    splits:
+    - functional1
   test_update_login_via_doorhanger:
     result: pass
     splits:
