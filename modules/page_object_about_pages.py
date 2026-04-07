@@ -459,7 +459,7 @@ class AboutTelemetry(BasePage):
         """
         Types a search term into the about:telemetry search box to filter results.
         """
-        search_box = self.driver.find_element(By.ID, "search")
+        search_box = self.get_element("search")
         search_box.clear()
         search_box.send_keys(term)
         return self
