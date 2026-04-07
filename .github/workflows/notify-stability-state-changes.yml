@@ -1,0 +1,65 @@
+name: Notify Stability State Changes
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "win | mac"
+        required: true
+        default: "mac"
+        type: string
+      runs:
+        description: "How many recent runs to analyze"
+        required: true
+        default: "5"
+        type: string
+      include_headed:
+        description: "Include headed results"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip3 install 'pipenv==2023.11.15';
+          pipenv install;
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Notify changes
+        env:
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: ${{ secrets.BQ_TABLE }}
+
+          REPO: ${{ github.repository }}
+          WORKFLOW_FILE: main-stability.yml
+
+          PLATFORM: ${{ inputs.platform }}
+          RUNS: ${{ inputs.runs }}
+          INCLUDE_HEADED: ${{ inputs.include_headed }}
+
+          SLACK_KEY: ${{ secrets.SLACK_KEY }}
+          SLACK_CHANNEL: C07AHPJ525V
+        run: |
+          python scripts/notify_stability_state_changes.py
