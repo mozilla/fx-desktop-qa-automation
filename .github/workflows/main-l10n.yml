@@ -389,10 +389,12 @@ jobs:
           pipenv run python -c "import sys; print(sys.platform)"
 
           $possiblePaths = @(
-            'C:\Program Files\Custom Firefox\firefox.exe',
-            'C:\Program Files\Custom Firefox\core\firefox.exe',
-            'C:\Program Files\Mozilla Firefox\firefox.exe',
-            'C:\Program Files (x86)\Mozilla Firefox\firefox.exe'
+          'C:\Program Files\Custom Firefox\core\firefox.exe',
+          'C:\Program Files\Custom Firefox\firefox.exe',
+          'C:\Program Files\Mozilla Firefox\core\firefox.exe',
+          'C:\Program Files\Mozilla Firefox\firefox.exe',
+          'C:\Program Files (x86)\Mozilla Firefox\core\firefox.exe',
+          'C:\Program Files (x86)\Mozilla Firefox\firefox.exe'
           )
 
           $env:FX_EXECUTABLE = $possiblePaths | Where-Object { Test-Path $_ } | Select-Object -First 1

@@ -485,6 +485,7 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
+    driver = None
     options = Options()
     # options.log.level = "trace"
     options.add_argument("--remote-allow-system-access")
@@ -498,8 +499,10 @@ def driver(
 
     if opt_headless:
         options.add_argument("--headless")
+
     for opt, value in prefs_list:
         options.set_preference(opt, value)
+
     try:
         if geckodriver:
             service = Service(executable_path=geckodriver)
@@ -520,6 +523,7 @@ def driver(
                 separator = ","
             elif " " in opt_window_size:
                 separator = " "
+
         winsize = [int(s) for s in opt_window_size.split(separator)]
         driver.set_window_size(*winsize)
 
@@ -535,6 +539,7 @@ def driver(
         json_metadata["test_case"] = test_case
 
         yield driver
+
         if hard_quit:
             if hasattr(driver, "service") and driver.service is not None:
                 driver.service.stop()
@@ -545,7 +550,7 @@ def driver(
         raise
 
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
+        if driver:
             driver.quit()
 
 
