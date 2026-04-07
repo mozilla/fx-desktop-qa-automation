@@ -43,10 +43,12 @@ class Dropdown(Region):
         wait_for_selection=True,
         option_tag="menuitem",
         label_name="label",
+        expected_root_value=None,
+        expected_root_label=None,
     ):
         """Select an option in the dropdown. Does not return self."""
         try:
-            if not self.dropmarker.get_attribute("open") == "true":
+            if not self.dropmarker or self.dropmarker.get_attribute("open") != "true":
                 self.root.click()
         except AttributeError:
             self.root.click()
@@ -72,22 +74,34 @@ class Dropdown(Region):
                 for el in self.root.find_elements(By.CSS_SELECTOR, option_tag)
                 if el.get_attribute(label_name) == option_name
             ]
+
         if len(matching_menuitems) == 0:
             return False
-        elif len(matching_menuitems) == 1:
-            if double_click:
-                self.page.double_click(reference=matching_menuitems[0])
-            else:
-                matching_menuitems[0].click()
-            if wait_for_selection:
-                if self.is_search_dropdown:
-                    panel_trigger = self.dropmarker.find_element(
-                        By.CLASS_NAME, "panel-trigger"
-                    )
-                    self.wait.until(lambda _: panel_trigger.text == option_name)
-                else:
-                    self.wait.until(EC.element_to_be_selected(matching_menuitems[0]))
-            # self.root.send_keys(Keys.ESCAPE)
-            return self
-        else:
+        if len(matching_menuitems) > 1:
             raise ValueError("More than one menu item matched search string")
+
+        target_option = matching_menuitems[0]
+
+        if double_click:
+            self.page.double_click(reference=target_option)
+        else:
+            target_option.click()
+
+        if wait_for_selection:
+            if self.is_search_dropdown:
+                panel_trigger = self.dropmarker.find_element(
+                    By.CLASS_NAME, "panel-trigger"
+                )
+                self.wait.until(lambda _: panel_trigger.text == option_name)
+            elif expected_root_value is not None:
+                self.wait.until(
+                    lambda _: self.root.get_attribute("value") == expected_root_value
+                )
+            elif expected_root_label is not None:
+                self.wait.until(
+                    lambda _: self.root.get_attribute("label") == expected_root_label
+                )
+            else:
+                self.wait.until(EC.element_to_be_selected(target_option))
+
+        return self
