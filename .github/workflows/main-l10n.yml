@@ -1,7 +1,7 @@
----
 name: L10N Test Execution
 
 run-name: ${{ github.actor }} is running l10n tests
+
 on:
   workflow_call:
     inputs:
@@ -22,21 +22,63 @@ on:
         required: false
         type: boolean
         default: false
+      win_installer_link:
+        description: "The link to the Windows installer (win64) for the Fx under test"
+        required: false
+        type: string
+        default: ""
+      mac_installer_link:
+        description: "The link to the macOS installer for the Fx under test"
+        required: false
+        type: string
+        default: ""
+      linux_tarball_link:
+        description: "The link to the Linux tarball (linux-x86_64) for the Fx under test"
+        required: false
+        type: string
+        default: ""
 
   workflow_dispatch:
     inputs:
+      channel:
+        description: "Channel to run tests against"
+        default: "beta"
+        required: false
+        type: choice
+        options:
+          - beta
+      job_to_run:
+        description: "Which job to run"
+        required: true
+        default: "L10N-Windows"
+        type: choice
+        options:
+          - L10N-Windows
+          - L10N-Linux
+          - L10N-MacOS
+      is_pull_request:
+        description: "Is this a PR?"
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: "If true, skip downloads/installs/tests/uploads (safe dry run)"
+        required: false
+        default: false
+        type: boolean
       win_installer_link:
-        description: 'The link to the Windows installer (win64) for the Fx under test'
+        description: "The link to the Windows installer (win64) for the Fx under test"
         required: false
         type: string
       mac_installer_link:
-        description: 'The link to the macOS installer for the Fx under test'
+        description: "The link to the macOS installer for the Fx under test"
         required: false
         type: string
       linux_tarball_link:
-        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
+        description: "The link to the Linux tarball (linux-x86_64) for the Fx under test"
         required: false
         type: string
+
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -47,7 +89,7 @@ env:
 
 jobs:
   L10N-MacOS:
-    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link != '' }}
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -70,31 +112,32 @@ jobs:
       - name: Set CI Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'L10N-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
-          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV";
-          echo "Running report for most recent Beta on MacOS";
+          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV"
+          echo "Running report for most recent Beta on MacOS"
 
       - name: Set CI Environment (Manual)
-        if: ${{ inputs.mac_installer_link && inputs.dry_run != true }}
+        if: ${{ inputs.mac_installer_link != '' && inputs.dry_run != true }}
         run: |
-          echo "MANUAL=true" >> "$GITHUB_ENV";
-          echo "Running l10n tests on supplied executable";
+          echo "MANUAL=true" >> "$GITHUB_ENV"
+          echo "Running l10n tests on supplied executable"
 
       - name: Install dependencies
         run: |
-          mkdir -p artifacts/;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
+          mkdir -p artifacts/
+          pip3 install 'pipenv==2023.11.15'
+          pip3 install 'ruff>=0.4.8,<0.5'
+          rm ./pyproject.toml
+          mv ./config/ci_pyproject.toml ./pyproject.toml
+          pipenv install
 
       - name: Install Fx
         if: ${{ inputs.dry_run != true }}
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
-        run:
-          echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT";
+        run: |
+          app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)
+          echo "app_name=$app_name" >> "$GITHUB_OUTPUT"
 
       - name: Select Tests (macOS)
         run: |
@@ -103,7 +146,7 @@ jobs:
       - name: Dry Run - Print Selected Tests (macOS)
         if: ${{ inputs.dry_run == true }}
         run: |
-          echo "Selected tests: "
+          echo "Selected tests:"
           if [ -f selected_l10n_mappings ]; then
             cat selected_l10n_mappings
           else
@@ -116,28 +159,33 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
-          "$FX_EXECUTABLE" --version;
-          echo "0" > TEST_EXIT_CODE;
+          "$FX_EXECUTABLE" --version
+          echo "0" > TEST_EXIT_CODE
+          SCRIPT_EXIT_CODE=0
+
           while IFS= read -r line; do
-            echo "Running tests for: $line";
-            pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
-          done < selected_l10n_mappings;
-          mv artifacts artifacts-mac || true;
-          EXIT_CODE=$(cat TEST_EXIT_CODE);
-          if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE;
+            echo "Running tests for: $line"
+            pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" "$line" || SCRIPT_EXIT_CODE=$?
+          done < selected_l10n_mappings
+
+          mv artifacts artifacts-mac || true
+
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ "$EXIT_CODE" != "0" ]; then
+            exit "$EXIT_CODE"
           fi
-          exit $SCRIPT_EXIT_CODE;
+
+          exit "$SCRIPT_EXIT_CODE"
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
           path: artifacts-mac
 
   L10N-Linux:
-    if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -160,11 +208,11 @@ jobs:
       - name: Set CI Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'L10N-Linux' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
-          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV";
-          echo "Running report for most recent Beta on Linux";
+          echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV"
+          echo "Running report for most recent Beta on Linux"
 
       - name: Set CI Environment (Manual)
-        if: ${{ inputs.linux_tarball_link && inputs.dry_run != true }}
+        if: ${{ inputs.linux_tarball_link != '' && inputs.dry_run != true }}
         run: |
           echo "MANUAL=true" >> "$GITHUB_ENV"
           echo "Running l10n tests on supplied executable"
@@ -174,20 +222,20 @@ jobs:
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          sudo apt install gnome-screenshot;
-          uname -m;
-          mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
-          pipenv install;
-          ./scripts/collect_executables.sh;
-          ./firefox/firefox --version;
+          sudo apt install -y gnome-screenshot
+          uname -m
+          mkdir -p artifacts
+          pip3 install 'pipenv==2023.11.15'
+          pip3 install 'ruff>=0.4.8,<0.5'
+          rm ./pyproject.toml
+          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml
+          pipenv install
+          ./scripts/collect_executables.sh
+          ./firefox/firefox --version
 
       - name: Select Tests (Linux)
         run: |
-          pipenv run python scripts/choose_l10n_ci_set.py;
+          pipenv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (Linux)
         if: ${{ inputs.dry_run == true }}
@@ -205,19 +253,25 @@ jobs:
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
-          "$FX_EXECUTABLE" --version;
-          echo "0" > TEST_EXIT_CODE;
-          Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
+          "$FX_EXECUTABLE" --version
+          echo "0" > TEST_EXIT_CODE
+          SCRIPT_EXIT_CODE=0
+
+          Xvfb :99 -screen 0 1600x1200x24 > artifacts/xvfb.log 2>&1 &
+
           while IFS= read -r line; do
-            echo "Running tests for: $line";
-            DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
-          done < selected_l10n_mappings;
-          mv artifacts artifacts-linux || true;
-          EXIT_CODE=$(cat TEST_EXIT_CODE);
-          if [ $EXIT_CODE != 0 ]; then
-            exit $EXIT_CODE;
+            echo "Running tests for: $line"
+            DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" "$line" || SCRIPT_EXIT_CODE=$?
+          done < selected_l10n_mappings
+
+          mv artifacts artifacts-linux || true
+
+          EXIT_CODE=$(cat TEST_EXIT_CODE)
+          if [ "$EXIT_CODE" != "0" ]; then
+            exit "$EXIT_CODE"
           fi
-          exit $SCRIPT_EXIT_CODE;
+
+          exit "$SCRIPT_EXIT_CODE"
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
@@ -227,7 +281,7 @@ jobs:
           path: artifacts-linux
 
   L10N-Windows:
-    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
+    if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link != '' }}
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -235,6 +289,7 @@ jobs:
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
+        shell: pwsh
         run: |
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
@@ -249,7 +304,7 @@ jobs:
           "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Set CI Environment (Manual)
-        if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
+        if: ${{ inputs.win_installer_link != '' && inputs.dry_run != true }}
         shell: pwsh
         run: |
           "MANUAL=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -277,35 +332,38 @@ jobs:
         shell: pwsh
         run: |
           $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
-          echo $gecko_url
+          Write-Host $gecko_url
           Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
           unzip geckodriver.zip
-          echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Download Beta
-        if: ${{ !inputs.win_installer_link && inputs.dry_run != true }}
+        if: ${{ inputs.win_installer_link == '' && inputs.dry_run != true }}
         shell: pwsh
         run: |
           $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
-          echo $fx_url
+          Write-Host $fx_url
           Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
-          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force | Out-Null
 
       - name: Download Executable
-        if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
+        if: ${{ inputs.win_installer_link != '' && inputs.dry_run != true }}
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri $WIN_INSTALLER_LINK -OutFile "${{ github.workspace }}\setup.exe"
-          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          Invoke-WebRequest -Uri $env:WIN_INSTALLER_LINK -OutFile "${{ github.workspace }}\setup.exe"
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force | Out-Null
 
       - name: Install Beta
         if: ${{ inputs.dry_run != true }}
         id: setup
         shell: pwsh
         run: |
-          Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          $process = Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", "/D=C:\Program Files\Custom Firefox" -Wait -NoNewWindow -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Firefox installer failed with exit code $($process.ExitCode)"
+          }
 
       - name: Select Tests (Win)
         shell: pwsh
@@ -321,6 +379,7 @@ jobs:
             Get-Content "selected_l10n_mappings"
           } else {
             Write-Error "selected_l10n_mappings file not found"
+            exit 1
           }
 
       - name: Run L10N Tests in Win
@@ -358,11 +417,11 @@ jobs:
             $line = $_
             Write-Host "Running tests for: $line"
 
-            pipenv run python -m l10n_CM.run_l10n --geckodriver=geckodriver.exe --fx-executable="$env:FX_EXECUTABLE" $line
-            $LASTEXITCODE = $LASTEXITCODE
+            pipenv run python -m l10n_CM.run_l10n --geckodriver=geckodriver.exe --fx-executable="$env:FX_EXECUTABLE" "$line"
+            $CapturedExitCode = $LASTEXITCODE
 
-            if ($LASTEXITCODE -ne 0) {
-              $SCRIPT_EXIT_CODE = $LASTEXITCODE
+            if ($CapturedExitCode -ne 0) {
+              $SCRIPT_EXIT_CODE = $CapturedExitCode
             }
           }
 
@@ -376,6 +435,13 @@ jobs:
           }
 
           exit $SCRIPT_EXIT_CODE
+
+      - name: Upload artifacts
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-win-l10n
+          path: artifacts-win
 
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
@@ -399,30 +465,36 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-win-l10n
           path: artifacts-win
 
       - name: Download Linux artifact
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux-l10n
           path: artifacts-linux
 
       - name: Download MacOS artifact
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac-l10n
           path: artifacts-mac
 
       - name: List downloaded Windows files
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         run: ls artifacts-win/
 
       - name: List downloaded Linux files
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         run: ls artifacts-linux/
 
       - name: List downloaded MacOS files
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         run: ls artifacts-mac/
 
       - name: Run script with secret
