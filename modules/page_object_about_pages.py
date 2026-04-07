@@ -530,6 +530,15 @@ class AboutTelemetry(BasePage):
 
         return self
 
+    def search_telemetry(self, term: str) -> "AboutTelemetry":
+        """
+        Types a search term into the about:telemetry search box to filter results.
+        """
+        search_box = self.driver.find_element(By.ID, "search")
+        search_box.clear()
+        search_box.send_keys(term)
+        return self
+
     def is_telemetry_entry_present(
         self, table_selector_key: str, expected_telemetry_data
     ) -> bool:
