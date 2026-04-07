@@ -43,6 +43,10 @@ def test_new_tab_label(driver: Firefox):
     ), "Expected context-openANewTab to have value 2 after Step 2"
 
     # Step 3: Right click in the Tab Bar and click New Tab
+
+    # Note: "Right click in the Tab Bar" is intentionally not used here because it
+    # increments "toolbar-context-openANewTab" instead of "context-openANewTab".
+    # Right clicking an opened tab is used to bring context-openANewTab to 3.
     tabs.context_click(second_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
 
