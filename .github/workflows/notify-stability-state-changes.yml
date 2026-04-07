@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       platform:
-        description: "win | mac"
+        description: "Platform to analyze"
         required: true
         default: "mac"
-        type: string
+        type: choice
+        options:
+          - mac
+          - win
       runs:
         description: "How many recent runs to analyze"
         required: true
