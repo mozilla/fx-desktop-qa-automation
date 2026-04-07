@@ -491,7 +491,14 @@ def driver(
     options.add_argument("--remote-allow-system-access")
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
+    # Add validation
+    if not os.path.exists(fx_executable):
+        raise FileNotFoundError(f"Firefox executable not found at: {fx_executable}")
 
+    if not os.access(fx_executable, os.X_OK):
+        raise PermissionError(f"Firefox executable is not executable: {fx_executable}")
+
+    options.binary_location = fx_executable
     if use_profile:
         profile_path = tmp_path / use_profile
         unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
