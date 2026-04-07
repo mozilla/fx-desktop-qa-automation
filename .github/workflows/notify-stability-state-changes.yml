@@ -60,6 +60,6 @@ jobs:
           INCLUDE_HEADED: ${{ inputs.include_headed }}
 
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
-          SLACK_CHANNEL: C07AHPJ525V
+          SLACK_CHANNEL: ${{ vars.DTE_NOTIFIER_SLACK_CHANNEL }}
         run: |
           python scripts/notify_stability_state_changes.py
