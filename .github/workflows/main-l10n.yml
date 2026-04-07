@@ -328,38 +328,51 @@ jobs:
         shell: pwsh
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
-          $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
 
-          Write-Host "Checking Firefox path: $env:FX_EXECUTABLE"
-          if (-not (Test-Path $env:FX_EXECUTABLE)) {
-              Write-Host "Firefox not found at expected path."
-              Write-Host "Listing install directory..."
-              Get-ChildItem 'C:\Program Files\Custom Firefox' -Recurse -ErrorAction SilentlyContinue
-              throw "Firefox executable not found at $env:FX_EXECUTABLE"
+          $possiblePaths = @(
+            'C:\Program Files\Custom Firefox\firefox.exe',
+            'C:\Program Files\Custom Firefox\core\firefox.exe',
+            'C:\Program Files\Mozilla Firefox\firefox.exe',
+            'C:\Program Files (x86)\Mozilla Firefox\firefox.exe'
+          )
+
+          $env:FX_EXECUTABLE = $possiblePaths | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+          if (-not $env:FX_EXECUTABLE) {
+            Write-Host "Firefox executable not found in expected locations."
+            Write-Host "Contents of C:\Program Files\Custom Firefox:"
+            Get-ChildItem 'C:\Program Files\Custom Firefox' -Recurse -ErrorAction SilentlyContinue
+            Write-Host "Searching Program Files for firefox.exe:"
+            Get-ChildItem 'C:\Program Files' -Recurse -Filter firefox.exe -ErrorAction SilentlyContinue
+            Get-ChildItem 'C:\Program Files (x86)' -Recurse -Filter firefox.exe -ErrorAction SilentlyContinue
+            throw "Firefox executable not found on runner"
           }
 
-          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
+          Write-Host "Using Firefox: $env:FX_EXECUTABLE"
+          & $env:FX_EXECUTABLE --version
 
           "0" | Set-Content -Path "TEST_EXIT_CODE"
           $SCRIPT_EXIT_CODE = 0
 
           Get-Content "selected_l10n_mappings" | ForEach-Object {
-              $line = $_
-              Write-Host "Running tests for: $line"
-              try {
-                  pipenv run python -m l10n_CM.run_l10n --geckodriver=geckodriver.exe --fx-executable="$env:FX_EXECUTABLE" $line
-              } catch {
-                  $SCRIPT_EXIT_CODE = $_.Exception.HResult
-              }
+            $line = $_
+            Write-Host "Running tests for: $line"
+
+            pipenv run python -m l10n_CM.run_l10n --geckodriver=geckodriver.exe --fx-executable="$env:FX_EXECUTABLE" $line
+            $LASTEXITCODE = $LASTEXITCODE
+
+            if ($LASTEXITCODE -ne 0) {
+              $SCRIPT_EXIT_CODE = $LASTEXITCODE
+            }
           }
 
           if (Test-Path artifacts) {
-              Move-Item artifacts artifacts-win -Force
+            Move-Item artifacts artifacts-win -Force
           }
 
           $EXIT_CODE = Get-Content -Path "TEST_EXIT_CODE"
           if ([int]$EXIT_CODE -ne 0) {
-              exit [int]$EXIT_CODE
+            exit [int]$EXIT_CODE
           }
 
           exit $SCRIPT_EXIT_CODE
