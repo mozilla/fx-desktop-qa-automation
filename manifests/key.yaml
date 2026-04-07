@@ -798,6 +798,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_delete_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_edit_primary_password:
     result: pass
     splits:
