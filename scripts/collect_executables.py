@@ -9,6 +9,7 @@ from os import environ
 from platform import uname
 from sys import argv, exit
 from time import sleep
+from urllib.parse import quote, urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -206,7 +207,6 @@ def main(args):
             build = 1
             if response.status_code < 300:
                 soup = BeautifulSoup(response.text, "html.parser")
-                executable_name = ""
                 # Extract the text of each line
                 for line in soup.find_all("a"):
                     line_text = line.getText().split(".")
@@ -226,10 +226,10 @@ def main(args):
         for _ in range(3):
             if status < 300:
                 response_text = response.text
-            else:
-                sleep(3)
-                response = requests.get(fx_download_dir_url)
-                status = response.status_code
+                break
+            sleep(3)
+            response = requests.get(fx_download_dir_url)
+            status = response.status_code
 
         logging.warning(f"Collecting executable at {fx_download_dir_url}")
 
@@ -240,16 +240,24 @@ def main(args):
         soup = BeautifulSoup(response_text, "html.parser")
 
         executable_name = ""
-        # Extract the text of each line
         for line in soup.find_all("a"):
             line_text = line.getText().split(".")
             if not line_text[0]:
                 continue
-            # Get the executable name
             if line_text[-1] == get_fx_executable_extension():
-                executable_name = line.getText().replace(" ", "%20")
+                executable_name = line.getText()
 
-        fx_download_executable_url = rf"{fx_download_dir_url}{executable_name}"
+        if not executable_name:
+            exit(
+                f"Could not find a Firefox executable with extension "
+                f"'.{get_fx_executable_extension()}' at {fx_download_dir_url}."
+            )
+
+        fx_download_executable_url = urljoin(
+            fx_download_dir_url,
+            quote(executable_name, safe="/"),
+        )
+
         if number_only:
             if channel == "-devedition":
                 output = devedition_version
