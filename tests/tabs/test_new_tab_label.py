@@ -1,61 +1,54 @@
 import pytest
 
-
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 from modules.browser_object import ContextMenu, TabBar
+from modules.page_object_about_pages import AboutTelemetry
 
 @pytest.fixture()
 def test_case():
     return "1339887"
 
-def search_and_retrieve(driver:Firefox, alreadySearched):
-    if not alreadySearched:
-        searchBox = driver.find_element(By.ID, "search")
-        searchBox.send_keys("context-openANewTab")
-    else:
-        #no need to search again, just refresh the page
-        driver.switch_to.window(driver.window_handles[1]) #switches to "about:telemetry"
-        driver.refresh()
 
-    result = driver.find_element(By.XPATH, '//*[@id="context-openANewTab"]')
-    # result.text returns "context-openANewTab (value)"
-    value = result.text.split(" ")[-1]
-    return value
-
-def test_new_tab_label(driver:Firefox):
+def test_new_tab_label(driver: Firefox):
     tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
+    about_telemetry = AboutTelemetry(driver)
 
-    url_list = ["about:logo", "about:telemetry"]
-    driver.get(url_list[0])
+    driver.get("about:logo")
+    first_tab = tabs.get_tab(1)  # about:logo tab; get_tab index starts at 1, NOT 0
 
-    #get_tab index starts 1; NOT at 0!
-    first_tab = tabs.get_tab(1) #about:logo
-
-    #Step 1: Right click any opened tab and click New Tab
+    # Step 1: Right click any opened tab and click New Tab
     tabs.context_click(first_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
+
+    # Navigate the new tab to about:telemetry and verify scalar value is 1
     driver.switch_to.window(driver.window_handles[-1])
-    driver.get(url_list[1])
-    result_1 = search_and_retrieve(driver, False)
-    assert result_1 == "1", f"Expected 1 but got: {result_1}"
+    about_telemetry.open()
+    about_telemetry.search_telemetry("context-openANewTab")
+    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
+        ["context-openANewTab", "1"]
+    ), "Expected context-openANewTab to have value 1 after Step 1"
 
-    second_tab = tabs.get_tab(2) #'about:telemetry' tab
+    second_tab = tabs.get_tab(2)  # about:telemetry tab
 
-    #Step 2: Right click a opened tab and hit W key on the keyboard
+    # Step 2: Right click an open tab and press W to open a new tab
     tabs.context_click(second_tab)
     tabs.actions.send_keys("w").perform()
-    result_2 = search_and_retrieve(driver, True)
-    assert result_2 == "2", f"Expected 2 but got: {result_2}"
 
-    #Step 3: Modified
+    # Switch back to about:telemetry and refresh to pick up updated scalar
+    driver.switch_to.window(driver.window_handles[1])
+    driver.refresh()
+    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
+        ["context-openANewTab", "2"]
+    ), "Expected context-openANewTab to have value 2 after Step 2"
+
+    # Step 3: Right click in the Tab Bar and click New Tab
     tabs.context_click(second_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
-    result_3 = search_and_retrieve(driver, True)
-    assert result_3 == "3", f"Expected 3 but got: {result_3}"
 
- 
-
-
-
+    # Switch back to about:telemetry and refresh to pick up updated scalar
+    driver.switch_to.window(driver.window_handles[1])
+    driver.refresh()
+    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
+        ["context-openANewTab", "3"]
+    ), "Expected context-openANewTab to have value 3 after Step 3"
