@@ -58,7 +58,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
+    result: unstable
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:
@@ -114,11 +115,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
+    result: unstable
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
+    result: unstable
     splits:
     - functional1
   test_search_code_google_non_us:
@@ -130,7 +133,8 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_engine_result_page_load_on_reload:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
+    result: unstable
     splits:
     - functional1
   test_search_engine_selector:
@@ -381,7 +385,8 @@ downloads:
     splits:
     - functional1
   test_change_download_folder:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029672
+    result: unstable
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
@@ -410,7 +415,8 @@ downloads:
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029673
+    result: unstable
     splits:
     - functional1
   test_download_pdf:
@@ -681,11 +687,13 @@ notifications:
     splits:
     - functional2
   test_downloads_button_is_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029634
+    result: unstable
     splits:
     - functional2
   test_downloads_finished_button_is_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029634
+    result: unstable
     splits:
     - functional2
   test_geolocation_allow_browserleaks:
@@ -871,15 +879,19 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_username_edit_captured_in_dismissed_doorhanger:
+    result: pass
+    splits:
+    - functional2
 pdf_viewer:
   test_add_image_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
@@ -1243,6 +1255,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_vertical_tabs_mute_unmute:
+    result: pass
+    splits:
+    - functional2
   test_switch_between_horizontal_vertical_tabs:
     result: pass
     splits:
@@ -1256,6 +1272,10 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
+    result: pass
+    splits:
+    - functional2
+  test_vertical_tabs_reopen_closed_tab:
     result: pass
     splits:
     - functional2
@@ -1361,7 +1381,7 @@ tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: unstable
-      mac: pass
+      mac: unstable
       win: unstable
     splits:
     - functional2
