@@ -329,6 +329,15 @@ jobs:
         run: |
           pipenv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
+
+          Write-Host "Checking Firefox path: $env:FX_EXECUTABLE"
+          if (-not (Test-Path $env:FX_EXECUTABLE)) {
+              Write-Host "Firefox not found at expected path."
+              Write-Host "Listing install directory..."
+              Get-ChildItem 'C:\Program Files\Custom Firefox' -Recurse -ErrorAction SilentlyContinue
+              throw "Firefox executable not found at $env:FX_EXECUTABLE"
+          }
+
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
 
           "0" | Set-Content -Path "TEST_EXIT_CODE"
@@ -344,21 +353,16 @@ jobs:
               }
           }
 
-          mv artifacts artifacts-win || true
+          if (Test-Path artifacts) {
+              Move-Item artifacts artifacts-win -Force
+          }
 
           $EXIT_CODE = Get-Content -Path "TEST_EXIT_CODE"
-          if ($EXIT_CODE -ne 0) {
+          if ([int]$EXIT_CODE -ne 0) {
               exit [int]$EXIT_CODE
           }
 
-          exit $env:SCRIPT_EXIT_CODE
-
-      - name: Upload artifacts
-        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts-win-l10n
-          path: artifacts-win
+          exit $SCRIPT_EXIT_CODE
 
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
