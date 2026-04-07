@@ -258,35 +258,76 @@ def fx_executable(request, sys_platform):
     """Get the Fx executable path based on platform and edition request."""
     version = request.config.getoption("--fx-channel")
     location = request.config.getoption("--fx-executable")
+
     if location:
-        logging.warning(f"Using location: {location}")
-        return location
+        logging.warning(f"Using location from --fx-executable: {location}")
+    else:
+        # Path to build location. Use Custom by installing your incident build
+        # to the coinciding path.
+        if sys_platform == "Windows":
+            if version == "Firefox":
+                candidate_locations = [
+                    r"C:\Program Files\Mozilla Firefox\core\firefox.exe",
+                    r"C:\Program Files\Mozilla Firefox\firefox.exe",
+                ]
+            elif version == "Nightly":
+                candidate_locations = [
+                    r"C:\Program Files\Firefox Nightly\core\firefox.exe",
+                    r"C:\Program Files\Firefox Nightly\firefox.exe",
+                ]
+            elif version == "Custom":
+                candidate_locations = [
+                    r"C:\Program Files\Custom Firefox\core\firefox.exe",
+                    r"C:\Program Files\Custom Firefox\firefox.exe",
+                ]
+            else:
+                candidate_locations = []
+        elif sys_platform == "Darwin":
+            if version == "Firefox":
+                candidate_locations = [
+                    "/Applications/Firefox.app/Contents/MacOS/firefox",
+                ]
+            elif version == "Nightly":
+                candidate_locations = [
+                    "/Applications/Firefox Nightly.app/Contents/MacOS/firefox",
+                ]
+            elif version == "Custom":
+                candidate_locations = [
+                    "/Applications/Custom Firefox.app/Contents/MacOS/firefox",
+                ]
+            else:
+                candidate_locations = []
+        elif sys_platform == "Linux":
+            user = os.environ.get("USER")
+            if version == "Firefox":
+                candidate_locations = [
+                    f"/home/{user}/Desktop/Firefox/firefox",
+                ]
+            elif version == "Nightly":
+                candidate_locations = [
+                    f"/home/{user}/Desktop/Firefox Nightly/firefox",
+                ]
+            elif version == "Custom":
+                candidate_locations = [
+                    f"/home/{user}/Desktop/Custom Firefox/firefox",
+                    "./firefox/firefox",
+                ]
+            else:
+                candidate_locations = []
+        else:
+            candidate_locations = []
 
-    # Path to build location.  Use Custom by installing your incident build to the coinciding path.
-    location = ""
-    if sys_platform == "Windows":
-        if version == "Firefox":
-            location = r"C:\Program Files\Mozilla Firefox\firefox.exe"
-        elif version == "Nightly":
-            location = r"C:\Program Files\Firefox Nightly\firefox.exe"
-        elif version == "Custom":
-            location = r"C:\Program Files\Custom Firefox\firefox.exe"
-    elif sys_platform == "Darwin":
-        if version == "Firefox":
-            location = "/Applications/Firefox.app/Contents/MacOS/firefox"
-        elif version == "Nightly":
-            location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox"
-        elif version == "Custom":
-            location = "/Applications/Custom Firefox.app/Contents/MacOS/firefox"
-    elif sys_platform == "Linux":
-        user = os.environ.get("USER")
-        if version == "Firefox":
-            location = f"/home/{user}/Desktop/Firefox/firefox"
-        elif version == "Nightly":
-            location = f"/home/{user}/Desktop/Firefox Nightly/firefox"
-        elif version == "Custom":
-            location = f"/home/{user}/Desktop/Custom Firefox/firefox"
+        location = next(
+            (path for path in candidate_locations if os.path.exists(path)), ""
+        )
 
+    if not location:
+        raise FileNotFoundError(
+            f"Firefox executable could not be resolved for platform={sys_platform}, "
+            f"channel={version}. Pass --fx-executable explicitly or install Firefox in the expected location."
+        )
+
+    logging.warning(f"Resolved Firefox executable: {location}")
     return location
 
 
@@ -446,7 +487,7 @@ def driver(
     request,
     suite_id: str,
     test_case: str,
-    tmp_path: str,
+    tmp_path,
     use_profile: str | bool,
 ):
     """
@@ -489,16 +530,17 @@ def driver(
     options = Options()
     # options.log.level = "trace"
     options.add_argument("--remote-allow-system-access")
-    options.binary_location = fx_executable
-    # options.set_preference("app.update.disabledForTesting", False)
-    # Add validation
+
     if not os.path.exists(fx_executable):
         raise FileNotFoundError(f"Firefox executable not found at: {fx_executable}")
 
-    if not os.access(fx_executable, os.X_OK):
+    if os.name != "nt" and not os.access(fx_executable, os.X_OK):
         raise PermissionError(f"Firefox executable is not executable: {fx_executable}")
 
+    logging.warning(f"Using Firefox binary: {fx_executable}")
     options.binary_location = fx_executable
+    # options.set_preference("app.update.disabledForTesting", False)
+
     if use_profile:
         profile_path = tmp_path / use_profile
         unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
