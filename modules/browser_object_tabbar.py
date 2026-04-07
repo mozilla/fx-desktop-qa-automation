@@ -715,5 +715,3 @@ class TabBar(BasePage):
                 self.driver.switch_to.window(handle)
                 urls.add(self.driver.current_url)
         return urls
-
-  
