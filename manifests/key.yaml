@@ -1131,3 +1131,104 @@ theme_and_toolbar:
     result: pass
     splits:
     - functional2
+ai_controls:
+  test_ai_features_keyboard_accessible:
+    result: pass
+    splits:
+    - functional1
+  test_ai_settings_visible_high_contrast:
+    result: pass
+    splits:
+    - functional1
+  test_ai_settings_link_shortcut_visible:
+    result: pass
+    splits:
+    - functional1
+  test_keyboard_navigation_to_translations_setting:
+    result: pass
+    splits:
+    - functional1
+  test_keyboard_navigation_to_link_preview_setting:
+    result: pass
+    splits:
+    - functional1
+  test_keyboard_navigation_to_smart_tab_groups_setting:
+    result: pass
+    splits:
+    - functional1
+  test_block_all_ai_features_option_persists:
+    result: pass
+    splits:
+    - functional1
+  test_unblock_all_ai_features_restores_state:
+    result: pass
+    splits:
+    - functional1
+  test_enabled_features_remain_after_unblock:
+    result: pass
+    splits:
+    - functional1
+  test_cancel_blocking_all_ai_enhancements:
+    result: pass
+    splits:
+    - functional1
+  test_chatbot_provider_selection_reflects_on_ai_controls_page:
+    result: pass
+    splits:
+    - functional1
+  test_web_extensions_ai_api_disabled_when_blocking:
+    result: pass
+    splits:
+    - functional1
+  test_all_ai_models_deleted_when_features_blocked:
+    result: pass
+    splits:
+    - functional1
+  test_pdf_alt_text_feature_not_displayed_for_non_en_builds:
+    result: pass
+    splits:
+    - functional1
+  test_smart_tab_groups_not_displayed_for_non_en_builds:
+    result: pass
+    splits:
+    - functional1
+  test_link_preview_feature_localized:
+    result: pass
+    splits:
+    - functional1
+  test_translations_feature_localized:
+    result: pass
+    splits:
+    - functional1
+  test_chatbot_feature_localized:
+    result: pass
+    splits:
+    - functional1
+  test_ai_controls_labels_localized:
+    result: pass
+    splits:
+    - functional1
+  test_disable_all_ai_features_via_policies:
+    result: pass
+    splits:
+    - functional1
+  test_disable_only_chatbot_via_policies:
+    result: pass
+    splits:
+    - functional1
+  test_disable_only_smart_tab_groups_via_policies:
+    result: pass
+    splits:
+    - functional1
+  test_disable_only_link_previews_via_policies:
+    result: pass
+    splits:
+    - functional1
+  test_disable_only_translations_via_policies:
+    result: pass
+    splits:
+    - functional1
+  test_enable_ai_features_when_policy_changed:
+    result: pass
+    splits:
+    - functional1
