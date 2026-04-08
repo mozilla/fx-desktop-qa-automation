@@ -520,8 +520,7 @@ class Navigation(BasePage):
 
         try:
             self.custom_wait(timeout=3, poll_frequency=0.25).until(_get_warning_button)
-        except Exception as e:
-            logging.warning(e)
+        except TimeoutException:
             return self
         self.element_clickable("file-download-warning-button")
         self.click_on("file-download-warning-button")
