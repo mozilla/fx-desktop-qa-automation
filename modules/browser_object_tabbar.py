@@ -150,6 +150,14 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def deselect_all_tabs(self) -> BasePage:
+        """Clears multi-tab selection by clicking the first tab not in the multi-selection."""
+        tabs = self.get_elements("non-multiselected-tab")
+        if tabs:
+            tabs[0].click()
+        return self
+
+    @BasePage.context_chrome
     def click_tab_mute_button(self, identifier: Union[str, int]) -> BasePage:
         """Click the tab icon overlay, no matter what's happening with media"""
         logging.info(f"toggling tab mute for {identifier}")

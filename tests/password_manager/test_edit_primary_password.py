@@ -30,19 +30,13 @@ def test_edit_primary_password(driver: Firefox):
 
     # Select the "Use a primary password" check box to trigger the "Change Primary Password" window
     about_prefs.open()
-    about_prefs.click_on("use-primary-password")
-    primary_pw_popup = about_prefs.get_element("browser-popup")
-    ba.switch_to_iframe_context(primary_pw_popup)
+    about_prefs.open_primary_password_popup(ba)
 
     # Primary password can be changed
-    about_prefs.get_element("enter-new-password").send_keys(PRIMARY_PASSWORD)
-    about_prefs.get_element("reenter-new-password").send_keys(PRIMARY_PASSWORD)
-    about_prefs.click_on("submit-password")
+    about_prefs.set_primary_password(PRIMARY_PASSWORD)
 
     # Check that the pop-up appears
-    alert = about_prefs.get_alert()
-    assert alert.text == ALERT_MESSAGE
-    alert.accept()
+    about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)
 
     # Click on the Change Primary Password button
     about_prefs.open()
@@ -57,6 +51,4 @@ def test_edit_primary_password(driver: Firefox):
     about_prefs.click_on("submit-password")
 
     # Check that the pop-up appears
-    alert = about_prefs.get_alert()
-    assert alert.text == ALERT_MESSAGE
-    alert.accept()
+    about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)

@@ -980,6 +980,7 @@ class AboutPrefs(BasePage):
         alert.accept()
         return self
 
+
 class AboutAddons(BasePage):
     """
     The POM for the about:addons page
