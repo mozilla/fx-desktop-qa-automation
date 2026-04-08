@@ -23,9 +23,8 @@ _Mark the relevant boxes, delete irrelevant lines._
 - [ ] Changes the BasePage
 - [ ] Changes or creates a BOM/POM (name the object model): _
 - [ ] Changes CI flow
-- [ ] Changes scheduled Beta or DevEdition
-- [ ] Changes Git hooks or Github settings
-- [ ] Changes L10n harness
+- [ ] Changes scheduled Beta / DevEdition / RC
+- [ ] Changes Autofill L10n harness
 
 ### Screenshots or Explanations
 
