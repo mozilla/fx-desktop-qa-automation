@@ -48,7 +48,10 @@ class Dropdown(Region):
     ):
         """Select an option in the dropdown. Does not return self."""
         try:
-            if not self.dropmarker or self.dropmarker.get_attribute("open") != "true":
+            if (
+                self.dropmarker is None
+                or self.dropmarker.get_attribute("open") != "true"
+            ):
                 self.root.click()
         except AttributeError:
             self.root.click()
