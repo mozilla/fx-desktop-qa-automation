@@ -50,4 +50,3 @@ def test_about_logins_edit_prompts_primary_password(driver: Firefox):
     about_logins.element_attribute_contains(
         "about-logins-page-username-field", "value", NEW_USERNAME
     )
-
