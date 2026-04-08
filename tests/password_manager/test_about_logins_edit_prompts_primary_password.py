@@ -1,10 +1,7 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object_about_pages import AboutLogins
-from modules.page_object_autofill import LoginAutofill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
@@ -14,6 +11,7 @@ PASSWORD = "password1"
 PRIMARY_PASSWORD = "securePassword1"
 ALERT_MESSAGE = "Primary Password successfully changed."
 SECOND_ALERT_MESSAGE = "Please enter your Primary Password."
+NEW_USERNAME = "new username"
 
 
 @pytest.fixture()
@@ -28,7 +26,6 @@ def test_about_logins_edit_prompts_primary_password(driver: Firefox):
 
     # Instantiate objects
     about_logins = AboutLogins(driver)
-    login = LoginAutofill(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
 
@@ -45,8 +42,13 @@ def test_about_logins_edit_prompts_primary_password(driver: Firefox):
     # Click on the "Edit" button
     about_logins.click_on("edit-login")
 
-    alert = about_prefs.get_alert()
-    #alert.send_keys(PRIMARY_PASSWORD)
-    #sleep(5)
-    assert alert.text == SECOND_ALERT_MESSAGE
-    alert.accept()
+    # Enter the correct Primary Password
+    about_logins.enter_primary_password(PRIMARY_PASSWORD)
+
+    # The Edit mode is opened, change username and verify the field is changed
+    about_logins.get_element("about-logins-page-username-field").send_keys(NEW_USERNAME)
+    about_logins.click_on("save-edited-login")
+    about_logins.element_attribute_contains(
+        "about-logins-page-username-field", "value", NEW_USERNAME
+    )
+
