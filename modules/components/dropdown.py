@@ -19,6 +19,7 @@ class Dropdown(Region):
             page.__class__.__name__ == "AboutPrefs"
             and page.url_kwargs.get("category") == "search"
         )
+        self.dropmarker = None
         if require_shadow:
             self.shadow_elements = self.utils.get_shadow_content(self.root)
             try:
@@ -44,17 +45,9 @@ class Dropdown(Region):
         option_tag="menuitem",
         label_name="label",
         expected_root_value=None,
-        expected_root_label=None,
     ):
-        """Select an option in the dropdown. Returns self on success, False if no option matched.
-        If both expected_root_value and expected_root_label are passed, expected_root_label is ignored."""
-        try:
-            if (
-                self.dropmarker is None
-                or self.dropmarker.get_attribute("open") != "true"
-            ):
-                self.root.click()
-        except AttributeError:
+        """Select an option in the dropdown. Returns self on success, False if no option matched."""
+        if self.dropmarker is None or self.dropmarker.get_attribute("open") != "true":
             self.root.click()
 
         if self.is_search_dropdown:
@@ -100,10 +93,6 @@ class Dropdown(Region):
             elif expected_root_value is not None:
                 self.wait.until(
                     lambda _: self.root.get_attribute("value") == expected_root_value
-                )
-            elif expected_root_label is not None:
-                self.wait.until(
-                    lambda _: self.root.get_attribute("label") == expected_root_label
                 )
             else:
                 self.wait.until(EC.element_to_be_selected(target_option))

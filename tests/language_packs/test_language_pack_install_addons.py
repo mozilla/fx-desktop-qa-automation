@@ -58,11 +58,11 @@ def test_language_pack_install_from_addons(
     dropdown = Dropdown(page=about_prefs, root=language_dropdown)
     # prefs-html-root[lang] and language-set-alternative-button[label] checks were removed
     # as they were flaky on macOS; wait_for_selection with expected_root_value is used instead
-    dropdown.select_option(
+    assert dropdown.select_option(
         drop_down_name,
         double_click=False,
         wait_for_selection=True,
         expected_root_value=shortform,
-    )
+    ), f"Language option '{drop_down_name}' not found in dropdown"
 
     assert language_dropdown.get_attribute("label") == drop_down_name
