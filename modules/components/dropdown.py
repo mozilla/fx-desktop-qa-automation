@@ -46,7 +46,8 @@ class Dropdown(Region):
         expected_root_value=None,
         expected_root_label=None,
     ):
-        """Select an option in the dropdown. Does not return self."""
+        """Select an option in the dropdown. Returns self on success, False if no option matched.
+        If both expected_root_value and expected_root_label are passed, expected_root_label is ignored."""
         try:
             if (
                 self.dropmarker is None

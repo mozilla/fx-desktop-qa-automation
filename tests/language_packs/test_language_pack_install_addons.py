@@ -15,14 +15,11 @@ LANGUAGES = [
         "Italiano",
         "LanguageTools-table-row LanguageTools-lang-it",
         "it",
-        "Imposta alternative…",
     )
 ]
 
 
-@pytest.mark.parametrize(
-    "drop_down_name, language_label, shortform, localized_text", LANGUAGES
-)
+@pytest.mark.parametrize("drop_down_name, language_label, shortform", LANGUAGES)
 def test_language_pack_install_from_addons(
     driver: Firefox,
     amo_languages: AmoLanguages,
@@ -31,7 +28,6 @@ def test_language_pack_install_from_addons(
     drop_down_name: str,
     language_label: str,
     shortform: str,
-    localized_text: str,
 ):
     """
     C1549408: verify that installing a language pack from about:addons will correctly change the locale
