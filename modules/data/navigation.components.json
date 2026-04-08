@@ -580,9 +580,9 @@
         "groups": []
     },
     "searchbar-input": {
-        "selectorData": "#search-container #urlbar-input",
+        "selectorData": "input[aria-controls='searchbar-results']",
         "strategy": "css",
-        "groups": []
+        "groups": ["doNotCache"]
     },
     "searchbar-suggestions": {
         "selectorData": "div.urlbarView-row",

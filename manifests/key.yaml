@@ -58,8 +58,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:
@@ -115,13 +114,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_code_google_non_us:
@@ -133,8 +130,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_engine_result_page_load_on_reload:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029670
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_engine_selector:
@@ -806,6 +802,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_delete_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_edit_primary_password:
     result: pass
     splits:
@@ -867,6 +867,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_taobao_password_management:
+    result: pass
+    splits:
+    - functional1
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -1244,6 +1248,10 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_bookmarked:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_multiple_vertical_tabs_selection:
     result: pass
     splits:
     - functional2

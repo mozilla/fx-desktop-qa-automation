@@ -703,5 +703,21 @@
     "selectorData": "oldpw",
     "strategy": "id",
     "groups": ["doNotCache"]
+  },
+  "remove-current-password": {
+    "selectorData": "password",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-primary-password-box": {
+    "selectorData": "removemp",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-password": {
+    "selectorData": "button[label^='Remove']",
+    "strategy": "css",
+    "shadowParent": "remove-primary-password-box",
+    "groups": []
   }
 }

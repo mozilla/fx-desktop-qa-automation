@@ -184,6 +184,13 @@
         "strategy": "css",
         "groups": []
     },
+    "non-multiselected-tab": {
+        "selectorData": "tab.tabbrowser-tab:not([multiselected])",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "all-tabs": {
         "selectorData": "tabbrowser-tab",
         "strategy": "class",
