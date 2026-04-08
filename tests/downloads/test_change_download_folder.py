@@ -8,9 +8,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 
-FIRST_FILE_URL = "https://download.samplelib.com/mp3/sample-3s.mp3"
-SECOND_FILE_URL = "https://download.samplelib.com/mp3/sample-6s.mp3"
-
 FIRST_FILE_REGEX = r"sample-3s(\s\(\d+\))?\.mp3$"
 SECOND_FILE_REGEX = r"sample-6s(\s\(\d+\))?\.mp3$"
 
