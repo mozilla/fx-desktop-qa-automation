@@ -1237,15 +1237,15 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_multiple_vertical_tabs_selection:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tab_can_be_reloaded:
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_bookmarked:
-    result: pass
-    splits:
-    - functional2
-  test_sidebar_multiple_vertical_tabs_selection:
     result: pass
     splits:
     - functional2
