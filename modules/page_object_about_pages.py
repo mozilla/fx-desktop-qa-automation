@@ -431,12 +431,15 @@ class AboutLogins(BasePage):
         return self
 
     @BasePage.context_chrome
-    def dismiss_primary_password_prompt(self):
+    def dismiss_primary_password_prompt(self, expected_tabs=2) -> BasePage:
         """
         Switches to the primary password prompt tab and dismisses it using ESC.
         """
 
         original_window = self.driver.current_window_handle
+
+        # Wait until new tab (prompt) is opened
+        self.wait_for_num_tabs(expected_tabs)
 
         # Switch to the newest tab (prompt)
         self.driver.switch_to.window(self.driver.window_handles[-1])

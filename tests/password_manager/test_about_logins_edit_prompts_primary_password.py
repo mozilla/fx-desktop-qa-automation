@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_about_pages import AboutLogins
+from modules.page_object import AboutLogins
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
@@ -10,7 +10,6 @@ USERNAME = "username1"
 PASSWORD = "password1"
 PRIMARY_PASSWORD = "securePassword1"
 ALERT_MESSAGE = "Primary Password successfully changed."
-SECOND_ALERT_MESSAGE = "Please enter your Primary Password."
 NEW_USERNAME = "new username"
 
 
