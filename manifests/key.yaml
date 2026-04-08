@@ -381,8 +381,7 @@ downloads:
     splits:
     - functional1
   test_change_download_folder:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029672
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
@@ -411,8 +410,7 @@ downloads:
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029673
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_pdf:
