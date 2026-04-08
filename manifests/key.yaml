@@ -381,8 +381,7 @@ downloads:
     splits:
     - functional1
   test_change_download_folder:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029672
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
@@ -411,8 +410,7 @@ downloads:
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029673
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_pdf:
@@ -1231,7 +1229,7 @@ sidebar:
     result: pass
     splits:
     - functional2
-  test_sidebar-button-always-displayed-on-a-fresh-profile:
+  test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
     - functional2
@@ -1243,15 +1241,15 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_multiple_vertical_tabs_selection:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tab_can_be_reloaded:
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_bookmarked:
-    result: pass
-    splits:
-    - functional2
-  test_sidebar_multiple_vertical_tabs_selection:
     result: pass
     splits:
     - functional2

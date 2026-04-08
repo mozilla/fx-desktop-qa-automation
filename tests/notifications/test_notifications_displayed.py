@@ -7,6 +7,7 @@ from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
 TEST_PHRASE = "Aloha"
+NOTI_TEST_PAGE = "notification_test.html"
 
 
 @pytest.fixture()
@@ -22,8 +23,8 @@ def test_case():
 
 @pytest.fixture()
 def temp_page(tmp_path):
-    loc = tmp_path / "notification_test.html"
-    copyfile("data/notification_test.html", loc)
+    loc = tmp_path / NOTI_TEST_PAGE
+    copyfile(f"data/pages/{NOTI_TEST_PAGE}", loc)
     return loc
 
 

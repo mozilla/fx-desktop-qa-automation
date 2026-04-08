@@ -17,7 +17,7 @@ LOCAL_HTML = "basic_webpage.html"
 @pytest.fixture()
 def local_doc_path(tmp_path):
     loc = tmp_path / LOCAL_HTML
-    copyfile(f"data/{LOCAL_HTML}", loc)
+    copyfile(f"data/pages/{LOCAL_HTML}", loc)
     # copy goomy too!
     copyfile("data/goomy.png", tmp_path / "goomy.png")
     return loc

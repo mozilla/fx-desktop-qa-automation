@@ -1,21 +1,24 @@
 import os
 import re
+from shutil import copyfile
 
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutPrefs
-
-FIRST_FILE_URL = "https://download.samplelib.com/mp3/sample-3s.mp3"
-SECOND_FILE_URL = "https://download.samplelib.com/mp3/sample-6s.mp3"
 
 FIRST_FILE_REGEX = r"sample-3s(\s\(\d+\))?\.mp3$"
 SECOND_FILE_REGEX = r"sample-6s(\s\(\d+\))?\.mp3$"
 
 # Downloads panel value (chrome) often contains full filename; allow duplicates.
 MP3_PANEL_NAME_REGEX = r".*\.mp3(\s\(\d+\))?$"
+MP3_DOWNLOAD_PAGE = "mp3_download.html"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("media.play-stand-alone", False)]
 
 
 @pytest.fixture()
@@ -28,16 +31,27 @@ def delete_files_regex_string():
     return r"sample-(3s|6s)(\s\(\d+\))?\.mp3$"
 
 
-def _trigger_download(driver: Firefox, url: str) -> None:
-    """Reuse the downloads test pattern: create + click an anchor."""
-    driver.execute_script(
-        """
-        const a = document.createElement("a");
-        a.href = arguments[0];
-        a.click();
-        """,
-        url,
-    )
+@pytest.fixture()
+def temp_page(tmp_path):
+    loc = tmp_path / MP3_DOWNLOAD_PAGE
+    copyfile(f"data/pages/{MP3_DOWNLOAD_PAGE}", loc)
+    return loc
+
+
+@pytest.fixture()
+def temp_selectors():
+    return {
+        "link-3s": {
+            "selectorData": "mp3-link-3s",
+            "strategy": "class",
+            "groups": [],
+        },
+        "link-6s": {
+            "selectorData": "mp3-link-6s",
+            "strategy": "class",
+            "groups": [],
+        },
+    }
 
 
 def _set_download_dir(driver: Firefox, path: str) -> None:
@@ -58,6 +72,8 @@ def test_change_download_folder(
     driver: Firefox,
     downloads_folder: str,
     tmp_path,
+    temp_page,
+    temp_selectors,
     delete_files,
 ):
     """
@@ -67,14 +83,12 @@ def test_change_download_folder(
     nav = Navigation(driver)
 
     # Download a file (default folder)
-    page = GenericPage(driver, url="about:blank")
+    page = GenericPage(driver, url=f"file://{temp_page}")
+    page.elements |= temp_selectors
     page.open()
-    _trigger_download(driver, FIRST_FILE_URL)
+    page.click_on("link-3s")
 
-    try:
-        nav.click_file_download_warning_panel()
-    except Exception:
-        pass
+    nav.click_file_download_warning_panel()
 
     nav.element_visible("download-target-element")
     nav.wait_for_download_completion()
@@ -88,24 +102,15 @@ def test_change_download_folder(
         )
     )
 
-    # Go to about:preferences and search for "Downloads"
-    prefs = AboutPrefs(driver, category="general")
-    prefs.open()
-    prefs.find_in_settings("Downloads")
-
     # Change the download folder (Save files to)
     custom_dir = tmp_path / "custom-downloads"
     custom_dir.mkdir(parents=True, exist_ok=True)
     _set_download_dir(driver, str(custom_dir))
 
     # Download another file (should land in new folder)
-    page.open()
-    _trigger_download(driver, SECOND_FILE_URL)
+    page.click_on("link-6s")
 
-    try:
-        nav.click_file_download_warning_panel()
-    except Exception:
-        pass
+    nav.click_file_download_warning_panel()
 
     nav.element_visible("download-target-element")
     nav.wait_for_download_completion()
