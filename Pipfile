@@ -30,8 +30,8 @@ beautifulsoup4 = "4.12.3"
 pyautogui = "*"
 brotli = "*"
 opencv-python = "*"
-tk = "*"
 python-dev-tools = "*"
+python3-xlib = "*"
 
 [dev-packages]
 werkzeug = "==3.0.3"

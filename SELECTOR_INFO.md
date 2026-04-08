@@ -1384,6 +1384,41 @@ Description: Saved passwords button in about:preferences#privacy
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: change-primary-password
+Selector Data: "changeMasterPassword"
+Description: Change primary password button in about:preferences#privacy
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-primary-password
+Selector Data: "oldpw"
+Description: Input for current password in the Change Primary Password dialog
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-current-password
+Selector Data: "password"
+Description: Input for current password in the Remove Primary Password dialog
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-primary-password-box
+Selector Data: "removemp"
+Description: Shadow parent of the remove button
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-password
+Selector Data: "button[label^='Remove']"
+Description: Remove button to remove the primary password
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1832,6 +1867,13 @@ Description: Login autofill manage passwords button
 Location: Login autofill
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: password-notification-username-field
+Selector Data: "password-notification-username"
+Description: Username field in the password notification popup
+Location: Username field in the password notification popup
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -1929,6 +1971,13 @@ Selector Name: context-menu-unpin-tab
 Selector Data: "context_unpinTab"
 Description: Tab context click option "Unpin Tab"
 Location: Any pinned browser tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-toggle-mute-tab
+Selector Data: "context_toggleMuteTab"
+Description: Tab context click option "Mute Tab" / "Unmute Tab" — single toggle element whose label changes based on tab audio state
+Location: Any tab playing or muted audio
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
@@ -3856,13 +3905,6 @@ Selector Name: password-notification-popup
 Selector Data: "password-notification"
 Description: Password notification popup
 Location: Password notification prompt in Address bar
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector Name: password-notification-username-field
-Selector Data: "password-notification-username"
-Description: Username field in the password notification popup
-Location: Username field in the password notification popup
 Path to .json: modules/data/navigation.components.json
 ```
 ```

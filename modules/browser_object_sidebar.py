@@ -29,6 +29,14 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def move_sidebar_to_right(self) -> BasePage:
+        """Move the sidebar to the right side by setting sidebar.position_start to False."""
+        self.driver.execute_script(
+            "Services.prefs.setBoolPref('sidebar.position_start', false);"
+        )
+        return self
+
+    @BasePage.context_chrome
     def expect_extension_pinned_to_sidebar(self, extension_id: str):
         """Verify the extension button is present in the sidebar strip.
 

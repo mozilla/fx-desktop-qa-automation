@@ -71,8 +71,18 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-pin-selected-tabs": {
+        "selectorData": "context_pinSelectedTabs",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-unpin-tab": {
         "selectorData": "context_unpinTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-unpin-selected-tabs": {
+        "selectorData": "context_unpinSelectedTabs",
         "strategy": "id",
         "groups": []
     },
@@ -285,6 +295,11 @@
     },
     "context-menu-bookmark-tab": {
         "selectorData": "context_bookmarkTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-toggle-mute-tab": {
+        "selectorData": "context_toggleMuteTab",
         "strategy": "id",
         "groups": []
     }

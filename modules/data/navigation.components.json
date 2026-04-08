@@ -580,9 +580,9 @@
         "groups": []
     },
     "searchbar-input": {
-        "selectorData": "#search-container #urlbar-input",
+        "selectorData": "input[aria-controls='searchbar-results']",
         "strategy": "css",
-        "groups": []
+        "groups": ["doNotCache"]
     },
     "searchbar-suggestions": {
         "selectorData": "div.urlbarView-row",
@@ -741,11 +741,6 @@
     },
     "password-notification-popup": {
         "selectorData": "password-notification",
-        "strategy": "id",
-        "groups": []
-    },
-    "password-notification-username-field": {
-        "selectorData": "password-notification-username",
         "strategy": "id",
         "groups": []
     },

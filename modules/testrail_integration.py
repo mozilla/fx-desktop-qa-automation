@@ -741,14 +741,27 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     durations = suite_info.get("durations")
     plan_title = expected_plan.get("name")
 
+    # Re-fetch the plan to get the latest entries — Mac and Windows both receive the
+    # same stale snapshot from collect_changes. Without a fresh fetch here, both
+    # platforms see no entry and both call create_new_plan_entry, producing duplicate
+    # entries with no config runs.
+    plan_id = expected_plan.get("id")
+    expected_plan = testrail_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+    )
+    if not expected_plan:
+        logging.warning(
+            f"Could not re-fetch plan {plan_title} (milestone: {milestone_id})"
+        )
+        return
+
     suite_entries = [
         entry
-        for entry in expected_plan.get("entries")
+        for entry in expected_plan.get("entries", [])
         if entry.get("suite_id") == suite_id
     ]
 
     # Add a missing entry to a plan
-    plan_id = expected_plan.get("id")
     if not suite_entries:
         # If no entry, create entry for suite
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")

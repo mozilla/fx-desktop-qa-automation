@@ -381,7 +381,8 @@ downloads:
     splits:
     - functional1
   test_change_download_folder:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029672
+    result: unstable
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
@@ -410,15 +411,13 @@ downloads:
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029673
+    result: unstable
     splits:
     - functional1
   test_download_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
@@ -617,10 +616,7 @@ menus:
     - ci
   test_frequently_used_context_menu:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026682
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_hyperlink_context_menu:
@@ -629,10 +625,7 @@ menus:
     - smoke
   test_image_context_menu_actions:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026680
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_tab_context_menu_actions:
@@ -680,7 +673,7 @@ notifications:
   test_cancel_webextension:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_deny_geolocation:
     result: pass
     splits:
@@ -690,17 +683,19 @@ notifications:
     splits:
     - functional2
   test_downloads_button_is_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029634
+    result: unstable
     splits:
-    - functional1
+    - functional2
   test_downloads_finished_button_is_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029634
+    result: unstable
     splits:
-    - functional1
+    - functional2
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -730,7 +725,7 @@ password_manager:
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
@@ -803,6 +798,14 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_delete_primary_password:
+    result: pass
+    splits:
+    - functional2
+  test_edit_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_multiple_saved_logins:
     comment: Issue with Mac GHA? trying pass to see what happens.
     result:
@@ -860,6 +863,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_taobao_password_management:
+    result: pass
+    splits:
+    - functional1
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -872,13 +879,14 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_username_edit_captured_in_dismissed_doorhanger:
+    result: pass
+    splits:
+    - functional2
 pdf_viewer:
   test_add_image_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
@@ -1239,6 +1247,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_multiple_vertical_tabs_selection:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tabs_closing_options:
     result: pass
     splits:
@@ -1248,6 +1260,10 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_move_options:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_mute_unmute:
     result: pass
     splits:
     - functional2
@@ -1264,6 +1280,10 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
+    result: pass
+    splits:
+    - functional2
+  test_vertical_tabs_reopen_closed_tab:
     result: pass
     splits:
     - functional2
@@ -1369,7 +1389,7 @@ tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: unstable
-      mac: pass
+      mac: unstable
       win: unstable
     splits:
     - functional2
