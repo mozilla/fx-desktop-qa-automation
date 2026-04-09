@@ -848,6 +848,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_primary_password_allows_csv_export:
+    result: pass
+    splits:
+    - functional2
   test_primary_password_triggered_on_about_logins_access:
     result: pass
     splits:
