@@ -8,11 +8,17 @@ TEST_URL = "https://download.samplelib.com/mp3/sample-3s.mp3"
 
 
 @pytest.fixture()
+def add_to_prefs_list():
+    return [("media.play-stand-alone", False)]
+
+
+@pytest.fixture()
 def test_case():
     return "125308"
 
 
 def _trigger_download(driver: Firefox, url: str) -> None:
+    """Create + click an anchor."""
     driver.execute_script(
         """
         const a = document.createElement("a");
@@ -35,6 +41,7 @@ def test_downloads_icon_is_displayed_after_download(driver: Firefox):
     # Trigger download
     _trigger_download(driver, TEST_URL)
 
+    # Optional warning panel in some environments
     try:
         nav.click_file_download_warning_panel()
     except Exception:
