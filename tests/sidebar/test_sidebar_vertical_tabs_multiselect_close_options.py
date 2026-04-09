@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -32,7 +30,6 @@ def test_sidebar_vertical_tabs_multiselect_close_options(
     tabs.context_click(tabs.get_tab(3))
     context_menu.click_context_item("context-menu-close-multiple-tabs-to-right")
     tabs.wait_for_num_tabs(3)
-    time.sleep(5)
 
     # Close tabs above: middle tab remains selected, close all tabs before it (tabs 1 and 2) via context menu
     context_menu.click_context_item("context-menu-close-multiple-tabs-to-left")
