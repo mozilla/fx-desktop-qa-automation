@@ -595,11 +595,7 @@ geolocation:
     - functional2
 language_packs:
   test_language_pack_install_addons:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026674
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - functional2
   test_language_pack_install_preferences:
@@ -922,11 +918,7 @@ pdf_viewer:
     splits:
     - smoke
   test_pdf_navigation:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026644
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - smoke
   test_zoom_pdf_viewer:
