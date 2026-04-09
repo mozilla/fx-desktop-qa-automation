@@ -57,29 +57,17 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     # Attempt to view the saved password in order to trigger the primary password prompt
     about_logins.element_visible("show-password-checkbox")
     about_logins.click_on("show-password-checkbox")
+
     # Dismiss the primary password prompt without entering the password
-    with driver.context(driver.CONTEXT_CHROME):
-        driver.switch_to.window(driver.window_handles[-1])
-        primary_password_prompt = about_logins.get_element("primary-password-prompt")
-        primary_password_prompt.send_keys(Keys.ESCAPE)
+    about_logins.dismiss_primary_password_prompt()
 
     # Navigate to about:logins again through the hamburger menu
     tabs.switch_to_new_tab()
     panel_ui.open_panel_menu()
     panel_ui.redirect_to_about_logins_page()
-    # Verify that the primary password prompt appears and enter the primary password
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.wait_for_num_tabs(2)
-        driver.switch_to.window(driver.window_handles[-1])
-        # Fetch a fresh reference to avoid staling
-        primary_password_prompt = about_logins.get_element("primary-password-prompt")
-        assert primary_password_prompt.is_displayed()
 
-        primary_password_input_field = about_logins.get_element(
-            "primary-password-dialog-input-field"
-        )
-        primary_password_input_field.send_keys(PASSWORD)
-        primary_password_input_field.send_keys(Keys.ENTER)
+    # Verify that the primary password prompt appears and enter the primary password
+    about_logins.enter_primary_password(PASSWORD)
 
     # Verify that about:logins page is accessible after the primary password was entered
     driver.switch_to.window(driver.window_handles[0])

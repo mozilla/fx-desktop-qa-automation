@@ -509,6 +509,19 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def click_file_download_warning_panel(self) -> BasePage:
         """exit file download warning panel if present"""
+
+        def _get_warning_button(d):
+            matches = self.get_elements("file-download-warning-button")
+            if not matches:
+                return False
+            if matches[0].is_displayed():
+                return True
+            return False
+
+        try:
+            self.custom_wait(timeout=3, poll_frequency=0.25).until(_get_warning_button)
+        except TimeoutException:
+            return self
         self.element_clickable("file-download-warning-button")
         self.click_on("file-download-warning-button")
         return self
