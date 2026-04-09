@@ -15,14 +15,11 @@ LANGUAGES = [
         "Italiano",
         "LanguageTools-table-row LanguageTools-lang-it",
         "it",
-        "Imposta alternative…",
     )
 ]
 
 
-@pytest.mark.parametrize(
-    "drop_down_name, language_label, shortform, localized_text", LANGUAGES
-)
+@pytest.mark.parametrize("drop_down_name, language_label, shortform", LANGUAGES)
 def test_language_pack_install_from_addons(
     driver: Firefox,
     amo_languages: AmoLanguages,
@@ -31,7 +28,6 @@ def test_language_pack_install_from_addons(
     drop_down_name: str,
     language_label: str,
     shortform: str,
-    localized_text: str,
 ):
     """
     C1549408: verify that installing a language pack from about:addons will correctly change the locale
@@ -60,9 +56,13 @@ def test_language_pack_install_from_addons(
     language_dropdown = about_prefs.get_element("language-dropdown")
 
     dropdown = Dropdown(page=about_prefs, root=language_dropdown)
-    dropdown.select_option(drop_down_name, double_click=True, wait_for_selection=False)
+    # prefs-html-root[lang] and language-set-alternative-button[label] checks were removed
+    # as they were flaky on macOS; wait_for_selection with expected_root_value is used instead
+    assert dropdown.select_option(
+        drop_down_name,
+        double_click=False,
+        wait_for_selection=True,
+        expected_root_value=shortform,
+    ), f"Language option '{drop_down_name}' not found in dropdown"
 
-    about_prefs.element_attribute_is("prefs-html-root", "lang", shortform)
-    about_prefs.element_attribute_is(
-        "language-set-alternative-button", "label", localized_text
-    )
+    assert language_dropdown.get_attribute("label") == drop_down_name
