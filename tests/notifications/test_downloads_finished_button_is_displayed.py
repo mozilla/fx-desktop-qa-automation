@@ -23,7 +23,7 @@ def delete_files_regex_string():
 
 
 def _trigger_download(driver: Firefox, url: str) -> None:
-    """Create + click an anchor."""
+    """Create and click an anchor."""
     driver.execute_script(
         """
         const a = document.createElement("a");
