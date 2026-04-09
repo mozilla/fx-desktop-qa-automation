@@ -43,7 +43,7 @@ def test_sidebar_vertical_tabs_multiselect_close_options(
     context_menu.click_context_item("context-menu-close-multiple-tabs-to-left")
     tabs.wait_for_num_tabs(2)
 
-    # Close tabs below: right-click tab 4 (last remaining) and close it
-    tabs.context_click(tabs.get_tab(4))
+    # Close tabs below: right-click tab 3 (first of 2 remaining) and close tab 4 below it
+    tabs.context_click(tabs.get_tab(3))
     context_menu.click_context_item("context-menu-close-multiple-tabs-to-right")
     tabs.wait_for_num_tabs(1)
