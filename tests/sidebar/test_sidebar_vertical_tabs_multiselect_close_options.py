@@ -26,20 +26,24 @@ def test_sidebar_vertical_tabs_multiselect_close_options(
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
     tabs.wait_for_num_tabs(5)
 
-    # Close tabs below: right-click tab 3 and close all tabs after it (tabs 4 and 5)
-    tabs.context_click(tabs.get_tab(3))
-    context_menu.click_context_item("context-menu-close-multiple-tabs-to-right")
+    # Close other tabs: select tabs 2, 3, 4; close all unselected tabs (1 and 5)
+    selected_tabs = tabs.select_multiple_tabs_by_indices([2, 3, 4], sys_platform)
+    tabs.context_click(selected_tabs[0])
+    context_menu.click_context_item("context-menu-close-multiple-tabs")
+    tabs.context_click(selected_tabs[0])
+    context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-other-tabs")
+    tabs.hide_popup("tabContextMenu")
     tabs.wait_for_num_tabs(3)
 
-    # Close tabs above: middle tab remains selected, close all tabs before it (tabs 1 and 2) via context menu
+    # Plain-click tab 3 to clear multiselection (all remaining tabs are still multiselected)
+    tabs.select_multiple_tabs_by_indices([3], sys_platform)
+
+    # Close tabs above: right-click tab 3 (middle remaining) and close tab 2 above it
+    tabs.context_click(tabs.get_tab(3))
     context_menu.click_context_item("context-menu-close-multiple-tabs-to-left")
-    tabs.wait_for_num_tabs(1)
+    tabs.wait_for_num_tabs(2)
 
-    # Open 3 more tabs
-    driver.switch_to.window(driver.window_handles[0])
-    tabs.open_urls_in_tabs(["about:robots", "about:logo", "about:mozilla"])
-    tabs.wait_for_num_tabs(4)
-
-    # One tab is selected, close other tabs
-    context_menu.click_on("context-menu-close-multiple-tabs-other-tabs")
+    # Close tabs below: right-click tab 4 (last remaining) and close it
+    tabs.context_click(tabs.get_tab(4))
+    context_menu.click_context_item("context-menu-close-multiple-tabs-to-right")
     tabs.wait_for_num_tabs(1)
