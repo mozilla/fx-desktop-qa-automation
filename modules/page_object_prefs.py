@@ -941,7 +941,7 @@ class AboutPrefs(BasePage):
     def enable_show_sidebar(self):
         """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
         checkbox = self.get_element("show-sidebar-checkbox")
-        if not checkbox.is_selected():
+        if not checkbox.get_attribute("checked"):
             self.click_on("show-sidebar-checkbox")
         return self
 
