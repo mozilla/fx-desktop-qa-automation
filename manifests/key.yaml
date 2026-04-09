@@ -849,7 +849,11 @@ password_manager:
     splits:
     - functional2
   test_primary_password_allows_csv_export:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004938
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:

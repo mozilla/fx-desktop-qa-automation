@@ -3,8 +3,7 @@ import os
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_about_pages import AboutLogins
-from modules.page_object_prefs import AboutPrefs
+from modules.page_object import AboutLogins, AboutPrefs
 from modules.util import BrowserActions
 
 TEST_PAGE_URL = "https://mozilla.github.io/"
@@ -19,6 +18,9 @@ def test_case():
     return "2241527"
 
 
+# This test is unstable on Ubuntu: Bug 2004938
+@pytest.mark.headed
+@pytest.mark.noxvfb
 def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
     """
     C2241527 - Verify that entering the Primary Password allows successful export of passwords to a CSV file
@@ -55,5 +57,5 @@ def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
     csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
     assert os.path.exists(csv_file)
 
-    # Delete the password.csv created
+    # Delete the passwords.csv created
     about_logins.remove_password_csv(downloads_folder)
