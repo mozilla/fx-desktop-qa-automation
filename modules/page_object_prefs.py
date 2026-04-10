@@ -1,10 +1,10 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -253,9 +253,25 @@ class AboutPrefs(BasePage):
         select a content type and action
         """
         el = self.get_element("actions-menu", labels=[content_type])
-        el.click()
-        self.click_on("actions-menu-option", labels=[content_type, action])
-        self.wait.until(lambda _: el.get_attribute("label") == action)
+        items = el.find_elements(By.TAG_NAME, "menuitem")
+        target_index = next(
+            (
+                i
+                for i, item in enumerate(items)
+                if item.get_attribute("label") == action
+            ),
+            None,
+        )
+        if target_index is None:
+            raise ValueError(
+                f"Option '{action}' not found in actions menu for {content_type}"
+            )
+        self.click_on("actions-menu", labels=[content_type])
+        menu = self.get_element("actions-menu", labels=[content_type])
+        menu.send_keys(Keys.HOME)
+        for _ in range(target_index):
+            menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
         return self
 
     def select_trackers_to_block(self, *options):
