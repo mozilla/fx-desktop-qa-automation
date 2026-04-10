@@ -1174,11 +1174,7 @@ security_and_privacy:
     splits:
     - functional2
   test_sidebar_removed_on_end_private_session:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026669
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_third_party_content_blocked_private_browsing:

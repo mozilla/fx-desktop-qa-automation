@@ -19,6 +19,9 @@ def add_to_prefs_list():
     ]
 
 
+# bump
+
+
 def test_sidebar_removed_on_end_private_session(
     driver: Firefox, menu_bar: MenuBar, nav: Navigation, panel_ui: PanelUi
 ):
