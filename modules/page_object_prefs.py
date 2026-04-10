@@ -251,8 +251,8 @@ class AboutPrefs(BasePage):
         From the applications list that handles how downloaded media is used,
         select a content type and action
         """
-        el = self.get_element("actions-menu", labels=[content_type])
-        items = el.find_elements(By.TAG_NAME, "menuitem")
+        menu = self.get_element("actions-menu", labels=[content_type])
+        items = menu.find_elements(By.TAG_NAME, "menuitem")
         target_index = next(
             (
                 i
@@ -266,7 +266,6 @@ class AboutPrefs(BasePage):
                 f"Option '{action}' not found in actions menu for {content_type}"
             )
         self.click_on("actions-menu", labels=[content_type])
-        menu = self.get_element("actions-menu", labels=[content_type])
         self.wait.until(
             lambda _: menu.get_attribute("open") is not None
         )  # wait for popup
