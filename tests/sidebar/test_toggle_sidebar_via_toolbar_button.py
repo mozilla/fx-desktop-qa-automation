@@ -10,9 +10,6 @@ def test_case():
     return "2639190"
 
 
-# bump
-
-
 @pytest.fixture()
 def add_to_prefs_list():
     return [("sidebar.revamp", False)]
@@ -20,8 +17,8 @@ def add_to_prefs_list():
 
 def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     """
-    C2639190 - Verify the sidebar can be opened and closed using the toolbar button after enabling Show Sidebar from
-    about:preferences.
+    C2639190 - Verify the sidebar can be opened and closed using the toolbar button after enabling
+    Show Sidebar from about:preferences.
     """
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="general")
