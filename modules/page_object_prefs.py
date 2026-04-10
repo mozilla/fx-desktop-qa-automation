@@ -940,9 +940,9 @@ class AboutPrefs(BasePage):
 
     def enable_show_sidebar(self):
         """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
-        checkbox = self.get_element("show-sidebar-checkbox")
-        if not checkbox.get_attribute("checked"):
+        if not self.get_element("show-sidebar-checkbox").get_attribute("checked"):
             self.click_on("show-sidebar-checkbox")
+        self.element_has_attribute("show-sidebar-checkbox", "checked")
         return self
 
     def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
