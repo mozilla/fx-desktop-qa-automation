@@ -706,7 +706,7 @@
     "selectorData": "input",
     "strategy": "id",
     "groups": [],
-    "shadowParent": "show-sidebase-checkbox"
+    "shadowParent": "show-sidebar-checkbox"
   },
   "change-primary-password": {
     "selectorData": "changeMasterPassword",
