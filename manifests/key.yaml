@@ -609,7 +609,6 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026682
     result: pass
     splits:
     - functional2
@@ -618,7 +617,6 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026680
     result: pass
     splits:
     - functional2
@@ -899,8 +897,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018765
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_open_pdf_in_FF:
