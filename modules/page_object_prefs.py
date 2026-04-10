@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 from time import sleep
 from typing import List, Literal
 
@@ -268,10 +267,16 @@ class AboutPrefs(BasePage):
             )
         self.click_on("actions-menu", labels=[content_type])
         menu = self.get_element("actions-menu", labels=[content_type])
+        self.wait.until(
+            lambda _: menu.get_attribute("open") is not None
+        )  # wait for popup
         menu.send_keys(Keys.HOME)
         for _ in range(target_index):
             menu.send_keys(Keys.DOWN)
         menu.send_keys(Keys.ENTER)
+        self.wait.until(
+            lambda _: menu.get_attribute("label") == action
+        )  # verify selection
         return self
 
     def select_trackers_to_block(self, *options):
