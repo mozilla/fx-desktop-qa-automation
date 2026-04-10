@@ -677,13 +677,11 @@ notifications:
     splits:
     - functional2
   test_downloads_button_is_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029634
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_downloads_finished_button_is_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2029634
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_geolocation_allow_browserleaks:
