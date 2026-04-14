@@ -8,6 +8,11 @@ TEST_URL = "https://download.samplelib.com/mp3/sample-3s.mp3"
 
 
 @pytest.fixture()
+def add_to_prefs_list():
+    return [("media.play-stand-alone", False)]
+
+
+@pytest.fixture()
 def test_case():
     return "125307"
 
@@ -18,7 +23,7 @@ def delete_files_regex_string():
 
 
 def _trigger_download(driver: Firefox, url: str) -> None:
-    """Create + click an anchor."""
+    """Create and click an anchor."""
     driver.execute_script(
         """
         const a = document.createElement("a");
