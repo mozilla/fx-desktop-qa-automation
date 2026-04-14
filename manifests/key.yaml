@@ -1220,7 +1220,7 @@ session_restore:
     splits:
     - functional2
 sidebar:
-  test_close_button_is_displayed_on_hovering_a_vertical_tab:
+  test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
     result: pass
     splits:
     - functional2

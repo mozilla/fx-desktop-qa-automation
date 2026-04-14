@@ -13,7 +13,7 @@ def test_case():
     return "2652733"
 
 
-def test_close_button_is_displayed_on_hovering_a_vertical_tab(driver: Firefox):
+def test_close_button_present_on_hovering_or_selecting_a_vertical_tab(driver: Firefox):
     """
     C2652733 - Verify the close (X) button is displayed and functional on a vertical tab when it is selected,
     hovered, or focused via keyboard.
