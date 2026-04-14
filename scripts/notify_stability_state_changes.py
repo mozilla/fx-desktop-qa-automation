@@ -30,24 +30,18 @@ if PLATFORM not in {"win", "mac"}:
 
 
 def load_manifest() -> dict:
+    """
+    Read manifest file and parse it into a Python dictionary.
+    """
     with MANIFEST_PATH.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 def manifest_entries(manifest: dict):
     """
-    Supports:
-      suite:
-        test_name:
-          result: ...
-          splits: ...
-
-    and:
-      suite:
-        test_file:
-          test_subtest:
-            result: ...
-            splits: ...
+    Supports two shapes of manifest entries: file-level, and subtest-level entry
+    It flattens both shapes into consistent stream of (test_nodeid, result_field)
+    Where test_nodeid looks like a pytest identifier.
     """
     for suite, suite_blob in manifest.items():
         if not isinstance(suite_blob, dict):
