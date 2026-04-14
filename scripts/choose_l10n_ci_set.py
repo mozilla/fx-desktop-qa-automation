@@ -7,8 +7,6 @@ import sys
 from collections import defaultdict
 from subprocess import check_output
 
-from modules.util import env_true
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 CI_MARK = "@pytest.mark.ci"
@@ -152,7 +150,10 @@ if __name__ == "__main__":
     for key in sample_mappings:
         regions = sorted(list(sample_mappings[key]))
         sample_mappings[key] = (regions[0], regions[-1])
-    if env_true("TESTRAIL_REPORT") or env_true("MANUAL"):
+    if (
+        os.environ.get("TESTRAIL_REPORT") == "true"
+        or os.environ.get("MANUAL") == "true"
+    ):
         # Run all tests if this is a scheduled beta or a manual run
         save_mappings(l10n_mappings)
         sys.exit(0)
