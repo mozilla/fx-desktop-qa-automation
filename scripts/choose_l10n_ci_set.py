@@ -128,7 +128,11 @@ if __name__ == "__main__":
         beta_version = int(
             (
                 subprocess.check_output(
-                    [sys.executable, "./scripts/collect_executables.py", "-n"]
+                    [
+                        sys.executable,
+                        "./scripts/collect_executables.py",
+                        "-n",
+                    ]
                 )
                 .strip()
                 .decode()
