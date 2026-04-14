@@ -70,7 +70,7 @@ def manifest_entries(manifest: dict):
                 yield nodeid, subentry.get("result")
 
 
-def manifest_state_for_platform(result_field, platform: str) -> Optional[str]:
+def manifest_state_for_platform(result_field, platform: str):
     """
     Manifest supports:
       result: pass
@@ -81,6 +81,16 @@ def manifest_state_for_platform(result_field, platform: str) -> Optional[str]:
         win: pass
         mac: unstable
         linux: pass
+
+    This method converts either forms into effective state for a platform:
+
+    result: pass   =>  win: pass,  mac: pass
+
+    result:
+        win: pass
+        mac: unstable
+
+        => win: pass,  mac: unstable
     """
     if isinstance(result_field, str):
         return result_field.lower()
