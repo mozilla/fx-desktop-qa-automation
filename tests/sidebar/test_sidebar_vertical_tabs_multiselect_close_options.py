@@ -27,16 +27,16 @@ def test_sidebar_vertical_tabs_multiselect_close_options(
     tabs.wait_for_num_tabs(5)
 
     # Close other tabs: select tabs 2, 3, 4; close all unselected tabs (1 and 5)
+    # In the multiselect vertical tabs context menu, close-other/above/below are top-level
+    # items (not nested under a "Close Multiple Tabs" submenu), so no parent hover is needed.
     selected_tabs = tabs.select_multiple_tabs_by_indices([2, 3, 4], sys_platform)
-    tabs.context_click(selected_tabs[0])
-    context_menu.click_context_item("context-menu-close-multiple-tabs")
     tabs.context_click(selected_tabs[0])
     context_menu.click_and_hide_menu("context-menu-close-multiple-tabs-other-tabs")
     tabs.hide_popup("tabContextMenu")
     tabs.wait_for_num_tabs(3)
 
-    # Plain-click tab 3 to clear multiselection (all remaining tabs are still multiselected)
-    tabs.select_multiple_tabs_by_indices([3], sys_platform)
+    # Plain-click tab 3 to clear multiselection
+    tabs.click_tab_by_index(3)
 
     # Close tabs above: right-click tab 3 (middle remaining) and close tab 2 above it
     tabs.context_click(tabs.get_tab(3))
