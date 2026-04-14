@@ -537,7 +537,9 @@
   "enter-new-password": {
     "selectorData": "pw1",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "form-container": {
     "selectorData": "form",
@@ -554,18 +556,24 @@
   "reenter-new-password": {
     "selectorData": "pw2",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "submit-password": {
     "selectorData": "button[label^='OK']",
     "strategy": "css",
     "shadowParent": "primary-password-box",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "primary-password-box": {
     "selectorData": "changemp",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "autoplay-settings-button": {
     "selectorData": "autoplaySettingsButton",
@@ -694,15 +702,25 @@
     "strategy": "id",
     "groups": []
   },
+  "show-sidebar-shadow-box": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "show-sidebar-checkbox"
+  },
   "change-primary-password": {
     "selectorData": "changeMasterPassword",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "current-primary-password": {
     "selectorData": "oldpw",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   },
   "remove-current-password": {
     "selectorData": "password",
