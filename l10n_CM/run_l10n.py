@@ -331,7 +331,7 @@ def run_unified(regions, unified_flags):
         regions (list[str]): A set of region identifiers.
         unified_flags (list[str]): A list of pytest flags to be used.
     """
-    unified_tests = get_region_tests("Unified", unified_flags.get("ci"))
+    unified_tests = get_region_tests("Unified", "--ci" in unified_flags)
     logging.info(f"Testing {live_sites} Sites.")
     for live_site in live_sites:
         # If the live_site is 'demo', skip starting the server
@@ -357,9 +357,9 @@ def run_unified(regions, unified_flags):
 if __name__ == "__main__":
     arguments = sys.argv[1:]
     flags = get_flags_and_sanitize(arguments)
-    if not flags.get("ci"):
-        if not os.environ.get("TESTRAIL_REPORT"):
-            flags["ci"] = True
+    if "--ci" not in flags and not os.environ.get("TESTRAIL_REPORT"):
+        flags.append("--ci")
+    logging.warning(flags)
     if len(live_sites) == 0:
         # Run on all live sites.
         live_sites = valid_sites
