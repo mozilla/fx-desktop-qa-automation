@@ -1,11 +1,8 @@
-#!/usr/bin/env python3
-
 import json
 import os
 from pathlib import Path
 from typing import Dict, List, Optional
 
-import requests
 import yaml
 from google.cloud import bigquery
 from slack_sdk import WebClient
@@ -21,11 +18,7 @@ WORKFLOW_FILE = os.environ.get("WORKFLOW_FILE", "main-stability.yml")
 
 PLATFORM = os.environ["PLATFORM"].lower()
 RUNS = int(os.environ.get("RUNS", "5"))
-INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in (
-    "1",
-    "true",
-    "yes",
-)
+INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "true")
 
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL", "C07AHPJ525V")
@@ -43,9 +36,6 @@ def load_manifest() -> dict:
 
 def manifest_entries(manifest: dict):
     """
-    Yield tuples:
-      (test_nodeid, result_field)
-
     Supports:
       suite:
         test_name:
