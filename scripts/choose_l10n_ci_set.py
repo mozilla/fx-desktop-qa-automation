@@ -197,11 +197,13 @@ if __name__ == "__main__":
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
     selected_mappings = defaultdict(set)
+    print(committed_files)
     if main_conftest in committed_files or base_page in committed_files:
         # Run sample tests for all mappings if main conftest or basepage changed
         selected_mappings |= sample_mappings
 
-    # Run sample tests for all mappings if any core l10n model, component, conftest, or tests are changed.
+    # Run sample tests for all mappings if any core l10n model, component, conftest, or
+    # tests are changed.
     for f in committed_files:
         # check if constants, sites or region directory files were changed or added.
         # if so, add the site/region mappings.
