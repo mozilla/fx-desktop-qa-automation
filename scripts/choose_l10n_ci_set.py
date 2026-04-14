@@ -150,11 +150,13 @@ if __name__ == "__main__":
     for key in sample_mappings:
         regions = sorted(list(sample_mappings[key]))
         sample_mappings[key] = (regions[0], regions[-1])
+        print("a")
     if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
         # Run all tests if this is a scheduled beta or a manual run
         save_mappings(l10n_mappings)
         sys.exit(0)
 
+    print("b")
     re_set_all = [
         r"l10n_CM/Unified/test_.*\.py",
         r"l10n_CM/Unified/conftest\.py",
@@ -198,6 +200,7 @@ if __name__ == "__main__":
     base_page = os.path.join("modules", "page_base.py")
     selected_mappings = defaultdict(set)
     if main_conftest in committed_files or base_page in committed_files:
+        print("c")
         # Run sample tests for all mappings if main conftest or basepage changed
         selected_mappings |= sample_mappings
 
@@ -208,9 +211,11 @@ if __name__ == "__main__":
         # if so, add the site/region mappings.
         for re_val in re_set_select:
             if re_val.match(f):
+                print("d")
                 process_changed_file(f, selected_mappings)
         for re_val in re_set_all:
             if re_val.match(f):
+                print("e")
                 selected_mappings |= sample_mappings
                 break
 
