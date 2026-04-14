@@ -359,7 +359,6 @@ if __name__ == "__main__":
     flags = get_flags_and_sanitize(arguments)
     if "--ci" not in flags and not os.environ.get("TESTRAIL_REPORT"):
         flags.append("--ci")
-    logging.warning(flags)
     if len(live_sites) == 0:
         # Run on all live sites.
         live_sites = valid_sites
