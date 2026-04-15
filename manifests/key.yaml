@@ -1276,6 +1276,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_switching_to_horizontal_tabs_disables_expand_on_hover:
+    result: pass
+    splits:
+    - functional2
   test_toggle_sidebar_via_toolbar_button:
     result: pass
     splits:

@@ -143,6 +143,46 @@ class Sidebar(BasePage):
         )
         return self
 
+    def _exec_on_expand_on_hover_element(self, js_on_element: str):
+        """Find the expand-on-hover checkbox in the customize panel and evaluate js_on_element on it.
+
+        Mirrors _exec_on_vertical_tab_element but targets [data-l10n-id*="expand-on-hover"]. Must be called
+        from within a @BasePage.context_chrome method.
+        """
+        return self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "if (!cd || cd.readyState !== 'complete') return null;"
+            "function search(root) {"
+            "  const el = root.querySelector('[data-l10n-id*=\"expand-on-hover\"]');"
+            "  if (el) return " + js_on_element + ";"
+            "  for (const host of root.querySelectorAll('*')) {"
+            "    if (host.shadowRoot) {"
+            "      const r = search(host.shadowRoot);"
+            "      if (r !== null) return r;"
+            "    }"
+            "  }"
+            "  return null;"
+            "}"
+            "return search(cd);"
+        )
+
+    @BasePage.context_chrome
+    def expect_expand_on_hover_disabled(self):
+        """Wait until the expand-on-hover option is either removed, hidden, or disabled.
+
+        After switching from vertical tabs to horizontal tabs, this option should no longer be
+        available to the user.
+        """
+
+        def _is_unavailable(_):
+            state = self._exec_on_expand_on_hover_element(
+                "el.disabled === true || el.hidden === true || !el.offsetParent"
+            )
+            return state is None or state is True
+
+        self.wait.until(_is_unavailable)
+        return self
+
     @BasePage.context_chrome
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
