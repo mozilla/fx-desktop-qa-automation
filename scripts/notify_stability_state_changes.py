@@ -21,7 +21,7 @@ RUNS = int(os.environ.get("RUNS", "5"))
 INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "true")
 
 SLACK_KEY = os.environ["SLACK_KEY"]
-SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL", "C07AHPJ525V")
+SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
 
 MANIFEST_PATH = Path("manifests/key.yaml")
 
