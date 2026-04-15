@@ -169,7 +169,7 @@ class Sidebar(BasePage):
                 "}"
                 "return search(cd);"
             )
-            return state in ("not-found", True)
+            return state == "not-found" or state is True
 
         self.wait.until(_is_unavailable)
         return self
