@@ -44,7 +44,13 @@ ALLOWED_RGB_AFTER_VALUES_THREE_DOTS = set(
 )
 
 REQUIRED_CONTEXT_MENU_ACTIONS_REGULAR_TILE = set(
-    ["Pin", "Edit", "Open in a New Window", "Open in a New Private Window", "Dismiss"]
+    [
+        "Pin",
+        "Edit",
+        "Open in a New Window",
+        "Open in a New Private Window",
+        "Dismiss",
+    ]
 )
 
 REQUIRED_CONTEXT_MENU_ACTIONS_SPONSORED_TILE = set(
