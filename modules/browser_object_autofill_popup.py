@@ -173,3 +173,13 @@ class AutofillPopup(BasePage):
         # Clicks the "Use a Securely Generated Password" option from the autofill popup
         self.click_on("generated-securely-password")
         return self
+
+    @BasePage.context_chrome
+    def verify_autocomplete_option(self, value: str):
+        self.wait.until(
+            lambda _: self.get_element(
+                "select-form-option-by-value",
+                labels=[value]
+            ).is_displayed()
+        )
+        return self

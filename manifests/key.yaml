@@ -792,6 +792,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_confirm_or_edit_generated_password_shows_correct_password:
+    result: pass
+    splits:
+    - functional2
   test_delete_login:
     result: pass
     splits:

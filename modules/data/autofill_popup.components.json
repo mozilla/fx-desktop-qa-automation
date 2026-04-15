@@ -56,7 +56,7 @@
     ]
   },
   "select-form-option-by-value": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']",
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value*='{value}']",
     "strategy": "css",
     "groups": []
   },
