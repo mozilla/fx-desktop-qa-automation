@@ -792,7 +792,7 @@ password_manager:
     result: pass
     splits:
     - functional2
-  test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_passwords_option:
+  test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
     result: pass
     splits:
     - functional2
