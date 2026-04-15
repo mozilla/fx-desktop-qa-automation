@@ -8,7 +8,6 @@ from google.cloud import bigquery
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-
 BQ_PROJECT = os.environ["BQ_PROJECT"]
 BQ_DATASET = os.environ["BQ_DATASET"]
 BQ_TABLE = os.environ.get("BQ_TABLE", "stability_test_events")
