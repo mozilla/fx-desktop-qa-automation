@@ -348,7 +348,7 @@ def send_slack_message(
             blocks=blocks,
         )
     except SlackApiError as e:
-        print(f"Error sending message: {e.response['error']}")
+        print(f"Error sending message: {e.response.get('error', e.response)}")
         raise
 
 
@@ -368,9 +368,10 @@ def main() -> int:
 
     changes = build_changes(manifest, computed, PLATFORM)
 
+    print(json.dumps(changes, indent=2))
+
     send_slack_message(changes, PLATFORM, RUNS)
 
-    print(json.dumps(changes, indent=2))
     return 0
 
 
