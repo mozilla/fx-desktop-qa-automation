@@ -116,8 +116,10 @@ def classify_recent(statuses_oldest_to_newest: List[str]) -> str:
     if len(statuses_oldest_to_newest) < 2:
         return "unknown"
 
+    # Get the two most recent executions
     last_two = statuses_oldest_to_newest[-2:]
 
+    # This could also be an indicator of an actual bug, regression for instance
     if last_two == ["fail", "fail"]:
         return "unstable"
 
@@ -132,6 +134,7 @@ def classify_recent(statuses_oldest_to_newest: List[str]) -> str:
     return "unknown"
 
 
+# Query BQ for the recent test history and converts it into per-test status lists
 def fetch_classifications_from_bq(
     client: bigquery.Client,
     repo: str,
@@ -193,6 +196,7 @@ def fetch_classifications_from_bq(
         ),
     )
 
+    # Convert BQ rows to Python results
     results: List[Dict[str, object]] = []
     for row in job.result():
         statuses = list(row["statuses"])
@@ -213,6 +217,19 @@ def build_changes(
     computed: List[Dict[str, object]],
     platform: str,
 ) -> List[Dict[str, object]]:
+    """
+    This will tell which tests have a computed state different from what manifest indicates.
+
+    Creates a dictionary like:
+    {
+        "tests/bookmarks_and_history/test_clear_all_history.py": "pass",
+        ...
+    }
+
+    Then the script can look up manifest state by nodeid
+
+    """
+
     manifest_map: Dict[str, Optional[str]] = {}
 
     for nodeid, result_field in manifest_entries(manifest):
@@ -222,9 +239,9 @@ def build_changes(
 
     for item in computed:
         nodeid = item["test_nodeid"]
-        new_state = item["state"]
+        new_state = item["state"]  # Computed state from BQ
         statuses = item["statuses"]
-        current_state = manifest_map.get(nodeid)
+        current_state = manifest_map.get(nodeid)  # Current state from manifest
 
         if current_state is None:
             continue
@@ -250,6 +267,8 @@ def build_changes(
 def build_slack_blocks(
     changes: List[Dict[str, object]], platform: str, runs: int
 ) -> List[dict]:
+    """Turn the list of changes into Slack Blocks"""
+
     header_text = f"Stability state changes for {platform} (last {runs} runs)"
 
     if not changes:
@@ -337,6 +356,7 @@ def main() -> int:
     manifest = load_manifest()
     client = bigquery.Client(project=BQ_PROJECT)
 
+    # Query BQ and compute current state
     computed = fetch_classifications_from_bq(
         client=client,
         repo=REPO,
