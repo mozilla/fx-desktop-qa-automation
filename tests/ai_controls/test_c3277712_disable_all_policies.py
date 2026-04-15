@@ -15,16 +15,12 @@ def test_case():
 def test_disable_all_ai_features_via_policies(about_prefs: AboutPrefs):
     """
     C3277712 - Disable all AI features via policies
-    Verify that the user can Disable all AI feature settings via policies
+    Stub: requires enterprise policy (DisableAIEnhancements) to be set in profile.
     """
     about_prefs.navigate_to_ai_controls()
-    
-    # Step 1: Navigate to AI controls
     about_prefs.verify_ai_controls_page_loaded()
-    
-    # Steps 2-3: When policies disable all features, the controls should be in a disabled state
-    try:
-        toggle_state = about_prefs.get_ai_killswitch_state()
-        logging.info(f"Killswitch state under policy: {toggle_state}")
-    except Exception as e:
-        logging.info(f"Expected behavior - controls may be hidden/disabled under strict policy: {e}")
+
+    toggle_state = about_prefs.get_ai_killswitch_state()
+    logging.info(f"Killswitch state under policy: {toggle_state}")
+    # Note: When DisableAIEnhancements policy is active, killswitch should be forced on.
+    # Full validation requires enterprise policy configuration in the browser profile.

@@ -3,7 +3,13 @@ C3276003 - AI settings visible with high contrast
 Verify that the AI settings page is visible with High Contrast and other themes enabled
 """
 import logging
+import pytest
 from modules.page_object_prefs import AboutPrefs
+
+
+@pytest.fixture()
+def test_case():
+    return "3276003"
 
 
 def test_ai_settings_visible_with_high_contrast(about_prefs: AboutPrefs):

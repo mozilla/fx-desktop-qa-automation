@@ -3,7 +3,13 @@ C3276004 - AI settings link shortcut visible
 Verify that the AI settings link/shortcut is visible on the Firefox Preferences page
 """
 import logging
+import pytest
 from modules.page_object_prefs import AboutPrefs
+
+
+@pytest.fixture()
+def test_case():
+    return "3276004"
 
 
 def test_ai_settings_link_shortcut_visible(about_prefs: AboutPrefs):

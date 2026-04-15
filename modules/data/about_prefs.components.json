@@ -415,6 +415,16 @@
     "strategy": "id",
     "groups": []
   },
+  "ai-control-link-preview-select": {
+    "selectorData": "aiControlLinkPreviewSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-smart-tab-groups-select": {
+    "selectorData": "aiControlSmartTabGroupsSelect",
+    "strategy": "id",
+    "groups": []
+  },
   "language-settings-dialog": {
     "selectorData": "BrowserLanguagesDialog",
     "strategy": "id",

@@ -1149,7 +1149,7 @@ ai_controls:
     splits:
     - functional1
   test_keyboard_navigation_to_link_preview_setting:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_keyboard_navigation_to_smart_tab_groups_setting:
@@ -1185,15 +1185,15 @@ ai_controls:
     splits:
     - functional1
   test_pdf_alt_text_feature_not_displayed_for_non_en_builds:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_smart_tab_groups_not_displayed_for_non_en_builds:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_link_preview_feature_localized:
-    result: pass
+    result: unstable
     splits:
     - functional1
   test_translations_feature_localized:

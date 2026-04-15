@@ -211,23 +211,9 @@ def _get_version(driver: Firefox):
 
 def _fx_up_to_date(driver: Firefox):
     driver.get(ABOUT_FIREFOX)
-
-    # Firefox Nightly may have a different update dialog or no dialog at all.
-    # We ignore the check for Nightly builds as they are frequently updated and the update dialog is inconsistent.
-    # For Beta and Release, we want to ensure we're testing against an up-to-date build.
-    version_text = driver.find_element(By.ID, "version").text
-    if "nightly" in version_text.lower():
-        logging.info("Skipping update check for Nightly build.")
-        return
-
-    try:
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
-        )
-    except Exception:
-        # If the element is not found for Beta/Release, it might be an actual issue or a slow check
-        logging.warning("Update check timed out or 'noUpdatesFound' not visible.")
-        pass
+    WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
+    )
 
 
 @pytest.fixture()
