@@ -20,9 +20,12 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
-def test_confirm_or_edit_generated_password_shows_correct_password(driver: Firefox):
+def test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options(
+    driver: Firefox,
+):
     """
-    C2248183 - Verify that the “Confirm/Retype Password” field autocomplete dropdown displays the previously edited and auto-saved generated password
+    C2248183 - Verify that the “Confirm/Retype Password” field autocomplete dropdown displays the previously edited
+     and auto-saved generated password
     """
 
     # Instantiate objects
@@ -45,7 +48,7 @@ def test_confirm_or_edit_generated_password_shows_correct_password(driver: Firef
     # Edit the generated password (e.g. add/remove characters) and click out-side of the field
     login_autofill.get_element("password-signup-field").send_keys(EDITED_PASSWORD)
     panel.click_outside_add_folder_panel()
-    
+
     # A new “Password Saved!” blue message is displayed for every edit
     nav.element_visible("confirmation-hint")
 

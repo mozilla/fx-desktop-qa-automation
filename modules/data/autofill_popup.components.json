@@ -164,7 +164,7 @@
     "strategy": "id",
     "groups": []
   },
-   "generated-securely-password": {
+  "generated-securely-password": {
     "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
     "strategy": "css",
     "groups": []
