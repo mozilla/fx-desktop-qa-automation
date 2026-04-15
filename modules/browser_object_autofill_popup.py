@@ -167,3 +167,9 @@ class AutofillPopup(BasePage):
         """Dismiss the Password Manager doorhanger using ESC."""
         self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
         return self
+
+    @BasePage.context_chrome
+    def click_securely_generated_password(self) -> BasePage:
+        # Clicks the "Use a Securely Generated Password" option from the autofill popup
+        self.click_on("generated-securely-password")
+        return self
