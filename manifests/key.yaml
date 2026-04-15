@@ -1228,6 +1228,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
+    result: pass
+    splits:
+    - functional2
   test_hide_sidebar_behaviour:
     result: pass
     splits:
@@ -1260,6 +1264,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_vertical_tabs_multiselect_close_options:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tabs_move_options:
     result: pass
     splits:
@@ -1269,6 +1277,10 @@ sidebar:
     splits:
     - functional2
   test_switch_between_horizontal_vertical_tabs:
+    result: pass
+    splits:
+    - functional2
+  test_switching_to_horizontal_tabs_disables_expand_on_hover:
     result: pass
     splits:
     - functional2
