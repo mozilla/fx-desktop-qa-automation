@@ -33,4 +33,4 @@ def test_switching_to_horizontal_tabs_disables_expand_on_hover(driver: Firefox):
     sidebar.expect_horizontal_tabs_active()
 
     # Verify the expand/collapse on hover option is disabled automatically
-    sidebar.expect_expand_on_hover_disabled()
+    sidebar.expect_expand_on_hover_unavailable()

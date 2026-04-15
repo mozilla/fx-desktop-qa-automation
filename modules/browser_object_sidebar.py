@@ -143,42 +143,33 @@ class Sidebar(BasePage):
         )
         return self
 
-    def _exec_on_expand_on_hover_element(self, js_on_element: str):
-        """Find the expand-on-hover checkbox in the customize panel and evaluate js_on_element on it.
-
-        Mirrors _exec_on_vertical_tab_element but targets [data-l10n-id*="expand-on-hover"]. Must be called
-        from within a @BasePage.context_chrome method.
-        """
-        return self.driver.execute_script(
-            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-            "if (!cd || cd.readyState !== 'complete') return null;"
-            "function search(root) {"
-            "  const el = root.querySelector('[data-l10n-id*=\"expand-on-hover\"]');"
-            "  if (el) return " + js_on_element + ";"
-            "  for (const host of root.querySelectorAll('*')) {"
-            "    if (host.shadowRoot) {"
-            "      const r = search(host.shadowRoot);"
-            "      if (r !== null) return r;"
-            "    }"
-            "  }"
-            "  return null;"
-            "}"
-            "return search(cd);"
-        )
-
     @BasePage.context_chrome
-    def expect_expand_on_hover_disabled(self):
-        """Wait until the expand-on-hover option is either removed, hidden, or disabled.
+    def expect_expand_on_hover_unavailable(self):
+        """Wait until the expand-on-hover option is no longer available.
 
-        After switching from vertical tabs to horizontal tabs, this option should no longer be
-        available to the user.
+        After switching from vertical tabs to horizontal tabs, the option should
+        disappear from the Customize Sidebar panel. If it is still present, it must
+        at least be hidden or disabled.
         """
 
         def _is_unavailable(_):
-            state = self._exec_on_expand_on_hover_element(
-                "el.disabled === true || el.hidden === true || !el.offsetParent"
+            state = self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return 'not-ready';"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-l10n-id*=\"expand-on-hover\"]');"
+                "  if (el) return el.disabled === true || el.hidden === true || !el.offsetParent;"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const result = search(host.shadowRoot);"
+                "      if (result !== 'not-found') return result;"
+                "    }"
+                "  }"
+                "  return 'not-found';"
+                "}"
+                "return search(cd);"
             )
-            return state is None or state is True
+            return state in ("not-found", True)
 
         self.wait.until(_is_unavailable)
         return self
