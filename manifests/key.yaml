@@ -1132,103 +1132,103 @@ theme_and_toolbar:
     splits:
     - functional2
 ai_controls:
-  test_ai_features_keyboard_accessible:
+  test_c3276002_ai_features_keyboard_accessible:
     result: pass
     splits:
     - functional1
-  test_ai_settings_visible_high_contrast:
+  test_c3276002_keyboard_nav_translations:
     result: pass
     splits:
     - functional1
-  test_ai_settings_link_shortcut_visible:
-    result: pass
-    splits:
-    - functional1
-  test_keyboard_navigation_to_translations_setting:
-    result: pass
-    splits:
-    - functional1
-  test_keyboard_navigation_to_link_preview_setting:
+  test_c3276002_keyboard_nav_link_preview:
     result: unstable
     splits:
     - functional1
-  test_keyboard_navigation_to_smart_tab_groups_setting:
-    result: pass
-    splits:
-    - functional1
-  test_block_all_ai_features_option_persists:
-    result: pass
-    splits:
-    - functional1
-  test_unblock_all_ai_features_restores_state:
-    result: pass
-    splits:
-    - functional1
-  test_enabled_features_remain_after_unblock:
-    result: pass
-    splits:
-    - functional1
-  test_cancel_blocking_all_ai_enhancements:
-    result: pass
-    splits:
-    - functional1
-  test_chatbot_provider_selection_reflects_on_ai_controls_page:
-    result: pass
-    splits:
-    - functional1
-  test_web_extensions_ai_api_disabled_when_blocking:
-    result: pass
-    splits:
-    - functional1
-  test_all_ai_models_deleted_when_features_blocked:
-    result: pass
-    splits:
-    - functional1
-  test_pdf_alt_text_feature_not_displayed_for_non_en_builds:
-    result: disabled
-    splits:
-    - functional1
-  test_smart_tab_groups_not_displayed_for_non_en_builds:
-    result: disabled
-    splits:
-    - functional1
-  test_link_preview_feature_localized:
+  test_c3276002_keyboard_nav_smart_tab_groups:
     result: unstable
     splits:
     - functional1
-  test_translations_feature_localized:
+  test_c3276003_ai_settings_visible_high_contrast:
+    result: unstable
+    splits:
+    - functional1
+  test_c3276004_ai_settings_link_shortcut:
+    result: unstable
+    splits:
+    - functional1
+  test_c3277712_disable_all_policies:
+    result: unstable
+    splits:
+    - functional1
+  test_c3277713_disable_chatbot_policies:
+    result: unstable
+    splits:
+    - functional1
+  test_c3277714_disable_smart_tab_policies:
+    result: unstable
+    splits:
+    - functional1
+  test_c3277716_disable_link_preview_policies:
+    result: unstable
+    splits:
+    - functional1
+  test_c3279955_enable_when_policy_changed:
     result: pass
     splits:
     - functional1
-  test_chatbot_feature_localized:
+  test_c3298824_block_all_persists:
     result: pass
     splits:
     - functional1
-  test_ai_controls_labels_localized:
+  test_c3298825_disable_translations_policies:
+    result: unstable
+    splits:
+    - functional1
+  test_c3308998_unblock_restores_state:
     result: pass
     splits:
     - functional1
-  test_disable_all_ai_features_via_policies:
+  test_c3310314_features_remain_after_unblock:
     result: pass
     splits:
     - functional1
-  test_disable_only_chatbot_via_policies:
+  test_c3340562_cancel_blocking:
     result: pass
     splits:
     - functional1
-  test_disable_only_smart_tab_groups_via_policies:
+  test_c3341230_pdf_alt_text_non_en:
+    result: disabled
+    splits:
+    - functional1
+  test_c3341232_smart_tab_groups_non_en:
+    result: disabled
+    splits:
+    - functional1
+  test_c3341234_link_preview_localized:
+    result: unstable
+    splits:
+    - functional1
+  test_c3341235_translations_localized:
     result: pass
     splits:
     - functional1
-  test_disable_only_link_previews_via_policies:
+  test_c3341236_chatbot_localized:
     result: pass
     splits:
     - functional1
-  test_disable_only_translations_via_policies:
+  test_c3341237_labels_localized:
+    result: unstable
+    splits:
+    - functional1
+  test_c3341325_provider_selection_reflects:
     result: pass
     splits:
     - functional1
-  test_enable_ai_features_when_policy_changed:
+  test_c3341331_extensions_api_disabled:
+    result: pass
+    splits:
+    - functional1
+  test_c3343878_models_deleted_when_blocked:
     result: pass
     splits:
     - functional1

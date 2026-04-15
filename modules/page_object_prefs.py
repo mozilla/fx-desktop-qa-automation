@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
@@ -259,8 +260,8 @@ class AboutPrefs(BasePage):
         try:
             # Use the find-in-settings box to reveal the control if needed
             self.find_in_settings("AI")
-        except Exception:
-            pass
+        except Exception as e:
+            logging.warning(f"find_in_settings('AI') raised: {e}")
 
         toggle = self.get_element("ai-controls-toggle")
         # moz-toggle uses the 'pressed' property
@@ -268,7 +269,7 @@ class AboutPrefs(BasePage):
             "return arguments[0].pressed;",
             toggle
         )
-        
+
         if block != current_state:
             # Set the pressed property directly (clicking doesn't work on moz-toggle)
             self.driver.execute_script(
@@ -276,8 +277,7 @@ class AboutPrefs(BasePage):
                 toggle,
                 block
             )
-            from time import sleep
-            sleep(0.5)  # Give moz-toggle time to update the backend
+            self.expect(lambda _: self.get_ai_killswitch_state() == block)
         return self
 
     def get_ai_killswitch_state(self) -> bool:
@@ -375,9 +375,9 @@ class AboutPrefs(BasePage):
         """
         Verify that the AI Controls page has loaded successfully by checking for required elements.
         """
-        self.element_exists("ai-controls-toggle")
-        self.element_exists("ai-control-translations-select")
-        self.element_exists("ai-control-sidebar-chatbot-select")
+        self.element_visible("ai-controls-toggle")
+        self.element_visible("ai-control-translations-select")
+        self.element_visible("ai-control-sidebar-chatbot-select")
         return self
 
     def navigate_to_ai_controls(self) -> BasePage:
