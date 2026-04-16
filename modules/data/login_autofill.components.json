@@ -67,5 +67,10 @@
         "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='testUser']",
         "strategy": "css",
         "groups": []
+    },
+    "password-signup-field": {
+        "selectorData": "input[placeholder='new-password']",
+        "strategy": "css",
+        "groups": []
     }
 }

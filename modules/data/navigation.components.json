@@ -748,5 +748,10 @@
         "selectorData": "button.popup-notification-primary-button[label='Save']",
         "strategy": "css",
         "groups": []
+    },
+    "confirmation-hint": {
+        "selectorData": "confirmation-hint",
+        "strategy": "id",
+        "groups": []
     }
 }
