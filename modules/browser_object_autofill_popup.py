@@ -176,3 +176,19 @@ class AutofillPopup(BasePage):
         field.click()
         field.send_keys(Keys.ESCAPE)
         return self
+
+    @BasePage.context_chrome
+    def click_securely_generated_password(self) -> BasePage:
+        """Click the 'Use a Securely Generated Password' option from the autofill popup."""
+        self.click_on("generated-securely-password")
+        return self
+
+    @BasePage.context_chrome
+    def verify_autocomplete_option(self, value: str) -> BasePage:
+        """Wait until an autocomplete option containing `value` is displayed in the dropdown."""
+        self.wait.until(
+            lambda _: self.get_element(
+                "select-form-option-by-value", labels=[value]
+            ).is_displayed()
+        )
+        return self
