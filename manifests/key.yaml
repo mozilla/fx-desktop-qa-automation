@@ -861,8 +861,7 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026018
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
