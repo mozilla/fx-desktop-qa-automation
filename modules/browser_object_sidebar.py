@@ -104,6 +104,33 @@ class Sidebar(BasePage):
             "return search(cd);"
         )
 
+    def _exec_on_element_by_l10n_id(self, l10n_id: str, js_on_element: str):
+        """Find a customize-panel element by exact data-l10n-id and evaluate js_on_element on it.
+
+        General-purpose version of _exec_on_vertical_tab_element. l10n_id is passed as a JS
+        argument to avoid string injection; js_on_element is a developer-controlled code expression
+        concatenated at call time. Returns null if the panel is not ready or the element is not found.
+
+        Must be called from within a @BasePage.context_chrome method.
+        """
+        return self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "if (!cd || cd.readyState !== 'complete') return null;"
+            "function search(root) {"
+            "  const el = root.querySelector('[data-l10n-id=\"' + arguments[0] + '\"]');"
+            "  if (el) return " + js_on_element + ";"
+            "  for (const host of root.querySelectorAll('*')) {"
+            "    if (host.shadowRoot) {"
+            "      const r = search(host.shadowRoot);"
+            "      if (r !== null) return r;"
+            "    }"
+            "  }"
+            "  return null;"
+            "}"
+            "return search(cd);",
+            l10n_id,
+        )
+
     @BasePage.context_chrome
     def expect_vertical_tabs_checkbox_visible(self):
         """Verify that the Vertical tabs checkbox is displayed in the Sidebar settings section of the customize panel."""
@@ -145,54 +172,20 @@ class Sidebar(BasePage):
 
     @BasePage.context_chrome
     def click_expand_on_hover_in_panel(self) -> BasePage:
-        """Click the 'Expand sidebar on hover' checkbox in the Customize Sidebar panel.
-
-        Uses the same shadow-root piercing pattern as _exec_on_vertical_tab_element.
-        Finds the moz-checkbox with data-l10n-id="expand-sidebar-on-hover" and clicks it.
-        """
+        """Click the 'Expand sidebar on hover' checkbox in the Customize Sidebar panel."""
         self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return null;"
-                "function search(root) {"
-                "  const el = root.querySelector('[data-l10n-id=\"expand-sidebar-on-hover\"]');"
-                "  if (el) { el.click(); return true; }"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot) {"
-                "      const r = search(host.shadowRoot);"
-                "      if (r !== null) return r;"
-                "    }"
-                "  }"
-                "  return null;"
-                "}"
-                "return search(cd);"
+            lambda _: self._exec_on_element_by_l10n_id(
+                "expand-sidebar-on-hover", "(el.click(), true)"
             )
         )
         return self
 
     @BasePage.context_chrome
     def click_move_sidebar_to_right_in_panel(self) -> BasePage:
-        """Click the 'Move sidebar to the right' checkbox in the Customize Sidebar panel.
-
-        Uses the same shadow-root piercing pattern as _exec_on_vertical_tab_element.
-        Searches for the moz-checkbox with data-l10n-id="sidebar-show-on-the-right".
-        """
+        """Click the 'Move sidebar to the right' checkbox in the Customize Sidebar panel."""
         self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return null;"
-                "function search(root) {"
-                "  const el = root.querySelector('[data-l10n-id=\"sidebar-show-on-the-right\"]');"
-                "  if (el) { el.click(); return true; }"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot) {"
-                "      const r = search(host.shadowRoot);"
-                "      if (r !== null) return r;"
-                "    }"
-                "  }"
-                "  return null;"
-                "}"
-                "return search(cd);"
+            lambda _: self._exec_on_element_by_l10n_id(
+                "sidebar-show-on-the-right", "(el.click(), true)"
             )
         )
         return self
@@ -202,6 +195,7 @@ class Sidebar(BasePage):
         """Return the current rendered width of the sidebar-main element in pixels."""
         return self.driver.execute_script(
             "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
+        )
 
     @BasePage.context_chrome
     def expect_expand_on_hover_unavailable(self):
@@ -233,7 +227,6 @@ class Sidebar(BasePage):
 
         self.wait.until(_is_unavailable)
         return self
-
 
     @BasePage.context_chrome
     def click_manage_extensions(self):
