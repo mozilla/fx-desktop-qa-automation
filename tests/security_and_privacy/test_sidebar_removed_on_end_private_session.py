@@ -34,7 +34,7 @@ def test_sidebar_removed_on_end_private_session(
     if platform.system() == "Darwin":
         nav.perform_key_combo_chrome(Keys.SHIFT, Keys.COMMAND, "h")
     else:
-        nav.perform_key_combo_chrome(Keys.SHIFT, Keys.CONTROL, "h")
+        nav.perform_key_combo_chrome(Keys.CONTROL, "h")
 
     # Verify the sidebar is open
     nav.element_visible("sidebar-box")
