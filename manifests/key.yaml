@@ -609,7 +609,6 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026682
     result: pass
     splits:
     - functional2
@@ -618,7 +617,6 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026680
     result: pass
     splits:
     - functional2
@@ -714,6 +712,10 @@ notifications:
     splits:
     - functional2
 password_manager:
+  test_about_logins_copy_prompts_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_about_logins_direct_navigation:
     result: pass
     splits:
@@ -790,6 +792,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
+    result: pass
+    splits:
+    - functional2
   test_delete_login:
     result: pass
     splits:
@@ -855,8 +861,7 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026018
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
@@ -899,8 +904,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018765
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_open_pdf_in_FF:
@@ -1223,6 +1227,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
+    result: pass
+    splits:
+    - functional2
   test_hide_sidebar_behaviour:
     result: pass
     splits:
@@ -1259,6 +1267,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_vertical_tabs_multiselect_close_options:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tabs_mute_unmute:
     result: pass
     splits:
@@ -1267,12 +1279,12 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_switching_to_horizontal_tabs_disables_expand_on_hover:
+    result: pass
+    splits:
+    - functional2
   test_toggle_sidebar_via_toolbar_button:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026677
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:

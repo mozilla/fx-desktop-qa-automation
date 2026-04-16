@@ -57,6 +57,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
 
     # The "Save" doorhanger is displayed upon clicking the grey icon
     nav.element_visible("password-notification-popup")
+    nav.wait_for_notification_popup_open()
 
     # Choose to save the credentials
     nav.element_clickable("password-notification-save-button")

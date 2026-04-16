@@ -3059,6 +3059,13 @@ Description: Autocomplete dropdown is toggled for focused login fields on Mozill
 Location: Mozilla Github page load
 Path to .json: modules/data/login_autofill.components.json
 ```
+```
+Selector Name: password-signup-field
+Selector Data: "input[placeholder='new-password']"
+Description: Mozilla github registration password field
+Location: Mozilla github registration page
+Path to .json: modules/data/login_autofill.components.json
+```
 #### navigation
 ```
 Selector name: awesome-bar
@@ -3908,10 +3915,24 @@ Location: Password notification prompt in Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: password-notification-popup-panel
+Selector Data: "notification-popup"
+Description: The outer panel element that wraps the password notification; panelopen='true' is set on this element only after the opening animation completes, making it the reliable target for waiting until the popup is fully interactive
+Location: Password notification panel in Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: password-notification-save-button
 Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
 Description: Save button in the password notification popup
 Location: Save button in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: confirmation-hint
+Selector Data: "confirmation-hint"
+Description: Password saved! confirmation
+Location: In the Navigation bar, next to the url input field
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui
