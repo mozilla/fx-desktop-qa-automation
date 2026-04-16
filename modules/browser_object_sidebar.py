@@ -144,6 +144,67 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_expand_on_hover_in_panel(self) -> BasePage:
+        """Click the 'Expand sidebar on hover' checkbox in the Customize Sidebar panel.
+
+        Uses the same shadow-root piercing pattern as _exec_on_vertical_tab_element.
+        Finds the moz-checkbox with data-l10n-id="expand-sidebar-on-hover" and clicks it.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return null;"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-l10n-id=\"expand-sidebar-on-hover\"]');"
+                "  if (el) { el.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const r = search(host.shadowRoot);"
+                "      if (r !== null) return r;"
+                "    }"
+                "  }"
+                "  return null;"
+                "}"
+                "return search(cd);"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_move_sidebar_to_right_in_panel(self) -> BasePage:
+        """Click the 'Move sidebar to the right' checkbox in the Customize Sidebar panel.
+
+        Uses the same shadow-root piercing pattern as _exec_on_vertical_tab_element.
+        Searches for the moz-checkbox with data-l10n-id="sidebar-show-on-the-right".
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return null;"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-l10n-id=\"sidebar-show-on-the-right\"]');"
+                "  if (el) { el.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const r = search(host.shadowRoot);"
+                "      if (r !== null) return r;"
+                "    }"
+                "  }"
+                "  return null;"
+                "}"
+                "return search(cd);"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def get_sidebar_strip_width(self) -> float:
+        """Return the current rendered width of the sidebar-main element in pixels."""
+        return self.driver.execute_script(
+            "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
+        )
+
+    @BasePage.context_chrome
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 
