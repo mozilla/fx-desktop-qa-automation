@@ -114,10 +114,11 @@ class Sidebar(BasePage):
         Must be called from within a @BasePage.context_chrome method.
         """
         return self.driver.execute_script(
+            "const l10nId = arguments[0];"
             "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
             "if (!cd || cd.readyState !== 'complete') return null;"
             "function search(root) {"
-            "  const el = root.querySelector('[data-l10n-id=\"' + arguments[0] + '\"]');"
+            "  const el = root.querySelector('[data-l10n-id=\"' + l10nId + '\"]');"
             "  if (el) return " + js_on_element + ";"
             "  for (const host of root.querySelectorAll('*')) {"
             "    if (host.shadowRoot) {"

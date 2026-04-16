@@ -9,11 +9,6 @@ def test_case():
     return "2947650"
 
 
-@pytest.fixture()
-def add_to_prefs_list():
-    return [("sidebar.revamp", True)]
-
-
 def test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position(
     driver: Firefox,
 ):
