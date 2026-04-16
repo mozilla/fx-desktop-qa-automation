@@ -433,7 +433,7 @@ class AboutLogins(BasePage):
     @BasePage.context_chrome
     def dismiss_primary_password_prompt(self, expected_tabs=2) -> BasePage:
         """
-        Switches to the primary password prompt tab and dismisses it using ESC.
+        Switches to the primary password prompt tab and dismisses it using ESC
         """
 
         original_window = self.driver.current_window_handle
@@ -456,7 +456,10 @@ class AboutLogins(BasePage):
 
         return self
 
-    def assert_username_present(self, username: str):
+    def assert_username_present(self, username: str) -> BasePage:
+        """
+        Waits until a visible login list item with the given username is present
+        """
         self.wait.until(
             lambda _: any(
                 r.get_attribute("username") == username
@@ -465,6 +468,7 @@ class AboutLogins(BasePage):
             ),
             message=f"{username} not found in saved logins",
         )
+        return self
 
 
 class AboutPrivatebrowsing(BasePage):
