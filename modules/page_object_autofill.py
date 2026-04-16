@@ -878,6 +878,9 @@ class LoginAutofill(Autofill):
         ) -> None:
             """Select credentials from the autocomplete dropdown."""
 
+            # Clear any auto-filled value so the dropdown appears when focused
+            self.parent.get_element(field_reference).clear()
+
             # Open the autocomplete dropdown
             self.parent.click_on(field_reference)
 

@@ -1524,6 +1524,21 @@ class Navigation(BasePage):
         return self.paste()
 
     @BasePage.context_chrome
+    def wait_for_notification_popup_open(self) -> BasePage:
+        """Wait for the notification popup panel to finish opening (animation complete).
+
+        The panel sets panelopen='true' only after its opening animation finishes, so
+        this is more reliable than element_visible/element_clickable on buttons inside
+        the popup, which can pass while the panel is still animating.
+        """
+        self.expect(
+            lambda _: self.get_element(
+                "password-notification-popup-panel"
+            ).get_attribute("panelopen")
+        )
+        return self
+
+    @BasePage.context_chrome
     def toggle_vertical_tabs(self) -> BasePage:
         """Toggle vertical tabs via the toolbar context menu."""
         self.context_click("toolbar-blank-space")
