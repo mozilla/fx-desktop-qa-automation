@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -142,6 +143,9 @@ def fetch_classifications_from_bq(
     runs: int,
     include_headed: bool,
 ) -> List[Dict[str, object]]:
+    _safe = re.compile(r"^[\w.-]+$")
+    if not all(_safe.match(v) for v in (BQ_PROJECT, BQ_DATASET, BQ_TABLE)):
+        raise ValueError("BQ_PROJECT/BQ_DATASET/BQ_TABLE contain invalid characters")
     table_id = f"{BQ_PROJECT}.{BQ_DATASET}.{BQ_TABLE}"
 
     query = f"""
