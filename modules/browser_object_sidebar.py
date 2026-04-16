@@ -202,7 +202,38 @@ class Sidebar(BasePage):
         """Return the current rendered width of the sidebar-main element in pixels."""
         return self.driver.execute_script(
             "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
-        )
+
+    @BasePage.context_chrome
+    def expect_expand_on_hover_unavailable(self):
+        """Wait until the expand-on-hover option is no longer available.
+
+        After switching from vertical tabs to horizontal tabs, the option should
+        disappear from the Customize Sidebar panel. If it is still present, it must
+        at least be hidden or disabled.
+        """
+
+        def _is_unavailable(_):
+            state = self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return 'not-ready';"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-l10n-id*=\"expand-on-hover\"]');"
+                "  if (el) return el.disabled === true || el.hidden === true || !el.offsetParent;"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const result = search(host.shadowRoot);"
+                "      if (result !== 'not-found') return result;"
+                "    }"
+                "  }"
+                "  return 'not-found';"
+                "}"
+                "return search(cd);"
+            )
+            return state == "not-found" or state is True
+
+        self.wait.until(_is_unavailable)
+        return self
+
 
     @BasePage.context_chrome
     def click_manage_extensions(self):

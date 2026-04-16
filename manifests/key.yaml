@@ -792,6 +792,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
+    result: pass
+    splits:
+    - functional2
   test_delete_login:
     result: pass
     splits:
@@ -1277,6 +1281,10 @@ sidebar:
     splits:
     - functional2
   test_switch_between_horizontal_vertical_tabs:
+    result: pass
+    splits:
+    - functional2
+  test_switching_to_horizontal_tabs_disables_expand_on_hover:
     result: pass
     splits:
     - functional2
