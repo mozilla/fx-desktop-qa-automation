@@ -216,8 +216,9 @@ class Autofill(BasePage):
     ):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
-            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
-            # Should not be called directly from an Autofill instance.
+            # Method is meant to be called by one of the classes that inherit AutoFill
+            # (CreditCardFill or AddressFill). Should not be called directly
+            # from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )

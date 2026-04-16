@@ -28,5 +28,13 @@
     "test_demo_cc_5_clear.py",
     "test_demo_cc_6_capture_doorhanger_appearance.py",
     "test_demo_cc_7_capture_doorhanger_capture_and_stored_data.py"
+  ],
+  "ci": [
+    "test_demo_ad_0_add_new_address.py",
+    "test_demo_ad_1a_dropdown_name_org_fields.py",
+    "test_demo_ad_1b_dropdown_address_fields.py",
+    "test_demo_ad_1c_dropdown_phone_email_fields.py",
+    "test_demo_cc_0_add_new_credit_card.py",
+    "test_demo_cc_1_dropdown.py"
   ]
 }
