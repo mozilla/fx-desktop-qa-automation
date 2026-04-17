@@ -40,5 +40,6 @@ def test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position(
 
     # Move the mouse away and verify the sidebar collapses again
     expanded_width = sidebar.get_sidebar_strip_width()
+    assert expanded_width > collapsed_width
     sidebar.hover("sidebar-button")
     sidebar.wait.until(lambda _: sidebar.get_sidebar_strip_width() < expanded_width)

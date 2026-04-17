@@ -206,12 +206,10 @@ class Sidebar(BasePage):
         width, ensuring any panel-close animation has finished before the caller
         proceeds to measure a baseline width.
         """
-        last: list[float] = [None]
+        last: list[float | None] = [None]
 
         def _stable(_):
-            w = self.driver.execute_script(
-                "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
-            )
+            w = self.get_sidebar_strip_width()
             if w > 0 and w == last[0]:
                 return True
             last[0] = w
