@@ -146,6 +146,10 @@ address_bar_and_search:
     splits:
     - functional1
     - all
+  test_search_bar_on_engines_remove_restore:
+    result: pass
+    splits:
+    - all
   test_search_bar_results_shown_in_a_new_tab:
     result: pass
     splits:
@@ -165,6 +169,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - all
+  test_search_engine_result_page_load_on_reload_or_back:
+    result: pass
+    splits:
     - all
   test_search_engine_selector:
     result: pass
@@ -737,7 +745,7 @@ language_packs:
     - functional2
     - all
   test_language_pack_install_preferences:
-    result: pass
+    result: unavailable on nightly
     splits:
     - smoke
     - all
@@ -1420,6 +1428,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - all
+  test_private_browsing_dismiss_doorhanger_credentials:
+    result: pass
+    splits:
     - all
   test_private_session_awesome_bar_exclusion:
     result: pass

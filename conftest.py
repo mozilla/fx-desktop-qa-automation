@@ -334,6 +334,10 @@ def test_case():
 
 
 def pytest_configure(config):
+    logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
+        logging.CRITICAL
+    )
+    logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
     if not env_true("TESTRAIL_REPORT"):
         logging.warning("TESTRAIL_REPORT disabled; skipping TestRail integration.")
         return
@@ -384,7 +388,9 @@ def pytest_sessionfinish(session):
         )
         return None
 
-    if not hasattr(session.config, "_json_report"):
+    if not hasattr(session.config, "_json_report") or not hasattr(
+        session.config._json_report, "report"
+    ):
         logging.warning("No json_report in config, will try again with other workers.")
         return None
 

@@ -1,0 +1,3 @@
+https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.firefox.win64-nightlyasrelease-opt/artifacts/public%2Fbuild%2Ftarget.installer.exe
+https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.firefox.macosx64-nightlyasrelease-opt/artifacts/public%2Fbuild%2Ftarget.dmg
+http://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.firefox.linux64-nightlyasrelease-opt/artifacts/public%2Fbuild%2Ftarget.tar.xz
