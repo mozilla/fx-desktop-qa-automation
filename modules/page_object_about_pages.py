@@ -456,6 +456,18 @@ class AboutLogins(BasePage):
 
         return self
 
+    def assert_revealed_password(self, expected_password: str) -> BasePage:
+        """Reveal saved password and assert it matches the expected value"""
+        self.click_reveal_password_button()
+        saved_password = self.get_element(
+            "about-logins-page-password-revealed"
+        ).get_attribute("value")
+
+        assert saved_password == expected_password, (
+            f"Expected '{expected_password}', got '{saved_password}'"
+        )
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """
