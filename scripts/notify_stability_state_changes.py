@@ -441,7 +441,7 @@ def send_slack_message(
             blocks=blocks,
         )
     except SlackApiError as e:
-        print(f"Error sending message: {e.response['error']}")
+        print(f"Error sending message: {e.response.get('error', e.response)}")
         raise
 
 
