@@ -1,11 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_pages import AboutLogins
-from modules.page_object_autofill import LoginAutofill
+from modules.browser_object import AutofillPopup, Navigation, TabBar
+from modules.page_object import AboutLogins, LoginAutofill
 
 EDIT_PASSWORD = "GG"
 SECOND_EDIT_PASSWORD = "RR"
@@ -70,6 +67,7 @@ def test_edit_generated_password_triggers_autosave(driver: Firefox):
     )
 
     # Entry shows edited password is saved
+    about_logins.click_reveal_password_button()
     about_logins.assert_revealed_password(expected_password)
 
     # Go back to the password field tab and focus again the password field
@@ -93,6 +91,7 @@ def test_edit_generated_password_triggers_autosave(driver: Firefox):
 
     # Go back to again about:logins
     driver.switch_to.window(driver.window_handles[1])
+    about_logins.open()
 
     # Entry shows an empty username
     about_logins.element_attribute_contains(
@@ -100,4 +99,5 @@ def test_edit_generated_password_triggers_autosave(driver: Firefox):
     )
 
     # Entry shows edited password is saved
+    about_logins.click_reveal_password_button()
     about_logins.assert_revealed_password(expected_password_updated)
