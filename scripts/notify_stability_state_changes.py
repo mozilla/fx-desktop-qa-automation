@@ -311,7 +311,7 @@ def build_slack_blocks(
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"*{header_text}*\nNo test state changes detected."
+                    "text": f"*{header_text}*\nNo test state changes detected.",
                 },
             }
         ]
@@ -320,16 +320,14 @@ def build_slack_blocks(
     changes_sorted = sorted(
         changes,
         key=lambda x: (
-            severity_order.get(str(x["computed_state"]), -1) - severity_order.get(str(x["manifest_state"]), -1),
+            severity_order.get(str(x["computed_state"]), -1)
+            - severity_order.get(str(x["manifest_state"]), -1),
             x["fail_count"],
         ),
         reverse=True,
     )
 
-    summary_text = (
-        f"*{header_text}*\n"
-        f"Changed tests: *{len(changes_sorted)}*"
-    )
+    summary_text = f"*{header_text}*\nChanged tests: *{len(changes_sorted)}*"
     if insufficient_data_count > 0:
         summary_text += f"\nInsufficient data for *{insufficient_data_count}* test(s)"
 
@@ -391,7 +389,7 @@ def send_slack_message(
             blocks=blocks,
         )
     except SlackApiError as e:
-        print(f"Error sending message: {e.response['error']}")
+        print(f"Error sending message: {e.response.get('error', e.response)}")
         raise
 
 
