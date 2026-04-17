@@ -2,7 +2,7 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import yaml
 from google.cloud import bigquery
@@ -70,7 +70,7 @@ def manifest_entries(manifest: dict):
                 yield nodeid, subentry.get("result")
 
 
-def manifest_state_for_platform(result_field, platform: str):
+def manifest_state_for_platform(result_field, platform: str) -> Optional[str]:
     """
     Manifest supports:
       result: pass
@@ -111,7 +111,7 @@ def classify_recent(statuses_oldest_to_newest: List[str]) -> str:
     - else if the last 2 are pass/pass but there is one or more fail within the last N => flaky
     - else pass
 
-    If fewer than 2 executions exist, return unknown.
+    If fewer than 2 usable executions exist, return unknown.
     """
     if len(statuses_oldest_to_newest) < 2:
         return "unknown"
@@ -164,11 +164,11 @@ def fetch_classifications_from_bq(
         e.test_nodeid,
         e.run_id,
         e.run_created_at,
-        IF(
-          COUNTIF(LOWER(e.outcome) IN ('failed', 'error')) > 0,
-          'fail',
-          'pass'
-        ) AS normalized_status
+        CASE
+          WHEN COUNTIF(LOWER(e.outcome) IN ('failed', 'error')) > 0 THEN 'fail'
+          WHEN COUNTIF(LOWER(e.outcome) = 'passed') > 0 THEN 'pass'
+          ELSE NULL
+        END AS normalized_status
       FROM `{table_id}` e
       JOIN latest_runs r
         ON e.run_id = r.run_id
@@ -182,6 +182,7 @@ def fetch_classifications_from_bq(
       test_nodeid,
       ARRAY_AGG(normalized_status ORDER BY run_created_at ASC) AS statuses
     FROM per_run_test
+    WHERE normalized_status IS NOT NULL
     GROUP BY test_nodeid
     ORDER BY test_nodeid
     """
@@ -219,37 +220,48 @@ def build_changes(
     manifest: dict,
     computed: List[Dict[str, object]],
     platform: str,
-) -> List[Dict[str, object]]:
+) -> Tuple[List[Dict[str, object]], int]:
     """
-    This will tell which tests have a computed state different from what manifest indicates.
+    Compare computed state to manifest state to tell which tests have
+    a computed state, that is different from what manifest indicates.
 
-    Creates a dictionary like:
-    {
-        "tests/bookmarks_and_history/test_clear_all_history.py": "pass",
-        ...
-    }
+    - First try exact nodeid match
+    - If not found, fall back to file-level match by stripping ::subtest
+      This is needed because some manifest entries are file-level while BigQuery
+      contains per-test nodeids like:
+        tests/menus/test_copy_paste_actions.py::test_text_area_copy_paste
 
-    Then the script can look up manifest state by nodeid
-
+    Returns:
+      (changes, insufficient_data_count)
     """
-
     manifest_map: Dict[str, Optional[str]] = {}
 
     for nodeid, result_field in manifest_entries(manifest):
         manifest_map[nodeid] = manifest_state_for_platform(result_field, platform)
 
     changes: List[Dict[str, object]] = []
+    insufficient_data_count = 0
 
     for item in computed:
         nodeid = item["test_nodeid"]
-        new_state = item["state"]  # Computed state from BQ
+        new_state = item["state"]
         statuses = item["statuses"]
-        current_state = manifest_map.get(nodeid)  # Current state from manifest
+
+        # Try exact match first
+        current_state = manifest_map.get(nodeid)
+
+        # Fall back to file-level path if exact match is missing
+        if current_state is None and "::" in nodeid:
+            file_level_nodeid = nodeid.split("::", 1)[0]
+            current_state = manifest_map.get(file_level_nodeid)
 
         if current_state is None:
             continue
+
         if new_state == "unknown":
+            insufficient_data_count += 1
             continue
+
         if new_state == current_state:
             continue
 
@@ -264,17 +276,36 @@ def build_changes(
             }
         )
 
-    return changes
+    return changes, insufficient_data_count
 
 
 def build_slack_blocks(
-    changes: List[Dict[str, object]], platform: str, runs: int
+    changes: List[Dict[str, object]],
+    platform: str,
+    runs: int,
+    insufficient_data_count: int,
 ) -> List[dict]:
     """Turn the list of changes into Slack Blocks"""
 
     header_text = f"Stability state changes for {platform} (last {runs} runs)"
 
     if not changes:
+        if insufficient_data_count > 0:
+            return [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": (
+                            f"*{header_text}*\n"
+                            f"No test state changes detected.\n"
+                            f"`{insufficient_data_count}` test(s) had insufficient data "
+                            f"(fewer than 2 usable executions)."
+                        ),
+                    },
+                }
+            ]
+
         return [
             {
                 "type": "section",
@@ -296,12 +327,16 @@ def build_slack_blocks(
         reverse=True,
     )
 
+    summary_text = f"*{header_text}*\nChanged tests: *{len(changes_sorted)}*"
+    if insufficient_data_count > 0:
+        summary_text += f"\nInsufficient data for *{insufficient_data_count}* test(s)"
+
     blocks: List[dict] = [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": (f"*{header_text}*\nChanged tests: *{len(changes_sorted)}*"),
+                "text": summary_text,
             },
         },
         {"type": "divider"},
@@ -338,11 +373,14 @@ def build_slack_blocks(
 
 
 def send_slack_message(
-    changes: List[Dict[str, object]], platform: str, runs: int
+    changes: List[Dict[str, object]],
+    platform: str,
+    runs: int,
+    insufficient_data_count: int,
 ) -> None:
     print("Trying to send Slack message...")
     client = WebClient(token=SLACK_KEY)
-    blocks = build_slack_blocks(changes, platform, runs)
+    blocks = build_slack_blocks(changes, platform, runs, insufficient_data_count)
 
     try:
         client.chat_postMessage(
@@ -369,11 +407,19 @@ def main() -> int:
         include_headed=INCLUDE_HEADED,
     )
 
-    changes = build_changes(manifest, computed, PLATFORM)
+    changes, insufficient_data_count = build_changes(manifest, computed, PLATFORM)
 
-    print(json.dumps(changes, indent=2))
+    print(
+        json.dumps(
+            {
+                "changes": changes,
+                "insufficient_data_count": insufficient_data_count,
+            },
+            indent=2,
+        )
+    )
 
-    send_slack_message(changes, PLATFORM, RUNS)
+    send_slack_message(changes, PLATFORM, RUNS, insufficient_data_count)
 
     return 0
 
