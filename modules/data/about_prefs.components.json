@@ -537,7 +537,9 @@
   "enter-new-password": {
     "selectorData": "pw1",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "form-container": {
     "selectorData": "form",
@@ -554,18 +556,24 @@
   "reenter-new-password": {
     "selectorData": "pw2",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "submit-password": {
     "selectorData": "button[label^='OK']",
     "strategy": "css",
     "shadowParent": "primary-password-box",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "primary-password-box": {
     "selectorData": "changemp",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "autoplay-settings-button": {
     "selectorData": "autoplaySettingsButton",
@@ -650,7 +658,7 @@
     "groups": []
   },
   "default-zoom-dropdown-value": {
-    "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
+    "selectorData": "menuitem[label='{.*}%']",
     "strategy": "css",
     "groups": []
   },
@@ -692,6 +700,42 @@
   "show-sidebar-checkbox": {
     "selectorData": "browserLayoutShowSidebar",
     "strategy": "id",
+    "groups": []
+  },
+  "show-sidebar-shadow-box": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "show-sidebar-checkbox"
+  },
+  "change-primary-password": {
+    "selectorData": "changeMasterPassword",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "current-primary-password": {
+    "selectorData": "oldpw",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "remove-current-password": {
+    "selectorData": "password",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-primary-password-box": {
+    "selectorData": "removemp",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-password": {
+    "selectorData": "button[label^='Remove']",
+    "strategy": "css",
+    "shadowParent": "remove-primary-password-box",
     "groups": []
   }
 }

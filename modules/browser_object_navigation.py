@@ -509,6 +509,19 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def click_file_download_warning_panel(self) -> BasePage:
         """exit file download warning panel if present"""
+
+        def _get_warning_button(d):
+            matches = self.get_elements("file-download-warning-button")
+            if not matches:
+                return False
+            if matches[0].is_displayed():
+                return True
+            return False
+
+        try:
+            self.custom_wait(timeout=3, poll_frequency=0.25).until(_get_warning_button)
+        except TimeoutException:
+            return self
         self.element_clickable("file-download-warning-button")
         self.click_on("file-download-warning-button")
         return self
@@ -1511,6 +1524,23 @@ class Navigation(BasePage):
         return self.paste()
 
     @BasePage.context_chrome
-    def dismiss_password_doorhanger(self):
-        """Dismiss the Password Manager doorhanger using ESC."""
-        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
+    def wait_for_notification_popup_open(self) -> BasePage:
+        """Wait for the notification popup panel to finish opening (animation complete).
+
+        The panel sets panelopen='true' only after its opening animation finishes, so
+        this is more reliable than element_visible/element_clickable on buttons inside
+        the popup, which can pass while the panel is still animating.
+        """
+        self.expect(
+            lambda _: self.get_element(
+                "password-notification-popup-panel"
+            ).get_attribute("panelopen")
+        )
+        return self
+
+    @BasePage.context_chrome
+    def toggle_vertical_tabs(self) -> BasePage:
+        """Toggle vertical tabs via the toolbar context menu."""
+        self.context_click("toolbar-blank-space")
+        self.context_menu.click_and_hide_menu("context-menu-vertical-tabs")
+        return self

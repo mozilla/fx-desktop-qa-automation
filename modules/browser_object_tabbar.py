@@ -135,6 +135,29 @@ class TabBar(BasePage):
             assert False, "Error checking tab pinned status"
 
     @BasePage.context_chrome
+    def toggle_mute_shortcut(self) -> BasePage:
+        """Toggle mute on the current tab using the CTRL+M keyboard shortcut"""
+        self.actions.key_down(Keys.CONTROL).send_keys("m").key_up(
+            Keys.CONTROL
+        ).perform()
+        return self
+
+    @BasePage.context_chrome
+    def close_tab_shortcut(self, sys_platform: str) -> BasePage:
+        """Close the current tab using the CTRL+W / CMD+W keyboard shortcut"""
+        modifier = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        self.actions.key_down(modifier).send_keys("w").key_up(modifier).perform()
+        return self
+
+    @BasePage.context_chrome
+    def deselect_all_tabs(self) -> BasePage:
+        """Clears multi-tab selection by clicking the first tab not in the multi-selection."""
+        tabs = self.get_elements("non-multiselected-tab")
+        if tabs:
+            tabs[0].click()
+        return self
+
+    @BasePage.context_chrome
     def click_tab_mute_button(self, identifier: Union[str, int]) -> BasePage:
         """Click the tab icon overlay, no matter what's happening with media"""
         logging.info(f"toggling tab mute for {identifier}")
@@ -311,6 +334,19 @@ class TabBar(BasePage):
         Given the index of the tab, it closes that tab.
         """
         self.get_element("tab-x-icon", parent_element=tab).click()
+        return self
+
+    @BasePage.context_chrome
+    def close_tab_by_middle_click(self, identifier: Union[str, int]) -> BasePage:
+        """Close a tab by middle-clicking it using W3C pointer actions (headless-compatible).
+        Note: w3c_actions is an internal Selenium API that may change across versions.
+        pointer_down/up with button index 1 represents the middle mouse button (0=left, 1=middle, 2=right).
+        """
+        tab = self.get_tab(identifier)
+        self.actions.move_to_element(tab).perform()
+        self.actions.w3c_actions.pointer_action.pointer_down(1)
+        self.actions.w3c_actions.pointer_action.pointer_up(1)
+        self.actions.perform()
         return self
 
     @BasePage.context_chrome

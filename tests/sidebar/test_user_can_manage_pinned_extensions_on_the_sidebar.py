@@ -1,8 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_sidebar import Sidebar
+from modules.browser_object import Navigation, Sidebar
 from modules.page_object_generics import GenericPage
 
 
