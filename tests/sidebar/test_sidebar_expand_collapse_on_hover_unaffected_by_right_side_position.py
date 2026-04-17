@@ -29,6 +29,9 @@ def test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position(
     sidebar.click_expand_on_hover_in_panel()
     sidebar.click_move_sidebar_to_right_in_panel()
 
+    # Close the Customize Sidebar panel so the sidebar returns to its collapsed strip state
+    sidebar.click_customize_sidebar()
+
     # Hover over the sidebar strip and verify it expands
     collapsed_width = sidebar.get_sidebar_strip_width()
     sidebar.hover("sidebar-main")
