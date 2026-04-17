@@ -199,6 +199,28 @@ class Sidebar(BasePage):
         )
 
     @BasePage.context_chrome
+    def expect_sidebar_strip_collapsed(self) -> "Sidebar":
+        """Wait until the sidebar strip width has stabilized to its collapsed state.
+
+        Polls until two consecutive readings (500 ms apart) return the same non-zero
+        width, ensuring any panel-close animation has finished before the caller
+        proceeds to measure a baseline width.
+        """
+        last: list[float] = [None]
+
+        def _stable(_):
+            w = self.driver.execute_script(
+                "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
+            )
+            if w > 0 and w == last[0]:
+                return True
+            last[0] = w
+            return False
+
+        self.wait.until(_stable)
+        return self
+
+    @BasePage.context_chrome
     def expect_expand_on_hover_unavailable(self):
         """Wait until the expand-on-hover option is no longer available.
 
