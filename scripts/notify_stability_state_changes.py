@@ -251,7 +251,10 @@ def build_manifest_map(manifest: dict, platform: str) -> Dict[str, Optional[str]
 
     for nodeid, result_field in manifest_entries(manifest):
         key = canonical_manifest_key(nodeid)
-        manifest_map[key] = manifest_state_for_platform(result_field, platform)
+        state = manifest_state_for_platform(result_field, platform)
+        if key in manifest_map and manifest_map[key] != state:
+            print(f"Warning: conflicting manifest states for {key!r}, keeping last ({state!r})")
+        manifest_map[key] = state
 
     return manifest_map
 
