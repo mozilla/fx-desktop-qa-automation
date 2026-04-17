@@ -23,10 +23,33 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
 
-MANIFEST_PATH = Path("manifests/key.yaml")
+MANIFEST_PATH = Path("manifests") / "key.yaml"
 
 if PLATFORM not in {"win", "mac"}:
     raise SystemExit("PLATFORM must be win or mac")
+
+
+def normalize_nodeid(nodeid: str) -> str:
+    if not nodeid:
+        return nodeid
+
+    nodeid = nodeid.strip().replace("\\", "/")
+    if nodeid.startswith("./"):
+        nodeid = nodeid[2:]
+
+    while "//" in nodeid:
+        nodeid = nodeid.replace("//", "/")
+
+    return nodeid
+
+
+def canonical_manifest_key(nodeid: str) -> str:
+    """
+    Compare tests at file level.
+    Example:
+      tests/foo/test_bar.py::test_baz -> tests/foo/test_bar.py
+    """
+    return normalize_nodeid(nodeid.split("::", 1)[0])
 
 
 def load_manifest() -> dict:
@@ -66,7 +89,9 @@ def manifest_entries(manifest: dict):
                 if "splits" not in subentry:
                     continue
 
-                nodeid = f"tests/{suite}/{testfile}.py::{subtest_name}"
+                nodeid = normalize_nodeid(
+                    f"tests/{suite}/{testfile}.py::{subtest_name}"
+                )
                 yield nodeid, subentry.get("result")
 
 
@@ -203,11 +228,13 @@ def fetch_classifications_from_bq(
     # Convert BQ rows to Python results
     results: List[Dict[str, object]] = []
     for row in job.result():
+        nodeid = normalize_nodeid(row["test_nodeid"])
         statuses = list(row["statuses"])
         state = classify_recent(statuses)
         results.append(
             {
-                "test_nodeid": row["test_nodeid"],
+                "test_nodeid": nodeid,
+                "canonical_key": canonical_manifest_key(nodeid),
                 "statuses": statuses,
                 "state": state,
             }
@@ -216,46 +243,49 @@ def fetch_classifications_from_bq(
     return results
 
 
-def build_changes(
-    manifest: dict,
-    computed: List[Dict[str, object]],
-    platform: str,
-) -> Tuple[List[Dict[str, object]], int]:
+def build_manifest_map(manifest: dict, platform: str) -> Dict[str, Optional[str]]:
     """
-    Compare computed state to manifest state to tell which tests have
-    a computed state, that is different from what manifest indicates.
-
-    - First try exact nodeid match
-    - If not found, fall back to file-level match by stripping ::subtest
-      This is needed because some manifest entries are file-level while BigQuery
-      contains per-test nodeids like:
-        tests/menus/test_copy_paste_actions.py::test_text_area_copy_paste
-
-    Returns:
-      (changes, insufficient_data_count)
+    Build file-level manifest map.
     """
     manifest_map: Dict[str, Optional[str]] = {}
 
     for nodeid, result_field in manifest_entries(manifest):
-        manifest_map[nodeid] = manifest_state_for_platform(result_field, platform)
+        key = canonical_manifest_key(nodeid)
+        manifest_map[key] = manifest_state_for_platform(result_field, platform)
+
+    return manifest_map
+
+
+def build_changes(
+    manifest: dict,
+    computed: List[Dict[str, object]],
+    platform: str,
+) -> Tuple[List[Dict[str, object]], int, int]:
+    """
+    Compare computed state to manifest state using file-level canonical keys.
+
+    Returns:
+      (changes, insufficient_data_count, unmatched_manifest_count)
+    """
+    manifest_map = build_manifest_map(manifest, platform)
 
     changes: List[Dict[str, object]] = []
     insufficient_data_count = 0
+    unmatched_manifest_count = 0
 
     for item in computed:
         nodeid = item["test_nodeid"]
+        canonical_key = item["canonical_key"]
         new_state = item["state"]
         statuses = item["statuses"]
 
-        # Try exact match first
-        current_state = manifest_map.get(nodeid)
-
-        # Fall back to file-level path if exact match is missing
-        if current_state is None and "::" in nodeid:
-            file_level_nodeid = nodeid.split("::", 1)[0]
-            current_state = manifest_map.get(file_level_nodeid)
+        current_state = manifest_map.get(canonical_key)
 
         if current_state is None:
+            unmatched_manifest_count += 1
+            print(
+                f"No manifest match for computed nodeid: {nodeid} (canonical: {canonical_key})"
+            )
             continue
 
         if new_state == "unknown":
@@ -266,9 +296,11 @@ def build_changes(
             continue
 
         fail_count = sum(1 for s in statuses if s == "fail")
+
         changes.append(
             {
                 "test_nodeid": nodeid,
+                "canonical_key": canonical_key,
                 "manifest_state": current_state,
                 "computed_state": new_state,
                 "statuses": statuses,
@@ -276,7 +308,7 @@ def build_changes(
             }
         )
 
-    return changes, insufficient_data_count
+    return changes, insufficient_data_count, unmatched_manifest_count
 
 
 def build_slack_blocks(
@@ -284,34 +316,35 @@ def build_slack_blocks(
     platform: str,
     runs: int,
     insufficient_data_count: int,
+    unmatched_manifest_count: int,
+    computed_count: int,
 ) -> List[dict]:
     """Turn the list of changes into Slack Blocks"""
 
     header_text = f"Stability state changes for {platform} (last {runs} runs)"
 
     if not changes:
+        details = [
+            f"*{header_text}*",
+            "No test state changes detected.",
+            f"Computed tests: `{computed_count}`",
+        ]
         if insufficient_data_count > 0:
-            return [
-                {
-                    "type": "section",
-                    "text": {
-                        "type": "mrkdwn",
-                        "text": (
-                            f"*{header_text}*\n"
-                            f"No test state changes detected.\n"
-                            f"`{insufficient_data_count}` test(s) had insufficient data "
-                            f"(fewer than 2 usable executions)."
-                        ),
-                    },
-                }
-            ]
+            details.append(
+                f"Insufficient data for `{insufficient_data_count}` test(s) "
+                f"(fewer than 2 usable executions)."
+            )
+        if unmatched_manifest_count > 0:
+            details.append(
+                f"No manifest match for `{unmatched_manifest_count}` computed test(s)."
+            )
 
         return [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"*{header_text}*\nNo test state changes detected.",
+                    "text": "\n".join(details),
                 },
             }
         ]
@@ -327,16 +360,26 @@ def build_slack_blocks(
         reverse=True,
     )
 
-    summary_text = f"*{header_text}*\nChanged tests: *{len(changes_sorted)}*"
+    summary_lines = [
+        f"*{header_text}*",
+        f"Changed tests: *{len(changes_sorted)}*",
+        f"Computed tests: `{computed_count}`",
+    ]
     if insufficient_data_count > 0:
-        summary_text += f"\nInsufficient data for *{insufficient_data_count}* test(s)"
+        summary_lines.append(
+            f"Insufficient data for *{insufficient_data_count}* test(s)"
+        )
+    if unmatched_manifest_count > 0:
+        summary_lines.append(
+            f"No manifest match for *{unmatched_manifest_count}* test(s)"
+        )
 
     blocks: List[dict] = [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": summary_text,
+                "text": "\n".join(summary_lines),
             },
         },
         {"type": "divider"},
@@ -377,10 +420,19 @@ def send_slack_message(
     platform: str,
     runs: int,
     insufficient_data_count: int,
+    unmatched_manifest_count: int,
+    computed_count: int,
 ) -> None:
     print("Trying to send Slack message...")
     client = WebClient(token=SLACK_KEY)
-    blocks = build_slack_blocks(changes, platform, runs, insufficient_data_count)
+    blocks = build_slack_blocks(
+        changes=changes,
+        platform=platform,
+        runs=runs,
+        insufficient_data_count=insufficient_data_count,
+        unmatched_manifest_count=unmatched_manifest_count,
+        computed_count=computed_count,
+    )
 
     try:
         client.chat_postMessage(
@@ -389,7 +441,7 @@ def send_slack_message(
             blocks=blocks,
         )
     except SlackApiError as e:
-        print(f"Error sending message: {e.response.get('error', e.response)}")
+        print(f"Error sending message: {e.response['error']}")
         raise
 
 
@@ -407,19 +459,32 @@ def main() -> int:
         include_headed=INCLUDE_HEADED,
     )
 
-    changes, insufficient_data_count = build_changes(manifest, computed, PLATFORM)
+    changes, insufficient_data_count, unmatched_manifest_count = build_changes(
+        manifest=manifest,
+        computed=computed,
+        platform=PLATFORM,
+    )
 
     print(
         json.dumps(
             {
+                "computed_count": len(computed),
                 "changes": changes,
                 "insufficient_data_count": insufficient_data_count,
+                "unmatched_manifest_count": unmatched_manifest_count,
             },
             indent=2,
         )
     )
 
-    send_slack_message(changes, PLATFORM, RUNS, insufficient_data_count)
+    send_slack_message(
+        changes=changes,
+        platform=PLATFORM,
+        runs=RUNS,
+        insufficient_data_count=insufficient_data_count,
+        unmatched_manifest_count=unmatched_manifest_count,
+        computed_count=len(computed),
+    )
 
     return 0
 
