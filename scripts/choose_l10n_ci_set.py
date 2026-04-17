@@ -150,7 +150,10 @@ if __name__ == "__main__":
     for key in sample_mappings:
         regions = sorted(list(sample_mappings[key]))
         sample_mappings[key] = (regions[0], regions[-1])
-    if os.environ.get("TESTRAIL_REPORT") or os.environ.get("MANUAL"):
+    if (
+        os.environ.get("TESTRAIL_REPORT") == "true"
+        or os.environ.get("MANUAL") == "true"
+    ):
         # Run all tests if this is a scheduled beta or a manual run
         save_mappings(l10n_mappings)
         sys.exit(0)
@@ -201,7 +204,8 @@ if __name__ == "__main__":
         # Run sample tests for all mappings if main conftest or basepage changed
         selected_mappings |= sample_mappings
 
-    # Run sample tests for all mappings if any core l10n model, component, conftest, or tests are changed.
+    # Run sample tests for all mappings if any core l10n model, component, conftest, or
+    # tests are changed.
     for f in committed_files:
         # check if constants, sites or region directory files were changed or added.
         # if so, add the site/region mappings.

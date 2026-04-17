@@ -195,7 +195,7 @@ def run_tests(reg, site, flg, all_tests):
             os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
-def get_region_tests(test_region: str) -> list[str]:
+def get_region_tests(test_region: str, ci=False) -> list[str]:
     """
     Retrieve the list of test file paths for a specified region.
 
@@ -208,7 +208,8 @@ def get_region_tests(test_region: str) -> list[str]:
     path_to_region = os.path.join(current_dir, "region")
     with open(os.path.join(path_to_region, test_region) + ".json", "r") as fp:
         region_data = load(fp)
-        raw_tests = region_data.get("tests", [])
+        test_type = "ci" if ci else "tests"
+        raw_tests = region_data.get(test_type, [])
         return (
             list(
                 map(lambda test: os.path.join(current_dir, "Unified", test), raw_tests)
@@ -330,7 +331,7 @@ def run_unified(regions, unified_flags):
         regions (list[str]): A set of region identifiers.
         unified_flags (list[str]): A list of pytest flags to be used.
     """
-    unified_tests = get_region_tests("Unified")
+    unified_tests = get_region_tests("Unified", "--ci" in unified_flags)
     logging.info(f"Testing {live_sites} Sites.")
     for live_site in live_sites:
         # If the live_site is 'demo', skip starting the server
@@ -356,12 +357,16 @@ def run_unified(regions, unified_flags):
 if __name__ == "__main__":
     arguments = sys.argv[1:]
     flags = get_flags_and_sanitize(arguments)
+    if "--ci" not in flags and (
+        os.environ.get("CI") and not (os.environ.get("TESTRAIL_REPORT") == "true")
+    ):
+        flags.append("--ci")
     if len(live_sites) == 0:
         # Run on all live sites.
         live_sites = valid_sites
         logging.info(f"Running Against all available live sites ({live_sites}).")
     if len(arguments) == 0:
-        ## Run on all Regions.
+        # Run on all Regions.
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)
     else:

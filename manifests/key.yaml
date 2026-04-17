@@ -865,8 +865,7 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026018
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
@@ -1179,11 +1178,7 @@ security_and_privacy:
     splits:
     - functional2
   test_sidebar_removed_on_end_private_session:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026669
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_third_party_content_blocked_private_browsing:
@@ -1268,11 +1263,11 @@ sidebar:
     result: pass
     splits:
     - functional2
-  test_sidebar_vertical_tabs_multiselect_close_options:
+  test_sidebar_vertical_tabs_move_options:
     result: pass
     splits:
     - functional2
-  test_sidebar_vertical_tabs_move_options:
+  test_sidebar_vertical_tabs_multiselect_close_options:
     result: pass
     splits:
     - functional2

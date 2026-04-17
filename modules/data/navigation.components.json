@@ -744,6 +744,11 @@
         "strategy": "id",
         "groups": []
     },
+    "password-notification-popup-panel": {
+        "selectorData": "notification-popup",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    },
     "password-notification-save-button": {
         "selectorData": "button.popup-notification-primary-button[label='Save']",
         "strategy": "css",
