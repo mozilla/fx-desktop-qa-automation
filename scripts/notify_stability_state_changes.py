@@ -252,9 +252,14 @@ def build_manifest_map(manifest: dict, platform: str) -> Dict[str, Optional[str]
     for nodeid, result_field in manifest_entries(manifest):
         key = canonical_manifest_key(nodeid)
         state = manifest_state_for_platform(result_field, platform)
-        if key in manifest_map and manifest_map[key] != state:
-            print(f"Warning: conflicting manifest states for {key!r}, keeping last ({state!r})")
-        manifest_map[key] = state
+        SEVERITY = {"pass": 0, "flaky": 1, "unstable": 2}
+        if key in manifest_map:
+            existing = manifest_map[key]
+            if existing != state:
+                print(f"Warning: conflicting manifest states for {key!r}: {existing!r} vs {state!r}, keeping most restrictive")
+                manifest_map[key] = max(existing, state, key=lambda s: SEVERITY.get(s or "", -1))
+        else:
+            manifest_map[key] = state
 
     return manifest_map
 
