@@ -317,9 +317,9 @@ bookmarks_and_history:
   test_import_bookmarks_chrome:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033604
     result:
-      win: unstable
       linux: pass
       mac: pass
+      win: unstable
     splits:
     - smoke
   test_import_bookmarks_edge:
@@ -643,9 +643,9 @@ networking:
   test_default_dns_protection:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033605
     result:
-      win: unstable
-      mac: pass
       linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_http_site:
@@ -1018,9 +1018,9 @@ profile:
   test_set_default_profile:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033608
     result:
-      win: unstable
-      mac: pass
       linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
 reader_view:
