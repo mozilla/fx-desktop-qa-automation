@@ -311,7 +311,7 @@ def version(fx_executable: str):
 
 
 @pytest.fixture(scope="session")
-def build_version(request):
+def build_version():
     """Collect executables, but just the version number for Fx"""
     if not os.environ.get("CI"):
         return None

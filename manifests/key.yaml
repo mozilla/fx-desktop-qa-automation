@@ -315,7 +315,11 @@ bookmarks_and_history:
     splits:
     - functional1
   test_import_bookmarks_chrome:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033604
+    result:
+      win: unstable
+      linux: pass
+      mac: pass
     splits:
     - smoke
   test_import_bookmarks_edge:
@@ -637,7 +641,11 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033605
+    result:
+      win: unstable
+      mac: pass
+      linux: pass
     splits:
     - smoke
   test_http_site:
@@ -1008,7 +1016,11 @@ printing_ui:
     - functional2
 profile:
   test_set_default_profile:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033608
+    result:
+      win: unstable
+      mac: pass
+      linux: pass
     splits:
     - smoke
 reader_view:
