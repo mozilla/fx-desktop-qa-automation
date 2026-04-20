@@ -81,14 +81,6 @@ def get_facebook_logins(about_logins: AboutLogins):
     ]
 
 
-def open_facebook_login(driver: Firefox, temp_selectors: dict) -> GenericPage:
-    web_page = GenericPage(driver, url=LOGIN_URL).open()
-    web_page.elements |= temp_selectors
-
-    web_page.element_visible("facebook-username-field")
-    web_page.element_visible("facebook-password-field")
-
-
 def dismiss_facebook_cookies_if_present(web_page: GenericPage):
     if len(web_page.get_elements("facebook-cookie-dialog")) == 0:
         return
