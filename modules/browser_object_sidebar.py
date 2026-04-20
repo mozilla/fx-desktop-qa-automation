@@ -104,6 +104,34 @@ class Sidebar(BasePage):
             "return search(cd);"
         )
 
+    def _exec_on_element_by_l10n_id(self, l10n_id: str, js_on_element: str):
+        """Find a customize-panel element by exact data-l10n-id and evaluate js_on_element on it.
+
+        General-purpose version of _exec_on_vertical_tab_element. l10n_id is passed as a JS
+        argument to avoid string injection; js_on_element is a developer-controlled code expression
+        concatenated at call time. Returns null if the panel is not ready or the element is not found.
+
+        Must be called from within a @BasePage.context_chrome method.
+        """
+        return self.driver.execute_script(
+            "const l10nId = arguments[0];"
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "if (!cd || cd.readyState !== 'complete') return null;"
+            "function search(root) {"
+            "  const el = root.querySelector('[data-l10n-id=\"' + l10nId + '\"]');"
+            "  if (el) return " + js_on_element + ";"
+            "  for (const host of root.querySelectorAll('*')) {"
+            "    if (host.shadowRoot) {"
+            "      const r = search(host.shadowRoot);"
+            "      if (r !== null) return r;"
+            "    }"
+            "  }"
+            "  return null;"
+            "}"
+            "return search(cd);",
+            l10n_id,
+        )
+
     @BasePage.context_chrome
     def expect_vertical_tabs_checkbox_visible(self):
         """Verify that the Vertical tabs checkbox is displayed in the Sidebar settings section of the customize panel."""
@@ -141,6 +169,53 @@ class Sidebar(BasePage):
         self.wait.until(
             lambda _: self._exec_on_vertical_tab_element("el.checked === false")
         )
+        return self
+
+    @BasePage.context_chrome
+    def click_expand_on_hover_in_panel(self) -> BasePage:
+        """Click the 'Expand sidebar on hover' checkbox in the Customize Sidebar panel."""
+        self.wait.until(
+            lambda _: self._exec_on_element_by_l10n_id(
+                "expand-sidebar-on-hover", "(el.click(), true)"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_move_sidebar_to_right_in_panel(self) -> BasePage:
+        """Click the 'Move sidebar to the right' checkbox in the Customize Sidebar panel."""
+        self.wait.until(
+            lambda _: self._exec_on_element_by_l10n_id(
+                "sidebar-show-on-the-right", "(el.click(), true)"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def get_sidebar_strip_width(self) -> float:
+        """Return the current rendered width of the sidebar-main element in pixels."""
+        return self.driver.execute_script(
+            "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
+        )
+
+    @BasePage.context_chrome
+    def expect_sidebar_strip_collapsed(self) -> "Sidebar":
+        """Wait until the sidebar strip width has stabilized to its collapsed state.
+
+        Polls until two consecutive readings (500 ms apart) return the same non-zero
+        width, ensuring any panel-close animation has finished before the caller
+        proceeds to measure a baseline width.
+        """
+        last: list[float | None] = [None]
+
+        def _stable(_):
+            w = self.get_sidebar_strip_width()
+            if w > 0 and w == last[0]:
+                return True
+            last[0] = w
+            return False
+
+        self.wait.until(_stable)
         return self
 
     @BasePage.context_chrome

@@ -447,8 +447,7 @@ downloads:
     splits:
     - functional1
   test_set_always_ask_file_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018770
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_telemetry_download_and_open:
@@ -1236,6 +1235,10 @@ sidebar:
     splits:
     - functional2
   test_hide_sidebar_behaviour:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
     result: pass
     splits:
     - functional2
