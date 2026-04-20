@@ -210,7 +210,6 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
 
     web_page.click_on("facebook-username-field")
     username_field.send_keys(Keys.ARROW_DOWN)
-
     autofill_popup.ensure_autofill_dropdown_visible()
 
     first_value = autofill_popup.get_primary_value(autofill_popup.get_nth_element(1))
