@@ -10,6 +10,10 @@ on:
         description: "Dry-Run - If true, only report the plan; do not trigger downstream workflows."
         required: false
         default: "false"
+      preview_only:
+        description: "Preview Only - If true, only show which jobs would run (no reusable workflows called)"
+        required: false
+        default: "false"
 
 env:
   LATEST: ""
@@ -53,6 +57,7 @@ jobs:
     with:
       channel: "rc"
       job_to_run: Test-Windows
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
       test_set: smoke
     secrets: inherit
 
@@ -67,5 +72,6 @@ jobs:
     with:
       channel: "rc"
       job_to_run: Test-MacOS
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
       test_set: smoke
     secrets: inherit

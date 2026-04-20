@@ -1323,7 +1323,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: default-zoom-dropdown-value
-Selector Data: menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']
+Selector Data: menuitem[label='{.*}%']
 Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
@@ -1382,6 +1382,41 @@ Selector Name: saved-passwords
 Selector Data: "showPasswords"
 Description: Saved passwords button in about:preferences#privacy
 Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: change-primary-password
+Selector Data: "changeMasterPassword"
+Description: Change primary password button in about:preferences#privacy
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-primary-password
+Selector Data: "oldpw"
+Description: Input for current password in the Change Primary Password dialog
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-current-password
+Selector Data: "password"
+Description: Input for current password in the Remove Primary Password dialog
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-primary-password-box
+Selector Data: "removemp"
+Description: Shadow parent of the remove button
+Location: about:preferences#privacy Primary Password popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-password
+Selector Data: "button[label^='Remove']"
+Description: Remove button to remove the primary password
+Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -1832,6 +1867,13 @@ Description: Login autofill manage passwords button
 Location: Login autofill
 Path to .json: modules/data/autofill_popup.components.json
 ```
+```
+Selector Name: password-notification-username-field
+Selector Data: "password-notification-username"
+Description: Username field in the password notification popup
+Location: Username field in the password notification popup
+Path to .json: modules/data/autofill_popup.components.json
+```
 #### context_menu
 ```
 Selector Name: context-menu-search-selected-text
@@ -1929,6 +1971,13 @@ Selector Name: context-menu-unpin-tab
 Selector Data: "context_unpinTab"
 Description: Tab context click option "Unpin Tab"
 Location: Any pinned browser tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-toggle-mute-tab
+Selector Data: "context_toggleMuteTab"
+Description: Tab context click option "Mute Tab" / "Unmute Tab" — single toggle element whose label changes based on tab audio state
+Location: Any tab playing or muted audio
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
@@ -2173,6 +2222,13 @@ Selector Name: context-menu-vertical-tabs
 Selector Data: toolbar-context-toggle-vertical-tabs
 Description: Vertical Tabs context menu option
 Location: Toolbar context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-use-saved-password
+Selector Data: fill-login
+Description: Context menu option "Use Saved Password" shown on login form fields when saved credentials exist for the page
+Location: Context menu on a username or password field in a login form
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
@@ -3001,6 +3057,13 @@ Selector Name: mozilla-github-credentials
 Selector Data: "richlistitem.autocomplete-richlistitem[ac-value='testUser']"
 Description: Autocomplete dropdown is toggled for focused login fields on Mozilla github page load
 Location: Mozilla Github page load
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: password-signup-field
+Selector Data: "input[placeholder='new-password']"
+Description: Mozilla github registration password field
+Location: Mozilla github registration page
 Path to .json: modules/data/login_autofill.components.json
 ```
 #### navigation
@@ -3852,10 +3915,10 @@ Location: Password notification prompt in Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector Name: password-notification-username-field
-Selector Data: "password-notification-username"
-Description: Username field in the password notification popup
-Location: Username field in the password notification popup
+Selector Name: password-notification-popup-panel
+Selector Data: "notification-popup"
+Description: The outer panel element that wraps the password notification; panelopen='true' is set on this element only after the opening animation completes, making it the reliable target for waiting until the popup is fully interactive
+Location: Password notification panel in Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -3863,6 +3926,13 @@ Selector Name: password-notification-save-button
 Selector Data: "button[class='popup-notification-primary-button primary footer-button']"
 Description: Save button in the password notification popup
 Location: Save button in the password notification popup
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: confirmation-hint
+Selector Data: "confirmation-hint"
+Description: Password saved! confirmation
+Location: In the Navigation bar, next to the url input field
 Path to .json: modules/data/navigation.components.json
 ```
 #### panel_ui

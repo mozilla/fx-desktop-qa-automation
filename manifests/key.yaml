@@ -163,7 +163,7 @@ address_bar_and_search:
     - functional1
   test_search_modes_for_sites:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
-    result: unstable
+    result: deprecated
     splits:
     - functional1
   test_search_string_displayed_when_addressbar_unfocused:
@@ -236,7 +236,8 @@ audio_video:
     splits:
     - smoke
   test_html5_video_playback_controls:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026662
+    result: unstable
     splits:
     - functional1
   test_users_actions_saved_on_reload:
@@ -384,7 +385,8 @@ downloads:
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026665
+    result: unstable
     splits:
     - functional1
   test_delete_download_while_in_progress:
@@ -412,6 +414,7 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: pass
     splits:
     - smoke
@@ -444,8 +447,7 @@ downloads:
     splits:
     - functional1
   test_set_always_ask_file_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018770
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_telemetry_download_and_open:
@@ -548,7 +550,8 @@ form_autofill:
     splits:
     - functional1
   test_form_autofill_suggestions:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026652
+    result: unstable
     splits:
     - functional1
   test_name_autofill_attribute:
@@ -605,37 +608,17 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    test_inspect:
-      result: pass
-      splits:
-      - functional2
-    test_save_page_as:
-      comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
-      result: pass
-      splits:
-      - functional2
-    test_take_screenshot:
-      result: pass
-      splits:
-      - functional2
+    result: pass
+    splits:
+    - functional2
   test_hyperlink_context_menu:
     result: pass
     splits:
     - smoke
   test_image_context_menu_actions:
-    test_copy_image_link:
-      result: pass
-      splits:
-      - functional2
-    test_open_image_in_new_tab:
-      result: pass
-      splits:
-      - functional2
-    test_save_image_as:
-      comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2020687
-      result: pass
-      splits:
-      - functional2
+    result: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -681,7 +664,7 @@ notifications:
   test_cancel_webextension:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_deny_geolocation:
     result: pass
     splits:
@@ -693,15 +676,15 @@ notifications:
   test_downloads_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_downloads_finished_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_prompt_presence:
     result: pass
     splits:
@@ -728,10 +711,18 @@ notifications:
     splits:
     - functional2
 password_manager:
+  test_about_logins_copy_prompts_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional1
+    - functional2
+  test_about_logins_edit_prompts_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
@@ -800,10 +791,26 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
+    result: pass
+    splits:
+    - functional2
   test_delete_login:
     result: pass
     splits:
     - smoke
+  test_delete_primary_password:
+    result: pass
+    splits:
+    - functional2
+  test_edit_generated_password_triggers_autosave:
+    result: pass
+    splits:
+    - functional2
+  test_edit_primary_password:
+    result: pass
+    splits:
+    - functional2
   test_multiple_saved_logins:
     comment: Issue with Mac GHA? trying pass to see what happens.
     result:
@@ -844,7 +851,19 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_primary_password_allows_csv_export:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004938
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
+    splits:
+    - functional2
   test_primary_password_triggered_on_about_logins_access:
+    result: pass
+    splits:
+    - functional2
+  test_private_browsing_dismiss_doorhanger_credentials:
     result: pass
     splits:
     - functional2
@@ -856,13 +875,30 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_taobao_password_management:
+    result: pass
+    splits:
+    - functional1
   test_update_login_via_doorhanger:
+    result: pass
+    splits:
+    - functional2
+  test_use_saved_password_option_not_in_password_field_context_menu_without_saved_logins:
+    result: pass
+    splits:
+    - functional2
+  test_use_saved_password_option_not_in_username_field_context_menu_without_saved_logins:
+    result: pass
+    splits:
+    - functional2
+  test_username_edit_captured_in_dismissed_doorhanger:
     result: pass
     splits:
     - functional2
 pdf_viewer:
   test_add_image_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
+    result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
@@ -871,8 +907,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018765
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_open_pdf_in_FF:
@@ -1070,7 +1105,7 @@ security_and_privacy:
     splits:
     - functional2
   test_detected_blocked_trackers_found:
-    result: pass
+    result: deprecated
     splits:
     - functional2
   test_download_list_cleared_by_end_private_session:
@@ -1125,10 +1160,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_private_browsing_dismiss_doorhanger_credentials:
-    result: pass
-    splits:
-    - functional2
   test_private_session_awesome_bar_exclusion:
     result: pass
     splits:
@@ -1158,7 +1189,7 @@ security_and_privacy:
     splits:
     - functional2
   test_trackers_crypto_fingerprint_blocked:
-    result: pass
+    result: deprecated
     splits:
     - functional2
   test_tracking_content_custom_mode:
@@ -1195,11 +1226,19 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
+    result: pass
+    splits:
+    - functional2
   test_hide_sidebar_behaviour:
     result: pass
     splits:
     - functional2
-  test_sidebar-button-always-displayed-on-a-fresh-profile:
+  test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
     - functional2
@@ -1211,7 +1250,39 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_sidebar_multiple_vertical_tabs_selection:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tab_can_be_reloaded:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_bookmarked:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_closing_options:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_vertical_tabs_move_options:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_multiselect_close_options:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_vertical_tabs_mute_unmute:
+    result: pass
+    splits:
+    - functional2
+  test_switch_between_horizontal_vertical_tabs:
+    result: pass
+    splits:
+    - functional2
+  test_switching_to_horizontal_tabs_disables_expand_on_hover:
     result: pass
     splits:
     - functional2
@@ -1220,6 +1291,10 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
+    result: pass
+    splits:
+    - functional2
+  test_vertical_tabs_reopen_closed_tab:
     result: pass
     splits:
     - functional2
@@ -1325,7 +1400,7 @@ tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: unstable
-      mac: pass
+      mac: unstable
       win: unstable
     splits:
     - functional2

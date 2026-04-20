@@ -394,7 +394,7 @@ def reportable(platform_to_test=None):
     channel_milestone = tr_session.matching_submilestone(
         major_milestone, f"{channel} {ctx['major_number']}"
     )
-    if not channel_milestone and channel == "Devedition":
+    if not channel_milestone and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = tr_session.matching_submilestone(
             major_milestone, f"Beta {ctx['major_number']}"
         )
@@ -741,14 +741,27 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     durations = suite_info.get("durations")
     plan_title = expected_plan.get("name")
 
+    # Re-fetch the plan to get the latest entries — Mac and Windows both receive the
+    # same stale snapshot from collect_changes. Without a fresh fetch here, both
+    # platforms see no entry and both call create_new_plan_entry, producing duplicate
+    # entries with no config runs.
+    plan_id = expected_plan.get("id")
+    expected_plan = testrail_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+    )
+    if not expected_plan:
+        logging.warning(
+            f"Could not re-fetch plan {plan_title} (milestone: {milestone_id})"
+        )
+        return
+
     suite_entries = [
         entry
-        for entry in expected_plan.get("entries")
+        for entry in expected_plan.get("entries", [])
         if entry.get("suite_id") == suite_id
     ]
 
     # Add a missing entry to a plan
-    plan_id = expected_plan.get("id")
     if not suite_entries:
         # If no entry, create entry for suite
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
@@ -759,6 +772,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             name=suite_description,
             description="Automation-generated test plan entry",
             case_ids=cases_in_suite,
+            config_ids=[config_id],
         )
 
         expected_plan = testrail_session.matching_plan_in_milestone(
@@ -778,6 +792,23 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     # And if not, make that run
     entry = suite_entries[0]
     config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
+    # Sometimes, we get entries with null descriptions, not sure why
+    if not entry.get("description"):
+        logging.warning(f"Entry {entry.get('id')} is malformed, missing description")
+        testrail_session.update_plan_entry(
+            plan_id, entry.get("id"), description="Automation-generated test plan entry"
+        )
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+        entry = suite_entries[0]
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
     logging.info(f"config runs {config_runs}")
     logging.warning(
@@ -849,7 +880,11 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         if not test_results[category].get(run_id):
             test_results[category][run_id] = []
         test_results[category][run_id].append(
-            {"suite_id": suite_id, "test_case": test_case, "duration": f"{duration}s"}
+            {
+                "suite_id": suite_id,
+                "test_case": test_case,
+                "duration": f"{duration}s",
+            }
         )
 
     return test_results
@@ -919,7 +954,7 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
-    if (not channel_milestone) and channel == "Devedition":
+    if (not channel_milestone) and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = testrail_session.matching_submilestone(
             major_milestone, f"Beta {major}"
         )

@@ -11,13 +11,13 @@ from modules.page_object import AboutPrefs, GenericPage
 DEFAULT_ZOOM_110 = 110
 DEFAULT_ZOOM_100 = 100
 WEBSITE_1 = "https://en.wikipedia.org/wiki/Mozilla"
-LOCAL_HTML = "text_test.html"
+LOCAL_HTML = "basic_webpage.html"
 
 
 @pytest.fixture()
 def local_doc_path(tmp_path):
     loc = tmp_path / LOCAL_HTML
-    copyfile(f"data/{LOCAL_HTML}", loc)
+    copyfile(f"data/pages/{LOCAL_HTML}", loc)
     # copy goomy too!
     copyfile("data/goomy.png", tmp_path / "goomy.png")
     return loc

@@ -18,7 +18,7 @@ NUM_LINKS = 3
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("pdfjs.disabled", True)]
+    return [("browser.download.enableDeletePrivate", False), ("pdfjs.disabled", True)]
 
 
 @pytest.fixture()
@@ -63,7 +63,7 @@ def test_downloads_from_private_not_leaked(
         and el.get_attribute("href").endswith(".pdf")
         and el.is_displayed()
     ]
-    # first link is large, skip it
+    # First link is large, skip it
     panel_skipped = False
     for link in valid_links[1 : (NUM_LINKS + 1)]:
         target = link.get_attribute("href")

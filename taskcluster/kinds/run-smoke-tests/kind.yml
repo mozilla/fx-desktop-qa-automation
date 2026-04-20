@@ -33,7 +33,7 @@ tasks:
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
         . ./scripts/keyring-unlock.sh
-        if [[ ! $(python3 scripts/choose_test_channel.py) =~ "starfox" ]]; then exit 0; fi;
+        if [[ ! $(python3 ./scripts/choose_test_type.py) =~ "starfox" ]]; then exit 0; fi;
         pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests);
         export FAILURE=${?};

@@ -583,9 +583,9 @@
         "groups": []
     },
     "searchbar-input": {
-        "selectorData": "#search-container #urlbar-input",
+        "selectorData": "input[aria-controls='searchbar-results']",
         "strategy": "css",
-        "groups": []
+        "groups": ["doNotCache"]
     },
     "searchbar-suggestions": {
         "selectorData": "div.urlbarView-row",
@@ -747,14 +747,19 @@
         "strategy": "id",
         "groups": []
     },
-    "password-notification-username-field": {
-        "selectorData": "password-notification-username",
+    "password-notification-popup-panel": {
+        "selectorData": "notification-popup",
         "strategy": "id",
-        "groups": []
+        "groups": ["doNotCache"]
     },
     "password-notification-save-button": {
         "selectorData": "button.popup-notification-primary-button[label='Save']",
         "strategy": "css",
+        "groups": []
+    },
+    "confirmation-hint": {
+        "selectorData": "confirmation-hint",
+        "strategy": "id",
         "groups": []
     }
 }
