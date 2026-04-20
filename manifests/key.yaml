@@ -1294,6 +1294,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
+    result: pass
+    splits:
+    - functional2
   test_vertical_tabs_reopen_closed_tab:
     result: pass
     splits:
