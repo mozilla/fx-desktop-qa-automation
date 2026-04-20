@@ -972,7 +972,11 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033620
+    result:
+      win: unstable
+      linux: pass
+      mac: pass
     splits:
     - smoke
   test_firefox_home_new_tabs:
