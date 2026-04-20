@@ -110,8 +110,8 @@
         "groups": []
     },
     "searchmode-switcher": {
-        "selectorData": "urlbar-searchmode-switcher",
-        "strategy": "id",
+        "selectorData": "searchmode-switcher",
+        "strategy": "class",
         "groups": []
     },
     "legacy-searchbar-switcher-popup": {
@@ -127,9 +127,18 @@
         ]
     },
     "search-mode-switcher-option": {
-        "selectorData": "menuitem[label*='{title}']",
+        "selectorData": "#searchmode-switcher-panel-list-urlbar panel-item[label*='{title}']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "search-mode-switcher-prefs": {
+        "selectorData": "searchmode-switcher-panel-search-settings-button",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "downloads-button": {
         "selectorData": "downloads-button",
@@ -582,7 +591,9 @@
     "searchbar-input": {
         "selectorData": "input[aria-controls='searchbar-results']",
         "strategy": "css",
-        "groups": ["doNotCache"]
+        "groups": [
+            "doNotCache"
+        ]
     },
     "searchbar-suggestions": {
         "selectorData": "div.urlbarView-row",
@@ -747,7 +758,9 @@
     "password-notification-popup-panel": {
         "selectorData": "notification-popup",
         "strategy": "id",
-        "groups": ["doNotCache"]
+        "groups": [
+            "doNotCache"
+        ]
     },
     "password-notification-save-button": {
         "selectorData": "button.popup-notification-primary-button[label='Save']",

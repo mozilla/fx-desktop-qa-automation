@@ -28,6 +28,7 @@ ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
 TESTRAIL_FX_DESK_PRJ = "17"
 TESTRAIL_RUN_FMT = "[{channel} {major}] Automated testing {major}.{minor}b{build}"
+VERSION_TEST_NAME = "test_fx_version"
 
 # Number of suites that exist in the repo, that shouldn't report to TR. Currently meta and pocket.
 SUITE_COVERAGE_TOLERANCE = 2
@@ -311,8 +312,10 @@ def version(fx_executable: str):
 
 
 @pytest.fixture(scope="session")
-def build_version():
+def build_version(request):
     """Collect executables, but just the version number for Fx"""
+    if not os.environ.get("CI") and request.node.name != VERSION_TEST_NAME:
+        return None
     return collect_executables.main("-n")
 
 
