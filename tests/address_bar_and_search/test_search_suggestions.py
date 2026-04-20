@@ -55,12 +55,11 @@ def test_search_suggests_enabled(driver: Firefox):
 
     while not found_sponsored and retries < RETRY_LIMIT:
         actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
-        with driver.context(driver.CONTEXT_CHROME):
-            try:
-                nav.wait_for_suggestions_present()
-                found_sponsored = len(nav.get_elements("sponsored-suggestion")) > 0
-            except TimeoutException:
-                pass
+        try:
+            nav.wait_for_suggestions_present()
+            found_sponsored = len(nav.get_elements("sponsored-suggestion")) > 0
+        except TimeoutException:
+            pass
 
         retries += 1
 
@@ -73,16 +72,16 @@ def test_search_suggests_enabled(driver: Firefox):
     retries = 0
     while not found_non_sponsored and retries < RETRY_LIMIT:
         actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
-        with driver.context(driver.CONTEXT_CHROME):
-            try:
-                nav.wait_for_suggestions_present()
-                nav.get_element("firefox-suggest")
-                titles = nav.get_elements("suggestion-titles")
-                found_non_sponsored = any("Wikipedia" in title.text for title in titles)
-            except (NoSuchElementException, TimeoutException):
-                pass
+        try:
+            nav.wait_for_suggestions_present()
+            nav.get_element("firefox-suggest")
+            titles = nav.get_elements("suggestion-titles")
+            found_non_sponsored = any("Wikipedia" in title.text for title in titles)
+        except (NoSuchElementException, TimeoutException):
+            pass
 
         retries += 1
+
     assert found_non_sponsored, (
         f"Non-sponsored suggestion not found after {RETRY_LIMIT} retries."
     )
