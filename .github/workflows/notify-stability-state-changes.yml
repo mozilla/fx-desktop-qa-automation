@@ -56,7 +56,7 @@ jobs:
           BQ_TABLE: ${{ secrets.BQ_TABLE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          WORKFLOW_FILE: main-stability.yml
+          WORKFLOW_FILE: stability-test-dispatch.yml
 
           PLATFORM: ${{ inputs.platform }}
           RUNS: ${{ inputs.runs }}

@@ -14,7 +14,7 @@ BQ_DATASET = os.environ["BQ_DATASET"]
 BQ_TABLE = os.environ.get("BQ_TABLE", "stability_test_events")
 
 REPO = os.environ["REPO"]
-WORKFLOW_FILE = os.environ.get("WORKFLOW_FILE", "main-stability.yml")
+WORKFLOW_FILE = os.environ["WORKFLOW_FILE"]
 
 PLATFORM = os.environ["PLATFORM"].lower()
 RUNS = int(os.environ.get("RUNS", "5"))
