@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -148,7 +146,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
 
     about_logins.wait.until(
         lambda _: (
-                len(about_logins.get_elements("login-list-item")) > original_logins_amount
+            len(about_logins.get_elements("login-list-item")) > original_logins_amount
         )
     )
 
@@ -160,11 +158,11 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
 
     web_page.wait.until(
         lambda _: web_page.get_element("facebook-username-field").get_attribute("value")
-                  == USERNAME_1
+        == USERNAME_1
     )
     web_page.wait.until(
         lambda _: web_page.get_element("facebook-password-field").get_attribute("value")
-                  == PASSWORD_1
+        == PASSWORD_1
     )
 
     # Step 4: add second credential for same origin
@@ -174,7 +172,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
 
     about_logins.wait.until(
         lambda _: (
-                len(about_logins.get_elements("login-list-item")) > original_logins_amount
+            len(about_logins.get_elements("login-list-item")) > original_logins_amount
         )
     )
 
@@ -201,11 +199,11 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
 
     web_page.wait.until(
         lambda _: web_page.get_element("facebook-username-field").get_attribute("value")
-                  == ""
+        == ""
     )
     web_page.wait.until(
         lambda _: web_page.get_element("facebook-password-field").get_attribute("value")
-                  == ""
+        == ""
     )
 
     username_field = web_page.get_element("facebook-username-field")
