@@ -974,9 +974,9 @@ preferences:
   test_clear_cookie_data:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033620
     result:
-      win: unstable
       linux: pass
       mac: pass
+      win: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
