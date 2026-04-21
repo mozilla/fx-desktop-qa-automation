@@ -302,9 +302,16 @@ class Navigation(BasePage):
         # check if search_mode is valid, otherwise raise error.
         if search_mode not in self.VALID_SEARCH_MODES:
             raise ValueError("search location is not valid.")
-        # switch to chrome context
-        # get list of all valid search modes and filter by label
-        self.get_element("search-mode-switcher-option", labels=[search_mode]).click()
+
+        # wait for menu to fully render
+        self.element_visible("search-mode-switcher-prefs")
+        self.element_clickable("search-mode-switcher-option", labels=[search_mode])
+
+        # We get "cannot scroll into view", so force with JS
+        self.driver.execute_script(
+            "arguments[0].click();",
+            self.fetch("search-mode-switcher-option", labels=[search_mode]),
+        )
         return self
 
     @BasePage.context_chrome
