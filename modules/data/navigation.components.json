@@ -133,6 +133,13 @@
             "doNotCache"
         ]
     },
+    "search-mode-local-option": {
+        "selectorData": "#searchmode-switcher-panel-list-urlbar panel-item.search-button-{function}",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "search-mode-switcher-prefs": {
         "selectorData": "searchmode-switcher-panel-search-settings-button",
         "strategy": "class",
@@ -628,7 +635,7 @@
         "groups": []
     },
     "exit-button-searchmode": {
-        "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
+        "selectorData": "[data-l10n-id='urlbar-searchmode-exit-button2']",
         "strategy": "css",
         "groups": []
     },
