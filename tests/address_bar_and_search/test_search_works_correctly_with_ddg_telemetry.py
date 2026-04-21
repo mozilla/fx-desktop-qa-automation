@@ -24,7 +24,7 @@ def test_search_works_correctly_with_ddg_telemetry(driver):
     telemetry = AboutTelemetry(driver)
     util = Utilities()
 
-    # Step 1: Go to the website and select DuckDuckGo as a search engine
+    # Step 1: Select DuckDuckGo as a search engine (no need to open another site)
     nav.set_search_mode(SEARCH_ENGINE)
 
     # Step 2: Perform the search
