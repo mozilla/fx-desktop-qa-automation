@@ -463,6 +463,11 @@
     "strategy": "id",
     "groups": []
   },
+  "ai-control-pdf-alt-text-select": {
+    "selectorData": "aiControlPdfjsAltTextSelect",
+    "strategy": "id",
+    "groups": []
+  },
   "language-settings-dialog": {
     "selectorData": "BrowserLanguagesDialog",
     "strategy": "id",

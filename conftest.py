@@ -456,11 +456,9 @@ def driver(
     opt_ci: bool,
     opt_headless: bool,
     opt_implicit_timeout: int,
-    prefs_list: List[Tuple],
-    policies_list: Dict,
-    opt_ci: bool,
     opt_window_size: str,
-    prefs_list: dict,
+    policies_list: Dict,
+    prefs_list: List[Tuple],
     request,
     suite_id: str,
     test_case: str,
@@ -503,21 +501,6 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
-    options = Options()
-    # options.log.level = "trace"
-    options.add_argument("--remote-allow-system-access")
-    options.binary_location = fx_executable
-    # options.set_preference("app.update.disabledForTesting", False)
-
-    if use_profile:
-        profile_path = tmp_path / use_profile
-        unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
-        options.profile = profile_path
-
-    if opt_headless:
-        options.add_argument("--headless")
-    for opt, value in prefs_list:
-        options.set_preference(opt, value)
     try:
         options = Options()
         options.add_argument("--remote-allow-system-access")

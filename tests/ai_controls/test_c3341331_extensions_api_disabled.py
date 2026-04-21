@@ -19,5 +19,8 @@ def test_web_extensions_ai_api_disabled_when_blocking(about_prefs: AboutPrefs):
 
     about_prefs.set_ai_blocking(True)
     about_prefs.expect(lambda _: about_prefs.get_ai_killswitch_state() is True)
-    # Note: Verification that extensions.ml.enabled is also disabled
-    # would require navigating to about:config as a separate step.
+    # TODO: Implement the following to complete this test:
+    # 1. After blocking, read the extensions.ml.enabled pref via
+    #    driver.execute_script("return Services.prefs.getBoolPref('extensions.ml.enabled');").
+    # 2. Assert the pref is False when the killswitch is active.
+    # 3. Unblock, then assert the pref returns to True.

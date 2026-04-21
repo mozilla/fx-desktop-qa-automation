@@ -19,5 +19,7 @@ def test_all_ai_models_deleted_when_features_blocked(about_prefs: AboutPrefs):
 
     about_prefs.set_ai_blocking(True)
     about_prefs.expect(lambda _: about_prefs.get_ai_killswitch_state() is True)
-    # Note: Full model deletion verification requires navigating to about:inference,
-    # which is outside the scope of this AboutPrefs page object.
+    # TODO: Implement the following to complete this test:
+    # 1. Navigate to about:inference (or use IndexedDB / profile inspection)
+    #    to list cached AI models before and after blocking.
+    # 2. Assert that all model entries are removed once the killswitch is on.

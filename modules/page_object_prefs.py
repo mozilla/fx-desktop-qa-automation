@@ -334,9 +334,9 @@ class AboutPrefs(BasePage):
         current_state = self.get_ai_killswitch_state()
 
         if block != current_state:
-            value = "blocked" if block else "available"
             self.driver.execute_script(
-                f"Services.prefs.setStringPref('browser.ai.control.default', '{value}');"
+                "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+                "blocked" if block else "available",
             )
             self.expect(lambda _: self.get_ai_killswitch_state() == block)
         return self

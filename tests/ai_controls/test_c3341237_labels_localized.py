@@ -20,4 +20,7 @@ def test_ai_controls_labels_localized(about_prefs: AboutPrefs):
     """
     about_prefs.navigate_to_ai_controls()
     about_prefs.verify_ai_controls_core_elements_visible()
-    logging.info("AI controls labels are visible and localized")
+    # TODO: A complete implementation would iterate each element's data-l10n-id
+    # and assert document.l10n.formatValue(...) returns a non-empty, locale-
+    # appropriate string for each label, description, and option.
+    logging.info("AI controls labels are visible — locale string assertion pending")
