@@ -75,8 +75,8 @@ def test_search_suggests_enabled(driver: Firefox):
         try:
             nav.wait_for_suggestions_present()
             nav.get_element("firefox-suggest")
-            titles = nav.get_elements("suggestion-titles")
-            found_non_sponsored = any("Wikipedia" in title.text for title in titles)
+            entries = nav.get_elements("firefox-suggest")
+            found_non_sponsored = any("Wikipedia" in entry.text for entry in entries)
         except (NoSuchElementException, TimeoutException):
             pass
 
