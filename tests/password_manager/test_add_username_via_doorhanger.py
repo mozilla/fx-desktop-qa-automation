@@ -39,6 +39,9 @@ def test_add_username_via_doorhanger(driver: Firefox):
     # Fill in only the password field
     login_form.fill_password(PASSWORD)
 
+    # Force trigger by typing again
+    login_autofill.get_element("password-login-field").send_keys("aaaaaaa")
+
     # Click the Password Manager key icon
     nav.click_on("password-notification-key")
 
