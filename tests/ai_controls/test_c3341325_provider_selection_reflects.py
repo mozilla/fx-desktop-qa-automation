@@ -17,7 +17,6 @@ def test_chatbot_provider_selection_reflects_on_ai_controls_page(about_prefs: Ab
     C3341325 - Chatbot provider selection reflects on AI controls page
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
 
     about_prefs.set_ai_chatbot_provider("ChatGPT")
     provider = about_prefs.get_ai_chatbot_provider()

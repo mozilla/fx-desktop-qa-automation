@@ -20,5 +20,6 @@ def test_block_all_ai_features_option_persists(about_prefs: AboutPrefs):
     about_prefs.set_ai_blocking(True)
     about_prefs.expect(lambda _: about_prefs.get_ai_killswitch_state() is True)
 
-    # Re-verify state is still on after a subsequent read
+    # Enable one individual feature — the killswitch must remain on
+    about_prefs.set_ai_translations("available")
     about_prefs.expect(lambda _: about_prefs.get_ai_killswitch_state() is True)

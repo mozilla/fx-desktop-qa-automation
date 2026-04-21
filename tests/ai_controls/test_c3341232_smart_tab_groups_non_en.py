@@ -18,7 +18,6 @@ def test_smart_tab_groups_not_displayed_for_non_en_builds(about_prefs: AboutPref
     C3341232 - Smart tab groups not displayed for non en builds
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
 
     try:
         about_prefs.get_element("ai-control-smart-tab-groups-select")

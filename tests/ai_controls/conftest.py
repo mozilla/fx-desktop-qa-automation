@@ -1,5 +1,4 @@
 import pytest
-from selenium.webdriver import Firefox
 
 from modules.page_object_prefs import AboutPrefs
 
@@ -16,6 +15,6 @@ def prefs_list():
 
 
 @pytest.fixture()
-def about_prefs(driver: Firefox):
+def about_prefs(driver):
     """Fixture for AboutPrefs object navigated to AI Controls"""
     return AboutPrefs(driver)

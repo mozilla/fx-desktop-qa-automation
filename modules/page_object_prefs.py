@@ -257,26 +257,12 @@ class AboutPrefs(BasePage):
         Arguments:
             block: True to block AI enhancements, False to allow them.
         """
-        # Ensure the AI Controls pane is visible
-        try:
-            # Use the find-in-settings box to reveal the control if needed
-            self.find_in_settings("AI")
-        except TimeoutException as e:
-            logging.warning(f"find_in_settings('AI') raised: {e}")
-
-        toggle = self.get_element("ai-controls-toggle")
-        # moz-toggle uses the 'pressed' property
-        current_state = self.driver.execute_script(
-            "return arguments[0].pressed;",
-            toggle
-        )
+        current_state = self.get_ai_killswitch_state()
 
         if block != current_state:
-            # Set the pressed property directly (clicking doesn't work on moz-toggle)
+            value = "blocked" if block else "available"
             self.driver.execute_script(
-                "arguments[0].pressed = arguments[1];",
-                toggle,
-                block
+                f"Services.prefs.setStringPref('browser.ai.control.default', '{value}');"
             )
             self.expect(lambda _: self.get_ai_killswitch_state() == block)
         return self
@@ -300,20 +286,20 @@ class AboutPrefs(BasePage):
         Set the AI Translations feature state.
         
         Arguments:
-            state: "enabled", "removed", or "blocked"
+            state: "available" or "blocked"
         """
         select_elem = self.get_element("ai-control-translations-select")
-        # moz-select doesn't work with Selenium's Select class, use direct property
         self.driver.execute_script(
-            "arguments[0].value = arguments[1];",
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
             select_elem,
             state
         )
-        # Trigger change event
-        self.driver.execute_script(
-            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
-            select_elem
-        )
+        self.expect(lambda _: self.get_ai_translations_state() == state)
         return self
 
     def get_ai_translations_state(self) -> str:
@@ -337,22 +323,25 @@ class AboutPrefs(BasePage):
             provider: Provider name (e.g., "ChatGPT", "Claude", "Copilot")
         """
         select_elem = self.get_element("ai-control-sidebar-chatbot-select")
-        # moz-select: find option with matching text and set value
-        self.driver.execute_script(
+        # moz-select uses moz-option elements with a 'label' attribute
+        matched = self.driver.execute_script(
             """
             const select = arguments[0];
             const provider = arguments[1];
             for (let option of select.options) {
-                if (option.text === provider) {
+                if (option.label === provider) {
                     select.value = option.value;
-                    break;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    return true;
                 }
             }
-            select.dispatchEvent(new Event('change', { bubbles: true }));
+            return false;
             """,
             select_elem,
             provider
         )
+        if not matched:
+            raise ValueError(f"Provider '{provider}' not found in chatbot dropdown")
         return self
 
     def get_ai_chatbot_provider(self) -> str:
@@ -367,14 +356,18 @@ class AboutPrefs(BasePage):
             """
             const select = arguments[0];
             const selectedOption = select.options[select.selectedIndex];
-            return selectedOption ? selectedOption.text : '';
+            return selectedOption ? selectedOption.label : '';
             """,
             select_elem
         )
 
-    def verify_ai_controls_page_loaded(self) -> BasePage:
+    def verify_ai_controls_core_elements_visible(self) -> BasePage:
         """
-        Verify that the AI Controls page has loaded successfully by checking for required elements.
+        Verify that the three always-present AI Controls elements are visible.
+
+        ai-control-link-preview-select and ai-control-smart-tab-groups-select
+        are gated behind feature flags and not present in all builds; they are
+        checked individually in the tests that specifically target those features.
         """
         self.element_visible("ai-controls-toggle")
         self.element_visible("ai-control-translations-select")
@@ -386,7 +379,7 @@ class AboutPrefs(BasePage):
         Navigate to the AI Controls preference page.
         """
         self.driver.get("about:preferences#ai")
-        return self.verify_ai_controls_page_loaded()
+        return self.verify_ai_controls_core_elements_visible()
 
     # Payment and Address Management
     def verify_cc_json(

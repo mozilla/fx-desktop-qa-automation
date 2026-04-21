@@ -18,7 +18,6 @@ def test_pdf_alt_text_feature_not_displayed_for_non_en_builds(about_prefs: About
     C3341230 - PDF alt text feature not displayed for non en builds
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
 
     try:
         about_prefs.get_element("ai-control-pdf-alt-text-select")

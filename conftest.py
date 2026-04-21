@@ -1,11 +1,13 @@
 import datetime
+import json
 import logging
 import os
 import platform
 import re
+from pathlib import Path
 from shutil import unpack_archive
 from subprocess import check_output, run
-from typing import Callable, List, Tuple, Union
+from typing import Callable, Dict, List, Tuple, Union
 
 # import psutil
 import pytest
@@ -310,6 +312,17 @@ def use_profile():
     yield False
 
 
+@pytest.fixture()
+def policies_list() -> Dict:
+    """
+    Enterprise policies to apply before Firefox launches.
+    Override in a suite conftest.py or test file to inject policies.
+    The dict is written verbatim as the value of the top-level "policies" key
+    in distribution/policies.json (e.g. {"DisableAIEnhancements": True}).
+    """
+    return {}
+
+
 @pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
@@ -424,6 +437,7 @@ def driver(
     opt_headless: bool,
     opt_implicit_timeout: int,
     prefs_list: List[Tuple],
+    policies_list: Dict,
     opt_ci: bool,
     opt_window_size: str,
     use_profile: Union[bool, str],
@@ -481,6 +495,28 @@ def driver(
         if opt_headless:
             options.add_argument("--headless")
         options.binary_location = fx_executable
+
+        # Write enterprise policies.json if any policies were requested
+        policy_file: Path | None = None
+        if policies_list:
+            fx_path = Path(fx_executable)
+            if platform.system() == "Darwin":
+                # <App>.app/Contents/MacOS/firefox -> <App>.app/Contents/Resources/distribution
+                dist_dir = fx_path.parent.parent / "Resources" / "distribution"
+            else:
+                dist_dir = fx_path.parent / "distribution"
+            try:
+                dist_dir.mkdir(parents=True, exist_ok=True)
+                policy_file = dist_dir / "policies.json"
+                policy_file.write_text(
+                    json.dumps({"policies": policies_list}, indent=2)
+                )
+                logging.info(f"Wrote enterprise policies to {policy_file}: {policies_list}")
+            except PermissionError:
+                pytest.skip(
+                    f"Cannot write policies to {dist_dir} (permission denied). "
+                    f"Policy tests require write access to the Firefox distribution folder."
+                )
 
         if use_profile:
             profile_path = tmp_path / use_profile
@@ -542,8 +578,17 @@ def driver(
         raise
 
     finally:
-        if not hard_quit and ("driver" in locals() or "driver" in globals()) and driver:
-            driver.quit()
+        if policy_file and policy_file.exists():
+            try:
+                policy_file.unlink()
+                logging.info(f"Removed enterprise policies file {policy_file}")
+            except OSError:
+                pass
+        try:
+            if not hard_quit and driver:
+                driver.quit()
+        except UnboundLocalError:
+            pass
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)

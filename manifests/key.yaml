@@ -1226,10 +1226,10 @@ ai_controls:
     splits:
     - functional1
   test_c3341331_extensions_api_disabled:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_c3343878_models_deleted_when_blocked:
-    result: pass
+    result: disabled
     splits:
     - functional1

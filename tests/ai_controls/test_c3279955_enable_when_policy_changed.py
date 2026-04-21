@@ -12,12 +12,17 @@ def test_case():
     return "3279955"
 
 
+@pytest.fixture()
+def policies_list():
+    """No policy active — simulates policy being removed/changed."""
+    return {}
+
+
 def test_enable_ai_features_when_policy_changed(about_prefs: AboutPrefs):
     """
     C3279955 - Enable AI features when policy changed
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
 
     # With no restricting policy active, the killswitch should be off
     killswitch_state = about_prefs.get_ai_killswitch_state()

@@ -12,11 +12,22 @@ def test_case():
     return "3298825"
 
 
+@pytest.fixture()
+def policies_list():
+    return {
+        "AIControls": {
+            "Translations": {"Value": "blocked", "Locked": True}
+        }
+    }
+
+
 def test_disable_only_translations_via_policies(about_prefs: AboutPrefs):
     """
     C3298825 - Disable only translations via policies
-    Stub: requires enterprise policy to disable only the Translations feature.
+    Requires enterprise policy to disable only the Translations feature.
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
-    logging.info("Stub: full validation requires enterprise policy configuration")
+
+    # Translations control should be hidden when the policy is active
+    about_prefs.element_not_visible("ai-control-translations-select")
+    logging.info("Translations control is not visible under policy")

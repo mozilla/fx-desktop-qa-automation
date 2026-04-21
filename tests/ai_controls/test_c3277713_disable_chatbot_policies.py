@@ -12,15 +12,28 @@ def test_case():
     return "3277713"
 
 
+@pytest.fixture()
+def policies_list():
+    return {
+        "AIControls": {
+            "SidebarChatbot": {"Value": "blocked", "Locked": True}
+        }
+    }
+
+
 def test_disable_only_chatbot_via_policies(about_prefs: AboutPrefs):
     """
     C3277713 - Disable only chatbot via policies
-    Stub: requires enterprise policy to disable only the chatbot feature.
+    Requires enterprise policy to disable only the chatbot feature.
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
 
-    # When only chatbot is disabled by policy, translations should still be available
+    # Chatbot control should be hidden when the chatbot policy is active
+    about_prefs.element_not_visible("ai-control-sidebar-chatbot-select")
+
+    # Other features should remain available
     state = about_prefs.get_ai_translations_state()
-    logging.info(f"Translations feature state: {state}")
-    # Note: Full validation requires enterprise policy configuration in the browser profile.
+    logging.info(f"Translations feature state (should still be available): {state}")
+    assert state in ("available", "default"), (
+        f"Translations should remain available when only chatbot is disabled by policy, got '{state}'"
+    )
