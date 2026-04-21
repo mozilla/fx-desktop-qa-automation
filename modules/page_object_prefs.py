@@ -391,10 +391,11 @@ class AboutPrefs(BasePage):
 
     def set_ai_chatbot_provider(self, provider: str) -> BasePage:
         """
-        Set the AI Chatbot provider from the dropdown.
-        
-        Arguments:
-            provider: Provider name (e.g., "ChatGPT", "Claude", "Copilot")
+        try:
+            # Use the find-in-settings box to reveal the control if needed
+            self.find_in_settings("AI")
+        except Exception as e:
+            logging.warning(f"find_in_settings('AI') raised: {e}")
         """
         select_elem = self.get_element("ai-control-sidebar-chatbot-select")
         # moz-select uses moz-option elements with a 'label' attribute

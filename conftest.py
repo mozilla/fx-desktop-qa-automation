@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from shutil import unpack_archive
 from subprocess import check_output, run
-from typing import Callable, Dict, List, Tuple, Union
+from typing import Callable, Dict, List, Tuple
 
 # import psutil
 import pytest
