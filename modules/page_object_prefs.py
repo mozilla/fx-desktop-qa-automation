@@ -344,16 +344,17 @@ class AboutPrefs(BasePage):
     def get_ai_killswitch_state(self) -> bool:
         """
         Get the current state of the AI killswitch toggle.
-        
+
         Returns:
             bool: True if AI features are blocked, False otherwise.
         """
         toggle = self.get_element("ai-controls-toggle")
-        # moz-toggle uses the 'pressed' property
-        return self.driver.execute_script(
+        # moz-toggle uses the 'pressed' property; cast to bool for safety
+        # in case the property is missing (JS returns undefined → Python None)
+        return bool(self.driver.execute_script(
             "return arguments[0].pressed;",
             toggle
-        )
+        ))
 
     def set_ai_translations(self, state: str) -> BasePage:
         """
@@ -379,9 +380,9 @@ class AboutPrefs(BasePage):
     def get_ai_translations_state(self) -> str:
         """
         Get the current state of the AI Translations feature.
-        
+
         Returns:
-            str: Current state ("enabled", "removed", or "blocked")
+            str: Current state ("available" or "blocked")
         """
         select_elem = self.get_element("ai-control-translations-select")
         return self.driver.execute_script(
@@ -397,14 +398,16 @@ class AboutPrefs(BasePage):
             provider: Provider name (e.g., "ChatGPT", "Claude", "Copilot")
         """
         select_elem = self.get_element("ai-control-sidebar-chatbot-select")
-        # moz-select uses moz-option elements with a 'label' attribute
+        # moz-select uses moz-option children with a 'label' attribute;
+        # iterate via querySelectorAll to avoid relying on HTMLSelectElement.options
         matched = self.driver.execute_script(
             """
             const select = arguments[0];
             const provider = arguments[1];
-            for (let option of select.options) {
-                if (option.label === provider) {
-                    select.value = option.value;
+            const options = select.querySelectorAll('moz-option');
+            for (const option of options) {
+                if (option.getAttribute('label') === provider) {
+                    select.value = option.getAttribute('value');
                     select.dispatchEvent(new Event('change', { bubbles: true }));
                     return true;
                 }
@@ -429,8 +432,13 @@ class AboutPrefs(BasePage):
         return self.driver.execute_script(
             """
             const select = arguments[0];
-            const selectedOption = select.options[select.selectedIndex];
-            return selectedOption ? selectedOption.label : '';
+            const options = select.querySelectorAll('moz-option');
+            for (const option of options) {
+                if (option.getAttribute('value') === select.value) {
+                    return option.getAttribute('label') || '';
+                }
+            }
+            return '';
             """,
             select_elem
         )

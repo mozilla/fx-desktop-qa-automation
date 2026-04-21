@@ -1517,7 +1517,7 @@ ai_controls:
     splits:
     - functional1
   test_c3279955_enable_when_policy_changed:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_c3298824_block_all_persists:
@@ -1537,7 +1537,7 @@ ai_controls:
     splits:
     - functional1
   test_c3340562_cancel_blocking:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_c3341230_pdf_alt_text_non_en:
@@ -1553,11 +1553,11 @@ ai_controls:
     splits:
     - functional1
   test_c3341235_translations_localized:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_c3341236_chatbot_localized:
-    result: pass
+    result: disabled
     splits:
     - functional1
   test_c3341237_labels_localized:

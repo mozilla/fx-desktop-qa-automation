@@ -17,7 +17,7 @@ def test_enabled_features_remain_after_unblock(about_prefs: AboutPrefs):
     """
     about_prefs.navigate_to_ai_controls()
 
-    about_prefs.set_ai_translations("enabled")
+    about_prefs.set_ai_translations("available")
     translations_state_before = about_prefs.get_ai_translations_state()
 
     about_prefs.set_ai_blocking(True)

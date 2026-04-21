@@ -5,7 +5,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def suite_id():
-    return ("71443", "AI Controls")
+    return ("S71443", "AI Controls")
 
 
 @pytest.fixture()
