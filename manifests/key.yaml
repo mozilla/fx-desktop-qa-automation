@@ -1,10 +1,12 @@
 address_bar_and_search:
   test_adaptive_history_autofill:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033866
+    result: unstable
     splits:
     - functional1
   test_adaptive_history_removal:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033866
+    result: unstable
     splits:
     - functional1
   test_add_engine_address_bar:
@@ -12,7 +14,6 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021908
     result: pass
     splits:
     - functional1
@@ -30,7 +31,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_bing_search_codes:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -50,11 +52,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_ddg_search_codes:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884, https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
@@ -662,11 +666,7 @@ notifications:
     splits:
     - functional2
   test_camera_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_cancel_webextension:
@@ -698,11 +698,7 @@ notifications:
     splits:
     - functional2
   test_microphone_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_notifications_displayed:
@@ -820,11 +816,7 @@ password_manager:
     splits:
     - functional2
   test_multiple_saved_logins:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
