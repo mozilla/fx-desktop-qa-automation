@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException
 
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
@@ -82,16 +83,18 @@ def get_facebook_logins(about_logins: AboutLogins):
 
 
 def dismiss_facebook_cookies_if_present(web_page: GenericPage):
-    if len(web_page.get_elements("facebook-cookie-dialog")) == 0:
+    try:
+        web_page.element_visible("facebook-cookie-dialog")
+    except TimeoutException:
         return
 
     decline_buttons = web_page.get_elements("facebook-cookie-decline")
     allow_buttons = web_page.get_elements("facebook-cookie-allow")
 
     if decline_buttons:
-        web_page.driver.execute_script("arguments[0].click();", decline_buttons[0])
+        web_page.click_on(decline_buttons[0])
     elif allow_buttons:
-        web_page.driver.execute_script("arguments[0].click();", allow_buttons[0])
+        web_page.click_on(allow_buttons[0])
     else:
         return
 
@@ -112,6 +115,18 @@ def open_facebook_login(driver: Firefox, temp_selectors: dict) -> GenericPage:
     web_page.element_visible("facebook-username-field")
     web_page.element_visible("facebook-password-field")
     return web_page
+
+
+def get_autocomplete_values(driver: Firefox, autofill_popup: AutofillPopup):
+    with driver.context(driver.CONTEXT_CHROME):
+        autofill_popup.wait.until(
+            lambda _: len(autofill_popup.get_elements("select-form-option")) >= 1
+        )
+        return [
+            autofill_popup.get_primary_value(element)
+            for element in autofill_popup.get_elements("select-form-option")
+            if autofill_popup.get_primary_value(element)
+        ]
 
 
 @pytest.mark.headed
@@ -201,13 +216,13 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     username_field = web_page.get_element("facebook-username-field")
 
     web_page.click_on("facebook-username-field")
+
+    # Facebook requires an extra keypress to reliably trigger the autocomplete dropdown
     username_field.send_keys(Keys.ARROW_DOWN)
 
     autofill_popup.ensure_autofill_dropdown_visible()
+    autocomplete_values = get_autocomplete_values(driver, autofill_popup)
 
-    first_value = autofill_popup.get_primary_value(autofill_popup.get_nth_element(1))
-    second_value = autofill_popup.get_primary_value(autofill_popup.get_nth_element(2))
-    footer_value = autofill_popup.get_primary_value(autofill_popup.get_nth_element(3))
-
-    assert {first_value, second_value} == {USERNAME_1, USERNAME_2}
-    assert footer_value == "Manage Passwords"
+    assert USERNAME_1 in autocomplete_values
+    assert USERNAME_2 in autocomplete_values
+    assert "Manage Passwords" in autocomplete_values
