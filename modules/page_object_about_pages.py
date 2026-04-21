@@ -584,8 +584,7 @@ class AboutNetworking(BasePage):
         self.get_element("networking-sidebar-category", labels=[option]).click()
 
     def get_all_dns_rows(self) -> list[tuple[str, str]]:
-        """Get all DNS rows as (host, trr) text tuples."""
-        self.element_visible("dns-content")
+        """Get all DNS rows as (host, trr) text tuples. Caller must ensure the table is visible first."""
         rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
         result = []
         for row in rows:
@@ -615,7 +614,7 @@ class AboutNetworking(BasePage):
             except StaleElementReferenceException:
                 return False
 
-        self.wait.until(
+        self.custom_wait(timeout=30).until(
             _entry_present,
             message=f"DNS entry for host '{host}' with TRR='{trr}' did not appear",
         )
