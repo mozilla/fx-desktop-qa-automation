@@ -52,6 +52,6 @@ def test_add_username_via_doorhanger(driver: Firefox):
     autofill_popup_panel.click_doorhanger_button("save")
 
     # Password saved message is displayed -> check about:logins
-    nav.element_visible("confirmation-hint")
+    nav.wait.until(lambda _: nav.element_visible("confirmation-hint"))
     about_logins.open()
     about_logins.assert_username_present(USERNAME)
