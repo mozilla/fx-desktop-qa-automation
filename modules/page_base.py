@@ -334,7 +334,9 @@ class BasePage(Page):
         def _elem_attr_contains(_):
             el = self.fetch(reference, labels=labels)
             return (
-                el and el.get_attribute(attr_name) is not None and str(attr_value) in el
+                el
+                and el.get_attribute(attr_name) is not None
+                and str(attr_value) in el.get_attribute(attr_name)
             )
 
         self.expect(_elem_attr_contains)
