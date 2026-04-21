@@ -330,6 +330,13 @@ class BasePage(Page):
         labels=None,
     ) -> Page:
         """Expect helper: wait until element attribute contains certain value"""
+
+        def _elem_attr_contains(_):
+            el = self.fetch(reference, labels=labels)
+            return (
+                el and el.get_attribute(attr_name) is not None and str(attr_value) in el
+            )
+
         self.expect(
             lambda _: (
                 self.fetch(reference, labels=labels)
