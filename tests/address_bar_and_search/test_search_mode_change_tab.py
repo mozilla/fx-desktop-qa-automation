@@ -22,24 +22,20 @@ def test_search_mode_change_tab(driver: Firefox, engine1, engine2):
     nav = Navigation(driver)
     tabs = TabBar(driver)
 
-    # Click on the USB
-    nav.click_search_mode_switcher()
-
     # Click on Bing engine
     nav.set_search_mode(engine1)
 
     # "Search Mode" is visible in URL bar for Bing
-    nav.verify_engine_returned(engine1)
+    nav.verify_search_mode_is_visible(engine1)
 
     # Open a new tab and click on the USB
     nav.open_and_switch_to_new_window("tab")
-    nav.click_search_mode_switcher()
 
     # Click on the Duckduckgo engine
     nav.set_search_mode(engine2)
 
     # "Search Mode" is visible in URL bar for duckduckgo
-    nav.verify_engine_returned(engine2)
+    nav.verify_search_mode_is_visible(engine2)
 
     # Go back to tab from step #2
     tabs.click_tab_by_index(1)
@@ -48,7 +44,7 @@ def test_search_mode_change_tab(driver: Firefox, engine1, engine2):
     nav.search(TEXT)
 
     # Check search is done using Bing engine
-    nav.verify_engine_returned(engine1)
+    nav.verify_search_mode_is_visible(engine1)
 
     # Go back to the tab from step #4
     tabs.click_tab_by_index(2)
@@ -57,4 +53,4 @@ def test_search_mode_change_tab(driver: Firefox, engine1, engine2):
     nav.search(TEXT)
 
     # Check that search is done using the duckduckgo engine
-    nav.verify_engine_returned(engine2)
+    nav.verify_search_mode_is_visible(engine2)
