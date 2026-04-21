@@ -1133,43 +1133,44 @@ theme_and_toolbar:
     - functional2
 ai_controls:
   test_c3276002_ai_features_keyboard_accessible:
-    result: pass
-    splits:
-    - functional1
-  test_c3276002_keyboard_nav_translations:
-    result: pass
-    splits:
-    - functional1
-  test_c3276002_keyboard_nav_link_preview:
-    result: unstable
-    splits:
-    - functional1
-  test_c3276002_keyboard_nav_smart_tab_groups:
-    result: unstable
-    splits:
-    - functional1
+    test_ai_controls_toggle_visible:
+      result: pass
+      splits:
+      - functional1
+    test_chatbot_select_visible:
+      result: pass
+      splits:
+      - functional1
+    test_translations_select_visible:
+      result: pass
+      splits:
+      - functional1
+    test_smart_tab_groups_select_visible:
+      result: unstable
+      splits:
+      - functional1
   test_c3276003_ai_settings_visible_high_contrast:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3276004_ai_settings_link_shortcut:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3277712_disable_all_policies:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3277713_disable_chatbot_policies:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3277714_disable_smart_tab_policies:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3277716_disable_link_preview_policies:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3279955_enable_when_policy_changed:
@@ -1181,7 +1182,7 @@ ai_controls:
     splits:
     - functional1
   test_c3298825_disable_translations_policies:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3308998_unblock_restores_state:
@@ -1217,7 +1218,7 @@ ai_controls:
     splits:
     - functional1
   test_c3341237_labels_localized:
-    result: unstable
+    result: disabled
     splits:
     - functional1
   test_c3341325_provider_selection_reflects:

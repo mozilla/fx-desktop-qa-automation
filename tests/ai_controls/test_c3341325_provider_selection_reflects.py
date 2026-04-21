@@ -19,6 +19,9 @@ def test_chatbot_provider_selection_reflects_on_ai_controls_page(about_prefs: Ab
     about_prefs.navigate_to_ai_controls()
     about_prefs.verify_ai_controls_page_loaded()
 
-    about_prefs.element_exists("ai-control-sidebar-chatbot-select")
     about_prefs.set_ai_chatbot_provider("ChatGPT")
-    logging.info("Chatbot provider set via AI controls page")
+    provider = about_prefs.get_ai_chatbot_provider()
+    assert provider == "ChatGPT", (
+        f"Chatbot provider should reflect 'ChatGPT' after selection, got '{provider}'"
+    )
+    logging.info(f"Chatbot provider correctly reflects: {provider}")

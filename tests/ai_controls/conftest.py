@@ -6,8 +6,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def suite_id():
-    # TODO: Replace with the actual TestRail suite number, e.g. ("12345", "AI Controls")
-    return ("TODO", "AI Controls")
+    return ("71443", "AI Controls")
 
 
 @pytest.fixture()

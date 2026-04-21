@@ -4,6 +4,7 @@ import logging
 from time import sleep
 from typing import List, Literal
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -260,7 +261,7 @@ class AboutPrefs(BasePage):
         try:
             # Use the find-in-settings box to reveal the control if needed
             self.find_in_settings("AI")
-        except Exception as e:
+        except TimeoutException as e:
             logging.warning(f"find_in_settings('AI') raised: {e}")
 
         toggle = self.get_element("ai-controls-toggle")

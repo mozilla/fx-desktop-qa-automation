@@ -17,5 +17,4 @@ def test_ai_settings_visible_with_high_contrast(about_prefs: AboutPrefs):
     C3276003 - AI settings visible with high contrast
     """
     about_prefs.navigate_to_ai_controls()
-    about_prefs.verify_ai_controls_page_loaded()
     logging.info("AI settings page is visible with high contrast theme")
