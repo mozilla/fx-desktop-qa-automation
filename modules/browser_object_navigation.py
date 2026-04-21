@@ -280,19 +280,17 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_search_mode_switcher(self) -> BasePage:
+        self.element_visible("searchmode-switcher")
         self.click_on("searchmode-switcher")
         return self
 
     @BasePage.context_chrome
     def set_search_mode(self, search_mode: str, local=False) -> BasePage:
         """
-        set new search location if search_mode in VALID_SEARCH_MODES
+        set new search location
 
         Parameter:
             search_mode (str): search mode to be selected
-
-        Raises:
-            StopIteration: if a valid search mode is not found in the list of valid elements.
         """
         self.click_search_mode_switcher()
 
@@ -316,6 +314,23 @@ class Navigation(BasePage):
                 "arguments[0].click();",
                 self.fetch("search-mode-switcher-option", labels=[search_mode]),
             )
+        return self
+
+    @BasePage.context_chrome
+    def add_search_mode(self, search_mode: str) -> BasePage:
+        """
+        add new search location
+
+        Parameter:
+            search_mode (str): search mode to be selected
+        """
+        self.click_search_mode_switcher()
+        self.element_visible("search-mode-switcher-prefs")
+        self.element_clickable("search-mode-add-option", labels=[search_mode])
+        self.driver.execute_script(
+            "arguments[0].click();",
+            self.fetch("search-mode-add-option", labels=[search_mode]),
+        )
         return self
 
     @BasePage.context_chrome

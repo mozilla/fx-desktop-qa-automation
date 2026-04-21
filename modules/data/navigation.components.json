@@ -140,6 +140,13 @@
             "doNotCache"
         ]
     },
+    "search-mode-add-option": {
+        "selectorData": ".searchmode-switcher-addEngine[data-engine-name='{title}']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "search-mode-switcher-prefs": {
         "selectorData": "searchmode-switcher-panel-search-settings-button",
         "strategy": "class",
