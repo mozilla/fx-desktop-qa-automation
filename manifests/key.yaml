@@ -1,10 +1,12 @@
 address_bar_and_search:
   test_adaptive_history_autofill:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033866
+    result: unstable
     splits:
     - functional1
   test_adaptive_history_removal:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033866
+    result: unstable
     splits:
     - functional1
   test_add_engine_address_bar:
@@ -12,8 +14,8 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021908
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_addon_suggestion:
@@ -26,11 +28,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_addressbar_search_engine_keywords:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033877
+    result: unstable
     splits:
     - functional1
   test_bing_search_codes:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -50,11 +54,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_ddg_search_codes:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884, https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
@@ -66,7 +72,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_disable_websearch_from_awesome_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033887, https://bugzilla.mozilla.org/show_bug.cgi?id=2033889
+    result: unstable
     splits:
     - functional1
   test_dont_show_search_suggestions_in_private_window:
@@ -86,7 +93,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_insertion_point_no_search_terms_display:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033877
+    result: unstable
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
@@ -138,19 +146,23 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_mode_appears_after_input:
-    result: pass
+    comment: open_searchmode_switcher_settings
+    result: unstable
     splits:
     - functional1
   test_search_mode_change_tab:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033877
+    result: unstable
     splits:
     - functional1
   test_search_mode_cleared_on_engine_removal:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033887, https://bugzilla.mozilla.org/show_bug.cgi?id=2033821
+    result: unstable
     splits:
     - functional1
   test_search_mode_exits_correctly:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033877, https://bugzilla.mozilla.org/show_bug.cgi?id=2033821
+    result: unstable
     splits:
     - functional1
   test_search_mode_persists_mixed_with_bing:
@@ -158,7 +170,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_mode_update_on_alias_prefix:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033877
+    result: unstable
     splits:
     - functional1
   test_search_modes_for_sites:
@@ -185,7 +198,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033887
+    result: unstable
     splits:
     - functional1
   test_server_not_found_error:
@@ -210,11 +224,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_use_different_search_shortcut_while_already_in_search_mode:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033887, https://bugzilla.mozilla.org/show_bug.cgi?id=2033821
+    result: unstable
     splits:
     - functional1
   test_verify_url_after_tab_switch_with_search_mode:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884, https://bugzilla.mozilla.org/show_bug.cgi?id=2033821
+    result: unstable
     splits:
     - functional1
 audio_video:
