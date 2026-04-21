@@ -146,7 +146,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_mode_appears_after_input:
-    comment: open_searchmode_switcher_settings
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033821
     result: unstable
     splits:
     - functional1
