@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -12,6 +10,7 @@ def test_case():
 
 
 URLS = [
+    "about:cache",
     "about:about",
     "about:mozilla",
     "about:logo",
@@ -25,11 +24,12 @@ def test_restore_multiple_closed_tabs(driver: Firefox, tabs: TabBar, sys_platfor
     """
     context_menu = ContextMenu(driver)
 
+    driver.get(URLS[0])
     # Open 4 new tabs
     for i in range(4):
         tabs.new_tab_by_button()
         driver.switch_to.window(driver.window_handles[-1])
-        driver.get(URLS[i])
+        driver.get(URLS[i + 1])
     tabs.wait_for_num_tabs(5)
 
     # Close those 4 tabs with tab context menu option

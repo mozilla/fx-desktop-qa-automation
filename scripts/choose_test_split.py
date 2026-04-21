@@ -65,11 +65,21 @@ def get_tests_by_model(
     return matching_tests
 
 
+def get_tests_in_suite(path: str):
+    """Get all the test paths in a suite dir"""
+    return [
+        SLASH.join([path, n])
+        for n in os.listdir(path)
+        if n.startswith("test_") and n.endswith(".py")
+    ]
+
+
 def dedupe(run_list: list) -> list:
     """For a run list, remove entries that are covered by more general entries."""
     run_list = list(set(run_list))
     dotslashes = []
     removes = []
+    adds = []
 
     for i, entry in enumerate(run_list):
         if (
@@ -83,9 +93,14 @@ def dedupe(run_list: list) -> list:
         run_list[dotslash] = f".{SLASH}{run_list[dotslash]}"
 
     for i, entry_a in enumerate(run_list):
-        if not os.path.exists(entry_a):
+        if not os.path.exists(entry_a.split("::")[0]):
             print(f"Removing {entry_a}: path does not exist")
             removes.append(i)
+            continue
+        elif os.path.isdir(entry_a):
+            print(f"Removing {entry_a}: is a directory, adding tests")
+            removes.append(i)
+            adds.extend(get_tests_in_suite(entry_a))
             continue
         for j, entry_b in enumerate(run_list):
             if i == j:
@@ -98,21 +113,57 @@ def dedupe(run_list: list) -> list:
     removes.sort(reverse=True)
     for remove in removes:
         del run_list[remove]
+    run_list.extend(adds)
 
     run_list.sort()
     return run_list
 
 
 if __name__ == "__main__":
-    print("Selecting test set...")
     manifest = TestKey(MANIFEST_KEY)
+
+    category = os.environ.get("STARFOX_CATEGORY")
+    if category:
+        category = category.lower()
+        split_name = os.environ.get("STARFOX_SPLIT", "all")
+
+        # platform MUST be set by the job environment (win|mac|linux)
+        platform = os.environ.get("STARFOX_PLATFORM")
+        if not platform:
+            raise SystemExit(
+                "STARFOX_PLATFORM must be set to 'win', 'mac', or 'linux' when STARFOX_CATEGORY is used."
+            )
+
+        platform = platform.lower()
+        if platform not in SUPPORTED_OSES:
+            raise SystemExit(
+                f"Unsupported STARFOX_PLATFORM: '{platform}'. Expected one of: {', '.join(SUPPORTED_OSES)}."
+            )
+
+        print(
+            f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'..."
+        )
+
+        # Call gather_category with platform explicitly
+        run_list = manifest.gather_category(
+            split_name=split_name, platform=platform, category=category
+        )
+        run_list = dedupe(run_list)
+
+        with open(OUTPUT_FILE, "w") as fh:
+            fh.write("\n".join(run_list))
+        sys.exit(0)
+
+    print("Selecting test set...")
     if os.environ.get("STARFOX_SPLIT"):
         print(f"Gathering tests from split: {os.environ['STARFOX_SPLIT']}...")
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
+        run_list = manifest.filter_filenames_by_pass(run_list)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
-            sys.exit(0)
+        sys.exit(0)
 
     re_obj = {
         "test_re_string": r".*/.*/test_.*\.py",
@@ -141,14 +192,12 @@ if __name__ == "__main__":
 
     main_conftest = "conftest.py"
     base_page = os.path.join("modules", "page_base.py")
+    run_list = []
 
     if main_conftest in committed_files or base_page in committed_files:
         # Run smoke tests if main conftest or basepage changed
-        run_list = manifest.gather_split("smoke")
+        run_list.extend(manifest.gather_split("smoke"))
         run_list = dedupe(run_list)
-        with open(OUTPUT_FILE, "w") as fh:
-            fh.write("\n".join(run_list))
-        sys.exit(0)
 
     all_tests = []
     test_paths_and_contents = {}
@@ -173,10 +222,12 @@ if __name__ == "__main__":
     changed_tests = [f for f in committed_files if re_obj.get("test_re").match(f)]
 
     if changed_suite_conftests:
-        run_list = [
-            "." + SLASH + os.path.join(*suite.split(SLASH)[-3:-1])
-            for suite in changed_suite_conftests
-        ]
+        run_list.extend(
+            [
+                "." + SLASH + os.path.join(*suite.split(SLASH)[-3:-1])
+                for suite in changed_suite_conftests
+            ]
+        )
 
     if changed_selectors:
         for selector_file in changed_selectors:
@@ -228,8 +279,8 @@ if __name__ == "__main__":
     if SLASH == "\\":
         run_list = [entry.replace("/", SLASH) for entry in run_list]
     run_list = [entry for entry in run_list if os.path.exists(entry)]
-    run_list = manifest.filter_filenames_by_pass(run_list)
     run_list = dedupe(run_list)
+    run_list = manifest.filter_filenames_by_pass(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
     with open(OUTPUT_FILE, "w") as fh:
         fh.write("\n".join(run_list))

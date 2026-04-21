@@ -32,25 +32,25 @@ def temp_selectors():
         "drop-area": {"selectorData": "#droparea", "strategy": "css", "groups": []},
         "matching": {"selectorData": "matching", "strategy": "id", "groups": []},
         "image-to-copy": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img",
-            "strategy": "xpath",
+            "selectorData": ".m24-c-donate-media > img",
+            "strategy": "css",
             "groups": [],
         },
         "paragraph1": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[1]",
-            "strategy": "xpath",
+            "selectorData": ".m24-c-donate-body > p:nth-of-type(1)",
+            "strategy": "css",
             "groups": [],
         },
         "paragraph2": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[2]",
-            "strategy": "xpath",
+            "selectorData": ".m24-c-donate-body > p:nth-of-type(2)",
+            "strategy": "css",
             "groups": [],
         },
     }
 
 
 DEMO_URL = "https://mystor.github.io/dragndrop/#"
-COPY_URL = "https://1stwebdesigner.com/image-file-types/"
+COPY_URL = "https://www.mozilla.org/en-US"
 
 
 @pytest.mark.headed

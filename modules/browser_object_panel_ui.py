@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple
 
 from pypom import Region
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -167,16 +168,12 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def reopen_recently_closed_tabs(self) -> BasePage:
-        """Reopen all recently closed tabs"""
+        """Navigate to Hamburger > History > Recently Closed Tabs subview."""
         self.open_panel_menu()
         self.click_on("panel-ui-history")
-
         self.click_on("panel-ui-history-recently-closed")
-        if self.sys_platform() in ("Linux", "Darwin"):
-            sleep(2)
-
+        sleep(2)
         self.click_on("panel-ui-history-recently-closed-reopen-tabs")
-
         return self
 
     # History
@@ -394,7 +391,97 @@ class PanelUi(BasePage):
 
     @BasePage.context_chrome
     def reopen_all_recently_closed_tabs(self) -> BasePage:
-        """Reopen all recently closed tabs"""
+        """Reopen all recently closed tabs via Hamburger > History > Recently Closed."""
         self.reopen_recently_closed_tabs()
+        self.element_visible("reopen-all-closed-tabs-button")
         self.click_on("reopen-all-closed-tabs-button")
+        return self
+
+    @BasePage.context_chrome
+    def get_recently_closed_tab_urls(self):
+        """Get URLs/labels of recently closed tabs from the Hamburger menu."""
+        self.reopen_recently_closed_tabs()
+        items = self.get_elements("bookmark-item")
+        urls = []
+        for item in items:
+            if item.is_displayed():
+                label = item.get_attribute("label") or ""
+                urls.append(label)
+        return urls
+
+    @BasePage.context_chrome
+    def verify_urls_not_in_recently_closed(self, urls: set[str]):
+        """Verify that the specified URLs are not in the recently closed tabs list."""
+        recently_closed = set(self.get_recently_closed_tab_urls())
+        found = urls.intersection(recently_closed)
+        assert len(found) == 0, (
+            f"Expected URLs to be removed from recently closed, but found: {found}"
+        )
+
+    @BasePage.context_chrome
+    def edit_bookmark_via_toolbar(
+        self, folder_name: str, ba: BrowserActions
+    ) -> BasePage:
+        """
+        Edit the name of a new Bookmark Folder in the Bookmarks Toolbar panel.
+
+        This simulates typing into the Name field of the Add Folder panel
+        without saving the folder yet. Useful for testing "unsaved" behavior.
+
+        Arguments:
+        folder_name : str : The name to set for the folder
+        ba : BrowserActions : Utility for switching context to the bookmark panel iframe
+        """
+        # Switch to the iframe containing the Add Folder panel
+        iframe = self.get_element("bookmark-iframe")
+        ba.switch_to_iframe_context(iframe)
+
+        # Type the folder name into the Name field
+        self.actions.send_keys(folder_name).perform()
+        return self
+
+    @BasePage.context_chrome
+    def click_outside_add_folder_panel(self) -> BasePage:
+        """
+        Click outside the Add Folder panel to simulate cancelling or clicking away.
+
+        This is used to test that editing the folder name alone does NOT create
+        the folder in the toolbar without explicitly saving it.
+
+        The 'tabs-toolbar' element is used as a safe area outside the panel.
+        """
+        outside = self.get_element("tabs-toolbar")
+        outside.click()
+        return self
+
+    @BasePage.context_chrome
+    def save_folder_via_toolbar(self) -> BasePage:
+        """
+        Save the Bookmark Folder after editing the Name field.
+
+        Presses Enter to confirm creation of the folder. In the UI, this is
+        equivalent to clicking the 'Save' button or pressing Enter while
+        focused on the Name field.
+        """
+        # Simulate pressing Enter to save the folder
+        self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
+    @BasePage.context_chrome
+    def is_add_folder_panel_open(self) -> bool:
+        """
+        Returns True if the Add Folder panel is still visible/open.
+
+        This can be used to verify that clicking outside did NOT dismiss the panel.
+        """
+        panel = self.get_element("bookmark-iframe")  # or panel container
+        return panel.is_displayed()
+
+    @BasePage.context_chrome
+    def click_inside_bookmark_panel(self) -> BasePage:
+        """
+        Click inside the Edit Bookmark panel (on the Location label).
+        """
+        inside = self.get_element("bookmarks-panel-location-label")
+        inside.click()
         return self

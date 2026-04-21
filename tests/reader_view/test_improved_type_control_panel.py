@@ -10,7 +10,7 @@ from modules.util import Utilities
 
 
 @pytest.fixture()
-def test_case() -> str:
+def test_case():
     return "130919"
 
 
@@ -132,8 +132,9 @@ def test_type_control_panel_text_alignment(
 
     reader_view.get_element(f"toolbar-text-align-{alignment}").click()
     reader_view.wait.until(
-        lambda _: container.value_of_css_property("--text-alignment")
-        == intended_alignment
+        lambda _: (
+            container.value_of_css_property("--text-alignment") == intended_alignment
+        )
     )
 
 

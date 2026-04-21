@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 from typing import Union
 
 from selenium.common.exceptions import NoSuchElementException
@@ -134,6 +133,29 @@ class TabBar(BasePage):
             return pinned == "true"
         else:
             assert False, "Error checking tab pinned status"
+
+    @BasePage.context_chrome
+    def toggle_mute_shortcut(self) -> BasePage:
+        """Toggle mute on the current tab using the CTRL+M keyboard shortcut"""
+        self.actions.key_down(Keys.CONTROL).send_keys("m").key_up(
+            Keys.CONTROL
+        ).perform()
+        return self
+
+    @BasePage.context_chrome
+    def close_tab_shortcut(self, sys_platform: str) -> BasePage:
+        """Close the current tab using the CTRL+W / CMD+W keyboard shortcut"""
+        modifier = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+        self.actions.key_down(modifier).send_keys("w").key_up(modifier).perform()
+        return self
+
+    @BasePage.context_chrome
+    def deselect_all_tabs(self) -> BasePage:
+        """Clears multi-tab selection by clicking the first tab not in the multi-selection."""
+        tabs = self.get_elements("non-multiselected-tab")
+        if tabs:
+            tabs[0].click()
+        return self
 
     @BasePage.context_chrome
     def click_tab_mute_button(self, identifier: Union[str, int]) -> BasePage:
@@ -311,8 +333,20 @@ class TabBar(BasePage):
         """
         Given the index of the tab, it closes that tab.
         """
-        # cur_tab = self.click_tab_by_index(index)
         self.get_element("tab-x-icon", parent_element=tab).click()
+        return self
+
+    @BasePage.context_chrome
+    def close_tab_by_middle_click(self, identifier: Union[str, int]) -> BasePage:
+        """Close a tab by middle-clicking it using W3C pointer actions (headless-compatible).
+        Note: w3c_actions is an internal Selenium API that may change across versions.
+        pointer_down/up with button index 1 represents the middle mouse button (0=left, 1=middle, 2=right).
+        """
+        tab = self.get_tab(identifier)
+        self.actions.move_to_element(tab).perform()
+        self.actions.w3c_actions.pointer_action.pointer_down(1)
+        self.actions.w3c_actions.pointer_action.pointer_up(1)
+        self.actions.perform()
         return self
 
     @BasePage.context_chrome
@@ -343,9 +377,7 @@ class TabBar(BasePage):
         page.open()
         return self
 
-    def open_urls_in_tabs(
-        self, urls: list, open_first_in_current_tab: bool = False
-    ) -> "TabBar":
+    def open_urls_in_tabs(self, urls: list, open_first_in_current_tab: bool = False):
         """
         Opens URLs in tabs. By default, opens a new tab for each URL.
         Arguments:
@@ -414,24 +446,11 @@ class TabBar(BasePage):
     @BasePage.context_chrome
     def reopen_tabs_with_shortcut(self, sys_platform: str, count: int) -> None:
         """Reopen closed tabs using keyboard shortcut Ctrl/Cmd + Shift + T."""
-
-        # Press modifier keys
-        if sys_platform == "Darwin":
-            self.actions.key_down(Keys.COMMAND).key_down(Keys.SHIFT).perform()
-        else:
-            self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).perform()
-
-        # Press "T" multiple times to reopen tabs
+        modifier = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
         for _ in range(count):
-            self.actions.send_keys("t").perform()
-            # Pause a moment to let each tab to reopen
-            sleep(0.2)
-
-        # Release modifier keys
-        if sys_platform == "Darwin":
-            self.actions.key_up(Keys.SHIFT).key_up(Keys.COMMAND).perform()
-        else:
-            self.actions.key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+            self.actions.key_down(modifier).key_down(Keys.SHIFT).send_keys(
+                "t"
+            ).key_down(Keys.SHIFT).key_up(modifier).perform()
 
     @BasePage.context_chrome
     def reload_tab(self, nav, mod_key=None, extra_key=None):
@@ -536,7 +555,9 @@ class TabBar(BasePage):
         This closes all tabs in the group and removes the group label.
         """
         self.context_click("tabgroup-label")
-        self.click_on("tabgroup-save-and-close-group")
+        self.element_visible("tabgroup-menu")
+        save_btn = self.get_element("tabgroup-save-and-close-group")
+        self.click_on(save_btn)
         return self
 
     @BasePage.context_chrome
@@ -608,3 +629,89 @@ class TabBar(BasePage):
             context_menu.click_on("context-move-tab-to-group")
             self.click_and_hide_menu("tabgroup-menuitem")
             self.hide_popup("tabContextMenu")
+
+    @BasePage.context_chrome
+    def add_tab_to_existing_group(self, tab_index: int, context_menu: ContextMenu):
+        """
+        Add a tab to an existing tab group.
+        Arguments:
+            tab_index: The index of the tab to add to the group
+            context_menu: ContextMenu instance
+        """
+        tab = self.get_tab(tab_index)
+        self.context_click(tab)
+        context_menu.click_on("context-move-tab-to-group")
+        self.click_and_hide_menu("tabgroup-menuitem")
+        self.hide_popup("tabContextMenu")
+        return self
+
+    @BasePage.context_chrome
+    def remove_tab_from_group(self, tab_index: int, context_menu: ContextMenu):
+        """
+        Remove a tab from its group via context menu.
+        Arguments:
+            tab_index: The index of the tab to remove from the group
+            context_menu: ContextMenu instance
+        """
+        tab = self.get_tab(tab_index)
+        self.context_click(tab)
+        context_menu.click_and_hide_menu("context-remove-tab-from-group")
+        self.hide_popup("tabContextMenu")
+        return self
+
+    @BasePage.context_chrome
+    def get_tab_position(self, tab_index: int):
+        """
+        Get the visual position of a tab in the tab strip. Returns the x-coordinate of the tab.
+        Argument:
+            tab_index: The index of the tab to get the position of
+        """
+        tab = self.get_tab(tab_index)
+        return tab.location["x"]
+
+    @BasePage.context_chrome
+    def verify_removed_tab_displayed_after_group(self, tab_index: int):
+        """
+        Verify that a tab is positioned after the tab group in the tab strip.
+        Argument:
+            tab_index: The index of the tab to verify
+        """
+        tab_position = self.get_tab_position(tab_index)
+        group = self.get_element("tabgroup")
+        group_end_position = group.location["x"] + group.size["width"]
+        assert tab_position >= group_end_position, (
+            f"Expected tab to be after the group. "
+            f"Tab position: {tab_position}, Group end: {group_end_position}"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def verify_hover_preview(self, total_tabs: int, expect_thumbnail: bool = True):
+        """
+        Hover over each tab and verify the hover preview panel is displayed.
+        Arguments:
+            total_tabs: Total number of tabs to hover over
+            expect_thumbnail: If True, verify panel with Name and URL.
+                              If False, also assert thumbnail container is not visible.
+        """
+        for i in range(1, total_tabs + 1):
+            tab = self.get_tab(i)
+            self.hover(tab)
+            self.element_visible("tab-preview-panel")
+            self.element_visible("tab-preview-title")
+            self.element_visible("tab-preview-uri")
+
+            if not expect_thumbnail:
+                self.element_not_visible("tab-preview-thumbnail-container")
+        return self
+
+    def get_all_window_urls(self) -> set[str]:
+        """Get URLs from all open windows/tabs.
+        Iterates through all window handles and collects current URLs
+        """
+        urls = set()
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            for handle in self.driver.window_handles:
+                self.driver.switch_to.window(handle)
+                urls.add(self.driver.current_url)
+        return urls

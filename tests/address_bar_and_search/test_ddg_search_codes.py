@@ -42,7 +42,7 @@ def test_ddg_search_codes(driver: Firefox):
     nav.open_searchmode_switcher_settings()
 
     # Set DuckDuckGo as default search engine
-    prefs.search_engine_dropdown().select_option(SEARCH_ENGINE)
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Open a tab and verify DUckDuckGo search code
     driver.get("about:newtab")

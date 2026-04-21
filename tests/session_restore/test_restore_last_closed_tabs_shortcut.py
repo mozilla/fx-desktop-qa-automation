@@ -21,6 +21,9 @@ def test_restore_closed_tabs(driver: Firefox, tabs: TabBar, sys_platform: str):
     """
     C2186610 - Verify that the last closed tab is restored by keyboard shortcut (Ctrl/Cmd + Shift + T).
     """
+    # First tab must not be blank page (otherwise we get restore tab into that blank tab)
+    driver.get(URLS[1])
+
     # Open a new tab, close that tab, then restore it
     tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
@@ -49,10 +52,10 @@ def test_restore_closed_tabs(driver: Firefox, tabs: TabBar, sys_platform: str):
     tabs.wait_for_num_tabs(1)
 
     # Use the method to restore the closed tabs with shortcut
-    for i in range(4):
-        tabs.reopen_tabs_with_shortcut(sys_platform, count=4)
+    tabs.reopen_tabs_with_shortcut(sys_platform, count=4)
+    tabs.wait_for_num_tabs(5)
 
-    # Verify the tabs are restored
+    # Verify the page of each tab was restored
     open_urls = set()
     for handle in driver.window_handles:
         driver.switch_to.window(handle)

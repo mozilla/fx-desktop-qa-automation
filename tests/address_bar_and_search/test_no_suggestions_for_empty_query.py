@@ -45,7 +45,7 @@ def test_suggestions_for_empty_query_not_shown_in_search_mode(driver: Firefox):
     # Change default search engine to DuckDuckGo
     nav.open_and_switch_to_new_window("tab")
     prefs.open()
-    prefs.search_engine_dropdown().select_option("DuckDuckGo")
+    prefs.select_default_search_engine_by_key("DuckDuckGo")
 
     # Switch to eBay (empty query)
     nav.open_and_switch_to_new_window("tab")

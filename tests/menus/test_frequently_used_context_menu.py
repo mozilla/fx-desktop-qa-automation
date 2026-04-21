@@ -1,5 +1,4 @@
 import os
-import platform
 from time import sleep
 
 import pytest
@@ -21,13 +20,6 @@ def test_save_page_as(driver: Firefox, sys_platform):
     """
     C2637623.1: save page as
     """
-    try:
-        from pynput.keyboard import Controller
-    except ModuleNotFoundError:
-        pytest.skip("Could not load pynput")
-
-    controller = Controller()
-
     # create objects
     context_menu = ContextMenu(driver)
     driver.get("https://example.com")
@@ -43,13 +35,19 @@ def test_save_page_as(driver: Firefox, sys_platform):
 
     # short sleep to ensure menu is shown
     sleep(2)
-    context_menu.handle_os_download_confirmation(controller, sys_platform)
+    context_menu.handle_os_download_confirmation()
 
     # Wait for the animation to complete
     nav.wait_for_download_animation_finish()
 
     # verify and delete downloaded file
-    saved_image_location = util.get_saved_file_path("Example Domain.html")
+    if sys_platform == "Windows":
+        saved_file_name = "Example Domain.htm"
+    else:
+        saved_file_name = "Example Domain.html"
+
+    saved_image_location = util.get_saved_file_path(saved_file_name)
+
     example_page.expect(lambda _: os.path.exists(saved_image_location))
     util.remove_file(saved_image_location)
 

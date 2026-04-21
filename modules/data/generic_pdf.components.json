@@ -57,7 +57,7 @@
         "groups": []
     },
     "page-one-item": {
-        "selectorData": "/html/body/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/span[13]",
+        "selectorData": "//span[contains(.,'Webcast Auction')]",
         "strategy": "xpath",
         "groups": []
     },

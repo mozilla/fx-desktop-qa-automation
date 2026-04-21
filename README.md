@@ -3,6 +3,8 @@
 
 A Python Selenium based set of tests for smoke testing of Firefox, including Fx incident smoke testing.
 
+[Project Summary](./PROJECT_SUMMARY.md)
+
 ### Build under test
 Get the build to be smoke tested from the [candidates](https://ftp.mozilla.org/pub/firefox/candidates/) directory. Incident testing: Ask 
 the RelMan contact for the current Incident what the build versions is. 
@@ -247,3 +249,9 @@ called `login`.
 **DO NOT PUSH UNENCRYPTED SECRETS.**
 
 **DO NOT ADD SECRETS UNNECESSARILY.**
+
+
+### CI Dry-Run
+In order to validate CI behavior for workflow / code changes while avoiding costly or side effecting actions:
+(downloads, installs, test execution, artifact uploads, publishing/deploying, etc.) one could do so by running
+the CI with dry-run flag. For further details, please refer to [Dry-Run Readme](dryrun.md)

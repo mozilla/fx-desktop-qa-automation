@@ -5,11 +5,11 @@
 # exit with non-zero status after issuing an appropriate message if
 # it wants to stop the commit.
 #
-# To enable this hook, rename this file to "pre-commit".
+# To enable this hook, move to ".git/hooks/pre-commit".
 
-pytest test_local_executables_updated.py
+pytest tests/meta/test_version.py
 if [[ $? -ne 0 ]]; then
-  echo "Please update your firefox/geckodriver!"
+  echo "Please update your firefox/geckodriver, see test results for details!"
   exit 1
 fi
 

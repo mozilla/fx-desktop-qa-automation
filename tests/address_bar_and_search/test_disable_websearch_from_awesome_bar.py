@@ -31,14 +31,14 @@ def test_disable_websearch_from_awesome_bar(driver):
     # Enter "google" into the Awesome Bar
     nav.search(KEYWORD)
 
-    # Wait for the tab title "Server Not Found"
-    tabs.wait_for_tab_title("Server Not Found")
+    # Wait for the tab title "Problem loading page"
+    tabs.wait_for_tab_title("Problem loading page")
 
     # The Awesome Bar should still show exactly what was typed
     assert nav.get_awesome_bar_text() == KEYWORD
 
-    # Firefox 138+ shows: "Hmm. We’re having trouble finding that site."
-    assert "having trouble finding that site" in error_page.get_error_title().lower()
+    # Firefox shows: "Server Not Found"
+    assert "server not found" in error_page.get_error_title().lower()
 
     # Open a new tab and switch to it
     nav.open_and_switch_to_new_window("tab")

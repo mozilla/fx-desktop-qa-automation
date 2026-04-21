@@ -1,10 +1,7 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()

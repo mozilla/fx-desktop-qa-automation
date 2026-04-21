@@ -56,7 +56,7 @@
     ]
   },
   "select-form-option-by-value": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='{value}']",
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value*='{value}']",
     "strategy": "css",
     "groups": []
   },
@@ -151,6 +151,21 @@
   },
   "preview-form-container": {
     "selectorData": ".autocomplete-richlistbox richlistitem",
+    "strategy": "css",
+    "groups": []
+  },
+  "manage-passwords": {
+    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
+    "strategy": "css",
+    "groups": []
+  },
+  "password-notification-username-field": {
+    "selectorData": "password-notification-username",
+    "strategy": "id",
+    "groups": []
+  },
+  "generated-securely-password": {
+    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
     "strategy": "css",
     "groups": []
   }

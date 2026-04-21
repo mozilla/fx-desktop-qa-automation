@@ -1,0 +1,23 @@
+{
+    "context": "chrome",
+    "sidebar-button": {
+        "selectorData": "sidebar-button",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    },
+    "sidebar-main": {
+        "selectorData": "sidebar-main",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    },
+    "sidebar-hide-option": {
+        "selectorData": "sidebar-context-menu-hide-sidebar",
+        "strategy": "id",
+        "groups": []
+    },
+    "confirmation-hint": {
+        "selectorData": "confirmation-hint",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    }
+}

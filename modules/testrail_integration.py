@@ -1,5 +1,7 @@
+import json
 import logging
 import os
+import platform as _platform
 import re
 import subprocess
 import sys
@@ -8,10 +10,12 @@ from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TestRail
+from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
+from scripts.collect_executables import get_fx_version
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
-FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)(.*)")
+FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)-build(\d+)")
 FX_DEVED_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)b(\d\d?)")
 FX_RELEASE_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)\.(\d\d?)(.*)")
 TESTRAIL_RUN_FMT = (
@@ -21,7 +25,10 @@ PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-TC_EXECUTION_TEMPLATE = "https://firefox-ci-tc.services.mozilla.com/tasks/%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
+TC_EXECUTION_TEMPLATE = (
+    "https://firefox-ci-tc.services.mozilla.com/tasks/"
+    "%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
+)
 
 
 def get_execution_link(os_name: str = None) -> str:
@@ -55,7 +62,8 @@ def get_execution_link(os_name: str = None) -> str:
         return link
 
     logging.warning(
-        f"Could not generate execution link for os_name={os_name}. Missing required environment variables."
+        f"Could not generate execution link for os_name={os_name}. "
+        "Missing required environment variables."
     )
     return ""
 
@@ -123,6 +131,18 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{beta}", beta)
             .split("-")[0]
         )
+    elif channel == "Rc":
+        logging.info(f"Release Candidate: {version_str}")
+        version_match = FX_RC_VERSION_RE.match(version_str)
+        (major, minor, build) = [version_match[n] for n in range(1, 4)]
+        plan_title = (
+            TESTRAIL_RUN_FMT.replace("{channel}", channel)
+            .replace("{major}", major)
+            .replace("{plan}", plan_prefix)
+            .replace("{minor}", minor)
+            .replace("b{beta}", "")
+            .replace("{build}", build)
+        )
     elif version_match:
         logging.info(version_match)
         (major, minor, beta, build) = [version_match[n] for n in range(1, 5)]
@@ -170,101 +190,255 @@ def tc_reportable():
         sys.exit(100)
 
 
+def _common_reportable_context(platform_to_test=None) -> dict:
+    """
+    Compute local context shared by reportable() and preview_reportable().
+    This function does NOT call TestRail, only local computations.
+    Returns a dict with:
+      - platform/system normalization
+      - TESTRAIL_REPORT / REPORTABLE flags
+      - version string from scripts/collect_executables.py -n
+      - parsed major/minor/beta version info
+      - channel + plan_title
+      - STARFOX_SPLIT + expected suites
+      - FX_L10N info + expected mappings (from select_l10n_mappings)
+    """
+
+    ctx = {
+        "testrail_report_requested": env_true("TESTRAIL_REPORT"),
+        "forced_reportable": env_true("REPORTABLE"),
+        "split": os.environ.get("STARFOX_SPLIT"),
+        "is_l10n": bool(os.environ.get("FX_L10N")),
+        "platform_system": None,  # "Darwin", etc
+        "platform_name": None,  # "MacOS", etc
+        "version": "",
+        "major_number": None,
+        "minor_number": None,
+        "beta_version": 0,
+        "channel": None,
+        "plan_title": None,
+        "expected_suites": [],
+        "distributed_mappings": None,
+        "expected_mappings": None,
+    }
+
+    # Determine platform
+    sys_platform = platform_to_test or _platform.system()
+    ctx["platform_system"] = sys_platform
+    ctx["platform_name"] = "MacOS" if sys_platform == "Darwin" else sys_platform
+
+    if platform_to_test:
+        os.environ["FX_PLATFORM"] = platform_to_test
+
+    # Get version
+    try:
+        ctx["version"] = get_fx_version().strip()
+    except Exception as e:
+        logging.warning(f"Could not determine version: {e}")
+        ctx["version"] = ""
+
+    # Parse major/minor/beta
+    try:
+        major_number, second_half = ctx["version"].split(".")
+        ctx["major_number"] = major_number
+
+        if "-" in second_half:
+            minor_number, _ = second_half.split("-")
+        else:
+            minor_number = second_half
+
+        ctx["minor_number"] = minor_number
+
+        if "b" in minor_number:
+            ctx["beta_version"] = int(minor_number.split("b")[-1])
+        else:
+            ctx["beta_version"] = 0
+    except Exception:
+        # leave defaults if parsing fails
+        pass
+
+    # Determine channel
+    channel = os.environ.get("FX_CHANNEL") or "beta"
+    channel = channel.title()
+    if not channel:
+        if ctx["minor_number"] and "b" in ctx["minor_number"]:
+            channel = "Beta"
+        else:
+            channel = "Release"
+    ctx["channel"] = channel
+
+    # Plan title
+    if ctx["version"]:
+        try:
+            ctx["plan_title"] = get_plan_title(ctx["version"], ctx["channel"])
+        except Exception as e:
+            logging.warning(f"get_plan_title failed: {e}")
+            ctx["plan_title"] = None
+
+    # Expected suites
+    try:
+        manifest = TestKey(TEST_KEY_LOCATION)
+        expected_suites = manifest.get_valid_suites_in_split(
+            ctx["split"], suite_numbers=True
+        )
+        ctx["expected_suites"] = expected_suites
+    except Exception as e:
+        logging.warning(f"Could not compute expected suites: {e}")
+        ctx["expected_suites"] = []
+
+    # L10N mappings expectation
+    if ctx["is_l10n"]:
+        try:
+            distributed_mappings = select_l10n_mappings(ctx["beta_version"])
+            ctx["distributed_mappings"] = distributed_mappings
+            ctx["expected_mappings"] = sum(
+                map(lambda x: len(x), distributed_mappings.values())
+            )
+        except Exception as e:
+            logging.warning(f"Could not compute l10n mappings: {e}")
+            ctx["distributed_mappings"] = {}
+            ctx["expected_mappings"] = 0
+
+    return ctx
+
+
+def preview_reportable(platform_to_test=None) -> dict:
+    """
+    Preview plan for dry-run.
+    Calls _common_reportable_context() and returns JSON structured data.
+    DOES NOT call TestRail.
+    """
+    ctx = _common_reportable_context(platform_to_test)
+
+    preview = {
+        "mode": "preview",
+        "platform": ctx["platform_name"],
+        "platform_system": ctx["platform_system"],
+        "split": ctx["split"],
+        "version": ctx["version"],
+        "channel": ctx["channel"],
+        "plan_title": ctx["plan_title"],
+        "testrail_report_requested": ctx["testrail_report_requested"],
+        "forced_reportable": ctx["forced_reportable"],
+        "is_l10n": ctx["is_l10n"],
+        "expected_suites": ctx["expected_suites"],
+        "expected_suites_count": len(ctx["expected_suites"]),
+        "expected_mappings": ctx["expected_mappings"],
+        "reportable": None,
+        "note": "Preview only: reportable is unknown because TestRail is not queried.",
+    }
+
+    # print JSON
+    json.dumps(preview)
+
+    return preview
+
+
 def reportable(platform_to_test=None):
     """Return true if we should report to TestRail"""
-    import platform
 
     logging.warning("Checking to see if run is reportable...")
 
-    if not os.environ.get("TESTRAIL_REPORT"):
+    ctx = _common_reportable_context(platform_to_test)
+
+    if not ctx["testrail_report_requested"]:
         logging.warning("TESTRAIL_REPORT not set, session not reportable.")
         return False
 
     # If we ask for reporting, we can force a report
-    if os.environ.get("REPORTABLE"):
+    if ctx["forced_reportable"]:
         logging.warning("REPORTABLE=true; we will report this session.")
         return True
 
-    # Find the correct test plan
-    sys_platform = platform_to_test or platform.system()
-    if platform_to_test:
-        os.environ["FX_PLATFORM"] = platform_to_test
-    version = (
-        subprocess.check_output(
-            [sys.executable, "./scripts/collect_executables.py", "-n"]
-        )
-        .strip()
-        .decode()
-    )
-    logging.warning(f"Got version from collect_executable.py! {version}")
-    tr_session = testrail_init()
-    major_number, second_half = version.split(".")
-    if "-" in second_half:
-        minor_num, _ = second_half.split("-")
-    else:
-        minor_num = second_half
-    channel = os.environ.get("FX_CHANNEL") or "beta"
-    channel = channel.title()
-    if not channel:
-        if "b" in minor_num:
-            channel = "Beta"
-        else:
-            channel = "Release"
+    # Make sure TestRail is actually configured before trying to init it
+    required = ["TESTRAIL_BASE_URL", "TESTRAIL_USERNAME", "TESTRAIL_API_KEY"]
+    missing = [name for name in required if not os.environ.get(name)]
 
-    major_version = f"Firefox {major_number}"
+    if missing:
+        logging.warning(
+            "TestRail not configured; missing env vars: %s. Session not reportable.",
+            ", ".join(missing),
+        )
+        return False
+
+    # Connect to TestRail — only in real mode
+    try:
+        tr_session = testrail_init()
+    except Exception as e:
+        logging.warning(
+            "Could not initialize TestRail session (%s). Session not reportable.",
+            e,
+        )
+        return False
+
+    if not tr_session:
+        logging.warning(
+            "TestRail session could not be created. Session not reportable."
+        )
+        return False
+
+    # Reuse parsed values from ctx
+    if not ctx["major_number"]:
+        logging.warning("Not reporting: could not parse major version.")
+        return False
+
+    major_version = f"Firefox {ctx['major_number']}"
     major_milestone = tr_session.matching_milestone(TESTRAIL_FX_DESK_PRJ, major_version)
     if not major_milestone:
         logging.warning(
-            f"Not reporting: Could not find matching milestone: Firefox {major_version}"
+            f"Not reporting: Could not find matching milestone: {major_version}"
         )
         return False
 
+    channel = ctx["channel"] or "Beta"
     channel_milestone = tr_session.matching_submilestone(
-        major_milestone, f"{channel} {major_number}"
+        major_milestone, f"{channel} {ctx['major_number']}"
     )
+    if not channel_milestone and (channel == "Devedition" or channel == "Rc"):
+        channel_milestone = tr_session.matching_submilestone(
+            major_milestone, f"Beta {ctx['major_number']}"
+        )
     if not channel_milestone:
-        if channel == "Devedition":
-            channel_milestone = tr_session.matching_submilestone(
-                major_milestone, f"Beta {major_number}"
-            )
-        if not channel_milestone:
-            logging.warning(
-                f"Not reporting: Could not find matching submilestone for {channel} {major_number}"
-            )
-            return False
+        logging.warning(
+            "Not reporting: Could not find matching sub-milestone "
+            f"for {channel} {ctx['major_number']}"
+        )
+        return False
 
-    split_ = os.environ.get("STARFOX_SPLIT")
+    split_ = ctx["split"]
     logging.warning(f"Testing against split {split_}...")
-    manifest = TestKey(TEST_KEY_LOCATION)
-    expected_suites = manifest.get_valid_suites_in_split(split_, suite_numbers=True)
-    if not expected_suites and not os.environ.get("FX_L10N"):
-        # If suite is empty, never report (unless in l10n-land).
+
+    # If suite is empty, never report (unless in l10n-land).
+    if not ctx["expected_suites"] and not ctx["is_l10n"]:
         logging.warning("This split is empty, not running or reporting.")
         return False
 
-    plan_title = get_plan_title(version, channel)
+    plan_title = ctx["plan_title"]
+    if not plan_title:
+        logging.warning("Not reporting: could not compute plan title.")
+        return False
+
     logging.warning(f"Checking plan title: {plan_title}")
     this_plan = tr_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, channel_milestone.get("id"), plan_title
     )
     if not this_plan:
         logging.warning(
-            f"Session reportable: could not find {plan_title} (milestone: {channel_milestone.get('id')})"
+            f"Session reportable: could not find {plan_title} "
+            f"(milestone: {channel_milestone.get('id')})"
         )
         return True
 
-    if platform_to_test:
-        sys_platform = platform_to_test
-    platform = "MacOS" if sys_platform == "Darwin" else sys_platform
+    platform_name = ctx["platform_name"]
+    plan_entries = this_plan.get("entries") or []
 
-    plan_entries = this_plan.get("entries")
-    if os.environ.get("FX_L10N"):
-        logging.warning(f"Getting reportability for L10n in {platform}...")
-        beta_version = int(minor_num.split("b")[-1])
-        distributed_mappings = select_l10n_mappings(beta_version)
-        expected_mappings = sum(map(lambda x: len(x), distributed_mappings.values()))
+    # L10N logic
+    if ctx["is_l10n"]:
+        logging.warning(f"Getting reportability for L10n in {platform_name}...")
+        distributed_mappings = ctx["distributed_mappings"] or {}
+        expected_mappings = ctx["expected_mappings"] or 0
         covered_mappings = 0
-        # keeping this logic to still see how many mappings are reported.
+
         for entry in plan_entries:
             if entry.get("name") in distributed_mappings:
                 site = entry.get("name")
@@ -273,55 +447,72 @@ def reportable(platform_to_test=None):
                         run_region, run_platform = run_.get("config").split("-")
                         if (
                             run_region in distributed_mappings[site]
-                            and platform in run_platform
+                            and platform_name in run_platform
                         ):
                             logging.warning(
                                 f"Already reported: {site} {run_region},{run_platform}"
                             )
                             covered_mappings += 1
+
         logging.warning(
-            f"Potentially matching run found for {platform}, may be reportable. (Found {covered_mappings} site/region mappings reported, expected {expected_mappings}.)"
+            f"Potentially matching run found for {platform_name}, may be reportable. "
+            f"(Found {covered_mappings} site/region mappings reported, "
+            f"expected {expected_mappings}.)"
         )
-        # Only report when there is a new beta without a reported plan or if the selected split is not completely reported.
+        # Only report when there is a new beta without a reported plan or
+        # if the selected split is not completely reported.
         return covered_mappings < expected_mappings
+
+    # STARfox logic
+    logging.warning(f"Getting reportability for STARfox in {platform_name}...")
+    if not split_:
+        logging.warning("No split selected")
+        return False
+
+    covered_suites = []
+    for entry in plan_entries:
+        for run_ in entry.get("runs"):
+            if run_.get("config") and platform_name in run_.get("config"):
+                covered_suites.append(str(run_.get("suite_id")))
+
+    if not covered_suites:
+        logging.warning(
+            "No coverage found for this platform, running tests and report..."
+        )
+        return True
     else:
-        logging.warning(f"Getting reportability for STARfox in {platform}...")
-        if not split_:
-            logging.warning("No split selected")
-            return False
+        logging.warning(
+            f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
+        )
 
-        covered_suites = []
-        for entry in plan_entries:
-            for run_ in entry.get("runs"):
-                if run_.get("config") and platform in run_.get("config"):
-                    covered_suites.append(str(run_.get("suite_id")))
+    uncovered_suites = list(set(ctx["expected_suites"]) - set(covered_suites))
+    if len(uncovered_suites):
+        suite_names = []
+        for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ).get("suites"):
+            if str(suite.get("id")) in uncovered_suites:
+                suite_names.append(suite.get("name"))
+        logging.warning("Coverage not found for the following suites:")
+        logging.warning("\t-" + "\n\t-".join(suite_names))
+    else:
+        logging.warning("All suites covered, not reporting.")
 
-        if not covered_suites:
-            logging.warning(
-                "No coverage found for this platform, running tests and report..."
-            )
-            return True
-        else:
-            logging.warning(
-                f"Suite coverage found for Suite IDs: {', '.join(covered_suites)}"
-            )
-
-        uncovered_suites = list(set(expected_suites) - set(covered_suites))
-        if len(uncovered_suites):
-            suite_names = []
-            for suite in tr_session.get_suites(TESTRAIL_FX_DESK_PRJ).get("suites"):
-                if str(suite.get("id")) in uncovered_suites:
-                    suite_names.append(suite.get("name"))
-            logging.warning("Coverage not found for the following suites:")
-            logging.warning("\t-" + "\n\t-".join(suite_names))
-        else:
-            logging.warning("All suites covered, not reporting.")
-        return bool(uncovered_suites)
+    return bool(uncovered_suites)
 
 
-def testrail_init() -> TestRail:
+def testrail_init() -> TestRail | None:
     """Connect to a TestRail API session"""
-    local = os.environ.get("TESTRAIL_BASE_URL").split("/")[2].startswith("127")
+    base_url = os.environ.get("TESTRAIL_BASE_URL")
+
+    if not base_url:
+        logging.warning("TESTRAIL_BASE_URL not set. Skipping TestRail.")
+        return None
+
+    try:
+        local = base_url.split("/")[2].startswith("127")
+    except Exception as e:
+        logging.warning("Invalid TESTRAIL_BASE_URL: %s - %s", base_url, e)
+        return None
+
     tr_session = tr.TestRail(
         os.environ.get("TESTRAIL_BASE_URL"),
         os.environ.get("TESTRAIL_USERNAME"),
@@ -550,14 +741,27 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     durations = suite_info.get("durations")
     plan_title = expected_plan.get("name")
 
+    # Re-fetch the plan to get the latest entries — Mac and Windows both receive the
+    # same stale snapshot from collect_changes. Without a fresh fetch here, both
+    # platforms see no entry and both call create_new_plan_entry, producing duplicate
+    # entries with no config runs.
+    plan_id = expected_plan.get("id")
+    expected_plan = testrail_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+    )
+    if not expected_plan:
+        logging.warning(
+            f"Could not re-fetch plan {plan_title} (milestone: {milestone_id})"
+        )
+        return
+
     suite_entries = [
         entry
-        for entry in expected_plan.get("entries")
+        for entry in expected_plan.get("entries", [])
         if entry.get("suite_id") == suite_id
     ]
 
     # Add a missing entry to a plan
-    plan_id = expected_plan.get("id")
     if not suite_entries:
         # If no entry, create entry for suite
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
@@ -568,6 +772,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             name=suite_description,
             description="Automation-generated test plan entry",
             case_ids=cases_in_suite,
+            config_ids=[config_id],
         )
 
         expected_plan = testrail_session.matching_plan_in_milestone(
@@ -587,6 +792,23 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
     # And if not, make that run
     entry = suite_entries[0]
     config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+
+    # Sometimes, we get entries with null descriptions, not sure why
+    if not entry.get("description"):
+        logging.warning(f"Entry {entry.get('id')} is malformed, missing description")
+        testrail_session.update_plan_entry(
+            plan_id, entry.get("id"), description="Automation-generated test plan entry"
+        )
+        expected_plan = testrail_session.matching_plan_in_milestone(
+            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        )
+        suite_entries = [
+            entry
+            for entry in expected_plan.get("entries")
+            if entry.get("suite_id") == suite_id
+        ]
+        entry = suite_entries[0]
+        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
 
     logging.info(f"config runs {config_runs}")
     logging.warning(
@@ -658,7 +880,11 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         if not test_results[category].get(run_id):
             test_results[category][run_id] = []
         test_results[category][run_id].append(
-            {"suite_id": suite_id, "test_case": test_case, "duration": f"{duration}s"}
+            {
+                "suite_id": suite_id,
+                "test_case": test_case,
+                "duration": f"{duration}s",
+            }
         )
 
     return test_results
@@ -689,7 +915,7 @@ def collect_changes(testrail_session: TestRail, report):
             break
 
     if not metadata:
-        logging.error("No metadata collected. Exiting without report.")
+        logging.warning("No metadata collected. Exiting without report.")
         return False
 
     version_str = metadata.get("fx_version")
@@ -728,7 +954,7 @@ def collect_changes(testrail_session: TestRail, report):
     channel_milestone = testrail_session.matching_submilestone(
         major_milestone, f"{channel} {major}"
     )
-    if (not channel_milestone) and channel == "Devedition":
+    if (not channel_milestone) and (channel == "Devedition" or channel == "Rc"):
         channel_milestone = testrail_session.matching_submilestone(
             major_milestone, f"Beta {major}"
         )
@@ -822,11 +1048,10 @@ def collect_changes(testrail_session: TestRail, report):
         # Tests reported as rerun are a problem -- we need to know pass/fail
         if outcome == "rerun":
             outcome = test.get("call").get("outcome")
-        duration = (
-            test["setup"]["duration"]
-            + test["call"]["duration"]
-            + test["teardown"]["duration"]
-        )
+        setup_dur = 0.0 if not test.get("setup") else test["setup"]["duration"]
+        call_dur = 0.0 if not test.get("call") else test["call"]["duration"]
+        teardown_dur = 0.0 if not test.get("teardown") else test["teardown"]["duration"]
+        duration = setup_dur + call_dur + teardown_dur
         logging.info(f"TC: {test_case}: {outcome} using {duration}s ")
 
         if not results_by_suite.get(suite_id):
@@ -864,7 +1089,9 @@ def collect_changes(testrail_session: TestRail, report):
         last_description = suite_description
 
     # We do need to run this again because we will always have one last suite.
-    cases_in_suite = list(results_by_suite[last_suite_id].keys())
+    cases_in_suite = list(results_by_suite.get(last_suite_id, {}).keys())
+    if not cases_in_suite:
+        return full_test_results
     suite_info = {
         "id": last_suite_id,
         "description": last_description,

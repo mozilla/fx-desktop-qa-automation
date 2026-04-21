@@ -8,7 +8,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,6 +17,31 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.page_base import BasePage
 from modules.page_object_generics import GenericPage
 from modules.util import BrowserActions
+
+
+class AboutCache(BasePage):
+    """
+    POM for the about:cache page
+    """
+
+    URL_TEMPLATE = "about:cache"
+
+    def open_disk_or_memory_cache_entries(self, storage: str = "disk"):
+        """
+        Open the cache entries list for the given storage type.
+
+        Argument:
+            storage: 'disk' or 'memory'
+        """
+        self.click_on(f"{storage}-cache-link")
+
+    def get_entries_text(self):
+        """Return the full text content of the cache entries table, lowercased."""
+        return self.get_element("entries-table").text.lower()
+
+    def get_number_of_entries(self):
+        """Return the 'Number of entries' value from the about:cache overview."""
+        return self.get_element("number-of-entries").text
 
 
 class AboutConfig(BasePage):
@@ -51,7 +76,7 @@ class AboutConfig(BasePage):
         toggle_tf_button.click()
         return self
 
-    def change_config_value(self, term: str, value) -> BasePage:
+    def edit_config_value(self, term: str, value) -> BasePage:
         """
         Main method to change a config's value in about:config
         Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
@@ -62,6 +87,17 @@ class AboutConfig(BasePage):
         pref_edit_button.click()
         pref_edit = self.get_element("value-edit-field")
         pref_edit.send_keys(value)
+        pref_edit_button.click()
+        return self
+
+    def toggle_config_value(self, term: str, value) -> BasePage:
+        """
+        Main method to toggle a config's value in about:config
+        Note: To use this in a test, use pref_list - ("browser.aboutConfig.showWarning", False),
+        in the test suite's conftest.py or use add_to_prefs_list fixture in the test itself
+        """
+        self.search_pref(term)
+        pref_edit_button = self.get_element("value-edit-button")
         pref_edit_button.click()
         return self
 
@@ -229,10 +265,10 @@ class AboutLogins(BasePage):
                 self.fill("login-item-type", value, labels=[item_type])
             logging.info("Clicking submit...")
             self.wait.until(
-                lambda _: self.get_element("create-login-button").get_attribute(
-                    "disabled"
+                lambda _: (
+                    self.get_element("create-login-button").get_attribute("disabled")
+                    is None
                 )
-                is None
             )
             logging.info("Submitted.")
         except (WebDriverException, StaleElementReferenceException):
@@ -334,6 +370,103 @@ class AboutLogins(BasePage):
         page = GenericPage(self.driver)
         page.navigate_dialog_to_location(downloads_folder, filename)
 
+    def click_copy_username_button(self) -> Page:
+        """Click the copy username button"""
+        self.click_on("copy-username")
+        return self
+
+    def click_copy_password_button(self) -> Page:
+        """Click the copy password button"""
+        self.click_on("copy-password")
+        return self
+
+    def click_reveal_password_button(self) -> Page:
+        """Click the reveal password button"""
+        self.click_on("show-password-checkbox")
+        return self
+
+    def verify_reveal_button_cursor_pointer(self):
+        """
+        Verify that hovering over the Reveal/Hide password button
+        changes the mouse cursor to a hand pointer
+        """
+        element = self.get_element("show-password-checkbox")
+
+        # hover over element
+        ActionChains(self.driver).move_to_element(element).perform()
+
+        # read computed cursor style
+        cursor = element.value_of_css_property("cursor")
+
+        assert cursor == "pointer", f"Expected pointer cursor, got {cursor}"
+
+    @BasePage.context_chrome
+    def enter_primary_password(self, primary_password, expected_tabs=2) -> BasePage:
+        """
+        Waits for the primary password prompt in chrome context,
+        switches to the new tab, enters the password, and submits it.
+        """
+
+        original_window = self.driver.current_window_handle
+
+        # Wait until new tab (prompt) is opened
+        self.wait_for_num_tabs(expected_tabs)
+
+        # Switch to the newest tab
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+        # Re-fetch element to avoid stale reference
+        primary_password_prompt = self.get_element("primary-password-prompt")
+        assert primary_password_prompt.is_displayed()
+
+        # Enter password
+        input_field = self.get_element("primary-password-dialog-input-field")
+        input_field.send_keys(primary_password)
+        input_field.send_keys(Keys.ENTER)
+
+        # Switch back after prompt closes
+        self.wait.until(lambda d: len(d.window_handles) == 1)
+        self.driver.switch_to.window(original_window)
+
+        return self
+
+    @BasePage.context_chrome
+    def dismiss_primary_password_prompt(self, expected_tabs=2) -> BasePage:
+        """
+        Switches to the primary password prompt tab and dismisses it using ESC.
+        """
+
+        original_window = self.driver.current_window_handle
+
+        # Wait until new tab (prompt) is opened
+        self.wait_for_num_tabs(expected_tabs)
+
+        # Switch to the newest tab (prompt)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+        # Re-fetch element to avoid stale reference
+        primary_password_prompt = self.get_element("primary-password-prompt")
+
+        # Dismiss prompt
+        primary_password_prompt.send_keys(Keys.ESCAPE)
+
+        # Switch back after prompt closes
+        self.wait.until(lambda d: len(d.window_handles) == 1)
+        self.driver.switch_to.window(original_window)
+
+        return self
+
+    def assert_revealed_password(self, expected_password: str) -> BasePage:
+        """Reveal saved password and assert it matches the expected value"""
+        saved_password = self.get_element(
+            "about-logins-page-password-revealed"
+        ).get_attribute("value")
+
+        assert saved_password == expected_password, (
+            f"Expected '{expected_password}', got '{saved_password}'"
+        )
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """
@@ -351,6 +484,14 @@ class AboutProfiles(BasePage):
     URL_TEMPLATE = "about:profiles"
 
 
+class AboutProtections(BasePage):
+    """
+    POM for about:protections page
+    """
+
+    URL_TEMPLATE = "about:protections"
+
+
 class AboutTelemetry(BasePage):
     """
     The POM for the about:telemetry page
@@ -362,59 +503,70 @@ class AboutTelemetry(BasePage):
         """
         Opens the Raw JSON telemetry view (against bnVsbA== / null payload timing).
         """
+        existing_tabs = len(self.driver.window_handles)
+
         # Click "Raw JSON" from categories on the left
-        WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable(self.get_selector("category-raw"))
-        )
+        self.element_clickable("category-raw")
         self.get_element("category-raw").click()
 
-        # Switching to the new tab opened by Raw
+        # Wait for the new tab before switching
+        self.wait.until(lambda d: len(d.window_handles) == existing_tabs + 1)
         self.switch_to_new_tab()
+        self.clear_cache()
 
         # Wait for Raw Data tab to be clickable, then click it
-        WebDriverWait(self.driver, 30).until(
-            EC.element_to_be_clickable(self.get_selector("rawdata-tab"))
-        )
+        self.element_clickable("rawdata-tab")
         self.get_element("rawdata-tab").click()
 
         # Wait for data URL
-        WebDriverWait(self.driver, 30).until(
+        self.wait.until(
             lambda d: d.current_url.startswith("data:application/json;base64,")
         )
 
-        # Wait until it's not the "null" payload (bnVsbA==)
-        WebDriverWait(self.driver, 30).until(
+        # Wait until it's not the "null" payload (bnVsbA==); telemetry can take time to flush
+        self.custom_wait(timeout=30).until(
             lambda d: "base64,bnVsbA==" not in d.current_url
         )
 
         return self
 
-    def assert_telemetry_row_present(self, expected_telemetry_data):
+    def is_telemetry_entry_present(
+        self, table_selector_key: str, expected_telemetry_data
+    ) -> bool:
         """
-        Verifies that the latest telemetry row matches the expected data.
-
-        :param driver: Selenium WebDriver instance
-        :param expected_telemetry_data: List of expected cell values (excluding first column)
-        :raises AssertionError: If no matching telemetry row is found
+        Generic method to check if a telemetry row exists in a given table.
         """
-        all_rows = self.find_elements(By.CSS_SELECTOR, "#events-section table tr")
 
-        matching_cells = None
+        # Wait for the table to exist in DOM
+        self.get_element(table_selector_key)
 
-        for row in reversed(all_rows):
-            cells = row.find_elements(By.TAG_NAME, "td")
-            if len(cells) > 1:
-                cell_texts = [cell.text.strip() for cell in cells[1:]]
-                if cell_texts == expected_telemetry_data:
-                    matching_cells = cells
-                    break
+        # Retrieve all rows from the telemetry table
+        rows = self.get_elements(table_selector_key)
 
-        assert matching_cells is not None, (
-            f"Telemetry row not found. Expected: {expected_telemetry_data}"
+        # Iterate from newest to oldest entries
+        for row in reversed(rows):
+            cells = [cell.text.strip() for cell in row.find_elements(By.TAG_NAME, "td")]
+
+            # Verify all expected values are present in the row
+            if all(value in cells for value in expected_telemetry_data):
+                return True
+
+        return False
+
+    def is_telemetry_scalars_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present(
+            "telemetry-scalars-table-rows", expected_data
         )
 
-        actual_texts = [cell.text.strip() for cell in matching_cells[1:]]
-        assert actual_texts == expected_telemetry_data
+    def is_telemetry_events_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present(
+            "telemetry-events-table-rows", expected_data
+        )
+
+    def is_telemetry_keyed_scalars_entry_present(self, expected_data):
+        return self.is_telemetry_entry_present(
+            "telemetry-keyed-scalars-table-rows", expected_data
+        )
 
 
 class AboutNetworking(BasePage):
@@ -441,3 +593,20 @@ class AboutNetworking(BasePage):
             By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=3]"
         )
         return list(zip(names, trr))
+
+    def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
+        """Wait until a DNS entry for the given host appears in the table."""
+
+        # Wait once for the table to be visible
+        self.element_visible("dns-content")
+
+        # Then poll for the specific row
+        self.wait.until(
+            lambda _: any(
+                name.text == host and trr_el.text == trr
+                for name, trr_el in self.get_all_dns_rows()
+            ),
+            message=f"DNS entry for host '{host}' with TRR='{trr}' did not appear",
+        )
+
+        return self

@@ -55,6 +55,16 @@
         "strategy": "id",
         "groups": []
     },
+    "view-sidebar-menu": {
+        "selectorData": "viewSidebarMenu",
+        "strategy": "id",
+        "groups": []
+    },
+    "view-sidebar-history": {
+        "selectorData": "menu_historySidebar",
+        "strategy": "id",
+        "groups": []
+    },
     "menu-bar-zoom": {
         "selectorData": "viewFullZoomMenu",
         "strategy": "id",

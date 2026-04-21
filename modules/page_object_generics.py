@@ -125,19 +125,34 @@ class GenericPage(BasePage):
         Verify that the HTML5 video volume level is below 100%.
         """
         volume_el = self.get_element("vjs-volume")
-        style = volume_el.get_attribute("style")
+        volume_level = volume_el.get_attribute("data-volume-level")
 
-        prefix = "width:"
-        assert prefix in style, f"Volume style does not contain width: '{style}'"
-
-        width_str = style.split(prefix)[1].strip().rstrip(";").rstrip("%")
-        width_percent = float(width_str)
-
-        assert width_percent < 100, (
-            f"Expected volume to be under 100%, but got {width_percent}%"
+        assert volume_level is not None, (
+            "Expected data-volume-level attribute to be present on volume button"
+        )
+        assert volume_level != "high", (
+            f"Expected volume to be below max, but data-volume-level is '{volume_level}'"
         )
 
         return self
+
+    def download_gdoc_as_pdf(self) -> None:
+        """
+        Opens a Google Doc file and downloads it as a PDF.
+
+        Steps:
+        1. Click on the Google Doc file
+        2. Open File -> Download
+        3. Select PDF Document (.pdf)
+        """
+        # Click the Google Doc file
+        self.click_on("gdoc-file")
+
+        # Click File menu -> Download
+        self.click_on("gdoc-file-download")
+
+        # Click PDF Document (.pdf)
+        self.click_on("gdoc-file-download-pdf")
 
 
 class GenericPdf(BasePage):

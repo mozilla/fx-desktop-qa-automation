@@ -23,6 +23,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
+from modules.util import env_true
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
@@ -41,6 +42,10 @@ def screenshot_content(driver: Firefox, opt_ci: bool, test_name: str) -> None:
     current_time = str(datetime.datetime.now())
     current_time = re.sub(r"[^\w_. -]", "_", current_time)
     filename = f"{test_name}_{current_time}_image"
+
+    if not driver:
+        return
+
     try:
         _screenshot_whole_screen(f"{filename}_screen", driver, opt_ci)
     except Exception as e:
@@ -65,6 +70,9 @@ def log_content(opt_ci: bool, driver: Firefox, test_name: str) -> None:
     fullpath_chrome = os.path.join(
         artifacts_loc, f"{test_name}_{current_time}_chrome.txt"
     )
+
+    if not driver:
+        return
 
     try:
         # Save Chrome context page source
@@ -203,21 +211,6 @@ def _screenshot_whole_screen(filename: str, driver: Firefox, opt_ci: bool):
     return fullpath
 
 
-def _get_version(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    version_el = driver.find_element(By.ID, "version")
-    version = version_el.text
-    driver.get("about:blank")
-    return version
-
-
-def _fx_up_to_date(driver: Firefox):
-    driver.get(ABOUT_FIREFOX)
-    WebDriverWait(driver, 20).until(
-        EC.visibility_of_element_located((By.ID, "noUpdatesFound"))
-    )
-
-
 @pytest.fixture()
 def opt_headless(request):
     return request.config.getoption("--run-headless")
@@ -268,6 +261,7 @@ def fx_executable(request, sys_platform):
     version = request.config.getoption("--fx-channel")
     location = request.config.getoption("--fx-executable")
     if location:
+        logging.warning(f"Using location: {location}")
         return location
 
     # Path to build location.  Use Custom by installing your incident build to the coinciding path.
@@ -332,6 +326,8 @@ def version(fx_executable: str):
 @pytest.fixture(scope="session")
 def build_version():
     """Collect executables, but just the version number for Fx"""
+    if not os.environ.get("CI"):
+        return None
     return collect_executables.main("-n")
 
 
@@ -353,24 +349,31 @@ def test_case():
 
 
 def pytest_configure(config):
-    # Check if run is "reportable": if it is on a never-reported Fx version
-    if os.environ.get("TESTRAIL_REPORT"):
-        logging.warning("Checking to see if session would be reportable...")
-        if os.environ.get("TASKCLUSTER_ROOT_URL") and os.environ.get("FX_EXECUTABLE"):
-            logging.warning("Getting TC credentials...")
-            creds = get_tc_secret()
-            if creds:
-                os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
-                os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
-                os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
-            elif not os.environ.get("TESTRAIL_USERNAME"):
-                logging.error(
-                    "Attempted to log into TestRail, but could not find credentials."
-                )
-                raise OSError("Could not find TestRail credentials")
+    logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
+        logging.CRITICAL
+    )
+    logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
+    if not env_true("TESTRAIL_REPORT"):
+        logging.warning("TESTRAIL_REPORT disabled; skipping TestRail integration.")
+        return
 
-        if not tri.reportable():
-            pytest.exit("Test run is not reportable. Exiting.")
+    logging.warning("Checking to see if session would be reportable...")
+
+    if os.environ.get("TASKCLUSTER_ROOT_URL") and os.environ.get("FX_EXECUTABLE"):
+        logging.warning("Getting TC credentials...")
+        creds = get_tc_secret()
+        if creds:
+            os.environ["TESTRAIL_USERNAME"] = creds.get("TESTRAIL_USERNAME")
+            os.environ["TESTRAIL_API_KEY"] = creds.get("TESTRAIL_API_KEY")
+            os.environ["TESTRAIL_BASE_URL"] = creds.get("TESTRAIL_BASE_URL")
+        elif not os.environ.get("TESTRAIL_USERNAME"):
+            logging.error(
+                "Attempted to log into TestRail, but could not find credentials."
+            )
+            raise OSError("Could not find TestRail credentials")
+
+    if not tri.reportable():
+        pytest.exit("Test run is not reportable. Exiting.")
 
 
 def pytest_sessionfinish(session):
@@ -389,16 +392,20 @@ def pytest_sessionfinish(session):
                     proc.kill()
             except (ProcessLookupError, psutil.NoSuchProcess):
                 logging.warning("Failed to kill process.")
+                if psutil.pid_exists(proc.pid):
+                    logging.warning(f"And process {proc.pid} is still alive.")
                 pass
 
     # TestRail reporting
-    if not os.environ.get("TESTRAIL_REPORT"):
+    if not env_true("TESTRAIL_REPORT"):
         logging.warning(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
         return None
 
-    if not hasattr(session.config, "_json_report"):
+    if not hasattr(session.config, "_json_report") or not hasattr(
+        session.config._json_report, "report"
+    ):
         logging.warning("No json_report in config, will try again with other workers.")
         return None
 
@@ -421,8 +428,14 @@ def pytest_sessionfinish(session):
         raise OSError("Could not find TestRail credentials")
 
     tr_session = tri.testrail_init()
+    if tr_session is None:
+        logging.error("TestRail session could not be initialized.")
+        return
     passes = tri.collect_changes(tr_session, report)
-    tri.mark_results(tr_session, passes)
+    if passes:
+        tri.mark_results(tr_session, passes)
+    else:
+        logging.warning("No test results found.")
 
 
 @pytest.fixture()
@@ -432,25 +445,27 @@ def hard_quit():
 
 @pytest.fixture(autouse=True)
 def driver(
-    fx_executable: str,
+    build_version,
+    create_profiles,
+    env_prep,
+    fx_executable,
     geckodriver: str,
+    hard_quit,
+    json_metadata,
+    machine_config: str,
+    opt_ci: bool,
     opt_headless: bool,
     opt_implicit_timeout: int,
     prefs_list: List[Tuple],
     policies_list: Dict,
     opt_ci: bool,
     opt_window_size: str,
-    use_profile: Union[bool, str],
+    prefs_list: dict,
+    request,
     suite_id: str,
     test_case: str,
-    machine_config: str,
-    env_prep,
-    tmp_path,
-    request,
-    build_version,
-    json_metadata,
-    hard_quit,
-    create_profiles,
+    tmp_path: str,
+    use_profile: str | bool,
 ):
     """
     Return the webdriver object.
@@ -488,7 +503,21 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
+    options = Options()
+    # options.log.level = "trace"
+    options.add_argument("--remote-allow-system-access")
+    options.binary_location = fx_executable
+    # options.set_preference("app.update.disabledForTesting", False)
 
+    if use_profile:
+        profile_path = tmp_path / use_profile
+        unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
+        options.profile = profile_path
+
+    if opt_headless:
+        options.add_argument("--headless")
+    for opt, value in prefs_list:
+        options.set_preference(opt, value)
     try:
         options = Options()
         options.add_argument("--remote-allow-system-access")
@@ -555,23 +584,16 @@ def driver(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
 
-        displayed_version = _get_version(driver).split(" ")[0]
-        if opt_ci:
-            if displayed_version not in build_version and not os.environ.get("MANUAL"):
-                # Manual flows may test older versions, automatic flows should not
-                raise ValueError(
-                    f"Mismatch between displayed version {displayed_version}"
-                    f" and actual version {build_version}"
-                )
-        else:
-            _fx_up_to_date(driver)
-
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
-        json_metadata["suite_id"] = suite_id
+        json_metadata["suite_id"] = list(suite_id)
         json_metadata["test_case"] = test_case
 
         yield driver
+        if hard_quit:
+            if hasattr(driver, "service") and driver.service is not None:
+                driver.service.stop()
+            return
 
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
@@ -655,7 +677,7 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 def use_secrets(opt_ci):
     """Function factory: grab a named secret from a secrets file"""
     if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        level = 3 if os.environ.get("TESTRAIL_REPORT") else 1
+        level = 3 if env_true("TESTRAIL_REPORT") else 1
         os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
             "test-accts-key", level=level
         ).get("SVC_ACCT_DECRYPT")

@@ -7,7 +7,7 @@ from modules.page_object_generics import GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "2006919"
+    return "1090684"
 
 
 TEST_URL = "https://en.wikipedia.org"
@@ -15,7 +15,7 @@ TEST_URL = "https://en.wikipedia.org"
 
 def test_page_number_indicator_print_preview(driver: Firefox):
     """
-    C2006919 - Verify page number indicator and navigation in Print Preview
+    C1090684 - Verify page number indicator and navigation in Print Preview
     """
     # Instantiate objects
     print_preview = PrintPreview(driver)

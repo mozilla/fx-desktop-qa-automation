@@ -9,6 +9,7 @@ PRIMARY_PASSWORD = "securePassword1"
 TEST_PAGE_URL = "mozilla.org"
 PASSWORD = "password"
 USERNAME = "username"
+ALERT_MESSAGE = "Primary Password successfully changed."
 
 
 @pytest.fixture()
@@ -40,18 +41,13 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
 
     # Enable the setup for primary password
     about_prefs.open()
-    about_prefs.click_on("use-primary-password")
-    primary_pw_popup = about_prefs.get_element("browser-popup")
-    ba.switch_to_iframe_context(primary_pw_popup)
+    about_prefs.open_primary_password_popup(ba)
 
     # Set primary password
-    about_prefs.get_element("enter-new-password").send_keys(PASSWORD)
-    about_prefs.get_element("reenter-new-password").send_keys(PASSWORD)
-    about_prefs.click_on("submit-password")
+    about_prefs.set_primary_password(PASSWORD)
 
     # Dismiss the success message after setting the primary password
-    alert = about_prefs.get_alert()
-    alert.accept()
+    about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)
 
     # Open about:logins page and create a login entry
     tabs.switch_to_new_tab()
@@ -61,29 +57,17 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     # Attempt to view the saved password in order to trigger the primary password prompt
     about_logins.element_visible("show-password-checkbox")
     about_logins.click_on("show-password-checkbox")
+
     # Dismiss the primary password prompt without entering the password
-    with driver.context(driver.CONTEXT_CHROME):
-        driver.switch_to.window(driver.window_handles[-1])
-        primary_password_prompt = about_logins.get_element("primary-password-prompt")
-        primary_password_prompt.send_keys(Keys.ESCAPE)
+    about_logins.dismiss_primary_password_prompt()
 
     # Navigate to about:logins again through the hamburger menu
     tabs.switch_to_new_tab()
     panel_ui.open_panel_menu()
     panel_ui.redirect_to_about_logins_page()
-    # Verify that the primary password prompt appears and enter the primary password
-    with driver.context(driver.CONTEXT_CHROME):
-        tabs.wait_for_num_tabs(2)
-        driver.switch_to.window(driver.window_handles[-1])
-        # Fetch a fresh reference to avoid staling
-        primary_password_prompt = about_logins.get_element("primary-password-prompt")
-        assert primary_password_prompt.is_displayed()
 
-        primary_password_input_field = about_logins.get_element(
-            "primary-password-dialog-input-field"
-        )
-        primary_password_input_field.send_keys(PASSWORD)
-        primary_password_input_field.send_keys(Keys.ENTER)
+    # Verify that the primary password prompt appears and enter the primary password
+    about_logins.enter_primary_password(PASSWORD)
 
     # Verify that about:logins page is accessible after the primary password was entered
     driver.switch_to.window(driver.window_handles[0])
@@ -91,6 +75,8 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
 
     # Verify that the saved login is visible and accessible in the login list
     about_logins.wait.until(
-        lambda _: about_logins.get_element("login-list-item").get_attribute("title")
-        == TEST_PAGE_URL
+        lambda _: (
+            about_logins.get_element("login-list-item").get_attribute("title")
+            == TEST_PAGE_URL
+        )
     )

@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import time
@@ -20,7 +21,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_panel_ui import PanelUi
 from modules.classes.bookmark import Bookmark
-from modules.page_base import BasePage
+from modules.page_base import BasePage, Page
 from modules.page_object_customize_firefox import CustomizeFirefox
 from modules.util import BrowserActions
 
@@ -211,7 +212,7 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         return self
 
     @BasePage.context_chrome
@@ -225,7 +226,7 @@ class Navigation(BasePage):
         term : str
             The search term
         """
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.search_bar.send_keys(term + Keys.ENTER)
         return self
@@ -233,18 +234,32 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def type_in_search_bar(self, term: str) -> BasePage:
         """
-        Type in the *Old* Search Bar. Returns self.
-
-        Attributes
-        ----------
-
-        term : str
-            The search term
+        Type in search bar without hitting enter
+        Argument:
+            term: The search term
         """
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
+        self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.search_bar.send_keys(term)
         return self
+
+    @BasePage.context_chrome
+    def verify_search_bar_is_focused(self):
+        """
+        Verify the toolbar Search Bar is focused.
+
+        Note: In Firefox chrome context, WebDriver's active element APIs (e.g. switch_to.active_element) are not
+        supported, and focus state is not reliably exposed via a stable DOM attribute that we can assert with a CSS
+        selector. We therefore use a small JS check against ownerDocument.activeElement to reliably confirm the input
+        is the focused element in the chrome document.Verify the search bar is focused by checking if it's the active
+        element."""
+        search_input = self.get_element("searchbar-input")
+        self.wait.until(
+            lambda d: d.execute_script(
+                "return arguments[0].ownerDocument.activeElement === arguments[0]",
+                search_input,
+            )
+        )
 
     def open_awesome_bar_settings(self):
         """Open search settings from the awesome bar"""
@@ -253,12 +268,9 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_on_change_search_settings_button(self) -> BasePage:
-        self.search_bar = self.find_element(By.CLASS_NAME, "searchbar-textbox")
-        self.search_bar.click()
-        self.change_search_settings_button = self.find_element(
-            By.ID, "searchbar-anon-search-settings"
-        )
-        self.change_search_settings_button.click()
+        self.click_on("searchmode-switcher")
+        self.element_visible("legacy-searchbar-switcher-popup")
+        self.click_on("legacy-searchbar-search-settings")
         return self
 
     @BasePage.context_chrome
@@ -290,9 +302,16 @@ class Navigation(BasePage):
         # check if search_mode is valid, otherwise raise error.
         if search_mode not in self.VALID_SEARCH_MODES:
             raise ValueError("search location is not valid.")
-        # switch to chrome context
-        # get list of all valid search modes and filter by label
-        self.get_element("search-mode-switcher-option", labels=[search_mode]).click()
+
+        # wait for menu to fully render
+        self.element_visible("search-mode-switcher-prefs")
+        self.element_clickable("search-mode-switcher-option", labels=[search_mode])
+
+        # We get "cannot scroll into view", so force with JS
+        self.driver.execute_script(
+            "arguments[0].click();",
+            self.fetch("search-mode-switcher-option", labels=[search_mode]),
+        )
         return self
 
     @BasePage.context_chrome
@@ -310,6 +329,7 @@ class Navigation(BasePage):
         downloads_button = self.get_element("downloads-button")
         return downloads_button
 
+    @BasePage.context_chrome
     def click_download_button(self) -> BasePage:
         self.get_download_button().click()
         return self
@@ -325,34 +345,6 @@ class Navigation(BasePage):
         except TimeoutException:
             logging.warning("Animation did not finish or did not play.")
         return self
-
-    @BasePage.context_chrome
-    def open_tracker_panel(self) -> BasePage:
-        """
-        Clicks the shield icon and opens the panel associated with it
-        """
-        self.get_element("shield-icon").click()
-        return self
-
-    @BasePage.context_chrome
-    def assert_blocked_trackers(self, *blocked_trackers) -> BasePage:
-        """
-        Given a list of blocked trackers, assert that they are present in the blocked list.
-        """
-        self.open_tracker_panel()
-        if blocked_trackers:
-            for tracker in blocked_trackers:
-                self.element_visible(tracker)
-        else:
-            self.get_element("no-trackers-detected").is_displayed()
-
-    @BasePage.context_chrome
-    def verify_cross_site_trackers(self, cross_site_trackers, allowed_cookies):
-        """
-        Verify that the list of cross-site trackers is as expected.
-        """
-        for val in cross_site_trackers:
-            self.expect(lambda _: val in allowed_cookies)
 
     def search_and_check_if_suggestions_are_present(
         self, text, search_mode: str = "awesome", min_suggestions=1
@@ -524,6 +516,19 @@ class Navigation(BasePage):
     @BasePage.context_chrome
     def click_file_download_warning_panel(self) -> BasePage:
         """exit file download warning panel if present"""
+
+        def _get_warning_button(d):
+            matches = self.get_elements("file-download-warning-button")
+            if not matches:
+                return False
+            if matches[0].is_displayed():
+                return True
+            return False
+
+        try:
+            self.custom_wait(timeout=3, poll_frequency=0.25).until(_get_warning_button)
+        except TimeoutException:
+            return self
         self.element_clickable("file-download-warning-button")
         self.click_on("file-download-warning-button")
         return self
@@ -632,11 +637,9 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def get_legacy_search_engine_label(self) -> str:
-        """Return the displayed engine name from the legacy search bar."""
-        return self.driver.find_element(
-            By.CSS_SELECTOR, ".searchbar-engine-name"
-        ).get_attribute("value")
+    def legacy_search_engine_matches(self, engine: str):
+        """Test the displayed engine name from the legacy search bar."""
+        self.element_attribute_contains("searchmode-switcher", "data-l10n-args", engine)
 
     # Bookmark
 
@@ -670,7 +673,7 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def add_bookmark_via_toolbar_other_bookmark_context_menu(
-        self, bookmark_data: Bookmark, ba: BrowserActions
+        self, bookmark_data: Bookmark, ba: BrowserActions, save: bool = True
     ) -> BasePage:
         """
         Add a bookmark via the toolbar's Other Bookmarks context menu.
@@ -692,8 +695,9 @@ class Navigation(BasePage):
         self.actions.send_keys(Keys.TAB).perform()
         # fill keywords
         self.actions.send_keys(bookmark_data.keyword).perform()
-        # save the bookmark
-        self.actions.send_keys(Keys.ENTER).perform()
+        # only save if requested
+        if save:
+            self.actions.send_keys(Keys.ENTER).perform()
         return self
 
     @BasePage.context_chrome
@@ -826,25 +830,35 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def edit_bookmark_via_star_button(self, new_name: str, location: str) -> BasePage:
+    def edit_bookmark_via_star_button(
+        self, new_name: str, location: str, save_bookmark: True
+    ) -> BasePage:
         """
         Edit bookmark details by opening the edit bookmark panel via the star button
 
         Arguments:
         new_name : The new name/title to assign to the bookmark
         location : The folder location where the bookmark should be saved
+        action_complete:
         """
         self.click_on("star-button")
-        self.panel_ui.get_element("edit-bookmark-panel").send_keys(new_name)
+        # Wait a moment for the panel edit field to gain focus then delete the contents,
+        # otherwise new_name text can be appended to the original name instead of replacing it
+        time.sleep(0.5)
+        self.panel_ui.get_element("edit-bookmark-panel").send_keys(
+            Keys.DELETE + new_name
+        )
         if location == "Other Bookmarks":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("other-bookmarks")
         elif location == "Bookmarks Toolbar":
             self.panel_ui.click_on("bookmark-location")
             self.panel_ui.click_on("bookmarks-toolbar")
-        # for else add Bookmark Menu option if needed in the future
-        self.panel_ui.click_on("save-bookmark-button")
-        return self
+        if not save_bookmark:
+            return self
+        else:
+            self.panel_ui.click_on("save-bookmark-button")
+            return self
 
     @BasePage.context_chrome
     def toggle_show_editor_when_saving(self) -> BasePage:
@@ -1068,8 +1082,9 @@ class Navigation(BasePage):
         Wait until the HTTPS prefix is hidden in the address bar display.
         """
         self.wait.until(
-            lambda d: "https"
-            not in self.get_element("awesome-bar").get_attribute("value")
+            lambda d: (
+                "https" not in self.get_element("awesome-bar").get_attribute("value")
+            )
         )
 
     @BasePage.context_chrome
@@ -1081,9 +1096,11 @@ class Navigation(BasePage):
             prefix (str): Expected starting string (e.g., "https://").
         """
         self.wait.until(
-            lambda d: self.get_element("awesome-bar")
-            .get_attribute("value")
-            .startswith(prefix)
+            lambda d: (
+                self.get_element("awesome-bar")
+                .get_attribute("value")
+                .startswith(prefix)
+            )
         )
 
     @BasePage.context_chrome
@@ -1139,6 +1156,15 @@ class Navigation(BasePage):
         self.panel_ui.navigate_to_customize_toolbar()
         self.customize.add_widget_to_toolbar("search-bar")
         return self
+
+    def verify_searchbar_suggestion_is_highlighted(self):
+        """Verify that a suggestion item is highlighted in the search bar popup.
+
+        Uses a dedicated selector (div.urlbarView-row[selected]) rather than checking
+        the 'selected' attribute on the generic row selector, because fetch() returns
+        the first matching element — which may not be the highlighted one.
+        """
+        self.element_visible("searchbar-highlighted-suggestion")
 
     @BasePage.context_chrome
     def click_exit_button_searchmode(self) -> None:
@@ -1196,38 +1222,6 @@ class Navigation(BasePage):
             return True
 
         return index
-
-    @BasePage.context_chrome
-    def verify_autofill_adaptive_element(
-        self, expected_type: str, expected_url: str
-    ) -> BasePage:
-        """
-        Verify that the adaptive history autofill element has the expected type and URL text.
-        This method handles chrome context switching internally.
-        Arguments:
-            expected_type: Expected type attribute value
-            expected_url: Expected URL fragment to be contained in the element text
-        """
-        autofill_element = self.get_element("search-result-autofill-adaptive-element")
-        actual_type = autofill_element.get_attribute("type")
-        actual_text = autofill_element.text
-
-        assert actual_type == expected_type
-        assert expected_url in actual_text
-
-        return self
-
-    @BasePage.context_chrome
-    def verify_no_autofill_adaptive_elements(self) -> BasePage:
-        autofill_elements = self.get_elements("search-result-autofill-adaptive-element")
-        if autofill_elements:
-            logging.warning(
-                f"Unexpected adaptive autofill elements found: {[el.text for el in autofill_elements]}"
-            )
-        assert len(autofill_elements) == 0, (
-            "Adaptive history autofill suggestion was not removed after deletion."
-        )
-        return self
 
     @BasePage.context_chrome
     def verify_autofill_adaptive_element(
@@ -1408,6 +1402,7 @@ class Navigation(BasePage):
         match = self._TARGET_URI_RE.search(html)
         return match.group(1) if match else None
 
+    @BasePage.context_chrome
     def perform_download_context_action(self, action_name: str) -> BasePage:
         """
         From the downloads panel, right-click the latest download and perform a context menu action.
@@ -1426,4 +1421,133 @@ class Navigation(BasePage):
         self.context_menu.get_element(action_name).click()
         self.context_menu.hide_popup_by_child_node(action_name)
 
+        return self
+
+    @BasePage.context_chrome
+    def open_downloaded_file(self) -> None:
+        """
+        Opens the most recently downloaded file from the Downloads panel.
+        """
+        # Wait until the element is visible and clickable
+        self.expect(
+            lambda _: self.get_element("download-target-element").is_displayed()
+        )
+
+        # Click the button
+        self.get_element("download-target-element").click()
+
+    @BasePage.context_chrome
+    def open_download_panel(self):
+        """
+        Open the download panel.
+        """
+        self.click_on("downloads-button")
+        return self
+
+    @BasePage.context_chrome
+    def is_download_button_visible(self) -> bool:
+        """
+        Returns True if the Downloads button is visible, False otherwise.
+        """
+        try:
+            return self.get_element("downloads-button").is_displayed()
+        except Exception:
+            # Element not found or not accessible
+            return False
+
+    @BasePage.context_chrome
+    def end_private_session(self) -> BasePage:
+        """Click 'End Private Session' toolbar button then confirm with 'Delete session data'."""
+        self.click_on("end-private-session-button")
+        self.click_on("delete-session-data-button")
+        return self
+
+    @BasePage.context_chrome
+    def add_folder_via_context_menu(self) -> BasePage:
+        """
+        Right-clicks on bookmarks toolbar and add folder via context menu
+        """
+        self.context_click("bookmarks-toolbar-context")
+        self.context_menu.click_and_hide_menu("context-menu-toolbar-add-folder")
+        return self
+
+    def edit_bookmark_or_folder_via_context_menu_via_toolbar(
+        self, item_type: str
+    ) -> "BasePage":
+        """
+        Right-clicks on a bookmark or bookmark folder from toolbar and edits it via context menu.
+
+        Args:
+            item_type (str): Either "bookmark" or "folder".
+        """
+        element_map = {
+            "bookmark": "bookmark-in-toolbar",
+            "folder": "bookmark-folder-in-toolbar",
+        }
+
+        if item_type not in element_map:
+            raise ValueError(
+                f"Invalid item_type: {item_type}. Must be 'bookmark' or 'folder'."
+            )
+
+        self.context_click(element_map[item_type])
+        self.context_menu.click_and_hide_menu("context-menu-edit-bookmark")
+        return self
+
+    @BasePage.context_chrome
+    def verify_bookmark_not_in_bookmarks_toolbar(self, bookmark_name: str) -> BasePage:
+        """
+        Verify bookmark does NOT exist in the bookmarks toolbar
+        """
+        self.panel_ui.element_not_visible(
+            "panel-menu-item-by-title", labels=[bookmark_name]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_bookmark_toolbar_context_menu_option(self, item_type: str) -> BasePage:
+        """
+        Right-clicks on the bookmarks toolbar and adds an item via context menu.
+
+        :param item_type: Type of item to add ("bookmark" or "folder")
+        """
+        self.context_click("bookmarks-toolbar-context")
+
+        menu_items = {
+            "bookmark": "context-menu-toolbar-add-bookmark",
+            "folder": "context-menu-toolbar-add-folder",
+        }
+
+        if item_type not in menu_items:
+            raise ValueError(f"Unsupported item_type: {item_type}")
+
+        self.context_menu.click_and_hide_menu(menu_items[item_type])
+        return self
+
+    @BasePage.context_chrome
+    def paste_in_awesome_bar(self) -> Page:
+        """Paste clipboard content into the awesome bar"""
+        self.click_on("awesome-bar")
+        return self.paste()
+
+    @BasePage.context_chrome
+    def wait_for_notification_popup_open(self) -> BasePage:
+        """Wait for the notification popup panel to finish opening (animation complete).
+
+        The panel sets panelopen='true' only after its opening animation finishes, so
+        this is more reliable than element_visible/element_clickable on buttons inside
+        the popup, which can pass while the panel is still animating.
+        """
+        self.expect(
+            lambda _: self.get_element(
+                "password-notification-popup-panel"
+            ).get_attribute("panelopen")
+        )
+        return self
+
+    @BasePage.context_chrome
+    def toggle_vertical_tabs(self) -> BasePage:
+        """Toggle vertical tabs via the toolbar context menu."""
+        self.context_click("toolbar-blank-space")
+        self.context_menu.click_and_hide_menu("context-menu-vertical-tabs")
         return self

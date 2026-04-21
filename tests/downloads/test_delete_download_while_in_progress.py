@@ -8,6 +8,11 @@ TEST_URL = "https://ash-speed.hetzner.com/"
 
 
 @pytest.fixture()
+def hard_quit():
+    return True
+
+
+@pytest.fixture()
 def test_case():
     return "1756765"
 

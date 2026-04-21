@@ -31,6 +31,11 @@
         "strategy": "class",
         "groups": []
     },
+    "customize-widget-remove-from-toolbar": {
+        "selectorData": "toolbar-context-remove-from-toolbar",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-add-bookmark": {
         "selectorData": "placesContext_new:bookmark",
         "strategy": "id",
@@ -66,8 +71,18 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-pin-selected-tabs": {
+        "selectorData": "context_pinSelectedTabs",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-unpin-tab": {
         "selectorData": "context_unpinTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-unpin-selected-tabs": {
+        "selectorData": "context_unpinSelectedTabs",
         "strategy": "id",
         "groups": []
     },
@@ -106,19 +121,29 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-move-tab": {
+        "selectorData": "context_moveTabOptions",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-move-tab-to-start": {
-        "selectorData": "menuitem[data-l10n-id='move-to-start']",
-        "strategy": "css",
+        "selectorData": "context_moveToStart",
+        "strategy": "id",
         "groups": []
     },
     "context-menu-move-tab-to-end": {
-        "selectorData": "menuitem[data-l10n-id='move-to-end']",
-        "strategy": "css",
+        "selectorData": "context_moveToEnd",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu_reload-tab": {
+        "selectorData": "context_reloadTab",
+        "strategy": "id",
         "groups": []
     },
     "context-menu-move-to-new-window": {
-        "selectorData": "menuitem[data-l10n-id='move-to-new-window']",
-        "strategy": "css",
+        "selectorData": "context_openTabInWindow",
+        "strategy": "id",
         "groups": []
     },
     "context-menu-open-link-in-tab": {
@@ -198,6 +223,11 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-use-saved-password": {
+        "selectorData": "fill-login",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-reveal-password": {
         "selectorData": "context-reveal-password",
         "strategy": "id",
@@ -233,6 +263,11 @@
         "strategy": "css",
         "groups": []
     },
+    "context-close-duplicate-tabs": {
+        "selectorData": "context_closeDuplicateTabs",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-vertical-tabs": {
         "selectorData": "toolbar-context-toggle-vertical-tabs",
         "strategy": "id",
@@ -241,6 +276,31 @@
     "context-menu-delete": {
         "selectorData": "downloadDeleteFileMenuItem",
         "strategy": "class",
+        "groups": []
+    },
+    "context-menu-toolbar-add-folder": {
+        "selectorData": "placesContext_new:folder",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-edit-bookmark": {
+        "selectorData": "placesContext_show_bookmark:info",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-toolbar-add-bookmark": {
+        "selectorData": "placesContext_new:bookmark",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-bookmark-tab": {
+        "selectorData": "context_bookmarkTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-toggle-mute-tab": {
+        "selectorData": "context_toggleMuteTab",
+        "strategy": "id",
         "groups": []
     }
 }

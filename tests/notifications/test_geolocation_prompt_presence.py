@@ -1,5 +1,5 @@
 import pytest
-from selenium.common import NoSuchElementException, TimeoutException
+from selenium.common import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 

@@ -17,6 +17,11 @@ def test_case():
 
 
 @pytest.fixture()
+def hard_quit():
+    return True
+
+
+@pytest.fixture()
 def add_to_prefs_list():
     return [
         ("browser.migrate.chrome.get_permissions.enabled", True),

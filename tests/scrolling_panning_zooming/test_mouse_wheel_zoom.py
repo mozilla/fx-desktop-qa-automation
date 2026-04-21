@@ -1,5 +1,4 @@
 import logging
-import time
 
 import pytest
 from selenium.webdriver import ActionChains, Firefox

@@ -31,26 +31,21 @@ def test_search_bar_display_alpenglow_theme(driver: Firefox):
     # Add the Search bar to Toolbar
     nav.add_search_bar_to_toolbar()
 
-    # Open a new tab and hit Ctrl/Cmd + K
+    # Open a new tab hit Ctrl/Cmd + K and verify the search bar is in focus
     nav.open_and_switch_to_new_window("tab")
-    nav.perform_key_combo_chrome(Keys.COMMAND, "k")
+    nav.perform_key_combo_chrome(Keys.CONTROL, "k")
+    nav.verify_search_bar_is_focused()
 
-    # Write an input
+    # Write an input and wait for the search suggestions dropdown to be visible
     nav.type_in_search_bar(TEXT)
-
-    # Wait until the search suggestions dropdown is visible
     nav.wait_for_searchbar_suggestions()
 
-    # Hit Tab a few times
-    for _ in range(2):
+    # Tab cycles suggestions
+    for _ in range(5):
         nav.perform_key_combo_chrome(Keys.TAB)
+        nav.verify_searchbar_suggestion_is_highlighted()
 
-    # The highlight goes through the one-off buttons accordingly
-    nav.verify_searchbar_engine_is_focused("Bing")
-
-    # Hit the down Arrow key a few times
-    for _ in range(2):
+    # Down arrow cycles suggestions
+    for _ in range(5):
         nav.perform_key_combo_chrome(Keys.DOWN)
-
-    # The highlight goes through the one-off buttons accordingly
-    nav.verify_searchbar_engine_is_focused("eBay")
+        nav.verify_searchbar_suggestion_is_highlighted()
