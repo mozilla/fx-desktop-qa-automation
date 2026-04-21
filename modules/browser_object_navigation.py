@@ -295,21 +295,18 @@ class Navigation(BasePage):
         self.click_search_mode_switcher()
 
         # wait for menu to fully render
+        # We get "cannot scroll into view", so force with JS
         self.element_visible("search-mode-switcher-prefs")
         if local:
             self.element_clickable(
                 "search-mode-local-option", labels=[search_mode.lower()]
             )
-        else:
-            self.element_clickable("search-mode-switcher-option", labels=[search_mode])
-
-        # We get "cannot scroll into view", so force with JS
-        if local:
             self.driver.execute_script(
                 "arguments[0].click();",
                 self.fetch("search-mode-local-option", labels=[search_mode.lower()]),
             )
         else:
+            self.element_clickable("search-mode-switcher-option", labels=[search_mode])
             self.driver.execute_script(
                 "arguments[0].click();",
                 self.fetch("search-mode-switcher-option", labels=[search_mode]),
