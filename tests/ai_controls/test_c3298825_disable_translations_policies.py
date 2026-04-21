@@ -26,7 +26,7 @@ def test_disable_only_translations_via_policies(about_prefs: AboutPrefs):
     C3298825 - Disable only translations via policies
     Requires enterprise policy to disable only the Translations feature.
     """
-    about_prefs.navigate_to_ai_controls()
+    about_prefs.navigate_to_ai_controls(verify=False)
 
     # Translations control should be hidden when the policy is active
     about_prefs.element_not_visible("ai-control-translations-select")

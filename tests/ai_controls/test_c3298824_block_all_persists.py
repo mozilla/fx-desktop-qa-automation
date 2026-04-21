@@ -20,6 +20,9 @@ def test_block_all_ai_features_option_persists(about_prefs: AboutPrefs):
     about_prefs.set_ai_blocking(True)
     about_prefs.expect(lambda _: about_prefs.get_ai_killswitch_state() is True)
 
-    # Enable one individual feature — the killswitch must remain on
-    about_prefs.set_ai_translations("available")
+    # Enable one individual feature via pref — the UI control may be hidden
+    # when the killswitch is active, so we set the pref directly.
+    about_prefs.driver.execute_script(
+        "Services.prefs.setStringPref('browser.ai.control.translations', 'available');"
+    )
     about_prefs.expect(lambda _: about_prefs.get_ai_killswitch_state() is True)

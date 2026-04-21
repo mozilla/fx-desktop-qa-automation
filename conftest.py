@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from shutil import unpack_archive
 from subprocess import check_output, run
-from typing import Callable, Dict, List, Tuple
+from typing import Callable
 
 # import psutil
 import pytest
@@ -307,7 +307,7 @@ def use_profile():
 
 
 @pytest.fixture()
-def policies_list() -> Dict:
+def policies_list() -> dict:
     """
     Enterprise policies to apply before Firefox launches.
     Override in a suite conftest.py or test file to inject policies.
@@ -457,8 +457,8 @@ def driver(
     opt_headless: bool,
     opt_implicit_timeout: int,
     opt_window_size: str,
-    policies_list: Dict,
-    prefs_list: List[Tuple],
+    policies_list: dict,
+    prefs_list: list[tuple],
     request,
     suite_id: str,
     test_case: str,
@@ -482,7 +482,7 @@ def driver(
     opt_implicit_timeout: int
         Timeout, in seconds for driver-level wait attribute.
 
-    prefs_list: List[Tuple]
+    prefs_list: list[tuple]
         Preferences to set before the Firefox object is created.
         Usually set in the conftest.py inside a test suite folder.
 
@@ -501,6 +501,7 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
+    policy_file: Path | None = None
     try:
         options = Options()
         options.add_argument("--remote-allow-system-access")
@@ -509,7 +510,6 @@ def driver(
         options.binary_location = fx_executable
 
         # Write enterprise policies.json if any policies were requested
-        policy_file: Path | None = None
         if policies_list:
             fx_path = Path(fx_executable)
             if platform.system() == "Darwin":

@@ -391,11 +391,10 @@ class AboutPrefs(BasePage):
 
     def set_ai_chatbot_provider(self, provider: str) -> BasePage:
         """
-        try:
-            # Use the find-in-settings box to reveal the control if needed
-            self.find_in_settings("AI")
-        except Exception as e:
-            logging.warning(f"find_in_settings('AI') raised: {e}")
+        Set the AI Chatbot provider from the dropdown.
+
+        Arguments:
+            provider: Provider name (e.g., "ChatGPT", "Claude", "Copilot")
         """
         select_elem = self.get_element("ai-control-sidebar-chatbot-select")
         # moz-select uses moz-option elements with a 'label' attribute
@@ -449,18 +448,18 @@ class AboutPrefs(BasePage):
         self.element_visible("ai-control-sidebar-chatbot-select")
         return self
 
-    def navigate_to_ai_controls(self) -> BasePage:
+    def navigate_to_ai_controls(self, verify: bool = True) -> BasePage:
         """
         Navigate to the AI Controls preference page.
-        """
-        self.driver.get("about:preferences#ai")
-    def navigate_to_ai_controls(self, verify: bool = True) -> "AboutPrefs":
-        """
-        Navigate to the AI Controls preference page.
+
+        Arguments:
+            verify: If True (default), assert the three core elements are
+                    visible after navigation.  Pass False when enterprise
+                    policies hide those controls.
         """
         self.driver.get("about:preferences#ai")
         if verify:
-            return self.verify_ai_controls_core_elements_visible()
+            self.verify_ai_controls_core_elements_visible()
         return self
 
     # Payment and Address Management

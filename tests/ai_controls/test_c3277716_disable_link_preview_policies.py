@@ -26,7 +26,7 @@ def test_disable_only_link_previews_via_policies(about_prefs: AboutPrefs):
     C3277716 - Disable only link previews via policies
     Requires enterprise policy to disable only the Link Previews feature.
     """
-    about_prefs.navigate_to_ai_controls()
+    about_prefs.navigate_to_ai_controls(verify=False)
 
     # Link Preview control should be hidden when the policy is active
     about_prefs.element_not_visible("ai-control-link-preview-select")

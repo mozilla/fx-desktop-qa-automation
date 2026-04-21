@@ -27,7 +27,7 @@ def test_disable_all_ai_features_via_policies(about_prefs: AboutPrefs):
     With AIControls.Default blocked, all individual feature controls should
     be hidden from the AI controls page.
     """
-    about_prefs.navigate_to_ai_controls()
+    about_prefs.navigate_to_ai_controls(verify=False)
 
     about_prefs.element_not_visible("ai-control-translations-select")
     about_prefs.element_not_visible("ai-control-sidebar-chatbot-select")

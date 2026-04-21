@@ -26,7 +26,7 @@ def test_disable_only_smart_tab_groups_via_policies(about_prefs: AboutPrefs):
     C3277714 - Disable only smart tab groups via policies
     Requires enterprise policy to disable only the Smart Tab Groups feature.
     """
-    about_prefs.navigate_to_ai_controls()
+    about_prefs.navigate_to_ai_controls(verify=False)
 
     # Smart Tab Groups control should be hidden when the policy is active
     about_prefs.element_not_visible("ai-control-smart-tab-groups-select")

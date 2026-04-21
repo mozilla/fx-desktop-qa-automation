@@ -26,7 +26,7 @@ def test_disable_only_chatbot_via_policies(about_prefs: AboutPrefs):
     C3277713 - Disable only chatbot via policies
     Requires enterprise policy to disable only the chatbot feature.
     """
-    about_prefs.navigate_to_ai_controls()
+    about_prefs.navigate_to_ai_controls(verify=False)
 
     # Chatbot control should be hidden when the chatbot policy is active
     about_prefs.element_not_visible("ai-control-sidebar-chatbot-select")
