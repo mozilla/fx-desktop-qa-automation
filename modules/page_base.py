@@ -337,13 +337,7 @@ class BasePage(Page):
                 el and el.get_attribute(attr_name) is not None and str(attr_value) in el
             )
 
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and str(attr_value)
-                in self.fetch(reference, labels=labels).get_attribute(attr_name)
-            )
-        )
+        self.expect(_elem_attr_contains)
         return self
 
     @context_of_model
