@@ -453,7 +453,14 @@ class AboutPrefs(BasePage):
         Navigate to the AI Controls preference page.
         """
         self.driver.get("about:preferences#ai")
-        return self.verify_ai_controls_core_elements_visible()
+    def navigate_to_ai_controls(self, verify: bool = True) -> "AboutPrefs":
+        """
+        Navigate to the AI Controls preference page.
+        """
+        self.driver.get("about:preferences#ai")
+        if verify:
+            return self.verify_ai_controls_core_elements_visible()
+        return self
 
     # Payment and Address Management
     def verify_cc_json(
