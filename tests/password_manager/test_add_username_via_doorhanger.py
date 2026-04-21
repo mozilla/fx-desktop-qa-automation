@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.browser_object_navigation import Navigation
-from modules.page_object_about_pages import AboutLogins
-from modules.page_object_autofill import LoginAutofill
+from modules.browser_object import AutofillPopup, Navigation
+from modules.page_object import AboutLogins, LoginAutofill
 
 PASSWORD = "testPassword"
 USERNAME = "testUsername"
@@ -43,6 +41,7 @@ def test_add_username_via_doorhanger(driver: Firefox):
     login_autofill.get_element("password-login-field").send_keys("aaaaaaa")
 
     # Click the Password Manager key icon
+    nav.element_visible("password-notification-key")
     nav.click_on("password-notification-key")
 
     # The Password Manager dialog is displayed
