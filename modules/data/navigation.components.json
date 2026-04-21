@@ -186,22 +186,25 @@
         ]
     },
     "sponsored-suggestion": {
-        "doNotCache": true,
-        "selectorData": "urlbarView-group-aria-label",
-        "strategy": "class",
-        "groups": []
+        "selectorData": "div.urlbarView-row[sponsored='']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "firefox-suggest": {
-        "doNotCache": true,
-        "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
+        "selectorData": "div.urlbarView-row[label='Firefox Suggest']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "suggestion-titles": {
-        "doNotCache": true,
         "selectorData": "urlbarView-title",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-result-autofill-adaptive-element": {
         "selectorData": ".//*[@type='autofill_adaptive']",
