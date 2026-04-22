@@ -250,6 +250,58 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def expect_ai_chat_panel_open(self) -> "Sidebar":
+        """Verify the AI chat panel is loaded in the sidebar by checking for the onboarding root."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "return cd?.readyState === 'complete' && "
+                "Boolean(cd?.querySelector('#multi-stage-message-root'));"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_providers_displayed(self) -> "Sidebar":
+        """Verify that AI provider radio options are shown in the chatbot onboarding panel."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelectorAll('input[type=\"radio\"]').length > 0;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_first_ai_provider(self) -> "Sidebar":
+        """Select the first AI provider via its label and confirm with the Continue button.
+
+        The radio inputs are sr-only so the enclosing label must be clicked instead.
+        Waits until the onboarding screen is gone, confirming the provider was saved.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "const label = cd.querySelector('label.select-item');"
+                "if (!label) return false;"
+                "label.click();"
+                "const continueBtn = cd.querySelector('button[value=\"primary_button\"]');"
+                "if (continueBtn) continueBtn.click();"
+                "return true;"
+            )
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "return cd?.readyState === 'complete' && "
+                "!cd?.querySelector('#multi-stage-message-root');"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 
