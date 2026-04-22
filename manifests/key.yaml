@@ -1234,10 +1234,6 @@ sidebar:
     result: pass
     splits:
     - functional2
-  test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
-    result: pass
-    splits:
-    - functional2
   test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
@@ -1247,6 +1243,10 @@ sidebar:
     splits:
     - functional2
   test_sidebar_enabled_in_private_window:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
     result: pass
     splits:
     - functional2
@@ -1368,6 +1368,10 @@ tabs:
     result: pass
     splits:
     - functional2
+  test_new_tab_label:
+    result: pass
+    splits:
+    - ci
   test_open_bookmark_in_new_tab:
     result: pass
     splits:
