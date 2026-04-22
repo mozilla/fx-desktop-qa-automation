@@ -94,6 +94,7 @@ class ContextMenu(BasePage):
         assert el.get_attribute("disabled") == "true", (
             f"{reference} is not disabled"
         )
+        return self
 
 
 class AboutDownloadsContextMenu(ContextMenu):

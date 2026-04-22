@@ -8,7 +8,7 @@ from modules.page_object_autofill import LoginAutofill
 from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
-TEST_PAGE_URL = "https://facebook.com"
+CREDENTIAL_ORIGIN = "https://facebook.com"
 USERNAME = "username"
 PASSWORD = "password"
 PRIMARY_PASSWORD = "securePassword1"
@@ -42,7 +42,7 @@ def test_no_generated_password_options_with_pp_and_no_credentials(driver: Firefo
     # Open about:logins page and create a login entry
     tabs.switch_to_new_tab()
     about_logins.open()
-    about_logins.add_login(TEST_PAGE_URL, USERNAME, PASSWORD)
+    about_logins.add_login(CREDENTIAL_ORIGIN, USERNAME, PASSWORD)
 
     # Attempt to view the saved password in order to trigger the primary password prompt
     about_logins.element_visible("show-password-checkbox")
