@@ -438,6 +438,36 @@
     "strategy": "css",
     "groups": []
   },
+  "ai-controls-toggle": {
+    "selectorData": "aiControlDefaultToggle",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-translations-select": {
+    "selectorData": "aiControlTranslationsSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-sidebar-chatbot-select": {
+    "selectorData": "aiControlSidebarChatbotSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-link-preview-select": {
+    "selectorData": "aiControlLinkPreviewKeyPointsSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-smart-tab-groups-select": {
+    "selectorData": "aiControlSmartTabGroupsSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-pdf-alt-text-select": {
+    "selectorData": "aiControlPdfjsAltTextSelect",
+    "strategy": "id",
+    "groups": []
+  },
   "language-settings-dialog": {
     "selectorData": "BrowserLanguagesDialog",
     "strategy": "id",

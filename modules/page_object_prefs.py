@@ -1,8 +1,10 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -320,6 +322,152 @@ class AboutPrefs(BasePage):
         sleep(1)
         menulist_popup = Select(self.get_element("history-option-select"))
         menulist_popup.select_by_value(option)
+        return self
+
+    def set_ai_blocking(self, block: bool) -> BasePage:
+        """
+        Set the global AI blocking (killswitch) toggle in AI Controls.
+
+        Arguments:
+            block: True to block AI enhancements, False to allow them.
+        """
+        current_state = self.get_ai_killswitch_state()
+
+        if block != current_state:
+            self.driver.execute_script(
+                "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+                "blocked" if block else "available",
+            )
+            self.expect(lambda _: self.get_ai_killswitch_state() == block)
+        return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Get the current state of the AI killswitch toggle.
+
+        Returns:
+            bool: True if AI features are blocked, False otherwise.
+        """
+        toggle = self.get_element("ai-controls-toggle")
+        # moz-toggle uses the 'pressed' property; cast to bool for safety
+        # in case the property is missing (JS returns undefined → Python None)
+        return bool(self.driver.execute_script(
+            "return arguments[0].pressed;",
+            toggle
+        ))
+
+    def set_ai_translations(self, state: str) -> BasePage:
+        """
+        Set the AI Translations feature state.
+        
+        Arguments:
+            state: "available" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state
+        )
+        self.expect(lambda _: self.get_ai_translations_state() == state)
+        return self
+
+    def get_ai_translations_state(self) -> str:
+        """
+        Get the current state of the AI Translations feature.
+
+        Returns:
+            str: Current state ("available" or "blocked")
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        return self.driver.execute_script(
+            "return arguments[0].value;",
+            select_elem
+        )
+
+    def set_ai_chatbot_provider(self, provider: str) -> BasePage:
+        """
+        Set the AI Chatbot provider from the dropdown.
+
+        Arguments:
+            provider: Provider name (e.g., "ChatGPT", "Claude", "Copilot")
+        """
+        select_elem = self.get_element("ai-control-sidebar-chatbot-select")
+        # moz-select uses moz-option children with a 'label' attribute;
+        # iterate via querySelectorAll to avoid relying on HTMLSelectElement.options
+        matched = self.driver.execute_script(
+            """
+            const select = arguments[0];
+            const provider = arguments[1];
+            const options = select.querySelectorAll('moz-option');
+            for (const option of options) {
+                if (option.getAttribute('label') === provider) {
+                    select.value = option.getAttribute('value');
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    return true;
+                }
+            }
+            return false;
+            """,
+            select_elem,
+            provider
+        )
+        if not matched:
+            raise ValueError(f"Provider '{provider}' not found in chatbot dropdown")
+        return self
+
+    def get_ai_chatbot_provider(self) -> str:
+        """
+        Get the currently selected AI Chatbot provider.
+        
+        Returns:
+            str: Current provider name
+        """
+        select_elem = self.get_element("ai-control-sidebar-chatbot-select")
+        return self.driver.execute_script(
+            """
+            const select = arguments[0];
+            const options = select.querySelectorAll('moz-option');
+            for (const option of options) {
+                if (option.getAttribute('value') === select.value) {
+                    return option.getAttribute('label') || '';
+                }
+            }
+            return '';
+            """,
+            select_elem
+        )
+
+    def verify_ai_controls_core_elements_visible(self) -> BasePage:
+        """
+        Verify that the three always-present AI Controls elements are visible.
+
+        ai-control-link-preview-select and ai-control-smart-tab-groups-select
+        are gated behind feature flags and not present in all builds; they are
+        checked individually in the tests that specifically target those features.
+        """
+        self.element_visible("ai-controls-toggle")
+        self.element_visible("ai-control-translations-select")
+        self.element_visible("ai-control-sidebar-chatbot-select")
+        return self
+
+    def navigate_to_ai_controls(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the AI Controls preference page.
+
+        Arguments:
+            verify: If True (default), assert the three core elements are
+                    visible after navigation.  Pass False when enterprise
+                    policies hide those controls.
+        """
+        self.driver.get("about:preferences#ai")
+        if verify:
+            self.verify_ai_controls_core_elements_visible()
         return self
 
     # Payment and Address Management
