@@ -91,9 +91,7 @@ class ContextMenu(BasePage):
     def verify_item_disabled(self, reference: str, labels=None):
         """Assert a context menu item is disabled (grayed out)."""
         el = self.get_element(reference, labels=labels)
-        assert el.get_attribute("disabled") == "true", (
-            f"{reference} is not disabled"
-        )
+        assert el.get_attribute("disabled") == "true", f"{reference} is not disabled"
         return self
 
 
