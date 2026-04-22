@@ -1290,6 +1290,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_summarize_page_via_tab_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_switch_between_horizontal_vertical_tabs:
     result: pass
     splits:

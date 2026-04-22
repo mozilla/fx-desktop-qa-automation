@@ -302,5 +302,15 @@
         "selectorData": "context_toggleMuteTab",
         "strategy": "id",
         "groups": []
+    },
+    "context-ask-chat": {
+        "selectorData": "context_askChat",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-ask-chat-summarize-page": {
+        "selectorData": "//menu[@id='context_askChat']//menuitem[@label='Summarize Page']",
+        "strategy": "xpath",
+        "groups": []
     }
 }

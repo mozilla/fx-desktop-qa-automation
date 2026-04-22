@@ -67,6 +67,33 @@ class ContextMenu(BasePage):
             )
 
     @BasePage.context_chrome
+    def click_summarize_page_from_ai_chat(self):
+        """Activate the Summarize Page item from the already opened AI Chat submenu.
+
+        Pure Selenium cannot interact with XUL submenu items in the chrome context: ActionChains
+        move_to_element does not cross GeckoDriver's chrome context boundary, and Selenium's click()
+        on a XUL <menu> element does not open its popup. JS is used to dispatch the full mouse event
+        sequence (mousemove/mousedown/mouseup/click) directly on the menuitem, which fires the XUL
+        command event that triggers the sidebar to open.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const menu = document.getElementById('context_askChat');"
+                "if (!menu) return false;"
+                "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+                "if (!popup) return false;"
+                "const item = popup.querySelector('menuitem[label=\"Summarize Page\"]');"
+                "if (!item) return false;"
+                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def bookmark_tab_via_context_menu(self) -> BasePage:
         """Click 'Bookmark Tab' in the tab context menu, dismiss the menu, then
         confirm the Add Bookmark dialog by clicking its Save button via JS.
