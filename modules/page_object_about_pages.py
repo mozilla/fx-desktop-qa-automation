@@ -584,7 +584,7 @@ class AboutNetworking(BasePage):
         self.get_element("networking-sidebar-category", labels=[option]).click()
 
     def get_all_dns_rows(self) -> list[tuple[str, str]]:
-        """Get all DNS rows as (host, trr) text tuples. Caller must ensure the table is visible first."""
+        """Get all DNS rows as (host, trr) text tuples."""
         rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
         result = []
         for row in rows:
@@ -599,20 +599,20 @@ class AboutNetworking(BasePage):
         return result
 
     def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
-        """Wait until a DNS entry for the given host appears in the table."""
+        """Wait until a DNS entry for the given host appears in the table.
+
+        Ensures the table is visible before polling.
+        """
         self.element_visible("dns-content")
 
         expected_host = host.strip()
         expected_trr = trr.strip().lower()
 
         def _entry_present(_):
-            try:
-                return any(
-                    row_host == expected_host and row_trr == expected_trr
-                    for row_host, row_trr in self.get_all_dns_rows()
-                )
-            except StaleElementReferenceException:
-                return False
+            return any(
+                row_host == expected_host and row_trr == expected_trr
+                for row_host, row_trr in self.get_all_dns_rows()
+            )
 
         self.custom_wait(timeout=30).until(
             _entry_present,
