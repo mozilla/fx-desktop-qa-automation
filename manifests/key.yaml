@@ -1371,7 +1371,7 @@ tabs:
   test_new_tab_label:
     result: pass
     splits:
-    - ci
+    - functional2
   test_open_bookmark_in_new_tab:
     result: pass
     splits:
