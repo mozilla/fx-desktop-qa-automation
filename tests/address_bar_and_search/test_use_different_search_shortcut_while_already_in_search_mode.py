@@ -26,16 +26,17 @@ def test_use_search_shortcut_for_a_different_search_engine_while_already_in_sear
 
     # Enter search mode for the desired search engine in a new tab
     nav.open_and_switch_to_new_window("tab")
-    nav.open_usb_and_select_option(SEARCH_ENGINE)
+    nav.set_search_mode(SEARCH_ENGINE)
 
     # Verify search mode is entered for the corresponding engine
-    nav.verify_search_mode_is_visible()
+    nav.verify_search_mode_is_visible(SEARCH_ENGINE)
 
     # Type @engine shortcut
     nav.type_in_awesome_bar(SEARCH_TERM)
 
-    # Verify the search mode label matches the selected search engine and the input contains the plain search term
-    nav.verify_search_mode_label(SEARCH_ENGINE)
+    # Verify the search mode label matches the selected search engine
+    # and the input contains the plain search term
+    nav.verify_search_mode_is_visible(SEARCH_ENGINE)
     nav.verify_plain_text_in_input_awesome_bar(SEARCH_TERM)
 
     # Perform the search by pressing Enter and expect

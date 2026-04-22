@@ -14,7 +14,7 @@ def test_case():
 @pytest.mark.parametrize("engine", ["DuckDuckGo"])
 def test_search_mode_persists_mixed_with_bing(driver: Firefox, engine):
     """
-    TC 3028730: Ensure '@bing' is NOT recognized as a special Bing search when DuckDuckGo is selected.
+    3028730: Ensure '@bing' is NOT recognized as a special Bing search when DuckDuckGo is selected.
     """
     # Open a neutral page (new tab) and prepare helpers
     page = GenericPage(driver, url="about:newtab")
@@ -23,7 +23,6 @@ def test_search_mode_persists_mixed_with_bing(driver: Firefox, engine):
     page.open()
 
     # Step 1: pick DuckDuckGo from the search mode switcher (aka USB)
-    nav.click_search_mode_switcher()
     nav.set_search_mode(engine)
 
     # Step 2: type '@bing' in the Awesome Bar
