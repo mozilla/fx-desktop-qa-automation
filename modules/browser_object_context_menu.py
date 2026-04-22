@@ -93,6 +93,34 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_open_chatbot_from_context_menu(self) -> BasePage:
+        """Click the 'Open Chatbot' item from the AI Chat submenu in the tab context menu.
+
+        The tabContextMenu must be open before calling this (via tabs.context_click). Setting
+        menu.open = true on the XUL <menu> element opens the submenu inline while the parent
+        tabContextMenu is still open, which triggers provider-specific children to be generated
+        in the menupopup DOM. Pure Selenium cannot hover XUL elements across GeckoDriver's chrome
+        context boundary; ActionChains.move_to_element does not cross that boundary.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const menu = document.getElementById('context_askChat');"
+                "if (!menu) return false;"
+                "menu.open = true;"
+                "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+                "if (!popup) return false;"
+                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-open-provider\"]');"
+                "if (!item) return false;"
+                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def bookmark_tab_via_context_menu(self) -> BasePage:
         """Click 'Bookmark Tab' in the tab context menu, dismiss the menu, then
         confirm the Add Bookmark dialog by clicking its Save button via JS.

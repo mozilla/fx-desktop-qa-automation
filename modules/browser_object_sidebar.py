@@ -249,6 +249,38 @@ class Sidebar(BasePage):
         self.wait.until(_is_unavailable)
         return self
 
+    def expect_ai_chat_sidebar_open(self) -> "Sidebar":
+        """Verify the AI Chat sidebar panel is open via the sidebarcommand attribute on sidebar-box."""
+        self.element_attribute_contains(
+            "sidebar-box", "sidebarcommand", "viewGenaiChatSidebar"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def close_ai_chat_panel(self) -> "Sidebar":
+        """Close the AI chat panel by clicking its close button.
+
+        The close button (button#main-button[title='Close']) lives inside Lit web components
+        behind nested shadow DOM in browser#sidebar's contentDocument. JS recursively pierces
+        shadow roots to find and click it — Selenium cannot reach inside shadow DOM directly.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "function search(root) {"
+                "  const btn = root.querySelector('button#main-button[title=\"Close\"]');"
+                "  if (btn) { btn.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot && search(host.shadowRoot)) return true;"
+                "  }"
+                "  return false;"
+                "}"
+                "return search(cd);"
+            )
+        )
+        return self
+
     @BasePage.context_chrome
     def expect_ai_chat_panel_open(self) -> "Sidebar":
         """Verify the AI chat panel is loaded in the sidebar by checking for the onboarding root."""
