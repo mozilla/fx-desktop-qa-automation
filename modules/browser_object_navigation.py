@@ -71,6 +71,14 @@ class Navigation(BasePage):
         self.customize = CustomizeFirefox(self.driver)
 
     @BasePage.context_chrome
+    def js_click_on(self, reference, labels=[]) -> BasePage:
+        """Perform a 'hard click' using a JS command"""
+        self.driver.execute_script(
+            "arguments[0].click();", self.fetch(reference, labels=labels)
+        )
+        return self
+
+    @BasePage.context_chrome
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
         self.awesome_bar = self.get_element("awesome-bar")
@@ -266,10 +274,10 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def click_on_change_search_settings_button(self) -> BasePage:
-        self.click_on("searchmode-switcher")
-        self.element_visible("legacy-searchbar-switcher-popup")
-        self.click_on("legacy-searchbar-search-settings")
+    def click_on_legacy_search_settings_button(self) -> BasePage:
+        self.click_on("legacy-searchmode-switcher")
+        self.element_visible("legacy-searchbar-search-settings")
+        self.js_click_on("legacy-searchbar-search-settings")
         return self
 
     @BasePage.context_chrome
@@ -301,16 +309,10 @@ class Navigation(BasePage):
             self.element_clickable(
                 "search-mode-local-option", labels=[search_mode.lower()]
             )
-            self.driver.execute_script(
-                "arguments[0].click();",
-                self.fetch("search-mode-local-option", labels=[search_mode.lower()]),
-            )
+            self.js_click_on("search-mode-local-option", labels=[search_mode.lower()])
         else:
             self.element_clickable("search-mode-switcher-option", labels=[search_mode])
-            self.driver.execute_script(
-                "arguments[0].click();",
-                self.fetch("search-mode-switcher-option", labels=[search_mode]),
-            )
+            self.js_click_on("search-mode-switcher-option", labels=[search_mode])
         return self
 
     @BasePage.context_chrome
@@ -324,10 +326,7 @@ class Navigation(BasePage):
         self.click_search_mode_switcher()
         self.element_visible("search-mode-switcher-prefs")
         self.element_clickable("search-mode-add-option", labels=[search_mode])
-        self.driver.execute_script(
-            "arguments[0].click();",
-            self.fetch("search-mode-add-option", labels=[search_mode]),
-        )
+        self.js_click_on("search-mode-add-option", labels=[search_mode])
         return self
 
     @BasePage.context_chrome
@@ -639,7 +638,8 @@ class Navigation(BasePage):
     def open_searchmode_switcher_settings(self):
         """Open search settings from searchmode switcher in awesome bar"""
         self.click_on("searchmode-switcher")
-        self.click_on("searchmode-switcher-settings")
+        self.element_visible("search-mode-switcher-prefs")
+        self.js_click_on("search-mode-switcher-prefs")
         self.switch_to_new_tab()
         return self
 
