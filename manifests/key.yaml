@@ -815,6 +815,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_facebook_login_autofill_dropdown:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
     result: pass
     splits:
