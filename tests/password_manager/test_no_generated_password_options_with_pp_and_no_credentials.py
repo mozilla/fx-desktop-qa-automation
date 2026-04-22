@@ -1,11 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_context_menu import ContextMenu
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_pages import AboutLogins
-from modules.page_object_autofill import LoginAutofill
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import ContextMenu, TabBar
+from modules.page_object import AboutLogins, LoginAutofill, AboutPrefs
 from modules.util import BrowserActions
 
 CREDENTIAL_ORIGIN = "https://facebook.com"
