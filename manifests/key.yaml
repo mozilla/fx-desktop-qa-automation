@@ -1011,11 +1011,7 @@ printing_ui:
     - functional2
 profile:
   test_set_default_profile:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033608
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
 reader_view:
