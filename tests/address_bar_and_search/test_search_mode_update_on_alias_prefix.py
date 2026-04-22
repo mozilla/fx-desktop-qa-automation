@@ -15,7 +15,8 @@ def test_case():
 
 def test_search_mode_update_on_alias_prefix(driver: Firefox):
     """
-    C3028841 - Search mode is updated after typing a keyword/alias at the beginning of a non-empty search string
+    C3028841 - Search mode is updated after typing a keyword/alias at the beginning
+    of a non-empty search string
     """
 
     # Instantiate object
@@ -34,7 +35,7 @@ def test_search_mode_update_on_alias_prefix(driver: Firefox):
     nav.type_in_awesome_bar(ENGINE_KEYWORD, reset=False)
     nav.perform_key_combo_chrome(Keys.SPACE)
 
-    # Search shortcut should be identified and translated to search mode for bing with the original text
-    # remaining as search query
-    nav.verify_engine_returned(ENGINE)
+    # Search shortcut should be identified and translated to search mode for bing with the
+    # original text remaining as search query
+    nav.verify_search_mode_is_visible(ENGINE)
     nav.verify_plain_text_in_input_awesome_bar(TEXT)

@@ -133,6 +133,20 @@
             "doNotCache"
         ]
     },
+    "search-mode-local-option": {
+        "selectorData": "#searchmode-switcher-panel-list-urlbar panel-item.search-button-{function}",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "search-mode-add-option": {
+        "selectorData": ".searchmode-switcher-addEngine[data-engine-name='{title}']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
     "search-mode-switcher-prefs": {
         "selectorData": "searchmode-switcher-panel-search-settings-button",
         "strategy": "class",
@@ -172,22 +186,25 @@
         ]
     },
     "sponsored-suggestion": {
-        "doNotCache": true,
-        "selectorData": "urlbarView-group-aria-label",
-        "strategy": "class",
-        "groups": []
+        "selectorData": "div.urlbarView-row[sponsored='']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "firefox-suggest": {
-        "doNotCache": true,
-        "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
+        "selectorData": "div.urlbarView-row[label='Firefox Suggest']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "suggestion-titles": {
-        "doNotCache": true,
         "selectorData": "urlbarView-title",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-result-autofill-adaptive-element": {
         "selectorData": ".//*[@type='autofill_adaptive']",
@@ -628,7 +645,7 @@
         "groups": []
     },
     "exit-button-searchmode": {
-        "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
+        "selectorData": "[data-l10n-id='urlbar-searchmode-exit-button2']",
         "strategy": "css",
         "groups": []
     },
