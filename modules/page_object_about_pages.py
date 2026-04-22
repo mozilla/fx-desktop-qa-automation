@@ -585,18 +585,21 @@ class AboutNetworking(BasePage):
 
     def get_all_dns_rows(self) -> list[tuple[str, str]]:
         """Get all DNS rows as (host, trr) text tuples."""
-        rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
-        result = []
-        for row in rows:
-            try:
-                cells = row.find_elements(By.TAG_NAME, "td")
-                if len(cells) >= 3:
-                    result.append(
-                        (cells[0].text.strip(), cells[2].text.strip().lower())
-                    )
-            except StaleElementReferenceException:
-                continue
-        return result
+        try:
+            rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
+            result = []
+            for row in rows:
+                try:
+                    cells = row.find_elements(By.TAG_NAME, "td")
+                    if len(cells) >= 3:
+                        result.append(
+                            (cells[0].text.strip(), cells[2].text.strip().lower())
+                        )
+                except StaleElementReferenceException:
+                    continue
+            return result
+        except StaleElementReferenceException:
+            return []
 
     def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
         """Wait until a DNS entry for the given host appears in the table.
