@@ -791,6 +791,7 @@ class Navigation(BasePage):
         """
         self.panel_ui.context_click("panel-menu-item-by-title", labels=[item_title])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
+        self.panel_ui.element_not_visible("panel-main-view")
         return self
 
     @BasePage.context_chrome
