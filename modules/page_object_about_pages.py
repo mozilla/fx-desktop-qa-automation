@@ -584,22 +584,24 @@ class AboutNetworking(BasePage):
         self.get_element("networking-sidebar-category", labels=[option]).click()
 
     def get_all_dns_rows(self) -> list[tuple[str, str]]:
-        """Get all DNS rows as (host, trr) text tuples."""
-        try:
-            rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
-            result = []
-            for row in rows:
-                try:
-                    cells = row.find_elements(By.TAG_NAME, "td")
-                    if len(cells) >= 3:
-                        result.append(
-                            (cells[0].text.strip(), cells[2].text.strip().lower())
-                        )
-                except StaleElementReferenceException:
-                    continue
-            return result
-        except StaleElementReferenceException:
-            return []
+        """Get all DNS rows as (host, trr) text tuples.
+
+        Caller must ensure the DNS table is visible before calling. Returns []
+        if an individual row goes stale mid-iteration (table is re-rendering);
+        callers that poll can treat [] as a retry signal.
+        """
+        rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
+        result = []
+        for row in rows:
+            try:
+                cells = row.find_elements(By.TAG_NAME, "td")
+                if len(cells) >= 3:
+                    result.append(
+                        (cells[0].text.strip(), cells[2].text.strip().lower())
+                    )
+            except StaleElementReferenceException:
+                continue
+        return result
 
     def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
         """Wait until a DNS entry for the given host appears in the table.
