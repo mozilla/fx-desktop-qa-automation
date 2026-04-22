@@ -207,9 +207,11 @@
         ]
     },
     "search-result-autofill-adaptive-element": {
-        "selectorData": ".//*[@type='autofill_adaptive']",
-        "strategy": "xpath",
-        "groups": []
+        "selectorData": "[data-l10n-id='urlbar-group-firefox-suggest'] .urlbarView-url",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-result": {
         "selectorData": "//div[@data-text-ad]//a",

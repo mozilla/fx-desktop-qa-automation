@@ -1230,26 +1230,6 @@ class Navigation(BasePage):
         return index
 
     @BasePage.context_chrome
-    def verify_autofill_adaptive_element(
-        self, expected_type: str, expected_url: str
-    ) -> BasePage:
-        """
-        Verify that the adaptive history autofill element has the expected type and URL text.
-        This method handles chrome context switching internally.
-        Arguments:
-            expected_type: Expected type attribute value
-            expected_url: Expected URL fragment to be contained in the element text
-        """
-        autofill_element = self.get_element("search-result-autofill-adaptive-element")
-        actual_type = autofill_element.get_attribute("type")
-        actual_text = autofill_element.text
-
-        assert actual_type == expected_type
-        assert expected_url in actual_text
-
-        return self
-
-    @BasePage.context_chrome
     def verify_no_autofill_adaptive_elements(self) -> BasePage:
         """Verify that no adaptive history autofill elements are present."""
         autofill_elements = self.get_elements("search-result-autofill-adaptive-element")

@@ -1,12 +1,10 @@
 address_bar_and_search:
   test_adaptive_history_autofill:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033866
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_adaptive_history_removal:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033866
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_add_engine_address_bar:
