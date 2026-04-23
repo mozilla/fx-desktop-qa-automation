@@ -249,6 +249,7 @@ class Sidebar(BasePage):
         self.wait.until(_is_unavailable)
         return self
 
+    @BasePage.context_chrome
     def expect_ai_chat_sidebar_open(self):
         """Verify the sidebar is open and showing the AI Chat panel."""
         self.element_attribute_contains(

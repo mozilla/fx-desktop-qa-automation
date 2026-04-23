@@ -75,6 +75,9 @@ class ContextMenu(BasePage):
         on a XUL <menu> element does not open its popup. JS is used to dispatch the full mouse event
         sequence (mousemove/mousedown/mouseup/click) directly on the menuitem, which fires the XUL
         command event that triggers the sidebar to open.
+
+        Note: the menuitem is selected by label="Summarize Page" which is English-only; no stable
+        ID or anonid is exposed by this XUL element.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -82,14 +85,17 @@ class ContextMenu(BasePage):
                 "if (!menu) return false;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
                 "if (!popup) return false;"
-                "const item = popup.querySelector('menuitem[label=\"Summarize Page\"]');"
-                "if (!item) return false;"
-                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
-                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
-                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
-                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
-                "return true;"
+                "return popup.querySelector('menuitem[label=\"Summarize Page\"]') !== null;"
             )
+        )
+        self.driver.execute_script(
+            "const menu = document.getElementById('context_askChat');"
+            "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+            "const item = popup.querySelector('menuitem[label=\"Summarize Page\"]');"
+            "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
         )
         return self
 
