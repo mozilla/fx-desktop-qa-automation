@@ -72,7 +72,10 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def js_click_on(self, reference, labels=None) -> BasePage:
-        """Perform a 'hard click' using a JS command"""
+        """
+        Perform a 'hard click' using a JS command. Use this when regular click_on()
+        doesn't work well
+        """
         self.driver.execute_script(
             "arguments[0].click();", self.fetch(reference, labels=labels)
         )
