@@ -267,7 +267,8 @@ class Sidebar(BasePage):
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "return cd?.getElementById('summarize-button') !== null;"
+                "if (!cd) return false;"
+                "return cd.getElementById('summarize-button') !== null;"
             )
         )
         return self
