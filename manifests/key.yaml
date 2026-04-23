@@ -57,7 +57,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:
@@ -89,7 +90,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
@@ -217,7 +219,11 @@ address_bar_and_search:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_autoplay_permission_settings_displayed:
@@ -482,7 +488,11 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
 find_toolbar:
@@ -1036,7 +1046,11 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_zoom_menu_correlation:
@@ -1204,7 +1218,11 @@ session_restore:
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
@@ -1220,7 +1238,11 @@ session_restore:
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
 sidebar:
@@ -1273,7 +1295,11 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_mute_unmute:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034572
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_switch_between_horizontal_vertical_tabs:
