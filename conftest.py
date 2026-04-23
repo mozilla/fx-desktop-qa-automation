@@ -360,8 +360,7 @@ def pytest_configure(config):
             )
             raise OSError("Could not find TestRail credentials")
 
-    if not tri.reportable() and not env_true("STATUS_REPORTED"):
-        os.environ["STATUS_REPORTED"] = "true"
+    if not tri.reportable():
         pytest.exit("Test run is not reportable. Exiting.")
 
 
