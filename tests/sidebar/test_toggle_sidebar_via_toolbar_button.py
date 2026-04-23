@@ -11,7 +11,7 @@ def test_case():
 
 
 @pytest.fixture()
-def add_to_prefs_list():
+def prefs_list():
     return [("sidebar.revamp", False)]
 
 

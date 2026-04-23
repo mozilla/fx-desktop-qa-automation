@@ -2245,13 +2245,6 @@ Description: "Ask ChatGPT" context menu option
 Location: Tab context menu
 Path to .json: modules/data/context_menu.components.json
 ```
-```
-Selector Name: context-ask-chat-summarize-page
-Selector Data: //menu[@id='context_askChat']//menuitem[@label='Summarize Page']
-Description: "Summarize Page" context menu option under "Ask ChatGPT" menu
-Location: Tab context menu
-Path to .json: modules/data/context_menu.components.json
-```
 #### credit_card_fill
 ```
 Selector Name: form-field

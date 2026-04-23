@@ -37,7 +37,7 @@ def test_summarize_page_via_tab_context_menu(driver: Firefox):
 
     # Right-click the tab and select AI Chat
     tabs.context_click(tabs.get_tab(1))
-    context_menu.context_click("context-ask-chat")
+    context_menu.click_context_item("context-ask-chat")
 
     # In the AI Chat submenu, click "Summarize Page"
     context_menu.click_summarize_page_from_ai_chat()

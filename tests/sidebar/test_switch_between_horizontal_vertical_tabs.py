@@ -11,7 +11,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("sidebar.revamp", True), ("sidebar.verticalTabs", False)]
+    return [("sidebar.verticalTabs", False)]
 
 
 def test_switch_between_horizontal_vertical_tabs(driver: Firefox):
