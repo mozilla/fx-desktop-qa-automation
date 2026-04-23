@@ -375,6 +375,8 @@ jobs:
           rm ./pyproject.toml;
           mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
           pipenv install;
+          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
           ./scripts/collect_executables.sh
           ./firefox/firefox --version;
           #. ./keyring-unlock.sh;
