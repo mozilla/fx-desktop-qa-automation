@@ -1278,7 +1278,11 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_mute_unmute:
-    result: pass
+    comment: CI limitation - audio playback not supported on Windows CI runners
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_summarize_page_via_tab_context_menu:
