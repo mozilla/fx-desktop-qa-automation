@@ -340,9 +340,9 @@ def pytest_configure(config):
         logging.CRITICAL
     )
     logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
-    if not env_true("TESTRAIL_REPORT") and not env_true("STATUS_REPORTED"):
+    if not env_true("TESTRAIL_REPORT") and not env_true("TR_STATUS_REPORTED"):
         logging.warning("TESTRAIL_REPORT disabled; skipping TestRail integration.")
-        os.environ["STATUS_REPORTED"] = True
+        os.environ["TR_STATUS_REPORTED"] = "true"
         return
 
     logging.warning("Checking to see if session would be reportable...")
@@ -361,7 +361,7 @@ def pytest_configure(config):
             raise OSError("Could not find TestRail credentials")
 
     if not tri.reportable() and not env_true("STATUS_REPORTED"):
-        os.environ["STATUS_REPORTED"] = True
+        os.environ["STATUS_REPORTED"] = "true"
         pytest.exit("Test run is not reportable. Exiting.")
 
 
@@ -390,7 +390,7 @@ def pytest_sessionfinish(session):
         logging.warning(
             "Not reporting to TestRail. Set env var TESTRAIL_REPORT to activate reporting."
         )
-        os.environ["STATUS_REPORTED"] = True
+        os.environ["STATUS_REPORTED"] = "true"
         return None
 
     if not hasattr(session.config, "_json_report") or not hasattr(
@@ -415,7 +415,7 @@ def pytest_sessionfinish(session):
         logging.error(
             "Attempted to report to TestRail, but could not find credentials."
         )
-        os.environ["STATUS_REPORTED"] = True
+        os.environ["STATUS_REPORTED"] = "true"
         raise OSError("Could not find TestRail credentials")
 
     tr_session = tri.testrail_init()
