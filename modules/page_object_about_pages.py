@@ -467,6 +467,16 @@ class AboutLogins(BasePage):
         )
         return self
 
+    def dismiss_pp_if_appears(self, timeout=3):
+        """Dismiss the Primary Password prompt only if it appears within a short time window"""
+        try:
+            self.custom_wait(timeout=timeout).until(
+                lambda d: self.is_element_present("primary-password-dialog", timeout=0)
+            )
+            self.dismiss_primary_password_prompt()
+        except Exception:
+            pass
+
 
 class AboutPrivatebrowsing(BasePage):
     """

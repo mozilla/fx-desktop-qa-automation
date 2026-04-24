@@ -60,11 +60,12 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     tabs.open_and_switch_to_new_tab()
     login_autofill.open()
 
-    # Fill in both the username and password (other credentials other than the one from precondition)
+    # Fill in both the username and password with new credentials and dismiss pp if appears
     login_form = LoginAutofill.LoginForm(login_autofill)
     login_form.fill_username(SECOND_USERNAME)
-    about_logins.dismiss_primary_password_prompt()
+    about_logins.dismiss_pp_if_appears()
     login_form.fill_password(SECOND_PASSWORD)
+    about_logins.dismiss_pp_if_appears()
 
     # Submit the form
     login_form.submit()
