@@ -24,7 +24,8 @@ def add_to_prefs_list():
 
 def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     """
-    C3029071 - Verify adaptive history entry is deleted from history and not suggested in address bar.
+    C3029071 - Verify adaptive history entry is deleted from history and
+    not suggested in address bar.
     """
     # Instantiate objects
     nav = Navigation(driver)
@@ -49,7 +50,10 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
     nav.type_in_awesome_bar(TYPED_TEXT)
-    nav.verify_autofill_adaptive_element(EXPECTED_TYPE, EXPECTED_URL)
+    # Adaptive autofill is done through Fx Suggest, url in title attr
+    nav.element_attribute_contains(
+        "search-result-autofill-adaptive-element", "title", EXPECTED_URL
+    )
 
     # Delete the adaptive history entry
     panel.open_history_menu()
@@ -61,4 +65,6 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     driver.switch_to.window(driver.window_handles[1])
     tabs.close_first_tab_by_icon()
     nav.type_in_awesome_bar(TYPED_TEXT)
-    nav.verify_no_autofill_adaptive_elements()
+    # Fx Suggest elements always exist and are populated based on search,
+    # so we need to check that element has "" in the title attr
+    nav.element_attribute_is("search-result-autofill-adaptive-element", "title", "")
