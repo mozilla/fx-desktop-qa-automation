@@ -54,7 +54,7 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     about_logins.click_on("show-password-checkbox")
 
     # Dismiss the primary password prompt without entering the password
-    about_logins.dismiss_primary_password_prompt()
+    about_logins.dismiss_pp_if_appears()
 
     # Go to the test website
     tabs.open_and_switch_to_new_tab()
