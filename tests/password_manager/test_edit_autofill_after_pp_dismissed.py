@@ -80,5 +80,5 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     # The credentials were saved and the autocomplete dropdown appear on page load with 2 entries.
     # (1 from preconditions and 1 for the newly saved credentials)
     login_autofill.click_on("username-login-field")
-    autofill_popup_panel.verify_autocomplete_option("username")
-    autofill_popup_panel.verify_autocomplete_option("SecondUsername")
+    autofill_popup_panel.verify_autocomplete_option(USERNAME)
+    autofill_popup_panel.verify_autocomplete_option(SECOND_USERNAME)
