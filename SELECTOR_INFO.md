@@ -2238,6 +2238,13 @@ Description: Close Duplicate Tabs context menu option
 Location: Tab context menu
 Path to .json: modules/data/context_menu.components.json
 ```
+```
+Selector Name: context-ask-chat
+Selector Data: context_askChat
+Description: "Ask ChatGPT" context menu option
+Location: Tab context menu
+Path to .json: modules/data/context_menu.components.json
+```
 #### credit_card_fill
 ```
 Selector Name: form-field
@@ -4606,6 +4613,13 @@ Path to .json: modules/data/sidebar.components.json
 Selector Name: confirmation-hint
 Selector Data: confirmation-hint
 Description: The confirmation dialog when a tab is closed in the sidebar
+Location: Sidebar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-box
+Selector Data: sidebar-box
+Description: The box element that wraps the entire sidebar content
 Location: Sidebar
 Path to .json: modules/data/sidebar.components.json
 ```
