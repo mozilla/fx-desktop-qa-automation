@@ -1,4 +1,3 @@
-import json
 import logging
 import re
 import time
@@ -70,6 +69,17 @@ class Navigation(BasePage):
         self.context_menu = ContextMenu(self.driver)
         self.panel_ui = PanelUi(self.driver)
         self.customize = CustomizeFirefox(self.driver)
+
+    @BasePage.context_chrome
+    def js_click_on(self, reference, labels=None) -> BasePage:
+        """
+        Perform a 'hard click' using a JS command. Use this when regular click_on()
+        doesn't work well
+        """
+        self.driver.execute_script(
+            "arguments[0].click();", self.fetch(reference, labels=labels)
+        )
+        return self
 
     @BasePage.context_chrome
     def set_awesome_bar(self) -> BasePage:
@@ -267,10 +277,10 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def click_on_change_search_settings_button(self) -> BasePage:
-        self.click_on("searchmode-switcher")
-        self.element_visible("legacy-searchbar-switcher-popup")
-        self.click_on("legacy-searchbar-search-settings")
+    def click_on_legacy_search_settings_button(self) -> BasePage:
+        self.click_on("legacy-searchmode-switcher")
+        self.element_visible("legacy-searchbar-search-settings")
+        self.js_click_on("legacy-searchbar-search-settings")
         return self
 
     @BasePage.context_chrome
@@ -281,37 +291,45 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_search_mode_switcher(self) -> BasePage:
-        """
-        click search mode switcher
-        """
-        self.search_mode_switcher = self.get_element("searchmode-switcher")
-        self.search_mode_switcher.click()
+        self.element_visible("searchmode-switcher")
+        self.click_on("searchmode-switcher")
         return self
 
     @BasePage.context_chrome
-    def set_search_mode(self, search_mode: str) -> BasePage:
+    def set_search_mode(self, search_mode: str, local=False) -> BasePage:
         """
-        set new search location if search_mode in VALID_SEARCH_MODES
+        set new search location
 
         Parameter:
             search_mode (str): search mode to be selected
-
-        Raises:
-            StopIteration: if a valid search mode is not found in the list of valid elements.
         """
-        # check if search_mode is valid, otherwise raise error.
-        if search_mode not in self.VALID_SEARCH_MODES:
-            raise ValueError("search location is not valid.")
+        self.click_search_mode_switcher()
 
         # wait for menu to fully render
-        self.element_visible("search-mode-switcher-prefs")
-        self.element_clickable("search-mode-switcher-option", labels=[search_mode])
-
         # We get "cannot scroll into view", so force with JS
-        self.driver.execute_script(
-            "arguments[0].click();",
-            self.fetch("search-mode-switcher-option", labels=[search_mode]),
-        )
+        self.element_visible("search-mode-switcher-prefs")
+        if local:
+            self.element_clickable(
+                "search-mode-local-option", labels=[search_mode.lower()]
+            )
+            self.js_click_on("search-mode-local-option", labels=[search_mode.lower()])
+        else:
+            self.element_clickable("search-mode-switcher-option", labels=[search_mode])
+            self.js_click_on("search-mode-switcher-option", labels=[search_mode])
+        return self
+
+    @BasePage.context_chrome
+    def add_search_mode(self, search_mode: str) -> BasePage:
+        """
+        add new search location
+
+        Parameter:
+            search_mode (str): search mode to be selected
+        """
+        self.click_search_mode_switcher()
+        self.element_visible("search-mode-switcher-prefs")
+        self.element_clickable("search-mode-add-option", labels=[search_mode])
+        self.js_click_on("search-mode-add-option", labels=[search_mode])
         return self
 
     @BasePage.context_chrome
@@ -434,13 +452,6 @@ class Navigation(BasePage):
         self.element_not_visible("suggestion-titles")
         return self
 
-    @BasePage.context_chrome
-    def open_usb_and_select_option(self, option_title: str):
-        """Click the USB icon and select an option by its title."""
-        self.get_element("searchmode-switcher").click()
-        self.get_element("search-mode-switcher-option", labels=[option_title]).click()
-        return self
-
     def assert_search_mode_chip_visible(self):
         """Ensure the search mode indicator (chip) is visible on the left."""
         self.set_chrome_context()
@@ -448,15 +459,24 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_visible(self):
+    def verify_search_mode_is_visible(self, search_mode):
         """Ensure the search mode is visible in URLbar"""
-        self.element_visible("search-mode-chicklet")
+        self.element_visible("searchmode-switcher")
+        self.element_attribute_contains(
+            "searchmode-switcher", "data-l10n-args", search_mode
+        )
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_not_visible(self):
+    def verify_search_mode_is_not_visible(self, search_mode):
         """Ensure the search mode is cleared from URLbar"""
-        self.element_not_visible("search-mode-chicklet")
+        self.element_visible("searchmode-switcher")
+        self.expect(
+            lambda _: (
+                search_mode
+                not in self.fetch("searchmode-switcher").get_attribute("data-l10n-args")
+            )
+        )
         return self
 
     @BasePage.context_chrome
@@ -621,7 +641,8 @@ class Navigation(BasePage):
     def open_searchmode_switcher_settings(self):
         """Open search settings from searchmode switcher in awesome bar"""
         self.click_on("searchmode-switcher")
-        self.click_on("searchmode-switcher-settings")
+        self.element_visible("search-mode-switcher-prefs")
+        self.js_click_on("search-mode-switcher-prefs")
         self.switch_to_new_tab()
         return self
 
@@ -773,6 +794,7 @@ class Navigation(BasePage):
         """
         self.panel_ui.context_click("panel-menu-item-by-title", labels=[item_title])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
+        self.panel_ui.element_not_visible("panel-main-view")
         return self
 
     @BasePage.context_chrome
@@ -1065,18 +1087,6 @@ class Navigation(BasePage):
         )
 
     @BasePage.context_chrome
-    def verify_engine_returned(self, engine: str) -> None:
-        """
-        Verify that the given search engine is visible in the search mode switcher.
-        """
-        engine_locator = self.elements["searchmode-engine"]["selectorData"].format(
-            engine=engine
-        )
-        self.wait.until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, engine_locator))
-        )
-
-    @BasePage.context_chrome
     def verify_https_hidden_in_address_bar(self) -> None:
         """
         Wait until the HTTPS prefix is hidden in the address bar display.
@@ -1173,10 +1183,10 @@ class Navigation(BasePage):
         Waits until the button is visible and clickable before performing the click.
         """
         # Wait until the element is visible and clickable
-        self.expect(lambda _: self.get_element("exit-button-searchmode").is_displayed())
+        self.element_visible("exit-button-searchmode")
 
         # Click the button
-        self.get_element("exit-button-searchmode").click()
+        self.click_on("exit-button-searchmode")
 
     @BasePage.context_chrome
     def type_and_verify(
@@ -1222,26 +1232,6 @@ class Navigation(BasePage):
             return True
 
         return index
-
-    @BasePage.context_chrome
-    def verify_autofill_adaptive_element(
-        self, expected_type: str, expected_url: str
-    ) -> BasePage:
-        """
-        Verify that the adaptive history autofill element has the expected type and URL text.
-        This method handles chrome context switching internally.
-        Arguments:
-            expected_type: Expected type attribute value
-            expected_url: Expected URL fragment to be contained in the element text
-        """
-        autofill_element = self.get_element("search-result-autofill-adaptive-element")
-        actual_type = autofill_element.get_attribute("type")
-        actual_text = autofill_element.text
-
-        assert actual_type == expected_type
-        assert expected_url in actual_text
-
-        return self
 
     @BasePage.context_chrome
     def verify_no_autofill_adaptive_elements(self) -> BasePage:

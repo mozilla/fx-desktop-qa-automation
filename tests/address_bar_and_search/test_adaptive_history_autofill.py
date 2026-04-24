@@ -47,4 +47,7 @@ def test_add_adaptive_history_autofill(driver: Firefox):
     tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[-1])
     nav.type_in_awesome_bar(TYPED_TEXT)
-    nav.verify_autofill_adaptive_element(EXPECTED_TYPE, EXPECTED_URL)
+    # Adaptive autofill is done through Fx Suggest, url in title attr
+    nav.element_attribute_contains(
+        "search-result-autofill-adaptive-element", "title", EXPECTED_URL
+    )

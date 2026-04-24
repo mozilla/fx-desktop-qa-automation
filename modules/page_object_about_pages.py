@@ -583,30 +583,44 @@ class AboutNetworking(BasePage):
         # Use dynamic ID based on the option name
         self.get_element("networking-sidebar-category", labels=[option]).click()
 
-    def get_all_dns_rows(self):
-        """Get all DNS rows with their TRR status in the DNS table"""
-        self.element_visible("dns-content")
-        names = self.find_elements(
-            By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=1]"
-        )
-        trr = self.find_elements(
-            By.XPATH, "//tbody[@id='dns_content']/tr/td[position()=3]"
-        )
-        return list(zip(names, trr))
+    def get_all_dns_rows(self) -> list[tuple[str, str]]:
+        """Get all DNS rows as (host, trr) text tuples.
+
+        Caller must ensure the DNS table is visible before calling. Returns []
+        if an individual row goes stale mid-iteration (table is re-rendering);
+        callers that poll can treat [] as a retry signal.
+        """
+        rows = self.find_elements(By.XPATH, "//tbody[@id='dns_content']/tr")
+        result = []
+        for row in rows:
+            try:
+                cells = row.find_elements(By.TAG_NAME, "td")
+                if len(cells) >= 3:
+                    result.append(
+                        (cells[0].text.strip(), cells[2].text.strip().lower())
+                    )
+            except StaleElementReferenceException:
+                continue
+        return result
 
     def wait_for_dns_entry(self, host: str, trr: str = "true") -> BasePage:
-        """Wait until a DNS entry for the given host appears in the table."""
+        """Wait until a DNS entry for the given host appears in the table.
 
-        # Wait once for the table to be visible
+        Ensures the table is visible before polling.
+        """
         self.element_visible("dns-content")
 
-        # Then poll for the specific row
-        self.wait.until(
-            lambda _: any(
-                name.text == host and trr_el.text == trr
-                for name, trr_el in self.get_all_dns_rows()
-            ),
+        expected_host = host.strip()
+        expected_trr = trr.strip().lower()
+
+        def _entry_present(_):
+            return any(
+                row_host == expected_host and row_trr == expected_trr
+                for row_host, row_trr in self.get_all_dns_rows()
+            )
+
+        self.custom_wait(timeout=30).until(
+            _entry_present,
             message=f"DNS entry for host '{host}' with TRR='{trr}' did not appear",
         )
-
         return self

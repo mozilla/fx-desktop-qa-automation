@@ -112,15 +112,26 @@
     "searchmode-switcher": {
         "selectorData": "searchmode-switcher",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "legacy-searchmode-switcher": {
+        "selectorData": "#searchbar-new .searchmode-switcher",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "legacy-searchbar-switcher-popup": {
-        "selectorData": "searchmode-switcher-popup",
+        "selectorData": "searchmode-switcher-panel-list",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "legacy-searchbar-search-settings": {
-        "selectorData": "searchmode-switcher-popup-search-settings-button",
+        "selectorData": "searchmode-switcher-panel-search-settings-button",
         "strategy": "class",
         "groups": [
             "doNotCache"
@@ -128,6 +139,20 @@
     },
     "search-mode-switcher-option": {
         "selectorData": "#searchmode-switcher-panel-list-urlbar panel-item[label*='{title}']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "search-mode-local-option": {
+        "selectorData": "#searchmode-switcher-panel-list-urlbar panel-item.search-button-{function}",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "search-mode-add-option": {
+        "selectorData": ".searchmode-switcher-addEngine[data-engine-name='{title}']",
         "strategy": "css",
         "groups": [
             "doNotCache"
@@ -172,27 +197,32 @@
         ]
     },
     "sponsored-suggestion": {
-        "doNotCache": true,
-        "selectorData": "urlbarView-group-aria-label",
-        "strategy": "class",
-        "groups": []
+        "selectorData": "div.urlbarView-row[sponsored='']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "firefox-suggest": {
-        "doNotCache": true,
-        "selectorData": "div.urlbarView-row[label='Firefox Suggest'] > span.urlbarView-row-inner",
+        "selectorData": "div.urlbarView-row[label='Firefox Suggest']",
         "strategy": "css",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "suggestion-titles": {
-        "doNotCache": true,
         "selectorData": "urlbarView-title",
         "strategy": "class",
-        "groups": []
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-result-autofill-adaptive-element": {
-        "selectorData": ".//*[@type='autofill_adaptive']",
-        "strategy": "xpath",
-        "groups": []
+        "selectorData": "[data-l10n-id='urlbar-group-firefox-suggest'] .urlbarView-url",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     },
     "search-result": {
         "selectorData": "//div[@data-text-ad]//a",
@@ -628,7 +658,7 @@
         "groups": []
     },
     "exit-button-searchmode": {
-        "selectorData": "toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']",
+        "selectorData": "[data-l10n-id='urlbar-searchmode-exit-button2']",
         "strategy": "css",
         "groups": []
     },

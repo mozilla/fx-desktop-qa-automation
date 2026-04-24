@@ -12,7 +12,6 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021908
     result: pass
     splits:
     - functional1
@@ -58,7 +57,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:
@@ -90,7 +90,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
@@ -171,8 +172,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -219,7 +219,11 @@ address_bar_and_search:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_autoplay_permission_settings_displayed:
@@ -484,7 +488,11 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
 find_toolbar:
@@ -641,11 +649,7 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033605
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
   test_http_site:
@@ -662,11 +666,7 @@ notifications:
     splits:
     - functional2
   test_camera_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_cancel_webextension:
@@ -698,11 +698,7 @@ notifications:
     splits:
     - functional2
   test_microphone_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_notifications_displayed:
@@ -819,12 +815,12 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_facebook_login_autofill_dropdown:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
@@ -835,6 +831,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_no_generated_password_options_with_pp_and_no_credentials:
+    result: pass
+    splits:
+    - functional2
   test_password_csv_correctness:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
@@ -972,11 +972,7 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033620
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -1020,11 +1016,7 @@ printing_ui:
     - functional2
 profile:
   test_set_default_profile:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033608
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
 reader_view:
@@ -1054,7 +1046,11 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_zoom_menu_correlation:
@@ -1222,7 +1218,11 @@ session_restore:
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
@@ -1238,7 +1238,11 @@ session_restore:
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
 sidebar:
@@ -1247,10 +1251,6 @@ sidebar:
     splits:
     - functional2
   test_hide_sidebar_behaviour:
-    result: pass
-    splits:
-    - functional2
-  test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
     result: pass
     splits:
     - functional2
@@ -1263,6 +1263,10 @@ sidebar:
     splits:
     - functional2
   test_sidebar_enabled_in_private_window:
+    result: pass
+    splits:
+    - functional2
+  test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
     result: pass
     splits:
     - functional2
@@ -1291,7 +1295,11 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_mute_unmute:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034572
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_switch_between_horizontal_vertical_tabs:
