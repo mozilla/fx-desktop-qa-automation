@@ -802,6 +802,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_edit_autofill_after_pp_dismissed:
+    result: pass
+    splits:
+    - functional2
   test_edit_generated_password_triggers_autosave:
     result: pass
     splits:
