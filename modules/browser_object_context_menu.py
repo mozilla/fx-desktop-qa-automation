@@ -141,7 +141,7 @@ class ContextMenu(BasePage):
                 "if (!menu) return false;"
                 "menu.open = true;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
-                "if (!popup) return false;"
+                "if (!popup || popup.children.length === 0) return false;"
                 "const item = popup.querySelector('[data-l10n-id=\"genai-menu-open-provider\"]');"
                 "if (!item) return false;"
                 "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"

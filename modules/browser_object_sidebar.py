@@ -327,8 +327,10 @@ class Sidebar(BasePage):
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "return cd?.readyState === 'complete' && "
-                "!cd?.querySelector('#multi-stage-message-root');"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "if (cd.querySelector('#multi-stage-message-root')) return false;"
+                "try { return !!Services.prefs.getStringPref('browser.ml.chat.provider', ''); }"
+                "catch(e) { return false; }"
             )
         )
         return self
