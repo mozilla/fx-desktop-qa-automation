@@ -41,11 +41,11 @@ def test_open_ai_chat_via_context_menu(driver: Firefox):
     sidebar.expect_ai_chat_panel_open()
     sidebar.expect_ai_providers_displayed()
 
-    # Step 2: Select any AI provider, then close the AI chat panel
+    # Select any AI provider, then close the AI chat panel
     sidebar.select_first_ai_provider()
     sidebar.close_ai_chat_panel()
 
-    # Step 3: Right-click tab → Open Chatbot → verify AI chat panel opens
+    # Right-click tab → Open Chatbot → verify AI chat panel opens
     tabs.open_and_switch_to_new_tab()
     tabs.context_click(tabs.get_tab(2))
     context_menu.click_open_chatbot_from_context_menu()
