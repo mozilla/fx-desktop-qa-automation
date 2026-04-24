@@ -188,7 +188,7 @@ jobs:
 
       - name: Install executables
         id: install-fx
-        if: ${{ steps.install-fx.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
         run: |
