@@ -377,6 +377,12 @@ jobs:
           pipenv install;
           echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
           echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
           ./scripts/collect_executables.sh
           ./firefox/firefox --version;
           #. ./keyring-unlock.sh;
