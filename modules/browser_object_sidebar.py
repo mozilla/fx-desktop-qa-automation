@@ -249,13 +249,6 @@ class Sidebar(BasePage):
         self.wait.until(_is_unavailable)
         return self
 
-    def expect_ai_chat_sidebar_open(self) -> "Sidebar":
-        """Verify the AI Chat sidebar panel is open via the sidebarcommand attribute on sidebar-box."""
-        self.element_attribute_contains(
-            "sidebar-box", "sidebarcommand", "viewGenaiChatSidebar"
-        )
-        return self
-
     @BasePage.context_chrome
     def close_ai_chat_panel(self) -> "Sidebar":
         """Close the AI chat panel by clicking its close button.
@@ -319,8 +312,16 @@ class Sidebar(BasePage):
                 "const label = cd.querySelector('label.select-item');"
                 "if (!label) return false;"
                 "label.click();"
+                "return true;"
+            )
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
                 "const continueBtn = cd.querySelector('button[value=\"primary_button\"]');"
-                "if (continueBtn) continueBtn.click();"
+                "if (!continueBtn) return false;"
+                "continueBtn.click();"
                 "return true;"
             )
         )
