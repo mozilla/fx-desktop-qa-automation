@@ -322,7 +322,7 @@ jobs:
       - name: Run Tests in MacOS (Headed)
         if: ${{ steps.install-fx.conclusion == 'success' && always() && inputs.dry_run != true }}
         env:
-          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
           rm -f ./pyproject.toml
