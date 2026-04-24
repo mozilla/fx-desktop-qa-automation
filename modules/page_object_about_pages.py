@@ -469,16 +469,10 @@ class AboutLogins(BasePage):
 
     def dismiss_pp_if_appears(self, timeout=3):
         """
-        Dismiss the Primary Password prompt if it appears.
-
-        This method waits for a short period of time for the primary password
-        dialog to be triggered. If the dialog is present, it will be dismissed.
-        If no dialog appears within the timeout, execution continues silently.
+        Dismiss the Primary Password alert if it appears within timeout seconds
         """
         try:
-            self.custom_wait(timeout=timeout).until(
-                lambda d: d.switch_to.alert
-            )
+            self.custom_wait(timeout=timeout).until(lambda d: d.switch_to.alert)
             self.driver.switch_to.alert.dismiss()
         except Exception:
             # No alert appeared within timeout → continue test

@@ -164,12 +164,16 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     web_page = open_facebook_login(driver, temp_selectors)
 
     web_page.wait.until(
-        lambda _: web_page.get_element("facebook-username-field").get_attribute("value")
-        == USERNAME_1
+        lambda _: (
+            web_page.get_element("facebook-username-field").get_attribute("value")
+            == USERNAME_1
+        )
     )
     web_page.wait.until(
-        lambda _: web_page.get_element("facebook-password-field").get_attribute("value")
-        == PASSWORD_1
+        lambda _: (
+            web_page.get_element("facebook-password-field").get_attribute("value")
+            == PASSWORD_1
+        )
     )
 
     # Step 4: add second credential for same origin
@@ -205,12 +209,14 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     web_page = open_facebook_login(driver, temp_selectors)
 
     web_page.wait.until(
-        lambda _: web_page.get_element("facebook-username-field").get_attribute("value")
-        == ""
+        lambda _: (
+            web_page.get_element("facebook-username-field").get_attribute("value") == ""
+        )
     )
     web_page.wait.until(
-        lambda _: web_page.get_element("facebook-password-field").get_attribute("value")
-        == ""
+        lambda _: (
+            web_page.get_element("facebook-password-field").get_attribute("value") == ""
+        )
     )
 
     username_field = web_page.get_element("facebook-username-field")
