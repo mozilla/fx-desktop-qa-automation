@@ -87,6 +87,9 @@ jobs:
           rm ./pyproject.toml;
           mv ./config/ci_pyproject.toml ./pyproject.toml;
           pipenv install;
+          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
+          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
         if: ${{ inputs.dry_run != true }}
