@@ -378,7 +378,7 @@ jobs:
           echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
           echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
-      - name: Install dependencies
+      - name: Install executables
         if: ${{ steps.setup.conclusion == 'success' }}
         id: install-fx
         env:
