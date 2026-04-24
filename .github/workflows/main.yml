@@ -253,6 +253,9 @@ jobs:
           echo "Running smoke tests on supplied executable"
 
       - name: Install dependencies
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run: |
           mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
@@ -265,8 +268,8 @@ jobs:
           echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
-        id: setup
-        if: ${{ inputs.dry_run != true }}
+        id: install-fx
+        if: ${{ inputs.dry_run != true && steps.setup.conclusion == 'success'}}
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
@@ -289,7 +292,7 @@ jobs:
       - name: Test Fx Version (MacOS)
         if: |
           ${{
-            steps.setup.conclusion == 'success' &&
+            steps.install-fx.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
             inputs.dry_run != true
           }}
@@ -303,7 +306,7 @@ jobs:
       - name: Run Tests in MacOS
         if: |
           ${{
-            steps.setup.conclusion == 'success' &&
+            steps.install-fx.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
             inputs.dry_run != true
           }}
@@ -317,7 +320,7 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Run Tests in MacOS (Headed)
-        if: ${{ steps.setup.conclusion == 'success' && always() && inputs.dry_run != true }}
+        if: ${{ steps.install-fx.conclusion == 'success' && always() && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true

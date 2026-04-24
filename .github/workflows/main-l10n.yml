@@ -80,24 +80,27 @@ jobs:
           echo "Running l10n tests on supplied executable";
 
       - name: Install dependencies
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run: |
-          mkdir -p artifacts/;
+          mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
           mv ./config/ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
+          pipenv install
           if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
           echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
           echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
-        if: ${{ inputs.dry_run != true }}
-        id: setup
+        id: install-fx
+        if: ${{ inputs.dry_run != true && steps.setup.conclusion == 'success'}}
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
-          echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT";
+          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT"
 
       - name: Select Tests (macOS)
         run: |
@@ -115,7 +118,7 @@ jobs:
           fi
 
       - name: Run L10N Tests in MacOS
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ steps.install-fx.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
