@@ -250,6 +250,31 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def expect_ai_chat_sidebar_open(self):
+        """Verify the sidebar is open and showing the AI Chat panel."""
+        self.element_attribute_contains(
+            "sidebar-box", "sidebarcommand", "viewGenaiChatSidebar"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_summarize_button_visible(self) -> "Sidebar":
+        """Verify the Summarize page button is visible in the AI Chat panel.
+
+        The button lives inside <browser id="sidebar">'s contentDocument (chrome://browser/content/genai/chat.html).
+        Selenium has no API to switch into an embedded XUL <browser> element, so JS is used to access
+        contentDocument and query the button directly.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd) return false;"
+                "return cd.getElementById('summarize-button') !== null;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 

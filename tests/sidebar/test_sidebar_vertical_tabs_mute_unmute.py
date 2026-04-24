@@ -14,7 +14,6 @@ def test_case():
 @pytest.fixture()
 def add_to_prefs_list():
     return [
-        ("sidebar.revamp", True),
         ("browser.tabs.delayHidingAudioPlayingIconMS", "200"),
     ]
 
