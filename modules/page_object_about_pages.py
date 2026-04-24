@@ -472,10 +472,9 @@ class AboutLogins(BasePage):
         Dismiss the Primary Password alert if it appears within timeout seconds
         """
         try:
-            self.custom_wait(timeout=timeout).until(lambda d: d.switch_to.alert)
+            WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
             self.driver.switch_to.alert.dismiss()
         except Exception:
-            # No alert appeared within timeout → continue test
             pass
         return self
 

@@ -59,6 +59,7 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     # Go to the test website
     tabs.open_and_switch_to_new_tab()
     login_autofill.open()
+    about_logins.dismiss_pp_if_appears()
 
     # Fill in both the username and password with new credentials and dismiss pp if appears
     login_form = LoginAutofill.LoginForm(login_autofill)
