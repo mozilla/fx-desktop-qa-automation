@@ -114,14 +114,17 @@ class ContextMenu(BasePage):
                 "if (!menu) return false;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
                 "if (!popup) return false;"
-                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
-                "if (!item) return false;"
-                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
-                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
-                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
-                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
-                "return true;"
+                "return popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]') !== null;"
             )
+        )
+        self.driver.execute_script(
+            "const menu = document.getElementById('context_askChat');"
+            "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+            "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
+            "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
         )
         return self
 
@@ -135,9 +138,12 @@ class ContextMenu(BasePage):
         in the menupopup DOM. Pure Selenium cannot hover XUL elements across GeckoDriver's chrome
         context boundary; ActionChains.move_to_element does not cross that boundary.
 
-        After provider setup the submenu no longer contains genai-menu-open-provider; instead
-        genai-menu-choose-chatbot ('Choose an AI Chatbot') is the item that reopens the panel.
-        The selector matches any visible item whose l10n-id or label suggests opening or chat.
+        menu.open = true must remain inside the retry loop: the XUL submenu closes between
+        separate execute_script calls, so the standard check-then-act split cannot be used here.
+
+        The l10n-id for the open-chatbot item varies across Firefox builds; flexible matching on
+        l10n-id and label is intentional — targeting a hardcoded id caused timeouts in the
+        current build where that exact id is absent.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
