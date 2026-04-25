@@ -375,12 +375,21 @@ jobs:
           rm ./pyproject.toml;
           mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
           pipenv install;
+          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+
+      - name: Install executables
+        if: ${{ steps.setup.conclusion == 'success' }}
+        id: install-fx
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
           ./scripts/collect_executables.sh
           ./firefox/firefox --version;
           #. ./keyring-unlock.sh;
 
       - name: Select Tests (Linux)
-        if: ${{ steps.setup.conclusion == 'success' }}
+        if: ${{ steps.install-fx.conclusion == 'success' }}
         id: select
         run: |
           pipenv run python -m scripts.choose_test_split
@@ -396,7 +405,7 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
-        if: ${{ steps.setup.conclusion == 'success' && always() && inputs.dry_run != true }}
+        if: ${{ steps.install-fx.conclusion == 'success' && always() && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
           REPORTABLE: true
