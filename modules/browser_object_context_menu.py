@@ -127,13 +127,17 @@ class ContextMenu(BasePage):
 
     @BasePage.context_chrome
     def click_open_chatbot_from_context_menu(self) -> BasePage:
-        """Click the 'Open Chatbot' item from the AI Chat submenu in the tab context menu.
+        """Click the item that opens the AI chatbot panel from the tab context menu.
 
         The tabContextMenu must be open before calling this (via tabs.context_click). Setting
         menu.open = true on the XUL <menu> element opens the submenu inline while the parent
         tabContextMenu is still open, which triggers provider-specific children to be generated
         in the menupopup DOM. Pure Selenium cannot hover XUL elements across GeckoDriver's chrome
         context boundary; ActionChains.move_to_element does not cross that boundary.
+
+        After provider setup the submenu no longer contains genai-menu-open-provider; instead
+        genai-menu-choose-chatbot ('Choose an AI Chatbot') is the item that reopens the panel.
+        The selector matches any visible item whose l10n-id or label suggests opening or chat.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -142,7 +146,15 @@ class ContextMenu(BasePage):
                 "menu.open = true;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
                 "if (!popup || popup.children.length === 0) return false;"
-                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-open-provider\"]');"
+                "const items = Array.from(popup.children).filter("
+                "  item => !item.hidden && !item.disabled"
+                ");"
+                "const item = items.find(item => {"
+                "  const l10n = item.getAttribute('data-l10n-id') || '';"
+                "  const label = (item.getAttribute('label') || '').toLowerCase();"
+                "  return l10n.includes('open') || l10n.includes('provider') ||"
+                "         label.includes('open') || label.includes('chat');"
+                "});"
                 "if (!item) return false;"
                 "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
                 "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"

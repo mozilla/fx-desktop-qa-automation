@@ -250,32 +250,27 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def close_ai_chat_panel(self) -> "Sidebar":
-        """Close the AI chat panel by clicking its close button.
+    def close_ai_chat_panel(self):
+        """Close the AI chat sidebar using Firefox's SidebarController.
 
-        The close button (button#main-button[title='Close']) lives inside Lit web components
-        behind nested shadow DOM in browser#sidebar's contentDocument. JS recursively pierces
-        shadow roots to find and click it — Selenium cannot reach inside shadow DOM directly.
+        The panel DOM structure differs between the onboarding and active-chat views, making
+        a CSS selector for the Close button unreliable. Calling SidebarController.hide()
+        directly is version-independent and avoids traversing nested shadow DOM.
         """
+        self.driver.execute_script(
+            "if (typeof SidebarController !== 'undefined') SidebarController.hide();"
+        )
         self.wait.until(
             lambda _: self.driver.execute_script(
-                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd || cd.readyState !== 'complete') return false;"
-                "function search(root) {"
-                "  const btn = root.querySelector('button#main-button[title=\"Close\"]');"
-                "  if (btn) { btn.click(); return true; }"
-                "  for (const host of root.querySelectorAll('*')) {"
-                "    if (host.shadowRoot && search(host.shadowRoot)) return true;"
-                "  }"
-                "  return false;"
-                "}"
-                "return search(cd);"
+                "const box = document.getElementById('sidebar-box');"
+                "return !box || box.hidden || "
+                "box.getAttribute('sidebarcommand') !== 'viewGenaiChatSidebar';"
             )
         )
         return self
 
     @BasePage.context_chrome
-    def expect_ai_chat_panel_open(self) -> "Sidebar":
+    def expect_ai_chat_panel_open(self):
         """Verify the AI chat panel is loaded in the sidebar by checking for the onboarding root."""
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -287,7 +282,7 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def expect_ai_providers_displayed(self) -> "Sidebar":
+    def expect_ai_providers_displayed(self):
         """Verify that AI provider radio options are shown in the chatbot onboarding panel."""
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -299,7 +294,7 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def select_first_ai_provider(self) -> "Sidebar":
+    def select_first_ai_provider(self):
         """Select the first AI provider via its label and confirm with the Continue button.
 
         The radio inputs are sr-only so the enclosing label must be clicked instead.
@@ -345,7 +340,22 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def expect_summarize_button_visible(self) -> "Sidebar":
+    def expect_ai_chat_sidebar_closed(self):
+        """Wait until the AI chat panel is fully hidden.
+
+        SidebarController.hide() is async — this guard ensures sidebar-box.hidden is true
+        before the caller proceeds to interact with tabs, preventing a state where the
+        sidebar contentDocument still holds focus.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return document.getElementById('sidebar-box')?.hidden === true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_summarize_button_visible(self):
         """Verify the Summarize page button is visible in the AI Chat panel.
 
         The button lives inside <browser id="sidebar">'s contentDocument (chrome://browser/content/genai/chat.html).

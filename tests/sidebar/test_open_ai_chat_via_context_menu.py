@@ -15,6 +15,7 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("browser.ml.chat.enabled", True),
+        ("browser.ml.chat.page", True),
     ]
 
 
@@ -36,7 +37,7 @@ def test_open_ai_chat_via_context_menu(driver: Firefox):
 
     # Right-click tab → Choose an AI Chatbot → verify panel opens with provider options
     tabs.context_click(tabs.get_tab(1))
-    context_menu.context_click("context-ask-chat")
+    context_menu.click_context_item("context-ask-chat")
     context_menu.click_choose_ai_chatbot_from_context_menu()
     sidebar.expect_ai_chat_panel_open()
     sidebar.expect_ai_providers_displayed()
