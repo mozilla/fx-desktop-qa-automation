@@ -715,3 +715,16 @@ class TabBar(BasePage):
                 self.driver.switch_to.window(handle)
                 urls.add(self.driver.current_url)
         return urls
+
+    @BasePage.context_chrome
+    def context_click_tabbar(self) -> BasePage:
+        all_tabs = self.get_elements("all-tabs")
+        last_tab = all_tabs[-1]
+
+        # Move to the last tab, then offset by its full width + a bit more to land after it
+        self.actions.move_to_element_with_offset(
+            last_tab,
+            last_tab.size["width"],  # move to the right edge of the last tab
+            last_tab.size["height"] // 2,
+        ).context_click().perform()
+        return self
