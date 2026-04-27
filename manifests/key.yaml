@@ -3,19 +3,21 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_adaptive_history_removal:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_add_engine_address_bar:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021908
     result: pass
     splits:
     - functional1
@@ -35,6 +37,7 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_bing_search_codes:
     result: pass
@@ -50,16 +53,19 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_ctrl_enter_completes_link_and_can_refresh:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_ctrl_enter_fixes_url:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_ddg_search_codes:
     result: pass
@@ -90,6 +96,7 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_glean_serp_impression_js_api:
     result: pass
@@ -120,11 +127,13 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_open_link_in_new_container_tab:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_paste_and_go_opens_correct_url:
     result: pass
@@ -177,12 +186,14 @@ address_bar_and_search:
   test_search_engine_selector:
     result: pass
     splits:
-    - smoke
     - all
+    - esr140
+    - smoke
   test_search_mode_appears_after_input:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_search_mode_change_tab:
     result: pass
@@ -203,6 +214,7 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_search_mode_update_on_alias_prefix:
     result: pass
@@ -256,6 +268,7 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_switch_to_existing_tab_when_having_the_same_URL:
     result: pass
@@ -283,11 +296,13 @@ audio_video:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_autoplay_permission_settings_displayed:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_autoplay_sound_blocking_background_tab:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2010227
@@ -299,6 +314,7 @@ audio_video:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_html5_video_playback_controls:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026662
@@ -331,22 +347,26 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_bookmark_via_bookmark_menu:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_bookmark_website_via_star_button:
     result: pass
     splits:
     - smoke
     - ci
+    - esr140
     - all
   test_clear_all_history:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_clear_recent_history_displayed:
     result: pass
@@ -382,6 +402,7 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_edit_bookmark_via_star_button_not_saving_realtime:
     result: pass
@@ -415,6 +436,7 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_open_bookmark_in_new_window_via_toolbar_context_menu:
     result: pass
@@ -425,6 +447,7 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_open_bookmarks_from_toolbar:
     result: pass
@@ -435,6 +458,7 @@ bookmarks_and_history:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_opened_website_in_new_tab_present_in_hamburger_history_menu:
     result: pass
@@ -455,16 +479,19 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_toggle_bookmarks_toolbar:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_user_can_forget_history:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
 downloads:
   test_add_mime_type_doc:
@@ -514,6 +541,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_download_mp3_and_check_extension:
     result: pass
@@ -539,6 +567,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_install_unsigned_addons:
     result: pass
@@ -558,6 +587,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_set_always_ask_file_type:
     result: pass
@@ -573,6 +603,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_verify_telemetry_downloads_panel_open:
     result: pass
@@ -584,6 +615,7 @@ drag_and_drop:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_copy_from_an_editor_paste_in_another:
     result: pass
@@ -610,22 +642,26 @@ find_toolbar:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_find_toolbar_nav:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_find_toolbar_search:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
 form_autofill:
   test_address_autofill_attribute:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_autofill_cc_cvv:
     result: pass
@@ -656,11 +692,13 @@ form_autofill:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_clear_form:
     result: pass
     splits:
     - functional1
+    - esr140
     - all
   test_create_new_cc_profile:
     result: pass
@@ -728,6 +766,7 @@ geolocation:
       win: unstable
     splits:
     - functional2
+    - esr140
     - all
   test_geolocation_shared_via_w3c_api:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
@@ -737,12 +776,14 @@ geolocation:
       win: unstable
     splits:
     - functional2
+    - esr140
     - all
 language_packs:
   test_language_pack_install_addons:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_language_pack_install_preferences:
     result: unavailable on nightly
@@ -753,23 +794,27 @@ menus:
   test_copy_paste_actions:
     result: pass
     splits:
-    - smoke
-    - ci
     - all
+    - ci
+    - esr140
+    - smoke
   test_frequently_used_context_menu:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_hyperlink_context_menu:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_image_context_menu_actions:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_tab_context_menu_actions:
     result: pass
@@ -790,36 +835,32 @@ meta:
   test_version:
     result: pass
     splits:
+    - esr140
     - all
 networking:
   test_default_dns_protection:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_http_site:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
 notifications:
   test_audio_video_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
     - all
   test_camera_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_cancel_webextension:
     result: pass
@@ -830,11 +871,13 @@ notifications:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_deny_screen_capture:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_downloads_button_is_displayed:
     result: pass
@@ -850,31 +893,32 @@ notifications:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_geolocation_prompt_presence:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_microphone_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_notifications_displayed:
     result: pass
     splits:
     - smoke
     - ci
+    - esr140
     - all
   test_screen_share_permission_prompt:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_webextension_completed_installation_successfully_displayed:
     result: pass
@@ -896,6 +940,7 @@ password_manager:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_about_logins_navigation_from_about_preferences:
     result: pass
@@ -921,6 +966,7 @@ password_manager:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_about_logins_password_show_hide_button:
     result: pass
@@ -951,16 +997,19 @@ password_manager:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_add_password_save_valid_data:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_add_primary_password:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_auto_saved_generated_password_context_menu:
     result: pass
@@ -991,11 +1040,13 @@ password_manager:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_delete_primary_password:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_edit_generated_password_triggers_autosave:
     result: pass
@@ -1008,11 +1059,7 @@ password_manager:
     - functional2
     - all
   test_multiple_saved_logins:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
     - all
@@ -1077,11 +1124,13 @@ password_manager:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_saved_hyperlink_redirects_to_corresponding_page:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_taobao_password_management:
     result: pass
@@ -1130,11 +1179,13 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_pdf_download:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
@@ -1153,8 +1204,9 @@ pdf_viewer:
   test_pdf_navigation:
     result: pass
     splits:
-    - smoke
     - all
+    - esr140
+    - smoke
   test_zoom_pdf_viewer:
     result: pass
     splits:
@@ -1185,11 +1237,13 @@ preferences:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_clear_cookie_data:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_firefox_home_new_tabs:
     result: pass
@@ -1205,6 +1259,7 @@ preferences:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_manage_cookie_data:
     result: pass
@@ -1226,13 +1281,15 @@ printing_ui:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_print_preview:
     result: pass
     splits:
-    - smoke
+    - esr140
     - ci
     - all
+    - smoke
   test_print_to_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974011
     result: unstable
@@ -1244,13 +1301,15 @@ profile:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
 reader_view:
   test_improved_type_control_panel:
     result: pass
     splits:
-    - smoke
+    - esr140
     - all
+    - smoke
   test_reader_view_close_sidebar:
     result: pass
     splits:
@@ -1298,6 +1357,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_blocking_cryptominers:
     result: pass
@@ -1318,11 +1378,13 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_bookmarks_toolbar_present_in_private_browsing:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_cache_is_cleared_via_end_private_session_button:
     result: pass
@@ -1333,6 +1395,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_cross_site_tracking_cookies_blocked:
     result: pass
@@ -1348,6 +1411,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_custom_block_suspected_fingerprinters_only_in_private_windows:
     result: pass
@@ -1368,11 +1432,13 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_downloads_from_private_not_leaked:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
     result: pass
@@ -1383,11 +1449,13 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_https_enabled_private_browsing:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
     result: pass
@@ -1398,11 +1466,13 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_no_cached_file_in_private_browsing:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_no_trackers_detected:
     result: pass
@@ -1413,16 +1483,19 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+    - esr140
     - all
   test_open_private_browsing_via_keyboard:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_phishing_and_malware_warnings:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_private_browser_password_doorhanger:
     result: pass
@@ -1437,11 +1510,13 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_private_session_history_exclusion:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_private_window_from_panelui:
     result: pass
@@ -1481,8 +1556,9 @@ security_and_privacy:
   test_undo_close_tab_private_browsing:
     result: pass
     splits:
-    - smoke
+    - esr140
     - all
+    - smoke
 session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
@@ -1503,6 +1579,7 @@ session_restore:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_restore_multiple_closed_tabs_at_once:
     result: pass
@@ -1534,6 +1611,7 @@ sidebar:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
   test_sidebar_enabled_in_private_window:
     result: pass
@@ -1573,6 +1651,7 @@ sidebar:
   test_sidebar_vertical_tabs_mute_unmute:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_switch_between_horizontal_vertical_tabs:
@@ -1617,12 +1696,14 @@ tabs:
   test_active_tab:
     result: pass
     splits:
-    - smoke
+    - esr140
     - ci
     - all
+    - smoke
   test_change_position_of_pinned_tabs:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_close_pinned_tab_via_mouse:
@@ -1644,6 +1725,7 @@ tabs:
   test_edit_tab_groups:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_group_tabs:
@@ -1659,6 +1741,7 @@ tabs:
   test_list_all_tabs:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_move_multi_selected_tabs:
@@ -1678,6 +1761,7 @@ tabs:
       mac: pass
       win: unstable
     splits:
+    - esr140
     - functional2
     - all
   test_navigation_multiple_tabs:
@@ -1688,8 +1772,9 @@ tabs:
   test_open_bookmark_in_new_tab:
     result: pass
     splits:
-    - smoke
+    - esr140
     - all
+    - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
     result: pass
     splits:
@@ -1698,23 +1783,27 @@ tabs:
   test_open_new_tab:
     result: pass
     splits:
-    - smoke
+    - esr140
     - all
+    - smoke
   test_open_new_tab_keys:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_open_new_tab_via_hyperlink:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_pin_tab:
     result: pass
     splits:
-    - smoke
+    - esr140
     - all
+    - smoke
   test_pin_unpin_selected_tabs:
     result: pass
     splits:
@@ -1757,11 +1846,13 @@ tabs:
   test_reopen_tabs_through_keys:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_restore_closed_tabs_previous_groups:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
   test_save_and_close_a_tab_group:
@@ -1777,17 +1868,20 @@ tabs:
   test_ungroup_tabs:
     result: pass
     splits:
+    - esr140
     - functional2
     - all
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass
     splits:
-    - smoke
-    - ci
     - all
+    - ci
+    - esr140
+    - smoke
   test_installed_theme_enabled:
     result: pass
     splits:
     - functional2
+    - esr140
     - all
