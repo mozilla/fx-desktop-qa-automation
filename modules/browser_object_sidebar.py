@@ -250,6 +250,90 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def close_ai_chat_panel(self):
+        """Close the AI chat sidebar using Firefox's SidebarController.
+
+        The panel DOM structure differs between the onboarding and active-chat views, making
+        a CSS selector for the Close button unreliable. Calling SidebarController.hide()
+        directly is version-independent and avoids traversing nested shadow DOM.
+        """
+        self.driver.execute_script(
+            "if (typeof SidebarController !== 'undefined') SidebarController.hide();"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const box = document.getElementById('sidebar-box');"
+                "return !box || box.hidden || "
+                "box.getAttribute('sidebarcommand') !== 'viewGenaiChatSidebar';"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_chat_panel_open(self):
+        """Verify the AI chat panel is loaded in the sidebar by checking for the onboarding root."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "return cd?.readyState === 'complete' && "
+                "Boolean(cd?.querySelector('#multi-stage-message-root'));"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_providers_displayed(self):
+        """Verify that AI provider radio options are shown in the chatbot onboarding panel."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelectorAll('input[type=\"radio\"]').length > 0;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_first_ai_provider(self):
+        """Select the first AI provider via its label and confirm with the Continue button.
+
+        The radio inputs are sr-only so the enclosing label must be clicked instead.
+        Waits until the onboarding screen is gone, confirming the provider was saved.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelector('label.select-item') !== null;"
+            )
+        )
+        self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "cd?.querySelector('label.select-item')?.click();"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelector('button[value=\"primary_button\"]') !== null;"
+            )
+        )
+        self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "cd?.querySelector('button[value=\"primary_button\"]')?.click();"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "if (cd.querySelector('#multi-stage-message-root')) return false;"
+                "try { return !!Services.prefs.getStringPref('browser.ml.chat.provider', ''); }"
+                "catch(e) { return false; }"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def expect_ai_chat_sidebar_open(self):
         """Verify the sidebar is open and showing the AI Chat panel."""
         self.element_attribute_contains(
@@ -258,7 +342,7 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def expect_summarize_button_visible(self) -> "Sidebar":
+    def expect_summarize_button_visible(self):
         """Verify the Summarize page button is visible in the AI Chat panel.
 
         The button lives inside <browser id="sidebar">'s contentDocument (chrome://browser/content/genai/chat.html).

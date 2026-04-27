@@ -1254,6 +1254,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_open_ai_chat_via_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
