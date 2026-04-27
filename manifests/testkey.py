@@ -433,6 +433,42 @@ class TestKey:
 
         return sorted(splits)
 
+    def update_key_based_on_pytest_output(
+        self, results_file: str, rubric: dict, overwrite_split=False
+    ):
+        """
+        Given a dict where the key is a valid PyTest test outcome (e.g. PASSED,
+        FAILED, SKIPPED) and the value is a TestKey dict fragment, update the
+        TestKey entry to include the fragment (|= operator). If "splits" is a key
+        in rubric, the unique values will be added to existing split, unless
+        overwrite_split is True, in which case the existing splits are overwritten.
+        """
+        results_test = open(results_file).read()
+        for line in results_test.split("\n"):
+            line = line.strip()
+            # print(f"%{line}%")
+            for result, fragment in rubric.items():
+                if result in line:
+                    filename = line.split(result)[-1].strip()
+                    print(filename)
+                    try:
+                        entry = self.get_entry_from_filename(filename)
+                    except KeyError:
+                        entry = self.get_entry_from_filename(filename.split("::")[0])
+                    if entry is None:
+                        continue
+                    test = list(entry.values())[0]
+                    test_name = list(test.keys())[0]
+                    test_info = list(test.values())[0]
+                    suite = list(entry.keys())[0]
+                    print(suite, test)
+                    all_splits = list(set(test_info["splits"] + fragment["splits"]))
+                    self.manifest[suite][test_name] |= fragment
+                    if fragment.get("splits") and not overwrite_split:
+                        self.manifest[suite][test_name]["splits"] = all_splits
+                    print("===written===")
+            self.write()
+
     def addtests(self, interactive=True):
         """
         If a test in the directory is not in the manifest, ask questions
