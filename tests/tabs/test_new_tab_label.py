@@ -57,6 +57,21 @@ def test_new_tab_label(driver: Firefox):
         # Switch back to about:telemetry and refresh to pick up updated scalar
         driver.switch_to.window(driver.window_handles[1])
         driver.refresh()
+
+        # Debug: check what value is actually there
+        print(
+            "Has value 1?",
+            about_telemetry.is_telemetry_keyed_scalars_entry_present(
+                ["context-openANewTab", "1"]
+            ),
+        )
+        print(
+            "Has value 2?",
+            about_telemetry.is_telemetry_keyed_scalars_entry_present(
+                ["context-openANewTab", "2"]
+            ),
+        )
+        print("Window count:", len(driver.window_handles))
         assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
             ["context-openANewTab", "2"]
         ), "Expected context-openANewTab to have value 2 after Step 2"
