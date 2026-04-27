@@ -4,7 +4,6 @@ from time import sleep
 from typing import List, Literal
 
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -224,45 +223,27 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(str(option_id), "checked", "")
         return self
 
+    def click_zoom_text_only(self) -> BasePage:
+        """
+        Toggles the Zoom Text Only checkbox in about:preferences.
+        Uses JS to pierce the moz-checkbox shadow root.
+        """
+        moz_checkbox = self.get_element("zoom-text-only")
+        self.driver.execute_script("arguments[0].click()", moz_checkbox)
+        return self
+
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
-        Focuses the inner <select> inside moz-select's shadow root,
-        then uses arrow keys to navigate to the target zoom level.
+        Gets the inner <select> from moz-select's shadow root and uses
+        Selenium's Select class to choose the target zoom level.
         """
-        if zoom_percentage not in self.ZOOM_LEVELS:
-            raise ValueError(
-                f"{zoom_percentage}% is not a valid zoom level. "
-                f"Valid values: {self.ZOOM_LEVELS}"
-            )
         moz_select = self.get_element("default-zoom-dropdown")
-        actual = int(
-            self.driver.execute_script(
-                "return arguments[0].shadowRoot.querySelector('select').value",
-                moz_select,
-            )
+        inner_select = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('select')",
+            moz_select,
         )
-        for _ in range(3):
-            steps = self.ZOOM_LEVELS.index(zoom_percentage) - self.ZOOM_LEVELS.index(
-                actual
-            )
-            if steps == 0:
-                break
-            key = Keys.ARROW_DOWN if steps > 0 else Keys.ARROW_UP
-            self.driver.execute_script(
-                "arguments[0].shadowRoot.querySelector('select').focus()",
-                moz_select,
-            )
-            ActionChains(self.driver).send_keys(key * abs(steps)).perform()
-            actual = int(
-                self.driver.execute_script(
-                    "return arguments[0].shadowRoot.querySelector('select').value",
-                    moz_select,
-                )
-            )
-        assert actual == zoom_percentage, (
-            f"Failed to set zoom to {zoom_percentage}%, got {actual}%"
-        )
+        Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
@@ -270,10 +251,31 @@ class AboutPrefs(BasePage):
         From the applications list that handles how downloaded media is used,
         select a content type and action
         """
-        el = self.get_element("actions-menu", labels=[content_type])
-        el.click()
-        self.click_on("actions-menu-option", labels=[content_type, action])
-        self.wait.until(lambda _: el.get_attribute("label") == action)
+        menu = self.get_element("actions-menu", labels=[content_type])
+        items = menu.find_elements(By.TAG_NAME, "menuitem")
+        target_index = next(
+            (
+                i
+                for i, item in enumerate(items)
+                if item.get_attribute("label") == action
+            ),
+            None,
+        )
+        if target_index is None:
+            raise ValueError(
+                f"Option '{action}' not found in actions menu for {content_type}"
+            )
+        self.click_on("actions-menu", labels=[content_type])
+        self.wait.until(
+            lambda _: menu.get_attribute("open") is not None
+        )  # wait for popup
+        menu.send_keys(Keys.HOME)
+        for _ in range(target_index):
+            menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
+        self.wait.until(
+            lambda _: menu.get_attribute("label") == action
+        )  # verify selection
         return self
 
     def select_trackers_to_block(self, *options):
@@ -958,9 +960,9 @@ class AboutPrefs(BasePage):
 
     def enable_show_sidebar(self):
         """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
-        checkbox = self.get_element("show-sidebar-checkbox")
-        if not checkbox.is_selected():
-            self.click_on("show-sidebar-checkbox")
+        if not self.get_element("show-sidebar-checkbox").get_attribute("checked"):
+            self.click_on("show-sidebar-shadow-box")
+        self.element_has_attribute("show-sidebar-checkbox", "checked")
         return self
 
     def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
@@ -968,6 +970,34 @@ class AboutPrefs(BasePage):
         self.wait.until(
             lambda _: self.element_has_text("select-wrapper-button", engine_name)
         )
+        return self
+
+    def open_primary_password_popup(self, browser_actions):
+        """
+        Opens the 'Change Primary Password' popup by checking the checkbox
+        and switches to the iframe context.
+        """
+        self.click_on("use-primary-password")
+        popup = self.get_element("browser-popup")
+        browser_actions.switch_to_iframe_context(popup)
+        return self
+
+    def set_primary_password(self, password):
+        """
+        Sets a new primary password.
+        """
+        self.get_element("enter-new-password").send_keys(password)
+        self.get_element("reenter-new-password").send_keys(password)
+        self.click_on("submit-password")
+        return self
+
+    def accept_alert_and_verify_text(self, expected_text: str):
+        """
+        Verifies alert text and accepts it.
+        """
+        alert = self.get_alert()
+        assert expected_text in alert.text
+        alert.accept()
         return self
 
 

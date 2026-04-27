@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_sidebar import Sidebar
+from modules.browser_object import Sidebar
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -17,8 +17,8 @@ def add_to_prefs_list():
 
 def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     """
-    C2639190 - Verify the sidebar can be opened and closed using the toolbar button after enabling Show Sidebar from
-    about:preferences.
+    C2639190 - Verify the sidebar can be opened and closed using the toolbar button after enabling
+    Show Sidebar from about:preferences.
     """
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="general")

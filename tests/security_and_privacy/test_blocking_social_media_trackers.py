@@ -7,7 +7,7 @@ from modules.page_object import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "446406"
+    return "3054913"
 
 
 SOCIAL_MEDIA_TRACKERS_URL = (

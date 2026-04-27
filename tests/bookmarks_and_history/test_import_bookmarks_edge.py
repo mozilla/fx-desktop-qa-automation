@@ -21,26 +21,21 @@ def edge_bookmarks(sys_platform, home_folder):
     C2084641: Verify that the user can Import Bookmarks from Microsoft Edge
     """
     source = os.path.join("data", "Edge_Bookmarks")
-    if sys_platform.lower().startswith("win"):
-        target = os.path.join(
-            home_folder,
-            "AppData",
-            "Local",
-            "Microsoft",
-            "Edge",
-            "User Data",
-            "Default",
-            "Bookmarks",
-        )
-    elif sys_platform == "Darwin":
-        target = os.path.join(
-            home_folder,
-            "Library",
-            "Application Support",
-            "Microsoft Edge",
-            "Default",
-            "Bookmarks",
-        )
+
+    if not sys_platform.lower().startswith("win"):
+        pytest.skip("Edge bookmarks import test is Windows-only")
+
+    target = os.path.join(
+        home_folder,
+        "AppData",
+        "Local",
+        "Microsoft",
+        "Edge",
+        "User Data",
+        "Default",
+        "Bookmarks",
+    )
+
     copyfile(source, target)
     return target
 

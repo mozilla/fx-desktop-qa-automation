@@ -57,8 +57,8 @@
         "groups": []
     },
     "page-one-item": {
-        "selectorData": "div[data-page-number='1'] > .textLayer > span:nth-child(9)",
-        "strategy": "css",
+        "selectorData": "//span[contains(.,'Webcast Auction')]",
+        "strategy": "xpath",
         "groups": []
     },
     "page-input": {

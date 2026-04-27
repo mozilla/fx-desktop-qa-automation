@@ -216,8 +216,9 @@ class Autofill(BasePage):
     ):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
-            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
-            # Should not be called directly from an Autofill instance.
+            # Method is meant to be called by one of the classes that inherit AutoFill
+            # (CreditCardFill or AddressFill). Should not be called directly
+            # from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
@@ -878,15 +879,20 @@ class LoginAutofill(Autofill):
         ) -> None:
             """Select credentials from the autocomplete dropdown."""
 
+            # Clear any auto-filled value so the dropdown appears when focused
+            self.parent.get_element(field_reference).clear()
+
             # Open the autocomplete dropdown
             self.parent.click_on(field_reference)
 
             # Click the credential entry from the Firefox chrome autocomplete popup
             with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):
                 credential = self.parent.wait.until(
-                    lambda d: self.parent.get_element(credential_reference)
-                    if self.parent.get_element(credential_reference).is_displayed()
-                    else False
+                    lambda d: (
+                        self.parent.get_element(credential_reference)
+                        if self.parent.get_element(credential_reference).is_displayed()
+                        else False
+                    )
                 )
                 credential.click()
 

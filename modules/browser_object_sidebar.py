@@ -29,6 +29,14 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def move_sidebar_to_right(self) -> BasePage:
+        """Move the sidebar to the right side by setting sidebar.position_start to False."""
+        self.driver.execute_script(
+            "Services.prefs.setBoolPref('sidebar.position_start', false);"
+        )
+        return self
+
+    @BasePage.context_chrome
     def expect_extension_pinned_to_sidebar(self, extension_id: str):
         """Verify the extension button is present in the sidebar strip.
 
@@ -66,6 +74,104 @@ class Sidebar(BasePage):
                 "if (btn) { btn.click(); return true; }",
             )
         )
+        return self
+
+    def _exec_on_vertical_tab_element(self, js_on_element: str):
+        """Find the Vertical tabs checkbox in the customize panel and evaluate js_on_element on it.
+
+        Shared boilerplate for all Vertical tabs checkbox interactions. Accesses browser#sidebar
+        contentDocument, recursively pierces shadow roots, finds [data-l10n-id*="vertical-tab"], and
+        evaluates js_on_element with el in scope. Returns null if the panel is not ready or the element
+        is not found; otherwise returns the result of js_on_element. Both null and false are falsy, so
+        wait.until retries in either case — null on miss is a consistency choice, not a semantic one.
+
+        Must be called from within a @BasePage.context_chrome method.
+        """
+        return self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "if (!cd || cd.readyState !== 'complete') return null;"
+            "function search(root) {"
+            "  const el = root.querySelector('[data-l10n-id*=\"vertical-tab\"]');"
+            "  if (el) return " + js_on_element + ";"
+            "  for (const host of root.querySelectorAll('*')) {"
+            "    if (host.shadowRoot) {"
+            "      const r = search(host.shadowRoot);"
+            "      if (r !== null) return r;"
+            "    }"
+            "  }"
+            "  return null;"
+            "}"
+            "return search(cd);"
+        )
+
+    @BasePage.context_chrome
+    def expect_vertical_tabs_checkbox_visible(self):
+        """Verify that the Vertical tabs checkbox is displayed in the Sidebar settings section of the customize panel."""
+        self.wait.until(lambda _: self._exec_on_vertical_tab_element("true"))
+        return self
+
+    @BasePage.context_chrome
+    def click_vertical_tabs_checkbox(self):
+        """Click the Vertical tabs checkbox in the Sidebar settings section of the customize panel."""
+        self.wait.until(
+            lambda _: self._exec_on_vertical_tab_element("(el.click(), true)")
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_vertical_tabs_active(self):
+        """Verify that vertical tabs are active by checking that the Vertical tabs checkbox is checked.
+
+        The Vertical tabs checkbox remains visible in the panel at all times; when checked, vertical tabs
+        are active. Mirrors expect_horizontal_tabs_active which verifies the unchecked state.
+        """
+        self.wait.until(
+            lambda _: self._exec_on_vertical_tab_element("el.checked === true")
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_horizontal_tabs_active(self):
+        """Verify that horizontal tabs are active by checking that the Vertical tabs checkbox is unchecked.
+
+        There is no dedicated UI element for horizontal tabs — the mode is defined purely by the absence of
+        vertical tabs. The Vertical tabs checkbox remains visible in the panel at all times; when unchecked,
+        horizontal tabs are active.
+        """
+        self.wait.until(
+            lambda _: self._exec_on_vertical_tab_element("el.checked === false")
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_expand_on_hover_unavailable(self):
+        """Wait until the expand-on-hover option is no longer available.
+
+        After switching from vertical tabs to horizontal tabs, the option should
+        disappear from the Customize Sidebar panel. If it is still present, it must
+        at least be hidden or disabled.
+        """
+
+        def _is_unavailable(_):
+            state = self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return 'not-ready';"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-l10n-id*=\"expand-on-hover\"]');"
+                "  if (el) return el.disabled === true || el.hidden === true || !el.offsetParent;"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const result = search(host.shadowRoot);"
+                "      if (result !== 'not-found') return result;"
+                "    }"
+                "  }"
+                "  return 'not-found';"
+                "}"
+                "return search(cd);"
+            )
+            return state == "not-found" or state is True
+
+        self.wait.until(_is_unavailable)
         return self
 
     @BasePage.context_chrome

@@ -1,10 +1,10 @@
-from time import sleep
-
 import pytest
 
 from modules.browser_object import Navigation
 from modules.page_object import AboutTelemetry
-from modules.util import Utilities
+
+SEARCH_TERM = "iphone"
+TELEMETRY_PATH = '$..["browser.search.withads.urlbar"].["google:tagged"]'
 
 
 @pytest.fixture()
@@ -17,43 +17,17 @@ def add_to_prefs_list():
     return [("cookiebanners.service.mode", 1)]
 
 
-# Google re-captcha makes test unstable for now
-# Mac GHA makes test unstable for now
-def test_google_withads_url_bar_us(driver):
+def test_google_withads_url_bar_us(driver, google_telemetry_runner):
     """
-    C1365070 - Retry up to 5 times if Google CAPTCHA blocks telemetry path.
+    C1365070 - Verify Google with-ads URL bar telemetry (US region).
     """
-    max_attempts = 5
-    search_term = "iphone"
-    path = '$..["browser.search.withads.urlbar"].["google:tagged"]'
-    util = Utilities()
+    nav = Navigation(driver)
 
-    for attempt in range(1, max_attempts + 1):
-        nav = Navigation(driver)
-        nav.search(search_term)
-        sleep(5)
-
-        if "recaptcha" in driver.page_source.lower():
-            if attempt < max_attempts:
-                driver.delete_all_cookies()
-                driver.get("about:newtab")
-                sleep(2)
-                continue
-            else:
-                pytest.fail("CAPTCHA triggered repeatedly. Giving up after 5 attempts.")
-
-        about_telemetry = AboutTelemetry(driver).open()
-        sleep(5)
-        about_telemetry.open_raw_json_data()
-
-        json_data = util.decode_url(driver)
-        if util.assert_json_value(json_data, path, 1):
-            return
-
-        if attempt < max_attempts:
-            sleep(2)
-            driver.get("about:newtab")
-        else:
-            pytest.fail(
-                f"Telemetry path {path} not found after {max_attempts} attempts."
-            )
+    google_telemetry_runner(
+        driver=driver,
+        telemetry_cls=AboutTelemetry,
+        search_action=lambda: nav.search(SEARCH_TERM),
+        telemetry_expectations=[(TELEMETRY_PATH, 1)],
+        after_search_wait=5,
+        telemetry_load_wait=5,
+    )

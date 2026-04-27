@@ -7,7 +7,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "446405"
+    return "3054912"
 
 
 TRACKER_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"

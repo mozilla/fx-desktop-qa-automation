@@ -115,7 +115,7 @@ jobs:
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         run: |
-          echo "STARFOX_SPLIT=smoke" | Out-File -FilePath .env -Encoding utf8 -Append -Force
+          echo "STARFOX_SPLIT=all" | Out-File -FilePath .env -Encoding utf8 -Append -Force
           Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
         shell: pwsh
@@ -237,7 +237,7 @@ jobs:
         if: ${{ inputs.mac_installer_link && inputs.dry_run != true }}
         run: |
           echo "MANUAL='true'" >> "$GITHUB_ENV";
-          echo "STARFOX_SPLIT=smoke" >> .env
+          echo "STARFOX_SPLIT=all" >> .env
           echo "Running smoke tests on supplied executable";
 
       - name: Install dependencies
@@ -366,6 +366,7 @@ jobs:
         if: ${{ steps.select.conclusion == 'success' }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
+          STARFOX_SPLIT: all
         run: |
           "$FX_EXECUTABLE" --version;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
@@ -376,6 +377,7 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
+          STARFOX_SPLIT: all
         run: |
           mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml;
           DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
