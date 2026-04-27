@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/standaardboekhandel_cc.html",
+  "field_mapping": {
+    "card_number": "9dfee21a-4d2e-4778-8353-36fefb0edeb4",
+    "name": "94dbf92e-546e-4975-9b22-de54a07585cf",
+    "expiration_date": "7f5b120b-2328-4b84-8de5-835d4bca98c3",
+    "cvv": "c21f860b-8507-478d-b208-c1ea5a7917e9"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "9dfee21a-4d2e-4778-8353-36fefb0edeb4",
+    "94dbf92e-546e-4975-9b22-de54a07585cf",
+    "7f5b120b-2328-4b84-8de5-835d4bca98c3",
+    "c21f860b-8507-478d-b208-c1ea5a7917e9"
+  ]
+}

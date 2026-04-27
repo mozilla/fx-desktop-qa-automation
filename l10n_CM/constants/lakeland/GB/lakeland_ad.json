@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/lakeland_ad.html",
+  "field_mapping": {
+    "given_name": "1dfd2e52-068f-4494-b776-75de08dd980b",
+    "family_name": "400420e3-7152-486d-87ab-b7a456cbb005",
+    "street_address": "88423397-e708-4f5d-a4c9-0ed1925e47dc",
+    "address_level_2": "7967ba2a-d032-428a-aa74-e664aa26b99a",
+    "postal_code": "c73dd630-44f6-483c-9efa-559d05b3b9f5",
+    "telephone": "1e867d24-ea35-480d-a067-210afe08d07f",
+    "email": "a4f12e28-826a-41ad-9836-dfbac0f87a56"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "1dfd2e52-068f-4494-b776-75de08dd980b",
+    "400420e3-7152-486d-87ab-b7a456cbb005",
+    "88423397-e708-4f5d-a4c9-0ed1925e47dc",
+    "7967ba2a-d032-428a-aa74-e664aa26b99a",
+    "c73dd630-44f6-483c-9efa-559d05b3b9f5",
+    "1e867d24-ea35-480d-a067-210afe08d07f",
+    "a4f12e28-826a-41ad-9836-dfbac0f87a56"
+  ]
+}

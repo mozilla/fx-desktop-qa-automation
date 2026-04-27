@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/libro_cc.html",
+  "field_mapping": {
+    "name": "eecd3f4f-88a3-4c6f-9a9d-ed6995e01262",
+    "card_number": "7dbcf6d8-5b68-40ca-a6a4-fd8ddff7f1ac",
+    "expiration_date": "aac8243e-eb03-4a84-a213-b25a7c43f7f3",
+    "cvv": "e0564b06-322a-4320-8c4b-fb134ca2a1ad"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "eecd3f4f-88a3-4c6f-9a9d-ed6995e01262",
+    "7dbcf6d8-5b68-40ca-a6a4-fd8ddff7f1ac",
+    "aac8243e-eb03-4a84-a213-b25a7c43f7f3",
+    "e0564b06-322a-4320-8c4b-fb134ca2a1ad"
+  ]
+}

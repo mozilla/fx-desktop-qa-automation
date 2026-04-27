@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/alternate_cc.html",
+  "field_mapping": {
+    "card_number": "19025b6b-6cc1-43e2-8d56-f15d0b87abbe",
+    "name": "d328d2c2-892f-4761-a119-457bcf383b7e",
+    "expiration_month": "c8d47521-3e25-4a43-98a3-c3447e9d3314",
+    "expiration_year": "aefb0b08-9f4d-405b-9922-4941ccac7cc5",
+    "cvv": "673dd708-94b4-4097-b030-9c1d676caede"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "19025b6b-6cc1-43e2-8d56-f15d0b87abbe",
+    "d328d2c2-892f-4761-a119-457bcf383b7e",
+    "c8d47521-3e25-4a43-98a3-c3447e9d3314",
+    "aefb0b08-9f4d-405b-9922-4941ccac7cc5",
+    "673dd708-94b4-4097-b030-9c1d676caede"
+  ]
+}

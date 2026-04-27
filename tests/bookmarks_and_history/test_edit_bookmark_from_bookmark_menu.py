@@ -11,57 +11,38 @@ def test_case():
     return "2084490"
 
 
-URL_TO_BOOKMARK = "https://www.mozilla.org/"
-URL_TO_SAVE = "https://monitor.mozilla.org/"
-ENABLE_ADD_TAG = """
-            PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);
-        """
+BOOKMARK_URL = "https://www.mozilla.org/"
+BOOKMARK_NAME = "Mozilla Firefox"
+BOOKMARK_LOCATION = "Other Bookmarks"
+BOOKMARK_TAGS_STR = "Work, To do"
+BOOKMARK_TAGS_LIST = ["Work", "To do"]
 
 
 def test_edit_bookmark_from_bookmark_menu(driver: Firefox):
     """
     C2084490: Verify that the user can Edit a Bookmark from Bookmarks menu
     """
-    # instantiate object
+    # Instantiate objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
+    page = GenericPage(driver, url=BOOKMARK_URL)
 
-    # Bookmark the given website via bookmarks menu
-    GenericPage(driver, url=URL_TO_BOOKMARK).open()
+    # Bookmark using Bookmark current tab option from Hamburger Menu
+    page.open()
     panel.open_bookmarks_panel_from_hamburger_menu()
-    nav.add_bookmark_via_star_icon()
+    panel.bookmark_current_tab_via_hamburger_menu()
 
-    with driver.context(driver.CONTEXT_CHROME):
-        # enable add a tag to a bookmark in the bookmark panel
-        driver.execute_script(ENABLE_ADD_TAG)
+    # Enable bookmark tagging functionality
+    panel.enable_bookmark_tagging()
 
-        # Open the Hamburger menu, click on the Edit This Bookmark button from the Bookmarks section
-        panel.open_bookmarks_panel_from_hamburger_menu()
-        panel.get_element("bookmark-current-tab").click()
+    # Edit bookmark details via Hamburger Menu
+    panel.edit_bookmark_from_hamburger_menu(
+        new_name=BOOKMARK_NAME, tags=BOOKMARK_TAGS_STR, location=BOOKMARK_LOCATION
+    )
 
-        # Change bookmark name, location and add a tag
-        nav.get_element("edit-bookmark-panel").send_keys("Mozilla Firefox")
-        panel.get_element("bookmark-tags").send_keys("Work, To do")
-        panel.get_element("bookmark-location").click()
-        panel.get_element("other-bookmarks").click()
-        nav.get_element("save-bookmark-button").click()
+    # Verify bookmark was moved to Other Bookmarks with correct name
+    nav.verify_bookmark_exists_in_toolbar_other_bookmarks_folder(BOOKMARK_NAME)
 
-        # Temporary fix before the other bookmarks issue is fixed
-        nav.get_element("star-button").click()
-        assert (
-            panel.get_element("bookmark-location").get_attribute("label")
-            == "Other Bookmarks"
-        )
-        # Check bookmark name and location are changed in the bookmarks toolbar
-        # panel.get_element("other-bookmarks-toolbar").click()
-        # panel.element_visible("other-bookmarks-by-title", labels=["Mozilla Firefox"])
-        # panel.get_element("other-bookmarks-toolbar").click()
-
-        # Check tags are correctly added and checked
-        panel.get_element("extend-bookmark-tags").click()
-        work_checkbox = panel.get_element("work-tag")
-        work_checked_attr = work_checkbox.get_attribute("checked")
-        assert work_checked_attr is None
-        todo_checkbox = panel.get_element("todo-tag")
-        todo_checked_attr = todo_checkbox.get_attribute("checked")
-        assert todo_checked_attr is None
+    # Verify bookmark tags are set correctly
+    actual_tags = panel.get_bookmark_tags(BOOKMARK_TAGS_LIST)
+    assert actual_tags == BOOKMARK_TAGS_LIST

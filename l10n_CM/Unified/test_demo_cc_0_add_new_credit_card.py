@@ -9,7 +9,7 @@ from modules.page_object import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "2886595"
+    return "3056980"
 
 
 def test_create_new_cc_profile(
@@ -19,7 +19,7 @@ def test_create_new_cc_profile(
     populate_saved_payments: CreditCardBase,
 ):
     """
-    C2886595 - Tests you can create and save a new Credit Card profile
+    C3056980 - Tests you can create and save a new Credit Card profile
     """
     # get sample data
     credit_card_sample_data = populate_saved_payments

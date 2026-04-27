@@ -8,6 +8,7 @@ from modules.page_object_prefs import AboutPrefs
 from modules.util import Utilities
 
 
+# bump
 @pytest.fixture()
 def suite_id():
     return ("2054", "Form Autofill")
@@ -19,6 +20,8 @@ def prefs_list(add_to_prefs_list: dict):
     prefs = [
         ("extensions.formautofill.creditCards.reauth.optout", False),
         ("extensions.formautofill.reauth.enabled", False),
+        ("extensions.formautofill.addresses.enabled", True),
+        ("extensions.formautofill.creditCards.enabled", True),
     ]
     prefs.extend(add_to_prefs_list)
     return prefs

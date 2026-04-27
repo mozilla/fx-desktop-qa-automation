@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/carpimoto_ad.html",
+  "field_mapping": {
+    "given_name": "3600e3cc-b7d9-449b-9537-bc8dfe3324d9",
+    "family_name": "8d296702-56f4-42f4-96fd-b7fd06109644",
+    "address_level_2": "43344816-10ab-4ba2-96d9-98190a6d1559",
+    "street_address" : "0df962af-1f6b-401c-9ca3-74e6eeb06c0c",
+    "postal_code": "9f914dea-7144-42b9-a9d3-440829478b54",
+    "telephone": "b8dbdfef-8eef-459f-b3a7-c97b90182b7e",
+    "email": "0c596fe3-0bf9-48bf-aa7e-503c0b23c949"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "3600e3cc-b7d9-449b-9537-bc8dfe3324d9",
+    "8d296702-56f4-42f4-96fd-b7fd06109644",
+    "43344816-10ab-4ba2-96d9-98190a6d1559",
+    "0df962af-1f6b-401c-9ca3-74e6eeb06c0c",
+    "9f914dea-7144-42b9-a9d3-440829478b54",
+    "b8dbdfef-8eef-459f-b3a7-c97b90182b7e",
+    "0c596fe3-0bf9-48bf-aa7e-503c0b23c949"
+  ]
+}

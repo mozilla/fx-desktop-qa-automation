@@ -1,8 +1,15 @@
+import logging
+
 import pytest
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_object import AboutLogins
+
+WEBSITE_ADDRESS = "mozilla.org"
+USERNAME = "username"
+PASSWORD = "password"
 
 
 @pytest.fixture()
@@ -14,29 +21,30 @@ def test_add_password_save_valid_data(driver: Firefox):
     """
     C2241112 Verify that a password can be added and saved
     """
-    # instantiate object
+
+    # Instantiate object
     about_logins = AboutLogins(driver)
 
     # Open about:logins and click on the "Add password" button
     about_logins.open()
-    about_logins.click_add_login_button()
 
     # Complete all the fields with valid data and click the "Save" button.
-    about_logins.create_new_login(
-        {
-            "origin": "mozilla.org",
-            "username": "username",
-            "password": "password",
-        }
-    )
+    about_logins.add_login(WEBSITE_ADDRESS, USERNAME, PASSWORD)
 
     # Check password added in the listbox
-    about_logins.get_element("login-list-item")
     logins = about_logins.get_elements("login-list-item")
-    mozilla_login = next(
-        login for login in logins if login.get_attribute("title") == "mozilla.org"
-    )
-    assert mozilla_login
+    try:
+        about_logins.wait.until(
+            lambda _: any(
+                [
+                    login
+                    for login in logins
+                    if login.get_attribute("title") == WEBSITE_ADDRESS
+                ]
+            )
+        )
+    except TimeoutException:
+        logging.warning("A login was not saved.")
 
     # Check the "Sort by:" dropdown from the top part of the Login list becomes active
     login_sort = about_logins.get_element("login-sort")

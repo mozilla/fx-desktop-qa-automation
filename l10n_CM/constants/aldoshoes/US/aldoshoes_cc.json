@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/aldoshoes_cc.html",
+  "field_mapping": {
+    "card_number": "card",
+    "name": "name",
+    "expiration_month": "expmonth",
+    "expiration_year": "expyear"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+   "skip": "True",
+  "fields": [
+    "card",
+    "name",
+    "expmonth",
+    "expyear"
+  ]
+}

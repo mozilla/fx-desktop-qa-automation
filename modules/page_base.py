@@ -8,9 +8,11 @@ import time
 from copy import deepcopy
 from functools import wraps
 from pathlib import Path
-from typing import List, Union
+from typing import List
 
-from pynput.keyboard import Controller, Key
+from pynput.keyboard import Key
+from pynput.mouse import Button
+from pynput.mouse import Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -105,45 +107,10 @@ class BasePage(Page):
         if self._xul_source_snippet not in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CHROME)
 
-    @staticmethod
-    def context_chrome(func):
-        """Decorator to switch to CONTEXT_CHROME"""
-
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            with self.driver.context(self.driver.CONTEXT_CHROME):
-                return func(self, *args, **kwargs)
-
-        return wrapper
-
-    @staticmethod
-    def context_content(func):
-        """Decorator to switch to CONTEXT_CONTENT"""
-
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            with self.driver.context(self.driver.CONTEXT_CONTENT):
-                return func(self, *args, **kwargs)
-
-        return wrapper
-
     def set_content_context(self):
         """Make sure the Selenium driver is using CONTEXT_CONTENT"""
         if self._xul_source_snippet in self.driver.page_source:
             self.driver.set_context(self.driver.CONTEXT_CONTENT)
-
-    def opposite_context(self):
-        """Return the context that is *not* in use"""
-        return (
-            self.driver.CONTEXT_CONTENT
-            if self._xul_source_snippet in self.driver.page_source
-            else self.driver.CONTEXT_CHROME
-        )
-
-    def is_private(self):
-        """Determine if current browsing context is private"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            return "Private Browsing" in self.driver.title
 
     def custom_wait(self, **kwargs) -> WebDriverWait:
         """
@@ -154,39 +121,6 @@ class BasePage(Page):
           self.custom_wait(poll_frequency=1).until(<condition>)
         """
         return WebDriverWait(self.driver, **kwargs)
-
-    def expect(self, condition) -> Page:
-        """Use the Page's wait object to assert a condition or wait until timeout"""
-        with self.driver.context(self.context_id):
-            logging.info(f"Expecting in {self.context_id}...")
-            self.wait.until(condition)
-        return self
-
-    def expect_not(self, condition) -> Page:
-        """Use the Page's to wait until assert a condition is not true or wait until timeout"""
-        with self.driver.context(self.context_id):
-            logging.info(f"Expecting NOT in {self.context_id}...")
-            self.wait.until_not(condition)
-        return self
-
-    def perform_key_combo(self, *keys) -> Page:
-        """
-        Use ActionChains to perform key combos. Modifier keys should come first in the function call.
-        Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
-        """
-        while Keys.CONTROL in keys and self.sys_platform == "Darwin":
-            keys[keys.index(Keys.CONTROL)] = Keys.COMMAND
-        for k in keys[:-1]:
-            self.actions.key_down(k)
-
-        self.actions.send_keys(keys[-1])
-
-        for k in keys[:-1]:
-            self.actions.key_up(k)
-
-        self.actions.perform()
-
-        return self
 
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
@@ -214,7 +148,281 @@ class BasePage(Page):
                 logging.info(f"adding do-not-cache to {key}")
                 self.elements[key]["groups"].append("doNotCache")
 
-    def get_selector(self, name: str, labels=[]) -> list:
+    def clear_cache(self) -> Page:
+        """
+        Clear cached Selenium objects to avoid stale element references.
+        Useful after switching windows, page reloads, or significant DOM changes.
+        """
+        for name in self.elements:
+            if "seleniumObject" in self.elements[name]:
+                del self.elements[name]["seleniumObject"]
+        return self
+
+    @staticmethod
+    def context_chrome(func):
+        """Decorator to switch to CONTEXT_CHROME"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @staticmethod
+    def context_content(func):
+        """Decorator to switch to CONTEXT_CONTENT"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @staticmethod
+    def context_of_model(func):
+        """Decorator to switch to the context declared in the BOM/POM json file"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.context_id):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @context_content
+    def expect_in_content(self, condition):
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
+        self.wait.until(condition)
+
+    @context_chrome
+    def expect_in_chrome(self, condition):
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CHROME"""
+        self.wait.until(condition)
+
+    def opposite_context(self):
+        """Return the context that is *not* in use"""
+        return (
+            self.driver.CONTEXT_CONTENT
+            if self._xul_source_snippet in self.driver.page_source
+            else self.driver.CONTEXT_CHROME
+        )
+
+    @context_chrome
+    def is_private(self):
+        """Determine if current browsing context is private"""
+        self.expect(lambda _: "Private Browsing" in self.driver.title)
+
+    @context_chrome
+    def is_not_private(self):
+        """Determine if current browsing context is not private"""
+        self.expect(lambda _: "Private Browsing" not in self.driver.title)
+
+    @context_of_model
+    def expect(self, condition) -> Page:
+        """Use the Page's wait object to assert a condition or wait until timeout"""
+        logging.info(f"Expecting in {self.context_id}...")
+        self.wait.until(condition)
+        return self
+
+    @context_of_model
+    def expect_not(self, condition) -> Page:
+        """Use the Page's to wait until assert a condition is not true or wait until timeout"""
+        logging.info(f"Expecting NOT in {self.context_id}...")
+        self.wait.until_not(condition)
+        return self
+
+    @context_of_model
+    def element_exists(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Expect helper: wait until element exists or timeout"""
+        self.expect(lambda _: self.fetch(reference, labels=labels))
+        return self
+
+    @context_of_model
+    def element_does_not_exist(self, reference: str | tuple, labels=None) -> "Page":
+        """Wait until element does not exist (no matches) or timeout."""
+        labels = labels or []
+
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            if isinstance(reference, str):
+                # Use len(...) to avoid any truthiness quirks from wrappers
+                self.instawait.until_not(
+                    lambda _: len(self.get_elements(reference, labels=labels)) > 0
+                )
+            else:
+                self.instawait.until_not(
+                    lambda _: len(self.driver.find_elements(*reference)) > 0
+                )
+        finally:
+            self.driver.implicitly_wait(original)
+
+        return self
+
+    @context_of_model
+    def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Expect helper: wait until element is visible or timeout"""
+        self.expect(
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and self.fetch(reference, labels=labels).is_displayed()
+            )
+        )
+        return self
+
+    @context_of_model
+    def element_not_visible(self, reference: str | tuple, labels=None) -> "Page":
+        labels = labels or []
+
+        def gone_or_hidden(_):
+            els = self.get_elements(reference, labels=labels)
+            if len(els) == 0:
+                return True
+            return not any(el.is_displayed() for el in els)
+
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            self.expect(gone_or_hidden)
+        finally:
+            self.driver.implicitly_wait(original)
+
+        return self
+
+    @context_of_model
+    def element_clickable(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Expect helper: wait until element is clickable or timeout"""
+        self.element_visible(reference, labels=labels)
+        self.expect(lambda _: self.fetch(reference, labels=labels).is_enabled())
+        return self
+
+    @context_of_model
+    def element_selected(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Expect helper: wait until element is selected or timeout"""
+        self.expect(
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and self.fetch(reference, labels=labels).is_selected()
+            )
+        )
+        return self
+
+    @context_of_model
+    def element_has_text(
+        self, reference: str | tuple | WebElement, text: str, labels=None
+    ) -> Page:
+        """Expect helper: wait until element has given text"""
+        self.expect(lambda _: text in self.fetch(reference, labels=labels).text)
+        return self
+
+    @context_of_model
+    def element_attribute_contains(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ) -> Page:
+        """Expect helper: wait until element attribute contains certain value"""
+        self.expect(
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and str(attr_value)
+                in self.fetch(reference, labels=labels).get_attribute(attr_name)
+            )
+        )
+        return self
+
+    @context_of_model
+    def element_attribute_is(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ):
+        """Expect helper: wait until element attribute is a certain value"""
+        self.expect(
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and str(attr_value)
+                == self.fetch(reference, labels=labels).get_attribute(attr_name)
+            )
+        )
+        return self
+
+    @context_of_model
+    def element_has_attribute(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Expect helper: check to see if attribute exists in element."""
+        return self.expect(
+            lambda _: EC.element_attribute_to_include(
+                self.fetch(reference, labels), attr
+            )
+        )
+
+    @context_of_model
+    def get_attribute_value(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Return value of attribute in a context-sensitive way"""
+        return self.fetch(reference, labels).get_attribute(attr)
+
+    @context_content
+    def url_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect_in_content(EC.url_contains(url_part))
+        return self
+
+    def title_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect(EC.title_contains(url_part))
+        return self
+
+    def title_is(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL is given text or timeout"""
+        self.expect(EC.title_is(url_part))
+        return self
+
+    def perform_key_combo(self, *keys) -> Page:
+        """
+        Use ActionChains to perform key combos. Modifier keys should come first in the function call
+        Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
+        """
+        if self.sys_platform() == "Darwin":
+            keys = tuple(Keys.COMMAND if k == Keys.CONTROL else k for k in keys)
+
+        for k in keys[:-1]:
+            self.actions.key_down(k)
+
+        self.actions.send_keys(keys[-1])
+
+        for k in keys[:-1]:
+            self.actions.key_up(k)
+
+        self.actions.perform()
+
+        return self
+
+    @context_chrome
+    def perform_key_combo_chrome(self, *keys) -> Page:
+        """
+        Perform a keyboard shortcut in the browser chrome context (e.g., address bar).
+        This method should be used for actions that target browser UI elements such as the
+        awesome bar or toolbar buttons — not web content.
+        Example:
+            self.perform_key_combo_chrome(Keys.COMMAND, "c")  # Copy from address bar
+        """
+        return self.perform_key_combo(*keys)
+
+    def get_selector(self, name: str, labels=None) -> list:
         """
         Given a key for a self.elements dict entry, return the Selenium selector tuple.
         If there are items in `labels`, replace instances of {.*} in the "selectorData"
@@ -255,8 +463,8 @@ class BasePage(Page):
         return selector
 
     def get_element(
-        self, name: str, multiple=False, parent_element=None, labels=[]
-    ) -> Union[list[WebElement], WebElement]:
+        self, name: str, multiple=False, parent_element=None, labels=None
+    ) -> list[WebElement] | WebElement:
         """
         Given a key for a self.elements dict entry, return the Selenium WebElement(s).
         If multiple is set to True, use find_elements instead of find_element.
@@ -264,7 +472,8 @@ class BasePage(Page):
         with items from `labels`, in the order they are given. (Think Rust format macros.)
 
 
-        Note: This method currently does not support finding a child under a parent (given in the JSON) if it has a shadow parent.
+        Note: This method currently does not support finding a child under a parent
+        (given in the JSON) if it has a shadow parent.
         ...
 
         Arguments
@@ -277,7 +486,8 @@ class BasePage(Page):
             Do we expect a list of WebElements?
 
         parent_element: WebElement
-            The parent WebElement to search under to narrow the scope instead of searching the entire page
+            The parent WebElement to search under to narrow the scope instead of searching the
+            entire page
 
         labels: list[str]
             Strings that replace instances of {.*} in the "selectorData" subentry of
@@ -354,7 +564,7 @@ class BasePage(Page):
         else:
             return self.driver.find_elements(*selector)
 
-    def get_elements(self, name: str, labels=[]):
+    def get_elements(self, name: str, labels=None):
         """
         Get multiple elements using get_element()
 
@@ -377,81 +587,15 @@ class BasePage(Page):
         return self.get_element(name, multiple=True, labels=labels)
 
     def get_parent_of(
-        self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: str | tuple | WebElement, labels=None
     ) -> WebElement:
         """
-        Given a name + labels, a WebElement, or a tuple, return the direct parent node of the element.
+        Given a name + labels, a WebElement, or a tuple, return the direct parent node of
+        the element.
         """
 
         child = self.fetch(reference, labels=labels)
         return child.find_element(By.XPATH, "..")
-
-    def element_exists(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element exists or timeout"""
-        self.expect(lambda _: self.get_element(name, labels=labels))
-        return self
-
-    def element_does_not_exist(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element exists or timeout"""
-        self.instawait.until_not(lambda _: self.get_elements(name, labels=labels))
-        return self
-
-    def element_visible(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element is visible or timeout"""
-        self.expect(
-            lambda _: self.get_element(name, labels=labels)
-            and self.get_element(name, labels=labels).is_displayed()
-        )
-        return self
-
-    def element_not_visible(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element is not visible or timeout"""
-        self.expect(
-            lambda _: self.get_elements(name, labels=labels) == []
-            or not self.get_element(name, labels=labels).is_displayed()
-        )
-        return self
-
-    def element_clickable(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element is clickable or timeout"""
-        self.element_visible(name, labels=labels)
-        self.expect(lambda _: self.get_element(name, labels=labels).is_enabled())
-        return self
-
-    def element_selected(self, name: str, labels=[]) -> Page:
-        """Expect helper: wait until element is selected or timeout"""
-        self.expect(
-            lambda _: self.get_element(name, labels=labels)
-            and self.get_element(name, labels=labels).is_selected()
-        )
-        return self
-
-    def element_has_text(self, name: str, text: str, labels=[]) -> Page:
-        """Expect helper: wait until element has given text"""
-        self.expect(lambda _: text in self.get_element(name, labels=labels).text)
-        return self
-
-    def expect_element_attribute_contains(
-        self, name: str, attr_name: str, attr_value: Union[str, float, int], labels=[]
-    ) -> Page:
-        """Expect helper: wait until element attribute contains certain value"""
-        self.expect(
-            lambda _: self.get_element(name, labels=labels)
-            and str(attr_value)
-            in self.get_element(name, labels=labels).get_attribute(attr_name)
-        )
-        return self
-
-    def url_contains(self, url_part: str) -> Page:
-        """Expect helper: wait until driver URL contains given text or timeout"""
-        self.context_id = self.driver.CONTEXT_CONTENT
-        self.expect(EC.url_contains(url_part))
-        return self
-
-    def title_contains(self, url_part: str) -> Page:
-        """Expect helper: wait until driver URL contains given text or timeout"""
-        self.expect(EC.title_contains(url_part))
-        return self
 
     def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
         """
@@ -468,7 +612,7 @@ class BasePage(Page):
         return self
 
     def fill(
-        self, name: str, term: str, clear_first=True, press_enter=True, labels=[]
+        self, name: str, term: str, clear_first=True, press_enter=True, labels=None
     ) -> Page:
         """
         Get a fillable element and fill it with text. Return self.
@@ -504,7 +648,7 @@ class BasePage(Page):
         el.send_keys(f"{term}{end}")
         return self
 
-    def fetch(self, reference: Union[str, tuple, WebElement], labels=[]) -> WebElement:
+    def fetch(self, reference: str | tuple | WebElement, labels=None) -> WebElement:
         """
         Given an element name, a selector, or a WebElement, return the
         corresponding WebElement.
@@ -519,7 +663,7 @@ class BasePage(Page):
             "Bad fetch: only selectors, selector names, or WebElements allowed."
         )
 
-    def click_on(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+    def click_on(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Click on an element, no matter the context, return the page"""
         with self.driver.context(self.context_id):
             self.fetch(reference, labels).click()
@@ -527,7 +671,7 @@ class BasePage(Page):
         return self
 
     def multi_click(
-        self, iters: int, reference: Union[str, tuple, WebElement], labels=[]
+        self, iters: int, reference: str | tuple | WebElement, labels=None
     ) -> Page:
         """Perform multiple clicks at once on an element by name, selector, or WebElement"""
         with self.driver.context(self.context_id):
@@ -550,17 +694,57 @@ class BasePage(Page):
 
         return self
 
-    def double_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+    def double_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Actions helper: perform double-click on given element"""
         return self.multi_click(2, reference, labels)
 
-    def triple_click(self, reference: Union[str, tuple, WebElement], labels=[]) -> Page:
+    def triple_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Actions helper: perform triple-click on a given element"""
         return self.multi_click(3, reference, labels)
 
-    def context_click(
-        self, reference: Union[str, tuple, WebElement], labels=[]
-    ) -> Page:
+    def control_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Actions helper: perform control-click on given element"""
+        element = self.fetch(reference, labels)
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.actions.key_down(mod_key).click(element).key_up(mod_key).perform()
+        return self
+
+    def middle_click(self, reference: str | tuple | WebElement, labels=None):
+        """Actions helper: Perform a middle mouse click on desired element"""
+        with self.driver.context(self.context_id):
+            mouse = MouseController()
+            element = self.fetch(reference, labels)
+
+            element_location = element.location
+            element_size = element.size
+            window_position = self.driver.get_window_position()
+
+            inner_height = self.driver.execute_script("return window.innerHeight;")
+            outer_height = self.driver.execute_script("return window.outerHeight;")
+            chrome_height = outer_height - inner_height
+
+            element_x = (
+                window_position["x"]
+                + element_location["x"]
+                + (element_size["width"] / 2)
+            )
+            element_y = (
+                window_position["y"]
+                + element_location["y"]
+                + (element_size["height"] / 2)
+                + chrome_height
+            )
+            mouse.position = (element_x, element_y)
+
+            # Need a short wait to ensure the mouse move completes, then middle click
+            time.sleep(0.5)
+            mouse.click(Button.middle, 1)
+        return self
+
+    def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Context (right-) click on an element"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
@@ -595,7 +779,7 @@ class BasePage(Page):
         return self
 
     def paste_to_element(
-        self, sys_platform, reference: Union[str, tuple, WebElement], labels=[]
+        self, sys_platform, reference: str | tuple | WebElement, labels=None
     ) -> Page:
         """Paste the copied item into the element"""
         with self.driver.context(self.context_id):
@@ -608,7 +792,7 @@ class BasePage(Page):
         return self
 
     def copy_image_from_element(
-        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+        self, keyboard, reference: str | tuple | WebElement, labels=None
     ) -> Page:
         """Copy from the given element using right click (pynput)"""
         with self.driver.context(self.context_id):
@@ -623,7 +807,7 @@ class BasePage(Page):
         return self
 
     def copy_selection(
-        self, keyboard, reference: Union[str, tuple, WebElement], labels=[]
+        self, keyboard, reference: str | tuple | WebElement, labels=None
     ) -> Page:
         """Copy from the current selection using right click (pynput)"""
         with self.driver.context(self.context_id):
@@ -636,7 +820,7 @@ class BasePage(Page):
         return self
 
     def click_and_hide_menu(
-        self, reference: Union[str, tuple, WebElement], labels=[]
+        self, reference: str | tuple | WebElement, labels=None
     ) -> Page:
         """Click an option in a context menu, then hide it"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -644,7 +828,7 @@ class BasePage(Page):
             self.hide_popup_by_child_node(reference, labels=labels)
             return self
 
-    def hover(self, reference: Union[str, tuple, WebElement], labels=[]):
+    def hover(self, reference: str | tuple | WebElement, labels=None):
         """
         Hover over the specified element.
         Parameters: element (str): The element to hover over.
@@ -656,7 +840,7 @@ class BasePage(Page):
             self.actions.move_to_element(el).perform()
         return self
 
-    def scroll_to_element(self, reference: Union[str, tuple, WebElement], labels=[]):
+    def scroll_to_element(self, reference: str | tuple | WebElement, labels=None):
         """
         Scroll towards the specified element which may be out of frame.
         Parameters: element (str): The element to hover over.
@@ -667,22 +851,27 @@ class BasePage(Page):
         return self
 
     def get_all_children(
-        self, reference: Union[str, tuple, WebElement], labels=[]
+        self,
+        reference: str | tuple | WebElement,
+        locator: str = "./*",
+        labels: list[str] = None,
     ) -> List[WebElement]:
         """
         Gets all the children of a webelement
+        if locator is not specified, defaults to "./*".
         """
         children = None
         with self.driver.context(self.context_id):
             element = self.fetch(reference, labels)
-            children = element.find_elements(By.XPATH, "./*")
+            children = element.find_elements(By.XPATH, locator)
         return children
 
     def wait_for_no_children(
-        self, parent: Union[str, tuple, WebElement], labels=[]
+        self, parent: str | tuple | WebElement, labels=None
     ) -> Page:
         """
-        Waits for 0 children under the given parent, the wait is instant (note, this changes the driver implicit wait and changes it back)
+        Waits for 0 children under the given parent, the wait is instant
+        (note, this changes the driver implicit wait and changes it back)
         """
         driver_wait = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
@@ -690,17 +879,20 @@ class BasePage(Page):
             assert len(self.get_all_children(self.fetch(parent, labels))) == 0
         finally:
             self.driver.implicitly_wait(driver_wait)
+        return self
 
     def wait_for_num_tabs(self, num_tabs: int) -> Page:
         """
-        Waits for the driver.window_handles to be updated accordingly with the number of tabs requested
+        Waits for the driver.window_handles to be updated accordingly
+        with the number of tabs requested
         """
         try:
             self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
         except TimeoutException:
             logging.warning(
-                "Timeout waiting for the number of windows to be:", num_tabs
+                f"Timeout waiting for the number of windows to be: {num_tabs}"
             )
+            raise TimeoutException
         return self
 
     def switch_to_default_frame(self) -> Page:
@@ -712,6 +904,12 @@ class BasePage(Page):
         """Switch to frame of given index"""
         self.driver.switch_to.frame(index)
         return self
+
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
 
     def switch_to_new_tab(self) -> Page:
         """Get list of all window handles, switch to the newly opened tab"""
@@ -766,7 +964,7 @@ class BasePage(Page):
         self.driver.get("about:blank")
         return self
 
-    def switch_to_frame(self, frame: str, labels=[]) -> Page:
+    def switch_to_frame(self, frame: str, labels=None) -> Page:
         """Switch to inline document frame"""
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.expect(
@@ -780,7 +978,8 @@ class BasePage(Page):
         """
         Given the ID of the context menu, it will dismiss the menu.
 
-        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be: tabs.hide_popup("tabContextMenu")
+        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be:
+          tabs.hide_popup("tabContextMenu")
         """
         script = f'document.querySelector("#{context_menu}").hidePopup();'
         if chrome:
@@ -789,6 +988,7 @@ class BasePage(Page):
         else:
             with self.driver.context(self.driver.CONTEXT_CONTENT):
                 self.driver.execute_script(script)
+        return self
 
     def hide_popup_by_class(self, class_name: str, retry=False) -> None:
         """
@@ -812,35 +1012,63 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
-    def handle_os_download_confirmation(self, keyboard: Controller, sys_platform: str):
+    def handle_os_download_confirmation(self):
         """
-        This function handles the keyboard shortcuts. If on Linux, it simulates switching
-        to OK. On other platforms, it directly presses enter.
-        """
-        if sys_platform == "Linux":
-            # Perform the series of ALT+TAB key presses on Linux
-            keyboard.press(Key.alt)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.release(Key.alt)
-            time.sleep(1)
-            keyboard.press(Key.alt)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            keyboard.release(Key.alt)
-            time.sleep(1)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
-            time.sleep(1)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.tab)
+        Confirm the native OS download confirmation dialog.
 
-        # Press enter to confirm the download on all platforms
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        Uses pyautogui when possible. Tries image-match click first, then falls
+        back to pressing Enter if the image is not found or if it still matches
+        after the click.
+        """
+
+        system = platform.system()
+        if system == "Linux":
+            # Workaround while we figure out if tkinter is possible for us
+            from modules.util import LinuxAuto
+
+            linux_auto = LinuxAuto()
+            linux_auto.press("Return")
+            time.sleep(1.5)
+            return
+
+        import pyautogui
+
+        if system == "Windows":
+            button_img = os.path.join("data", "win_save_button.png")
+        elif system == "Darwin":
+            button_img = os.path.join("data", "mac_save_button.png")
+        else:
+            button_img = os.path.join("data", "linux_save_button.png")
+
+        original_failsafe = pyautogui.FAILSAFE
+        pyautogui.FAILSAFE = False
+
+        try:
+            time.sleep(0.5)
+
+            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+            logging.info(f"OS dialog button found at {loc}, clicking")
+            pyautogui.click(loc)
+            time.sleep(1)
+
+            try:
+                pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                logging.info(
+                    "Button still visible after click; pressing Enter as fallback"
+                )
+                pyautogui.press("enter")
+            except pyautogui.ImageNotFoundException:
+                pass  # dialog dismissed successfully
+
+        except pyautogui.ImageNotFoundException:
+            logging.info("OS dialog button image not found; pressing Enter as fallback")
+            pyautogui.press("enter")
+
+        finally:
+            pyautogui.FAILSAFE = original_failsafe
 
     def hide_popup_by_child_node(
-        self, reference: Union[str, tuple, WebElement], labels=[], retry=False
+        self, reference: str | tuple | WebElement, labels=None, retry=False
     ) -> Page:
         try:
             with self.driver.context(self.context_id):
@@ -858,6 +1086,7 @@ class BasePage(Page):
                     self.hide_popup_by_child_node(reference, labels, True)
             else:
                 raise NoSuchWindowException
+        return self
 
     def get_localstorage_item(self, key: str):
         return self.driver.execute_script(f"return window.localStorage.getItem({key});")

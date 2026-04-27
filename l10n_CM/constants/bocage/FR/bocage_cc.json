@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/bocage_cc.html",
+  "field_mapping": {
+    "card_number": "aaa71a9b-b50f-40d7-bb11-609f37857349",
+    "name": "e6f6f562-0263-44ff-8521-110bec29d149",
+    "expiration_month": "0bb3554d-5f2f-46f5-89af-1a01d460353b",
+    "expiration_year": "f3125a45-7826-4a9e-89a0-e867a28b83ed",
+    "cvv": "8005ad13-294d-4711-8a83-9ca96e78bce9"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "aaa71a9b-b50f-40d7-bb11-609f37857349",
+    "e6f6f562-0263-44ff-8521-110bec29d149",
+    "0bb3554d-5f2f-46f5-89af-1a01d460353b",
+    "f3125a45-7826-4a9e-89a0-e867a28b83ed",
+    "8005ad13-294d-4711-8a83-9ca96e78bce9"
+]
+}

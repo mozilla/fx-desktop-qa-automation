@@ -44,7 +44,7 @@ def test_update_address(
     # Change name field value.
     new_name_value = sample_data.name + " Doe"
     setattr(sample_data, "name", new_name_value)
-    address_autofill.update_form_data(sample_data, "name", new_name_value)
+    address_autofill.update_form_data(sample_data, "name", new_name_value, region)
 
     # Navigate to settings
     about_prefs_privacy.open()

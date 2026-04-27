@@ -1,5 +1,3 @@
-from time import sleep
-
 from selenium.common import NoAlertPresentException
 from selenium.webdriver.common.keys import Keys
 
@@ -19,51 +17,159 @@ def _get_alert(d):
 class PrintPreview(BasePage):
     """Browser Object Model for Print Preview modal"""
 
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.panel_ui = PanelUi(self.driver)
+
     URL_TEMPLATE = "about:blank"
 
-    def open(self) -> BasePage:
+    @BasePage.context_chrome
+    def open_and_load_print_from_panelui(self) -> BasePage:
         """Use PanelUi to open the Print Preview, wait for element to load"""
-        panel_ui = PanelUi(self.driver)
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            panel_ui.open_panel_menu()
-            panel_ui.select_panel_setting("print-option")
-            self.wait_for_page_to_load()
+        self.panel_ui.open_panel_menu()
+        self.panel_ui.click_on("print-option")
+        self.wait_for_page_to_load()
         return self
 
+    @BasePage.context_chrome
     def open_with_key_combo(self) -> BasePage:
         """Use Cmd/Ctrl + P to open the Print Preview, wait for load"""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            if self.sys_platform() == "Darwin":
-                mod_key = Keys.COMMAND
-            else:
-                mod_key = Keys.CONTROL
-            self.perform_key_combo(mod_key, "p")
-            self.wait_for_page_to_load()
+
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.perform_key_combo(mod_key, "p")
+        self.wait_for_page_to_load()
         return self
 
+    @BasePage.context_chrome
     def switch_to_preview_window(self) -> BasePage:
-        """Switch to the iframe holding the Print Preview"""
+        """Switch to the iframe holding the Print Preview settings."""
         ba = BrowserActions(self.driver)
-        sleep(3)
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
-            self.expect(
-                lambda _: self.driver.execute_script(
-                    'return document.readyState === "complete";'
-                )
-            )
+        ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
+        # Wait for print button to be present as indicator of readiness
+        self.element_exists("print-button")
         return self
 
-    def start_print(self, secondary_confirm=True) -> BasePage:
-        """Press Enter in Print"""
+    @BasePage.context_content
+    def start_print(self) -> BasePage:
+        """Press Enter in Print Preview Page."""
         from pynput.keyboard import Controller, Key
 
         self.switch_to_preview_window()
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.actions.send_keys_to_element(
-                self.get_element("print-settings-browser"), Keys.TAB + Keys.ENTER
-            ).perform()
-            sleep(2)
-            keyboard = Controller()
-            keyboard.tap(Key.enter)
+        self.get_element("print-button").click()
+        # Wait for print dialog to appear
+        self.custom_wait(timeout=5).until(lambda d: _get_alert(d))
+        keyboard = Controller()
+        keyboard.tap(Key.enter)
+        return self
+
+    @BasePage.context_chrome
+    def hover_preview(self) -> BasePage:
+        """Hover over the print preview to reveal the page indicator toolbar."""
+        preview_browser = self.get_element("print-preview-browser")
+        self.actions.move_to_element(preview_browser).perform()
+        # Wait for pagination to become visible
+        self.element_visible("print-preview-pagination")
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_preview_ready(self, timeout: int = 20) -> BasePage:
+        """Wait until Print Preview has current-page and sheet-count >= 1."""
+
+        def _ready(_):
+            preview_browser = self.get_element("print-preview-browser")
+            current_page = preview_browser.get_attribute("current-page")
+            sheet_count = preview_browser.get_attribute("sheet-count")
+            # Return False if attributes not yet present
+            if current_page is None or sheet_count is None:
+                return False
+            return int(sheet_count) >= 1 and int(current_page) >= 1
+
+        self.custom_wait(timeout=timeout).until(_ready)
+        return self
+
+    @BasePage.context_chrome
+    def get_sheet_indicator_values(self) -> tuple[int, int]:
+        """Return (current_page, sheet_count) from print-preview-browser attributes."""
+        preview_browser = self.get_element("print-preview-browser")
+        current_page = preview_browser.get_attribute("current-page")
+        sheet_count = preview_browser.get_attribute("sheet-count")
+
+        assert current_page is not None, (
+            "Missing 'current-page' attribute on print-preview-browser"
+        )
+        assert sheet_count is not None, (
+            "Missing 'sheet-count' attribute on print-preview-browser"
+        )
+
+        return int(current_page), int(sheet_count)
+
+    @BasePage.context_chrome
+    def get_sheet_indicator_text(self) -> str:
+        """Return a display-friendly string, e.g. '1 of 5' (derived from attributes)."""
+        current, total = self.get_sheet_indicator_values()
+        return f"{current} of {total}"
+
+    @BasePage.context_chrome
+    def _wait_for_current_page(self, expected: int, timeout: int = 20):
+        """Wait until current-page equals expected."""
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_sheet_indicator_values()[0] == expected
+        )
+
+    @BasePage.context_chrome
+    def _click_pagination_button(self, button_id: str):
+        """
+        Click a navigation button in the print preview pagination toolbar.
+        button_id: 'navigateHome', 'navigatePrevious', 'navigateNext', 'navigateEnd'
+
+        Note: Uses JavaScript to access shadow DOM because the buttons are nested
+        deep within the shadow root. The framework's find_shadow_element only
+        searches direct children, but shadowRoot.getElementById() finds at any depth.
+        """
+        self.hover_preview()
+        pagination = self.get_element("print-preview-pagination")
+        self.driver.execute_script(
+            "arguments[0].shadowRoot.getElementById(arguments[1]).click()",
+            pagination,
+            button_id,
+        )
+
+    @BasePage.context_chrome
+    def go_to_first_page(self) -> BasePage:
+        """Click << (navigateHome) and wait until we reach page 1."""
+        self.wait_for_preview_ready()
+        current, _total = self.get_sheet_indicator_values()
+        if current != 1:
+            self._click_pagination_button("navigateHome")
+            self._wait_for_current_page(expected=1)
+        return self
+
+    @BasePage.context_chrome
+    def go_to_previous_page(self) -> BasePage:
+        """Click < (navigatePrevious) and wait for page to decrement."""
+        self.wait_for_preview_ready()
+        before, _total = self.get_sheet_indicator_values()
+        self._click_pagination_button("navigatePrevious")
+        self._wait_for_current_page(expected=max(1, before - 1))
+        return self
+
+    @BasePage.context_chrome
+    def go_to_next_page(self) -> BasePage:
+        """Click > (navigateNext) and wait for page to increment."""
+        self.wait_for_preview_ready()
+        before, total = self.get_sheet_indicator_values()
+        self._click_pagination_button("navigateNext")
+        self._wait_for_current_page(expected=min(total, before + 1))
+        return self
+
+    @BasePage.context_chrome
+    def go_to_last_page(self) -> BasePage:
+        """Click >> (navigateEnd) and wait until we reach the last page."""
+        self.wait_for_preview_ready()
+        _current, total = self.get_sheet_indicator_values()
+        self._click_pagination_button("navigateEnd")
+        self._wait_for_current_page(expected=total)
         return self

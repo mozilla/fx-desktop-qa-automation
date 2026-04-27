@@ -40,13 +40,24 @@ class ReaderView(BasePage):
         self.wait_for_reader_view_open()
         return self
 
+    @BasePage.context_chrome
     def close_reader_view_searchbar(self) -> BasePage:
         """
         Closes the reader view using the search bar
         """
         before_page_source = self.driver.page_source
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.get_element("reader-view-button").click()
+        self.get_element("reader-view-button").click()
+        self.wait.until(lambda _: self.driver.page_source != before_page_source)
+        self.wait_for_reader_view_closed()
+        return self
+
+    @BasePage.context_content
+    def close_reader_view_by_x_button(self) -> BasePage:
+        """
+        Closes the reader view using the toolbar [X] button
+        """
+        before_page_source = self.driver.page_source
+        self.get_element("reader-close-button").click()
         self.wait.until(lambda _: self.driver.page_source != before_page_source)
         self.wait_for_reader_view_closed()
         return self
@@ -76,9 +87,9 @@ class ReaderView(BasePage):
 
     def wait_for_reader_view_closed(self) -> BasePage:
         """
-        Checks to see if the reader view toolbar is not present, demonstrating that reader view is not open.
+        Checks to see if the reader view toolbar is not visible, demonstrating that reader view is not open.
         """
-        self.element_does_not_exist("reader-toolbar")
+        self.element_not_visible("reader-toolbar")
         return self
 
     def click_toolbar_option(self, option: str) -> BasePage:

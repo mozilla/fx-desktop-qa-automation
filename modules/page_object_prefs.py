@@ -1,6 +1,7 @@
-import re
+import datetime
+import json
 from time import sleep
-from typing import List
+from typing import List, Literal
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -12,9 +13,8 @@ from selenium.webdriver.support.select import Select
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
-from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
-from modules.util import Utilities
+from modules.util import BrowserActions, Utilities
 
 
 class AboutPrefs(BasePage):
@@ -28,15 +28,34 @@ class AboutPrefs(BasePage):
     """
 
     URL_TEMPLATE = "about:preferences#{category}"
+    OPTIONS_MAX = 12
     iframe = None
 
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.driver = driver
 
-    # number of tabs to reach the country tab
+    # Number of tabs to reach the country tab
     TABS_TO_COUNTRY = 6
     TABS_TO_SAVE_CC = 5
+    ZOOM_LEVELS = [
+        30,
+        50,
+        67,
+        80,
+        90,
+        100,
+        110,
+        120,
+        133,
+        150,
+        170,
+        200,
+        240,
+        300,
+        400,
+        500,
+    ]
 
     class HttpsOnlyStatus:
         """Fake enum: return a string based on a constant name"""
@@ -49,12 +68,32 @@ class AboutPrefs(BasePage):
     HTTPS_ONLY_STATUS = HttpsOnlyStatus()
 
     # Function Organization
-    ## Search and Settings
-    def search_engine_dropdown(self) -> Dropdown:
-        """Returns the Dropdown region for search engine prefs"""
-        return Dropdown(
-            self, self.driver, root=self.get_element("search-engine-dropdown-root")
-        )
+    # Search and Settings
+
+    def select_search_suggestions_in_address_bar(self, value: bool = True) -> BasePage:
+        """
+        Selects the search suggestions in the Address Bar checkbox according to the value given.
+        """
+        checkbox = self.get_element("show-suggestions")
+        awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
+        checked = bool(checkbox.get_attribute("checked"))
+        if value != checked:
+            checkbox.click()
+        if value and not awesome_bar_checkbox.get_attribute("checked"):
+            awesome_bar_checkbox.click()
+        return self
+
+    def select_default_search_engine_by_key(self, option: str) -> BasePage:
+        """Open the Default Search Engine dropdown directly and use keys to choose"""
+        for i in range(self.OPTIONS_MAX):
+            self.click_on("default-engine-dropdown")
+            for _ in range(i):
+                self.actions.send_keys(Keys.DOWN)
+            self.actions.send_keys(Keys.ENTER).perform()
+            if self.get_element("select-wrapper-button").text == option:
+                break
+        assert self.get_element("select-wrapper-button").text == option
+        return self
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
@@ -62,6 +101,93 @@ class AboutPrefs(BasePage):
         search_input.clear()
         search_input.send_keys(term)
         return self
+
+    def enable_private_window_suggestions(self):
+        """Enable 'Show search suggestions in Private Windows' if not already checked."""
+
+        checkbox = self.get_element("search-suggestion-in-private-windows")
+        if checkbox.get_attribute("checked") != "true":
+            checkbox.click()
+        return self
+
+    def select_search_engine_from_tree(self, engine_name: str) -> BasePage:
+        """
+        Select a search engine from the 'Search Shortcuts' list in about:preferences.
+        Note:
+            This method handles browser UI built with Firefox’s internal XUL TreeView API,
+            where items are generated virtually rather than as standard DOM nodes. Since
+            Selenium cannot interact with these virtual rows directly, this method scrolls
+            to the table and delegates selection to a JavaScript-based helper.
+        Argument:
+            engine_name (str): Name of the search engine to select (e.g., "DuckDuckGo")
+        """
+        search_shortcuts_group = self.get_element("search-shortcuts-group")
+        engine_list = self.get_element(
+            "search-engine-list", parent_element=search_shortcuts_group
+        )
+        return self._select_engine_with_javascript(engine_list, engine_name)
+
+    def _select_engine_with_javascript(self, engine_list, engine_name: str) -> BasePage:
+        """
+        Select a search engine from a XUL TreeView-backed list via JavaScript.
+        Note:
+            The 'Search Shortcuts' table is rendered using Firefox’s internal TreeView API,
+            not the standard DOM. Therefore, Selenium cannot access or click individual rows.
+            This method executes JavaScript to loop through the TreeView rows and programmatically
+            select the row that matches the given engine name.
+        Arguments:
+            engine_list: WebElement representing the XUL tree container.
+            engine_name (str): Search engine name to select (case-insensitive match).
+        Raises:
+            Exception: If no matching search engine is found in the TreeView.
+        """
+        js = """
+        let tree = arguments[0];
+        let name = arguments[1].toLowerCase();
+        let view = tree.view;
+        for (let i = 0; i < view.rowCount; i++) {
+            let text = view.getCellText(i, tree.columns.getNamedColumn("engineName"));
+            if (text && text.toLowerCase().includes(name)) {
+                view.selection.select(i);
+                tree.ensureRowIsVisible(i);
+                return true;
+            }
+        }
+        return false;
+        """
+
+        found = self.driver.execute_script(js, engine_list, engine_name)
+        if not found:
+            raise Exception(
+                f"Search engine '{engine_name}' not found in Search Shortcuts table."
+            )
+        return self
+
+    @BasePage.context_chrome
+    def remove_search_engine(self, engine_name: str) -> BasePage:
+        """
+        Remove a search engine from the 'Search Shortcuts' list in about:preferences.
+        Argument:
+            engine_name (str): Name of the search engine to remove (e.g., "DuckDuckGo")
+        """
+        self.element_visible("remove-search-engine-button")
+        self.click_on("remove-search-engine-button")
+        return self
+
+    @BasePage.context_chrome
+    def restore_default_search_engines(self) -> BasePage:
+        """
+        Restore the default search engines in the 'Search Shortcuts' list in about:preferences.
+        """
+        self.element_visible("restore-default-search-engines-button")
+        self.click_on("restore-default-search-engines-button")
+        return self
+
+    @BasePage.context_content
+    def verify_clipboard_suggestion_enabled(self) -> None:
+        checkbox = self.get_element("clipboard-suggestion-checkbox")
+        is_checked = checkbox.get_attribute("checked") in ("true", "checked", "")
+        assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Changes the browser language"""
@@ -80,7 +206,7 @@ class AboutPrefs(BasePage):
         self.get_element("language-option-by-code", labels=[lang_code]).click()
         select_language.click()
         self.get_element("language-settings-add-button").click()
-        self.expect_element_attribute_contains(
+        self.element_attribute_contains(
             "language-added-list", "last-selected", f"locale-{lang_code}"
         )
 
@@ -94,17 +220,30 @@ class AboutPrefs(BasePage):
         self.find_in_settings("HTTPS")
         self.element_clickable(str(option_id))
         self.click_on(str(option_id))
-        self.expect_element_attribute_contains(str(option_id), "checked", "")
+        self.element_attribute_contains(str(option_id), "checked", "")
+        return self
+
+    def click_zoom_text_only(self) -> BasePage:
+        """
+        Toggles the Zoom Text Only checkbox in about:preferences.
+        Uses JS to pierce the moz-checkbox shadow root.
+        """
+        moz_checkbox = self.get_element("zoom-text-only")
+        self.driver.execute_script("arguments[0].click()", moz_checkbox)
         return self
 
     def set_default_zoom_level(self, zoom_percentage: int) -> BasePage:
         """
         Sets the Default Zoom level in about:preferences.
+        Gets the inner <select> from moz-select's shadow root and uses
+        Selenium's Select class to choose the target zoom level.
         """
-        self.click_on("default-zoom-dropdown")
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            self.click_on("default-zoom-dropdown-value", labels=[f"{zoom_percentage}"])
-        self.click_on("default-zoom-dropdown")
+        moz_select = self.get_element("default-zoom-dropdown")
+        inner_select = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('select')",
+            moz_select,
+        )
+        Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
@@ -112,31 +251,91 @@ class AboutPrefs(BasePage):
         From the applications list that handles how downloaded media is used,
         select a content type and action
         """
-        el = self.get_element("actions-menu", labels=[content_type])
-        el.click()
-        self.click_on("actions-menu-option", labels=[content_type, action])
-        self.wait.until(lambda _: el.get_attribute("label") == action)
+        menu = self.get_element("actions-menu", labels=[content_type])
+        items = menu.find_elements(By.TAG_NAME, "menuitem")
+        target_index = next(
+            (
+                i
+                for i, item in enumerate(items)
+                if item.get_attribute("label") == action
+            ),
+            None,
+        )
+        if target_index is None:
+            raise ValueError(
+                f"Option '{action}' not found in actions menu for {content_type}"
+            )
+        self.click_on("actions-menu", labels=[content_type])
+        self.wait.until(
+            lambda _: menu.get_attribute("open") is not None
+        )  # wait for popup
+        menu.send_keys(Keys.HOME)
+        for _ in range(target_index):
+            menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
+        self.wait.until(
+            lambda _: menu.get_attribute("label") == action
+        )  # verify selection
+        return self
+
+    def select_trackers_to_block(self, *options):
+        """Select the trackers to block in the about:preferences page. Unchecks all first."""
+        self.elements |= {
+            "checkbox-by-label": {
+                "selectorData": "checkbox[label='{}']",
+                "strategy": "css",
+                "groups": ["doNotCache"],
+            }
+        }
+        self.click_on("custom-radio")
+        checkboxes = self.get_element("custom-tracker-options-parent").find_elements(
+            By.TAG_NAME, "checkbox"
+        )
+        for checkbox in checkboxes:
+            if checkbox.is_selected():
+                checkbox.click()
+        for option in options:
+            self.click_on(option)
+            tag = self.get_element(option).tag_name
+            if tag == "checkbox":
+                self.element_has_attribute(option, "checked")
+            elif tag == "menuitem":
+                self.element_attribute_is(option, "selected", "true")
+
+        sleep(0.25)
         return self
 
     def get_history_menulist(self) -> WebElement:
         """
-        Gets the webelement for the list of history items that appear in about:preferences
+        Gets the web element for the list of history items that appear in about:preferences
         """
         return self.get_element("history_menulist")
 
-    ## Payment and Address Management
+    def set_history_option(self, option: str):
+        """
+        Set the history option in about:preferences.
+        """
+        history_menulist = self.get_history_menulist()
+        self.driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
+        sleep(1)
+        menulist_popup = Select(self.get_element("history-option-select"))
+        menulist_popup.select_by_value(option)
+        return self
+
+    # Payment and Address Management
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
         """
-        Does the assertions that ensure all the extracted information (the cc_info_json) is the same as the generated fake credit_card_fill_obj data.
+        Does the assertions that ensure all the extracted information (the cc_info_json) is the same
+        as the generated fake credit_card_fill_obj data.
 
         ...
 
         Attributes
         ----------
         cc_info_json: dict
-            The dictionary that is the json representation of the extracted information from a web page
+            JSON representation of the extracted information from a web page
         credit_card_fill_obj: CreditCardBase
             The object that contains all the generated information
         """
@@ -149,7 +348,7 @@ class AboutPrefs(BasePage):
         self, credit_card_fill_obj: CreditCardBase
     ):
         """
-        Verify saved payment profile data is the same as the generated fake credit_card_fill_obj data.
+        Verify saved payment profile data is the same as generated fake credit_card_fill_obj data.
         Make sure cvv is not displayed.
 
         Arguments:
@@ -188,12 +387,6 @@ class AboutPrefs(BasePage):
                 )
                 assert field_value != expected_cvv, "CVV is displayed."
         return self
-
-    def get_saved_payments_popup(self) -> WebElement:
-        """
-        Open saved payments dialog panel
-        """
-        return self.get_element("prefs-button", labels=["Saved payment methods"])
 
     def click_edit_on_dialog_element(self):
         """
@@ -245,7 +438,8 @@ class AboutPrefs(BasePage):
         for field in fields:
             self.actions.send_keys(fields[field] + Keys.TAB).perform()
 
-        # Press tab again to navigate to the next field (this accounts for the second tab after the name field)
+        # Press tab again to navigate to the next field (this accounts for the second tab
+        # after the name field)
         self.actions.send_keys(Keys.TAB).perform()
         # Finally, press enter
         self.actions.send_keys(Keys.ENTER).perform()
@@ -268,7 +462,11 @@ class AboutPrefs(BasePage):
     def close_dialog_box(self):
         """Close dialog box for saved addresses or payments."""
         self.element_clickable("panel-popup-button", labels=["close-button"])
-        self.get_element("panel-popup-button", labels=["close-button"]).click()
+        self.click_on("panel-popup-button", labels=["close-button"])
+        if self.get_element(
+            "panel-popup-button", labels=["close-button"]
+        ).is_displayed():
+            self.click_on("panel-popup-button", labels=["close-button"])
         return self
 
     def update_cc_field_panel(self, field_name: str, value: str | int) -> BasePage:
@@ -289,17 +487,18 @@ class AboutPrefs(BasePage):
             )
         self.switch_to_edit_saved_payments_popup_iframe()
         value_field = self.find_element(By.ID, fields[field_name])
-        if value_field.tag_name != "select":
+        if value.isdigit():
+            value = int(value)
+        if field_name == "expiration_year":
+            value -= (datetime.datetime.now().year % 100) + 1
+
+        if value_field.tag_name == "select":
+            Select(value_field).select_by_index(value)
+        else:
             value_field.clear()
-        value_field.send_keys(value)
+            value_field.send_keys(value)
         self.get_element("save-button").click()
         return self
-
-    def get_saved_addresses_popup(self) -> WebElement:
-        """
-        Returns saved addresses button element
-        """
-        return self.get_element("prefs-button", labels=["Saved addresses"])
 
     def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
         """
@@ -323,6 +522,15 @@ class AboutPrefs(BasePage):
         self.fill_and_save_address_panel_information(address_data)
         self.switch_to_default_frame()
         self.close_dialog_box()
+        return self
+
+    def select_saved_address_entry(self, idx=0):
+        """
+        Select one of the entries in the saved addresses list.
+        """
+        self.switch_to_saved_addresses_popup_iframe()
+        select_el = Select(self.get_element("address-saved-options"))
+        self.double_click(select_el.options[idx])
         return self
 
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
@@ -384,12 +592,13 @@ class AboutPrefs(BasePage):
             telephone=util.normalize_regional_phone_numbers(fields.get("tel"), region),
         )
 
-    ## UI Navigation and Iframe Handling
+    # UI Navigation and Iframe Handling
     def get_saved_payments_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_saved_payments_popup().click()
+        self.find_in_settings("pay")
+        self.click_on("saved-payments-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -403,17 +612,31 @@ class AboutPrefs(BasePage):
 
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
-        Returns the iframe object for the dialog panel in the popup after pressing some button that triggers a popup
+        Returns the iframe object for the dialog panel in the popup after pressing some button that
+        triggers a popup
         """
-        self.get_element("prefs-button", labels=[button_label]).click()
+        # hack to know if the current iframe is the default browser one or not
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+        self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
+
+    def clear_cookies_and_get_dialog_iframe(self):
+        """
+        Returns the iframe object for the dialog panel in the popup after pressing the clear site
+        data button.
+        """
+        self.scroll_to_element("clear-site-data-button")
+        self.click_on("clear-site-data-button")
+        return self.get_element("browser-popup")
 
     def get_saved_addresses_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.get_saved_addresses_popup().click()
+        self.find_in_settings("manage add")
+        self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
 
@@ -447,6 +670,15 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("browser-popup")
 
+    def get_and_switch_iframe(self):
+        """
+        Gets the webelement for the iframe that commonly appears in about:preferences and switches
+        to it.
+        """
+        iframe = self.get_iframe()
+        self.switch_to_iframe_context(iframe)
+        return self
+
     def get_password_exceptions_popup_iframe(self) -> WebElement:
         """
         Returns the iframe object for the Password Exceptions dialog panel in the popup.
@@ -457,7 +689,7 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    ## Data Extraction and Processing
+    # Data Extraction and Processing
     def set_country_autofill_panel(self, country: str) -> BasePage:
         """Sets the country value in the autofill view"""
         select_country = Select(self.driver.find_element(By.ID, "country"))
@@ -468,7 +700,8 @@ class AboutPrefs(BasePage):
         self, address_data: AutofillAddressBase
     ) -> BasePage:
         """
-        Takes the sample AutofillAddressBase object and fills it into the popup panel in the about:prefs section
+        Takes the sample AutofillAddressBase object and fills it into the popup panel in the
+        about:prefs section
         under saved addresses methods.
 
         Arguments:
@@ -498,30 +731,22 @@ class AboutPrefs(BasePage):
         self.get_element("save-button").click()
         return self
 
-    def get_clear_cookie_data_value(self) -> int | None:
+    def get_cookie_site_data_value(self) -> int | None:
         """
         With the 'Clear browsing data and cookies' popup open,
         returns the <memory used> value of the option for 'Cookies and site data (<memory used>)'.
-        The <memory used> value for no cookies is '0 bytes', otherwise values are '### MB', or '### KB'
+        The <memory used> value for no cookies is '0 bytes', otherwise values are
+        '### MB', or '### KB'
         """
         # Find the dialog option elements containing the checkbox label
-        options = self.get_elements("clear-data-dialog-options")
-
-        # Extract the text from the label the second option
-        second_option = options[1]
-        label_text = second_option.text
-        print(f"The text of the option is: {label_text}")
-
-        # Use a regular expression to find the memory usage
-        match = re.search(r"\d+", label_text)
-
-        if match:
-            number_str = match.group()  # Extract the matched number as a string
-            number = int(number_str)  # Convert the number to an integer
-            print(f"The extracted value is: {number}")
-            return number
-        else:
-            print("No number found in the string")
+        self.element_exists("clear-data-dialog-options")
+        cookies_checkbox = self.get_element("cookies-data-checkbox")
+        self.element_has_attribute(cookies_checkbox, "data-l10n-args")
+        cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
+        # dictionary holding the cookies amount and unit
+        # {amount: "1234", unit: "MB"}
+        cookies_amount = json.loads(cookies_object)
+        return int(cookies_amount.get("amount"))
 
     def get_manage_data_site_element(self, site: str) -> WebElement:
         """
@@ -530,8 +755,53 @@ class AboutPrefs(BasePage):
         element = self.get_element("manage-cookies-site", labels=[site])
         return element
 
-    ## Utility Functions
-    def import_bookmarks(self, browser_name: str) -> BasePage:
+    def remove_cookie_site_data(self, cookie_site: str = "", all_sites: bool = False):
+        """
+        Removes a given site from the manage site data popup
+        If all_sites is True, removes all sites from the manage site data popup and check that
+        "cookies-manage-data-sitelist" only has one row.
+        """
+        sites = self.get_elements("children-host-elements")
+        if all_sites:
+            self.click_on("remove-all-button")
+            self.element_exists("cookies-manage-data-sitelist")
+            sites = self.get_elements("children-host-elements")
+            self.expect(lambda _: len(sites) == 0)
+        else:
+            cookie_item = self.get_manage_data_site_element(cookie_site)
+            cookie_item.click()
+            self.click_on("remove-selected-cookie-button")
+            new_sites = self.get_elements("children-host-elements")
+            self.expect(lambda _: len(new_sites) == len(sites) - 1)
+
+    def open_autoplay_modal(self) -> BasePage:
+        """
+        Opens the Autoplay settings modal dialog from the about:preferences#privacy page.
+        """
+        self.open()
+        self.click_on("autoplay-settings-button")
+        self.driver.switch_to.frame(self.get_iframe())
+        self.click_on("autoplay-settings")
+        return self
+
+    def set_autoplay_setting_in_preferences(
+        self,
+        settings: Literal["allow-audio-video", "block-audio-video", "allow-audio-only"],
+    ) -> BasePage:
+        """
+        Open the Autoplay settings panel and choose a setting for all sites.
+        Arguments:
+            settings: "allow-audio-video" → Allow Audio and Video, "block-audio-video" →
+            Block Audio and Video, "allow-audio-only" → Allow Audio but block Video
+        """
+        self.open_autoplay_modal()
+        self.click_on(settings)
+        self.click_on("spacer")
+        self.click_on("autoplay-save-changes")
+        return self
+
+    # Utility Functions
+    def import_bookmarks(self, browser_name: str, platform) -> BasePage:
         """
         Press the import browser data button
         """
@@ -556,11 +826,20 @@ class AboutPrefs(BasePage):
             tries += 1
 
         self.click_on("migration-import-button")
+        sleep(1)
+
+        # On Windows, Tab to and use the Skip button
+        if platform.lower().startswith("win"):
+            for _ in range(3):
+                self.actions.send_keys(Keys.TAB).perform()
+            self.actions.send_keys(Keys.RETURN).perform()
 
         # There are two messages that indicate a successful migration
         self.wait.until(
-            lambda _: self.get_element("migration-progress-header").text
-            in ["Data Imported Successfully", "Data Import Complete"]
+            lambda _: (
+                self.get_element("migration-progress-header").text
+                in ["Data imported successfully", "Data import complete"]
+            )
         )
         self.actions.send_keys(" ").perform()
         return self
@@ -572,6 +851,153 @@ class AboutPrefs(BasePage):
                 self.get_element("panel-popup-button", labels=[field]).click()
         else:
             self.get_element("panel-popup-button", labels=[field]).click()
+        return self
+
+    @BasePage.context_content
+    def get_app_name_for_mime_type(self, mime_type: str) -> str:
+        """
+        Return the application name associated with a given MIME type in about:preferences.
+        Argument:
+            mime_type: the MIME type to look up (e.g., "application/msword").
+        """
+        # Locate the row for the given MIME type
+        mime_type_item = self.get_element("mime-type-item", labels=[mime_type])
+
+        # Find the description element that contains application info
+        action_description = self.get_element(
+            "mime-type-item-description", parent_element=mime_type_item
+        )
+
+        # Parse the JSON data-l10n-args attribute and extract app name
+        mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
+        return mime_type_data["app-name"]
+
+    def set_pdf_handling_to_always_ask(self) -> BasePage:
+        """
+        Set PDF content type handling to "Always ask" in Applications settings.
+        """
+        self.click_on("pdf-content-type")
+        self.click_on("pdf-actions-menu")
+        menu = self.get_element("pdf-actions-menu")
+        menu.send_keys(Keys.DOWN)
+        menu.send_keys(Keys.ENTER)
+        return self
+
+    @BasePage.context_chrome
+    def handle_unknown_content_dialog(self) -> BasePage:
+        """
+        Wait for the unknown content type dialog to appear and close it with Escape.
+        """
+        self.wait.until(lambda _: len(self.driver.window_handles) > 1)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.wait.until(lambda _: self.get_element("unknown-content-type-dialog"))
+
+        # Close the dialog with Escape
+        dialog = self.get_element("unknown-content-type-dialog")
+        dialog.send_keys(Keys.ESCAPE)
+        return self
+
+    def open_manage_cookies_data_dialog(self) -> BasePage:
+        """
+        Open the 'Manage Cookies and Site Data' dialog safely.
+
+        Waits for the 'Manage browsing data' button to be clickable, clicks it to open
+        the dialog, and switches the driver context to the dialog's iframe. After
+        calling this method, subsequent element interactions will be within the
+        dialog's iframe context.
+
+        Note: This method assumes the about:preferences page is already open.
+        Call self.open() first if needed.
+        """
+        self.element_clickable("prefs-button", labels=["Manage browsing data"])
+        manage_data_popup = self.press_button_get_popup_dialog_iframe(
+            "Manage browsing data"
+        )
+        BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
+        return self
+
+    def uncheck_history_suggestion(self):
+        """
+        Uncheck the 'historySuggestion' checkbox if it's currently checked.
+        """
+        checkbox = self.get_element("history-suggestion")
+        if checkbox.is_selected():
+            checkbox.click()
+
+    def verify_element_is_interactable(
+        self, locator: str, text_value: str = None
+    ) -> BasePage:
+        """Verify that the element with the given locator is interactable."""
+        element = self.get_element(locator)
+        if element.is_displayed():
+            self.scroll_to_element(locator)
+            self.element_clickable(locator)
+            if text_value:
+                self.element_has_text(locator, text_value)
+        return self
+
+    def open_clear_cookie_site_and_get_data(self):
+        """
+        Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
+        wait for its option container to be present, read the value, then switch back.
+        """
+        self.open()
+        iframe = self.clear_cookies_and_get_dialog_iframe()
+        self.switch_to_iframe_context(iframe)
+        val = self.get_cookie_site_data_value()
+        self.switch_to_default_frame()
+        self.close_dialog_box()
+        return val
+
+    def open_clear_cookie_site_and_clear_data(self):
+        """
+        Open about:preferences#privacy and clear cookies and site data.
+        """
+        iframe = self.clear_cookies_and_get_dialog_iframe()
+        self.switch_to_iframe_context(iframe)
+        self.click_on("clear-data-accept-button")
+        self.switch_to_default_frame()
+
+    def enable_show_sidebar(self):
+        """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
+        if not self.get_element("show-sidebar-checkbox").get_attribute("checked"):
+            self.click_on("show-sidebar-shadow-box")
+        self.element_has_attribute("show-sidebar-checkbox", "checked")
+        return self
+
+    def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
+        """Wait until the UI reflects the selected default search engine."""
+        self.wait.until(
+            lambda _: self.element_has_text("select-wrapper-button", engine_name)
+        )
+        return self
+
+    def open_primary_password_popup(self, browser_actions):
+        """
+        Opens the 'Change Primary Password' popup by checking the checkbox
+        and switches to the iframe context.
+        """
+        self.click_on("use-primary-password")
+        popup = self.get_element("browser-popup")
+        browser_actions.switch_to_iframe_context(popup)
+        return self
+
+    def set_primary_password(self, password):
+        """
+        Sets a new primary password.
+        """
+        self.get_element("enter-new-password").send_keys(password)
+        self.get_element("reenter-new-password").send_keys(password)
+        self.click_on("submit-password")
+        return self
+
+    def accept_alert_and_verify_text(self, expected_text: str):
+        """
+        Verifies alert text and accepts it.
+        """
+        alert = self.get_alert()
+        assert expected_text in alert.text
+        alert.accept()
         return self
 
 
@@ -591,7 +1017,15 @@ class AboutAddons(BasePage):
         """
         Clicks the corresponding sidebar option from the about:addons page.
         """
-        self.get_element("sidebar-options", labels=[option]).click()
+        self.element_clickable("sidebar-options", labels=[option])
+        self.click_on("sidebar-options", labels=[option])
+
+    def get_language_addon_list(self):
+        """Gets the cards from the about:addons page"""
+        addon_list_parent = self.get_element("languages-addon-list")
+        return self.get_element(
+            "languages-addon-list-card", multiple=True, parent_element=addon_list_parent
+        )
 
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
@@ -602,7 +1036,7 @@ class AboutAddons(BasePage):
         Attributes
         ----------
         nav: Navigation
-            The navgiation object
+            The navigation object
         theme_name: str
             The name of the theme to press
         intended_color: str
@@ -646,7 +1080,7 @@ class AboutAddons(BasePage):
 
     def check_theme_has_changed(self, original_theme: str) -> BasePage:
         """
-        Ensure that the theme has changed.
+        Ensure the theme has changed.
         """
         assert not self.enabled_theme_matches(original_theme)
         return self

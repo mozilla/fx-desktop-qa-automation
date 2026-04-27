@@ -1,0 +1,18 @@
+{
+ "url": "http://127.0.0.1:8080/mediamarkt_ad.html",
+ "field_mapping": {
+   "given_name": "8c7da706-f38b-4a73-9676-9002d73d42ce",
+   "family_name": "11e319f4-799c-4dc7-b263-ba7579f925b0",
+   "street_address": "5e202852-df33-4dca-810d-010cc4c2357b",
+   "email": "36b2f5e8-aa5e-4d1d-9831-75d79fbdc7a3",
+   "telephone": "4fce2ff8-f354-49ca-9d7e-9a0115bbf578"
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+   "8c7da706-f38b-4a73-9676-9002d73d42ce",
+   "11e319f4-799c-4dc7-b263-ba7579f925b0",
+   "5e202852-df33-4dca-810d-010cc4c2357b",
+   "36b2f5e8-aa5e-4d1d-9831-75d79fbdc7a3",
+   "4fce2ff8-f354-49ca-9d7e-9a0115bbf578"
+ ]
+}

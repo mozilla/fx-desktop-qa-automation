@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/kohls_ad.html",
+  "field_mapping": {
+    "given_name": "4da59850-5fe6-41cf-a641-9194edc524f3",
+    "family_name": "04b920e6-037b-410b-915e-bbb2c03133e7",
+    "street_address": "c6a8e434-6b1e-4450-9bdf-d436114de5f3",
+    "address_level_2": "c18042af-da06-4cbe-8ae4-3318b8f20147",
+    "address_level_1": "787f91cf-3cf1-4cf4-a709-a32cd7d109de",
+    "postal_code": "4449316e-ca95-4f85-868a-4e72fce61d4a",
+    "telephone": "310ac4ab-2324-4f49-91c3-467b4c2be388"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "4da59850-5fe6-41cf-a641-9194edc524f3",
+    "04b920e6-037b-410b-915e-bbb2c03133e7",
+    "c6a8e434-6b1e-4450-9bdf-d436114de5f3",
+    "c18042af-da06-4cbe-8ae4-3318b8f20147",
+    "787f91cf-3cf1-4cf4-a709-a32cd7d109de",
+    "4449316e-ca95-4f85-868a-4e72fce61d4a",
+    "310ac4ab-2324-4f49-91c3-467b4c2be388"
+  ]
+}

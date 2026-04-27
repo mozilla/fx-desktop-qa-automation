@@ -1,0 +1,27 @@
+{
+ "url": "http://127.0.0.1:8080/tchibo_ad.html",
+ "field_mapping": {
+    "given_name":"7c5a8db6-8650-40bb-b2d7-56faa25baf64",
+    "family_name":"ab6565f2-d945-4f59-90fa-0013b1cc82f9",
+    "street_address":"6220b12e-acd9-4598-b518-951106cd8e24",
+    "postal_code":"13f8266c-138b-45ce-b11d-067c42971508",
+    "telephone": "3c89fd93-24e6-4f56-b3d2-947eeaea3f0d",
+    "email": "fc6c00f1-c9fe-4ecd-8841-425a3484061b",
+   "country": "70f2ff1e-9425-4b75-8fd5-e321fe29dde9"
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "7c5a8db6-8650-40bb-b2d7-56faa25baf64",
+    "ab6565f2-d945-4f59-90fa-0013b1cc82f9",
+    "6220b12e-acd9-4598-b518-951106cd8e24",
+    "13f8266c-138b-45ce-b11d-067c42971508",
+    "3c89fd93-24e6-4f56-b3d2-947eeaea3f0d",
+    "fc6c00f1-c9fe-4ecd-8841-425a3484061b",
+   "70f2ff1e-9425-4b75-8fd5-e321fe29dde9"
+ ],
+    "skipped": [
+      "test_demo_ad_4a_highlight_name_org_fields.py",
+      "test_demo_ad_4b_highlight_address_fields.py",
+      "test_demo_ad_4c_highlight_phone_email_fields.py"
+  ]
+}

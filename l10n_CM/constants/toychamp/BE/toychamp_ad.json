@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/toychamp_ad.html",
+  "field_mapping": {
+    "given_name": "ab548548-2319-4fb2-82e1-f164b53f10b9",
+    "family_name": "17ef5136-7212-4a13-9ab8-f86d2cbea6ba",
+    "street_address": "2516835f-5747-42e5-a860-79212792551f",
+    "address_level_2": "2238993e-e6ed-4b6b-ae70-13ce12cc5986",
+    "postal_code": "a71e35c1-b785-4608-a857-afd55dcacd78",
+    "telephone": "4c2bf173-8bfa-42df-a5b6-8f0155066d4f",
+    "email": "b6448d6d-9b7d-4a59-80f6-e5bfb314c45e"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "ab548548-2319-4fb2-82e1-f164b53f10b9",
+    "17ef5136-7212-4a13-9ab8-f86d2cbea6ba",
+    "2516835f-5747-42e5-a860-79212792551f",
+    "2238993e-e6ed-4b6b-ae70-13ce12cc5986",
+    "a71e35c1-b785-4608-a857-afd55dcacd78",
+    "4c2bf173-8bfa-42df-a5b6-8f0155066d4f",
+    "b6448d6d-9b7d-4a59-80f6-e5bfb314c45e"
+  ]
+}

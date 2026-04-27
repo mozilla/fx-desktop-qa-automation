@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/leevalley_cc.html",
+  "field_mapping": {
+    "name": "1aa986e7-882f-47e8-9495-ca1ed5b14cb5",
+    "card_number": "f673defa-559b-46cd-9717-c9df96ce3969",
+    "expiration_date": "eccc9c93-fc62-4565-a95f-297c3d0f2841",
+    "cvv": "c0a629bc-bf13-4944-8d76-4d21bc97b55a"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "1aa986e7-882f-47e8-9495-ca1ed5b14cb5",
+    "f673defa-559b-46cd-9717-c9df96ce3969",
+    "eccc9c93-fc62-4565-a95f-297c3d0f2841",
+    "c0a629bc-bf13-4944-8d76-4d21bc97b55a"
+]
+}

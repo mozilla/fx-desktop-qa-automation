@@ -11,7 +11,11 @@ def test_case():
     return "122361"
 
 
-@pytest.mark.ci
+@pytest.fixture()
+def hard_quit():
+    return True
+
+
 def test_telephone_attribute_autofill(
     driver: Firefox,
     address_autofill: AddressFill,

@@ -38,10 +38,4 @@ def test_no_password_doorhanger_private_browsing(driver: Firefox):
     login_form.submit()
 
     # Ensure that the panel is not open
-    with driver.context(driver.CONTEXT_CHROME):
-        login_auto_fill.wait.until(
-            lambda d: login_auto_fill.get_element("save-login-popup").get_attribute(
-                "panelopen"
-            )
-            is None
-        )
+    login_auto_fill.verify_login_panel_not_open()

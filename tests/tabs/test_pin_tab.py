@@ -3,6 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
 
+NUM_TABS = 5
+
 
 @pytest.fixture()
 def test_case():
@@ -13,16 +15,16 @@ def test_pin_tab(driver: Firefox):
     """
     C134722, ensures that tabs can be pinned
     """
+
+    # Instantiate objects
     tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
 
-    num_tabs = 5
-
-    # opening some tabs
-    for _ in range(num_tabs):
+    # Opening some tabs
+    for _ in range(NUM_TABS):
         tabs.new_tab_by_button()
 
-    # pin the 1st tab
+    # Pin the 1st tab
     first_tab = tabs.get_tab(1)
     tabs.context_click(first_tab)
     tab_context_menu.click_and_hide_menu("context-menu-pin-tab")
@@ -30,11 +32,11 @@ def test_pin_tab(driver: Firefox):
     assert tabs.is_pinned(first_tab)
 
     # ensuring all the other tabs are not pinned
-    for i in range(2, num_tabs + 2):
+    for i in range(2, NUM_TABS + 2):
         tab = tabs.get_tab(i)
         assert not tabs.is_pinned(tab)
 
-    # unpinning the tab and ensuring it is no longer pinned
+    # Unpinning the tab and ensuring it is no longer pinned
     tabs.context_click(first_tab)
     tab_context_menu.click_and_hide_menu("context-menu-unpin-tab")
 

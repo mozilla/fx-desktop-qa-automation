@@ -1,5 +1,20 @@
 {
-    "region": "DE",
-    "tests": [
-    ]
+  "region": "DE",
+  "sites": [
+    "aldi",
+    "amazon",
+    "bijoubrigitte",
+    "canda",
+    "demo",
+    "dm",
+    "ebay",
+    "justspices",
+    "mediamarkt",
+    "newbalance",
+    "tchibo",
+    "thomann",
+    "zalando"
+  ],
+  "tests": [
+  ]
 }

@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
 from modules.page_object import GenericPage
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -20,16 +19,19 @@ def test_clear_all_history(driver: Firefox):
     """
     C172045: Verify that the user can Clear all the History
     """
-    panel_ui = PanelUi(driver)
-    panel_ui.open()
-    gen_page = GenericPage(driver)
-    panel_ui.open_history_menu()
-    ba = BrowserActions(driver)
+    # Instantiate objects
+    page = GenericPage(driver)
+    panel = PanelUi(driver)
 
-    panel_ui.select_clear_history_option("Everything")
+    # Open Clear History dialog
+    panel.open_history_menu()
+    panel.open_clear_history_dialog()
 
-    gen_page.get_element("clear-history-button").click()
-    ba.switch_to_content_context()
+    # Select the option to clear all the history
+    panel.select_history_time_range_option("Everything")
+    # A method in panel BOM  with selectors moved accordingly would make more sense, I'll come to this later,
+    # there are some context switching + iframe entanglements, couldn't make it work so far
+    page.click_on("clear-history-button")
 
-    panel_ui.open_history_menu()
-    panel_ui.element_does_not_exist("bookmark-item")
+    # Verify all the history is deleted
+    panel.confirm_history_clear()

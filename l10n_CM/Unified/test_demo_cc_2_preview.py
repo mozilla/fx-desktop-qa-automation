@@ -3,13 +3,13 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
-from modules.page_object import AboutPrefs, CreditCardFill
+from modules.page_object import CreditCardFill
 from modules.util import Utilities
 
 
 @pytest.fixture()
 def test_case():
-    return "2886599"
+    return "3056984"
 
 
 @pytest.fixture()
@@ -26,7 +26,7 @@ def test_cc_preview(
     fill_and_save_payments: CreditCardBase,
 ):
     """
-    C2886599 -  Verify that hovering over field will preview all eligible fields (except for the CVV field)
+    C3056984 -  Verify that hovering over field will preview all eligible fields (except for the CVV field)
     """
 
     # Open credit card form page

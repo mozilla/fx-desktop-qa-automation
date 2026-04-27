@@ -1,0 +1,26 @@
+{
+  "url": "http://127.0.0.1:8080/aldi_cc.html",
+  "field_mapping": {
+    "card_number": "3be7aab0-534f-44c7-aa07-d89f6b11320a",
+    "name": "8ddc4796-d84f-475e-a0ed-404b7491233e",
+    "expiration_month": "6c950c51-e01e-4e67-bd7b-6c16ac0d9d9c",
+    "expiration_year": "8749017b-0b4c-46c9-bb4b-c3a6fccb2795",
+    "cvv": "1a379348-4faf-4fb8-a660-2f8097d94c15"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "3be7aab0-534f-44c7-aa07-d89f6b11320a",
+    "8ddc4796-d84f-475e-a0ed-404b7491233e",
+    "6c950c51-e01e-4e67-bd7b-6c16ac0d9d9c",
+    "8749017b-0b4c-46c9-bb4b-c3a6fccb2795",
+    "1a379348-4faf-4fb8-a660-2f8097d94c15"
+  ],
+
+  "skipped": [
+    "test_demo_cc_2_preview.py",
+    "test_demo_cc_3_autofill.py",
+    "test_demo_cc_4_highlight.py",
+    "test_demo_cc_5_clear.py"
+   ]
+}

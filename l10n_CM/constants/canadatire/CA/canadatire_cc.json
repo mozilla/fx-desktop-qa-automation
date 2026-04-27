@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/canadatire_cc.html",
+  "field_mapping": {
+    "cardholder_name": "card",
+    "card_number": "card",
+    "expiration_date": "card",
+    "cvv": "card"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "card",
+    "card",
+    "card",
+    "card",
+    "card"
+]
+}

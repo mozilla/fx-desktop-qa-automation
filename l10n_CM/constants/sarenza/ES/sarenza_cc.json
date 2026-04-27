@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/sarenza_cc.html",
+  "field_mapping": {
+    "card_number": "1423c8e8-ea98-4c3a-a33f-22573fc12c21",
+    "expiration_date": "b259d589-eaa3-46bf-afa6-b40b8ba4ad5e",
+    "cvv": "2dc73072-cff5-408b-8400-5f6c44e8ddb6"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "1423c8e8-ea98-4c3a-a33f-22573fc12c21",
+    "b259d589-eaa3-46bf-afa6-b40b8ba4ad5e",
+    "2dc73072-cff5-408b-8400-5f6c44e8ddb6"
+  ]
+}

@@ -1,11 +1,7 @@
-import re
-
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
+from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
 
@@ -19,42 +15,27 @@ def delete_files_regex_string():
     return r"\bdownload\b"
 
 
-MIXED_CONTENT_DOWNLOAD_URL = "https://b-mcb-download.glitch.me/"
+MIXED_CONTENT_DOWNLOAD_URL = (
+    "https://file-examples.com/wp-content/storage/2017/10/file-sample_100kB.odt"
+)
+MAX_CHECKS = 30
 
 
+# This test has been found to be unstable in CI
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
     """
-
+    # Initialize objects
     web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
+    nav = Navigation(driver)
 
-    # Wait up to 30 seconds for test website to wake up and load the content
+    # Wait for the test website to wake up and download the content
     web_page.open()
-    with driver.context(driver.CONTEXT_CHROME):
-        WebDriverWait(driver, 30).until(EC.title_contains("Hello!"))
+    web_page.wait.until(lambda _: nav.element_visible("download-target-element"))
 
-    WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.XPATH, "//button[@onclick='runtestSec()']"))
-    ).click()
+    # Verify download name matches expected pattern
+    nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")
 
-    with driver.context(driver.CONTEXT_CHROME):
-        download_name = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "downloadTarget"))
-        )
-
-        download_status = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "downloadProgress"))
-        )
-
-        # Verify that the desired download target element is present directly, no extra steps needed.
-        download_value = download_name.get_attribute("value")
-        assert re.match(r"download(\(\d+\))?$", download_value), (
-            f"The download name is incorrect: {download_value}"
-        )
-
-        # Verify that the download progress has reached 100%, which indicates that the download is complete.
-        download_status_value = download_status.get_attribute("value")
-        assert download_status_value == "100", (
-            f"The download status is not '100': {download_status_value}"
-        )
+    # Wait for download completion
+    nav.wait_for_download_completion()

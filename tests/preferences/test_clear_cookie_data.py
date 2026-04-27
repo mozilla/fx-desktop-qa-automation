@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
-from modules.util import BrowserActions
 
 
 @pytest.fixture()
@@ -10,35 +9,28 @@ def test_case():
     return "143627"
 
 
-def test_clear_cookie_data(driver: Firefox):
+@pytest.fixture()
+def about_prefs_category():
+    return "privacy"
+
+
+WEBSITE_ADDRESS = "https://www.wikipedia.com"
+
+
+def test_clear_cookie_data(driver: Firefox, about_prefs: AboutPrefs):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel
     """
-    # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
-    ba = BrowserActions(driver)
-
-    def open_clear_cookies_data_dialog():
-        about_prefs.open()
-        clear_data_popup = about_prefs.press_button_get_popup_dialog_iframe(
-            "Clear Data"
-        )
-        ba.switch_to_iframe_context(clear_data_popup)
-
     # Visit a site to get a cookie added to saved data
-    driver.get("https://www.firefox.com")
+    driver.get(WEBSITE_ADDRESS)
 
-    # Navigate to the clear data dialog of about:preferences#privacy
-    open_clear_cookies_data_dialog()
+    # Open dialog and read current value (must be > 0)
+    cookie_value = about_prefs.open_clear_cookie_site_and_get_data()
+    assert cookie_value > 0, f"Expected cookie/site data > 0, got {cookie_value}"
 
-    # Check for a non-zero value of the 'Cookies and site data' option
-    cookie_value = about_prefs.get_clear_cookie_data_value()
-    assert cookie_value > 0
+    # Clear cookies and site data: open the dialog again, wait for iframe, click clear
+    about_prefs.open_clear_cookie_site_and_clear_data()
 
-    # Then clear the cookies and site data
-    about_prefs.get_element("clear-data-accept-button").click()
-
-    # Finally, check the value of the dialog option, it should be 0
-    open_clear_cookies_data_dialog()
-    cookie_value2 = about_prefs.get_clear_cookie_data_value()
-    assert cookie_value2 == 0
+    # Wait until the dialog reports 0 (reopen/poll via helper)
+    cookie_value = about_prefs.open_clear_cookie_site_and_get_data()
+    assert cookie_value == 0, f"Expected 0 after clearing, got {cookie_value}"

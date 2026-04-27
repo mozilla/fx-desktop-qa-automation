@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/thenorthface_cc.html",
+  "field_mapping": {
+    "card_number": "cbdbd82e-0090-4545-9bdf-214e047228e8",
+    "expiration_date": "7fb30475-14a0-4251-88f4-a6188cca11f9",
+    "cvv": "6d9ffa11-9d5a-4dd5-b44f-51b3b8bd5b32"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "cbdbd82e-0090-4545-9bdf-214e047228e8",
+    "7fb30475-14a0-4251-88f4-a6188cca11f9",
+    "6d9ffa11-9d5a-4dd5-b44f-51b3b8bd5b32"
+  ]
+}

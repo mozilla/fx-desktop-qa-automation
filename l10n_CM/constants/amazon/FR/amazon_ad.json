@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:8080/amazon_ad.html",
+  "field_mapping": {
+    "country": "ec708d25-c69f-48a6-80f1-be4e96b6db04",
+    "name": "87e21b43-187e-400b-bd9d-fd889f9fbaa0",
+    "telephone": "499c2ea7-72a7-4e8f-8f76-5e37bb793016",
+    "street_address": "3f36ea97-c7d4-4334-baba-ed7bb1d31230",
+    "address_level_2": "ef31ec08-7a7a-4a82-b68e-495d3154700c",
+    "postal_code": "71d96b8d-e26c-4aab-bfd7-b2bdb6b4ceb7"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "ec708d25-c69f-48a6-80f1-be4e96b6db04",
+    "87e21b43-187e-400b-bd9d-fd889f9fbaa0",
+    "499c2ea7-72a7-4e8f-8f76-5e37bb793016",
+    "3f36ea97-c7d4-4334-baba-ed7bb1d31230",
+    "ef31ec08-7a7a-4a82-b68e-495d3154700c",
+    "71d96b8d-e26c-4aab-bfd7-b2bdb6b4ceb7"
+  ]
+}

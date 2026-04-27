@@ -32,25 +32,25 @@ def temp_selectors():
         "drop-area": {"selectorData": "#droparea", "strategy": "css", "groups": []},
         "matching": {"selectorData": "matching", "strategy": "id", "groups": []},
         "image-to-copy": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[6]/img",
-            "strategy": "xpath",
+            "selectorData": ".m24-c-donate-media > img",
+            "strategy": "css",
             "groups": [],
         },
         "paragraph1": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[1]",
-            "strategy": "xpath",
+            "selectorData": ".m24-c-donate-body > p:nth-of-type(1)",
+            "strategy": "css",
             "groups": [],
         },
         "paragraph2": {
-            "selectorData": "/html/body/div[3]/div/div/section[2]/div/main/article/section/p[2]",
-            "strategy": "xpath",
+            "selectorData": ".m24-c-donate-body > p:nth-of-type(2)",
+            "strategy": "css",
             "groups": [],
         },
     }
 
 
 DEMO_URL = "https://mystor.github.io/dragndrop/#"
-COPY_URL = "https://1stwebdesigner.com/image-file-types/"
+COPY_URL = "https://www.mozilla.org/en-US"
 
 
 @pytest.mark.headed
@@ -78,7 +78,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
     web_page.paste_to_element(sys_platform, "drop-area")
-    web_page.expect_element_attribute_contains("matching", "outerHTML", "green")
+    web_page.element_attribute_contains("matching", "outerHTML", "green")
 
     # Test pasting text data
     web_page.click_on("paste-html-data")
@@ -96,4 +96,4 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
     web_page.paste_to_element(sys_platform, "drop-area")
-    web_page.expect_element_attribute_contains("matching", "outerHTML", "green")
+    web_page.element_attribute_contains("matching", "outerHTML", "green")

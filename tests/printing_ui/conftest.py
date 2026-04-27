@@ -1,7 +1,8 @@
 import pytest
 
+from modules.browser_object import PrintPreview
 
-# test
+
 @pytest.fixture()
 def suite_id():
     return ("S73", "Printing UI Modernization")
@@ -18,3 +19,8 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def print_preview(driver):
+    return PrintPreview(driver)

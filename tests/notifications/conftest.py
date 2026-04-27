@@ -1,4 +1,7 @@
 import pytest
+from selenium.webdriver import Firefox
+
+from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -17,3 +20,13 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture
+def web_page(driver: Firefox, temp_selectors):
+    def _create(url: str):
+        page = GenericPage(driver, url=url).open()
+        page.elements |= temp_selectors
+        return page
+
+    return _create

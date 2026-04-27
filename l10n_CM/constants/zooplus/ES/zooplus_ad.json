@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8080/zooplus_ad.html",
+  "field_mapping": {
+    "given_name": "8f548960-cd3b-4efa-a1fb-bba25eec15cd",
+    "family_name": "deacbbce-01f5-4a5b-b220-9ce55582f059",
+    "street_address": "17b0308e-9f7f-461c-ad74-4ede5c43c170",
+    "address_level_2": "d8e4d927-0c54-4641-86fd-4040c2ad86f9",
+    "country": "fb809b18-b4f0-48c8-9bff-3bed00148c65",
+    "postal_code": "5e8d7b9d-09bc-4aa1-91e5-cd9f733fb12e",
+    "telephone": "a86df83d-33df-4c32-a813-e4976f4b4c44"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "8f548960-cd3b-4efa-a1fb-bba25eec15cd",
+    "deacbbce-01f5-4a5b-b220-9ce55582f059",
+    "17b0308e-9f7f-461c-ad74-4ede5c43c170",
+    "d8e4d927-0c54-4641-86fd-4040c2ad86f9",
+    "fb809b18-b4f0-48c8-9bff-3bed00148c65",
+    "5e8d7b9d-09bc-4aa1-91e5-cd9f733fb12e",
+    "a86df83d-33df-4c32-a813-e4976f4b4c44"
+  ]
+}

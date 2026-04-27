@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/whittard_ad.html",
+  "field_mapping": {
+    "given_name": "28187127-a9d5-41fc-ad29-422d4386dc6f",
+    "family_name": "7f521e28-34c7-4b61-9222-b9faa2d4ce95",
+    "street_address": "5625975f-1ca8-4632-8c66-52c490e87a02",
+    "address_level_2": "68ae7843-fd19-4c76-b2c4-c0b488f977a2",
+    "country": "7b1e5bca-1ef1-4e22-82ea-d56c435925fe",
+    "postal_code": "7d9b7aec-75c2-4314-97a0-483255b0f978",
+    "telephone": "9db0d3e3-54bf-4544-b190-3aed129d05c9",
+    "email": "5f649f14-02ea-42a9-9937-c82e1b3a6372"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "28187127-a9d5-41fc-ad29-422d4386dc6f",
+    "7f521e28-34c7-4b61-9222-b9faa2d4ce95",
+    "5625975f-1ca8-4632-8c66-52c490e87a02",
+    "68ae7843-fd19-4c76-b2c4-c0b488f977a2",
+    "7b1e5bca-1ef1-4e22-82ea-d56c435925fe",
+    "7d9b7aec-75c2-4314-97a0-483255b0f978",
+    "9db0d3e3-54bf-4544-b190-3aed129d05c9",
+    "5f649f14-02ea-42a9-9937-c82e1b3a6372"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/douglas_cc.html",
+  "field_mapping": {
+    "name": "146772ef-7c08-4f78-afa1-e2086ee3fc4b",
+    "card_number": "3711d662-3488-4cbd-9ccd-918b0da1e6d2",
+    "expiration_date": "2c13b5be-867c-4cf4-9184-55126ea52e1e",
+    "cvv": "33fc5efa-e493-4841-bbc0-304319af8860"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "146772ef-7c08-4f78-afa1-e2086ee3fc4b",
+    "3711d662-3488-4cbd-9ccd-918b0da1e6d2",
+    "2c13b5be-867c-4cf4-9184-55126ea52e1e",
+    "33fc5efa-e493-4841-bbc0-304319af8860"
+  ]
+}

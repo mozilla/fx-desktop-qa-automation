@@ -132,3 +132,20 @@ class AboutNewtab(BasePage):
         logging.info(f"Found {self.count_top_sites()} top sites")
         # ODD: Sometimes we get 7 top sites, not 8
         assert self.count_top_sites() in self.TOP_SITES_TOTAL
+
+    @BasePage.context_content
+    def get_topsite_element(self, tile_title: str):
+        """Get a topsite tile element by title."""
+        return self.get_element("top-site-by-title", labels=[tile_title])
+
+    @BasePage.context_content
+    def open_topsite_context_menu_by_title(self, tile_title: str):
+        """
+        Opens the context menu for a topsite tile by its title.
+        Argument:
+            tile_title: The title text of the tile (eg. "Wikipedia")
+        """
+        # Get the tile by title and right-click on it to open context menu
+        tile = self.get_topsite_element(tile_title)
+        self.context_click(tile)
+        return self

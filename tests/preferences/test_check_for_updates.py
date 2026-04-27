@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -17,34 +15,17 @@ def add_to_prefs_list():
     return [("app.update.disabledForTesting", False)]
 
 
-def test_check_for_updates(driver: Firefox):
+def test_check_for_updates(driver: Firefox, about_prefs: AboutPrefs):
     """
     C143572 - The check for updates button is available and responsive
     The Button changes text to "Restart to update" if an update is available
     """
 
-    about_prefs = AboutPrefs(driver, category="general").open()
-    time.sleep(2)
+    about_prefs.open()
 
     # Find the 'updateButton' and 'checkForUpdatesButton3' elements
-    update_available_button = about_prefs.get_element("update_available_button")
-    up_to_date_button = about_prefs.get_element("up_to_date_button")
-    time.sleep(2)
-
-    # Check the label of the buttons and assert they are correct
-    if update_available_button.is_displayed():
-        label = update_available_button.text
-        assert label == "Restart to Update Firefox", (
-            f"Expected label to be 'Restart to Update Firefox' but got '{label}'"
-        )
-        assert update_available_button.is_enabled(), (
-            "The 'Restart to Update Firefox' button is not clickable"
-        )
-    elif up_to_date_button.is_displayed():
-        label = up_to_date_button.text
-        assert label == "Check for updates", (
-            f"Expected label to be 'Check for updates' but got '{label}'"
-        )
-        assert up_to_date_button.is_enabled(), (
-            "The 'Check for updates' button is not clickable"
-        )
+    # verify that they are interactable with the correct text.
+    about_prefs.verify_element_is_interactable(
+        "update_available_button", "Restart to Update Firefox"
+    )
+    about_prefs.verify_element_is_interactable("up_to_date_button", "Check for updates")

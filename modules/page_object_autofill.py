@@ -146,6 +146,7 @@ class Autofill(BasePage):
         """Click the form field given the attribute name."""
         field = self.field_mapping.get(attr_name, None)
         if field:
+            self.get_element("form-field", labels=[field]).clear()
             self.double_click("form-field", labels=[field])
         else:
             logging.warning(f"The field: {attr_name} is not available in the site.")
@@ -189,6 +190,7 @@ class Autofill(BasePage):
         sample_data: AutofillAddressBase | CreditCardBase,
         field: str,
         value: str | int,
+        region: str,
     ):
         """
         Update the form field with the new value.
@@ -197,6 +199,7 @@ class Autofill(BasePage):
             sample_data: sample data instance used to verify change.
             field: field being changed.
             value: value being added.
+            region: region being tested.
         """
         # updating the profile accordingly
         self.update_and_save(field, value)
@@ -205,14 +208,17 @@ class Autofill(BasePage):
         self.select_autofill_option(field)
 
         # verifying the correct data
-        self.verify_form_data(sample_data)
+        self.verify_form_data(sample_data, region)
         return self
 
-    def verify_form_data(self, sample_data: CreditCardBase | AutofillAddressBase):
+    def verify_form_data(
+        self, sample_data: CreditCardBase | AutofillAddressBase, region: str = "US"
+    ):
         """Verify that form is filled correctly against sample data."""
         if not self.field_mapping:
-            # Method is meant to be called by one of the classes that inherit AutoFill (CreditCardFill or AddressFill)
-            # Should not be called directly from an Autofill instance.
+            # Method is meant to be called by one of the classes that inherit AutoFill
+            # (CreditCardFill or AddressFill). Should not be called directly
+            # from an Autofill instance.
             raise NotImplementedError(
                 "Method should only be called in inherited classes."
             )
@@ -225,28 +231,63 @@ class Autofill(BasePage):
         for attr_name, field_name in self.field_mapping.items():
             if non_us_ca_address and field_name == "address-level1":
                 continue
-            if field_name != "cc-csc":
-                expected_value = getattr(sample_data, attr_name, None)
-                autofilled_field = self.get_element("form-field", labels=[field_name])
-                if autofilled_field.tag_name.lower() != "select":
-                    autofilled_field_value = autofilled_field.get_attribute("value")
-                    # self.expect_element_attribute_contains(
-                    #     "form-field", "value", expected_value, labels=[field_name]
-                    # )
-                else:
-                    autofilled_field_value = Select(
-                        autofilled_field
-                    ).first_selected_option.text
-                if (
-                    field_name == "address-level1"
-                    and autofilled_field_value != expected_value
-                ):
-                    expected_value = self.util.get_state_province_abbreviation(
-                        expected_value
-                    )
-                assert expected_value in autofilled_field_value, (
-                    f"{autofilled_field_value} is different from {expected_value}"
+            if attr_name == "cvv":
+                continue
+            expected_value = getattr(sample_data, attr_name, None)
+            auto_filled_field_value = self._get_field_value(field_name)
+
+            # Normalize values for comparison if they are different
+            if auto_filled_field_value != expected_value:
+                expected_value, auto_filled_field_value = self._normalize_values(
+                    attr_name, expected_value, auto_filled_field_value, region
                 )
+
+            # Strip whitespace before asserting
+            if expected_value is not None and auto_filled_field_value is not None:
+                expected_value = expected_value.strip()
+                auto_filled_field_value = auto_filled_field_value.strip()
+
+            assert expected_value in auto_filled_field_value, (
+                f"Field '{attr_name}' ('{field_name}'): expected '{expected_value}' to be in '{auto_filled_field_value}'"
+            )
+
+    def _get_field_value(self, field_name: str) -> str:
+        """Get the value from a form field, handling different element types."""
+        autofilled_field = self.get_element("form-field", labels=[field_name])
+        if autofilled_field.tag_name.lower() != "select":
+            return autofilled_field.get_attribute("value")
+        else:
+            return Select(autofilled_field).first_selected_option.text
+
+    def _normalize_values(
+        self,
+        attr_name: str,
+        expected_value: str,
+        auto_filled_field_value: str,
+        region: str,
+    ) -> tuple[str, str]:
+        """Normalize expected and actual values for comparison."""
+        if attr_name == "address_level_1":
+            expected_value = self.util.get_state_province_abbreviation(expected_value)
+        elif attr_name == "expiration_date" and len(auto_filled_field_value) > 5:
+            auto_filled_field_value = auto_filled_field_value.replace("20", "")
+        elif attr_name == "country":
+            expected_value = self.util.get_country_local_translation(expected_value)
+        elif attr_name == "telephone":
+            expected_value = self.util.normalize_regional_phone_numbers(
+                expected_value, region
+            )
+            auto_filled_field_value = self.util.normalize_regional_phone_numbers(
+                auto_filled_field_value, region
+            )
+
+        # Handle numeric fields
+        if attr_name == "expiration_month" and auto_filled_field_value.isdigit():
+            # Handle expiration month comparison - normalize to integers to handle leading zeros
+            auto_filled_field_value = str(int(auto_filled_field_value))
+            expected_value = str(int(expected_value))
+
+        return expected_value, auto_filled_field_value
 
     def verify_field_autofill_dropdown(
         self,
@@ -284,6 +325,7 @@ class Autofill(BasePage):
             if field:
                 autofill_field = self.get_element("form-field", labels=[field])
                 if autofill_field.tag_name.lower() != "select":
+                    autofill_field.clear()
                     # more general way of activating the dropdown
                     self.double_click("form-field", labels=[field])
                     autofill_field.send_keys("")
@@ -372,13 +414,15 @@ class Autofill(BasePage):
             if field:
                 autofill_field = self.get_element("form-field", labels=[field])
                 if autofill_field.tag_name.lower() != "select":
+                    autofill_field.clear()
+                    self.scroll_to_element("form-field", labels=[field])
                     # Focus the field so the highlight is visible
                     self.click_on("form-field", labels=[field])
 
                     # Get all colors in the field
                     selector = self.get_selector("form-field", labels=[field])
                     colors = self.browser_actions.get_all_colors_in_element(selector)
-                    logging.info(f"Colors found in '{field}': {colors}")
+                    logging.info(f"Colors found in '{field_name}': {colors}")
 
                     # Check the highlight
                     is_field_highlighted = any(
@@ -389,20 +433,24 @@ class Autofill(BasePage):
                     # Assert based on expectation
                     if should_be_highlighted:
                         assert is_field_highlighted, (
-                            f"Expected yellow highlight on '{field}', but none found."
+                            f"Expected yellow highlight on '{field_name}', but none found."
                         )
-                        logging.info(f"Yellow highlight found in '{field}'.")
+                        logging.info(f"Yellow highlight found in '{field_name}'.")
                     else:
                         assert not is_field_highlighted, (
-                            f"Expected NO yellow highlight on '{field}', but found one."
+                            f"Expected NO yellow highlight on '{field_name}', but found one."
                         )
-                        logging.info(f"No yellow highlight in '{field}', as expected.")
+                        logging.info(
+                            f"No yellow highlight in '{field_name}', as expected."
+                        )
                 else:
                     logging.info(
-                        f"Field: {field} is a select element. No autofill option."
+                        f"Field: {field_name} is a select element. No autofill option."
                     )
             else:
-                logging.warning(f"The field: {field} is not available in the site.")
+                logging.warning(
+                    f"The field: {field_name} is not available in the site."
+                )
 
         return self
 
@@ -418,7 +466,7 @@ class Autofill(BasePage):
 
     @BasePage.context_chrome
     def verify_autofill_data_on_hover(
-        self, autofill_data: CreditCardBase | AutofillAddressBase
+        self, autofill_data: CreditCardBase | AutofillAddressBase, region: str
     ):
         """
         Verifies that the autofill preview data matches the expected values when hovering
@@ -440,7 +488,7 @@ class Autofill(BasePage):
         container_data = container.get("fillMessageData", {}).get("profile", {})
         assert container_data, "No preview data available."
         assert all(field in container_data.keys() for field in self.preview_fields), (
-            f"Not all fields present in preview data."
+            "Not all fields present in preview data."
         )
 
         # sanitize data
@@ -458,7 +506,7 @@ class Autofill(BasePage):
                 )
         for field, value in container_data.items():
             if field in self.preview_fields:
-                value = self.sanitize_preview_data(field, str(value))
+                value = self.sanitize_preview_data(field, str(value), region)
                 # Check if this value exists in our CreditCardBase | AutofillAddressBase object
                 is_present = any(
                     [value in val for val in autofill_data.__dict__.values()]
@@ -467,16 +515,16 @@ class Autofill(BasePage):
                     f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
                 )
 
-    def sanitize_preview_data(self, field, value):
+    def sanitize_preview_data(self, field, value, region):
         if field == "cc-number":
             value = value[-4:]
         elif field == "cc-exp-year":
             value = value[-2:]
-        elif value[0] == "+":
-            value = self.util.normalize_phone_number(value)
+        elif field == "tel" or value[0] == "+":
+            value = self.util.normalize_regional_phone_numbers(value, region)
         return value
 
-    def select_autofill_option(self, field, index: int = 1):
+    def select_autofill_option(self, field):
         """
         Presses the autofill panel that pops up after you double-click an input field
 
@@ -487,9 +535,10 @@ class Autofill(BasePage):
         """
         autofill_field = self.get_element("form-field", labels=[field])
         if autofill_field.tag_name.lower() != "select":
+            autofill_field.clear()
             self.double_click("form-field", labels=[field])
             self.autofill_popup.ensure_autofill_dropdown_visible()
-            self.autofill_popup.select_nth_element(index)
+            self.autofill_popup.select_autofill_panel()
         else:
             logging.info(f"Field: {field} is a select element. No autofill option.")
         return self
@@ -556,10 +605,11 @@ class Autofill(BasePage):
         if field:
             autofill_field = self.get_element("form-field", labels=[field])
             if autofill_field.tag_name.lower() != "select":
+                autofill_field.clear()
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
-                self.autofill_popup.hover("select-form-option")
-                self.verify_autofill_data_on_hover(sample_data)
+                self.autofill_popup.hover_over_autofill_panel()
+                self.verify_autofill_data_on_hover(sample_data, region)
                 self.click_on("form-field", labels=[field])
             else:
                 logging.info(
@@ -611,14 +661,15 @@ class Autofill(BasePage):
         if field:
             autofill_field = self.get_element("form-field", labels=[field])
             if autofill_field.tag_name.lower() != "select":
+                autofill_field.clear()
                 # Double-click a field and choose the first element from the autocomplete dropdown
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
-                self.autofill_popup.select_nth_element(1)
+                self.autofill_popup.select_autofill_panel()
 
                 if sample_data:
                     ## verify data
-                    self.verify_form_data(sample_data)
+                    self.verify_form_data(sample_data, region)
 
                 # Clear form autofill
                 self.double_click("form-field", labels=[field])
@@ -727,6 +778,14 @@ class LoginAutofill(Autofill):
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
 
+    @BasePage.context_chrome
+    def verify_login_panel_not_open(self):
+        self.wait.until(
+            lambda d: (
+                self.get_element("save-login-popup").get_attribute("panelopen") is None
+            )
+        )
+
     class LoginForm:
         """
         Subclass of the Login Autofill Form where you can interact with the Login Form
@@ -756,6 +815,86 @@ class LoginAutofill(Autofill):
             if self.submit_button is None:
                 self.submit_button = self.parent.get_element("submit-button-login")
             self.submit_button.click()
+
+        def verify_password_value(
+            self, expected_password: str, field: str = "password-login-field"
+        ):
+            """Wait until the password field contains the expected value."""
+            element = self.parent.get_element(field)
+            self.parent.wait.until(
+                lambda _: element.get_attribute("value") == expected_password
+            )
+            return element
+
+        def verify_username_value(
+            self, expected_username: str, field: str = "username-login-field"
+        ):
+            """Wait until the username field contains the expected value."""
+            element = self.parent.get_element(field)
+            self.parent.wait.until(
+                lambda _: element.get_attribute("value") == expected_username
+            )
+            return element
+
+        def verify_password_length(
+            self, expected_length: int = 8, field: str = "password-login-field"
+        ):
+            """Wait until the password field contains the expected number of characters."""
+            element = self.parent.get_element(field)
+            self.parent.wait.until(
+                lambda _: len(element.get_attribute("value")) == expected_length
+            )
+            return element
+
+        def verify_field_empty(self, field: str):
+            """Wait until the given field is empty."""
+            element = self.parent.get_element(field)
+            self.parent.wait.until(lambda _: element.get_attribute("value") == "")
+            return element
+
+        def generate_secure_password(self, context_menu):
+            """
+            Opens the login autofill page, triggers the 'Suggest Strong Password'
+            option from the context menu, confirms the generated password,
+            and waits until the field is filled.
+            """
+            self.parent.open()
+            self.parent.context_click("password-login-field")
+            context_menu.click_and_hide_menu("context-menu-suggest-strong-password")
+
+            # Switch to chrome context to click 'Use a Securely Generated Password'
+            with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):
+                self.parent.get_element("generated-securely-password").click()
+
+            # Wait until the password field is actually filled
+            self.parent.expect(
+                lambda _: (
+                    (elem := self.parent.get_element("password-login-field"))
+                    and elem.get_attribute("value") not in ("", None)
+                )
+            )
+
+        def select_saved_credentials(
+            self, field_reference: str, credential_reference: str
+        ) -> None:
+            """Select credentials from the autocomplete dropdown."""
+
+            # Clear any auto-filled value so the dropdown appears when focused
+            self.parent.get_element(field_reference).clear()
+
+            # Open the autocomplete dropdown
+            self.parent.click_on(field_reference)
+
+            # Click the credential entry from the Firefox chrome autocomplete popup
+            with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):
+                credential = self.parent.wait.until(
+                    lambda d: (
+                        self.parent.get_element(credential_reference)
+                        if self.parent.get_element(credential_reference).is_displayed()
+                        else False
+                    )
+                )
+                credential.click()
 
 
 class TextAreaFormAutofill(Autofill):

@@ -1,0 +1,17 @@
+{
+  "region": "PL",
+  "sites": [
+    "ceneo",
+    "centrumrowerowe",
+    "cocolita",
+    "demo",
+    "doz",
+    "duka",
+    "helikon-tex",
+    "taniaksiazka",
+    "tanie-leczenie",
+    "zalando"
+  ],
+  "tests": [
+  ]
+}

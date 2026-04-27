@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/cultbeauty_cc.html",
+  "field_mapping": {
+    "card_number": "1ae2f87d-489b-412e-8ae9-b6b7e2860b3c",
+    "name": "dcacdef7-e39f-4c8c-a9df-aa03173c89aa",
+    "expiration_month": "43a870b8-62fa-4cdd-a5ee-f7c0832ca4ff",
+    "expiration_year": "fda74455-fcc3-4129-8431-a0cbadb79dab",
+    "cvv": "d1a43343-2491-4510-b779-54ff1961ef77"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "1ae2f87d-489b-412e-8ae9-b6b7e2860b3c",
+    "dcacdef7-e39f-4c8c-a9df-aa03173c89aa",
+    "43a870b8-62fa-4cdd-a5ee-f7c0832ca4ff",
+    "fda74455-fcc3-4129-8431-a0cbadb79dab",
+    "d1a43343-2491-4510-b779-54ff1961ef77"
+  ]
+}

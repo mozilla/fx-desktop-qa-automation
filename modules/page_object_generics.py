@@ -4,6 +4,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 
@@ -50,6 +51,108 @@ class GenericPage(BasePage):
             keyboard.type(f"{location}/{filename}")
             sleep(1)
             keyboard.tap(Key.enter)
+
+    def wait_for_reload_and_verify_empty_field(
+        self, old_field, field_id: str, wait_time: int = 10
+    ):
+        """
+        Wait until the page reloads (staleness of old field) and verify that the
+        new search field is visible and empty.
+
+        Args:
+            old_field: WebElement before reload.
+            field_id (str): ID of the field to locate.
+            wait_time (int): Max wait time in seconds.
+
+        Returns:
+            WebElement: The refreshed search field.
+        """
+
+        # Wait for the old element to be stale (page reload)
+        self.wait.until(EC.staleness_of(old_field))
+
+        # Wait for the new one to appear and be visible
+        new_field = self.wait.until(
+            lambda d: (
+                elem
+                if (elem := d.find_element(By.ID, field_id)).is_displayed()
+                else False
+            )
+        )
+
+        assert new_field.get_attribute("value") == "", (
+            "Search field should be empty after reload"
+        )
+        return new_field
+
+    def fill_field_and_verify(
+        self, field, text: str, clear_func, assert_nonempty: bool = True
+    ):
+        """
+        Clicks the field, clears it, fills with text, and optionally asserts the value.
+
+        Args:
+            field: WebElement to interact with.
+            text: Text to enter.
+            clear_func: Callable that clears and fills the field (e.g., ba.clear_and_fill).
+            assert_nonempty: If True, asserts that field value matches `text`.
+
+        Returns:
+            WebElement: The same field after filling.
+        """
+        field.click()
+        clear_func(field, text, press_enter=False)
+        if assert_nonempty:
+            actual = field.get_attribute("value")
+            assert actual == text, f"Expected field value '{text}', but got '{actual}'"
+        return field
+
+    def wait_for_geolocation_data(self, timeout=20):
+        """Wait until both latitude and longitude data are available."""
+        self.custom_wait(timeout=timeout).until(
+            lambda _: all(
+                [
+                    self.find_element(By.ID, "latitude").get_attribute("data-raw")
+                    is not None,
+                    self.find_element(By.ID, "longitude").get_attribute("data-raw")
+                    is not None,
+                ]
+            )
+        )
+
+    def verify_volume_not_max(self):
+        """
+        Verify that the HTML5 video volume level is below 100%.
+        """
+        volume_el = self.get_element("vjs-volume")
+        volume_level = volume_el.get_attribute("data-volume-level")
+
+        assert volume_level is not None, (
+            "Expected data-volume-level attribute to be present on volume button"
+        )
+        assert volume_level != "high", (
+            f"Expected volume to be below max, but data-volume-level is '{volume_level}'"
+        )
+
+        return self
+
+    def download_gdoc_as_pdf(self) -> None:
+        """
+        Opens a Google Doc file and downloads it as a PDF.
+
+        Steps:
+        1. Click on the Google Doc file
+        2. Open File -> Download
+        3. Select PDF Document (.pdf)
+        """
+        # Click the Google Doc file
+        self.click_on("gdoc-file")
+
+        # Click File menu -> Download
+        self.click_on("gdoc-file-download")
+
+        # Click PDF Document (.pdf)
+        self.click_on("gdoc-file-download-pdf")
 
 
 class GenericPdf(BasePage):

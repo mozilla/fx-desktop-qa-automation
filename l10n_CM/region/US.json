@@ -1,4 +1,21 @@
 {
-    "region": "US",
-    "tests": []
+  "region": "US",
+  "sites": [
+    "aldoshoes",
+    "amazon",
+    "apple",
+    "bestbuy",
+    "calvinklein",
+    "demo",
+    "etsy",
+    "kohls",
+    "lowes",
+    "newegg",
+    "pacsun",
+    "saksfifthavenue",
+    "urbanoutfitters",
+    "walmart",
+    "wish"
+  ],
+  "tests": []
 }

@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/giesswein_ad.html",
+  "field_mapping": {
+    "given_name": "ee8a9c3c-3187-402c-b94f-6c2f482ab9ed",
+    "family_name": "2d7d44ee-eaed-49c2-8b7a-4e00a0828daf",
+    "street_address": "b87748e0-7b80-4783-aec7-0b11181f1d67",
+    "address_level_2": "c355c0df-0e08-47a6-a2c8-b562f571d449",
+    "country": "e2490d4b-22e5-4acf-8841-edd7732bfb61",
+    "postal_code": "c6f628e3-333f-4698-b35d-5756f9d6c61b",
+    "email": "3b826141-d662-4f28-aeaf-b7f47bcc1c65",
+    "telephone": "44a5af27-dbfa-4f2e-8a82-4e1f4c687ad1"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "ee8a9c3c-3187-402c-b94f-6c2f482ab9ed",
+    "2d7d44ee-eaed-49c2-8b7a-4e00a0828daf",
+    "b87748e0-7b80-4783-aec7-0b11181f1d67",
+    "c355c0df-0e08-47a6-a2c8-b562f571d449",
+    "e2490d4b-22e5-4acf-8841-edd7732bfb61",
+    "c6f628e3-333f-4698-b35d-5756f9d6c61b",
+    "3b826141-d662-4f28-aeaf-b7f47bcc1c65",
+    "44a5af27-dbfa-4f2e-8a82-4e1f4c687ad1"
+  ]
+}

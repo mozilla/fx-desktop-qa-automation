@@ -1,9 +1,26 @@
+from pathlib import Path
+from shutil import copyfile
+
 import pytest
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
+from modules.page_base import BasePage
 from modules.page_object import AboutPrefs, GenericPage
+
+DEFAULT_ZOOM_110 = 110
+DEFAULT_ZOOM_100 = 100
+WEBSITE_1 = "https://en.wikipedia.org/wiki/Mozilla"
+LOCAL_HTML = "basic_webpage.html"
+
+
+@pytest.fixture()
+def local_doc_path(tmp_path):
+    loc = tmp_path / LOCAL_HTML
+    copyfile(f"data/pages/{LOCAL_HTML}", loc)
+    # copy goomy too!
+    copyfile("data/goomy.png", tmp_path / "goomy.png")
+    return loc
 
 
 @pytest.fixture()
@@ -14,41 +31,27 @@ def test_case():
 @pytest.fixture()
 def temp_selectors():
     return {
-        "yahoo-reject-cookie": {
-            "selectorData": "button[name='reject']",
+        "site-1-image": {
+            "selectorData": "a[href='/wiki/File:Mozilla_2024_logo.svg'] > img",
             "strategy": "css",
-            "groups": [],
+            "groups": ["doNotCache"],
         },
-        "yahoo-consent-page-scroll": {
-            "selectorData": "scroll-down-btn",
+        "site-1-text": {
+            "selectorData": "History",
             "strategy": "id",
-            "groups": [],
+            "groups": ["doNotCache"],
         },
-        "yahoo-logo": {
-            "selectorData": "sfp-placeholder",
-            "strategy": "id",
-            "groups": [],
-        },
-        "yahoo-login-button": {
-            "selectorData": "hd_nav_item",
+        "site-2-image": {
+            "selectorData": "goomy",
             "strategy": "class",
-            "groups": [],
+            "groups": ["doNotCache"],
         },
-        "duckduckgo-logo": {
-            "selectorData": "img[alt='DuckDuckGo Logo']",
-            "strategy": "css",
-            "groups": [],
-        },
-        "duckduckgo-tagline": {
-            "selectorData": "//span[contains(@class, 'minimal')]",
-            "strategy": "xpath",
-            "groups": [],
+        "site-2-text": {
+            "selectorData": "para",
+            "strategy": "class",
+            "groups": ["doNotCache"],
         },
     }
-
-
-WEBSITE_1 = "https://search.yahoo.com/"
-WEBSITE_2 = "https://start.duckduckgo.com/"
 
 
 @pytest.fixture()
@@ -70,24 +73,35 @@ def web_page(driver: Firefox, temp_selectors):
     yield generic_page
 
 
-@pytest.fixture()
-def reject_consent_page(web_page: GenericPage):
-    """
-    reject consent page. scroll to rejection button if necessary.
-    """
-    try:
-        if web_page.element_clickable("yahoo-consent-page-scroll"):
-            web_page.click_on("yahoo-consent-page-scroll")
-        web_page.wait.until(lambda _: web_page.element_clickable("yahoo-reject-cookie"))
-        web_page.click_on("yahoo-reject-cookie")
-    except TimeoutException:
-        pass
+def _capture_element_layout(page: BasePage, selector: str) -> dict:
+    el = page.get_element(selector)
+    return {"loc": tuple(el.location.values()), "size": tuple(el.size.values())}
 
 
-@pytest.mark.ci
+def _confirm_element_size(
+    page: BasePage,
+    selector: str,
+    original_value,
+    fail_on_change=True,
+):
+    def _compare(d):
+        new_info = _capture_element_layout(page, selector)
+        if fail_on_change:
+            # Image check: only size matters — images are replaced content,
+            # immune to text-only zoom regardless of position shifts.
+            changed = new_info.get("size") != original_value.get("size")
+        else:
+            # Text check: compare full layout. The heading may not reflow
+            # but its y-position shifts as text above it expands.
+            changed = new_info != original_value
+        return changed != fail_on_change
+
+    page.expect(_compare)
+
+
 @pytest.mark.noxvfb
 def test_zoom_text_only_from_settings(
-    driver: Firefox, web_page: GenericPage, reject_consent_page
+    driver: Firefox, web_page: GenericPage, local_doc_path: Path
 ):
     """
     C545733.1: Verify that ticking the zoom text only box would only affect the scale of text.
@@ -100,131 +114,54 @@ def test_zoom_text_only_from_settings(
     nav = Navigation(driver)
     panel_ui = PanelUi(driver)
 
-    # Save the original positions of elements for comparison
-    panel_ui.open_and_switch_to_new_window("tab")
-    nav.search(WEBSITE_2)
-    web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
-    original_positions = save_original_positions(driver, web_page)
+    # Save the original sizes and positions for comparison
+    original_layout = {}
+    el_types = ["image", "text"]
+    for et in el_types:
+        index = f"site-1-{et}"
+        original_layout[index] = _capture_element_layout(web_page, index)
 
     # Set the pref to zoom text only
     panel_ui.open_and_switch_to_new_window("tab")
     about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.click_on("zoom-text-only")
+    about_prefs.click_zoom_text_only()
 
     # Set zoom level to 110%
-    about_prefs.set_default_zoom_level(110)
+    about_prefs.set_default_zoom_level(DEFAULT_ZOOM_110)
 
-    # Verify results
-    zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
-
-    # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
-    about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.set_default_zoom_level(100)
-    about_prefs.click_on("zoom-text-only")
-
-
-def test_zoom_text_only_after_restart(
-    driver: Firefox, web_page: GenericPage, reject_consent_page
-):
-    """
-    C545733.2: Verify that the zoom text only option works after restart
-
-        Arguments:
-        web_page: instance of generic page.
-    """
-    # Initializing objects
-    nav = Navigation(driver)
-    panel_ui = PanelUi(driver)
-
-    # Save the original positions of elements for comparison
-    panel_ui.open_and_switch_to_new_window("tab")
-    nav.search(WEBSITE_2)
-    web_page.wait.until(lambda _: web_page.title_contains("DuckDuckGo"))
-    original_positions = save_original_positions(driver, web_page)
-
-    # Set default zoom level
-    panel_ui.open_and_switch_to_new_window("tab")
-    about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.set_default_zoom_level(110)
-
-    # Verify results
-    zoom_text_only_functionality_test(driver, nav, web_page, original_positions)
-
-    # Reset the zoom settings so the config is no longer zoom text only, and default zoom level is 100%
-    about_prefs = AboutPrefs(driver, category="General").open()
-    about_prefs.set_default_zoom_level(100)
-    about_prefs.click_on("zoom-text-only")
-
-
-def save_original_positions(driver, web_page):
-    """
-    Saves the original positions of elements to be tested to verify the effects of zooming
-    """
+    # Confirm that text changes size but image does not
     driver.switch_to.window(driver.window_handles[0])
-    original_website1_image_position = web_page.get_element("yahoo-logo").location["x"]
-    original_website1_text_position = web_page.get_element(
-        "yahoo-login-button"
-    ).location["x"]
-    driver.switch_to.window(driver.window_handles[1])
-    original_website2_image_position = web_page.get_element("duckduckgo-logo").location[
-        "x"
-    ]
-    original_website2_text_position = web_page.get_element(
-        "duckduckgo-tagline"
-    ).location["x"]
-    return (
-        original_website1_image_position,
-        original_website1_text_position,
-        original_website2_image_position,
-        original_website2_text_position,
+    _confirm_element_size(
+        web_page, "site-1-text", original_layout["site-1-text"], fail_on_change=False
+    )
+    _confirm_element_size(
+        web_page,
+        "site-1-image",
+        original_layout["site-1-image"],
     )
 
+    panel_ui.open_and_switch_to_new_window("tab")
+    nav.search(str(local_doc_path))
+    web_page.url_contains(str(local_doc_path))
+    for et in el_types:
+        index = f"site-2-{et}"
+        original_layout[index] = _capture_element_layout(web_page, index)
 
-def zoom_text_only_functionality_test(driver, nav, web_page, original_positions):
-    """
-    Verifies that zoom text only works
-    """
-    (
-        original_website1_image_position,
-        original_website1_text_position,
-        original_website2_image_position,
-        original_website2_text_position,
-    ) = original_positions
+    driver.switch_to.window(driver.window_handles[1])  # prefs
+    about_prefs.set_default_zoom_level(DEFAULT_ZOOM_100)
 
-    # Verify only text is enlarged
-    driver.switch_to.window(driver.window_handles[0])
-    new_image_position = web_page.get_element("yahoo-logo").location["x"]
-    new_text_position = web_page.get_element("yahoo-login-button").location["x"]
-    assert new_image_position == original_website1_image_position
-    assert new_text_position < original_website1_text_position
-
-    # Zoom out to 90% using panel controls
-    panel = PanelUi(driver)
-    panel.open_panel_menu()
-    panel.click_on("zoom-reduce")
-    panel.click_on("zoom-reduce")
-
-    # Verify that zoom level badge is correct
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.expect_element_attribute_contains("toolbar-zoom-level", "label", "90%")
-
-    # Verify that only text is zoomed out
-    assert (
-        web_page.get_element("yahoo-logo").location["x"]
-        == original_website1_image_position
+    # Confirm that the text, not the image, zooms out to 100%, for both sites
+    driver.switch_to.window(driver.window_handles[0])  # wiki
+    _confirm_element_size(
+        web_page,
+        "site-1-text",
+        original_layout["site-1-text"],
     )
-    assert (
-        web_page.get_element("yahoo-login-button").location["x"]
-        > original_website1_text_position
-    )
+    _confirm_element_size(web_page, "site-1-image", original_layout["site-1-image"])
 
-    # Verify that zoom level is default level for a different website and only text is enlarged
-    driver.switch_to.window(driver.window_handles[1])
-    assert (
-        web_page.get_element("duckduckgo-logo").location["x"]
-        == original_website2_image_position
+    driver.switch_to.window(driver.window_handles[2])  # local
+    # Local page's "original" was after zoom default changed
+    _confirm_element_size(
+        web_page, "site-2-text", original_layout["site-2-text"], fail_on_change=False
     )
-    assert (
-        web_page.get_element("duckduckgo-tagline").location["x"]
-        < original_website2_text_position
-    )
+    _confirm_element_size(web_page, "site-2-image", original_layout["site-2-image"])

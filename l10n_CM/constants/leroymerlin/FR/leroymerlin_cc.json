@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/leroymerlin_cc.html",
+  "field_mapping": {
+    "name": "d44be0be-88c6-4fdf-b7e6-2e2991719bfd",
+    "card_number": "c7be0b61-65df-49ac-97a9-b4f429590390",
+    "expiration_month": "6d043537-1ea6-46d7-b7ef-cf52162e24b6",
+    "expiration_year": "b7b30252-ceda-436e-977f-897dd7dfcf0b",
+    "cvv": "ad381e85-f3e4-4459-9bcd-47c8b8c776d9"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "d44be0be-88c6-4fdf-b7e6-2e2991719bfd",
+    "c7be0b61-65df-49ac-97a9-b4f429590390",
+    "6d043537-1ea6-46d7-b7ef-cf52162e24b6",
+    "b7b30252-ceda-436e-977f-897dd7dfcf0b",
+    "ad381e85-f3e4-4459-9bcd-47c8b8c776d9"
+  ]
+}

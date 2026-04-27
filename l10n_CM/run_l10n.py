@@ -1,5 +1,6 @@
 import logging
 import os
+import platform
 import subprocess
 import sys
 import threading
@@ -9,15 +10,111 @@ from json import load
 
 import requests
 
+from scripts.choose_l10n_ci_set import valid_l10n_mappings
+
 current_dir = os.path.dirname(__file__)
-valid_flags = {"--run-headless", "-n", "--reruns"}
+valid_flags = {
+    "--run-headless",
+    "-n",
+    "--reruns",
+    "--fx-executable",
+    "--ci",
+    "--geckodriver",
+}
 flag_with_parameter = {"-n", "--reruns"}
-valid_region = {"US", "CA", "DE", "FR"}
-valid_sites = {"demo", "amazon", "walmart"}
+valid_region = {"US", "CA", "DE", "FR", "IT", "GB", "PL", "ES", "BE", "AT"}
+valid_sites = {
+    "aldi",
+    "aldoshoes",
+    "alternate",
+    "amazon",
+    "apple",
+    "artsper",
+    "assos",
+    "aveda",
+    "bestbuy",
+    "bijoubrigitte",
+    "bocage",
+    "boohoo",
+    "brico",
+    "burtsbees",
+    "calvinklein",
+    "canadatire",
+    "canda",
+    "carpimoto",
+    "cdiscount",
+    "ceneo",
+    "centrumrowerowe",
+    "cocolita",
+    "cultbeauty",
+    "cupshe",
+    "decathlon",
+    "demo",
+    "diy",
+    "dm",
+    "douglas",
+    "doz",
+    "duka",
+    "ebay",
+    "etsy",
+    "euronics",
+    "fnac",
+    "fossil",
+    "gapcanada",
+    "giesswein",
+    "helikon-tex",
+    "hofer",
+    "holzkern",
+    "ilcorteinglesa",
+    "johnlewis",
+    "justspices",
+    "kastnerandoehler",
+    "kohls",
+    "lakeland",
+    "leevalley",
+    "leroymerlin",
+    "libro",
+    "lookfantastic",
+    "lowes",
+    "mediamarkt",
+    "movieposters",
+    "newbalance",
+    "newegg",
+    "pacsun",
+    "peacocks",
+    "pescaderiascorunesas",
+    "saksfifthavenue",
+    "sarenza",
+    "scapino",
+    "standaardboekhandel",
+    "staples",
+    "taniaksiazka",
+    "tanie-leczenie",
+    "tchibo",
+    "thenorthface",
+    "thomann",
+    "tiffany",
+    "toychamp",
+    "torfs",
+    "urbanoutfitters",
+    "vans",
+    "walmart",
+    "whittard",
+    "wish",
+    "yellowkorner",
+    "zalando",
+    "zara",
+    "zooplus",
+}
+
+loaded_valid_sites = valid_l10n_mappings().keys()
+valid_sites = valid_sites.union(set(loaded_valid_sites))
 live_sites = []
+
 
 LOCALHOST = "127.0.0.1"
 PORT = 8080
+os.environ["TEST_EXIT_CODE"] = "0"
 
 
 class MyHttpRequestHandler(SimpleHTTPRequestHandler):
@@ -25,7 +122,7 @@ class MyHttpRequestHandler(SimpleHTTPRequestHandler):
     region = None
 
     def translate_path(self, path):
-        """switch the default directory where the html files are served from."""
+        """switch the default directory where the HTML files are served from."""
         base_dir = os.path.join(current_dir, "sites", self.live_site, self.region)
         return os.path.join(base_dir, path.lstrip("/"))
 
@@ -79,6 +176,7 @@ def run_tests(reg, site, flg, all_tests):
         flg (list[str]): The list of pytest flags to be used.
         all_tests (list[str]): The list of test file paths to execute.
     """
+    all_tests = remove_skipped_tests(all_tests, site, reg)
     try:
         if len(all_tests) > 0:
             logging.info(f"Tests for {reg} region on {site} page.")
@@ -88,7 +186,13 @@ def run_tests(reg, site, flg, all_tests):
         else:
             logging.info(f"{reg} region on {site} site has no tests.")
     except subprocess.CalledProcessError as e:
-        logging.warning(f"Test run failed. {e}")
+        logging.warning(f"Test run failed with exit code: {e.returncode}")
+        # true failure instead of run not being reportable.
+        if e.returncode != 2:
+            if os.environ.get("FX_L10N") and os.environ.get("TEST_EXIT_CODE") == "0":
+                with open("TEST_EXIT_CODE", "w") as f:
+                    f.write(str(e.returncode))
+            os.environ["TEST_EXIT_CODE"] = str(e.returncode)
 
 
 def get_region_tests(test_region: str) -> list[str]:
@@ -101,15 +205,73 @@ def get_region_tests(test_region: str) -> list[str]:
     Returns:
         list[str]: A list of test file paths for the given region.
     """
-    path_to_region = current_dir + "/region/"
-    with open(path_to_region + test_region + ".json", "r") as fp:
+    path_to_region = os.path.join(current_dir, "region")
+    with open(os.path.join(path_to_region, test_region) + ".json", "r") as fp:
         region_data = load(fp)
         raw_tests = region_data.get("tests", [])
         return (
-            list(map(lambda test: current_dir + "/Unified/" + test, raw_tests))
+            list(
+                map(lambda test: os.path.join(current_dir, "Unified", test), raw_tests)
+            )
             if len(raw_tests) > 0
             else raw_tests
         )
+
+
+def remove_skipped_tests(extracted_tests, live_site, reg):
+    """
+    Reads the mapping for the given region and site and removes any tests that are marked as skipped.
+
+    Args:
+        extracted_tests (list[str]): The list of test file paths to execute.
+        live_site (str): Page being tested.
+        reg (str): The test region identifier.
+    Returns:
+        list[str]: A list of test file paths for the given region.
+    """
+    mid_path = f"/{reg}/" if live_site != "demo" else "/"
+    live_sites = [
+        (f"{live_site}{mid_path}{live_site}_{suffix}", f"_{suffix}_")
+        for suffix in ("ad", "cc")
+    ]
+    for live_site, suffix in live_sites:
+        skipped_tests = get_skipped_tests(live_site, reg)
+        if skipped_tests and skipped_tests != "All":
+            skipped_tests = list(
+                map(
+                    lambda test: os.path.join(current_dir, "Unified", test),
+                    skipped_tests,
+                )
+            )
+
+        def should_keep_test(test):
+            return (
+                suffix not in test
+                if skipped_tests == "All"
+                else test not in skipped_tests
+            )
+
+        extracted_tests = list(filter(should_keep_test, extracted_tests))
+    return extracted_tests
+
+
+def get_skipped_tests(live_site, reg) -> list[str] | str:
+    """
+    Read the mapping for the given region and site and return any tests that are marked as skipped.
+    It is either a list of tests to skip or skipping all tests for the given site.
+
+    Arg:
+        live_site (str): The site is being tested.
+    Returns:
+        list[str] | str: A list of tests that should be skipped, or "All" if all tests should be skipped.
+    """
+    with open(os.path.join(current_dir, "constants", live_site) + ".json", "r") as fp:
+        live_site_data = load(fp)
+        platform_skip = platform.system() in live_site_data.get("skip_os", [])
+        region_skip = reg in live_site_data.get("skip_regions", [])
+        if live_site_data.get("skip") or platform_skip or region_skip:
+            return "All"
+        return live_site_data.get("skipped", [])
 
 
 def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
@@ -128,8 +290,12 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
     """
     # add workers and rerun flaky failed tests.
     flg = []
+    expanded_args = [
+        flag.split() if "--" not in flag else [flag] for flag in flags_arguments
+    ]
+    flags_arguments[:] = sum(expanded_args, [])
     for arg in flags_arguments[:]:
-        if arg in valid_flags:
+        if arg.split("=")[0] in valid_flags:
             if arg in flag_with_parameter:
                 try:
                     i = flags_arguments.index(arg)
@@ -199,14 +365,14 @@ if __name__ == "__main__":
         logging.info(f"Running Unified Tests for {valid_region} Regions.")
         run_unified(list(valid_region), flags)
     else:
-        # run on given region and sites.
+        # run on a given region and sites.
         logging.info(f"Running Unified Tests for {arguments} Regions.")
         run_unified(arguments, flags)
     for site in live_sites:
-        # for a given site, run all region specific tests.
+        # for a given site, run all region-specific tests.
         for region in arguments:
             tests = get_region_tests(region)
-            # Check if field mapping json file is present, pass test region if it isn't
+            # Check if a field-mapping JSON file is present, pass a test region if it isn't
             json_path = os.path.join(current_dir, "constants", site, region)
             logging.info(f"Running Specific Tests for {region}.")
             # If the live_site is 'demo', skip starting the server

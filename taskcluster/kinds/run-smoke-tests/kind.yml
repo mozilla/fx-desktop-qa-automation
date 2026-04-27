@@ -3,12 +3,12 @@ transforms:
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Smoke Tests"
-  description: "Runs Smoke Tests and Notifies Slack"
+  label: "CI Smoke Tests"
+  description: "Runs CI Smoke Tests and Notifies Slack"
   worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
-    max-run-time: 1800
+    max-run-time: 3600
     artifacts:
       - name: public/results
         path: checkouts/vcs/artifacts
@@ -28,18 +28,18 @@ tasks:
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15';
-        pip3 install 'ruff>=0.4.8,<0.5';
-        mv ./ci_pyproject.toml ./pyproject.toml;
+        mv ./config/ci_pyproject.toml ./pyproject.toml;
         pipenv install;
-        ./collect_executables.sh;
+        ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
-        . ./keyring-unlock.sh
-        pipenv run python3 choose_ci_set.py
-        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests)
-        export FAILURE=${?}
-        mv ./ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run python3 choose_ci_set.py
-        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests)
+        . ./scripts/keyring-unlock.sh
+        if [[ ! $(python3 scripts/choose_test_channel.py) =~ "starfox" ]]; then exit 0; fi;
+        pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable ./firefox/firefox -n 4 $(cat selected_tests);
+        export FAILURE=${?};
+        mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+        pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/torfs_cc.html",
+  "field_mapping": {
+    "card_number": "2f049f45-0bf3-476f-a121-d3bf98409bd6",
+    "name": "10ae36ee-1ae8-4ae6-adc6-bda0f76edf59",
+    "expiration_date": "65c61974-b8c2-4b1f-8a10-d8b76896a3d0",
+    "cvv": "f21a8736-13c3-4539-994a-b8e8a538f59a"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "2f049f45-0bf3-476f-a121-d3bf98409bd6",
+    "10ae36ee-1ae8-4ae6-adc6-bda0f76edf59",
+    "65c61974-b8c2-4b1f-8a10-d8b76896a3d0",
+    "f21a8736-13c3-4539-994a-b8e8a538f59a"
+  ]
+}

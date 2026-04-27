@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/aveda_cc.html",
+  "field_mapping": {
+    "card_number": "67ccd08b-eb11-4c09-bc39-e622edb48dfc",
+    "expiration_date": "52269caa-c7a9-408a-afa3-8f1c31ba282f",
+    "cvv": "dcc571ba-9d6f-4f04-a09f-f8517da9e5fb",
+    "name": "e4084b8a-e146-427f-a7ff-bdf7de2d0496"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "67ccd08b-eb11-4c09-bc39-e622edb48dfc",
+    "52269caa-c7a9-408a-afa3-8f1c31ba282f",
+    "dcc571ba-9d6f-4f04-a09f-f8517da9e5fb",
+    "e4084b8a-e146-427f-a7ff-bdf7de2d0496"
+  ]
+}

@@ -8,7 +8,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "2886597"
+    return "3056982"
 
 
 def test_demo_cc_data_captured_in_doorhanger_and_stored(
@@ -20,7 +20,7 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
     is_live_site: str,
 ):
     """
-    C2889999 - Verify credit card data is captured in the Capture Doorhanger and stored in about:preferences
+    C3056982 - Verify credit card data is captured in the Capture Doorhanger and stored in about:preferences
     """
     if not is_live_site:
         # Navigate to page

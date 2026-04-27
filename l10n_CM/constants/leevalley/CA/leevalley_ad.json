@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/leevalley_ad.html",
+  "field_mapping": {
+    "given_name": "9f4aff51-6d52-4365-9732-9b1163cd34ca",
+    "family_name": "2a415720-65de-4bec-bda4-edf4c8eedac0",
+    "street_address": "bb795046-632e-4d6f-bf1e-498d3f0ac1a0",
+    "address_level_2": "7d7149a5-79e6-40cc-ae23-6fc6604048a5",
+    "address_level_1": "7dd725be-c025-49e8-ae0d-f8997a2f4efb",
+    "country": "1bf857dd-cc40-4cef-a44d-69f71cc67f04",
+    "postal_code": "f8639a7d-2e0c-4fb3-8290-73ac453d4b47",
+    "telephone": "395cbb63-3c55-42b0-8817-9703e902e4e3"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "9f4aff51-6d52-4365-9732-9b1163cd34ca",
+    "2a415720-65de-4bec-bda4-edf4c8eedac0",
+    "bb795046-632e-4d6f-bf1e-498d3f0ac1a0",
+    "7d7149a5-79e6-40cc-ae23-6fc6604048a5",
+    "7dd725be-c025-49e8-ae0d-f8997a2f4efb",
+    "1bf857dd-cc40-4cef-a44d-69f71cc67f04",
+    "f8639a7d-2e0c-4fb3-8290-73ac453d4b47",
+    "395cbb63-3c55-42b0-8817-9703e902e4e3"
+  ]
+}

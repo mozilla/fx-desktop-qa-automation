@@ -1,0 +1,31 @@
+{
+  "url": "http://127.0.0.1:8080/scapino_ad.html",
+  "field_mapping": {
+    "given_name": "89866d2c-32f7-436a-978d-8bef5029a76f",
+    "family_name": "1f895d85-e577-4629-8be3-5f3a691aed6c",
+    "email": "27364e3f-d95d-473e-a6ea-4c79cad85f43",
+    "telephone": "a1ebadfa-c92a-4fdb-b12a-ddc8a06e497a",
+    "street_address": "19aa4988-fc9f-40c9-985e-dff36ae0715b",
+    "address_level_2": "04e0218e-9f26-4f80-a6a5-aa1c5cf2c4a5",
+    "postal_code": "c431875e-79e5-499e-a5ac-159fb1bcba51",
+    "country": "20aa1d90-b528-4b30-9eb9-ada0beb85961"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "89866d2c-32f7-436a-978d-8bef5029a76f",
+    "1f895d85-e577-4629-8be3-5f3a691aed6c",
+    "27364e3f-d95d-473e-a6ea-4c79cad85f43",
+    "a1ebadfa-c92a-4fdb-b12a-ddc8a06e497a",
+    "19aa4988-fc9f-40c9-985e-dff36ae0715b",
+    "04e0218e-9f26-4f80-a6a5-aa1c5cf2c4a5",
+    "c431875e-79e5-499e-a5ac-159fb1bcba51",
+    "20aa1d90-b528-4b30-9eb9-ada0beb85961"
+  ],
+
+  "skipped": [
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py"
+   ]
+}

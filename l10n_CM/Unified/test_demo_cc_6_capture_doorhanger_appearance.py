@@ -3,12 +3,11 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
 def test_case():
-    return "2889441"
+    return "3056981"
 
 
 def test_cc_check_door_hanger_is_displayed(
@@ -19,7 +18,7 @@ def test_cc_check_door_hanger_is_displayed(
     is_live_site: str,
 ):
     """
-    C2889441 - Ensures that the door hanger is displayed after filling credit card info
+    C3056981 - Ensures that the door hanger is displayed after filling credit card info
     """
     if not is_live_site:
         # Navigate to page

@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:8080/johnlewis_ad.html",
+  "field_mapping": {
+    "given_name": "80fd95df-baf0-4996-a776-b613c673d4d4",
+    "family_name": "4f577c73-a0ae-4b45-a867-0fbc6210a7d3",
+    "street_address": "51c4e4e1-71ac-445a-aa0c-da30c2cef2d4",
+    "address_level_2": "69bacce2-3841-427e-bee2-b54402b1b664",
+    "postal_code": "3e6db344-bd68-4240-b258-0ae257816565",
+    "telephone": "b5d4e232-a3fd-4c7c-a500-a35d8e6ff812"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "80fd95df-baf0-4996-a776-b613c673d4d4",
+    "4f577c73-a0ae-4b45-a867-0fbc6210a7d3",
+    "51c4e4e1-71ac-445a-aa0c-da30c2cef2d4",
+    "69bacce2-3841-427e-bee2-b54402b1b664",
+    "3e6db344-bd68-4240-b258-0ae257816565",
+    "b5d4e232-a3fd-4c7c-a500-a35d8e6ff812"
+  ]
+}

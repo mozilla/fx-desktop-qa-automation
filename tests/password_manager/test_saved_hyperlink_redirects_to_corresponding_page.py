@@ -5,6 +5,8 @@ from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
 
 TEST_PAGE_URL = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
+USERNAME = "username1"
+PASSWORD = "dp@ssw0r"
 
 
 @pytest.fixture()
@@ -28,31 +30,27 @@ def test_saved_hyperlink_redirects_to_corresponding_page(driver: Firefox):
 
     # Add a new login
     about_logins.open()
-    about_logins.click_add_login_button()
-    about_logins.create_new_login(
-        {
-            "origin": TEST_PAGE_URL,
-            "username": "username",
-            "password": "password",
-        }
-    )
+    about_logins.add_login(TEST_PAGE_URL, USERNAME, PASSWORD)
 
+    # Wait for item to populate login list
+    about_logins.wait.until(
+        lambda _: (
+            "initialized"
+            in about_logins.get_element("login-list").get_attribute("class")
+        )
+    )
     # Click on the hyperlink website
-    about_logins.get_element("website-address").click()
+    about_logins.click_on("website-address")
     about_logins.switch_to_new_tab()
     about_logins.url_contains("mozilla.github")
 
-    # Verify that the saved login is recognized
+    # Creating an instance of the LoginForm within the LoginAutofill page object
     login_autofill.open()
+    login_form = LoginAutofill.LoginForm(login_autofill)
 
     # Verify the username field has the saved value
-    username_element = login_autofill.get_element("username-login-field")
-    login_autofill.wait.until(
-        lambda _: username_element.get_attribute("value") == "username"
-    )
+    login_form.verify_username_value(USERNAME)
 
     # Verify the password field is filled with a value that match the length of the saved password
-    password_element = login_autofill.get_element("password-login-field")
-    login_autofill.wait.until(
-        lambda _: len(password_element.get_attribute("value")) == 8
-    )
+    password_element = login_form.verify_password_length(8)
+    assert len(password_element.get_attribute("value")) == 8

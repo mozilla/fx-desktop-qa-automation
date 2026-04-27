@@ -1,5 +1,22 @@
 {
-    "region": "CA",
-    "tests": [
-    ]
+  "region": "CA",
+  "sites": [
+    "amazon",
+    "boohoo",
+    "burtsbees",
+    "calvinklein",
+    "canadatire",
+    "cupshe",
+    "demo",
+    "ebay",
+    "etsy",
+    "gapcanada",
+    "leevalley",
+    "movieposters",
+    "newbalance",
+    "staples",
+    "walmart"
+  ],
+  "tests": [
+  ]
 }

@@ -52,19 +52,11 @@ def test_open_image_in_new_tab(driver: Firefox):
     wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
 
 
-@pytest.mark.ci
 @pytest.mark.headed
 def test_save_image_as(driver: Firefox, sys_platform, delete_files):
     """
     C2637622.2: save image as
     """
-    try:
-        from pynput.keyboard import Controller
-    except ModuleNotFoundError:
-        pytest.skip("Could not load pynput")
-
-    controller = Controller()
-
     wiki_image_page = GenericPage(driver, url=LINK_IMAGE_URL)
     wiki_image_page.open()
     image_context_menu = ContextMenu(driver)
@@ -82,7 +74,7 @@ def test_save_image_as(driver: Firefox, sys_platform, delete_files):
 
     # wait some time before interacting with the system dialog
     sleep(2)
-    wiki_image_page.handle_os_download_confirmation(controller, sys_platform)
+    wiki_image_page.handle_os_download_confirmation()
 
     # Verify that the file exists
     sleep(2)
@@ -123,5 +115,4 @@ def test_copy_image_link(driver: Firefox):
     nav.click_and_hide_menu("context-menu-paste-and-go")
 
     wiki_image_page.wait_for_page_to_load()
-    with driver.context(driver.CONTEXT_CONTENT):
-        wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
+    wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)

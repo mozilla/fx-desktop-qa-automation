@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/johnlewis_cc.html",
+  "field_mapping": {
+    "name": "cf6e4e9b-093f-4856-aee4-010162d7c9f9",
+    "card_number": "2c0e42a5-d6c3-4507-ac52-9fca82b15cd0",
+    "expiration_date": "bded7920-6a92-44b6-aabb-3a12eb8c315d",
+    "cvv": "6ccc0d12-13f8-4ae8-b843-048c62859502"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "cf6e4e9b-093f-4856-aee4-010162d7c9f9",
+    "2c0e42a5-d6c3-4507-ac52-9fca82b15cd0",
+    "bded7920-6a92-44b6-aabb-3a12eb8c315d",
+    "6ccc0d12-13f8-4ae8-b843-048c62859502"
+]
+}

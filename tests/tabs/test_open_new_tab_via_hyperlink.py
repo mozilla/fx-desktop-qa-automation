@@ -4,6 +4,8 @@ from selenium.webdriver import Firefox
 from modules.browser_object import ContextMenu
 from modules.page_object import ExamplePage
 
+URL = "https://www.iana.org/help/example-domains"
+
 
 @pytest.fixture()
 def test_case():
@@ -14,15 +16,17 @@ def test_open_new_via_hyperlink(driver: Firefox):
     """
     C134444 - A hyperlink can be opened in a new tab
     """
-    example = ExamplePage(driver).open()
+
+    # Instantiate objects
+    example = ExamplePage(driver)
+    context_menu = ContextMenu(driver)
 
     # Use context menu option to open link in new tab
-    example.context_click("more-information")
-    context_menu = ContextMenu(driver)
-    with driver.context(driver.CONTEXT_CHROME):
-        context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
+    example.open()
+    example.context_click("learn-more")
+    context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
 
     # Get the title of the new tab
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
-    example.url_contains("https://www.iana.org/help/example-domains")
+    example.url_contains(URL)

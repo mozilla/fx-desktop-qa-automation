@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/torfs_ad.html",
+  "field_mapping": {
+    "given_name": "510a726a-7571-4636-aa52-fc8ee58e19ad",
+    "family_name": "5e77527b-c54a-442d-a173-f5136177e973",
+    "street_address": "69a5cd30-fce1-45df-a4ad-bd60824ad6fe",
+    "address_level_2": "61cde911-8b99-429f-bc43-5bea8f428fbc",
+    "postal_code": "a8db71ca-f7ec-41d0-b146-299e289bba3d",
+    "country": "a5148bea-c9a5-40e7-9c0b-d0b2254ab2a4"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "510a726a-7571-4636-aa52-fc8ee58e19ad",
+    "5e77527b-c54a-442d-a173-f5136177e973",
+    "69a5cd30-fce1-45df-a4ad-bd60824ad6fe",
+    "61cde911-8b99-429f-bc43-5bea8f428fbc",
+    "a8db71ca-f7ec-41d0-b146-299e289bba3d",
+    "a5148bea-c9a5-40e7-9c0b-d0b2254ab2a4"
+  ]
+}

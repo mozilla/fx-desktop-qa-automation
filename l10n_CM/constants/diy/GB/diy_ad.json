@@ -1,0 +1,21 @@
+{
+  "url": "http://127.0.0.1:8080/diy_ad.html",
+  "field_mapping": {
+    "given_name": "a0ac142d-5ef6-4f5a-b62a-6656fb094027",
+    "family_name": "254ad5e3-4dca-47fc-a8b0-4e9100b37a6c",
+    "address_level_2": "6252605d-3b83-4204-88ee-6a905aae44fd",
+    "country": "4f4f99dc-f710-4ad5-88ae-919d0b1dabcb",
+    "postal_code": "4732adf2-b596-42e2-b11e-e9d64d8e4f0e",
+    "telephone": "8bd92901-44f9-42de-a961-67da66a6541c"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "a0ac142d-5ef6-4f5a-b62a-6656fb094027",
+    "254ad5e3-4dca-47fc-a8b0-4e9100b37a6c",
+    "6252605d-3b83-4204-88ee-6a905aae44fd",
+    "4f4f99dc-f710-4ad5-88ae-919d0b1dabcb",
+    "4732adf2-b596-42e2-b11e-e9d64d8e4f0e",
+    "8bd92901-44f9-42de-a961-67da66a6541c"
+  ]
+}

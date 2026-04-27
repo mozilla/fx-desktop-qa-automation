@@ -5,13 +5,17 @@
     "groups": []
   },
   "search-engine-dropdown-root": {
-    "selectorData": "defaultEngine",
+    "selectorData": "defaultEngineNormal",
     "strategy": "id",
     "groups": [
-      "requiredForPage",
       "dropdownRoot",
       "searchEngineDropdown"
     ]
+  },
+  "custom-tracker-options-parent": {
+    "selectorData": "contentBlockingOptionCustom",
+    "strategy": "id",
+    "groups": []
   },
   "search-engine-dropmarker": {
     "selectorData": "dropmarker",
@@ -20,6 +24,17 @@
     "groups": [
       "searchEngineDropdown"
     ]
+  },
+  "default-engine-dropdown": {
+    "selectorData": "defaultEngineNormal",
+    "strategy": "id",
+    "groups": []
+  },
+  "select-wrapper-button": {
+    "selectorData": ".select-wrapper button",
+    "strategy": "css",
+    "shadowParent": "default-engine-dropdown",
+    "groups": []
   },
   "find-in-settings": {
     "selectorData": "searchInput",
@@ -40,22 +55,67 @@
     "groups": []
   },
   "save-and-fill-addresses": {
-    "selectorData": "checkbox[label='Save and fill addresses']",
+    "selectorData": "[data-l10n-id='autofill-addresses-checkbox-message']",
     "strategy": "css",
     "groups": []
   },
   "save-and-fill-payment-methods": {
-    "selectorData": "checkbox[label='Save and fill payment methods']",
+    "selectorData": "[data-l10n-id='autofill-payment-methods-checkbox-message-2']",
     "strategy": "css",
     "groups": []
   },
   "prefs-button": {
+    "selectorData": "moz-box-button[label^='{name}']",
+    "strategy": "css",
+    "groups": []
+  },
+  "action-button": {
     "selectorData": "button[label^='{name}']",
     "strategy": "css",
     "groups": []
   },
+  "close-dialog": {
+    "selectorData": "button[data-l10n-id='close-button']",
+    "strategy": "css",
+    "groups": []
+  },
+  "clear-site-data-button": {
+    "selectorData": "clearSiteDataButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "search-shortcuts-group": {
+    "selectorData": "oneClickSearchProvidersGroup",
+    "strategy": "id",
+    "groups": []
+  },
+  "search-engine-list": {
+    "selectorData": "engineList",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-search-engine-button": {
+    "selectorData": "removeEngineButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "restore-default-search-engines-button": {
+    "selectorData": "restoreDefaultSearchEngines",
+    "strategy": "id",
+    "groups": []
+  },
+  "saved-payments-button": {
+    "selectorData": "[data-l10n-id='autofill-payment-methods-manage-payments-button']",
+    "strategy": "css",
+    "groups": []
+  },
+  "saved-addresses-button": {
+    "selectorData": "[data-l10n-id='autofill-addresses-manage-addresses-button']",
+    "strategy": "css",
+    "groups": []
+  },
   "import-browser-data": {
-    "selectorData": "button[id='data-migration']",
+    "selectorData": "moz-box-button[id='data-migration']",
     "strategy": "css",
     "groups": []
   },
@@ -133,19 +193,42 @@
     "strategy": "id",
     "groups": []
   },
+  "show-suggestions-awesomebar": {
+    "selectorData": "urlBarSuggestion",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-suggestions-parent": {
+    "selectorData": "suggestionsInSearchFieldsCheckbox",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-suggestions-first-parent": {
+    "selectorData": "showSearchSuggestionsFirstCheckbox",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-trending-parent": {
+    "selectorData": "showTrendingSuggestionsCheckbox",
+    "strategy": "id",
+    "groups": []
+  },
   "show-suggestions": {
-    "selectorData": "checkbox[data-l10n-id='search-show-suggestions-option']",
+    "selectorData": "input",
     "strategy": "css",
+    "shadowParent": "show-suggestions-parent",
     "groups": []
   },
-  "firefox-suggest-nonsponsored": {
-    "selectorData": "firefoxSuggestNonsponsored",
-    "strategy": "id",
+  "show-suggestions-first": {
+    "selectorData": "input",
+    "strategy": "css",
+    "shadowParent": "show-suggestions-first-parent",
     "groups": []
   },
-  "firefox-suggest-sponsored": {
-    "selectorData": "firefoxSuggestSponsored",
-    "strategy": "id",
+  "show-trending": {
+    "selectorData": "input",
+    "strategy": "css",
+    "shadowParent": "show-trending-parent",
     "groups": []
   },
   "prefs-html-root": {
@@ -208,6 +291,16 @@
     "strategy": "id",
     "groups": []
   },
+  "suspected-fingerprints-in-all-windows": {
+    "selectorData": "#fingerprintingProtectionMenu menuitem[value='always']",
+    "strategy": "css",
+    "groups": []
+  },
+  "suspected-fingerprints-only-in-private-windows": {
+    "selectorData": "#fingerprintingProtectionMenu menuitem[value='private']",
+    "strategy": "css",
+    "groups": []
+  },
   "cookies-shadow-root": {
     "selectorData": "dialog[buttons='accept,cancel']",
     "strategy": "css",
@@ -223,7 +316,9 @@
   "cookies-manage-data-sitelist": {
     "selectorData": "sitesList",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "manage-cookies-site": {
     "selectorData": "richlistitem[host='{name}']",
@@ -296,14 +391,26 @@
     "strategy": "id",
     "groups": []
   },
+  "cookies-data-checkbox": {
+    "selectorData": "cookiesAndStorage",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "up_to_date_button": {
     "selectorData": "checkForUpdatesButton3",
     "strategy": "id",
     "groups": []
   },
   "cookies-privacy-label": {
-    "selectorData": "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']",
+    "selectorData": "moz-message-bar[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
     "strategy": "css",
+    "groups": []
+  },
+  "history-privacy-label": {
+    "selectorData": "historyMode",
+    "strategy": "id",
     "groups": []
   },
   "cookies-delete-on-close": {
@@ -321,11 +428,6 @@
     "strategy": "id",
     "groups": []
   },
-  "history-privacy-label": {
-    "selectorData": "description[data-l10n-id='history-dontremember-description']",
-    "strategy": "css",
-    "groups": []
-  },
   "language-dropdown": {
     "selectorData": "primaryBrowserLocale",
     "strategy": "id",
@@ -338,6 +440,11 @@
   },
   "language-settings-dialog": {
     "selectorData": "BrowserLanguagesDialog",
+    "strategy": "id",
+    "groups": []
+  },
+  "search-suggestion-in-private-windows": {
+    "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
     "groups": []
   },
@@ -412,6 +519,11 @@
     "strategy": "xpath",
     "groups": []
   },
+  "children-host-elements": {
+    "selectorData": "richlistitem",
+    "strategy": "tag",
+    "groups": []
+  },
   "use-primary-password": {
     "selectorData": "useMasterPassword",
     "strategy": "id",
@@ -425,7 +537,9 @@
   "enter-new-password": {
     "selectorData": "pw1",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "form-container": {
     "selectorData": "form",
@@ -442,18 +556,24 @@
   "reenter-new-password": {
     "selectorData": "pw2",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "submit-password": {
     "selectorData": "button[label^='OK']",
     "strategy": "css",
     "shadowParent": "primary-password-box",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "primary-password-box": {
     "selectorData": "changemp",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "autoplay-settings-button": {
     "selectorData": "autoplaySettingsButton",
@@ -467,6 +587,11 @@
   },
   "allow-audio-video": {
     "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
+    "strategy": "css",
+    "groups": []
+  },
+  "block-audio": {
+    "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-block']",
     "strategy": "css",
     "groups": []
   },
@@ -533,8 +658,84 @@
     "groups": []
   },
   "default-zoom-dropdown-value": {
-    "selectorData": "menuitem[data-l10n-id='preferences-default-zoom-value'][value='{.*}']",
+    "selectorData": "menuitem[label='{.*}%']",
     "strategy": "css",
+    "groups": []
+  },
+  "clipboard-suggestion-checkbox": {
+    "selectorData": "#clipboardSuggestion",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "unknown-content-type-dialog": {
+    "selectorData": "unknownContentTypeWindow",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "history-suggestion": {
+    "selectorData": "historySuggestion",
+    "strategy": "id",
+    "groups": []
+  },
+  "history-option-select": {
+    "selectorData": "select[id='input']",
+    "strategy": "css",
+    "shadowParent": "history_menulist",
+    "groups": []
+  },
+  "tab-hover-preview-checkbox": {
+    "selectorData": "tabPreviewShowThumbnails",
+    "strategy": "id",
+    "groups": []
+  },
+  "saved-passwords": {
+    "selectorData": "showPasswords",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-sidebar-checkbox": {
+    "selectorData": "browserLayoutShowSidebar",
+    "strategy": "id",
+    "groups": []
+  },
+  "show-sidebar-shadow-box": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "show-sidebar-checkbox"
+  },
+  "change-primary-password": {
+    "selectorData": "changeMasterPassword",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "current-primary-password": {
+    "selectorData": "oldpw",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "remove-current-password": {
+    "selectorData": "password",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-primary-password-box": {
+    "selectorData": "removemp",
+    "strategy": "id",
+    "groups": []
+  },
+  "remove-password": {
+    "selectorData": "button[label^='Remove']",
+    "strategy": "css",
+    "shadowParent": "remove-primary-password-box",
     "groups": []
   }
 }

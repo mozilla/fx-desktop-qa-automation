@@ -19,13 +19,13 @@ def test_open_link_in_new_window(driver: Firefox):
     example = ExamplePage(driver)
     example.open()
 
-    # right click the hyperlink
-    example.context_click("more-information")
+    # Right-click the hyperlink
+    example.context_click("learn-more")
 
-    # click on the open in new window option
+    # Click on the open in new window option
     hyperlink_context.click_and_hide_menu("context-menu-open-link-in-new-window")
 
-    # verify there are two instances (two windows)
+    # Verify there are two instances (two windows)
     tabs.wait_for_num_windows(2)
     driver.switch_to.window(driver.window_handles[1])
 

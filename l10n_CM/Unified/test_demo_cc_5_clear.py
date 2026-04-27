@@ -1,15 +1,13 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
 from modules.classes.credit_card import CreditCardBase
-from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import Utilities
+from modules.page_object import CreditCardFill
 
 
 @pytest.fixture()
 def test_case():
-    return "2886602"
+    return "3056987"
 
 
 def test_cc_clear_form(
@@ -19,7 +17,7 @@ def test_cc_clear_form(
     fill_and_save_payments: CreditCardBase,
 ):
     """
-    C2886602 - Verify that clearing the form from any field results in all fields being emptied, regardless of the
+    C3056987 - Verify that clearing the form from any field results in all fields being emptied, regardless of the
     field from which the clear action was triggered.
     """
 

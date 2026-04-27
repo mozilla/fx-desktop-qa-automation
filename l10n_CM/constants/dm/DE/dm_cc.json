@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/dm_cc.html",
+  "field_mapping": {
+    "name": "a6d37a7a-7769-41e5-941e-4efd0620ab9c",
+    "card_number": "b894b5b1-6d4a-447a-95e5-d9432e9f38a9",
+    "expiration_date": "90a49c03-ecc7-4cd3-a903-46a429dc1935",
+    "cvv": "73ccfbb3-2943-40a9-a6c1-2d02bbcbc061"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "a6d37a7a-7769-41e5-941e-4efd0620ab9c",
+    "b894b5b1-6d4a-447a-95e5-d9432e9f38a9",
+    "90a49c03-ecc7-4cd3-a903-46a429dc1935",
+    "73ccfbb3-2943-40a9-a6c1-2d02bbcbc061"
+  ]
+}

@@ -1,4 +1,4 @@
-
+/.vscode/
 /venv/
 .env
 .report.json
@@ -191,6 +191,9 @@ cython_debug/
 drivers/
 temp.py
 tests/test_scratch.py
+
+# L10N files
+selected_l10n_mappings
 
 # Credentials
 credentials.json

@@ -1,0 +1,25 @@
+{
+ "url": "http://127.0.0.1:8080/cocolita_ad.html",
+ "field_mapping": {
+    "given_name":"e2a713e5-c359-4de7-b68d-4360c05b55a4",
+    "family_name":"9124baa6-314e-45cf-8afd-3813eadbb6b0",
+    "organization": "b0ac0cfc-52ff-48f8-ad60-6bb4d50df23f",
+    "street_address":"578a9427-2e4e-4081-ba42-b4f23d3e2663",
+    "postal_code":"d662799e-8530-4934-a922-aa528e57eb9e",
+    "address_level_2": "c876d26e-9bc3-4039-9d72-459738f5091f",
+    "telephone": "90c0240c-4028-4766-9f72-649cde76f107",
+    "country": "9c817403-7428-4c59-8c03-0daa726431b1"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "e2a713e5-c359-4de7-b68d-4360c05b55a4",
+    "9124baa6-314e-45cf-8afd-3813eadbb6b0",
+    "b0ac0cfc-52ff-48f8-ad60-6bb4d50df23f",
+    "578a9427-2e4e-4081-ba42-b4f23d3e2663",
+    "d662799e-8530-4934-a922-aa528e57eb9e",
+    "c876d26e-9bc3-4039-9d72-459738f5091f",
+    "90c0240c-4028-4766-9f72-649cde76f107",
+    "9c817403-7428-4c59-8c03-0daa726431b1"
+ ]
+}

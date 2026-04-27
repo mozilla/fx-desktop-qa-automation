@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/urbanoutfitters_ad.html",
+  "field_mapping": {
+    "family_name": "78a9f7b2-bfe7-4a64-b376-372f5c030b93",
+    "given_name": "2923b766-ad03-49fa-b4b5-455b102afc58",
+    "address_level_2": "af4d1709-f693-4383-9848-2d1f50729e8d",
+    "address_level_1": "48db575e-6073-47e0-90f7-e0ef047893dc",
+    "street_address" : "daf6676d-4676-40e2-8a69-e1b79bd0a33d",
+    "postal_code": "efc23dac-1908-443b-b682-33e32aff11ea",
+    "telephone": "6416afc3-2516-450f-9816-a3428a42520c",
+    "country": "24de3ce8-77c8-4b7e-97ff-9958f938de54"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "78a9f7b2-bfe7-4a64-b376-372f5c030b93",
+    "2923b766-ad03-49fa-b4b5-455b102afc58",
+    "af4d1709-f693-4383-9848-2d1f50729e8d",
+    "48db575e-6073-47e0-90f7-e0ef047893dc",
+    "daf6676d-4676-40e2-8a69-e1b79bd0a33d",
+    "efc23dac-1908-443b-b682-33e32aff11ea",
+    "6416afc3-2516-450f-9816-a3428a42520c",
+    "24de3ce8-77c8-4b7e-97ff-9958f938de54"
+  ]
+}

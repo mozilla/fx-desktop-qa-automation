@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:8080/urbanoutfitters_cc.html",
+  "field_mapping": {
+    "card_number": "d0d91a53-07a6-4d64-8efe-5c2306662118",
+    "expiration_date": "41631e9c-5caa-4fbe-83df-6aefa76ae148",
+    "cvv": "878b4dd6-80f5-48ed-b9f0-bc661faf6f34"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "d0d91a53-07a6-4d64-8efe-5c2306662118",
+    "41631e9c-5caa-4fbe-83df-6aefa76ae148",
+    "878b4dd6-80f5-48ed-b9f0-bc661faf6f34"
+]
+
+}

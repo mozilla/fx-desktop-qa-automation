@@ -2,7 +2,6 @@ import logging
 from typing import List, Optional, Set
 
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.remote.webelement import WebElement
 
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
@@ -15,6 +14,7 @@ class TrackerPanel(BasePage):
 
     URL_TEMPLATE = ""
 
+    @BasePage.context_chrome
     def verify_allowed_blocked_trackers(
         self, allowed: Optional[Set[str]] = None, blocked: Optional[Set[str]] = None
     ) -> bool:
@@ -67,16 +67,38 @@ class TrackerPanel(BasePage):
                     break
             if to_rm_item != "":
                 rm_set.remove(to_rm_item)
+        self.expect(lambda _: len(blocked) == 0 and len(allowed) == 0)
 
-        if len(blocked) == 0 and len(allowed) == 0:
-            return True
-        return False
+    @BasePage.context_chrome
+    def verify_tracker_subview_title(
+        self, blocked_tracker, subview_locator, expected_title
+    ):
+        """
+        Verify the title of the subview that shows the blocked trackers.
+        """
+        self.click_on(blocked_tracker)
+        tracker_subview_title = self.get_element(subview_locator)
+        self.expect(
+            lambda _: tracker_subview_title.get_attribute("title") == expected_title
+        )
+
+    @BasePage.context_chrome
+    def verify_tracker_panel_title(self, expected_title):
+        """
+        verify the title of the tracker panel.
+        """
+        self.expect(
+            lambda _: (
+                self.get_element("tracker-title").get_attribute("innerHTML")
+                == "Protections for senglehardt.com"
+            )
+        )
 
     def wait_for_blocked_tracking_icon(
         self, nav: Navigation, page: BasePage
     ) -> BasePage:
         """
-        Waits for the shield icon to indicate that cookies/trackers are being blocked by continuously refresing the page
+        Waits for the shield icon to indicate that cookies/trackers are being blocked by continuously refreshing the page
 
         Remember to open the passed in page beforehand, this waits for the page to load.
 
@@ -150,12 +172,18 @@ class TrackerPanel(BasePage):
             )
         return self
 
-    def open_and_return_cross_site_trackers(self) -> List[WebElement]:
-        with self.driver.context(self.context_id):
-            self.get_element("tracker-cross-site-tracking").click()
-            return self.get_elements("tracking-cross-site-tracking-item")
+    @BasePage.context_chrome
+    def open_and_return_cross_site_trackers(self) -> List[str]:
+        self.get_element("tracker-cross-site-tracking").click()
+        return [
+            val.get_attribute("value")
+            for val in self.get_elements("tracking-cross-site-tracking-item")
+        ]
 
-    def open_and_return_allowed_trackers(self) -> List[WebElement]:
-        with self.driver.context(self.context_id):
-            self.get_element("tracker-tracking-content").click()
-            return self.get_elements("tracking-allowed-content-item")
+    @BasePage.context_chrome
+    def open_and_return_allowed_trackers(self) -> List[str]:
+        self.get_element("tracker-tracking-content").click()
+        return [
+            val.get_attribute("value")
+            for val in self.get_elements("tracking-allowed-content-item")
+        ]

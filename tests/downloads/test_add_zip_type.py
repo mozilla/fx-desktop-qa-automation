@@ -1,21 +1,16 @@
-import os
-import shutil
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_navigation import Navigation
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
+
+ZIP_URL = "https://github.com/microsoft/api-guidelines"
 
 
 @pytest.fixture()
 def test_case():
     return "1756743"
-
-
-ZIP_URL = "https://github.com/microsoft/api-guidelines"
 
 
 @pytest.fixture()
@@ -27,8 +22,8 @@ def delete_files_regex_string():
 def temp_selectors():
     return {
         "github-code-button": {
-            "selectorData": "/html/body/div[1]/div[4]/div/main/turbo-frame/div/div/div/div/div[1]/react-partial/div/div/div[2]/div[2]/button",
             "strategy": "xpath",
+            "selectorData": "//button[.//span[normalize-space()='Code']]",
             "groups": [],
         },
         "github-download-button": {
@@ -50,28 +45,24 @@ def test_add_zip_type(
     """
     C1756743: Verify that the user can add the .zip mime type to Firefox
     """
-    # instantiate object
-    web_page = GenericPage(driver, url=ZIP_URL).open()
+    # Instantiate objects
+    web_page = GenericPage(driver, url=ZIP_URL)
     nav = Navigation(driver)
-    context_menu = ContextMenu(driver)
     about_prefs = AboutPrefs(driver, category="general")
 
+    # Add temporary selectors for GitHub UI
     web_page.elements |= temp_selectors
 
-    # Click on the available zip
+    # Trigger a ZIP download from GitHub
+    web_page.open()
     web_page.click_on("github-code-button")
     web_page.click_on("github-download-button")
 
     # In the download panel right-click on the download and click "Always Open Similar Files"
-    with driver.context(driver.CONTEXT_CHROME):
-        nav.context_click(nav.get_element("download-panel-item"))
-        context_menu.get_element("context-menu-always-open-similar-files").click()
+    nav.perform_download_context_action("context-menu-always-open-similar-files")
 
-    # Open about:preferences and check that zip mime type is present in the application list
+    # Open about:preferences and verify ZIP mime type is present
     about_prefs.open()
-    about_prefs.element_exists("mime-type-item", labels=["application/zip"])
-
-    # Remove the directory created as MacOS automatically unzips
-    if sys_platform == "Darwin":
-        dir_created = os.path.join(home_folder, "Downloads", "api-guidelines-vNext")
-        shutil.rmtree(dir_created)
+    assert about_prefs.get_app_name_for_mime_type("application/zip"), (
+        "ZIP mime type not found in Applications list"
+    )

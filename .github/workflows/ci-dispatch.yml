@@ -1,0 +1,131 @@
+---
+name: DTE Automation Dispatch
+
+run-name: CI tests kicked off by ${{ github.actor }}
+on:
+  pull_request:
+
+  workflow_dispatch:
+    inputs:
+      preview_only:
+        description: "Preview Only - If true, only show which jobs would run (no reusable workflows called)"
+        required: false
+        default: "false"
+      dry_run:
+        description: "Dry-Run - If true, downstream workflows should avoid side-effects (publish/deploy)"
+        required: false
+        default: "false"
+      split:
+        description: "Split - Default = smoke. Could be changed to functional1 or functional2, etc."
+        default: "smoke"
+        type: string
+        required: false
+
+permissions:
+  contents: "write"
+
+jobs:
+  Select-Test-Type:
+    runs-on: ubuntu-latest
+    outputs:
+      test_types: ${{ steps.dispatch.outputs.test_types }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Select test types
+        id: dispatch
+        run: |
+          test_types="$(python3 scripts/choose_test_type.py)"
+          echo "test_types=$test_types" >> "$GITHUB_OUTPUT"
+
+  Preview-Plan:
+    needs: Select-Test-Type
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.preview_only == 'true' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show selected test types
+        run: |
+          echo "selected test types are: ${{ needs.Select-Test-Type.outputs.test_types }}"
+
+      - name: Print planned jobs
+        env:
+          SELECT_TEST_TYPES: ${{ needs.Select-Select-Test-Type.outputs.test_types }}
+        run: |
+          python3 scripts/preview_plan.py
+
+  Run-Starfox-Win:
+    needs: Select-Test-Type
+    # skip this job in preview_only mode
+    if: |
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main.yml
+    with:
+      job_to_run: Test-Windows
+      is_pull_request: true
+      # pass the value of dry_run down the pipeline
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+      test_set: ${{ github.event.inputs.split }}
+    secrets: inherit
+
+  Run-Starfox-Mac:
+    needs: Select-Test-Type
+    if: |
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main.yml
+    with:
+      job_to_run: Test-MacOS
+      is_pull_request: true
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+      test_set: ${{ github.event.inputs.split }}
+    secrets: inherit
+
+  Run-L10n-Win:
+    needs: Select-Test-Type
+    if: |
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main-l10n.yml
+    with:
+      job_to_run: L10n-Windows
+      is_pull_request: true
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+    secrets: inherit
+
+  Run-L10n-Mac:
+    needs: Select-Test-Type
+    if: |
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main-l10n.yml
+    with:
+      job_to_run: L10n-MacOS
+      is_pull_request: true
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+    secrets: inherit
+
+  Run-L10n-Linux:
+    needs: Select-Test-Type
+    if: |
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main-l10n.yml
+    with:
+      job_to_run: L10n-Linux
+      is_pull_request: true
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+    secrets: inherit

@@ -1,0 +1,27 @@
+{
+  "url": "http://127.0.0.1:8080/zara_ad.html",
+  "field_mapping": {
+    "given_name": "ac80253b-a6ba-45e9-ad55-cd7b3a340161",
+    "family_name": "2992b76b-0859-4e53-a8ee-b96d06232265",
+    "street_address": "178d8863-2ed4-4e27-bd8c-51346b0ea7aa",
+    "address_level_1": "a3800b62-8b98-4f54-a85b-a25a68897702",
+    "address_level_2": "d19237af-091f-4c66-905d-1205c598783d",
+    "country": "b12bf682-908f-4dc4-87af-33e2c0e7c29f",
+    "postal_code": "99ce2b37-3362-410e-bf73-db46b04dfdb2",
+    "telephone": "38c2b5c6-f32e-4c8f-a779-743a7eb7f3ca",
+    "email": "2b602e86-87c8-4ef2-bc56-07ab55cde296"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "ac80253b-a6ba-45e9-ad55-cd7b3a340161",
+    "2992b76b-0859-4e53-a8ee-b96d06232265",
+    "178d8863-2ed4-4e27-bd8c-51346b0ea7aa",
+    "a3800b62-8b98-4f54-a85b-a25a68897702",
+    "d19237af-091f-4c66-905d-1205c598783d",
+    "b12bf682-908f-4dc4-87af-33e2c0e7c29f",
+    "99ce2b37-3362-410e-bf73-db46b04dfdb2",
+    "38c2b5c6-f32e-4c8f-a779-743a7eb7f3ca",
+    "2b602e86-87c8-4ef2-bc56-07ab55cde296"
+  ]
+}

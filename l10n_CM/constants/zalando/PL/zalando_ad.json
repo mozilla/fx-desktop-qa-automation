@@ -1,0 +1,20 @@
+{
+ "url": "http://127.0.0.1:8080/zalando_ad.html",
+ "field_mapping": {
+    "given_name":"c3fa1b01-da72-4499-a839-ff22339be533",
+    "family_name":"3418ab6c-db89-4476-b001-e6bcccb25330",
+    "street_address":"1035f3d8-efd8-48bd-a4ed-0472f18e4b10",
+    "postal_code":"0769b552-edc4-4ba1-bfef-b8d82665d990",
+    "address_level_2": "92ed3f36-e523-4a96-a5a9-54be50339e69"
+
+ },
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "c3fa1b01-da72-4499-a839-ff22339be533",
+    "3418ab6c-db89-4476-b001-e6bcccb25330",
+    "1035f3d8-efd8-48bd-a4ed-0472f18e4b10",
+    "0769b552-edc4-4ba1-bfef-b8d82665d990",
+    "92ed3f36-e523-4a96-a5a9-54be50339e69"
+
+ ]
+}

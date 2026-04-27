@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8080/newbalance_cc.html",
+  "field_mapping": {
+    "card_number": "2f4676c4-2ce0-4a97-a0cc-fb377d836441",
+    "expiration_date": "060f9552-da63-46a8-a820-a671c185776c",
+    "cvv": "a3ee2068-148e-4b0a-a67b-f401e0930f39"
+},
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "skip": "True",
+  "fields": [
+    "2f4676c4-2ce0-4a97-a0cc-fb377d836441",
+    "060f9552-da63-46a8-a820-a671c185776c",
+    "a3ee2068-148e-4b0a-a67b-f401e0930f39"
+]
+}

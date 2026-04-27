@@ -3,9 +3,7 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
-from modules.browser_object_context_menu import AboutDownloadsContextMenu
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import AboutDownloadsContextMenu, Navigation, PanelUi
 from modules.page_object import AboutDownloads, GenericPage
 
 
@@ -20,7 +18,7 @@ NUM_LINKS = 3
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("pdfjs.disabled", True)]
+    return [("browser.download.enableDeletePrivate", False), ("pdfjs.disabled", True)]
 
 
 @pytest.fixture()
@@ -30,23 +28,30 @@ def delete_files_regex_string():
 
 @pytest.mark.slow
 @pytest.mark.audio
-def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screenshot):
-    """C101674 - Downloads initiated from a private window are not leaked to the non-private window"""
+def test_downloads_from_private_not_leaked(
+    driver: Firefox,
+    delete_files,
+    screenshot,
+    panel_ui: PanelUi,
+    nav: Navigation,
+    about_downloads: AboutDownloads,
+):
+    """
+    C101674 - Downloads initiated from a private window are not leaked to the
+    non-private window
+    """
+
+    opm_forms = GenericPage(driver, url=TEST_URL)
 
     # We've deleted relevant downloads_file just to be safe
     non_private_window = driver.current_window_handle
-    panel_ui = PanelUi(driver)
-    nav = Navigation(driver)
-
     panel_ui.open_and_switch_to_new_window("private")
 
-    about_downloads = AboutDownloads(driver)
     about_downloads.open()
     if not about_downloads.is_empty():
         screenshot("about_downloads_not_empty")
         logging.warning("About:Downloads is not registering as empty")
 
-    opm_forms = GenericPage(driver, url=TEST_URL)
     opm_forms.open()
 
     # Get all links to pdfs on the page
@@ -58,12 +63,17 @@ def test_downloads_from_private_not_leaked(driver: Firefox, delete_files, screen
         and el.get_attribute("href").endswith(".pdf")
         and el.is_displayed()
     ]
-    # first link is large, skip it
+    # First link is large, skip it
+    panel_skipped = False
     for link in valid_links[1 : (NUM_LINKS + 1)]:
         target = link.get_attribute("href")
         logging.info(f"Downloading target {target}:")
         logging.info(link.text)
         link.click()
+        if not panel_skipped:
+            # skip download warning panel once.
+            nav.click_file_download_warning_panel()
+            panel_skipped = True
         nav.wait_for_item_to_download(target.split("/")[-1])
 
     # Check that everything looks good in About:Downloads

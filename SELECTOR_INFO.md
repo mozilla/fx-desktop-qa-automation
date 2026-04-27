@@ -23,6 +23,35 @@ Description: Takes the name of the intended theme to use
 Location: Theme cards on about:addons page
 Path to .json: modules/data/about_addons.components.json
 ```
+#### about_cache
+```
+Selector Name: disk-cache-link
+Selector Data: "a[href=\"about:cache?storage=disk\"]"
+Description: The "List Cache Entries" link for the disk storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: memory-cache-link
+Selector Data: "a[href=\"about:cache?storage=memory\"]"
+Description: The "List Cache Entries" link for the memory storage section
+Location: about:cache overview page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: entries-table
+Selector Data: "entries"
+Description: The table containing cache entry rows
+Location: about:cache?storage=disk or about:cache?storage=memory page
+Path to .json: modules/data/about_cache.components.json
+```
+```
+Selector Name: number-of-entries
+Selector Data: "//th[normalize-space()='Number of entries:']/following-sibling::td[1]"
+Description: The "Number of entries" value cell in the cache storage summary table
+Location: about:cache
+Path to .json: modules/data/about_cache.components.json
+```
 #### about_config
 ```
 Selector Name: warning-button
@@ -136,6 +165,27 @@ Selector Name: clear-downloads
 Selector Data: "menuitem[data-l10n-id='downloads-cmd-clear-downloads']"
 Description: Downloads context menu option "Clear Preview Panel"
 Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: context-menu-delete
+Selector Data: "downloadDeleteFileMenuItem"
+Description: Downloads context menu option "Delete"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: context-menu-toolbar-add-folder
+Selector Data: placesContext_new:folder
+Description: Downloads context menu option "New folder"
+Location: Downloaded file context menu
+Path to .json: modules/data/about_downloads_context_menu.components.json
+```
+```
+Selector Name: context-menu-toolbar-add-bookmark
+Selector Data: context-menu-toolbar-add-bookmark
+Description: Downloads context menu option "New bookmark"
+Location: Toolbar bookmark context menu
 Path to .json: modules/data/about_downloads_context_menu.components.json
 ```
 #### about_glean
@@ -443,6 +493,14 @@ Description: The Firefox logo
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```
+```
+Selector Name: top-site-by-title
+Selector Data: "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/.."
+Description: Topsite tile by title
+Location: The about:newtab page (middle section)
+Path to .json: modules/data/about_newtab.components.json
+```
+
 #### about_prefs
 ```
 Selector Name: search-engine-dropdown-root
@@ -452,9 +510,37 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: show-suggestions-in-address-bar
+Selector Data: showSearchSuggestionsFirstCheckbox
+Description: Parent Checkbox element to show suggestions in search
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: show-suggestions-awesomebar
+Selector Data: urlBarSuggestion
+Description: Checkbox element to show suggestions in the Awesomebar
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: search-engine-dropmarker
 Selector Data: "dropmarker"
 Description: Button that opens the search engine options list
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: default-engine-dropdown
+Selector Data: defaultEngineNormal
+Description: Button that opens the search engine options list (like above)
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: select-wrapper-button
+Selector Data: .select-wrapper button
+Description: Option inside the search engine options list
 Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -487,6 +573,13 @@ Location: about:preferences
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: tab-hover-preview-checkbox
+Selector Data: tabPreviewShowThumbnails
+Description: Checkbox to toggle "Show an image preview when you hover on a tab"
+Location: about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: h2-enhanced-tracking-protection
 Selector Data: h2[data-l10n-id='content-blocking-enhanced-tracking-protection']"
 Description: Enhance Tracking Protection sub-header
@@ -495,22 +588,50 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-addresses
-Selector Data: "checkbox[label='Save and fill addresses']"
+Selector Data: "[data-l10n-id='autofill-addresses-checkbox-message']"
 Description: Label for Autofill > Save and fill addresses option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: save-and-fill-payment-methods
-Selector Data: "checkbox[label='Save and fill payment methods']"
+Selector Data: "[data-l10n-id='autofill-payment-methods-checkbox-message-2']"
 Description: Label for Autofill > Save and fill payment methods option
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: prefs-button
+Selector Data: "moz-box-button[label^='{name}']"
+Description: Checkbox for a option by label of moz box button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: action-button
 Selector Data: "button[label^='{name}']"
-Description: Checkbox for a option by label
+Description: Checkbox for a option by label of normal button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: close-dialog
+Selector Data: "button[data-l10n-id='close-button']"
+Description: Close dialog button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payments-button
+Selector Data: "[data-l10n-id='autofill-payment-methods-manage-payments-button']"
+Description: Embedded button/label for "Manage Saved Payments"
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-addresses-button
+Selector Data: "[data-l10n-id='autofill-addresses-manage-addresses-button']"
+Description: Embedded button/label for "Manage Addresses and more..."
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -613,16 +734,16 @@ Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: firefox-suggest-nonsponsored
-Selector Data: "firefoxSuggestNonsponsored"
+Selector Name: firefox-suggestions
+Selector Data: showSearchSuggestionsFirstCheckbox
 Description: The Suggestions from Firefox check-box
 Location: about:preferences#search > Address Bar - Firefox Suggest
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: firefox-suggest-sponsored
-Selector Data: "firefoxSuggestSponsored"
-Description: The Suggestions from sponsors check-box
+Selector Name: firefox-trending-suggestions
+Selector Data: showTrendingSuggestions
+Description: Trending search suggestions check-box
 Location: about:preferences#search > Address Bar - Firefox Suggest
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -658,6 +779,13 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: custom-radio
 Selector Data: "customRadio"
 Description: In Enhanced Tracking Protection, the Custom radio button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: custom-tracker-options-parent
+Selector Data: "contentBlockingOptionCustom"
+Description: Parent Element in custom tracker blocking checkboxes
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -838,7 +966,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cookies-privacy-label
-Selector Data: "description[data-l10n-id='sitedata-delete-on-close-private-browsing2']"
+Selector Data: "[data-l10n-id='sitedata-delete-on-close-private-browsing3']"
 Description: Message in Cookies and Site data when History is not remembered
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -897,6 +1025,13 @@ Selector Name: language-settings-select
 Selector Data: "[data-l10n-id='browser-languages-select-language']"
 Description: In the Language Set Alternatives dialog, the Select a language to add button
 Location: about:preferences#general Language subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-suggestion-in-private-windows
+Selector Data: "showSearchSuggestionsPrivateWindows"
+Description: Show search suggestions in Private Windows
+Location: about:preferences#search
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1040,6 +1175,13 @@ Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: block-audio
+Selector Data: menuitem[data-l10n-id='permissions-capabilities-autoplay-block']
+Description: Block audio option
+Location: Settings Autoplay popup
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: autoplay-settings-button
 Selector Data: autoplaySettingsButton
 Description: Autoplay settings button
@@ -1049,7 +1191,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: autoplay-settings
 Selector Data: #setAutoplayPref > menulist[label='Block Audio']
-Description: Default autpplay settings for all websites button
+Description: Default autoplay settings for all websites button
 Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -1144,6 +1286,62 @@ Description: The dropdown menu for default zoom selection
 Location: about:preferences - Zoom settings
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: unknown-content-type-dialog
+Selector Data: unknownContentTypeWindo
+Description: The unknown content type dialog
+Location: about:preferences#general Applications subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: clipboard-suggestion-checkbox
+Selector Data: #clipboardSuggestion"
+Description: The checkbox for Clipboard
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-shortcuts-group
+Selector Data: oneClickSearchProvidersGroup
+Description: The Search shortcuts table
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: search-engine-list
+Selector Data: engineList
+Description: The Search shortcuts options list
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-search-engine-button
+Selector Data: removeEngineButton
+Description: The Remove button under Search shortcuts tabel
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: restore-default-search-engines-button
+Selector Data: restoreDefaultSearchEngines
+Description: The Restore Default Search Engines button under Search shortcuts tabel
+Location: about:preferences#search Search Shortcuts subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: Browsing History
+Selector Data: history-suggestion
+Description: Browsing History / History Suggestion under Address bar section
+Location: about:preferences#search
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-passwords
+Selector Data: "showPasswords"
+Description: Saved passwords button in about:preferences#privacy
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1207,6 +1405,41 @@ Selector Name: events-tab
 Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='events-section']"
 Description: Events option
 Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']"
+Description: Scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-events-table-rows
+Selector Data: "#events-section table tr"
+Description: Telemetry events table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-scalars-table-rows
+Selector Data: "#scalars-section table tr"
+Description: Telemetry scalars table rows
+Location: about:telemetry events or scalars table rows info
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: keyed-scalars-tab
+Selector Data: "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']"
+Description: Keyed scalars option
+Location: about:telemetry Sidebar option
+Path to .json: modules/data/about_telemetry.components.json
+```
+```
+Selector Name: telemetry-keyed-scalars-table-rows
+Selector Data: "#keyed-scalars-section-parent table tr"
+Description: Telemetry keyed scalars table rows
+Location: about:telemetry events or scalars table rows info
 Path to .json: modules/data/about_telemetry.components.json
 ```
 #### address_fill
@@ -1572,6 +1805,13 @@ Location: Any item in the customize Firefox content
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: customize-widget-remove-from-toolbar
+Selector Data: "toolbar-context-remove-from-toolbar"
+Description: Customize window context click option "Remove from Toolbar"
+Location: Any item on the toolbar in the customize Firefox content
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-add-bookmark
 Selector Data: "placesContext_new:bookmark"
 Description: Bookmarks Toolbar context click option "Add Bookmark…"
@@ -1590,6 +1830,27 @@ Selector Name: context-menu-add-search-engine
 Selector Data: "context-menu-add-engine"
 Description: Awesomebar context click option "Add <search engine>"
 Location: Any history item in the Hamburger history list
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-move-tab-to-new-group
+Selector Data: "context_moveTabToNewGroup"
+Description: Tab context click option "Add Tab to New Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-move-tab-to-group
+Selector Data: "context_moveTabToGroup"
+Description: Tab context click option "Add Tab to Group"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-remove-tab-from-group
+Selector Data: "context_ungroupTab"
+Description: Tab context click option "Remove from Group"
+Location: In the tabbed browser
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
@@ -1768,10 +2029,86 @@ Location: Toolbar - any bookmark context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-toolbar-open-in-new-tab
+Selector Data: selectorData": "placesContext_open:newtab"
+Description: Context menu option from a Toolbar bookmark
+Location: Toolbar - any bookmark context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-toolbar-open-all-bookmarks
 Selector Data: placesContext_openBookmarkContainer:tabs
 Description: Open all bookmarks from the context menu option from a Toolbar bookmark
 Location: Context menu - Toolbar
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-tab
+Selector Data: context_moveTabOptions
+Description: Context menu submenu for tab move options (Move to Start, Move to End, Move to New Window).
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-tab-to-start
+Selector Data: context_moveToStart
+Description: Context menu option to move a tab to the start of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-tab-to-end
+Selector Data: context_moveToEnd
+Description: Context menu option to move a tab to the end of the tab bar.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-move-to-new-window
+Selector Data: context_openTabInWindow
+Description: Context menu option to move a tab to a new window.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu_reload-tab
+Selector Data: context_reloadTab
+Description: Context menu option to reload a tab.
+Location: Context menu - Tab
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-bookmark-link
+Selector Data: context-bookmarklink
+Description: Context menu option to bookmark a link
+Location: Context menu - topsite context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-search-select
+Selector Data: coontext-searchselect
+Description: Context menu option to search selected text with the engine set as default
+Location: Context menu - topsite context menu
+```
+```
+Selector Name: context-menu-open-link-in-new_container_tab
+Selector Data: context-openlinkinusercontext-menu"
+Description: Open  linkin new container tab context menu item
+Location: Newpage topsites tile context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-open-link-in-container-work
+Selector Data: menuitem[data-l10n-id='user-context-work']"
+Description: Open link in container "Work" context submenu item
+Location: Newpage topsites tile submenu context menu, secodn option
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-vertical-tabs
+Selector Data: toolbar-context-toggle-vertical-tabs
+Description: Vertical Tabs context menu option
+Location: Toolbar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
@@ -1805,9 +2142,9 @@ Location: Any non-linked content space inside example.com page
 Path to .json: modules/data/exemple_page.components.json
 ```
 ```
-Selector Name: more-information
-Selector Data: "More information..."
-Description: More information..." link 
+Selector Name: learn-more
+Selector Data: "Learn more"
+Description: "Learn more" link
 Location: The hyperlink positioned in the middle of example.com page  
 Path to .json: modules/data/exemple_page.components.json
 ```
@@ -1816,6 +2153,34 @@ Path to .json: modules/data/exemple_page.components.json
 Selector Name: forget
 Selector Data: "wrapper-panic-button"
 Description: The forget option button from the customizing options
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: nav-searchbar
+Selector Data: "search-container"
+Description: the search container element
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: done-button
+Selector Data: "customization-done-button"
+Description: The done button in the customizd toolbar
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: restore-defaults-button
+Selector Data: "customization-reset-button"
+Description: The Restore Defaults button in the customize toolbar page
+Location: Customize firefox options in Context Chrome
+Path to .json: modules/data/customize_firefox.components.json
+```
+```
+Selector Name: end-private-session
+Selector Data: "wrapper-reset-pbm-toolbar-button"
+Description: The End Private Session button wrapper in the customize toolbar page
 Location: Customize firefox options in Context Chrome
 Path to .json: modules/data/customize_firefox.components.json
 ```
@@ -2035,6 +2400,34 @@ Location: In the FxA signin page flow
 Path to .json: modules/data/fxa_home.components.json
 ```
 ```
+Selector Name: do-it-later-button
+Selector Data: "inline_recovery_key_setup_create_do_it_later"
+Description: Coninute fxa account creation flow
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: login-password-input
+Selector Data: "choice-pair-not-now"
+Description: Dont pair with phone now
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: signed-in-status
+Selector Data: "div[role='status']"
+Description: Sign in status
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
+Selector Name: manage-sync-button
+Selector Data: "signup_confirmed_sync_manage_sync_button"
+Description: sign up and sync confirmation
+Location: In the FxA signin page flow
+Path to .json: modules/data/fxa_home.components.json
+```
+```
 Selector Name: signin-otp-input
 Selector Data: "[data-testid='signin-token-code-input-field']"
 Description: The FxAccount One Time Password entry field
@@ -2128,8 +2521,8 @@ Path to .json: modules/data/generic_page.components.json
 ```
 ```
 Selector Name: simulated-tracker-dnt-status
-Selector Data: "dnt-on"
-Description: The Do Not Track status
+Selector Data: "dnt-ff"
+Description: The Do Not Track (DNT) status
 Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
@@ -2159,6 +2552,90 @@ Selector Name: bsky-signin-button
 Selector Data: "//button[@aria-label='Sign in']"
 Description: bsky website sign in button
 Location: Bsky website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: url-to-copy
+Selector Data: "p[contenteditable]"
+Description: Clipboard page to copy url
+Location: Clipboard test page
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-play-button
+Selector Data: "vjs-big-play-button"
+Description: videojs website play button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-pause-button
+Selector Data: "button[type='button'][title='Pause']"
+Description: videojs website mute button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-fullscreen
+Selector Data: "button[type='button'][title='Fullscreen']"
+Description: videojs website fullscreen button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-exit-fullscreen
+Selector Data: "button[type='button'][title='Exit Fullscreen']"
+Description: videojs website exit fullscreen button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-play
+Selector Data: "button[type='button'][title='Play']"
+Description: videojs website media player play button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: vjs-volume
+Selector Data: "vjs-volume-level"
+Description: videojs website media player volume button
+Location: videojs website player
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: sample-bin-download-100mb
+Selector Data: "a[href='100MB.bin']"
+Description: Sample download
+Location: ash-speed.hetzner website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file
+Selector Data: "docs-file-menu"
+Description: Gdoc file menu
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file-download
+Selector Data: "span.goog-menuitem-label[aria-label^='Download']"
+Description: Gdoc file menu -> download
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: gdoc-file-download-pdf
+Selector Data: "span.goog-menuitem-label[aria-label^='PDF Document']"
+Description: Gdoc file menu -> download -> PDF Document (.pdf)
+Location: docs.google.com website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: download-malicious-warning
+Selector Data: "a[href='https://testsafebrowsing.appspot.com/s/content.exe']"
+Description: A link to download a file with malicious warning
+Location: testsafebrowsing website
 Path to .json: modules/data/generic_page.components.json
 ```
 #### generic_pdf
@@ -2442,6 +2919,13 @@ Path to .json: modules/data/login_autofill.components.json
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
 Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Location: bsky page load
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: facebook-credentials
+Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
+Description: Autocomplete dropdown is toggled for focused login fields on facebook page load
 Location: Facebook page load
 Path to .json: modules/data/login_autofill.components.json
 ```
@@ -2450,6 +2934,13 @@ Path to .json: modules/data/login_autofill.components.json
 Selector name: awesome-bar
 Selector Data: urlbar-input
 Description: Awesome bar / URL bar
+Location: Any clickable area on the awesome bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: legacy-search-mode-suggestion-container
+Selector Data: richlistbox[class='autocomplete-richlistbox search-panel-tree']
+Description: Legacy search container
 Location: Any clickable area on the awesome bar
 Path to .json: modules/data/navigation.components.json
 ```
@@ -2734,13 +3225,6 @@ Location: URL bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: save-bookmark-button
-Selector Data: editBookmarkPanelDoneButton
-Description: Save bookmark
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
 Selector name: blue-star-button
 Selector Data: image[id='star-button'][starred='true']
 Description: Bookmarked page
@@ -2762,10 +3246,24 @@ Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: edit-bookmark-panel
-Selector Data: editBMPanel_namePicker
-Description: Edit bookmark panel
-Location: Bookmark panel
+Selector name: download-target-element
+Selector Data: downloadTarget
+Description: Downloaded item in the download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: download-progress-element
+Selector Data: downloadProgress
+Description: Download progress bar
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: ddownload-details-element
+Selector Data: downloadDetailsNormal
+Description: Download details element
+Location: Download panel
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -2780,6 +3278,34 @@ Selector name: forget-button
 Selector Data: panic-button
 Description: Forget button
 Location: Toolbar after adding it from customize
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: end-private-session-button
+Selector Data: reset-pbm-toolbar-button
+Description: "End Private Session" toolbar button (private browsing / PBM)
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: delete-session-data-button
+Selector Data: reset-pbm-panel-confirm-button
+Description: Confirmation button in the "End Private Session" panel ("Delete session data")
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: cancel-session-data-button
+Selector Data: reset-pbm-panel-cancel-button
+Description: Cancel button in the "End Private Session" confirmation panel
+Location: Confirmation panel after clicking "End Private Session"
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: always-ask-pbm-checkbox
+Selector Data: reset-pbm-panel-checkbox
+Description: "Always ask me" checkbox in the "End Private Session" confirmation panel
+Location: Confirmation panel after clicking "End Private Session"
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -2798,30 +3324,30 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: library-history-submenu-button
-Selector Data: appMenu-library-history-button
+Selector Data: //*[@id='appMenu-library-history-button' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
 Description: Library history submenu button
 Location: Inside the library button in the toolbar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
-Selector name: bookmarks-type-dropdown
-Selector Data: editBMPanel_folderMenuList
-Description: Bookmark location
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: bookmarks-type-dropdown-other
-Selector Data: editBMPanel_unfiledRootItem
-Description: Bookmark location - Other bookmarks
-Location: Bookmark panel
-Path to .json: modules/data/navigation.components.json
-```
-```
-Selector name: other-bookmarks
+Selector name: other-bookmarks-toolbar
 Selector Data: OtherBookmarks
-Description: Other bookmarks option
-Location: Bookmark panel
+Description: Other bookmarks folder
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: toolbar-history-recently-closed-tabs
+Selector Data: //*[@panelopen='true']//*[@id='appMenuRecentlyClosedTabs' and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Recently closed tabs button in the Library History view
+Location: Library > History
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: library-recently-closed-tabs-items
+Selector Data: //*[@id='appMenu-library-recentlyClosedTabs' and @visible='true']//*[@targetURI and not(ancestor::*[contains(concat(' ', normalize-space(@class), ' '), ' offscreen ')])]
+Description: Individual closed tab items in the Library History Recently Closed Tabs panel
+Location: Library > History > Recently Closed Tabs
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -2930,6 +3456,13 @@ Location: Hangs from the Extensions button in toolbar once the extension is adde
 Path to .json: modules/data/navigation.components.json
 ```
 ```
+Selector Name: popup-notification-cancel
+Selector Data: popup-notification-secondary-button
+Description: Popup notification cancel button
+Location: Hangs from the Extensions button in toolbar once the extension is added to Firefox
+Path to .json: modules/data/navigation.components.json
+```
+```
 Selector Name: popup-notification-panel
 Selector Data: appMenu-addon-installed-notification
 Description: Popup notification panel
@@ -3015,7 +3548,7 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchmode-switcher-settings
-Selector Data: searchmode-switcher-popup-search-settings-button
+Selector Data: menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']
 Description: Search settings button in the searchmode switcher dropdown
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
@@ -3055,12 +3588,172 @@ Description: Developer tool icon
 Location: Navigation bar
 Path to .json: modules/data/navigation.components.json
 ```
+```
+Selector Name: status-panel-label
+Selector Data: statuspanel-label
+Description: Status panel URL label
+Location: newtab page bottom left corner on link hover
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchmode-engine
+Selector Data: toolbarbutton#urlbar-searchmode-switcher[label*='{engine}, pick a search engine']
+Description: Searchmode engine label
+Location: Address bar searchmode engine label
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: selected_searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'][selected]
+Description: Searchbar-search-engine
+Location: Selected search bar search engine
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-suggestions
+Selector Data: hbox.search-one-offs
+Description: Searchbar suggestions
+Location: Searchbar results
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-magnifying-glass-button
+Selector Data: hbox.searchbar-search-button[data-l10n-id='searchbar-icon']
+Description: Searchbar magnifying glass button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: searchbar-search-engine
+Selector Data: button.searchbar-engine-one-off-item[tooltiptext='{engine}'
+Description: Searchbar search engine button
+Location: Searchbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-chicklet
+Selector Data: label.searchmode-switcher-title
+Description: Search mode chicklet
+Location: Address bar search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: history-button-search-mode
+Selector Data: search-button-history
+Description: Histroy button search mode
+Location: Search mode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: exit-button-searchmode
+Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
+Description: Exit button searchmode
+Location: Address bar searchmode
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-tab
+Selector Data: div.urlbarView-row[type='switchtab']
+Description: Switch to tab from awesome bar
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: switch-to-cliboard
+Selector Data: #urlbar-results > div.urlbarView-row[type='clipboard']"
+Description: Switch to clipboard
+Location: Address bar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: tab-container-label
+Selector Data: "userContext-label"
+Description:  Tab container label
+Location: URL bar when a tab container is active
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-deleted-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='File deleted']"
+Description: "File Deleted" status for a deleted download
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: xpi-download-target-element
+Selector Data: ".downloadTarget[value='tomato_clock-6.0.2.xpi']"
+Description: xpi addon download panel
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-malicious-message
+Selector Data: ".downloadDetails.downloadDetailsNormal[value='This file contains a virus or malware.']"
+Description: A message when downloading a malicious file
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-details-button
+Selector Data: ".downloadButton.downloadIconSubviewArrow[aria-label='Open or Remove File']"
+Description: Download panel more Details button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: remove-download
+Selector Data: "#downloadsPanel-blockedSubview-deleteButton[label='Remove file']"
+Description: Download detils remove button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: allow-download
+Selector Data: "#downloadsPanel-blockedSubview-unblockButton[label='Allow download']"
+Description: Download detils allow button
+Location: Download panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: download-button-warning
+Selector Data: "#downloads-button[attention='severe']"
+Description: Download button warning dot
+Location: Download button
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmarks-toolbar-context
+Selector Data: "PlacesToolbarItems"
+Description: Bookmarks toolbar fress space
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmark-folder-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='New Folder']"
+Description: Bookmark folder in toolbar
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: bookmark-in-toolbar
+Selector Data: "toolbarbutton.bookmark-item[label='Mozilla - Internet for people, not profit (US)']"
+Description: Mozilla website bookmark in toolbar
+Location: Bookmarks toolbar
+Path to .json: modules/data/navigation.components.json
+```
 #### panel_ui
 ```
 Selector name: panel-ui-button
 Selector Data: PanelUI-menu-button
 Description: Menu button / Hambuger menu
 Location: Toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: panel-main-view
+Description: Main body of Panel UI
+Location: See above
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
@@ -3169,6 +3862,12 @@ Location: Firefox menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
+Selector name: panel-ui-history-view
+Description: Subview of Panel UI
+Location: See above
+Path to .json: modules/data/panel_ui.components.json
+```
+```
 Selector name: panel-ui-history-recently-closed
 Selector Data: appMenuRecentlyClosedTabs
 Description: Recently closed tabs
@@ -3232,10 +3931,10 @@ Location: On the hamburger menu
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
-Selector name: bookmark-by-title
+Selector name: panel-menu-item-by-title
 Selector Data: toolbarbutton.bookmark-item[label*='{title}']
-Description: Bookmark item
-Location: On the hamburger menu > Bookmarks
+Description: Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class "bookmark-item" for both in the hamburger menu UI.
+Location: On the hamburger menu > Bookmarks or History
 Path to .json: modules/data/panel_ui.components.json
 ```
 ```
@@ -3244,6 +3943,27 @@ Selector Data: panelMenuBookmarkThisPage
 Description: Bookmark current tab button
 Location: On the hamburger menu > Bookmarks
 Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-type-dropdown
+Selector Data: editBMPanel_folderMenuList
+Description: Bookmark location
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: bookmarks-type-dropdown-other
+Selector Data: editBMPanel_unfiledRootItem
+Description: Bookmark location - Other bookmarks
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector name: save-bookmark-button
+Selector Data: editBookmarkPanelDoneButton
+Description: Save bookmark
+Location: Bookmark panel
+Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector name: iframe
@@ -3392,6 +4112,48 @@ Description: Bookmarks toolbar
 Location: Bookmarks toolbar
 Path to .json: modules/data/panel_ui.components.json
 ```
+```
+Selector name: edit-bookmark-panel
+Selector Data: editBMPanel_namePicker
+Description: Edit bookmark panel
+Location: Bookmark panel
+Path to .json: modules/data/pane_ui.components.json
+```
+```
+Selector Name: toolbarspring
+Selector Data: customizableui-special-spring2
+Description: toolbarspring
+Location: Toolbar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: reopen-all-closed-tabs-button
+Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
+Description: Reopen all closed tabs buttonutton
+Location: On the hamburger menu > History > Recently closed tabs
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmark-iframe
+Selector Data: browser[class='dialogFrame']
+Description: Add bookmark folder
+Location: Add bookmark folder from bookmarks toolbar
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: tabs-toolbar
+Selector Data: TabsToolbar
+Description: Click outside the Add Folder panel to simulate cancelling or clicking away
+Location: Add bookmark folder
+Path to .json: modules/data/panel_ui.components.json
+```
+```
+Selector name: bookmarks-panel-location-label
+Selector Data: "label.editBMPanel_folderRow.hideable[value='Location']",
+Description: Click inside the Add Folder panel to simulate cancelling or clicking away
+Location: Add/Edit bookmark folder
+Path to .json: modules/data/panel_ui.components.json
+```
 #### print_preview
 ```
 Selector name: print-preview-browser
@@ -3414,6 +4176,13 @@ Description: Print Settings bar in Print Preview
 Location: Right sidebar in Print Preview
 Path to .json: modules/data/print_preview.components.json
 ```
+```
+Selector name: print-preview-pagination
+Selector Data: "printPreviewNavigation"
+Description: Pagination toolbar for navigating pages
+Location: Over the Print Preview page thumbnail/preview
+Path to .json: modules/data/print_preview.components.json
+```
 #### reader_view
 ```
 Selector name: reader-view-button
@@ -3434,6 +4203,13 @@ Selector name: toolbar-font-selector
 Selector Data: "font-type-selector"
 Description: The Font options dropdown
 Location: In the Reader View Toolbar Text options dialog.
+Path to .json: modules/data/reader_view.components.json
+```
+```
+Selector name: reader-close-button
+Selector Data: "button[class='close-button toolbar-button']"
+Description: The Reader View toolbar close [X] button
+Location: In page, when in Reader View mode.
 Path to .json: modules/data/reader_view.components.json
 ```
 ```
@@ -3717,7 +4493,139 @@ Description: A tab's Close (X) button
 Location: In the tabbed browser.
 Path to .json: modules/data/tab_bar.components.json
 ```
-
+```
+Selector name: tabgroup-menu
+Selector Data: "tab-group-editor"
+Description: Adding tabs to a group menu
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-input
+Selector Data: "[data-l10n-id='tab-group-editor-name-field']"
+Description: Name field
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-create-button
+Selector Data: "tab-group-editor-button-create"
+Description: Create button
+Location: Menu that opens when adding tabs to a group
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-label
+Selector Data: "tab-group-label"
+Description: The label of tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-menuitem
+Selector Data: "tab-group-icon"
+Description: Icon related to tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-overflow-count
+Selector Data: "tab-group-overflow-count"
+Description: Numbers of tabs in tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-line
+Selector Data: "tab-group-line"
+Description: Line indicator of tab group
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-ungroup-tabs
+Selector Data: "tabGroupEditor_ungroupTabs"
+Description: Ungroup the tab group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-name-input
+Selector Data: "tab-group-name"
+Description: Name input field in the tab group editor
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-color-swatch
+Selector Data: "tab-group-editor-swatch-{color}"
+Description: Color swatch button in the tab group editor (use labels parameter for color)
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-add-new-tab
+Selector Data: "tabGroupEditor_addNewTabInGroup"
+Description: Button to add a new tab in the group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup
+Selector Data: "tab-group"
+Description: Tab group container element (has color attribute)
+Location: In the tabbed browser
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tabgroup-save-and-close-group
+Selector Data: "tabGroupEditor_saveAndCloseGroup"
+Description: Save and close the tab group
+Location: Menu that opens when right click on the tab group label
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: selected-tab
+Selector Data: "tab.tabbrowser-tab[selected='true']"
+Description: Selected tab locator
+Location: Selected tab in the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: all-tabs
+Selector Data: tabbrowser-tab
+Description: All tabs locator
+Location: All tabs from the tabs bar
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-panel
+Selector Data: tab-preview-panel
+Description: Tab hover preview panel container
+Location: In the tabbed browser (shown when hovering a tab)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-title
+Selector Data: "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title"
+Description: Title text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-uri
+Selector Data: "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri"
+Description: URL text inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
+```
+Selector Name: tab-preview-thumbnail-container
+Selector Data: "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container"
+Description: Thumbnail container inside the tab hover preview panel
+Location: In the tabbed browser (hover preview panel)
+Path to .json: modules/data/tab_bar.components.json
+```
 #### text_area_form_autofill
 ```
 Selector Name: street-address-textarea
@@ -3873,4 +4781,32 @@ Selector Data: "menu_zoomReset"
 Description: Reset Zoom option from Menu Bar
 Location: Menu bar
 Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: menu-bar-recently-closed-tabs-items
+Selector Data: "menuitem.bookmark-item"
+Description: Individual closed tab items in the Recently Closed Tabs submenu
+Location: History menu > Recently Closed Tabs submenu
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: view-sidebar-menu
+Selector Data: "viewSidebarMenu"
+Description: Sidebar submenu under the View menu in the Menu Bar
+Location: View menu > Sidebar submenu
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: view-sidebar-history
+Selector Data: "menu_historySidebar"
+Description: History option in the View > Sidebar submenu, opens the History sidebar panel
+Location: View menu > Sidebar submenu > History
+Path to .json: modules/data/menu_bar.components.json
+```
+```
+Selector Name: sidebar-box
+Selector Data: "sidebar-box"
+Description: Container element for the classic Firefox sidebar; visible when any sidebar panel is open, hidden when closed
+Location: Browser chrome
+Path to .json: modules/data/navigation.components.json
 ```

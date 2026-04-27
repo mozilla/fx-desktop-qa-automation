@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/cupshe_ad.html",
+ "field_mapping": {
+    "given_name":"bdbfa5cc-0a65-436b-8029-2915feeacd3f",
+    "family_name":"4a452ab0-598b-4bc3-87eb-04aad2178a74",
+    "street_address":"ca64bf31-31d8-4855-a1c1-3528f6e64ea4",
+    "postal_code":"0347bc97-e89c-4c02-a969-c12e7059e2e1",
+    "address_level_2": "8149b53c-22ab-4150-8e72-8e612601a6ef",
+    "telephone": "82a9ad4c-951c-427c-bfca-a24a957a6865"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "bdbfa5cc-0a65-436b-8029-2915feeacd3f",
+    "4a452ab0-598b-4bc3-87eb-04aad2178a74",
+    "ca64bf31-31d8-4855-a1c1-3528f6e64ea4",
+    "0347bc97-e89c-4c02-a969-c12e7059e2e1",
+    "8149b53c-22ab-4150-8e72-8e612601a6ef",
+    "82a9ad4c-951c-427c-bfca-a24a957a6865"
+ ]
+}

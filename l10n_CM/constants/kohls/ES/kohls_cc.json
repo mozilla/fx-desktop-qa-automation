@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/kohls_cc.html",
+  "field_mapping": {
+    "name": "3bff160b-eca2-4078-a19a-7602a1d5918a",
+    "card_number": "d419cf62-6a52-4920-a8eb-2d091842e0df",
+    "expiration_date": "790d6479-a0cf-4654-b373-7ec872712f96",
+    "cvv": "22e24985-cd38-4260-92bc-c0c7368e2877"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "3bff160b-eca2-4078-a19a-7602a1d5918a",
+    "d419cf62-6a52-4920-a8eb-2d091842e0df",
+    "790d6479-a0cf-4654-b373-7ec872712f96",
+    "22e24985-cd38-4260-92bc-c0c7368e2877"
+]
+}

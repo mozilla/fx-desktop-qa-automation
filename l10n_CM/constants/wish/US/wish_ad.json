@@ -1,0 +1,24 @@
+{
+  "url": "http://127.0.0.1:8080/wish_ad.html",
+  "field_mapping": {
+    "family_name": "85068eda-75f5-4319-b897-becd3a1b1b22",
+    "given_name": "3cab3b5e-1944-4112-af77-75a4f3ca238d",
+    "address_level_2": "0408ab06-bf6d-4aae-b73c-58e314183732",
+    "address_level_1": "5dee3d64-dab7-4848-895c-6ecb016547fb",
+    "street_address" : "a6db6fea-94a1-4a7f-addd-436a4b2ba270",
+    "postal_code": "be69366f-f2b1-4502-90af-cdc56069af11",
+    "telephone": "22bcc5a1-f1d3-4a97-949a-6868448e9c17"
+
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "85068eda-75f5-4319-b897-becd3a1b1b22",
+    "3cab3b5e-1944-4112-af77-75a4f3ca238d",
+    "0408ab06-bf6d-4aae-b73c-58e314183732",
+    "5dee3d64-dab7-4848-895c-6ecb016547fb",
+    "a6db6fea-94a1-4a7f-addd-436a4b2ba270",
+    "be69366f-f2b1-4502-90af-cdc56069af11",
+    "22bcc5a1-f1d3-4a97-949a-6868448e9c17"
+
+  ]
+}

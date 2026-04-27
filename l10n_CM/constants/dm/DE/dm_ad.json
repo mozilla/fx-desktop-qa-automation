@@ -1,0 +1,17 @@
+{
+  "url": "http://127.0.0.1:8080/dm_ad.html",
+  "field_mapping": {
+    "street_address": "94ba9666-c517-4feb-b6e9-97a1d17216c3",
+    "postal_code": "53aa05be-999b-4b53-b0f5-8d56a57f0920",
+    "address_level_2": "fc1339ea-780f-4940-908b-c84c88760e97",
+    "country": "b4db3ff8-a951-426d-bdb4-96edf70d1457"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "94ba9666-c517-4feb-b6e9-97a1d17216c3",
+    "53aa05be-999b-4b53-b0f5-8d56a57f0920",
+    "fc1339ea-780f-4940-908b-c84c88760e97",
+    "b4db3ff8-a951-426d-bdb4-96edf70d1457"
+  ]
+}

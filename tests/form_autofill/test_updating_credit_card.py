@@ -57,7 +57,7 @@ def test_update_cc_no_dupe_name(
         credit_card_sample_data, field, region
     )
     credit_card_autofill.update_form_data(
-        credit_card_sample_data, field, new_field_value
+        credit_card_sample_data, field, new_field_value, region
     )
 
     # navigate to settings

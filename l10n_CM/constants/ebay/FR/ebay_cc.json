@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/ebay_cc.html",
+  "field_mapping": {
+    "card_number": "074f3242-21d4-4356-9309-f6c1a2d724e0",
+    "given_name": "00467d92-b775-4596-966f-2bf3d1267c0c",
+    "family_name": "fb594e12-3e59-4175-862f-cd403d982672",
+    "expiration_date": "218d3d69-83f5-46e4-8adc-8251d12b9aa2",
+    "cvv":"59c55fa4-c6fa-4212-896b-b7183182c092"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "074f3242-21d4-4356-9309-f6c1a2d724e0",
+    "00467d92-b775-4596-966f-2bf3d1267c0c",
+    "fb594e12-3e59-4175-862f-cd403d982672",
+    "218d3d69-83f5-46e4-8adc-8251d12b9aa2",
+    "59c55fa4-c6fa-4212-896b-b7183182c092"
+  ]
+}

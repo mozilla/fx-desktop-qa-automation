@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/boohoo_cc.html",
+  "field_mapping": {
+    "card_number": "6cba999f-33f7-4e06-bb43-3e8985931de6",
+    "name": "ea44442f-c2a3-4bf2-8e97-ed61356add36",
+    "expiration_month": "7265bd2f-9433-4ca8-9c83-a88ef69abf60",
+    "expiration_year": "90fad733-c684-4cc9-98fb-c93833f30fd3",
+    "cvv": "3087fbe0-b452-4836-a9e8-4b9e603c41f2"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "6cba999f-33f7-4e06-bb43-3e8985931de6",
+    "ea44442f-c2a3-4bf2-8e97-ed61356add36",
+    "7265bd2f-9433-4ca8-9c83-a88ef69abf60",
+    "90fad733-c684-4cc9-98fb-c93833f30fd3",
+    "3087fbe0-b452-4836-a9e8-4b9e603c41f2"
+]
+}

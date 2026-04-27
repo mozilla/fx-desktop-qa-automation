@@ -1,0 +1,27 @@
+{
+  "url": "http://127.0.0.1:8080/aveda_ad.html",
+  "field_mapping": {
+    "given_name": "70235159-ab93-4262-b1af-30c4e92c9268",
+    "family_name": "1cbefedb-e083-4ecd-aed5-adfdfbc67b78",
+    "address_level_2": "ede5bda6-b73a-4e2d-9966-9f4af5816f56",
+    "street_address" : "e8bca979-cfd4-46fc-9421-7b919eab33a0",
+    "postal_code": "3e2ae4ce-e487-4ad3-b76b-37ce94b55f2d",
+    "telephone": "dd8c8e0a-2457-4f70-8505-f38c43dd7d0a"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "70235159-ab93-4262-b1af-30c4e92c9268",
+    "1cbefedb-e083-4ecd-aed5-adfdfbc67b78",
+    "ede5bda6-b73a-4e2d-9966-9f4af5816f56",
+    "e8bca979-cfd4-46fc-9421-7b919eab33a0",
+    "3e2ae4ce-e487-4ad3-b76b-37ce94b55f2d",
+    "dd8c8e0a-2457-4f70-8505-f38c43dd7d0a"
+  ],
+
+  "skipped": [
+     "test_demo_ad_3a_autofill_address_fields.py",
+     "test_demo_ad_3b_autofill_name_org_fields.py",
+     "test_demo_ad_3c_autofill_phone_email_fields.py"
+   ]
+}

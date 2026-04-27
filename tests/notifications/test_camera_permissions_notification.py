@@ -1,12 +1,7 @@
-import sys
-from os import environ
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -32,30 +27,26 @@ def add_to_prefs_list():
 
 
 TEST_URL = "https://mozilla.github.io/webrtc-landing/gum_test.html"
-MAC_GHA = environ.get("GITHUB_ACTIONS") == "true" and sys.platform.startswith("darwin")
 
 
-@pytest.mark.skipif(MAC_GHA, reason="Test unstable in MacOS Github Actions")
-def test_camera_permissions_notification(driver: Firefox, temp_selectors):
+# Test is unstable in MacOS GHA for now
+def test_camera_permissions_notification(driver: Firefox, web_page):
     """
     C122536 - Verify that Camera only permission prompt is successfully displayed when the website asks for camera permissions
     """
-    # Instatiate Objects
+    # Instantiate Objects
     nav = Navigation(driver)
-    web_page = GenericPage(driver, url=TEST_URL).open()
-    web_page.elements |= temp_selectors
+    page = web_page(TEST_URL)
 
     # Trigger the popup notification asking for camera permissions
-    web_page.click_on("camera-only")
+    page.click_on("camera-only")
 
     # Verify that the notification is displayed
-    nav.expect_element_attribute_contains("popup-notification", "label", "Allow ")
-    nav.expect_element_attribute_contains(
-        "popup-notification", "name", "mozilla.github.io"
-    )
-    nav.expect_element_attribute_contains(
+    nav.element_attribute_contains("popup-notification", "label", "Allow ")
+    nav.element_attribute_contains("popup-notification", "name", "mozilla.github.io")
+    nav.element_attribute_contains(
         "popup-notification", "endlabel", " to use your camera?"
     )
 
-    sleep(1.5)
+    nav.element_visible("popup-notification-secondary-button")
     nav.click_on("popup-notification-secondary-button")

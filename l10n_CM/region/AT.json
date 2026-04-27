@@ -1,0 +1,16 @@
+{
+  "region": "AT",
+  "sites": [
+    "demo",
+    "ebay",
+    "giesswein",
+    "hofer",
+    "holzkern",
+    "kastnerandoehler",
+    "libro",
+    "mediamarkt"
+  ],
+
+  "tests": [
+  ]
+}

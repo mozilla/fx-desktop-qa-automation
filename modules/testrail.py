@@ -107,6 +107,12 @@ class APIClient:
                 requests.exceptions.HTTPError
             ):  # response.content not formatted as JSON
                 error = str(response.content)
+            sanitized_headers = {
+                k: v for k, v in headers.items() if not k.lower().startswith("auth")
+            }
+            logging.warning(f"Broken call: {url}")
+            logging.warning(f" headers: {sanitized_headers}")
+            logging.warning(f" data: {data}")
             raise APIError(
                 "TestRail API returned HTTP %s (%s)" % (response.status_code, error)
             )
@@ -160,6 +166,16 @@ class TestRail:
         """Get a given Test Case"""
         return self.client.send_get(f"get_case/{case_id}")
 
+    def get_cases_in_suite(self, project_id, suite_id, offset=0):
+        """Given a project and a suite, get all test cases"""
+        return self.client.send_get(
+            f"get_cases/{project_id}&suite_id={suite_id}&offset={offset}"
+        )
+
+    def get_suites(self, project_id):
+        """Get all suites for project"""
+        return self.client.send_get(f"get_suites/{project_id}")
+
     def update_cases_in_suite(self, suite_id, case_ids, **kwargs):
         """Given a suite and a list of test cases, update all listed
         test cases according to keyword args"""
@@ -200,11 +216,12 @@ class TestRail:
         logging.info(f"run on plan entry configs {config_ids}")
         payload = {
             "config_ids": config_ids,
-            "description": description,
             "include_all": not bool(case_ids),
         }
         if case_ids:
             payload["case_ids"] = case_ids
+        if description:
+            payload["description"] = description
         logging.info(f"create run on entry payload:\n{payload}")
         return self.client.send_post(
             f"add_run_to_plan_entry/{plan_id}/{entry_id}", payload
@@ -235,7 +252,9 @@ class TestRail:
         return None
 
     def matching_submilestone(self, milestone, submile_name):
-        """Given a milestone object and a submilestone name, return the submile object that matches"""
+        """
+        Given a milestone object and a submilestone name, return the submile object that matches
+        """
         for submile in milestone["milestones"]:
             if submile_name == submile["name"]:
                 return submile
@@ -246,7 +265,7 @@ class TestRail:
         return the plan object that matches"""
         plans = self._get_plans_in_milestone(testrail_project_id, milestone_id)
         for plan in plans:
-            if plan_name in plan["name"]:
+            if plan_name == plan["name"]:
                 return self._get_full_plan(plan.get("id"))
         return None
 
@@ -345,6 +364,18 @@ class TestRail:
             payload["runs"] = runs
         return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
 
+    def update_plan(self, plan_id, **kwargs):
+        """Given a plan id, update the plan per kwargs"""
+        if not kwargs:
+            return False
+        return self.client.send_post(f"/update_plan/{plan_id}", kwargs)
+
+    def update_plan_entry(self, plan_id, entry_id, **kwargs):
+        """Given a plan id and entry id, update the entry per kwargs"""
+        if not kwargs:
+            return False
+        return self.client.send_post(f"/update_plan_entry/{plan_id}/{entry_id}", kwargs)
+
     def matching_configs(self, testrail_project_id, config_group_id, config_name):
         """Given a project id, a config group id, and a config name, return the matching config object"""
         configs = self.client.send_get(f"/get_configs/{testrail_project_id}")
@@ -386,10 +417,17 @@ class TestRail:
         testrail_suite_id,
         test_case_ids=[],
         status="passed",
+        elapsed=[],
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
-        status_key = {"passed": 1, "skipped": 3, "xfailed": 4, "failed": 5}
+        status_key = {
+            "passed": 1,
+            "skipped": 3,
+            "blocked": 2,
+            "xfailed": 4,
+            "failed": 5,
+        }
         if not test_case_ids:
             test_case_ids = [
                 test_case.get("id")
@@ -397,13 +435,19 @@ class TestRail:
                     testrail_project_id, testrail_suite_id
                 )
             ]
-        data = {
-            "results": [
-                {"case_id": test_case_id, "status_id": status_key.get(status)}
-                for test_case_id in test_case_ids
-            ]
-        }
-        return self._update_test_run_results(testrail_run_id, data)
+
+        results = []
+        for i in range(len(test_case_ids)):
+            results.append(
+                {
+                    "case_id": test_case_ids[i],
+                    "status_id": status_key.get(status),
+                    "elapsed": elapsed[i],
+                }
+            )
+        logging.warning(f"Going to update cases with payload: {results}")
+
+        return self._update_test_run_results(testrail_run_id, {"results": results})
 
     # Private Methods
 

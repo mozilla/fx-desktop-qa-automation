@@ -29,6 +29,18 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
+if platform.system() == "Linux":
+    import Xlib.XK
+    from Xlib import X
+    from Xlib.display import Display
+    from Xlib.ext.xtest import fake_input
+
+
+def env_true(name: str) -> bool:
+    """Return True if the environment variable is set to '1' or 'true' (case-insensitive)."""
+    logging.warning(f"env: {name} set to {os.environ.get(name)}")
+    return os.environ.get(name, "").strip().lower() in ("1", "true")
+
 
 class Utilities:
     """
@@ -103,8 +115,37 @@ class Utilities:
             "Nunavut": "NU",
             "Yukon": "YT",
         }
+        # temporary fix until faker issue is resolved
+        self.country_local_translation = {
+            "Germany": "Deutschland",
+            "Italy": "Italia",
+            "Spain": "España",
+            "Poland": "Polska",
+            "Belgium": "België",
+            "Austria": "Österreich",
+        }
+        # Country code mapping for different regions
+        self.country_codes = {
+            "US": "1",
+            "CA": "1",
+            "FR": "33",
+            "DE": "49",
+            "GB": "44",
+            "IT": "39",
+            "PL": "48",
+            "ES": "34",
+            "BE": "32",
+            "AT": "43",
+        }
+
         self.fake = None
         self.locale = None
+
+    def assert_search_code_in_url(self, driver, nav, expected_code):
+        assert expected_code in driver.current_url, (
+            f"Expected '{expected_code}' in URL, got: {driver.current_url}"
+        )
+        nav.clear_awesome_bar()
 
     def remove_file(self, path: str):
         try:
@@ -204,14 +245,15 @@ class Utilities:
         """
 
         # Check if locale exists, otherwise return None
-        locale = next(filter(lambda x: country_code in x, AVAILABLE_LOCALES), None)
+        locales = list(filter(lambda x: country_code in x, AVAILABLE_LOCALES))
 
-        if not locale:
+        if not locales:
             logging.error(
                 f"Invalid country code `{country_code}`. No faker instance created."
             )
             return None  # No fallback
 
+        locale = next(filter(lambda x: "en" in x, locales), locales[-1])
         try:
             # seed to get consistent data
             if self.fake is None:
@@ -256,7 +298,9 @@ class Utilities:
                 if phone[:2] != "11":
                     break
         else:
-            phone = self.normalize_phone_number(fake.phone_number())
+            phone = self.normalize_regional_phone_numbers(
+                fake.phone_number(), country_code
+            )
         return phone
 
     def fake_autofill_data(self, country_code) -> AutofillAddressBase:
@@ -267,7 +311,12 @@ class Utilities:
         region_attributes = ["state", "administrative_unit", "region"]
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        given_name, family_name = name.split()
+
+        # Safely split the name
+        name_parts = name.split()
+        given_name = name_parts[0]
+        family_name = name_parts[-1] if len(name_parts) > 1 else ""
+
         organization = fake.company().replace(",", "")
         street_address = fake.street_address()
         # find correct attribute for selected locale
@@ -315,7 +364,12 @@ class Utilities:
         """
         fake, valid_code = self.create_localized_faker(country_code)
         name = fake.name()
-        given_name, family_name = name.split()
+
+        # Safely split the name
+        name_parts = name.split()
+        given_name = name_parts[0]
+        family_name = name_parts[-1] if len(name_parts) > 1 else ""
+
         card_number = fake.credit_card_number()
         generated_credit_expiry = fake.credit_card_expire()
         expiration_month, expiration_year = generated_credit_expiry.split("/")
@@ -333,20 +387,10 @@ class Utilities:
             cvv=cvv,
             telephone=telephone,
         )
-
-        while len(fake_data.card_number) <= 14:
-            name = fake.name()
+        card_number = fake_data.card_number
+        while len(card_number) <= 14:
             card_number = fake.credit_card_number()
-            generated_credit_expiry = fake.credit_card_expire()
-            expiration_month, expiration_year = generated_credit_expiry.split("/")
-            cvv = fake.credit_card_security_code()
-            fake_data = CreditCardBase(
-                name=name,
-                card_number=card_number,
-                expiration_month=expiration_month,
-                expiration_year=expiration_year,
-                cvv=cvv,
-            )
+        setattr(fake_data, "card_number", card_number)
         cc_mapping = {
             "card_number": "credit_card_number",
             "name": "name",
@@ -418,6 +462,54 @@ class Utilities:
                 matches.append(match[0])
 
         return matches
+
+    def colors_match(self, a: str, b: str, tolerance: float = 0.14) -> bool:
+        """
+        Compare two CSS color strings and determine if they are close enough to be considered equal.
+
+        Args:
+            a (str): First CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+            b (str): Second CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+            tolerance (float, optional): Allowed relative difference between each color channel.
+                Defaults to 0.14. A higher value means colors can differ more and still match.
+
+        Returns:
+            bool: True if the two colors are considered a match within the given tolerance.
+                False if the color strings are invalid.
+        """
+        try:
+            a_vals = a.split("(")[1].split(")")[0].split("/")[0].strip()
+            b_vals = b.split("(")[1].split(")")[0].split("/")[0].strip()
+            if a_vals[0].isnumeric():
+                a_nums = [float(n.strip()) for n in a_vals.split(",")]
+            else:
+                # String contains (srgb n n n) or the like
+                tokens = a_vals.split()[1:]
+                a_nums = [float(n) for n in tokens]
+            if b_vals[0].isnumeric():
+                b_nums = [float(n.strip()) for n in b_vals.split(",")]
+            else:
+                tokens = b_vals.split()[1:]
+                b_nums = [float(n) for n in tokens]
+        except (IndexError, ValueError) as e:
+            # Raised if string doesn't contain expected format or non-numeric parts
+            logging.warning(str(e))
+            return False
+
+        # Compare up to the shortest length (rgb vs rgba)
+        for i in range(min(len(a_nums), len(b_nums))):
+            if a_nums[i] == b_nums[i]:
+                continue
+            base = b_nums[i] if b_nums[i] != 0 else 1.0
+            diff = abs((a_nums[i] / base) - 1.0)
+            if diff > tolerance:
+                logging.info(
+                    f"[Color match] failed: #{i}: {a_nums[i]} - {b_nums[i]} ({diff})"
+                )
+                return False
+
+        logging.info(f"[Color match] success: {a_nums} | {b_nums}")
+        return True
 
     def normalize_phone_number(self, phone: str, default_country_code="1") -> str:
         """
@@ -509,9 +601,18 @@ class Utilities:
         Returns the abbreviation for a given state, province, or region full name.
 
         :param full_name: The full name of the state, province, or region.
-        :return: The corresponding abbreviation or "Not Found" if not in the dictionary.
+        :return: The corresponding abbreviation or the full name itself if not in the dictionary.
         """
-        return self.state_province_abbr.get(full_name, "Not Found")
+        return self.state_province_abbr.get(full_name, full_name)
+
+    def get_country_local_translation(self, country_name: str) -> str:
+        """
+        Returns the local translation of the country name.
+
+        :param country_name: The full name of the country in english
+        :return: The corresponding translation in the local language or the english name itself if not in the dictionary.
+        """
+        return self.country_local_translation.get(country_name, country_name)
 
     def normalize_regional_phone_numbers(self, phone: str, region: str) -> str:
         """
@@ -528,14 +629,25 @@ class Utilities:
         str
             The normalized phone number in the format <country-code><number>.
         """
+        # Handle leading zero in local numbers before country code is removed
+        if region not in ["US", "CA"] and phone.startswith("0"):
+            # Remove the leading zero
+            phone = phone[1:]
 
-        # Country code mapping for different regions
-        country_codes = {
-            "US": "1",
-            "CA": "1",
-            "FR": "33",
-            "DE": "49",
-        }
+        # Fix Austrian phone number duplication issue before processing
+        if region == "AT" and "4343" in phone:
+            # Remove the duplicated country code
+            phone = phone.replace("4343", "43")
+
+        # If phone is already normalized, return as it is
+        expected_country_code = self.country_codes.get(region)
+        if (
+            expected_country_code
+            and phone.isdigit()
+            and phone.startswith(expected_country_code)
+            and len(phone) >= len(expected_country_code) + 6
+        ):
+            return phone
 
         # Sub out anything that matches this regex statement with an empty string to get rid of extensions in generated phone numbers
         phone = re.sub(r"\s*(?:x|ext)\s*\d*$", "", phone, flags=re.IGNORECASE)
@@ -543,21 +655,19 @@ class Utilities:
         digits = re.sub(r"\D", "", phone)
 
         # Determine country code
-        country_code = country_codes.get(
+        country_code = self.country_codes.get(
             region, "1"
-        )  # Default to "1" (US/CA) if region is unknown
+        )  # Default to "1" (US/CA) if the region is unknown
+        # handle leading zeros
         local_number = digits
 
-        # Check if phone already contains a valid country code
-        for code in country_codes.values():
-            if digits.startswith(code):
-                country_code = code
-                # Remove country code from local number
-                local_number = digits[len(code) :]
-                break
+        # Check if the phone number already contains a valid country code
+        if digits.startswith(country_code):
+            # Remove country code from the local number
+            local_number = digits[len(country_code) :]
 
-        # Handle leading zero in local numbers (France & Germany)
-        if region in ["FR", "DE"] and local_number.startswith("0"):
+        # Handle leading zero in local numbers after country code is removed
+        if region not in ["US", "CA"] and local_number.startswith("0"):
             # Remove the leading zero
             local_number = local_number[1:]
 
@@ -567,7 +677,9 @@ class Utilities:
             return ""
 
         # Return formatted phone number with correct country code
-        return f"{country_code}{local_number}"
+        result = f"{country_code}{local_number}"
+        logging.info(f"Phone normalization result: {phone} -> {result}")
+        return result
 
 
 class BrowserActions:
@@ -865,3 +977,17 @@ class PomUtils:
             if not matches:
                 logging.info("No matches found.")
             return matches
+
+
+class LinuxAuto:
+    """Automate some Linux keyboard interactions with X11"""
+
+    def __init__(self):
+        self._display = Display(os.environ.get("DISPLAY"))
+
+    def press(self, key):
+        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(key))
+        fake_input(self._display, X.KeyPress, keycode)
+        self._display.sync()
+        fake_input(self._display, X.KeyRelease, keycode)
+        self._display.sync()

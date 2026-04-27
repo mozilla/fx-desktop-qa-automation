@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8080/etsy_cc.html",
+  "field_mapping": {
+    "name": "399fdc51-6f1f-4c03-9a3d-9bad578189b1",
+    "card_number": "4c7d55ac-0291-4f67-960f-5a6c62876fb7",
+    "expiration_month": "6fb7be76-2f51-4ac5-8011-7eb1c3549f7d",
+    "expiration_year": "dbc812c6-039e-4b03-85f7-888a5483f87a",
+    "cvv": "5eae1ea8-978b-44cf-bf61-2dd029fe11b6"
+  },
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "399fdc51-6f1f-4c03-9a3d-9bad578189b1",
+    "4c7d55ac-0291-4f67-960f-5a6c62876fb7",
+    "6fb7be76-2f51-4ac5-8011-7eb1c3549f7d",
+    "dbc812c6-039e-4b03-85f7-888a5483f87a",
+    "5eae1ea8-978b-44cf-bf61-2dd029fe11b6"
+  ]
+}

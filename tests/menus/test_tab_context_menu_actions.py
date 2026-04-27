@@ -4,6 +4,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import ContextMenu, TabBar
+from modules.page_object import GenericPage
 
 
 @pytest.fixture()
@@ -25,24 +26,25 @@ def test_duplicate_tab(driver: Firefox):
     """
     tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
+    page = GenericPage(driver)
 
     tabs_to_open = 4
 
-    # open some tabs
+    # Open some tabs
     for i in range(tabs_to_open):
         driver.get(links[i])
         tabs.new_tab_by_button()
         driver.switch_to.window(driver.window_handles[i + 1])
 
-    # context click
+    # Context click
     first_tab = tabs.get_tab(1)
     tabs.context_click(first_tab)
     tab_context_menu.click_and_hide_menu("context-menu-duplicate-tab")
 
-    # get the current tab and assert the url
+    # Get the current tab and assert the url
     driver.switch_to.window(driver.window_handles[tabs_to_open + 1])
-    current_page = driver.current_url
-    assert current_page == links[0]
+
+    page.url_contains(links[0])
 
 
 def test_close_multiple_tabs_to_right(driver: Firefox):
@@ -54,7 +56,7 @@ def test_close_multiple_tabs_to_right(driver: Firefox):
 
     tabs_to_open = 4
 
-    # open some tabs
+    # Open some tabs
     for i in range(tabs_to_open):
         driver.get(links[i])
         tabs.new_tab_by_button()

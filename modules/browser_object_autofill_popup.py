@@ -1,5 +1,7 @@
+import time
 from typing import Union
 
+from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -26,26 +28,30 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def ensure_autofill_dropdown_not_visible(self):
         """
-        Verifies that the autofill dropdown does NOT appear
-        checks if the parent pop up component have children elements before explicit wait.
+        Verifies that the autofill dropdown does not appear
+        checks if the parent pop up component has hidden attribute.
         """
         self.element_exists("pop-up-component")
         popup_component = self.get_element("pop-up-component")
-        if popup_component and len(popup_component.get_attribute("innerHTML")) > 1:
-            self.element_not_visible("select-form-option")
+        if len(popup_component.get_attribute("innerHTML")) > 1:
+            self.element_attribute_contains("pop-up-component-box", "style", "0px;")
+        else:
+            self.element_attribute_contains("pop-up-component", "hidden", "true")
         return self
 
     @BasePage.context_chrome
-    def ensure_autofill_dropdown_visible(self, field_element: WebElement = None):
+    def ensure_autofill_dropdown_visible(self):
         """
         Verifies that the autofill dropdown appears
-        checks if the parent pop up component have children elements before explicit wait.
-
-        Arguments:
-            field_element: if field element is given.
-                check whether it is a select element. pass the check if it is.
+        checks if the parent pop up component has hidden attribute.
         """
-        self.element_visible("select-form-option")
+        self.element_clickable("pop-up-component-box")
+        return self
+
+    @BasePage.context_chrome
+    def hover_over_autofill_panel(self):
+        self.element_clickable("pop-up-component-box")
+        self.hover("pop-up-component-box")
         return self
 
     # Interaction with popup elements
@@ -100,12 +106,17 @@ class AutofillPopup(BasePage):
         Arguments:
             index (int): The index of the element to retrieve (1-based)
         """
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.get_element("select-form-option-by-index", labels=[str(index)])
-            )
-        )
-        self.get_element("select-form-option-by-index", labels=[str(index)]).click()
+        self.element_clickable("pop-up-component-box")
+        self.click_on("select-form-option-by-index", labels=[str(index)])
+
+    @BasePage.context_chrome
+    def select_autofill_panel(self):
+        """
+        Select the first autofill panel in the autocomplete list.
+        """
+        self.element_clickable("select-form-option-autofill")
+        self.click_on("select-form-option-autofill")
+        return self
 
     @BasePage.context_chrome
     def get_primary_value(self, element: WebElement) -> str:
@@ -115,3 +126,60 @@ class AutofillPopup(BasePage):
         Returns: str: The primary value extracted from the element's attribute
         """
         return element.get_attribute("ac-value")
+
+    @BasePage.context_chrome
+    def verify_update_password_doorhanger(self, nav, expected_text):
+        """
+        Wait for and verify that the 'Update password' doorhanger is displayed
+        with the expected text
+        """
+        # Wait for and open the doorhanger
+        time.sleep(1)
+        nav.expect(lambda _: nav.element_visible("password-notification-key"))
+        nav.click_on("password-notification-key")
+
+        # Verify the doorhanger text
+        self.expect(
+            lambda _: (
+                expected_text in self.get_element("password-update-doorhanger").text
+            )
+        )
+
+    @BasePage.context_chrome
+    def click_manage_passwords(self) -> BasePage:
+        # Clicks the "Manage Passwords" option from the autofill popup
+        self.click_on("manage-passwords")
+        return self
+
+    @BasePage.context_chrome
+    def verify_username_value(
+        self,
+        expected_username: str,
+        field: str = "password-notification-username-field",
+    ) -> WebElement:
+        """Wait until the username field contains the expected value."""
+        element = self.get_element(field)
+        self.wait.until(lambda _: element.get_attribute("value") == expected_username)
+        return element
+
+    @BasePage.context_chrome
+    def dismiss_password_doorhanger(self) -> BasePage:
+        """Dismiss the Password Manager doorhanger using ESC."""
+        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
+        return self
+
+    @BasePage.context_chrome
+    def click_securely_generated_password(self) -> BasePage:
+        """Click the 'Use a Securely Generated Password' option from the autofill popup."""
+        self.click_on("generated-securely-password")
+        return self
+
+    @BasePage.context_chrome
+    def verify_autocomplete_option(self, value: str) -> BasePage:
+        """Wait until an autocomplete option containing `value` is displayed in the dropdown."""
+        self.wait.until(
+            lambda _: self.get_element(
+                "select-form-option-by-value", labels=[value]
+            ).is_displayed()
+        )
+        return self

@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:8080/yellowkorner_ad.html",
+  "field_mapping": {
+    "given_name": "5960cb79-1aab-4074-ae3c-764685328505",
+    "family_name": "030cb327-9c72-4617-8a63-aa39b886ba6c",
+    "street_address": "834b799a-5d7b-41f2-9ba0-3fe6796e34b2",
+    "address_level_2": "7f25e3a1-4160-4d19-b2c3-9b449d7aba9d",
+    "country": "d3b5f197-a1a1-49e3-ad6e-a7019131fd19",
+    "postal_code": "26148b36-0fc4-4c51-aef1-4636168b65a5",
+    "telephone": "e5aea163-2e59-4db5-a78f-f3a799ea07ed",
+    "email": "df9be921-33a5-446c-afc3-8526f6205031"
+  },
+
+  "form_field": "*[data-moz-autofill-inspect-id='{given_name}']",
+  "fields": [
+    "5960cb79-1aab-4074-ae3c-764685328505",
+    "030cb327-9c72-4617-8a63-aa39b886ba6c",
+    "834b799a-5d7b-41f2-9ba0-3fe6796e34b2",
+    "7f25e3a1-4160-4d19-b2c3-9b449d7aba9d",
+    "d3b5f197-a1a1-49e3-ad6e-a7019131fd19",
+    "26148b36-0fc4-4c51-aef1-4636168b65a5",
+    "e5aea163-2e59-4db5-a78f-f3a799ea07ed",
+    "df9be921-33a5-446c-afc3-8526f6205031"
+  ]
+}

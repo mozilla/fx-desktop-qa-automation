@@ -52,6 +52,8 @@ def create_profiles(profile_paths, sys_platform):
     except Exception:
         file_size = 0
 
+    if file_size == 0:
+        os.makedirs(os.path.dirname(profile_file), exist_ok=True)
     with open(profile_file, "a") as p:
         for i in range(len(tmpdir)):
             p.write("\n")

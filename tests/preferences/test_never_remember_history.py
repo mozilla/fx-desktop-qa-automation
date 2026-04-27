@@ -1,9 +1,7 @@
 import os
-import time
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
 
 from modules.page_object import AboutPrefs
 
@@ -19,28 +17,21 @@ def add_to_prefs_list():
     return [("browser.privatebrowsing.autostart", False)]
 
 
-def test_never_remember_history(driver: Firefox, sys_platform: str):
+@pytest.fixture()
+def about_prefs_category():
+    return "privacy"
+
+
+def test_never_remember_history(
+    driver: Firefox, sys_platform: str, about_prefs: AboutPrefs
+):
     """
     C143604: Make sure to set the pref via about:preferences, then check in about:config that the pref has been changed
     """
-
-    about_prefs = AboutPrefs(driver, category="privacy").open()
+    about_prefs.open()
 
     # Change the settings to not remember the browser history
-    history_menulist = about_prefs.get_history_menulist()
-    menulist_popup = history_menulist.find_element(By.TAG_NAME, "menupopup")
-    options = menulist_popup.find_elements(By.TAG_NAME, "menuitem")
-
-    # Scrolling for visibility
-    driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
-    time.sleep(1)
-    current_selection = history_menulist.get_attribute("value")
-
-    if current_selection != "dontremember":
-        for option in options:
-            if option.get_attribute("value") == "dontremember":
-                option.click()
-                break
+    about_prefs.set_history_option("dontremember")
 
     # Verify that the pref is set to True
     profile_path = driver.capabilities["moz:profile"]

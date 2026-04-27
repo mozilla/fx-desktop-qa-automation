@@ -1,0 +1,21 @@
+{
+ "url": "http://127.0.0.1:8080/douglas_ad.html",
+ "field_mapping": {
+    "given_name":"44b17868-63bd-4ad7-9054-8c97583dfbbd",
+    "family_name":"91e11207-713f-433c-b26a-17f38c229b9f",
+    "street_address":"8106df36-5490-473e-9274-e10703157bfc",
+    "postal_code":"f10d15fe-7b8d-46e9-99fc-7c34b676d74b",
+    "address_level_2": "18a599a1-7d6c-4a91-805c-c7f10c51b66c",
+    "email": "151b57f4-881f-44e2-9404-b6c6242d6dba"
+ },
+
+ "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+ "fields": [
+    "44b17868-63bd-4ad7-9054-8c97583dfbbd",
+    "91e11207-713f-433c-b26a-17f38c229b9f",
+    "8106df36-5490-473e-9274-e10703157bfc",
+    "f10d15fe-7b8d-46e9-99fc-7c34b676d74b",
+    "18a599a1-7d6c-4a91-805c-c7f10c51b66c",
+    "151b57f4-881f-44e2-9404-b6c6242d6dba"
+ ]
+}

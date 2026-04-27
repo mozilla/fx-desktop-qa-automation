@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:8080/brico_cc.html",
+  "field_mapping": {
+    "card_number": "61ed6e91-e97e-4aa9-b18c-44a5b65a0da5",
+    "name": "e306d4c8-b355-47d2-9f11-2bc03770c1c1",
+    "expiration_month": "7dd0225f-9dde-450f-9789-6b1afeb79017",
+    "expiration_year": "bfb596be-4108-4826-b54d-0a7f042fefeb",
+    "cvv": "9790f8a4-1f21-4381-9ac8-f8123ad008a6"
+},
+
+  "form_field": "*[data-moz-autofill-inspect-id='{name}']",
+  "fields": [
+    "61ed6e91-e97e-4aa9-b18c-44a5b65a0da5",
+    "e306d4c8-b355-47d2-9f11-2bc03770c1c1",
+    "7dd0225f-9dde-450f-9789-6b1afeb79017",
+    "bfb596be-4108-4826-b54d-0a7f042fefeb",
+    "9790f8a4-1f21-4381-9ac8-f8123ad008a6"
+]
+}

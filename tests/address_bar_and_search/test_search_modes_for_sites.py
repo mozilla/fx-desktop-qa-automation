@@ -14,9 +14,11 @@ SEARCH_MODES = [
 
 @pytest.fixture()
 def test_case():
-    return "3028754"
+    return "deprecated"
 
 
+# Google recaptcha makes this test unstable for now
+# Test has been removed from main TestRail suites
 @pytest.mark.parametrize("search_engine, prefix, url", SEARCH_MODES)
 def test_search_modes_for_sites(
     driver: Firefox, search_engine: str, prefix: str, url: str
