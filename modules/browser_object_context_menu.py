@@ -114,17 +114,14 @@ class ContextMenu(BasePage):
                 "if (!menu) return false;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
                 "if (!popup) return false;"
-                "return popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]') !== null;"
+                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
+                "if (!item) return false;"
+                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "return true;"
             )
-        )
-        self.driver.execute_script(
-            "const menu = document.getElementById('context_askChat');"
-            "const popup = menu.querySelector('menupopup') || menu.menupopup;"
-            "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
-            "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
-            "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
-            "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
-            "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
         )
         return self
 

@@ -340,21 +340,6 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def expect_ai_chat_sidebar_closed(self):
-        """Wait until the AI chat panel is fully hidden.
-
-        SidebarController.hide() is async — this guard ensures sidebar-box.hidden is true
-        before the caller proceeds to interact with tabs, preventing a state where the
-        sidebar contentDocument still holds focus.
-        """
-        self.wait.until(
-            lambda _: self.driver.execute_script(
-                "return document.getElementById('sidebar-box')?.hidden === true;"
-            )
-        )
-        return self
-
-    @BasePage.context_chrome
     def expect_summarize_button_visible(self):
         """Verify the Summarize page button is visible in the AI Chat panel.
 
