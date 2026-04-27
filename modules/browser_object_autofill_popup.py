@@ -183,12 +183,3 @@ class AutofillPopup(BasePage):
             ).is_displayed()
         )
         return self
-
-    def is_autocomplete_option_present(self, value: str) -> bool:
-        """Checks whether an autocomplete option with the given value is visible."""
-        try:
-            return self.get_element(
-                "select-form-option-by-value", labels=[value]
-            ).is_displayed()
-        except Exception:
-            return False
