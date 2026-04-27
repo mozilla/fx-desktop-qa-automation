@@ -1,0 +1,374 @@
+---
+name: Fx Test Stability Monitoring
+
+on:
+  workflow_call:
+    inputs:
+      channel:
+        description: "Channel to run tests against"
+        default: "beta"
+        type: string
+        required: false
+      job_to_run:
+        required: true
+        type: string
+      test_set:
+        description: "Test set to run"
+        required: true
+        type: string
+      test_category:
+        description: 'Either pass, unstable or flaky'
+        required: true
+        default: "pass"
+        type: string
+env:
+  FX_CHANNEL: ${{ inputs.channel }}
+  STARFOX_CATEGORY: ${{ inputs.test_category }}
+  SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+
+jobs:
+  Test-Windows:
+    if: ${{ inputs.job_to_run == 'Test-Windows' }}
+    runs-on: windows-latest
+    env:
+      STARFOX_PLATFORM: win
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set CI Environment (Stability Check)
+        shell: pwsh
+        run: |
+          "STARFOX_SPLIT=${{ inputs.test_set }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "REPORTABLE=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          Remove-Item ./pyproject.toml;
+          Move-Item ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
+          pipenv install;
+
+      - name: Download Geckodriver
+        shell: pwsh
+        run: |
+          $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
+          echo $gecko_url
+          Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
+          unzip geckodriver.zip
+          echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Download Beta
+        shell: pwsh
+        run: |
+          $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
+          echo $fx_url
+          Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+
+      - name: Install Beta
+        id: setup
+        shell: pwsh
+        run: |
+          Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+
+      - name: Select Tests (Win)
+        id: select
+        shell: pwsh
+        run: |
+          pipenv run python -m scripts.choose_test_split
+
+      - name: Print Selected Tests (Win)
+        if: ${{steps.select.conclusion == 'success'}}
+        shell: pwsh
+        run: |
+          $testCount = (Get-Content selected_tests | Where-Object { $_.Trim() -ne "" }).Count
+          Write-Host "Total test scripts selected: $testCount"
+
+          Write-Host "Selected tests:"
+          Get-Content selected_tests
+
+      - name: Test Fx Version (Win)
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success'
+          }}
+        shell: pwsh
+        run: |
+          pipenv run python -c "import sys; print(sys.platform)"
+          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
+          pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
+
+      - name: Run Tests in Win
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success'
+          }}
+        shell: pwsh
+        run: |
+          mkdir -p test-results
+          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win.json --reruns 0
+          $env:TEST_EXIT_CODE = $LASTEXITCODE
+          mv artifacts artifacts-win || true
+          exit $env:TEST_EXIT_CODE
+
+      - name: Upload JSON report (Win)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-win
+          path: test-results/report-win.json
+
+      - name: Run Tests in Win (Headed)
+        if: ${{ steps.setup.conclusion == 'success' && always() }}
+        shell: pwsh
+        run: |
+          Remove-Item -Path ./pyproject.toml -ErrorAction SilentlyContinue
+          mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
+
+          New-Item -ItemType Directory -Force -Path test-results | Out-Null
+
+          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+
+          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win-headed.json --reruns 0
+
+          $env:TEST_EXIT_CODE = $LASTEXITCODE
+
+          rm artifacts/assets -r -Force
+
+          Get-ChildItem -Path "artifacts" | ForEach-Object {
+              $destPath = "artifacts-win\" + $_.Name
+              if (-not (Test-Path -Path $destPath)) {
+                  try {
+                      Move-Item -Path $_.FullName -Destination $destPath
+                  } catch {
+                      # Ignore errors and continue
+                  }
+              }
+          }
+          exit $env:TEST_EXIT_CODE
+
+      - name: Upload JSON report (Win headed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-win-headed
+          path: test-results/report-win-headed.json
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-win
+          path: artifacts-win
+
+  Test-MacOS:
+    if: ${{ inputs.job_to_run == 'Test-MacOS' }}
+    runs-on: macos-latest
+    env:
+      STARFOX_PLATFORM: mac
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set CI Environment (Stability Check)
+        run: |
+          echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+          echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
+          echo "REPORTABLE=false" >> "$GITHUB_ENV"
+
+      - name: Check test case numbers
+        run: |
+          python scripts/check_test_cases.py
+          exit $?
+
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts;
+          pip3 install 'pipenv==2023.11.15';
+          pip3 install 'ruff>=0.4.8,<0.5';
+          rm -f ./pyproject.toml;
+          mv ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
+          pipenv install
+          echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"
+          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+
+      - name: Install Fx
+        id: setup
+        run:
+          echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT"
+
+      - name: Select Tests (MacOS)
+        id: select
+        run: |
+          pipenv run python -m scripts.choose_test_split
+
+      - name: Print Selected Tests (MacOS)
+        if: ${{steps.select.conclusion == 'success'}}
+        run: |
+          test_count=$(grep -cve '^\s*$' selected_tests)
+          echo "Total test scripts selected: $test_count"
+
+          echo "Selected tests:"
+          cat selected_tests
+
+      - name: Test Fx Version (MacOS)
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success'
+          }}
+        env:
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+        run: |
+          "$FX_EXECUTABLE" --version
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+
+      - name: Run Tests in MacOS
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            steps.select.conclusion == 'success'
+          }}
+        env:
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+        run: |
+          mkdir -p test-results
+          "$FX_EXECUTABLE" --version
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --json-report --json-report-file=test-results/report-mac.json --reruns 0 || TEST_EXIT_CODE=$?
+          mv artifacts artifacts-mac || true
+          exit $TEST_EXIT_CODE
+
+      - name: Upload JSON (MacOS)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-mac
+          path: test-results/report-mac.json
+
+      - name: Run Tests in MacOS (Headed)
+        if: ${{ steps.setup.conclusion == 'success' && always() }}
+        env:
+          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+        run: |
+          mkdir -p test-results
+          rm -f ./pyproject.toml
+          mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
+          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 || TEST_EXIT_CODE=$?
+          mv -n artifacts/* artifacts-mac/ || true
+          exit $TEST_EXIT_CODE
+
+      - name: Upload JSON (MacOS headed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-mac-headed
+          path: test-results/report-mac-headed.json
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-mac
+          path: artifacts-mac
+
+  Use-Artifacts-Win:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.job_to_run == 'Test-Windows' }}
+    needs:
+      - Test-Windows
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip3 install 'pipenv==2023.11.15'
+          pipenv install
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts-win
+          path: artifacts-win
+
+      - name: List downloaded Windows files
+        run: ls artifacts-win/
+
+      - name: Run script with secret (Win)
+        env:
+          SLACK_KEY: ${{ secrets.SLACK_KEY }}
+          GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          STARFOX_PLATFORM: win
+        run: |
+          pipenv run python scripts/notifier.py
+
+  Use-Artifacts-Mac:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.job_to_run == 'Test-MacOS' }}
+    needs:
+      - Test-MacOS
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip3 install 'pipenv==2023.11.15'
+          pipenv install
+
+      - name: Download MacOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts-mac
+          path: artifacts-mac
+
+      - name: List downloaded MacOS files
+        run: ls artifacts-mac/
+
+      - name: Run script with secret (MacOS)
+        env:
+          SLACK_KEY: ${{ secrets.SLACK_KEY }}
+          GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          STARFOX_PLATFORM: mac
+        run: |
+          pipenv run python scripts/notifier.py

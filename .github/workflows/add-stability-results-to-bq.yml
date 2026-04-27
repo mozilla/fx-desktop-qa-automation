@@ -1,0 +1,62 @@
+name: Add Stability JSON Reports to BigQuery
+
+on:
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: "How many recent runs of main-stability.yml to add"
+        required: true
+        default: "5"
+        type: string
+      platform:
+        description: "Platform to report, options: all, win, mac"
+        required: true
+        default: 'all'
+        type: string
+      include_headed:
+        description: "Include headed reports or not"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip3 install 'pipenv==2023.11.15';
+          pipenv install;
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Add JSON artifacts into BigQuery
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          TARGET_WORKFLOW_FILE: stability-test-dispatch.yml
+
+          D_RUNS: ${{ inputs.runs }}
+          PLATFORM: ${{ inputs.platform }}
+          INCLUDE_HEADED: ${{ inputs.include_headed }}
+
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: ${{ secrets.BQ_TABLE }}
+        run: |
+          pipenv run python scripts/add_stability_json_to_bq.py
