@@ -309,7 +309,7 @@ class Sidebar(BasePage):
         )
         self.driver.execute_script(
             "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-            "cd.querySelector('label.select-item').click();"
+            "cd?.querySelector('label.select-item')?.click();"
         )
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -320,7 +320,7 @@ class Sidebar(BasePage):
         )
         self.driver.execute_script(
             "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-            "cd.querySelector('button[value=\"primary_button\"]').click();"
+            "cd?.querySelector('button[value=\"primary_button\"]')?.click();"
         )
         self.wait.until(
             lambda _: self.driver.execute_script(
