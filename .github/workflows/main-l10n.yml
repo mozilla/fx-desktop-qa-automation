@@ -285,7 +285,7 @@ jobs:
       - name: Install Fx
         id: install-fx
         env:
-          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }
+          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         if: ${{ inputs.dry_run != true }}
         shell: pwsh
         run: |
