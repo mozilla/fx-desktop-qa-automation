@@ -282,13 +282,23 @@ jobs:
           mv ./config/ci_pyproject.toml ./pyproject.toml
           pipenv install
 
+      - name: Install Fx
+        id: install-fx
+        if: ${{ inputs.dry_run != true }}
+        shell: pwsh
+        run: |
+          if (-not "${{ inputs.win_installer_link }}") {
+            $fx_url = (pipenv run python -m scripts.collect_executables) -join ""
+            "FX_DOWNLOAD_URL=$fx_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+          $gecko_url = (pipenv run python -m scripts.collect_executables -g) -join ""
+          "GECKO_DOWNLOAD_URL=$gecko_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - name: Download Geckodriver
         if: ${{ inputs.dry_run != true }}
         shell: pwsh
         run: |
-          $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
-          echo $gecko_url
-          Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
+          Invoke-WebRequest -Uri $env:GECKO_DOWNLOAD_URL -OutFile "geckodriver.zip"
           unzip geckodriver.zip
           echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
@@ -296,9 +306,7 @@ jobs:
         if: ${{ !inputs.win_installer_link && inputs.dry_run != true }}
         shell: pwsh
         run: |
-          $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
-          echo $fx_url
-          Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
+          Invoke-WebRequest -Uri $env:FX_DOWNLOAD_URL -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
 
       - name: Download Executable
