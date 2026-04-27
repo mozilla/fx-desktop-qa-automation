@@ -54,8 +54,8 @@ def test_new_tab_label(driver: Firefox):
         driver.switch_to.window(driver.window_handles[1])
         driver.refresh()
         assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-            ["toolbar-context-openANewTab", "1"]
-        ), "Expected toolbar-context-openANewTab to have value 1 after Step 2"
+            ["context-openANewTab", "2"]
+        ), "Expected context-openANewTab to have value 2 after Step 2"
 
     # Step 3: Right click in the Tab Bar and click New Tab
     # Note: "Right click in the Tab Bar" increments "toolbar-context-openANewTab" instead of "context-openANewTab".
