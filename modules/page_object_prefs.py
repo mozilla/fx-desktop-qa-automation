@@ -1001,6 +1001,7 @@ class AboutPrefs(BasePage):
         return self
 
     def create_primary_password(self, password: str, alert_text: str, ba):
+        """Creates a Primary Password, confirms alert"""
         self.open()
         self.open_primary_password_popup(ba)
         self.set_primary_password(password)

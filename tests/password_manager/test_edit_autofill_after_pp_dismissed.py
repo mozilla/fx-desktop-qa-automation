@@ -77,7 +77,6 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     # Click on the grey key icon, choose to save the credentials and reload the form
     nav.click_on("password-notification-key")
     autofill_popup_panel.click_doorhanger_button("save")
-    nav.element_not_visible("password-notification-key")
     tabs.open_and_switch_to_new_tab()
     login_autofill.open()
 
@@ -85,10 +84,8 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     # (1 from preconditions and 1 for the newly saved credentials)
     login_autofill.click_on("username-login-field")
     autofill_popup_panel.verify_autocomplete_option(USERNAME)
-    # autofill_popup_panel.verify_autocomplete_option(SECOND_USERNAME)
-    try:
-        autofill_popup_panel.verify_autocomplete_option(SECOND_USERNAME)
-    except Exception:
-        # re-trigger dropdown and try again
-        login_autofill.double_click("username-login-field")
-        autofill_popup_panel.verify_autocomplete_option(SECOND_USERNAME)
+    if not autofill_popup_panel.is_autocomplete_option_present(SECOND_USERNAME):
+        login_autofill.open()
+        login_autofill.click_on("username-login-field")
+
+    autofill_popup_panel.verify_autocomplete_option(SECOND_USERNAME)
