@@ -304,21 +304,23 @@ class Sidebar(BasePage):
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
                 "if (!cd || cd.readyState !== 'complete') return false;"
-                "const label = cd.querySelector('label.select-item');"
-                "if (!label) return false;"
-                "label.click();"
-                "return true;"
+                "return cd.querySelector('label.select-item') !== null;"
             )
+        )
+        self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "cd.querySelector('label.select-item').click();"
         )
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
                 "if (!cd || cd.readyState !== 'complete') return false;"
-                "const continueBtn = cd.querySelector('button[value=\"primary_button\"]');"
-                "if (!continueBtn) return false;"
-                "continueBtn.click();"
-                "return true;"
+                "return cd.querySelector('button[value=\"primary_button\"]') !== null;"
             )
+        )
+        self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "cd.querySelector('button[value=\"primary_button\"]').click();"
         )
         self.wait.until(
             lambda _: self.driver.execute_script(
