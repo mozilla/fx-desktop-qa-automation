@@ -107,6 +107,7 @@ jobs:
         run: |
           if (-not $env:WIN_INSTALLER_LINK) {
             $fx_url = (pipenv run python -m scripts.collect_executables) -join ""
+            if (-not $fx_url) { throw "collect_executables returned an empty Firefox URL" }
             "FX_DOWNLOAD_URL=$fx_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           }
           $gecko_url = (pipenv run python -m scripts.collect_executables -g) -join ""
