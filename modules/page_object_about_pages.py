@@ -478,6 +478,20 @@ class AboutLogins(BasePage):
             pass
         return self
 
+    def assert_username_present(self, username: str) -> BasePage:
+        """
+        Waits until a visible login list item with the given username is present
+        """
+        self.wait.until(
+            lambda _: any(
+                r.get_attribute("username") == username
+                for r in self.get_elements("login-list-item")
+                if r.is_displayed()
+            ),
+            message=f"{username} not found in saved logins",
+        )
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """
