@@ -441,3 +441,4 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
           pipenv run python scripts/notifier.py
+          
