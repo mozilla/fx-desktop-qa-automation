@@ -3,13 +3,11 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
   test_adaptive_history_removal:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
   test_add_engine_address_bar:
     result: pass
@@ -53,20 +51,21 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_ctrl_enter_completes_link_and_can_refresh:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_ctrl_enter_fixes_url:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_ddg_search_codes:
     result: pass
     splits:
@@ -87,6 +86,7 @@ address_bar_and_search:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_disable_websearch_from_awesome_bar:
     result: pass
     splits:
@@ -96,8 +96,9 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_glean_serp_impression_js_api:
     result: pass
     splits:
@@ -127,24 +128,28 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_open_link_in_new_container_tab:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_paste_and_go_opens_correct_url:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_refresh_firefox_dialog:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_sap_google_adclick:
     result: pass
     splits:
@@ -155,6 +160,7 @@ address_bar_and_search:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_search_bar_on_engines_remove_restore:
     result: pass
     splits:
@@ -167,18 +173,21 @@ address_bar_and_search:
   test_search_code_google_non_us:
     result: pass
     splits:
-    - smoke
     - all
+    - nightly-as-beta
+    - smoke
   test_search_code_google_us:
     result: pass
     splits:
-    - smoke
     - all
+    - nightly-as-beta
+    - smoke
   test_search_engine_result_page_load_on_reload:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_search_engine_result_page_load_on_reload_or_back:
     result: pass
     splits:
@@ -232,6 +241,7 @@ address_bar_and_search:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_search_suggestions:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
@@ -259,22 +269,25 @@ address_bar_and_search:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_server_not_found_error_pb:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_suggestion_engine_selection:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_switch_to_existing_tab_when_having_the_same_URL:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_tile_menu_options:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021941
     result: unstable
@@ -302,7 +315,6 @@ audio_video:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
   test_autoplay_sound_blocking_background_tab:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2010227
@@ -333,46 +345,53 @@ bookmarks_and_history:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_add_bookmark_via_star_only_saved_explicitly:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_add_bookmark_via_toolbar_not_saving_realtime:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_add_new_other_bookmark:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_bookmark_via_bookmark_menu:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_bookmark_website_via_star_button:
     result: pass
     splits:
-    - smoke
-    - ci
     - esr140
+    - smoke
+    - nightly-as-beta
+    - ci
     - all
   test_clear_all_history:
     result: pass
     splits:
-    - smoke
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
+    - smoke
   test_clear_recent_history_displayed:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_delete_bookmarks_from_toolbar:
     result: pass
     splits:
@@ -383,6 +402,7 @@ bookmarks_and_history:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_deleted_page_not_remembered:
     result: pass
     splits:
@@ -393,32 +413,38 @@ bookmarks_and_history:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_edit_bookmark_from_bookmark_menu:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_edit_bookmark_via_star_button:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_edit_bookmark_via_star_button_not_saving_realtime:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_edit_bookmark_via_toolbar_not_saving_realtime:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_history_menu_from_different_places:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_import_bookmarks_chrome:
     result: pass
     splits:
@@ -436,65 +462,71 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_open_bookmark_in_new_window_via_toolbar_context_menu:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_open_bookmark_in_private_window_via_toolbar_context_menu:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_open_bookmarks_from_toolbar:
     result: pass
     splits:
     - nightly-as-beta
-    - smoke
     - all
+    - smoke
   test_open_websites_from_history:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
   test_opened_website_in_new_tab_present_in_hamburger_history_menu:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_opened_website_in_new_window_present_in_hamburger_history_menu:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_opened_website_present_in_hamburger_history_menu:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_private_window_website_not_in_history:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_toggle_bookmarks_toolbar:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_user_can_forget_history:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
 downloads:
   test_add_mime_type_doc:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018772
@@ -524,6 +556,7 @@ downloads:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_download_apk_and_check_extension:
     result: pass
     splits:
@@ -543,8 +576,9 @@ downloads:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_download_mp3_and_check_extension:
     result: pass
     splits:
@@ -569,13 +603,15 @@ downloads:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_install_unsigned_addons:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_mixed_content_download_via_https:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004945
     result:
@@ -589,8 +625,8 @@ downloads:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_set_always_ask_file_type:
     result: pass
     splits:
@@ -601,25 +637,26 @@ downloads:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_telemetry_pdf_download_open:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
   test_verify_telemetry_downloads_panel_open:
     result: pass
     splits:
     - functional1
     - all
+    - nightly-as-beta
 drag_and_drop:
   test_copy_entire_row_column:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
   test_copy_from_an_editor_paste_in_another:
     result: pass
     splits:
@@ -645,29 +682,31 @@ find_toolbar:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_find_toolbar_nav:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
   test_find_toolbar_search:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
 form_autofill:
   test_address_autofill_attribute:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
   test_autofill_cc_cvv:
     result: pass
     splits:
@@ -677,8 +716,8 @@ form_autofill:
     result: pass
     splits:
     - nightly-as-beta
-    - smoke
     - all
+    - smoke
   test_autofill_credit_card_doorhanger:
     result: pass
     splits:
@@ -694,18 +733,21 @@ form_autofill:
     splits:
     - functional1
     - all
+    - nightly-as-beta
   test_cc_clear_form:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_clear_form:
     result: pass
     splits:
     - functional1
-    - esr140
     - all
+    - nightly-as-beta
+    - esr140
   test_create_new_cc_profile:
     result: pass
     splits:
@@ -741,8 +783,8 @@ form_autofill:
     result: pass
     splits:
     - nightly-as-beta
-    - smoke
     - all
+    - smoke
   test_private_mode_info_not_saved:
     result: pass
     splits:
@@ -753,8 +795,8 @@ form_autofill:
     splits:
     - ci
     - nightly-as-beta
-    - smoke
     - all
+    - smoke
   test_updating_address:
     result: pass
     splits:
@@ -802,40 +844,42 @@ menus:
   test_copy_paste_actions:
     result: pass
     splits:
-    - ci
-    - all
+    - smoke
     - esr140
     - nightly-as-beta
-    - smoke
+    - ci
+    - all
   test_frequently_used_context_menu:
     result: pass
     splits:
+    - all
     - functional2
     - esr140
-    - all
+    - nightly-as-beta
   test_hyperlink_context_menu:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
   test_image_context_menu_actions:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - functional2
+    - nightly-as-beta
   test_tab_context_menu_actions:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_tab_context_menu_close:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
 meta:
   test_selectors:
     comment: Not part of feature functional test suites
@@ -845,8 +889,9 @@ meta:
   test_version:
     result: pass
     splits:
-    - esr140
     - all
+    - esr140
+    - nightly-as-beta
 networking:
   test_default_dns_protection:
     result: pass
@@ -864,31 +909,36 @@ notifications:
   test_audio_video_permissions_notification:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_camera_permissions_notification:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_cancel_webextension:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_deny_geolocation:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_deny_screen_capture:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_downloads_button_is_displayed:
     result: pass
     splits:
@@ -902,41 +952,43 @@ notifications:
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_geolocation_prompt_presence:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_microphone_permissions_notification:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_notifications_displayed:
     result: pass
     splits:
-    - ci
-    - all
+    - smoke
     - esr140
     - nightly-as-beta
-    - smoke
+    - ci
+    - all
   test_screen_share_permission_prompt:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
   test_webextension_completed_installation_successfully_displayed:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
 password_manager:
   test_about_logins_copy_prompts_primary_password:
     result: pass
@@ -946,8 +998,9 @@ password_manager:
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_edit_prompts_primary_password:
     result: pass
     splits:
@@ -962,62 +1015,70 @@ password_manager:
   test_about_logins_navigation_from_about_protections:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_navigation_from_hamburger_menu:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_password_copy_button:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_about_logins_password_show_hide_button:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_search_passwords:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_search_username:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_search_website:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_about_logins_username_copy_button:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_add_password_non_ascii_chars:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_add_password_save_valid_data:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
   test_add_primary_password:
     result: pass
     splits:
@@ -1028,13 +1089,14 @@ password_manager:
     result: pass
     splits:
     - nightly-as-beta
-    - smoke
     - all
+    - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_can_view_password_when_PP_enabled:
     result: pass
     splits:
@@ -1043,31 +1105,33 @@ password_manager:
   test_changes_made_in_edit_mode_are_saved:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_delete_login:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
   test_delete_primary_password:
     result: pass
     splits:
     - functional2
-    - esr140
     - all
   test_edit_generated_password_triggers_autosave:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_edit_primary_password:
     result: pass
     splits:
@@ -1081,8 +1145,9 @@ password_manager:
   test_navigation_to_about_logins_from_autocomplete:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_never_save_login_via_doorhanger:
     result: pass
     splits:
@@ -1109,13 +1174,15 @@ password_manager:
   test_password_field_only_triggers_dismissed_doorhanger:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_password_manager_key_icon_after_doorhanger_dismiss:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_primary_password_allows_csv_export:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004938
     result:
@@ -1133,20 +1200,21 @@ password_manager:
   test_private_browsing_dismiss_doorhanger_credentials:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_save_login_via_doorhanger:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_saved_hyperlink_redirects_to_corresponding_page:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_taobao_password_management:
     result: pass
     splits:
@@ -1155,23 +1223,27 @@ password_manager:
   test_update_login_via_doorhanger:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_use_saved_password_option_not_in_password_field_context_menu_without_saved_logins:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_use_saved_password_option_not_in_username_field_context_menu_without_saved_logins:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_username_edit_captured_in_dismissed_doorhanger:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
 pdf_viewer:
   test_add_image_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
@@ -1194,15 +1266,16 @@ pdf_viewer:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_pdf_download:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result:
@@ -1216,20 +1289,21 @@ pdf_viewer:
     result: pass
     splits:
     - nightly-as-beta
-    - smoke
     - all
+    - smoke
   test_pdf_navigation:
     result: pass
     splits:
+    - nightly-as-beta
     - smoke
     - esr140
-    - nightly-as-beta
     - all
   test_zoom_pdf_viewer:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
 pocket:
   test_basic_de:
     test_localized_pocket_layout_DE:
@@ -1271,8 +1345,9 @@ preferences:
   test_firefox_home_on_launch:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_lang_pack_changed_from_about_prefs:
     result: pass
     splits:
@@ -1298,17 +1373,17 @@ printing_ui:
   test_page_number_indicator_print_preview:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_print_preview:
     result: pass
     splits:
+    - esr140
+    - smoke
+    - nightly-as-beta
     - ci
     - all
-    - esr140
-    - nightly-as-beta
-    - smoke
   test_print_to_pdf:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974011
     result: unstable
@@ -1320,27 +1395,29 @@ profile:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
+    - esr140
 reader_view:
   test_improved_type_control_panel:
     result: pass
     splits:
+    - nightly-as-beta
     - smoke
     - esr140
-    - nightly-as-beta
     - all
   test_reader_view_close_sidebar:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_reader_view_location_bar:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
 scrolling_panning_zooming:
   test_default_zoom_persists:
     result: pass
@@ -1354,8 +1431,9 @@ scrolling_panning_zooming:
       mac: unstable
       win: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_zoom_from_menu_bar:
     result: pass
     splits:
@@ -1364,8 +1442,9 @@ scrolling_panning_zooming:
   test_zoom_menu_correlation:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_zoom_text_only:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022011
     result: unstable
@@ -1377,9 +1456,9 @@ security_and_privacy:
   test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_blocking_cryptominers:
     result: pass
     splits:
@@ -1398,20 +1477,22 @@ security_and_privacy:
   test_bookmarks_removed_via_private_browsing:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_bookmarks_toolbar_present_in_private_browsing:
     result: pass
     splits:
-    - functional2
-    - esr140
     - all
+    - nightly-as-beta
+    - functional2
   test_cache_is_cleared_via_end_private_session_button:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
@@ -1426,13 +1507,13 @@ security_and_privacy:
   test_cryptominers_blocked_and_shown_in_info_panel:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_custom_block_suspected_fingerprinters_in_all_windows:
     result: pass
     splits:
     - functional2
-    - esr140
     - all
   test_custom_block_suspected_fingerprinters_only_in_private_windows:
     result: pass
@@ -1442,8 +1523,9 @@ security_and_privacy:
   test_data_clearance_from_private_window_can_be_canceled:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_detected_blocked_trackers_found:
     result: deprecated
     splits:
@@ -1452,26 +1534,30 @@ security_and_privacy:
   test_download_list_cleared_by_end_private_session:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_downloads_from_private_not_leaked:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_end_private_session_clears_cookies:
     result: pass
     splits:
+    - all
+    - nightly-as-beta
     - functional2
     - esr140
-    - all
   test_https_enabled_private_browsing:
     result: pass
     splits:
@@ -1481,8 +1567,9 @@ security_and_privacy:
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_never_remember_browsing_history:
     result: pass
     splits:
@@ -1511,7 +1598,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-    - esr140
     - all
   test_phishing_and_malware_warnings:
     result: pass
@@ -1532,13 +1618,11 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-    - esr140
     - all
   test_private_session_history_exclusion:
     result: pass
     splits:
     - functional2
-    - esr140
     - all
   test_private_window_from_panelui:
     result: pass
@@ -1579,15 +1663,15 @@ security_and_privacy:
     result: pass
     splits:
     - nightly-as-beta
-    - esr140
-    - smoke
     - all
+    - smoke
 session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
-    - functional2
     - all
+    - functional2
+    - nightly-as-beta
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
     result: pass
     splits:
@@ -1727,7 +1811,6 @@ tabs:
   test_change_position_of_pinned_tabs:
     result: pass
     splits:
-    - esr140
     - functional2
     - all
   test_close_pinned_tab_via_mouse:
@@ -1815,13 +1898,11 @@ tabs:
   test_open_new_tab_keys:
     result: pass
     splits:
-    - esr140
     - functional2
     - all
   test_open_new_tab_via_hyperlink:
     result: pass
     splits:
-    - esr140
     - functional2
     - all
   test_pin_tab:
@@ -1873,7 +1954,6 @@ tabs:
   test_reopen_tabs_through_keys:
     result: pass
     splits:
-    - esr140
     - functional2
     - all
   test_restore_closed_tabs_previous_groups:
