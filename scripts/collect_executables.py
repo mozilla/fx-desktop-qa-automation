@@ -71,6 +71,10 @@ def main(args):
     number_only = False
     output = ""
     if "-g" in args:
+        location_in_env = environ.get("GECKO_DOWNLOAD_URL")
+        if location_in_env:
+            return location_in_env
+
         gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
         # In mac, sometimes this request fails to produce a link
@@ -85,7 +89,8 @@ def main(args):
             gd_platform = get_gd_platform()
             ext = "zip" if "win" in gd_platform else "tar.gz"
             print(
-                f"https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-{gd_platform}.{ext}"
+                "https://github.com/mozilla/geckodriver/releases/download/v0.36.0/"
+                f"geckodriver-v0.36.0-{gd_platform}.{ext}"
             )
             exit()
 
@@ -100,6 +105,15 @@ def main(args):
     else:
         if "-n" in args:
             number_only = True
+            version_in_env = environ.get("FX_VERSION")
+            if version_in_env:
+                return version_in_env
+        else:
+            location_in_env = environ.get("FX_DOWNLOAD_URL")
+            if location_in_env:
+                return location_in_env
+
+        logging.warning(f"env channel: {environ.get('FX_CHANNEL')}")
         channel = environ.get("FX_CHANNEL")
         # if channel doesn't exist use beta, if blank leave blank (for Release)
         # ...otherwise prepend hyphen
@@ -124,7 +138,10 @@ def main(args):
                 (major, _) = this_devedition.split(".")
                 major = int(major)
                 this_devedition = f"{major + 1}.0b5"
-                next_candidate = f"https://archive.mozilla.org/pub/devedition/releases/{this_devedition}/"
+                next_candidate = (
+                    "https://archive.mozilla.org/pub/devedition/releases/"
+                    f"{this_devedition}/"
+                )
 
                 rs = requests.get(next_candidate)
                 if rs.status_code > 399:
@@ -142,6 +159,7 @@ def main(args):
 
             candidate_exists = True
             this_beta = BACKSTOP
+            logging.warning(f"channel: {channel}")
             while candidate_exists:
                 (major, minor_beta) = this_beta.split(".")
                 (minor, beta) = minor_beta.split("b")
@@ -150,7 +168,12 @@ def main(args):
                 beta = int(beta)
 
                 next_major = f"{major + 1}.0b1"
-                fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_major}-candidates/"
+                fx_download_dir_url = (
+                    "https://archive.mozilla.org/pub/firefox/candidates/"
+                    f"{next_major}-candidates/"
+                )
+                if channel == "-rc":
+                    fx_download_dir_url = fx_download_dir_url.replace("b1", "")
                 rs = requests.get(fx_download_dir_url)
                 if rs.status_code < 300:
                     latest_beta_ver = next_major
@@ -158,25 +181,39 @@ def main(args):
                     continue
 
                 next_minor = f"{major}.{minor + 1}b1"
-                fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_minor}-candidates/"
+                fx_download_dir_url = (
+                    "https://archive.mozilla.org/pub/firefox/candidates/"
+                    f"{next_minor}-candidates/"
+                )
+                if channel == "-rc":
+                    fx_download_dir_url = fx_download_dir_url.replace("b1", "")
                 rs = requests.get(fx_download_dir_url)
                 if rs.status_code < 300:
                     latest_beta_ver = next_minor
                     this_beta = next_minor
                     continue
 
-                next_beta = f"{major}.{minor}b{beta + 1}"
-                fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{next_beta}-candidates/"
-                rs = requests.get(fx_download_dir_url)
-                if rs.status_code < 300:
-                    latest_beta_ver = next_beta
-                    this_beta = next_beta
-                    continue
+                if channel != "-rc":
+                    next_beta = f"{major}.{minor}b{beta + 1}"
+                    fx_download_dir_url = (
+                        "https://archive.mozilla.org/pub/firefox/candidates/"
+                        f"{next_beta}-candidates/"
+                    )
+                    rs = requests.get(fx_download_dir_url)
+                    if rs.status_code < 300:
+                        latest_beta_ver = next_beta
+                        this_beta = next_beta
+                        continue
 
                 candidate_exists = False
 
             # Look for the latest build
-            fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/"
+            if channel == "-rc":
+                latest_beta_ver = latest_beta_ver.replace("b1", "")
+            fx_download_dir_url = (
+                "https://archive.mozilla.org/pub/firefox/candidates/"
+                f"{latest_beta_ver}-candidates/"
+            )
             response = requests.get(fx_download_dir_url)
             build = 1
             if response.status_code < 300:
@@ -189,7 +226,10 @@ def main(args):
                         continue
                     # Get the executable name
                     build = max(int(line_text[0][-2]), build)
-                fx_download_dir_url = f"https://archive.mozilla.org/pub/firefox/candidates/{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+                fx_download_dir_url = (
+                    "https://archive.mozilla.org/pub/firefox/candidates/"
+                    f"{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+                )
 
         # Get the corresponding executable
         response = requests.get(fx_download_dir_url)
