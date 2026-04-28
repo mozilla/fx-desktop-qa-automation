@@ -867,6 +867,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_password_manager_on_google_US:
+    result: pass
+    splits:
+    - functional1
   test_primary_password_allows_csv_export:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004938
     result:
