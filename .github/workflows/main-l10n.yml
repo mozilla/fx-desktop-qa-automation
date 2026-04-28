@@ -136,7 +136,7 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
