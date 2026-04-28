@@ -467,6 +467,17 @@ class AboutLogins(BasePage):
         )
         return self
 
+    def dismiss_pp_if_appears(self, timeout=3):
+        """
+        Dismiss the Primary Password alert if it appears within timeout seconds
+        """
+        try:
+            WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+            self.driver.switch_to.alert.dismiss()
+        except Exception:
+            pass
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """

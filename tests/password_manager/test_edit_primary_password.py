@@ -28,15 +28,8 @@ def test_edit_primary_password(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy")
     ba = BrowserActions(driver)
 
-    # Select the "Use a primary password" check box to trigger the "Change Primary Password" window
-    about_prefs.open()
-    about_prefs.open_primary_password_popup(ba)
-
-    # Primary password can be changed
-    about_prefs.set_primary_password(PRIMARY_PASSWORD)
-
-    # Check that the pop-up appears
-    about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)
+    # Have a Primary Password set
+    about_prefs.create_primary_password(PRIMARY_PASSWORD, ALERT_MESSAGE, ba)
 
     # Click on the Change Primary Password button
     about_prefs.open()
