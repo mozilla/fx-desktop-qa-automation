@@ -300,7 +300,7 @@ jobs:
         if: ${{ inputs.dry_run != true }}
         shell: pwsh
         run: |
-         Invoke-WebRequest -Uri $env:GECKO_DOWNLOAD_URL -OutFile "geckodriver.zip"
+          Invoke-WebRequest -Uri $env:GECKO_DOWNLOAD_URL -OutFile "geckodriver.zip"
           unzip geckodriver.zip
           echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
