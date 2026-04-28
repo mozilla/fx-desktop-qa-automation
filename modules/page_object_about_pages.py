@@ -1,7 +1,6 @@
 import logging
 import os
 import re
-import time
 
 from pypom import Page
 from selenium.common.exceptions import (
@@ -535,4 +534,24 @@ class AboutNetworking(BasePage):
             _entry_present,
             message=f"DNS entry for host '{host}' with TRR='{trr}' did not appear",
         )
+        return self
+
+
+class AboutGlean(BasePage):
+    """POM for about:glean"""
+
+    URL_TEMPLATE = "about:glean"
+
+    def change_ping_id(self, ping_id: str) -> "AboutGlean":
+        """Change the Glean ping id to the given string."""
+        ba = BrowserActions(self.driver)
+        self.click_on("manual-testing")
+        ping_input = self.get_element("ping-id-input")
+        ba.clear_and_fill(ping_input, ping_id)
+        self.wait.until(
+            EC.text_to_be_present_in_element(
+                self.get_selector("ping-submit-label"), ping_id
+            )
+        )
+        self.get_element("ping-submit-button").click()
         return self

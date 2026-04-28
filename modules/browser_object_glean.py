@@ -1,29 +1,10 @@
 import time
 
-from selenium.webdriver.support import expected_conditions as EC
-
 from modules.page_base import BasePage
-from modules.util import BrowserActions
 
 
 class Glean(BasePage):
     """BOM for Glean telemetry. Executes JS in the Firefox chrome context to read metrics."""
-
-    URL_TEMPLATE = "about:glean"
-
-    def change_ping_id(self, ping_id: str) -> "Glean":
-        """Change the Glean ping id to the given string."""
-        ba = BrowserActions(self.driver)
-        self.click_on("manual-testing")
-        ping_input = self.get_element("ping-id-input")
-        ba.clear_and_fill(ping_input, ping_id)
-        self.wait.until(
-            EC.text_to_be_present_in_element(
-                self.get_selector("ping-submit-label"), ping_id
-            )
-        )
-        self.get_element("ping-submit-button").click()
-        return self
 
     def _build_poll_js(self, metric_path: str) -> str:
         """
