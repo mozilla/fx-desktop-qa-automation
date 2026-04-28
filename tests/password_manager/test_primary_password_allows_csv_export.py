@@ -35,10 +35,7 @@ def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
     about_logins.remove_password_csv(downloads_folder)
 
     # Have a Primary Password set
-    about_prefs.open()
-    about_prefs.open_primary_password_popup(ba)
-    about_prefs.set_primary_password(PRIMARY_PASSWORD)
-    about_prefs.accept_alert_and_verify_text(ALERT_MESSAGE)
+    about_prefs.create_primary_password(PRIMARY_PASSWORD, ALERT_MESSAGE, ba)
 
     # Have at least one saved login
     about_logins.open()

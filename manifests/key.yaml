@@ -807,6 +807,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_edit_autofill_after_pp_dismissed:
+    result: pass
+    splits:
+    - functional2
   test_edit_generated_password_triggers_autosave:
     result: pass
     splits:
@@ -1254,6 +1258,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_open_ai_chat_via_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:

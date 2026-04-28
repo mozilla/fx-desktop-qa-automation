@@ -1005,6 +1005,14 @@ class AboutPrefs(BasePage):
         alert.accept()
         return self
 
+    def create_primary_password(self, password: str, alert_text: str, ba):
+        """Creates a Primary Password, confirms alert"""
+        self.open()
+        self.open_primary_password_popup(ba)
+        self.set_primary_password(password)
+        self.accept_alert_and_verify_text(alert_text)
+        return self
+
 
 class AboutAddons(BasePage):
     """
