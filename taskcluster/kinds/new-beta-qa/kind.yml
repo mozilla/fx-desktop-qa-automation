@@ -47,7 +47,7 @@ tasks:
         pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
         pipenv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
-        export FAILURE=${?};
+        export FAILURE=$((FAILURE | ${?}));
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
         export REPORTABLE=1;
         pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
