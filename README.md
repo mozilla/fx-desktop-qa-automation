@@ -3,6 +3,25 @@
 
 A Python Selenium based set of tests for smoke testing of Firefox, including Fx incident smoke testing.
 
+### ESR140 Branch Instructions
+
+This branch exists primarily to be used as an automanual build validation for ESR140 releases. This
+reduces manual test time for ESR releases. When a new ESR140 build is available, run these tests by
+doing the following:
+
+- Have a GitHub account that is at Contributor level or higher in our repo
+- Navigate [to this link](https://github.com/mozilla/fx-desktop-qa-automation/actions/workflows/main.yml) while
+logged in
+- Click "Run Workflow" (currently in the blue notification bar near the top, at the right side)
+- Select the branch `0esr140`
+- Add the relevant links (must be available on the open internet) to Win, Mac, and Linux
+  - For Mac and Windows, these are installers. For Linux, this is the tarball.
+- Click the "Run Workflow" button
+- The results will be at or near the top of the [Action List](https://github.com/mozilla/fx-desktop-qa-automation/actions)
+
+These tests are unlikely to change. If there is a test that is being run that should not be, or a
+test that is not being run, that should be, contact the repo maintainers.
+
 ### Build under test
 Get the build to be smoke tested from the [candidates](https://ftp.mozilla.org/pub/firefox/candidates/) directory. Incident testing: Ask 
 the RelMan contact for the current Incident what the build versions is. 
