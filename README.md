@@ -3,6 +3,25 @@
 
 A Python Selenium based set of tests for smoke testing of Firefox, including Fx incident smoke testing.
 
+### Nightly-as-beta Branch Instructions
+
+This branch exists primarily to be used as an automanual check against incoming Beta 1s. This gives
+us advance warning of changes that could break our tests. On the release date of the last Beta in a
+cycle, after that Beta has landed, run these tests by doing the following:
+
+- Have a GitHub account that is at Contributor level or higher in our repo
+- Navigate [to this link](https://github.com/mozilla/fx-desktop-qa-automation/actions/workflows/main.yml) while
+logged in
+- Click "Run Workflow" (currently in the blue notification bar near the top, at the right side)
+- Select the branch `0nightly-as-beta`
+- Add these links into the fields:
+  - Win: https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.firefox.win64-nightlyasrelease-opt/artifacts/public%2Fbuild%2Ftarget.installer.exe
+  - Mac: https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.firefox.macosx64-nightlyasrelease-opt/artifacts/public%2Fbuild%2Ftarget.dmg
+  - Linux: http://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.firefox.linux64-nightlyasrelease-opt/artifacts/public%2Fbuild%2Ftarget.tar.xz
+
+Near the middle of the cycle, it is advised to run this flow in case we need to merge tests,
+configs, scripts, or other elements into this branch before "showtime".
+
 ### Build under test
 Get the build to be smoke tested from the [candidates](https://ftp.mozilla.org/pub/firefox/candidates/) directory. Incident testing: Ask 
 the RelMan contact for the current Incident what the build versions is. 
