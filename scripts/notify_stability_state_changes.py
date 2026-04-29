@@ -437,7 +437,9 @@ def resolve_slack_user_group_id(client: WebClient, handle: str) -> Optional[str]
     try:
         response = client.usergroups_list(include_disabled=False)
     except SlackApiError as e:
-        print(f"Error resolving Slack user group @{handle}: {e.response.get('error', e.response)}")
+        print(
+            f"Error resolving Slack user group @{handle}: {e.response.get('error', e.response)}"
+        )
         return None
 
     for group in response.get("usergroups", []):
@@ -468,7 +470,9 @@ def send_slack_message(
         computed_count=computed_count,
     )
 
-    user_group_handle = os.environ.get("SLACK_USER_GROUP_HANDLE", "dte-automators").strip()
+    user_group_handle = os.environ.get(
+        "SLACK_USER_GROUP_HANDLE", "dte-automators"
+    ).strip()
     mention_text = ""
 
     user_group_id = resolve_slack_user_group_id(client, user_group_handle)
