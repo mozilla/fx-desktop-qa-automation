@@ -22,9 +22,7 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
-SLACK_USER_GROUP_HANDLE = os.environ.get(
-    "SLACK_USER_GROUP_HANDLE", "dte-automators"
-).strip()
+SLACK_USER_GROUP_HANDLE = os.environ["SLACK_USER_GROUP_HANDLE"]
 
 MANIFEST_PATH = Path("manifests") / "key.yaml"
 
