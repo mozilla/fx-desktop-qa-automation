@@ -32,7 +32,7 @@ def test_new_tab_label(driver: Firefox):
 
     second_tab = tabs.get_tab(2)  # about:telemetry tab
 
-    # Step 2: Right click an open tab and click New Tab
+    # Step 2: Right-click an open tab and click New Tab
     tabs.context_click(second_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
 
