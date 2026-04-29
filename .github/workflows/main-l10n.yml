@@ -136,7 +136,7 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
@@ -387,7 +387,7 @@ jobs:
           path: artifacts-win
 
   Use-Artifacts:
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.dry_run != true }}
+    if: ${{ always() && github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
     runs-on: ubuntu-latest
     needs:
       - L10N-Windows
@@ -408,33 +408,40 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-win-l10n
           path: artifacts-win
 
       - name: Download Linux artifact
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux-l10n
           path: artifacts-linux
 
       - name: Download MacOS artifact
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac-l10n
           path: artifacts-mac
 
       - name: List downloaded Windows files
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         run: ls artifacts-win/
 
       - name: List downloaded Linux files
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         run: ls artifacts-linux/
 
       - name: List downloaded MacOS files
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         run: ls artifacts-mac/
 
       - name: Run script with secret
+        if: ${{ needs.L10N-Windows.result == 'success' || needs.L10N-Linux.result == 'success' || needs.L10N-MacOS.result == 'success' }}
         env:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
           GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
@@ -444,3 +451,4 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
           pipenv run python scripts/notifier.py
+          
