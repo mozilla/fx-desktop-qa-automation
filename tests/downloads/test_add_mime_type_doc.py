@@ -25,6 +25,7 @@ def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
 
 
 # Test is unstable on Windows GHA because the image does not have a .doc handler
+# This test isn't even written to work on Windows due to above method
 @pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
     """

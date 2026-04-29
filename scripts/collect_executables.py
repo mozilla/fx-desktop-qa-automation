@@ -71,6 +71,10 @@ def main(args):
     number_only = False
     output = ""
     if "-g" in args:
+        location_in_env = environ.get("GECKO_DOWNLOAD_URL")
+        if location_in_env:
+            return location_in_env
+
         gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
         # In mac, sometimes this request fails to produce a link
@@ -101,6 +105,14 @@ def main(args):
     else:
         if "-n" in args:
             number_only = True
+            version_in_env = environ.get("FX_VERSION")
+            if version_in_env:
+                return version_in_env
+        else:
+            location_in_env = environ.get("FX_DOWNLOAD_URL")
+            if location_in_env:
+                return location_in_env
+
         logging.warning(f"env channel: {environ.get('FX_CHANNEL')}")
         channel = environ.get("FX_CHANNEL")
         # if channel doesn't exist use beta, if blank leave blank (for Release)

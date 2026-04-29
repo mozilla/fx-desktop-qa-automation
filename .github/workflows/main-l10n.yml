@@ -80,21 +80,27 @@ jobs:
           echo "Running l10n tests on supplied executable";
 
       - name: Install dependencies
+        id: setup
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run: |
-          mkdir -p artifacts/;
+          mkdir -p artifacts;
           pip3 install 'pipenv==2023.11.15';
           pip3 install 'ruff>=0.4.8,<0.5';
           rm ./pyproject.toml;
           mv ./config/ci_pyproject.toml ./pyproject.toml;
           pipenv install;
+          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
+          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
-        if: ${{ inputs.dry_run != true }}
-        id: setup
+        id: install-fx
+        if: ${{ inputs.dry_run != true && steps.setup.conclusion == 'success'}}
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
-          echo app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh) >> "$GITHUB_OUTPUT";
+          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT"
 
       - name: Select Tests (macOS)
         run: |
@@ -112,9 +118,9 @@ jobs:
           fi
 
       - name: Run L10N Tests in MacOS
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ steps.install-fx.conclusion == 'success' && inputs.dry_run != true }}
         env:
-          FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
+          FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
@@ -130,7 +136,7 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
@@ -182,6 +188,16 @@ jobs:
           rm ./pyproject.toml;
           mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
           pipenv install;
+          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
+          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+
+      - name: Install executables
+        id: install-fx
+        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
           ./scripts/collect_executables.sh;
           ./firefox/firefox --version;
 
@@ -201,7 +217,7 @@ jobs:
           fi
 
       - name: Run L10N Tests in Ubuntu
-        if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
+        if: ${{ steps.install-fx.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
@@ -272,13 +288,25 @@ jobs:
           mv ./config/ci_pyproject.toml ./pyproject.toml
           pipenv install
 
+      - name: Install Fx
+        id: install-fx
+        env:
+          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+        if: ${{ inputs.dry_run != true }}
+        shell: pwsh
+        run: |
+          if (-not $env:WIN_INSTALLER_LINK) {
+            $fx_url = (pipenv run python -m scripts.collect_executables) -join ""
+            "FX_DOWNLOAD_URL=$fx_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+          $gecko_url = (pipenv run python -m scripts.collect_executables -g) -join ""
+          "GECKO_DOWNLOAD_URL=$gecko_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - name: Download Geckodriver
         if: ${{ inputs.dry_run != true }}
         shell: pwsh
         run: |
-          $gecko_url = (pipenv run python scripts/collect_executables.py -g) -join "`n"
-          echo $gecko_url
-          Invoke-WebRequest -Uri $gecko_url -OutFile "geckodriver.zip"
+          Invoke-WebRequest -Uri $env:GECKO_DOWNLOAD_URL -OutFile "geckodriver.zip"
           unzip geckodriver.zip
           echo "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
@@ -286,9 +314,7 @@ jobs:
         if: ${{ !inputs.win_installer_link && inputs.dry_run != true }}
         shell: pwsh
         run: |
-          $fx_url = (pipenv run python scripts/collect_executables.py) -join "`n"
-          echo $fx_url
-          Invoke-WebRequest -Uri $fx_url -OutFile "${{ github.workspace }}\setup.exe"
+          Invoke-WebRequest -Uri $env:FX_DOWNLOAD_URL -OutFile "${{ github.workspace }}\setup.exe"
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
 
       - name: Download Executable
@@ -361,7 +387,7 @@ jobs:
           path: artifacts-win
 
   Use-Artifacts:
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.dry_run != true }}
+    if: ${{ always() && github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
     runs-on: ubuntu-latest
     needs:
       - L10N-Windows
@@ -382,33 +408,40 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-win-l10n
           path: artifacts-win
 
       - name: Download Linux artifact
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux-l10n
           path: artifacts-linux
 
       - name: Download MacOS artifact
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac-l10n
           path: artifacts-mac
 
       - name: List downloaded Windows files
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         run: ls artifacts-win/
 
       - name: List downloaded Linux files
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         run: ls artifacts-linux/
 
       - name: List downloaded MacOS files
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         run: ls artifacts-mac/
 
       - name: Run script with secret
+        if: ${{ needs.L10N-Windows.result == 'success' || needs.L10N-Linux.result == 'success' || needs.L10N-MacOS.result == 'success' }}
         env:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
           GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
@@ -418,3 +451,4 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
           pipenv run python scripts/notifier.py
+          

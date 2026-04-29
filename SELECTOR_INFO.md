@@ -1419,6 +1419,20 @@ Description: Remove button to remove the primary password
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: standard-radio
+Selector Data: "standardRadio"
+Description: In Enhanced Tracking Protection, the standard radio button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: standard-section
+Selector Data: "contentBlockingOptionStandard"
+Description: In Enhanced Tracking Protection, the standard radio section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -2249,6 +2263,13 @@ Path to .json: modules/data/context_menu.components.json
 Selector Name: context-close-duplicate-tabs
 Selector Data: context_closeDuplicateTabs
 Description: Close Duplicate Tabs context menu option
+Location: Tab context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-ask-chat
+Selector Data: context_askChat
+Description: "Ask ChatGPT" context menu option
 Location: Tab context menu
 Path to .json: modules/data/context_menu.components.json
 ```
@@ -4620,6 +4641,13 @@ Path to .json: modules/data/sidebar.components.json
 Selector Name: confirmation-hint
 Selector Data: confirmation-hint
 Description: The confirmation dialog when a tab is closed in the sidebar
+Location: Sidebar
+Path to .json: modules/data/sidebar.components.json
+```
+```
+Selector Name: sidebar-box
+Selector Data: sidebar-box
+Description: The box element that wraps the entire sidebar content
 Location: Sidebar
 Path to .json: modules/data/sidebar.components.json
 ```

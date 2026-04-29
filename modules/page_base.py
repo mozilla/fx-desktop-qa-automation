@@ -330,13 +330,16 @@ class BasePage(Page):
         labels=None,
     ) -> Page:
         """Expect helper: wait until element attribute contains certain value"""
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and str(attr_value)
-                in self.fetch(reference, labels=labels).get_attribute(attr_name)
+
+        def _elem_attr_contains(_):
+            el = self.fetch(reference, labels=labels)
+            return (
+                el
+                and el.get_attribute(attr_name) is not None
+                and str(attr_value) in el.get_attribute(attr_name)
             )
-        )
+
+        self.expect(_elem_attr_contains)
         return self
 
     @context_of_model
@@ -1046,13 +1049,13 @@ class BasePage(Page):
         try:
             time.sleep(0.5)
 
-            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
             logging.info(f"OS dialog button found at {loc}, clicking")
             pyautogui.click(loc)
             time.sleep(1)
 
             try:
-                pyautogui.locateCenterOnScreen(button_img, confidence=0.85)
+                pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
                 logging.info(
                     "Button still visible after click; pressing Enter as fallback"
                 )

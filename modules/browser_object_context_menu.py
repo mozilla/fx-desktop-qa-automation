@@ -67,6 +67,108 @@ class ContextMenu(BasePage):
             )
 
     @BasePage.context_chrome
+    def click_summarize_page_from_ai_chat(self):
+        """Activate the Summarize Page item from the already opened AI Chat submenu.
+
+        Pure Selenium cannot interact with XUL submenu items in the chrome context: ActionChains
+        move_to_element does not cross GeckoDriver's chrome context boundary, and Selenium's click()
+        on a XUL <menu> element does not open its popup. JS is used to dispatch the full mouse event
+        sequence (mousemove/mousedown/mouseup/click) directly on the menuitem, which fires the XUL
+        command event that triggers the sidebar to open.
+
+        Note: the menuitem is selected by label="Summarize Page" which is English-only; no stable
+        ID or anonid is exposed by this XUL element.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const menu = document.getElementById('context_askChat');"
+                "if (!menu) return false;"
+                "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+                "if (!popup) return false;"
+                "return popup.querySelector('menuitem[label=\"Summarize Page\"]') !== null;"
+            )
+        )
+        self.driver.execute_script(
+            "const menu = document.getElementById('context_askChat');"
+            "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+            "const item = popup.querySelector('menuitem[label=\"Summarize Page\"]');"
+            "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+            "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_choose_ai_chatbot_from_context_menu(self) -> BasePage:
+        """Click the 'Choose an AI Chatbot' item from the AI Chat submenu in the tab context menu.
+
+        Pure Selenium cannot interact with XUL submenu items in the chrome context: ActionChains
+        move_to_element does not cross GeckoDriver's chrome context boundary, and Selenium's click()
+        on a XUL <menu> element does not open its popup. JS dispatches the full mouse event sequence
+        directly on the menuitem, which fires the XUL command event that opens the sidebar.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const menu = document.getElementById('context_askChat');"
+                "if (!menu) return false;"
+                "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+                "if (!popup) return false;"
+                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
+                "if (!item) return false;"
+                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_open_chatbot_from_context_menu(self) -> BasePage:
+        """Click the item that opens the AI chatbot panel from the tab context menu.
+
+        The tabContextMenu must be open before calling this (via tabs.context_click). Setting
+        menu.open = true on the XUL <menu> element opens the submenu inline while the parent
+        tabContextMenu is still open, which triggers provider-specific children to be generated
+        in the menupopup DOM. Pure Selenium cannot hover XUL elements across GeckoDriver's chrome
+        context boundary; ActionChains.move_to_element does not cross that boundary.
+
+        menu.open = true must remain inside the retry loop: the XUL submenu closes between
+        separate execute_script calls, so the standard check-then-act split cannot be used here.
+
+        The l10n-id for the open-chatbot item varies across Firefox builds; flexible matching on
+        l10n-id and label is intentional — targeting a hardcoded id caused timeouts in the
+        current build where that exact id is absent.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const menu = document.getElementById('context_askChat');"
+                "if (!menu) return false;"
+                "menu.open = true;"
+                "const popup = menu.querySelector('menupopup') || menu.menupopup;"
+                "if (!popup || popup.children.length === 0) return false;"
+                "const items = Array.from(popup.children).filter("
+                "  item => !item.hidden && !item.disabled"
+                ");"
+                "const item = items.find(item => {"
+                "  const l10n = item.getAttribute('data-l10n-id') || '';"
+                "  const label = (item.getAttribute('label') || '').toLowerCase();"
+                "  return l10n.includes('open') || l10n.includes('provider') ||"
+                "         label.includes('open') || label.includes('chat');"
+                "});"
+                "if (!item) return false;"
+                "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def bookmark_tab_via_context_menu(self) -> BasePage:
         """Click 'Bookmark Tab' in the tab context menu, dismiss the menu, then
         confirm the Add Bookmark dialog by clicking its Save button via JS.
@@ -85,6 +187,13 @@ class ContextMenu(BasePage):
                 "if (btn) { btn.click(); return true; }"
             )
         )
+        return self
+
+    @BasePage.context_chrome
+    def verify_item_disabled(self, reference: str, labels=None):
+        """Assert a context menu item is disabled (grayed out)."""
+        el = self.get_element(reference, labels=labels)
+        assert el.get_attribute("disabled") == "true", f"{reference} is not disabled"
         return self
 
 

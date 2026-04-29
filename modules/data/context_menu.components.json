@@ -312,5 +312,10 @@
         "selectorData": "context_toggleMuteTab",
         "strategy": "id",
         "groups": []
+    },
+    "context-ask-chat": {
+        "selectorData": "context_askChat",
+        "strategy": "id",
+        "groups": []
     }
 }

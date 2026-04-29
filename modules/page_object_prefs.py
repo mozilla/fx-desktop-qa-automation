@@ -13,6 +13,7 @@ from selenium.webdriver.support.select import Select
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
+from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
@@ -82,6 +83,10 @@ class AboutPrefs(BasePage):
         if value and not awesome_bar_checkbox.get_attribute("checked"):
             awesome_bar_checkbox.click()
         return self
+
+    def search_engine_dropdown(self) -> Dropdown:
+        """Returns the Dropdown region for search engine prefs"""
+        return Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
 
     def select_default_search_engine_by_key(self, option: str) -> BasePage:
         """Open the Default Search Engine dropdown directly and use keys to choose"""
@@ -998,6 +1003,14 @@ class AboutPrefs(BasePage):
         alert = self.get_alert()
         assert expected_text in alert.text
         alert.accept()
+        return self
+
+    def create_primary_password(self, password: str, alert_text: str, ba):
+        """Creates a Primary Password, confirms alert"""
+        self.open()
+        self.open_primary_password_popup(ba)
+        self.set_primary_password(password)
+        self.accept_alert_and_verify_text(alert_text)
         return self
 
 
