@@ -352,7 +352,7 @@ class Sidebar(BasePage):
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd) return false;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
                 "return cd.getElementById('summarize-button') !== null;"
             )
         )
@@ -390,14 +390,12 @@ class Sidebar(BasePage):
     def switch_to_ai_provider(self, provider: str):
         """Switch AI provider via pref + sidebar reload — the in-panel switcher is a Lit custom component that cannot be driven via a standard <select> interaction."""
         self.driver.execute_script(
-            "Services.prefs.setStringPref('browser.ml.chat.provider', arguments[0]);",
-            provider,
-        )
-        self.driver.execute_script(
+            "Services.prefs.setStringPref('browser.ml.chat.provider', arguments[0]);"
             "if (typeof SidebarController !== 'undefined') {"
             "  SidebarController.hide();"
             "  SidebarController.show('viewGenaiChatSidebar');"
-            "}"
+            "}",
+            provider,
         )
         self.wait.until(
             lambda _: self.driver.execute_script(
