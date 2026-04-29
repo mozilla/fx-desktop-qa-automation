@@ -13,6 +13,7 @@ from selenium.webdriver.support.select import Select
 from modules.browser_object import Navigation
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
+from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
@@ -82,6 +83,10 @@ class AboutPrefs(BasePage):
         if value and not awesome_bar_checkbox.get_attribute("checked"):
             awesome_bar_checkbox.click()
         return self
+
+    def search_engine_dropdown(self) -> Dropdown:
+        """Returns the Dropdown region for search engine prefs"""
+        return Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
 
     def select_default_search_engine_by_key(self, option: str) -> BasePage:
         """Open the Default Search Engine dropdown directly and use keys to choose"""

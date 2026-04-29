@@ -605,6 +605,11 @@ geolocation:
       win: unstable
     splits:
     - functional2
+glean:
+  test_serp_impression:
+    result: pass
+    splits:
+    - glean
 language_packs:
   test_language_pack_install_addons:
     result: pass
