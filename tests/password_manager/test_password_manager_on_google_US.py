@@ -63,20 +63,15 @@ def test_google_login_saved_credentials_dropdown(driver: Firefox, temp_selectors
     google_login_page.click_on("google-email-field")
     autofill_popup.ensure_autofill_dropdown_visible()
 
-    values = []
+    for expected_username in [USERNAME, USERNAME2, USERNAME3]:
+        autofill_popup.element_visible(
+            "select-form-option-by-value", labels=[expected_username]
+        )
 
-    for i in range(
-        1, 6
-    ):  # should be enough elements (3 credentials + passkey + Manage passwords)
-        try:
-            el = autofill_popup.get_nth_element(str(i))
-            values.append(autofill_popup.get_primary_value(el))
-        except Exception:
-            break
+    autofill_popup.element_visible(
+        "select-form-option-by-value", labels=["Use a passkey"]
+    )
 
-    assert USERNAME in values
-    assert USERNAME2 in values
-    assert USERNAME3 in values
-
-    assert "Use a passkey" in values
-    assert "Manage Passwords" in values
+    autofill_popup.element_visible(
+        "select-form-option-by-value", labels=["Manage Passwords"]
+    )
