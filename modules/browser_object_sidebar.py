@@ -352,8 +352,56 @@ class Sidebar(BasePage):
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
-                "if (!cd) return false;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
                 "return cd.getElementById('summarize-button') !== null;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def open_ai_chat_panel(self):
+        """Open the AI Chat panel by clicking its moz-button inside <sidebar-main>'s shadow root — JS is required because Selenium has no API to pierce shadow roots."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const btn = Array.from("
+                "  document.querySelector('sidebar-main')?.shadowRoot"
+                "  ?.querySelectorAll('moz-button') || []"
+                ").find(b => b.getAttribute('view') === 'viewGenaiChatSidebar');"
+                "if (btn) { btn.click(); return true; }"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_summarize_button(self):
+        """Click #summarize-button inside <browser id="sidebar">'s contentDocument — JS is required because Selenium has no API to switch into an embedded XUL <browser> element."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "const btn = cd.getElementById('summarize-button');"
+                "if (!btn) return false;"
+                "btn.click(); return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def switch_to_ai_provider(self, provider: str):
+        """Switch AI provider via pref + sidebar reload — the in-panel switcher is a Lit custom component that cannot be driven via a standard <select> interaction."""
+        self.driver.execute_script(
+            "Services.prefs.setStringPref('browser.ml.chat.provider', arguments[0]);"
+            "if (typeof SidebarController !== 'undefined') {"
+            "  SidebarController.hide();"
+            "  SidebarController.show('viewGenaiChatSidebar');"
+            "}",
+            provider,
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const box = document.getElementById('sidebar-box');"
+                "return !!(box && !box.hidden && "
+                "box.getAttribute('sidebarcommand') === 'viewGenaiChatSidebar');"
             )
         )
         return self
