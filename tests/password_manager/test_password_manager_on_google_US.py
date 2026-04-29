@@ -37,6 +37,7 @@ def temp_selectors():
 
 
 def add_login_and_wait(about_logins, origin, username, password):
+    about_logins.open()
     original_count = len(about_logins.get_elements("login-list-item"))
     about_logins.add_login(origin, username, password)
     about_logins.wait.until(
@@ -52,7 +53,6 @@ def test_google_login_saved_credentials_dropdown(driver: Firefox, temp_selectors
     about_logins = AboutLogins(driver)
     autofill_popup = AutofillPopup(driver)
 
-    about_logins.open()
     add_login_and_wait(about_logins, GOOGLE_ORIGIN, USERNAME, PASSWORD)
     add_login_and_wait(about_logins, GOOGLE_ORIGIN, USERNAME2, PASSWORD2)
     add_login_and_wait(about_logins, GOOGLE_ORIGIN, USERNAME3, PASSWORD3)
