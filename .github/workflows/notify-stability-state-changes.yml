@@ -64,6 +64,6 @@ jobs:
 
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
           SLACK_CHANNEL: ${{ vars.DTE_NOTIFIER_SLACK_CHANNEL }}
-          SLACK_USER_GROUP_HANDLE: dte-automators
+          SLACK_USER_GROUP_HANDLE: ${{ vars.DTE_NOTIFIER_SLACK_USER_GROUP_HANDLE }}
         run: |
           pipenv run python scripts/notify_stability_state_changes.py
