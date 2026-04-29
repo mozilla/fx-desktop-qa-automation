@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import TrustPanel
+from modules.page_object import AboutPrefs, GenericPage
 
 FINGERPRINTERS_URL = (
     "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
@@ -12,7 +11,7 @@ FINGERPRINTERS_URL = (
 
 @pytest.fixture()
 def test_case():
-    return "450232"
+    return "387363"
 
 
 def test_fingerprinters_blocked_and_shown_in_panel_and_preferences(driver: Firefox):
