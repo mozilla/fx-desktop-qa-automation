@@ -60,6 +60,7 @@ def test_google_login_saved_credentials_dropdown(driver: Firefox, temp_selectors
     google_login_page = GenericPage(driver, url=GOOGLE_LOGIN_URL).open()
     google_login_page.elements |= temp_selectors
 
+    google_login_page.element_visible("google-email-field")
     google_login_page.click_on("google-email-field")
     autofill_popup.ensure_autofill_dropdown_visible()
 
