@@ -11,7 +11,8 @@ def test_case():
 
 
 @pytest.fixture()
-def add_to_prefs_list():
+def prefs_list():
+    # Overrides suite default (sidebar.revamp: True) — this test requires sidebar.revamp disabled.
     return [("sidebar.revamp", False)]
 
 

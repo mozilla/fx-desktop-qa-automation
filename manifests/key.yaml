@@ -12,7 +12,6 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021908
     result: pass
     splits:
     - functional1
@@ -58,7 +57,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:
@@ -90,7 +90,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
@@ -171,8 +172,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_suggestions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
@@ -219,7 +219,11 @@ address_bar_and_search:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_autoplay_permission_settings_displayed:
@@ -315,7 +319,11 @@ bookmarks_and_history:
     splits:
     - functional1
   test_import_bookmarks_chrome:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033604
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_import_bookmarks_edge:
@@ -371,13 +379,19 @@ bookmarks_and_history:
     - functional1
 downloads:
   test_add_mime_type_doc:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018772
-    result: unstable
+    comment: Windows unstable in GHA
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_add_zip_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018772
-    result: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2035548
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_change_download_folder:
@@ -414,16 +428,11 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -480,7 +489,11 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
 find_toolbar:
@@ -592,6 +605,11 @@ geolocation:
       win: unstable
     splits:
     - functional2
+glean:
+  test_serp_impression:
+    result: pass
+    splits:
+    - glean
 language_packs:
   test_language_pack_install_addons:
     result: pass
@@ -654,11 +672,7 @@ notifications:
     splits:
     - functional2
   test_camera_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_cancel_webextension:
@@ -690,11 +704,7 @@ notifications:
     splits:
     - functional2
   test_microphone_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_notifications_displayed:
@@ -775,6 +785,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_add_username_via_doorhanger:
+    result: pass
+    splits:
+    - functional2
   test_auto_saved_generated_password_context_menu:
     result: pass
     splits:
@@ -803,6 +817,10 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_edit_autofill_after_pp_dismissed:
+    result: pass
+    splits:
+    - functional2
   test_edit_generated_password_triggers_autosave:
     result: pass
     splits:
@@ -811,12 +829,12 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_facebook_login_autofill_dropdown:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
@@ -827,6 +845,10 @@ password_manager:
     result: pass
     splits:
     - smoke
+  test_no_generated_password_options_with_pp_and_no_credentials:
+    result: pass
+    splits:
+    - functional2
   test_password_csv_correctness:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
@@ -1038,7 +1060,11 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_zoom_menu_correlation:
@@ -1124,6 +1150,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
@@ -1206,7 +1236,11 @@ session_restore:
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
@@ -1222,7 +1256,11 @@ session_restore:
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
 sidebar:
@@ -1234,6 +1272,10 @@ sidebar:
     result: pass
     splits:
     - functional2
+  test_open_ai_chat_via_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
@@ -1275,9 +1317,21 @@ sidebar:
     splits:
     - functional2
   test_sidebar_vertical_tabs_mute_unmute:
-    result: pass
+    comment: CI limitation - audio playback not supported on Windows CI runners
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
+  test_summarize_page_via_ai_chat_panel:
+    result: pass
+    splits:
+    - functional1
+  test_summarize_page_via_tab_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_switch_between_horizontal_vertical_tabs:
     result: pass
     splits:
@@ -1291,6 +1345,10 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
+    result: pass
+    splits:
+    - functional2
+  test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
     result: pass
     splits:
     - functional2
