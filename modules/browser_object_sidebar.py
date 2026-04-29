@@ -359,6 +359,68 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def open_ai_chat_panel(self):
+        """Open the AI Chat panel by clicking its button in the sidebar strip.
+
+        The AI chat button lives inside the open shadow root of <sidebar-main>. Selenium has no API to
+        pierce shadow roots, so JS is used to query the shadow DOM and click the moz-button whose
+        view attribute identifies it as the AI chat entry point.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const btn = Array.from("
+                "  document.querySelector('sidebar-main')?.shadowRoot"
+                "  ?.querySelectorAll('moz-button') || []"
+                ").find(b => b.getAttribute('view') === 'viewGenaiChatSidebar');"
+                "if (btn) { btn.click(); return true; }"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_summarize_button(self):
+        """Click the Summarize current page button in the AI Chat panel.
+
+        The button lives inside <browser id="sidebar">'s contentDocument (chrome://browser/content/genai/chat.html).
+        Selenium has no API to switch into an embedded XUL <browser> element, so JS is used to access
+        contentDocument and click the button directly.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "const btn = cd.getElementById('summarize-button');"
+                "if (!btn) return false;"
+                "btn.click(); return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def switch_to_ai_provider(self, provider: str):
+        """Switch AI provider by updating the pref and reloading the sidebar chat panel.
+
+        The provider switcher in chat.html is a Lit custom component and cannot be driven via
+        a standard <select> interaction. Changing the pref directly and toggling the sidebar
+        is the only reliable way to switch providers in automation.
+        """
+        self.driver.execute_script(
+            "Services.prefs.setStringPref('browser.ml.chat.provider', arguments[0]);",
+            provider,
+        )
+        self.driver.execute_script(
+            "SidebarController.hide();SidebarController.show('viewGenaiChatSidebar');"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const box = document.getElementById('sidebar-box');"
+                "return !!(box && !box.hidden && "
+                "box.getAttribute('sidebarcommand') === 'viewGenaiChatSidebar');"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 
