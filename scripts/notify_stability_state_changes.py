@@ -470,15 +470,14 @@ def send_slack_message(
         computed_count=computed_count,
     )
 
-    user_group_handle = SLACK_USER_GROUP_HANDLE
     mention_text = ""
 
-    user_group_id = resolve_slack_user_group_id(client, user_group_handle)
+    user_group_id = resolve_slack_user_group_id(client, SLACK_USER_GROUP_HANDLE)
     if user_group_id:
-        mention_text = f"<!subteam^{user_group_id}|@{user_group_handle}>"
-    elif user_group_handle:
+        mention_text = f"<!subteam^{user_group_id}|@{SLACK_USER_GROUP_HANDLE}>"
+    elif SLACK_USER_GROUP_HANDLE:
         print(
-            f"Warning: could not resolve Slack user group @{user_group_handle}; no mention will be sent."
+            f"Warning: could not resolve Slack user group @{SLACK_USER_GROUP_HANDLE}; no mention will be sent."
         )
 
     if mention_text:
