@@ -22,6 +22,7 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
+SLACK_USER_GROUP_HANDLE = os.environ.get("SLACK_USER_GROUP_HANDLE", "").strip()
 
 MANIFEST_PATH = Path("manifests") / "key.yaml"
 
@@ -429,6 +430,24 @@ def build_slack_blocks(
     return blocks
 
 
+def resolve_slack_user_group_id(client: WebClient, handle: str) -> Optional[str]:
+    if not handle:
+        return None
+
+    try:
+        response = client.usergroups_list(include_disabled=False)
+    except SlackApiError as e:
+        print(f"Error resolving Slack user group @{handle}: {e.response.get('error', e.response)}")
+        return None
+
+    for group in response.get("usergroups", []):
+        if group.get("handle") == handle:
+            return group.get("id")
+
+    print(f"Slack user group @{handle} was not found.")
+    return None
+
+
 def send_slack_message(
     changes: List[Dict[str, object]],
     platform: str,
@@ -439,6 +458,7 @@ def send_slack_message(
 ) -> None:
     print("Trying to send Slack message...")
     client = WebClient(token=SLACK_KEY)
+
     blocks = build_slack_blocks(
         changes=changes,
         platform=platform,
@@ -448,10 +468,30 @@ def send_slack_message(
         computed_count=computed_count,
     )
 
+    user_group_handle = os.environ.get("SLACK_USER_GROUP_HANDLE", "dte-automators").strip()
+    mention_text = ""
+
+    user_group_id = resolve_slack_user_group_id(client, user_group_handle)
+    if user_group_id:
+        mention_text = f"<!subteam^{user_group_id}|@{user_group_handle}>"
+    elif user_group_handle:
+        mention_text = f"@{user_group_handle}"
+
+    if mention_text:
+        blocks.append(
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"cc {mention_text}",
+                },
+            }
+        )
+
     try:
         client.chat_postMessage(
             channel=SLACK_CHANNEL,
-            text="Important update from ACTIONS...",
+            text=f"Important update from ACTIONS... {mention_text}",
             blocks=blocks,
         )
     except SlackApiError as e:
