@@ -725,7 +725,7 @@ class TabBar(BasePage):
         margin = 10
         self.actions.move_to_element_with_offset(
             last_tab,
-            last_tab.size["width"] + margin,  # move to the right edge of the last tab
+            last_tab.size["width"] + margin,
             last_tab.size["height"] // 2,
         ).context_click().perform()
         return self

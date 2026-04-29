@@ -456,9 +456,6 @@ class AboutTelemetry(BasePage):
         return self
 
     def search_telemetry(self, term: str) -> "AboutTelemetry":
-        """
-        Types a search term into the about:telemetry search box to filter results.
-        """
         search_box = self.get_element("search")
         search_box.clear()
         search_box.send_keys(term)
@@ -477,11 +474,8 @@ class AboutTelemetry(BasePage):
         # Retrieve all rows from the telemetry table
         rows = self.get_elements(table_selector_key)
 
-        # Iterate from newest to oldest entries
         for row in reversed(rows):
             cells = [cell.text.strip() for cell in row.find_elements(By.TAG_NAME, "td")]
-
-            # Verify all expected values are present in the row
             if all(value in cells for value in expected_telemetry_data):
                 return True
 
