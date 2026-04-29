@@ -1145,6 +1145,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
