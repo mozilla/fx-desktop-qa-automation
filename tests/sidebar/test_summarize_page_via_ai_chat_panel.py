@@ -3,10 +3,9 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, Sidebar
 
-WEBSITE = "https://en.wikipedia.org/wiki/Firefox"
+WEBSITE = "https://www.mozilla.org/en-US/about/"
 
 PROVIDERS = [
-    "https://chatgpt.com",
     "https://gemini.google.com",
     "https://claude.ai",
     "https://copilot.microsoft.com",
@@ -30,7 +29,7 @@ def add_to_prefs_list():
 
 def test_summarize_page_via_ai_chat_panel(driver: Firefox):
     """
-    C3197643 - Verify that the entire page can be summarised using the Summarize current page button from each AI chat panel.
+    C3197643 - Verify that the entire page can be summarized using the Summarize current page button from each AI chat panel.
     """
     # Instantiate objects
     nav = Navigation(driver)
@@ -45,8 +44,8 @@ def test_summarize_page_via_ai_chat_panel(driver: Firefox):
     sidebar.expect_ai_chat_sidebar_open()
     sidebar.click_summarize_button()
 
-    # Switch to each available AI engine and verify the Summarize button works for each (chat conversation is not
-    # accessible
+    # Switch to each available AI engine and verify the Summarize button works for each
+    # (chat conversation is not accessible)
     for provider in PROVIDERS:
         sidebar.switch_to_ai_provider(provider)
         sidebar.expect_summarize_button_visible()

@@ -409,7 +409,10 @@ class Sidebar(BasePage):
             provider,
         )
         self.driver.execute_script(
-            "SidebarController.hide();SidebarController.show('viewGenaiChatSidebar');"
+            "if (typeof SidebarController !== 'undefined') {"
+            "  SidebarController.hide();"
+            "  SidebarController.show('viewGenaiChatSidebar');"
+            "}"
         )
         self.wait.until(
             lambda _: self.driver.execute_script(
