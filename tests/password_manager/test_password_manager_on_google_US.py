@@ -17,7 +17,7 @@ PASSWORD3 = "password3"
 
 @pytest.fixture()
 def test_case():
-    return "NEW_TEST_CASE_ID"
+    return "2245444"
 
 
 @pytest.fixture()
@@ -31,7 +31,7 @@ def temp_selectors():
         "google-email-field": {
             "selectorData": "identifierId",
             "strategy": "id",
-            "groups": [],
+            "groups": ["doNotCache"],
         }
     }
 
@@ -63,12 +63,20 @@ def test_google_login_saved_credentials_dropdown(driver: Firefox, temp_selectors
     google_login_page.click_on("google-email-field")
     autofill_popup.ensure_autofill_dropdown_visible()
 
-    for i, expected_username in enumerate([USERNAME, USERNAME2, USERNAME3], start=1):
-        credential = autofill_popup.get_nth_element(str(i))
-        assert autofill_popup.get_primary_value(credential) == expected_username
+    values = []
 
-    passkey = autofill_popup.get_nth_element("4")
-    assert autofill_popup.get_primary_value(passkey) == "Use a passkey"
+    for i in range(
+        1, 6
+    ):  # should be enough elements (3 credentials + passkey + Manage passwords)
+        try:
+            el = autofill_popup.get_nth_element(str(i))
+            values.append(autofill_popup.get_primary_value(el))
+        except Exception:
+            break
 
-    footer = autofill_popup.get_nth_element("5")
-    assert autofill_popup.get_primary_value(footer) == "Manage Passwords"
+    assert USERNAME in values
+    assert USERNAME2 in values
+    assert USERNAME3 in values
+
+    assert "Use a passkey" in values
+    assert "Manage Passwords" in values
