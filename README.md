@@ -22,6 +22,9 @@ logged in
 These tests are unlikely to change. If there is a test that is being run that should not be, or a
 test that is not being run, that should be, contact the repo maintainers.
 
+**NB: If you're running a build validation, not contributing to the repo, you can ignore the rest
+of this document.**
+
 ### Build under test
 Get the build to be smoke tested from the [candidates](https://ftp.mozilla.org/pub/firefox/candidates/) directory. Incident testing: Ask 
 the RelMan contact for the current Incident what the build versions is. 
