@@ -360,12 +360,7 @@ class Sidebar(BasePage):
 
     @BasePage.context_chrome
     def open_ai_chat_panel(self):
-        """Open the AI Chat panel by clicking its button in the sidebar strip.
-
-        The AI chat button lives inside the open shadow root of <sidebar-main>. Selenium has no API to
-        pierce shadow roots, so JS is used to query the shadow DOM and click the moz-button whose
-        view attribute identifies it as the AI chat entry point.
-        """
+        """Open the AI Chat panel by clicking its moz-button inside <sidebar-main>'s shadow root — JS is required because Selenium has no API to pierce shadow roots."""
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const btn = Array.from("
@@ -379,12 +374,7 @@ class Sidebar(BasePage):
 
     @BasePage.context_chrome
     def click_summarize_button(self):
-        """Click the Summarize current page button in the AI Chat panel.
-
-        The button lives inside <browser id="sidebar">'s contentDocument (chrome://browser/content/genai/chat.html).
-        Selenium has no API to switch into an embedded XUL <browser> element, so JS is used to access
-        contentDocument and click the button directly.
-        """
+        """Click #summarize-button inside <browser id="sidebar">'s contentDocument — JS is required because Selenium has no API to switch into an embedded XUL <browser> element."""
         self.wait.until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
@@ -398,12 +388,7 @@ class Sidebar(BasePage):
 
     @BasePage.context_chrome
     def switch_to_ai_provider(self, provider: str):
-        """Switch AI provider by updating the pref and reloading the sidebar chat panel.
-
-        The provider switcher in chat.html is a Lit custom component and cannot be driven via
-        a standard <select> interaction. Changing the pref directly and toggling the sidebar
-        is the only reliable way to switch providers in automation.
-        """
+        """Switch AI provider via pref + sidebar reload — the in-panel switcher is a Lit custom component that cannot be driven via a standard <select> interaction."""
         self.driver.execute_script(
             "Services.prefs.setStringPref('browser.ml.chat.provider', arguments[0]);",
             provider,

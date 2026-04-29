@@ -40,11 +40,9 @@ def test_summarize_page_via_ai_chat_panel(driver: Firefox):
     nav.toggle_vertical_tabs()
     driver.get(WEBSITE)
 
-    # Open the AI Chat panel from the sidebar and click the Summarize current page button
+    # Open the AI Chat panel from the sidebar
     sidebar.open_ai_chat_panel()
     sidebar.expect_ai_chat_sidebar_open()
-    sidebar.expect_summarize_button_visible()
-    sidebar.click_summarize_button()
 
     # Switch to each available AI engine and verify the Summarize button works for each
     # (chat conversation is not accessible)
