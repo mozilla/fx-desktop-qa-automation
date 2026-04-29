@@ -57,11 +57,13 @@ def test_google_login_saved_credentials_dropdown(driver: Firefox, temp_selectors
     add_login_and_wait(about_logins, GOOGLE_ORIGIN, USERNAME2, PASSWORD2)
     add_login_and_wait(about_logins, GOOGLE_ORIGIN, USERNAME3, PASSWORD3)
 
-    google_login_page = GenericPage(driver, url=GOOGLE_LOGIN_URL).open()
+    google_login_page = GenericPage(driver, url=GOOGLE_LOGIN_URL)
+    google_login_page.open()
     google_login_page.elements |= temp_selectors
 
     google_login_page.element_visible("google-email-field")
     google_login_page.click_on("google-email-field")
+    google_login_page.fill("google-email-field", USERNAME[:3], press_enter=False)
     autofill_popup.ensure_autofill_dropdown_visible()
 
     for expected_username in [USERNAME, USERNAME2, USERNAME3]:
