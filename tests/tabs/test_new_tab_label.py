@@ -52,26 +52,11 @@ def test_new_tab_label(driver: Firefox):
         tabs.actions.send_keys("n").perform()
         tabs.actions.send_keys(Keys.RETURN).perform()
 
-        time.sleep(2)
-
         # Switch back to about:telemetry and refresh to pick up updated scalar
         driver.switch_to.window(driver.window_handles[1])
         driver.refresh()
 
-        # Debug: check what value is actually there
-        print(
-            "Has value 1?",
-            about_telemetry.is_telemetry_keyed_scalars_entry_present(
-                ["context-openANewTab", "1"]
-            ),
-        )
-        print(
-            "Has value 2?",
-            about_telemetry.is_telemetry_keyed_scalars_entry_present(
-                ["context-openANewTab", "2"]
-            ),
-        )
-        print("Window count:", len(driver.window_handles))
+        # in the virtual mac, it seems to increase the counter of 'context-openANewTab' and not 'toolbar-context-openANewTab'
         assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
             ["context-openANewTab", "2"]
         ), "Expected context-openANewTab to have value 2 after Step 2"
@@ -84,13 +69,6 @@ def test_new_tab_label(driver: Firefox):
     # Switch back to about:telemetry and refresh to pick up updated scalar
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
-
-    if system == "Windows":
-        assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-            ["toolbar-context-openANewTab", "1"]
-        ), "Expected toolbar-context-openANewTab to have value 1 after Step 3"
-
-    else:
-        assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-            ["toolbar-context-openANewTab", "1"]
-        ), "Expected toolbar-context-openANewTab to have value 1 after Step 3"
+    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
+        ["toolbar-context-openANewTab", "1"]
+    ), "Expected toolbar-context-openANewTab to have value 1 after Step 3"
