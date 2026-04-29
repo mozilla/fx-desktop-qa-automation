@@ -1421,7 +1421,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: standard-radio
-Selector Data: "standardRadiocontentBlockingOptionStandard"
+Selector Data: "standardRadio"
 Description: In Enhanced Tracking Protection, the standard radio button
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
