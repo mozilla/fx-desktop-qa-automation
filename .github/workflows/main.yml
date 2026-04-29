@@ -343,7 +343,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          split="${STARFOX_SPLIT}:-smoke"
+          split="${STARFOX_SPLIT:-smoke}"
           if ! [[ $split = "smoke" ]]; then exit 0; fi
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
