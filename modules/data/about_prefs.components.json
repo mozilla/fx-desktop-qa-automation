@@ -737,5 +737,15 @@
     "strategy": "css",
     "shadowParent": "remove-primary-password-box",
     "groups": []
+  },
+  "standard-section": {
+    "selectorData": "contentBlockingOptionStandard",
+    "strategy": "id",
+    "groups": []
+  },
+  "standard-radio": {
+    "selectorData": "standardRadio",
+    "strategy": "id",
+    "groups": []
   }
 }

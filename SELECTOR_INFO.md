@@ -1419,6 +1419,20 @@ Description: Remove button to remove the primary password
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: standard-radio
+Selector Data: "standardRadiocontentBlockingOptionStandard"
+Description: In Enhanced Tracking Protection, the standard radio button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: standard-section
+Selector Data: "standardRadio"
+Description: In Enhanced Tracking Protection, the standard radio section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
