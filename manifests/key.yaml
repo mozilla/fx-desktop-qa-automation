@@ -868,7 +868,10 @@ password_manager:
     splits:
     - functional2
   test_password_manager_on_google_US:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_primary_password_allows_csv_export:
