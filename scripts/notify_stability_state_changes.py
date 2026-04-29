@@ -22,7 +22,9 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
-SLACK_USER_GROUP_HANDLE = os.environ.get("SLACK_USER_GROUP_HANDLE", "dte-automators").strip()
+SLACK_USER_GROUP_HANDLE = os.environ.get(
+    "SLACK_USER_GROUP_HANDLE", "dte-automators"
+).strip()
 
 MANIFEST_PATH = Path("manifests") / "key.yaml"
 
@@ -477,7 +479,9 @@ def send_slack_message(
     if user_group_id:
         mention_text = f"<!subteam^{user_group_id}|@{user_group_handle}>"
     elif user_group_handle:
-        print(f"Warning: could not resolve Slack user group @{user_group_handle}; no mention will be sent.")
+        print(
+            f"Warning: could not resolve Slack user group @{user_group_handle}; no mention will be sent."
+        )
 
     if mention_text:
         blocks.append(
