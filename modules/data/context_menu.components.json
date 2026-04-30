@@ -51,6 +51,16 @@
         "strategy": "class",
         "groups": []
     },
+    "context-open-new-tab": {
+        "selectorData": "context_openANewTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "toolbar-context-open-new-tab": {
+        "selectorData": "toolbar-context-openANewTab",
+        "strategy": "id",
+        "groups": []
+    },
     "context-move-tab-to-new-group": {
         "selectorData": "context_moveTabToNewGroup",
         "strategy": "id",
