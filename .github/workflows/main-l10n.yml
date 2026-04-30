@@ -136,11 +136,17 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
+        id: upload-artifact
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
           path: artifacts-mac
+
+      - name: Flag upload
+        if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
+        run: |
+          echo "artifact=1"
 
   L10N-Linux:
     if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
@@ -236,11 +242,17 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
+        id: upload-artifact
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-linux-l10n
           path: artifacts-linux
+
+      - name: Flag upload
+        if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
+        run: |
+          echo "artifact=1"
 
   L10N-Windows:
     if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
@@ -380,11 +392,17 @@ jobs:
           exit $env:SCRIPT_EXIT_CODE
 
       - name: Upload artifacts
+        id: upload-artifact
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win-l10n
           path: artifacts-win
+
+      - name: Flag upload
+        if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
+        run: |
+          echo "artifact=1"
 
   Use-Artifacts:
     if: ${{ always() && github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
@@ -408,21 +426,21 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
-        if: ${{ needs.L10N-Windows.result == 'success' }}
+        if: ${{ needs.L10N-Windows.outputs.artifact }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-win-l10n
           path: artifacts-win
 
       - name: Download Linux artifact
-        if: ${{ needs.L10N-Linux.result == 'success' }}
+        if: ${{ needs.L10N-Linux.outputs.artifact }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux-l10n
           path: artifacts-linux
 
       - name: Download MacOS artifact
-        if: ${{ needs.L10N-MacOS.result == 'success' }}
+        if: ${{ needs.L10N-MacOS.outputs.artifact }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac-l10n
