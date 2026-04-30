@@ -83,5 +83,16 @@
         "groups": [
             "doNotCache"
         ]
+    },
+    "see-blocked-trackers-parent": {
+        "selectorData": "trustpanel-blocker-see-all",
+        "strategy": "id",
+        "groups": []
+    },
+    "see-blocked-trackers": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "shadowParent": "see-blocked-trackers-parent",
+        "groups": []
     }
 }

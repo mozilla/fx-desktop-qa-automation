@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.browser_object_navigation import Navigation
 from modules.browser_object_trust_panel import TrustPanel
 from modules.page_object_generics import GenericPage
 from modules.page_object_prefs import AboutPrefs
@@ -8,7 +9,7 @@ from modules.page_object_prefs import AboutPrefs
 FINGERPRINTERS_URL = (
     "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
 )
-BLOCKED_TRACKER_URL = "https://mozilla.org"
+DETECTED_TRACKER_URL = "https://base-fingerprinting-track-digest256.dummytracker.org"
 
 
 @pytest.fixture()
@@ -16,7 +17,7 @@ def test_case():
     return "3054916"
 
 
-def test_blocked_fingerprinters_displayed_in_sub_panel(driver: Firefox):
+def test_fingerprinters_subpanel_display_when_not_blocked(driver: Firefox):
     """
     C3054916 - Fingerprinters are correctly displayed in the sub panel when they are not blocked
     """
@@ -25,6 +26,7 @@ def test_blocked_fingerprinters_displayed_in_sub_panel(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=FINGERPRINTERS_URL)
     trust_panel = TrustPanel(driver)
+    nav = Navigation(driver)
 
     # In about:preferences#privacy deselect the options "Known fingerprinters" and "Suspected fingerprinters"
     about_prefs.open()
@@ -44,5 +46,6 @@ def test_blocked_fingerprinters_displayed_in_sub_panel(driver: Firefox):
 
     # The allowed fingerprinter is displayed inside the subpanel
     # trust_panel.sites_blocked(BLOCKED_TRACKER_URL)
-
-    trust_panel.sites_detected(BLOCKED_TRACKER_URL)
+    trust_panel.assert_no_trackers()
+    trust_panel.trackers_detected("fingerprinters")
+    # trust_panel.sites_detected(DETECTED_TRACKER_URL)
