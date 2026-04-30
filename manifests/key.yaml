@@ -1067,9 +1067,9 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570, (Windows), https://bugzilla.mozilla.org/show_bug.cgi?id=2036155 (Linux)
     result:
-      linux: pass
+      linux: unstable
       mac: pass
       win: unstable
     splits:
@@ -1243,9 +1243,9 @@ session_restore:
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565 (Windows), https://bugzilla.mozilla.org/show_bug.cgi?id=2036129 (Linux)
     result:
-      linux: pass
+      linux: unstable
       mac: pass
       win: unstable
     splits:
@@ -1263,9 +1263,9 @@ session_restore:
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566 (Windows), https://bugzilla.mozilla.org/show_bug.cgi?id=2036129 (Linux)
     result:
-      linux: pass
+      linux: unstable
       mac: pass
       win: unstable
     splits:
