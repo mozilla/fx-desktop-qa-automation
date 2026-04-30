@@ -1222,6 +1222,10 @@ security_and_privacy:
     result: deprecated
     splits:
     - functional2
+  test_trackers_cryptominers_fingerprinters_blocked:
+    result: pass
+    splits:
+    - functional2
   test_tracking_content_custom_mode:
     result: pass
     splits:
