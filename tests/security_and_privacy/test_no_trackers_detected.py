@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -20,7 +18,6 @@ def test_no_trackers_detected(driver: Firefox, trust_panel: TrustPanel):
     """
     # access url
     driver.get(NOTRACKERS_URL)
-    sleep(111111)
     # verify that no trackers are detected
     trust_panel.open_panel()
     trust_panel.assert_no_trackers()
