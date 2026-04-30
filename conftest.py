@@ -608,8 +608,8 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
     downloads_folder = os.path.join(home_folder, "Downloads")
 
     def _delete_files():
+        delete_files_regex = re.compile(delete_files_regex_string)
         for file in os.listdir(downloads_folder):
-            delete_files_regex = re.compile(delete_files_regex_string)
             if delete_files_regex.match(file):
                 target = os.path.join(downloads_folder, file)
                 if os.path.isdir(target):
