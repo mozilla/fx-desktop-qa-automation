@@ -146,10 +146,7 @@ if __name__ == "__main__":
         beta_version = 0
     # choose split number
     l10n_mappings = select_l10n_mappings(beta_version)
-    sample_mappings = {k: v for k, v in l10n_mappings.items() if k.startswith("demo")}
-    for key in sample_mappings:
-        regions = sorted(list(sample_mappings[key]))
-        sample_mappings[key] = (regions[0], regions[-1])
+    sample_mappings = {"demo": {"US"}}
     if (
         os.environ.get("TESTRAIL_REPORT") == "true"
         or os.environ.get("MANUAL") == "true"

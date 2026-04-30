@@ -49,8 +49,6 @@ jobs:
   L10N-MacOS:
     if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
-    outputs:
-      artifact: ${{ steps.flag-upload.outputs.artifact }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -138,23 +136,14 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
-        id: upload-artifact
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
-          path: artifacts
-
-      - name: Flag upload
-        id: flag-upload
-        if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
-        run: |
-          echo "artifact=1" >> "$GITHUB_OUTPUT"
+          path: artifacts-mac
 
   L10N-Linux:
     if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
-    outputs:
-      artifact: ${{ steps.flag-upload.outputs.artifact }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -247,23 +236,14 @@ jobs:
           exit $SCRIPT_EXIT_CODE;
 
       - name: Upload artifacts
-        id: upload-artifact
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-linux-l10n
           path: artifacts-linux
 
-      - name: Flag upload
-        id: flag-upload
-        if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
-        run: |
-          echo "artifact=1" >> "$GITHUB_OUTPUT"
-
   L10N-Windows:
     if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
-    outputs:
-      artifact: ${{ steps.flag-upload.outputs.artifact }}
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -400,18 +380,11 @@ jobs:
           exit $env:SCRIPT_EXIT_CODE
 
       - name: Upload artifacts
-        id: upload-artifact
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win-l10n
-          path: artifacts
-
-      - name: Flag upload
-        id: flag-upload
-        if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
-        run: |
-          echo "artifact=1" >> "$GITHUB_OUTPUT"
+          path: artifacts-win
 
   Use-Artifacts:
     if: ${{ always() && github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
@@ -435,21 +408,21 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
-        if: ${{ needs.L10N-Windows.outputs.artifact }}
+        if: ${{ needs.L10N-Windows.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-win-l10n
           path: artifacts-win
 
       - name: Download Linux artifact
-        if: ${{ needs.L10N-Linux.outputs.artifact }}
+        if: ${{ needs.L10N-Linux.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux-l10n
-          path: artifacts
+          path: artifacts-linux
 
       - name: Download MacOS artifact
-        if: ${{ needs.L10N-MacOS.outputs.artifact }}
+        if: ${{ needs.L10N-MacOS.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           name: artifacts-mac-l10n
