@@ -1033,7 +1033,7 @@ reader_view:
   test_improved_type_control_panel:
     result: pass
     splits:
-    - smoke
+    - functional2
   test_reader_view_close_sidebar:
     result: pass
     splits:
@@ -1041,7 +1041,7 @@ reader_view:
   test_reader_view_location_bar:
     result: pass
     splits:
-    - functional2
+    - smoke
 scrolling_panning_zooming:
   test_default_zoom_persists:
     result: pass
