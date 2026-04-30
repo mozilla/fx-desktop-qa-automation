@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TrustPanel
+from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
 
