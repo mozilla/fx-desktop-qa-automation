@@ -607,13 +607,13 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 
     downloads_folder = os.path.join(home_folder, "Downloads")
 
-    def _sep_path(pathstr: str) -> dict:
+    def _sep_path(pathstr: str) -> list:
         head, tail = os.path.split(pathstr)
         if head == "".join(os.path.split(head)):
             return [head, tail]
         else:
             newparts = _sep_path(head)
-            newparts.extend(tail)
+            newparts.append(tail)
             return newparts
 
     def _delete_files():
