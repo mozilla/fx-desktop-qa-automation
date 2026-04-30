@@ -607,12 +607,26 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
 
     downloads_folder = os.path.join(home_folder, "Downloads")
 
+    def _sep_path(pathstr: str) -> dict:
+        head, tail = os.path.split(pathstr)
+        if head == "".join(os.path.split(head)):
+            return [head, tail]
+        else:
+            newparts = _sep_path(head)
+            newparts.extend(tail)
+            return newparts
+
     def _delete_files():
         delete_files_regex = re.compile(delete_files_regex_string)
         for file in os.listdir(downloads_folder):
             if delete_files_regex.match(file):
                 target = os.path.join(downloads_folder, file)
                 if os.path.isdir(target):
+                    # Is target likely to be harmful to delete?
+                    if target == downloads_folder or len(_sep_path(target)) < 4:
+                        raise PermissionError(
+                            "Cannot delete directory, looks important!"
+                        )
                     rmtree(target)
                 else:
                     os.remove(target)

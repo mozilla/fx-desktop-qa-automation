@@ -22,6 +22,8 @@ on:
         required: false
         type: boolean
         default: false
+    outputs:
+      artifact: ${{ steps.flag-upload.outputs.artifact }}
 
   workflow_dispatch:
     inputs:
@@ -144,9 +146,10 @@ jobs:
           path: artifacts-mac
 
       - name: Flag upload
+        id: flag-upload
         if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
         run: |
-          echo "artifact=1"
+          echo "artifact=1" >> "$GITHUB_OUTPUT"
 
   L10N-Linux:
     if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
@@ -252,7 +255,7 @@ jobs:
       - name: Flag upload
         if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
         run: |
-          echo "artifact=1"
+          echo "artifact=1" >> "$GITHUB_OUTPUT"
 
   L10N-Windows:
     if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
@@ -402,7 +405,7 @@ jobs:
       - name: Flag upload
         if: ${{ always() && steps.upload-artifact.conclusion == 'success' }}
         run: |
-          echo "artifact=1"
+          echo "artifact=1" >> "$GITHUB_OUTPUT"
 
   Use-Artifacts:
     if: ${{ always() && github.event_name != 'workflow_dispatch' && inputs.dry_run != true && inputs.is_pull_request == true }}
