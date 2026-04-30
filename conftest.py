@@ -3,7 +3,7 @@ import logging
 import os
 import platform
 import re
-from shutil import unpack_archive
+from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
@@ -611,7 +611,11 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
         for file in os.listdir(downloads_folder):
             delete_files_regex = re.compile(delete_files_regex_string)
             if delete_files_regex.match(file):
-                os.remove(os.path.join(downloads_folder, file))
+                target = os.path.join(downloads_folder, file)
+                if os.path.isdir(target):
+                    rmtree(target)
+                else:
+                    os.remove(target)
 
     _delete_files()
     yield True
