@@ -1955,7 +1955,7 @@ Path to .json: modules/data/context_menu.components.json
 ```
 Selector Name: context-open-new-tab
 Selector Data: "context_openANewTab"
-Description: Tab context click option "New Tab to Right"
+Description: Tab context click option "Open a New Tab"
 Location: In the tabbed browser
 Path to .json: modules/data/context_menu.components.json
 ```

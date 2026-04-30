@@ -1,9 +1,5 @@
-import platform
-import time
-
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import AboutTelemetry
@@ -36,39 +32,25 @@ def test_new_tab_label(driver: Firefox):
 
     second_tab = tabs.get_tab(2)  # about:telemetry tab
 
-    # Step 2: Right click an open tab and press W to open a new tab
-    system = platform.system()
+    # Step 2: Right click an open tab and click New Tab
     tabs.context_click(second_tab)
+    tab_context_menu.click_and_hide_menu("context-open-new-tab")
 
-    if system == "Windows":
-        tabs.actions.send_keys("w").perform()
-        # Switch back to about:telemetry and refresh to pick up updated scalar
-        driver.switch_to.window(driver.window_handles[1])
-        driver.refresh()
-        assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-            ["context-openANewTab", "2"]
-        ), "Expected context-openANewTab to have value 2 after Step 2"
-    else:
-        tabs.actions.send_keys("n").perform()
-        tabs.actions.send_keys(Keys.RETURN).perform()
-
-        # Switch back to about:telemetry and refresh to pick up updated scalar
-        driver.switch_to.window(driver.window_handles[1])
-        driver.refresh()
-
-        # in the virtual mac, it seems to increase the counter of 'context-openANewTab' and not 'toolbar-context-openANewTab'
-        assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-            ["context-openANewTab", "2"]
-        ), "Expected context-openANewTab to have value 2 after Step 2"
+    driver.switch_to.window(driver.window_handles[1])
+    driver.refresh()
+    about_telemetry.search_telemetry("context-openANewTab")
+    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
+        ["context-openANewTab", "2"]
+    ), "Expected context-openANewTab to have value 2 after Step 2"
 
     # Step 3: Right click in the Tab Bar and click New Tab
-    # Note: "Right click in the Tab Bar" increments "toolbar-context-openANewTab" instead of "context-openANewTab".
+    # Note: right-clicking the tab bar increments "toolbar-context-openANewTab", not "context-openANewTab".
     tabs.context_click_tabbar()
     tab_context_menu.click_and_hide_menu("toolbar-context-open-new-tab")
 
-    # Switch back to about:telemetry and refresh to pick up updated scalar
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
+    about_telemetry.search_telemetry("toolbar-context-openANewTab")
     assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
         ["toolbar-context-openANewTab", "1"]
     ), "Expected toolbar-context-openANewTab to have value 1 after Step 3"
