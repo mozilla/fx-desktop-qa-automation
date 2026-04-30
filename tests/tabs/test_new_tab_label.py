@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import ContextMenu, TabBar
 from modules.page_object import AboutTelemetry
@@ -21,6 +22,7 @@ def test_new_tab_label(driver: Firefox):
     # Step 1: Right click any opened tab and click New Tab
     tabs.context_click(first_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
+    tabs.wait_for_num_tabs(2)
 
     # Navigate the new tab to about:telemetry and verify scalar value is 1
     driver.switch_to.window(driver.window_handles[-1])
@@ -36,6 +38,7 @@ def test_new_tab_label(driver: Firefox):
     tabs.context_click(second_tab)
     tab_context_menu.click_and_hide_menu("context-open-new-tab")
 
+    tabs.wait_for_num_tabs(3)
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
     about_telemetry.search_telemetry("context-openANewTab")
@@ -48,6 +51,7 @@ def test_new_tab_label(driver: Firefox):
     tabs.context_click_tabbar()
     tab_context_menu.click_and_hide_menu("toolbar-context-open-new-tab")
 
+    tabs.wait_for_num_tabs(4)
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
     about_telemetry.search_telemetry("toolbar-context-openANewTab")
