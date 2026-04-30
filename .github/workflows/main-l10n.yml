@@ -143,7 +143,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-mac-l10n
-          path: artifacts-mac
+          path: artifacts
 
       - name: Flag upload
         id: flag-upload
@@ -405,7 +405,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-win-l10n
-          path: artifacts-win
+          path: artifacts
 
       - name: Flag upload
         id: flag-upload
@@ -446,7 +446,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifacts-linux-l10n
-          path: artifacts-linux
+          path: artifacts
 
       - name: Download MacOS artifact
         if: ${{ needs.L10N-MacOS.outputs.artifact }}
