@@ -387,11 +387,7 @@ downloads:
     splits:
     - functional1
   test_add_zip_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2035548
-    result:
-      linux: unstable
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - functional1
   test_change_download_folder:
