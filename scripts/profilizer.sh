@@ -1,8 +1,12 @@
 #!/bin/bash
 
-cp -r $1 tmp_profile
+if [[ -z "$1" || ! -d "$1" ]]; then
+  echo "Usage: $0 <path-to-profile-directory>" >&2
+  exit 1
+fi
+cp -r "$1" tmp_profile
 rm -rf tmp_profile/browser-extension-data
-rm -rf tmp_profile/hrome_debugger_profile
+rm -rf tmp_profile/chrome_debugger_profile
 rm -rf tmp_profile/domain_to_categories.sqlite
 rm -rf tmp_profile/domain_to_categories.sqlite-journal
 rm -rf tmp_profile/favicons.sqlite-shm
@@ -20,4 +24,5 @@ rm -rf tmp_profile/tabnotes.sqlite
 rm -rf tmp_profile/tabnotes.sqlite-wal
 rm -rf tmp_profile/targeting.snapshot.json
 rm -rf tmp_profile/weave
-cd tmp_profile; zip -9r ../profile.zip .; cd ..;
+(cd tmp_profile && zip -9r ../profile.zip .)
+rm -rf tmp_profile
