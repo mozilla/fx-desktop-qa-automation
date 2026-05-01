@@ -101,20 +101,22 @@ class ContextMenu(BasePage):
 
     @BasePage.context_chrome
     def click_choose_ai_chatbot_from_context_menu(self) -> BasePage:
-        """Click the 'Choose an AI Chatbot' item from the AI Chat submenu in the tab context menu.
+        """Click the 'Choose an AI Chatbot' item from the AI Chat submenu.
 
-        Pure Selenium cannot interact with XUL submenu items in the chrome context: ActionChains
-        move_to_element does not cross GeckoDriver's chrome context boundary, and Selenium's click()
-        on a XUL <menu> element does not open its popup. JS dispatches the full mouse event sequence
-        directly on the menuitem, which fires the XUL command event that opens the sidebar.
+        Uses the real DOM id 'context-ask-chat' (not the JSON selectorData alias).
+        menu.open = true is set inside the retry loop to keep the submenu alive while
+        searching for its children. Works for both tab and page context menus.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
-                "const menu = document.getElementById('context_askChat');"
+                "const menu = document.getElementById('context-ask-chat');"
                 "if (!menu) return false;"
+                "menu.open = true;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
-                "if (!popup) return false;"
-                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
+                "if (!popup || popup.children.length === 0) return false;"
+                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]')"
+                "  || Array.from(popup.children).find("
+                "      el => el.label && el.label.includes('Choose an AI Chatbot'));"
                 "if (!item) return false;"
                 "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
                 "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
