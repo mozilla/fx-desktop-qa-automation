@@ -25,7 +25,7 @@ rm -rf tmp_profile/tabnotes.sqlite
 rm -rf tmp_profile/tabnotes.sqlite-wal
 rm -rf tmp_profile/targeting.snapshot.json
 rm -rf tmp_profile/weave
-if [[ -e "../profile.zip" ]]; then
+if [[ -e "profile.zip" ]]; then
   echo "Error: profile.zip already exists. Remove it first." >&2
   exit 1
 fi
