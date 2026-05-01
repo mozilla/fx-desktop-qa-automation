@@ -217,6 +217,22 @@ If you are outside of Mozilla and would like to contribute to this project:
   - Address any review comments
 - Once approved your test code will be landed in this repo.
 
+### CI Dry-Run
+In order to validate CI behavior for workflow / code changes while avoiding costly or side effecting actions:
+(downloads, installs, test execution, artifact uploads, publishing/deploying, etc.) one could do so by running
+the CI with dry-run flag. For further details, please refer to [Dry-Run Readme](dryrun.md)
+
+### Profile Creation
+In order to create / upload a profile for testing:
+
+* Create the profile with a reasonably recent build
+* Find the [profile location](https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data)
+* Copy that profile to another location
+* Execute `./scripts/profilizer.sh <location of profile copy>`
+* Move `./profile.zip` to `./profiles/` and name it something else
+* Use the `use_profile` fixture in your test, such that it returns just the name of the profile, without
+the `.zip`.
+
 ### Test Account Secrets Management (not fully implemented)
 To protect our test logins to various services, we encrypt them with a key. This key is available from repo
 maintainers if you ask. Please be careful with it. This key must exist in the environment as SVC_ACCT_DECRYPT
@@ -249,9 +265,3 @@ called `login`.
 **DO NOT PUSH UNENCRYPTED SECRETS.**
 
 **DO NOT ADD SECRETS UNNECESSARILY.**
-
-
-### CI Dry-Run
-In order to validate CI behavior for workflow / code changes while avoiding costly or side effecting actions:
-(downloads, installs, test execution, artifact uploads, publishing/deploying, etc.) one could do so by running
-the CI with dry-run flag. For further details, please refer to [Dry-Run Readme](dryrun.md)
