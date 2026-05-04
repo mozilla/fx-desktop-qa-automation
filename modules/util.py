@@ -4,6 +4,7 @@ import logging
 import os
 import platform
 import re
+import sys
 from os import remove
 from random import shuffle
 from time import sleep
@@ -29,7 +30,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
-if platform.system() == "Linux":
+if platform.system() == "Linux" and "Xlib" not in sys.modules:
     import Xlib.XK
     from Xlib import X
     from Xlib.display import Display
@@ -1032,6 +1033,7 @@ class LinuxAuto:
         self._keyup(key)
 
     def write(self, string: str, interval=0.0):
+        """Write a string using X11 key events, does not support Shift injection yet"""
         for char in string:
             self.press(char)
             sleep(interval)
