@@ -87,12 +87,11 @@
     "see-blocked-trackers-parent": {
         "selectorData": "trustpanel-blocker-see-all",
         "strategy": "id",
-        "groups": []
+        "groups": ["doNotCache"]
     },
     "see-blocked-trackers": {
-        "selectorData": "main-button",
+        "selectorData": "trustpanel-blocker-see-all",
         "strategy": "id",
-        "shadowParent": "see-blocked-trackers-parent",
-        "groups": []
+        "groups": ["doNotCache"]
     }
 }
