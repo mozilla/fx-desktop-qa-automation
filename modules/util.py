@@ -984,19 +984,39 @@ class LinuxAuto:
 
     HOTKEY_WAIT = 0.1
     BUTTONMAP = {"left": 1, "middle": 2, "right": 3}
-    KEYMAP = {"enter": "Return", "down": "Down", "up": "Up"}
+    # We don't need a giant keymap. Add as needed, using this or other reference:
+    # https://github.com/asweigart/pyautogui/blob/b4255d0be42c377154c7d92337d7f8515fc63234/pyautogui/_pyautogui_x11.py#L192
+    KEYMAP = {
+        "alt": "Atl_L",
+        "ctrl": "Control_L",
+        "down": "Down",
+        "enter": "Return",
+        "shift": "Shift_L",
+        "tab": "Tab",
+        "up": "Up",
+    }
 
     def __init__(self):
         self._display = Display(os.environ.get("DISPLAY"))
 
+    def _get_key(self, key):
+        map_val = self.KEYMAP.get(key)
+        if map_val:
+            return map_val
+        if len(key) == 1:
+            return key
+        raise ValueError(
+            f"Key name '{key}' not found, please add to util.LinuxAuto.KEYMAP."
+        )
+
     def _keydown(self, key):
-        realkey = self.KEYMAP[key]
+        realkey = self._get_key(key)
         keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(realkey))
         fake_input(self._display, X.KeyPress, keycode)
         self._display.sync()
 
     def _keyup(self, key):
-        realkey = self.KEYMAP[key]
+        realkey = self._get_key(key)
         keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(realkey))
         fake_input(self._display, X.KeyRelease, keycode)
         self._display.sync()
