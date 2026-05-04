@@ -450,18 +450,6 @@ class BasePage(Page):
             self.gui.press(key)
         return self
 
-    def gui_click(self, button="left") -> Page:
-        """Use a GUI automation to click mouse buttons"""
-        if self.sys_platform == "Linux":
-            from modules.util import LinuxAuto
-
-            LinuxAuto.click(button)
-        else:
-            import pyautogui
-
-            pyautogui.click(button=button)
-        return self
-
     def get_selector(self, name: str, labels=None) -> list:
         """
         Given a key for a self.elements dict entry, return the Selenium selector tuple.
