@@ -55,6 +55,17 @@ def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
     nav.search(search_term)
 
 
+@_entry("searchbar")
+def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar from the Customize page, then perform a search via it."""
+    # Instantiate object
+    nav = Navigation(driver)
+
+    # Add the search bar to the toolbar and perform the search via it
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_search(search_term)
+
+
 # ---------------------------------------------------------------------------
 # Action flows — things that happen after the SERP is open
 # ---------------------------------------------------------------------------
