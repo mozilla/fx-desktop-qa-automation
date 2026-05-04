@@ -51,6 +51,7 @@ def test_fx_view_closed_tabs_from_multiple_windows_shown_in_history_menu(
     tabs.close_last_n_tabs(total_tabs=1 + len(WINDOW_2_URLS), count=len(WINDOW_2_URLS))
 
     # Verify closed tabs from Window 2 appear History menu
+    tabs.new_tab_by_button()
     urls = menu_bar.get_recently_closed_urls()
     assert set(WINDOW_2_URLS).issubset(urls), (
         f"Window 2 URLs {WINDOW_2_URLS} not found in {urls}"
@@ -65,6 +66,7 @@ def test_fx_view_closed_tabs_from_multiple_windows_shown_in_history_menu(
     tabs.close_last_n_tabs(total_tabs=1 + len(WINDOW_3_URLS), count=len(WINDOW_3_URLS))
 
     # Verify closed tabs from Window 3 appear History menu
+    tabs.new_tab_by_button()
     urls = menu_bar.get_recently_closed_urls()
     assert set(WINDOW_3_URLS).issubset(urls), (
         f"Window 3 URLs {WINDOW_3_URLS} not found in {urls}"

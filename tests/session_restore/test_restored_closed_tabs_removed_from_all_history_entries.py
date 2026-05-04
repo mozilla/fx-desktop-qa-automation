@@ -76,6 +76,7 @@ def test_restored_closed_tabs_removed_from_all_history_entries(driver: Firefox):
         from modules.browser_object_menu_bar import MenuBar
 
         menu_bar = MenuBar(driver)
+        tabs.new_tab_by_button()
         assert len(menu_bar.get_recently_closed_urls()) == 0, (
             "Expected no recently closed tabs in menu bar"
         )

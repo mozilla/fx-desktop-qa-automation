@@ -16,7 +16,7 @@ class MenuBar(BasePage):
     @BasePage.context_chrome
     def open_menu(self, menu_name: str) -> BasePage:
         """Opens a specified menu from the Menu Bar"""
-        self.click_and_hide_menu(f"{menu_name.lower()}-menu-button")
+        self.click_on(f"{menu_name.lower()}-menu-button")
         return self
 
     @BasePage.context_chrome
@@ -39,11 +39,18 @@ class MenuBar(BasePage):
         """Opens History > Recently Closed Tabs and returns the URLs as a set"""
         self.activate_menu_bar()
         self.open_menu("History")
+        recently_closed = self.fetch("menu-bar-recently-closed-tabs")
+        if recently_closed.get_dom_attribute("disabled") == "true":
+            self.hide_popup_by_child_node("menu-bar-recently-closed-tabs")
+            return set()
         self.click_on("menu-bar-recently-closed-tabs")
-        items = self.get_elements("menu-bar-recently-closed-tabs-items")
+        items = self.wait.until(
+            lambda _: self.get_elements("menu-bar-recently-closed-tabs-items")
+        )
         urls = {
             item.get_dom_attribute("targetURI")
             for item in items
             if item.get_dom_attribute("targetURI")
         }
+        self.hide_popup_by_child_node("menu-bar-recently-closed-tabs-items")
         return urls
