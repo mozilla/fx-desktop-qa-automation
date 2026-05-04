@@ -4,7 +4,6 @@ import logging
 import os
 import platform
 import re
-from contextlib import contextmanager
 from os import remove
 from random import shuffle
 from time import sleep
@@ -987,7 +986,7 @@ class LinuxAuto:
     # We don't need a giant keymap. Add as needed, using this or other reference:
     # https://github.com/asweigart/pyautogui/blob/b4255d0be42c377154c7d92337d7f8515fc63234/pyautogui/_pyautogui_x11.py#L192
     KEYMAP = {
-        "alt": "Atl_L",
+        "alt": "Alt_L",
         "ctrl": "Control_L",
         "down": "Down",
         "enter": "Return",
@@ -1021,17 +1020,12 @@ class LinuxAuto:
         fake_input(self._display, X.KeyRelease, keycode)
         self._display.sync()
 
-    @contextmanager
-    def keypress(self, key):
-        try:
-            self._keydown(key)
-        finally:
-            self._keyup(key)
-
     def hotkey(self, *keys):
         for key in keys:
-            with self.keypress(key):
-                sleep(self.HOTKEY_WAIT)
+            self._keydown(key)
+        sleep(self.HOTKEY_WAIT)
+        for key in reversed(keys):
+            self._keyup(key)
 
     def press(self, key):
         self._keydown(key)
@@ -1056,7 +1050,7 @@ class LinuxAuto:
 class GuiAuto:
     def __init__(self, sysname):
         if sysname == "Linux":
-            self.interface = LinuxAuto
+            self.interface = LinuxAuto()
         else:
             import pyautogui
 

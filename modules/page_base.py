@@ -429,17 +429,6 @@ class BasePage(Page):
             self.gui.press(key)
         return self
 
-    def gui_move(self, x: float, y: float) -> Page:
-        if self.sys_platform == "Linux":
-            from modules.util import LinuxAuto
-
-            LinuxAuto.move_to(x, y)
-        else:
-            import pyautogui
-
-            pyautogui.moveTo(x, y)
-        return self
-
     def gui_click(self, button="left") -> Page:
         """Use a GUI automation to click mouse buttons"""
         if self.sys_platform == "Linux":

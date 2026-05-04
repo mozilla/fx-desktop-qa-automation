@@ -34,7 +34,7 @@ class GenericPage(BasePage):
             sleep(1.5)
             self.gui.write(location)
             sleep(1)
-            self.press("enter")
+            self.gui.press("enter")
             sleep(1)
             self.gui.hotkey("alt", "s")
         else:
