@@ -24,7 +24,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.util import GuiAuto, PomUtils
+from modules.util import PomUtils
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {
@@ -37,6 +37,16 @@ STRATEGY_MAP = {
     "tag": By.TAG_NAME,
     "name": By.NAME,
 }
+
+
+def make_gui_auto(sysname):
+    if sysname == "Linux":
+        from modules.util import LinuxAuto
+
+        return LinuxAuto()
+    import pyautogui
+
+    return pyautogui
 
 
 class BasePage(Page):
@@ -90,7 +100,8 @@ class BasePage(Page):
             )
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
-        self.gui = GuiAuto(sys_platform).interface
+
+        self.gui = make_gui_auto(sys_platform)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'

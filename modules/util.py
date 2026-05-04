@@ -1045,13 +1045,3 @@ class LinuxAuto:
         self._display.sync()
         fake_input(self._display, X.ButtonRelease, self.BUTTONMAP[button])
         self._display.sync()
-
-
-class GuiAuto:
-    def __init__(self, sysname):
-        if sysname == "Linux":
-            self.interface = LinuxAuto()
-        else:
-            import pyautogui
-
-            self.interface = pyautogui
