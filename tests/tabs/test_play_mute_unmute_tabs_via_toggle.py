@@ -99,7 +99,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             # Offset to click on the audio control area (left side of tab)
             tabs.gui.moveTo(element_x - 75, element_y)
             sleep(POSITION_DELAY)  # Small delay for mouse positioning
-            tabs.gui_click()
+            tabs.gui.click()
             sleep(DELAY)  # Wait for action to take effect
 
         # Click Play button
