@@ -1218,10 +1218,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_trackers_crypto_fingerprint_blocked:
-    result: deprecated
-    splits:
-    - functional2
   test_tracking_content_custom_mode:
     result: pass
     splits:
