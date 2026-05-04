@@ -38,8 +38,10 @@ STRATEGY_MAP = {
     "name": By.NAME,
 }
 
+_gui_auto = None
 
-def make_gui_auto(sysname):
+
+def _make_gui_auto(sysname):
     if sysname == "Linux":
         from modules.util import LinuxAuto
 
@@ -47,6 +49,13 @@ def make_gui_auto(sysname):
     import pyautogui
 
     return pyautogui
+
+
+def _get_gui_auto(sysname):
+    global _gui_auto
+    if _gui_auto is None:
+        _gui_auto = _make_gui_auto(sysname)
+    return _gui_auto
 
 
 class BasePage(Page):
@@ -101,7 +110,8 @@ class BasePage(Page):
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
-        self.gui = make_gui_auto(sys_platform)
+        if not driver.capabilities.get("moz:headless", "_"):
+            self.gui = _get_gui_auto(sys_platform)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -455,7 +465,7 @@ class BasePage(Page):
         """
         return self.perform_key_combo(*keys)
 
-    def gui_press(self, *keys) -> Page:
+    def gui_sequence(self, *keys) -> Page:
         """Use a GUI automation to press keys, rather than sending them to an element."""
         for key in keys:
             self.gui.press(key)
@@ -837,7 +847,7 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            self.gui_press("down", "down", "down", "enter")
+            self.gui_sequence("down", "down", "down", "enter")
             time.sleep(0.5)
         return self
 
@@ -847,7 +857,7 @@ class BasePage(Page):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            self.gui_press("down", "enter")
+            self.gui_sequence("down", "enter")
             time.sleep(0.5)
         return self
 

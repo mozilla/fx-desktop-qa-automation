@@ -66,9 +66,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
 
     # Check that "about:logins" is opened when clicking "Manage Password" in the Context Menu
     web_page.context_click("username-field")
-    web_page.gui.press("down")
-    web_page.gui.press("down")
-    web_page.gui.press("enter")
+    web_page.gui_sequence("down", "down", "enter")
     web_page.wait_for_num_tabs(2)
     web_page.switch_to_new_tab()
     web_page.url_contains("about:logins")
