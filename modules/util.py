@@ -4,6 +4,7 @@ import logging
 import os
 import platform
 import re
+from contextlib import contextmanager
 from os import remove
 from random import shuffle
 from time import sleep
@@ -979,14 +980,64 @@ class PomUtils:
 
 
 class LinuxAuto:
-    """Automate some Linux keyboard interactions with X11"""
+    """Automate some Linux UI interactions with X11"""
+
+    HOTKEY_WAIT = 0.1
+    BUTTONMAP = {"left": 1, "middle": 2, "right": 3}
+    KEYMAP = {"enter": "Return", "down": "Down", "up": "Up"}
 
     def __init__(self):
         self._display = Display(os.environ.get("DISPLAY"))
 
-    def press(self, key):
-        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(key))
+    def _keydown(self, key):
+        realkey = self.KEYMAP[key]
+        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(realkey))
         fake_input(self._display, X.KeyPress, keycode)
         self._display.sync()
+
+    def _keyup(self, key):
+        realkey = self.KEYMAP[key]
+        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(realkey))
         fake_input(self._display, X.KeyRelease, keycode)
         self._display.sync()
+
+    @contextmanager
+    def keypress(self, key):
+        try:
+            self._keydown(key)
+        finally:
+            self._keyup(key)
+
+    def hotkey(self, *keys):
+        for key in keys:
+            with self.keypress(key):
+                sleep(self.HOTKEY_WAIT)
+
+    def press(self, key):
+        self._keydown(key)
+        self._keyup(key)
+
+    def write(self, string: str, interval=0.0):
+        for char in string:
+            self.press(char)
+            sleep(interval)
+
+    def moveTo(self, x, y):
+        fake_input(self._display, X.MotionNotify, x=x, y=y)
+        self._display.sync()
+
+    def click(self, button="left"):
+        fake_input(self._display, X.ButtonPress, self.BUTTONMAP[button])
+        self._display.sync()
+        fake_input(self._display, X.ButtonRelease, self.BUTTONMAP[button])
+        self._display.sync()
+
+
+class GuiAuto:
+    def __init__(self, sysname):
+        if sysname == "Linux":
+            self.interface = LinuxAuto
+        else:
+            import pyautogui
+
+            self.interface = pyautogui

@@ -10,9 +10,6 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
-from pynput.keyboard import Key
-from pynput.mouse import Button
-from pynput.mouse import Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -27,7 +24,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.util import PomUtils
+from modules.util import GuiAuto, PomUtils
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {
@@ -93,6 +90,7 @@ class BasePage(Page):
             )
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
+        self.gui = GuiAuto(sys_platform).interface
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -425,6 +423,35 @@ class BasePage(Page):
         """
         return self.perform_key_combo(*keys)
 
+    def gui_press(self, *keys) -> Page:
+        """Use a GUI automation to press keys, rather than sending them to an element."""
+        for key in keys:
+            self.gui.press(key)
+        return self
+
+    def gui_move(self, x: float, y: float) -> Page:
+        if self.sys_platform == "Linux":
+            from modules.util import LinuxAuto
+
+            LinuxAuto.move_to(x, y)
+        else:
+            import pyautogui
+
+            pyautogui.moveTo(x, y)
+        return self
+
+    def gui_click(self, button="left") -> Page:
+        """Use a GUI automation to click mouse buttons"""
+        if self.sys_platform == "Linux":
+            from modules.util import LinuxAuto
+
+            LinuxAuto.click(button)
+        else:
+            import pyautogui
+
+            pyautogui.click(button=button)
+        return self
+
     def get_selector(self, name: str, labels=None) -> list:
         """
         Given a key for a self.elements dict entry, return the Selenium selector tuple.
@@ -718,7 +745,6 @@ class BasePage(Page):
     def middle_click(self, reference: str | tuple | WebElement, labels=None):
         """Actions helper: Perform a middle mouse click on desired element"""
         with self.driver.context(self.context_id):
-            mouse = MouseController()
             element = self.fetch(reference, labels)
 
             element_location = element.location
@@ -740,11 +766,11 @@ class BasePage(Page):
                 + (element_size["height"] / 2)
                 + chrome_height
             )
-            mouse.position = (element_x, element_y)
+            self.gui.moveTo(element_x, element_y)
 
             # Need a short wait to ensure the mouse move completes, then middle click
             time.sleep(0.5)
-            mouse.click(Button.middle, 1)
+            self.gui.click(button="middle")
         return self
 
     def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
@@ -795,30 +821,24 @@ class BasePage(Page):
         return self
 
     def copy_image_from_element(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
+        self, reference: str | tuple | WebElement, labels=None
     ) -> Page:
-        """Copy from the given element using right click (pynput)"""
+        """Copy from the given element using right click (pyautogui)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            self.gui_press("down", "down", "down", "enter")
             time.sleep(0.5)
         return self
 
-    def copy_selection(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
-    ) -> Page:
-        """Copy from the current selection using right click (pynput)"""
+    def copy_selection(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Copy from the current selection using right click (pyautogui)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            self.gui_press("down", "enter")
             time.sleep(0.5)
         return self
 
@@ -1027,10 +1047,7 @@ class BasePage(Page):
         system = platform.system()
         if system == "Linux":
             # Workaround while we figure out if tkinter is possible for us
-            from modules.util import LinuxAuto
-
-            linux_auto = LinuxAuto()
-            linux_auto.press("Return")
+            self.gui.press("enter")
             time.sleep(1.5)
             return
 

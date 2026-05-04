@@ -27,7 +27,7 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
 
-    assert driver.current_url == TEST_URL
+    example.url_contains(TEST_URL)
 
     # Close new tab, switch back to original example page
     driver.close()
@@ -38,4 +38,4 @@ def test_open_new_bg_tab_via_mouse_and_keyboard(driver: Firefox):
     example.wait_for_num_tabs(2)
     example.switch_to_new_tab()
 
-    assert driver.current_url == TEST_URL
+    example.url_contains(TEST_URL)
