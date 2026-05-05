@@ -8,6 +8,7 @@ import yaml
 from google.cloud import bigquery
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+import tempfile
 
 BQ_PROJECT = os.environ["BQ_PROJECT"]
 BQ_DATASET = os.environ["BQ_DATASET"]
@@ -23,7 +24,7 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
 SLACK_USER_GROUP_HANDLE = os.environ["SLACK_USER_GROUP_HANDLE"]
-MAX_SLACK_BLOCKS = 43 # Slack hard limit is 50; conservative cap to leave headroom
+MAX_SLACK_BLOCKS = 43  # Slack hard limit is 50; conservative cap to leave headroom
 OVERHEAD_BLOCKS = 3
 
 MANIFEST_PATH = Path("manifests") / "key.yaml"
@@ -366,7 +367,17 @@ def upload_changes_artifact(
     )
 
     filename = f"stability-state-changes-{platform}.json"
-    path = Path(filename)
+
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".json",
+        prefix=f"stability-state-changes-{platform}-",
+        delete=False,
+        encoding="utf-8",
+    ) as f:
+        f.write(json.dumps(payload, indent=2))
+        path = Path(f.name)
+
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     try:
@@ -464,7 +475,7 @@ def build_slack_blocks(
     ]
 
     # Keep room for summary + divider + optional cc block.
-    max_change_blocks = MAX_SLACK_BLOCKS - 3
+    max_change_blocks = MAX_SLACK_BLOCKS - OVERHEAD_BLOCKS
 
     for change in changes_sorted[:max_change_blocks]:
         blocks.append(
@@ -519,7 +530,9 @@ def send_slack_message(
     artifact_url = None
 
     # +2 for summary and divider, +1 possible cc block.
-    would_exceed_block_limit = bool(changes) and (len(changes) + OVERHEAD_BLOCKS > MAX_SLACK_BLOCKS)
+    would_exceed_block_limit = bool(changes) and (
+        len(changes) + OVERHEAD_BLOCKS > MAX_SLACK_BLOCKS
+    )
 
     if would_exceed_block_limit:
         artifact_url = upload_changes_artifact(
