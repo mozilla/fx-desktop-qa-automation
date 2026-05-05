@@ -480,6 +480,7 @@ def build_slack_blocks(
 
     return blocks
 
+
 def resolve_slack_user_group_id(client: WebClient, handle: str) -> Optional[str]:
     if not handle:
         return None
