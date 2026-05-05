@@ -40,7 +40,7 @@ tasks:
         pipenv run pytest --fx-executable ./firefox/firefox tests/glean;
         export FAILURE=$((FAILURE | ${?}));
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-        xeyes &
+        xinit &
         pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
