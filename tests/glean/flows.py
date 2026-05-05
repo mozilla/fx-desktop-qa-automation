@@ -55,9 +55,11 @@ def _action(name):
 @_entry("urlbar")
 def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
     """Open a new tab and perform a search via the URL bar."""
+    # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
 
+    # Open the page and perform the search
     page.open()
     nav.search(search_term)
 
@@ -65,19 +67,25 @@ def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
 @_entry("searchbar")
 def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     """Add the search bar from the Customize page, then perform a search via it."""
+    # Instantiate objects
     nav = Navigation(driver)
 
+    # Add the search bar to the toolbar and perform the search
     nav.add_search_bar_to_toolbar()
     nav.search_bar_search(search_term)
 
 
 @_entry("urlbar_handoff")
 def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None):
-    """Click the newtab handoff search box, then type in the focused urlbar without refocusing."""
+    """Simulate a urlbar_handoff search: the newtab in-content search box is a fake input that,
+    when clicked, activates the urlbar in handoff mode. Firefox records this origin and tags the
+    SERP as source='urlbar_handoff'. reset=False preserves that handoff state while typing."""
+    # Instantiate objects
     newtab = AboutNewtab(driver)
     nav = Navigation(driver)
     tabs = TabBar(driver)
 
+    # Open about:newtab, perform a search via websearch bar
     tabs.open_and_switch_to_new_tab()
     newtab.click_on("incontent-search-input")
     nav.set_awesome_bar()
