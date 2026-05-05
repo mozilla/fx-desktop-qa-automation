@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutLogins, GenericPage
 
-
 REDDIT_LOGIN_URL = "https://www.reddit.com/login/"
 REDDIT_ORIGIN = "https://www.reddit.com"
 
@@ -15,8 +14,8 @@ PASSWORD2 = "password2"
 USERNAME3 = "username3"
 PASSWORD3 = "password3"
 
-UNSAVED_USERNAME = "unsaved_user"
-UNSAVED_PASSWORD = "unsaved_pass"
+# UNSAVED_USERNAME = "unsaved_user"
+# UNSAVED_PASSWORD = "unsaved_pass"
 
 
 @pytest.fixture()
@@ -55,6 +54,7 @@ def temp_selectors():
             "groups": ["doNotCache"],
         },
     }
+
 
 def add_login_and_wait(about_logins, origin, username, password):
     about_logins.open()
