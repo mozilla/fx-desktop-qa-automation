@@ -76,12 +76,10 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         Uses the n-th saved password within the context menu
         """
         web_page.context_click("username-field")
-        web_page.gui.press("down")
-        web_page.gui.press("enter")
-        time.sleep(0.1)
-        for _ in range(n - 1):
-            web_page.gui.press("down")
-        web_page.gui.press("enter")
+        sequence = ["down", "enter"]
+        sequence.extend(["down"] * (n - 1))
+        sequence.append("enter")
+        web_page.gui_sequence(sequence)
 
     # Verify the all 3 credientials are correct when autofilling
     driver.switch_to.window(driver.window_handles[0])

@@ -444,10 +444,11 @@ class BasePage(Page):
         """
         return self.perform_key_combo(*keys)
 
-    def gui_sequence(self, *keys) -> Page:
+    def gui_sequence(self, *keys, interval=0.1) -> Page:
         """Use a GUI automation to press keys, rather than sending them to an element."""
         for key in keys:
             self.gui.press(key)
+            time.sleep(interval)
         return self
 
     def get_selector(self, name: str, labels=None) -> list:
