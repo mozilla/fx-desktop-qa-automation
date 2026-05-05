@@ -81,6 +81,8 @@ class Dropdown(Region):
         if double_click:
             self.page.double_click(reference=target_option)
         else:
+            if self.is_search_dropdown:
+                self.page.scroll_to_element(target_option)
             target_option.click()
 
         if wait_for_selection:
