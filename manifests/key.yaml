@@ -1063,12 +1063,7 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570, (Windows), https://bugzilla.mozilla.org/show_bug.cgi?id=2036155
-      (Linux)
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_zoom_menu_correlation:
@@ -1226,6 +1221,10 @@ security_and_privacy:
     result: deprecated
     splits:
     - functional2
+  test_trackers_cryptominers_fingerprinters_blocked:
+    result: pass
+    splits:
+    - functional2
   test_tracking_content_custom_mode:
     result: pass
     splits:
@@ -1240,12 +1239,7 @@ session_restore:
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565 (Windows), https://bugzilla.mozilla.org/show_bug.cgi?id=2036129
-      (Linux)
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
@@ -1261,12 +1255,7 @@ session_restore:
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566 (Windows), https://bugzilla.mozilla.org/show_bug.cgi?id=2036129
-      (Linux)
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
 sidebar:
