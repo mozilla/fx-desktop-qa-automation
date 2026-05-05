@@ -1,3 +1,4 @@
+import logging
 import time
 
 import pytest
@@ -76,6 +77,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         Uses the n-th saved password within the context menu
         """
         web_page.context_click("username-field")
+        time.sleep(0.1)
         sequence = ["down", "enter"]
         sequence.extend(["down"] * (n - 1))
         sequence.append("enter")
@@ -84,6 +86,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
     # Verify the all 3 credientials are correct when autofilling
     driver.switch_to.window(driver.window_handles[0])
     for i in range(1, 4):
+        logging.warning(f"Attempting username{i}")
         use_credential_n(i)
         web_page.element_attribute_contains("username-field", "value", f"username{i}")
         web_page.element_attribute_contains("password-field", "value", f"password{i}")
