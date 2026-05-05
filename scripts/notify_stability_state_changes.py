@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import tempfile
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -8,7 +9,6 @@ import yaml
 from google.cloud import bigquery
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-import tempfile
 
 BQ_PROJECT = os.environ["BQ_PROJECT"]
 BQ_DATASET = os.environ["BQ_DATASET"]
@@ -377,8 +377,6 @@ def upload_changes_artifact(
     ) as f:
         f.write(json.dumps(payload, indent=2))
         path = Path(f.name)
-
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     try:
         response = client.files_upload_v2(
