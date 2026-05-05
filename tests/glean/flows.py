@@ -1,10 +1,19 @@
 import pytest
-from selenium.webdriver import Firefox
+from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import Navigation
+from modules.browser_object_tabbar import TabBar
+from modules.page_object import AboutNewtab
 from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
+
+ENTRY_PREFS: dict[str, list[tuple]] = {
+    "urlbar_handoff": [
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
+        ("browser.startup.page", 1),
+    ],
+}
 
 _ENTRIES = {}
 _ACTIONS = {}
@@ -46,11 +55,9 @@ def _action(name):
 @_entry("urlbar")
 def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
     """Open a new tab and perform a search via the URL bar."""
-    # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
 
-    # Open the page and perform the search via the URL bar
     page.open()
     nav.search(search_term)
 
@@ -58,12 +65,23 @@ def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
 @_entry("searchbar")
 def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     """Add the search bar from the Customize page, then perform a search via it."""
-    # Instantiate object
     nav = Navigation(driver)
 
-    # Add the search bar to the toolbar and perform the search via it
     nav.add_search_bar_to_toolbar()
     nav.search_bar_search(search_term)
+
+
+@_entry("urlbar_handoff")
+def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None):
+    """Click the newtab handoff search box, then type in the focused urlbar without refocusing."""
+    newtab = AboutNewtab(driver)
+    nav = Navigation(driver)
+    tabs = TabBar(driver)
+
+    tabs.open_and_switch_to_new_tab()
+    newtab.click_on("incontent-search-input")
+    nav.set_awesome_bar()
+    nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
 
 
 # ---------------------------------------------------------------------------

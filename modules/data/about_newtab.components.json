@@ -6,9 +6,15 @@
             "requiredForPage"
         ]
     },
+    "incontent-search-container": {
+        "selectorData": "content-search-handoff-ui",
+        "strategy": "css",
+        "groups": []
+    },
     "incontent-search-input": {
         "selectorData": "fake-editable",
         "strategy": "class",
+        "shadowParent": "incontent-search-container",
         "groups": []
     },
     "card-by-index": {
