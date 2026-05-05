@@ -23,7 +23,8 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
 SLACK_USER_GROUP_HANDLE = os.environ["SLACK_USER_GROUP_HANDLE"]
-MAX_SLACK_BLOCKS = 43
+MAX_SLACK_BLOCKS = 43 # Slack hard limit is 50; conservative cap to leave headroom
+OVERHEAD_BLOCKS = 3
 
 MANIFEST_PATH = Path("manifests") / "key.yaml"
 
@@ -368,12 +369,15 @@ def upload_changes_artifact(
     path = Path(filename)
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    response = client.files_upload_v2(
-        channel=SLACK_CHANNEL,
-        file=str(path),
-        filename=filename,
-        title=filename,
-    )
+    try:
+        response = client.files_upload_v2(
+            channel=SLACK_CHANNEL,
+            file=str(path),
+            filename=filename,
+            title=filename,
+        )
+    finally:
+        path.unlink(missing_ok=True)
 
     file_info = response.get("file")
     if not file_info and response.get("files"):
@@ -515,7 +519,7 @@ def send_slack_message(
     artifact_url = None
 
     # +2 for summary and divider, +1 possible cc block.
-    would_exceed_block_limit = bool(changes) and (len(changes) + 3 > MAX_SLACK_BLOCKS)
+    would_exceed_block_limit = bool(changes) and (len(changes) + OVERHEAD_BLOCKS > MAX_SLACK_BLOCKS)
 
     if would_exceed_block_limit:
         artifact_url = upload_changes_artifact(
