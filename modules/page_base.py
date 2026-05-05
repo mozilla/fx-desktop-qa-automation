@@ -847,7 +847,9 @@ class BasePage(Page):
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
+            time.sleep(0.1)
             self.context_click(el)
+            time.sleep(0.1)
             self.gui_sequence("down", "down", "down", "enter")
             time.sleep(0.5)
         return self

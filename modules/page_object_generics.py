@@ -24,7 +24,7 @@ class GenericPage(BasePage):
         if self.sys_platform() == "Darwin":
             self.gui.press("/")
             sleep(1.5)
-            self.gui.write(location.lstrip("/"))
+            self.gui.write(location.lstrip("/"), interval=0.2)
             sleep(1)
             self.gui.press("enter")
             sleep(1)
@@ -32,7 +32,7 @@ class GenericPage(BasePage):
         elif self.sys_platform().startswith("Win"):
             self.gui.hotkey("ctrl", "l")
             sleep(1.5)
-            self.gui.write(location)
+            self.gui.write(location, interval=0.2)
             sleep(1)
             self.gui.press("enter")
             sleep(1)
@@ -40,7 +40,7 @@ class GenericPage(BasePage):
         else:
             self.gui.hotkey("ctrl", "a")
             sleep(1.5)
-            self.gui.write(f"{location}/{filename}")
+            self.gui.write(f"{location}/{filename}", interval=0.2)
             sleep(1)
             self.gui.press("enter")
 
