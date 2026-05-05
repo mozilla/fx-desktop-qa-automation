@@ -8,7 +8,7 @@
     },
     "incontent-search-container": {
         "selectorData": "content-search-handoff-ui",
-        "strategy": "css",
+        "strategy": "class",
         "groups": []
     },
     "incontent-search-input": {

@@ -85,7 +85,7 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     nav = Navigation(driver)
     tabs = TabBar(driver)
 
-    # Open about:newtab, perform a search via websearch bar
+    # Open a new tab and trigger a search via the newtab handoff input
     tabs.open_and_switch_to_new_tab()
     newtab.click_on("incontent-search-input")
     nav.set_awesome_bar()
