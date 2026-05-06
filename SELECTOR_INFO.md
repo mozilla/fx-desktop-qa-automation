@@ -431,9 +431,16 @@ Path to .json: modules/data/about_networking.components.json
 ```
 #### about_newtab
 ```
+Selector Name: incontent-search-container
+Selector Data: "content-search-handoff-ui"
+Description: The newtab handoff search UI container; clicking it activates the urlbar in handoff mode, tagging the resulting SERP as source='urlbar_handoff'
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
 Selector Name: incontent-search-input
 Selector Data: "fake-editable"
-Description: The in page search input field
+Description: The fake in-page search input field inside the handoff container (shadow DOM child of incontent-search-container)
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```

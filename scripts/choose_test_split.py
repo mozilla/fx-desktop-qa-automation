@@ -187,6 +187,10 @@ if __name__ == "__main__":
         .splitlines()
     )
 
+    # Never select glean tests, they work in a different flow
+    # TODO: fully move glean out of the main starfox flow, like l10n
+    committed_files = [f for f in committed_files if f"{SLASH}glean" not in f]
+
     print("Committed files:\n\t", end="")
     print("\n\t".join(committed_files))
 
