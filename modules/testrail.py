@@ -354,11 +354,11 @@ class TestRail:
             "suite_id": suite_id,
             "name": name,
             "description": description,
-            "include_all": bool(case_ids),
+            "include_all": not bool(case_ids),
         }
-        if payload.get("include_all"):
+        if case_ids:
             payload["case_ids"] = case_ids
-        if payload.get("config_ids"):
+        if config_ids:
             payload["config_ids"] = config_ids
         if runs:
             payload["runs"] = runs
