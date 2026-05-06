@@ -339,6 +339,13 @@ class Navigation(BasePage):
         actions.context_click(self.awesome_bar).perform()
         return self
 
+    @BasePage.context_content
+    def open_page_context_menu(self):
+        """Right-click the page body to open the content area context menu."""
+        body = self.driver.find_element(By.TAG_NAME, "body")
+        ActionChains(self.driver).context_click(body).perform()
+        return self
+
     @BasePage.context_chrome
     def get_download_button(self) -> WebElement:
         """

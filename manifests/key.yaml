@@ -1259,6 +1259,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_choose_ai_chatbot_via_page_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
     result: pass
     splits:

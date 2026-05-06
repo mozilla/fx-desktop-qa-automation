@@ -100,20 +100,23 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
-    def click_choose_ai_chatbot_from_context_menu(self) -> BasePage:
-        """Click the 'Choose an AI Chatbot' item from the AI Chat submenu in the tab context menu.
+    def click_choose_ai_chatbot_from_context_menu(
+        self, source: str = "tab"
+    ) -> BasePage:
+        """Click the 'Choose an AI Chatbot' item from the AI Chat submenu.
 
-        Pure Selenium cannot interact with XUL submenu items in the chrome context: ActionChains
-        move_to_element does not cross GeckoDriver's chrome context boundary, and Selenium's click()
-        on a XUL <menu> element does not open its popup. JS dispatches the full mouse event sequence
-        directly on the menuitem, which fires the XUL command event that opens the sidebar.
+        source='tab' targets the tab context menu (DOM id 'context_askChat');
+        source='page' targets the page context menu (DOM id 'context-ask-chat').
+        menu.open = true keeps the submenu alive while searching for its children.
         """
+        menu_id = "context_askChat" if source == "tab" else "context-ask-chat"
         self.wait.until(
             lambda _: self.driver.execute_script(
-                "const menu = document.getElementById('context_askChat');"
+                f"const menu = document.getElementById('{menu_id}');"
                 "if (!menu) return false;"
+                "menu.open = true;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
-                "if (!popup) return false;"
+                "if (!popup || popup.children.length === 0) return false;"
                 "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
                 "if (!item) return false;"
                 "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
