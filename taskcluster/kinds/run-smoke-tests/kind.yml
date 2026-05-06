@@ -27,7 +27,7 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'pipenv==2023.11.15' --break-system-packages;
         mv ./config/ci_pyproject.toml ./pyproject.toml;
         pipenv install;
         ./scripts/collect_executables.sh;
