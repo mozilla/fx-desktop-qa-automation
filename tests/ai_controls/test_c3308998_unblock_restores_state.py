@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture()
 def test_case():
-    return "C3308998"
+    return "3308998"
 
 
 def test_unblock_restores_state(about_prefs):
