@@ -1,9 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from modules.browser_object import Glean, Navigation
 from modules.classes.glean import GleanAsserts
-from modules.page_object import AboutGlean, AboutPrefs
+from modules.page_object import AboutPrefs
 from modules.page_object_generics import GenericPage
 
 # Test constants
@@ -39,7 +39,7 @@ def test_glean_serp_impression_js_api(driver: Firefox):
     nav = Navigation(driver)
     prefs = AboutPrefs(driver, category="search")
     page = GenericPage(driver, url="about:newtab")
-    glean = AboutGlean(driver)
+    glean = Glean(driver)
 
     # Set search engine
     prefs.open()

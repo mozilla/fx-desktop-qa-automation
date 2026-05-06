@@ -387,11 +387,7 @@ downloads:
     splits:
     - functional1
   test_add_zip_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2035548
-    result:
-      linux: unstable
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - functional1
   test_change_download_folder:
@@ -605,6 +601,11 @@ geolocation:
       win: unstable
     splits:
     - functional2
+glean:
+  test_serp_impression:
+    result: pass
+    splits:
+    - glean
 language_packs:
   test_language_pack_install_addons:
     result: pass
@@ -868,6 +869,13 @@ password_manager:
     result: pass
     splits:
     - functional2
+  test_password_manager_on_google_US:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
+    splits:
+    - functional1
   test_primary_password_allows_csv_export:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004938
     result:
@@ -1032,7 +1040,7 @@ reader_view:
   test_improved_type_control_panel:
     result: pass
     splits:
-    - smoke
+    - functional2
   test_reader_view_close_sidebar:
     result: pass
     splits:
@@ -1040,7 +1048,7 @@ reader_view:
   test_reader_view_location_bar:
     result: pass
     splits:
-    - functional2
+    - smoke
 scrolling_panning_zooming:
   test_default_zoom_persists:
     result: pass
@@ -1055,11 +1063,7 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034570
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_zoom_menu_correlation:
@@ -1149,6 +1153,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
@@ -1213,8 +1221,8 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_trackers_crypto_fingerprint_blocked:
-    result: deprecated
+  test_trackers_cryptominers_fingerprinters_blocked:
+    result: pass
     splits:
     - functional2
   test_tracking_content_custom_mode:
@@ -1231,11 +1239,7 @@ session_restore:
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034565
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
@@ -1251,11 +1255,7 @@ session_restore:
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034566
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
 sidebar:
@@ -1319,6 +1319,10 @@ sidebar:
       win: unstable
     splits:
     - functional2
+  test_summarize_page_via_ai_chat_panel:
+    result: pass
+    splits:
+    - functional1
   test_summarize_page_via_tab_context_menu:
     result: pass
     splits:
@@ -1414,6 +1418,10 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
+    result: pass
+    splits:
+    - functional2
+  test_new_tab_label:
     result: pass
     splits:
     - functional2

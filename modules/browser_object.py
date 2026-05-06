@@ -3,6 +3,7 @@ from modules.browser_object_context_menu import *
 from modules.browser_object_devtools import *
 from modules.browser_object_find_toolbar import *
 from modules.browser_object_forget_panel import *
+from modules.browser_object_glean import *
 from modules.browser_object_menu_bar import *
 from modules.browser_object_navigation import *
 from modules.browser_object_panel_ui import *

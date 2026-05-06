@@ -1419,6 +1419,20 @@ Description: Remove button to remove the primary password
 Location: about:preferences#privacy Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: standard-radio
+Selector Data: "standardRadio"
+Description: In Enhanced Tracking Protection, the standard radio button
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: standard-section
+Selector Data: "contentBlockingOptionStandard"
+Description: In Enhanced Tracking Protection, the standard radio section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1936,6 +1950,20 @@ Selector Name: context-menu-add-search-engine
 Selector Data: "context-menu-add-engine"
 Description: Awesomebar context click option "Add <search engine>"
 Location: Any history item in the Hamburger history list
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-open-new-tab
+Selector Data: "context_openANewTab"
+Description: Tab context click option "Open a New Tab"
+Location: In the tabbed browser
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: toolbar-context-open-new-tab
+Selector Data: "toolbar-context-openANewTab"
+Description: Tab Bar context click option "New Tab"
+Location: In the tabbed browser
 Path to .json: modules/data/context_menu.components.json
 ```
 ```

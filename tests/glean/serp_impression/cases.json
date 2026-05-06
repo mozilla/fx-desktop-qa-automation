@@ -1,0 +1,10 @@
+{
+  "metric": "serp.impression",
+  "cases": [
+    {"id": "3255425", "entry": "urlbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "google", "partner_code": "firefox-b-1-d", "source": "urlbar", "tagged": "true"}},
+    {"id": "3255440", "entry": "urlbar", "action": null, "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "urlbar", "tagged": "true"}},
+    {"id": "3255455", "entry": "urlbar", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab", "source": "urlbar", "tagged": "true"}},
+    {"id": "3255470", "entry": "urlbar", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "urlbar", "tagged": "true"}},
+    {"id": "3255485", "entry": "urlbar", "action": null, "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"provider": "qwant", "partner_code": "brz-moz", "source": "urlbar", "tagged": "true"}}
+  ]
+}
