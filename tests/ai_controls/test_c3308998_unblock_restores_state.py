@@ -7,13 +7,18 @@ def test_case():
 
 
 def test_unblock_restores_state(about_prefs):
-    """Verify that unblocking AI restores the toggle to unpressed state."""
-    about_prefs.navigate_to_ai_controls()
-
-    # Block AI features
-    about_prefs.set_ai_blocking(block=True)
-    assert about_prefs.get_ai_killswitch_state() is True
-
-    # Unblock AI features
-    about_prefs.set_ai_blocking(block=False)
+    """Verify that toggling the AI killswitch via keyboard blocks/unblocks
+    AI features and enables/disables the downstream select controls."""
+    # Initial state: AI should be available (toggle unpressed, selects enabled)
     assert about_prefs.get_ai_killswitch_state() is False
+    assert about_prefs.get_ai_selects_disabled_state() is False
+
+    # Block AI via keyboard toggle
+    about_prefs.toggle_ai_killswitch_via_keyboard()
+    assert about_prefs.get_ai_killswitch_state() is True
+    assert about_prefs.get_ai_selects_disabled_state() is True
+
+    # Unblock AI via keyboard toggle
+    about_prefs.toggle_ai_killswitch_via_keyboard()
+    assert about_prefs.get_ai_killswitch_state() is False
+    assert about_prefs.get_ai_selects_disabled_state() is False
