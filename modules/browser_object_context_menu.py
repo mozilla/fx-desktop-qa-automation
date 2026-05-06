@@ -100,22 +100,24 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
-    def click_choose_ai_chatbot_from_context_menu(self) -> BasePage:
+    def click_choose_ai_chatbot_from_context_menu(
+        self, source: str = "tab"
+    ) -> BasePage:
         """Click the 'Choose an AI Chatbot' item from the AI Chat submenu.
 
-        Uses the page context menu DOM id 'context-ask-chat'.
+        source='tab' targets the tab context menu (DOM id 'context_askChat');
+        source='page' targets the page context menu (DOM id 'context-ask-chat').
         menu.open = true keeps the submenu alive while searching for its children.
         """
+        menu_id = "context_askChat" if source == "tab" else "context-ask-chat"
         self.wait.until(
             lambda _: self.driver.execute_script(
-                "const menu = document.getElementById('context-ask-chat');"
+                f"const menu = document.getElementById('{menu_id}');"
                 "if (!menu) return false;"
                 "menu.open = true;"
                 "const popup = menu.querySelector('menupopup') || menu.menupopup;"
                 "if (!popup || popup.children.length === 0) return false;"
-                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]')"
-                "  || Array.from(popup.children).find("
-                "      el => el.label && el.label.includes('Choose an AI Chatbot'));"
+                "const item = popup.querySelector('[data-l10n-id=\"genai-menu-choose-chatbot\"]');"
                 "if (!item) return false;"
                 "item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
                 "item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"

@@ -35,7 +35,7 @@ def test_choose_ai_chatbot_via_page_context_menu(driver: Firefox):
 
     # Right-click the page and select Ask an AI Chatbot > Choose an AI Chatbot
     nav.open_page_context_menu()
-    context_menu.click_choose_ai_chatbot_from_context_menu()
+    context_menu.click_choose_ai_chatbot_from_context_menu(source="page")
 
     # Verify the user is redirected to the AI provider selection page in the Sidebar
     sidebar.expect_ai_chat_panel_open()
