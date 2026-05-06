@@ -340,10 +340,14 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_content
-    def open_page_context_menu(self) -> "Navigation":
-        """Right-click the page body to open the content area context menu."""
-        body = self.driver.find_element(By.TAG_NAME, "body")
-        ActionChains(self.driver).context_click(body).perform()
+    def open_page_context_menu(self):
+        """Right-click the first paragraph to open the plain-text page context menu.
+
+        Targeting <p> avoids accidentally right-clicking a link or image, which would
+        open a link/image-specific context menu instead of the plain page menu.
+        """
+        paragraph = self.driver.find_element(By.TAG_NAME, "p")
+        ActionChains(self.driver).context_click(paragraph).perform()
         return self
 
     @BasePage.context_chrome
