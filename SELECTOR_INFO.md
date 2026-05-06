@@ -3076,8 +3076,22 @@ Path to .json: modules/data/login_autofill.components.json
 ```
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
-Description: Autocomplete dropdown is toggled for focused login fields on facebook page load 
+Description: Autocomplete dropdown is toggled for focused login fields on bsky page load 
 Location: bsky page load
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: reddit-username-parent
+Selector Data: "faceplate-text-input[name='username']"
+Description: Shadow host for the Reddit username input field.
+Location: Reddit login page
+Path to .json: modules/data/login_autofill.components.json
+```
+```
+Selector Name: reddit-username-field
+Selector Data: "input[name='username']"
+Description: Username input field inside the Reddit login shadow DOM.
+Location: Reddit login page
 Path to .json: modules/data/login_autofill.components.json
 ```
 ```
