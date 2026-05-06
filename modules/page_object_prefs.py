@@ -1013,6 +1013,74 @@ class AboutPrefs(BasePage):
         self.accept_alert_and_verify_text(alert_text)
         return self
 
+    # ── AI Controls ──────────────────────────────────────────────────────
+
+    def navigate_to_ai_controls(self, verify: bool = True) -> "AboutPrefs":
+        """Navigate to about:preferences#ai and optionally verify elements."""
+        self.open()
+        if verify:
+            self.verify_ai_controls_core_elements_visible()
+        return self
+
+    def verify_ai_controls_core_elements_visible(self) -> "AboutPrefs":
+        """Verify that the AI controls toggle and select elements are visible."""
+        for key in [
+            "ai-controls-toggle",
+            "ai-control-translations-select",
+            "ai-control-sidebar-chatbot-select",
+        ]:
+            el = self.get_element(key)
+            assert el.is_displayed(), f"{key} is not displayed"
+        return self
+
+    @BasePage.context_chrome
+    def set_ai_blocking(self, block: bool) -> "AboutPrefs":
+        """
+        Block or unblock AI features via the browser.ai.control.default pref.
+        Requires chrome context for Services.prefs access.
+        """
+        value = "blocked" if block else "available"
+        self.driver.execute_script(
+            "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+            value,
+        )
+        return self
+
+    def toggle_ai_killswitch_via_keyboard(self) -> "AboutPrefs":
+        """
+        Toggle the AI killswitch by sending Space to the moz-toggle element.
+        This simulates real user interaction rather than bypassing the UI.
+        """
+        el = self.get_element("ai-controls-toggle")
+        el.send_keys(Keys.SPACE)
+        return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Return True if the AI killswitch toggle is pressed (AI blocked).
+        """
+        el = self.get_element("ai-controls-toggle")
+        pressed = self.driver.execute_script(
+            "return arguments[0].pressed;", el
+        )
+        return bool(pressed)
+
+    def get_ai_selects_disabled_state(self) -> bool:
+        """
+        Return True if the AI feature selects are disabled (blocked state).
+        """
+        for key in [
+            "ai-control-translations-select",
+            "ai-control-sidebar-chatbot-select",
+        ]:
+            el = self.get_element(key)
+            disabled = self.driver.execute_script(
+                "return arguments[0].disabled;", el
+            )
+            if not disabled:
+                return False
+        return True
+
 
 class AboutAddons(BasePage):
     """
@@ -1097,71 +1165,3 @@ class AboutAddons(BasePage):
         """
         assert not self.enabled_theme_matches(original_theme)
         return self
-
-    # ── AI Controls ──────────────────────────────────────────────────────
-
-    def navigate_to_ai_controls(self, verify: bool = True) -> "AboutPrefs":
-        """Navigate to about:preferences#ai and optionally verify elements."""
-        self.open()
-        if verify:
-            self.verify_ai_controls_core_elements_visible()
-        return self
-
-    def verify_ai_controls_core_elements_visible(self) -> "AboutPrefs":
-        """Verify that the AI controls toggle and select elements are visible."""
-        for key in [
-            "ai-controls-toggle",
-            "ai-control-translations-select",
-            "ai-control-sidebar-chatbot-select",
-        ]:
-            el = self.get_element(key)
-            assert el.is_displayed(), f"{key} is not displayed"
-        return self
-
-    @BasePage.context_chrome
-    def set_ai_blocking(self, block: bool) -> "AboutPrefs":
-        """
-        Block or unblock AI features via the browser.ai.control.default pref.
-        Requires chrome context for Services.prefs access.
-        """
-        value = "blocked" if block else "available"
-        self.driver.execute_script(
-            "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
-            value,
-        )
-        return self
-
-    def toggle_ai_killswitch_via_keyboard(self) -> "AboutPrefs":
-        """
-        Toggle the AI killswitch by sending Space to the moz-toggle element.
-        This simulates real user interaction rather than bypassing the UI.
-        """
-        el = self.get_element("ai-controls-toggle")
-        el.send_keys(Keys.SPACE)
-        return self
-
-    def get_ai_killswitch_state(self) -> bool:
-        """
-        Return True if the AI killswitch toggle is pressed (AI blocked).
-        """
-        el = self.get_element("ai-controls-toggle")
-        pressed = self.driver.execute_script(
-            "return arguments[0].pressed;", el
-        )
-        return bool(pressed)
-
-    def get_ai_selects_disabled_state(self) -> bool:
-        """
-        Return True if the AI feature selects are disabled (blocked state).
-        """
-        for key in [
-            "ai-control-translations-select",
-            "ai-control-sidebar-chatbot-select",
-        ]:
-            el = self.get_element(key)
-            disabled = self.driver.execute_script(
-                "return arguments[0].disabled;", el
-            )
-            if not disabled:
-                return False
-        return True
