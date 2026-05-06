@@ -1,7 +1,7 @@
 {
     "context": "chrome",
     "toolbar-blank-space": {
-        "selectorData": "toolbar-context-menu",
+        "selectorData": "customizableui-special-spring1",
         "strategy": "id",
         "groups": []
     },
