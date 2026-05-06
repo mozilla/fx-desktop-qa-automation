@@ -747,5 +747,20 @@
     "selectorData": "standardRadio",
     "strategy": "id",
     "groups": []
+  },
+  "ai-controls-toggle": {
+    "selectorData": "aiControlDefaultToggle",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-translations-select": {
+    "selectorData": "aiControlTranslationsSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-sidebar-chatbot-select": {
+    "selectorData": "aiControlSidebarChatbotSelect",
+    "strategy": "id",
+    "groups": []
   }
 }

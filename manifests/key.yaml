@@ -1511,3 +1511,9 @@ theme_and_toolbar:
     result: pass
     splits:
     - functional2
+
+ai_controls:
+  test_c3308998_unblock_restores_state:
+    result: pass
+    splits:
+    - functional1
