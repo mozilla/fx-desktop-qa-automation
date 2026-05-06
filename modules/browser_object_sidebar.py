@@ -1,5 +1,3 @@
-from selenium.webdriver.common.action_chains import ActionChains
-
 from modules.page_base import BasePage
 
 
@@ -358,24 +356,6 @@ class Sidebar(BasePage):
                 "return cd.getElementById('summarize-button') !== null;"
             )
         )
-        return self
-
-    @BasePage.context_chrome
-    def context_click_ai_chat_button(self) -> "Sidebar":
-        """Right-click the AI Chat moz-button in the sidebar strip to open its context menu.
-
-        JS retrieves the element from <sidebar-main>'s shadow root; ActionChains performs
-        the trusted right-click that triggers Firefox to open the native popup.
-        """
-        btn = self.wait.until(
-            lambda _: self.driver.execute_script(
-                "return Array.from("
-                "  document.querySelector('sidebar-main')?.shadowRoot"
-                "  ?.querySelectorAll('moz-button') || []"
-                ").find(b => b.getAttribute('view') === 'viewGenaiChatSidebar') || null;"
-            )
-        )
-        ActionChains(self.driver).context_click(btn).perform()
         return self
 
     @BasePage.context_chrome
