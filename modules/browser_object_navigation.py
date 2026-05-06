@@ -347,6 +347,7 @@ class Navigation(BasePage):
         open a link/image-specific context menu instead of the plain page menu.
         """
         paragraph = self.driver.find_element(By.TAG_NAME, "p")
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", paragraph)
         ActionChains(self.driver).context_click(paragraph).perform()
         return self
 
