@@ -29,7 +29,7 @@ tasks:
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15' --break-system-packages;
         mv ./config/ci_pyproject.toml ./pyproject.toml;
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
         pipenv install;
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
