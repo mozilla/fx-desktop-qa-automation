@@ -217,6 +217,11 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+ai_controls:
+  test_c3308998_unblock_restores_state:
+    result: pass
+    splits:
+    - functional1
 audio_video:
   test_allow_audio_video_functionality:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
@@ -1511,9 +1516,3 @@ theme_and_toolbar:
     result: pass
     splits:
     - functional2
-
-ai_controls:
-  test_c3308998_unblock_restores_state:
-    result: pass
-    splits:
-    - functional1
