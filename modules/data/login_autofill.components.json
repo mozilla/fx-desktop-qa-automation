@@ -87,5 +87,20 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "reddit-password-parent": {
+    "selectorData": "faceplate-text-input[name='password']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "reddit-password-field": {
+    "selectorData": "input[name='password']",
+    "strategy": "css",
+    "shadowParent": "reddit-password-parent",
+    "groups": [
+      "doNotCache"
+    ]
   }
 }
