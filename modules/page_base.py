@@ -361,6 +361,24 @@ class BasePage(Page):
         return self
 
     @context_of_model
+    def element_attribute_is_not(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ):
+        """Expect helper: wait until element attribute is a certain value"""
+        self.expect(
+            lambda _: (
+                self.fetch(reference, labels=labels)
+                and str(attr_value)
+                != self.fetch(reference, labels=labels).get_attribute(attr_name)
+            )
+        )
+        return self
+
+    @context_of_model
     def element_has_attribute(
         self, reference: str | tuple | WebElement, attr: str, labels=None
     ):

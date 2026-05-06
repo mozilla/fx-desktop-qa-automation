@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
@@ -1046,6 +1047,19 @@ class AboutPrefs(BasePage):
         )
         return self
 
+    def toggle_ai_killswitch_click(self) -> BasePage:
+        confirm_required = (
+            self.get_element("ai-controls-toggle").get_attribute("aria-pressed")
+            == "false"
+        )
+        self.click_on("ai-controls-toggle")
+        logging.warning(f"confirm_required: {confirm_required}")
+        if confirm_required:
+            buttons = self.get_elements("ai-controls-disable-dialog-button")
+            block = [el for el in buttons if el.get_attribute("label") == "Block"][0]
+            block.click()
+        return self
+
     def toggle_ai_killswitch_via_keyboard(self) -> "AboutPrefs":
         """
         Toggle the AI killswitch by sending Space to the moz-toggle element.
@@ -1055,31 +1069,28 @@ class AboutPrefs(BasePage):
         el.send_keys(Keys.SPACE)
         return self
 
-    def get_ai_killswitch_state(self) -> bool:
+    def expect_ai_killswitch_state(self, pressed=False) -> BasePage:
         """
-        Return True if the AI killswitch toggle is pressed (AI blocked).
+        Wait for AI killswitch to match expected state
         """
-        el = self.get_element("ai-controls-toggle")
-        pressed = self.driver.execute_script(
-            "return arguments[0].pressed;", el
+        self.element_attribute_is(
+            "ai-controls-toggle", "aria-pressed", str(pressed).lower()
         )
-        return bool(pressed)
+        return self
 
-    def get_ai_selects_disabled_state(self) -> bool:
+    def expect_ai_selects_state(self, disabled=False) -> BasePage:
         """
-        Return True if the AI feature selects are disabled (blocked state).
+        Wait for AI feature selects to match expected state
         """
         for key in [
             "ai-control-translations-select",
             "ai-control-sidebar-chatbot-select",
         ]:
-            el = self.get_element(key)
-            disabled = self.driver.execute_script(
-                "return arguments[0].disabled;", el
-            )
-            if not disabled:
-                return False
-        return True
+            if disabled:
+                self.element_has_attribute(key, "disabled")
+            else:
+                self.element_attribute_is_not(key, "disabled", "")
+        return self
 
 
 class AboutAddons(BasePage):
