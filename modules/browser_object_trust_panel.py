@@ -120,3 +120,26 @@ class TrustPanel(BasePage):
             f"Expected '{expected_technical_details}' but found "
             f"'{technical_details.get_attribute('value')}'"
         )
+
+    @BasePage.context_chrome
+    def click_see_all(self) -> BasePage:
+        """Clicks the "See All" button in the trackers panel"""
+        self.js_click_on("see-all-trackers")
+        return self
+
+    @BasePage.context_chrome
+    def has_allowed_sites(self, *expected_sites) -> bool:
+        """Checks whether the expected sites are present in the allowed sites list."""
+        elements = self.get_elements("protections-popup-list-host-label")
+
+        if expected_sites and not elements:
+            return False
+
+        # Extract the "value" attribute from each label element
+        values = [el.get_attribute("value") for el in elements if el]
+
+        for site in expected_sites:
+            if not any(val and val.endswith(site) for val in values):
+                return False
+
+        return True

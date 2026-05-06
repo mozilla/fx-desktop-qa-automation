@@ -71,17 +71,6 @@ class Navigation(BasePage):
         self.customize = CustomizeFirefox(self.driver)
 
     @BasePage.context_chrome
-    def js_click_on(self, reference, labels=None) -> BasePage:
-        """
-        Perform a 'hard click' using a JS command. Use this when regular click_on()
-        doesn't work well
-        """
-        self.driver.execute_script(
-            "arguments[0].click();", self.fetch(reference, labels=labels)
-        )
-        return self
-
-    @BasePage.context_chrome
     def set_awesome_bar(self) -> BasePage:
         """Set the awesome_bar attribute of the Navigation object"""
         self.awesome_bar = self.get_element("awesome-bar")
