@@ -172,6 +172,43 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_summarize_page_from_sidebar_ai_chat_button(self) -> BasePage:
+        """Click 'Summarize Page' from the context menu opened by right-clicking the AI Chat
+        sidebar button.
+
+        Searches any open menupopup (including inside shadow roots) for a summarize menuitem —
+        the popup has no stable document-level ID. JS dispatches the full mouse event sequence
+        directly on the menuitem, which fires the XUL command event.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "function findInRoot(root) {"
+                "  for (const popup of root.querySelectorAll('menupopup')) {"
+                "    const s = popup.state;"
+                "    if (s === 'closed' || s === 'hiding') continue;"
+                "    const item = Array.from(popup.querySelectorAll('menuitem')).find(el => {"
+                "      const label = (el.getAttribute('label') || '').toLowerCase();"
+                "      const l10n = el.getAttribute('data-l10n-id') || '';"
+                "      return label.includes('summarize') || l10n.includes('summarize');"
+                "    });"
+                "    if (!item) continue;"
+                "    item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "    item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "    item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "    item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "    return true;"
+                "  }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot && findInRoot(host.shadowRoot)) return true;"
+                "  }"
+                "  return false;"
+                "}"
+                "return findInRoot(document);"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def bookmark_tab_via_context_menu(self) -> BasePage:
         """Click 'Bookmark Tab' in the tab context menu, dismiss the menu, then
         confirm the Add Bookmark dialog by clicking its Save button via JS.
