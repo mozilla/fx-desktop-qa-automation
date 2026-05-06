@@ -103,9 +103,8 @@ class ContextMenu(BasePage):
     def click_choose_ai_chatbot_from_context_menu(self) -> BasePage:
         """Click the 'Choose an AI Chatbot' item from the AI Chat submenu.
 
-        Uses the real DOM id 'context-ask-chat' (not the JSON selectorData alias).
-        menu.open = true is set inside the retry loop to keep the submenu alive while
-        searching for its children. Works for both tab and page context menus.
+        Uses the page context menu DOM id 'context-ask-chat'.
+        menu.open = true keeps the submenu alive while searching for its children.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
