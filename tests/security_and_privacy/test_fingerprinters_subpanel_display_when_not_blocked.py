@@ -29,7 +29,9 @@ def test_fingerprinters_subpanel_display_when_not_blocked(driver: Firefox):
     # In about:preferences#privacy deselect the options "Known fingerprinters" and "Suspected fingerprinters"
     about_prefs.open()
     about_prefs.select_trackers_to_block(
-        "cryptominers-checkbox", "cookies-isolate-social-media-option", "tracking-checkbox"
+        "cryptominers-checkbox",
+        "cookies-isolate-social-media-option",
+        "tracking-checkbox",
     )
 
     # Open page and click on the shield icon
