@@ -1032,7 +1032,7 @@ class LinuxAuto:
         self._keydown(key)
         self._keyup(key)
 
-    def write(self, string: str, interval=0.0):
+    def write(self, string: str, interval=0.1):
         """Write a string using X11 key events, does not support Shift injection yet"""
         for char in string:
             self.press(char)
