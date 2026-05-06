@@ -14,7 +14,8 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'pipenv==2023.11.15' --break-system-packages;
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
         pipenv install;
         pipenv run python3 -m ruff version;
         pipenv run python3 -m ruff format --check;
