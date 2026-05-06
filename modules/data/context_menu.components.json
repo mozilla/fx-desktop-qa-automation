@@ -317,10 +317,5 @@
         "selectorData": "context_askChat",
         "strategy": "id",
         "groups": []
-    },
-    "context-ask-chat-page": {
-        "selectorData": "context-ask-chat",
-        "strategy": "id",
-        "groups": []
     }
 }

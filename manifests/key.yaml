@@ -1220,11 +1220,11 @@ security_and_privacy:
   test_trackers_cryptominers_fingerprinters_blocked:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_tracking_content_custom_mode:
     result: pass
     splits:
-      - functional2
+    - functional2
   test_undo_close_tab_private_browsing:
     result: pass
     splits:
