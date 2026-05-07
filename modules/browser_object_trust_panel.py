@@ -143,3 +143,15 @@ class TrustPanel(BasePage):
                 return False
 
         return True
+
+    @BasePage.context_chrome
+    def title_displayed_in_subpanel(self, category: str) -> bool:
+        """
+        Verify that the 'Not Blocking <Category>' title
+        is displayed in the subpanel.
+        """
+        self.element_visible(
+            "not-blocking-category",
+            labels=[category.capitalize()]
+        )
+        return True

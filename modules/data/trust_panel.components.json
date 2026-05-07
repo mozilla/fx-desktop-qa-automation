@@ -106,13 +106,24 @@
         "groups": [],
         "shadowParent": "fingerprinters-detected-parent"
     },
-    "not-blocking-fingerprinters": {
-        "selectorData": "panelview[title='Not Blocking Fingerprinters']",
+    "protections-popup-list-host-label": {
+        "selectorData": ".protections-popup-list-host-label",
         "strategy": "css",
         "groups": []
     },
-    "protections-popup-list-host-label": {
-        "selectorData": ".protections-popup-list-host-label",
+    "cryptominers-detected-parent": {
+        "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
+        "strategy": "css",
+        "groups": []
+    },
+    "cryptominers-detected": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "cryptominers-detected-parent"
+    },
+    "not-blocking-category": {
+        "selectorData": "panelview[title='Not Blocking {}']",
         "strategy": "css",
         "groups": []
     }
