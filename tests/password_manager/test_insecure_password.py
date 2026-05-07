@@ -7,8 +7,6 @@ from modules.page_object_autofill import LoginAutofill
 from modules.page_object_generics import GenericPage
 
 TESTFIRE_LOGIN_URL = "http://demo.testfire.net/login.jsp"
-INSECURE_WARNING_TEXT = "This connection is not secure."
-MANAGE_PASSWORDS_TEXT = "Manage Passwords"
 SUPPORT_PAGE_URL_PART = "support.mozilla.org"
 SUPPORT_PAGE_ARTICLE_PART = "insecure-password-warning-firefox"
 
