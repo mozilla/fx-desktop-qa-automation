@@ -52,4 +52,4 @@ def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
     trust_panel.title_displayed_in_subpanel("cryptominers")
 
     # The allowed cryptominers are displayed inside the subpanel
-    assert trust_panel.has_allowed_sites()
+    assert trust_panel.has_allowed_sites(DETECTED_TRACKER_URL)
