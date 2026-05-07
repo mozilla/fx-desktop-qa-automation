@@ -31,6 +31,7 @@ tasks:
         mv ./config/ci_pyproject.toml ./pyproject.toml;
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         export PATH=$PATH:$HOME/.cargo/bin
+        . "$HOME/.cargo/env"
         pipenv install;
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
