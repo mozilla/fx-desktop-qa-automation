@@ -32,7 +32,7 @@ def test_summarize_page_via_sidebar_ai_chat_context_menu(driver: Firefox):
     nav.toggle_vertical_tabs()
     driver.get(WEBSITE)
 
-    # Open the AI Chat panel from the sidebar
+    # Right-click the AI Chat sidebar button to open its context menu
     sidebar.context_click_ai_chat_button()
     context_menu.click_summarize_page_from_sidebar_ai_chat_button()
 

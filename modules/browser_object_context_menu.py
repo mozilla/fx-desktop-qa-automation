@@ -176,9 +176,8 @@ class ContextMenu(BasePage):
         """Click 'Summarize Page' from the context menu opened by right-clicking the AI Chat
         sidebar button.
 
-        Searches any open menupopup (including inside shadow roots) for a summarize menuitem —
-        the popup has no stable document-level ID. JS dispatches the full mouse event sequence
-        directly on the menuitem, which fires the XUL command event.
+        Searches open menupopups, including inside shadow roots, because the popup has no
+        stable document-level ID and chrome menu placement can vary.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
@@ -187,9 +186,8 @@ class ContextMenu(BasePage):
                 "    const s = popup.state;"
                 "    if (s === 'closed' || s === 'hiding') continue;"
                 "    const item = Array.from(popup.querySelectorAll('menuitem')).find(el => {"
-                "      const label = (el.getAttribute('label') || '').toLowerCase();"
-                "      const l10n = el.getAttribute('data-l10n-id') || '';"
-                "      return label.includes('summarize') || l10n.includes('summarize');"
+                "      const label = el.getAttribute('label') || '';"
+                "      return label === 'Summarize Page';"
                 "    });"
                 "    if (!item) continue;"
                 "    item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
