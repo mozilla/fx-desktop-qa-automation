@@ -747,5 +747,15 @@
     "selectorData": "standardRadio",
     "strategy": "id",
     "groups": []
-  }
+  },
+  "cookies-from-unvisited-websites": {
+    "selectorData": "[data-l10n-id='sitedata-option-block-unvisited']",
+    "strategy": "css",
+    "groups": []
+  },
+  "not-blocking-category": {
+        "selectorData": "panelview[title='Not Blocking {}']",
+        "strategy": "css",
+        "groups": []
+    }
 }
