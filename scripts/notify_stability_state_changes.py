@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import tempfile
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -23,6 +24,8 @@ INCLUDE_HEADED = os.environ.get("INCLUDE_HEADED", "false").lower() in ("1", "tru
 SLACK_KEY = os.environ["SLACK_KEY"]
 SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
 SLACK_USER_GROUP_HANDLE = os.environ["SLACK_USER_GROUP_HANDLE"]
+MAX_SLACK_BLOCKS = 43  # Slack hard limit is 50; conservative cap to leave headroom
+OVERHEAD_BLOCKS = 3
 
 MANIFEST_PATH = Path("manifests") / "key.yaml"
 
@@ -326,6 +329,76 @@ def build_changes(
     return changes, insufficient_data_count, unmatched_manifest_count
 
 
+def build_changes_artifact_payload(
+    changes: List[Dict[str, object]],
+    platform: str,
+    runs: int,
+    insufficient_data_count: int,
+    unmatched_manifest_count: int,
+    computed_count: int,
+) -> dict:
+    return {
+        "platform": platform,
+        "runs": runs,
+        "computed_count": computed_count,
+        "changed_count": len(changes),
+        "insufficient_data_count": insufficient_data_count,
+        "unmatched_manifest_count": unmatched_manifest_count,
+        "changes": changes,
+    }
+
+
+def upload_changes_artifact(
+    client: WebClient,
+    changes: List[Dict[str, object]],
+    platform: str,
+    runs: int,
+    insufficient_data_count: int,
+    unmatched_manifest_count: int,
+    computed_count: int,
+) -> str:
+    payload = build_changes_artifact_payload(
+        changes=changes,
+        platform=platform,
+        runs=runs,
+        insufficient_data_count=insufficient_data_count,
+        unmatched_manifest_count=unmatched_manifest_count,
+        computed_count=computed_count,
+    )
+
+    filename = f"stability-state-changes-{platform}.json"
+
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".json",
+        prefix=f"stability-state-changes-{platform}-",
+        delete=False,
+        encoding="utf-8",
+    ) as f:
+        f.write(json.dumps(payload, indent=2))
+        path = Path(f.name)
+
+    try:
+        response = client.files_upload_v2(
+            channel=SLACK_CHANNEL,
+            file=str(path),
+            filename=filename,
+            title=filename,
+        )
+    finally:
+        path.unlink(missing_ok=True)
+
+    file_info = response.get("file")
+    if not file_info and response.get("files"):
+        file_info = response["files"][0]
+
+    permalink = file_info.get("permalink") if file_info else None
+    if not permalink:
+        raise RuntimeError(f"Could not get Slack artifact permalink: {response}")
+
+    return permalink
+
+
 def build_slack_blocks(
     changes: List[Dict[str, object]],
     platform: str,
@@ -333,36 +406,9 @@ def build_slack_blocks(
     insufficient_data_count: int,
     unmatched_manifest_count: int,
     computed_count: int,
+    artifact_url: Optional[str] = None,
 ) -> List[dict]:
-    """Turn the list of changes into Slack Blocks"""
-
     header_text = f"Stability state changes for {platform} (last {runs} runs)"
-
-    if not changes:
-        details = [
-            f"*{header_text}*",
-            "No test state changes detected.",
-            f"Computed tests: `{computed_count}`",
-        ]
-        if insufficient_data_count > 0:
-            details.append(
-                f"Insufficient data for `{insufficient_data_count}` test(s) "
-                f"(fewer than 2 usable executions)."
-            )
-        if unmatched_manifest_count > 0:
-            details.append(
-                f"No manifest match for `{unmatched_manifest_count}` computed test(s)."
-            )
-
-        return [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "\n".join(details),
-                },
-            }
-        ]
 
     severity_order = {"pass": 0, "flaky": 1, "unstable": 2}
     changes_sorted = sorted(
@@ -380,6 +426,7 @@ def build_slack_blocks(
         f"Changed tests: *{len(changes_sorted)}*",
         f"Computed tests: `{computed_count}`",
     ]
+
     if insufficient_data_count > 0:
         summary_lines.append(
             f"Insufficient data for *{insufficient_data_count}* test(s)"
@@ -388,6 +435,31 @@ def build_slack_blocks(
         summary_lines.append(
             f"No manifest match for *{unmatched_manifest_count}* test(s)"
         )
+
+    if artifact_url:
+        summary_lines.append(f"Full change list: <{artifact_url}|JSON artifact>")
+
+        return [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "\n".join(summary_lines),
+                },
+            }
+        ]
+
+    if not changes_sorted:
+        summary_lines.append("No test state changes detected.")
+        return [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "\n".join(summary_lines),
+                },
+            }
+        ]
 
     blocks: List[dict] = [
         {
@@ -400,7 +472,10 @@ def build_slack_blocks(
         {"type": "divider"},
     ]
 
-    for change in changes_sorted[:50]:
+    # Keep room for summary + divider + optional cc block.
+    max_change_blocks = MAX_SLACK_BLOCKS - OVERHEAD_BLOCKS
+
+    for change in changes_sorted[:max_change_blocks]:
         blocks.append(
             {
                 "type": "section",
@@ -412,17 +487,6 @@ def build_slack_blocks(
                         f"fails: `{change['fail_count']}/{len(change['statuses'])}`\n"
                         f"statuses: `{change['statuses']}`"
                     ),
-                },
-            }
-        )
-
-    if len(changes_sorted) > 50:
-        blocks.append(
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"...and {len(changes_sorted) - 50} more",
                 },
             }
         )
@@ -461,6 +525,24 @@ def send_slack_message(
     print("Trying to send Slack message...")
     client = WebClient(token=SLACK_KEY)
 
+    artifact_url = None
+
+    # +2 for summary and divider, +1 possible cc block.
+    would_exceed_block_limit = bool(changes) and (
+        len(changes) + OVERHEAD_BLOCKS > MAX_SLACK_BLOCKS
+    )
+
+    if would_exceed_block_limit:
+        artifact_url = upload_changes_artifact(
+            client=client,
+            changes=changes,
+            platform=platform,
+            runs=runs,
+            insufficient_data_count=insufficient_data_count,
+            unmatched_manifest_count=unmatched_manifest_count,
+            computed_count=computed_count,
+        )
+
     blocks = build_slack_blocks(
         changes=changes,
         platform=platform,
@@ -468,6 +550,7 @@ def send_slack_message(
         insufficient_data_count=insufficient_data_count,
         unmatched_manifest_count=unmatched_manifest_count,
         computed_count=computed_count,
+        artifact_url=artifact_url,
     )
 
     mention_text = ""
