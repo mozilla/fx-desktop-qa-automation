@@ -33,7 +33,7 @@ def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
         "cookies-isolate-social-media-option",
         "tracking-checkbox",
         "known-fingerprints-checkbox",
-        "suspected-fingerprints-checkbox"
+        "suspected-fingerprints-checkbox",
     )
 
     # Open page and click on the shield icon
@@ -44,7 +44,7 @@ def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
     # Click on "See All" button
     trust_panel.click_see_all()
 
-    # Click on "Fingerprinters"
+    # Click on "Cryptominers"
     trust_panel.wait_for_trackers()
     trust_panel.js_click_on("cryptominers-detected")
 

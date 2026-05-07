@@ -150,8 +150,5 @@ class TrustPanel(BasePage):
         Verify that the 'Not Blocking <Category>' title
         is displayed in the subpanel.
         """
-        self.element_visible(
-            "not-blocking-category",
-            labels=[category.capitalize()]
-        )
-        return True
+        self.element_visible("not-blocking-category", labels=[category.capitalize()])
+        return self
