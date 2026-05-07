@@ -14,7 +14,7 @@ DETECTED_TRACKER_URL = "https://base-cryptomining-track-digest256.dummytracker.o
 
 @pytest.fixture()
 def test_case():
-    return "3054916"
+    return "3054915"
 
 
 def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
