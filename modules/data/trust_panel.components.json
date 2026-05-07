@@ -83,5 +83,37 @@
         "groups": [
             "doNotCache"
         ]
+    },
+    "see-all-trackers-parent": {
+        "selectorData": "trustpanel-blocker-see-all",
+        "strategy": "id",
+        "groups": []
+    },
+    "see-all-trackers": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "see-all-trackers-parent"
+    },
+    "fingerprinters-detected-parent": {
+        "selectorData": "[data-l10n-id='trustpanel-list-label-fingerprinter']",
+        "strategy": "css",
+        "groups": []
+    },
+    "fingerprinters-detected": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "fingerprinters-detected-parent"
+    },
+    "not-blocking-fingerprinters": {
+        "selectorData": "panelview[title='Not Blocking Fingerprinters']",
+        "strategy": "css",
+        "groups": []
+    },
+    "protections-popup-list-host-label": {
+        "selectorData": ".protections-popup-list-host-label",
+        "strategy": "css",
+        "groups": []
     }
 }
