@@ -30,11 +30,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
-if platform.system() == "Linux" and "Xlib" not in sys.modules:
-    import Xlib.XK
-    from Xlib import X
-    from Xlib.display import Display
-    from Xlib.ext.xtest import fake_input
+# if platform.system() == "Linux" and "Xlib" not in sys.modules:
+#     import Xlib.XK
+#     from Xlib import X
+#     from Xlib.display import Display
+#     from Xlib.ext.xtest import fake_input
 
 
 def env_true(name: str) -> bool:

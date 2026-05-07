@@ -42,10 +42,10 @@ _gui_auto = None
 
 
 def _make_gui_auto(sysname):
-    if sysname == "Linux":
-        from modules.util import LinuxAuto
-
-        return LinuxAuto()
+    # if sysname == "Linux":
+    #     from modules.util import LinuxAuto
+    #
+    #     return LinuxAuto()
     import pyautogui
 
     return pyautogui
