@@ -19,6 +19,7 @@ tasks:
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         pipenv install;
+        export DISPLAY=:1
         pipenv run python3 -c 'import pyautogui'
         pipenv run python3 -m ruff version;
         pipenv run python3 -m ruff format --check;
