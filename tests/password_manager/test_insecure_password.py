@@ -21,14 +21,6 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
-def get_autofill_dropdown_values(autofill_popup: AutofillPopup) -> list[str]:
-    autofill_popup.ensure_autofill_dropdown_visible()
-    return [
-        autofill_popup.get_primary_value(option)
-        for option in autofill_popup.get_elements("select-form-option")
-    ]
-
-
 def verify_insecure_warning_dropdown(autofill_popup: AutofillPopup):
     autofill_popup.ensure_autofill_dropdown_visible()
     autofill_popup.element_visible("insecure-login-warning")
