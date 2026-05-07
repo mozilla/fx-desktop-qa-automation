@@ -829,6 +829,10 @@ password_manager:
     result: pass
     splits:
     - functional1
+  test_insecure_password:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
     result: pass
     splits:
@@ -1153,11 +1157,11 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_fingerprinters_subpanel_display_when_not_blocked:
+  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
     result: pass
     splits:
     - functional2
-  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+  test_fingerprinters_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2

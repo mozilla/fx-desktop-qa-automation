@@ -268,6 +268,34 @@ Location: The about:login's page's sidebar
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
+Selector Name: `testfire-username-field`  
+Selector Data: `input[name='uid']`  
+Description: Username field from the Altoro Mutual HTTP login page. Used to trigger the insecure login contextual warning.  
+Location: `http://demo.testfire.net/login.jsp`  
+Path to `.json`: `modules/data/login_autofill.components.json`
+```
+```
+Selector Name: `testfire-password-field`  
+Selector Data: `input[name='passw']`  
+Description: Password field from the Altoro Mutual HTTP login page. Used to trigger the insecure login contextual warning.  
+Location: `http://demo.testfire.net/login.jsp`  
+Path to `.json`: `modules/data/login_autofill.components.json`
+```
+```
+Selector Name: `insecure-login-warning`  
+Selector Data: `richlistitem[originaltype='insecureWarning']`  
+Description: Firefox autocomplete warning item shown for login fields on insecure HTTP pages.  
+Location: Firefox chrome autofill popup  
+Path to `.json`: `modules/data/autofill_popup.components.json`
+```
+```
+Selector Name: `insecure-login-warning-text`  
+Selector Data: `richlistitem[originaltype='insecureWarning'] .ac-title-text`  
+Description: Text container for the insecure login warning message.  
+Location: Firefox chrome autofill popup  
+Path to `.json`: `modules/data/autofill_popup.components.json`
+```
+```
 Selector Name: login-item-type
 Selector Data: "{name}"
 Description: Individual saved login item
