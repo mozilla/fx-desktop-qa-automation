@@ -102,19 +102,5 @@
     "groups": [
       "doNotCache"
     ]
-  },
-  "testfire-username-field": {
-    "selectorData": "input[name='uid']",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ]
-  },
-  "testfire-password-field": {
-    "selectorData": "input[name='passw']",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ]
   }
 }
