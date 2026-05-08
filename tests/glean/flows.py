@@ -8,6 +8,9 @@ from modules.page_object_example_page import ExamplePage
 from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
+WIKI_IMAGE_URL = (
+    "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
+)
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -76,21 +79,6 @@ def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     nav.search_bar_search(search_term)
 
 
-@_entry("contextmenu")
-def _entry_contextmenu(driver: Firefox, search_term: str, params: dict = None):
-    """Select text on a page and search via the right-click context menu."""
-    # Instantiate objects
-    example = ExamplePage(driver)
-    context_menu = ContextMenu(driver)
-
-    # Open example.com, select the header text, and trigger the context menu search
-    example.search_selected_header_via_context_menu()
-    context_menu.click_and_hide_menu("context-menu-search-selected-text")
-
-    # Switch to the new tab opened by the context menu search
-    driver.switch_to.window(driver.window_handles[-1])
-
-
 @_entry("urlbar_handoff")
 def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None):
     """Simulate a urlbar_handoff search: the newtab in-content search box is a fake input that,
@@ -106,6 +94,36 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     newtab.click_on("incontent-search-input")
     nav.set_awesome_bar()
     nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
+
+
+@_entry("contextmenu")
+def _entry_contextmenu(driver: Firefox, search_term: str, params: dict = None):
+    """Select text on a page and search via the right-click context menu."""
+    # Instantiate objects
+    example = ExamplePage(driver)
+    context_menu = ContextMenu(driver)
+
+    # Open example.com, select the header text, and trigger the context menu search
+    example.search_selected_header_via_context_menu()
+    context_menu.click_and_hide_menu("context-menu-search-selected-text")
+
+
+@_entry("contextmenu_visual")
+def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = None):
+    """Right-click an image and search via Google Lens from the context menu."""
+    # Instantiate objects
+    wiki_page = GenericPage(driver, url=WIKI_IMAGE_URL)
+    context_menu = ContextMenu(driver)
+
+    # Open the page, right-click the image, and trigger the Google Lens search
+    wiki_page.open()
+    wiki_page.wait_for_page_to_load()
+    image = wiki_page.get_element("mediawiki-image")
+    wiki_page.context_click(image)
+    context_menu.click_and_hide_menu("context-menu-search-image-with-lens")
+
+    # Switch to the new tab opened by the search
+    driver.switch_to.window(driver.window_handles[-1])
 
 
 # ---------------------------------------------------------------------------
