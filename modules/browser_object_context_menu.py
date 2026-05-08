@@ -176,8 +176,7 @@ class ContextMenu(BasePage):
         """Click 'Summarize Page' from the context menu opened by right-clicking the AI Chat
         sidebar button.
 
-        Searches open menupopups, including inside shadow roots, because the popup has no
-        stable document-level ID and chrome menu placement can vary.
+        The popup is at chrome-document level; a flat querySelectorAll('menupopup') is sufficient.
         """
         self.wait.until(
             lambda _: self.driver.execute_script(
