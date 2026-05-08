@@ -5060,3 +5060,59 @@ Description: "Only in private windows" option in the Suspected Fingerprinters dr
 Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: see-all-trackers-parent
+Selector Data: "trustpanel-blocker-see-all"
+Description: See all button (shadow parent)
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: see-all-trackers
+Selector Data: "main-buttonl"
+Description: See all button
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: fingerprinters-detected-parent
+Selector Data: "[data-l10n-id='trustpanel-list-label-fingerprinter']"
+Description: Fingerprinters detected in the trust panel (Shadow parent)
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: fingerprinters-detected
+Selector Data: "main-button"
+Description: Fingerprinters detected in the trust panel
+Location: Trustpanel - Tracking protection view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: protections-popup-list-host-label
+Selector Data: ".protections-popup-list-host-label"
+Description: Sites trying to fingerprint
+Location: Trustpanel - Not blocking fingerprinters view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: cryptominers-detected-parent
+Selector Data: "[data-l10n-id='trustpanel-list-label-cryptominers']"
+Description: Cryptominers detected in the trust panel (Shadow parent)
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: cryptominers-detected
+Selector Data: "main-button"
+Description: Cryptominers detected in the trust panel
+Location: Trustpanel - Tracking protection view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: not-blocking-category
+Selector Data: "panelview[title='Not Blocking {}']"
+Description: Not blocking tracker category title
+Location: Trustpanel - Not blocking category view
+Path to .json: modules/data/trust_panel.components.json
+```

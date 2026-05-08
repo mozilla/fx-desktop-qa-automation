@@ -1121,6 +1121,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_cryptominers_subpanel_display_when_not_blocked:
+    result: pass
+    splits:
+    - functional2
   test_custom_block_suspected_fingerprinters_in_all_windows:
     result: pass
     splits:
@@ -1150,6 +1154,10 @@ security_and_privacy:
     splits:
     - functional2
   test_end_private_session_clears_cookies:
+    result: pass
+    splits:
+    - functional2
+  test_fingerprinters_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2

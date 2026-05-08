@@ -36,8 +36,9 @@ def add_login_and_wait(
     about_logins.add_login(origin, username, password)
 
     about_logins.expect(
-        lambda _: len(about_logins.get_elements("login-list-item"))
-        == initial_login_count + 1
+        lambda _: (
+            len(about_logins.get_elements("login-list-item")) == initial_login_count + 1
+        )
     )
 
 
