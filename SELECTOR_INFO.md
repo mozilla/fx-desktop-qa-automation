@@ -2128,6 +2128,13 @@ Location: Any content page image
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-search-image-with-lens
+Selector Data: "context-visual-search"
+Description: Image context menu option "Search Image with Google Lens"
+Location: Any content page image (requires Google as default search engine)
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-copy
 Selector Data: "context-copy"
 Description: Page content context menu option "Copy"
