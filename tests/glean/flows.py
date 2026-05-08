@@ -8,9 +8,7 @@ from modules.page_object_example_page import ExamplePage
 from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
-WIKI_IMAGE_URL = (
-    "https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg"
-)
+WIKI_IMAGE_URL = "https://en.wikipedia.org/wiki/Norman_Rockwell"
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -118,12 +116,10 @@ def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = 
     # Open the page, right-click the image, and trigger the Google Lens search
     wiki_page.open()
     wiki_page.wait_for_page_to_load()
-    image = wiki_page.get_element("mediawiki-image")
+    image = wiki_page.get_element("wiki-article-image")
+    wiki_page.scroll_to_element(image)
     wiki_page.context_click(image)
     context_menu.click_and_hide_menu("context-menu-search-image-with-lens")
-
-    # Switch to the new tab opened by the search
-    driver.switch_to.window(driver.window_handles[-1])
 
 
 # ---------------------------------------------------------------------------

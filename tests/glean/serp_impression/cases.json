@@ -25,11 +25,7 @@
     {"id": "3255473", "entry": "contextmenu",                               "action": null,           "params": {"engine": "Ecosia"},     "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia",     "partner_code": "mzl",           "source": "contextmenu",                               "tagged": "true"}},
     {"id": "3255488", "entry": "contextmenu",                               "action": null,           "params": {"engine": "Qwant"},      "prefs": [["browser.search.region", "FR"]], "expected": {"provider": "qwant",      "partner_code": "brz-moz",       "source": "contextmenu",                               "tagged": "true"}},
 
-    {"id": "3255429", "entry": "contextmenu_visual",                        "action": null,           "params": {"engine": "Google"},     "prefs": [["browser.search.region", "US"]], "expected": {"provider": "google",     "partner_code": "firefox-b-1-d", "source": "contextmenu_visual",                        "tagged": "true"}},
-    {"id": "3255444", "entry": "contextmenu_visual",                        "action": null,           "params": {"engine": "Bing"},       "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing",       "partner_code": "MOZI",          "source": "contextmenu_visual",                        "tagged": "true"}},
-    {"id": "3255459", "entry": "contextmenu_visual",                        "action": null,           "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab",          "source": "contextmenu_visual",                        "tagged": "true"}},
-    {"id": "3255474", "entry": "contextmenu_visual",                        "action": null,           "params": {"engine": "Ecosia"},     "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia",     "partner_code": "mzl",           "source": "contextmenu_visual",                        "tagged": "true"}},
-    {"id": "3255489", "entry": "contextmenu_visual",                        "action": null,           "params": {"engine": "Qwant"},      "prefs": [["browser.search.region", "FR"]], "expected": {"provider": "qwant",      "partner_code": "brz-moz",       "source": "contextmenu_visual",                        "tagged": "true"}}
+    {"id": "3255429", "entry": "contextmenu_visual",                        "action": null,           "params": {"engine": "Google"},     "prefs": [["browser.search.region", "US"]], "expected": {"provider": "google",     "partner_code": "lens-firefox-fcm", "source": "contextmenu_visual",                        "tagged": "true"}}
 
-  ]
+    ]
 }

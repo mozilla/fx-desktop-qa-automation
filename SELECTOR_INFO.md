@@ -2657,6 +2657,13 @@ Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
+Selector Name: wiki-article-image
+Selector Data: "mw-file-element"
+Description: A regular inline image in a Wikipedia article (e.g. infobox image)
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
 Selector Name: wiki-search-bar
 Selector Data: "cdx-text-input__input"
 Description: The wikipedia search field
