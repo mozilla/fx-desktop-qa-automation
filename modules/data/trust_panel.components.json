@@ -106,7 +106,7 @@
         "groups": []
     },
     "detected-category": {
-        "selectorData": "[data-l10n-id='{}']",
+        "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
         "strategy": "css",
         "groups": []
     }

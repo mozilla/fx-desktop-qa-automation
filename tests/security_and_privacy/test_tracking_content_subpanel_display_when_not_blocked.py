@@ -48,9 +48,9 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     # Click on "See All" button
     trust_panel.click_see_all()
 
-    # Click on "Cross-site tracking cookies"
+    # Click on "Tracking content"
     trust_panel.wait_for_trackers()
-    trust_panel.open_detected_category("tracking-content")
+    trust_panel.open_detected_category("tracking content")
 
     # "Not Blocking Cross-site Tracking Cookies." title is displayed in the subpanel
     trust_panel.title_displayed_in_subpanel("tracking content")

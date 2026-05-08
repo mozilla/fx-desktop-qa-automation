@@ -5097,7 +5097,7 @@ Path to .json: modules/data/trust_panel.components.json
 ```
 ```
 Selector Name: detected-category
-Selector Data: "[data-l10n-id='{}']"
+Selector Data: "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']"
 Description: Detected tracker category from the protections panel
 Location: Trustpanel - Detected tracker category from the protections panel
 Path to .json: modules/data/trust_panel.components.json
