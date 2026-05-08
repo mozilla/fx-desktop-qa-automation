@@ -54,7 +54,6 @@ def open_insecure_warning_article(driver: Firefox, autofill_popup: AutofillPopup
         lambda _: SUPPORT_PAGE_URL_PART in driver.current_url
     )
 
-    assert SUPPORT_PAGE_URL_PART in driver.current_url
     assert SUPPORT_PAGE_ARTICLE_PART in driver.current_url
 
     driver.close()
@@ -100,8 +99,8 @@ def test_insecure_login_contextual_warning(driver: Firefox, temp_selectors):
     page.open()
 
     login_autofill.element_clickable("testfire-username-field")
-    login_autofill.click_on("testfire-username-field")
-    login_autofill.click_on("testfire-username-field")
+    # make sure the dropdown is still there after clicking the username field
+    login_autofill.fill("testfire-username-field", "", press_enter=False)
 
     verify_insecure_warning_dropdown(autofill_popup)
     open_insecure_warning_article(driver, autofill_popup)
