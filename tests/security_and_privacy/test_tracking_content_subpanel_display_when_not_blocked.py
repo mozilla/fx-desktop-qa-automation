@@ -7,9 +7,11 @@ from modules.page_object_prefs import AboutPrefs
 
 TRACKING_CONTENT_URL = "https://senglehardt.com/test/trackingprotection/test_pages/cryptomining_and_trackers"
 
-DETECTED_TRACKING_CONTENT = ("https://social-track-digest256.dummytracker.org",
-                             "https://ads-track-digest256.dummytracker.org",
-                             "https://analytics-track-digest256.dummytracker.org")
+DETECTED_TRACKING_CONTENT = (
+    "https://social-track-digest256.dummytracker.org",
+    "https://ads-track-digest256.dummytracker.org",
+    "https://analytics-track-digest256.dummytracker.org",
+)
 
 
 @pytest.fixture()
@@ -35,7 +37,7 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
         "known-fingerprints-checkbox",
         "suspected-fingerprints-checkbox",
         "cryptominers-checkbox",
-        "cookies-from-unvisited-websites"
+        "cookies-from-unvisited-websites",
     )
 
     # Open page and click on the shield icon
