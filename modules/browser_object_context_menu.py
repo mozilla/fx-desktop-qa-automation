@@ -172,6 +172,33 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_summarize_page_from_sidebar_ai_chat_button(self) -> BasePage:
+        """Click 'Summarize Page' from the context menu opened by right-clicking the AI Chat
+        sidebar button.
+
+        The popup is at chrome-document level; a flat querySelectorAll('menupopup') is sufficient.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "for (const popup of document.querySelectorAll('menupopup')) {"
+                "  const s = popup.state;"
+                "  if (s === 'closed' || s === 'hiding') continue;"
+                "  const item = Array.from(popup.querySelectorAll('menuitem')).find(el =>"
+                "    el.getAttribute('label') === 'Summarize Page'"
+                "  );"
+                "  if (!item) continue;"
+                "  item.dispatchEvent(new MouseEvent('mousemove', {bubbles: true}));"
+                "  item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));"
+                "  item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));"
+                "  item.dispatchEvent(new MouseEvent('click', {bubbles: true}));"
+                "  return true;"
+                "}"
+                "return false;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def bookmark_tab_via_context_menu(self) -> BasePage:
         """Click 'Bookmark Tab' in the tab context menu, dismiss the menu, then
         confirm the Add Bookmark dialog by clicking its Save button via JS.

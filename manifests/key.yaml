@@ -1335,6 +1335,10 @@ sidebar:
     result: pass
     splits:
     - functional1
+  test_summarize_page_via_sidebar_ai_chat_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_summarize_page_via_tab_context_menu:
     result: pass
     splits:
