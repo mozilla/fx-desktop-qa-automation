@@ -47,7 +47,7 @@ def test_fingerprinters_subpanel_display_when_not_blocked(driver: Firefox):
     trust_panel.js_click_on("fingerprinters-detected")
 
     # "Not Blocking Fingerprinters" title is displayed in the subpanel
-    trust_panel.element_visible("not-blocking-fingerprinters")
+    trust_panel.title_displayed_in_subpanel("fingerprinters")
 
     # The allowed fingerprinter is displayed inside the subpanel
     assert trust_panel.has_allowed_sites(DETECTED_TRACKER_URL)
