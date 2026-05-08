@@ -1,9 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import Navigation
+from modules.browser_object import ContextMenu, Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object import AboutNewtab
+from modules.page_object_example_page import ExamplePage
 from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
@@ -73,6 +74,21 @@ def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     # Add the search bar to the toolbar and perform the search
     nav.add_search_bar_to_toolbar()
     nav.search_bar_search(search_term)
+
+
+@_entry("contextmenu")
+def _entry_contextmenu(driver: Firefox, search_term: str, params: dict = None):
+    """Select text on a page and search via the right-click context menu."""
+    # Instantiate objects
+    example = ExamplePage(driver)
+    context_menu = ContextMenu(driver)
+
+    # Open example.com, select the header text, and trigger the context menu search
+    example.search_selected_header_via_context_menu()
+    context_menu.click_and_hide_menu("context-menu-search-selected-text")
+
+    # Switch to the new tab opened by the context menu search
+    driver.switch_to.window(driver.window_handles[-1])
 
 
 @_entry("urlbar_handoff")
