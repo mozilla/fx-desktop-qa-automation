@@ -7,7 +7,7 @@ from modules.page_object_prefs import AboutPrefs
 
 TRACKING_CONTENT_URL = "https://senglehardt.com/test/trackingprotection/test_pages/cryptomining_and_trackers"
 
-DETECTED_TRACKING_CONTENT = ("https://social-track-digest256.dummytracker.org,"
+DETECTED_TRACKING_CONTENT = ("https://social-track-digest256.dummytracker.org",
                              "https://ads-track-digest256.dummytracker.org",
                              "https://analytics-track-digest256.dummytracker.org")
 
