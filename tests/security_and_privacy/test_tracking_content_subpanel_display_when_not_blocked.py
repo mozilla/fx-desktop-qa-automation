@@ -7,6 +7,10 @@ from modules.page_object_prefs import AboutPrefs
 
 TRACKING_CONTENT_URL = "https://senglehardt.com/test/trackingprotection/test_pages/cryptomining_and_trackers"
 
+DETECTED_TRACKING_CONTENT = ("https://social-track-digest256.dummytracker.org,"
+                             "https://ads-track-digest256.dummytracker.org",
+                             "https://analytics-track-digest256.dummytracker.org")
+
 
 @pytest.fixture()
 def test_case():
@@ -44,10 +48,10 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
 
     # Click on "Cross-site tracking cookies"
     trust_panel.wait_for_trackers()
-    trust_panel.js_click_on("cryptominers-detected")
+    trust_panel.open_detected_category("tracking-content")
 
     # "Not Blocking Cross-site Tracking Cookies." title is displayed in the subpanel
     trust_panel.title_displayed_in_subpanel("tracking content")
 
     # The allowed cross-site tracking cookies are displayed inside the subpanel
-    # assert trust_panel.has_allowed_sites()
+    assert trust_panel.has_allowed_sites(DETECTED_TRACKING_CONTENT)

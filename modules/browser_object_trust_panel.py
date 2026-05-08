@@ -150,5 +150,19 @@ class TrustPanel(BasePage):
         Verify that the 'Not Blocking <Category>' title
         is displayed in the subpanel.
         """
-        self.element_visible("not-blocking-category", labels=[category.capitalize()])
+        self.element_visible(
+            "not-blocking-category",
+            labels=[category.title()]
+        )
+        return self
+
+    @BasePage.context_chrome
+    def open_detected_category(self, category: str):
+        """
+        Open a detected tracker category from the protections panel.
+        """
+        self.js_click_on(
+            "detected-category",
+            labels=[f"trustpanel-list-label-{category}"]
+        )
         return self

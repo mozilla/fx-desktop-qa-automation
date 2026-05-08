@@ -95,35 +95,18 @@
         "groups": [],
         "shadowParent": "see-all-trackers-parent"
     },
-    "fingerprinters-detected-parent": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-fingerprinter']",
-        "strategy": "css",
-        "groups": []
-    },
-    "fingerprinters-detected": {
-        "selectorData": "main-button",
-        "strategy": "id",
-        "groups": [],
-        "shadowParent": "fingerprinters-detected-parent"
-    },
     "protections-popup-list-host-label": {
         "selectorData": ".protections-popup-list-host-label",
         "strategy": "css",
         "groups": []
     },
-    "cryptominers-detected-parent": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
+    "not-blocking-category": {
+        "selectorData": "panelview[title='Not Blocking {}']",
         "strategy": "css",
         "groups": []
     },
-    "cryptominers-detected": {
-        "selectorData": "main-button",
-        "strategy": "id",
-        "groups": [],
-        "shadowParent": "cryptominers-detected-parent"
-    },
-    "not-blocking-category": {
-        "selectorData": "panelview[title='Not Blocking {}']",
+    "detected-category": {
+        "selectorData": "[data-l10n-id='{}']",
         "strategy": "css",
         "groups": []
     }
