@@ -35,7 +35,7 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
         "cookies-isolate-social-media-option",
         "known-fingerprints-checkbox",
         "suspected-fingerprints-checkbox",
-        "cryptominers-checkbox"
+        "cryptominers-checkbox",
     )
 
     # Open page and click on the shield icon
