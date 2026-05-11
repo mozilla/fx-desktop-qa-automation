@@ -31,6 +31,7 @@ tasks:
         fi
         SOURCE_XAUTHORITY="${XAUTHORITY:-}"
         if [ -n "$SOURCE_XAUTHORITY" ] && command -v xauth >/dev/null 2>&1; then
+          set +x
           XAUTH_COOKIE="$(xauth -f "$SOURCE_XAUTHORITY" list 2>/dev/null | awk '/MIT-MAGIC-COOKIE-1/ { print $3; exit }')"
           if [ -n "$XAUTH_COOKIE" ]; then
             export XAUTHORITY="$HOME/.Xauthority"
@@ -38,6 +39,8 @@ tasks:
             chmod 600 "$XAUTHORITY"
             xauth -f "$XAUTHORITY" add "$(hostname)/unix:0" MIT-MAGIC-COOKIE-1 "$XAUTH_COOKIE"
           fi
+          unset XAUTH_COOKIE
+          set -x
         fi
         echo "DISPLAY=${DISPLAY:-}"
         echo "XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-}"
