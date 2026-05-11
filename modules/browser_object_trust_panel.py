@@ -167,6 +167,6 @@ class TrustPanel(BasePage):
             [f"trustpanel-list-label-{canonical}"],
         )
 
-        self.element_clickable(*locator)
+        sleep(0.5)
         self.js_click_on(*locator)
         return self

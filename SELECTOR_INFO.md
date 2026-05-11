@@ -1440,13 +1440,6 @@ Description: In Enhanced Tracking Protection, the standard radio section
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
-```
-Selector Name: cookies-from-unvisited-websites
-Selector Data: "[data-l10n-id='sitedata-option-block-unvisited']"
-Description: In Enhanced Tracking Protection, cookies from unvisited websites option
-Location: about:preferences#privacy
-Path to .json: modules/data/about_prefs.components.json
-```
 #### about_profiles
 ```
 Selector Name: profile-container
