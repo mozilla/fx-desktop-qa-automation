@@ -115,7 +115,6 @@ def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = 
 
     # Open the page, right-click the image, and trigger the Google Lens search
     wiki_page.open()
-    wiki_page.wait_for_page_to_load()
     image = wiki_page.get_element("wiki-article-image")
     wiki_page.scroll_to_element(image)
     wiki_page.context_click(image)
