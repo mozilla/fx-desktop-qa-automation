@@ -2659,14 +2659,14 @@ Path to .json: modules/data/generic_page.components.json
 ```
 Selector Name: mediawiki-image
 Selector Data: "mw-mmv-image"
-Description: The wikipedia page icon
+Description: The image inside the Wikipedia media viewer overlay (opened when clicking an image). Use for media viewer interactions - right-click intercepts are handled by the overlay, not the browser.
 Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
 Selector Name: wiki-article-image
 Selector Data: "mw-file-element"
-Description: A regular inline image in a Wikipedia article (e.g. infobox image)
+Description: A regular inline image in a Wikipedia article (e.g. infobox image). Use this - not mediawiki-image - when you need the browser's native right-click context menu on an image.
 Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
