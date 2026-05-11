@@ -16,12 +16,12 @@ DETECTED_TRACKING_CONTENT = (
 
 @pytest.fixture()
 def test_case():
-    return "3054914"
+    return "3054917"
 
 
 def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     """
-    C3054914 - Cross-site tracking cookies are correctly displayed in the sub panel when they are not blocked
+    C3054917 - Tracking content is correctly displayed in the sub panel when they are not blocked
     """
 
     # Instantiate objects
@@ -29,15 +29,13 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     tracking_page = GenericPage(driver, url=TRACKING_CONTENT_URL)
     trust_panel = TrustPanel(driver)
 
-    # In about:preferences#privacy deselect only the option "Tracking content"
-    # and from the Cookies section, select "Cookies from unvisited websites"
+    # In about:preferences#privacy deselect only the option "Tracking Content" in the Custom section
     about_prefs.open()
     about_prefs.select_trackers_to_block(
         "cookies-isolate-social-media-option",
         "known-fingerprints-checkbox",
         "suspected-fingerprints-checkbox",
-        "cryptominers-checkbox",
-        "cookies-from-unvisited-websites",
+        "cryptominers-checkbox"
     )
 
     # Open page and click on the shield icon
@@ -52,9 +50,9 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     trust_panel.wait_for_trackers()
     trust_panel.open_detected_category("tracking content")
 
-    # "Not Blocking Cross-site Tracking Cookies." title is displayed in the subpanel
+    # "Not Blocking Tracking Content" title is displayed in the subpanel
     trust_panel.wait_for_trackers()
     trust_panel.title_displayed_in_subpanel("tracking content")
 
-    # The allowed cross-site tracking cookies are displayed inside the subpanel
+    # The allowed tracking content is displayed inside the subpanel
     assert trust_panel.has_allowed_sites(*DETECTED_TRACKING_CONTENT)
