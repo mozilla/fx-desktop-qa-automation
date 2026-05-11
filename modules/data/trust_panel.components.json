@@ -126,5 +126,10 @@
         "selectorData": "panelview[title='Not Blocking {}']",
         "strategy": "css",
         "groups": []
+    },
+    "detected-category": {
+        "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
+        "strategy": "css",
+        "groups": []
     }
 }

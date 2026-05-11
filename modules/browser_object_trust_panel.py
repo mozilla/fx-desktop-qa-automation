@@ -152,3 +152,20 @@ class TrustPanel(BasePage):
         """
         self.element_visible("not-blocking-category", labels=[category.capitalize()])
         return self
+
+    @BasePage.context_chrome
+    def open_detected_category(self, category: str):
+        """
+        Open a detected tracker category from the protections panel.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        canonical = category.strip().lower().replace(" ", "-")
+        locator = (
+            "detected-category",
+            [f"trustpanel-list-label-{canonical}"],
+        )
+
+        sleep(0.5)
+        self.js_click_on(*locator)
+        return self
