@@ -2128,6 +2128,13 @@ Location: Any content page image
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-search-image-with-lens
+Selector Data: "context-visual-search"
+Description: Image context menu option "Search Image with Google Lens"
+Location: Any content page image (requires Google as default search engine)
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-copy
 Selector Data: "context-copy"
 Description: Page content context menu option "Copy"
@@ -2652,7 +2659,14 @@ Path to .json: modules/data/generic_page.components.json
 ```
 Selector Name: mediawiki-image
 Selector Data: "mw-mmv-image"
-Description: The wikipedia page icon
+Description: The image inside the Wikipedia media viewer overlay. Supports browser right-click context menu actions (open in new tab, save, copy). Use for media viewer image interactions.
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-article-image
+Selector Data: "mw-file-element"
+Description: A regular inline image in a Wikipedia article (e.g. infobox image). Use this instead of mediawiki-image when the target image is in the article body, not the media viewer.
 Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
