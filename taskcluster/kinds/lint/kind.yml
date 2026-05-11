@@ -19,10 +19,28 @@ tasks:
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         pipenv install;
+        export DISPLAY="${DISPLAY:-:0}"
+        export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+        if [ -z "${XAUTHORITY:-}" ]; then
+          for candidate in "$XDG_RUNTIME_DIR/gdm/Xauthority" "$XDG_RUNTIME_DIR"/.mutter-Xwaylandauth.* "$HOME/.Xauthority"; do
+            if [ -r "$candidate" ]; then
+              export XAUTHORITY="$candidate"
+              break
+            fi
+          done
+        fi
+        echo "DISPLAY=${DISPLAY:-}"
+        echo "XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-}"
+        echo "XAUTHORITY=${XAUTHORITY:-}"
+        ls -la "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR/gdm" "$HOME/.Xauthority" 2>&1 || true
+        if [ -n "${XAUTHORITY:-}" ]; then
+          ls -l "$XAUTHORITY" || true
+        fi
         xeyes & echo "running xeyes";
-        pipenv run python3 -c 'import pyautogui'
+        PYAUTOGUI_IMPORT_EXIT_CODE=0
+        pipenv run python3 -c 'import pyautogui' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
         pipenv run python3 -m ruff version;
         pipenv run python3 -m ruff format --check;
         export EXIT_CODE=$?;
         pipenv run python3 -m ruff check --select I;
-        exit $(( $EXIT_CODE || $? ));
+        exit $(( $PYAUTOGUI_IMPORT_EXIT_CODE || $EXIT_CODE || $? ));
