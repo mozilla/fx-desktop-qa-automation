@@ -162,7 +162,11 @@ class TrustPanel(BasePage):
         """
         canonical = category.strip().lower().replace(" ", "-")
 
-        self.js_click_on(
-            "detected-category", labels=[f"trustpanel-list-label-{canonical}"]
+        locator = (
+            "detected-category",
+            [f"trustpanel-list-label-{canonical}"],
         )
+
+        self.element_clickable(*locator)
+        self.js_click_on(*locator)
         return self
