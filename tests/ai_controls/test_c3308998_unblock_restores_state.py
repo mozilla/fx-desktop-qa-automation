@@ -1,5 +1,3 @@
-import time
-
 import pytest
 
 
@@ -9,8 +7,9 @@ def test_case():
 
 
 def test_unblock_restores_state(about_prefs):
-    """Verify that toggling the AI killswitch via keyboard blocks/unblocks
-    AI features and enables/disables the downstream select controls."""
+    """Verify that clicking the AI killswitch toggle blocks/unblocks AI
+    features and that the downstream select controls become disabled/enabled
+    accordingly."""
     # Initial state: AI should be available (toggle unpressed, selects enabled)
     about_prefs.expect_ai_killswitch_state(pressed=False)
     about_prefs.expect_ai_selects_state(disabled=False)
