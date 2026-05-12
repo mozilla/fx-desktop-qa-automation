@@ -633,6 +633,10 @@ menus:
     result: pass
     splits:
     - functional2
+  test_new_tab_label:
+    result: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -1157,11 +1161,11 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_fingerprinters_subpanel_display_when_not_blocked:
+  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
     result: pass
     splits:
     - functional2
-  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+  test_fingerprinters_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2
@@ -1434,10 +1438,6 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
-    result: pass
-    splits:
-    - functional2
-  test_new_tab_label:
     result: pass
     splits:
     - functional2
