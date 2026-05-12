@@ -201,7 +201,7 @@ class Sidebar(BasePage):
         )
 
     @BasePage.context_chrome
-    def expect_sidebar_strip_collapsed(self) -> "Sidebar":
+    def expect_sidebar_strip_collapsed(self):
         """Wait until the sidebar strip width has stabilized to its collapsed state.
 
         Polls until two consecutive readings (500 ms apart) return the same non-zero
@@ -435,7 +435,36 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def context_click_ai_chat_button(self) -> "Sidebar":
+    def uncheck_ai_chatbot_in_customize_panel(self):
+        """Uncheck the AI chatbot tool in the Customize Sidebar panel.
+
+        The toggle lives inside the sidebar contentDocument and uses Lit web components
+        with nested shadow roots. The element is found via data-l10n-id containing "genai"
+        or by data-action matching the AI chat view command as a fallback.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-l10n-id*=\"genai\"]') ||"
+                "              root.querySelector('[data-action=\"viewGenaiChatSidebar\"]');"
+                "  if (el) { el.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const r = search(host.shadowRoot);"
+                "      if (r) return r;"
+                "    }"
+                "  }"
+                "  return false;"
+                "}"
+                "return search(cd);"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def context_click_ai_chat_button(self):
         """Right-click the AI Chat moz-button in the sidebar strip to open its context menu.
 
         JS retrieves the element from <sidebar-main>'s shadow root; ActionChains performs
