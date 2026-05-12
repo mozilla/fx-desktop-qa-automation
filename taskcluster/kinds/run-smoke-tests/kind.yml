@@ -9,6 +9,8 @@ task-defaults:
   worker:
     taskcluster-proxy: true
     max-run-time: 3600
+    env:
+      PYAUTOGUI_WAYLAND_PROBE_ONLY: "1"
     artifacts:
       - name: public/results
         path: checkouts/vcs/artifacts
@@ -67,7 +69,10 @@ tasks:
           xauth -f "$XAUTHORITY" list 2>&1 | sed -E 's/[0-9a-fA-F]{32,}/<redacted>/g' || true
         fi
         PYAUTOGUI_IMPORT_EXIT_CODE=0
-        pipenv run python3 -c 'import pyautogui' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
+        pipenv run python3 -c 'import pyautogui; print("pyautogui import ok")' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
+        if [ "${PYAUTOGUI_WAYLAND_PROBE_ONLY:-0}" = "1" ]; then
+          exit "$PYAUTOGUI_IMPORT_EXIT_CODE"
+        fi
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
         . ./scripts/keyring-unlock.sh
