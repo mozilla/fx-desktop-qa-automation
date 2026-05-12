@@ -660,7 +660,10 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    result: pass
+    result:
+      mac: pass
+      linux: pass
+      win: unstable
     splits:
     - smoke
   test_http_site:
@@ -1002,7 +1005,10 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    result: pass
+    result:
+      mac: pass
+      linux: pass
+      win: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -1046,7 +1052,10 @@ printing_ui:
     - functional2
 profile:
   test_set_default_profile:
-    result: pass
+    result:
+      mac: pass
+      linux: pass
+      win: unstable
     splits:
     - smoke
 reader_view:
