@@ -9,8 +9,6 @@ task-defaults:
   worker:
     taskcluster-proxy: true
     max-run-time: 3600
-    env:
-      PYAUTOGUI_WAYLAND_PROBE_ONLY: "1"
     artifacts:
       - name: public/results
         path: checkouts/vcs/artifacts
