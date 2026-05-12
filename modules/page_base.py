@@ -378,7 +378,7 @@ class BasePage(Page):
             el = self.fetch(reference, labels=labels)
             return el and str(attr_value) != el.get_attribute(attr_name)
 
-        self.expect(lambda _: _element_attribute_is_not)
+        self.expect(_element_attribute_is_not)
         return self
 
     @context_of_model

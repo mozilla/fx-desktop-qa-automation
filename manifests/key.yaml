@@ -661,8 +661,8 @@ meta:
 networking:
   test_default_dns_protection:
     result:
-      mac: pass
       linux: pass
+      mac: pass
       win: unstable
     splits:
     - smoke
@@ -1006,8 +1006,8 @@ preferences:
     - functional2
   test_clear_cookie_data:
     result:
-      mac: pass
       linux: pass
+      mac: pass
       win: unstable
     splits:
     - smoke
@@ -1053,8 +1053,8 @@ printing_ui:
 profile:
   test_set_default_profile:
     result:
-      mac: pass
       linux: pass
+      mac: pass
       win: unstable
     splits:
     - smoke
