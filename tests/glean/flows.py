@@ -121,6 +121,19 @@ def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = 
     context_menu.click_and_hide_menu("context-menu-search-image-with-lens")
 
 
+@_entry("urlbar_searchmode")
+def _entry_urlbar_searchmode(driver: Firefox, search_term: str, params: dict = None):
+    """Enter search mode via the searchmode switcher button for a specific engine, then search."""
+    # Instantiate objects
+    page = GenericPage(driver, url="about:newtab")
+    nav = Navigation(driver)
+
+    # Open a new tab, select the engine via the searchmode switcher and perform the search
+    page.open()
+    nav.set_search_mode(params["engine"])
+    nav.type_in_awesome_bar(search_term + Keys.ENTER)
+
+
 # ---------------------------------------------------------------------------
 # Action flows — things that happen after the SERP is open
 # ---------------------------------------------------------------------------
