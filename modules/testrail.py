@@ -354,7 +354,7 @@ class TestRail:
             "suite_id": suite_id,
             "name": name,
             "description": description,
-            "include_all": not bool(case_ids),
+            "include_all": bool(case_ids),
         }
         if case_ids:
             payload["case_ids"] = case_ids
