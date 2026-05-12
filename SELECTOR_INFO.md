@@ -431,9 +431,16 @@ Path to .json: modules/data/about_networking.components.json
 ```
 #### about_newtab
 ```
+Selector Name: incontent-search-container
+Selector Data: "content-search-handoff-ui"
+Description: The newtab handoff search UI container; clicking it activates the urlbar in handoff mode, tagging the resulting SERP as source='urlbar_handoff'
+Location: The about:newtab page
+Path to .json: modules/data/about_newtab.components.json
+```
+```
 Selector Name: incontent-search-input
 Selector Data: "fake-editable"
-Description: The in page search input field
+Description: The fake in-page search input field inside the handoff container (shadow DOM child of incontent-search-container)
 Location: The about:newtab page
 Path to .json: modules/data/about_newtab.components.json
 ```
@@ -2121,6 +2128,13 @@ Location: Any content page image
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-search-image-with-lens
+Selector Data: "context-visual-search"
+Description: Image context menu option "Search Image with Google Lens"
+Location: Any content page image (requires Google as default search engine)
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-copy
 Selector Data: "context-copy"
 Description: Page content context menu option "Copy"
@@ -2645,7 +2659,14 @@ Path to .json: modules/data/generic_page.components.json
 ```
 Selector Name: mediawiki-image
 Selector Data: "mw-mmv-image"
-Description: The wikipedia page icon
+Description: The image inside the Wikipedia media viewer overlay. Supports browser right-click context menu actions (open in new tab, save, copy). Use for media viewer image interactions.
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-article-image
+Selector Data: "mw-file-element"
+Description: A regular inline image in a Wikipedia article (e.g. infobox image). Use this instead of mediawiki-image when the target image is in the article body, not the media viewer.
 Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
@@ -5052,4 +5073,60 @@ Selector Data: "#fingerprintingProtectionMenu menuitem[value='private']"
 Description: "Only in private windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
 Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
 Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: see-all-trackers-parent
+Selector Data: "trustpanel-blocker-see-all"
+Description: See all button (shadow parent)
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: see-all-trackers
+Selector Data: "main-buttonl"
+Description: See all button
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: fingerprinters-detected-parent
+Selector Data: "[data-l10n-id='trustpanel-list-label-fingerprinter']"
+Description: Fingerprinters detected in the trust panel (Shadow parent)
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: fingerprinters-detected
+Selector Data: "main-button"
+Description: Fingerprinters detected in the trust panel
+Location: Trustpanel - Tracking protection view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: protections-popup-list-host-label
+Selector Data: ".protections-popup-list-host-label"
+Description: Sites trying to fingerprint
+Location: Trustpanel - Not blocking fingerprinters view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: cryptominers-detected-parent
+Selector Data: "[data-l10n-id='trustpanel-list-label-cryptominers']"
+Description: Cryptominers detected in the trust panel (Shadow parent)
+Location: Trustpanel main view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: cryptominers-detected
+Selector Data: "main-button"
+Description: Cryptominers detected in the trust panel
+Location: Trustpanel - Tracking protection view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: not-blocking-category
+Selector Data: "panelview[title='Not Blocking {}']"
+Description: Not blocking tracker category title
+Location: Trustpanel - Not blocking category view
+Path to .json: modules/data/trust_panel.components.json
 ```

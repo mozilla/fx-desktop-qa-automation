@@ -83,5 +83,48 @@
         "groups": [
             "doNotCache"
         ]
+    },
+    "see-all-trackers-parent": {
+        "selectorData": "trustpanel-blocker-see-all",
+        "strategy": "id",
+        "groups": []
+    },
+    "see-all-trackers": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "see-all-trackers-parent"
+    },
+    "fingerprinters-detected-parent": {
+        "selectorData": "[data-l10n-id='trustpanel-list-label-fingerprinter']",
+        "strategy": "css",
+        "groups": []
+    },
+    "fingerprinters-detected": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "fingerprinters-detected-parent"
+    },
+    "protections-popup-list-host-label": {
+        "selectorData": ".protections-popup-list-host-label",
+        "strategy": "css",
+        "groups": []
+    },
+    "cryptominers-detected-parent": {
+        "selectorData": "[data-l10n-id='trustpanel-list-label-cryptominer']",
+        "strategy": "css",
+        "groups": []
+    },
+    "cryptominers-detected": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "cryptominers-detected-parent"
+    },
+    "not-blocking-category": {
+        "selectorData": "panelview[title='Not Blocking {}']",
+        "strategy": "css",
+        "groups": []
     }
 }

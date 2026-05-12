@@ -638,6 +638,10 @@ menus:
     result: pass
     splits:
     - functional2
+  test_new_tab_label:
+    result: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -1126,6 +1130,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_cryptominers_subpanel_display_when_not_blocked:
+    result: pass
+    splits:
+    - functional2
   test_custom_block_suspected_fingerprinters_in_all_windows:
     result: pass
     splits:
@@ -1159,6 +1167,10 @@ security_and_privacy:
     splits:
     - functional2
   test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+    result: pass
+    splits:
+    - functional2
+  test_fingerprinters_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2
@@ -1264,6 +1276,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_choose_ai_chatbot_via_page_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
     result: pass
     splits:
@@ -1325,6 +1341,10 @@ sidebar:
     splits:
     - functional2
   test_summarize_page_via_ai_chat_panel:
+    result: pass
+    splits:
+    - functional1
+  test_summarize_page_via_sidebar_ai_chat_context_menu:
     result: pass
     splits:
     - functional1
@@ -1423,10 +1443,6 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
-    result: pass
-    splits:
-    - functional2
-  test_new_tab_label:
     result: pass
     splits:
     - functional2
