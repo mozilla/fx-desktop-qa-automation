@@ -49,7 +49,6 @@ def test_social_media_trackers_displayed_subpanel(driver: Firefox):
     trust_panel.open_detected_category("social tracking")
 
     # "Social Media Trackers Blocked" title is displayed in the subpanel
-    trust_panel.wait_for_trackers()
     trust_panel.blocked_trackers_title_displayed_in_subpanel("social media trackers")
 
     # The blocked social-media trackers are displayed inside the subpanel

@@ -122,7 +122,7 @@
         "groups": [],
         "shadowParent": "cryptominers-detected-parent"
     },
-    "not-blocking-category": {
+    "not-blocked-trackers-title": {
         "selectorData": "panelview[title='Not Blocking {}']",
         "strategy": "css",
         "groups": []
