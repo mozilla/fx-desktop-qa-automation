@@ -26,10 +26,9 @@ def file_name():
     return PDF_FILE_NAME
 
 
-def test_pdf_dropdown_selection_with_keyboard_input(
+def test_pdf_dropdown_functionality(
     driver: Firefox,
     pdf_viewer: GenericPdf,
-    hard_quit,
 ):
     """
     Verify that typing inside a PDF form dropdown selects an option based on
