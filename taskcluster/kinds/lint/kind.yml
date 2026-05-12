@@ -19,10 +19,14 @@ tasks:
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         pipenv install;
-        xeyes & echo "running xeyes";
-        pipenv run python3 -c 'import pyautogui'
+        . ./scripts/setup-xauthority.sh
+        XEYES_EXIT_CODE=0
+        timeout 5 xeyes || XEYES_EXIT_CODE=$?
+        echo "XEYES_EXIT_CODE=$XEYES_EXIT_CODE"
+        PYAUTOGUI_IMPORT_EXIT_CODE=0
+        pipenv run python3 -c 'import pyautogui' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
         pipenv run python3 -m ruff version;
         pipenv run python3 -m ruff format --check;
         export EXIT_CODE=$?;
         pipenv run python3 -m ruff check --select I;
-        exit $(( $EXIT_CODE || $? ));
+        exit $(( $PYAUTOGUI_IMPORT_EXIT_CODE || $EXIT_CODE || $? ));
