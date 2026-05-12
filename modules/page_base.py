@@ -1066,14 +1066,9 @@ class BasePage(Page):
         after the click.
         """
 
-        system = platform.system()
-        if system == "Linux":
-            # Workaround while we figure out if tkinter is possible for us
-            self.gui.press("enter")
-            time.sleep(1.5)
-            return
-
         import pyautogui
+
+        system = platform.system()
 
         if system == "Windows":
             button_img = os.path.join("data", "win_save_button.png")
