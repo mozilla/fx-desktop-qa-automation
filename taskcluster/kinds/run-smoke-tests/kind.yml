@@ -33,13 +33,48 @@ tasks:
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         pipenv install;
+        export DISPLAY="${DISPLAY:-:0}"
+        export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+        if [ -z "${XAUTHORITY:-}" ]; then
+          for candidate in "$XDG_RUNTIME_DIR/gdm/Xauthority" "$XDG_RUNTIME_DIR"/.mutter-Xwaylandauth.* "$HOME/.Xauthority"; do
+            if [ -r "$candidate" ]; then
+              export XAUTHORITY="$candidate"
+              break
+            fi
+          done
+        fi
+        SOURCE_XAUTHORITY="${XAUTHORITY:-}"
+        if [ -n "$SOURCE_XAUTHORITY" ] && command -v xauth >/dev/null 2>&1; then
+          set +x
+          XAUTH_COOKIE="$(xauth -f "$SOURCE_XAUTHORITY" list 2>/dev/null | awk '/MIT-MAGIC-COOKIE-1/ { print $3; exit }')"
+          if [ -n "$XAUTH_COOKIE" ]; then
+            export XAUTHORITY="$HOME/.Xauthority"
+            touch "$XAUTHORITY"
+            chmod 600 "$XAUTHORITY"
+            xauth -f "$XAUTHORITY" add "$(hostname)/unix:0" MIT-MAGIC-COOKIE-1 "$XAUTH_COOKIE"
+          fi
+          unset XAUTH_COOKIE
+          set -x
+        fi
+        echo "DISPLAY=${DISPLAY:-}"
+        echo "XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-}"
+        echo "SOURCE_XAUTHORITY=${SOURCE_XAUTHORITY:-}"
+        echo "XAUTHORITY=${XAUTHORITY:-}"
+        ls -la "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR/gdm" "$SOURCE_XAUTHORITY" "$HOME/.Xauthority" 2>&1 || true
+        if [ -n "${XAUTHORITY:-}" ]; then
+          ls -l "$XAUTHORITY" || true
+          command -v xauth || true
+          xauth -f "$XAUTHORITY" list 2>&1 | sed -E 's/[0-9a-fA-F]{32,}/<redacted>/g' || true
+        fi
+        PYAUTOGUI_IMPORT_EXIT_CODE=0
+        pipenv run python3 -c 'import pyautogui' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
         . ./scripts/keyring-unlock.sh
         if [[ ! $(python3 ./scripts/choose_test_type.py) =~ "starfox" ]]; then exit 0; fi;
         pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
-        export FAILURE=${?};
+        export FAILURE=$((PYAUTOGUI_IMPORT_EXIT_CODE | ${?}));
         pipenv run pytest --fx-executable ./firefox/firefox tests/glean;
         export FAILURE=$((FAILURE | ${?}));
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
