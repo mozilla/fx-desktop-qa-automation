@@ -173,8 +173,5 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def blocked_trackers_title_displayed_in_subpanel(self, category: str):
         """Verify that the subpanel title for the blocked tracker category is visible."""
-        self.element_visible(
-            "blocked-trackers-title",
-            labels=[category.title()]
-        )
+        self.element_visible("blocked-trackers-title", labels=[category.title()])
         return self

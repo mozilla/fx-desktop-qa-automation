@@ -33,9 +33,7 @@ def test_social_media_trackers_displayed_subpanel(driver: Firefox):
     about_prefs.open()
 
     # In about:preferences#privacy select only the option "Tracking content" - > In all Windows
-    about_prefs.select_trackers_to_block(
-        "tracking-checkbox", "tracking-in-all-windows"
-    )
+    about_prefs.select_trackers_to_block("tracking-checkbox", "tracking-in-all-windows")
 
     # Open page and click on the shield icon
     tracking_page.open()
