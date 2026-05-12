@@ -1027,6 +1027,7 @@ class AboutPrefs(BasePage):
         )
         self.click_on("ai-controls-toggle")
         if confirm_required:
+            self.element_visible("ai-controls-disable-dialog-button")
             buttons = self.get_elements("ai-controls-disable-dialog-button")
             block = [el for el in buttons if el.get_attribute("label") == "Block"][0]
             block.click()
