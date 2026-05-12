@@ -35,6 +35,7 @@ def test_ai_chatbot_removed_from_sidebar_not_shown_in_tab_context_menu(driver: F
     # Open Customize Sidebar panel and uncheck the AI chatbot tool
     sidebar.click_customize_sidebar()
     sidebar.uncheck_ai_chatbot_in_customize_panel()
+    sidebar.expect_ai_chatbot_absent_from_sidebar_strip()
 
     # Open a new tab and navigate to a website
     tabs.open_and_switch_to_new_tab()
