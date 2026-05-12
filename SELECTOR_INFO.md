@@ -5116,3 +5116,10 @@ Description: Not blocking tracker category title
 Location: Trustpanel - Not blocking category view
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: blocked-trackers-title
+Selector Data: "panelview[title='{} Blocked']"
+Description: Blocking tracker category title
+Location: Trustpanel - Blocking category view
+Path to .json: modules/data/trust_panel.components.json
+```

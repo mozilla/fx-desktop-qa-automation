@@ -128,8 +128,8 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
-    def has_allowed_sites(self, *expected_sites) -> bool:
-        """Checks whether the expected sites are present in the allowed sites list."""
+    def has_detected_tracking_sites(self, *expected_sites) -> bool:
+        """Checks whether the expected tracking domains are detected in the protections popup."""
         elements = self.get_elements("protections-popup-list-host-label")
 
         if expected_sites and not elements:
@@ -145,12 +145,12 @@ class TrustPanel(BasePage):
         return True
 
     @BasePage.context_chrome
-    def title_displayed_in_subpanel(self, category: str):
+    def not_blocked_trackers_title_displayed_in_subpanel(self, category: str):
         """
         Verify that the 'Not Blocking <Category>' title
         is displayed in the subpanel.
         """
-        self.element_visible("not-blocking-category", labels=[category.capitalize()])
+        self.element_visible("not-blocking-category", labels=[category.title()])
         return self
 
     @BasePage.context_chrome
@@ -168,4 +168,13 @@ class TrustPanel(BasePage):
 
         sleep(0.5)
         self.js_click_on(*locator)
+        return self
+
+    @BasePage.context_chrome
+    def blocked_trackers_title_displayed_in_subpanel(self, category: str):
+        """Verify that the subpanel title for the blocked tracker category is visible."""
+        self.element_visible(
+            "blocked-trackers-title",
+            labels=[category.title()]
+        )
         return self
