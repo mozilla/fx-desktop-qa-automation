@@ -360,6 +360,18 @@ class TestRail:
             payload["case_ids"] = case_ids
         if config_ids:
             payload["config_ids"] = config_ids
+            # TestRail rejects an entry with config_ids unless a matching runs
+            # array is provided ("Field :entries has configurations but no test
+            # runs."). Build one run per config so the entry is accepted.
+            if not runs:
+                runs = [
+                    {
+                        "config_ids": [cid],
+                        "include_all": not bool(case_ids),
+                        **({"case_ids": case_ids} if case_ids else {}),
+                    }
+                    for cid in config_ids
+                ]
         if runs:
             payload["runs"] = runs
         return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
