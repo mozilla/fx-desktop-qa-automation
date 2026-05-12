@@ -633,6 +633,10 @@ menus:
     result: pass
     splits:
     - functional2
+  test_new_tab_label:
+    result: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -1434,10 +1438,6 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
-    result: pass
-    splits:
-    - functional2
-  test_new_tab_label:
     result: pass
     splits:
     - functional2
