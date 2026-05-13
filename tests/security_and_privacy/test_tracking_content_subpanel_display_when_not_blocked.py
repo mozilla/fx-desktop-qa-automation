@@ -55,4 +55,4 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     trust_panel.not_blocked_trackers_title_displayed_in_subpanel("tracking content")
 
     # The allowed tracking content is displayed inside the subpanel
-    assert trust_panel.has_allowed_sites(*DETECTED_TRACKING_CONTENT)
+    assert trust_panel.has_detected_tracking_sites(*DETECTED_TRACKING_CONTENT)

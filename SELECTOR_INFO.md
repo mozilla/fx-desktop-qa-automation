@@ -5103,20 +5103,6 @@ Location: Trustpanel main view
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
-Selector Name: fingerprinters-detected-parent
-Selector Data: "[data-l10n-id='trustpanel-list-label-fingerprinter']"
-Description: Fingerprinters detected in the trust panel (Shadow parent)
-Location: Trustpanel main view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: fingerprinters-detected
-Selector Data: "main-button"
-Description: Fingerprinters detected in the trust panel
-Location: Trustpanel - Tracking protection view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
 Selector Name: protections-popup-list-host-label
 Selector Data: ".protections-popup-list-host-label"
 Description: Sites trying to fingerprint
