@@ -833,6 +833,10 @@ password_manager:
     result: pass
     splits:
     - functional1
+  test_insecure_password:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
     result: pass
     splits:

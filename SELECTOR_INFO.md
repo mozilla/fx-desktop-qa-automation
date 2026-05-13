@@ -268,6 +268,20 @@ Location: The about:login's page's sidebar
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
+Selector Name: `insecure-login-warning`  
+Selector Data: `richlistitem[originaltype='insecureWarning']`  
+Description: Firefox autocomplete warning item shown for login fields on insecure HTTP pages.  
+Location: Firefox chrome autofill popup  
+Path to `.json`: `modules/data/autofill_popup.components.json`
+```
+```
+Selector Name: `insecure-login-warning-text`  
+Selector Data: `richlistitem[originaltype='insecureWarning'] .ac-title-text`  
+Description: Text container for the insecure login warning message.  
+Location: Firefox chrome autofill popup  
+Path to `.json`: `modules/data/autofill_popup.components.json`
+```
+```
 Selector Name: login-item-type
 Selector Data: "{name}"
 Description: Individual saved login item
