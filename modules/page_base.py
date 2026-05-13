@@ -1065,6 +1065,8 @@ class BasePage(Page):
             loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
             logging.warning(f"OS dialog button found at {loc}, clicking")
             pyautogui.click(loc)
+            if system == "Linux":
+                pyautogui.click(loc)
             time.sleep(1)
 
             try:
@@ -1072,7 +1074,10 @@ class BasePage(Page):
                 logging.warning(
                     "Button still visible after click; pressing Enter as fallback"
                 )
-                pyautogui.press("enter")
+                if system == "Linux":
+                    pyautogui.hotkey("ctrl", "s")
+                else:
+                    pyautogui.press("enter")
             except pyautogui.ImageNotFoundException:
                 pass  # dialog dismissed successfully
 
