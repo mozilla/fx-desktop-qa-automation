@@ -1084,13 +1084,13 @@ class BasePage(Page):
             time.sleep(0.5)
 
             loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
-            logging.info(f"OS dialog button found at {loc}, clicking")
+            logging.warning(f"OS dialog button found at {loc}, clicking")
             pyautogui.click(loc)
             time.sleep(1)
 
             try:
                 pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
-                logging.info(
+                logging.warning(
                     "Button still visible after click; pressing Enter as fallback"
                 )
                 pyautogui.press("enter")
