@@ -264,12 +264,12 @@ class BasePage(Page):
     @context_of_model
     def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Expect helper: wait until element is visible or timeout"""
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and self.fetch(reference, labels=labels).is_displayed()
-            )
-        )
+
+        def _element_visible(_):
+            el = self.fetch(reference, labels=labels)
+            return el and el.is_displayed()
+
+        self.expect(_element_visible)
         return self
 
     @context_of_model
@@ -305,12 +305,12 @@ class BasePage(Page):
         self, reference: str | tuple | WebElement, labels=None
     ) -> Page:
         """Expect helper: wait until element is selected or timeout"""
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and self.fetch(reference, labels=labels).is_selected()
-            )
-        )
+
+        def _element_selected(_):
+            el = self.fetch(reference, labels=labels)
+            return el and el.is_selected()
+
+        self.expect(_element_selected)
         return self
 
     @context_of_model
@@ -318,7 +318,12 @@ class BasePage(Page):
         self, reference: str | tuple | WebElement, text: str, labels=None
     ) -> Page:
         """Expect helper: wait until element has given text"""
-        self.expect(lambda _: text in self.fetch(reference, labels=labels).text)
+
+        def _element_has_text(_):
+            el = self.fetch(reference, labels=labels)
+            return el and text in el.text
+
+        self.expect(_element_has_text)
         return self
 
     @context_of_model
@@ -351,13 +356,29 @@ class BasePage(Page):
         labels=None,
     ):
         """Expect helper: wait until element attribute is a certain value"""
-        self.expect(
-            lambda _: (
-                self.fetch(reference, labels=labels)
-                and str(attr_value)
-                == self.fetch(reference, labels=labels).get_attribute(attr_name)
-            )
-        )
+
+        def _element_attribute_is(_):
+            el = self.fetch(reference, labels=labels)
+            return el and str(attr_value) == el.get_attribute(attr_name)
+
+        self.expect(_element_attribute_is)
+        return self
+
+    @context_of_model
+    def element_attribute_is_not(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ):
+        """Expect helper: wait until element attribute is NOT a certain value"""
+
+        def _element_attribute_is_not(_):
+            el = self.fetch(reference, labels=labels)
+            return el and str(attr_value) != el.get_attribute(attr_name)
+
+        self.expect(_element_attribute_is_not)
         return self
 
     @context_of_model
