@@ -109,5 +109,10 @@
         "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
         "strategy": "css",
         "groups": []
+    },
+    "blocked-trackers-title": {
+        "selectorData": "panelview[title='{} Blocked']",
+        "strategy": "css",
+        "groups": []
     }
 }

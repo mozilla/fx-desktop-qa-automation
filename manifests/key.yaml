@@ -1233,6 +1233,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_social_media_trackers_displayed_subpanel:
+    result: pass
+    splits:
+    - functional2
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:
