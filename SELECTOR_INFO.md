@@ -3153,7 +3153,7 @@ Path to .json: modules/data/login_autofill.components.json
 ```
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
-Description: Autocomplete dropdown is toggled for focused login fields on bsky page load 
+Description: Autocomplete dropdown is toggled for focused login fields on bsky page load
 Location: bsky page load
 Path to .json: modules/data/login_autofill.components.json
 ```
