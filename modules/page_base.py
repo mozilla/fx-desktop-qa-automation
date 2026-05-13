@@ -1094,7 +1094,7 @@ class BasePage(Page):
                     "Button still visible after click; pressing Enter as fallback"
                 )
                 if system == "Linux":
-                    pyautogui.hotkey("alt", "tab")
+                    pyautogui.hotkey("tab")
                 pyautogui.press("enter")
             except pyautogui.ImageNotFoundException:
                 pass  # dialog dismissed successfully
