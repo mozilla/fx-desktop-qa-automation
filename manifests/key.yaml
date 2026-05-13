@@ -951,6 +951,10 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+  test_pdf_checkbox_functionality:
+    result: pass
+    splits:
+    - functional1
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
