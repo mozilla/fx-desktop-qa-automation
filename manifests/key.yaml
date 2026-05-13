@@ -1241,6 +1241,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_tracking_content_subpanel_display_when_not_blocked:
+    result: pass
+    splits:
+    - functional2
   test_undo_close_tab_private_browsing:
     result: pass
     splits:

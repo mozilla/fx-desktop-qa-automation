@@ -5089,20 +5089,6 @@ Location: Trustpanel main view
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
-Selector Name: fingerprinters-detected-parent
-Selector Data: "[data-l10n-id='trustpanel-list-label-fingerprinter']"
-Description: Fingerprinters detected in the trust panel (Shadow parent)
-Location: Trustpanel main view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: fingerprinters-detected
-Selector Data: "main-button"
-Description: Fingerprinters detected in the trust panel
-Location: Trustpanel - Tracking protection view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
 Selector Name: protections-popup-list-host-label
 Selector Data: ".protections-popup-list-host-label"
 Description: Sites trying to fingerprint
@@ -5110,23 +5096,16 @@ Location: Trustpanel - Not blocking fingerprinters view
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
-Selector Name: cryptominers-detected-parent
-Selector Data: "[data-l10n-id='trustpanel-list-label-cryptominers']"
-Description: Cryptominers detected in the trust panel (Shadow parent)
-Location: Trustpanel main view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: cryptominers-detected
-Selector Data: "main-button"
-Description: Cryptominers detected in the trust panel
-Location: Trustpanel - Tracking protection view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
 Selector Name: not-blocking-category
 Selector Data: "panelview[title='Not Blocking {}']"
 Description: Not blocking tracker category title
 Location: Trustpanel - Not blocking category view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: detected-category
+Selector Data: "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']"
+Description: Detected tracker category from the protections panel
+Location: Trustpanel - Detected tracker category from the protections panel
 Path to .json: modules/data/trust_panel.components.json
 ```
