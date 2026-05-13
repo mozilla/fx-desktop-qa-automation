@@ -145,7 +145,7 @@ class TrustPanel(BasePage):
         return True
 
     @BasePage.context_chrome
-    def title_displayed_in_subpanel(self, category: str):
+    def not_blocked_trackers_title_displayed_in_subpanel(self, category: str):
         """
         Verify that the 'Not Blocking <Category>' title
         is displayed in the subpanel.
