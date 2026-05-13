@@ -1,12 +1,14 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import Navigation
+from modules.browser_object import ContextMenu, Navigation
 from modules.browser_object_tabbar import TabBar
 from modules.page_object import AboutNewtab
+from modules.page_object_example_page import ExamplePage
 from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
+WIKI_IMAGE_URL = "https://en.wikipedia.org/wiki/Norman_Rockwell"
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -90,6 +92,33 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     newtab.click_on("incontent-search-input")
     nav.set_awesome_bar()
     nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
+
+
+@_entry("contextmenu")
+def _entry_contextmenu(driver: Firefox, search_term: str, params: dict = None):
+    """Select text on a page and search via the right-click context menu."""
+    # Instantiate objects
+    example = ExamplePage(driver)
+    context_menu = ContextMenu(driver)
+
+    # Open example.com, select the header text, and trigger the context menu search
+    example.search_selected_header_via_context_menu()
+    context_menu.click_and_hide_menu("context-menu-search-selected-text")
+
+
+@_entry("contextmenu_visual")
+def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = None):
+    """Right-click an image and search via Google Lens from the context menu."""
+    # Instantiate objects
+    wiki_page = GenericPage(driver, url=WIKI_IMAGE_URL)
+    context_menu = ContextMenu(driver)
+
+    # Open the page, right-click the image, and trigger the Google Lens search
+    wiki_page.open()
+    image = wiki_page.get_element("wiki-article-image")
+    wiki_page.scroll_to_element(image)
+    wiki_page.context_click(image)
+    context_menu.click_and_hide_menu("context-menu-search-image-with-lens")
 
 
 # ---------------------------------------------------------------------------

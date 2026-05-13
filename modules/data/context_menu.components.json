@@ -213,6 +213,11 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-search-image-with-lens": {
+        "selectorData": "context-visual-search",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-copy": {
         "selectorData": "context-copy",
         "strategy": "id",

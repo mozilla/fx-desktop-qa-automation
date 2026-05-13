@@ -633,6 +633,10 @@ menus:
     result: pass
     splits:
     - functional2
+  test_new_tab_label:
+    result: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -826,6 +830,10 @@ password_manager:
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_insecure_password:
     result: pass
     splits:
     - functional1
@@ -1157,11 +1165,11 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_fingerprinters_subpanel_display_when_not_blocked:
+  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
     result: pass
     splits:
     - functional2
-  test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+  test_fingerprinters_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2
@@ -1238,6 +1246,10 @@ security_and_privacy:
     splits:
     - functional2
   test_tracking_content_custom_mode:
+    result: pass
+    splits:
+    - functional2
+  test_tracking_content_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2
@@ -1438,10 +1450,6 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
-    result: pass
-    splits:
-    - functional2
-  test_new_tab_label:
     result: pass
     splits:
     - functional2

@@ -268,6 +268,20 @@ Location: The about:login's page's sidebar
 Path to .json: modules/data/about_logins.components.json
 ```
 ```
+Selector Name: `insecure-login-warning`  
+Selector Data: `richlistitem[originaltype='insecureWarning']`  
+Description: Firefox autocomplete warning item shown for login fields on insecure HTTP pages.  
+Location: Firefox chrome autofill popup  
+Path to `.json`: `modules/data/autofill_popup.components.json`
+```
+```
+Selector Name: `insecure-login-warning-text`  
+Selector Data: `richlistitem[originaltype='insecureWarning'] .ac-title-text`  
+Description: Text container for the insecure login warning message.  
+Location: Firefox chrome autofill popup  
+Path to `.json`: `modules/data/autofill_popup.components.json`
+```
+```
 Selector Name: login-item-type
 Selector Data: "{name}"
 Description: Individual saved login item
@@ -2128,6 +2142,13 @@ Location: Any content page image
 Path to .json: modules/data/context_menu.components.json
 ```
 ```
+Selector Name: context-menu-search-image-with-lens
+Selector Data: "context-visual-search"
+Description: Image context menu option "Search Image with Google Lens"
+Location: Any content page image (requires Google as default search engine)
+Path to .json: modules/data/context_menu.components.json
+```
+```
 Selector Name: context-menu-copy
 Selector Data: "context-copy"
 Description: Page content context menu option "Copy"
@@ -2652,7 +2673,14 @@ Path to .json: modules/data/generic_page.components.json
 ```
 Selector Name: mediawiki-image
 Selector Data: "mw-mmv-image"
-Description: The wikipedia page icon
+Description: The image inside the Wikipedia media viewer overlay. Supports browser right-click context menu actions (open in new tab, save, copy). Use for media viewer image interactions.
+Location: wikipedia.org
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: wiki-article-image
+Selector Data: "mw-file-element"
+Description: A regular inline image in a Wikipedia article (e.g. infobox image). Use this instead of mediawiki-image when the target image is in the article body, not the media viewer.
 Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
@@ -5096,24 +5124,17 @@ Location: Trustpanel - Not blocking fingerprinters view
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
-Selector Name: cryptominers-detected-parent
-Selector Data: "[data-l10n-id='trustpanel-list-label-cryptominers']"
-Description: Cryptominers detected in the trust panel (Shadow parent)
-Location: Trustpanel main view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: cryptominers-detected
-Selector Data: "main-button"
-Description: Cryptominers detected in the trust panel
-Location: Trustpanel - Tracking protection view
-Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: not-blocked-trackers-title
+Selector Name: not-blocking-category
 Selector Data: "panelview[title='Not Blocking {}']"
 Description: Not blocking tracker category title
 Location: Trustpanel - Not blocking category view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: detected-category
+Selector Data: "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']"
+Description: Detected tracker category from the protections panel
+Location: Trustpanel - Detected tracker category from the protections panel
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
