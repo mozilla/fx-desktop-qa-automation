@@ -1045,9 +1045,12 @@ class BasePage(Page):
         after the click.
         """
 
-        import pyautogui
-
         system = platform.system()
+        if system == "Linux":
+            self.gui.hotkey("ctrl", "s")
+            return
+
+        import pyautogui
 
         if system == "Windows":
             button_img = os.path.join("data", "win_save_button.png")
@@ -1063,17 +1066,15 @@ class BasePage(Page):
             time.sleep(0.5)
 
             loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
-            logging.warning(f"OS dialog button found at {loc}, clicking")
+            logging.info(f"OS dialog button found at {loc}, clicking")
             pyautogui.click(loc)
             time.sleep(1)
 
             try:
                 pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
-                logging.warning(
+                logging.info(
                     "Button still visible after click; pressing Enter as fallback"
                 )
-                if system == "Linux":
-                    pyautogui.press("tab")
                 pyautogui.press("enter")
             except pyautogui.ImageNotFoundException:
                 pass  # dialog dismissed successfully
