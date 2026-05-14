@@ -4,7 +4,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
-FINGERPRINTING_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
+FINGERPRINTING_URL = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
+)
 DETECTED_FINGERPRINTER = "https://base-fingerprinting-track-digest256.dummytracker.org"
 
 
