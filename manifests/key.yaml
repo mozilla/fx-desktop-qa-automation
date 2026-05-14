@@ -964,7 +964,7 @@ pdf_viewer:
     splits:
     - functional1
   test_pdf_copy_paste_functionality_numerical:
-      result: pass
+    result: pass
     splits:
     - functional1
   test_pdf_copy_paste_functionality:
