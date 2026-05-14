@@ -1013,6 +1013,49 @@ class AboutPrefs(BasePage):
         self.accept_alert_and_verify_text(alert_text)
         return self
 
+    # ── AI Controls ──────────────────────────────────────────────────────
+
+    def toggle_ai_killswitch_click(self) -> BasePage:
+        """
+        Click the AI killswitch toggle. When transitioning from unblocked to
+        blocked, a confirmation dialog appears; click its "Block" button to
+        confirm. The dialog is not shown when re-enabling AI.
+        """
+        confirm_required = (
+            self.get_element("ai-controls-toggle").get_attribute("aria-pressed")
+            == "false"
+        )
+        self.click_on("ai-controls-toggle")
+        if confirm_required:
+            self.element_visible("ai-controls-disable-dialog-button")
+            buttons = self.get_elements("ai-controls-disable-dialog-button")
+            block = [el for el in buttons if el.get_attribute("label") == "Block"][0]
+            block.click()
+        return self
+
+    def expect_ai_killswitch_state(self, pressed=False) -> BasePage:
+        """
+        Wait for AI killswitch to match expected state
+        """
+        self.element_attribute_is(
+            "ai-controls-toggle", "aria-pressed", str(pressed).lower()
+        )
+        return self
+
+    def expect_ai_selects_state(self, disabled=False) -> BasePage:
+        """
+        Wait for AI feature selects to match expected state
+        """
+        for key in [
+            "ai-control-translations-select",
+            "ai-control-sidebar-chatbot-select",
+        ]:
+            if disabled:
+                self.element_has_attribute(key, "disabled")
+            else:
+                self.element_attribute_is_not(key, "disabled", "")
+        return self
+
 
 class AboutAddons(BasePage):
     """

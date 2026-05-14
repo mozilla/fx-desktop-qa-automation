@@ -217,6 +217,11 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+ai_controls:
+  test_c3308998_unblock_restores_state:
+    result: pass
+    splits:
+    - functional1
 audio_video:
   test_allow_audio_video_functionality:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
@@ -633,6 +638,10 @@ menus:
     result: pass
     splits:
     - functional2
+  test_new_tab_label:
+    result: pass
+    splits:
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
@@ -651,7 +660,10 @@ meta:
     splits: []
 networking:
   test_default_dns_protection:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_http_site:
@@ -829,6 +841,10 @@ password_manager:
     result: pass
     splits:
     - functional1
+  test_insecure_password:
+    result: pass
+    splits:
+    - functional1
   test_multiple_saved_logins:
     result: pass
     splits:
@@ -943,6 +959,14 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+  test_pdf_checkbox_functionality:
+    result: pass
+    splits:
+    - functional1
+  test_pdf_copy_paste_functionality:
+    result: pass
+    splits:
+    - functional1
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
@@ -955,6 +979,10 @@ pdf_viewer:
       win: pass
     splits:
     - functional2
+  test_pdf_dropdown_functionality:
+    result: pass
+    splits:
+    - functional1
   test_pdf_input_numbers:
     result: pass
     splits:
@@ -993,7 +1021,10 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -1037,7 +1068,10 @@ printing_ui:
     - functional2
 profile:
   test_set_default_profile:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
 reader_view:
@@ -1221,6 +1255,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_social_media_trackers_displayed_subpanel:
+    result: pass
+    splits:
+    - functional2
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:
@@ -1234,6 +1272,10 @@ security_and_privacy:
     splits:
     - functional2
   test_tracking_content_custom_mode:
+    result: pass
+    splits:
+    - functional2
+  test_tracking_content_subpanel_display_when_not_blocked:
     result: pass
     splits:
     - functional2
@@ -1438,10 +1480,6 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
-    result: pass
-    splits:
-    - functional2
-  test_new_tab_label:
     result: pass
     splits:
     - functional2

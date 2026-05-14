@@ -313,7 +313,7 @@ class TestRail:
         }
         if entries:
             payload["entries"] = entries
-        return self.client.send_post(f"/add_plan/{testrail_project_id}", payload)
+        return self.client.send_post(f"add_plan/{testrail_project_id}", payload)
 
     def create_new_plan_entry(
         self,
@@ -360,25 +360,37 @@ class TestRail:
             payload["case_ids"] = case_ids
         if config_ids:
             payload["config_ids"] = config_ids
+            # TestRail rejects an entry with config_ids unless a matching runs
+            # array is provided ("Field :entries has configurations but no test
+            # runs."). Build one run per config so the entry is accepted.
+            if not runs:
+                runs = [
+                    {
+                        "config_ids": [cid],
+                        "include_all": not bool(case_ids),
+                        **({"case_ids": case_ids} if case_ids else {}),
+                    }
+                    for cid in config_ids
+                ]
         if runs:
             payload["runs"] = runs
-        return self.client.send_post(f"/add_plan_entry/{plan_id}", payload)
+        return self.client.send_post(f"add_plan_entry/{plan_id}", payload)
 
     def update_plan(self, plan_id, **kwargs):
         """Given a plan id, update the plan per kwargs"""
         if not kwargs:
             return False
-        return self.client.send_post(f"/update_plan/{plan_id}", kwargs)
+        return self.client.send_post(f"update_plan/{plan_id}", kwargs)
 
     def update_plan_entry(self, plan_id, entry_id, **kwargs):
         """Given a plan id and entry id, update the entry per kwargs"""
         if not kwargs:
             return False
-        return self.client.send_post(f"/update_plan_entry/{plan_id}/{entry_id}", kwargs)
+        return self.client.send_post(f"update_plan_entry/{plan_id}/{entry_id}", kwargs)
 
     def matching_configs(self, testrail_project_id, config_group_id, config_name):
         """Given a project id, a config group id, and a config name, return the matching config object"""
-        configs = self.client.send_get(f"/get_configs/{testrail_project_id}")
+        configs = self.client.send_get(f"get_configs/{testrail_project_id}")
         matching_group = next(c for c in configs if c.get("id") == config_group_id)
         logging.info(f"matching group|| {matching_group}")
         cfgs = [
@@ -390,15 +402,15 @@ class TestRail:
 
     def add_config(self, config_group_id, name):
         """Add a config to a config group"""
-        return self.client.send_post(f"/add_config/{config_group_id}", {"name": name})
+        return self.client.send_post(f"add_config/{config_group_id}", {"name": name})
 
     def get_run(self, run_id):
         """Return a run object by id"""
-        return self.client.send_get(f"/get_run/{run_id}")
+        return self.client.send_get(f"get_run/{run_id}")
 
     def get_test_results(self, run_id):
         """Given a run id, return all test objects in that run"""
-        results_rs_json = self.client.send_get(f"/get_tests/{run_id}")
+        results_rs_json = self.client.send_get(f"get_tests/{run_id}")
         return results_rs_json.get("tests")
 
     def get_custom_fields(self):

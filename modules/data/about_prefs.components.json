@@ -747,5 +747,43 @@
     "selectorData": "standardRadio",
     "strategy": "id",
     "groups": []
+  },
+  "ai-controls-toggle-tile": {
+    "selectorData": "aiControlDefaultToggle",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-controls-toggle": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "ai-controls-toggle-tile"
+  },
+  "ai-control-translations-select": {
+    "selectorData": "aiControlTranslationsSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-controls-disable-parent": {
+    "selectorData": "block-ai-confirmation-dialog",
+    "strategy": "tag",
+    "groups": []
+  },
+  "ai-controls-disable-dialog": {
+    "selectorData": "dialog",
+    "strategy": "tag",
+    "groups": [],
+    "shadowParent": "ai-controls-disable-parent"
+  },
+  "ai-controls-disable-dialog-button": {
+    "selectorData": "moz-button",
+    "strategy": "tag",
+    "groups": [],
+    "shadowParent": "ai-controls-disable-parent"
+  },
+  "ai-control-sidebar-chatbot-select": {
+    "selectorData": "aiControlSidebarChatbotSelect",
+    "strategy": "id",
+    "groups": []
   }
 }

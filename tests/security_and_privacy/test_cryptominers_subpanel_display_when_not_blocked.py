@@ -46,10 +46,10 @@ def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
 
     # Click on "Cryptominers"
     trust_panel.wait_for_trackers()
-    trust_panel.js_click_on("cryptominers-detected")
+    trust_panel.open_detected_category("cryptominer")
 
     # "Not Blocking Cryptominers" title is displayed in the subpanel
-    trust_panel.title_displayed_in_subpanel("cryptominers")
+    trust_panel.not_blocked_trackers_title_displayed_in_subpanel("cryptominers")
 
     # The allowed cryptominers are displayed inside the subpanel
-    assert trust_panel.has_allowed_sites(DETECTED_TRACKER_URL)
+    assert trust_panel.has_detected_tracking_sites(DETECTED_TRACKER_URL)

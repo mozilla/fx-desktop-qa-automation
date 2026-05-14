@@ -80,9 +80,12 @@ class Dropdown(Region):
 
         if double_click:
             self.page.double_click(reference=target_option)
+        elif self.is_search_dropdown:
+            # panel-item elements live inside a panel-list overflow container; Selenium's click() cannot scroll them
+            # into view consistently, so JS click is used instead. Correctness relies on the wait_for_selection
+            # check below: if the item is detached or hidden the JS click is silent but the wait will catch it.
+            self.page.driver.execute_script("arguments[0].click();", target_option)
         else:
-            if self.is_search_dropdown:
-                self.page.scroll_to_element(target_option)
             target_option.click()
 
         if wait_for_selection:
