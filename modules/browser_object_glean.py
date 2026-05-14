@@ -1,6 +1,9 @@
+import re
 import time
 
 from modules.page_base import BasePage
+
+_GLEAN_METRIC_PATH_RE = re.compile(r"^[A-Za-z0-9_.]+$")
 
 
 class Glean(BasePage):
@@ -39,6 +42,9 @@ class Glean(BasePage):
         timeout: int,
     ) -> str:
         """Build a detailed timeout error message using the closest matching event."""
+        if not last_result:
+            return f"Glean metric '{metric_path}' recorded no events after {timeout}s."
+
         best = max(
             last_result,
             key=lambda event: sum(
@@ -46,14 +52,13 @@ class Glean(BasePage):
                 for key, expected_value in expected.items()
                 if event.get("extra", {}).get(key) == expected_value
             ),
-            default={},
         )
         best_payload = best.get("extra", {})
 
         diff_lines = [
             f"Glean metric '{metric_path}' did not match after {timeout}s.",
             "",
-            "Expected vs Actual:",
+            "Expected vs Actual (closest match):",
         ]
 
         for key in sorted(expected):
@@ -86,6 +91,8 @@ class Glean(BasePage):
         urlbar_persisted records a first urlbar event and a second urlbar_persisted event.
         Returning on the first non-empty batch would pick the wrong event.
         """
+        if not _GLEAN_METRIC_PATH_RE.match(metric_path):
+            raise ValueError(f"Invalid metric_path: {metric_path!r}")
         js_code = self._build_poll_js(metric_path)
         end_time = time.time() + timeout
         last_result = []
