@@ -32,20 +32,20 @@ def test_pdf_text_can_be_pasted_in_text_field(pdf_viewer: GenericPdf):
     # Step 1: PDF form with text fields is opened by the pdf_viewer fixture.
     pdf_viewer.element_visible("first-name-field")
 
-    # Step 2: Copy a random text from any source.
+    # Step 2: Copy a random text
     pdf_viewer.fill("first-name-field", random_text, press_enter=False)
     pdf_viewer.triple_click("first-name-field")
     pdf_viewer.copy()
 
     # Step 3: Click inside the text field for the name section.
-    pdf_viewer.get_element("first-name-field").send_keys(Keys.BACK_SPACE)
-    pdf_viewer.element_attribute_contains("first-name-field", "value", "")
+    pdf_viewer.get_element("first-name-field").clear()
+    pdf_viewer.element_attribute_is("first-name-field", "value", "")
     pdf_viewer.click_on("first-name-field")
 
     # Step 4: Paste the previously copied text.
     pdf_viewer.paste()
-    pdf_viewer.element_attribute_contains("first-name-field", "value", random_text)
+    pdf_viewer.element_attribute_is("first-name-field", "value", random_text)
 
     # Step 5: Click or tab out of the input field and verify the text remains.
     pdf_viewer.get_element("first-name-field").send_keys(Keys.TAB)
-    pdf_viewer.element_attribute_contains("first-name-field", "value", random_text)
+    pdf_viewer.element_attribute_is("first-name-field", "value", random_text)
