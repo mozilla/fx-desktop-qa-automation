@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Glean
-from modules.classes.glean import GleanAsserts
 from modules.page_object import AboutPrefs
 from tests.glean.flows import ENTRY_PREFS, SEARCH_TERM, run_action, run_entry
 from tests.glean.utils import load_cases
@@ -45,6 +44,4 @@ def test_serp_impression(driver: Firefox, case: dict):
     run_entry(driver, case["entry"], SEARCH_TERM, params)
     run_action(driver, case.get("action"), params)
 
-    events = glean.poll_glean_metric(METRIC)
-    expected = case["expected"]
-    GleanAsserts.assert_payload(METRIC, events, expected)
+    glean.poll_glean_metric(METRIC, case["expected"])

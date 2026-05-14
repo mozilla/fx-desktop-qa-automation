@@ -8,12 +8,16 @@ from modules.page_object_example_page import ExamplePage
 from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
+PERSISTED_REFINEMENT = " browser"
 WIKI_IMAGE_URL = "https://en.wikipedia.org/wiki/Norman_Rockwell"
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
         ("browser.startup.page", 1),
+    ],
+    "urlbar_persisted": [
+        ("browser.urlbar.showSearchTerms.enabled", True),
     ],
 }
 
@@ -123,15 +127,33 @@ def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = 
 
 @_entry("urlbar_searchmode")
 def _entry_urlbar_searchmode(driver: Firefox, search_term: str, params: dict = None):
-    """Enter search mode via the searchmode switcher button for a specific engine, then search."""
+    """Enter search mode via the searchmode switcher for a specific engine, then search."""
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
 
-    # Open a new tab, select the engine via the searchmode switcher and perform the search
+    # Open a new tab, select the engine via the searchmode switcher, and perform the search
     page.open()
     nav.set_search_mode(params["engine"])
     nav.type_in_awesome_bar(search_term + Keys.ENTER)
+
+
+@_entry("urlbar_persisted")
+def _entry_urlbar_persisted(driver: Firefox, search_term: str, params: dict = None):
+    """Perform an initial urlbar search, then refine it from the SERP to trigger a persisted impression."""
+    # Instantiate objects
+    page = GenericPage(driver, url="about:newtab")
+    nav = Navigation(driver)
+
+    # Open a new tab and perform an initial search
+    page.open()
+    nav.search(search_term)
+
+    # Refine the persisted search term
+    page.url_contains(search_term)
+    nav.wait.until(lambda _: nav.get_awesome_bar_text() == search_term)
+    nav.append_to_awesome_bar_and_submit(PERSISTED_REFINEMENT)
+    page.url_contains(PERSISTED_REFINEMENT.strip())
 
 
 # ---------------------------------------------------------------------------
