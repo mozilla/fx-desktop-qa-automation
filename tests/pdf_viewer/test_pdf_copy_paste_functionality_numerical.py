@@ -9,7 +9,7 @@ NUMERIC_TEXT = "1907"
 
 @pytest.fixture()
 def test_case():
-    return "C1017529"
+    return "1017529"
 
 
 @pytest.fixture()
