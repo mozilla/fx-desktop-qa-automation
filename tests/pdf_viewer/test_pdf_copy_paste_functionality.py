@@ -22,7 +22,7 @@ def file_name():
     return PDF_FILE_NAME
 
 
-def test_pdf_text_can_be_pasted_in_text_field(pdf_viewer: GenericPdf):
+def test_pdf_copy_paste_functionality(pdf_viewer: GenericPdf):
     """
     1017527: Verify that text can be pasted in a PDF form text field
     """
