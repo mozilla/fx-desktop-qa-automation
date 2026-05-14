@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import TrustPanel
+from modules.page_object import AboutPrefs, GenericPage
 
 FINGERPRINTING_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
 DETECTED_FINGERPRINTER = "https://base-fingerprinting-track-digest256.dummytracker.org"
@@ -16,7 +15,7 @@ def test_case():
 
 def test_fingerprinters_displayed_subpanel(driver: Firefox):
     """
-    C3054911 - Fingerpringers are correctly displayed in the sub panel
+    C3054911 - Fingerprinters are correctly displayed in the sub panel
     """
 
     # Instantiate objects
