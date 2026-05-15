@@ -106,9 +106,9 @@ class Navigation(BasePage):
         awesome_bar.send_keys(Keys.END)
         awesome_bar.send_keys(text)
         self.wait.until(
-            lambda _: self.get_element("awesome-bar")
-            .get_attribute("value")
-            .endswith(text)
+            lambda _: (
+                self.get_element("awesome-bar").get_attribute("value").endswith(text)
+            )
         )
         awesome_bar.send_keys(Keys.ENTER)
         return self

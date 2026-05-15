@@ -5,10 +5,11 @@ from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
 COOKIES_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
-DETECTED_COOKIES = ("https://social-track-digest256.dummytracker.org",
-                    "https://ads-track-digest256.dummytracker.org",
-                    "https://analytics-track-digest256.dummytracker.org"
-                    )
+DETECTED_COOKIES = (
+    "https://social-track-digest256.dummytracker.org",
+    "https://ads-track-digest256.dummytracker.org",
+    "https://analytics-track-digest256.dummytracker.org",
+)
 
 
 @pytest.fixture()
