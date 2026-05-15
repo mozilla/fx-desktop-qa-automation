@@ -39,7 +39,7 @@ def test_cross_site_tracking_cookies_displayed_subpanel(driver: Firefox):
     # Click on "See All" button
     trust_panel.click_see_all()
 
-    # Click on Cross-site tracking cookies
+    # Click on cross-site tracking cookies
     trust_panel.open_detected_category("tracking cookies")
 
     # "Third-Party Cookies Blocked" title is displayed in the subpanel
