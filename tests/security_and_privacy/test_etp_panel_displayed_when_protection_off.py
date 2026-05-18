@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
-TEST_WEBSITE = "https://www.youtube.com/"
+YOUTUBE_URL = "https://www.youtube.com/"
 
 
 @pytest.fixture()
@@ -19,7 +19,7 @@ def test_etp_panel_displayed_when_protection_off(driver: Firefox):
 
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
-    test_page = GenericPage(driver, url=TEST_WEBSITE)
+    test_page = GenericPage(driver, url=YOUTUBE_URL)
     trust_panel = TrustPanel(driver)
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
