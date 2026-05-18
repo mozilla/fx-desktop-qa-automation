@@ -1235,7 +1235,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_panel_displayed_when_all_protections_disabled_custom:
+  test_etp_panel_displayed_when_all_protections_disabled_custom:
     result: pass
     splits:
     - functional2

@@ -115,8 +115,8 @@
         "strategy": "css",
         "groups": []
     },
-    "trustpanel-etp-label": {
-        "selectorData": "//*[@id='trustpanel-etp-label' and text()='Enhanced Tracking Protection is on']",
+    "trustpanel-etp-on": {
+        "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
         "strategy": "xpath",
         "groups": []
     }

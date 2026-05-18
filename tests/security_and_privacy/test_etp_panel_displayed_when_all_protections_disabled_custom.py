@@ -12,7 +12,7 @@ def test_case():
     return "3054908"
 
 
-def test_panel_displayed_when_all_protections_disabled_custom(driver: Firefox):
+def test_etp_panel_displayed_when_all_protections_disabled_custom(driver: Firefox):
     """
     C3054908 - The panel is correctly displayed when all protections are disabled through custom
     """
@@ -30,5 +30,5 @@ def test_panel_displayed_when_all_protections_disabled_custom(driver: Firefox):
     test_page.open()
     trust_panel.open_panel()
 
-    # The message "Enhanced Tracking Protection is on" is displayed inside the banner
-    trust_panel.trustpanel_etp_label_displayed_in_subpanel()
+    # The message "Firefox is on guard" is displayed inside the banner
+    trust_panel.trustpanel_status("on")
