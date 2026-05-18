@@ -228,6 +228,16 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-cut": {
+    "selectorData": "context-cut",
+    "strategy": "id",
+    "groups": []
+    },
+    "context-menu-delete-in-form": {
+    "selectorData": "context-delete",
+    "strategy": "id",
+    "groups": []
+    },
     "context-menu-suggest-strong-password": {
         "selectorData": "fill-login-generated-password",
         "strategy": "id",
