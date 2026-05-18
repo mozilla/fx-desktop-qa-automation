@@ -99,6 +99,21 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def append_to_awesome_bar_and_submit(self, text: str) -> BasePage:
+        """Append text to the current Awesome Bar value and submit."""
+        awesome_bar = self.get_element("awesome-bar")
+        awesome_bar.click()
+        awesome_bar.send_keys(Keys.END)
+        awesome_bar.send_keys(text)
+        self.wait.until(
+            lambda _: (
+                self.get_element("awesome-bar").get_attribute("value").endswith(text)
+            )
+        )
+        awesome_bar.send_keys(Keys.ENTER)
+        return self
+
+    @BasePage.context_chrome
     def type_in_awesome_bar(self, term: str, reset=True) -> BasePage:
         """
         Type text into the Awesome Bar.

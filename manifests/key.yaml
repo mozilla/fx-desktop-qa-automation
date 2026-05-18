@@ -73,10 +73,6 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_glean_serp_impression_js_api:
-    result: pass
-    splits:
-    - functional1
   test_google_search_counts_us:
     result: pass
     splits:
@@ -1155,7 +1151,15 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_cross_site_tracking_cookies_displayed_subpanel:
+    result: pass
+    splits:
+    - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
+    result: pass
+    splits:
+    - functional2
+  test_cryptominers_displayed_subpanel:
     result: pass
     splits:
     - functional2
@@ -1196,6 +1200,10 @@ security_and_privacy:
     splits:
     - functional2
   test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+    result: pass
+    splits:
+    - functional2
+  test_fingerprinters_displayed_subpanel:
     result: pass
     splits:
     - functional2
