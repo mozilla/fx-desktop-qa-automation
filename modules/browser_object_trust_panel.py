@@ -175,3 +175,27 @@ class TrustPanel(BasePage):
         """Verify that the subpanel title for the blocked tracker category is visible."""
         self.element_visible("blocked-trackers-title", labels=[category.title()])
         return self
+
+    @BasePage.context_chrome
+    def trustpanel_toggle_on_off(self):
+        """Trust panel toggle button"""
+        self.js_click_on("trustpanel-toggle-button")
+        return self
+
+    @BasePage.context_chrome
+    def trustpanel_status(self, status: str):
+        """
+        Verify Trust Panel ETP status.
+        status: "on" | "off"
+        """
+
+        mapping = {
+            "on": "trustpanel-etp-on",
+            "off": "trustpanel-etp-off",
+        }
+
+        if status not in mapping:
+            raise ValueError("status must be 'on' or 'off'")
+
+        self.element_visible(mapping[status])
+        return self
