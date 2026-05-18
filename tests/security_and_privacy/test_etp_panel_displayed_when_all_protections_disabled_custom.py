@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
-TEST_WEBSITE = "https://www.google.com/"
+GOOGLE_URL = "https://www.google.com/"
 
 
 @pytest.fixture()
@@ -19,7 +19,7 @@ def test_etp_panel_displayed_when_all_protections_disabled_custom(driver: Firefo
 
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
-    test_page = GenericPage(driver, url=TEST_WEBSITE)
+    test_page = GenericPage(driver, url=GOOGLE_URL)
     trust_panel = TrustPanel(driver)
 
     # Go to about:preferences#privacy and select the "Custom" options from the ETP section and deselect everything
