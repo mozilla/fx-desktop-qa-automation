@@ -177,6 +177,12 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
+    def trustpanel_toggle_on_off(self):
+        """Trust panel toggle button"""
+        self.js_click_on("trustpanel-toggle-button")
+        return self
+
+    @BasePage.context_chrome
     def trustpanel_status(self, status: str):
         """
         Verify Trust Panel ETP status.

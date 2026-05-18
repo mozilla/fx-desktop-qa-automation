@@ -115,6 +115,22 @@
         "strategy": "css",
         "groups": []
     },
+    "trustpanel-toggle-parent": {
+        "selectorData": "trustpanel-toggle",
+        "strategy": "id",
+        "groups": []
+    },
+    "trustpanel-toggle-button": {
+        "selectorData": "input",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "trustpanel-toggle-parent"
+    },
+    "trustpanel-etp-off": {
+        "selectorData": "//*[@id='trustpanel-header' and text()='You turned off protections']",
+        "strategy": "xpath",
+        "groups": []
+    },
     "trustpanel-etp-on": {
         "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
         "strategy": "xpath",
