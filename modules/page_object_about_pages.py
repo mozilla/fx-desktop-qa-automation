@@ -92,7 +92,7 @@ class AboutConfig(BasePage):
     def get_pref_value(self, term: str):
         """Return the current value string for a preference from about:config."""
         self.search_pref(term)
-        return self.get_element("pref-cell-value").text
+        return self.get_element("pref-cell-value").text.strip()
 
     def toggle_config_value(self, term: str, value) -> BasePage:
         """
