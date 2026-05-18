@@ -26,7 +26,45 @@ def file_name():
     return PDF_FILE_NAME
 
 
-def test_pdf_context_menu_actions(driver: Firefox, pdf_viewer: GenericPdf):
+def _verify_context_menu_actions(
+    pdf_viewer: GenericPdf,
+    context_menu: ContextMenu,
+    field: str,
+    value: str,
+):
+    pdf_viewer.fill(field, value, press_enter=False)
+    pdf_viewer.element_attribute_is(field, "value", value)
+
+    # Verify context menu copy and paste.
+    pdf_viewer.triple_click(field)
+    pdf_viewer.context_click(field)
+    context_menu.click_and_hide_menu("context-menu-copy")
+
+    pdf_viewer.get_element(field).clear()
+    pdf_viewer.element_attribute_is(field, "value", "")
+
+    pdf_viewer.context_click(field)
+    context_menu.click_and_hide_menu("context-menu-paste")
+    pdf_viewer.element_attribute_is(field, "value", value)
+
+    # Verify context menu cut and paste.
+    pdf_viewer.triple_click(field)
+    pdf_viewer.context_click(field)
+    context_menu.click_and_hide_menu("context-menu-cut")
+    pdf_viewer.element_attribute_is(field, "value", "")
+
+    pdf_viewer.context_click(field)
+    context_menu.click_and_hide_menu("context-menu-paste")
+    pdf_viewer.element_attribute_is(field, "value", value)
+
+    # Verify context menu delete.
+    pdf_viewer.triple_click(field)
+    pdf_viewer.context_click(field)
+    context_menu.click_and_hide_menu("context-menu-delete-in-form")
+    pdf_viewer.element_attribute_is(field, "value", "")
+
+
+def test_pdf_contextual_menu_actions(driver: Firefox, pdf_viewer: GenericPdf):
     """
     C1017607: Verify that context menu actions apply to PDF form input fields
     """
@@ -38,66 +76,6 @@ def test_pdf_context_menu_actions(driver: Firefox, pdf_viewer: GenericPdf):
     pdf_viewer.element_visible(TEXT_FIELD)
     pdf_viewer.element_visible(NUMERIC_FIELD)
 
-    # Step 2: Enter text in the text field.
-    pdf_viewer.fill(TEXT_FIELD, random_text, press_enter=False)
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", random_text)
-
-    # Step 3: Use the context menu copy and paste actions on the text field.
-    pdf_viewer.triple_click(TEXT_FIELD)
-    pdf_viewer.context_click(TEXT_FIELD)
-    context_menu.click_and_hide_menu("context-menu-copy")
-
-    pdf_viewer.get_element(TEXT_FIELD).clear()
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", "")
-
-    pdf_viewer.context_click(TEXT_FIELD)
-    context_menu.click_and_hide_menu("context-menu-paste")
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", random_text)
-
-    # Step 4: Use the context menu cut and paste actions on the text field.
-    pdf_viewer.triple_click(TEXT_FIELD)
-    pdf_viewer.context_click(TEXT_FIELD)
-    context_menu.click_and_hide_menu("context-menu-cut")
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", "")
-
-    pdf_viewer.context_click(TEXT_FIELD)
-    context_menu.click_and_hide_menu("context-menu-paste")
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", random_text)
-
-    # Step 5: Use the context menu delete action on the text field.
-    pdf_viewer.triple_click(TEXT_FIELD)
-    pdf_viewer.context_click(TEXT_FIELD)
-    context_menu.click_and_hide_menu("context-menu-delete-in-form")
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", "")
-
-    # Step 6: Enter numbers in the numeric field.
-    pdf_viewer.fill_element(NUMERIC_FIELD, NUMERIC_TEXT)
-    pdf_viewer.element_attribute_is(NUMERIC_FIELD, "value", NUMERIC_TEXT)
-
-    # Step 7: Use the context menu copy and paste actions on the numeric field.
-    pdf_viewer.triple_click(NUMERIC_FIELD)
-    pdf_viewer.context_click(NUMERIC_FIELD)
-    context_menu.click_and_hide_menu("context-menu-copy")
-
-    pdf_viewer.get_element(NUMERIC_FIELD).clear()
-    pdf_viewer.element_attribute_is(NUMERIC_FIELD, "value", "")
-
-    pdf_viewer.context_click(NUMERIC_FIELD)
-    context_menu.click_and_hide_menu("context-menu-paste")
-    pdf_viewer.element_attribute_is(NUMERIC_FIELD, "value", NUMERIC_TEXT)
-
-    # Step 8: Use the context menu cut and paste actions on the numeric field.
-    pdf_viewer.triple_click(NUMERIC_FIELD)
-    pdf_viewer.context_click(NUMERIC_FIELD)
-    context_menu.click_and_hide_menu("context-menu-cut")
-    pdf_viewer.element_attribute_is(NUMERIC_FIELD, "value", "")
-
-    pdf_viewer.context_click(NUMERIC_FIELD)
-    context_menu.click_and_hide_menu("context-menu-paste")
-    pdf_viewer.element_attribute_is(NUMERIC_FIELD, "value", NUMERIC_TEXT)
-
-    # Step 9: Use the context menu delete action on the numeric field.
-    pdf_viewer.triple_click(NUMERIC_FIELD)
-    pdf_viewer.context_click(NUMERIC_FIELD)
-    context_menu.click_and_hide_menu("context-menu-delete-in-form")
-    pdf_viewer.element_attribute_is(NUMERIC_FIELD, "value", "")
+    # Step 2: Enter text and numbers in both text and numeric fields.
+    _verify_context_menu_actions(pdf_viewer, context_menu, TEXT_FIELD, random_text)
+    _verify_context_menu_actions(pdf_viewer, context_menu, NUMERIC_FIELD, NUMERIC_TEXT)
