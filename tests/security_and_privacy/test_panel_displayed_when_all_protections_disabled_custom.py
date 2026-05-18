@@ -29,7 +29,6 @@ def test_panel_displayed_when_all_protections_disabled_custom(driver: Firefox):
     # Open page and click on the shield icon
     test_page.open()
     trust_panel.open_panel()
-    # trust_panel.wait_for_trackers()
 
     # The message "Enhanced Tracking Protection is on" is displayed inside the banner
     trust_panel.trustpanel_etp_label_displayed_in_subpanel()
