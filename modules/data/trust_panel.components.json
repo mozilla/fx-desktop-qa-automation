@@ -114,5 +114,10 @@
         "selectorData": "panelview[title='{} Blocked']",
         "strategy": "css",
         "groups": []
+    },
+    "trustpanel-etp-label": {
+        "selectorData": "//*[@id='trustpanel-etp-label' and text()='Enhanced Tracking Protection is on']",
+        "strategy": "xpath",
+        "groups": []
     }
 }

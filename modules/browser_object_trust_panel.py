@@ -175,3 +175,9 @@ class TrustPanel(BasePage):
         """Verify that the subpanel title for the blocked tracker category is visible."""
         self.element_visible("blocked-trackers-title", labels=[category.title()])
         return self
+
+    @BasePage.context_chrome
+    def trustpanel_etp_label_displayed_in_subpanel(self):
+        """Verify the ETP enabled message is displayed in the protections panel."""
+        self.element_visible("trustpanel-etp-label")
+        return self

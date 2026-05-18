@@ -5130,3 +5130,10 @@ Description: Blocking tracker category title
 Location: Trustpanel - Blocking category view
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-etp-label
+Selector Data: "//*[@id='trustpanel-etp-label' and text()='Enhanced Tracking Protection is on']"
+Description: ETP enabled message is displayed in the protections panel
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
