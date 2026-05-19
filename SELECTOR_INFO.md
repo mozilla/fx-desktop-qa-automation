@@ -5172,3 +5172,24 @@ Description: Blocking tracker category title
 Location: Trustpanel - Blocking category view
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-toggle-parent
+Selector Data: "trustpanel-toggle"
+Description: Trust toggle button parent
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-toggle-button
+Selector Data: "input"
+Description: Trustpanel toggle button
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-etp-off
+Selector Data: "//*[@id='trustpanel-header' and text()='You turned off protections']"
+Description: Trust Panel ETP status
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```

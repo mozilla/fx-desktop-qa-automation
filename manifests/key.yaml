@@ -963,6 +963,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional1
+  test_pdf_contextual_menu_actions:
+    result: pass
+    splits:
+    - functional1
   test_pdf_copy_paste_functionality:
     result: pass
     splits:
@@ -1200,6 +1204,10 @@ security_and_privacy:
     splits:
     - functional2
   test_end_private_session_clears_cookies:
+    result: pass
+    splits:
+    - functional2
+  test_etp_panel_displayed_when_protection_off:
     result: pass
     splits:
     - functional2
