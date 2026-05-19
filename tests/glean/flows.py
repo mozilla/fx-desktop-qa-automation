@@ -2,7 +2,6 @@ import time
 
 import pytest
 from selenium.webdriver import Firefox, Keys
-from selenium.webdriver.common.by import By
 
 from modules.browser_object import ContextMenu, Navigation
 from modules.browser_object_tabbar import TabBar
@@ -13,14 +12,6 @@ from modules.page_object_generics import GenericPage
 SEARCH_TERM = "firefox"
 PERSISTED_REFINEMENT = " browser"
 WIKI_IMAGE_URL = "https://en.wikipedia.org/wiki/Norman_Rockwell"
-
-_INCONTENT_SEARCH_BAR: dict[str, str] = {
-    "Google": "textarea[aria-label='Search']",
-    "Bing": "input#sb_form_q",
-    "DuckDuckGo": "input[name='q']",
-    "Ecosia": "input[name='q']",
-    "Qwant": "input[name='q']",
-}
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -178,45 +169,20 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
-    engine = (params or {}).get("engine", "Google")
-    selector = _INCONTENT_SEARCH_BAR[engine]
+    search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
 
     # Open a new tab and perform the initial search
     page.open()
     nav.search(search_term)
     page.url_contains(search_term)
 
-    # Wait until Firefox has fully classified the first SERP. The urlbar swapping
-    # to show the search term (gated by browser.urlbar.showSearchTerms.enabled)
-    # is the same "SERP classified" signal urlbar_persisted relies on; without
-    # it, the refinement below races ahead and Firefox can't see the previous
-    # SERP context, so the second impression gets source='unknown'.
-    nav.wait.until(lambda _: nav.get_awesome_bar_text() == search_term)
+    page.element_visible(search_bar_name)
+    search_bar = page.get_element(search_bar_name)
 
-    # Refine via the in-content search bar on the SERP. Wait for the SERP to
-    # finish loading and give Firefox's SearchSERPTelemetry actor time to attach
-    # before submitting — without this delay the refinement races ahead of the
-    # content instrumentation and the resulting impression gets source='unknown'
-    # instead of follow_on_from_refine_on_incontent_search. Submit by pressing
-    # Enter on the searchbox itself: clicking the form's submit button is
-    # tracked as a generic 'non_ads_link' engagement and breaks source tagging.
-    search_bar = page.wait.until(
-        lambda d: el
-        if (el := d.find_element(By.CSS_SELECTOR, selector)).is_displayed()
-        else False
-    )
-    page.wait.until(
-        lambda d: d.execute_script("return document.readyState") == "complete"
-    )
     time.sleep(3)
 
     search_bar.click()
-    search_bar.send_keys(Keys.END)
-    search_bar.send_keys(PERSISTED_REFINEMENT)
-    page.wait.until(
-        lambda _: search_bar.get_attribute("value").endswith(PERSISTED_REFINEMENT)
-    )
-    search_bar.send_keys(Keys.ENTER)
+    search_bar.send_keys(Keys.END + PERSISTED_REFINEMENT + Keys.ENTER)
     page.url_contains(PERSISTED_REFINEMENT.strip())
 
 
