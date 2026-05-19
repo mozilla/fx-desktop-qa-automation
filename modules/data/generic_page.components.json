@@ -19,9 +19,9 @@
         "strategy": "class",
         "groups": []
     },
-    "wiki-article-image": {
-        "selectorData": "mw-file-element",
-        "strategy": "class",
+    "python-logo": {
+        "selectorData": "img[src*='python-logo']",
+        "strategy": "css",
         "groups": []
     },
     "wiki-search-bar": {
