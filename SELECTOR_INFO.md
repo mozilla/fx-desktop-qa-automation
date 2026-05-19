@@ -2678,10 +2678,10 @@ Location: wikipedia.org
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
-Selector Name: wiki-article-image
-Selector Data: "mw-file-element"
-Description: A regular inline image in a Wikipedia article (e.g. infobox image). Use this instead of mediawiki-image when the target image is in the article body, not the media viewer.
-Location: wikipedia.org
+Selector Name: python-logo
+Selector Data: "img[src*='python-logo']"
+Description: The Python logo image on python.org. Stable inline <img> element suitable for context-menu image actions (search image, save image, etc.) when a banner-free, layout-stable test page is needed.
+Location: python.org
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
