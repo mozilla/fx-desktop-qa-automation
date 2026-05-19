@@ -5193,3 +5193,10 @@ Description: Trust Panel ETP status
 Location: Trustpanel
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-etp-on
+Selector Data: "//*[@id='trustpanel-header' and text()='Firefox is on guard']"
+Description: Trust Panel ETP status when turned on
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
