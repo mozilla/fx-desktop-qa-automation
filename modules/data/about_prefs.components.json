@@ -642,6 +642,31 @@
     "strategy": "id",
     "groups": []
   },
+  "doh-default-radio": {
+    "selectorData": "dohDefaultRadio",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-increased-protection-radio": {
+    "selectorData": "dohEnabledRadio",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-max-protection-radio": {
+    "selectorData": "dohStrictRadio",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-off-radio": {
+    "selectorData": "dohOffRadio",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-enabled-resolver": {
+    "selectorData": "dohEnabledResolverChoices",
+    "strategy": "id",
+    "groups": []
+  },
   "mlb-allow-audio-video-settings": {
     "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
     "strategy": "css",
