@@ -132,7 +132,7 @@
         "groups": []
     },
     "connection-not-secure": {
-        "selectorData": "//*[@class='identity-popup-connection-not-secure security-view' and contains(.,'You are not securely connected to this site')]",
+        "selectorData": "//*[@class='identity-popup-connection-not-secure security-view' and text()='You are not securely connected to this site.']",
         "strategy": "xpath",
         "groups": []
     },
