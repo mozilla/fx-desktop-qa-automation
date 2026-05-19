@@ -1275,6 +1275,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_secure_domain_certificate_messaging_panel:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_removed_on_end_private_session:
     result: pass
     splits:
