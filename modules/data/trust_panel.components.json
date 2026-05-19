@@ -131,6 +131,11 @@
         "strategy": "xpath",
         "groups": []
     },
+    "trustpanel-etp-on": {
+        "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
+        "strategy": "xpath",
+        "groups": []
+    },
     "connection-not-secure": {
         "selectorData": "//*[@class='identity-popup-connection-not-secure security-view' and text()='You are not securely connected to this site.']",
         "strategy": "xpath",
