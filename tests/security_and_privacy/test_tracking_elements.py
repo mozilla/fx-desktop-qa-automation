@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -10,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import Navigation, TrustPanel
+from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -28,13 +26,10 @@ def status_checker(span_id, expected):
     )
 
 
-VISIT_URL = "about:preferences#privacy"
 TRACKER_URL = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
-def test_tracking_elements(
-    driver: Firefox, trust_panel: TrustPanel, about_prefs_privacy: AboutPrefs
-):
+def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
     """
     C446325: Verify tracking elements are not blocked in normal browsing session
     """
@@ -53,7 +48,7 @@ def test_tracking_elements(
     trust_panel.wait_for_trackers()
 
     # turn of the enhanced tracking protection toggle
-    trust_panel.click_tracking_protection_toggle()
+    trust_panel.trustpanel_toggle_on_off()
 
     # wait until the page refreshes
     WebDriverWait(driver, 10).until(EC.staleness_of(old_body))
