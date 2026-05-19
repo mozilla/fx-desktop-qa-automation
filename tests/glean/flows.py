@@ -1,9 +1,8 @@
-import time
-
 import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import ContextMenu, Navigation
+from modules.browser_object_glean import Glean
 from modules.browser_object_tabbar import TabBar
 from modules.page_object import AboutNewtab
 from modules.page_object_example_page import ExamplePage
@@ -169,6 +168,7 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
+    glean = Glean(driver)
     search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
 
     # Open a new tab and perform the initial search
@@ -176,11 +176,12 @@ def _entry_follow_on_from_refine_on_incontent_search(
     nav.search(search_term)
     page.url_contains(search_term)
 
+    # Wait for the first SERP impression to be recorded so Firefox has wired up in-content search telemetry before we
+    # refine; otherwise the refinement is attributed as source='unknown'
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
     page.element_visible(search_bar_name)
     search_bar = page.get_element(search_bar_name)
-
-    time.sleep(3)
-
     search_bar.click()
     search_bar.send_keys(Keys.END + PERSISTED_REFINEMENT + Keys.ENTER)
     page.url_contains(PERSISTED_REFINEMENT.strip())
