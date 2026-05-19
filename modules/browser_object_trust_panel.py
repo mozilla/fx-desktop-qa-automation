@@ -203,5 +203,5 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def click_tracking_protection_toggle(self):
         """Clicks the "Enhanced Tracking Protection" toggle in the trackers panel"""
-        self.js_click_on("enhanced-tracking-protection-toggle")
+        self.js_click_on("trustpanel-toggle-button")
         return self
