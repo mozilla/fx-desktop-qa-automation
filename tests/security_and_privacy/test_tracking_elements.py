@@ -31,7 +31,7 @@ TRACKER_URL = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
     """
-    C446325: Verify tracking elements are not blocked in normal browsing session
+    C446325: Verify tracking elements are not blocked in normal browsing session after ETP is disabled
     """
     about_prefs = AboutPrefs(driver, category="privacy")
 
@@ -41,17 +41,13 @@ def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
 
     # open the trackers page and save the current state of the page before changes
     GenericPage(driver, url=TRACKER_URL).open()
-    old_body = driver.find_element(By.TAG_NAME, "body")
 
     # click on the shield icon
     trust_panel.open_panel()
     trust_panel.wait_for_trackers()
 
-    # turn of the enhanced tracking protection toggle
+    # turn off the enhanced tracking protection toggle
     trust_panel.trustpanel_toggle_on_off()
-
-    # wait until the page refreshes
-    WebDriverWait(driver, 10).until(EC.staleness_of(old_body))
 
     # Wait for fresh DOM to have correct values (re-fetches each poll)
     wait = WebDriverWait(
@@ -60,6 +56,15 @@ def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
         ignored_exceptions=(StaleElementReferenceException, NoSuchElementException),
     )
 
-    wait.until(status_checker("blacklisted-loaded", "incorrectly loaded"))
-    wait.until(status_checker("whitelisted-loaded", "correctly loaded"))
-    wait.until(status_checker("dnt-off", "incorrectly missing"))
+    wait.until(
+        status_checker("blacklisted-loaded", "incorrectly loaded"),
+        "Expected result: incorrectly loaded",
+    )
+    wait.until(
+        status_checker("whitelisted-loaded", "correctly loaded"),
+        "Expected result: correctly loaded",
+    )
+    wait.until(
+        status_checker("dnt-off", "incorrectly missing"),
+        "Expected result: incorrectly missing",
+    )
