@@ -1,8 +1,14 @@
 import time
 
 import pytest
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import Navigation, TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
@@ -13,6 +19,15 @@ def test_case():
     return "446325"
 
 
+def status_checker(span_id, expected):
+    return (
+        lambda d: (
+            d.find_element(By.ID, span_id).get_attribute("textContent") or ""
+        ).strip()
+        == expected
+    )
+
+
 VISIT_URL = "about:preferences#privacy"
 TRACKER_URL = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
@@ -20,27 +35,36 @@ TRACKER_URL = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 def test_tracking_elements(
     driver: Firefox, trust_panel: TrustPanel, about_prefs_privacy: AboutPrefs
 ):
-    pgg = GenericPage(driver, url=TRACKER_URL)
+    """
+    C446325: Verify tracking elements are not blocked in normal browsing session
+    """
     about_prefs = AboutPrefs(driver, category="privacy")
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs.open()
     about_prefs.click_on("standard-radio")
 
-    # wait for the shield icon
-    pgg.open()
+    # open the trackers page and save the current state of the page before changes
+    GenericPage(driver, url=TRACKER_URL).open()
+    old_body = driver.find_element(By.TAG_NAME, "body")
+
+    # click on the shield icon
     trust_panel.open_panel()
     trust_panel.wait_for_trackers()
 
+    # turn of the enhanced tracking protection toggle
     trust_panel.click_tracking_protection_toggle()
-    pg_body = pgg.get_element("page-body")
-    # result1 = driver.find_element(By.XPATH, '//*[@id="blacklisted-loaded"]')
-    # result2 = driver.find_element(By.XPATH, '//*[@id="whitelisted-loaded"]')
-    # result3 = driver.find_element(By.XPATH, '//*[@id="dnt-off"]')
 
-    # print(f"-------------------result1----->{result1.text}")
-    # print(f"-------------------result2----->{result2.text}")
-    # print(f"-------------------result3----->{result3.text}")
-    # assert result1.text == "incorrectly loaded", f"Expected incorrectly loaded but got: {result1.text}"
-    # assert result2.text == "correctly loaded", f"Expected correctly loaded but got: {result2.text}"
-    # assert result3.text == "incorrectly missing", f"Expected incorrectly loaded but got: {result3.text}"
+    # wait until the page refreshes
+    WebDriverWait(driver, 10).until(EC.staleness_of(old_body))
+
+    # Wait for fresh DOM to have correct values (re-fetches each poll)
+    wait = WebDriverWait(
+        driver,
+        10,
+        ignored_exceptions=(StaleElementReferenceException, NoSuchElementException),
+    )
+
+    wait.until(status_checker("blacklisted-loaded", "incorrectly loaded"))
+    wait.until(status_checker("whitelisted-loaded", "correctly loaded"))
+    wait.until(status_checker("dnt-off", "incorrectly missing"))
