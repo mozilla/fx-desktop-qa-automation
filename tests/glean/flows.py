@@ -9,7 +9,7 @@ from modules.page_object_generics import GenericPage
 
 SEARCH_TERM = "firefox"
 PERSISTED_REFINEMENT = " browser"
-WIKI_IMAGE_URL = "https://en.wikipedia.org/wiki/Norman_Rockwell"
+IMAGE_PAGE_URL = "https://www.python.org/"
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -114,14 +114,14 @@ def _entry_contextmenu(driver: Firefox, search_term: str, params: dict = None):
 def _entry_contextmenu_visual(driver: Firefox, search_term: str, params: dict = None):
     """Right-click an image and search via Google Lens from the context menu."""
     # Instantiate objects
-    wiki_page = GenericPage(driver, url=WIKI_IMAGE_URL)
+    image_page = GenericPage(driver, url=IMAGE_PAGE_URL)
     context_menu = ContextMenu(driver)
 
     # Open the page, right-click the image, and trigger the Google Lens search
-    wiki_page.open()
-    image = wiki_page.get_element("wiki-article-image")
-    wiki_page.scroll_to_element(image)
-    wiki_page.context_click(image)
+    image_page.open()
+    image = image_page.get_element("python-logo")
+    image_page.scroll_to_element(image)
+    image_page.context_click(image)
     context_menu.click_and_hide_menu("context-menu-search-image-with-lens")
 
 
