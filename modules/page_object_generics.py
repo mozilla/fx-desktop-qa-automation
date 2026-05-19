@@ -20,7 +20,7 @@ class GenericPage(BasePage):
     def navigate_dialog_to_location(
         self, location: str, filename="test.txt"
     ) -> BasePage:
-        logging(f"Location: {location}")
+        logging.warning(f"Location: {location}")
         sleep(1.5)
 
         if self.sys_platform() == "Darwin":
