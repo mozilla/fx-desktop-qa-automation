@@ -89,6 +89,11 @@ class AboutConfig(BasePage):
         pref_edit_button.click()
         return self
 
+    def get_pref_value(self, term: str):
+        """Return the current value string for a preference from about:config."""
+        self.search_pref(term)
+        return self.get_element("pref-cell-value").text.strip()
+
     def toggle_config_value(self, term: str, value) -> BasePage:
         """
         Main method to toggle a config's value in about:config

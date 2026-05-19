@@ -68,6 +68,13 @@ class AboutPrefs(BasePage):
 
     HTTPS_ONLY_STATUS = HttpsOnlyStatus()
 
+    DOH_RADIO_IDS = {
+        "default-protection": "doh-default-radio",
+        "increased-protection": "doh-increased-protection-radio",
+        "max-protection": "doh-max-protection-radio",
+        "off": "doh-off-radio",
+    }
+
     # Function Organization
     # Search and Settings
 
@@ -216,6 +223,14 @@ class AboutPrefs(BasePage):
         )
 
         self.get_element("language-settings-ok").click()
+        return self
+
+    def select_doh_protection_level(self, level: str) -> BasePage:
+        """
+        Select a DNS over HTTPS protection level in about:preferences#privacy.
+        level: 'default-protection' | 'increased-protection' | 'max-protection' | 'off'
+        """
+        self.click_on(self.DOH_RADIO_IDS[level])
         return self
 
     def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
