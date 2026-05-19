@@ -16,6 +16,11 @@
         "strategy": "class",
         "groups": []
     },
+    "pref-cell-value": {
+        "selectorData": "td.cell-value",
+        "strategy": "css",
+        "groups": []
+    },
     "value-edit-field": {
         "selectorData": "#form-edit > input:nth-child(1)",
         "strategy": "css",
