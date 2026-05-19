@@ -5,14 +5,13 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_case():
     return "446325"
 
