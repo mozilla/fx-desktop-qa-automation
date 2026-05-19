@@ -180,6 +180,7 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # refine; otherwise the refinement is attributed as source='unknown'
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
 
+    # Refine the search via the in-content search bar and verify the URL updates
     page.element_visible(search_bar_name)
     search_bar = page.get_element(search_bar_name)
     search_bar.click()
