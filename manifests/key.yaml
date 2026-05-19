@@ -1203,6 +1203,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_etp_panel_displayed_when_no_trackers_detected:
+    result: pass
+    splits:
+    - functional2
   test_etp_panel_displayed_when_protection_off:
     result: pass
     splits:
