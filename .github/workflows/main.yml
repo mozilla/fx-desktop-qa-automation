@@ -202,7 +202,7 @@ jobs:
           }}
         shell: pwsh
         run: |
-          $split = $env:STARFOX_SPLIT ?? "smoke"
+          $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
           if ($split -ne "smoke") {exit 0}
           pipenv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
