@@ -5194,6 +5194,13 @@ Location: Trustpanel
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
+Selector Name: trustpanel-etp-on
+Selector Data: "//*[@id='trustpanel-header' and text()='Firefox is on guard']"
+Description: Trust Panel ETP status when turned on
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
 Selector Name: connection-secure
 Selector Data: "//*[@class='identity-popup-connection-secure security-view' and text()='You are securely connected to this site.']"
 Description: 'You are securely connected to this site.' message is displayed in the connection subpanel

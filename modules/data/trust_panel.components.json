@@ -131,6 +131,11 @@
         "strategy": "xpath",
         "groups": []
     },
+    "trustpanel-etp-on": {
+        "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
+        "strategy": "xpath",
+        "groups": []
+    },
     "trustpanel-connection-button": {
         "selectorData": "trustpanel-connection-label",
         "strategy": "id",
