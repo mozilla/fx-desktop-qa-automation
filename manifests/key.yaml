@@ -426,16 +426,16 @@ downloads:
     - functional1
   test_download_pdf:
     result:
-      win: pass
-      mac: pass
       linux: unstable
+      mac: pass
+      win: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
     result:
-      win: pass
-      mac: pass
       linux: unstable
+      mac: pass
+      win: pass
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -630,9 +630,9 @@ menus:
     - ci
   test_frequently_used_context_menu:
     result:
+      linux: unstable
       mac: pass
       win: pass
-      linux: unstable
     splits:
     - functional1
   test_hyperlink_context_menu:
@@ -641,9 +641,9 @@ menus:
     - smoke
   test_image_context_menu_actions:
     result:
+      linux: unstable
       mac: pass
       win: pass
-      linux: unstable
     splits:
     - functional1
   test_new_tab_label:
