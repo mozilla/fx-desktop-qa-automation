@@ -81,6 +81,13 @@ Description: Text entry field when editing a str value of a config
 Location: Line item config in about:config page
 Path to .json: modules/data/about_config.components.json
 ```
+```
+Selector Name: pref-cell-value
+Selector Data: "td.cell-value"
+Description: The cell displaying the current value of a preference
+Location: Line item config in about:config page
+Path to .json: modules/data/about_config.components.json
+```
 #### about_downloads
 ```
 Selector Name: no-downloads-label
@@ -1319,6 +1326,41 @@ Selector Name: doh-resolver
 Selector Data: "dohResolver"
 Description: The name of the DoH provider
 Location: Inside the first frame of the DoH section in about:preferences#general
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-default-radio
+Selector Data: "dohDefaultRadio"
+Description: Radio button for Default Protection DoH mode
+Location: about:preferences#privacy - DNS over HTTPS section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-increased-protection-radio
+Selector Data: "dohEnabledRadio"
+Description: Radio button for Increased Protection DoH mode
+Location: about:preferences#privacy - DNS over HTTPS section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-max-protection-radio
+Selector Data: "dohStrictRadio"
+Description: Radio button for Max Protection DoH mode
+Location: about:preferences#privacy - DNS over HTTPS section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-off-radio
+Selector Data: "dohOffRadio"
+Description: Radio button to turn DoH off
+Location: about:preferences#privacy - DNS over HTTPS section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-enabled-resolver
+Selector Data: "dohEnabledResolverChoices"
+Description: Provider dropdown for the Increased Protection DoH mode
+Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```

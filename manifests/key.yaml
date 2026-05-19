@@ -655,6 +655,10 @@ meta:
     result: pass
     splits: []
 networking:
+  test_cloudflare_as_default_doh_provider:
+    result: pass
+    splits:
+    - functional1
   test_default_dns_protection:
     result:
       linux: pass
