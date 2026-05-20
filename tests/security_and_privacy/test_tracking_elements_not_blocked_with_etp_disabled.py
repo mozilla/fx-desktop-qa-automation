@@ -1,10 +1,7 @@
 import pytest
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    StaleElementReferenceException,
-)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import TrustPanel
@@ -14,15 +11,6 @@ from modules.page_object import AboutPrefs, GenericPage
 @pytest.fixture()
 def test_case():
     return "446325"
-
-
-def status_checker(span_id, expected):
-    return (
-        lambda d: (
-            d.find_element(By.ID, span_id).get_attribute("textContent") or ""
-        ).strip()
-        == expected
-    )
 
 
 TRACKER_URL = "https://www.itisatrap.org/firefox/its-a-tracker.html"
@@ -49,21 +37,18 @@ def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
     trust_panel.trustpanel_toggle_on_off()
 
     # Wait for fresh DOM to have correct values (re-fetches each poll)
-    wait = WebDriverWait(
-        driver,
-        10,
-        ignored_exceptions=(StaleElementReferenceException, NoSuchElementException),
-    )
+    wait = WebDriverWait(driver, 10)
 
     wait.until(
-        status_checker("blacklisted-loaded", "incorrectly loaded"),
-        "Expected result: incorrectly loaded",
+        EC.text_to_be_present_in_element(
+            (By.ID, "blacklisted-loaded"), "incorrectly loaded"
+        )
     )
     wait.until(
-        status_checker("whitelisted-loaded", "correctly loaded"),
-        "Expected result: correctly loaded",
+        EC.text_to_be_present_in_element(
+            (By.ID, "whitelisted-loaded"), "correctly loaded"
+        )
     )
     wait.until(
-        status_checker("dnt-off", "incorrectly missing"),
-        "Expected result: incorrectly missing",
+        EC.text_to_be_present_in_element((By.ID, "dnt-off"), "incorrectly missing")
     )

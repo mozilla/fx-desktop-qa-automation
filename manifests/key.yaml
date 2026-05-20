@@ -1315,7 +1315,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_tracking_elements:
+  test_tracking_elements_not_blocked_with_etp_disabled:
     result: pass
     splits:
     - functional2
