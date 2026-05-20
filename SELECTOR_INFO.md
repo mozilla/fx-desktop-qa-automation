@@ -2748,7 +2748,14 @@ Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
-Selector Name: simulated-tracker-load-status
+Selector Name: simulated-third-party-tracker-load-status
+Selector Data: "blacklisted-loaded"
+Description: The  third-party tracker loaded status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-first-party-tracker-load-status
 Selector Data: "whitelisted-loaded"
 Description: The tracker allowed status
 Location: Tracker test website

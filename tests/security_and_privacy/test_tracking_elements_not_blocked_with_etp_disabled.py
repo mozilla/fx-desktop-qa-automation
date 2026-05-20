@@ -1,8 +1,5 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
@@ -16,7 +13,9 @@ def test_case():
 TRACKER_URL = "https://www.itisatrap.org/firefox/its-a-tracker.html"
 
 
-def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
+def test_tracking_elements_not_blocked_with_etp_disabled(
+    driver: Firefox, trust_panel: TrustPanel
+):
     """
     C446325: Verify tracking elements are not blocked in normal browsing session after ETP is disabled
     """
@@ -26,29 +25,26 @@ def test_tracking_elements(driver: Firefox, trust_panel: TrustPanel):
     about_prefs.open()
     about_prefs.click_on("standard-radio")
 
-    # open the trackers page and save the current state of the page before changes
-    GenericPage(driver, url=TRACKER_URL).open()
+    # open the trackers page
+    tracker_website = GenericPage(driver, url=TRACKER_URL)
+    tracker_website.open()
 
     # click on the shield icon
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
 
     # turn off the enhanced tracking protection toggle
     trust_panel.trustpanel_toggle_on_off()
+    trust_panel.wait_for_trackers()
 
-    # Wait for fresh DOM to have correct values (re-fetches each poll)
-    wait = WebDriverWait(driver, 10)
+    # Assert the various statuses, ensure that the correct one is displayed
+    block_status = tracker_website.get_element(
+        "simulated-third-party-tracker-load-status"
+    )
+    load_status = tracker_website.get_element(
+        "simulated-first-party-tracker-load-status"
+    )
+    dnt_status = tracker_website.get_element("simulated-tracker-dnt-status")
 
-    wait.until(
-        EC.text_to_be_present_in_element(
-            (By.ID, "blacklisted-loaded"), "incorrectly loaded"
-        )
-    )
-    wait.until(
-        EC.text_to_be_present_in_element(
-            (By.ID, "whitelisted-loaded"), "correctly loaded"
-        )
-    )
-    wait.until(
-        EC.text_to_be_present_in_element((By.ID, "dnt-off"), "incorrectly missing")
-    )
+    assert "incorrect" in block_status.get_attribute("class")
+    assert "correct" in load_status.get_attribute("class")
+    assert "incorrect" in dnt_status.get_attribute("class")
