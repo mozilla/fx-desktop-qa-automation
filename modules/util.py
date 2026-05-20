@@ -11,7 +11,6 @@ from time import sleep
 from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
-import pyautogui
 from faker import Faker
 from faker.config import AVAILABLE_LOCALES
 from faker.providers import internet, misc
@@ -32,6 +31,7 @@ from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
 if platform.system() == "Linux" and "wayland_automation" not in sys.modules:
+    import pynput
     import wayland_automation as wa
 #     import Xlib.XK
 #     from Xlib import X
@@ -982,6 +982,49 @@ class PomUtils:
 
 
 class LinuxAuto:
+    def __init__(self):
+        self.mouse = pynput.mouse.Controller()
+        self.mouse_button = pynput.mouse.Button()
+        self.keyboard = pynput.keyboard.Controller()
+        self.key = pynput.keyboard.Key()
+
+    def moveTo(self, x, y):
+        self.mouse.position = (x, y)
+
+    def click(self, x, y, button):
+        self.moveTo(x, y)
+        btn = getattr(self.mouse_button, button)
+        self.mouse.press(btn)
+        self.mouse.release(btn)
+
+    def press(self, key):
+        k = getattr(self.key, key, None)
+        if k is None:
+            k = key
+        self.keyboard.tap(k)
+
+    def write(self, s):
+        for c in s:
+            self.press()
+
+    def hotkey(self, *keys):
+        for key in keys:
+            k = getattr(self.key, key, None)
+            if k is None:
+                k = key
+            self.keyboard.press(k)
+
+        for key in reversed(keys):
+            k = getattr(self.key, key, None)
+            if k is None:
+                k = key
+            self.keyboard.release(k)
+
+
+class WaylandLinuxAuto:
+    """This class, once permissions issues on Wayland machines are resolved,
+    will automate Wayland GUI interactions"""
+
     def __init__(self):
         self.click = wa.click
         self.swipe = wa.swipe

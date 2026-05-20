@@ -33,6 +33,7 @@ opencv-python = "*"
 python-dev-tools = "*"
 python3-xlib = "*"
 wayland-automation = { version = "*", markers = "sys_platform == 'linux'"}
+pynput = { version = "*", markers = "sys_platform == 'linux'"}
 
 [dev-packages]
 werkzeug = "==3.1.6"
