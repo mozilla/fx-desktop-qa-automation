@@ -10,7 +10,12 @@ data = load_cases(__file__)
 METRIC = data["metric"]
 
 
-@pytest.fixture(params=data["cases"], ids=lambda c: f"{c['id']}-{c['entry']}")
+@pytest.fixture(
+    params=data["cases"],
+    ids=lambda c: (
+        f"{c['id']}-{c['entry']}" + (f"-{c['action']}" if c.get("action") else "")
+    ),
+)
 def case(request):
     """Parametrized fixture yielding one test case dict from cases.json."""
     return request.param

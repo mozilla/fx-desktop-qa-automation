@@ -192,7 +192,19 @@ def _entry_follow_on_from_refine_on_incontent_search(
 # Action flows — things that happen after the SERP is open
 # ---------------------------------------------------------------------------
 
-# TBD
+
+@_action("reload")
+def _action_reload(driver: Firefox, params: dict = None):
+    """Reload the SERP so Firefox records a fresh impression with source='reload'."""
+    # Instantiate objects
+    page = GenericPage(driver, url="about:newtab")
+    nav = Navigation(driver)
+
+    # Wait for the SERP to finish loading before reloading, then reload and wait again
+    page.url_contains(SEARCH_TERM)
+    nav.refresh_page()
+    page.url_contains(SEARCH_TERM)
+
 
 # ---------------------------------------------------------------------------
 # Public API

@@ -40,6 +40,11 @@
 
     {"id": "3255447", "entry": "follow_on_from_refine_on_incontent_search", "action": null, "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "follow_on_from_refine_on_incontent_search", "tagged": "true"}},
     {"id": "3255462", "entry": "follow_on_from_refine_on_incontent_search", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab", "source": "follow_on_from_refine_on_incontent_search", "tagged": "true"}},
-    {"id": "3255477", "entry": "follow_on_from_refine_on_incontent_search", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "follow_on_from_refine_on_incontent_search", "tagged": "true"}}
+    {"id": "3255477", "entry": "follow_on_from_refine_on_incontent_search", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "follow_on_from_refine_on_incontent_search", "tagged": "true"}},
+
+    {"id": "3255448", "entry": "urlbar", "action": "reload", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "reload",  "tagged": "true"}},
+    {"id": "3255463", "entry": "urlbar", "action": "reload", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab",  "source": "reload", "tagged": "true"}},
+    {"id": "3255478", "entry": "urlbar", "action": "reload", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "reload", "tagged": "true"}},
+    {"id": "3255493", "entry": "urlbar", "action": "reload", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"provider": "qwant", "partner_code": "brz-moz", "source": "reload", "tagged": "true"}}
   ]
 }
