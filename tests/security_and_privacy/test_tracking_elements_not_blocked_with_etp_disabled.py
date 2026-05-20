@@ -34,17 +34,21 @@ def test_tracking_elements_not_blocked_with_etp_disabled(
 
     # turn off the enhanced tracking protection toggle
     trust_panel.trustpanel_toggle_on_off()
+
+    # verify that the toggle has been turned off and wait for trackers
+    trust_panel.open_panel()
+    trust_panel.trustpanel_status("off")
     trust_panel.wait_for_trackers()
 
     # Assert the various statuses, ensure that the correct one is displayed
-    block_status = tracker_website.get_element(
+    third_party_load_status = tracker_website.get_element(
         "simulated-third-party-tracker-load-status"
     )
-    load_status = tracker_website.get_element(
+    first_party_load_status = tracker_website.get_element(
         "simulated-first-party-tracker-load-status"
     )
     dnt_status = tracker_website.get_element("simulated-tracker-dnt-status")
 
-    assert "incorrect" in block_status.get_attribute("class")
-    assert "correct" in load_status.get_attribute("class")
+    assert "incorrect" in third_party_load_status.get_attribute("class")
+    assert "correct" in first_party_load_status.get_attribute("class")
     assert "incorrect" in dnt_status.get_attribute("class")
