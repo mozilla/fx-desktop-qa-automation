@@ -28,7 +28,7 @@ STARfox uses [TestRail](https://www.testrail.com/) as the system of record for s
 ```mermaid
 flowchart TD
     A[GitHub Actions trigger<br/>schedule / PR / manual] --> B[Check-*-Version job<br/>scripts/check_reportable.sh]
-    B -->|reportable() or  preview_reportable()| C{reportable?}
+    B -->|reportable() or preview_reportable()| C{reportable?}
     C -- no --> Z[Job emits win=False/mac=False<br/>downstream jobs skip]
     C -- yes --> D[main.yml / main-l10n.yml<br/>Test-Windows / Test-MacOS / L10N-Linux]
     D -->|sets TESTRAIL_REPORT=true| E[pytest run]
@@ -105,7 +105,7 @@ Fires from `conftest.pytest_sessionfinish` once pytest has produced its `_json_r
    - Buckets tests by `suite_id`, then for each suite hands off to `organize_entries`.
 2. **`organize_entries(tr_session, expected_plan, suite_info)`** (`testrail_integration.py`)
    - Re-fetches the plan to avoid stale-snapshot races between the Mac and Windows jobs.
-   - Ensures the entry for this suite exists (creates it if not, with `config_ids` and `runs` — see the [related fix](#known-pitfalls)).
+   - Ensures the entry for this suite exists (creates it if not, with `config_ids` and `runs`.
    - Ensures the run for this `(entry, config)` pair exists; creates it via `create_test_run_on_plan_entry` if not.
    - If existing run is missing any of the expected case ids, calls `update_run_in_entry` to add them.
    - Skips runs marked `is_completed`.
