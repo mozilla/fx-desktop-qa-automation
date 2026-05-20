@@ -593,7 +593,7 @@ geolocation:
       mac: pass
       win: unstable
     splits:
-    - functional2
+    - functional1
   test_geolocation_shared_via_w3c_api:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
     result:
@@ -601,7 +601,7 @@ geolocation:
       mac: pass
       win: unstable
     splits:
-    - functional2
+    - functional1
 glean:
   test_serp_impression:
     result: pass
@@ -611,7 +611,7 @@ language_packs:
   test_language_pack_install_addons:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_language_pack_install_preferences:
     result: pass
     splits:
@@ -625,7 +625,7 @@ menus:
   test_frequently_used_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_hyperlink_context_menu:
     result: pass
     splits:
@@ -633,19 +633,19 @@ menus:
   test_image_context_menu_actions:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_new_tab_label:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_tab_context_menu_actions:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_tab_context_menu_close:
     result: pass
     splits:
-    - functional2
+    - functional1
 meta:
   test_selectors:
     comment: Not part of feature functional test suites
@@ -669,7 +669,7 @@ networking:
   test_http_site:
     result: pass
     splits:
-    - functional2
+    - functional1
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
@@ -678,43 +678,43 @@ notifications:
       mac: pass
       win: pass
     splits:
-    - functional2
+    - functional1
   test_camera_permissions_notification:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_cancel_webextension:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_deny_geolocation:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_deny_screen_capture:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_downloads_button_is_displayed:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_downloads_finished_button_is_displayed:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_geolocation_prompt_presence:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_microphone_permissions_notification:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_notifications_displayed:
     result: pass
     splits:
@@ -727,64 +727,64 @@ notifications:
   test_webextension_completed_installation_successfully_displayed:
     result: pass
     splits:
-    - functional2
+    - functional1
 password_manager:
   test_about_logins_copy_prompts_primary_password:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_edit_prompts_primary_password:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_navigation_from_about_protections:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_navigation_from_hamburger_menu:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_password_copy_button:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_password_show_hide_button:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_search_passwords:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_search_username:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_search_website:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_about_logins_username_copy_button:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_add_password_non_ascii_chars:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_add_password_save_valid_data:
     result: pass
     splits:
@@ -792,7 +792,7 @@ password_manager:
   test_add_primary_password:
     result: pass
     splits:
-    - functional2
+    - functional1
   test_add_username_via_doorhanger:
     result: pass
     splits:
@@ -923,7 +923,7 @@ password_manager:
   test_taobao_password_management:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -962,19 +962,19 @@ pdf_viewer:
   test_pdf_checkbox_functionality:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_contextual_menu_actions:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_copy_paste_functionality:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_copy_paste_functionality_numerical:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_data_can_be_cleared:
     result: pass
     splits:
@@ -990,7 +990,7 @@ pdf_viewer:
   test_pdf_dropdown_functionality:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_input_numbers:
     result: pass
     splits:
@@ -1002,7 +1002,7 @@ pdf_viewer:
   test_pdf_zoom_in_text_fields:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_zoom_pdf_viewer:
     result: pass
     splits:
@@ -1132,13 +1132,13 @@ security_and_privacy:
     splits:
     - functional2
   test_blocking_cryptominers:
-    result: pass
+    result: deprecated
     splits:
     - smoke
   test_blocking_fingerprinters:
     result: pass
     splits:
-    - smoke
+    - functional2
   test_blocking_social_media_trackers:
     result: pass
     splits:
@@ -1160,7 +1160,7 @@ security_and_privacy:
     splits:
     - functional2
   test_cross_site_tracking_cookies_blocked:
-    result: pass
+    result: deprecated
     splits:
     - functional2
   test_cross_site_tracking_cookies_displayed_subpanel:
@@ -1208,6 +1208,10 @@ security_and_privacy:
     splits:
     - functional2
   test_end_private_session_clears_cookies:
+    result: pass
+    splits:
+    - functional2
+  test_etp_panel_displayed_when_all_protections_disabled_custom:
     result: pass
     splits:
     - functional2
@@ -1259,10 +1263,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
-  test_etp_panel_displayed_when_all_protections_disabled_custom:
-    result: pass
-    splits:
-    - functional2
   test_phishing_and_malware_warnings:
     result: pass
     splits:
@@ -1310,7 +1310,7 @@ security_and_privacy:
   test_trackers_cryptominers_fingerprinters_blocked:
     result: pass
     splits:
-    - functional2
+    - smoke
   test_tracking_content_custom_mode:
     result: pass
     splits:
@@ -1352,7 +1352,7 @@ sidebar:
   test_choose_ai_chatbot_via_page_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
     result: pass
     splits:
@@ -1364,7 +1364,7 @@ sidebar:
   test_open_ai_chat_via_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
@@ -1416,15 +1416,15 @@ sidebar:
   test_summarize_page_via_ai_chat_panel:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_summarize_page_via_sidebar_ai_chat_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_summarize_page_via_tab_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_switch_between_horizontal_vertical_tabs:
     result: pass
     splits:
