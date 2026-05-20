@@ -7,7 +7,7 @@ STARfox uses [TestRail](https://www.testrail.com/) as the system of record for s
 | File | Role |
 |---|---|
 | [`modules/testrail.py`](modules/testrail.py) | Thin HTTP wrapper. `APIClient` handles auth, GET/POST, and error logging. `TestRail` exposes the endpoints the rest of the codebase uses (`get_test_case`, `create_new_plan`, `create_new_plan_entry`, `create_test_run_on_plan_entry`, `update_test_cases`, etc.). |
-| [`modules/testrail_integration.py`](modules/testrail_integration.py) | The integration brain. Builds plan titles, decides whether a session is *reportable*, walks the pytest JSON report, and creates/updates plans/entries/runs/results in TestRail. |
+| [`modules/testrail_integration.py`](modules/testrail_integration.py) | Builds plan titles, decides whether a session is *reportable*, walks the pytest JSON report, and creates/updates plans/entries/runs/results in TestRail. |
 | [`conftest.py`](conftest.py) | pytest hooks: `pytest_configure` early-exits if the session isn't reportable; `pytest_sessionfinish` posts results when the run is over. |
 | [`scripts/check_reportable.sh`](scripts/check_reportable.sh) | The job-level gate used by the scheduled workflows — runs `reportable()` (or `preview_reportable()` for dry-runs) and writes `win`/`mac` outputs the downstream jobs key off. |
 | [`modules/taskcluster.py`](modules/taskcluster.py) | Provides `get_tc_secret()` — pulls TestRail credentials from Taskcluster secrets when the Linux runs execute on TC. |
@@ -20,7 +20,7 @@ STARfox uses [TestRail](https://www.testrail.com/) as the system of record for s
 - **Plan** — one per Firefox build, named e.g. `[Beta 151] Automated testing 151.0b9-build1`. L10N runs prefix with `L10N `. Functional splits append ` - Functional (Split N)`.
 - **Entry** — one per test suite inside a plan. The entry's `name` is the suite description; its `suite_id` matches a TestRail suite.
 - **Run** — one per (entry, config) pair. The `config` string ("Configuration") encodes platform / OS / arch, e.g. `MacOS 15 arm64`. For L10N, the region is prepended: `de-Windows 11 x86_64`.
-- **Configuration group** — `CONFIG_GROUP_ID = 95`. New configs (e.g. a new platform string) are auto-created in this group via `add_config`.
+- **Configuration group** — New configs (e.g. a new platform string) are auto-created in this group via `add_config`.
 - **Case** — a single TestRail test case, identified by id. STARfox tests provide their case id via a `test_case` pytest fixture.
 
 ## End-to-end flow
@@ -28,7 +28,7 @@ STARfox uses [TestRail](https://www.testrail.com/) as the system of record for s
 ```mermaid
 flowchart TD
     A[GitHub Actions trigger<br/>schedule / PR / manual] --> B[Check-*-Version job<br/>scripts/check_reportable.sh]
-    B -->|reportable | preview_reportable| C{reportable?}
+    B -->|reportable() or  preview_reportable()| C{reportable?}
     C -- no --> Z[Job emits win=False/mac=False<br/>downstream jobs skip]
     C -- yes --> D[main.yml / main-l10n.yml<br/>Test-Windows / Test-MacOS / L10N-Linux]
     D -->|sets TESTRAIL_REPORT=true| E[pytest run]
@@ -94,23 +94,23 @@ When `FX_L10N` is set, `L10N ` is prefixed inside the brackets. When `STARFOX_SP
 
 Fires from `conftest.pytest_sessionfinish` once pytest has produced its `_json_report.report`. End-to-end:
 
-1. **`collect_changes(tr_session, report)`** (`testrail_integration.py:893`)
+1. **`collect_changes(tr_session, report)`** (`testrail_integration.py`)
    - Reads the first test's `metadata` (set by the test) for `fx_version` and `machine_config`.
-   - On Linux, post-processes `machine_config` with `lsb_release` to get `Linux 24.04 x86_64`.
-   - For L10N, prepends `FX_REGION` → `de-Linux 24.04 x86_64`.
+   - On Linux, post-processes `machine_config` with `lsb_release` to get `Linux Ubuntu 24.04 x86_64`.
+   - For L10N, prepends `FX_REGION` → `de-Linux Ubuntu 24.04 x86_64`.
    - Recomputes the plan title, finds (or creates) the milestone, submilestone, and plan.
    - Writes `.tmp_testrail_info` (plan title `|` config) so other tools can pick up the reporting target.
    - Adds/updates an "execution link" line in the plan's description so each plan has a clickable link back to the Action / TC log per OS (`replace_link_in_description`).
    - Finds (or creates) the config in `CONFIG_GROUP_ID = 95`.
    - Buckets tests by `suite_id`, then for each suite hands off to `organize_entries`.
-2. **`organize_entries(tr_session, expected_plan, suite_info)`** (`testrail_integration.py:719`)
+2. **`organize_entries(tr_session, expected_plan, suite_info)`** (`testrail_integration.py`)
    - Re-fetches the plan to avoid stale-snapshot races between the Mac and Windows jobs.
    - Ensures the entry for this suite exists (creates it if not, with `config_ids` and `runs` — see the [related fix](#known-pitfalls)).
    - Ensures the run for this `(entry, config)` pair exists; creates it via `create_test_run_on_plan_entry` if not.
    - If existing run is missing any of the expected case ids, calls `update_run_in_entry` to add them.
    - Skips runs marked `is_completed`.
    - Returns results grouped into `passed` / `failed` / `xfailed` / `skipped` buckets, keyed by `run_id`.
-3. **`mark_results(tr_session, test_results)`** (`testrail_integration.py:542`)
+3. **`mark_results(tr_session, test_results)`** (`testrail_integration.py`)
    - For each non-skipped category, fetches the current statuses on the run.
    - Won't downgrade an already-passing case to anything else.
    - Posts the batch via `update_test_cases` → `add_results_for_cases/{run_id}`.
@@ -162,13 +162,6 @@ Dry-run never opens a TestRail session and never modifies any state.
 - a GitHub Actions run (Windows / Mac via `GITHUB_REPOSITORY` + `GITHUB_RUN_ID`).
 
 If a line for the same OS already exists, it's replaced rather than duplicated.
-
-## Known pitfalls
-
-- **`add_plan_entry` rejects entries with `config_ids` but no `runs`.** TestRail returns `Field :entries has configurations but no test runs.` if you pass `config_ids` without also passing a matching `runs` array. `create_new_plan_entry` in `modules/testrail.py` builds a one-run-per-config payload automatically when the caller doesn't supply `runs`. See the [TestRail Plans API](https://support.testrail.com/hc/en-us/articles/7077711537684-Plans).
-- **Mac and Windows jobs can race.** Both platforms start with the same plan snapshot from `collect_changes`. Without the re-fetch at the top of `organize_entries`, both can decide "this entry doesn't exist yet" and create duplicate, configless entries. The re-fetch is what keeps this safe.
-- **Rerun outcomes lose pass/fail info.** When a pytest test reports `outcome: rerun`, `collect_changes` falls back to `test["call"]["outcome"]` to recover the underlying status.
-- **Already-passing cases are never downgraded.** `mark_results` queries the run's existing results and filters out any case currently marked `passed (status_id=1)` before posting an update. So flaky reruns can't turn a green case red.
 
 ## Helper scripts
 
