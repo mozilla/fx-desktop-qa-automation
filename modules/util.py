@@ -11,6 +11,7 @@ from time import sleep
 from typing import List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
+import pyautogui
 from faker import Faker
 from faker.config import AVAILABLE_LOCALES
 from faker.providers import internet, misc
@@ -30,7 +31,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 
-# if platform.system() == "Linux" and "Xlib" not in sys.modules:
+if platform.system() == "Linux" and "wayland_automation" not in sys.modules:
+    import wayland_automation as wa
 #     import Xlib.XK
 #     from Xlib import X
 #     from Xlib.display import Display
@@ -980,70 +982,13 @@ class PomUtils:
 
 
 class LinuxAuto:
-    """Automate some Linux UI interactions with X11"""
-
-    HOTKEY_WAIT = 0.1
-    BUTTONMAP = {"left": 1, "middle": 2, "right": 3}
-    # We don't need a giant keymap. Add as needed, using this or other reference:
-    # https://github.com/asweigart/pyautogui/blob/b4255d0be42c377154c7d92337d7f8515fc63234/pyautogui/_pyautogui_x11.py#L192
-    KEYMAP = {
-        "alt": "Alt_L",
-        "ctrl": "Control_L",
-        "down": "Down",
-        "enter": "Return",
-        "shift": "Shift_L",
-        "tab": "Tab",
-        "up": "Up",
-    }
-
     def __init__(self):
-        self._display = Display(os.environ.get("DISPLAY"))
+        self.click = wa.click
+        self.swipe = wa.swipe
+        self.press = wa.press
+        self.hotkey = wa.hotkey
+        self.write = wa.typewrite
 
-    def _get_key(self, key):
-        map_val = self.KEYMAP.get(key)
-        if map_val:
-            return map_val
-        if len(key) == 1:
-            return key
-        raise ValueError(
-            f"Key name '{key}' not found, please add to util.LinuxAuto.KEYMAP."
-        )
-
-    def _keydown(self, key):
-        realkey = self._get_key(key)
-        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(realkey))
-        fake_input(self._display, X.KeyPress, keycode)
-        self._display.sync()
-
-    def _keyup(self, key):
-        realkey = self._get_key(key)
-        keycode = self._display.keysym_to_keycode(Xlib.XK.string_to_keysym(realkey))
-        fake_input(self._display, X.KeyRelease, keycode)
-        self._display.sync()
-
-    def hotkey(self, *keys):
-        for key in keys:
-            self._keydown(key)
-        sleep(self.HOTKEY_WAIT)
-        for key in reversed(keys):
-            self._keyup(key)
-
-    def press(self, key):
-        self._keydown(key)
-        self._keyup(key)
-
-    def write(self, string: str, interval=0.1):
-        """Write a string using X11 key events, does not support Shift injection yet"""
-        for char in string:
-            self.press(char)
-            sleep(interval)
-
-    def moveTo(self, x, y):
-        fake_input(self._display, X.MotionNotify, x=x, y=y)
-        self._display.sync()
-
-    def click(self, button="left"):
-        fake_input(self._display, X.ButtonPress, self.BUTTONMAP[button])
-        self._display.sync()
-        fake_input(self._display, X.ButtonRelease, self.BUTTONMAP[button])
-        self._display.sync()
+    def moveTo(x, y):
+        height, width = wa.get_resolution()
+        wa.send_motion_absolute(x, y, int(height), int(width))

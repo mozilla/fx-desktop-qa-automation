@@ -50,7 +50,7 @@ tasks:
         # export FAILURE=$((FAILURE | ${?}));
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
         # pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable ./firefox/firefox tests/password_manager/test_password_csv_export.py
+        pipenv run pytest --fx-executable ./firefox/firefox tests/password_manager/test_password_csv_export.py tests/pdf_viewer/test_pdf_download.py
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

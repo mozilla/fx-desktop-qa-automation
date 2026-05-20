@@ -42,10 +42,10 @@ _gui_auto = None
 
 
 def _make_gui_auto(sysname):
-    # if sysname == "Linux":
-    #     from modules.util import LinuxAuto
-    #
-    #     return LinuxAuto()
+    if sysname == "Linux":
+        from modules.util import LinuxAuto
+
+        return LinuxAuto()
     import pyautogui
 
     return pyautogui
@@ -1088,7 +1088,7 @@ class BasePage(Page):
 
             loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
             logging.info(f"OS dialog button found at {loc}, clicking")
-            pyautogui.click(loc)
+            self.gui.click(loc)
             time.sleep(1)
 
             try:
@@ -1096,13 +1096,13 @@ class BasePage(Page):
                 logging.info(
                     "Button still visible after click; pressing Enter as fallback"
                 )
-                pyautogui.press("enter")
+                self.gui.press("enter")
             except pyautogui.ImageNotFoundException:
                 pass  # dialog dismissed successfully
 
         except pyautogui.ImageNotFoundException:
             logging.info("OS dialog button image not found; pressing Enter as fallback")
-            pyautogui.press("enter")
+            self.gui.press("enter")
 
         finally:
             pyautogui.FAILSAFE = original_failsafe
