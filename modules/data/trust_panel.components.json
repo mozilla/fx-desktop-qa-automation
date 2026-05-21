@@ -137,8 +137,8 @@
         "groups": []
     },
     "connection-not-secure": {
-        "selectorData": "//*[@class='identity-popup-connection-not-secure security-view' and text()='You are not securely connected to this site.']",
-        "strategy": "xpath",
+        "selectorData": "[data-l10n-id='identity-connection-not-secure-security-view']",
+        "strategy": "css",
         "groups": []
     },
     "trustpanel-connection-button": {
