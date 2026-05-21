@@ -203,8 +203,9 @@ jobs:
           }}
         shell: pwsh
         run: |
-          $gitdiff = (git --no-pager diff --name-only origin/main)
-          if (-not ($gitdiff.Contains("\glean\"))) {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
+          $origin = "${{ github.event.pull_request.base.sha }}"
+          $gitdiff = (git --no-pager diff --name-only $origin)
+          if (-not ($gitdiff.Contains("/glean/"))) {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
 
       - name: Run Telemetry Tests in Win
         if: |
@@ -367,7 +368,8 @@ jobs:
             inputs.is_pull_request == true
           }}
         run: |
-          if ! [[ $(git --no-pager diff --name-only origin/main) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
+          export ORIGIN="${{ github.event.pull_request.base.sha }}"
+          if ! [[ $(git --no-pager diff --name-only $ORIGIN) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
 
       - name: Run Telemetry Tests in MacOS
         if: |
