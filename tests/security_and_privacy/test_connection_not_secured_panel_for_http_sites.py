@@ -12,6 +12,15 @@ def test_case():
     return "3054044"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("dom.security.https_first", False),
+        ("dom.security.https_first_pbm", False),
+        ("dom.security.https_only_mode", False),
+    ]
+
+
 def test_connection_not_secured_panel_for_http_sites(driver: Firefox):
     """
     C3054044 - Connection not secure is correctly displayed for plain HTTP site

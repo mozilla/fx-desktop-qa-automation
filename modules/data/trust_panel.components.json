@@ -146,11 +146,6 @@
         "strategy": "css",
         "groups": []
     },
-    "connection-subview": {
-        "selectorData": ".identity-popup-security-connection.identity-popup-section",
-        "strategy": "css",
-        "groups": []
-    },
     "trustpanel-security-information-view": {
         "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
         "strategy": "css",
