@@ -1315,6 +1315,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_tracking_elements_not_blocked_with_etp_disabled:
+    result: pass
+    splits:
+    - functional2
   test_undo_close_tab_private_browsing:
     result: pass
     splits:
