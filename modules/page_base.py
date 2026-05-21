@@ -43,8 +43,6 @@ _gui_auto = None
 
 def _make_gui_auto(sysname):
     if sysname == "Linux":
-        return None
-        # This code remains in case we figure out elevated Linux testing in future
         from modules.util import LinuxAuto
 
         return LinuxAuto()
@@ -1070,7 +1068,7 @@ class BasePage(Page):
 
         system = platform.system()
         if system == "Linux":
-            self.gui.hotkey("ctrl", "s")
+            self.gui.press("enter")
             return
 
         import pyautogui
