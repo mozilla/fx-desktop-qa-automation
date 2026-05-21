@@ -1,12 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import ContextMenu, Navigation
-from modules.browser_object_glean import Glean
-from modules.browser_object_tabbar import TabBar
-from modules.page_object import AboutNewtab
-from modules.page_object_example_page import ExamplePage
-from modules.page_object_generics import GenericPage
+from modules.browser_object import ContextMenu, Glean, Navigation, TabBar
+from modules.page_object import AboutNewtab, ExamplePage, GenericPage
 
 SEARCH_TERM = "firefox"
 PERSISTED_REFINEMENT = " browser"
@@ -180,11 +176,14 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # refine; otherwise the refinement is attributed as source='unknown'
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
 
-    # Refine the search via the in-content search bar and verify the URL updates
+    # Refine the search via the in-content search bar and verify both the original term
+    # and the refinement remain in the URL (guards against the engine auto-selecting and
+    # replacing the existing query on focus)
     page.element_visible(search_bar_name)
     search_bar = page.get_element(search_bar_name)
     search_bar.click()
     search_bar.send_keys(Keys.END + PERSISTED_REFINEMENT + Keys.ENTER)
+    page.url_contains(search_term)
     page.url_contains(PERSISTED_REFINEMENT.strip())
 
 
@@ -197,7 +196,7 @@ def _entry_follow_on_from_refine_on_incontent_search(
 def _action_reload(driver: Firefox, params: dict = None):
     """Reload the SERP so Firefox records a fresh impression with source='reload'."""
     # Instantiate objects
-    page = GenericPage(driver, url="about:newtab")
+    page = GenericPage(driver)
     nav = Navigation(driver)
 
     # Wait for the SERP to finish loading before reloading, then reload and wait again
