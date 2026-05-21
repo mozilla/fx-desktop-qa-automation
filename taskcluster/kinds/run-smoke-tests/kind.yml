@@ -37,7 +37,8 @@ tasks:
         pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         export FAILURE=${?};
-        if [[ $(cat selected_tests) =~ "/glean/" ]]; then pipenv run pytest --fx-executable ./firefox/firefox tests/glean; export FAILURE=$((FAILURE | ${?})); fi;
+        export GIT_DIFF=$(git --no-pager diff --name-only origin/main)
+        if [[ $GIT_DIFF =~ "/glean/" ]]; then pipenv run pytest --fx-executable ./firefox/firefox tests/glean; export FAILURE=$((FAILURE | ${?})); fi;
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
         pipenv run python -m scripts.choose_test_split;
         pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
