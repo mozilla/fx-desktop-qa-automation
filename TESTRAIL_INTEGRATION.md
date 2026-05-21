@@ -28,7 +28,7 @@ STARfox uses [TestRail](https://www.testrail.com/) as the system of record for s
 ```mermaid
 flowchart TD
     A[GitHub Actions trigger<br/>schedule / PR / manual] --> B[Check-*-Version job<br/>scripts/check_reportable.sh]
-    B -->|reportable() or preview_reportable()| C{reportable?}
+    B -->|"reportable() or preview_reportable()"| C{reportable?}
     C -- no --> Z[Job emits win=False/mac=False<br/>downstream jobs skip]
     C -- yes --> D[main.yml / main-l10n.yml<br/>Test-Windows / Test-MacOS / L10N-Linux]
     D -->|sets TESTRAIL_REPORT=true| E[pytest run]
@@ -134,11 +134,11 @@ Reporting is opt-in per-process, gated by environment variables:
 
 | Workflow | Trigger | Channel | Reports? | Notes |
 |---|---|---|---|---|
-| [`smoke-test-beta.yml`](.github/workflows/smoke-test-beta.yml) | `schedule: 30 */1 * * *`, `workflow_dispatch` | Beta | Yes | Runs `Check-Beta-Version` job → `check_reportable.sh` → calls reusable `main.yml`. `STARFOX_SPLIT=smoke`. |
-| [`functional-test-beta.yml`](.github/workflows/functional-test-beta.yml) | `schedule: 12 * * * *`, `workflow_dispatch` | Beta | Yes | Picks a functional split deterministically from the current hour (`functional$(date +%-I % MAX_SPLITS + 1)`), then runs the standard check + main flow. |
-| [`smoke-test-devedition.yml`](.github/workflows/smoke-test-devedition.yml) | `schedule: 35 */1 * * *`, `workflow_dispatch` | DevEdition | Yes | Same shape as smoke-beta but with `FX_CHANNEL=devedition`. |
-| [`smoke-test-rc.yml`](.github/workflows/smoke-test-rc.yml) | `schedule: 55 */4 * * *`, `workflow_dispatch` | RC | Yes | `FX_CHANNEL=rc`. Falls back to the `Beta N` submilestone if `Rc N` doesn't exist. |
-| [`test-l10n-beta.yml`](.github/workflows/test-l10n-beta.yml) | `schedule: 40 */2 * * *` | Beta (L10N) | Yes | `FX_L10N=true`. Calls `reportable()` once per platform (Windows/Darwin/Linux) and dispatches `main-l10n.yml`. |
+| [`smoke-test-beta.yml`](.github/workflows/smoke-test-beta.yml) | `schedule`, `workflow_dispatch` | Beta | Yes | Runs `Check-Beta-Version` job → `check_reportable.sh` → calls reusable `main.yml`. `STARFOX_SPLIT=smoke`. |
+| [`functional-test-beta.yml`](.github/workflows/functional-test-beta.yml) | `schedule`, `workflow_dispatch` | Beta | Yes | Picks a functional split deterministically from the current hour (`functional$(date +%-I % MAX_SPLITS + 1)`), then runs the standard check + main flow. |
+| [`smoke-test-devedition.yml`](.github/workflows/smoke-test-devedition.yml) | `schedule`, `workflow_dispatch` | DevEdition | Yes | Same shape as smoke-beta but with `FX_CHANNEL=devedition`. |
+| [`smoke-test-rc.yml`](.github/workflows/smoke-test-rc.yml) | `schedule`, `workflow_dispatch` | RC | Yes | `FX_CHANNEL=rc`. Falls back to the `Beta N` submilestone if `Rc N` doesn't exist. |
+| [`test-l10n-beta.yml`](.github/workflows/test-l10n-beta.yml) | `schedule` | Beta (L10N) | Yes | `FX_L10N=true`. Calls `reportable()` once per platform (Windows/Darwin/Linux) and dispatches `main-l10n.yml`. |
 | [`main.yml`](.github/workflows/main.yml) | `workflow_call`, `workflow_dispatch` | inherited | Conditional | The actual test executor. Sets `TESTRAIL_REPORT=true` only in the *Scheduled Beta* path (`is_pull_request==false` and not dry-run). The headed re-run step exports `REPORTABLE=true` so it always reports. PR / dry-run / manual-installer paths leave `TESTRAIL_REPORT=false`. |
 | [`main-l10n.yml`](.github/workflows/main-l10n.yml) | `workflow_call`, `workflow_dispatch` | inherited | Conditional | Same pattern as `main.yml` but with `FX_L10N=true` and per-region matrix. |
 | [`ci-dispatch.yml`](.github/workflows/ci-dispatch.yml) | `pull_request`, `workflow_dispatch` | Beta | **No** | PR / manual triggers pass `is_pull_request: true` to `main.yml`, which keeps `TESTRAIL_REPORT=false`. PR runs intentionally never write to TestRail. |
