@@ -203,7 +203,8 @@ jobs:
           }}
         shell: pwsh
         run: |
-          if !($(Get-Content selected_tests).Contains("\glean\")) {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
+          $gitdiff = (git --no-pager diff --name-only origin/main)
+          if (-not ($gitdiff.Contains("\glean\"))) {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
 
       - name: Run Telemetry Tests in Win
         if: |
@@ -366,7 +367,7 @@ jobs:
             inputs.is_pull_request == true
           }}
         run: |
-          if ! [[ $(cat selected_tests) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
+          if ! [[ $(git --no-pager diff --name-only origin/main) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
 
       - name: Run Telemetry Tests in MacOS
         if: |
@@ -379,7 +380,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version
           split="${STARFOX_SPLIT:-smoke}"
-          if ! [[ $split = "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
+          if [[ $split != "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
