@@ -1003,6 +1003,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+  test_pdf_zoom_radio_buttons:
+    result: pass
+    splits:
+    - functional1
   test_zoom_pdf_viewer:
     result: pass
     splits:
