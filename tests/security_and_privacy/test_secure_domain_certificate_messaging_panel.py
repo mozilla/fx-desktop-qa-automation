@@ -1,8 +1,10 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_generics import GenericPage
+from modules.browser_object import TrustPanel
+from modules.page_object import GenericPage
 
 YOUTUBE_URL = "https://youtube.com/"
 
@@ -28,5 +30,5 @@ def test_secure_domain_certificate_messaging_panel(driver: Firefox):
     # Click the lock text row (or dedicated “Connection secure” arrow)
     trust_panel.click_connection_button()
 
-    # The text is displayed: “You are securely connected to this site” plus “Verified by: GlobalSign nv-sa”
+    # The text is displayed: “You are securely connected to this site”
     trust_panel.connection_secure_message_displayed()

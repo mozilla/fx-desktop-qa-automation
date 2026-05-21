@@ -203,13 +203,13 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def click_connection_button(self):
         """Click the connection section button from the Trust Panel."""
-        self.click_on("trustpanel-connection-button")
+        self.click_on("trustpanel-connect-button")
         return self
 
     @BasePage.context_chrome
     def connection_secure_message_displayed(self):
         """
-        Verify the 'You are not securely connected to this site.'
+        Verify the 'You are securely connected to this site.'
         message is displayed in the connection subpanel.
         """
         self.element_visible("connection-secure")

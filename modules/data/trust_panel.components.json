@@ -136,11 +136,6 @@
         "strategy": "xpath",
         "groups": []
     },
-    "trustpanel-connection-button": {
-        "selectorData": "trustpanel-connection-label",
-        "strategy": "id",
-        "groups": []
-    },
     "connection-secure": {
         "selectorData": "//*[@class='identity-popup-connection-secure security-view' and text()='You are securely connected to this site.']",
         "strategy": "xpath",
