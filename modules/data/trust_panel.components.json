@@ -135,5 +135,25 @@
         "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
         "strategy": "xpath",
         "groups": []
+    },
+    "trustpanel-connection-button": {
+        "selectorData": "trustpanel-connection-label",
+        "strategy": "id",
+        "groups": []
+    },
+    "connection-subview": {
+        "selectorData": ".identity-popup-security-connection.identity-popup-section",
+        "strategy": "css",
+        "groups": []
+    },
+    "connection-subview": {
+        "selectorData": ".identity-popup-security-connection.identity-popup-section",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-security-information-view": {
+        "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
+        "strategy": "css",
+        "groups": []
     }
 }
