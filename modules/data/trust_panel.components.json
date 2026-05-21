@@ -145,5 +145,10 @@
         "selectorData": "trustpanel-connection-label",
         "strategy": "id",
         "groups": []
+    },
+    "connection-subview": {
+        "selectorData": ".identity-popup-security-connection.identity-popup-section",
+        "strategy": "css",
+        "groups": []
     }
 }
