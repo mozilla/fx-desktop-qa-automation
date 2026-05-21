@@ -214,7 +214,7 @@ jobs:
         shell: pwsh
         run: |
           $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
-          if ($split -ne "smoke" || $env:SKIP_GLEAN -eq "true") {exit 0}
+          if ($split -ne "smoke" -or $env:SKIP_GLEAN -eq "true") {exit 0}
           pipenv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -366,7 +366,7 @@ jobs:
             inputs.is_pull_request == true
           }}
         run: |
-          if ![[ $(cat selected_tests) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
+          if ! [[ $(cat selected_tests) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
 
       - name: Run Telemetry Tests in MacOS
         if: |
