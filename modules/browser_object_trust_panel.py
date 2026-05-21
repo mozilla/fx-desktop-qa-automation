@@ -2,6 +2,7 @@ import json
 import logging
 from time import sleep
 
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -203,7 +204,14 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def click_connection_button(self):
         """Click the connection section button from the Trust Panel."""
+        self.element_visible("trustpanel-connect-button")
         self.click_on("trustpanel-connect-button")
+        # Wait for the subview to actually render
+        try:
+            self.element_visible("connection-subview")
+        except TimeoutException:
+            # Retry click
+            self.click_on("trustpanel-connect-button")
         return self
 
     @BasePage.context_chrome

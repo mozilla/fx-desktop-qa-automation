@@ -5207,3 +5207,10 @@ Description: 'You are securely connected to this site.' message is displayed in 
 Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: connection-subvie
+Selector Data: "panel-subview-body"
+Description: Connection subview panel
+Location: Trustpanel - Connection panel
+Path to .json: modules/data/trust_panel.components.json
+```

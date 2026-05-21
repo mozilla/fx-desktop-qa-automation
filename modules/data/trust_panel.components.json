@@ -140,5 +140,10 @@
         "selectorData": "//*[@class='identity-popup-connection-secure security-view' and text()='You are securely connected to this site.']",
         "strategy": "xpath",
         "groups": []
+    },
+    "connection-subview": {
+        "selectorData": "panel-subview-body",
+        "strategy": "css",
+        "groups": []
     }
 }
