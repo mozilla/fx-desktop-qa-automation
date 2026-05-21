@@ -5202,7 +5202,7 @@ Path to .json: modules/data/trust_panel.components.json
 ```
 ```
 Selector Name: connection-not-secure
-Selector Data: "//*[@class='identity-popup-connection-not-secure security-view' and text()='You are not securely connected to this site.']"
+Selector Data: "[data-l10n-id='identity-connection-not-secure-security-view']"
 Description: 'You are not securely connected to this site.' message is displayed in the connection subpanel
 Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
