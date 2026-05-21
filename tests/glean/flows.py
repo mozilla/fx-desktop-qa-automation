@@ -198,9 +198,14 @@ def _action_reload(driver: Firefox, params: dict = None):
     # Instantiate objects
     page = GenericPage(driver)
     nav = Navigation(driver)
+    glean = Glean(driver)
 
-    # Wait for the SERP to finish loading before reloading, then reload and wait again
+    # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP
+    # telemetry context before we reload; otherwise the reload is attributed as source='unknown'
     page.url_contains(SEARCH_TERM)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Reload the page and wait for it to settle
     nav.refresh_page()
     page.url_contains(SEARCH_TERM)
 
