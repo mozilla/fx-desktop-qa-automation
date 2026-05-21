@@ -35,8 +35,17 @@ def add_to_prefs_list(case):
     return prefs
 
 
-def test_serp_impression(driver: Firefox, case: dict):
+def test_serp_impression(driver: Firefox, case: dict, sys_platform: str):
     """Verify serp.impression Glean event payload after a SERP is opened."""
+    # Bing serves a bot-detection captcha on Linux CI for this flow's double-request pattern,
+    # so the refinement never reaches a real SERP.
+    if (
+        sys_platform == "Linux"
+        and case["entry"] == "follow_on_from_refine_on_incontent_search"
+        and case.get("params", {}).get("engine") == "Bing"
+    ):
+        pytest.skip("Bing follow_on hits a bot-detection captcha on Linux CI")
+
     prefs = AboutPrefs(driver, category="search")
     glean = Glean(driver)
     params = case.get("params", {})
