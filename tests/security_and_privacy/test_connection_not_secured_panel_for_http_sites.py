@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_generics import GenericPage
+from modules.browser_object import TrustPanel
+from modules.page_object import GenericPage
 
 HTTP_SITE = "http://example.com/"
 
