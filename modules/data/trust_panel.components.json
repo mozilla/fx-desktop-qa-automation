@@ -142,7 +142,7 @@
         "groups": []
     },
     "connection-subview": {
-        "selectorData": "panel-subview-body",
+        "selectorData": ".identity-popup-security-connection.identity-popup-section",
         "strategy": "css",
         "groups": []
     }
