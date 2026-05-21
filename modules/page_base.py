@@ -1057,6 +1057,127 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
+    @context_chrome
+    def install_mock_file_picker(self, target_path: str) -> Page:
+        """
+        Replace Firefox's native file picker with a picker that returns target_path.
+
+        Linux Wayland CI cannot reliably drive GTK file pickers through XTest or
+        virtual-keyboard input, so Linux headed tests can install this before
+        clicking a Firefox control that opens nsIFilePicker.
+        """
+        self.driver.execute_script(
+            """
+            const contract = "@mozilla.org/filepicker;1";
+            const registrar = Components.manager.QueryInterface(
+              Ci.nsIComponentRegistrar
+            );
+
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+
+            const target = Cc["@mozilla.org/file/local;1"].createInstance(
+              Ci.nsIFile
+            );
+            target.initWithPath(arguments[0]);
+
+            const state = {
+              target,
+              shown: false,
+              oldClassID: registrar.contractIDToCID(contract),
+              newClassID: Services.uuid.generateUUID(),
+              factory: null,
+            };
+
+            function MockFilePicker() {}
+            MockFilePicker.prototype = {
+              QueryInterface: ChromeUtils.generateQI(["nsIFilePicker"]),
+              init(_browsingContext, _title, mode) {
+                this.mode = mode;
+              },
+              appendFilter() {},
+              appendFilters() {},
+              defaultString: "",
+              defaultExtension: "",
+              displayDirectory: null,
+              displaySpecialDirectory: "",
+              filterIndex: 0,
+              okButtonLabel: "",
+              mode: null,
+              get file() {
+                return state.target;
+              },
+              get fileURL() {
+                return Services.io.newFileURI(state.target);
+              },
+              get files() {
+                return [state.target][Symbol.iterator]();
+              },
+              open(callback) {
+                state.shown = true;
+                Services.tm.dispatchToMainThread(() => {
+                  const result = Ci.nsIFilePicker.returnOK;
+                  if (callback?.done) {
+                    callback.done(result);
+                  } else if (typeof callback == "function") {
+                    callback(result);
+                  }
+                });
+              },
+            };
+
+            state.factory = {
+              createInstance(iid) {
+                return new MockFilePicker().QueryInterface(iid);
+              },
+              QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
+            };
+
+            registrar.registerFactory(state.newClassID, "", contract, state.factory);
+            window.__fxQAMockFilePicker = state;
+            window.__fxQAMockFilePickerCleanup = () => {
+              const currentState = window.__fxQAMockFilePicker;
+              if (!currentState?.factory) {
+                return;
+              }
+              registrar.unregisterFactory(
+                currentState.newClassID,
+                currentState.factory
+              );
+              registrar.registerFactory(currentState.oldClassID, "", contract, null);
+              delete window.__fxQAMockFilePicker;
+              delete window.__fxQAMockFilePickerCleanup;
+            };
+            """,
+            target_path,
+        )
+        return self
+
+    @context_chrome
+    def mock_file_picker_was_shown(self) -> bool:
+        """Return True when the installed mock file picker has been opened."""
+        return self.driver.execute_script(
+            "return !!window.__fxQAMockFilePicker?.shown;"
+        )
+
+    def wait_for_mock_file_picker(self) -> Page:
+        """Wait for a previously installed mock file picker to be opened."""
+        self.custom_wait(timeout=10).until(lambda _: self.mock_file_picker_was_shown())
+        return self
+
+    @context_chrome
+    def cleanup_mock_file_picker(self) -> Page:
+        """Restore Firefox's native file picker after install_mock_file_picker."""
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+            """
+        )
+        return self
+
     def handle_os_download_confirmation(self):
         """
         Confirm the native OS download confirmation dialog.

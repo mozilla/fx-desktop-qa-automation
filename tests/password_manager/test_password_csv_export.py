@@ -31,7 +31,8 @@ def test_password_csv_export(
     # Export the passwords CSV
     about_logins.export_passwords_csv(downloads_folder, "passwords.csv")
 
-    about_logins.gui.press("enter")
+    if sys_platform != "Linux":
+        about_logins.gui.press("enter")
 
     # Verify the exported csv file is present in the target folder
     csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
