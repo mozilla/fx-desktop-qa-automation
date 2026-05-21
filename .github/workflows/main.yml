@@ -203,7 +203,7 @@ jobs:
           }}
         shell: pwsh
         run: |
-          git fetch origin main --depth 0
+          git fetch origin main --depth 1
           $origin = (git merge-base origin/main HEAD)
           $gitdiff = (git --no-pager diff --name-only $origin)
           $gitdiff = if ($gitdiff) { $gitdiff } else { "null" }
@@ -370,7 +370,7 @@ jobs:
             inputs.is_pull_request == true
           }}
         run: |
-          git fetch origin main --depth 0
+          git fetch origin main --depth 1
           export ORIGIN=$(git merge-base origin/main HEAD)
           if ! [[ $(git --no-pager diff --name-only $ORIGIN) =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
 
