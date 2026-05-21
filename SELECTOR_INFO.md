@@ -5208,9 +5208,16 @@ Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
-Selector Name: connection-subvie
+Selector Name: connection-subview
 Selector Data: "Selector Data: .identity-popup-security-connection.identity-popup-section"
 Description: Connection subview panel
 Location: Trustpanel - Connection panel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connection-button
+Selector Data: trustpanel-connection-label
+Description: Trustpanel connection security button
+Location: trustpanel main top right
 Path to .json: modules/data/trust_panel.components.json
 ```

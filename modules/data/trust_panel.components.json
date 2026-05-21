@@ -145,5 +145,10 @@
         "selectorData": ".identity-popup-security-connection.identity-popup-section",
         "strategy": "css",
         "groups": []
+    },
+    "trustpanel-connection-button": {
+        "selectorData": "trustpanel-connection-label",
+        "strategy": "id",
+        "groups": []
     }
 }

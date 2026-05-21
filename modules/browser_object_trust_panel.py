@@ -204,14 +204,14 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def click_connection_button(self):
         """Click the connection section button from the Trust Panel."""
-        self.element_visible("trustpanel-connect-button")
-        self.click_on("trustpanel-connect-button")
+        self.element_visible("trustpanel-connection-button")
+        self.click_on("trustpanel-connection-button")
         # Wait for the subview to actually render
         try:
             self.element_visible("connection-subview")
         except TimeoutException:
             # Retry click
-            self.click_on("trustpanel-connect-button")
+            self.click_on("trustpanel-connection-button")
         return self
 
     @BasePage.context_chrome
