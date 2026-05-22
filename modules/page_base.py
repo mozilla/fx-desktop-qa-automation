@@ -43,9 +43,7 @@ _gui_auto = None
 
 def _make_gui_auto(sysname):
     if sysname == "Linux":
-        from modules.util import LinuxAuto
-
-        return LinuxAuto()
+        return None
     import pyautogui
 
     return pyautogui
@@ -1062,17 +1060,12 @@ class BasePage(Page):
         """
         Replace Firefox's native file picker with a picker that returns target_path.
 
-        Linux Wayland CI cannot reliably drive GTK file pickers through XTest or
-        virtual-keyboard input, so Linux headed tests can install this before
-        clicking a Firefox control that opens nsIFilePicker.
+        Linux Wayland CI cannot reliably drive GTK file pickers through desktop
+        input, so Linux headed tests can install this before clicking a Firefox
+        control that opens nsIFilePicker.
         """
         self.driver.execute_script(
             """
-            const contract = "@mozilla.org/filepicker;1";
-            const registrar = Components.manager.QueryInterface(
-              Ci.nsIComponentRegistrar
-            );
-
             if (window.__fxQAMockFilePickerCleanup) {
               window.__fxQAMockFilePickerCleanup();
             }
@@ -1082,70 +1075,104 @@ class BasePage(Page):
             );
             target.initWithPath(arguments[0]);
 
-            const state = {
-              target,
-              shown: false,
-              oldClassID: registrar.contractIDToCID(contract),
-              newClassID: Services.uuid.generateUUID(),
-              factory: null,
-            };
+            function installTestingCommonMock() {
+              const { MockFilePicker } = ChromeUtils.importESModule(
+                "resource://testing-common/MockFilePicker.sys.mjs"
+              );
 
-            function MockFilePicker() {}
-            MockFilePicker.prototype = {
-              QueryInterface: ChromeUtils.generateQI(["nsIFilePicker"]),
-              init(_browsingContext, _title, mode) {
-                this.mode = mode;
-              },
-              appendFilter() {},
-              appendFilters() {},
-              defaultString: "",
-              defaultExtension: "",
-              displayDirectory: null,
-              displaySpecialDirectory: "",
-              filterIndex: 0,
-              okButtonLabel: "",
-              mode: null,
-              get file() {
-                return state.target;
-              },
-              get fileURL() {
-                return Services.io.newFileURI(state.target);
-              },
-              get files() {
-                return [state.target][Symbol.iterator]();
-              },
-              open(callback) {
-                state.shown = true;
-                Services.tm.dispatchToMainThread(() => {
-                  const result = Ci.nsIFilePicker.returnOK;
-                  if (callback?.done) {
-                    callback.done(result);
-                  } else if (typeof callback == "function") {
-                    callback(result);
-                  }
-                });
-              },
-            };
+              MockFilePicker.init();
+              MockFilePicker.setFiles([target]);
+              MockFilePicker.returnValue = MockFilePicker.returnOK;
 
-            state.factory = {
-              createInstance(iid) {
-                return new MockFilePicker().QueryInterface(iid);
-              },
-              QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
-            };
+              const state = {
+                get shown() {
+                  return MockFilePicker.shown;
+                },
+                cleanup() {
+                  MockFilePicker.cleanup();
+                },
+              };
+              return state;
+            }
 
-            registrar.registerFactory(state.newClassID, "", contract, state.factory);
+            function installInlineMock() {
+              const contract = "@mozilla.org/filepicker;1";
+              const registrar = Components.manager.QueryInterface(
+                Ci.nsIComponentRegistrar
+              );
+              const state = {
+                shown: false,
+                oldClassID: registrar.contractIDToCID(contract),
+                newClassID: Services.uuid.generateUUID(),
+                factory: null,
+                cleanup() {
+                  registrar.unregisterFactory(this.newClassID, this.factory);
+                  registrar.registerFactory(this.oldClassID, "", contract, null);
+                },
+              };
+
+              function MockFilePicker() {}
+              MockFilePicker.prototype = {
+                QueryInterface: ChromeUtils.generateQI(["nsIFilePicker"]),
+                init(_browsingContext, _title, mode) {
+                  this.mode = mode;
+                },
+                appendFilter() {},
+                appendFilters() {},
+                defaultString: "",
+                defaultExtension: "",
+                displayDirectory: null,
+                displaySpecialDirectory: "",
+                filterIndex: 0,
+                okButtonLabel: "",
+                mode: null,
+                get file() {
+                  return target;
+                },
+                get fileURL() {
+                  return Services.io.newFileURI(target);
+                },
+                get files() {
+                  return [target][Symbol.iterator]();
+                },
+                open(callback) {
+                  state.shown = true;
+                  Services.tm.dispatchToMainThread(() => {
+                    const result = Ci.nsIFilePicker.returnOK;
+                    if (callback?.done) {
+                      callback.done(result);
+                    } else if (typeof callback == "function") {
+                      callback(result);
+                    }
+                  });
+                },
+              };
+
+              state.factory = {
+                createInstance(iid) {
+                  return new MockFilePicker().QueryInterface(iid);
+                },
+                QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
+              };
+
+              registrar.registerFactory(state.newClassID, "", contract, state.factory);
+              return state;
+            }
+
+            const state = (() => {
+              try {
+                return installTestingCommonMock();
+              } catch (error) {
+                return installInlineMock();
+              }
+            })();
             window.__fxQAMockFilePicker = state;
             window.__fxQAMockFilePickerCleanup = () => {
               const currentState = window.__fxQAMockFilePicker;
-              if (!currentState?.factory) {
+              if (!currentState?.cleanup) {
                 return;
               }
-              registrar.unregisterFactory(
-                currentState.newClassID,
-                currentState.factory
-              );
-              registrar.registerFactory(currentState.oldClassID, "", contract, null);
+              currentState.cleanup();
               delete window.__fxQAMockFilePicker;
               delete window.__fxQAMockFilePickerCleanup;
             };

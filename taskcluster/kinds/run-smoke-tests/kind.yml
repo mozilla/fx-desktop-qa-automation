@@ -34,7 +34,6 @@ tasks:
         . "$HOME/.cargo/env"
         pipenv install;
         . ./scripts/setup-xauthority.sh
-        for tool in ydotool wtype xdotool; do command -v "$tool" || true; done
         FAILURE=0
         PYAUTOGUI_IMPORT_EXIT_CODE=0
         pipenv run python3 -c 'import pyautogui; print("pyautogui import ok")' || PYAUTOGUI_IMPORT_EXIT_CODE=$?

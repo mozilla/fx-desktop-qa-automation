@@ -48,7 +48,6 @@ def test_pdf_download(
         file_name: pdf file name
     """
 
-    # bump
     saved_pdf_location = os.path.join(downloads_folder, file_name)
     use_mock_picker = sys_platform == "Linux"
     if use_mock_picker:
