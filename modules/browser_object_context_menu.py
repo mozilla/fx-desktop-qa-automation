@@ -220,6 +220,24 @@ class ContextMenu(BasePage):
         return self
 
     @BasePage.context_chrome
+    def expect_ask_ai_chat_submenu_absent(self) -> BasePage:
+        """Verify the Ask AI chatbot submenu is not visible in the open tab context menu.
+
+        Gates on tabContextMenu being open first to prevent a false positive: context_askChat
+        is always in the DOM with hidden=true when the chatbot is disabled, so checking
+        before the menu opens would succeed even if the right-click never worked.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const menu = document.getElementById('tabContextMenu');"
+                "if (!menu || menu.state !== 'open') return false;"
+                "const el = document.getElementById('context_askChat');"
+                "return !el || el.hidden;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def verify_item_disabled(self, reference: str, labels=None):
         """Assert a context menu item is disabled (grayed out)."""
         el = self.get_element(reference, labels=labels)

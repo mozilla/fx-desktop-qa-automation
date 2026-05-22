@@ -10,7 +10,9 @@ permissions:
 
 jobs:
   claude-code-review:
-    if: github.event.pull_request.draft == false
+    if: |
+      github.event.pull_request.draft == false &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-claude-review')
 
     concurrency:
       group: claude-review-${{ github.event.pull_request.number }}

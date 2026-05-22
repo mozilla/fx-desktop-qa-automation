@@ -2,6 +2,7 @@ import json
 import logging
 from time import sleep
 
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -198,4 +199,26 @@ class TrustPanel(BasePage):
             raise ValueError("status must be 'on' or 'off'")
 
         self.element_visible(mapping[status])
+        return self
+
+    @BasePage.context_chrome
+    def click_connection_button(self):
+        """Click the connection section button from the Trust Panel."""
+        self.element_visible("trustpanel-connection-button")
+        self.click_on("trustpanel-connection-button")
+        # Wait for the subview to actually render
+        try:
+            self.element_visible("connection-subview")
+        except TimeoutException:
+            # Retry click
+            self.click_on("trustpanel-connection-button")
+        return self
+
+    @BasePage.context_chrome
+    def connection_not_secure_message_displayed(self):
+        """
+        Verify the 'You are not securely connected to this site.'
+        message is displayed in the connection subpanel.
+        """
+        self.element_visible("connection-not-secure")
         return self
