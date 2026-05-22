@@ -999,6 +999,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+  test_pdf_zoom_radio_buttons:
+    result: pass
+    splits:
+    - functional1
   test_zoom_pdf_viewer:
     result: pass
     splits:
@@ -1293,6 +1297,10 @@ security_and_privacy:
     splits:
     - functional2
   test_protection_level_redirect_about_preferences:
+    result: pass
+    splits:
+    - functional2
+  test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
     - functional2

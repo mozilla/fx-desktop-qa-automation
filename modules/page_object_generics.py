@@ -280,3 +280,17 @@ class GenericPdf(BasePage):
             raise ValueError("incorrect scroll value.")
         self.get_element(f"scroll-{direction}").click()
         return self
+
+    def expect_scale_factor_greater_than(self, scale_factor: float) -> BasePage:
+        self.wait.until(
+            lambda _: float(self.pdf_body.value_of_css_property("--scale-factor"))
+            > scale_factor
+        )
+        return self
+
+    def expect_scale_factor_less_than(self, scale_factor: float) -> BasePage:
+        self.wait.until(
+            lambda _: float(self.pdf_body.value_of_css_property("--scale-factor"))
+            < scale_factor
+        )
+        return self
