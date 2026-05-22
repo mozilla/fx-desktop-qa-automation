@@ -150,5 +150,10 @@
         "selectorData": ".identity-popup-security-connection.identity-popup-section",
         "strategy": "css",
         "groups": []
+    },
+    "connection-secure": {
+        "selectorData": "[data-l10n-id='identity-connection-verified']",
+        "strategy": "css",
+        "groups": []
     }
 }
