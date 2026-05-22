@@ -6,6 +6,7 @@ from modules.page_object import GenericPage
 
 MIXED_CONTENT_URL = "https://mixed.badssl.com/"
 
+
 @pytest.fixture()
 def test_case():
     return "3054043"
