@@ -488,8 +488,7 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389
-      (All)
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389 (All)
     result: unstable
     splits:
     - functional1

@@ -205,7 +205,6 @@ jobs:
           }}
         shell: pwsh
         run: |
-          git fetch origin main --depth 1
           $origin = (git merge-base origin/main HEAD)
           $gitdiff = (git --no-pager diff --name-only $origin) -join "`n"
           Write-Host $gitdiff
@@ -264,6 +263,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
@@ -372,7 +373,6 @@ jobs:
             inputs.is_pull_request == true
           }}
         run: |
-          git fetch origin main --depth 1
           export ORIGIN=$(git merge-base origin/main HEAD)
           export DIFF=$(git --no-pager diff --name-only $ORIGIN)
           echo "${DIFF}"
