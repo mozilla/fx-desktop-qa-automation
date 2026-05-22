@@ -1,11 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import ContextMenu, Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object import AboutNewtab
-from modules.page_object_example_page import ExamplePage
-from modules.page_object_generics import GenericPage
+from modules.browser_object import ContextMenu, Glean, Navigation, TabBar
+from modules.page_object import AboutNewtab, ExamplePage, GenericPage
 
 SEARCH_TERM = "firefox"
 PERSISTED_REFINEMENT = " browser"
@@ -17,6 +14,9 @@ ENTRY_PREFS: dict[str, list[tuple]] = {
         ("browser.startup.page", 1),
     ],
     "urlbar_persisted": [
+        ("browser.urlbar.showSearchTerms.enabled", True),
+    ],
+    "follow_on_from_refine_on_incontent_search": [
         ("browser.urlbar.showSearchTerms.enabled", True),
     ],
 }
@@ -156,11 +156,59 @@ def _entry_urlbar_persisted(driver: Firefox, search_term: str, params: dict = No
     page.url_contains(PERSISTED_REFINEMENT.strip())
 
 
+@_entry("follow_on_from_refine_on_incontent_search")
+def _entry_follow_on_from_refine_on_incontent_search(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Perform an initial urlbar search, then refine via the in-content SERP search bar."""
+    # Instantiate objects
+    page = GenericPage(driver, url="about:newtab")
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
+
+    # Open a new tab and perform the initial search
+    page.open()
+    nav.search(search_term)
+    page.url_contains(search_term)
+
+    # Wait for the first SERP impression to be recorded so Firefox has wired up in-content search telemetry before we
+    # refine; otherwise the refinement is attributed as source='unknown'
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Refine the search via the in-content search bar and verify both the original term
+    # and the refinement remain in the URL (guards against the engine auto-selecting and
+    # replacing the existing query on focus)
+    page.element_visible(search_bar_name)
+    search_bar = page.get_element(search_bar_name)
+    search_bar.click()
+    search_bar.send_keys(Keys.END + PERSISTED_REFINEMENT + Keys.ENTER)
+    page.url_contains(search_term)
+    page.url_contains(PERSISTED_REFINEMENT.strip())
+
+
 # ---------------------------------------------------------------------------
 # Action flows — things that happen after the SERP is open
 # ---------------------------------------------------------------------------
 
-# TBD
+
+@_action("reload")
+def _action_reload(driver: Firefox, params: dict = None):
+    """Reload the SERP so Firefox records a fresh impression with source='reload'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+
+    # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP
+    # telemetry context before we reload; otherwise the reload is attributed as source='unknown'
+    page.url_contains(SEARCH_TERM)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Reload the page and wait for it to settle
+    nav.refresh_page()
+    page.url_contains(SEARCH_TERM)
+
 
 # ---------------------------------------------------------------------------
 # Public API
