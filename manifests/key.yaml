@@ -1350,6 +1350,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_ai_chatbot_removed_from_sidebar_not_shown_in_tab_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_choose_ai_chatbot_via_page_context_menu:
     result: pass
     splits:
