@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
@@ -233,14 +234,43 @@ class AboutPrefs(BasePage):
         self.click_on(self.DOH_RADIO_IDS[level])
         return self
 
-    def select_doh_provider(self, provider_name: str) -> BasePage:
+    def select_doh_provider(self, provider_name: str, provider_url: str) -> BasePage:
         """
         Select a DoH resolver from the provider menulist in about:preferences#privacy.
-        provider_name: the menuitem label (e.g. 'NextDNS', 'Cloudflare (Default)')
+
+        provider_name: menuitem label, e.g. 'NextDNS', 'Cloudflare (Default)'
+        provider_url:  resolver URL — used only by the fallback path
+
+        Firefox loads the DoH provider list asynchronously from RemoteSettings; on a
+        small percentage of sessions (notably Windows CI workers) the load never
+        completes and the menulist's popup only contains the static 'Custom' fallback.
+        Reloading the page does NOT recover — the entire driver session is stuck.
+
+        Primary: real click gesture via the Dropdown helper. Fallback (target
+        menuitem absent): set menulist.value directly and dispatch the same
+        `command` event a click would fire.
         """
-        Dropdown(self, root=self.get_element("doh-enabled-resolver")).select_option(
-            provider_name
-        )
+        menulist = self.get_element("doh-enabled-resolver")
+        items = menulist.find_elements(By.CSS_SELECTOR, "menuitem")
+        labels = [mi.get_attribute("label") for mi in items]
+        if provider_name in labels:
+            Dropdown(self, root=menulist).select_option(provider_name)
+        else:
+            logging.warning(
+                f"[doh] resolver list did not populate (got {labels}); "
+                f"falling back to direct value-set for {provider_name!r}"
+            )
+            self.driver.execute_script(
+                """
+                const ml = arguments[0];
+                ml.value = arguments[1];
+                ml.setAttribute('label', arguments[2]);
+                ml.dispatchEvent(new Event('command', { bubbles: true }));
+                """,
+                menulist,
+                provider_url,
+                provider_name,
+            )
         return self
 
     def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:

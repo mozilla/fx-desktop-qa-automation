@@ -35,7 +35,7 @@ def test_nextdns_as_doh_provider(driver: Firefox):
     prefs.element_attribute_is("doh-increased-protection-radio", "selected", "true")
 
     # Select NextDNS from the resolver dropdown
-    prefs.select_doh_provider(NEXTDNS_LABEL)
+    prefs.select_doh_provider(NEXTDNS_LABEL, NEXTDNS_URL)
     prefs.element_attribute_is("doh-enabled-resolver", "label", NEXTDNS_LABEL)
 
     # Navigate away and back to verify the selection persists without errors
