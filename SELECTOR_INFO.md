@@ -5228,3 +5228,10 @@ Description: 'You are securely connected to this site.' message is displayed in 
 Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: identity-popup-content-verifier
+Selector Data: "#identity-popup-content-verifier"
+Description: "Verified by: Let's Encrypt" message is displayed inside the panel
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```

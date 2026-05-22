@@ -30,4 +30,5 @@ def test_mixed_content_warning_displayed_in_panel(driver: Firefox):
     # Message shows "You are securely connected to this site"
     trust_panel.connection_secure_message_displayed()
 
-    # "Verified by: Let's Encrypt" message is diplayed inside the panel
+    # "Verified by: Let's Encrypt" message is displayed inside the panel
+    trust_panel.element_visible("identity-popup-content-verifier")
