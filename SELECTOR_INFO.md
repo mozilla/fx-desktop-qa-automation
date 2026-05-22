@@ -5228,3 +5228,10 @@ Description: 'You are securely connected to this site.' message is displayed in 
 Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-subview-back-button
+Selector Data: ".subviewbutton.subviewbutton-iconic.subviewbutton-back"
+Description: Trustpanel subview back button
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```

@@ -160,5 +160,10 @@
         "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
         "strategy": "css",
         "groups": []
+    },
+    "trustpanel-subview-back-button": {
+        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+        "strategy": "css",
+        "groups": []
     }
 }
