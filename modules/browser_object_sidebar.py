@@ -201,7 +201,7 @@ class Sidebar(BasePage):
         )
 
     @BasePage.context_chrome
-    def expect_sidebar_strip_collapsed(self) -> "Sidebar":
+    def expect_sidebar_strip_collapsed(self):
         """Wait until the sidebar strip width has stabilized to its collapsed state.
 
         Polls until two consecutive readings (500 ms apart) return the same non-zero
@@ -435,7 +435,56 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def context_click_ai_chat_button(self) -> "Sidebar":
+    def uncheck_ai_chatbot_in_customize_panel(self):
+        """Uncheck the AI chatbot tool in the Customize Sidebar panel.
+
+        The toggle lives inside the sidebar contentDocument behind nested Lit shadow roots.
+        data-action="viewGenaiChatSidebar" is tried first as the most specific identifier;
+        data-l10n-id containing "genai" is the fallback for builds where data-action is absent.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-action=\"viewGenaiChatSidebar\"]') ||"
+                "              root.querySelector('[data-l10n-id*=\"genai\"]');"
+                "  if (el) { el.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const r = search(host.shadowRoot);"
+                "      if (r) return r;"
+                "    }"
+                "  }"
+                "  return false;"
+                "}"
+                "return search(cd);"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_chatbot_absent_from_sidebar_strip(self) -> BasePage:
+        """Verify the AI Chat button is no longer in the sidebar strip.
+
+        After unchecking the chatbot in the Customize Sidebar panel the moz-button with
+        view="viewGenaiChatSidebar" is removed from sidebar-main's shadow root immediately,
+        making this the reliable signal that the setting took effect.
+        """
+        self.wait.until(
+            lambda _: (
+                not self.driver.execute_script(
+                    "return Array.from("
+                    "  document.querySelector('sidebar-main')?.shadowRoot"
+                    "  ?.querySelectorAll('moz-button') || []"
+                    ").some(b => b.getAttribute('view') === 'viewGenaiChatSidebar');"
+                )
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def context_click_ai_chat_button(self):
         """Right-click the AI Chat moz-button in the sidebar strip to open its context menu.
 
         JS retrieves the element from <sidebar-main>'s shadow root; ActionChains performs

@@ -2748,9 +2748,16 @@ Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
-Selector Name: simulated-tracker-load-status
+Selector Name: simulated-third-party-tracker-load-status
+Selector Data: "blacklisted-loaded"
+Description: The third-party tracker loaded status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-first-party-tracker-load-status
 Selector Data: "whitelisted-loaded"
-Description: The tracker allowed status
+Description: The first-party tracker allowed status
 Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
@@ -2871,6 +2878,41 @@ Selector Name: download-malicious-warning
 Selector Data: "a[href='https://testsafebrowsing.appspot.com/s/content.exe']"
 Description: A link to download a file with malicious warning
 Location: testsafebrowsing website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: google-incontent-search-bar
+Selector Data: "textarea[aria-label='Search']"
+Description: The in-content search bar on the Google SERP, used to refine a search after the initial query
+Location: google.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: bing-incontent-search-bar
+Selector Data: "input#sb_form_q"
+Description: The in-content search bar on the Bing SERP, used to refine a search after the initial query
+Location: bing.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: duckduckgo-incontent-search-bar
+Selector Data: "input[name='q']"
+Description: The in-content search bar on the DuckDuckGo SERP, used to refine a search after the initial query
+Location: duckduckgo.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: ecosia-incontent-search-bar
+Selector Data: "input[name='q']"
+Description: The in-content search bar on the Ecosia SERP, used to refine a search after the initial query
+Location: ecosia.org SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: qwant-incontent-search-bar
+Selector Data: "input[name='q']"
+Description: The in-content search bar on the Qwant SERP, used to refine a search after the initial query
+Location: qwant.com SERP
 Path to .json: modules/data/generic_page.components.json
 ```
 #### generic_pdf
@@ -3153,7 +3195,7 @@ Path to .json: modules/data/login_autofill.components.json
 ```
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
-Description: Autocomplete dropdown is toggled for focused login fields on bsky page load 
+Description: Autocomplete dropdown is toggled for focused login fields on bsky page load
 Location: bsky page load
 Path to .json: modules/data/login_autofill.components.json
 ```
@@ -5198,5 +5240,26 @@ Selector Name: trustpanel-etp-on
 Selector Data: "//*[@id='trustpanel-header' and text()='Firefox is on guard']"
 Description: Trust Panel ETP status when turned on
 Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: connection-not-secure
+Selector Data: "[data-l10n-id='identity-connection-not-secure-security-view']"
+Description: 'You are not securely connected to this site.' message is displayed in the connection subpanel
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connection-button
+Selector Data: "trustpanel-connection-label"
+Description: Conection secure/not secure button
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: connection-secure
+Selector Data: "identity-connection-verified"
+Description: 'You are securely connected to this site.' message is displayed in the connection subpanel
+Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```

@@ -185,11 +185,13 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041385
+    result: unstable
     splits:
     - functional1
   test_server_not_found_error_pb:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041385
+    result: unstable
     splits:
     - functional1
   test_suggestion_engine_selection:
@@ -486,11 +488,8 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389 (All)
+    result: unstable
     splits:
     - functional1
 find_toolbar:
@@ -897,11 +896,8 @@ password_manager:
     splits:
     - functional1
   test_primary_password_allows_csv_export:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004938
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2041399
+    result: unstable
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
@@ -1003,6 +999,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+  test_pdf_zoom_radio_buttons:
+    result: pass
+    splits:
+    - functional1
   test_zoom_pdf_viewer:
     result: pass
     splits:
@@ -1029,7 +1029,8 @@ pocket:
       splits: []
 preferences:
   test_check_for_updates:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041395
+    result: unstable
     splits:
     - functional2
   test_clear_cookie_data:
@@ -1155,6 +1156,14 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_certificate_expired_displayed_panel:
+    result: pass
+    splits:
+    - functional2
+  test_connection_not_secured_panel_for_http_sites:
+    result: pass
+    splits:
+    - functional2
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
@@ -1168,7 +1177,11 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_cryptominers_displayed_subpanel:
@@ -1287,6 +1300,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_secure_domain_certificate_messaging_panel:
+    result: pass
+    splits:
+    - functional2
   test_sidebar_removed_on_end_private_session:
     result: pass
     splits:
@@ -1312,6 +1329,10 @@ security_and_privacy:
     splits:
     - functional2
   test_tracking_content_subpanel_display_when_not_blocked:
+    result: pass
+    splits:
+    - functional2
+  test_tracking_elements_not_blocked_with_etp_disabled:
     result: pass
     splits:
     - functional2
@@ -1345,6 +1366,10 @@ session_restore:
     splits:
     - functional2
 sidebar:
+  test_ai_chatbot_removed_from_sidebar_not_shown_in_tab_context_menu:
+    result: pass
+    splits:
+    - functional1
   test_choose_ai_chatbot_via_page_context_menu:
     result: pass
     splits:
@@ -1434,7 +1459,8 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041403
+    result: unstable
     splits:
     - functional2
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
@@ -1556,7 +1582,8 @@ tabs:
     splits:
     - functional2
   test_reload_tab_via_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041392
+    result: unstable
     splits:
     - functional2
   test_remove_tab_from_a_group:

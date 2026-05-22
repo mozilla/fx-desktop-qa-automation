@@ -34,12 +34,17 @@
         "strategy": "css",
         "groups": []
     },
-    "simulated-tracker-block-status": {
+    "simulated-third-party-tracker-block-status": {
         "selectorData": "blacklisted-blocked",
         "strategy": "id",
         "groups": []
     },
-    "simulated-tracker-load-status": {
+    "simulated-third-party-tracker-load-status": {
+        "selectorData": "blacklisted-loaded",
+        "strategy": "id",
+        "groups": []
+    },
+    "simulated-first-party-tracker-load-status": {
         "selectorData": "whitelisted-loaded",
         "strategy": "id",
         "groups": []
@@ -143,6 +148,31 @@
     "add-to-firefox": {
         "selectorData": "AMInstallButton-button",
         "strategy": "class",
+        "groups": []
+    },
+    "google-incontent-search-bar": {
+        "selectorData": "textarea[aria-label='Search']",
+        "strategy": "css",
+        "groups": []
+    },
+    "bing-incontent-search-bar": {
+        "selectorData": "input#sb_form_q",
+        "strategy": "css",
+        "groups": []
+    },
+    "duckduckgo-incontent-search-bar": {
+        "selectorData": "input[name='q']",
+        "strategy": "css",
+        "groups": []
+    },
+    "ecosia-incontent-search-bar": {
+        "selectorData": "input[name='q']",
+        "strategy": "css",
+        "groups": []
+    },
+    "qwant-incontent-search-bar": {
+        "selectorData": "input[name='q']",
+        "strategy": "css",
         "groups": []
     }
 }
