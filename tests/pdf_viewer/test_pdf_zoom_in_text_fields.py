@@ -39,10 +39,7 @@ def test_pdf_zoom_works_on_text_fields(pdf_viewer: GenericPdf):
     )
 
     pdf_viewer.zoom_in_toolbar()
-    pdf_viewer.wait.until(
-        lambda _: float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-        > before_zoom_in_scale_factor
-    )
+    pdf_viewer.expect_scale_factor_greater_than(before_zoom_in_scale_factor)
     pdf_viewer.element_attribute_is(TEXT_FIELD, "value", TEST_TEXT)
 
     # Step 4: Zoom out a couple of times and verify there are no unexpected issues with the form.
@@ -51,19 +48,13 @@ def test_pdf_zoom_works_on_text_fields(pdf_viewer: GenericPdf):
     )
 
     pdf_viewer.zoom_out_toolbar()
-    pdf_viewer.wait.until(
-        lambda _: float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-        < before_first_zoom_out_scale_factor
-    )
+    pdf_viewer.expect_scale_factor_less_than(before_first_zoom_out_scale_factor)
 
     before_second_zoom_out_scale_factor = float(
         pdf_viewer.pdf_body.value_of_css_property("--scale-factor")
     )
 
     pdf_viewer.zoom_out_toolbar()
-    pdf_viewer.wait.until(
-        lambda _: float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-        < before_second_zoom_out_scale_factor
-    )
+    pdf_viewer.expect_scale_factor_less_than(before_second_zoom_out_scale_factor)
 
     pdf_viewer.element_attribute_is(TEXT_FIELD, "value", TEST_TEXT)
