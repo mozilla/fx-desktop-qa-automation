@@ -5207,3 +5207,17 @@ Description: Trust Panel ETP status when turned on
 Location: Trustpanel
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: connection-not-secure
+Selector Data: "[data-l10n-id='identity-connection-not-secure-security-view']"
+Description: 'You are not securely connected to this site.' message is displayed in the connection subpanel
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connection-button
+Selector Data: "trustpanel-connection-label"
+Description: Conection secure/not secure button
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```

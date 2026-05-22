@@ -1152,6 +1152,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_certificate_expired_displayed_panel:
+    result: pass
+    splits:
+    - functional2
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
