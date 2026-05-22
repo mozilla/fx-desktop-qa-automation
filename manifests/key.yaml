@@ -1499,7 +1499,11 @@ tabs:
     - smoke
     - ci
   test_close_tab_through_middle_mouse_click:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
+    result:
+      mac: unstable
+      win: pass
+      linux: pass
     splits:
     - functional2
   test_display_customize_button:
