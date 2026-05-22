@@ -40,8 +40,10 @@ def test_pdf_zoom_works_on_text_fields(pdf_viewer: GenericPdf):
 
     pdf_viewer.zoom_in_toolbar()
     pdf_viewer.wait.until(
-        lambda _: float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-        > before_zoom_in_scale_factor
+        lambda _: (
+            float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
+            > before_zoom_in_scale_factor
+        )
     )
     pdf_viewer.element_attribute_is(TEXT_FIELD, "value", TEST_TEXT)
 
@@ -52,8 +54,10 @@ def test_pdf_zoom_works_on_text_fields(pdf_viewer: GenericPdf):
 
     pdf_viewer.zoom_out_toolbar()
     pdf_viewer.wait.until(
-        lambda _: float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-        < before_first_zoom_out_scale_factor
+        lambda _: (
+            float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
+            < before_first_zoom_out_scale_factor
+        )
     )
 
     before_second_zoom_out_scale_factor = float(
@@ -62,8 +66,10 @@ def test_pdf_zoom_works_on_text_fields(pdf_viewer: GenericPdf):
 
     pdf_viewer.zoom_out_toolbar()
     pdf_viewer.wait.until(
-        lambda _: float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-        < before_second_zoom_out_scale_factor
+        lambda _: (
+            float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
+            < before_second_zoom_out_scale_factor
+        )
     )
 
     pdf_viewer.element_attribute_is(TEXT_FIELD, "value", TEST_TEXT)

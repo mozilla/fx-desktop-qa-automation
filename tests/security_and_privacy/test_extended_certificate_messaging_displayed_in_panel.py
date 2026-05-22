@@ -6,6 +6,7 @@ from modules.page_object import GenericPage
 
 EXTENDED_CERTIFICATE_URL = "https://extended-validation.badssl.com/"
 
+
 @pytest.fixture()
 def test_case():
     return "3054042"
