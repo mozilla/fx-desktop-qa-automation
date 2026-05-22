@@ -1232,6 +1232,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_extended_certificate_messaging_displayed_in_panel:
+    result: pass
+    splits:
+    - functional2
   test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
     result: pass
     splits:
