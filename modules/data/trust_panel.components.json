@@ -136,9 +136,14 @@
         "strategy": "xpath",
         "groups": []
     },
-    "connection-secure": {
-        "selectorData": "[data-l10n-id='identity-connection-verified']",
+    "connection-not-secure": {
+        "selectorData": "[data-l10n-id='identity-connection-not-secure-security-view']",
         "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-connection-button": {
+        "selectorData": "trustpanel-connection-label",
+        "strategy": "id",
         "groups": []
     },
     "connection-subview": {
@@ -146,9 +151,9 @@
         "strategy": "css",
         "groups": []
     },
-    "trustpanel-connection-button": {
-        "selectorData": "trustpanel-connection-label",
-        "strategy": "id",
+    "connection-secure": {
+        "selectorData": "[data-l10n-id='identity-connection-verified']",
+        "strategy": "css",
         "groups": []
     }
 }

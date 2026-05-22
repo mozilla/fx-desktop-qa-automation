@@ -215,6 +215,15 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
+    def connection_not_secure_message_displayed(self):
+        """
+        Verify the 'You are not securely connected to this site.'
+        message is displayed in the connection subpanel.
+        """
+        self.element_visible("connection-not-secure")
+        return self
+
+    @BasePage.context_chrome
     def connection_secure_message_displayed(self):
         """
         Verify the 'You are securely connected to this site.'
