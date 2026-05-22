@@ -2748,9 +2748,16 @@ Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
 ```
-Selector Name: simulated-tracker-load-status
+Selector Name: simulated-third-party-tracker-load-status
+Selector Data: "blacklisted-loaded"
+Description: The third-party tracker loaded status
+Location: Tracker test website
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: simulated-first-party-tracker-load-status
 Selector Data: "whitelisted-loaded"
-Description: The tracker allowed status
+Description: The first-party tracker allowed status
 Location: Tracker test website
 Path to .json: modules/data/generic_page.components.json
 ```
@@ -3153,7 +3160,7 @@ Path to .json: modules/data/login_autofill.components.json
 ```
 Selector Name: bsky-credentials
 Selector Data: ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']"
-Description: Autocomplete dropdown is toggled for focused login fields on bsky page load 
+Description: Autocomplete dropdown is toggled for focused login fields on bsky page load
 Location: bsky page load
 Path to .json: modules/data/login_autofill.components.json
 ```
@@ -5197,6 +5204,20 @@ Path to .json: modules/data/trust_panel.components.json
 Selector Name: trustpanel-etp-on
 Selector Data: "//*[@id='trustpanel-header' and text()='Firefox is on guard']"
 Description: Trust Panel ETP status when turned on
+Location: Trustpanel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: connection-not-secure
+Selector Data: "[data-l10n-id='identity-connection-not-secure-security-view']"
+Description: 'You are not securely connected to this site.' message is displayed in the connection subpanel
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connection-button
+Selector Data: "trustpanel-connection-label"
+Description: Conection secure/not secure button
 Location: Trustpanel
 Path to .json: modules/data/trust_panel.components.json
 ```
