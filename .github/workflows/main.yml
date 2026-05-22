@@ -205,9 +205,8 @@ jobs:
         run: |
           git fetch origin main --depth 1
           $origin = (git merge-base origin/main HEAD)
-          $gitdiff = (git --no-pager diff --name-only $origin)
-          $gitdiff = if ($gitdiff) { $gitdiff } else { "null" }
-          if (-not ($gitdiff.Contains("/glean/"))) {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
+          $gitdiff = (git --no-pager diff --name-only $origin) -join "`n"
+          if ($gitdiff -notmatch "/glean/") {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
 
       - name: Run Telemetry Tests in Win
         if: |
