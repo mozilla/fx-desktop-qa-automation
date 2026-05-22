@@ -32,7 +32,7 @@ def test_connection_secure_second_level_panel(driver: Firefox):
     trust_panel.element_visible("trustpanel-security-information-view")
 
     # Click on the back arrow
-    trust_panel.click_on("trustpanel-subview-back-button")
+    trust_panel.click_subview_back_button()
 
     # The panel returns to main Unified Trust Panel
     trust_panel.element_visible("connection-subview")

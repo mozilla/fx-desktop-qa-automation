@@ -231,3 +231,10 @@ class TrustPanel(BasePage):
         """
         self.element_visible("connection-secure")
         return self
+
+    @BasePage.context_chrome
+    def click_subview_back_button(self):
+        """Click the back arrow to return from a subview to the main Trust Panel."""
+        self.element_visible("trustpanel-subview-back-button")
+        self.click_on("trustpanel-subview-back-button")
+        return self
