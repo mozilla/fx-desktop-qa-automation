@@ -1501,9 +1501,9 @@ tabs:
   test_close_tab_through_middle_mouse_click:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
     result:
+      linux: pass
       mac: unstable
       win: pass
-      linux: pass
     splits:
     - functional2
   test_display_customize_button:
