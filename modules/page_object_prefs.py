@@ -233,6 +233,16 @@ class AboutPrefs(BasePage):
         self.click_on(self.DOH_RADIO_IDS[level])
         return self
 
+    def select_doh_provider(self, provider_name: str) -> BasePage:
+        """
+        Select a DoH resolver from the provider menulist in about:preferences#privacy.
+        provider_name: the menuitem label (e.g. 'NextDNS', 'Cloudflare (Default)')
+        """
+        Dropdown(self, root=self.get_element("doh-enabled-resolver")).select_option(
+            provider_name
+        )
+        return self
+
     def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
         """
         Click the HTTPS Only option given
