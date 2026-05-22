@@ -155,5 +155,10 @@
         "selectorData": "[data-l10n-id='identity-connection-verified']",
         "strategy": "css",
         "groups": []
+    },
+    "trustpanel-security-information-view": {
+        "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
+        "strategy": "css",
+        "groups": []
     }
 }
