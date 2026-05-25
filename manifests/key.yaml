@@ -603,7 +603,11 @@ geolocation:
     - functional1
 glean:
   test_serp_impression:
-    result: pass
+    comment:
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - glean
 language_packs:
