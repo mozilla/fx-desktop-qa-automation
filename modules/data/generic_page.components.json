@@ -149,5 +149,30 @@
         "selectorData": "AMInstallButton-button",
         "strategy": "class",
         "groups": []
+    },
+    "google-incontent-search-bar": {
+        "selectorData": "textarea[aria-label='Search']",
+        "strategy": "css",
+        "groups": []
+    },
+    "bing-incontent-search-bar": {
+        "selectorData": "input#sb_form_q",
+        "strategy": "css",
+        "groups": []
+    },
+    "duckduckgo-incontent-search-bar": {
+        "selectorData": "input[name='q']",
+        "strategy": "css",
+        "groups": []
+    },
+    "ecosia-incontent-search-bar": {
+        "selectorData": "input[name='q']",
+        "strategy": "css",
+        "groups": []
+    },
+    "qwant-incontent-search-bar": {
+        "selectorData": "input[name='q']",
+        "strategy": "css",
+        "groups": []
     }
 }
