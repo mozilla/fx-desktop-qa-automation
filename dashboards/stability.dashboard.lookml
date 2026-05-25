@@ -14,7 +14,7 @@
   - name: Headed
     title: Headed
     type: field_filter
-    model: stability
+    model: stability_analytics
     explore: stability_test_events
     field: stability_test_events.headed
     default_value: "No"
@@ -24,7 +24,7 @@
   elements:
   - title: macOS Stability
     name: macos_stability
-    model: stability
+    model: stability_analytics
     explore: stability_test_events
     type: looker_line
     fields: [
@@ -41,7 +41,7 @@
 
   - title: Windows Stability
     name: windows_stability
-    model: stability
+    model: stability_analytics
     explore: stability_test_events
     type: looker_line
     fields: [

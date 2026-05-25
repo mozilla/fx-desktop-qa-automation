@@ -1,11 +1,18 @@
 view: stability_test_events {
-  # # You can specify the table name if it's different from the view name:
-  # sql_table_name: my_schema_name.tester ;;
-  #
-  # # Define your dimensions and measures here, like this:
-  # dimension: user_id {
-  #   description: "Unique ID for each user that has ordered"view: stability_test_events {
   sql_table_name: `moz-desktop.stability.stability_test_events` ;;
+
+  dimension: row_id {
+    primary_key: yes
+    hidden: yes
+    type: string
+    sql: CONCAT(
+      CAST(${TABLE}.run_id AS STRING),
+      '_',
+      ${TABLE}.artifact_name,
+      '_',
+      ${TABLE}.test_nodeid
+    ) ;;
+  }
 
   dimension: run_id {
     type: number
