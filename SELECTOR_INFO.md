@@ -2880,6 +2880,41 @@ Description: A link to download a file with malicious warning
 Location: testsafebrowsing website
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: google-incontent-search-bar
+Selector Data: "textarea[aria-label='Search']"
+Description: The in-content search bar on the Google SERP, used to refine a search after the initial query
+Location: google.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: bing-incontent-search-bar
+Selector Data: "input#sb_form_q"
+Description: The in-content search bar on the Bing SERP, used to refine a search after the initial query
+Location: bing.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: duckduckgo-incontent-search-bar
+Selector Data: "input[name='q']"
+Description: The in-content search bar on the DuckDuckGo SERP, used to refine a search after the initial query
+Location: duckduckgo.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: ecosia-incontent-search-bar
+Selector Data: "input[name='q']"
+Description: The in-content search bar on the Ecosia SERP, used to refine a search after the initial query
+Location: ecosia.org SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: qwant-incontent-search-bar
+Selector Data: "input[name='q']"
+Description: The in-content search bar on the Qwant SERP, used to refine a search after the initial query
+Location: qwant.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
