@@ -1493,10 +1493,7 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_middle_click:
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - smoke
     - ci
