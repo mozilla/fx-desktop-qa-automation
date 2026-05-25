@@ -1498,8 +1498,8 @@ tabs:
       mac: unstable
       win: pass
     splits:
-      - smoke
-      - ci
+    - smoke
+    - ci
   test_close_tab_through_middle_mouse_click:
     result: pass
     splits:
