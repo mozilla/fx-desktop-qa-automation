@@ -1493,7 +1493,11 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_middle_click:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042107
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - smoke
     - ci
