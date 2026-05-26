@@ -34,7 +34,6 @@ def test_passwords_appear_in_firefox_lockwise(driver: Firefox):
     # Reach "about:protections"
     protection.open()
 
-    # Check that under Password Management it shows the number of store passwords and how many devices are syncing
     # "x password stored securely." text is correctly displayed
     protection.verify_lockwise_scanned_text()
 
