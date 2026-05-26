@@ -488,7 +488,8 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389 (All)
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389
+      (All)
     result: unstable
     splits:
     - functional1
@@ -1004,6 +1005,10 @@ pdf_viewer:
     splits:
     - functional1
   test_zoom_pdf_viewer:
+    result: pass
+    splits:
+    - functional2
+  test_zoom_works_on_dropdown_menus:
     result: pass
     splits:
     - functional2
