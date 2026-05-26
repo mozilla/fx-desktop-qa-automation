@@ -488,7 +488,8 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389 (All)
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389
+      (All)
     result: unstable
     splits:
     - functional1
@@ -1497,7 +1498,11 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
+    result:
+      linux: pass
+      mac: pass
+      win: pass
     splits:
     - smoke
     - ci
