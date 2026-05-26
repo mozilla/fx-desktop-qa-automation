@@ -24,7 +24,7 @@ def add_to_prefs_list(region: str):
 def test_verify_new_address_is_added(
     driver: Firefox,
     region: str,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_addresses: AboutPrefs,
     util: Utilities,
     populate_saved_addresses: AutofillAddressBase,
 ):
@@ -37,10 +37,11 @@ def test_verify_new_address_is_added(
     # address autofill data
     address_autofill_data = populate_saved_addresses
     address_values = {str(val) for val in address_autofill_data.__dict__.values()}
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
     # verify that the address saved is the same.
-    elements = about_prefs_privacy.get_element("saved-addresses-values").text.split(",")
+    saved_address_data = about_prefs_addresses.get_data_from_saved_address()
+    elements = [saved_address_data.get("name")]
+    elements.extend(saved_address_data.get("address").split(","))
     total_address_match = True
     for element in elements:
         sanitized_element = data_sanitizer(

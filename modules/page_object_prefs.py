@@ -538,10 +538,12 @@ class AboutPrefs(BasePage):
             address_data: The object containing all the sample data
         """
 
-        self.switch_to_edit_saved_addresses_popup_iframe()
+        # self.switch_to_edit_saved_addresses_popup_iframe()
+        self.click_on("add-address")
+        self.switch_to_iframe(1)
         self.fill_and_save_address_panel_information(address_data)
         self.switch_to_default_frame()
-        self.close_dialog_box()
+        # self.close_dialog_box()
         return self
 
     def select_saved_address_entry(self, idx=0):
@@ -552,6 +554,14 @@ class AboutPrefs(BasePage):
         select_el = Select(self.get_element("address-saved-options"))
         self.double_click(select_el.options[idx])
         return self
+
+    def get_data_from_saved_address(self, idx=0) -> dict:
+        """Get data-l10n-args from the saved address card"""
+        self.element_visible("saved-address-entry")
+        raw_json = self.get_elements("saved-address-entry")[idx].get_attribute(
+            "data-l10n-args"
+        )
+        return json.loads(raw_json)
 
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
@@ -655,7 +665,7 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.find_in_settings("manage add")
+        # self.find_in_settings("manage add")
         self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe

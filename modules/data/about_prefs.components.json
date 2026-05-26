@@ -1,8 +1,20 @@
 {
   "add-address": {
-    "selectorData": "add",
+    "selectorData": "add-address-button",
     "strategy": "id",
     "groups": []
+  },
+  "edit-address": {
+    "selectorData": "edit-address-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "saved-address-entry": {
+    "selectorData": "[data-l10n-id='address-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "search-engine-dropdown-root": {
     "selectorData": "defaultEngineNormal",

@@ -207,6 +207,11 @@ def about_prefs_privacy(driver):
 
 
 @pytest.fixture()
+def about_prefs_addresses(driver):
+    return AboutPrefs(driver, category="manageAddresses")
+
+
+@pytest.fixture()
 def about_prefs(driver):
     return AboutPrefs(driver)
 
@@ -231,19 +236,17 @@ def populate_saved_payments(
 
 @pytest.fixture()
 def populate_saved_addresses(
-    about_prefs_privacy: AboutPrefs, util: Utilities, region: str
+    about_prefs_addresses: AboutPrefs, util: Utilities, region: str
 ):
     """Fixture to add cc data through saved payments method."""
     # Go to about:preferences#privacy and open Saved Addresses Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+    about_prefs_addresses.open()
 
     # Save address information using fake data
     address_data_sample_data = util.fake_autofill_data(region)
 
     # Add a new address profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_addresses(address_data_sample_data)
+    about_prefs_addresses.add_entry_to_saved_addresses(address_data_sample_data)
     return address_data_sample_data
 
 
