@@ -26,14 +26,16 @@ view: stability_test_events {
 
   dimension_group: run_created {
     type: time
+    datatype: timestamp
     timeframes: [raw, date, week, month]
-    sql: ${TABLE}.run_created_at ;;
+    sql: SAFE_CAST(${TABLE}.run_created_at AS TIMESTAMP) ;;
   }
 
   dimension_group: ingested {
     type: time
+    datatype: timestamp
     timeframes: [raw, date, week, month]
-    sql: ${TABLE}.ingested_at ;;
+    sql: SAFE_CAST(${TABLE}.ingested_at AS TIMESTAMP) ;;
   }
 
   dimension: platform {
