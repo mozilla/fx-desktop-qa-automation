@@ -4,7 +4,6 @@ import logging
 import os
 import platform
 import re
-import sys
 from os import remove
 from random import shuffle
 from time import sleep
@@ -29,14 +28,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
-
-if platform.system() == "Linux" and "wayland_automation" not in sys.modules:
-    import pynput
-    import wayland_automation as wa
-#     import Xlib.XK
-#     from Xlib import X
-#     from Xlib.display import Display
-#     from Xlib.ext.xtest import fake_input
 
 
 def env_true(name: str) -> bool:
@@ -979,59 +970,3 @@ class PomUtils:
             if not matches:
                 logging.info("No matches found.")
             return matches
-
-
-class LinuxAuto:
-    def __init__(self):
-        self.mouse = pynput.mouse.Controller()
-        self.mouse_button = pynput.mouse.Button()
-        self.keyboard = pynput.keyboard.Controller()
-        self.key = pynput.keyboard.Key()
-
-    def moveTo(self, x, y):
-        self.mouse.position = (x, y)
-
-    def click(self, x, y, button):
-        self.moveTo(x, y)
-        btn = getattr(self.mouse_button, button)
-        self.mouse.press(btn)
-        self.mouse.release(btn)
-
-    def press(self, key):
-        k = getattr(self.key, key, None)
-        if k is None:
-            k = key
-        self.keyboard.tap(k)
-
-    def write(self, s):
-        for c in s:
-            self.press()
-
-    def hotkey(self, *keys):
-        for key in keys:
-            k = getattr(self.key, key, None)
-            if k is None:
-                k = key
-            self.keyboard.press(k)
-
-        for key in reversed(keys):
-            k = getattr(self.key, key, None)
-            if k is None:
-                k = key
-            self.keyboard.release(k)
-
-
-class WaylandLinuxAuto:
-    """This class, once permissions issues on Wayland machines are resolved,
-    will automate Wayland GUI interactions"""
-
-    def __init__(self):
-        self.click = wa.click
-        self.swipe = wa.swipe
-        self.press = wa.press
-        self.hotkey = wa.hotkey
-        self.write = wa.typewrite
-
-    def moveTo(x, y):
-        height, width = wa.get_resolution()
-        wa.send_motion_absolute(x, y, int(height), int(width))

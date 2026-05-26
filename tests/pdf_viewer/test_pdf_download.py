@@ -48,18 +48,28 @@ def test_pdf_download(
         file_name: pdf file name
     """
 
-    # bump
+    saved_pdf_location = os.path.join(downloads_folder, file_name)
+    use_mock_picker = sys_platform == "Linux"
+    if use_mock_picker:
+        pdf_viewer.install_mock_file_picker(saved_pdf_location)
+
     # Click the download button
-    pdf_viewer.click_download_button()
+    try:
+        pdf_viewer.click_download_button()
 
-    # Allow time for the download dialog to appear and pressing enter to download
-    sleep(2)
+        if use_mock_picker:
+            pdf_viewer.wait_for_mock_file_picker()
+        else:
+            # Allow time for the download dialog to appear and pressing enter to download
+            sleep(2)
 
-    # Handle OS download prompt
-    pdf_viewer.handle_os_download_confirmation()
+            # Handle OS download prompt
+            pdf_viewer.handle_os_download_confirmation()
+    finally:
+        if use_mock_picker:
+            pdf_viewer.cleanup_mock_file_picker()
 
     # Set the expected download path and the expected PDF name
-    saved_pdf_location = os.path.join(downloads_folder, file_name)
     pdf_viewer.expect(lambda _: os.path.exists(saved_pdf_location))
 
     # Verify if the file exists

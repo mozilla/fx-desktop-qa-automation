@@ -34,6 +34,7 @@ tasks:
         . "$HOME/.cargo/env"
         pipenv install;
         . ./scripts/setup-xauthority.sh
+        FAILURE=0
         PYAUTOGUI_IMPORT_EXIT_CODE=0
         pipenv run python3 -c 'import pyautogui; print("pyautogui import ok")' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
         if [ "${PYAUTOGUI_WAYLAND_PROBE_ONLY:-0}" = "1" ]; then

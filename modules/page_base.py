@@ -44,10 +44,6 @@ _gui_auto = None
 def _make_gui_auto(sysname):
     if sysname == "Linux":
         return None
-        # This code remains in case we figure out elevated Linux testing in future
-        from modules.util import LinuxAuto
-
-        return LinuxAuto()
     import pyautogui
 
     return pyautogui
@@ -1059,6 +1055,156 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
+    @context_chrome
+    def install_mock_file_picker(self, target_path: str) -> Page:
+        """
+        Replace Firefox's native file picker with a picker that returns target_path.
+
+        Linux Wayland CI cannot reliably drive GTK file pickers through desktop
+        input, so Linux headed tests can install this before clicking a Firefox
+        control that opens nsIFilePicker.
+        """
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+
+            const target = Cc["@mozilla.org/file/local;1"].createInstance(
+              Ci.nsIFile
+            );
+            target.initWithPath(arguments[0]);
+
+            function installTestingCommonMock() {
+              const { MockFilePicker } = ChromeUtils.importESModule(
+                "resource://testing-common/MockFilePicker.sys.mjs"
+              );
+
+              MockFilePicker.init();
+              MockFilePicker.setFiles([target]);
+              MockFilePicker.returnValue = MockFilePicker.returnOK;
+
+              const state = {
+                get shown() {
+                  return MockFilePicker.shown;
+                },
+                cleanup() {
+                  MockFilePicker.cleanup();
+                },
+              };
+              return state;
+            }
+
+            function installInlineMock() {
+              const contract = "@mozilla.org/filepicker;1";
+              const registrar = Components.manager.QueryInterface(
+                Ci.nsIComponentRegistrar
+              );
+              const state = {
+                shown: false,
+                oldClassID: registrar.contractIDToCID(contract),
+                newClassID: Services.uuid.generateUUID(),
+                factory: null,
+                cleanup() {
+                  registrar.unregisterFactory(this.newClassID, this.factory);
+                  registrar.registerFactory(this.oldClassID, "", contract, null);
+                },
+              };
+
+              function MockFilePicker() {}
+              MockFilePicker.prototype = {
+                QueryInterface: ChromeUtils.generateQI(["nsIFilePicker"]),
+                init(_browsingContext, _title, mode) {
+                  this.mode = mode;
+                },
+                appendFilter() {},
+                appendFilters() {},
+                defaultString: "",
+                defaultExtension: "",
+                displayDirectory: null,
+                displaySpecialDirectory: "",
+                filterIndex: 0,
+                okButtonLabel: "",
+                mode: null,
+                get file() {
+                  return target;
+                },
+                get fileURL() {
+                  return Services.io.newFileURI(target);
+                },
+                get files() {
+                  return [target][Symbol.iterator]();
+                },
+                open(callback) {
+                  state.shown = true;
+                  Services.tm.dispatchToMainThread(() => {
+                    const result = Ci.nsIFilePicker.returnOK;
+                    if (callback?.done) {
+                      callback.done(result);
+                    } else if (typeof callback == "function") {
+                      callback(result);
+                    }
+                  });
+                },
+              };
+
+              state.factory = {
+                createInstance(iid) {
+                  return new MockFilePicker().QueryInterface(iid);
+                },
+                QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
+              };
+
+              registrar.registerFactory(state.newClassID, "", contract, state.factory);
+              return state;
+            }
+
+            const state = (() => {
+              try {
+                return installTestingCommonMock();
+              } catch (error) {
+                return installInlineMock();
+              }
+            })();
+            window.__fxQAMockFilePicker = state;
+            window.__fxQAMockFilePickerCleanup = () => {
+              const currentState = window.__fxQAMockFilePicker;
+              if (!currentState?.cleanup) {
+                return;
+              }
+              currentState.cleanup();
+              delete window.__fxQAMockFilePicker;
+              delete window.__fxQAMockFilePickerCleanup;
+            };
+            """,
+            target_path,
+        )
+        return self
+
+    @context_chrome
+    def mock_file_picker_was_shown(self) -> bool:
+        """Return True when the installed mock file picker has been opened."""
+        return self.driver.execute_script(
+            "return !!window.__fxQAMockFilePicker?.shown;"
+        )
+
+    def wait_for_mock_file_picker(self) -> Page:
+        """Wait for a previously installed mock file picker to be opened."""
+        self.custom_wait(timeout=10).until(lambda _: self.mock_file_picker_was_shown())
+        return self
+
+    @context_chrome
+    def cleanup_mock_file_picker(self) -> Page:
+        """Restore Firefox's native file picker after install_mock_file_picker."""
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+            """
+        )
+        return self
+
     def handle_os_download_confirmation(self):
         """
         Confirm the native OS download confirmation dialog.
@@ -1070,7 +1216,7 @@ class BasePage(Page):
 
         system = platform.system()
         if system == "Linux":
-            self.gui.hotkey("ctrl", "s")
+            self.gui.press("enter")
             return
 
         import pyautogui
