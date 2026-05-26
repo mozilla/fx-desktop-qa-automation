@@ -12,6 +12,7 @@ MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
+IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
 
 
 def snakify(pascal: str) -> str:
@@ -187,9 +188,10 @@ if __name__ == "__main__":
         .splitlines()
     )
 
-    # Never select glean tests, they work in a different flow
+    # Never select tests that work in a different flow
     # TODO: fully move glean out of the main starfox flow, like l10n
-    committed_files = [f for f in committed_files if f"{SLASH}glean" not in f]
+    for reg in [re.compile(ignore) for ignore in IGNORE_FILE_REGEXES]:
+        committed_files = [f for f in committed_files if reg.search(f) is None]
 
     print("Committed files:\n\t", end="")
     print("\n\t".join(committed_files))
