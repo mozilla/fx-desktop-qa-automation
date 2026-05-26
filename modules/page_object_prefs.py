@@ -359,9 +359,9 @@ class AboutPrefs(BasePage):
         credit_card_fill_obj: CreditCardBase
             The object that contains all the generated information
         """
-        # assert cc_info_json["name"] == credit_card_fill_obj.name
         assert cc_info_json["cardNumber"][-4:] == credit_card_fill_obj.card_number[-4:]
         _, year = cc_info_json["expDate"].split("/")
+        # Compare two digit year to four-digit
         assert int(year) == int(credit_card_fill_obj.expiration_year) + 2000
         return self
 
@@ -539,12 +539,10 @@ class AboutPrefs(BasePage):
             address_data: The object containing all the sample data
         """
 
-        # self.switch_to_edit_saved_addresses_popup_iframe()
         self.click_on("add-address")
         self.switch_to_iframe(1)
         self.fill_and_save_address_panel_information(address_data)
         self.switch_to_default_frame()
-        # self.close_dialog_box()
         return self
 
     def select_saved_address_entry(self, idx=0):

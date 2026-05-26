@@ -1,6 +1,3 @@
-import json
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -24,8 +21,6 @@ def test_create_new_cc_profile(
     """
     # get sample data
     credit_card_sample_data = populate_saved_payments
-
-    # sleep(100)
 
     cc_info_json = about_prefs_payments.get_data_from_saved_payment()
 
