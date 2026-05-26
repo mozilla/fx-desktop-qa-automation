@@ -258,7 +258,7 @@ jobs:
 
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
-    runs-on: macos-latest
+    runs-on: macos-26
 
     steps:
       - name: Checkout repository

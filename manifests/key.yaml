@@ -1497,7 +1497,7 @@ tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
     result:
       linux: pass
-      mac: unstable
+      mac: pass
       win: pass
     splits:
     - smoke
