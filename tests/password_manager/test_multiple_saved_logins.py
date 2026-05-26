@@ -81,7 +81,7 @@ def test_multiple_saved_logins(driver: Firefox, temp_selectors):
         sequence = ["down", "enter"]
         sequence.extend(["down"] * (n - 1))
         sequence.append("enter")
-        web_page.gui_sequence(sequence)
+        web_page.gui_sequence(*sequence)
 
     # Verify the all 3 credientials are correct when autofilling
     driver.switch_to.window(driver.window_handles[0])
