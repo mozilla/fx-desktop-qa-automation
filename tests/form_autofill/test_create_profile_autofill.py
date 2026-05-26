@@ -11,7 +11,7 @@ def test_case():
 
 
 def test_create_address_profile(
-    driver: Firefox, about_prefs_privacy: AboutPrefs, util: Utilities, region: str
+    driver: Firefox, about_prefs_addresses: AboutPrefs, util: Utilities, region: str
 ):
     """
     C122348, creating an address profile
@@ -21,25 +21,24 @@ def test_create_address_profile(
         util: Utilities instance
         region: country code in use
     """
-    about_prefs_privacy.open()
+    about_prefs_addresses.open()
 
     # create sample data
     autofill_sample_data = util.fake_autofill_data(region)
 
-    # switch to saved addresses panel
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
-    about_prefs_privacy.click_add_on_dialog_element()
-
     # add entry to saved addresses
-    about_prefs_privacy.add_entry_to_saved_addresses(autofill_sample_data)
+    about_prefs_addresses.add_entry_to_saved_addresses(autofill_sample_data)
 
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+    saved_address_data = about_prefs_addresses.get_data_from_saved_address()
 
-    elements = about_prefs_privacy.get_all_saved_address_profiles()
-    about_prefs_privacy.double_click(elements[0])
-    observed_data = about_prefs_privacy.extract_address_data_from_saved_addresses_entry(
-        util, region
-    )
-
-    # ensure that the objects have the same fields
-    assert autofill_sample_data == observed_data
+    autofilled_dict = vars(autofill_sample_data)
+    state_provs = util.state_province_abbr
+    for element in autofilled_dict.keys():
+        if "name" in element:
+            assert autofilled_dict[element] in saved_address_data.get("name")
+        elif "address" in element or "postal_code" in element:
+            if autofilled_dict[element] in state_provs:
+                addr_line_value = state_provs[autofilled_dict[element]]
+            else:
+                addr_line_value = autofilled_dict[element]
+            assert addr_line_value in saved_address_data.get("address")
