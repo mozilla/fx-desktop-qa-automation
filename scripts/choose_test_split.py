@@ -12,7 +12,7 @@ MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
-IGNORE_FILE_REGEXES = [rf"{SLASH}glean", rf"l10n_CM{SLASH}.*\.py"]
+IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
 
 
 def snakify(pascal: str) -> str:
