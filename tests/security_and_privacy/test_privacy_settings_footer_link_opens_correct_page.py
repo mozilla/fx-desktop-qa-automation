@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_generics import GenericPage
+from modules.browser_object import Navigation, TabBar, TrustPanel
+from modules.page_object import GenericPage
 
 YOUTUBE_URL = "https://www.youtube.com"
 PREFERENCES_URL = "about:preferences#privacy"
