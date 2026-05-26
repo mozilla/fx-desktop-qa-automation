@@ -426,8 +426,11 @@ class AboutProtections(BasePage):
         self.element_visible("lockwise-scanned-text")
         element = self.get_element("lockwise-scanned-text")
         actual = element.text.strip()
-        expected = f"{expected_count} password stored securely." if expected_count == 1 \
+        expected = (
+            f"{expected_count} password stored securely."
+            if expected_count == 1
             else f"{expected_count} passwords stored securely."
+        )
         assert actual == expected, f"Expected '{expected}', got '{actual}'"
         return self
 

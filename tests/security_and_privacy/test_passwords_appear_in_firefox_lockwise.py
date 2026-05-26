@@ -1,11 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_pages import AboutProtections, AboutLogins
+from modules.browser_object import Navigation, TabBar
+from modules.page_object import AboutLogins, AboutProtections
 
-TEST_PAGE_URL = "mozilla.github.io"
+TEST_PAGE_URL = "https://mozilla.github.io/"
 USERNAME = "username1"
 PASSWORD = "password1"
 LOGIN_URL = "about:logins"
