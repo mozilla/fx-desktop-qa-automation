@@ -474,6 +474,7 @@ class AboutPrefs(BasePage):
         Arguments:
             cc_data: The object containing all the sample data
         """
+        # TODO: update tests in tests/form_autofill to follow this pattern
         self.click_on("add-payment")
         self.switch_to_iframe(1)
         self.fill_and_save_cc_panel_information(cc_data)
