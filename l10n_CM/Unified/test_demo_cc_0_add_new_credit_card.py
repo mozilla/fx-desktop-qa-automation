@@ -1,4 +1,5 @@
 import json
+from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -15,7 +16,7 @@ def test_case():
 def test_create_new_cc_profile(
     driver: Firefox,
     region: str,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_payments: AboutPrefs,
     populate_saved_payments: CreditCardBase,
 ):
     """
@@ -24,14 +25,9 @@ def test_create_new_cc_profile(
     # get sample data
     credit_card_sample_data = populate_saved_payments
 
-    # open about_prefs saved payments profiles
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    # sleep(100)
 
-    # Get the saved CC data
-    cc_profiles = about_prefs_privacy.get_all_saved_cc_profiles()
-    assert cc_profiles, "No saved cc profiles found"
-
-    cc_info_json = json.loads(cc_profiles[0].get_dom_attribute("data-l10n-args"))
+    cc_info_json = about_prefs_payments.get_data_from_saved_payment()
 
     # Compare input CC data with saved CC data
-    about_prefs_privacy.verify_cc_json(cc_info_json, credit_card_sample_data)
+    about_prefs_payments.verify_cc_json(cc_info_json, credit_card_sample_data)

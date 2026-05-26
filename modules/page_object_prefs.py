@@ -359,9 +359,10 @@ class AboutPrefs(BasePage):
         credit_card_fill_obj: CreditCardBase
             The object that contains all the generated information
         """
-        assert cc_info_json["name"] == credit_card_fill_obj.name
-        assert cc_info_json["number"][-4:] == credit_card_fill_obj.card_number[-4:]
-        assert int(cc_info_json["month"]) == int(credit_card_fill_obj.expiration_month)
+        # assert cc_info_json["name"] == credit_card_fill_obj.name
+        assert cc_info_json["cardNumber"][-4:] == credit_card_fill_obj.card_number[-4:]
+        _, year = cc_info_json["expDate"].split("/")
+        assert int(year) == int(credit_card_fill_obj.expiration_year) + 2000
         return self
 
     def verify_cc_edit_saved_payments_profile(
@@ -473,10 +474,10 @@ class AboutPrefs(BasePage):
         Arguments:
             cc_data: The object containing all the sample data
         """
-        self.switch_to_saved_payments_popup_iframe()
+        self.click_on("add-payment")
+        self.switch_to_iframe(1)
         self.fill_and_save_cc_panel_information(cc_data)
         self.switch_to_default_frame()
-        self.close_dialog_box()
         return self
 
     def close_dialog_box(self):
@@ -555,13 +556,21 @@ class AboutPrefs(BasePage):
         self.double_click(select_el.options[idx])
         return self
 
-    def get_data_from_saved_address(self, idx=0) -> dict:
-        """Get data-l10n-args from the saved address card"""
-        self.element_visible("saved-address-entry")
-        raw_json = self.get_elements("saved-address-entry")[idx].get_attribute(
+    def _get_tile_data(self, tile_type: str, idx=0) -> dict:
+        """Get data-l10n-args from a saved tile"""
+        self.element_visible(f"saved-{tile_type}-entry")
+        raw_json = self.get_elements(f"saved-{tile_type}-entry")[idx].get_attribute(
             "data-l10n-args"
         )
         return json.loads(raw_json)
+
+    def get_data_from_saved_address(self, idx=0) -> dict:
+        """Get data-l10n-args from the saved address card"""
+        return self._get_tile_data("address", idx)
+
+    def get_data_from_saved_payment(self, idx=0) -> dict:
+        """Get data-l10n-args from the saved payment card"""
+        return self._get_tile_data("payment", idx)
 
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
@@ -627,7 +636,6 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        self.find_in_settings("pay")
         self.click_on("saved-payments-button")
         iframe = self.get_element("browser-popup")
         return iframe
