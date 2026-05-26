@@ -488,7 +488,8 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389 (All)
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389
+      (All)
     result: unstable
     splits:
     - functional1
@@ -1003,6 +1004,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+  test_pdf_zoom_radio_buttons:
+    result: pass
+    splits:
+    - functional1
   test_zoom_pdf_viewer:
     result: pass
     splits:
@@ -1160,6 +1165,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_connection_not_secured_panel_for_http_sites:
+    result: pass
+    splits:
+    - functional2
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
@@ -1293,6 +1302,10 @@ security_and_privacy:
     splits:
     - functional2
   test_protection_level_redirect_about_preferences:
+    result: pass
+    splits:
+    - functional2
+  test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
     - functional2
@@ -1485,7 +1498,11 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
+    result:
+      linux: pass
+      mac: pass
+      win: pass
     splits:
     - smoke
     - ci
