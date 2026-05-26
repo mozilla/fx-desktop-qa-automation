@@ -5263,3 +5263,10 @@ Description: 'You are securely connected to this site.' message is displayed in 
 Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-privacy-link
+Selector Data: "#trustpanel-privacy-link"
+Description: "Privacy Settings" footer link in the Trust Panel
+Location: Trust Panel > footer section
+Path to .json: modules/data/trust_panel.components.json
+```

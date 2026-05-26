@@ -160,5 +160,10 @@
         "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
         "strategy": "css",
         "groups": []
+    },
+    "trustpanel-privacy-link": {
+        "selectorData": "trustpanel-privacy-link",
+        "strategy": "id",
+        "groups": []
     }
 }
