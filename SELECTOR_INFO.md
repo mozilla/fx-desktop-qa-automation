@@ -1554,6 +1554,20 @@ Description: Manage your privacy and security settings link in about:protections
 Location: about:protections page
 Path to .json: modules/data/about_protections.components.json
 ```
+```
+Selector Name: lockwise-scanned-text
+Selector Data: "lockwise-scanned-text"
+Description: Lockwise scanned status text showing the number of passwords stored securely
+Location: about:protections > Password manager section
+Path to .json: modules/data/about_protections.components.json
+```
+```
+Selector Name: manage-passwords-button
+Selector Data: "manage-passwords-button"
+Description: Manage passwords button in about:protections
+Location: about:protections > Password manager section
+Path to .json: modules/data/about_protections.components.json
+```
 #### about_telemetry
 ```
 Selector Name: category-raw

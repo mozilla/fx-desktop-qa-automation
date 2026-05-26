@@ -8,5 +8,15 @@
     "selectorData": "protection-settings",
     "strategy": "id",
     "groups": []
+  },
+  "lockwise-scanned-text": {
+    "selectorData": "lockwise-scanned-text",
+    "strategy": "id",
+    "groups": []
+  },
+  "manage-passwords-button": {
+    "selectorData": "manage-passwords-button",
+    "strategy": "id",
+    "groups": []
   }
 }

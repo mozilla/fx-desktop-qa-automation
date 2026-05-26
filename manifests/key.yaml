@@ -1276,6 +1276,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_passwords_appear_in_firefox_lockwise:
+    result: pass
+    splits:
+    - functional2
   test_phishing_and_malware_warnings:
     result: pass
     splits:
