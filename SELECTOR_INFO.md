@@ -1315,17 +1315,10 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-status
-Selector Data: "dohStatus"
-Description: Status of DoH
-Location: Inside the first frame of the DoH section in about:preferences#general
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-resolver
-Selector Data: "dohResolver"
-Description: The name of the DoH provider
-Location: Inside the first frame of the DoH section in about:preferences#general
+Selector Name: doh-mode-box-item
+Selector Data: "dohModeBoxItem"
+Description: Box item showing the currently selected DoH protection mode (label and description reflect the active mode)
+Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
