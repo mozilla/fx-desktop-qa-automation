@@ -672,7 +672,6 @@ class AboutPrefs(BasePage):
         """
         Returns the iframe object for the dialog panel in the popup
         """
-        # self.find_in_settings("manage add")
         self.click_on("saved-addresses-button")
         iframe = self.get_element("browser-popup")
         return iframe
@@ -813,9 +812,10 @@ class AboutPrefs(BasePage):
 
     def open_autoplay_modal(self) -> BasePage:
         """
-        Opens the Autoplay settings modal dialog from the about:preferences#privacy page.
+        Opens the Autoplay settings modal dialog from the about:preferences#permissionsData page.
         """
         self.open()
+        self.element_visible("autoplay-settings-button")
         self.click_on("autoplay-settings-button")
         self.driver.switch_to.frame(self.get_iframe())
         self.click_on("autoplay-settings")
