@@ -661,13 +661,8 @@
     "strategy": "id",
     "groups": []
   },
-  "doh-status": {
-    "selectorData": "dohStatus",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-resolver": {
-    "selectorData": "dohResolver",
+  "doh-mode-box-item": {
+    "selectorData": "dohModeBoxItem",
     "strategy": "id",
     "groups": []
   },
