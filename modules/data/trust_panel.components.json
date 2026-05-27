@@ -160,5 +160,10 @@
         "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
         "strategy": "css",
         "groups": []
+    },
+    "identity-popup-content-verifier": {
+        "selectorData": "#identity-popup-content-verifier",
+        "strategy": "css",
+        "groups": []
     }
 }

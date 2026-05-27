@@ -1257,6 +1257,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_mixed_content_warning_displayed_in_panel:
+    result: pass
+    splits:
+    - functional2
   test_never_remember_browsing_history:
     result: pass
     splits:
