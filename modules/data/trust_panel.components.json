@@ -147,8 +147,8 @@
         "groups": []
     },
     "connection-subview": {
-        "selectorData": ".identity-popup-security-connection.identity-popup-section",
-        "strategy": "css",
+        "selectorData": "identity-popup-securityView-extended-info",
+        "strategy": "id",
         "groups": []
     },
     "connection-secure": {
@@ -158,6 +158,11 @@
     },
     "trustpanel-security-information-view": {
         "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
+        "strategy": "css",
+        "groups": []
+    },
+    "identity-popup-content-verifier": {
+        "selectorData": "#identity-popup-content-verifier",
         "strategy": "css",
         "groups": []
     },
