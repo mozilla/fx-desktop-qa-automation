@@ -239,7 +239,8 @@ audio_video:
     splits:
     - functional1
   test_block_audio_video_functionality:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042653
+    result: unstable
     splits:
     - smoke
   test_html5_video_playback_controls:
@@ -427,11 +428,13 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042659
+    result: unstable
     splits:
     - smoke
   test_download_pdf_from_context_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042660
+    result: unstable
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -613,7 +616,8 @@ language_packs:
     splits:
     - functional1
   test_language_pack_install_preferences:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042655
+    result: unstable
     splits:
     - smoke
 menus:
@@ -660,9 +664,10 @@ networking:
     splits:
     - functional1
   test_default_dns_protection:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042657
     result:
-      linux: pass
-      mac: pass
+      linux: unstable
+      mac: unstable
       win: unstable
     splits:
     - smoke
@@ -854,7 +859,8 @@ password_manager:
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042649
+    result: unstable
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
@@ -1054,11 +1060,13 @@ preferences:
     splits:
     - functional2
   test_manage_cookie_data:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042648
+    result: unstable
     splits:
     - smoke
   test_never_remember_history:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042647
+    result: unstable
     splits:
     - smoke
   test_notifications_change_set:
@@ -1103,7 +1111,8 @@ reader_view:
     - smoke
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042652
+    result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
@@ -1254,7 +1263,8 @@ security_and_privacy:
     splits:
     - functional2
   test_https_enabled_private_browsing:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042651
+    result: unstable
     splits:
     - smoke
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
@@ -1502,10 +1512,10 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042645
     result:
       linux: pass
-      mac: pass
+      mac: unstable
       win: pass
     splits:
     - smoke
