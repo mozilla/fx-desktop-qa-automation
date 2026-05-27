@@ -1057,7 +1057,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: logins-exceptions
-Selector Data: "passwordExceptions"
+Selector Data: "managePasswordExceptions"
 Description: Manage Exceptions… button
 Location: about:preferences#privacy Passwords subsection
 Path to .json: modules/data/about_prefs.components.json

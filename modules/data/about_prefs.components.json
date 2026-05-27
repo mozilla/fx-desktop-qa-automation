@@ -453,7 +453,7 @@
     "groups": []
   },
   "logins-exceptions": {
-    "selectorData": "passwordExceptions",
+    "selectorData": "managePasswordExceptions",
     "strategy": "id",
     "groups": []
   },

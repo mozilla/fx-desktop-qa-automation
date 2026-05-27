@@ -33,7 +33,7 @@ def test_never_save_login_via_doorhanger(driver: Firefox):
     autofill_popup_panel = AutofillPopup(driver)
     nav = Navigation(driver)
     ba = BrowserActions(driver)
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
 
     # Creating an instance of the LoginForm within the LoginAutofill page object
     login_autofill.open()
