@@ -35,4 +35,4 @@ def test_connection_secure_second_level_panel(driver: Firefox):
     trust_panel.click_subview_back_button()
 
     # The panel returns to main Unified Trust Panel
-    trust_panel.element_visible("connection-subview")
+    trust_panel.element_visible("trustpanel-connection-button")

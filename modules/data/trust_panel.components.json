@@ -147,8 +147,8 @@
         "groups": []
     },
     "connection-subview": {
-        "selectorData": "identity-popup-securityView-extended-info",
-        "strategy": "id",
+        "selectorData": ".identity-popup-security-connection.identity-popup-section",
+        "strategy": "css",
         "groups": []
     },
     "connection-secure": {
@@ -163,11 +163,6 @@
     },
     "identity-popup-content-verifier": {
         "selectorData": "#identity-popup-content-verifier",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-subview-back-button": {
-        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
         "strategy": "css",
         "groups": []
     }
