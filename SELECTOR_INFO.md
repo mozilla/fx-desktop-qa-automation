@@ -1489,6 +1489,27 @@ Description: In Enhanced Tracking Protection, the standard radio section
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: doh-advanced-button
+Selector Data: "dohAdvancedButton"
+Description: Advanced settings button in the DNS over HTTPS (DoH) section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-radio-custom
+Selector Data: "dohRadioCustom"
+Description: "Custom" DoH radio option host element (moz-radio) in the DNS over HTTPS section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-radio-custom-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioCustom shadow root; used to actually click/select the "Custom" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioCustom)
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container

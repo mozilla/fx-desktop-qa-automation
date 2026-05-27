@@ -834,5 +834,21 @@
     "selectorData": "aiControlSidebarChatbotSelect",
     "strategy": "id",
     "groups": []
+  },
+  "doh-advanced-button": {
+    "selectorData": "dohAdvancedButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-radio-custom": {
+    "selectorData": "dohRadioCustom",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-radio-custom-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "doh-radio-custom"
   }
 }
