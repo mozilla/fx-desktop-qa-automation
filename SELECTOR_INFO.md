@@ -5264,6 +5264,13 @@ Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
+Selector Name: identity-popup-content-verifier
+Selector Data: "#identity-popup-content-verifier"
+Description: "Verified by: Let's Encrypt" message is displayed inside the panel
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
 Selector Name: trustpanel-privacy-link
 Selector Data: "#trustpanel-privacy-link"
 Description: "Privacy Settings" footer link in the Trust Panel
