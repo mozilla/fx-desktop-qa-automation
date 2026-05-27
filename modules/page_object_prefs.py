@@ -945,9 +945,9 @@ class AboutPrefs(BasePage):
         Note: This method assumes the about:preferences page is already open.
         Call self.open() first if needed.
         """
-        self.element_clickable("prefs-button", labels=["Manage browsing data"])
+        self.element_clickable("prefs-button", labels=["Manage exceptions"])
         manage_data_popup = self.press_button_get_popup_dialog_iframe(
-            "Manage browsing data"
+            "Manage exceptions"
         )
         BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
         return self
