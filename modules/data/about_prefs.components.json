@@ -605,8 +605,8 @@
     ]
   },
   "autoplay-settings-button": {
-    "selectorData": "autoplaySettingsButton",
-    "strategy": "id",
+    "selectorData": "moz-box-button[data-l10n-id='permissions-autoplay2']",
+    "strategy": "css",
     "groups": []
   },
   "autoplay-settings": {

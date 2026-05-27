@@ -28,7 +28,7 @@ def test_users_actions_saved_on_reload(driver: Firefox):
     """
     # Instantiate objects
     nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="permissionsData")
     page = GenericPage(driver, url=TEST_URL)
 
     # Open the test page

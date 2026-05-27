@@ -1253,9 +1253,9 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: autoplay-settings-button
-Selector Data: autoplaySettingsButton
+Selector Data: moz-box-button[data-l10n-id='permissions-autoplay2']
 Description: Autoplay settings button
-Location: about:preferences#privacy -> Permissions
+Location: about:preferences#permissionsData -> Permissions
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
