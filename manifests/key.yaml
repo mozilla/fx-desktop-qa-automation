@@ -1291,6 +1291,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_privacy_settings_footer_link_opens_correct_page:
+    result: pass
+    splits:
+    - functional2
   test_private_browser_password_doorhanger:
     result: pass
     splits:

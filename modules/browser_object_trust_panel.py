@@ -231,3 +231,10 @@ class TrustPanel(BasePage):
         """
         self.element_visible("connection-secure")
         return self
+
+    @BasePage.context_chrome
+    def click_privacy_settings_link(self):
+        """Click the 'Privacy Settings' footer link in the Trust Panel."""
+        self.element_visible("trustpanel-privacy-link")
+        self.js_click_on("trustpanel-privacy-link")
+        return self

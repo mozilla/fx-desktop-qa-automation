@@ -22,7 +22,7 @@ def test_allow_audio_video_functionality(driver: Firefox):
     C330155: 'Allow Audio and Video' functionality
     """
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="permissionsData")
     tabs = TabBar(driver)
     page = GenericPage(driver, url=TEST_URL)
 
