@@ -1,8 +1,37 @@
 {
   "add-address": {
-    "selectorData": "add",
+    "selectorData": "add-address-button",
     "strategy": "id",
     "groups": []
+  },
+  "edit-address": {
+    "selectorData": "edit-address-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "saved-address-entry": {
+    "selectorData": "[data-l10n-id='address-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "add-payment": {
+    "selectorData": "add-payment-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "edit-payment": {
+    "selectorData": "edit-payment-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "saved-payment-entry": {
+    "selectorData": "[data-l10n-id='payment-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "search-engine-dropdown-root": {
     "selectorData": "defaultEngineNormal",
@@ -424,7 +453,7 @@
     "groups": []
   },
   "logins-exceptions": {
-    "selectorData": "passwordExceptions",
+    "selectorData": "managePasswordExceptions",
     "strategy": "id",
     "groups": []
   },
@@ -576,8 +605,8 @@
     ]
   },
   "autoplay-settings-button": {
-    "selectorData": "autoplaySettingsButton",
-    "strategy": "id",
+    "selectorData": "moz-box-button[data-l10n-id='permissions-autoplay2']",
+    "strategy": "css",
     "groups": []
   },
   "autoplay-settings": {
@@ -632,13 +661,8 @@
     "strategy": "id",
     "groups": []
   },
-  "doh-status": {
-    "selectorData": "dohStatus",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-resolver": {
-    "selectorData": "dohResolver",
+  "doh-mode-box-item": {
+    "selectorData": "dohModeBoxItem",
     "strategy": "id",
     "groups": []
   },
@@ -810,5 +834,21 @@
     "selectorData": "aiControlSidebarChatbotSelect",
     "strategy": "id",
     "groups": []
+  },
+  "doh-advanced-button": {
+    "selectorData": "dohAdvancedButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-radio-custom": {
+    "selectorData": "dohRadioCustom",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-radio-custom-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "doh-radio-custom"
   }
 }
