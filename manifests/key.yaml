@@ -1008,6 +1008,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+  test_zoom_works_on_dropdown_menus:
+    result: pass
+    splits:
+    - functional2
 pocket:
   test_basic_de:
     test_localized_pocket_layout_DE:
