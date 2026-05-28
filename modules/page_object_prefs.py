@@ -69,10 +69,8 @@ class AboutPrefs(BasePage):
     HTTPS_ONLY_STATUS = HttpsOnlyStatus()
 
     DOH_RADIO_IDS = {
-        "default-protection": "doh-default-radio",
-        "increased-protection": "doh-increased-protection-radio",
-        "max-protection": "doh-max-protection-radio",
-        "off": "doh-off-radio",
+        "default": "doh-radio-default-input",
+        "custom": "doh-radio-custom-input",
     }
 
     # Function Organization
@@ -226,11 +224,21 @@ class AboutPrefs(BasePage):
         return self
 
     def select_doh_protection_level(self, level: str) -> BasePage:
+        """Expand the DoH advanced section and select the given mode.
+
+        Waits until the radio host's `checked` attribute is set.
+        level: 'default' | 'custom'
         """
-        Select a DNS over HTTPS protection level in about:preferences#privacy.
-        level: 'default-protection' | 'increased-protection' | 'max-protection' | 'off'
-        """
+        self.click_on("doh-advanced-button")
         self.click_on(self.DOH_RADIO_IDS[level])
+        self.element_attribute_contains(f"doh-radio-{level}", "checked", "")
+        return self
+
+    def verify_doh_provider(self, provider_name: str) -> BasePage:
+        """Wait until the DoH status box reports the given provider name."""
+        self.element_attribute_contains(
+            "doh-status-box", "data-l10n-args", provider_name
+        )
         return self
 
     def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:

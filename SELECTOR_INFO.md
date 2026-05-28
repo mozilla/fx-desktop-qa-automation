@@ -1322,38 +1322,24 @@ Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-default-radio
-Selector Data: "dohDefaultRadio"
-Description: Radio button for Default Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default
+Selector Data: "dohRadioDefault"
+Description: "Default" DoH radio option host element (moz-radio)
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-increased-protection-radio
-Selector Data: "dohEnabledRadio"
-Description: Radio button for Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioDefault shadow root; used to actually click/select the "Default" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioDefault)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-max-protection-radio
-Selector Data: "dohStrictRadio"
-Description: Radio button for Max Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-off-radio
-Selector Data: "dohOffRadio"
-Description: Radio button to turn DoH off
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-enabled-resolver
-Selector Data: "dohEnabledResolverChoices"
-Description: Provider dropdown for the Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-status-box
+Selector Data: "dohStatusBox"
+Description: moz-message-bar reporting active DoH provider; data-l10n-args carries the provider name
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```

@@ -28,11 +28,10 @@ def test_cloudflare_default_doh_provider(driver: Firefox):
     prefs = AboutPrefs(driver, category="privacy")
     about_config = AboutConfig(driver)
 
-    # Select Increased Protection in about:preferences#privacy
+    # Select Default DoH mode and verify Cloudflare is the active provider
     prefs.open()
-    prefs.select_doh_protection_level("increased-protection")
-    prefs.element_attribute_is("doh-increased-protection-radio", "selected", "true")
-    prefs.element_attribute_is("doh-enabled-resolver", "label", "Cloudflare (Default)")
+    prefs.select_doh_protection_level("default")
+    prefs.verify_doh_provider("Cloudflare")
 
     # Verify network.trr.default_provider_uri in about:config
     assert about_config.get_pref_value(TRR_PREF) == CLOUDFLARE_URL

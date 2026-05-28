@@ -666,28 +666,19 @@
     "strategy": "id",
     "groups": []
   },
-  "doh-default-radio": {
-    "selectorData": "dohDefaultRadio",
+  "doh-radio-default": {
+    "selectorData": "dohRadioDefault",
     "strategy": "id",
     "groups": []
   },
-  "doh-increased-protection-radio": {
-    "selectorData": "dohEnabledRadio",
+  "doh-radio-default-input": {
+    "selectorData": "input",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "shadowParent": "doh-radio-default"
   },
-  "doh-max-protection-radio": {
-    "selectorData": "dohStrictRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-off-radio": {
-    "selectorData": "dohOffRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-enabled-resolver": {
-    "selectorData": "dohEnabledResolverChoices",
+  "doh-status-box": {
+    "selectorData": "dohStatusBox",
     "strategy": "id",
     "groups": []
   },
