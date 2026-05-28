@@ -427,7 +427,6 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042659
     result: pass
     splits:
     - smoke
