@@ -202,27 +202,15 @@ class AboutPrefs(BasePage):
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
     def set_alternative_language(self, lang_code: str) -> BasePage:
-        """Changes the browser language"""
-        self.get_element("language-set-alternative-button").click()
-        self.driver.switch_to.frame(self.get_iframe())
+        """Sets the browser language via the Preferred language moz-select.
 
-        # Download the language options
-        select_language = self.get_element("language-settings-select")
-        select_language.click()
-        search_languages = self.get_element("language-settings-search")
-        search_languages.click()
-        select_language.click()
-
-        # Select the language, add, and make sure it appears
-        select_language.click()
-        self.get_element("language-option-by-code", labels=[lang_code]).click()
-        select_language.click()
-        self.get_element("language-settings-add-button").click()
-        self.element_attribute_contains(
-            "language-added-list", "last-selected", f"locale-{lang_code}"
+        Firefox applies the locale live once the dropdown value changes.
+        """
+        Select(self.get_element("browser-language-preferred-select")).select_by_value(
+            lang_code
         )
-
-        self.get_element("language-settings-ok").click()
+        moz_select = self.get_element("browser-language-preferred")
+        self.wait.until(lambda _: moz_select.get_attribute("value") == lang_code)
         return self
 
     def select_doh_protection_level(self, level: str) -> BasePage:
