@@ -52,6 +52,11 @@ def util():
 
 
 @pytest.fixture()
+def prefs_category():
+    return ""
+
+
+@pytest.fixture()
 def about_prefs_privacy(driver):
     yield AboutPrefs(driver, category="privacy")
 
@@ -67,8 +72,8 @@ def about_prefs_payments(driver):
 
 
 @pytest.fixture()
-def about_prefs(driver):
-    yield AboutPrefs(driver)
+def about_prefs(driver, prefs_category):
+    yield AboutPrefs(driver, category=prefs_category)
 
 
 @pytest.fixture()

@@ -12,9 +12,14 @@ def test_case():
     return "122388"
 
 
+@pytest.fixture()
+def prefs_category():
+    return "passwordsAutofill"
+
+
 def test_enable_disable_form_autofill_cc(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
     util: Utilities,
@@ -24,7 +29,7 @@ def test_enable_disable_form_autofill_cc(
     cards box the dropdown does not appear.
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs: AboutPrefs instance
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
         util: Utilities instance
@@ -40,10 +45,10 @@ def test_enable_disable_form_autofill_cc(
     credit_card_autofill.fill_and_save()
 
     # navigate to prefs
-    about_prefs_privacy.open()
+    about_prefs.open()
 
     # toggle autofill cc option
-    about_prefs_privacy.get_element("save-and-fill-payment-methods").click()
+    about_prefs.click_on("save-and-fill-payment-methods")
 
     # open credit card autofill page and select field
     credit_card_autofill.open()

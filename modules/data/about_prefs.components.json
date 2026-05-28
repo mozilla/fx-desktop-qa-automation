@@ -22,8 +22,13 @@
     "groups": []
   },
   "edit-payment": {
-    "selectorData": "edit-payment-button",
-    "strategy": "id",
+    "selectorData": "[data-l10n-id='payments-edit-payment-button-label']",
+    "strategy": "css",
+    "groups": []
+  },
+  "delete-payment": {
+    "selectorData": "[data-l10n-id='payments-delete-payment-button-label']",
+    "strategy": "css",
     "groups": []
   },
   "saved-payment-entry": {

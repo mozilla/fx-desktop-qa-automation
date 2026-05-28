@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
@@ -342,7 +343,7 @@ class AboutPrefs(BasePage):
         menulist_popup.select_by_value(option)
         return self
 
-    # Payment and Address Management
+    # ---- Payment and Address Management ---------------------------------------------------------
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
@@ -362,6 +363,7 @@ class AboutPrefs(BasePage):
         assert cc_info_json["cardNumber"][-4:] == credit_card_fill_obj.card_number[-4:]
         _, year = cc_info_json["expDate"].split("/")
         # Compare two digit year to four-digit
+        logging.warning(f"{year} {credit_card_fill_obj.expiration_year}")
         assert int(year) == int(credit_card_fill_obj.expiration_year) + 2000
         return self
 
@@ -503,18 +505,26 @@ class AboutPrefs(BasePage):
             "expiration_year": "cc-exp-year",
             "name": "cc-name",
         }
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
         if field_name not in fields.keys():
             raise ValueError(
                 f"{field_name} is not a valid field name for the cc dialog form."
             )
-        self.switch_to_edit_saved_payments_popup_iframe()
         value_field = self.find_element(By.ID, fields[field_name])
         if value.isdigit():
             value = int(value)
         if field_name == "expiration_year":
-            value -= (datetime.datetime.now().year % 100) + 1
+            if int(value) < 100:  # new exp years are all 4-digit
+                value = int(value) + 2000
+            value_field.click()
+            option = next(
+                el
+                for el in self.driver.find_elements(By.TAG_NAME, "option")
+                if el.text == str(value)
+            )
+            option.click()
 
-        if value_field.tag_name == "select":
+        elif value_field.tag_name == "select":
             Select(value_field).select_by_index(value)
         else:
             value_field.clear()
@@ -571,11 +581,22 @@ class AboutPrefs(BasePage):
         """Get data-l10n-args from the saved payment card"""
         return self._get_tile_data("payment", idx)
 
+    def _edit_tile(self, tile_type: str, idx=0):
+        """Open the edit view of payment or address"""
+        tiles = self.get_elements(f"edit-{tile_type}")
+        tiles[idx].click()
+
+    def edit_address(self, idx=0):
+        """Click the edit button on a given address"""
+        self._edit_tile("address", idx)
+
+    def edit_payment(self, idx=0):
+        """Click the edit button on a given payment"""
+        self._edit_tile("payment", idx)
+
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
-        self.switch_to_saved_payments_popup_iframe()
-        element = Select(self.get_element("cc-saved-options"))
-        return element.options
+        return self.get_elements("saved-payment-entry")
 
     def get_all_saved_address_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
@@ -643,8 +664,8 @@ class AboutPrefs(BasePage):
         """
         Switch to form iframe to edit saved payments.
         """
-        self.switch_to_default_frame()
-        self.switch_to_iframe(2)
+        self.switch_to_default_frame
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:

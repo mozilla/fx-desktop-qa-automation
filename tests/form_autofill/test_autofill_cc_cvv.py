@@ -1,11 +1,8 @@
-import json
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import CreditCardFill
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
 
 
@@ -19,13 +16,13 @@ def test_autofill_cc_cvv(
     credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
     util: Utilities,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_payments: AboutPrefs,
 ):
     """
     C122399, Test form autofill CC CVV number
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs_payments: AboutPrefs instance (payments category)
         credit_card_autofill: CreditCardFill instance
         autofill_popup: AutofillPopup instance
         util: Utilities instance
@@ -41,19 +38,16 @@ def test_autofill_cc_cvv(
     credit_card_sample_data = credit_card_autofill.fill_and_save()
 
     # Navigate to prefs
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    about_prefs_payments.open()
 
     # Get the saved CC data (first entry)
-    cc_profile = about_prefs_privacy.get_all_saved_cc_profiles()[0]
-    cc_info_json = json.loads(cc_profile.get_dom_attribute("data-l10n-args"))
+    cc_info_json = about_prefs_payments.get_data_from_saved_payment()
 
     # Compare input CC data with saved CC data
-    about_prefs_privacy.verify_cc_json(cc_info_json, credit_card_sample_data)
+    about_prefs_payments.verify_cc_json(cc_info_json, credit_card_sample_data)
 
     # Click on saved address and edit
-    cc_profile.click()
-    about_prefs_privacy.click_edit_on_dialog_element()
+    about_prefs_payments.click_on("edit-payment")
 
     # Verify that CVV number is not saved under CC profile but the rest of the data is saved
-    about_prefs_privacy.verify_cc_edit_saved_payments_profile(credit_card_sample_data)
+    about_prefs_payments.verify_cc_edit_saved_payments_profile(credit_card_sample_data)
