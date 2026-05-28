@@ -427,8 +427,7 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042659
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_download_pdf_from_context_menu:
