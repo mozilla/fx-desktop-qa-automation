@@ -491,7 +491,7 @@ drag_and_drop:
   test_paste_image_text:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034562 (Win), https://bugzilla.mozilla.org/show_bug.cgi?id=2041389
       (All)
-    result: unstable
+    result: pass
     splits:
     - functional1
 find_toolbar:

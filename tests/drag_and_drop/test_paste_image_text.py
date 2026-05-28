@@ -41,11 +41,6 @@ def temp_selectors():
             "strategy": "css",
             "groups": [],
         },
-        "paragraph2": {
-            "selectorData": ".m24-c-donate-body > p:nth-of-type(2)",
-            "strategy": "css",
-            "groups": [],
-        },
     }
 
 
@@ -86,11 +81,18 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Copy some text from another website
     driver.switch_to.window(driver.window_handles[1])
     web_page.scroll_to_element("paragraph1")
-    start_element = web_page.get_element("paragraph1")
-    end_element = web_page.get_element("paragraph2")
-    web_page.actions.click_and_hold(start_element).move_to_element(
-        end_element
-    ).release().perform()
+    paragraph = web_page.get_element("paragraph1")
+    driver.execute_script(
+        """
+        const range = document.createRange();
+        range.selectNodeContents(arguments[0]);
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        """,
+        paragraph,
+    )
     web_page.copy_selection(keyboard, "paragraph1")
 
     # Paste it in the test area
