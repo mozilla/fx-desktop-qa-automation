@@ -233,6 +233,13 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_privacy_settings_link(self):
+        """Click the 'Privacy Settings' footer link in the Trust Panel."""
+        self.element_visible("trustpanel-privacy-link")
+        self.js_click_on("trustpanel-privacy-link")
+        return self
+
+    @BasePage.context_chrome
     def click_subview_back_button(self):
         """Click the back arrow to return from a subview to the main Trust Panel."""
         self.element_visible("trustpanel-subview-back-button")

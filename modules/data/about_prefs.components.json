@@ -453,7 +453,7 @@
     "groups": []
   },
   "logins-exceptions": {
-    "selectorData": "passwordExceptions",
+    "selectorData": "managePasswordExceptions",
     "strategy": "id",
     "groups": []
   },
@@ -605,8 +605,8 @@
     ]
   },
   "autoplay-settings-button": {
-    "selectorData": "autoplaySettingsButton",
-    "strategy": "id",
+    "selectorData": "moz-box-button[data-l10n-id='permissions-autoplay2']",
+    "strategy": "css",
     "groups": []
   },
   "autoplay-settings": {
@@ -661,13 +661,8 @@
     "strategy": "id",
     "groups": []
   },
-  "doh-status": {
-    "selectorData": "dohStatus",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-resolver": {
-    "selectorData": "dohResolver",
+  "doh-mode-box-item": {
+    "selectorData": "dohModeBoxItem",
     "strategy": "id",
     "groups": []
   },
@@ -839,5 +834,21 @@
     "selectorData": "aiControlSidebarChatbotSelect",
     "strategy": "id",
     "groups": []
+  },
+  "doh-advanced-button": {
+    "selectorData": "dohAdvancedButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-radio-custom": {
+    "selectorData": "dohRadioCustom",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-radio-custom-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "doh-radio-custom"
   }
 }

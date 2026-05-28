@@ -431,7 +431,8 @@ downloads:
     splits:
     - smoke
   test_download_pdf_from_context_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042660
+    result: unstable
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -613,7 +614,8 @@ language_packs:
     splits:
     - functional1
   test_language_pack_install_preferences:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042655
+    result: unstable
     splits:
     - smoke
 menus:
@@ -660,10 +662,7 @@ networking:
     splits:
     - functional1
   test_default_dns_protection:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
   test_http_site:
@@ -1008,6 +1007,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+  test_zoom_works_on_dropdown_menus:
+    result: pass
+    splits:
+    - functional2
 pocket:
   test_basic_de:
     test_localized_pocket_layout_DE:
@@ -1054,11 +1057,13 @@ preferences:
     splits:
     - functional2
   test_manage_cookie_data:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042648
+    result: unstable
     splits:
     - smoke
   test_never_remember_history:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042647
+    result: unstable
     splits:
     - smoke
   test_notifications_change_set:
@@ -1293,6 +1298,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_privacy_settings_footer_link_opens_correct_page:
+    result: pass
+    splits:
+    - functional2
   test_private_browser_password_doorhanger:
     result: pass
     splits:
@@ -1506,7 +1515,7 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041834
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042645
     result:
       linux: pass
       mac: pass
