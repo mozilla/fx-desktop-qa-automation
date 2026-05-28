@@ -614,8 +614,7 @@ language_packs:
     splits:
     - functional1
   test_language_pack_install_preferences:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042655
-    result: unstable
+    result: pass
     splits:
     - smoke
 menus:
