@@ -1261,6 +1261,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_http_lock_icon_connection_state:
+    result: pass
+    splits:
+    - functional2
   test_https_enabled_private_browsing:
     result: pass
     splits:
