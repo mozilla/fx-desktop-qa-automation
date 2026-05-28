@@ -22,8 +22,9 @@ jobs:
           app-id: ${{ secrets.BOT_CLIENT_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
+          persist-credentials: false
           token: ${{ steps.app-token.outputs.token }}
       - name: Select Sites and Regions
         id: splits

@@ -19,7 +19,9 @@ jobs:
       linux_l10n_reportable: ${{ steps.l10n-reportable.outputs.linux_l10n }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
       - name: Check if the l10n run is reportable
         id: l10n-reportable
         env:

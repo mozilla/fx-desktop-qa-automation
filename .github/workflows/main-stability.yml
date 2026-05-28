@@ -35,10 +35,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.11"
 
@@ -106,7 +108,7 @@ jobs:
           Get-Content selected_tests
 
       - name: Test Fx Version (Win)
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success'
@@ -119,7 +121,7 @@ jobs:
           pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
       - name: Run Tests in Win
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success'
@@ -190,10 +192,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.11"
 
@@ -240,7 +244,7 @@ jobs:
           cat selected_tests
 
       - name: Test Fx Version (MacOS)
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success'
@@ -252,7 +256,7 @@ jobs:
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success'
@@ -307,10 +311,12 @@ jobs:
       - Test-Windows
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.11"
 
@@ -320,7 +326,7 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: artifacts-win
           path: artifacts-win
@@ -347,10 +353,12 @@ jobs:
       - Test-MacOS
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.11"
 
@@ -360,7 +368,7 @@ jobs:
           pipenv install
 
       - name: Download MacOS artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: artifacts-mac
           path: artifacts-mac

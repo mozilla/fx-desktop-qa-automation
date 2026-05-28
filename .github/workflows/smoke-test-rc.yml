@@ -31,7 +31,9 @@ jobs:
       preview_json: ${{ steps.reportable.outputs.preview_json }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Check if the run is reportable
         id: reportable
@@ -48,7 +50,7 @@ jobs:
 
   Run-Win-Smoke:
     needs: Check-RC-Version
-    if: |
+    if: |-
       ${{
         needs.Check-RC-Version.outputs.win_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
@@ -63,7 +65,7 @@ jobs:
 
   Run-Mac-Smoke:
     needs: Check-RC-Version
-    if: |
+    if: |-
       ${{
         needs.Check-RC-Version.outputs.mac_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )

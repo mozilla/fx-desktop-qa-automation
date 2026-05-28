@@ -27,7 +27,9 @@ jobs:
       preview_json: ${{ steps.reportable.outputs.preview_json }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Check if the run is reportable (or preview)
         id: reportable
@@ -47,7 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Print plan and job summary
         env:
@@ -61,7 +65,7 @@ jobs:
 
   Run-Win-Smoke:
     needs: Check-Beta-Version
-    if: |
+    if: |-
       ${{
         needs.Check-Beta-Version.outputs.win_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
@@ -74,7 +78,7 @@ jobs:
 
   Run-Mac-Smoke:
     needs: Check-Beta-Version
-    if: |
+    if: |-
       ${{
         needs.Check-Beta-Version.outputs.mac_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
