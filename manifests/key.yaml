@@ -355,9 +355,9 @@ bookmarks_and_history:
   test_open_websites_from_history:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043402
     result:
+      linux: pass
       mac: unstable
       win: pass
-      linux: pass
     splits:
     - smoke
   test_opened_website_in_new_tab_present_in_hamburger_history_menu:
