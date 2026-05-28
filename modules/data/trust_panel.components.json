@@ -165,5 +165,10 @@
         "selectorData": "#identity-popup-content-verifier",
         "strategy": "css",
         "groups": []
+    },
+    "trustpanel-privacy-link": {
+        "selectorData": "trustpanel-privacy-link",
+        "strategy": "id",
+        "groups": []
     }
 }

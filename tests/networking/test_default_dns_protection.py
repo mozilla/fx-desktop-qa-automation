@@ -28,10 +28,11 @@ def test_doh_enforces_secure_dns_resolution(
     """
     C2300296 - Verify that default DNS over HTTPS (DoH) settings enforce secure DNS resolution
     """
-    # Confirm the default DoH settings
+    # Confirm the default DoH mode is selected in the privacy panel
     prefs.open()
-    prefs.element_has_text("doh-status", "Status: Active")
-    prefs.element_has_text("doh-resolver", "Provider: Cloudflare")
+    prefs.element_attribute_is(
+        "doh-mode-box-item", "data-l10n-id", "preferences-doh-overview-default"
+    )
 
     # Open the test site and subsequently the networking#dns page
     driver.get(TEST_URL)

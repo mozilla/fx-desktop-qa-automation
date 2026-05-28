@@ -9,20 +9,23 @@ def test_case():
     return "1549409"
 
 
-LANGUAGES = [("it", "Imposta alternative")]
+LANGUAGES = [("it", "Lingua")]
 
 
 @pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
 def test_language_pack_install_about_preferences(
-    driver: Firefox, about_prefs: AboutPrefs, shortform: str, localized_text: str
+    driver: Firefox, shortform: str, localized_text: str
 ):
     """
     C1549409: language packs can be installed from about:preferences and firefox is correctly localized
     """
+    # Instantiate objects
+    about_prefs = AboutPrefs(driver, category="paneLanguages")
+
     about_prefs.open()
     about_prefs.set_alternative_language(shortform)
 
     about_prefs.open()
     about_prefs.element_attribute_contains(
-        "language-set-alternative-button", "label", localized_text
+        "browser-language-heading", "label", localized_text
     )

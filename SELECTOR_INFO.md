@@ -1057,7 +1057,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: logins-exceptions
-Selector Data: "passwordExceptions"
+Selector Data: "managePasswordExceptions"
 Description: Manage Exceptions… button
 Location: about:preferences#privacy Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
@@ -1070,31 +1070,24 @@ Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-dropdown
-Selector Data: "primaryBrowserLocale"
-Description: Language local menu list
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred
+Selector Data: "browserLanguagePreferred"
+Description: Preferred language moz-select on the Languages pane
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-set-alternative-button
-Selector Data: "[data-l10n-id='manage-browser-languages-button']"
-Description: Set Alternatives… button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred-select
+Selector Data: "select"
+Description: Inner native <select> inside the Preferred language moz-select shadow DOM (shadowParent: browser-language-preferred)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-settings-dialog
-Selector Data: "BrowserLanguagesDialog"
-Description: The Language Set Alternatives dialog
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-select
-Selector Data: "[data-l10n-id='browser-languages-select-language']"
-Description: In the Language Set Alternatives dialog, the Select a language to add button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-heading
+Selector Data: "moz-fieldset[data-l10n-id='browser-language-heading']"
+Description: Browser language card heading (label attribute is locale-translated, used to verify language switch)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1102,41 +1095,6 @@ Selector Name: search-suggestion-in-private-windows
 Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-search
-Selector Data: "menuitem[value='search']"
-Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-option-by-code
-Selector Data: "menuitem[value='{}']"
-Description: In the Language Set Alternatives dialog, Select a language by language code
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-added-list
-Selector Data: "selectedLocales"
-Description: In the Language Set Alternatives dialog, List of added languages
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-add-button
-Selector Data: "button[data-l10n-id='languages-customize-add']"
-Description: In the Language Set Alternatives dialog, Add button
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-ok
-Selector Data: "button[dlgtype='accept']"
-Description: In the Language Set Alternatives dialog, OK button
-Location: about:preferences#general Language subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1253,9 +1211,9 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: autoplay-settings-button
-Selector Data: autoplaySettingsButton
+Selector Data: moz-box-button[data-l10n-id='permissions-autoplay2']
 Description: Autoplay settings button
-Location: about:preferences#privacy -> Permissions
+Location: about:preferences#permissionsData -> Permissions
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1315,17 +1273,10 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-status
-Selector Data: "dohStatus"
-Description: Status of DoH
-Location: Inside the first frame of the DoH section in about:preferences#general
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-resolver
-Selector Data: "dohResolver"
-Description: The name of the DoH provider
-Location: Inside the first frame of the DoH section in about:preferences#general
+Selector Name: doh-mode-box-item
+Selector Data: "dohModeBoxItem"
+Description: Box item showing the currently selected DoH protection mode (label and description reflect the active mode)
+Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1494,6 +1445,27 @@ Selector Name: standard-section
 Selector Data: "contentBlockingOptionStandard"
 Description: In Enhanced Tracking Protection, the standard radio section
 Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-advanced-button
+Selector Data: "dohAdvancedButton"
+Description: Advanced settings button in the DNS over HTTPS (DoH) section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-radio-custom
+Selector Data: "dohRadioCustom"
+Description: "Custom" DoH radio option host element (moz-radio) in the DNS over HTTPS section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-radio-custom-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioCustom shadow root; used to actually click/select the "Custom" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioCustom)
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -5268,5 +5240,12 @@ Selector Name: identity-popup-content-verifier
 Selector Data: "#identity-popup-content-verifier"
 Description: "Verified by: Let's Encrypt" message is displayed inside the panel
 Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-privacy-link
+Selector Data: "#trustpanel-privacy-link"
+Description: "Privacy Settings" footer link in the Trust Panel
+Location: Trust Panel > footer section
 Path to .json: modules/data/trust_panel.components.json
 ```

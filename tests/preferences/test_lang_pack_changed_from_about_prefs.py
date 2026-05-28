@@ -45,18 +45,20 @@ def temp_selectors():
 
 def test_lang_pack_changed_from_about_prefs(
     driver: Firefox,
-    nav: Navigation,
-    about_prefs: AboutPrefs,
-    panel_ui: PanelUi,
-    tabs: TabBar,
     test_url: str,
-    generic_page: GenericPage,
     temp_selectors,
 ):
     """
     C1771617 - The language can be changed in about:preferences.
     We choose to set a pref rather than use a non-US local build.
     """
+    # Instantiate objects
+    about_prefs = AboutPrefs(driver, category="paneLanguages")
+    nav = Navigation(driver)
+    panel_ui = PanelUi(driver)
+    tabs = TabBar(driver)
+    generic_page = GenericPage(driver, url=test_url)
+
     # Skip Developer Edition since modifying menus, messages, and notifications language is blocked and defaults to
     # English
     try:
