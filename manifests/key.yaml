@@ -994,6 +994,10 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+  test_pdf_zoom_checkboxes:
+    result: pass
+    splits:
+    - functional1
   test_pdf_zoom_in_text_fields:
     result: pass
     splits:
