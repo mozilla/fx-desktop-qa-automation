@@ -170,5 +170,10 @@
         "selectorData": "trustpanel-privacy-link",
         "strategy": "id",
         "groups": []
+    },
+    "trustpanel-subview-back-button": {
+        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+        "strategy": "css",
+        "groups": []
     }
 }
