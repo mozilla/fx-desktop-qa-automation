@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -21,7 +20,6 @@ def test_autofill_credit_card_door_hanger(
     about_prefs: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    util: Utilities,
 ):
     """
     C122392, ensures that pressing not now > never save cards toggles off the setting
@@ -30,7 +28,6 @@ def test_autofill_credit_card_door_hanger(
         about_prefs_privacy: AboutPrefs instance (privacy category)
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
-        util: Utilities instance
     """
     # navigate to page
     credit_card_autofill.open()

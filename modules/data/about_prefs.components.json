@@ -16,6 +16,13 @@
       "doNotCache"
     ]
   },
+  "no-addresses": {
+    "selectorData": "[data-l10n-id='addresses-no-addresses-stored-message']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "add-payment": {
     "selectorData": "add-payment-button",
     "strategy": "id",
@@ -33,6 +40,13 @@
   },
   "saved-payment-entry": {
     "selectorData": "[data-l10n-id='payment-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "no-payments": {
+    "selectorData": "[data-l10n-id='payments-no-payments-stored-message']",
     "strategy": "css",
     "groups": [
       "doNotCache"

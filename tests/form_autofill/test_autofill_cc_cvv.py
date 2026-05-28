@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutPrefs, CreditCardFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -15,7 +14,6 @@ def test_autofill_cc_cvv(
     driver: Firefox,
     credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
-    util: Utilities,
     about_prefs_payments: AboutPrefs,
 ):
     """
@@ -25,7 +23,6 @@ def test_autofill_cc_cvv(
         about_prefs_payments: AboutPrefs instance (payments category)
         credit_card_autofill: CreditCardFill instance
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
     """
 
     # Open credit card autofill page

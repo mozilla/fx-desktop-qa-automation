@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import AutofillPopup
 from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -15,7 +14,6 @@ def test_form_autofill_suggestions(
     driver: Firefox,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    util: Utilities,
 ):
     """
     C122401, checks that the corresponding autofill suggestion autofills the fields correctly
@@ -23,7 +21,6 @@ def test_form_autofill_suggestions(
     Arguments:
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
-        util: Utilities instance
     """
     credit_card_autofill.open()
 

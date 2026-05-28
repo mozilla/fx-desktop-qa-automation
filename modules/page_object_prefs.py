@@ -594,17 +594,31 @@ class AboutPrefs(BasePage):
         """Click the edit button on a given payment"""
         self._edit_tile("payment", idx)
 
+    def _get_autofill_profiles(self, tile_type: str) -> List[WebElement]:
+        """Gets any type of autofill profile"""
+        self.element_visible(f"saved-{tile_type}-entry")
+        return self.get_elements(f"saved-{tile_type}-entry")
+
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
-        return self.get_elements("saved-payment-entry")
+        return self._get_autofill_profiles("payment")
 
     def get_all_saved_address_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
-        self.switch_to_saved_addresses_popup_iframe()
-        select_el = self.get_element("address-saved-options")
-        if len(select_el.get_attribute("innerHTML")) > 1:
-            return Select(select_el).options
-        return []
+        return self._get_autofill_profiles("address")
+
+    def _confirm_n_profiles(self, tile_type: str, n: int) -> BasePage:
+        """Confirm that _n_ profiles of a type exist"""
+        self.expect(lambda _: len(self._get_autofill_profiles(tile_type)) == n)
+        return self
+
+    def confirm_n_addresses(self, n: int) -> BasePage:
+        """Confirm that _n_ addresses exist"""
+        return self._confirm_n_profiles("address", n)
+
+    def confirm_n_payments(self, n: int) -> BasePage:
+        """Confirm that _n_ payments exist"""
+        return self._confirm_n_profiles("payment", n)
 
     def extract_address_data_from_saved_addresses_entry(
         self, util: Utilities, region: str = "US"

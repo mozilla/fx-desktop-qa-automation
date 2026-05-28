@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
-from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 
 
 @pytest.fixture()
@@ -22,7 +20,6 @@ def test_enable_disable_form_autofill_cc(
     about_prefs: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    util: Utilities,
 ):
     """
     C122388, tests that after saving cc information and toggling the autofill credit
@@ -32,7 +29,6 @@ def test_enable_disable_form_autofill_cc(
         about_prefs: AboutPrefs instance
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
-        util: Utilities instance
     """
 
     # open credit card autofill page

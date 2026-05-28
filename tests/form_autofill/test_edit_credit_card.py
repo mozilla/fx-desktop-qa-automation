@@ -1,13 +1,8 @@
-import json
-import logging
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
-from modules.page_object_autofill import CreditCardFill
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
 
 
@@ -55,7 +50,6 @@ def test_edit_credit_card_profile(
 
     # Fill in fake data
     original_cc_data = credit_card_autofill.fill_and_save()
-    logging.warning(f"old {original_cc_data}")
 
     # navigate to about:prefs and select the saved payment methods
     about_prefs_payments.open()
@@ -68,17 +62,14 @@ def test_edit_credit_card_profile(
 
     # update cc field
     updated_value = getattr(credit_card_sample_data_new, field)
-    logging.warning(f"new: {updated_value}")
     about_prefs_payments.update_cc_field_panel(field, updated_value)
     about_prefs_payments.open()  # reopen payment prefs to reset
 
     # get new json object for the updated field
 
     cc_info_json_new = about_prefs_payments.get_data_from_saved_payment()
-    logging.warning(f"borrowed {cc_info_json_new}")
     # replace required field value from original cc data
     setattr(original_cc_data, field, updated_value)
-    logging.warning(f"blue {original_cc_data}")
 
     # verify that field is changed
     about_prefs_payments.verify_cc_json(cc_info_json_new, original_cc_data)
