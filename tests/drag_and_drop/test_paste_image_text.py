@@ -87,15 +87,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Copy some text from another website
     driver.switch_to.window(driver.window_handles[1])
     web_page.scroll_to_element("paragraph1")
-    paragraph = web_page.get_element("paragraph1")
-    paragraph_size = paragraph.size
-
-    web_page.actions.move_to_element_with_offset(
-        paragraph, 5, paragraph_size["height"] // 2
-    ).click_and_hold().move_by_offset(
-        paragraph_size["width"] // 2, 0
-    ).release().perform()
-
+    web_page.triple_click("paragraph1")
     web_page.copy_selection(keyboard, "paragraph1")
 
     # Paste it in the test area
