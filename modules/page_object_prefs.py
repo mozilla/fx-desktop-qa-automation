@@ -1,6 +1,4 @@
-import datetime
 import json
-import logging
 from time import sleep
 from typing import List, Literal
 
@@ -363,7 +361,6 @@ class AboutPrefs(BasePage):
         assert cc_info_json["cardNumber"][-4:] == credit_card_fill_obj.card_number[-4:]
         _, year = cc_info_json["expDate"].split("/")
         # Compare two digit year to four-digit
-        logging.warning(f"{year} {credit_card_fill_obj.expiration_year}")
         assert int(year) == int(credit_card_fill_obj.expiration_year) + 2000
         return self
 
