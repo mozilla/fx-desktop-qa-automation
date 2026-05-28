@@ -5,13 +5,17 @@ view: stability_test_events {
     primary_key: yes
     hidden: yes
     type: string
-    sql: CONCAT(
-      CAST(${TABLE}.run_id AS STRING),
-      '_',
-      ${TABLE}.artifact_name,
-      '_',
-      ${TABLE}.test_nodeid
-    ) ;;
+    sql: FARM_FINGERPRINT(CONCAT(
+          CAST(${TABLE}.run_id AS STRING),
+          '|',
+          ${TABLE}.artifact_name,
+          '|',
+          ${TABLE}.test_nodeid,
+          '|',
+          ${TABLE}.outcome,
+          '|',
+          CAST(${TABLE}.duration AS STRING)
+        )) ;;
   }
 
   dimension: run_id {
@@ -66,6 +70,64 @@ view: stability_test_events {
   dimension: duration {
     type: number
     sql: ${TABLE}.duration ;;
+  }
+
+  dimension: test_file {
+    type: string
+    sql: SPLIT(${TABLE}.test_nodeid, '::')[SAFE_OFFSET(0)] ;;
+  }
+
+  dimension: test_name {
+    type: string
+    sql: SPLIT(${TABLE}.test_nodeid, '::')[SAFE_OFFSET(ARRAY_LENGTH(SPLIT(${TABLE}.test_nodeid, '::')) - 1)] ;;
+  }
+
+  dimension: failed {
+    type: yesno
+    sql: ${TABLE}.outcome = 'failed' ;;
+  }
+
+  dimension: passed {
+    type: yesno
+    sql: ${TABLE}.outcome = 'passed' ;;
+  }
+
+  measure: failure_rate {
+    type: number
+    value_format_name: percent_2
+    sql: SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0)) ;;
+  }
+
+  measure: pass_rate {
+    type: number
+    value_format_name: percent_2
+    sql: SAFE_DIVIDE(${passed_tests}, NULLIF(${total_tests}, 0)) ;;
+  }
+
+  measure: unique_runs {
+    type: count_distinct
+    sql: ${TABLE}.run_id ;;
+  }
+
+  measure: unique_tests {
+    type: count_distinct
+    sql: ${TABLE}.test_nodeid ;;
+  }
+
+  measure: flaky_score {
+    type: number
+    value_format_name: percent_2
+    sql:
+    CASE
+      WHEN ${passed_tests} > 0 AND ${failed_tests} > 0
+      THEN SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0))
+      ELSE 0
+    END ;;
+  }
+
+  measure: failure_count  {
+    type: count
+    filters: [outcome: "failed"]
   }
 
   measure: total_tests {
