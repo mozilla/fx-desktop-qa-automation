@@ -19,7 +19,7 @@ def test_block_audio_video_functionality(driver: Firefox):
     C330156: 'Block Audio and Video' functionality
     """
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="permissionsData")
     nav = Navigation(driver)
     page = GenericPage(driver, url=TEST_URL)
 

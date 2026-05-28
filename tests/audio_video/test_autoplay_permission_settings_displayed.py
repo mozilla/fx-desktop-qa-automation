@@ -14,7 +14,7 @@ def test_block_audio_video_functionality(driver: Firefox):
     C330151: Create test for Block Autoplay permission settings are displayed in about:preferences#privacy
     """
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="permissionsData")
 
     # Open privacy and click on the "Settings" button from Autoplay
     about_prefs.open_autoplay_modal()

@@ -57,6 +57,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
@@ -194,6 +196,20 @@ jobs:
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
 
+      - name: Skip Telemetry for most PRs
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            inputs.dry_run != true &&
+            inputs.is_pull_request == true
+          }}
+        shell: pwsh
+        run: |
+          $origin = (git merge-base origin/main HEAD)
+          $gitdiff = (git --no-pager diff --name-only $origin) -join "`n"
+          Write-Host $gitdiff
+          if ($gitdiff -notmatch "/glean/") {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
+
       - name: Run Telemetry Tests in Win
         if: |
           ${{
@@ -203,7 +219,7 @@ jobs:
         shell: pwsh
         run: |
           $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
-          if ($split -ne "smoke") {exit 0}
+          if ($split -ne "smoke" -or $env:SKIP_GLEAN -eq "true") {exit 0}
           pipenv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -242,11 +258,13 @@ jobs:
 
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
-    runs-on: macos-latest
+    runs-on: macos-26
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
@@ -347,6 +365,19 @@ jobs:
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
+      - name: Skip Telemetry for most PRs
+        if: |
+          ${{
+            steps.setup.conclusion == 'success' &&
+            inputs.dry_run != true &&
+            inputs.is_pull_request == true
+          }}
+        run: |
+          export ORIGIN=$(git merge-base origin/main HEAD)
+          export DIFF=$(git --no-pager diff --name-only $ORIGIN)
+          echo "${DIFF}"
+          if ! [[ "${DIFF}" =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
+
       - name: Run Telemetry Tests in MacOS
         if: |
           ${{
@@ -358,7 +389,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version
           split="${STARFOX_SPLIT:-smoke}"
-          if ! [[ $split = "smoke" ]]; then exit 0; fi
+          if [[ $split != "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
           pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE

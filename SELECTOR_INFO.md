@@ -1057,7 +1057,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: logins-exceptions
-Selector Data: "passwordExceptions"
+Selector Data: "managePasswordExceptions"
 Description: Manage Exceptions… button
 Location: about:preferences#privacy Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
@@ -1253,9 +1253,9 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: autoplay-settings-button
-Selector Data: autoplaySettingsButton
+Selector Data: moz-box-button[data-l10n-id='permissions-autoplay2']
 Description: Autoplay settings button
-Location: about:preferences#privacy -> Permissions
+Location: about:preferences#permissionsData -> Permissions
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1315,17 +1315,10 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-status
-Selector Data: "dohStatus"
-Description: Status of DoH
-Location: Inside the first frame of the DoH section in about:preferences#general
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-resolver
-Selector Data: "dohResolver"
-Description: The name of the DoH provider
-Location: Inside the first frame of the DoH section in about:preferences#general
+Selector Name: doh-mode-box-item
+Selector Data: "dohModeBoxItem"
+Description: Box item showing the currently selected DoH protection mode (label and description reflect the active mode)
+Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1494,6 +1487,27 @@ Selector Name: standard-section
 Selector Data: "contentBlockingOptionStandard"
 Description: In Enhanced Tracking Protection, the standard radio section
 Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-advanced-button
+Selector Data: "dohAdvancedButton"
+Description: Advanced settings button in the DNS over HTTPS (DoH) section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-radio-custom
+Selector Data: "dohRadioCustom"
+Description: "Custom" DoH radio option host element (moz-radio) in the DNS over HTTPS section
+Location: about:preferences#privacy
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-radio-custom-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioCustom shadow root; used to actually click/select the "Custom" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioCustom)
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
@@ -5261,5 +5275,19 @@ Selector Name: connection-secure
 Selector Data: "identity-connection-verified"
 Description: 'You are securely connected to this site.' message is displayed in the connection subpanel
 Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: identity-popup-content-verifier
+Selector Data: "#identity-popup-content-verifier"
+Description: "Verified by: Let's Encrypt" message is displayed inside the panel
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-privacy-link
+Selector Data: "#trustpanel-privacy-link"
+Description: "Privacy Settings" footer link in the Trust Panel
+Location: Trust Panel > footer section
 Path to .json: modules/data/trust_panel.components.json
 ```

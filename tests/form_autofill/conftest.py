@@ -2,9 +2,8 @@ import os
 
 import pytest
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import AddressFill, CreditCardFill
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, AddressFill, CreditCardFill
 from modules.util import Utilities
 
 
@@ -55,6 +54,16 @@ def util():
 @pytest.fixture()
 def about_prefs_privacy(driver):
     yield AboutPrefs(driver, category="privacy")
+
+
+@pytest.fixture()
+def about_prefs_addresses(driver):
+    return AboutPrefs(driver, category="manageAddresses")
+
+
+@pytest.fixture()
+def about_prefs_payments(driver):
+    return AboutPrefs(driver, category="managePayments")
 
 
 @pytest.fixture()

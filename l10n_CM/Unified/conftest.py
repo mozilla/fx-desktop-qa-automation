@@ -207,43 +207,49 @@ def about_prefs_privacy(driver):
 
 
 @pytest.fixture()
+def about_prefs_addresses(driver):
+    return AboutPrefs(driver, category="manageAddresses")
+
+
+@pytest.fixture()
+def about_prefs_payments(driver):
+    return AboutPrefs(driver, category="managePayments")
+
+
+@pytest.fixture()
 def about_prefs(driver):
     return AboutPrefs(driver)
 
 
 @pytest.fixture()
 def populate_saved_payments(
-    about_prefs_privacy: AboutPrefs, util: Utilities, region: str
+    about_prefs_payments: AboutPrefs, util: Utilities, region: str
 ):
     """Fixture to add cc data through saved payments method."""
     # Go to about:preferences#privacy and open Saved Payment Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    about_prefs_payments.open()
 
     # Save CC information using fake data
     credit_card_sample_data = util.fake_credit_card_data(region)
 
     # Add a new CC profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
+    about_prefs_payments.add_entry_to_saved_payments(credit_card_sample_data)
     return credit_card_sample_data
 
 
 @pytest.fixture()
 def populate_saved_addresses(
-    about_prefs_privacy: AboutPrefs, util: Utilities, region: str
+    about_prefs_addresses: AboutPrefs, util: Utilities, region: str
 ):
     """Fixture to add cc data through saved payments method."""
     # Go to about:preferences#privacy and open Saved Addresses Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+    about_prefs_addresses.open()
 
     # Save address information using fake data
     address_data_sample_data = util.fake_autofill_data(region)
 
     # Add a new address profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_addresses(address_data_sample_data)
+    about_prefs_addresses.add_entry_to_saved_addresses(address_data_sample_data)
     return address_data_sample_data
 
 
