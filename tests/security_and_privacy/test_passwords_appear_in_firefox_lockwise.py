@@ -34,7 +34,7 @@ def test_passwords_appear_in_firefox_lockwise(driver: Firefox):
     protection.open()
 
     # "x password stored securely." text is correctly displayed
-    protection.verify_lockwise_scanned_text()
+    protection.verify_lockwise_scanned_text(expected_count=1)
 
     # Click on the "Manage Passwords" button
     protection.click_on("manage-passwords-button")

@@ -421,17 +421,14 @@ class AboutProtections(BasePage):
 
     URL_TEMPLATE = "about:protections"
 
-    def verify_lockwise_scanned_text(self, expected_count: int = 1):
-        """Verify the Lockwise 'N password(s) stored securely.' message."""
-        self.element_visible("lockwise-scanned-text")
-        element = self.get_element("lockwise-scanned-text")
-        actual = element.text.strip()
+    def verify_lockwise_scanned_text(self, expected_count: int):
+        """Verify the Lockwise 'N password(s) stored securely.' message matches `expected_count`."""
         expected = (
             f"{expected_count} password stored securely."
             if expected_count == 1
             else f"{expected_count} passwords stored securely."
         )
-        assert actual == expected, f"Expected '{expected}', got '{actual}'"
+        self.element_has_text("lockwise-scanned-text", expected)
         return self
 
 
