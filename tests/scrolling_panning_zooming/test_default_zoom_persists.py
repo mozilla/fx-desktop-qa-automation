@@ -33,7 +33,9 @@ def _set_default_zoom(driver: Firefox, zoom_percent: int) -> None:
     Args:
         zoom_percent: Zoom percentage (e.g., 150).
     """
-    AboutPrefs(driver, category="general").open().set_default_zoom_level(zoom_percent)
+    AboutPrefs(driver, category="accessibility").open().set_default_zoom_level(
+        zoom_percent
+    )
 
 
 def test_default_zoom_across_tabs(driver: Firefox):
