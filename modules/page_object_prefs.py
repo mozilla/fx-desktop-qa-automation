@@ -503,7 +503,7 @@ class AboutPrefs(BasePage):
             value_field.click()
             option = next(
                 el
-                for el in self.driver.find_elements(By.TAG_NAME, "option")
+                for el in value_field.find_elements(By.TAG_NAME, "option")
                 if el.text == str(value)
             )
             option.click()
@@ -579,7 +579,7 @@ class AboutPrefs(BasePage):
         self._edit_tile("payment", idx)
 
     def _get_autofill_profiles(self, tile_type: str) -> List[WebElement]:
-        """Gets any type of autofill profile"""
+        """Gets any type of autofill profile, do not use against n=0"""
         self.element_visible(f"saved-{tile_type}-entry")
         return self.get_elements(f"saved-{tile_type}-entry")
 
@@ -592,16 +592,16 @@ class AboutPrefs(BasePage):
         return self._get_autofill_profiles("address")
 
     def _confirm_n_profiles(self, tile_type: str, n: int) -> BasePage:
-        """Confirm that _n_ profiles of a type exist"""
+        """Confirm that _n_ profiles of a type exist, where n>0"""
         self.expect(lambda _: len(self._get_autofill_profiles(tile_type)) == n)
         return self
 
     def confirm_n_addresses(self, n: int) -> BasePage:
-        """Confirm that _n_ addresses exist"""
+        """Confirm that _n_ addresses exist where n>0"""
         return self._confirm_n_profiles("address", n)
 
     def confirm_n_payments(self, n: int) -> BasePage:
-        """Confirm that _n_ payments exist"""
+        """Confirm that _n_ payments exist where n>0"""
         return self._confirm_n_profiles("payment", n)
 
     def extract_address_data_from_saved_addresses_entry(
@@ -662,7 +662,7 @@ class AboutPrefs(BasePage):
         """
         Switch to form iframe to edit saved payments.
         """
-        self.switch_to_default_frame
+        self.switch_to_default_frame()
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 

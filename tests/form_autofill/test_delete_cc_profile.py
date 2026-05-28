@@ -39,12 +39,10 @@ def test_delete_cc_profile(
     about_prefs_payments.open()
 
     # verify there are 2 profiles at first
-    cc_profiles = about_prefs_payments.get_all_saved_cc_profiles()
-    about_prefs_payments.wait.until(lambda _: len(cc_profiles) == 2)
+    about_prefs_payments.confirm_n_payments(2)
 
     # delete a profile and verify there is only 1 left
     about_prefs_payments.click_on("delete-payment")
     alert = about_prefs_payments.get_alert()
     alert.accept()
-    cc_profiles = about_prefs_payments.get_all_saved_cc_profiles()
-    about_prefs_payments.wait.until(lambda _: len(cc_profiles) == 1)
+    about_prefs_payments.confirm_n_payments(1)
