@@ -209,8 +209,7 @@ class AboutPrefs(BasePage):
         Select(self.get_element("browser-language-preferred-select")).select_by_value(
             lang_code
         )
-        moz_select = self.get_element("browser-language-preferred")
-        self.wait.until(lambda _: moz_select.get_attribute("value") == lang_code)
+        self.element_attribute_is("browser-language-preferred", "value", lang_code)
         return self
 
     def select_doh_protection_level(self, level: str) -> BasePage:
