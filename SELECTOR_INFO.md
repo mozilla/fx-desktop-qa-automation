@@ -1126,31 +1126,24 @@ Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-dropdown
-Selector Data: "primaryBrowserLocale"
-Description: Language local menu list
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred
+Selector Data: "browserLanguagePreferred"
+Description: Preferred language moz-select on the Languages pane
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-set-alternative-button
-Selector Data: "[data-l10n-id='manage-browser-languages-button']"
-Description: Set Alternatives… button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred-select
+Selector Data: "select"
+Description: Inner native <select> inside the Preferred language moz-select shadow DOM (shadowParent: browser-language-preferred)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-settings-dialog
-Selector Data: "BrowserLanguagesDialog"
-Description: The Language Set Alternatives dialog
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-select
-Selector Data: "[data-l10n-id='browser-languages-select-language']"
-Description: In the Language Set Alternatives dialog, the Select a language to add button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-heading
+Selector Data: "moz-fieldset[data-l10n-id='browser-language-heading']"
+Description: Browser language card heading (label attribute is locale-translated, used to verify language switch)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1158,41 +1151,6 @@ Selector Name: search-suggestion-in-private-windows
 Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-search
-Selector Data: "menuitem[value='search']"
-Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-option-by-code
-Selector Data: "menuitem[value='{}']"
-Description: In the Language Set Alternatives dialog, Select a language by language code
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-added-list
-Selector Data: "selectedLocales"
-Description: In the Language Set Alternatives dialog, List of added languages
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-add-button
-Selector Data: "button[data-l10n-id='languages-customize-add']"
-Description: In the Language Set Alternatives dialog, Add button
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-ok
-Selector Data: "button[dlgtype='accept']"
-Description: In the Language Set Alternatives dialog, OK button
-Location: about:preferences#general Language subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```

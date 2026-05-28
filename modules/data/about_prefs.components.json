@@ -476,55 +476,25 @@
     "strategy": "id",
     "groups": []
   },
-  "language-dropdown": {
-    "selectorData": "primaryBrowserLocale",
+  "browser-language-preferred": {
+    "selectorData": "browserLanguagePreferred",
     "strategy": "id",
     "groups": []
   },
-  "language-set-alternative-button": {
-    "selectorData": "[data-l10n-id='manage-browser-languages-button']",
+  "browser-language-preferred-select": {
+    "selectorData": "select",
     "strategy": "css",
+    "shadowParent": "browser-language-preferred",
     "groups": []
   },
-  "language-settings-dialog": {
-    "selectorData": "BrowserLanguagesDialog",
-    "strategy": "id",
+  "browser-language-heading": {
+    "selectorData": "moz-fieldset[data-l10n-id='browser-language-heading']",
+    "strategy": "css",
     "groups": []
   },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
-    "groups": []
-  },
-  "language-settings-select": {
-    "selectorData": "[data-l10n-id='browser-languages-select-language']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-settings-search": {
-    "selectorData": "menuitem[value='search']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-option-by-code": {
-    "selectorData": "menuitem[value='{}']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-added-list": {
-    "selectorData": "selectedLocales",
-    "strategy": "id",
-    "groups": []
-  },
-  "language-settings-add-button": {
-    "selectorData": "button[data-l10n-id='languages-customize-add']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-settings-ok": {
-    "selectorData": "button[dlgtype='accept']",
-    "strategy": "css",
-    "shadowParent": "language-settings-dialog",
     "groups": []
   },
   "history_menulist": {
