@@ -40,5 +40,5 @@ def test_passwords_appear_in_firefox_lockwise(driver: Firefox):
     protection.click_on("manage-passwords-button")
 
     # about:logins in opened in a new tab
-    tabs.switch_to_new_tab()
+    tabs.wait_and_switch_to_new_tab()
     nav.url_contains(LOGIN_URL)
