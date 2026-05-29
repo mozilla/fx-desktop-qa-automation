@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 
@@ -52,23 +51,8 @@ class GenericPage(BasePage):
             sleep(1)
             keyboard.tap(Key.enter)
 
-    def wait_for_reload_and_verify_empty_field(self, field_name: str):
-        """
-        Waits until the field is visible and empty after reload.
-
-        Args:
-            field_name: POM/BOM element name to verify after reload.
-
-        Returns:
-            WebElement: The field after reload.
-        """
-        self.element_visible(field_name)
-        self.element_attribute_is(field_name, "value", "")
-
-        return self.get_element(field_name)
-
     def fill_field_and_verify(
-        self, field_name: str, text: str, assert_nonempty: bool = True
+            self, field_name: str, text: str, assert_nonempty: bool = True
     ):
         """
         Clears the field, fills it with text, and optionally asserts the value.
@@ -79,27 +63,45 @@ class GenericPage(BasePage):
             assert_nonempty: If True, asserts that field value matches `text`.
 
         Returns:
-            WebElement: The field after filling.
+            GenericPage: The current page object.
         """
         self.fill(field_name, text, press_enter=False)
 
         if assert_nonempty:
             self.element_attribute_is(field_name, "value", text)
 
-        return self.get_element(field_name)
+        return self
 
-    def wait_for_geolocation_data(self, timeout=20):
-        """Wait until both latitude and longitude data are available."""
-        self.custom_wait(timeout=timeout).until(
-            lambda _: all(
-                [
-                    self.find_element(By.ID, "latitude").get_attribute("data-raw")
-                    is not None,
-                    self.find_element(By.ID, "longitude").get_attribute("data-raw")
-                    is not None,
-                ]
-            )
+    def get_page_time_origin(self):
+        """
+        Returns the current page navigation time origin.
+
+        Returns:
+            float: Current page time origin.
+        """
+        return self.driver.execute_script("return performance.timeOrigin")
+
+    def wait_for_reload_and_verify_empty_field(
+            self, field_name: str, previous_time_origin
+    ):
+        """
+        Waits until the page reloads, then verifies that the field is visible and empty.
+
+        Args:
+            field_name: POM/BOM element name to verify after reload.
+            previous_time_origin: Page time origin before reload.
+
+        Returns:
+            GenericPage: The current page object.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script("return performance.timeOrigin")
+                      != previous_time_origin
         )
+        self.element_visible(field_name)
+        self.element_attribute_is(field_name, "value", "")
+
+        return self
 
     def verify_volume_not_max(self):
         """
