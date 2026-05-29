@@ -1070,31 +1070,24 @@ Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-dropdown
-Selector Data: "primaryBrowserLocale"
-Description: Language local menu list
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred
+Selector Data: "browserLanguagePreferred"
+Description: Preferred language moz-select on the Languages pane
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-set-alternative-button
-Selector Data: "[data-l10n-id='manage-browser-languages-button']"
-Description: Set Alternatives… button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred-select
+Selector Data: "select"
+Description: Inner native <select> inside the Preferred language moz-select shadow DOM (shadowParent: browser-language-preferred)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-settings-dialog
-Selector Data: "BrowserLanguagesDialog"
-Description: The Language Set Alternatives dialog
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-select
-Selector Data: "[data-l10n-id='browser-languages-select-language']"
-Description: In the Language Set Alternatives dialog, the Select a language to add button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-heading
+Selector Data: "moz-fieldset[data-l10n-id='browser-language-heading']"
+Description: Browser language card heading (label attribute is locale-translated, used to verify language switch)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1102,41 +1095,6 @@ Selector Name: search-suggestion-in-private-windows
 Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-search
-Selector Data: "menuitem[value='search']"
-Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-option-by-code
-Selector Data: "menuitem[value='{}']"
-Description: In the Language Set Alternatives dialog, Select a language by language code
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-added-list
-Selector Data: "selectedLocales"
-Description: In the Language Set Alternatives dialog, List of added languages
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-add-button
-Selector Data: "button[data-l10n-id='languages-customize-add']"
-Description: In the Language Set Alternatives dialog, Add button
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-ok
-Selector Data: "button[dlgtype='accept']"
-Description: In the Language Set Alternatives dialog, OK button
-Location: about:preferences#general Language subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1580,6 +1538,20 @@ Selector Name: manage-privacy-security
 Selector Data: "protection-settings"
 Description: Manage your privacy and security settings link in about:protections
 Location: about:protections page
+Path to .json: modules/data/about_protections.components.json
+```
+```
+Selector Name: lockwise-scanned-text
+Selector Data: "lockwise-scanned-text"
+Description: Lockwise scanned status text showing the number of passwords stored securely
+Location: about:protections > Password manager section
+Path to .json: modules/data/about_protections.components.json
+```
+```
+Selector Name: manage-passwords-button
+Selector Data: "manage-passwords-button"
+Description: Manage passwords button in about:protections
+Location: about:protections > Password manager section
 Path to .json: modules/data/about_protections.components.json
 ```
 #### about_telemetry
@@ -5303,5 +5275,19 @@ Selector Name: trustpanel-privacy-link
 Selector Data: "#trustpanel-privacy-link"
 Description: "Privacy Settings" footer link in the Trust Panel
 Location: Trust Panel > footer section
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connection-label-insecure
+Selector Data: "[data-l10n-id='trustpanel-connection-label-insecure']"
+Description: Connection status label shown in the Trustpanel when the connection is not secure ("Connection not secure")
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-insecure-section-header
+Selector Data: "[data-l10n-id='trustpanel-insecure-section-header']"
+Description: Banner header label shown in the Trustpanel when the connection is insecure ("Your connection isn’t secure")
+Location: Trustpanel - Connection protections tab (insecure banner)
 Path to .json: modules/data/trust_panel.components.json
 ```

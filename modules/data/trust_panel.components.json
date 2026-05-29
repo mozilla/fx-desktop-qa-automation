@@ -170,5 +170,15 @@
         "selectorData": "trustpanel-privacy-link",
         "strategy": "id",
         "groups": []
+    },
+    "trustpanel-connection-label-insecure": {
+        "selectorData": "[data-l10n-id='trustpanel-connection-label-insecure']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-insecure-section-header": {
+        "selectorData": "[data-l10n-id='trustpanel-insecure-section-header']",
+        "strategy": "css",
+        "groups": []
     }
 }
