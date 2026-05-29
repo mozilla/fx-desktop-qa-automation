@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import CreditCardFill
 
 
 @pytest.fixture()
@@ -15,7 +14,6 @@ def test_autofill_four_fields(
     driver: Firefox,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    util: Utilities,
 ):
     """
     C122404, tests that the form fields are filled corrected after saving a profile.
@@ -23,7 +21,6 @@ def test_autofill_four_fields(
     Arguments:
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
-        util: Utilities instance
     """
     # navigate to credit card autofill page
     credit_card_autofill.open()
