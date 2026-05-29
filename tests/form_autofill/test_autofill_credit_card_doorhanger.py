@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
-from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 
 
 @pytest.fixture()
@@ -12,12 +10,16 @@ def test_case():
     return "122392"
 
 
+@pytest.fixture()
+def prefs_category():
+    return "passwordsAutofill"
+
+
 def test_autofill_credit_card_door_hanger(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    util: Utilities,
 ):
     """
     C122392, ensures that pressing not now > never save cards toggles off the setting
@@ -26,7 +28,6 @@ def test_autofill_credit_card_door_hanger(
         about_prefs_privacy: AboutPrefs instance (privacy category)
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
-        util: Utilities instance
     """
     # navigate to page
     credit_card_autofill.open()
@@ -42,7 +43,7 @@ def test_autofill_credit_card_door_hanger(
     autofill_popup.click_doorhanger_button("dropdown-never-save-cards")
 
     # ensure that the checked attribute is off
-    about_prefs_privacy.open()
-    payment_checkbox = about_prefs_privacy.get_element("save-and-fill-payment-methods")
-    checked_attr = payment_checkbox.get_attribute("checked")
-    assert checked_attr is None
+    about_prefs.open()
+    about_prefs.element_does_not_have_attribute(
+        "save-and-fill-payment-methods", "checked"
+    )

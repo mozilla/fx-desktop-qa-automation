@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import AddressFill
 
 
 @pytest.fixture()
@@ -15,15 +14,14 @@ def test_clear_form(
     driver: Firefox,
     address_autofill: AddressFill,
     autofill_popup: AutofillPopup,
-    util: Utilities,
     region: str,
 ):
     """
     C122574, test clear autofill form
 
     Arguments:
+        address_autofill: AddressFill instance
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
         region: country code in use
     """
     # open address page

@@ -16,18 +16,37 @@
       "doNotCache"
     ]
   },
+  "no-addresses": {
+    "selectorData": "[data-l10n-id='addresses-no-addresses-stored-message']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "add-payment": {
     "selectorData": "add-payment-button",
     "strategy": "id",
     "groups": []
   },
   "edit-payment": {
-    "selectorData": "edit-payment-button",
-    "strategy": "id",
+    "selectorData": "[data-l10n-id='payments-edit-payment-button-label']",
+    "strategy": "css",
+    "groups": []
+  },
+  "delete-payment": {
+    "selectorData": "[data-l10n-id='payments-delete-payment-button-label']",
+    "strategy": "css",
     "groups": []
   },
   "saved-payment-entry": {
     "selectorData": "[data-l10n-id='payment-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "no-payments": {
+    "selectorData": "[data-l10n-id='payments-no-payments-stored-message']",
     "strategy": "css",
     "groups": [
       "doNotCache"
