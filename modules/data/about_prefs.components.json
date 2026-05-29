@@ -646,20 +646,43 @@
     "shadowParent": "permission-dialog",
     "groups": []
   },
+  "connection-advanced-button": {
+    "selectorData": "connectionLinkButton",
+    "strategy": "id",
+    "groups": []
+  },
   "httpsonly-radio-enabled": {
     "selectorData": "httpsOnlyRadioEnabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-enabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled"
   },
   "httpsonly-radio-enabled-pbm": {
     "selectorData": "httpsOnlyRadioEnabledPBM",
     "strategy": "id",
     "groups": []
   },
+  "httpsonly-radio-enabled-pbm-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled-pbm"
+  },
   "httpsonly-radio-disabled": {
     "selectorData": "httpsOnlyRadioDisabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-disabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-disabled"
   },
   "doh-mode-box-item": {
     "selectorData": "dohModeBoxItem",

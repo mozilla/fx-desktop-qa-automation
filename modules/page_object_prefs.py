@@ -17,6 +17,8 @@ from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
+HttpsOnlyMode = Literal["all", "private", "disabled"]
+
 
 class AboutPrefs(BasePage):
     """
@@ -58,15 +60,11 @@ class AboutPrefs(BasePage):
         500,
     ]
 
-    class HttpsOnlyStatus:
-        """Fake enum: return a string based on a constant name"""
-
-        def __init__(self):
-            self.HTTPS_ONLY_ALL = "httpsonly-radio-enabled"
-            self.HTTPS_ONLY_PRIVATE = "httpsonly-radio-enabled-pbm"
-            self.HTTPS_ONLY_DISABLED = "httpsonly-radio-disabled"
-
-    HTTPS_ONLY_STATUS = HttpsOnlyStatus()
+    HTTPS_ONLY_RADIO_IDS = {
+        "all": "httpsonly-radio-enabled",
+        "private": "httpsonly-radio-enabled-pbm",
+        "disabled": "httpsonly-radio-disabled",
+    }
 
     DOH_RADIO_IDS = {
         "default": "doh-radio-default-input",
@@ -241,14 +239,27 @@ class AboutPrefs(BasePage):
         )
         return self
 
-    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
+    def open_connection_advanced(self) -> BasePage:
+        """Open Connection and software security > Advanced settings sub-pane.
+
+        The HTTPS-Only Mode card lives behind this button. Call once per
+        test; the sub-pane state persists across window switches.
         """
-        Click the HTTPS Only option given
+        self.click_on("connection-advanced-button")
+        return self
+
+    def select_https_only_setting(self, mode: HttpsOnlyMode) -> BasePage:
+        """Select an HTTPS-Only Mode radio.
+
+        Assumes the caller is on the Connection advanced sub-pane (call
+        `open_connection_advanced` first). Clicks the moz-radio's shadow
+        <input> and waits until the host's `checked` attribute is set.
+        mode: 'all' | 'private' | 'disabled'
         """
-        self.find_in_settings("HTTPS")
-        self.element_clickable(str(option_id))
-        self.click_on(str(option_id))
-        self.element_attribute_contains(str(option_id), "checked", "")
+        option_id = self.HTTPS_ONLY_RADIO_IDS[mode]
+        self.element_clickable(option_id)
+        self.click_on(f"{option_id}-input")
+        self.element_attribute_contains(option_id, "checked", "")
         return self
 
     def click_zoom_text_only(self) -> BasePage:
