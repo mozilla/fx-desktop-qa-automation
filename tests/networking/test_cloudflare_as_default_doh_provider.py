@@ -30,6 +30,7 @@ def test_cloudflare_default_doh_provider(driver: Firefox):
 
     # Select Default DoH mode and verify Cloudflare is the active provider
     prefs.open()
+    prefs.open_doh_advanced()
     prefs.select_doh_protection_level("default")
     prefs.verify_doh_provider("Cloudflare")
 

@@ -18,6 +18,7 @@ from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
+DohMode = Literal["default", "custom"]
 
 
 class AboutPrefs(BasePage):
@@ -67,8 +68,8 @@ class AboutPrefs(BasePage):
     }
 
     DOH_RADIO_IDS = {
-        "default": "doh-radio-default-input",
-        "custom": "doh-radio-custom-input",
+        "default": "doh-radio-default",
+        "custom": "doh-radio-custom",
     }
 
     # Function Organization
@@ -221,15 +222,20 @@ class AboutPrefs(BasePage):
         self.get_element("language-settings-ok").click()
         return self
 
-    def select_doh_protection_level(self, level: str) -> BasePage:
-        """Expand the DoH advanced section and select the given mode.
+    def open_doh_advanced(self) -> BasePage:
+        """Open the DoH Advanced settings sub-pane.
 
-        Waits until the radio host's `checked` attribute is set.
-        level: 'default' | 'custom'
+        The button toggles — call once per test.
         """
         self.click_on("doh-advanced-button")
-        self.click_on(self.DOH_RADIO_IDS[level])
-        self.element_attribute_contains(f"doh-radio-{level}", "checked", "")
+        return self
+
+    def select_doh_protection_level(self, level: DohMode) -> BasePage:
+        """Select a DNS over HTTPS mode. Requires `open_doh_advanced` first."""
+        option_id = self.DOH_RADIO_IDS[level]
+        self.element_clickable(option_id)
+        self.click_on(f"{option_id}-input")
+        self.element_attribute_contains(option_id, "checked", "")
         return self
 
     def verify_doh_provider(self, provider_name: str) -> BasePage:
@@ -249,13 +255,7 @@ class AboutPrefs(BasePage):
         return self
 
     def select_https_only_setting(self, mode: HttpsOnlyMode) -> BasePage:
-        """Select an HTTPS-Only Mode radio.
-
-        Assumes the caller is on the Connection advanced sub-pane (call
-        `open_connection_advanced` first). Clicks the moz-radio's shadow
-        <input> and waits until the host's `checked` attribute is set.
-        mode: 'all' | 'private' | 'disabled'
-        """
+        """Select an HTTPS-Only Mode radio. Requires `open_connection_advanced` first."""
         option_id = self.HTTPS_ONLY_RADIO_IDS[mode]
         self.element_clickable(option_id)
         self.click_on(f"{option_id}-input")
