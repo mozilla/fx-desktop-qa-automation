@@ -734,6 +734,62 @@ Location: about:preferences#general as result of Import Data button click
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: add-address
+Selector Data: "add-address-button"
+Description: Add autofill address
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: edit-address
+Selector Data: "edit-address-button"
+Description: Edit autofill address
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-address-entry
+Selector Data: "[data-l10n-id='address-moz-box-item']"
+Description: Autofill address entry
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: no-addresses
+Selector Data: "[data-l10n-id='addresses-no-addresses-stored-message']"
+Description: No addresses saved
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: add-payment
+Selector Data: "add-payment-button"
+Description: Add autofill payment
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: edit-payment
+Selector Data: "edit-payment-button"
+Description: Edit autofill payment
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payment-entry
+Selector Data: "[data-l10n-id='payment-moz-box-item']"
+Description: Autofill payment entry
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: no-payments
+Selector Data: "[data-l10n-id='payments-no-payments-stored-message']"
+Description: No payments saved
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: cc-saved-options
 Selector Data: "credit-cards"
 Description: The "Add card" modal, containing 4 fields

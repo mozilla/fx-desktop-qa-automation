@@ -19,7 +19,7 @@ associated_labels = [
 
 @pytest.fixture()
 def about_prefs_category():
-    return "privacy"
+    return "permissionsData"
 
 
 @pytest.fixture()
