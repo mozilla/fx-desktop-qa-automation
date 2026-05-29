@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -14,20 +13,19 @@ def test_case():
 
 def test_update_address(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_addresses: AboutPrefs,
     address_autofill: AddressFill,
     autofill_popup: AutofillPopup,
-    util: Utilities,
     region: str,
 ):
     """
-    C122354 - This test verifies that after updating and saving the autofill name field, the updated value appears in the Saved Addresses section.
+    C122354 - This test verifies that after updating and saving the autofill name field,
+    the updated value appears in the Saved Addresses section.
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs_addresses: AboutPrefs instance
         address_autofill: AddressFill instance
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
         region: country code in use
     """
     address_autofill.open()
@@ -47,19 +45,10 @@ def test_update_address(
     address_autofill.update_form_data(sample_data, "name", new_name_value, region)
 
     # Navigate to settings
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+    about_prefs_addresses.open()
 
     # Verify no dupe is saved
-    saved_addresses = about_prefs_privacy.get_all_saved_address_profiles()
-    assert len(saved_addresses) == 1, (
-        f"Expected 1 saved address, but found {len(saved_addresses)}."
-    )
+    about_prefs_addresses.confirm_n_addresses(1)
 
     # Assert that "Doe" is present in updated entry
-    found_updated_address = any(
-        new_name_value in element.text for element in saved_addresses
-    )
-    assert found_updated_address, (
-        "The new name was not found in any of the address entries."
-    )
+    about_prefs_addresses.element_has_text("saved-address-entry", new_name_value)

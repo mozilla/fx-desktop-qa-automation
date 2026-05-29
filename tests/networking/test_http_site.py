@@ -27,14 +27,18 @@ HTTP_SITE = "http://http.badssl.com/"
 CONNECTION_NOT_SECURE = "Connection is not secure"
 
 
-def test_http_site(
-    driver: Firefox, prefs: AboutPrefs, nav: Navigation, panel_ui: PanelUi
-):
+def test_http_site(driver: Firefox):
     """C2300294 Check that HTTP is allowed when appropriate"""
+
+    # Instantiate objects
+    prefs = AboutPrefs(driver, category="privacy")
+    nav = Navigation(driver)
+    panel_ui = PanelUi(driver)
 
     # Basic functionality
     prefs.open()
-    prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_DISABLED)
+    prefs.open_connection_advanced()
+    prefs.select_https_only_setting("disabled")
     panel_ui.open_and_switch_to_new_window("tab")
 
     driver.get(HTTP_SITE)
@@ -42,14 +46,14 @@ def test_http_site(
 
     # Blocking
     driver.switch_to.window(driver.window_handles[0])
-    prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_ALL)
+    prefs.select_https_only_setting("all")
     driver.switch_to.window(driver.window_handles[1])
     with pytest.raises(WebDriverException):
         driver.refresh()
 
     # Unblocking - non-private only
     driver.switch_to.window(driver.window_handles[0])
-    prefs.select_https_only_setting(prefs.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE)
+    prefs.select_https_only_setting("private")
     driver.switch_to.window(driver.window_handles[1])
 
     driver.refresh()

@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import AutofillPopup
 from modules.page_object import AboutPrefs
 from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
 
 
 @pytest.fixture()
@@ -24,10 +23,9 @@ def add_to_prefs_list():
 
 def test_private_mode_info_not_saved(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_addresses: AboutPrefs,
     address_autofill: AddressFill,
     autofill_popup: AutofillPopup,
-    util: Utilities,
     region: str,
 ):
     """
@@ -35,10 +33,9 @@ def test_private_mode_info_not_saved(
     This only tests the last part of the written TC - case should be divided
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs_addresses: AboutPrefs instance
         address_autofill: AddressFill instance
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
         region: country code in use
     """
     # navigate to address form page
@@ -49,11 +46,7 @@ def test_private_mode_info_not_saved(
     autofill_popup.ensure_autofill_dropdown_not_visible()
 
     # open about:prefs#privacy and switch to saved addresses dialog panel
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
+    about_prefs_addresses.open()
 
-    # Get all saved addresses items and filter out any false data.
-    saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
-    assert len(saved_address_profiles) == 0, (
-        f"Expected 0 saved address, but found {len(saved_address_profiles)}."
-    )
+    # Confirm no saved addresses
+    about_prefs_addresses.element_visible("no-addresses")
