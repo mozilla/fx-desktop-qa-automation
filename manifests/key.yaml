@@ -1615,7 +1615,6 @@ tabs:
     splits:
     - functional2
   test_reload_tab_via_keyboard:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041392
     result: pass
     splits:
     - functional2
