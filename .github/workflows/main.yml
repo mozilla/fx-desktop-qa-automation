@@ -56,7 +56,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -67,15 +67,17 @@ jobs:
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
       - name: Set CI Environment (Default)
         shell: pwsh
         run: |
-          "STARFOX_SPLIT=${{ inputs.test_set }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "STARFOX_SPLIT=$env:INPUTS_TEST_SET" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        env:
+          INPUTS_TEST_SET: ${{ inputs.test_set }}
 
       - name: Set CI Environment (Manual)
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
@@ -252,7 +254,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-win
           path: artifacts-win
@@ -263,7 +265,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -274,14 +276,16 @@ jobs:
           echo "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job"
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
       - name: Set CI Environment (Default)
         run: |
-          echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=${INPUTS_TEST_SET}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
+        env:
+          INPUTS_TEST_SET: ${{ inputs.test_set }}
 
       - name: Check test case numbers
         run: |
@@ -410,7 +414,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-mac
           path: artifacts-mac
@@ -421,19 +425,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
       - name: Set CI Environment (Default)
         run: |
-          echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=${INPUTS_TEST_SET}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
+        env:
+          INPUTS_TEST_SET: ${{ inputs.test_set }}
 
       - name: Check test case numbers
         run: |
@@ -508,12 +514,12 @@ jobs:
       - Test-MacOS
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
@@ -523,13 +529,13 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           name: artifacts-win
           path: artifacts-win
 
       - name: Download MacOS artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           name: artifacts-mac
           path: artifacts-mac

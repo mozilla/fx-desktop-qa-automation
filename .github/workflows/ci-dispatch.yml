@@ -21,8 +21,7 @@ on:
         type: string
         required: false
 
-permissions:
-  contents: "write"
+permissions: {}
 
 jobs:
   Select-Test-Type:
@@ -31,7 +30,7 @@ jobs:
       test_types: ${{ steps.dispatch.outputs.test_types }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
       - name: Select test types
@@ -46,7 +45,7 @@ jobs:
     if: ${{ github.event.inputs.preview_only == 'true' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
 

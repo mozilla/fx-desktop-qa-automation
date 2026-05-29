@@ -20,9 +20,6 @@ on:
         type: string
         required: true
 
-permissions:
-  contents: "write"
-
 jobs:
   Run-Starfox-Win:
     if: |-
