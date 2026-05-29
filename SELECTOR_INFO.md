@@ -5263,3 +5263,17 @@ Description: "Privacy Settings" footer link in the Trust Panel
 Location: Trust Panel > footer section
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-connection-label-insecure
+Selector Data: "[data-l10n-id='trustpanel-connection-label-insecure']"
+Description: Connection status label shown in the Trustpanel when the connection is not secure ("Connection not secure")
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-insecure-section-header
+Selector Data: "[data-l10n-id='trustpanel-insecure-section-header']"
+Description: Banner header label shown in the Trustpanel when the connection is insecure ("Your connection isn’t secure")
+Location: Trustpanel - Connection protections tab (insecure banner)
+Path to .json: modules/data/trust_panel.components.json
+```
