@@ -75,7 +75,7 @@ def test_hover_tab_preview(driver: Firefox):
     # Instantiate objects
     tabs = TabBar(driver)
     tab_context_menu = ContextMenu(driver)
-    about_prefs = AboutPrefs(driver, category="general")
+    about_prefs = AboutPrefs(driver, category="tabsBrowsing")
 
     # Pin the first few tabs
     for i in range(1, PINNED_TABS + 1):
