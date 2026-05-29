@@ -86,26 +86,25 @@ class GenericPage(BasePage):
         return new_field
 
     def fill_field_and_verify(
-        self, field, text: str, clear_func, assert_nonempty: bool = True
+            self, field_name: str, text: str, assert_nonempty: bool = True
     ):
         """
-        Clicks the field, clears it, fills with text, and optionally asserts the value.
+        Clicks the field, clears it, fills it with text, and optionally asserts the value.
 
         Args:
-            field: WebElement to interact with.
+            field_name: POM/BOM element name to interact with.
             text: Text to enter.
-            clear_func: Callable that clears and fills the field (e.g., ba.clear_and_fill).
             assert_nonempty: If True, asserts that field value matches `text`.
 
         Returns:
-            WebElement: The same field after filling.
+            WebElement: The field after filling.
         """
-        field.click()
-        clear_func(field, text, press_enter=False)
+        self.fill(field_name, text, press_enter=False)
+
         if assert_nonempty:
-            actual = field.get_attribute("value")
-            assert actual == text, f"Expected field value '{text}', but got '{actual}'"
-        return field
+            self.element_attribute_is(field_name, "value", text)
+
+        return self.get_element(field_name)
 
     def wait_for_geolocation_data(self, timeout=20):
         """Wait until both latitude and longitude data are available."""

@@ -28,12 +28,6 @@ def temp_selectors():
     }
 
 
-def _fill_search_field_and_verify(page: GenericPage):
-    page.fill(SEARCH_FIELD, TEST_TEXT, press_enter=False)
-    page.element_attribute_is(SEARCH_FIELD, "value", TEST_TEXT)
-    return page.get_element(SEARCH_FIELD)
-
-
 def _wait_for_reload_and_verify_empty_search_field(
     page: GenericPage,
     old_search_field,
@@ -69,14 +63,14 @@ def test_reload_tab_via_keyboard(
     page.element_visible(SEARCH_FIELD)
 
     # Type text into the search field so the reload can be verified.
-    search_field = _fill_search_field_and_verify(page)
+    search_field = page.fill_field_and_verify(SEARCH_FIELD, TEST_TEXT)
 
     # Step 3: Press the F5 button.
     tabbar.reload_tab(nav, extra_key=Keys.F5)
     _wait_for_reload_and_verify_empty_search_field(page, search_field)
 
     # Type text into the search field again so the second reload can be verified.
-    search_field = _fill_search_field_and_verify(page)
+    search_field = page.fill_field_and_verify(SEARCH_FIELD, TEST_TEXT)
 
     # Step 4: Hold the Ctrl/Cmd button and press the R button.
     tabbar.reload_tab(nav, mod_key=mod_key, extra_key="r")
