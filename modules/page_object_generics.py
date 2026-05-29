@@ -52,44 +52,26 @@ class GenericPage(BasePage):
             sleep(1)
             keyboard.tap(Key.enter)
 
-    def wait_for_reload_and_verify_empty_field(
-        self, old_field, field_id: str, wait_time: int = 10
-    ):
+    def wait_for_reload_and_verify_empty_field(self, field_name: str):
         """
-        Wait until the page reloads (staleness of old field) and verify that the
-        new search field is visible and empty.
+        Waits until the field is visible and empty after reload.
 
         Args:
-            old_field: WebElement before reload.
-            field_id (str): ID of the field to locate.
-            wait_time (int): Max wait time in seconds.
+            field_name: POM/BOM element name to verify after reload.
 
         Returns:
-            WebElement: The refreshed search field.
+            WebElement: The field after reload.
         """
+        self.element_visible(field_name)
+        self.element_attribute_is(field_name, "value", "")
 
-        # Wait for the old element to be stale (page reload)
-        self.wait.until(EC.staleness_of(old_field))
-
-        # Wait for the new one to appear and be visible
-        new_field = self.wait.until(
-            lambda d: (
-                elem
-                if (elem := d.find_element(By.ID, field_id)).is_displayed()
-                else False
-            )
-        )
-
-        assert new_field.get_attribute("value") == "", (
-            "Search field should be empty after reload"
-        )
-        return new_field
+        return self.get_element(field_name)
 
     def fill_field_and_verify(
-            self, field_name: str, text: str, assert_nonempty: bool = True
+        self, field_name: str, text: str, assert_nonempty: bool = True
     ):
         """
-        Clicks the field, clears it, fills it with text, and optionally asserts the value.
+        Clears the field, fills it with text, and optionally asserts the value.
 
         Args:
             field_name: POM/BOM element name to interact with.
