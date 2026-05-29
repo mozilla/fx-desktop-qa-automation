@@ -15,6 +15,11 @@ def add_to_prefs_list():
     return [("app.update.disabledForTesting", False)]
 
 
+@pytest.fixture()
+def about_prefs_category():
+    return "about"
+
+
 def test_check_for_updates(driver: Firefox, about_prefs: AboutPrefs):
     """
     C143572 - The check for updates button is available and responsive
