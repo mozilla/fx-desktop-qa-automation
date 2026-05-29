@@ -666,8 +666,7 @@ meta:
     splits: []
 networking:
   test_cloudflare_as_default_doh_provider:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043157
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_default_dns_protection:
@@ -675,8 +674,7 @@ networking:
     splits:
     - smoke
   test_http_site:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043157
-    result: unstable
+    result: pass
     splits:
     - functional1
 notifications:
