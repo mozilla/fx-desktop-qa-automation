@@ -1616,7 +1616,7 @@ tabs:
     - functional2
   test_reload_tab_via_keyboard:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041392
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_remove_tab_from_a_group:
