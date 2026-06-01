@@ -632,6 +632,7 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
       mac: pass
@@ -643,6 +644,7 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
       mac: pass
