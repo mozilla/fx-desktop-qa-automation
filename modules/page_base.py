@@ -410,6 +410,19 @@ class BasePage(Page):
         )
 
     @context_of_model
+    def element_does_not_have_attribute(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Expect helper: wait until attribute does not exist in element."""
+
+        def _element_does_not_have_attribute(_):
+            el = self.fetch(reference, labels=labels)
+            return el and (el.get_attribute(attr) is None)
+
+        self.expect(_element_does_not_have_attribute)
+        return self
+
+    @context_of_model
     def get_attribute_value(
         self, reference: str | tuple | WebElement, attr: str, labels=None
     ):

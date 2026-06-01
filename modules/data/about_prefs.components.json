@@ -16,18 +16,37 @@
       "doNotCache"
     ]
   },
+  "no-addresses": {
+    "selectorData": "[data-l10n-id='addresses-no-addresses-stored-message']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "add-payment": {
     "selectorData": "add-payment-button",
     "strategy": "id",
     "groups": []
   },
   "edit-payment": {
-    "selectorData": "edit-payment-button",
-    "strategy": "id",
+    "selectorData": "[data-l10n-id='payments-edit-payment-button-label']",
+    "strategy": "css",
+    "groups": []
+  },
+  "delete-payment": {
+    "selectorData": "[data-l10n-id='payments-delete-payment-button-label']",
+    "strategy": "css",
     "groups": []
   },
   "saved-payment-entry": {
     "selectorData": "[data-l10n-id='payment-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "no-payments": {
+    "selectorData": "[data-l10n-id='payments-no-payments-stored-message']",
     "strategy": "css",
     "groups": [
       "doNotCache"
@@ -457,55 +476,25 @@
     "strategy": "id",
     "groups": []
   },
-  "language-dropdown": {
-    "selectorData": "primaryBrowserLocale",
+  "browser-language-preferred": {
+    "selectorData": "browserLanguagePreferred",
     "strategy": "id",
     "groups": []
   },
-  "language-set-alternative-button": {
-    "selectorData": "[data-l10n-id='manage-browser-languages-button']",
+  "browser-language-preferred-select": {
+    "selectorData": "select",
     "strategy": "css",
+    "shadowParent": "browser-language-preferred",
     "groups": []
   },
-  "language-settings-dialog": {
-    "selectorData": "BrowserLanguagesDialog",
-    "strategy": "id",
+  "browser-language-heading": {
+    "selectorData": "moz-fieldset[data-l10n-id='browser-language-heading']",
+    "strategy": "css",
     "groups": []
   },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
-    "groups": []
-  },
-  "language-settings-select": {
-    "selectorData": "[data-l10n-id='browser-languages-select-language']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-settings-search": {
-    "selectorData": "menuitem[value='search']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-option-by-code": {
-    "selectorData": "menuitem[value='{}']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-added-list": {
-    "selectorData": "selectedLocales",
-    "strategy": "id",
-    "groups": []
-  },
-  "language-settings-add-button": {
-    "selectorData": "button[data-l10n-id='languages-customize-add']",
-    "strategy": "css",
-    "groups": []
-  },
-  "language-settings-ok": {
-    "selectorData": "button[dlgtype='accept']",
-    "strategy": "css",
-    "shadowParent": "language-settings-dialog",
     "groups": []
   },
   "history_menulist": {
@@ -646,48 +635,62 @@
     "shadowParent": "permission-dialog",
     "groups": []
   },
+  "connection-advanced-button": {
+    "selectorData": "connectionLinkButton",
+    "strategy": "id",
+    "groups": []
+  },
   "httpsonly-radio-enabled": {
     "selectorData": "httpsOnlyRadioEnabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-enabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled"
   },
   "httpsonly-radio-enabled-pbm": {
     "selectorData": "httpsOnlyRadioEnabledPBM",
     "strategy": "id",
     "groups": []
   },
+  "httpsonly-radio-enabled-pbm-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled-pbm"
+  },
   "httpsonly-radio-disabled": {
     "selectorData": "httpsOnlyRadioDisabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-disabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-disabled"
   },
   "doh-mode-box-item": {
     "selectorData": "dohModeBoxItem",
     "strategy": "id",
     "groups": []
   },
-  "doh-default-radio": {
-    "selectorData": "dohDefaultRadio",
+  "doh-radio-default": {
+    "selectorData": "dohRadioDefault",
     "strategy": "id",
     "groups": []
   },
-  "doh-increased-protection-radio": {
-    "selectorData": "dohEnabledRadio",
+  "doh-radio-default-input": {
+    "selectorData": "input",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "shadowParent": "doh-radio-default"
   },
-  "doh-max-protection-radio": {
-    "selectorData": "dohStrictRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-off-radio": {
-    "selectorData": "dohOffRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-enabled-resolver": {
-    "selectorData": "dohEnabledResolverChoices",
+  "doh-status-box": {
+    "selectorData": "dohStatusBox",
     "strategy": "id",
     "groups": []
   },

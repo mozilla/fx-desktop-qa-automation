@@ -433,6 +433,16 @@ class AboutProtections(BasePage):
 
     URL_TEMPLATE = "about:protections"
 
+    def verify_lockwise_scanned_text(self, expected_count: int):
+        """Verify the Lockwise 'N password(s) stored securely.' message matches `expected_count`."""
+        expected = (
+            f"{expected_count} password stored securely."
+            if expected_count == 1
+            else f"{expected_count} passwords stored securely."
+        )
+        self.element_has_text("lockwise-scanned-text", expected)
+        return self
+
 
 class AboutTelemetry(BasePage):
     """

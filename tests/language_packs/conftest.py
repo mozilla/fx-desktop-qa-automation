@@ -1,7 +1,5 @@
 import pytest
 
-from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages
-
 
 @pytest.fixture()
 def suite_id():
@@ -23,18 +21,3 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
-
-
-@pytest.fixture()
-def amo_languages(driver):
-    return AmoLanguages(driver)
-
-
-@pytest.fixture()
-def about_addons(driver):
-    return AboutAddons(driver)
-
-
-@pytest.fixture()
-def about_prefs(driver):
-    return AboutPrefs(driver, category="general")

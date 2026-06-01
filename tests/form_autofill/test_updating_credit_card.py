@@ -4,10 +4,8 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
-from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 
 
 @pytest.fixture()
@@ -21,22 +19,20 @@ fields = ["cc-name", "cc-exp-month", "cc-exp-year", "cc-number"]
 @pytest.mark.parametrize("field", fields)
 def test_update_cc_no_dupe_name(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_payments: AboutPrefs,
     autofill_popup: AutofillPopup,
     credit_card_autofill: CreditCardFill,
-    util: Utilities,
     field: str,
     region: str,
 ):
     """
-    C122406, ensures that updating the credit card saves the correct information with no dupe profile for the name and expiry dates
-    for cvv, must create a new profile
+    C122406, ensures that updating the credit card saves the correct information with
+    no dupe profile for the name and expiry dates. For cvv, must create a new profile.
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
-        autofill_popup: AutofillPopup instance
+        about_prefs_payments: AboutPrefs instance (privacy category)
+        autofill_popup: AutofillPopup instance:
         credit_card_autofill: CreditCardFill instance
-        util: Utilities instance
         field: credit card field being checked
         region: region being tested.
     """
@@ -61,17 +57,18 @@ def test_update_cc_no_dupe_name(
     )
 
     # navigate to settings
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    about_prefs_payments.open()
 
     # assert no dupe profile is saved
-    saved_cc = about_prefs_privacy.get_all_saved_cc_profiles()
-    assert len(saved_cc) == 1 if field != "cc-number" else len(saved_cc) == 2
+    if field == "cc-number":
+        about_prefs_payments.confirm_n_payments(2)
+    else:
+        about_prefs_payments.confirm_n_payments(1)
 
     # preprocessing for validations
-    cc_info_json = json.loads(saved_cc[0].get_dom_attribute("data-l10n-args"))
+    cc_info_json = about_prefs_payments.get_data_from_saved_payment(0)
     logging.info(f"The extracted JSON: {cc_info_json}")
     logging.info(f"The extracted cc data: {credit_card_sample_data}")
 
     # verify the items in the JSON vs the sample data
-    about_prefs_privacy.verify_cc_json(cc_info_json, credit_card_sample_data)
+    about_prefs_payments.verify_cc_json(cc_info_json, credit_card_sample_data)

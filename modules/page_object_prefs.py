@@ -1,4 +1,3 @@
-import datetime
 import json
 from time import sleep
 from typing import List, Literal
@@ -16,6 +15,9 @@ from modules.classes.credit_card import CreditCardBase
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
+
+HttpsOnlyMode = Literal["all", "private", "disabled"]
+DohMode = Literal["default", "custom"]
 
 
 class AboutPrefs(BasePage):
@@ -58,21 +60,15 @@ class AboutPrefs(BasePage):
         500,
     ]
 
-    class HttpsOnlyStatus:
-        """Fake enum: return a string based on a constant name"""
-
-        def __init__(self):
-            self.HTTPS_ONLY_ALL = "httpsonly-radio-enabled"
-            self.HTTPS_ONLY_PRIVATE = "httpsonly-radio-enabled-pbm"
-            self.HTTPS_ONLY_DISABLED = "httpsonly-radio-disabled"
-
-    HTTPS_ONLY_STATUS = HttpsOnlyStatus()
+    HTTPS_ONLY_RADIO_IDS = {
+        "all": "httpsonly-radio-enabled",
+        "private": "httpsonly-radio-enabled-pbm",
+        "disabled": "httpsonly-radio-disabled",
+    }
 
     DOH_RADIO_IDS = {
-        "default-protection": "doh-default-radio",
-        "increased-protection": "doh-increased-protection-radio",
-        "max-protection": "doh-max-protection-radio",
-        "off": "doh-off-radio",
+        "default": "doh-radio-default",
+        "custom": "doh-radio-custom",
     }
 
     # Function Organization
@@ -202,45 +198,54 @@ class AboutPrefs(BasePage):
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
     def set_alternative_language(self, lang_code: str) -> BasePage:
-        """Changes the browser language"""
-        self.get_element("language-set-alternative-button").click()
-        self.driver.switch_to.frame(self.get_iframe())
+        """Sets the browser language via the Preferred language moz-select.
 
-        # Download the language options
-        select_language = self.get_element("language-settings-select")
-        select_language.click()
-        search_languages = self.get_element("language-settings-search")
-        search_languages.click()
-        select_language.click()
-
-        # Select the language, add, and make sure it appears
-        select_language.click()
-        self.get_element("language-option-by-code", labels=[lang_code]).click()
-        select_language.click()
-        self.get_element("language-settings-add-button").click()
-        self.element_attribute_contains(
-            "language-added-list", "last-selected", f"locale-{lang_code}"
+        Firefox applies the locale live once the dropdown value changes.
+        """
+        Select(self.get_element("browser-language-preferred-select")).select_by_value(
+            lang_code
         )
-
-        self.get_element("language-settings-ok").click()
+        self.element_attribute_is("browser-language-preferred", "value", lang_code)
         return self
 
-    def select_doh_protection_level(self, level: str) -> BasePage:
+    def open_doh_advanced(self) -> BasePage:
+        """Open the DoH Advanced settings sub-pane.
+
+        The button toggles — call once per test.
         """
-        Select a DNS over HTTPS protection level in about:preferences#privacy.
-        level: 'default-protection' | 'increased-protection' | 'max-protection' | 'off'
-        """
-        self.click_on(self.DOH_RADIO_IDS[level])
+        self.click_on("doh-advanced-button")
         return self
 
-    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
+    def select_doh_protection_level(self, level: DohMode) -> BasePage:
+        """Select a DNS over HTTPS mode. Requires `open_doh_advanced` first."""
+        option_id = self.DOH_RADIO_IDS[level]
+        self.element_clickable(option_id)
+        self.click_on(f"{option_id}-input")
+        self.element_attribute_contains(option_id, "checked", "")
+        return self
+
+    def verify_doh_provider(self, provider_name: str) -> BasePage:
+        """Wait until the DoH status box reports the given provider name."""
+        self.element_attribute_contains(
+            "doh-status-box", "data-l10n-args", provider_name
+        )
+        return self
+
+    def open_connection_advanced(self) -> BasePage:
+        """Open Connection and software security > Advanced settings sub-pane.
+
+        The HTTPS-Only Mode card lives behind this button. Call once per
+        test; the sub-pane state persists across window switches.
         """
-        Click the HTTPS Only option given
-        """
-        self.find_in_settings("HTTPS")
-        self.element_clickable(str(option_id))
-        self.click_on(str(option_id))
-        self.element_attribute_contains(str(option_id), "checked", "")
+        self.click_on("connection-advanced-button")
+        return self
+
+    def select_https_only_setting(self, mode: HttpsOnlyMode) -> BasePage:
+        """Select an HTTPS-Only Mode radio. Requires `open_connection_advanced` first."""
+        option_id = self.HTTPS_ONLY_RADIO_IDS[mode]
+        self.element_clickable(option_id)
+        self.click_on(f"{option_id}-input")
+        self.element_attribute_contains(option_id, "checked", "")
         return self
 
     def click_zoom_text_only(self) -> BasePage:
@@ -342,7 +347,7 @@ class AboutPrefs(BasePage):
         menulist_popup.select_by_value(option)
         return self
 
-    # Payment and Address Management
+    # ---- Payment and Address Management ---------------------------------------------------------
     def verify_cc_json(
         self, cc_info_json: dict, credit_card_fill_obj: CreditCardBase
     ) -> BasePage:
@@ -503,18 +508,26 @@ class AboutPrefs(BasePage):
             "expiration_year": "cc-exp-year",
             "name": "cc-name",
         }
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
         if field_name not in fields.keys():
             raise ValueError(
                 f"{field_name} is not a valid field name for the cc dialog form."
             )
-        self.switch_to_edit_saved_payments_popup_iframe()
         value_field = self.find_element(By.ID, fields[field_name])
         if value.isdigit():
             value = int(value)
         if field_name == "expiration_year":
-            value -= (datetime.datetime.now().year % 100) + 1
+            if int(value) < 100:  # new exp years are all 4-digit
+                value = int(value) + 2000
+            value_field.click()
+            option = next(
+                el
+                for el in value_field.find_elements(By.TAG_NAME, "option")
+                if el.text == str(value)
+            )
+            option.click()
 
-        if value_field.tag_name == "select":
+        elif value_field.tag_name == "select":
             Select(value_field).select_by_index(value)
         else:
             value_field.clear()
@@ -571,19 +584,44 @@ class AboutPrefs(BasePage):
         """Get data-l10n-args from the saved payment card"""
         return self._get_tile_data("payment", idx)
 
+    def _edit_tile(self, tile_type: str, idx=0):
+        """Open the edit view of payment or address"""
+        tiles = self.get_elements(f"edit-{tile_type}")
+        tiles[idx].click()
+
+    def edit_address(self, idx=0):
+        """Click the edit button on a given address"""
+        self._edit_tile("address", idx)
+
+    def edit_payment(self, idx=0):
+        """Click the edit button on a given payment"""
+        self._edit_tile("payment", idx)
+
+    def _get_autofill_profiles(self, tile_type: str) -> List[WebElement]:
+        """Gets any type of autofill profile, do not use against n=0"""
+        self.element_visible(f"saved-{tile_type}-entry")
+        return self.get_elements(f"saved-{tile_type}-entry")
+
     def get_all_saved_cc_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
-        self.switch_to_saved_payments_popup_iframe()
-        element = Select(self.get_element("cc-saved-options"))
-        return element.options
+        return self._get_autofill_profiles("payment")
 
     def get_all_saved_address_profiles(self) -> List[WebElement]:
         """Gets the saved credit card profiles in the cc panel"""
-        self.switch_to_saved_addresses_popup_iframe()
-        select_el = self.get_element("address-saved-options")
-        if len(select_el.get_attribute("innerHTML")) > 1:
-            return Select(select_el).options
-        return []
+        return self._get_autofill_profiles("address")
+
+    def _confirm_n_profiles(self, tile_type: str, n: int) -> BasePage:
+        """Confirm that _n_ profiles of a type exist, where n>0"""
+        self.expect(lambda _: len(self._get_autofill_profiles(tile_type)) == n)
+        return self
+
+    def confirm_n_addresses(self, n: int) -> BasePage:
+        """Confirm that _n_ addresses exist where n>0"""
+        return self._confirm_n_profiles("address", n)
+
+    def confirm_n_payments(self, n: int) -> BasePage:
+        """Confirm that _n_ payments exist where n>0"""
+        return self._confirm_n_profiles("payment", n)
 
     def extract_address_data_from_saved_addresses_entry(
         self, util: Utilities, region: str = "US"
@@ -644,7 +682,7 @@ class AboutPrefs(BasePage):
         Switch to form iframe to edit saved payments.
         """
         self.switch_to_default_frame()
-        self.switch_to_iframe(2)
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:

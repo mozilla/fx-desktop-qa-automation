@@ -28,8 +28,16 @@ def temp_selectors():
             "strategy": "css",
             "groups": [],
         },
-        "drop-area": {"selectorData": "#droparea", "strategy": "css", "groups": []},
-        "matching": {"selectorData": "matching", "strategy": "id", "groups": []},
+        "drop-area": {
+            "selectorData": "#droparea",
+            "strategy": "css",
+            "groups": ["doNotCache"],
+        },
+        "matching": {
+            "selectorData": "matching",
+            "strategy": "id",
+            "groups": ["doNotCache"],
+        },
         "image-to-copy": {
             "selectorData": ".m24-c-donate-media > img",
             "strategy": "css",
@@ -37,11 +45,6 @@ def temp_selectors():
         },
         "paragraph1": {
             "selectorData": ".m24-c-donate-body > p:nth-of-type(1)",
-            "strategy": "css",
-            "groups": [],
-        },
-        "paragraph2": {
-            "selectorData": ".m24-c-donate-body > p:nth-of-type(2)",
             "strategy": "css",
             "groups": [],
         },
@@ -53,8 +56,6 @@ COPY_URL = "https://www.mozilla.org/en-US"
 
 
 @pytest.mark.headed
-# Ref to Windows bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
-# which may or may not be relevant
 def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     C464474: Verify that pasting images and text from html works

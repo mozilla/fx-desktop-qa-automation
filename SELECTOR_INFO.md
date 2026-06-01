@@ -734,6 +734,62 @@ Location: about:preferences#general as result of Import Data button click
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: add-address
+Selector Data: "add-address-button"
+Description: Add autofill address
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: edit-address
+Selector Data: "edit-address-button"
+Description: Edit autofill address
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-address-entry
+Selector Data: "[data-l10n-id='address-moz-box-item']"
+Description: Autofill address entry
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: no-addresses
+Selector Data: "[data-l10n-id='addresses-no-addresses-stored-message']"
+Description: No addresses saved
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: add-payment
+Selector Data: "add-payment-button"
+Description: Add autofill payment
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: edit-payment
+Selector Data: "edit-payment-button"
+Description: Edit autofill payment
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payment-entry
+Selector Data: "[data-l10n-id='payment-moz-box-item']"
+Description: Autofill payment entry
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: no-payments
+Selector Data: "[data-l10n-id='payments-no-payments-stored-message']"
+Description: No payments saved
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: cc-saved-options
 Selector Data: "credit-cards"
 Description: The "Add card" modal, containing 4 fields
@@ -1070,31 +1126,24 @@ Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-dropdown
-Selector Data: "primaryBrowserLocale"
-Description: Language local menu list
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred
+Selector Data: "browserLanguagePreferred"
+Description: Preferred language moz-select on the Languages pane
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-set-alternative-button
-Selector Data: "[data-l10n-id='manage-browser-languages-button']"
-Description: Set Alternatives… button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-preferred-select
+Selector Data: "select"
+Description: Inner native <select> inside the Preferred language moz-select shadow DOM (shadowParent: browser-language-preferred)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: language-settings-dialog
-Selector Data: "BrowserLanguagesDialog"
-Description: The Language Set Alternatives dialog
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-select
-Selector Data: "[data-l10n-id='browser-languages-select-language']"
-Description: In the Language Set Alternatives dialog, the Select a language to add button
-Location: about:preferences#general Language subsection
+Selector Name: browser-language-heading
+Selector Data: "moz-fieldset[data-l10n-id='browser-language-heading']"
+Description: Browser language card heading (label attribute is locale-translated, used to verify language switch)
+Location: about:preferences#paneLanguages Browser language section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1102,41 +1151,6 @@ Selector Name: search-suggestion-in-private-windows
 Selector Data: "showSearchSuggestionsPrivateWindowsCheckbox"
 Description: Show search suggestions in Private Windows
 Location: about:preferences#search
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-search
-Selector Data: "menuitem[value='search']"
-Description: In the Language Set Alternatives dialog, the Select a language to add, Search for more languages… option
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-option-by-code
-Selector Data: "menuitem[value='{}']"
-Description: In the Language Set Alternatives dialog, Select a language by language code
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-added-list
-Selector Data: "selectedLocales"
-Description: In the Language Set Alternatives dialog, List of added languages
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-add-button
-Selector Data: "button[data-l10n-id='languages-customize-add']"
-Description: In the Language Set Alternatives dialog, Add button
-Location: about:preferences#general Language subsection
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: language-settings-ok
-Selector Data: "button[dlgtype='accept']"
-Description: In the Language Set Alternatives dialog, OK button
-Location: about:preferences#general Language subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1294,24 +1308,52 @@ Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: connection-advanced-button
+Selector Data: "connectionLinkButton"
+Description: "Advanced settings" moz-box-button under "Connection and software security"; navigates to the sub-pane containing the HTTPS-Only Mode card
+Location: about:preferences#privacy - Connection and software security section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: httpsonly-radio-enabled
-Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled']"
-Description: Radio Button to turn Https Only Mode to enabled for all pages
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioEnabled"
+Description: "Enable HTTPS-Only Mode in all windows" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode card (reached via connection-advanced-button)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioEnabled shadow root; used to click the "Enable in all windows" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabled)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: httpsonly-radio-enabled-pbm
-Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled-pbm']"
-Description: Radio Button to turn Https Only Mode to enabled for private browsing
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioEnabledPBM"
+Description: "Enable HTTPS-Only Mode in private windows only" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-pbm-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioEnabledPBM shadow root; used to click the "Enable in private windows only" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabledPBM)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: httpsonly-radio-disabled
-Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
-Description: Radio Button to turn Https Only Mode to disabled for all pages
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioDisabled"
+Description: "Don't enable HTTPS-Only Mode" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-disabled-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioDisabled shadow root; used to click the "Don't enable" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioDisabled)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1322,38 +1364,24 @@ Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-default-radio
-Selector Data: "dohDefaultRadio"
-Description: Radio button for Default Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default
+Selector Data: "dohRadioDefault"
+Description: "Default" DoH radio option host element (moz-radio)
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-increased-protection-radio
-Selector Data: "dohEnabledRadio"
-Description: Radio button for Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioDefault shadow root; used to actually click/select the "Default" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioDefault)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-max-protection-radio
-Selector Data: "dohStrictRadio"
-Description: Radio button for Max Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-off-radio
-Selector Data: "dohOffRadio"
-Description: Radio button to turn DoH off
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-enabled-resolver
-Selector Data: "dohEnabledResolverChoices"
-Description: Provider dropdown for the Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-status-box
+Selector Data: "dohStatusBox"
+Description: moz-message-bar reporting active DoH provider; data-l10n-args carries the provider name
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1566,6 +1594,20 @@ Selector Name: manage-privacy-security
 Selector Data: "protection-settings"
 Description: Manage your privacy and security settings link in about:protections
 Location: about:protections page
+Path to .json: modules/data/about_protections.components.json
+```
+```
+Selector Name: lockwise-scanned-text
+Selector Data: "lockwise-scanned-text"
+Description: Lockwise scanned status text showing the number of passwords stored securely
+Location: about:protections > Password manager section
+Path to .json: modules/data/about_protections.components.json
+```
+```
+Selector Name: manage-passwords-button
+Selector Data: "manage-passwords-button"
+Description: Manage passwords button in about:protections
+Location: about:protections > Password manager section
 Path to .json: modules/data/about_protections.components.json
 ```
 #### about_telemetry
@@ -5289,5 +5331,19 @@ Selector Name: trustpanel-privacy-link
 Selector Data: "#trustpanel-privacy-link"
 Description: "Privacy Settings" footer link in the Trust Panel
 Location: Trust Panel > footer section
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-connection-label-insecure
+Selector Data: "[data-l10n-id='trustpanel-connection-label-insecure']"
+Description: Connection status label shown in the Trustpanel when the connection is not secure ("Connection not secure")
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-insecure-section-header
+Selector Data: "[data-l10n-id='trustpanel-insecure-section-header']"
+Description: Banner header label shown in the Trustpanel when the connection is insecure ("Your connection isn’t secure")
+Location: Trustpanel - Connection protections tab (insecure banner)
 Path to .json: modules/data/trust_panel.components.json
 ```
