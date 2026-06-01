@@ -483,9 +483,7 @@ def reportable(platform_to_test=None):
             cfg = run_.get("config")
             if cfg and platform_name in cfg:
                 covered_suites.append(str(run_.get("suite_id")))
-                matched_runs.append(
-                    (run_.get("id"), run_.get("suite_id"), cfg)
-                )
+                matched_runs.append((run_.get("id"), run_.get("suite_id"), cfg))
 
     if matched_runs:
         logging.warning(
