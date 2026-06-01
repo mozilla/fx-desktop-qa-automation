@@ -265,15 +265,27 @@ class AboutLogins(BasePage):
             downloads_folder (str): The folder where the CSV should be saved.
             filename (str): The name of the CSV file.
         """
-        # Open about:logins and click export buttons
-        self.open()
-        self.click_on("menu-button")
-        self.click_on("export-passwords-button")
-        self.click_on("continue-export-button")
+        target_path = os.path.join(downloads_folder, filename)
+        use_mock_picker = self.sys_platform() == "Linux"
+        if use_mock_picker:
+            self.install_mock_file_picker(target_path)
 
-        # Wait for export dialog and navigate to folder
-        page = GenericPage(self.driver)
-        page.navigate_dialog_to_location(downloads_folder, filename)
+        # Open about:logins and click export buttons
+        try:
+            self.open()
+            self.click_on("menu-button")
+            self.click_on("export-passwords-button")
+            self.click_on("continue-export-button")
+
+            if use_mock_picker:
+                self.wait_for_mock_file_picker()
+            else:
+                # Wait for export dialog and navigate to folder
+                page = GenericPage(self.driver)
+                page.navigate_dialog_to_location(downloads_folder, filename)
+        finally:
+            if use_mock_picker:
+                self.cleanup_mock_file_picker()
 
     def click_copy_username_button(self) -> Page:
         """Click the copy username button"""
@@ -420,6 +432,16 @@ class AboutProtections(BasePage):
     """
 
     URL_TEMPLATE = "about:protections"
+
+    def verify_lockwise_scanned_text(self, expected_count: int):
+        """Verify the Lockwise 'N password(s) stored securely.' message matches `expected_count`."""
+        expected = (
+            f"{expected_count} password stored securely."
+            if expected_count == 1
+            else f"{expected_count} passwords stored securely."
+        )
+        self.element_has_text("lockwise-scanned-text", expected)
+        return self
 
 
 class AboutTelemetry(BasePage):

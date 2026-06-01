@@ -429,6 +429,13 @@ def reportable(platform_to_test=None):
         )
         return True
 
+    logging.warning(
+        f"[diag] matched plan id={this_plan.get('id')} "
+        f"name={this_plan.get('name')!r} "
+        f"milestone_id={this_plan.get('milestone_id')} "
+        f"entries={len(this_plan.get('entries') or [])}"
+    )
+
     platform_name = ctx["platform_name"]
     plan_entries = this_plan.get("entries") or []
 
@@ -470,10 +477,22 @@ def reportable(platform_to_test=None):
         return False
 
     covered_suites = []
+    matched_runs = []
     for entry in plan_entries:
-        for run_ in entry.get("runs"):
-            if run_.get("config") and platform_name in run_.get("config"):
+        for run_ in entry.get("runs") or []:
+            cfg = run_.get("config")
+            if cfg and platform_name in cfg:
                 covered_suites.append(str(run_.get("suite_id")))
+                matched_runs.append((run_.get("id"), run_.get("suite_id"), cfg))
+
+    if matched_runs:
+        logging.warning(
+            f"[diag] {platform_name} coverage from {len(matched_runs)} run(s):"
+        )
+        for run_id, suite_id, cfg in matched_runs:
+            logging.warning(
+                f"[diag]   run_id={run_id} suite_id={suite_id} config={cfg!r}"
+            )
 
     if not covered_suites:
         logging.warning(
