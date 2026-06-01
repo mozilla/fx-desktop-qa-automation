@@ -124,7 +124,6 @@
     pivots: [stability_test_events.test_nodeid]
     filters:
       stability_test_events.test_nodeid: "-NULL"
-      stability_test_events.total_tests: ">=5"
     sorts: [stability_test_events.run_created_date asc]
     limit: 500
     listen:
