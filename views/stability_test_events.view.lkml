@@ -5,17 +5,13 @@ view: stability_test_events {
     primary_key: yes
     hidden: yes
     type: string
-    sql: FARM_FINGERPRINT(CONCAT(
+    sql: CONCAT(
           CAST(${TABLE}.run_id AS STRING),
           '|',
           ${TABLE}.artifact_name,
           '|',
-          ${TABLE}.test_nodeid,
-          '|',
-          ${TABLE}.outcome,
-          '|',
-          CAST(${TABLE}.duration AS STRING)
-        )) ;;
+          ${TABLE}.test_nodeid
+        ) ;;
   }
 
   dimension: run_id {
@@ -79,7 +75,7 @@ view: stability_test_events {
 
   dimension: test_name {
     type: string
-    sql: SPLIT(${TABLE}.test_nodeid, '::')[SAFE_OFFSET(ARRAY_LENGTH(SPLIT(${TABLE}.test_nodeid, '::')) - 1)] ;;
+    sql: ARRAY_REVERSE(SPLIT(${TABLE}.test_nodeid, '::'))[SAFE_OFFSET(0)] ;;
   }
 
   dimension: failed {
@@ -95,7 +91,7 @@ view: stability_test_events {
   measure: failure_rate {
     type: number
     value_format_name: percent_2
-    sql: SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0)) ;;
+    sql: SAFE_DIVIDE(${failed_tests}, ${total_tests}) ;;
   }
 
   measure: pass_rate {
@@ -117,17 +113,15 @@ view: stability_test_events {
   measure: flaky_score {
     type: number
     value_format_name: percent_2
+
+    # Flaky = both passes and fails observed.
+    # Tests that always pass or always fail are not considered flaky.
     sql:
     CASE
       WHEN ${passed_tests} > 0 AND ${failed_tests} > 0
-      THEN SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0))
+      THEN SAFE_DIVIDE(${failed_tests}, ${total_tests})
       ELSE 0
     END ;;
-  }
-
-  measure: failure_count  {
-    type: count
-    filters: [outcome: "failed"]
   }
 
   measure: total_tests {
