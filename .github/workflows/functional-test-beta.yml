@@ -15,8 +15,7 @@ env:
   LATEST: ""
   DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
 
-permissions:
-  contents: "write"
+permissions: {}
 
 jobs:
   Get-Functional-Split:
@@ -25,7 +24,9 @@ jobs:
         split: ${{ steps.getsplit.outputs.split }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Get Split Based On Time
         id: getsplit
@@ -42,7 +43,9 @@ jobs:
       preview_json: ${{ steps.reportable.outputs.preview_json }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Check if the run is reportable (or preview)
         id: reportable
@@ -63,7 +66,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Print plan and job summary
         env:
@@ -79,7 +84,7 @@ jobs:
     needs:
       - Check-Beta-Version
       - Get-Functional-Split
-    if: |
+    if: |-
       ${{
         needs.Check-Beta-Version.outputs.win_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
@@ -94,7 +99,7 @@ jobs:
     needs:
       - Check-Beta-Version
       - Get-Functional-Split
-    if: |
+    if: |-
       ${{
         needs.Check-Beta-Version.outputs.mac_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
