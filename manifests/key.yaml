@@ -632,7 +632,11 @@ menus:
     - smoke
     - ci
   test_frequently_used_context_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional1
   test_hyperlink_context_menu:
@@ -640,7 +644,11 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional1
   test_new_tab_label:
@@ -878,18 +886,18 @@ password_manager:
     splits:
     - functional2
   test_password_csv_correctness:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
-      mac: pass
+      mac: unstable
       win: pass
     splits:
     - functional2
   test_password_csv_export:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
-      mac: pass
+      mac: unstable
       win: pass
     splits:
     - functional2
@@ -995,10 +1003,10 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_download:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
-      mac: pass
+      mac: unstable
       win: pass
     splits:
     - functional2

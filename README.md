@@ -53,11 +53,6 @@ Launch the build manually one time to navigate through any system permission dia
     users may need to restart their shell.
 - Install dependencies: `pipenv install`
 - Start virtual environment: `pipenv shell`
-  - Ensure pynput is installed
-    - run: `pip list` to see if it's in the list
-      - if not, run: `python -m pip install pynput`
-    - you still may run into problems when running the test suite later. 
-      If pynput is not found, ensure the libraries are in your PATH.
 - Ensure your system allows the following to run in the virtual env:
   - Firefox (specifically the build being tested)
   - Terminal

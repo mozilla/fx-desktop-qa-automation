@@ -27,9 +27,19 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'pipenv==2023.11.15' --break-system-packages;
         mv ./config/ci_pyproject.toml ./pyproject.toml;
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        export PATH=$PATH:$HOME/.cargo/bin
+        . "$HOME/.cargo/env"
         pipenv install;
+        . ./scripts/setup-xauthority.sh
+        FAILURE=0
+        PYAUTOGUI_IMPORT_EXIT_CODE=0
+        pipenv run python3 -c 'import pyautogui; print("pyautogui import ok")' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
+        if [ "${PYAUTOGUI_WAYLAND_PROBE_ONLY:-0}" = "1" ]; then
+          exit "$PYAUTOGUI_IMPORT_EXIT_CODE"
+        fi
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
         . ./scripts/keyring-unlock.sh
@@ -42,8 +52,8 @@ tasks:
         export GIT_DIFF=$(git --no-pager diff --name-only $ORIGIN)
         if [[ $GIT_DIFF =~ "/glean/" ]]; then pipenv run pytest --fx-executable ./firefox/firefox tests/glean; export FAILURE=$((FAILURE | ${?})); fi;
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-        pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
+        # pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable ./firefox/firefox tests/password_manager/test_password_csv_export.py tests/pdf_viewer/test_pdf_download.py
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

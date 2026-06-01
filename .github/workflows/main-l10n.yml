@@ -220,10 +220,11 @@ jobs:
         if: ${{ steps.install-fx.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
+          XAUTHORITY: /tmp/xauth/.Xauthority
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
-          Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
+          Xvfb :99 -screen 0 '1600x1200x24' -auth "$XAUTHORITY" > artifacts/xvfb.log &
           while IFS= read -r line; do
             echo "Running tests for: $line";
             DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
