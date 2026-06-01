@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Run Claude Code Review
         uses: anthropics/claude-code-action@73367208d0bc0c529b8b3fb223cbd4a8f63586e4 # 1.0.133 2026-03-02

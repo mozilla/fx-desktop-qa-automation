@@ -62,11 +62,9 @@ jobs:
   Run-Starfox-Win:
     needs: Select-Test-Type
     # skip this job in preview_only mode
-    if: |-
-      ${{
-        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
-        !( github.event.inputs.preview_only == 'true' )
-      }}
+    if: >-
+      contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
+      !( github.event.inputs.preview_only == 'true' )
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
