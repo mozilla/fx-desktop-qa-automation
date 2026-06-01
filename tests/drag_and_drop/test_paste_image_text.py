@@ -1,4 +1,5 @@
 import pytest
+from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPage, Navigation
@@ -64,6 +65,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     nav = Navigation(driver)
     web_page = GenericPage(driver, url=DEMO_URL).open()
     web_page.elements |= temp_selectors
+    keyboard = Controller()
 
     # Test pasting image data
     web_page.click_on("paste-image-data")
@@ -72,7 +74,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     driver.switch_to.new_window("tab")
     nav.search(COPY_URL)
     web_page.element_exists("image-to-copy")
-    web_page.copy_image_from_element("image-to-copy")
+    web_page.copy_image_from_element(keyboard, "image-to-copy")
 
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
@@ -85,12 +87,8 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Copy some text from another website
     driver.switch_to.window(driver.window_handles[1])
     web_page.scroll_to_element("paragraph1")
-    start_element = web_page.get_element("paragraph1")
-    end_element = web_page.get_element("paragraph2")
-    web_page.actions.click_and_hold(start_element).move_to_element(
-        end_element
-    ).release().perform()
-    web_page.copy_selection("paragraph1")
+    web_page.triple_click("paragraph1")
+    web_page.copy_selection(keyboard, "paragraph1")
 
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
