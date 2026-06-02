@@ -836,7 +836,7 @@ class AboutPrefs(BasePage):
         "cookies-manage-data-sitelist" only has one row.
         """
         sites = self.get_elements("children-host-elements")
-        if all_sites or len(sites) == 1:
+        if all_sites:
             self.click_on("remove-all-button")
             self.element_exists("cookies-manage-data-sitelist")
             self.element_does_not_exist("children-host-elements")
@@ -844,8 +844,11 @@ class AboutPrefs(BasePage):
             cookie_item = self.get_manage_data_site_element(cookie_site)
             cookie_item.click()
             self.click_on("remove-selected-cookie-button")
-            new_sites = self.get_elements("children-host-elements")
-            self.expect(lambda _: len(new_sites) == len(sites) - 1)
+            if len(sites) > 1:
+                new_sites = self.get_elements("children-host-elements")
+                self.expect(lambda _: len(new_sites) == len(sites) - 1)
+            else:
+                self.element_does_not_exist("children-host-elements")
 
     def open_autoplay_modal(self) -> BasePage:
         """
@@ -973,9 +976,9 @@ class AboutPrefs(BasePage):
 
     def open_manage_cookies_data_dialog(self) -> BasePage:
         """
-        Open the 'Exceptions - Cookies and Site Data' dialog safely.
+        Open the 'Clear data for specific sites' dialog safely.
 
-        Waits for the 'Manage exceptions' button to be clickable, clicks it to open
+        Waits for the 'Clear data for..' button to be clickable, clicks it to open
         the dialog, and switches the driver context to the dialog's iframe. After
         calling this method, subsequent element interactions will be within the
         dialog's iframe context.
