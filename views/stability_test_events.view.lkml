@@ -94,12 +94,6 @@ view: stability_test_events {
     sql: SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0)) ;;
   }
 
-  measure: pass_rate {
-    type: number
-    value_format_name: percent_2
-    sql: SAFE_DIVIDE(${passed_tests}, NULLIF(${total_tests}, 0)) ;;
-  }
-
   measure: unique_runs {
     type: count_distinct
     sql: ${TABLE}.run_id ;;
