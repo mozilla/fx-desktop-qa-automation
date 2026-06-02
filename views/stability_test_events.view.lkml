@@ -91,7 +91,7 @@ view: stability_test_events {
   measure: failure_rate {
     type: number
     value_format_name: percent_2
-    sql: SAFE_DIVIDE(${failed_tests}, ${total_tests}) ;;
+    sql: SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0)) ;;
   }
 
   measure: pass_rate {
