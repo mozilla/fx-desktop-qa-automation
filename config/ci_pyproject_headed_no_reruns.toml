@@ -4,7 +4,7 @@ log_cli = true
 log_cli_level = "warn"
 markers = [
     "audio: test is reliant on audio",
-    "headed: test must run in headed mode (e.g. uses pynput)",
+    "headed: test must run in headed mode (uses desktop input automation)",
     "slow: test is clocked at more than 30s on modern machines",
     "locale_de: tests run in DE locale versions",
     "locale_fr: tests run in FR locale versions",

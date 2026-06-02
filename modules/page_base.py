@@ -10,9 +10,6 @@ from functools import wraps
 from pathlib import Path
 from typing import List
 
-from pynput.keyboard import Key
-from pynput.mouse import Button
-from pynput.mouse import Controller as MouseController
 from pypom import Page
 from selenium.common import NoAlertPresentException
 from selenium.common.exceptions import (
@@ -40,6 +37,23 @@ STRATEGY_MAP = {
     "tag": By.TAG_NAME,
     "name": By.NAME,
 }
+
+_gui_auto = None
+
+
+def _make_gui_auto(sysname):
+    if sysname == "Linux":
+        return None
+    import pyautogui
+
+    return pyautogui
+
+
+def _get_gui_auto(sysname):
+    global _gui_auto
+    if _gui_auto is None:
+        _gui_auto = _make_gui_auto(sysname)
+    return _gui_auto
 
 
 class BasePage(Page):
@@ -93,6 +107,9 @@ class BasePage(Page):
             )
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
+
+        if not driver.capabilities.get("moz:headless", "_"):
+            self.gui = _get_gui_auto(sys_platform)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -393,6 +410,19 @@ class BasePage(Page):
         )
 
     @context_of_model
+    def element_does_not_have_attribute(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Expect helper: wait until attribute does not exist in element."""
+
+        def _element_does_not_have_attribute(_):
+            el = self.fetch(reference, labels=labels)
+            return el and (el.get_attribute(attr) is None)
+
+        self.expect(_element_does_not_have_attribute)
+        return self
+
+    @context_of_model
     def get_attribute_value(
         self, reference: str | tuple | WebElement, attr: str, labels=None
     ):
@@ -445,6 +475,13 @@ class BasePage(Page):
             self.perform_key_combo_chrome(Keys.COMMAND, "c")  # Copy from address bar
         """
         return self.perform_key_combo(*keys)
+
+    def gui_sequence(self, *keys, interval=0.1) -> Page:
+        """Use a GUI automation to press keys, rather than sending them to an element."""
+        for key in keys:
+            self.gui.press(key)
+            time.sleep(interval)
+        return self
 
     def get_selector(self, name: str, labels=None) -> list:
         """
@@ -739,7 +776,6 @@ class BasePage(Page):
     def middle_click(self, reference: str | tuple | WebElement, labels=None):
         """Actions helper: Perform a middle mouse click on desired element"""
         with self.driver.context(self.context_id):
-            mouse = MouseController()
             element = self.fetch(reference, labels)
 
             element_location = element.location
@@ -761,11 +797,11 @@ class BasePage(Page):
                 + (element_size["height"] / 2)
                 + chrome_height
             )
-            mouse.position = (element_x, element_y)
+            self.gui.moveTo(element_x, element_y)
 
             # Need a short wait to ensure the mouse move completes, then middle click
             time.sleep(0.5)
-            mouse.click(Button.middle, 1)
+            self.gui.click(button="middle")
         return self
 
     def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
@@ -816,30 +852,26 @@ class BasePage(Page):
         return self
 
     def copy_image_from_element(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
+        self, reference: str | tuple | WebElement, labels=None
     ) -> Page:
-        """Copy from the given element using right click (pynput)"""
+        """Copy from the given element using right click (pyautogui)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
+            time.sleep(0.1)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            time.sleep(0.1)
+            self.gui_sequence("down", "down", "down", "enter")
             time.sleep(0.5)
         return self
 
-    def copy_selection(
-        self, keyboard, reference: str | tuple | WebElement, labels=None
-    ) -> Page:
-        """Copy from the current selection using right click (pynput)"""
+    def copy_selection(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Copy from the current selection using right click (pyautogui)"""
         with self.driver.context(self.context_id):
             el = self.fetch(reference, labels)
             self.scroll_to_element(el)
             self.context_click(el)
-            keyboard.tap(Key.down)
-            keyboard.tap(Key.enter)
+            self.gui_sequence("down", "enter")
             time.sleep(0.5)
         return self
 
@@ -1036,6 +1068,156 @@ class BasePage(Page):
             else:
                 raise NoSuchWindowException
 
+    @context_chrome
+    def install_mock_file_picker(self, target_path: str) -> Page:
+        """
+        Replace Firefox's native file picker with a picker that returns target_path.
+
+        Linux Wayland CI cannot reliably drive GTK file pickers through desktop
+        input, so Linux headed tests can install this before clicking a Firefox
+        control that opens nsIFilePicker.
+        """
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+
+            const target = Cc["@mozilla.org/file/local;1"].createInstance(
+              Ci.nsIFile
+            );
+            target.initWithPath(arguments[0]);
+
+            function installTestingCommonMock() {
+              const { MockFilePicker } = ChromeUtils.importESModule(
+                "resource://testing-common/MockFilePicker.sys.mjs"
+              );
+
+              MockFilePicker.init();
+              MockFilePicker.setFiles([target]);
+              MockFilePicker.returnValue = MockFilePicker.returnOK;
+
+              const state = {
+                get shown() {
+                  return MockFilePicker.shown;
+                },
+                cleanup() {
+                  MockFilePicker.cleanup();
+                },
+              };
+              return state;
+            }
+
+            function installInlineMock() {
+              const contract = "@mozilla.org/filepicker;1";
+              const registrar = Components.manager.QueryInterface(
+                Ci.nsIComponentRegistrar
+              );
+              const state = {
+                shown: false,
+                oldClassID: registrar.contractIDToCID(contract),
+                newClassID: Services.uuid.generateUUID(),
+                factory: null,
+                cleanup() {
+                  registrar.unregisterFactory(this.newClassID, this.factory);
+                  registrar.registerFactory(this.oldClassID, "", contract, null);
+                },
+              };
+
+              function MockFilePicker() {}
+              MockFilePicker.prototype = {
+                QueryInterface: ChromeUtils.generateQI(["nsIFilePicker"]),
+                init(_browsingContext, _title, mode) {
+                  this.mode = mode;
+                },
+                appendFilter() {},
+                appendFilters() {},
+                defaultString: "",
+                defaultExtension: "",
+                displayDirectory: null,
+                displaySpecialDirectory: "",
+                filterIndex: 0,
+                okButtonLabel: "",
+                mode: null,
+                get file() {
+                  return target;
+                },
+                get fileURL() {
+                  return Services.io.newFileURI(target);
+                },
+                get files() {
+                  return [target][Symbol.iterator]();
+                },
+                open(callback) {
+                  state.shown = true;
+                  Services.tm.dispatchToMainThread(() => {
+                    const result = Ci.nsIFilePicker.returnOK;
+                    if (callback?.done) {
+                      callback.done(result);
+                    } else if (typeof callback == "function") {
+                      callback(result);
+                    }
+                  });
+                },
+              };
+
+              state.factory = {
+                createInstance(iid) {
+                  return new MockFilePicker().QueryInterface(iid);
+                },
+                QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
+              };
+
+              registrar.registerFactory(state.newClassID, "", contract, state.factory);
+              return state;
+            }
+
+            const state = (() => {
+              try {
+                return installTestingCommonMock();
+              } catch (error) {
+                return installInlineMock();
+              }
+            })();
+            window.__fxQAMockFilePicker = state;
+            window.__fxQAMockFilePickerCleanup = () => {
+              const currentState = window.__fxQAMockFilePicker;
+              if (!currentState?.cleanup) {
+                return;
+              }
+              currentState.cleanup();
+              delete window.__fxQAMockFilePicker;
+              delete window.__fxQAMockFilePickerCleanup;
+            };
+            """,
+            target_path,
+        )
+        return self
+
+    @context_chrome
+    def mock_file_picker_was_shown(self) -> bool:
+        """Return True when the installed mock file picker has been opened."""
+        return self.driver.execute_script(
+            "return !!window.__fxQAMockFilePicker?.shown;"
+        )
+
+    def wait_for_mock_file_picker(self) -> Page:
+        """Wait for a previously installed mock file picker to be opened."""
+        self.custom_wait(timeout=10).until(lambda _: self.mock_file_picker_was_shown())
+        return self
+
+    @context_chrome
+    def cleanup_mock_file_picker(self) -> Page:
+        """Restore Firefox's native file picker after install_mock_file_picker."""
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+            """
+        )
+        return self
+
     def handle_os_download_confirmation(self):
         """
         Confirm the native OS download confirmation dialog.
@@ -1047,12 +1229,7 @@ class BasePage(Page):
 
         system = platform.system()
         if system == "Linux":
-            # Workaround while we figure out if tkinter is possible for us
-            from modules.util import LinuxAuto
-
-            linux_auto = LinuxAuto()
-            linux_auto.press("Return")
-            time.sleep(1.5)
+            self.gui.press("enter")
             return
 
         import pyautogui
@@ -1072,7 +1249,7 @@ class BasePage(Page):
 
             loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
             logging.info(f"OS dialog button found at {loc}, clicking")
-            pyautogui.click(loc)
+            self.gui.click(loc)
             time.sleep(1)
 
             try:
@@ -1080,13 +1257,13 @@ class BasePage(Page):
                 logging.info(
                     "Button still visible after click; pressing Enter as fallback"
                 )
-                pyautogui.press("enter")
+                self.gui.press("enter")
             except pyautogui.ImageNotFoundException:
                 pass  # dialog dismissed successfully
 
         except pyautogui.ImageNotFoundException:
             logging.info("OS dialog button image not found; pressing Enter as fallback")
-            pyautogui.press("enter")
+            self.gui.press("enter")
 
         finally:
             pyautogui.FAILSAFE = original_failsafe

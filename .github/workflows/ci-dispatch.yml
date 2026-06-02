@@ -21,8 +21,7 @@ on:
         type: string
         required: false
 
-permissions:
-  contents: "write"
+permissions: {}
 
 jobs:
   Select-Test-Type:
@@ -31,7 +30,9 @@ jobs:
       test_types: ${{ steps.dispatch.outputs.test_types }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
       - name: Select test types
         id: dispatch
         run: |
@@ -44,7 +45,9 @@ jobs:
     if: ${{ github.event.inputs.preview_only == 'true' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Show selected test types
         run: |
@@ -59,11 +62,9 @@ jobs:
   Run-Starfox-Win:
     needs: Select-Test-Type
     # skip this job in preview_only mode
-    if: |
-      ${{
-        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
-        !( github.event.inputs.preview_only == 'true' )
-      }}
+    if: >-
+      contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
+      !( github.event.inputs.preview_only == 'true' )
     uses: ./.github/workflows/main.yml
     with:
       job_to_run: Test-Windows
@@ -75,7 +76,7 @@ jobs:
 
   Run-Starfox-Mac:
     needs: Select-Test-Type
-    if: |
+    if: |-
       ${{
         contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'starfox') &&
         !( github.event.inputs.preview_only == 'true' )
@@ -90,7 +91,7 @@ jobs:
 
   Run-L10n-Win:
     needs: Select-Test-Type
-    if: |
+    if: |-
       ${{
         contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
         !( github.event.inputs.preview_only == 'true' )
@@ -104,7 +105,7 @@ jobs:
 
   Run-L10n-Mac:
     needs: Select-Test-Type
-    if: |
+    if: |-
       ${{
         contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
         !( github.event.inputs.preview_only == 'true' )
@@ -118,7 +119,7 @@ jobs:
 
   Run-L10n-Linux:
     needs: Select-Test-Type
-    if: |
+    if: |-
       ${{
         contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'l10n') &&
         !( github.event.inputs.preview_only == 'true' )

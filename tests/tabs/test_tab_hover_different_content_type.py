@@ -29,7 +29,7 @@ def test_tab_hover_different_content_type(driver: Firefox):
     """
     # Instantiate objects
     tabs = TabBar(driver)
-    about_prefs = AboutPrefs(driver, category="general")
+    about_prefs = AboutPrefs(driver, category="tabsBrowsing")
 
     # Open tabs with different content types
     tabs.open_urls_in_tabs(CONTENT_URLS, open_first_in_current_tab=True)

@@ -55,14 +55,11 @@ class PrintPreview(BasePage):
     @BasePage.context_content
     def start_print(self) -> BasePage:
         """Press Enter in Print Preview Page."""
-        from pynput.keyboard import Controller, Key
-
         self.switch_to_preview_window()
         self.get_element("print-button").click()
         # Wait for print dialog to appear
         self.custom_wait(timeout=5).until(lambda d: _get_alert(d))
-        keyboard = Controller()
-        keyboard.tap(Key.enter)
+        self.gui.press("enter")
         return self
 
     @BasePage.context_chrome
