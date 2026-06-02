@@ -42,9 +42,7 @@ def test_reload_tab_via_keyboard(driver: Firefox, sys_platform: str):
     # Step 3: Press the F5 button.
     previous_time_origin = page.get_page_time_origin()
     tabbar.reload_tab(nav, extra_key=Keys.F5)
-    page.wait_for_reload_and_verify_empty_field(
-        SEARCH_FIELD, previous_time_origin
-    )
+    page.wait_for_reload_and_verify_empty_field(SEARCH_FIELD, previous_time_origin)
 
     # Type text into the search field again so the second reload can be verified.
     page.fill_field_and_verify(SEARCH_FIELD, TEST_TEXT)
@@ -52,6 +50,4 @@ def test_reload_tab_via_keyboard(driver: Firefox, sys_platform: str):
     # Step 4: Hold the Ctrl/Cmd button and press the R button.
     previous_time_origin = page.get_page_time_origin()
     tabbar.reload_tab(nav, mod_key=mod_key, extra_key="r")
-    page.wait_for_reload_and_verify_empty_field(
-        SEARCH_FIELD, previous_time_origin
-    )
+    page.wait_for_reload_and_verify_empty_field(SEARCH_FIELD, previous_time_origin)

@@ -46,7 +46,7 @@ class GenericPage(BasePage):
             self.gui.press("enter")
 
     def fill_field_and_verify(
-            self, field_name: str, text: str, verify_value: bool = True
+        self, field_name: str, text: str, verify_value: bool = True
     ):
         """
         Clears the field, fills it with text, and optionally verifies the value.
@@ -76,7 +76,7 @@ class GenericPage(BasePage):
         return self.driver.execute_script("return performance.timeOrigin")
 
     def wait_for_reload_and_verify_empty_field(
-            self, field_name: str, previous_time_origin
+        self, field_name: str, previous_time_origin
     ):
         """
         Waits until the page reloads, then verifies that the field is visible and empty.
@@ -90,7 +90,7 @@ class GenericPage(BasePage):
         """
         self.wait.until(
             lambda _: self.driver.execute_script("return performance.timeOrigin")
-                      != previous_time_origin
+            != previous_time_origin
         )
         self.element_visible(field_name)
         self.element_attribute_is(field_name, "value", "")
