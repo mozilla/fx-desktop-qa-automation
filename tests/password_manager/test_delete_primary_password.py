@@ -20,7 +20,7 @@ def test_delete_primary_password(driver: Firefox):
     """
 
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
 
     # Have a Primary Password set
@@ -28,7 +28,7 @@ def test_delete_primary_password(driver: Firefox):
 
     # Uncheck the "Use a Primary Password" checkbox
     about_prefs.open()
-    about_prefs.click_on("use-primary-password")
+    about_prefs.click_on("turn-off-primary-password")
 
     # A "Remove Primary Password" prompt appears, containing a single input field for the current Primary Password
     primary_pw_popup = about_prefs.get_element("browser-popup")

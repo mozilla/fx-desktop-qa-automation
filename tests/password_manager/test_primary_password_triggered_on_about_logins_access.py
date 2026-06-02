@@ -33,7 +33,7 @@ def test_primary_password_triggered_on_about_logins_access_via_hamburger_menu(
     """
 
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
     panel_ui = PanelUi(driver)
     tabs = TabBar(driver)
