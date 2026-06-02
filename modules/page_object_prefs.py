@@ -1034,8 +1034,8 @@ class AboutPrefs(BasePage):
         self.switch_to_default_frame()
 
     def enable_show_sidebar(self):
-        """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
-        if not self.get_element("show-sidebar-checkbox").get_attribute("checked"):
+        """Enable the Show Sidebar checkbox in Tabs and browsing > Browser layout."""
+        if self.get_element("show-sidebar-checkbox").get_attribute("checked") is None:
             self.click_on("show-sidebar-shadow-box")
         self.element_has_attribute("show-sidebar-checkbox", "checked")
         return self
