@@ -925,7 +925,7 @@ class AboutPrefs(BasePage):
         """
         Open the 'Manage Cookies and Site Data' dialog safely.
 
-        Waits for the 'Manage browsing data' button to be clickable, clicks it to open
+        Waits for the 'Manage exceptions' button to be clickable, clicks it to open
         the dialog, and switches the driver context to the dialog's iframe. After
         calling this method, subsequent element interactions will be within the
         dialog's iframe context.

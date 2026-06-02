@@ -1056,7 +1056,6 @@ preferences:
     splits:
     - functional2
   test_manage_cookie_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042648
     result: pass
     splits:
     - smoke
