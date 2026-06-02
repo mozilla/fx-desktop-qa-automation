@@ -1036,8 +1036,7 @@ pocket:
       splits: []
 preferences:
   test_check_for_updates:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041395
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_clear_cookie_data:
