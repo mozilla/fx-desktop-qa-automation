@@ -388,7 +388,7 @@
     ]
   },
   "manage-data-save-changes-button": {
-    "selectorData": "[class='button-text'][value='Save Changes']",
+    "selectorData": "[dlgtype='accept']",
     "strategy": "css",
     "shadowParent": "cookies-shadow-root",
     "groups": [

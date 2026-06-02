@@ -785,11 +785,10 @@ class AboutPrefs(BasePage):
         "cookies-manage-data-sitelist" only has one row.
         """
         sites = self.get_elements("children-host-elements")
-        if all_sites:
+        if all_sites or len(sites) == 1:
             self.click_on("remove-all-button")
             self.element_exists("cookies-manage-data-sitelist")
-            sites = self.get_elements("children-host-elements")
-            self.expect(lambda _: len(sites) == 0)
+            self.element_does_not_exist("children-host-elements")
         else:
             cookie_item = self.get_manage_data_site_element(cookie_site)
             cookie_item.click()
@@ -933,11 +932,11 @@ class AboutPrefs(BasePage):
         Note: This method assumes the about:preferences page is already open.
         Call self.open() first if needed.
         """
-        self.element_clickable("prefs-button", labels=["Manage exceptions"])
+        self.element_clickable("prefs-button", labels=["Clear data for specific sites"])
         manage_data_popup = self.press_button_get_popup_dialog_iframe(
-            "Manage exceptions"
+            "Clear data for specific sites"
         )
-        BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
+        self.switch_to_iframe_context(manage_data_popup)
         return self
 
     def uncheck_history_suggestion(self):
