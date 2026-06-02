@@ -20,12 +20,9 @@ on:
         type: string
         required: true
 
-permissions:
-  contents: "write"
-
 jobs:
   Run-Starfox-Win:
-    if: |
+    if: |-
       ${{
         contains(github.event.inputs.platform, 'win') || github.event.inputs.platform == 'all' || github.event_name == 'schedule'
       }}
@@ -37,7 +34,7 @@ jobs:
     secrets: inherit
 
   Run-Starfox-Mac:
-    if: |
+    if: |-
       ${{
         contains(github.event.inputs.platform, 'mac') || github.event.inputs.platform == 'all' || github.event_name == 'schedule'
       }}

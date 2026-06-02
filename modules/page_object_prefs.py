@@ -16,6 +16,9 @@ from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, Utilities
 
+HttpsOnlyMode = Literal["all", "private", "disabled"]
+DohMode = Literal["default", "custom"]
+
 
 class AboutPrefs(BasePage):
     """
@@ -57,21 +60,15 @@ class AboutPrefs(BasePage):
         500,
     ]
 
-    class HttpsOnlyStatus:
-        """Fake enum: return a string based on a constant name"""
-
-        def __init__(self):
-            self.HTTPS_ONLY_ALL = "httpsonly-radio-enabled"
-            self.HTTPS_ONLY_PRIVATE = "httpsonly-radio-enabled-pbm"
-            self.HTTPS_ONLY_DISABLED = "httpsonly-radio-disabled"
-
-    HTTPS_ONLY_STATUS = HttpsOnlyStatus()
+    HTTPS_ONLY_RADIO_IDS = {
+        "all": "httpsonly-radio-enabled",
+        "private": "httpsonly-radio-enabled-pbm",
+        "disabled": "httpsonly-radio-disabled",
+    }
 
     DOH_RADIO_IDS = {
-        "default-protection": "doh-default-radio",
-        "increased-protection": "doh-increased-protection-radio",
-        "max-protection": "doh-max-protection-radio",
-        "off": "doh-off-radio",
+        "default": "doh-radio-default",
+        "custom": "doh-radio-custom",
     }
 
     # Function Organization
@@ -211,22 +208,44 @@ class AboutPrefs(BasePage):
         self.element_attribute_is("browser-language-preferred", "value", lang_code)
         return self
 
-    def select_doh_protection_level(self, level: str) -> BasePage:
+    def open_doh_advanced(self) -> BasePage:
+        """Open the DoH Advanced settings sub-pane.
+
+        The button toggles — call once per test.
         """
-        Select a DNS over HTTPS protection level in about:preferences#privacy.
-        level: 'default-protection' | 'increased-protection' | 'max-protection' | 'off'
-        """
-        self.click_on(self.DOH_RADIO_IDS[level])
+        self.click_on("doh-advanced-button")
         return self
 
-    def select_https_only_setting(self, option_id: HttpsOnlyStatus) -> BasePage:
+    def select_doh_protection_level(self, level: DohMode) -> BasePage:
+        """Select a DNS over HTTPS mode. Requires `open_doh_advanced` first."""
+        option_id = self.DOH_RADIO_IDS[level]
+        self.element_clickable(option_id)
+        self.click_on(f"{option_id}-input")
+        self.element_attribute_contains(option_id, "checked", "")
+        return self
+
+    def verify_doh_provider(self, provider_name: str) -> BasePage:
+        """Wait until the DoH status box reports the given provider name."""
+        self.element_attribute_contains(
+            "doh-status-box", "data-l10n-args", provider_name
+        )
+        return self
+
+    def open_connection_advanced(self) -> BasePage:
+        """Open Connection and software security > Advanced settings sub-pane.
+
+        The HTTPS-Only Mode card lives behind this button. Call once per
+        test; the sub-pane state persists across window switches.
         """
-        Click the HTTPS Only option given
-        """
-        self.find_in_settings("HTTPS")
-        self.element_clickable(str(option_id))
-        self.click_on(str(option_id))
-        self.element_attribute_contains(str(option_id), "checked", "")
+        self.click_on("connection-advanced-button")
+        return self
+
+    def select_https_only_setting(self, mode: HttpsOnlyMode) -> BasePage:
+        """Select an HTTPS-Only Mode radio. Requires `open_connection_advanced` first."""
+        option_id = self.HTTPS_ONLY_RADIO_IDS[mode]
+        self.element_clickable(option_id)
+        self.click_on(f"{option_id}-input")
+        self.element_attribute_contains(option_id, "checked", "")
         return self
 
     def click_zoom_text_only(self) -> BasePage:

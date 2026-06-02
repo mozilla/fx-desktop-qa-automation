@@ -1308,24 +1308,52 @@ Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: connection-advanced-button
+Selector Data: "connectionLinkButton"
+Description: "Advanced settings" moz-box-button under "Connection and software security"; navigates to the sub-pane containing the HTTPS-Only Mode card
+Location: about:preferences#privacy - Connection and software security section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: httpsonly-radio-enabled
-Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled']"
-Description: Radio Button to turn Https Only Mode to enabled for all pages
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioEnabled"
+Description: "Enable HTTPS-Only Mode in all windows" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode card (reached via connection-advanced-button)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioEnabled shadow root; used to click the "Enable in all windows" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabled)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: httpsonly-radio-enabled-pbm
-Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled-pbm']"
-Description: Radio Button to turn Https Only Mode to enabled for private browsing
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioEnabledPBM"
+Description: "Enable HTTPS-Only Mode in private windows only" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-pbm-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioEnabledPBM shadow root; used to click the "Enable in private windows only" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabledPBM)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: httpsonly-radio-disabled
-Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
-Description: Radio Button to turn Https Only Mode to disabled for all pages
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioDisabled"
+Description: "Don't enable HTTPS-Only Mode" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-disabled-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioDisabled shadow root; used to click the "Don't enable" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioDisabled)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1336,38 +1364,24 @@ Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-default-radio
-Selector Data: "dohDefaultRadio"
-Description: Radio button for Default Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default
+Selector Data: "dohRadioDefault"
+Description: "Default" DoH radio option host element (moz-radio)
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-increased-protection-radio
-Selector Data: "dohEnabledRadio"
-Description: Radio button for Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioDefault shadow root; used to actually click/select the "Default" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioDefault)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-max-protection-radio
-Selector Data: "dohStrictRadio"
-Description: Radio button for Max Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-off-radio
-Selector Data: "dohOffRadio"
-Description: Radio button to turn DoH off
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-enabled-resolver
-Selector Data: "dohEnabledResolverChoices"
-Description: Provider dropdown for the Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-status-box
+Selector Data: "dohStatusBox"
+Description: moz-message-bar reporting active DoH provider; data-l10n-args carries the provider name
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```

@@ -635,48 +635,62 @@
     "shadowParent": "permission-dialog",
     "groups": []
   },
+  "connection-advanced-button": {
+    "selectorData": "connectionLinkButton",
+    "strategy": "id",
+    "groups": []
+  },
   "httpsonly-radio-enabled": {
     "selectorData": "httpsOnlyRadioEnabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-enabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled"
   },
   "httpsonly-radio-enabled-pbm": {
     "selectorData": "httpsOnlyRadioEnabledPBM",
     "strategy": "id",
     "groups": []
   },
+  "httpsonly-radio-enabled-pbm-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled-pbm"
+  },
   "httpsonly-radio-disabled": {
     "selectorData": "httpsOnlyRadioDisabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-disabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-disabled"
   },
   "doh-mode-box-item": {
     "selectorData": "dohModeBoxItem",
     "strategy": "id",
     "groups": []
   },
-  "doh-default-radio": {
-    "selectorData": "dohDefaultRadio",
+  "doh-radio-default": {
+    "selectorData": "dohRadioDefault",
     "strategy": "id",
     "groups": []
   },
-  "doh-increased-protection-radio": {
-    "selectorData": "dohEnabledRadio",
+  "doh-radio-default-input": {
+    "selectorData": "input",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "shadowParent": "doh-radio-default"
   },
-  "doh-max-protection-radio": {
-    "selectorData": "dohStrictRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-off-radio": {
-    "selectorData": "dohOffRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-enabled-resolver": {
-    "selectorData": "dohEnabledResolverChoices",
+  "doh-status-box": {
+    "selectorData": "dohStatusBox",
     "strategy": "id",
     "groups": []
   },
