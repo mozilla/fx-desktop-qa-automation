@@ -10,7 +10,7 @@
     model: stability_analytics
     explore: stability_test_events
     field: stability_test_events.platform
-    default_value: "mac, win"
+    default_value: "mac,win"
     allow_multiple_values: true
     required: false
 
