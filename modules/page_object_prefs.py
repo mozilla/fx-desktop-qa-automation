@@ -974,7 +974,7 @@ class AboutPrefs(BasePage):
 
     def open_manage_cookies_data_dialog(self) -> BasePage:
         """
-        Open the 'Manage Cookies and Site Data' dialog safely.
+        Open the 'Exceptions - Cookies and Site Data' dialog safely.
 
         Waits for the 'Manage exceptions' button to be clickable, clicks it to open
         the dialog, and switches the driver context to the dialog's iframe. After
