@@ -89,8 +89,11 @@ class GenericPage(BasePage):
             GenericPage: The current page object.
         """
         self.wait.until(
-            lambda _: self.driver.execute_script("return performance.timeOrigin")
-            != previous_time_origin
+            lambda _: (
+                    (time_origin := self.driver.execute_script("return performance.timeOrigin"))
+                    is not None
+                    and time_origin != previous_time_origin
+            )
         )
         self.element_visible(field_name)
         self.element_attribute_is(field_name, "value", "")
