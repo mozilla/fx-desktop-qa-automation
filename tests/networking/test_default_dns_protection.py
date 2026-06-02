@@ -22,12 +22,15 @@ def add_to_prefs_list():
 TEST_URL = "https://www.wikipedia.org/"
 
 
-def test_doh_enforces_secure_dns_resolution(
-    driver: Firefox, prefs: AboutPrefs, networking: AboutNetworking, tabs: TabBar
-):
+def test_doh_enforces_secure_dns_resolution(driver: Firefox):
     """
     C2300296 - Verify that default DNS over HTTPS (DoH) settings enforce secure DNS resolution
     """
+    # Instantiate objects
+    prefs = AboutPrefs(driver, category="privacy")
+    networking = AboutNetworking(driver)
+    tabs = TabBar(driver)
+
     # Confirm the default DoH mode is selected in the privacy panel
     prefs.open()
     prefs.element_attribute_is(

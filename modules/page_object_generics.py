@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 
 from selenium.webdriver import Firefox
@@ -18,38 +19,31 @@ class GenericPage(BasePage):
     def navigate_dialog_to_location(
         self, location: str, filename="test.txt"
     ) -> BasePage:
+        logging.warning(f"Location: {location}")
         sleep(1.5)
-        from pynput.keyboard import Controller, Key
 
-        keyboard = Controller()
         if self.sys_platform() == "Darwin":
-            keyboard.type("/")
+            self.gui.press("/")
             sleep(1.5)
-            keyboard.type(location.lstrip("/"))
+            self.gui.write(location.lstrip("/"), interval=0.2)
             sleep(1)
-            keyboard.press(Key.enter)
+            self.gui.press("enter")
             sleep(1)
-            keyboard.press(Key.enter)
+            self.gui.press("enter")
         elif self.sys_platform().startswith("Win"):
-            keyboard.press(Key.ctrl)
-            keyboard.tap("l")
-            keyboard.release(Key.ctrl)
+            self.gui.hotkey("ctrl", "l")
             sleep(1.5)
-            keyboard.type(location)
+            self.gui.write(location, interval=0.2)
             sleep(1)
-            keyboard.tap(Key.enter)
+            self.gui.press("enter")
             sleep(1)
-            keyboard.press(Key.alt)
-            keyboard.tap("s")
-            keyboard.release(Key.alt)
+            self.gui.hotkey("alt", "s")
         else:
-            keyboard.press(Key.ctrl)
-            keyboard.tap("a")
-            keyboard.release(Key.ctrl)
+            self.gui.hotkey("ctrl", "a")
             sleep(1.5)
-            keyboard.type(f"{location}/{filename}")
+            self.gui.write(f"{location}/{filename}", interval=0.2)
             sleep(1)
-            keyboard.tap(Key.enter)
+            self.gui.press("enter")
 
     def fill_field_and_verify(
             self, field_name: str, text: str, assert_nonempty: bool = True
@@ -199,28 +193,24 @@ class GenericPdf(BasePage):
         """Add an image to a pdf file"""
         self.get_element("toolbar-add-image").click()
         self.get_element("toolbar-add-image-confirm").click()
-        sleep(1.5)
-        from pynput.keyboard import Controller, Key
 
-        keyboard = Controller()
+        sleep(1.5)
         if sys_platform == "Darwin" or sys_platform == "Linux":
-            keyboard.type("/")
+            self.gui.press("/")
             sleep(1.5)
-            keyboard.type(image_path.lstrip("/"))
+            self.gui.write(image_path.lstrip("/"))
         else:
             sleep(1.5)
-            keyboard.type(image_path)
+            self.gui.write(image_path)
         sleep(1)
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        self.gui.press("enter")
         sleep(1)
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
+        self.gui.press("enter")
         sleep(1.5)
         for _ in range(3):
-            keyboard.tap(Key.tab)
+            self.gui.press("tab")
         sleep(0.5)
-        keyboard.tap(Key.enter)
+        self.gui.press("enter")
         sleep(1)
         return self
 

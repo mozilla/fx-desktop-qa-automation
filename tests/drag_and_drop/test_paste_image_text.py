@@ -29,8 +29,16 @@ def temp_selectors():
             "strategy": "css",
             "groups": [],
         },
-        "drop-area": {"selectorData": "#droparea", "strategy": "css", "groups": []},
-        "matching": {"selectorData": "matching", "strategy": "id", "groups": []},
+        "drop-area": {
+            "selectorData": "#droparea",
+            "strategy": "css",
+            "groups": ["doNotCache"],
+        },
+        "matching": {
+            "selectorData": "matching",
+            "strategy": "id",
+            "groups": ["doNotCache"],
+        },
         "image-to-copy": {
             "selectorData": ".m24-c-donate-media > img",
             "strategy": "css",
@@ -38,11 +46,6 @@ def temp_selectors():
         },
         "paragraph1": {
             "selectorData": ".m24-c-donate-body > p:nth-of-type(1)",
-            "strategy": "css",
-            "groups": [],
-        },
-        "paragraph2": {
-            "selectorData": ".m24-c-donate-body > p:nth-of-type(2)",
             "strategy": "css",
             "groups": [],
         },
@@ -54,8 +57,6 @@ COPY_URL = "https://www.mozilla.org/en-US"
 
 
 @pytest.mark.headed
-# Ref to Windows bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1857764
-# which may or may not be relevant
 def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     C464474: Verify that pasting images and text from html works
@@ -86,11 +87,7 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Copy some text from another website
     driver.switch_to.window(driver.window_handles[1])
     web_page.scroll_to_element("paragraph1")
-    start_element = web_page.get_element("paragraph1")
-    end_element = web_page.get_element("paragraph2")
-    web_page.actions.click_and_hold(start_element).move_to_element(
-        end_element
-    ).release().perform()
+    web_page.triple_click("paragraph1")
     web_page.copy_selection(keyboard, "paragraph1")
 
     # Paste it in the test area

@@ -24,7 +24,7 @@ def test_password_can_be_shown(driver: Firefox):
     """
     # Instantiate object
     about_logins = AboutLogins(driver)
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
 
     # Open about:login and click on the "Add password" button

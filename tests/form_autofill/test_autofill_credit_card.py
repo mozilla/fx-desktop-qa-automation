@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import CreditCardFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import CreditCardFill
 
 
 @pytest.fixture()
@@ -13,7 +12,6 @@ def test_case():
 
 def test_autofill_credit_card(
     driver: Firefox,
-    util: Utilities,
     credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
     region: str,
@@ -24,7 +22,6 @@ def test_autofill_credit_card(
     Arguments:
         credit_card_autofill: CreditCardFill instance
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
         region: region being tested
     """
 

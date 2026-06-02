@@ -1,11 +1,8 @@
-import json
-
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
-from modules.page_object_autofill import CreditCardFill
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, CreditCardFill
 from modules.util import Utilities
 
 
@@ -25,7 +22,7 @@ fields = ["expiration_year", "name", "expiration_month", "card_number"]
 @pytest.mark.parametrize("field", fields)
 def test_edit_credit_card_profile(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_payments: AboutPrefs,
     util: Utilities,
     credit_card_autofill: CreditCardFill,
     autofill_popup: AutofillPopup,
@@ -37,7 +34,7 @@ def test_edit_credit_card_profile(
     has the correct behaviour
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs_payments: AboutPrefs instance (privacy category)
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
         util: Utilities instance
@@ -55,28 +52,24 @@ def test_edit_credit_card_profile(
     original_cc_data = credit_card_autofill.fill_and_save()
 
     # navigate to about:prefs and select the saved payment methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    about_prefs_payments.open()
 
     # fetch the saved cc profile and select edit
-    saved_profile = about_prefs_privacy.get_all_saved_cc_profiles()
-    saved_profile[0].click()
-    about_prefs_privacy.click_edit_on_dialog_element()
+    about_prefs_payments.edit_payment()
 
     # ensure the same year or month is not generated
     credit_card_sample_data_new = util.fake_credit_card_data(region, original_cc_data)
 
     # update cc field
     updated_value = getattr(credit_card_sample_data_new, field)
-    about_prefs_privacy.update_cc_field_panel(field, updated_value)
+    about_prefs_payments.update_cc_field_panel(field, updated_value)
+    about_prefs_payments.open()  # reopen payment prefs to reset
 
-    ## get new json object for the updated field
-    saved_profile = about_prefs_privacy.get_all_saved_cc_profiles()
-    saved_profile[0].click()
-    cc_info_json_new = json.loads(saved_profile[0].get_attribute("data-l10n-args"))
+    # get new json object for the updated field
 
+    cc_info_json_new = about_prefs_payments.get_data_from_saved_payment()
     # replace required field value from original cc data
     setattr(original_cc_data, field, updated_value)
 
     # verify that field is changed
-    about_prefs_privacy.verify_cc_json(cc_info_json_new, original_cc_data)
+    about_prefs_payments.verify_cc_json(cc_info_json_new, original_cc_data)

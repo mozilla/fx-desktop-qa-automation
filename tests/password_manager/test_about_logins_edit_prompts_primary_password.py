@@ -25,7 +25,7 @@ def test_about_logins_edit_prompts_primary_password(driver: Firefox):
 
     # Instantiate objects
     about_logins = AboutLogins(driver)
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
 
     # Have a Primary Password set

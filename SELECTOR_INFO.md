@@ -734,6 +734,62 @@ Location: about:preferences#general as result of Import Data button click
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: add-address
+Selector Data: "add-address-button"
+Description: Add autofill address
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: edit-address
+Selector Data: "edit-address-button"
+Description: Edit autofill address
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-address-entry
+Selector Data: "[data-l10n-id='address-moz-box-item']"
+Description: Autofill address entry
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: no-addresses
+Selector Data: "[data-l10n-id='addresses-no-addresses-stored-message']"
+Description: No addresses saved
+Location: about:preferences#manageAddresses
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: add-payment
+Selector Data: "add-payment-button"
+Description: Add autofill payment
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: edit-payment
+Selector Data: "edit-payment-button"
+Description: Edit autofill payment
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: saved-payment-entry
+Selector Data: "[data-l10n-id='payment-moz-box-item']"
+Description: Autofill payment entry
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: no-payments
+Selector Data: "[data-l10n-id='payments-no-payments-stored-message']"
+Description: No payments saved
+Location: about:preferences#managePayments
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: cc-saved-options
 Selector Data: "credit-cards"
 Description: The "Add card" modal, containing 4 fields
@@ -1155,7 +1211,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: use-primary-password
-Selector Data: "useMasterPassword"
+Selector Data: "addPrimaryPassword"
 Description: Checkbox for using primary password
 Location: about:preferences#privacy Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
@@ -1252,24 +1308,52 @@ Location: Settings Autoplay popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: connection-advanced-button
+Selector Data: "connectionLinkButton"
+Description: "Advanced settings" moz-box-button under "Connection and software security"; navigates to the sub-pane containing the HTTPS-Only Mode card
+Location: about:preferences#privacy - Connection and software security section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: httpsonly-radio-enabled
-Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled']"
-Description: Radio Button to turn Https Only Mode to enabled for all pages
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioEnabled"
+Description: "Enable HTTPS-Only Mode in all windows" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode card (reached via connection-advanced-button)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioEnabled shadow root; used to click the "Enable in all windows" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabled)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: httpsonly-radio-enabled-pbm
-Selector Data: "radio[data-l10n-id='httpsonly-radio-enabled-pbm']"
-Description: Radio Button to turn Https Only Mode to enabled for private browsing
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioEnabledPBM"
+Description: "Enable HTTPS-Only Mode in private windows only" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-enabled-pbm-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioEnabledPBM shadow root; used to click the "Enable in private windows only" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabledPBM)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: httpsonly-radio-disabled
-Selector Data: "radio[data-l10n-id='httpsonly-radio-disabled']"
-Description: Radio Button to turn Https Only Mode to disabled for all pages
-Location: about:preferences#privacy
+Selector Data: "httpsOnlyRadioDisabled"
+Description: "Don't enable HTTPS-Only Mode" moz-radio host element
+Location: about:preferences#privacy - HTTPS-Only Mode section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: httpsonly-radio-disabled-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the httpsOnlyRadioDisabled shadow root; used to click the "Don't enable" option
+Location: about:preferences#privacy (shadow DOM of httpsOnlyRadioDisabled)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1280,38 +1364,24 @@ Location: about:preferences#privacy - DNS over HTTPS section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-default-radio
-Selector Data: "dohDefaultRadio"
-Description: Radio button for Default Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default
+Selector Data: "dohRadioDefault"
+Description: "Default" DoH radio option host element (moz-radio)
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-increased-protection-radio
-Selector Data: "dohEnabledRadio"
-Description: Radio button for Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-radio-default-input
+Selector Data: "input"
+Description: Inner <input type="radio"> inside the dohRadioDefault shadow root; used to actually click/select the "Default" DoH option
+Location: about:preferences#privacy (shadow DOM of dohRadioDefault)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: doh-max-protection-radio
-Selector Data: "dohStrictRadio"
-Description: Radio button for Max Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-off-radio
-Selector Data: "dohOffRadio"
-Description: Radio button to turn DoH off
-Location: about:preferences#privacy - DNS over HTTPS section
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: doh-enabled-resolver
-Selector Data: "dohEnabledResolverChoices"
-Description: Provider dropdown for the Increased Protection DoH mode
-Location: about:preferences#privacy - DNS over HTTPS section
+Selector Name: doh-status-box
+Selector Data: "dohStatusBox"
+Description: moz-message-bar reporting active DoH provider; data-l10n-args carries the provider name
+Location: about:preferences#privacy - DNS over HTTPS advanced section
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1393,14 +1463,14 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: saved-passwords
-Selector Data: "showPasswords"
+Selector Data: "manageSavedPasswords"
 Description: Saved passwords button in about:preferences#privacy
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: change-primary-password
-Selector Data: "changeMasterPassword"
+Selector Data: "changePrimaryPassword"
 Description: Change primary password button in about:preferences#privacy
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -1466,6 +1536,13 @@ Selector Name: doh-radio-custom-input
 Selector Data: "input"
 Description: Inner <input type="radio"> inside the dohRadioCustom shadow root; used to actually click/select the "Custom" DoH option
 Location: about:preferences#privacy (shadow DOM of dohRadioCustom)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: turn-off-primary-password
+Selector Data: "turnOffPrimaryPassword"
+Description: "Turn off Primary Password" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password
+Location: about:preferences#privacy (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles

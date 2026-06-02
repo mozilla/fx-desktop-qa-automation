@@ -422,7 +422,7 @@ class Sidebar(BasePage):
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
                 "if (!cd || cd.readyState !== 'complete') return null;"
                 "function search(root) {"
-                "  const el = root.querySelector('a[data-l10n-id=\"sidebar-manage-extensions\"]');"
+                "  const el = root.querySelector('a[data-l10n-id=\"sidebar-manage-extensions2\"]');"
                 "  if (el) { el.click(); return true; }"
                 "  for (const host of root.querySelectorAll('*')) {"
                 "    if (host.shadowRoot && search(host.shadowRoot)) return true;"

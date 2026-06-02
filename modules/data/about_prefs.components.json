@@ -16,18 +16,37 @@
       "doNotCache"
     ]
   },
+  "no-addresses": {
+    "selectorData": "[data-l10n-id='addresses-no-addresses-stored-message']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "add-payment": {
     "selectorData": "add-payment-button",
     "strategy": "id",
     "groups": []
   },
   "edit-payment": {
-    "selectorData": "edit-payment-button",
-    "strategy": "id",
+    "selectorData": "[data-l10n-id='payments-edit-payment-button-label']",
+    "strategy": "css",
+    "groups": []
+  },
+  "delete-payment": {
+    "selectorData": "[data-l10n-id='payments-delete-payment-button-label']",
+    "strategy": "css",
     "groups": []
   },
   "saved-payment-entry": {
     "selectorData": "[data-l10n-id='payment-moz-box-item']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "no-payments": {
+    "selectorData": "[data-l10n-id='payments-no-payments-stored-message']",
     "strategy": "css",
     "groups": [
       "doNotCache"
@@ -524,7 +543,7 @@
     "groups": []
   },
   "use-primary-password": {
-    "selectorData": "useMasterPassword",
+    "selectorData": "addPrimaryPassword",
     "strategy": "id",
     "groups": []
   },
@@ -616,48 +635,62 @@
     "shadowParent": "permission-dialog",
     "groups": []
   },
+  "connection-advanced-button": {
+    "selectorData": "connectionLinkButton",
+    "strategy": "id",
+    "groups": []
+  },
   "httpsonly-radio-enabled": {
     "selectorData": "httpsOnlyRadioEnabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-enabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled"
   },
   "httpsonly-radio-enabled-pbm": {
     "selectorData": "httpsOnlyRadioEnabledPBM",
     "strategy": "id",
     "groups": []
   },
+  "httpsonly-radio-enabled-pbm-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-enabled-pbm"
+  },
   "httpsonly-radio-disabled": {
     "selectorData": "httpsOnlyRadioDisabled",
     "strategy": "id",
     "groups": []
+  },
+  "httpsonly-radio-disabled-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "httpsonly-radio-disabled"
   },
   "doh-mode-box-item": {
     "selectorData": "dohModeBoxItem",
     "strategy": "id",
     "groups": []
   },
-  "doh-default-radio": {
-    "selectorData": "dohDefaultRadio",
+  "doh-radio-default": {
+    "selectorData": "dohRadioDefault",
     "strategy": "id",
     "groups": []
   },
-  "doh-increased-protection-radio": {
-    "selectorData": "dohEnabledRadio",
+  "doh-radio-default-input": {
+    "selectorData": "input",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "shadowParent": "doh-radio-default"
   },
-  "doh-max-protection-radio": {
-    "selectorData": "dohStrictRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-off-radio": {
-    "selectorData": "dohOffRadio",
-    "strategy": "id",
-    "groups": []
-  },
-  "doh-enabled-resolver": {
-    "selectorData": "dohEnabledResolverChoices",
+  "doh-status-box": {
+    "selectorData": "dohStatusBox",
     "strategy": "id",
     "groups": []
   },
@@ -712,7 +745,7 @@
     "groups": []
   },
   "saved-passwords": {
-    "selectorData": "showPasswords",
+    "selectorData": "manageSavedPasswords",
     "strategy": "id",
     "groups": []
   },
@@ -728,7 +761,7 @@
     "shadowParent": "show-sidebar-checkbox"
   },
   "change-primary-password": {
-    "selectorData": "changeMasterPassword",
+    "selectorData": "changePrimaryPassword",
     "strategy": "id",
     "groups": [
       "doNotCache"
@@ -820,5 +853,10 @@
     "strategy": "id",
     "groups": [],
     "shadowParent": "doh-radio-custom"
+  },
+  "turn-off-primary-password": {
+    "selectorData": "turnOffPrimaryPassword",
+    "strategy": "id",
+    "groups": []
   }
 }

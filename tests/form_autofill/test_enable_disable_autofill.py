@@ -1,10 +1,13 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object import AboutPrefs
-from modules.page_object_autofill import AddressFill
-from modules.util import Utilities
+from modules.browser_object import AutofillPopup
+from modules.page_object import AboutPrefs, AddressFill
+
+
+@pytest.fixture()
+def prefs_category():
+    return "passwordsAutofill"
 
 
 @pytest.fixture()
@@ -14,10 +17,9 @@ def test_case():
 
 def test_enable_disable_autofill(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs: AboutPrefs,
     address_autofill: AddressFill,
     autofill_popup: AutofillPopup,
-    util: Utilities,
     region: str,
 ):
     """
@@ -25,9 +27,8 @@ def test_enable_disable_autofill(
     the autofill popups do not appear.
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs: AboutPrefs instance (privacy category)
         autofill_popup: AutofillPopup instance
-        util: Utilities instance
     """
     address_autofill.open()
 
@@ -40,8 +41,8 @@ def test_enable_disable_autofill(
     # create fake data, fill it in and press submit and save on the doorhanger
     address_autofill.fill_and_save()
 
-    about_prefs_privacy.open()
-    about_prefs_privacy.get_element("save-and-fill-addresses").click()
+    about_prefs.open()
+    about_prefs.get_element("save-and-fill-addresses").click()
 
     address_autofill.open()
 
