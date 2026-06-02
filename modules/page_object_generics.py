@@ -46,29 +46,29 @@ class GenericPage(BasePage):
             self.gui.press("enter")
 
     def fill_field_and_verify(
-            self, field_name: str, text: str, assert_nonempty: bool = True
+            self, field_name: str, text: str, verify_value: bool = True
     ):
         """
-        Clears the field, fills it with text, and optionally asserts the value.
+        Clears the field, fills it with text, and optionally verifies the value.
 
         Args:
             field_name: POM/BOM element name to interact with.
             text: Text to enter.
-            assert_nonempty: If True, asserts that field value matches `text`.
+            verify_value: If True, verifies that field value matches `text`.
 
         Returns:
             GenericPage: The current page object.
         """
         self.fill(field_name, text, press_enter=False)
 
-        if assert_nonempty:
+        if verify_value:
             self.element_attribute_is(field_name, "value", text)
 
         return self
 
     def get_page_time_origin(self):
         """
-        Returns the current page navigation time origin.
+        Returns the current page time origin.
 
         Returns:
             float: Current page time origin.
