@@ -684,6 +684,10 @@ networking:
     result: pass
     splits:
     - functional1
+  test_nextdns_as_doh_provider:
+    result: pass
+    splits:
+    - functional1
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.

@@ -224,6 +224,27 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "checked", "")
         return self
 
+    def select_doh_provider(self, provider_value: str) -> BasePage:
+        """Select a DoH provider from the Custom-mode provider menu.
+
+        Requires `select_doh_protection_level("custom")` first. The provider
+        list is hydrated asynchronously from remote settings, so wait until
+        the target option is present before selecting.
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == provider_value
+                for opt in self.get_element("doh-provider-select-inner").find_elements(
+                    By.TAG_NAME, "option"
+                )
+            )
+        )
+        Select(self.get_element("doh-provider-select-inner")).select_by_value(
+            provider_value
+        )
+        self.element_attribute_is("doh-provider-select", "value", provider_value)
+        return self
+
     def verify_doh_provider(self, provider_name: str) -> BasePage:
         """Wait until the DoH status box reports the given provider name."""
         self.element_attribute_contains(
