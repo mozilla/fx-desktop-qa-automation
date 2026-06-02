@@ -97,6 +97,20 @@ class GenericPage(BasePage):
 
         return self
 
+    def wait_for_geolocation_data(self, timeout=20):
+        """Wait until both latitude and longitude data are available."""
+        self.custom_wait(timeout=timeout).until(
+            lambda _: all(
+                [
+                    self.find_element(By.ID, "latitude").get_attribute("data-raw")
+                    is not None,
+                    self.find_element(By.ID, "longitude").get_attribute("data-raw")
+                    is not None,
+                ]
+            )
+        )
+        return self
+
     def verify_volume_not_max(self):
         """
         Verify that the HTML5 video volume level is below 100%.
