@@ -1526,8 +1526,7 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041403
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
