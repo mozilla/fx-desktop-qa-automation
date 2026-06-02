@@ -23,7 +23,7 @@ def test_add_primary_password(driver: Firefox):
     C2245178: Verify that a primary password can be added in about:preferences#privacy
     """
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
 
     # Select the "Use a primary password" check box to trigger the "Change Primary Password" window

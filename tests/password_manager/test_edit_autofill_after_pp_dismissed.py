@@ -33,7 +33,7 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     """
 
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
     tabs = TabBar(driver)
     about_logins = AboutLogins(driver)

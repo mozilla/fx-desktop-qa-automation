@@ -744,8 +744,7 @@ notifications:
     - functional1
 password_manager:
   test_about_logins_copy_prompts_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_direct_navigation:
@@ -753,13 +752,11 @@ password_manager:
     splits:
     - functional1
   test_about_logins_edit_prompts_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_about_preferences:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_about_protections:
@@ -807,8 +804,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_add_username_via_doorhanger:
@@ -824,8 +820,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
@@ -841,13 +836,11 @@ password_manager:
     splits:
     - smoke
   test_delete_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
@@ -855,8 +848,7 @@ password_manager:
     splits:
     - functional2
   test_edit_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
@@ -881,8 +873,7 @@ password_manager:
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_password_csv_correctness:
@@ -926,8 +917,7 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043373
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:

@@ -23,7 +23,7 @@ def test_no_generated_password_options_with_pp_and_no_credentials(driver: Firefo
     """
 
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="privacy")
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
     tabs = TabBar(driver)
     about_logins = AboutLogins(driver)
