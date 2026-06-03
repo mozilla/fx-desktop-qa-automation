@@ -24,7 +24,9 @@ TESTRAIL_RUN_FMT = (
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
-_CATEGORY_SEVERITY = {name: sid for name, sid in TESTRAIL_STATUS.items() if name != "skipped"}
+_CATEGORY_SEVERITY = {
+    name: sid for name, sid in TESTRAIL_STATUS.items() if name != "skipped"
+}
 TESTRAIL_FX_DESK_PRJ = 17
 TC_EXECUTION_TEMPLATE = (
     "https://firefox-ci-tc.services.mozilla.com/tasks/"
