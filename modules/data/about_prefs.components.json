@@ -407,7 +407,7 @@
     ]
   },
   "manage-data-save-changes-button": {
-    "selectorData": "[class='button-text'][value='Save Changes']",
+    "selectorData": "[dlgtype='accept']",
     "strategy": "css",
     "shadowParent": "cookies-shadow-root",
     "groups": [
@@ -543,7 +543,7 @@
     "groups": []
   },
   "use-primary-password": {
-    "selectorData": "useMasterPassword",
+    "selectorData": "addPrimaryPassword",
     "strategy": "id",
     "groups": []
   },
@@ -745,7 +745,7 @@
     "groups": []
   },
   "saved-passwords": {
-    "selectorData": "showPasswords",
+    "selectorData": "manageSavedPasswords",
     "strategy": "id",
     "groups": []
   },
@@ -761,7 +761,7 @@
     "shadowParent": "show-sidebar-checkbox"
   },
   "change-primary-password": {
-    "selectorData": "changeMasterPassword",
+    "selectorData": "changePrimaryPassword",
     "strategy": "id",
     "groups": [
       "doNotCache"
@@ -853,5 +853,10 @@
     "strategy": "id",
     "groups": [],
     "shadowParent": "doh-radio-custom"
+  },
+  "turn-off-primary-password": {
+    "selectorData": "turnOffPrimaryPassword",
+    "strategy": "id",
+    "groups": []
   }
 }

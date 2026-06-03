@@ -56,8 +56,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Dry-run notice
@@ -66,15 +67,17 @@ jobs:
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
       - name: Set CI Environment (Default)
         shell: pwsh
         run: |
-          "STARFOX_SPLIT=${{ inputs.test_set }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "STARFOX_SPLIT=$env:INPUTS_TEST_SET" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        env:
+          INPUTS_TEST_SET: ${{ inputs.test_set }}
 
       - name: Set CI Environment (Manual)
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
@@ -166,7 +169,7 @@ jobs:
           Get-Content selected_tests
 
       - name: Test Fx Version (Win)
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
@@ -183,7 +186,7 @@ jobs:
 
       # --- REAL RUN: actually execute tests ---
       - name: Run Tests in Win
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
@@ -197,7 +200,7 @@ jobs:
           exit $env:TEST_EXIT_CODE
 
       - name: Skip Telemetry for most PRs
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             inputs.dry_run != true &&
@@ -211,7 +214,7 @@ jobs:
           if ($gitdiff -notmatch "/glean/") {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
 
       - name: Run Telemetry Tests in Win
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             inputs.dry_run != true
@@ -224,6 +227,8 @@ jobs:
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
+        env:
+          REPORTABLE: ${{ !inputs.is_pull_request }}
 
       - name: Run Tests in Win (Headed)
         if: ${{ steps.setup.conclusion == 'success' && always() && inputs.dry_run != true }}
@@ -251,7 +256,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-win
           path: artifacts-win
@@ -262,8 +267,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Dry-run notice
@@ -272,14 +278,16 @@ jobs:
           echo "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job"
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
       - name: Set CI Environment (Default)
         run: |
-          echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=${INPUTS_TEST_SET}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
+        env:
+          INPUTS_TEST_SET: ${{ inputs.test_set }}
 
       - name: Check test case numbers
         run: |
@@ -337,7 +345,7 @@ jobs:
           cat selected_tests
 
       - name: Test Fx Version (MacOS)
-        if: |
+        if: |-
           ${{
             steps.install-fx.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
@@ -351,7 +359,7 @@ jobs:
           pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
-        if: |
+        if: |-
           ${{
             steps.install-fx.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
@@ -366,7 +374,7 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Skip Telemetry for most PRs
-        if: |
+        if: |-
           ${{
             steps.setup.conclusion == 'success' &&
             inputs.dry_run != true &&
@@ -379,13 +387,14 @@ jobs:
           if ! [[ "${DIFF}" =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
 
       - name: Run Telemetry Tests in MacOS
-        if: |
+        if: |-
           ${{
             steps.install-fx.conclusion == 'success' &&
             inputs.dry_run != true
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
+          REPORTABLE: ${{ !inputs.is_pull_request }}
         run: |
           "$FX_EXECUTABLE" --version
           split="${STARFOX_SPLIT:-smoke}"
@@ -408,7 +417,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-mac
           path: artifacts-mac
@@ -419,17 +428,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
       - name: Set CI Environment (Default)
         run: |
-          echo "STARFOX_SPLIT=${{ inputs.test_set }}" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=${INPUTS_TEST_SET}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
+        env:
+          INPUTS_TEST_SET: ${{ inputs.test_set }}
 
       - name: Check test case numbers
         run: |
@@ -504,10 +517,12 @@ jobs:
       - Test-MacOS
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.11"
 
@@ -517,13 +532,13 @@ jobs:
           pipenv install
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           name: artifacts-win
           path: artifacts-win
 
       - name: Download MacOS artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           name: artifacts-mac
           path: artifacts-mac

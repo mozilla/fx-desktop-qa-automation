@@ -17,10 +17,10 @@ TOLERANCE = 3
 
 TARGET_PAGE = "about:about"
 LOGGING_SELECTOR = "a[href='about:logging']"
-LOGO_SELECTOR = "a[href='about:logo']"
+LOGO_SELECTOR = "a[href='about:logins']"
 
-first_match = (By.CSS_SELECTOR, LOGGING_SELECTOR)
-fourth_match = (By.CSS_SELECTOR, LOGO_SELECTOR)
+about_logging_match = (By.CSS_SELECTOR, LOGGING_SELECTOR)
+about_logins_match = (By.CSS_SELECTOR, LOGO_SELECTOR)
 
 
 def are_lists_different(a: int, b: int) -> bool:
@@ -49,19 +49,31 @@ def test_find_toolbar_navigation(
     find_toolbar.rewind_to_first_match()
 
     # Ensure that first match is highlighted, others are not
-    first_match_colors = browser_actions.get_all_colors_in_element(first_match)
-    fourth_match_colors = browser_actions.get_all_colors_in_element(fourth_match)
+    about_logging_match_colors = browser_actions.get_all_colors_in_element(
+        about_logging_match
+    )
+    about_logins_match_colors = browser_actions.get_all_colors_in_element(
+        about_logins_match
+    )
 
-    assert len(first_match_colors) > len(fourth_match_colors)
-    assert are_lists_different(len(first_match_colors), len(fourth_match_colors))
+    assert len(about_logging_match_colors) > len(about_logins_match_colors)
+    assert are_lists_different(
+        len(about_logging_match_colors), len(about_logins_match_colors)
+    )
 
     # Navigate with keyboard and button
-    find_toolbar.navigate_matches_n_times(3)
-    first_match_colors = browser_actions.get_all_colors_in_element(first_match)
-    fourth_match_colors = browser_actions.get_all_colors_in_element(fourth_match)
+    find_toolbar.navigate_matches_n_times(6)
+    about_logging_match_colors = browser_actions.get_all_colors_in_element(
+        about_logging_match
+    )
+    about_logins_match_colors = browser_actions.get_all_colors_in_element(
+        about_logins_match
+    )
 
-    assert len(first_match_colors) < len(fourth_match_colors)
-    assert are_lists_different(len(first_match_colors), len(fourth_match_colors))
+    assert len(about_logging_match_colors) < len(about_logins_match_colors)
+    assert are_lists_different(
+        len(about_logging_match_colors), len(about_logins_match_colors)
+    )
 
     # Check what happens when you go past the last match
     find_toolbar.rewind_to_first_match()

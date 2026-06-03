@@ -12,6 +12,11 @@ def test_case():
     return "2241081"
 
 
+@pytest.fixture()
+def about_prefs_category():
+    return "passwordsAutofill"
+
+
 def test_about_logins_navigation_from_about_preferences(
     driver: Firefox, about_prefs: AboutPrefs
 ):

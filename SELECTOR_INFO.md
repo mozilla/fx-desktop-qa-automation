@@ -1211,7 +1211,7 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: use-primary-password
-Selector Data: "useMasterPassword"
+Selector Data: "addPrimaryPassword"
 Description: Checkbox for using primary password
 Location: about:preferences#privacy Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
@@ -1463,14 +1463,14 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: saved-passwords
-Selector Data: "showPasswords"
+Selector Data: "manageSavedPasswords"
 Description: Saved passwords button in about:preferences#privacy
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: change-primary-password
-Selector Data: "changeMasterPassword"
+Selector Data: "changePrimaryPassword"
 Description: Change primary password button in about:preferences#privacy
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
@@ -1536,6 +1536,13 @@ Selector Name: doh-radio-custom-input
 Selector Data: "input"
 Description: Inner <input type="radio"> inside the dohRadioCustom shadow root; used to actually click/select the "Custom" DoH option
 Location: about:preferences#privacy (shadow DOM of dohRadioCustom)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: turn-off-primary-password
+Selector Data: "turnOffPrimaryPassword"
+Description: "Turn off Primary Password" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password
+Location: about:preferences#privacy (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
 #### about_profiles
