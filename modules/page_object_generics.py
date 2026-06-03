@@ -90,9 +90,13 @@ class GenericPage(BasePage):
         """
         self.wait.until(
             lambda _: (
-                    (time_origin := self.driver.execute_script("return performance.timeOrigin"))
-                    is not None
-                    and time_origin != previous_time_origin
+                (
+                    time_origin := self.driver.execute_script(
+                        "return performance.timeOrigin"
+                    )
+                )
+                is not None
+                and time_origin != previous_time_origin
             )
         )
         self.element_visible(field_name)
