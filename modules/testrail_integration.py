@@ -9,7 +9,7 @@ import sys
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
-from modules.testrail import TestRail
+from modules.testrail import TESTRAIL_STATUS, TestRail
 from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
@@ -24,8 +24,8 @@ TESTRAIL_RUN_FMT = (
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
-_CATEGORY_SEVERITY = {"failed": 4, "xfailed": 3, "blocked": 2, "passed": 1}
-_STATUS_ID_SEVERITY = {1: 1, 2: 2, 5: 4}  # TestRail: passed=1, blocked=2, failed=5
+_CATEGORY_SEVERITY = {name: sid for name, sid in TESTRAIL_STATUS.items() if name != "skipped"}
+_STATUS_ID_SEVERITY = {sid: sid for name, sid in TESTRAIL_STATUS.items() if name != "skipped"}
 TESTRAIL_FX_DESK_PRJ = 17
 TC_EXECUTION_TEMPLATE = (
     "https://firefox-ci-tc.services.mozilla.com/tasks/"
