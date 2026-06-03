@@ -25,7 +25,6 @@ PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 _CATEGORY_SEVERITY = {name: sid for name, sid in TESTRAIL_STATUS.items() if name != "skipped"}
-_STATUS_ID_SEVERITY = {sid: sid for name, sid in TESTRAIL_STATUS.items() if name != "skipped"}
 TESTRAIL_FX_DESK_PRJ = 17
 TC_EXECUTION_TEMPLATE = (
     "https://firefox-ci-tc.services.mozilla.com/tasks/"
@@ -589,9 +588,7 @@ def mark_results(testrail_session: TestRail, test_results):
             test_cases_ids = []
             durations = []
             for i, test_case in enumerate(all_test_cases):
-                current_severity = _STATUS_ID_SEVERITY.get(
-                    current_results.get(test_case), 0
-                )
+                current_severity = current_results.get(test_case) or 0
                 if _CATEGORY_SEVERITY[category] < current_severity:
                     continue
                 test_cases_ids.append(test_case)
