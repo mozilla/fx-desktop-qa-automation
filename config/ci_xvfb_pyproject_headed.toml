@@ -17,7 +17,7 @@ addopts = "-vs --ci --json-report --timeout=300 --json-report-file artifacts/rep
 target-version = "py310"
 
 [project]
-name = "DTE Automations"
+name = "fx_desktop_qa_automation"
 version = "0.1.0"
 description = "DTE Selenium tests"
 readme = "README.md"

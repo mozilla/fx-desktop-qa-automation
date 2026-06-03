@@ -17,7 +17,7 @@ addopts = "-vs --ci --run-headless --timeout=300 --json-report --json-report-fil
 target-version = "py310"
 
 [project]
-name = "DTE Automations"
+name = "fx_desktop_qa_automation"
 version = "0.1.0"
 description = "DTE Selenium tests"
 readme = "README.md"

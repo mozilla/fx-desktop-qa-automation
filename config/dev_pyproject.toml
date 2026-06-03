@@ -26,7 +26,7 @@ exclude = [
 "modules/*.py" = ["F403"]
 
 [project]
-name = "DTE Automations"
+name = "fx_desktop_qa_automation"
 version = "0.1.0"
 description = "DTE Selenium tests"
 readme = "README.md"
