@@ -205,13 +205,9 @@ class TrustPanel(BasePage):
     def click_connection_button(self):
         """Click the connection section button from the Trust Panel."""
         self.element_visible("trustpanel-connection-button")
+        sleep(0.5)  # "visible" in trustpanel is mostly meaningless
         self.click_on("trustpanel-connection-button")
-        # Wait for the subview to actually render
-        try:
-            self.element_visible("connection-subview")
-        except TimeoutException:
-            # Retry click
-            self.click_on("trustpanel-connection-button")
+        self.element_does_not_have_attribute("trustpanel", "mainviewshowing")
         return self
 
     @BasePage.context_chrome
@@ -243,5 +239,7 @@ class TrustPanel(BasePage):
     def click_subview_back_button(self):
         """Click the back arrow to return from a subview to the main Trust Panel."""
         self.element_visible("trustpanel-subview-back-button")
-        self.click_on("trustpanel-subview-back-button")
+        sleep(0.5)  # "visible" in trustpanel doesn't mean what it seems to
+        self.js_click_on("trustpanel-subview-back-button")
+        self.element_attribute_is("trustpanel", "mainviewshowing", "true")
         return self
