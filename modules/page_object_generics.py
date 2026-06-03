@@ -96,7 +96,6 @@ class GenericPage(BasePage):
                     )
                 )
                 and time_origin != previous_time_origin
-                and time_origin != previous_time_origin
             )
         )
         self.element_visible(field_name)
