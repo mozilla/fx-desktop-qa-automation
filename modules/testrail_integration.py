@@ -24,6 +24,8 @@ TESTRAIL_RUN_FMT = (
 PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
+_CATEGORY_SEVERITY = {"failed": 4, "xfailed": 3, "blocked": 2, "passed": 1}
+_STATUS_ID_SEVERITY = {1: 1, 2: 2, 5: 4}  # TestRail: passed=1, blocked=2, failed=5
 TESTRAIL_FX_DESK_PRJ = 17
 TC_EXECUTION_TEMPLATE = (
     "https://firefox-ci-tc.services.mozilla.com/tasks/"
@@ -583,13 +585,17 @@ def mark_results(testrail_session: TestRail, test_results):
                 all_test_cases.append(result.get("test_case"))
                 all_durations.append(result.get("duration"))
 
-            # Don't set passed tests to another status.
+            # Never downgrade a result — skip if the new category is less severe.
             test_cases_ids = []
             durations = []
             for i, test_case in enumerate(all_test_cases):
-                if current_results.get(test_case) != 1:
-                    test_cases_ids.append(test_case)
-                    durations.append(all_durations[i])
+                current_severity = _STATUS_ID_SEVERITY.get(
+                    current_results.get(test_case), 0
+                )
+                if _CATEGORY_SEVERITY[category] < current_severity:
+                    continue
+                test_cases_ids.append(test_case)
+                durations.append(all_durations[i])
             logging.warning(
                 f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
             )
