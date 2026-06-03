@@ -180,5 +180,15 @@
         "selectorData": "[data-l10n-id='trustpanel-insecure-section-header']",
         "strategy": "css",
         "groups": []
+    },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-button": {
+        "selectorData": "trustpanel-clear-cookie-clear",
+        "strategy": "id",
+        "groups": []
     }
 }
