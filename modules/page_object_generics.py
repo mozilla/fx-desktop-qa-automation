@@ -76,7 +76,7 @@ class GenericPage(BasePage):
         return self.driver.execute_script("return performance.timeOrigin")
 
     def wait_for_reload_and_verify_empty_field(
-        self, field_name: str, previous_time_origin
+        self, field_name: str, previous_time_origin: float
     ):
         """
         Waits until the page reloads, then verifies that the field is visible and empty.
