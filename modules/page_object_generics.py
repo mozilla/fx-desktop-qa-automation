@@ -95,7 +95,7 @@ class GenericPage(BasePage):
                         "return performance.timeOrigin"
                     )
                 )
-                is not None
+                and time_origin != previous_time_origin
                 and time_origin != previous_time_origin
             )
         )
