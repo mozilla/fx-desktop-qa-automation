@@ -1,5 +1,4 @@
 import json
-import logging
 from time import sleep
 
 from selenium.common import TimeoutException
