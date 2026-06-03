@@ -15,3 +15,10 @@ addopts = "-vs --ci --json-report --timeout=300 --json-report-file artifacts/rep
 
 [tool.ruff]
 target-version = "py310"
+
+[project]
+name = "DTE Automations"
+version = "0.1.0"
+description = "DTE Selenium tests"
+readme = "README.md"
+requires-python = ">=3.11"
