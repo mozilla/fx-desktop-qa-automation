@@ -12,14 +12,13 @@ def test_case():
     return "3054040"
 
 
-def test_connection_secure_second_level_panel(driver: Firefox):
+def test_connection_secure_second_level_panel(driver: Firefox, trust_panel: TrustPanel):
     """
     C3054040 - Second level panel for "Connection secure" can be correctly opened
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=YOUTUBE_URL)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()
