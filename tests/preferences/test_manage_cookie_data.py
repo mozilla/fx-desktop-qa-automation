@@ -35,7 +35,7 @@ def test_manage_cookie_data(driver: Firefox, about_prefs: AboutPrefs):
     for site in TEST_SITES:
         driver.get(site)
 
-    # Open the Manage Cookies dialog
+    # Open the Exceptions - Cookies and Site Data dialog
     about_prefs.open()
     about_prefs.open_manage_cookies_data_dialog()
 
