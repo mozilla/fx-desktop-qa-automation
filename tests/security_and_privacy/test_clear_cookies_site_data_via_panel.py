@@ -26,7 +26,7 @@ def test_clear_cookies_site_data_via_panel(driver: Firefox):
     trust_panel.open_panel()
 
     # Click on the "Clear cookies and site data" option -> Clear
-    trust_panel.clear_cookies_site_date_via_panel()
+    trust_panel.clear_cookies_site_data_via_panel()
 
     # "Clear cookies and site data" dialog is dismissed
     trust_panel.panel_is_dismissed()

@@ -189,6 +189,6 @@
     "clear-button": {
         "selectorData": "trustpanel-clear-cookie-clear",
         "strategy": "id",
-        "groups": []
+        "groups": ["doNotCache"]
     }
 }

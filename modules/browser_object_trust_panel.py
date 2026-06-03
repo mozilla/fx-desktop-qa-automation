@@ -240,7 +240,7 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
-    def clear_cookies_site_date_via_panel(self):
+    def clear_cookies_site_data_via_panel(self):
         """Clear cookies and site data for the current site via the Trust Panel."""
         self.js_click_on("clear-cookies-button")
         self.js_click_on("clear-button")
