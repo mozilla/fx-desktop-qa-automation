@@ -5354,3 +5354,17 @@ Description: Banner header label shown in the Trustpanel when the connection is 
 Location: Trustpanel - Connection protections tab (insecure banner)
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: clear-cookies-button
+Selector Data: "trustpanel-clear-cookies-button"
+Description: "Clear cookies and site data" button in the Trustpanel that opens the clear confirmation dialog
+Location: Trustpanel - main panel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: clear-button
+Selector Data: "trustpanel-clear-cookie-clear"
+Description: "Clear" confirmation button inside the clear cookies and site data dialog that performs the clear action
+Location: Trustpanel - clear cookies and site data dialog
+Path to .json: modules/data/trust_panel.components.json
+```
