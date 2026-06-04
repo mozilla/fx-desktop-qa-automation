@@ -1187,6 +1187,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_clear_cookies_site_data_via_panel:
+    result: pass
+    splits:
+    - functional2
   test_connection_not_secured_panel_for_http_sites:
     result: pass
     splits:

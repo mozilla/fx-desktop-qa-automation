@@ -203,9 +203,13 @@ class TrustPanel(BasePage):
     def click_connection_button(self):
         """Click the connection section button from the Trust Panel."""
         self.element_visible("trustpanel-connection-button")
-        sleep(0.5)  # "visible" in trustpanel is mostly meaningless
         self.click_on("trustpanel-connection-button")
-        self.element_does_not_have_attribute("trustpanel", "mainviewshowing")
+        # Wait for the subview to actually render
+        try:
+            self.element_visible("connection-subview")
+        except TimeoutException:
+            # Retry click
+            self.click_on("trustpanel-connection-button")
         return self
 
     @BasePage.context_chrome
@@ -231,6 +235,20 @@ class TrustPanel(BasePage):
         """Click the 'Privacy Settings' footer link in the Trust Panel."""
         self.element_visible("trustpanel-privacy-link")
         self.js_click_on("trustpanel-privacy-link")
+        return self
+
+    @BasePage.context_chrome
+    def clear_cookies_site_data_via_panel(self):
+        """Clear cookies and site data for the current site via the Trust Panel."""
+        self.js_click_on("clear-cookies-button")
+        self.js_click_on("clear-button")
+        return self
+
+    @BasePage.context_chrome
+    def panel_is_dismissed(self):
+        """Verify the Trust Panel is closed via its state attribute."""
+        panel = self.get_element("trustpanel")
+        self.expect(lambda _: panel.get_attribute("state") == "closed")
         return self
 
     @BasePage.context_chrome

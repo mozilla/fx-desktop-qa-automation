@@ -181,6 +181,16 @@
         "strategy": "css",
         "groups": []
     },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-button": {
+        "selectorData": "trustpanel-clear-cookie-clear",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    },
     "trustpanel-subview-back-button": {
         "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
         "strategy": "css",
