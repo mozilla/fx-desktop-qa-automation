@@ -190,5 +190,24 @@
         "selectorData": "trustpanel-clear-cookie-clear",
         "strategy": "id",
         "groups": ["doNotCache"]
+    },
+    "shield-icon-disabled": {
+        "selectorData": "#trust-icon-container.inactive",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "trustpanel-header-enabled": {
+        "selectorData": "[data-l10n-id='trustpanel-header-enabled']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-tracking-protection-disabled": {
+        "selectorData": "#trustpanel-popup[tracking-protection='disabled']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }
