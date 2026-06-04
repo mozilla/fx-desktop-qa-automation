@@ -5376,13 +5376,6 @@ Location: URL bar - site info button
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
-Selector Name: trustpanel-toggle-off
-Selector Data: "trustpanel-toggle[data-l10n-id='trustpanel-etp-label-off']"
-Description: The ETP toggle element in the Trustpanel when it is in the OFF state, identified by the "trustpanel-etp-label-off" l10n id
-Location: Trustpanel - main panel
-Path to .json: modules/data/trust_panel.components.json
-```
-```
 Selector Name: trustpanel-header-enabled
 Selector Data: "[data-l10n-id='trustpanel-header-enabled']"
 Description: The header label in the Trustpanel graphic section when ETP is enabled and protections are active

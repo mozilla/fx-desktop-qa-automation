@@ -198,13 +198,6 @@
             "doNotCache"
         ]
     },
-    "trustpanel-toggle-off": {
-        "selectorData": "trustpanel-toggle[data-l10n-id='trustpanel-etp-label-off']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
     "trustpanel-header-enabled": {
         "selectorData": "[data-l10n-id='trustpanel-header-enabled']",
         "strategy": "css",

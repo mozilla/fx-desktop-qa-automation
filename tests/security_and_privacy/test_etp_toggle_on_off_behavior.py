@@ -17,7 +17,7 @@ def test_etp_toggle_on_off_behavior(driver: Firefox, trust_panel: TrustPanel):
     C3054034 - ETP toggle ON and OFF path are correctly working
     """
 
-    # Instantiate objects
+    # Instantiate object
     test_page = GenericPage(driver, url=TEST_URL)
 
     # Open test page and click on the shield icon
