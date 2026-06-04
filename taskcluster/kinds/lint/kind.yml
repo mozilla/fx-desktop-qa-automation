@@ -14,10 +14,9 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        pip3 install 'pipenv==2023.11.15' --break-system-packages;
-        pipenv install;
-        pipenv run python3 -m ruff version;
-        pipenv run python3 -m ruff format --check;
+        pip3 install 'ruff==0.9.6' --break-system-packages;
+        python3 -m ruff version;
+        python3 -m ruff format --check;
         export EXIT_CODE=$?;
-        pipenv run python3 -m ruff check --select I;
+        python3 -m ruff check --select I;
         exit $(( $EXIT_CODE || $? ));
