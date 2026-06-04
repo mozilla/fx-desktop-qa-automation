@@ -469,8 +469,7 @@ downloads:
     splits:
     - functional1
   test_telemetry_download_and_open:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043391
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_telemetry_pdf_download_open:
