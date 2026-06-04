@@ -238,3 +238,17 @@ class TrustPanel(BasePage):
         self.element_visible("trustpanel-privacy-link")
         self.js_click_on("trustpanel-privacy-link")
         return self
+
+    @BasePage.context_chrome
+    def clear_cookies_site_data_via_panel(self):
+        """Clear cookies and site data for the current site via the Trust Panel."""
+        self.js_click_on("clear-cookies-button")
+        self.js_click_on("clear-button")
+        return self
+
+    @BasePage.context_chrome
+    def panel_is_dismissed(self):
+        """Verify the Trust Panel is closed via its state attribute."""
+        panel = self.get_element("trustpanel")
+        self.expect(lambda _: panel.get_attribute("state") == "closed")
+        return self

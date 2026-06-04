@@ -205,5 +205,15 @@
         "selectorData": "trustpanel-clear-cookies-button",
         "strategy": "id",
         "groups": []
+    },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-button": {
+        "selectorData": "trustpanel-clear-cookie-clear",
+        "strategy": "id",
+        "groups": ["doNotCache"]
     }
 }

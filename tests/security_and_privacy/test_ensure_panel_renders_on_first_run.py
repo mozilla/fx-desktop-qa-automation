@@ -12,14 +12,13 @@ def test_case():
     return "3054026"
 
 
-def test_ensure_panel_renders_on_first_run(driver: Firefox):
+def test_ensure_panel_renders_on_first_run(driver: Firefox, trust_panel: TrustPanel):
     """
     C3054026 - The panel opens & renders correctly on the first run
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=TEST_URL)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()
