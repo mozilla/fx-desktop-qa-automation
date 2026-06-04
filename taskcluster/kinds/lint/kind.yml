@@ -14,7 +14,6 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        curl --version
         pip3 install 'ruff==0.9.6' --break-system-packages;
         python3 -m ruff version;
         python3 -m ruff format --check;
