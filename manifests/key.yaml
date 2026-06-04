@@ -1275,6 +1275,10 @@ security_and_privacy:
     result: unstable
     splits:
     - functional2
+  test_etp_toggle_on_off_behavior:
+    result: pass
+    splits:
+    - functional2
   test_extended_certificate_messaging_displayed_in_panel:
     result: pass
     splits:
