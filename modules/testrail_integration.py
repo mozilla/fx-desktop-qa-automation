@@ -587,7 +587,7 @@ def mark_results(testrail_session: TestRail, test_results):
             test_cases_ids = []
             durations = []
             for i, test_case in enumerate(all_test_cases):
-                current_severity = current_results.get(test_case) or 0
+                current_severity = current_results.get(test_case, 0)
                 if TESTRAIL_STATUS[category] < current_severity:
                     continue
                 test_cases_ids.append(test_case)
