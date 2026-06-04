@@ -27,6 +27,9 @@ from time import sleep
 
 import requests
 
+# Values double as severity scores: passed < blocked < skipped < xfailed < failed.
+# mark_results() relies on this ordering to avoid downgrading a result, so keep
+# these in ascending order of severity if statuses are ever added/changed.
 TESTRAIL_STATUS = {
     "passed": 1,
     "blocked": 2,
