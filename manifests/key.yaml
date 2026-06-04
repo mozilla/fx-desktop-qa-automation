@@ -1163,7 +1163,8 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_fingerprinters:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
+    result: unstable
     splits:
     - functional2
   test_blocking_social_media_trackers:
