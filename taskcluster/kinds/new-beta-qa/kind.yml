@@ -34,9 +34,13 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15';
+        pip3 install 'pipenv==2023.11.15' --break-system-packages;
         mv ./config/ci_pyproject.toml ./pyproject.toml;
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        export PATH=$PATH:$HOME/.cargo/bin
+        . "$HOME/.cargo/env"
         pipenv install;
+        . ./scripts/setup-xauthority.sh
         export FX_CHANNEL="beta";
         ./scripts/collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
