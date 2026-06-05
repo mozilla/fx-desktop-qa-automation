@@ -12,7 +12,9 @@ def test_case():
     return "3054033"
 
 
-def test_see_all_link_redirects_to_blocked_trackers(driver: Firefox, trust_panel: TrustPanel):
+def test_see_all_link_redirects_to_blocked_trackers(
+    driver: Firefox, trust_panel: TrustPanel
+):
     """
     C3054033 - “See all” link correctly redirects the user to the blocked trackers
     """
@@ -25,6 +27,7 @@ def test_see_all_link_redirects_to_blocked_trackers(driver: Firefox, trust_panel
     trust_panel.open_panel()
 
     # Click on the "See All" button
+    trust_panel.wait_for_trackers()
     trust_panel.click_see_all()
 
     # The blocked and allowed trackers are displayed in the panel
