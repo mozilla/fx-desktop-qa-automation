@@ -469,8 +469,7 @@ downloads:
     splits:
     - functional1
   test_telemetry_download_and_open:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043391
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_telemetry_pdf_download_open:
@@ -1079,8 +1078,7 @@ preferences:
     splits:
     - functional2
   test_manage_cookie_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042648
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_never_remember_history:
@@ -1165,7 +1163,8 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_fingerprinters:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
+    result: unstable
     splits:
     - functional2
   test_blocking_social_media_trackers:
@@ -1185,6 +1184,10 @@ security_and_privacy:
     splits:
     - functional2
   test_certificate_expired_displayed_panel:
+    result: pass
+    splits:
+    - functional2
+  test_clear_cookies_site_data_via_panel:
     result: pass
     splits:
     - functional2
@@ -1270,6 +1273,10 @@ security_and_privacy:
   test_etp_panel_displayed_when_protection_off:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
+    splits:
+    - functional2
+  test_etp_toggle_on_off_behavior:
+    result: pass
     splits:
     - functional2
   test_extended_certificate_messaging_displayed_in_panel:
@@ -1519,8 +1526,7 @@ sidebar:
     splits:
     - functional2
   test_toggle_sidebar_via_toolbar_button:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043393
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
@@ -1557,8 +1563,7 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042645
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci

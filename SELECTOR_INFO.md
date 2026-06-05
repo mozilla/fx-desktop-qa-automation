@@ -5354,3 +5354,38 @@ Description: Banner header label shown in the Trustpanel when the connection is 
 Location: Trustpanel - Connection protections tab (insecure banner)
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: clear-cookies-button
+Selector Data: "trustpanel-clear-cookies-button"
+Description: "Clear cookies and site data" button in the Trustpanel that opens the clear confirmation dialog
+Location: Trustpanel - main panel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: clear-button
+Selector Data: "trustpanel-clear-cookie-clear"
+Description: "Clear" confirmation button inside the clear cookies and site data dialog that performs the clear action
+Location: Trustpanel - clear cookies and site data dialog
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: shield-icon-disabled
+Selector Data: "#trust-icon-container.inactive"
+Description: The site info/shield icon container in the URL bar when ETP is disabled, identified by the "inactive" CSS class
+Location: URL bar - site info button
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-header-enabled
+Selector Data: "[data-l10n-id='trustpanel-header-enabled']"
+Description: The header label in the Trustpanel graphic section when ETP is enabled and protections are active
+Location: Trustpanel - graphic section
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-tracking-protection-disabled
+Selector Data: "#trustpanel-popup[tracking-protection='disabled']"
+Description: The main Trustpanel popup element when tracking protection has been disabled by the user for the current site
+Location: Trustpanel - main panel
+Path to .json: modules/data/trust_panel.components.json
+```

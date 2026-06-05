@@ -6,12 +6,12 @@ view: stability_test_events {
     hidden: yes
     type: string
     sql: CONCAT(
-      CAST(${TABLE}.run_id AS STRING),
-      '_',
-      ${TABLE}.artifact_name,
-      '_',
-      ${TABLE}.test_nodeid
-    ) ;;
+          CAST(${TABLE}.run_id AS STRING),
+          '|',
+          ${TABLE}.artifact_name,
+          '|',
+          ${TABLE}.test_nodeid
+        ) ;;
   }
 
   dimension: run_id {
@@ -66,6 +66,56 @@ view: stability_test_events {
   dimension: duration {
     type: number
     sql: ${TABLE}.duration ;;
+  }
+
+  dimension: test_file {
+    type: string
+    sql: SPLIT(${TABLE}.test_nodeid, '::')[SAFE_OFFSET(0)] ;;
+  }
+
+  dimension: test_name {
+    type: string
+    sql: ARRAY_REVERSE(SPLIT(${TABLE}.test_nodeid, '::'))[SAFE_OFFSET(0)] ;;
+  }
+
+  dimension: failed {
+    type: yesno
+    sql: ${TABLE}.outcome = 'failed' ;;
+  }
+
+  dimension: passed {
+    type: yesno
+    sql: ${TABLE}.outcome = 'passed' ;;
+  }
+
+  measure: failure_rate {
+    type: number
+    value_format_name: percent_2
+    sql: SAFE_DIVIDE(${failed_tests}, NULLIF(${total_tests}, 0)) ;;
+  }
+
+  measure: unique_runs {
+    type: count_distinct
+    sql: ${TABLE}.run_id ;;
+  }
+
+  measure: unique_tests {
+    type: count_distinct
+    sql: ${TABLE}.test_nodeid ;;
+  }
+
+  measure: flaky_score {
+    type: number
+    value_format_name: percent_2
+
+    # Flaky = both passes and fails observed.
+    # Tests that always pass or always fail are not considered flaky.
+    sql:
+    CASE
+      WHEN ${passed_tests} > 0 AND ${failed_tests} > 0
+      THEN SAFE_DIVIDE(${failed_tests}, ${total_tests})
+      ELSE 0
+    END ;;
   }
 
   measure: total_tests {

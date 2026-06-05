@@ -27,6 +27,17 @@ from time import sleep
 
 import requests
 
+# Values double as severity scores: passed < blocked < skipped < xfailed < failed.
+# mark_results() relies on this ordering to avoid downgrading a result, so keep
+# these in ascending order of severity if statuses are ever added/changed.
+TESTRAIL_STATUS = {
+    "passed": 1,
+    "blocked": 2,
+    "skipped": 3,
+    "xfailed": 4,
+    "failed": 5,
+}
+
 
 class APIClient:
     """
@@ -433,13 +444,7 @@ class TestRail:
     ):
         """Given a project id, a run id, and a suite id, for each case given a status,
         update the test objects with the correct status code"""
-        status_key = {
-            "passed": 1,
-            "skipped": 3,
-            "blocked": 2,
-            "xfailed": 4,
-            "failed": 5,
-        }
+        status_key = TESTRAIL_STATUS
         if not test_case_ids:
             test_case_ids = [
                 test_case.get("id")
