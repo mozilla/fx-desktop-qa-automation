@@ -66,10 +66,10 @@ jobs:
         run: |
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         shell: pwsh
@@ -278,10 +278,10 @@ jobs:
         run: |
           echo "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job"
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         run: |
@@ -434,10 +434,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         run: |
@@ -523,10 +523,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
