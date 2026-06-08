@@ -5389,3 +5389,17 @@ Description: The main Trustpanel popup element when tracking protection has been
 Location: Trustpanel - main panel
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-cross-site-cookies-count
+Selector Data: "[data-l10n-id='trustpanel-list-label-tracking-cookies']"
+Description: The cross-site tracking cookies button in the detailed tracker list showing the count of blocked cross-site tracking cookies
+Location: Trustpanel - blocker details view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-fingerprinter-count
+Selector Data: "[data-l10n-id='trustpanel-list-label-fingerprinter']"
+Description: The fingerprinters button in the detailed tracker list showing the count of blocked fingerprinters
+Location: Trustpanel - blocker details view
+Path to .json: modules/data/trust_panel.components.json
+```

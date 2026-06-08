@@ -252,3 +252,21 @@ class TrustPanel(BasePage):
         panel = self.get_element("trustpanel")
         self.expect(lambda _: panel.get_attribute("state") == "closed")
         return self
+
+    @BasePage.context_chrome
+    def get_tracker_count(self) -> int:
+        """Returns the total tracker count displayed in the main panel"""
+        raw = self.get_attribute_value("trustpanel-blocker-section", "data-l10n-args")
+        return int(raw.split(":")[1].replace("}", ""))
+
+    @BasePage.context_chrome
+    def get_cross_site_cookies_count(self) -> int:
+        """Returns the cross-site tracking cookies count from the detailed tracker list"""
+        raw = self.get_attribute_value("trustpanel-cross-site-cookies-count", "data-l10n-args")
+        return int(raw.split(":")[1].replace("}", ""))
+
+    @BasePage.context_chrome
+    def get_fingerprinter_count(self) -> int:
+        """Returns the fingerprinter count from the detailed tracker list"""
+        raw = self.get_attribute_value("trustpanel-fingerprinter-count", "data-l10n-args")
+        return int(raw.split(":")[1].replace("}", ""))
