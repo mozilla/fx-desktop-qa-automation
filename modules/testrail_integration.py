@@ -9,7 +9,7 @@ import sys
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
-from modules.testrail import TestRail
+from modules.testrail import TESTRAIL_STATUS, TestRail
 from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
@@ -583,13 +583,15 @@ def mark_results(testrail_session: TestRail, test_results):
                 all_test_cases.append(result.get("test_case"))
                 all_durations.append(result.get("duration"))
 
-            # Don't set passed tests to another status.
+            # Never downgrade a result — skip if the new category is less severe.
             test_cases_ids = []
             durations = []
             for i, test_case in enumerate(all_test_cases):
-                if current_results.get(test_case) != 1:
-                    test_cases_ids.append(test_case)
-                    durations.append(all_durations[i])
+                current_severity = current_results.get(test_case, 0)
+                if TESTRAIL_STATUS[category] < current_severity:
+                    continue
+                test_cases_ids.append(test_case)
+                durations.append(all_durations[i])
             logging.warning(
                 f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
             )

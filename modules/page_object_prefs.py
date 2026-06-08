@@ -860,14 +860,16 @@ class AboutPrefs(BasePage):
         if all_sites:
             self.click_on("remove-all-button")
             self.element_exists("cookies-manage-data-sitelist")
-            sites = self.get_elements("children-host-elements")
-            self.expect(lambda _: len(sites) == 0)
+            self.element_does_not_exist("children-host-elements")
         else:
             cookie_item = self.get_manage_data_site_element(cookie_site)
             cookie_item.click()
             self.click_on("remove-selected-cookie-button")
-            new_sites = self.get_elements("children-host-elements")
-            self.expect(lambda _: len(new_sites) == len(sites) - 1)
+            if len(sites) > 1:
+                new_sites = self.get_elements("children-host-elements")
+                self.expect(lambda _: len(new_sites) == len(sites) - 1)
+            else:
+                self.element_does_not_exist("children-host-elements")
 
     def open_autoplay_modal(self) -> BasePage:
         """
@@ -995,9 +997,9 @@ class AboutPrefs(BasePage):
 
     def open_manage_cookies_data_dialog(self) -> BasePage:
         """
-        Open the 'Manage Cookies and Site Data' dialog safely.
+        Open the 'Clear data for specific sites' dialog safely.
 
-        Waits for the 'Manage browsing data' button to be clickable, clicks it to open
+        Waits for the 'Clear data for..' button to be clickable, clicks it to open
         the dialog, and switches the driver context to the dialog's iframe. After
         calling this method, subsequent element interactions will be within the
         dialog's iframe context.
@@ -1005,11 +1007,11 @@ class AboutPrefs(BasePage):
         Note: This method assumes the about:preferences page is already open.
         Call self.open() first if needed.
         """
-        self.element_clickable("prefs-button", labels=["Manage browsing data"])
+        self.element_clickable("prefs-button", labels=["Clear data for specific sites"])
         manage_data_popup = self.press_button_get_popup_dialog_iframe(
-            "Manage browsing data"
+            "Clear data for specific sites"
         )
-        BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
+        self.switch_to_iframe_context(manage_data_popup)
         return self
 
     def uncheck_history_suggestion(self):
