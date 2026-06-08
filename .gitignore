@@ -1,6 +1,5 @@
 /.vscode/
 /venv/
-pyproject.toml
 .report.json
 .tmp*
 .testrail_credential*

@@ -98,8 +98,8 @@ jobs:
         run: |
           mkdir -p artifacts;
           pip3 install 'uv==0.11.18';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci;
           uv sync;
 
       - name: Install Fx
@@ -236,8 +236,8 @@ jobs:
           REPORTABLE: true
         shell: pwsh
         run: |
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci_headed;
           uv sync;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           uv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe
@@ -315,8 +315,8 @@ jobs:
         run: |
           mkdir -p artifacts;
           pip install 'uv==0.11.18';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci;
           uv sync;
           if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
           echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
@@ -410,8 +410,8 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
-          rm -f ./pyproject.toml
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci_headed
           uv sync;
           uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
@@ -467,8 +467,8 @@ jobs:
           uname -m;
           mkdir -p artifacts;
           pip3 install 'uv==0.11.18';
-          rm ./pyproject.toml;
-          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci_xvfb;
           uv sync;
           echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
           echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
@@ -505,8 +505,8 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
           REPORTABLE: true
         run: |
-          rm -f ./pyproject.toml
-          mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci_xvfb_headed;
           uv sync;
           DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
