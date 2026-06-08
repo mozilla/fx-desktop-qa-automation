@@ -12,7 +12,14 @@ def test_case():
     return "3054026"
 
 
-def test_ensure_panel_renders_on_first_run(driver: Firefox, trust_panel: TrustPanel):
+@pytest.fixture()
+def temp_selectors() -> dict:
+    return {"yt-icon": {"selectorData": "yt-icon", "strategy": "class", "groups": []}}
+
+
+def test_ensure_panel_renders_on_first_run(
+    driver: Firefox, trust_panel: TrustPanel, temp_selectors: dict
+):
     """
     C3054026 - The panel opens & renders correctly on the first run
     """
@@ -22,6 +29,8 @@ def test_ensure_panel_renders_on_first_run(driver: Firefox, trust_panel: TrustPa
 
     # Open test page and click on the shield icon
     test_page.open()
+    test_page.elements |= temp_selectors
+    test_page.element_visible("yt-icon")
     trust_panel.open_panel()
 
     # Site icon and its domain are displayed
