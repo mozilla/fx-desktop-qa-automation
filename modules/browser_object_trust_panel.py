@@ -262,7 +262,11 @@ class TrustPanel(BasePage):
     def get_cross_site_cookies_count(self) -> int:
         """Returns the cross-site tracking cookies count, 0 if not present"""
         try:
-            return int(self.get_element_args("trustpanel-cross-site-cookies-count").get("count"))
+            return int(
+                self.get_element_args("trustpanel-cross-site-cookies-count").get(
+                    "count"
+                )
+            )
         except Exception:
             return 0
 
@@ -270,6 +274,8 @@ class TrustPanel(BasePage):
     def get_fingerprinter_count(self) -> int:
         """Returns the fingerprinter count, 0 if not present"""
         try:
-            return int(self.get_element_args("trustpanel-fingerprinter-count").get("count"))
+            return int(
+                self.get_element_args("trustpanel-fingerprinter-count").get("count")
+            )
         except Exception:
             return 0
