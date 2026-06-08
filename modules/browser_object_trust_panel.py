@@ -260,10 +260,16 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def get_cross_site_cookies_count(self) -> int:
-        """Returns the cross-site tracking cookies count from the detailed tracker list"""
-        return self.get_element_args("trustpanel-cross-site-cookies-count").get("count")
+        """Returns the cross-site tracking cookies count, 0 if not present"""
+        try:
+            return int(self.get_element_args("trustpanel-cross-site-cookies-count").get("count"))
+        except Exception:
+            return 0
 
     @BasePage.context_chrome
     def get_fingerprinter_count(self) -> int:
-        """Returns the fingerprinter count from the detailed tracker list"""
-        return self.get_element_args("trustpanel-fingerprinter-count").get("count")
+        """Returns the fingerprinter count, 0 if not present"""
+        try:
+            return int(self.get_element_args("trustpanel-fingerprinter-count").get("count"))
+        except Exception:
+            return 0
