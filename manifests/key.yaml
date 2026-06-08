@@ -675,6 +675,10 @@ networking:
     result: pass
     splits:
     - functional1
+  test_custom_doh_provider:
+    result: pass
+    splits:
+    - functional1
   test_default_dns_protection:
     result: pass
     splits:

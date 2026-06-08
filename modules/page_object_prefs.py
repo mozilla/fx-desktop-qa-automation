@@ -14,7 +14,7 @@ from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
@@ -243,6 +243,20 @@ class AboutPrefs(BasePage):
             provider_value
         )
         self.element_attribute_is("doh-provider-select", "value", provider_value)
+        return self
+
+    def set_custom_doh_provider(self, provider_url: str) -> BasePage:
+        """Type a custom DoH provider URL into the Custom-mode input field.
+
+        The field is pre-populated with the default provider URL, so clear it
+        before entering the custom value. Requires the provider menu set to the
+        "Custom" option first (`select_doh_provider("custom")`), which reveals
+        the field.
+        """
+        custom_input = self.get_element("doh-custom-provider-input")
+        custom_input.send_keys(Keys.CONTROL, "a")
+        custom_input.send_keys(Keys.DELETE)
+        custom_input.send_keys(provider_url)
         return self
 
     def verify_doh_provider(self, provider_name: str) -> BasePage:
