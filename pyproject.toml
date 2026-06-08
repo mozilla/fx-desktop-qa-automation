@@ -114,7 +114,7 @@ dependencies = [
   "pylint==2.17.7 ; python_full_version >= '3.7.2'",
   "pymsgbox==2.0.1 ; python_full_version >= '3.4'",
   "pyobjc-core==12.2 ; sys_platform == 'darwin'",
-  "pyobjc-framework-cocoa==12.2 ; python_full_version >= '3.10', sys_platform == 'darwin'",
+  "pyobjc-framework-cocoa==12.2 ; python_full_version >= '3.10' ; sys_platform == 'darwin'",
   "pyobjc-framework-quartz==12.2 ; sys_platform == 'darwin'",
   "pyperclip==1.11.0",
   "pypom==2.2.4",
