@@ -1488,19 +1488,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pandas-vet"
-version = "0.2.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "attrs" },
-    { name = "flake8" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/15/7c/94314afc513c6c4cfc798093e95d57671ce2c3334f784a56ad31ea76b4b6/pandas-vet-0.2.3.tar.gz", hash = "sha256:58b64027a4c192b4b62272c1d8fdecc1733352452401282b697c1a32abe4656a", size = 8674, upload-time = "2022-02-09T02:48:58.742Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c6/23/299811a57f4225a8419b3488265423f6b9a3d68f53bbb630989e5adc1b77/pandas_vet-0.2.3-py3-none-any.whl", hash = "sha256:349e4240399ead316f64f9afc8e94a5bd5cfff45d7f448c5c22989e86c4ac782", size = 8948, upload-time = "2022-02-09T02:48:57.434Z" },
-]
-
-[[package]]
 name = "pathspec"
 version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1901,24 +1888,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/3b/81/58d0ac84e1ef3a3843791d6954d94c0b33d526c75eeb1efbce9d0a4c4077/pyjwt-2.13.0.tar.gz", hash = "sha256:41571c89ca91598c79e8ef18a2d07367d4810fbbd6f637794879baf1b7703423", size = 107515, upload-time = "2026-05-21T19:54:36.618Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a3/5e/ecf12fdb62546d64385c158514e9b2b671f7832108ef2ecd2020ce0af2d1/pyjwt-2.13.0-py3-none-any.whl", hash = "sha256:66adcc2aff09b3f1bbd95fc1e1577df8ac8723c978552fd43304c8a290ac5728", size = 31274, upload-time = "2026-05-21T19:54:35.362Z" },
-]
-
-[[package]]
-name = "pylint"
-version = "2.17.7"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "astroid" },
-    { name = "colorama", marker = "sys_platform == 'win32'" },
-    { name = "dill" },
-    { name = "isort" },
-    { name = "mccabe" },
-    { name = "platformdirs" },
-    { name = "tomlkit" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a3/e9/21f9ce3e4b81eef011be070a29f8a5c193e2488ed8713a898baa4e8b3362/pylint-2.17.7.tar.gz", hash = "sha256:f4fcac7ae74cfe36bc8451e931d8438e4a476c20314b1101c458ad0f05191fad", size = 434994, upload-time = "2023-09-30T21:25:10.328Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b4/49/cea450a83079445a84f16050e571a7c383d3f474b13c5caedfebd4e35def/pylint-2.17.7-py3-none-any.whl", hash = "sha256:27a8d4c7ddc8c2f8c18aa0050148f89ffc09838142193fdbe98f172781a3ff87", size = 537178, upload-time = "2023-09-30T21:25:07.527Z" },
 ]
 
 [[package]]
@@ -2350,8 +2319,6 @@ dependencies = [
     { name = "grpcio-status" },
     { name = "h11" },
     { name = "hawkauthlib" },
-    { name = "hypothesis" },
-    { name = "hypothesmith" },
     { name = "idna" },
     { name = "imagesize", marker = "python_full_version < '3.15'" },
     { name = "iniconfig" },
@@ -2363,7 +2330,6 @@ dependencies = [
     { name = "lazy-object-proxy" },
     { name = "markdown-it-py" },
     { name = "markupsafe" },
-    { name = "mccabe" },
     { name = "mdurl" },
     { name = "mouseinfo" },
     { name = "mozilla-repo-urls" },
@@ -2374,7 +2340,6 @@ dependencies = [
     { name = "opencv-python" },
     { name = "outcome" },
     { name = "packaging" },
-    { name = "pandas-vet" },
     { name = "pathspec" },
     { name = "pep8-naming" },
     { name = "pillow" },
@@ -2400,7 +2365,6 @@ dependencies = [
     { name = "pygetwindow" },
     { name = "pygments" },
     { name = "pyjwt" },
-    { name = "pylint" },
     { name = "pymsgbox" },
     { name = "pyobjc-core", marker = "sys_platform == 'darwin'" },
     { name = "pyobjc-framework-cocoa", marker = "sys_platform == 'darwin'" },
@@ -2464,8 +2428,6 @@ dependencies = [
     { name = "tokenize-rt" },
     { name = "toml" },
     { name = "tomlkit" },
-    { name = "tox" },
-    { name = "tox-travis" },
     { name = "trio" },
     { name = "trio-websocket" },
     { name = "typer" },
@@ -2542,8 +2504,6 @@ requires-dist = [
     { name = "grpcio-status", specifier = "==1.81.0" },
     { name = "h11", marker = "python_full_version >= '3.8'", specifier = "==0.16.0" },
     { name = "hawkauthlib", specifier = "==2.0.0" },
-    { name = "hypothesis", marker = "python_full_version >= '3.10'", specifier = "==6.155.1" },
-    { name = "hypothesmith", marker = "python_full_version >= '3.6'", specifier = "==0.1.9" },
     { name = "idna", marker = "python_full_version >= '3.9'", specifier = "==3.18" },
     { name = "imagesize", marker = "python_full_version >= '3.10' and python_full_version < '3.15'", specifier = "==2.0.0" },
     { name = "iniconfig", marker = "python_full_version >= '3.10'", specifier = "==2.3.0" },
@@ -2555,7 +2515,6 @@ requires-dist = [
     { name = "lazy-object-proxy", marker = "python_full_version >= '3.9'", specifier = "==1.12.0" },
     { name = "markdown-it-py", marker = "python_full_version >= '3.10'", specifier = "==4.2.0" },
     { name = "markupsafe", marker = "python_full_version >= '3.9'", specifier = "==3.0.3" },
-    { name = "mccabe", marker = "python_full_version >= '3.6'", specifier = "==0.7.0" },
     { name = "mdurl", marker = "python_full_version >= '3.7'", specifier = "==0.1.2" },
     { name = "mouseinfo", specifier = "==0.1.3" },
     { name = "mozilla-repo-urls", marker = "python_full_version >= '3.11'", specifier = "==0.2.2" },
@@ -2566,7 +2525,6 @@ requires-dist = [
     { name = "opencv-python", marker = "python_full_version >= '3.6'", specifier = "==4.13.0.92" },
     { name = "outcome", marker = "python_full_version >= '3.7'", specifier = "==1.3.0.post0" },
     { name = "packaging", marker = "python_full_version >= '3.8'", specifier = "==26.2" },
-    { name = "pandas-vet", specifier = "==0.2.3" },
     { name = "pathspec", marker = "python_full_version >= '3.9'", specifier = "==1.1.1" },
     { name = "pep8-naming", marker = "python_full_version >= '3.9'", specifier = "==0.15.1" },
     { name = "pillow", marker = "python_full_version >= '3.8'", specifier = "==10.4.0" },
@@ -2592,7 +2550,6 @@ requires-dist = [
     { name = "pygetwindow", specifier = "==0.0.9" },
     { name = "pygments", marker = "python_full_version >= '3.9'", specifier = "==2.20.0" },
     { name = "pyjwt", marker = "python_full_version >= '3.9'", specifier = "==2.13.0" },
-    { name = "pylint", marker = "python_full_version >= '3.7.2'", specifier = "==2.17.7" },
     { name = "pymsgbox", marker = "python_full_version >= '3.4'", specifier = "==2.0.1" },
     { name = "pyobjc-core", marker = "sys_platform == 'darwin'", specifier = "==12.2" },
     { name = "pyobjc-framework-cocoa", marker = "python_full_version >= '3.10' and sys_platform == 'darwin'", specifier = "==12.2" },
@@ -2656,8 +2613,6 @@ requires-dist = [
     { name = "tokenize-rt", marker = "python_full_version >= '3.9'", specifier = "==6.2.0" },
     { name = "toml", specifier = ">=0.10.2" },
     { name = "tomlkit", marker = "python_full_version >= '3.9'", specifier = "==0.15.0" },
-    { name = "tox", marker = "python_full_version >= '3.9'", specifier = "==4.27.0" },
-    { name = "tox-travis", specifier = "==0.12" },
     { name = "trio", marker = "python_full_version >= '3.10'", specifier = "==0.33.0" },
     { name = "trio-websocket", marker = "python_full_version >= '3.8'", specifier = "==0.12.2" },
     { name = "typer", marker = "python_full_version >= '3.10'", specifier = "==0.26.6" },
@@ -3135,38 +3090,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/51/db/03eaf4331631ef6b27d6e3c9b68c54dc6f0d63d87201fed600cc409307fd/tomlkit-0.15.0.tar.gz", hash = "sha256:7d1a9ecba3086638211b13814ea79c90dd54dd11993564376f3aa92271f5c7a3", size = 161875, upload-time = "2026-05-10T07:38:22.245Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/43/8bd850ee71a191bf072e31302c73a66be413fecdd98fdcd111ecbcce13ca/tomlkit-0.15.0-py3-none-any.whl", hash = "sha256:4dbc8f0fc024412b57ced8757ac7461305126a648ff8c2c807fcb8e133a78738", size = 41328, upload-time = "2026-05-10T07:38:23.517Z" },
-]
-
-[[package]]
-name = "tox"
-version = "4.27.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cachetools" },
-    { name = "chardet" },
-    { name = "colorama" },
-    { name = "filelock" },
-    { name = "packaging" },
-    { name = "platformdirs" },
-    { name = "pluggy" },
-    { name = "pyproject-api" },
-    { name = "virtualenv" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a5/b7/19c01717747076f63c54d871ada081cd711a7c9a7572f2225675c3858b94/tox-4.27.0.tar.gz", hash = "sha256:b97d5ecc0c0d5755bcc5348387fef793e1bfa68eb33746412f4c60881d7f5f57", size = 198351, upload-time = "2025-06-17T15:17:50.585Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/3a/30889167f41ecaffb957ec4409e1cbc1d5d558a5bbbdfb734a5b9911930f/tox-4.27.0-py3-none-any.whl", hash = "sha256:2b8a7fb986b82aa2c830c0615082a490d134e0626dbc9189986da46a313c4f20", size = 173441, upload-time = "2025-06-17T15:17:48.689Z" },
-]
-
-[[package]]
-name = "tox-travis"
-version = "0.12"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "tox" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b1/41/b2310246543fab3b595b49834d20fd8c1326cf64534f9743a984ba4208b6/tox-travis-0.12.tar.gz", hash = "sha256:465cd8f71ad878962a3fce0e9e2e213994e0ae4e0c30f87fe6af1b04ea282dc4", size = 23666, upload-time = "2019-03-14T18:51:38.576Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b9/62/940f7fdb0d207a90ebf8389b59679ed4c3b4b36357054a30dda6274ee6d0/tox_travis-0.12-py2.py3-none-any.whl", hash = "sha256:442c96b078333c94e272d0e90e4582e35e0529ea98bcd2f7f96053d690c4e7a4", size = 10557, upload-time = "2019-03-14T18:51:37.21Z" },
 ]
 
 [[package]]
