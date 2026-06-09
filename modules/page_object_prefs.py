@@ -254,9 +254,10 @@ class AboutPrefs(BasePage):
         the field.
         """
         custom_input = self.get_element("doh-custom-provider-input")
-        custom_input.send_keys(Keys.CONTROL, "a")
-        custom_input.send_keys(Keys.DELETE)
+        custom_input.clear()
         custom_input.send_keys(provider_url)
+        # Tab out to unfocus the field and commit the value to the pref
+        custom_input.send_keys(Keys.TAB)
         return self
 
     def verify_doh_provider(self, provider_name: str) -> BasePage:
