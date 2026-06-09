@@ -14,7 +14,7 @@ from modules.classes.autofill_base import AutofillAddressBase
 from modules.classes.credit_card import CreditCardBase
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
-from modules.util import BrowserActions, Utilities
+from modules.util import Utilities
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
@@ -222,6 +222,43 @@ class AboutPrefs(BasePage):
         self.element_clickable(option_id)
         self.click_on(f"{option_id}-input")
         self.element_attribute_contains(option_id, "checked", "")
+        return self
+
+    def select_doh_provider(self, provider_value: str) -> BasePage:
+        """Select a DoH provider from the Custom-mode provider menu.
+
+        Requires `select_doh_protection_level("custom")` first. The provider
+        list is hydrated asynchronously from remote settings, so wait until
+        the target option is present before selecting.
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == provider_value
+                for opt in self.get_element("doh-provider-select-inner").find_elements(
+                    By.TAG_NAME, "option"
+                )
+            )
+        )
+        Select(self.get_element("doh-provider-select-inner")).select_by_value(
+            provider_value
+        )
+        self.element_attribute_is("doh-provider-select", "value", provider_value)
+        return self
+
+    def set_custom_doh_provider(self, provider_url: str) -> BasePage:
+        """Type a custom DoH provider URL into the Custom-mode input field.
+
+        The field is pre-populated with the default provider URL, so clear it
+        before entering the custom value. Requires the provider menu set to the
+        "Custom" option first (`select_doh_provider("custom")`), which reveals
+        the field.
+        """
+        self.element_visible("doh-custom-provider-input")
+        custom_input = self.get_element("doh-custom-provider-input")
+        custom_input.clear()
+        custom_input.send_keys(provider_url)
+        # Tab out to unfocus the field and commit the value to the pref
+        custom_input.send_keys(Keys.TAB)
         return self
 
     def verify_doh_provider(self, provider_name: str) -> BasePage:
@@ -839,14 +876,16 @@ class AboutPrefs(BasePage):
         if all_sites:
             self.click_on("remove-all-button")
             self.element_exists("cookies-manage-data-sitelist")
-            sites = self.get_elements("children-host-elements")
-            self.expect(lambda _: len(sites) == 0)
+            self.element_does_not_exist("children-host-elements")
         else:
             cookie_item = self.get_manage_data_site_element(cookie_site)
             cookie_item.click()
             self.click_on("remove-selected-cookie-button")
-            new_sites = self.get_elements("children-host-elements")
-            self.expect(lambda _: len(new_sites) == len(sites) - 1)
+            if len(sites) > 1:
+                new_sites = self.get_elements("children-host-elements")
+                self.expect(lambda _: len(new_sites) == len(sites) - 1)
+            else:
+                self.element_does_not_exist("children-host-elements")
 
     def open_autoplay_modal(self) -> BasePage:
         """
@@ -974,9 +1013,9 @@ class AboutPrefs(BasePage):
 
     def open_manage_cookies_data_dialog(self) -> BasePage:
         """
-        Open the 'Manage Cookies and Site Data' dialog safely.
+        Open the 'Clear data for specific sites' dialog safely.
 
-        Waits for the 'Manage browsing data' button to be clickable, clicks it to open
+        Waits for the 'Clear data for..' button to be clickable, clicks it to open
         the dialog, and switches the driver context to the dialog's iframe. After
         calling this method, subsequent element interactions will be within the
         dialog's iframe context.
@@ -984,11 +1023,11 @@ class AboutPrefs(BasePage):
         Note: This method assumes the about:preferences page is already open.
         Call self.open() first if needed.
         """
-        self.element_clickable("prefs-button", labels=["Manage browsing data"])
+        self.element_clickable("prefs-button", labels=["Clear data for specific sites"])
         manage_data_popup = self.press_button_get_popup_dialog_iframe(
-            "Manage browsing data"
+            "Clear data for specific sites"
         )
-        BrowserActions(self.driver).switch_to_iframe_context(manage_data_popup)
+        self.switch_to_iframe_context(manage_data_popup)
         return self
 
     def uncheck_history_suggestion(self):
@@ -1034,8 +1073,8 @@ class AboutPrefs(BasePage):
         self.switch_to_default_frame()
 
     def enable_show_sidebar(self):
-        """Enable the Show Sidebar checkbox under General > Browser Layout if not already checked"""
-        if not self.get_element("show-sidebar-checkbox").get_attribute("checked"):
+        """Enable the Show Sidebar checkbox in Tabs and browsing > Browser layout."""
+        if self.get_element("show-sidebar-checkbox").get_attribute("checked") is None:
             self.click_on("show-sidebar-shadow-box")
         self.element_has_attribute("show-sidebar-checkbox", "checked")
         return self
