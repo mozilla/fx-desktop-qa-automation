@@ -32,12 +32,10 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
-        export MAX_SPLITS=$(grep 'functional.' manifests/key.yaml | tail -1 | grep -o '[0-9]')
-        export STARFOX_SPLIT="${STARFOX_SPLIT}$(($(date +%-I) % $MAX_SPLITS + 1))"
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
         pip3 install 'pipenv==2023.11.15' --break-system-packages;
-        mv ./config/ci_pyproject.toml ./pyproject.toml;
+        cp -f ./config/ci_pyproject.toml ./pyproject.toml;
         curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs | sh -s -- -y
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
@@ -46,17 +44,29 @@ tasks:
         export FX_CHANNEL="beta";
         ./scripts/collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
-        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
-        pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE tests/meta/test_version.py;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        export FAILURE=${?};
-        mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-        export REPORTABLE=1;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        exit $((${?} | ${FAILURE}))
+        # Coverage-driven split selection: run whatever functional splits still
+        # lack Linux coverage for the latest build, instead of picking by hour.
+        SPLITS=$(pipenv run python -m scripts.reportable_splits --platform Linux --format lines --tc-creds);
+        if [ -z "$SPLITS" ]; then echo "No uncovered Linux functional splits; nothing to do."; exit 0; fi
+        echo "Uncovered Linux functional splits: $SPLITS";
+        TESTRAIL_REPORT=false pipenv run pytest --fx-executable $FX_EXECUTABLE tests/meta/test_version.py;
+        export FAILURE=0
+        for split in $SPLITS; do
+          export STARFOX_SPLIT="$split";
+          echo "=== Running $STARFOX_SPLIT ===";
+          cp -f ./config/ci_pyproject.toml ./pyproject.toml;
+          unset REPORTABLE;
+          pipenv run python -m scripts.choose_test_split;
+          pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
+          export FAILURE=$((FAILURE | ${?}));
+          cp -f ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          export REPORTABLE=1;
+          pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
+          export FAILURE=$((FAILURE | ${?}));
+        done
+        exit $FAILURE
     notify:
       recipients:
         - type: slack-channel
