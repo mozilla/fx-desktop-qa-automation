@@ -1,7 +1,7 @@
 import json
 from time import sleep
 
-from selenium.common import TimeoutException, NoSuchElementException
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
