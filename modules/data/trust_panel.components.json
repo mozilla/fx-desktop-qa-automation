@@ -209,5 +209,10 @@
         "groups": [
             "doNotCache"
         ]
+    },
+    "trustpanel-subview-back-button": {
+        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+        "strategy": "css",
+        "groups": []
     }
 }

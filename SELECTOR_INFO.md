@@ -5403,3 +5403,10 @@ Description: The main Trustpanel popup element when tracking protection has been
 Location: Trustpanel - main panel
 Path to .json: modules/data/trust_panel.components.json
 ```
+```
+Selector Name: trustpanel-subview-back-button
+Selector Data: ".subviewbutton.subviewbutton-iconic.subviewbutton-back"
+Description: Trustpanel subview back button
+Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
