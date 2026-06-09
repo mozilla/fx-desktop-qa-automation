@@ -518,6 +518,59 @@ def reportable(platform_to_test=None):
     return bool(uncovered_suites)
 
 
+def functional_splits() -> list:
+    """Return the functional split names defined in the manifest, sorted.
+
+    e.g. ["functional1", "functional2"]. Used to drive coverage-based split
+    selection instead of choosing a split by wall-clock hour.
+    """
+    try:
+        manifest = TestKey(TEST_KEY_LOCATION)
+        return [s for s in manifest.find_all_splits() if s.startswith("functional")]
+    except Exception as e:
+        logging.warning(f"Could not enumerate functional splits: {e}")
+        return []
+
+
+def uncovered_functional_splits(platform_to_test=None) -> list:
+    """Return the functional splits that still need coverage for a platform.
+
+    For the latest build, iterate every functional split and keep the ones where
+    reportable() is True (the split's plan has no coverage yet for this platform).
+    This lets each pipeline run whatever is missing, regardless of when it fires,
+    instead of guessing a split from the current hour.
+
+    STARFOX_SPLIT is set per-iteration and restored before returning.
+    """
+    splits = functional_splits()
+    uncovered = []
+    previous_split = os.environ.get("STARFOX_SPLIT")
+    try:
+        for split in splits:
+            os.environ["STARFOX_SPLIT"] = split
+            try:
+                if reportable(platform_to_test):
+                    uncovered.append(split)
+            except SystemExit:
+                # collect_executables may exit() if it cannot resolve a build;
+                # treat as "cannot determine coverage" and skip this split.
+                logging.warning(
+                    f"Reportability check exited for split {split} on "
+                    f"{platform_to_test}; skipping."
+                )
+            except Exception as e:
+                logging.warning(
+                    f"Could not check reportability for {split} on "
+                    f"{platform_to_test}: {e}"
+                )
+        return uncovered
+    finally:
+        if previous_split is None:
+            os.environ.pop("STARFOX_SPLIT", None)
+        else:
+            os.environ["STARFOX_SPLIT"] = previous_split
+
+
 def testrail_init() -> TestRail | None:
     """Connect to a TestRail API session"""
     base_url = os.environ.get("TESTRAIL_BASE_URL")

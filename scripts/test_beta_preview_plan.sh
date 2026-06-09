@@ -2,23 +2,23 @@
 
 # Expected env vars:
 #   DRY_RUN
-#   SPLIT
-#   WIN_REPORTABLE
-#   MAC_REPORTABLE
+#   WIN_SPLITS    JSON array of functional splits to run on Windows, e.g. ["functional1"]
+#   MAC_SPLITS    JSON array of functional splits to run on macOS
 #   PREVIEW_JSON
+
+WIN_SPLITS="${WIN_SPLITS:-[]}"
+MAC_SPLITS="${MAC_SPLITS:-[]}"
 
 # Logs
 echo "DRY_RUN=${DRY_RUN}"
-echo "Split=${SPLIT}"
-echo "Windows reportable=${WIN_REPORTABLE}"
-echo "macOS reportable=${MAC_REPORTABLE}"
+echo "Windows splits to run=${WIN_SPLITS}"
+echo "macOS splits to run=${MAC_SPLITS}"
 
 # Job Summary
 {
   echo "## Plan"
   echo ""
   echo "DRY_RUN: ${DRY_RUN}"
-  echo "Split: ${SPLIT}"
   echo ""
   echo "### Decision"
   if [ "${DRY_RUN}" = "true" ]; then
@@ -27,16 +27,16 @@ echo "macOS reportable=${MAC_REPORTABLE}"
     echo "Normal Mode:"
   fi
   echo ""
-  if [ "${WIN_REPORTABLE}" = "True" ]; then
-    echo "Would trigger Test-Windows (test_set=${SPLIT})"
+  if [ "${WIN_SPLITS}" != "[]" ] && [ -n "${WIN_SPLITS}" ]; then
+    echo "Would trigger Test-Windows for splits: ${WIN_SPLITS}"
   else
-    echo "Won't trigger Test-Windows"
+    echo "Won't trigger Test-Windows (no uncovered splits)"
   fi
 
-  if [ "${MAC_REPORTABLE}" = "True" ]; then
-    echo "Would trigger Test-MacOS (test_set=${SPLIT})"
+  if [ "${MAC_SPLITS}" != "[]" ] && [ -n "${MAC_SPLITS}" ]; then
+    echo "Would trigger Test-MacOS for splits: ${MAC_SPLITS}"
   else
-    echo "Won't trigger Test-MacOS (mac_reportable=${MAC})"
+    echo "Won't trigger Test-MacOS (no uncovered splits)"
   fi
 
   if [ "${DRY_RUN}" = "true" ] && [ -n "${PREVIEW_JSON}" ]; then
