@@ -434,7 +434,8 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042659
+    result: unstable
     splits:
     - smoke
     - ci
@@ -1583,7 +1584,8 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042107
+    result: unstable
     splits:
     - smoke
     - ci
