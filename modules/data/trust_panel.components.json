@@ -181,6 +181,31 @@
         "strategy": "css",
         "groups": []
     },
+    "site-icon": {
+        "selectorData": "trustpanel-popup-icon",
+        "strategy": "id",
+        "groups": []
+    },
+    "site-domain": {
+        "selectorData": "trustpanel-popup-host",
+        "strategy": "id",
+        "groups": []
+    },
+    "connection-icon": {
+        "selectorData": "trustpanel-connection-icon",
+        "strategy": "id",
+        "groups": []
+    },
+    "purple-card": {
+        "selectorData": "trustpanel-graphic-section",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
     "clear-cookies-button": {
         "selectorData": "trustpanel-clear-cookies-button",
         "strategy": "id",

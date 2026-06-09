@@ -1268,6 +1268,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_ensure_panel_renders_on_first_run:
+    result: pass
+    splits:
+    - functional2
   test_etp_panel_displayed_when_all_protections_disabled_custom:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable

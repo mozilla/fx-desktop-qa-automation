@@ -5369,6 +5369,41 @@ Location: Trustpanel - Connection protections tab (insecure banner)
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
+Selector Name: site-icon
+Selector Data: "trustpanel-popup-icon"
+Description: Site favicon displayed at the top of the Trustpanel (e.g. the YouTube icon)
+Location: Trustpanel - header row
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: site-domain
+Selector Data: "trustpanel-popup-host"
+Description: Domain/host label shown next to the site favicon (value attribute holds the host, e.g. "youtube.com")
+Location: Trustpanel - header row
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: connection-icon
+Selector Data: "trustpanel-connection-icon"
+Description: Lock-state icon shown in the "Connection secure" row of the Trustpanel
+Location: Trustpanel - connection row
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: purple-card
+Selector Data: "trustpanel-graphic-section"
+Description: Purple graphic/banner card in the Trustpanel ("Firefox is on guard!")
+Location: Trustpanel - graphic section
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: clear-cookies-button
+Selector Data: "trustpanel-clear-cookies-button"
+Description: "Clear cookies and site data" action button in the Trustpanel footer
+Location: Trustpanel - footer actions
+Path to .json: modules/data/trust_panel.components.json
+```
+```
 Selector Name: clear-cookies-button
 Selector Data: "trustpanel-clear-cookies-button"
 Description: "Clear cookies and site data" button in the Trustpanel that opens the clear confirmation dialog
