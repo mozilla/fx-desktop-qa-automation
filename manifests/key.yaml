@@ -469,8 +469,7 @@ downloads:
     splits:
     - functional1
   test_telemetry_download_and_open:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043391
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_telemetry_pdf_download_open:
@@ -681,6 +680,10 @@ networking:
     splits:
     - smoke
   test_http_site:
+    result: pass
+    splits:
+    - functional1
+  test_nextdns_as_doh_provider:
     result: pass
     splits:
     - functional1
@@ -1164,7 +1167,8 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_fingerprinters:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
+    result: unstable
     splits:
     - functional2
   test_blocking_social_media_trackers:
@@ -1192,6 +1196,10 @@ security_and_privacy:
     splits:
     - functional2
   test_connection_not_secured_panel_for_http_sites:
+    result: pass
+    splits:
+    - functional2
+  test_connection_secure_second_level_panel:
     result: pass
     splits:
     - functional2
@@ -1277,6 +1285,10 @@ security_and_privacy:
   test_etp_panel_displayed_when_protection_off:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
+    splits:
+    - functional2
+  test_etp_toggle_on_off_behavior:
+    result: pass
     splits:
     - functional2
   test_extended_certificate_messaging_displayed_in_panel:
@@ -1367,6 +1379,10 @@ security_and_privacy:
     splits:
     - functional2
   test_secure_domain_certificate_messaging_panel:
+    result: pass
+    splits:
+    - functional2
+  test_see_all_link_redirects_to_blocked_trackers:
     result: pass
     splits:
     - functional2

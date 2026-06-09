@@ -854,6 +854,17 @@
     "groups": [],
     "shadowParent": "doh-radio-custom"
   },
+  "doh-provider-select": {
+    "selectorData": "dohProviderSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-provider-select-inner": {
+    "selectorData": "select",
+    "strategy": "css",
+    "groups": [],
+    "shadowParent": "doh-provider-select"
+  },
   "turn-off-primary-password": {
     "selectorData": "turnOffPrimaryPassword",
     "strategy": "id",
