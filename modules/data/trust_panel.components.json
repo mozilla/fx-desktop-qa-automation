@@ -210,6 +210,11 @@
             "doNotCache"
         ]
     },
+    "trustpanel-subview-back-button": {
+        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+        "strategy": "css",
+        "groups": []
+    },
     "trustpanel-cross-site-cookies-count": {
         "selectorData": "[data-l10n-id='trustpanel-list-label-tracking-cookies']",
         "strategy": "css",

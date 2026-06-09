@@ -254,6 +254,15 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_subview_back_button(self):
+        """Click the back arrow to return from a subview to the main Trust Panel."""
+        self.element_visible("trustpanel-subview-back-button")
+        sleep(0.5)  # "visible" in trustpanel doesn't mean what it seems to
+        self.js_click_on("trustpanel-subview-back-button")
+        self.element_attribute_is("trustpanel", "mainviewshowing", "true")
+        return self
+
+    @BasePage.context_chrome
     def get_tracker_count(self) -> int:
         """Returns the total tracker count displayed in the main panel"""
         return self.get_element_args("trustpanel-blocker-section").get("count")
