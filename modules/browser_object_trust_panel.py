@@ -1,8 +1,6 @@
 import json
-import logging
 from time import sleep
 
-from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -251,4 +249,13 @@ class TrustPanel(BasePage):
         """Verify the Trust Panel is closed via its state attribute."""
         panel = self.get_element("trustpanel")
         self.expect(lambda _: panel.get_attribute("state") == "closed")
+        return self
+
+    @BasePage.context_chrome
+    def click_subview_back_button(self):
+        """Click the back arrow to return from a subview to the main Trust Panel."""
+        self.element_visible("trustpanel-subview-back-button")
+        sleep(0.5)  # "visible" in trustpanel doesn't mean what it seems to
+        self.js_click_on("trustpanel-subview-back-button")
+        self.element_attribute_is("trustpanel", "mainviewshowing", "true")
         return self

@@ -1553,6 +1553,20 @@ Location: about:preferences#privacy (shadow DOM of dohProviderSelect)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: doh-custom-provider
+Selector Data: "dohCustomProvider"
+Description: moz-input-text host for the custom DoH provider URL field; revealed when the "Custom" option is chosen in the dohProviderSelect menu. Pre-populated with the default provider URL
+Location: about:preferences#privacy - DNS over HTTPS advanced section (Custom mode, Custom provider)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-custom-provider-input
+Selector Data: "input"
+Description: Inner native <input> inside the dohCustomProvider shadow root; used to type the custom DoH provider URL
+Location: about:preferences#privacy (shadow DOM of dohCustomProvider)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: turn-off-primary-password
 Selector Data: "turnOffPrimaryPassword"
 Description: "Turn off Primary Password" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password
@@ -5369,6 +5383,41 @@ Location: Trustpanel - Connection protections tab (insecure banner)
 Path to .json: modules/data/trust_panel.components.json
 ```
 ```
+Selector Name: site-icon
+Selector Data: "trustpanel-popup-icon"
+Description: Site favicon displayed at the top of the Trustpanel (e.g. the YouTube icon)
+Location: Trustpanel - header row
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: site-domain
+Selector Data: "trustpanel-popup-host"
+Description: Domain/host label shown next to the site favicon (value attribute holds the host, e.g. "youtube.com")
+Location: Trustpanel - header row
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: connection-icon
+Selector Data: "trustpanel-connection-icon"
+Description: Lock-state icon shown in the "Connection secure" row of the Trustpanel
+Location: Trustpanel - connection row
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: purple-card
+Selector Data: "trustpanel-graphic-section"
+Description: Purple graphic/banner card in the Trustpanel ("Firefox is on guard!")
+Location: Trustpanel - graphic section
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: clear-cookies-button
+Selector Data: "trustpanel-clear-cookies-button"
+Description: "Clear cookies and site data" action button in the Trustpanel footer
+Location: Trustpanel - footer actions
+Path to .json: modules/data/trust_panel.components.json
+```
+```
 Selector Name: clear-cookies-button
 Selector Data: "trustpanel-clear-cookies-button"
 Description: "Clear cookies and site data" button in the Trustpanel that opens the clear confirmation dialog
@@ -5401,5 +5450,12 @@ Selector Name: trustpanel-tracking-protection-disabled
 Selector Data: "#trustpanel-popup[tracking-protection='disabled']"
 Description: The main Trustpanel popup element when tracking protection has been disabled by the user for the current site
 Location: Trustpanel - main panel
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-subview-back-button
+Selector Data: ".subviewbutton.subviewbutton-iconic.subviewbutton-back"
+Description: Trustpanel subview back button
+Location: Trustpanel - Connection protections tab
 Path to .json: modules/data/trust_panel.components.json
 ```

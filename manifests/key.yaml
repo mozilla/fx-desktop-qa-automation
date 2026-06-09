@@ -434,7 +434,8 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042659
+    result: unstable
     splits:
     - smoke
     - ci
@@ -672,6 +673,10 @@ meta:
     splits: []
 networking:
   test_cloudflare_as_default_doh_provider:
+    result: pass
+    splits:
+    - functional1
+  test_custom_doh_provider:
     result: pass
     splits:
     - functional1
@@ -1199,6 +1204,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_connection_secure_second_level_panel:
+    result: pass
+    splits:
+    - functional2
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
@@ -1261,6 +1270,10 @@ security_and_privacy:
     splits:
     - functional2
   test_end_private_session_clears_cookies:
+    result: pass
+    splits:
+    - functional2
+  test_ensure_panel_renders_on_first_run:
     result: pass
     splits:
     - functional2
@@ -1359,6 +1372,10 @@ security_and_privacy:
     splits:
     - functional2
   test_private_session_history_exclusion:
+    result: pass
+    splits:
+    - functional2
+  test_etp_toggle_on_off_behavior_private_window:
     result: pass
     splits:
     - functional2
@@ -1571,7 +1588,8 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042107
+    result: unstable
     splits:
     - smoke
     - ci
