@@ -267,7 +267,7 @@ class TrustPanel(BasePage):
                     "count"
                 )
             )
-        except Exception:
+        except TypeError:
             return 0
 
     @BasePage.context_chrome
@@ -277,5 +277,5 @@ class TrustPanel(BasePage):
             return int(
                 self.get_element_args("trustpanel-fingerprinter-count").get("count")
             )
-        except Exception:
+        except TypeError:
             return 0
