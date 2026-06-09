@@ -1553,6 +1553,20 @@ Location: about:preferences#privacy (shadow DOM of dohProviderSelect)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: doh-custom-provider
+Selector Data: "dohCustomProvider"
+Description: moz-input-text host for the custom DoH provider URL field; revealed when the "Custom" option is chosen in the dohProviderSelect menu. Pre-populated with the default provider URL
+Location: about:preferences#privacy - DNS over HTTPS advanced section (Custom mode, Custom provider)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: doh-custom-provider-input
+Selector Data: "input"
+Description: Inner native <input> inside the dohCustomProvider shadow root; used to type the custom DoH provider URL
+Location: about:preferences#privacy (shadow DOM of dohCustomProvider)
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: turn-off-primary-password
 Selector Data: "turnOffPrimaryPassword"
 Description: "Turn off Primary Password" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password
