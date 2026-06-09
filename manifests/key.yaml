@@ -1366,6 +1366,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_etp_toggle_on_off_behavior_private_window:
+    result: pass
+    splits:
+    - functional2
   test_private_window_from_panelui:
     result: pass
     splits:
