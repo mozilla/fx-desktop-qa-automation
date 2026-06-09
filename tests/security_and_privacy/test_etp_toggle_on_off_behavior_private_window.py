@@ -13,18 +13,17 @@ def test_case():
 
 
 def test_etp_toggle_on_off_behavior_private_window(
-    driver: Firefox, trust_panel: TrustPanel
+    driver: Firefox, trust_panel: TrustPanel, panel_ui: PanelUi
 ):
     """
     C2230197 - Font Visibility Protection - verify that Fingerprinting can be disabled/enabled trough the ETP toggle
     """
 
     # Instantiate objects
-    panel = PanelUi(driver)
     test_page = GenericPage(driver, url=TEST_URL)
 
     # Open a private window and switch to it
-    panel.open_and_switch_to_new_window("private")
+    panel_ui.open_and_switch_to_new_window("private")
 
     # Open test page and click on the shield icon
     test_page.open()
