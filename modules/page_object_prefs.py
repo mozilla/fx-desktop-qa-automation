@@ -253,6 +253,7 @@ class AboutPrefs(BasePage):
         "Custom" option first (`select_doh_provider("custom")`), which reveals
         the field.
         """
+        self.element_visible("doh-custom-provider-input")
         custom_input = self.get_element("doh-custom-provider-input")
         custom_input.clear()
         custom_input.send_keys(provider_url)
