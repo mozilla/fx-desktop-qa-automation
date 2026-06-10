@@ -522,7 +522,7 @@ def functional_splits() -> list:
     """Return the functional split names defined in the manifest, sorted.
 
     e.g. ["functional1", "functional2"]. Used to drive coverage-based split
-    selection instead of choosing a split by wall-clock hour.
+    selection instead of choosing a split by time.
     """
     try:
         manifest = TestKey(TEST_KEY_LOCATION)
