@@ -1,9 +1,8 @@
 #!/bin/bash
 # Functional pipeline only. Run from the Check-Beta-Version job.
-# Unlike check_reportable.sh (which emits a single win/mac boolean for the
-# smoke/rc/devedition/l10n flows), this enumerates the functional splits that
-# still lack coverage for each platform on the latest build, so the run jobs can
-# fan out over them via a matrix instead of guessing a split by the hour.
+# Enumerates the functional splits that still lack coverage for each
+# platform on the latest build, so the run jobs can fan out over
+# them via a matrix instead of guessing a split by the hour.
 #
 # Check-Beta-Version.outputs =>
 #  win_splits:   list of functional splits needing Windows coverage, e.g. ["functional1"]

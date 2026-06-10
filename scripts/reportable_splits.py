@@ -1,8 +1,8 @@
 """Print the functional splits that still need coverage for a platform.
 
 Used by both the GitHub (Windows/macOS) and Taskcluster (Linux) functional
-pipelines to choose splits by *coverage* instead of by wall-clock hour, so a
-build that is only briefly "latest" still gets every split covered on every
+pipelines to choose splits by *coverage* instead of by time, so a build
+that is only briefly "latest" still gets every split covered on every
 platform regardless of when each pipeline happens to fire.
 
 Usage:
