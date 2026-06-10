@@ -19,26 +19,22 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("privacy.query_stripping.strip_on_share.enabled", True),
-        ("privacy.query_stripping.enabled", True),
+        ("privacy.query_stripping.enabled", False),
     ]
 
 
 def test_copy_clean_link(driver: Firefox):
     # Open a new tab and load source URL
     nav = Navigation(driver)
-
     nav.type_in_awesome_bar(SOURCE_URL)
 
     # Select URL and copy clean link from address bar
-    time.sleep(1)
     nav.perform_key_combo_chrome(Keys.CONTROL, "l")
-    time.sleep(1)
     nav.context_click_in_awesome_bar()
     nav.context_menu.click_and_hide_menu("context-menu-copy-clean-link")
 
-    # Paste-and-go in a new tab and verify query params are stripped
+    # Paste in a new tab and verify query params are stripped
     nav.open_and_switch_to_new_window("tab")
-    time.sleep(1)
     nav.context_click_in_awesome_bar()
     nav.perform_key_combo_chrome(Keys.CONTROL, "v")
     with driver.context(driver.CONTEXT_CHROME):
