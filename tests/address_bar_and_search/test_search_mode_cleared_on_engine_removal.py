@@ -13,8 +13,8 @@ def test_case():
 
 def test_search_mode_cleared_on_engine_removal(driver):
     """
-    C3028844 - Verify that removing a search engine from about:preferences#search clears search mode if that engine
-    is currently selected in search mode in a different tab.
+    C3028844 - Verify that removing a search engine from about:preferences#search
+    clears search mode if that engine is currently selected in search mode in a different tab.
     """
     # Instantiate objects
     nav = Navigation(driver)
@@ -23,10 +23,10 @@ def test_search_mode_cleared_on_engine_removal(driver):
 
     # Enter search mode for the desired search engine in a new tab
     nav.open_and_switch_to_new_window("tab")
-    nav.open_usb_and_select_option(SEARCH_ENGINE)
+    nav.set_search_mode(SEARCH_ENGINE)
 
     # Verify search mode is entered for the corresponding engine
-    nav.verify_search_mode_is_visible()
+    nav.verify_search_mode_is_visible(SEARCH_ENGINE)
 
     # In another tab, remove that search engine from about:preferences#search
     nav.open_and_switch_to_new_window("tab")
@@ -36,4 +36,4 @@ def test_search_mode_cleared_on_engine_removal(driver):
 
     # Return to the first tab and verify search mode is cleared
     tabs.click_tab_by_index(1)
-    nav.verify_search_mode_is_not_visible()
+    nav.verify_search_mode_is_not_visible(SEARCH_ENGINE)

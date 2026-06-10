@@ -91,8 +91,12 @@ def test_third_party_content_private_browsing_tracking_statuses(
     trust_panel.wait_for_trackers()
 
     # Assert the various statuses, ensure that the correct one is displayed
-    block_status = tracker_website.get_element("simulated-tracker-block-status")
-    load_status = tracker_website.get_element("simulated-tracker-load-status")
+    block_status = tracker_website.get_element(
+        "simulated-third-party-tracker-block-status"
+    )
+    load_status = tracker_website.get_element(
+        "simulated-first-party-tracker-load-status"
+    )
     dnt_status = tracker_website.get_element("simulated-tracker-dnt-status")
 
     assert "hidden" not in block_status.get_attribute("class")

@@ -50,8 +50,8 @@ def test_suggestions_for_empty_query_not_shown_in_search_mode(driver: Firefox):
     # Switch to eBay (empty query)
     nav.open_and_switch_to_new_window("tab")
     nav.clear_awesome_bar()
-    nav.click_search_mode_switcher()
     nav.set_search_mode("eBay")
+    nav.click_in_awesome_bar()
 
     # Verify there are no suggestions for an empty query in DuckDuckGo mode
     has_no_external_suggestions = nav.verify_no_external_suggestions(
@@ -64,12 +64,12 @@ def test_suggestions_for_empty_query_not_shown_in_search_mode(driver: Firefox):
     # --- Step 3: New tab + Ctrl/Cmd+K; verify no dropdown history is shown
     nav.open_and_switch_to_new_window("tab")
     nav.clear_awesome_bar()
+    nav.click_in_awesome_bar()
 
-    actions = ActionChains(driver)
     if sys.platform == "darwin":
-        actions.key_down(Keys.COMMAND).send_keys("k").key_up(Keys.COMMAND).perform()
+        nav.actions.key_down(Keys.COMMAND).send_keys("k").key_up(Keys.COMMAND).perform()
     else:
-        actions.key_down(Keys.CONTROL).send_keys("k").key_up(Keys.CONTROL).perform()
+        nav.actions.key_down(Keys.CONTROL).send_keys("k").key_up(Keys.CONTROL).perform()
 
     has_no_external_suggestions = nav.verify_no_external_suggestions(
         text="", search_mode="awesome", max_rows=0

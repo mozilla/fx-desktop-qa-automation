@@ -19,5 +19,10 @@
         "selectorData": "confirmation-hint",
         "strategy": "id",
         "groups": ["doNotCache"]
+    },
+    "sidebar-box": {
+        "selectorData": "sidebar-box",
+        "strategy": "id",
+        "groups": ["doNotCache"]
     }
 }

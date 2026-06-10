@@ -9,7 +9,7 @@ import sys
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
-from modules.testrail import TestRail
+from modules.testrail import TESTRAIL_STATUS, TestRail
 from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
@@ -429,6 +429,13 @@ def reportable(platform_to_test=None):
         )
         return True
 
+    logging.warning(
+        f"[diag] matched plan id={this_plan.get('id')} "
+        f"name={this_plan.get('name')!r} "
+        f"milestone_id={this_plan.get('milestone_id')} "
+        f"entries={len(this_plan.get('entries') or [])}"
+    )
+
     platform_name = ctx["platform_name"]
     plan_entries = this_plan.get("entries") or []
 
@@ -470,10 +477,22 @@ def reportable(platform_to_test=None):
         return False
 
     covered_suites = []
+    matched_runs = []
     for entry in plan_entries:
-        for run_ in entry.get("runs"):
-            if run_.get("config") and platform_name in run_.get("config"):
+        for run_ in entry.get("runs") or []:
+            cfg = run_.get("config")
+            if cfg and platform_name in cfg:
                 covered_suites.append(str(run_.get("suite_id")))
+                matched_runs.append((run_.get("id"), run_.get("suite_id"), cfg))
+
+    if matched_runs:
+        logging.warning(
+            f"[diag] {platform_name} coverage from {len(matched_runs)} run(s):"
+        )
+        for run_id, suite_id, cfg in matched_runs:
+            logging.warning(
+                f"[diag]   run_id={run_id} suite_id={suite_id} config={cfg!r}"
+            )
 
     if not covered_suites:
         logging.warning(
@@ -564,13 +583,15 @@ def mark_results(testrail_session: TestRail, test_results):
                 all_test_cases.append(result.get("test_case"))
                 all_durations.append(result.get("duration"))
 
-            # Don't set passed tests to another status.
+            # Never downgrade a result — skip if the new category is less severe.
             test_cases_ids = []
             durations = []
             for i, test_case in enumerate(all_test_cases):
-                if current_results.get(test_case) != 1:
-                    test_cases_ids.append(test_case)
-                    durations.append(all_durations[i])
+                current_severity = current_results.get(test_case, 0)
+                if TESTRAIL_STATUS[category] < current_severity:
+                    continue
+                test_cases_ids.append(test_case)
+                durations.append(all_durations[i])
             logging.warning(
                 f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
             )

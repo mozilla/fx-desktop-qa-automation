@@ -51,6 +51,16 @@
         "strategy": "class",
         "groups": []
     },
+    "context-open-new-tab": {
+        "selectorData": "context_openANewTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "toolbar-context-open-new-tab": {
+        "selectorData": "toolbar-context-openANewTab",
+        "strategy": "id",
+        "groups": []
+    },
     "context-move-tab-to-new-group": {
         "selectorData": "context_moveTabToNewGroup",
         "strategy": "id",
@@ -203,6 +213,11 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-search-image-with-lens": {
+        "selectorData": "context-visual-search",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-copy": {
         "selectorData": "context-copy",
         "strategy": "id",
@@ -210,6 +225,16 @@
     },
     "context-menu-paste": {
         "selectorData": "context-paste",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-cut": {
+        "selectorData": "context-cut",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-menu-delete-in-form": {
+        "selectorData": "context-delete",
         "strategy": "id",
         "groups": []
     },
@@ -300,6 +325,11 @@
     },
     "context-menu-toggle-mute-tab": {
         "selectorData": "context_toggleMuteTab",
+        "strategy": "id",
+        "groups": []
+    },
+    "context-ask-chat": {
+        "selectorData": "context_askChat",
         "strategy": "id",
         "groups": []
     }

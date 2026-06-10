@@ -168,5 +168,19 @@
     "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
     "strategy": "css",
     "groups": []
+  },
+  "insecure-login-warning": {
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='insecureWarning']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "insecure-login-warning-text": {
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='insecureWarning'] .ac-title-text",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
   }
 }

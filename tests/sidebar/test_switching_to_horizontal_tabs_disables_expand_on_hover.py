@@ -11,7 +11,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("sidebar.revamp", True), ("sidebar.expandOnHover", True)]
+    return [("sidebar.expandOnHover", True)]
 
 
 def test_switching_to_horizontal_tabs_disables_expand_on_hover(driver: Firefox):

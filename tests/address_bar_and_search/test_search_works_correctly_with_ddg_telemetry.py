@@ -4,7 +4,7 @@ import pytest
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation
-from modules.page_object_about_pages import AboutTelemetry
+from modules.page_object import AboutTelemetry
 from modules.util import Utilities
 
 WEBSITE_ADDRESS = "https://www.mozilla.com"
@@ -24,9 +24,7 @@ def test_search_works_correctly_with_ddg_telemetry(driver):
     telemetry = AboutTelemetry(driver)
     util = Utilities()
 
-    # Step 1: Go to the website and select DuckDuckGo as a search engine
-    driver.get(WEBSITE_ADDRESS)
-    nav.click_search_mode_switcher()
+    # Step 1: Select DuckDuckGo as a search engine (no need to open another site)
     nav.set_search_mode(SEARCH_ENGINE)
 
     # Step 2: Perform the search
@@ -69,7 +67,6 @@ def test_search_works_correctly_with_ddg_telemetry(driver):
     # Step 4: Go back to the search engine, perform another search, click on the first result, and go back
     driver.get("about:newtab")
     nav.clear_awesome_bar()
-    nav.click_search_mode_switcher()
     nav.set_search_mode(SEARCH_ENGINE)
     nav.search(SEARCH_TERM2)
     time.sleep(1)

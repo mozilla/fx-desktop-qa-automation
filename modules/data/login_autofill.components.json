@@ -1,76 +1,106 @@
 {
-    "input-field": {
-        "selectorData": "input[autocomplete='{name}']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "username-field": {
-        "selectorData": "input[placeholder='username']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "submit-form": {
-        "selectorData": "input[value='Log In']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "save-login-popup": {
-        "selectorData": "notification-popup",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "facebook-credentials": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
-        "strategy": "css",
-        "groups": []
-    },
-    "username-login-field": {
-        "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='username']",
-        "strategy": "xpath",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "password-login-field": {
-        "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='current-password']",
-        "strategy": "xpath",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "submit-button-login": {
-        "selectorData": "/html/body/div[1]/form[2]/input[3]",
-        "strategy": "xpath",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "generated-securely-password": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
-        "strategy": "css",
-        "groups": []
-    },
-    "bsky-credentials": {
-        "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
-        "strategy": "css",
-        "groups": []
-    },
-    "mozilla-github-credentials": {
-        "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='testUser']",
-        "strategy": "css",
-        "groups": []
-    },
-    "password-signup-field": {
-        "selectorData": "input[placeholder='new-password']",
-        "strategy": "css",
-        "groups": []
-    }
+  "input-field": {
+    "selectorData": "input[autocomplete='{name}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "username-field": {
+    "selectorData": "input[placeholder='username']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "submit-form": {
+    "selectorData": "input[value='Log In']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "save-login-popup": {
+    "selectorData": "notification-popup",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "facebook-credentials": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
+    "strategy": "css",
+    "groups": []
+  },
+  "username-login-field": {
+    "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='username']",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "password-login-field": {
+    "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='current-password']",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "submit-button-login": {
+    "selectorData": "/html/body/div[1]/form[2]/input[3]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "generated-securely-password": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
+    "strategy": "css",
+    "groups": []
+  },
+  "bsky-credentials": {
+    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
+    "strategy": "css",
+    "groups": []
+  },
+  "mozilla-github-credentials": {
+    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='testUser']",
+    "strategy": "css",
+    "groups": []
+  },
+  "password-signup-field": {
+    "selectorData": "input[placeholder='new-password']",
+    "strategy": "css",
+    "groups": []
+  },
+  "reddit-username-parent": {
+    "selectorData": "faceplate-text-input[name='username']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "reddit-username-field": {
+    "selectorData": "input[name='username']",
+    "strategy": "css",
+    "shadowParent": "reddit-username-parent",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "reddit-password-parent": {
+    "selectorData": "faceplate-text-input[name='password']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "reddit-password-field": {
+    "selectorData": "input[name='password']",
+    "strategy": "css",
+    "shadowParent": "reddit-password-parent",
+    "groups": [
+      "doNotCache"
+    ]
+  }
 }

@@ -44,14 +44,11 @@ def test_disable_websearch_from_awesome_bar(driver):
     nav.open_and_switch_to_new_window("tab")
 
     # Select Wikipedia from USB
-    nav.open_usb_and_select_option(ENGINE_NAME)
+    nav.set_search_mode(ENGINE_NAME)
 
     # Perform a normal search
     nav.search(SEARCH_TERM)
 
     # Wait for Wikipedia page to load — use URL for reliability
-    wait = WebDriverWait(driver, 10)
-    wait.until(lambda d: "wikipedia" in d.current_url.lower())
-
-    # Address bar contains "wikipedia"
-    assert "wikipedia" in nav.get_awesome_bar_text().lower()
+    nav.title_contains("Wikipedia")
+    nav.url_contains("wikipedia")

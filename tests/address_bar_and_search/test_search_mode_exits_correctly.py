@@ -23,13 +23,13 @@ def test_search_mode_exits_correctly(driver: Firefox):
 
     # In a new tab, focus the urlbar, type some text and choose an engine from the USB
     nav.type_in_awesome_bar(TEXT)
-    nav.open_usb_and_select_option(SEARCH_ENGINE)
+    nav.set_search_mode(SEARCH_ENGINE)
 
     # Check that the search engine is shown
-    nav.verify_engine_returned(SEARCH_ENGINE)
+    nav.verify_search_mode_is_visible(SEARCH_ENGINE)
 
     # Hover over the engine name and click on the close button
     nav.click_exit_button_searchmode()
 
     # Check that search mode is exited and new suggestions(default engine) are returned
-    nav.verify_engine_returned(DEFAULT_ENGINE)
+    nav.verify_search_mode_is_visible(DEFAULT_ENGINE)

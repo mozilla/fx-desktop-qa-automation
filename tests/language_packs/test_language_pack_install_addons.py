@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.components.dropdown import Dropdown
 from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages
 
 
@@ -12,57 +11,52 @@ def test_case():
 
 LANGUAGES = [
     (
-        "Italiano",
         "LanguageTools-table-row LanguageTools-lang-it",
         "it",
+        "Lingua",
     )
 ]
 
 
-@pytest.mark.parametrize("drop_down_name, language_label, shortform", LANGUAGES)
+@pytest.mark.parametrize("language_label, shortform, localized_text", LANGUAGES)
 def test_language_pack_install_from_addons(
     driver: Firefox,
-    amo_languages: AmoLanguages,
-    about_addons: AboutAddons,
-    about_prefs: AboutPrefs,
-    drop_down_name: str,
     language_label: str,
     shortform: str,
+    localized_text: str,
 ):
     """
     C1549408: verify that installing a language pack from about:addons will correctly change the locale
     """
+    # Instantiate objects
+    amo_languages = AmoLanguages(driver)
+    about_addons = AboutAddons(driver)
+    about_prefs = AboutPrefs(driver, category="paneLanguages")
+
     amo_languages.open()
 
-    # ensuring the page was loaded
+    # Ensuring the page was loaded
     amo_languages.wait_for_language_page_to_load()
 
-    # grab the appropriate link and wait until the page is loaded
+    # Grab the appropriate link and wait until the page is loaded
     amo_languages.find_language_row_and_navigate(language_label)
     amo_languages.click_on("language-addons-subpage-add-to-firefox")
 
     amo_languages.confirm_language_install_popup()
 
-    # ensure that the about:addons has the language listed
+    # Ensure that the about:addons has the language listed
     about_addons.open()
     about_addons.choose_sidebar_option("locale")
     addon_language_cards = about_addons.get_language_addon_list()
 
-    # making sure that 1 language was installed
+    # Making sure that 1 language was installed
     assert len(addon_language_cards) == 1
 
-    # perform language changing and assertions in about_prefs
+    # Perform language changing and locale-applied assertion in about_prefs
     about_prefs.open()
-    language_dropdown = about_prefs.get_element("language-dropdown")
+    about_prefs.set_alternative_language(shortform)
 
-    dropdown = Dropdown(page=about_prefs, root=language_dropdown)
-    # prefs-html-root[lang] and language-set-alternative-button[label] checks were removed
-    # as they were flaky on macOS; wait_for_selection with expected_root_value is used instead
-    assert dropdown.select_option(
-        drop_down_name,
-        double_click=False,
-        wait_for_selection=True,
-        expected_root_value=shortform,
-    ), f"Language option '{drop_down_name}' not found in dropdown"
-
-    assert language_dropdown.get_attribute("label") == drop_down_name
+    about_prefs.open()
+    about_prefs.element_attribute_contains(
+        "browser-language-heading", "label", localized_text
+    )

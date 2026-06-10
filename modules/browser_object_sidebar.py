@@ -1,3 +1,5 @@
+from selenium.webdriver import ActionChains
+
 from modules.page_base import BasePage
 
 
@@ -104,6 +106,34 @@ class Sidebar(BasePage):
             "return search(cd);"
         )
 
+    def _exec_on_element_by_l10n_id(self, l10n_id: str, js_on_element: str):
+        """Find a customize-panel element by exact data-l10n-id and evaluate js_on_element on it.
+
+        General-purpose version of _exec_on_vertical_tab_element. l10n_id is passed as a JS
+        argument to avoid string injection; js_on_element is a developer-controlled code expression
+        concatenated at call time. Returns null if the panel is not ready or the element is not found.
+
+        Must be called from within a @BasePage.context_chrome method.
+        """
+        return self.driver.execute_script(
+            "const l10nId = arguments[0];"
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "if (!cd || cd.readyState !== 'complete') return null;"
+            "function search(root) {"
+            "  const el = root.querySelector('[data-l10n-id=\"' + l10nId + '\"]');"
+            "  if (el) return " + js_on_element + ";"
+            "  for (const host of root.querySelectorAll('*')) {"
+            "    if (host.shadowRoot) {"
+            "      const r = search(host.shadowRoot);"
+            "      if (r !== null) return r;"
+            "    }"
+            "  }"
+            "  return null;"
+            "}"
+            "return search(cd);",
+            l10n_id,
+        )
+
     @BasePage.context_chrome
     def expect_vertical_tabs_checkbox_visible(self):
         """Verify that the Vertical tabs checkbox is displayed in the Sidebar settings section of the customize panel."""
@@ -144,6 +174,53 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def click_expand_on_hover_in_panel(self) -> BasePage:
+        """Click the 'Expand sidebar on hover' checkbox in the Customize Sidebar panel."""
+        self.wait.until(
+            lambda _: self._exec_on_element_by_l10n_id(
+                "expand-sidebar-on-hover", "(el.click(), true)"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_move_sidebar_to_right_in_panel(self) -> BasePage:
+        """Click the 'Move sidebar to the right' checkbox in the Customize Sidebar panel."""
+        self.wait.until(
+            lambda _: self._exec_on_element_by_l10n_id(
+                "sidebar-show-on-the-right", "(el.click(), true)"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def get_sidebar_strip_width(self) -> float:
+        """Return the current rendered width of the sidebar-main element in pixels."""
+        return self.driver.execute_script(
+            "return document.querySelector('sidebar-main')?.getBoundingClientRect().width ?? 0;"
+        )
+
+    @BasePage.context_chrome
+    def expect_sidebar_strip_collapsed(self):
+        """Wait until the sidebar strip width has stabilized to its collapsed state.
+
+        Polls until two consecutive readings (500 ms apart) return the same non-zero
+        width, ensuring any panel-close animation has finished before the caller
+        proceeds to measure a baseline width.
+        """
+        last: list[float | None] = [None]
+
+        def _stable(_):
+            w = self.get_sidebar_strip_width()
+            if w > 0 and w == last[0]:
+                return True
+            last[0] = w
+            return False
+
+        self.wait.until(_stable)
+        return self
+
+    @BasePage.context_chrome
     def expect_expand_on_hover_unavailable(self):
         """Wait until the expand-on-hover option is no longer available.
 
@@ -175,6 +252,163 @@ class Sidebar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def close_ai_chat_panel(self):
+        """Close the AI chat sidebar using Firefox's SidebarController.
+
+        The panel DOM structure differs between the onboarding and active-chat views, making
+        a CSS selector for the Close button unreliable. Calling SidebarController.hide()
+        directly is version-independent and avoids traversing nested shadow DOM.
+        """
+        self.driver.execute_script(
+            "if (typeof SidebarController !== 'undefined') SidebarController.hide();"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const box = document.getElementById('sidebar-box');"
+                "return !box || box.hidden || "
+                "box.getAttribute('sidebarcommand') !== 'viewGenaiChatSidebar';"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_chat_panel_open(self):
+        """Verify the AI chat panel is loaded in the sidebar by checking for the onboarding root."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "return cd?.readyState === 'complete' && "
+                "Boolean(cd?.querySelector('#multi-stage-message-root'));"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_providers_displayed(self):
+        """Verify that AI provider radio options are shown in the chatbot onboarding panel."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelectorAll('input[type=\"radio\"]').length > 0;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def select_first_ai_provider(self):
+        """Select the first AI provider via its label and confirm with the Continue button.
+
+        The radio inputs are sr-only so the enclosing label must be clicked instead.
+        Waits until the onboarding screen is gone, confirming the provider was saved.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelector('label.select-item') !== null;"
+            )
+        )
+        self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "cd?.querySelector('label.select-item')?.click();"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.querySelector('button[value=\"primary_button\"]') !== null;"
+            )
+        )
+        self.driver.execute_script(
+            "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+            "cd?.querySelector('button[value=\"primary_button\"]')?.click();"
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "if (cd.querySelector('#multi-stage-message-root')) return false;"
+                "try { return !!Services.prefs.getStringPref('browser.ml.chat.provider', ''); }"
+                "catch(e) { return false; }"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_chat_sidebar_open(self):
+        """Verify the sidebar is open and showing the AI Chat panel."""
+        self.element_attribute_contains(
+            "sidebar-box", "sidebarcommand", "viewGenaiChatSidebar"
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_summarize_button_visible(self):
+        """Verify the Summarize page button is visible in the AI Chat panel.
+
+        The button lives inside <browser id="sidebar">'s contentDocument (chrome://browser/content/genai/chat.html).
+        Selenium has no API to switch into an embedded XUL <browser> element, so JS is used to access
+        contentDocument and query the button directly.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "return cd.getElementById('summarize-button') !== null;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def open_ai_chat_panel(self):
+        """Open the AI Chat panel by clicking its moz-button inside <sidebar-main>'s shadow root — JS is required because Selenium has no API to pierce shadow roots."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const btn = Array.from("
+                "  document.querySelector('sidebar-main')?.shadowRoot"
+                "  ?.querySelectorAll('moz-button') || []"
+                ").find(b => b.getAttribute('view') === 'viewGenaiChatSidebar');"
+                "if (btn) { btn.click(); return true; }"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_summarize_button(self):
+        """Click #summarize-button inside <browser id="sidebar">'s contentDocument — JS is required because Selenium has no API to switch into an embedded XUL <browser> element."""
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "const btn = cd.getElementById('summarize-button');"
+                "if (!btn) return false;"
+                "btn.click(); return true;"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def switch_to_ai_provider(self, provider: str):
+        """Switch AI provider via pref + sidebar reload — the in-panel switcher is a Lit custom component that cannot be driven via a standard <select> interaction."""
+        self.driver.execute_script(
+            "Services.prefs.setStringPref('browser.ml.chat.provider', arguments[0]);"
+            "if (typeof SidebarController !== 'undefined') {"
+            "  SidebarController.hide();"
+            "  SidebarController.show('viewGenaiChatSidebar');"
+            "}",
+            provider,
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const box = document.getElementById('sidebar-box');"
+                "return !!(box && !box.hidden && "
+                "box.getAttribute('sidebarcommand') === 'viewGenaiChatSidebar');"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def click_manage_extensions(self):
         """Click the Manage Extensions link in the Customize Sidebar panel.
 
@@ -188,7 +422,7 @@ class Sidebar(BasePage):
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
                 "if (!cd || cd.readyState !== 'complete') return null;"
                 "function search(root) {"
-                "  const el = root.querySelector('a[data-l10n-id=\"sidebar-manage-extensions\"]');"
+                "  const el = root.querySelector('a[data-l10n-id=\"sidebar-manage-extensions2\"]');"
                 "  if (el) { el.click(); return true; }"
                 "  for (const host of root.querySelectorAll('*')) {"
                 "    if (host.shadowRoot && search(host.shadowRoot)) return true;"
@@ -198,4 +432,71 @@ class Sidebar(BasePage):
                 "return search(cd) || null;"
             )
         )
+        return self
+
+    @BasePage.context_chrome
+    def uncheck_ai_chatbot_in_customize_panel(self):
+        """Uncheck the AI chatbot tool in the Customize Sidebar panel.
+
+        The toggle lives inside the sidebar contentDocument behind nested Lit shadow roots.
+        data-action="viewGenaiChatSidebar" is tried first as the most specific identifier;
+        data-l10n-id containing "genai" is the fallback for builds where data-action is absent.
+        """
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
+                "if (!cd || cd.readyState !== 'complete') return false;"
+                "function search(root) {"
+                "  const el = root.querySelector('[data-action=\"viewGenaiChatSidebar\"]') ||"
+                "              root.querySelector('[data-l10n-id*=\"genai\"]');"
+                "  if (el) { el.click(); return true; }"
+                "  for (const host of root.querySelectorAll('*')) {"
+                "    if (host.shadowRoot) {"
+                "      const r = search(host.shadowRoot);"
+                "      if (r) return r;"
+                "    }"
+                "  }"
+                "  return false;"
+                "}"
+                "return search(cd);"
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_ai_chatbot_absent_from_sidebar_strip(self) -> BasePage:
+        """Verify the AI Chat button is no longer in the sidebar strip.
+
+        After unchecking the chatbot in the Customize Sidebar panel the moz-button with
+        view="viewGenaiChatSidebar" is removed from sidebar-main's shadow root immediately,
+        making this the reliable signal that the setting took effect.
+        """
+        self.wait.until(
+            lambda _: (
+                not self.driver.execute_script(
+                    "return Array.from("
+                    "  document.querySelector('sidebar-main')?.shadowRoot"
+                    "  ?.querySelectorAll('moz-button') || []"
+                    ").some(b => b.getAttribute('view') === 'viewGenaiChatSidebar');"
+                )
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
+    def context_click_ai_chat_button(self):
+        """Right-click the AI Chat moz-button in the sidebar strip to open its context menu.
+
+        JS retrieves the element from <sidebar-main>'s shadow root; ActionChains performs
+        the trusted right-click that triggers Firefox to open the native popup.
+        """
+        btn = self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return Array.from("
+                "  document.querySelector('sidebar-main')?.shadowRoot"
+                "  ?.querySelectorAll('moz-button') || []"
+                ").find(b => b.getAttribute('view') === 'viewGenaiChatSidebar') || null;"
+            )
+        )
+        ActionChains(self.driver).context_click(btn).perform()
         return self

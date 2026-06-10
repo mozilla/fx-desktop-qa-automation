@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -14,7 +12,7 @@ def test_case():
 
 def test_create_new_cc_profile(
     driver: Firefox,
-    about_prefs_privacy: AboutPrefs,
+    about_prefs_payments: AboutPrefs,
     about_prefs: AboutPrefs,
     util: Utilities,
 ):
@@ -27,21 +25,16 @@ def test_create_new_cc_profile(
         util: Utilities instance
     """
     # go to about:preferences#privacy and open Saved Payment Methods
-    about_prefs_privacy.open()
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    about_prefs_payments.open()
 
     # save CC data by using the fake data
     credit_card_sample_data = util.fake_credit_card_data()
 
     # add a new CC profile
-    about_prefs_privacy.click_add_on_dialog_element()
-    about_prefs_privacy.add_entry_to_saved_payments(credit_card_sample_data)
-
-    about_prefs_privacy.open_and_switch_to_saved_payments_popup()
+    about_prefs_payments.add_entry_to_saved_payments(credit_card_sample_data)
 
     # get the saved CC data
-    cc_profiles = about_prefs_privacy.get_all_saved_cc_profiles()
-    cc_info_json = json.loads(cc_profiles[0].get_dom_attribute("data-l10n-args"))
+    cc_info_json = about_prefs_payments.get_data_from_saved_payment()
 
     # compare input CC data with saved CC data
     about_prefs.verify_cc_json(cc_info_json, credit_card_sample_data)

@@ -11,7 +11,8 @@ def test_case():
 
 
 @pytest.fixture()
-def add_to_prefs_list():
+def prefs_list():
+    # Overrides suite default (sidebar.revamp: True) — this test requires sidebar.revamp disabled.
     return [("sidebar.revamp", False)]
 
 
@@ -21,7 +22,7 @@ def test_toggle_sidebar_via_toolbar_button(driver: Firefox):
     Show Sidebar from about:preferences.
     """
     # Instantiate objects
-    about_prefs = AboutPrefs(driver, category="general")
+    about_prefs = AboutPrefs(driver, category="paneTabsBrowsing")
     sidebar = Sidebar(driver)
 
     # Enable Show Sidebar from about:preferences (note that enabling the sidebar auto-opens it)

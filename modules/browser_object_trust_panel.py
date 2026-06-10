@@ -1,5 +1,4 @@
 import json
-import logging
 from time import sleep
 
 from selenium.webdriver.common.by import By
@@ -120,3 +119,143 @@ class TrustPanel(BasePage):
             f"Expected '{expected_technical_details}' but found "
             f"'{technical_details.get_attribute('value')}'"
         )
+
+    @BasePage.context_chrome
+    def click_see_all(self) -> BasePage:
+        """Clicks the "See All" button in the trackers panel"""
+        self.js_click_on("see-all-trackers")
+        return self
+
+    @BasePage.context_chrome
+    def has_detected_tracking_sites(self, *expected_sites) -> bool:
+        """Checks whether the expected tracking domains are detected in the protections popup."""
+        elements = self.get_elements("protections-popup-list-host-label")
+
+        if expected_sites and not elements:
+            return False
+
+        # Extract the "value" attribute from each label element
+        values = [el.get_attribute("value") for el in elements if el]
+
+        for site in expected_sites:
+            if not any(val and val.endswith(site) for val in values):
+                return False
+
+        return True
+
+    @BasePage.context_chrome
+    def not_blocked_trackers_title_displayed_in_subpanel(self, category: str):
+        """
+        Verify that the 'Not Blocking <Category>' title
+        is displayed in the subpanel.
+        """
+        self.element_visible("not-blocking-category", labels=[category.title()])
+        return self
+
+    @BasePage.context_chrome
+    def open_detected_category(self, category: str):
+        """
+        Open a detected tracker category from the protections panel.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        canonical = category.strip().lower().replace(" ", "-")
+        locator = (
+            "detected-category",
+            [f"trustpanel-list-label-{canonical}"],
+        )
+
+        sleep(0.5)
+        self.js_click_on(*locator)
+        return self
+
+    @BasePage.context_chrome
+    def blocked_trackers_title_displayed_in_subpanel(self, category: str):
+        """Verify that the subpanel title for the blocked tracker category is visible."""
+        self.element_visible("blocked-trackers-title", labels=[category.title()])
+        return self
+
+    @BasePage.context_chrome
+    def trustpanel_toggle_on_off(self):
+        """Trust panel toggle button"""
+        self.js_click_on("trustpanel-toggle-button")
+        return self
+
+    @BasePage.context_chrome
+    def trustpanel_status(self, status: str):
+        """
+        Verify Trust Panel ETP status.
+        status: "on" | "off"
+        """
+
+        mapping = {
+            "on": "trustpanel-etp-on",
+            "off": "trustpanel-etp-off",
+        }
+
+        if status not in mapping:
+            raise ValueError("status must be 'on' or 'off'")
+
+        self.element_visible(mapping[status])
+        return self
+
+    @BasePage.context_chrome
+    def click_connection_button(self):
+        """Click the connection section button from the Trust Panel."""
+        self.element_visible("trustpanel-connection-button")
+        self.click_on("trustpanel-connection-button")
+        # Wait for the subview to actually render
+        try:
+            self.element_visible("connection-subview")
+        except TimeoutException:
+            # Retry click
+            self.click_on("trustpanel-connection-button")
+        return self
+
+    @BasePage.context_chrome
+    def connection_not_secure_message_displayed(self):
+        """
+        Verify the 'You are not securely connected to this site.'
+        message is displayed in the connection subpanel.
+        """
+        self.element_visible("connection-not-secure")
+        return self
+
+    @BasePage.context_chrome
+    def connection_secure_message_displayed(self):
+        """
+        Verify the 'You are securely connected to this site.'
+        message is displayed in the connection subpanel.
+        """
+        self.element_visible("connection-secure")
+        return self
+
+    @BasePage.context_chrome
+    def click_privacy_settings_link(self):
+        """Click the 'Privacy Settings' footer link in the Trust Panel."""
+        self.element_visible("trustpanel-privacy-link")
+        self.js_click_on("trustpanel-privacy-link")
+        return self
+
+    @BasePage.context_chrome
+    def clear_cookies_site_data_via_panel(self):
+        """Clear cookies and site data for the current site via the Trust Panel."""
+        self.js_click_on("clear-cookies-button")
+        self.js_click_on("clear-button")
+        return self
+
+    @BasePage.context_chrome
+    def panel_is_dismissed(self):
+        """Verify the Trust Panel is closed via its state attribute."""
+        panel = self.get_element("trustpanel")
+        self.expect(lambda _: panel.get_attribute("state") == "closed")
+        return self
+
+    @BasePage.context_chrome
+    def click_subview_back_button(self):
+        """Click the back arrow to return from a subview to the main Trust Panel."""
+        self.element_visible("trustpanel-subview-back-button")
+        sleep(0.5)  # "visible" in trustpanel doesn't mean what it seems to
+        self.js_click_on("trustpanel-subview-back-button")
+        self.element_attribute_is("trustpanel", "mainviewshowing", "true")
+        return self

@@ -22,12 +22,12 @@ def test_case():
 @pytest.mark.parametrize("search_engine", SEARCH_ENGINES)
 def test_search_engine_selector_and_validator(driver: Firefox, search_engine: str):
     """
-    C1365151 - Select appropriate search engine from the Awesomebar and verify the correct engine is used.
+    C1365151 - Select appropriate search engine from the Awesomebar and
+    verify the correct engine is used.
     """
     nav = Navigation(driver)
 
     expected_url_fragment = search_engine.split()[0].lower()
-    nav.click_search_mode_switcher()
     nav.set_search_mode(search_engine)
 
     nav.search(SEARCH_TERM)

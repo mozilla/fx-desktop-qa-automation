@@ -12,13 +12,13 @@ TEST_PAGE_TITLE = "Home - Oregon State Parks"
 
 
 @pytest.fixture()
-def hard_quit():
-    return True
+def test_case():
+    return "2084639"
 
 
 @pytest.fixture()
-def test_case():
-    return "2084639"
+def hard_quit():
+    return True
 
 
 @pytest.fixture()

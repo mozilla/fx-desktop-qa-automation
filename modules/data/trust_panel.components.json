@@ -83,5 +83,161 @@
         "groups": [
             "doNotCache"
         ]
+    },
+    "see-all-trackers-parent": {
+        "selectorData": "trustpanel-blocker-see-all",
+        "strategy": "id",
+        "groups": []
+    },
+    "see-all-trackers": {
+        "selectorData": "main-button",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "see-all-trackers-parent"
+    },
+    "protections-popup-list-host-label": {
+        "selectorData": ".protections-popup-list-host-label",
+        "strategy": "css",
+        "groups": []
+    },
+    "not-blocking-category": {
+        "selectorData": "panelview[title='Not Blocking {}']",
+        "strategy": "css",
+        "groups": []
+    },
+    "detected-category": {
+        "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
+        "strategy": "css",
+        "groups": []
+    },
+    "blocked-trackers-title": {
+        "selectorData": "panelview[title='{} Blocked']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-toggle-parent": {
+        "selectorData": "trustpanel-toggle",
+        "strategy": "id",
+        "groups": []
+    },
+    "trustpanel-toggle-button": {
+        "selectorData": "input",
+        "strategy": "id",
+        "groups": [],
+        "shadowParent": "trustpanel-toggle-parent"
+    },
+    "trustpanel-etp-off": {
+        "selectorData": "//*[@id='trustpanel-header' and text()='You turned off protections']",
+        "strategy": "xpath",
+        "groups": []
+    },
+    "trustpanel-etp-on": {
+        "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
+        "strategy": "xpath",
+        "groups": []
+    },
+    "connection-not-secure": {
+        "selectorData": "[data-l10n-id='identity-connection-not-secure-security-view']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-connection-button": {
+        "selectorData": "trustpanel-connection-label",
+        "strategy": "id",
+        "groups": []
+    },
+    "connection-subview": {
+        "selectorData": ".identity-popup-security-connection.identity-popup-section",
+        "strategy": "css",
+        "groups": []
+    },
+    "connection-secure": {
+        "selectorData": "[data-l10n-id='identity-connection-verified']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-security-information-view": {
+        "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
+        "strategy": "css",
+        "groups": []
+    },
+    "identity-popup-content-verifier": {
+        "selectorData": "#identity-popup-content-verifier",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-privacy-link": {
+        "selectorData": "trustpanel-privacy-link",
+        "strategy": "id",
+        "groups": []
+    },
+    "trustpanel-connection-label-insecure": {
+        "selectorData": "[data-l10n-id='trustpanel-connection-label-insecure']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-insecure-section-header": {
+        "selectorData": "[data-l10n-id='trustpanel-insecure-section-header']",
+        "strategy": "css",
+        "groups": []
+    },
+    "site-icon": {
+        "selectorData": "trustpanel-popup-icon",
+        "strategy": "id",
+        "groups": []
+    },
+    "site-domain": {
+        "selectorData": "trustpanel-popup-host",
+        "strategy": "id",
+        "groups": []
+    },
+    "connection-icon": {
+        "selectorData": "trustpanel-connection-icon",
+        "strategy": "id",
+        "groups": []
+    },
+    "purple-card": {
+        "selectorData": "trustpanel-graphic-section",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-button": {
+        "selectorData": "trustpanel-clear-cookie-clear",
+        "strategy": "id",
+        "groups": ["doNotCache"]
+    },
+    "shield-icon-disabled": {
+        "selectorData": "#trust-icon-container.inactive",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "trustpanel-header-enabled": {
+        "selectorData": "[data-l10n-id='trustpanel-header-enabled']",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-tracking-protection-disabled": {
+        "selectorData": "#trustpanel-popup[tracking-protection='disabled']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "trustpanel-subview-back-button": {
+        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+        "strategy": "css",
+        "groups": []
     }
 }

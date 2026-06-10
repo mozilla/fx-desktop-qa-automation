@@ -43,7 +43,7 @@ def zoom_pdf_viewer(pdf_viewer: GenericPdf, control: str, input_type: str):
     Arguments:
         control: zoom controls
         pdf_viewer: instance of GenericPdf with correct path.
-        input_type: Keys or Tool
+        input_type: Keys or Tools
     """
     pdf_zoom = {
         "zoom_out": pdf_viewer.zoom_out_keys
@@ -53,24 +53,14 @@ def zoom_pdf_viewer(pdf_viewer: GenericPdf, control: str, input_type: str):
         if input_type == "Keys"
         else pdf_viewer.zoom_in_toolbar,
     }
-    body = pdf_viewer.get_element("pdf-body")
-    before_scale_factor = float(body.value_of_css_property("--scale-factor"))
+
+    before_scale_factor = float(
+        pdf_viewer.pdf_body.value_of_css_property("--scale-factor")
+    )
 
     if control == "out":
         pdf_zoom["zoom_out"]()
-        pdf_viewer.wait.until(
-            lambda _: (
-                float(body.value_of_css_property("--scale-factor"))
-                < before_scale_factor
-            )
-        )
-        assert float(body.value_of_css_property("--scale-factor")) < before_scale_factor
+        pdf_viewer.expect_scale_factor_less_than(before_scale_factor)
     else:
         pdf_zoom["zoom_in"]()
-        pdf_viewer.wait.until(
-            lambda _: (
-                float(body.value_of_css_property("--scale-factor"))
-                > before_scale_factor
-            )
-        )
-        assert float(body.value_of_css_property("--scale-factor")) > before_scale_factor
+        pdf_viewer.expect_scale_factor_greater_than(before_scale_factor)

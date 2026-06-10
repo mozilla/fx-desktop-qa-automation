@@ -40,5 +40,10 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "search": {
+    "selectorData": "search",
+    "strategy": "id",
+    "groups": ["doNotCache"]
   }
 }

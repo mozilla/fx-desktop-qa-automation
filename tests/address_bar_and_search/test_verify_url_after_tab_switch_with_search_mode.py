@@ -29,7 +29,7 @@ def test_verify_url_after_tab_switch_with_search_mode(driver: Firefox):
 
     # Open another new tab and click History from the USB
     tabs.new_tab_by_button()
-    nav.open_usb_and_select_option(OPTION)
+    nav.set_search_mode(OPTION, local=True)
 
     # Click the earlier opened tab
     tabs.click_tab_by_index(1)

@@ -20,11 +20,12 @@ def test_https_first_mode_in_private_browsing(
     C1362731 Check that https First Mode is properly enabled and working in Private Browsing
     """
 
-    # Navigate to the HTTP Site in a Private Window
+    # In the about:preferences#privacy section, check the "Enable HTTPS-Only Mode in private windows only" checkbox.
     about_prefs_privacy.open()
-    about_prefs_privacy.select_https_only_setting(
-        about_prefs_privacy.HTTPS_ONLY_STATUS.HTTPS_ONLY_PRIVATE
-    )
+    about_prefs_privacy.click_on("doh-advanced-button")
+    about_prefs_privacy.click_on("doh-radio-custom-input")
+
+    # Navigate to the HTTP Site in a Private Window
     panel_ui.open_and_switch_to_new_window("private")
     driver.get("about:blank")
     driver.get(HTTP_SITE)

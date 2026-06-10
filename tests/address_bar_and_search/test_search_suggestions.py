@@ -1,4 +1,5 @@
 import pytest
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object_navigation import Navigation
@@ -14,6 +15,14 @@ RETRY_LIMIT = 10
 @pytest.fixture()
 def test_case():
     return "3029158"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.urlbar.quicksuggest.enabled", True),
+        ("browser.urlbar.suggest.quicksuggest.sponsored", True),
+    ]
 
 
 def test_search_suggests_enabled(driver: Firefox):
@@ -43,14 +52,17 @@ def test_search_suggests_enabled(driver: Firefox):
     # Check for sponsored suggestion
     found_sponsored = False
     retries = 0
+
     while not found_sponsored and retries < RETRY_LIMIT:
         actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
-        with driver.context(driver.CONTEXT_CHROME):
-            found_sponsored = any(
-                item.get_attribute("aria-label") == "Sponsored"
-                for item in nav.get_elements("sponsored-suggestion")
-            )
+        try:
+            nav.wait_for_suggestions_present()
+            found_sponsored = len(nav.get_elements("sponsored-suggestion")) > 0
+        except TimeoutException:
+            pass
+
         retries += 1
+
     assert found_sponsored, (
         f"No sponsored suggestion found after {RETRY_LIMIT} retries."
     )
@@ -60,15 +72,16 @@ def test_search_suggests_enabled(driver: Firefox):
     retries = 0
     while not found_non_sponsored and retries < RETRY_LIMIT:
         actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
-        with driver.context(driver.CONTEXT_CHROME):
-            try:
-                nav.get_element("firefox-suggest")
-                titles = nav.get_elements("suggestion-titles")
-                found_non_sponsored = any("Wikipedia" in title.text for title in titles)
-                break
-            finally:
-                retries = +1
-                continue
+        try:
+            nav.wait_for_suggestions_present()
+            nav.get_element("firefox-suggest")
+            entries = nav.get_elements("firefox-suggest")
+            found_non_sponsored = any("Wikipedia" in entry.text for entry in entries)
+        except (NoSuchElementException, TimeoutException):
+            pass
+
+        retries += 1
+
     assert found_non_sponsored, (
         f"Non-sponsored suggestion not found after {RETRY_LIMIT} retries."
     )
