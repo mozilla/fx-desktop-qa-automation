@@ -37,5 +37,5 @@ def test_copy_clean_link(driver: Firefox):
     nav.context_click_in_awesome_bar()
     nav.perform_key_combo_chrome(Keys.CONTROL, "v")
     with driver.context(driver.CONTEXT_CHROME):
-            pasted_url = driver.find_element(By.ID, "urlbar-input").get_attribute("value")
+        pasted_url = driver.find_element(By.ID, "urlbar-input").get_attribute("value")
     assert pasted_url == EXPECTED_URL
