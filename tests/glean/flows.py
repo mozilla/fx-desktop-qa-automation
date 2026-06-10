@@ -1,4 +1,3 @@
-import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import ContextMenu, Glean, Navigation, TabBar
@@ -96,6 +95,25 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     newtab.click_on("incontent-search-input")
     nav.set_awesome_bar()
     nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
+
+
+@_entry("unknown")
+def _entry_unknown(driver: Firefox, search_term: str, params: dict = None):
+    """Submit a urlbar search with Alt+Shift+Enter so the SERP opens in a new tab. Firefox cannot
+    attribute the originating surface for a SERP opened this way, so it records source='unknown'."""
+    # Instantiate objects
+    page = GenericPage(driver, url="about:newtab")
+    nav = Navigation(driver)
+    tabs = TabBar(driver)
+
+    # Open a new tab and submit the search into a new tab via Alt+Shift+Enter
+    page.open()
+    nav.search_in_new_tab_via_keyboard(search_term)
+
+    # Switch to the SERP tab so it loads in the foreground and the impression is recorded
+    tabs.wait_for_num_tabs(2)
+    tabs.switch_to_new_tab()
+    page.url_contains(search_term)
 
 
 @_entry("contextmenu")
@@ -210,6 +228,32 @@ def _action_reload(driver: Firefox, params: dict = None):
     page.url_contains(SEARCH_TERM)
 
 
+@_action("tabhistory")
+def _action_tabhistory(driver: Firefox, params: dict = None):
+    """Leave the SERP for another page, then return to it via the back button so Firefox
+    records a fresh impression with source='tabhistory'.
+
+    Navigating to a stable page rather than clicking an engine-specific search result keeps the
+    flow engine-agnostic: the tabhistory attribution comes from the back navigation, not from how
+    we left the SERP.
+    """
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+
+    # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP
+    # telemetry context before we leave; otherwise the back navigation is attributed as source='unknown'
+    page.url_contains(SEARCH_TERM)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Leave the SERP for another page (creating a forward history entry), then return to the
+    # SERP via tab history
+    ExamplePage(driver).open()
+    nav.click_back_button()
+    page.url_contains(SEARCH_TERM)
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -218,8 +262,6 @@ def _action_reload(driver: Firefox, params: dict = None):
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
     """Look up and execute the registered entry flow by name."""
     params = params or {}
-    if entry == "unknown":
-        pytest.skip("'unknown' source is not automatable")
     if entry not in _ENTRIES:
         raise NotImplementedError(f"Entry '{entry}' is not implemented")
     _ENTRIES[entry](driver, search_term, params)
