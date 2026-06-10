@@ -332,5 +332,10 @@
         "selectorData": "context_askChat",
         "strategy": "id",
         "groups": []
+    },
+    "context-menu-copy-clean-link": {
+        "selectorData": "strip-on-share",
+        "strategy": "id",
+        "groups": []
     }
 }
