@@ -3,7 +3,6 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation
-import time
 from selenium.webdriver.common.by import By
 
 SOURCE_URL = "https://example.com/?fbclid=1234"
