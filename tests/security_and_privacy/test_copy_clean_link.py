@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
+
 from modules.browser_object import Navigation
 
 SOURCE_URL = "https://example.com/?fbclid=1234"
