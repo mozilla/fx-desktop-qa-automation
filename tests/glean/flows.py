@@ -4,6 +4,10 @@ from modules.browser_object import ContextMenu, Glean, Navigation, TabBar
 from modules.page_object import AboutNewtab, ExamplePage, GenericPage
 
 SEARCH_TERM = "firefox"
+# Commercial query so engines render the related-searches component that open_in_new_tab clicks.
+# Spaces get URL-encoded, so match only the first token when checking the SERP URL.
+RELATED_SEARCH_TERM = "women shoes"
+RELATED_SEARCH_TERM_IN_URL = RELATED_SEARCH_TERM.split()[0]
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
 
@@ -226,6 +230,34 @@ def _action_reload(driver: Firefox, params: dict = None):
     # Reload the page and wait for it to settle
     nav.refresh_page()
     page.url_contains(SEARCH_TERM)
+
+
+@_action("open_in_new_tab")
+def _action_open_in_new_tab(driver: Firefox, params: dict = None):
+    """Ctrl/Cmd+click a related-search shortcut on the SERP so the refined SERP opens in a new
+    background tab, then switch to it so its impression records with source='opened_in_new_tab'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+    shortcut = f"{params['engine'].lower()}-related-search-shortcut"
+
+    # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP telemetry
+    # context before we open the refinement; otherwise the new tab is attributed as source='unknown'
+    page.url_contains(RELATED_SEARCH_TERM_IN_URL)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Ctrl/Cmd+click the related-search shortcut to open the refined SERP in a new background tab
+    page.element_visible(shortcut)
+    page.open_link_in_new_tab_via_modifier_click(shortcut)
+
+    # Switch to the new tab and wait for it to land on a results page. The related search differs
+    # from the seed term and engines encode the query unpredictably (case, punctuation), so we
+    # confirm a search URL (q=) loaded rather than matching the refined term text; the final Glean
+    # poll verifies the impression itself.
+    tabs.wait_for_num_tabs(2)
+    tabs.switch_to_new_tab()
+    page.url_contains("q=")
 
 
 @_action("tabhistory")

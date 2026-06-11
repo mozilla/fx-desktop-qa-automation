@@ -174,5 +174,20 @@
         "selectorData": "input[name='q']",
         "strategy": "css",
         "groups": []
+    },
+    "bing-related-search-shortcut": {
+        "selectorData": "#brsv3 a",
+        "strategy": "css",
+        "groups": []
+    },
+    "duckduckgo-related-search-shortcut": {
+        "selectorData": "a.js-related-searches-link",
+        "strategy": "css",
+        "groups": []
+    },
+    "ecosia-related-search-shortcut": {
+        "selectorData": "a.related-queries__link-bottom",
+        "strategy": "css",
+        "groups": []
     }
 }
