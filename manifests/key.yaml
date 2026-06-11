@@ -477,7 +477,7 @@ bookmarks_and_history:
     - functional1
 downloads:
   test_add_mime_type_doc:
-    codename: DL/g+mime_tp_doc
+    codename: DL/+mime_tp_doc
     comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result:
       linux: unstable
@@ -486,76 +486,76 @@ downloads:
     splits:
     - functional1
   test_add_zip_type:
-    codename: DL/gadd_zip_type
+    codename: DL/add_zip_type
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result: unstable
     splits:
     - functional1
   test_change_download_folder:
-    codename: DL/gchange_dl_dir
+    codename: DL/change_dl_dir
     result: pass
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
-    codename: DL/gcls_bws_dl_prss
+    codename: DL/cls_bws_dl_prss
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026665
     result: unstable
     splits:
     - functional1
   test_delete_download_while_in_progress:
-    codename: DL/gdel_dl_live
+    codename: DL/del_dl_live
     result: pass
     splits:
     - functional1
   test_download_apk_and_check_extension:
-    codename: DL/gdl_apk_chk_ext
+    codename: DL/dl_apk_chk_ext
     result: pass
     splits:
     - functional1
   test_download_epub_shows_extension_in_downloads_panel:
-    codename: DL/gdl_epub_ext
+    codename: DL/dl_epub_ext
     result: pass
     splits:
     - functional1
   test_download_exe_and_check_extesion:
-    codename: DL/gdl_exe_ext
+    codename: DL/dl_exe_ext
     result: pass
     splits:
     - functional1
   test_download_malicious_warning:
-    codename: DL/gdl_malw_warn
+    codename: DL/dl_malw_warn
     result: pass
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    codename: DL/gdl_mp3_chk_ext
+    codename: DL/dl_mp3_chk_ext
     result: pass
     splits:
     - functional1
   test_download_pdf:
-    codename: DL/gdownload_pdf
+    codename: DL/download_pdf
     result: pass
     splits:
     - smoke
     - ci
   test_download_pdf_from_context_menu:
-    codename: DL/gdl_pdf_cxm
+    codename: DL/dl_pdf_cxm
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042660
     result: unstable
     splits:
     - smoke
   test_download_telemetry_recorded:
-    codename: DL/gdl_tm_record
+    codename: DL/dl_tm_record
     result: pass
     splits:
     - functional1
   test_install_unsigned_addons:
-    codename: DL/ginst_!sgn_adds
+    codename: DL/inst_!sgn_adds
     result: pass
     splits:
     - functional1
   test_mixed_content_download_via_https:
-    codename: DL/gmix_ct_dl_Hs
+    codename: DL/mix_ct_dl_Hs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004945
     result:
       linux: pass
@@ -564,28 +564,28 @@ downloads:
     splits:
     - functional1
   test_no_download_telemetry_without_panel:
-    codename: DL/g!dl_tm_wo_pl
+    codename: DL/!dl_tm_wo_pl
     result: pass
     splits:
     - functional1
   test_set_always_ask_file_type:
-    codename: DL/gset_alw_ask_typ
+    codename: DL/set_alw_ask_typ
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result: unstable
     splits:
     - functional1
   test_telemetry_download_and_open:
-    codename: DL/gtm_dl_open
+    codename: DL/tm_dl_open
     result: pass
     splits:
     - functional1
   test_telemetry_pdf_download_open:
-    codename: DL/gtm_pdf_dl_opn
+    codename: DL/tm_pdf_dl_opn
     result: pass
     splits:
     - functional1
   test_verify_telemetry_downloads_panel_open:
-    codename: DL/gvrf_tm_dl_pnl
+    codename: DL/vrf_tm_dl_pnl
     result: pass
     splits:
     - functional1
@@ -1290,13 +1290,13 @@ pocket:
       splits: []
 preferences:
   test_check_for_updates:
-    codename: PREF/gchck_fr_updat
+    codename: PREF/chck_fr_updat
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041395
     result: unstable
     splits:
     - functional2
   test_clear_cookie_data:
-    codename: PREF/gclr_cook_dt
+    codename: PREF/clr_cook_dt
     result:
       linux: pass
       mac: pass
@@ -1304,34 +1304,34 @@ preferences:
     splits:
     - smoke
   test_firefox_home_new_tabs:
-    codename: PREF/gfx_hm_nutabs
+    codename: PREF/fx_hm_nutabs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043953
     result: unstable
     splits:
     - functional2
   test_firefox_home_on_launch:
-    codename: PREF/gfx_hm_launch
+    codename: PREF/fx_hm_launch
     result: pass
     splits:
     - functional2
   test_lang_pack_changed_from_about_prefs:
-    codename: PREF/glgpk_a:pref
+    codename: PREF/lgpk_a:pref
     result: pass
     splits:
     - functional2
   test_manage_cookie_data:
-    codename: PREF/gmanage_ck_dt
+    codename: PREF/manage_ck_dt
     result: pass
     splits:
     - smoke
   test_never_remember_history:
-    codename: PREF/g!rmbr_hist
+    codename: PREF/!rmbr_hist
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042647
     result: unstable
     splits:
     - smoke
   test_notifications_change_set:
-    codename: PREF/gnotis_chg_set
+    codename: PREF/notis_chg_set
     result: pass
     splits:
     - functional2
