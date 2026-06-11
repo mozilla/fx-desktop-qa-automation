@@ -6,30 +6,58 @@ from selenium.webdriver import Firefox
 from modules.page_object import GenericPdf
 from modules.browser_object import PanelUi
 
+
 @pytest.fixture()
 def test_case():
     return "1020327"
 
+
 PDF_FILE_NAME = "i-9.pdf"
 DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
+DOWNLOAD_TIMEOUT_SEC = 5.0
+POLL_INTERVAL_SEC = 1.0
+
 
 @pytest.fixture()
 def file_name():
     return PDF_FILE_NAME
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return DOWNLOADED_PDF_REGEX
 
-def wait_for_file_download(file_path, timeout=10, interval=0.5):
-    start = time.time()
-    while time.time() - start < timeout:
-        if os.path.exists(file_path):
-            return True
-        time.sleep(interval)
-    return False
 
-def test_download_pdf_data(driver: Firefox, fillable_pdf_url: str, downloads_folder: str, file_name, delete_files):
+def _wait_for_file_download(
+    saved_pdf_path, timeout=DOWNLOAD_TIMEOUT_SEC, interval=POLL_INTERVAL_SEC
+) -> None:
+    """Wait until file exists on disk or raise a pytest failure."""
+
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        if os.path.exists(saved_pdf_path):
+            initial_size = os.path.getsize(saved_pdf_path)
+            time.sleep(interval)
+            final_size = os.path.getsize(saved_pdf_path)
+
+            if initial_size == final_size and final_size > 0:
+                return True
+
+        time.sleep(interval)
+
+    pytest.fail(f"The file was not downloaded within {timeout:.1f} seconds.")
+    return None
+
+
+@pytest.mark.headed
+def test_download_pdf_data(
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    file_name,
+    delete_files,
+    delete_files_regex_string,
+):
     """
     C1020327: Sangie/Verify that a PDF with filled data is successfully downloaded in Private window
     """
@@ -49,7 +77,7 @@ def test_download_pdf_data(driver: Firefox, fillable_pdf_url: str, downloads_fol
 
     # Set the expected download path and the expected PDF name
     saved_pdf_location = os.path.join(downloads_folder, file_name)
-    wait_for_file_download(saved_pdf_location)
+    _wait_for_file_download(saved_pdf_location)
 
     # Verify if the file exists
     assert os.path.exists(saved_pdf_location), (
