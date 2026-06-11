@@ -865,6 +865,17 @@
     "groups": [],
     "shadowParent": "doh-provider-select"
   },
+  "doh-custom-provider": {
+    "selectorData": "dohCustomProvider",
+    "strategy": "id",
+    "groups": []
+  },
+  "doh-custom-provider-input": {
+    "selectorData": "input",
+    "strategy": "css",
+    "groups": [],
+    "shadowParent": "doh-custom-provider"
+  },
   "turn-off-primary-password": {
     "selectorData": "turnOffPrimaryPassword",
     "strategy": "id",

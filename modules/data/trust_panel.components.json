@@ -181,6 +181,31 @@
         "strategy": "css",
         "groups": []
     },
+    "site-icon": {
+        "selectorData": "trustpanel-popup-icon",
+        "strategy": "id",
+        "groups": []
+    },
+    "site-domain": {
+        "selectorData": "trustpanel-popup-host",
+        "strategy": "id",
+        "groups": []
+    },
+    "connection-icon": {
+        "selectorData": "trustpanel-connection-icon",
+        "strategy": "id",
+        "groups": []
+    },
+    "purple-card": {
+        "selectorData": "trustpanel-graphic-section",
+        "strategy": "id",
+        "groups": []
+    },
+    "clear-cookies-button": {
+        "selectorData": "trustpanel-clear-cookies-button",
+        "strategy": "id",
+        "groups": []
+    },
     "clear-cookies-button": {
         "selectorData": "trustpanel-clear-cookies-button",
         "strategy": "id",
@@ -205,6 +230,25 @@
     },
     "trustpanel-tracking-protection-disabled": {
         "selectorData": "#trustpanel-popup[tracking-protection='disabled']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "trustpanel-subview-back-button": {
+        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+        "strategy": "css",
+        "groups": []
+    },
+    "trustpanel-cross-site-cookies-count": {
+        "selectorData": "[data-l10n-id='trustpanel-list-label-tracking-cookies']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "trustpanel-fingerprinter-count": {
+        "selectorData": "[data-l10n-id='trustpanel-list-label-fingerprinter']",
         "strategy": "css",
         "groups": [
             "doNotCache"

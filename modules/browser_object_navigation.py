@@ -224,6 +224,23 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def search_in_new_tab_via_keyboard(self, term: str) -> BasePage:
+        """
+        Type a search term in the Awesome Bar and submit it with the Alt+Shift+Enter keyboard
+        shortcut, which opens the SERP in a *new* tab. Returns self.
+
+        Argument:
+            term: The search term
+        """
+        self.set_awesome_bar()
+        self.awesome_bar.click()
+        self.awesome_bar.send_keys(term)
+        self.actions.key_down(Keys.ALT).key_down(Keys.SHIFT).send_keys(
+            Keys.ENTER
+        ).key_up(Keys.SHIFT).key_up(Keys.ALT).perform()
+        return self
+
+    @BasePage.context_chrome
     def set_search_bar(self) -> BasePage:
         """Set the search_bar attribute of the Navigation object"""
         self.search_bar = self.get_element("searchbar-input")
