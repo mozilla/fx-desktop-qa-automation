@@ -4,8 +4,9 @@ import time
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import GenericPdf
 from modules.browser_object import PanelUi
+from modules.page_object import GenericPdf
+
 
 
 @pytest.fixture()
